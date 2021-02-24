@@ -1,18 +1,14 @@
 import {
+  CreateDomainPayload,
   createDomainRecord,
+  createDomainSchema,
   Domain,
   DomainType,
-  createDomainSchema,
-  CreateDomainPayload
 } from '@linode/api-v4/lib/domains';
-import {
-  handleFieldErrors,
-  handleGeneralErrors
-} from 'src/utilities/formikErrorUtils';
-import { useFormik } from 'formik';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
+import { useFormik } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -23,13 +19,13 @@ import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
@@ -41,56 +37,60 @@ import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import {
   Origin as DomainDrawerOrigin,
-  resetDrawer
+  resetDrawer,
 } from 'src/store/domainDrawer';
 import { upsertDomain } from 'src/store/domains/domains.actions';
 import {
   DomainActionsProps,
-  withDomainActions
+  withDomainActions,
 } from 'src/store/domains/domains.container';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import {
+  handleFieldErrors,
+  handleGeneralErrors,
+} from 'src/utilities/formikErrorUtils';
 import { sendCreateDomainEvent } from 'src/utilities/ga';
 import {
   ExtendedIP,
   extendedIPToString,
-  stringToExtendedIP
+  stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
-    width: '100%'
+    width: '100%',
   },
   inner: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
     '& > div': {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     '& label': {
       color: theme.color.headline,
       fontWeight: 600,
       lineHeight: '1.33rem',
       letterSpacing: '0.25px',
-      margin: 0
-    }
+      margin: 0,
+    },
   },
   radio: {
     '& label:first-child .MuiButtonBase-root': {
-      marginLeft: -10
-    }
+      marginLeft: -10,
+    },
   },
   ip: {
-    maxWidth: 468
+    maxWidth: 468,
   },
   helperText: {
-    maxWidth: 'none'
-  }
+    maxWidth: 'none',
+  },
 }));
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
@@ -121,18 +121,18 @@ export const generateDefaultDomainRecords = (
   const baseIPv4Requests = [
     createDomainRecord(domainID, {
       type: 'A',
-      target: ipv4
+      target: ipv4,
     }),
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4,
-      name: 'www'
+      name: 'www',
     }),
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4,
-      name: 'mail'
-    })
+      name: 'mail',
+    }),
   ];
 
   return Promise.all(
@@ -142,29 +142,29 @@ export const generateDefaultDomainRecords = (
           ...baseIPv4Requests,
           createDomainRecord(domainID, {
             type: 'AAAA',
-            target: cleanedIPv6
+            target: cleanedIPv6,
           }),
           createDomainRecord(domainID, {
             type: 'AAAA',
             target: cleanedIPv6,
-            name: 'www'
+            name: 'www',
           }),
           createDomainRecord(domainID, {
             type: 'AAAA',
             target: cleanedIPv6,
-            name: 'mail'
+            name: 'mail',
           }),
           createDomainRecord(domainID, {
             type: 'MX',
             priority: 10,
-            target: `mail.${domain}`
-          })
+            target: `mail.${domain}`,
+          }),
         ]
       : baseIPv4Requests
   );
 };
 
-export const CreateDomain: React.FC<CombinedProps> = props => {
+export const CreateDomain: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { disabled, domainActions, origin } = props;
@@ -174,15 +174,16 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
-    DefaultRecordsType
-  >('none');
+  const [
+    defaultRecordsSetting,
+    setDefaultRecordsSetting,
+  ] = React.useState<DefaultRecordsType>('none');
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
   >(undefined);
   const [
     selectedDefaultNodeBalancer,
-    setSelectedDefaultNodeBalancer
+    setSelectedDefaultNodeBalancer,
   ] = React.useState<NodeBalancer | undefined>(undefined);
 
   const { values, ...formik } = useFormik({
@@ -190,12 +191,12 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
       domain: '',
       type: 'master' as DomainType,
       soa_email: '',
-      master_ips: ['']
+      master_ips: [''],
     },
     validationSchema: createDomainSchema,
     validateOnChange: true,
     validateOnMount: true,
-    onSubmit: values => create(values)
+    onSubmit: (values) => create(values),
   });
 
   React.useEffect(() => {
@@ -245,8 +246,8 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
       return setErrors([
         {
           reason: 'Please select a Linode.',
-          field: 'defaultLinode'
-        }
+          field: 'defaultLinode',
+        },
       ]);
     }
 
@@ -257,8 +258,8 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
       return setErrors([
         {
           reason: 'Please select a NodeBalancer.',
-          field: 'defaultNodeBalancer'
-        }
+          field: 'defaultNodeBalancer',
+        },
       ]);
     }
 
@@ -301,12 +302,12 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                     selectedLinode: selectedDefaultLinode!.id,
                     domainID: domainData.id,
                     ipv4: path(['ipv4', 0], selectedDefaultLinode),
-                    ipv6: path(['ipv6'], selectedDefaultLinode)
+                    ipv6: path(['ipv6'], selectedDefaultLinode),
                   }
                 );
                 return redirectToLandingOrDetail(type, domainData.id, {
                   recordError:
-                    'There was an issue creating default domain records.'
+                    'There was an issue creating default domain records.',
                 });
               });
           }
@@ -328,19 +329,19 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                     selectedNodeBalancer: selectedDefaultNodeBalancer!.id,
                     domainID: domainData.id,
                     ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
-                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
+                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer),
                   }
                 );
                 return redirectToLandingOrDetail(type, domainData.id, {
                   recordError:
-                    'There was an issue creating default domain records.'
+                    'There was an issue creating default domain records.',
                 });
               });
           }
         }
         return redirectToLandingOrDetail(type, domainData.id);
       })
-      .catch(err => {
+      .catch((err) => {
         if (!mounted) {
           return;
         }
@@ -490,23 +491,23 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
                   }
                   defaultValue={{
                     value: 'none',
-                    label: 'Do not insert default records for me.'
+                    label: 'Do not insert default records for me.',
                   }}
                   label="Insert Default Records"
                   options={[
                     {
                       value: 'none',
-                      label: 'Do not insert default records for me.'
+                      label: 'Do not insert default records for me.',
                     },
                     {
                       value: 'linode',
-                      label: 'Insert default records from one of my Linodes.'
+                      label: 'Insert default records from one of my Linodes.',
                     },
                     {
                       value: 'nodebalancer',
                       label:
-                        'Insert default records from one of my NodeBalancers.'
-                    }
+                        'Insert default records from one of my NodeBalancers.',
+                    },
                   ]}
                   disabled={disabled}
                 />
@@ -608,7 +609,7 @@ const mapStateToProps = (state: ApplicationState) => {
     id,
     // Disabled if the profile is restricted and doesn't have add_domains grant
     disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
-    origin: state.domainDrawer.origin
+    origin: state.domainDrawer.origin,
   };
 };
 

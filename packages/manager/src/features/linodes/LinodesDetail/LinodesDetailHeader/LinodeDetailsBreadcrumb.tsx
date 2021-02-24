@@ -5,49 +5,49 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   LinodeDetailContext,
-  withLinodeDetailContext
+  withLinodeDetailContext,
 } from '../linodeDetailContext';
 import withEditableLabelState, {
-  EditableLabelProps
+  EditableLabelProps,
 } from './editableLabelState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     textDecoration: 'none',
     [theme.breakpoints.down('sm')]: {
-      paddingRight: `${theme.spacing()}px !important`
+      paddingRight: `${theme.spacing()}px !important`,
     },
     [theme.breakpoints.down('xs')]: {
-      paddingLeft: theme.spacing()
-    }
+      paddingLeft: theme.spacing(),
+    },
   },
   error: {
     [theme.breakpoints.down('xs')]: {
-      paddingBottom: 20
+      paddingBottom: 20,
     },
     // The docs button will wrap when the label is editing mode so do not add
     // padding when it wraps
     [theme.breakpoints.down(395)]: {
-      paddingBottom: 0
-    }
+      paddingBottom: 0,
+    },
   },
   errorLong: {
     [theme.breakpoints.down(480)]: {
-      paddingBottom: 40
+      paddingBottom: 40,
     },
     // The docs button will wrap when the label is editing mode so do not add
     // padding when it wraps
     [theme.breakpoints.down(395)]: {
-      paddingBottom: 0
-    }
-  }
+      paddingBottom: 0,
+    },
+  },
 }));
 
 interface Props {
@@ -59,7 +59,7 @@ type CombinedProps = Props &
   EditableLabelProps &
   RouteComponentProps<{}>;
 
-const LinodeControls: React.FC<CombinedProps> = props => {
+const LinodeControls: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -69,23 +69,23 @@ const LinodeControls: React.FC<CombinedProps> = props => {
     resetEditableLabel,
     setEditableLabelError,
 
-    breadcrumbProps
+    breadcrumbProps,
   } = props;
 
   const disabled = linode._permissions === 'read_only';
 
   const handleSubmitLabelChange = (label: string) => {
     return updateLinode({ label })
-      .then(updatedLinode => {
+      .then((updatedLinode) => {
         resetEditableLabel();
       })
-      .catch(err => {
+      .catch((err) => {
         const errors: APIError[] = getAPIErrorOrDefault(
           err,
           'An error occurred while updating label',
           'label'
         );
-        const errorStrings: string[] = errors.map(e => e.reason);
+        const errorStrings: string[] = errors.map((e) => e.reason);
         setEditableLabelError(errorStrings[0]);
         scrollErrorIntoView();
         return Promise.reject(errorStrings[0]);
@@ -103,7 +103,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
         [classes.root]: true,
         [classes.error]: Boolean(editableLabelError),
         [classes.errorLong]: Boolean(editableLabelError.length > 60),
-        m0: true
+        m0: true,
       })}
       container
       alignItems="center"
@@ -121,7 +121,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
                   editableTextTitle: linode.label,
                   onEdit: handleSubmitLabelChange,
                   onCancel: resetEditableLabel,
-                  errorText: editableLabelError
+                  errorText: editableLabelError,
                 }
               : undefined
           }
@@ -142,7 +142,7 @@ const enhanced = compose<CombinedProps, Props>(
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
     updateLinode,
-    configs: linode._configs
+    configs: linode._configs,
   }))
 );
 

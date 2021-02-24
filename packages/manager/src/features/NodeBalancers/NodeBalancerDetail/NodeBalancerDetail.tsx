@@ -1,6 +1,6 @@
 import {
   getNodeBalancer,
-  getNodeBalancerConfigs
+  getNodeBalancerConfigs,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -10,31 +10,31 @@ import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabLinkList from 'src/components/TabLinkList';
 import withLoadingAndError, {
   LoadingAndErrorHandlers,
-  LoadingAndErrorState
+  LoadingAndErrorState,
 } from 'src/components/withLoadingAndError';
 import withFeatureFlagConsumerContainer, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
   withNodeBalancerActions,
-  WithNodeBalancerActions
+  WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
-  getErrorStringOrDefault
+  getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { ExtendedNodeBalancer } from '../types';
@@ -61,7 +61,7 @@ type CombinedProps = WithNodeBalancerActions &
 class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   state: State = {
     nodeBalancer: undefined,
-    ApiError: undefined
+    ApiError: undefined,
   };
 
   pollInterval: number;
@@ -69,7 +69,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   requestNodeBalancer = (nodeBalancerId: number) =>
     Promise.all([
       getNodeBalancer(+nodeBalancerId),
-      getNodeBalancerConfigs(+nodeBalancerId)
+      getNodeBalancerConfigs(+nodeBalancerId),
     ])
       .then(([nodeBalancer, configsData]) => {
         const { data: configs } = configsData;
@@ -83,14 +83,14 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           }, 0), // add the uptime for each config together
           configPorts: configs.reduce((acc: [number], config) => {
             return [...acc, { configId: config.id, port: config.port }];
-          }, [])
+          }, []),
         };
       })
       .then((nodeBalancer: ExtendedNodeBalancer) => {
         this.setState({ nodeBalancer });
         this.props.clearLoadingAndErrors();
       })
-      .catch(error => {
+      .catch((error) => {
         if (!this.state.nodeBalancer) {
           this.props.setErrorAndClearLoading(
             getErrorStringOrDefault(
@@ -127,7 +127,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
     const {
-      nodeBalancerActions: { updateNodeBalancer }
+      nodeBalancerActions: { updateNodeBalancer },
     } = this.props;
 
     // This should never actually happen, but TypeScript is expecting a Promise here.
@@ -141,10 +141,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       .then(() => {
         this.setState({
           nodeBalancer: { ...nodeBalancer, label },
-          labelInput: label
+          labelInput: label,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           () => ({
             ApiError: getAPIErrorOrDefault(
@@ -152,7 +152,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               'Error updating label',
               'label'
             ),
-            labelInput: label
+            labelInput: label,
           }),
           () => {
             scrollErrorIntoView();
@@ -165,7 +165,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   updateTags = (tags: string[]) => {
     const { nodeBalancer } = this.state;
     const {
-      nodeBalancerActions: { updateNodeBalancer }
+      nodeBalancerActions: { updateNodeBalancer },
     } = this.props;
 
     if (nodeBalancer === undefined) {
@@ -176,13 +176,13 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       .then(() => {
         this.setState({
           nodeBalancer: { ...nodeBalancer, tags },
-          ApiError: undefined
+          ApiError: undefined,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         const ApiError = getAPIErrorOrDefault(error, 'Error creating tag');
         this.setState({
-          ApiError
+          ApiError,
         });
         return Promise.reject(ApiError);
       });
@@ -191,7 +191,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   cancelUpdate = () => {
     this.setState({
       ApiError: undefined,
-      labelInput: pathOr('', ['label'], this.state.nodeBalancer)
+      labelInput: pathOr('', ['label'], this.state.nodeBalancer),
     });
   };
 
@@ -206,29 +206,29 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       title: 'Getting Started with NodeBalancers',
       src:
         'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers-new-manager/',
-      body: `Using a NodeBalancer to begin managing a simple web application`
+      body: `Using a NodeBalancer to begin managing a simple web application`,
     },
     {
       title: 'NodeBalancer Reference Guide',
       src:
         'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide-new-manager/',
-      body: `NodeBalancer Reference Guide`
-    }
+      body: `NodeBalancer Reference Guide`,
+    },
   ];
 
   tabs = [
     {
       routeName: `${this.props.match.url}/summary`,
-      title: 'Summary'
+      title: 'Summary',
     },
     {
       routeName: `${this.props.match.url}/configurations`,
-      title: 'Configurations'
+      title: 'Configurations',
     },
     {
       routeName: `${this.props.match.url}/settings`,
-      title: 'Settings'
-    }
+      title: 'Settings',
+    },
   ];
 
   render() {
@@ -263,7 +263,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         : nodeBalancer.label;
 
     const p = {
-      updateTags: this.updateTags
+      updateTags: this.updateTags,
     };
 
     const navToURL = (index: number) => {
@@ -287,7 +287,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                   editableTextTitle: nodeBalancerLabel,
                   onEdit: this.updateLabel,
                   onCancel: this.cancelUpdate,
-                  errorText: labelError
+                  errorText: labelError,
                 }}
               />
             </Grid>
@@ -298,7 +298,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           {errorMap.none && <Notice error text={errorMap.none} />}
           <Tabs
             index={Math.max(
-              this.tabs.findIndex(tab => matches(tab.routeName)),
+              this.tabs.findIndex((tab) => matches(tab.routeName)),
               0
             )}
             onChange={navToURL}

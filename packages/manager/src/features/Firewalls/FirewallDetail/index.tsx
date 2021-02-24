@@ -8,21 +8,19 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
-import DocumentationButton_CMR from 'src/components/CMR_DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import withFirewalls, {
-  Props as WithFirewallsProps
+  Props as WithFirewallsProps,
 } from 'src/containers/firewalls.container';
-import useFlags from 'src/hooks/useFlags';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-const FirewallRulesLanding = React.lazy(() =>
-  import('./Rules/FirewallRulesLanding')
+const FirewallRulesLanding = React.lazy(
+  () => import('./Rules/FirewallRulesLanding')
 );
 
 const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
@@ -32,14 +30,13 @@ type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
-export const FirewallDetail: React.FC<CombinedProps> = props => {
+export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
@@ -49,12 +46,12 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
   const tabs = [
     {
       title: 'Rules',
-      routeName: `${URL}/rules`
+      routeName: `${URL}/rules`,
     },
     {
       title: 'Linodes',
-      routeName: `${URL}/linodes`
-    }
+      routeName: `${URL}/linodes`,
+    },
   ];
 
   const matches = (p: string) => {
@@ -97,7 +94,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
     }
     return updateFirewall({
       id: Number(thisFirewallId),
-      payload: { label: newLabel }
+      payload: { label: newLabel },
     });
   };
 
@@ -122,18 +119,14 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
             editableTextTitle: thisFirewall.label,
             onEdit: handleLabelChange,
             onCancel: resetEditableLabel,
-            errorText
+            errorText,
           }}
         />
-        {flags.cmr ? (
-          <DocumentationButton_CMR href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
-        ) : (
-          <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
-        )}
+        <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
       </Box>
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}

@@ -2,7 +2,7 @@ import {
   Database,
   DatabaseConnection,
   DatabaseStatus,
-  getDatabaseConnection
+  getDatabaseConnection,
 } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
@@ -11,7 +11,6 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Chip from 'src/components/core/Chip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
@@ -20,6 +19,7 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
+import DocumentationButton from 'src/components/DocumentationButton';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
@@ -38,7 +38,7 @@ interface DatabaseEntityDetailProps {
   database: Database;
 }
 
-const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
+const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = (props) => {
   const { database } = props;
 
   const { deleteDatabase } = useDatabases();
@@ -118,50 +118,50 @@ export interface HeaderProps {
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
     margin: 0,
-    width: '100%'
+    width: '100%',
   },
   body: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     padding: 0,
-    width: '100%'
+    width: '100%',
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
-    marginLeft: theme.spacing()
+    marginLeft: theme.spacing(),
   },
   statusReady: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGreen
-    }
+      backgroundColor: theme.cmrIconColors.iGreen,
+    },
   },
   statusInitializing: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iOrange
-    }
+      backgroundColor: theme.cmrIconColors.iOrange,
+    },
   },
   statusError: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iRed
-    }
+      backgroundColor: theme.cmrIconColors.iRed,
+    },
   },
   statusUnknown: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGrey
-    }
+      backgroundColor: theme.cmrIconColors.iGrey,
+    },
   },
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center',
-    height: 40
+    height: 40,
   },
   actionItem: {
-    minWidth: 'auto'
-  }
+    minWidth: 'auto',
+  },
 }));
 
-const Header: React.FC<HeaderProps> = props => {
+const Header: React.FC<HeaderProps> = (props) => {
   const { label, status, handleClickDelete } = props;
 
   const classes = useHeaderStyles();
@@ -170,7 +170,7 @@ const Header: React.FC<HeaderProps> = props => {
     initializing: classes.statusInitializing,
     ready: classes.statusReady,
     error: classes.statusError,
-    unknown: classes.statusUnknown
+    unknown: classes.statusUnknown,
   };
 
   return (
@@ -210,7 +210,7 @@ const Header: React.FC<HeaderProps> = props => {
                 className={classnames({
                   [classes.statusChip]: true,
                   [statusToClass[status]]: true,
-                  statusOtherDetail: ['initializing'].includes(status)
+                  statusOtherDetail: ['initializing'].includes(status),
                 })}
                 label={status.toUpperCase()}
                 component="span"
@@ -251,28 +251,28 @@ export interface BodyProps {
 
 const useBodyStyles = makeStyles((theme: Theme) => ({
   body: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
   columnLabel: {
     color: theme.cmrTextColors.headlineStatic,
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
   },
   summaryContainer: {
-    flexBasis: '28%'
+    flexBasis: '28%',
   },
   summaryContent: {
     '& > div': {
       flexBasis: '50%',
       [theme.breakpoints.down('sm')]: {
-        flexBasis: '100%'
-      }
+        flexBasis: '100%',
+      },
     },
     '& p': {
-      color: theme.cmrTextColors.tableStatic
-    }
+      color: theme.cmrTextColors.tableStatic,
+    },
   },
   ipContainer: {
-    paddingLeft: '40px !important'
+    paddingLeft: '40px !important',
   },
   ipList: {
     marginTop: 4,
@@ -280,23 +280,23 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     '& li': {
       padding: 0,
       fontSize: '0.875rem',
-      lineHeight: 1.43
-    }
+      lineHeight: 1.43,
+    },
   },
   accessTableContainer: {
     flexBasis: '72%',
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
   },
   accessTableContent: {
     '&.MuiGrid-item': {
       padding: 0,
-      paddingLeft: theme.spacing()
-    }
+      paddingLeft: theme.spacing(),
+    },
   },
   accessTable: {
     tableLayout: 'fixed',
     '& tr': {
-      height: 34
+      height: 34,
     },
     '& th': {
       backgroundColor: theme.cmrBGColors.bgApp,
@@ -308,7 +308,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(),
       textAlign: 'left',
       whiteSpace: 'nowrap',
-      width: 140
+      width: 140,
     },
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
@@ -318,16 +318,16 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       fontSize: '0.875rem',
       overflowX: 'auto',
       padding: theme.spacing(),
-      whiteSpace: 'nowrap'
-    }
+      whiteSpace: 'nowrap',
+    },
   },
   code: {
     color: theme.cmrTextColors.tableStatic,
-    fontFamily: '"SourceCodePro", monospace, sans-serif'
-  }
+    fontFamily: '"SourceCodePro", monospace, sans-serif',
+  },
 }));
 
-const Body: React.FC<BodyProps> = props => {
+const Body: React.FC<BodyProps> = (props) => {
   const {
     numCPUs,
     gbRAM,
@@ -335,7 +335,7 @@ const Body: React.FC<BodyProps> = props => {
     typeLabel,
     connectionDetailsData,
     connectionDetailsLoading,
-    connectionDetailsError
+    connectionDetailsError,
   } = props;
 
   const classes = useBodyStyles();
@@ -441,23 +441,23 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     [theme.breakpoints.down('md')]: {
       marginTop: 0,
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
   listItem: {
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
     padding: `0px 10px`,
     '&:last-of-type': {
-      borderRight: 'none'
-    }
+      borderRight: 'none',
+    },
   },
   label: {
-    fontFamily: theme.font.bold
-  }
+    fontFamily: theme.font.bold,
+  },
 }));
 
-export const Footer: React.FC<FooterProps> = React.memo(props => {
+export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const classes = useFooterStyles();
 
   const { updateDatabase } = useDatabases();
@@ -469,9 +469,9 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   const addTag = React.useCallback(
     (tag: string) => {
       const newTags = [...tags, tag];
-      return updateDatabase(id, { tags: newTags }).catch(e =>
+      return updateDatabase(id, { tags: newTags }).catch((e) =>
         enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error'
+          variant: 'error',
         })
       );
     },
@@ -480,12 +480,12 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const deleteTag = React.useCallback(
     (tag: string) => {
-      const newTags = tags.filter(thisTag => thisTag !== tag);
-      return updateDatabase(id, { tags: newTags }).catch(e =>
+      const newTags = tags.filter((thisTag) => thisTag !== tag);
+      return updateDatabase(id, { tags: newTags }).catch((e) =>
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
           {
-            variant: 'error'
+            variant: 'error',
           }
         )
       );

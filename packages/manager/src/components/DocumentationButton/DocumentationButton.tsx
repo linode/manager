@@ -1,32 +1,28 @@
 import * as React from 'react';
-import BookIcon from 'src/assets/icons/book.svg';
+import DocsIcon from 'src/assets/icons/docs.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import useFlags from 'src/hooks/useFlags';
 import IconTextLink from '../IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `0 ${theme.spacing(1) + 4}px`,
-    marginBottom: 0,
+    alignItems: 'center',
+    fontFamily: theme.font.normal,
+    fontSize: '.875rem',
     lineHeight: 'normal',
+    margin: 0,
+    marginTop: 2,
+    minWidth: 'auto',
+    padding: 0,
     '& svg': {
-      width: 24,
-      height: 22
+      marginRight: theme.spacing(),
     },
-    '& .insidePath': {
-      fill: 'none',
-      fillRule: 'evenodd',
-      stroke: 'currentColor',
-      strokeLinecap: 'round',
-      strokeLinejoin: 'round',
-      strokeWidth: '1.5'
-    }
+    '&:hover': {
+      textDecoration: 'underline',
+      '& svg': {
+        color: theme.palette.primary.light,
+      },
+    },
   },
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginRight: -4
-    }
-  }
 }));
 
 interface Props {
@@ -35,23 +31,20 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const DocumentationButton: React.FC<CombinedProps> = props => {
+export const DocumentationButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const { href } = props;
 
   return (
     <IconTextLink
-      className={`${classes.root} ${flags.cmr && classes.cmrSpacing}`}
-      SideIcon={BookIcon}
-      text="Documentation"
-      title="Documentation"
+      className={`${classes.root} docsButton`}
+      SideIcon={DocsIcon}
+      text="Docs"
+      title="Docs"
       onClick={() => window.open(href, '_blank', 'noopener')}
       aria-describedby="external-site"
-    >
-      Documentation
-    </IconTextLink>
+    />
   );
 };
 

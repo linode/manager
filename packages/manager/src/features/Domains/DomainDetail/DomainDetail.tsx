@@ -3,14 +3,14 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
 import summaryPanelStyles, {
-  StyleProps
+  StyleProps,
 } from 'src/containers/SummaryPanels.styles';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useDomains from 'src/hooks/useDomains';
@@ -24,28 +24,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     margin: 0,
     [theme.breakpoints.down('xs')]: {
-      paddingLeft: theme.spacing()
+      paddingLeft: theme.spacing(),
     },
     [theme.breakpoints.down('sm')]: {
-      paddingRight: theme.spacing()
-    }
+      paddingRight: theme.spacing(),
+    },
   },
   error: {
     marginTop: `${theme.spacing(3)}px !important`,
-    marginBottom: `0 !important`
-  }
+    marginBottom: `0 !important`,
+  },
 }));
 
 type CombinedProps = RouteProps & StyleProps;
 
-const DomainDetail: React.FC<CombinedProps> = props => {
+const DomainDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
     location,
     match: {
-      params: { domainId }
-    }
+      params: { domainId },
+    },
   } = props;
 
   const { domains, updateDomain } = useDomains();
@@ -63,7 +63,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   const handleLabelChange = (label: string) => {
     setUpdateError(undefined);
 
-    return updateDomain({ domainId: domain.id, domain: label }).catch(e => {
+    return updateDomain({ domainId: domain.id, domain: label }).catch((e) => {
       setUpdateError(e[0].reason);
       return Promise.reject(e);
     });
@@ -80,7 +80,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     }
     return updateDomain({
       domainId: +domainId,
-      tags: tagsList
+      tags: tagsList,
     });
   };
 
@@ -124,7 +124,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
             editableTextTitle: domain.domain,
             onEdit: handleLabelChange,
             onCancel: resetEditableLabel,
-            errorText: updateError
+            errorText: updateError,
           }}
         />
         <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
