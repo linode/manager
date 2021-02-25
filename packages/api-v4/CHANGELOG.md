@@ -1,3 +1,9 @@
+## [2021-02-22] - v0.43.0
+
+### Changed
+- Update TypeScript version to v4.1.5
+- Adjust types for rescueLinode to work with TypeScript
+
 ## [2021-02-15] - v0.42.0
 
 ### Added

@@ -5,6 +5,7 @@ export * from './config';
 export * from './databases';
 export * from './disk';
 export * from './domain';
+export * from './entityTransfers';
 export * from './events';
 export * from './firewalls';
 export * from './images';

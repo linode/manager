@@ -31,7 +31,7 @@ export const sendLinodeActionEvent = () => {
 export const sendLinodeActionMenuItemEvent = (eventAction: string) => {
   sendEvent({
     category: 'Linode Action Menu Item',
-    action: eventAction
+    action: eventAction,
   });
 };
 
@@ -40,7 +40,7 @@ export const sendAdaEvent = () => {
   sendEvent({
     category: 'Support Bot',
     action: 'Open',
-    label: location.pathname
+    label: location.pathname,
   });
 };
 
@@ -52,7 +52,7 @@ export const sendPaginationEvent = (
   sendEvent({
     category: eventCategory,
     action: 'pagination',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -75,7 +75,7 @@ export const sendCreateVolumeEvent = (
   sendEvent({
     category: 'Create Volume',
     action: eventAction || 'Create Volume',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -87,7 +87,7 @@ export const sendCreateDomainEvent = (
   sendEvent({
     category: 'Create Domain',
     action: eventAction || 'Create Domain',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -97,7 +97,7 @@ export const sendStackscriptsSearchEvent = (eventLabel: string) => {
   sendEvent({
     category: 'stackscripts',
     action: 'search',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -107,7 +107,7 @@ export const sendFetchAllEvent = (eventLabel: string, eventValue: number) => {
     category: 'Search',
     action: 'Data fetch all entities',
     label: eventLabel,
-    value: eventValue
+    value: eventValue,
   });
 };
 
@@ -120,7 +120,7 @@ export const sendImportDisplayGroupSubmitEvent = (
     category: 'dashboard',
     action: 'import display groups',
     label: eventLabel,
-    value: eventValue
+    value: eventValue,
   });
 };
 
@@ -150,7 +150,7 @@ export const sendBackupsEnabledEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Backups',
     action: 'Enable All Backups',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -159,7 +159,7 @@ export const sendBackupsDisabledEvent = () => {
   sendEvent({
     category: 'Backups',
     action: 'Disable Backups',
-    label: 'From Backups tab'
+    label: 'From Backups tab',
   });
 };
 
@@ -174,7 +174,7 @@ export const sendGroupByTagEnabledEvent = (
   sendEvent({
     category: eventCategory,
     action: 'group by tag',
-    label: String(eventLabel)
+    label: String(eventLabel),
   });
 };
 
@@ -186,7 +186,7 @@ export const sendLinodesViewEvent = (
   sendEvent({
     category: eventCategory,
     action: 'switch view',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -195,7 +195,7 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string) => {
   sendEvent({
     category: 'NodeBalancer',
     action: 'Create NodeBalancer',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -207,7 +207,7 @@ export const sendCreateLinodeEvent = (
   sendEvent({
     category: 'Create Linode',
     action: eventAction,
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -216,7 +216,7 @@ export const sendCreateBucketEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Object Storage',
     action: 'Create Bucket',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -225,7 +225,7 @@ export const sendDeleteBucketEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Object Storage',
     action: 'Delete Bucket',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -233,7 +233,7 @@ export const sendDeleteBucketFailedEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Object Storage',
     action: 'Delete Bucket Failed',
-    label: eventLabel
+    label: eventLabel,
   });
 };
 
@@ -241,7 +241,7 @@ export const sendDeleteBucketFailedEvent = (eventLabel: string) => {
 export const sendCreateAccessKeyEvent = () => {
   sendEvent({
     category: 'Object Storage',
-    action: 'Create Access Key'
+    action: 'Create Access Key',
   });
 };
 
@@ -249,7 +249,7 @@ export const sendCreateAccessKeyEvent = () => {
 export const sendEditAccessKeyEvent = () => {
   sendEvent({
     category: 'Object Storage',
-    action: 'Edit Access Key'
+    action: 'Edit Access Key',
   });
 };
 
@@ -257,7 +257,7 @@ export const sendEditAccessKeyEvent = () => {
 export const sendRevokeAccessKeyEvent = () => {
   sendEvent({
     category: 'Object Storage',
-    action: 'Revoke Access Key'
+    action: 'Revoke Access Key',
   });
 };
 
@@ -267,7 +267,7 @@ export const sendRevokeAccessKeyEvent = () => {
 export const sendMigrationNavigationEvent = (pathNavigatedFrom: string) => {
   sendEvent({
     category: 'Migration Navigation',
-    action: `From ${pathNavigatedFrom}`
+    action: `From ${pathNavigatedFrom}`,
   });
 };
 
@@ -282,7 +282,7 @@ export const sendMigrationInitiatedEvent = (
   sendEvent({
     category: 'Inter-DC Migration Requested',
     action: `Initiation Time: ${generateTimeOfDay(usersCurrentHour)}`,
-    label: `${safeSourceRegion} to ${safeDestRegion}`
+    label: `${safeSourceRegion} to ${safeDestRegion}`,
   });
 };
 
@@ -307,14 +307,14 @@ export const generateTimeOfDay = (currentHour: number) => {
 export const sendDomainStatusChangeEvent = (action: 'Enable' | 'Disable') => {
   return sendEvent({
     category: 'Domain Status Change',
-    action
+    action,
   });
 };
 
 export const sendDownloadObjectEvent = () => {
   sendEvent({
     category: 'Object Storage',
-    action: 'Download Object'
+    action: 'Download Object',
   });
 };
 
@@ -322,7 +322,7 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
   sendEvent({
     category: 'Object Storage',
     action: 'Objects queued for upload',
-    label: `${numObjects} objects`
+    label: `${numObjects} objects`,
   });
 };
 
@@ -330,6 +330,30 @@ export const sendSearchBarUsedEvent = () => {
   sendEvent({
     category: 'Search',
     action: 'Search Select',
-    label: window.location.pathname
+    label: window.location.pathname,
+  });
+};
+
+export const sendEntityTransferCreateEvent = (label: string) => {
+  sendEvent({
+    // eslint-disable-next-line
+    category: 'Entity Transfer',
+    action: 'Create',
+    label,
+  });
+};
+
+export const sendEntityTransferReceiveEvent = (label: string) => {
+  sendEvent({
+    category: 'Entity Transfer',
+    action: 'Receive',
+    label,
+  });
+};
+
+export const sendEntityTransferCancelEvent = () => {
+  sendEvent({
+    category: 'Entity Transfer',
+    action: 'Cancel',
   });
 };

@@ -119,6 +119,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'CyberPanel',
+    description: `Reduce setup time required to host websites and applications, including popular tools like OpenLiteSpeed WordPress.`,
+    summary: 'Next-generation hosting control panel by OpenLiteSpeed.',
+    related_guides: [
+      {
+        title: 'Deploy CyberPanel with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-cyberpanel-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
+        href: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/'
+      }
+    ],
+    logo_url: 'assets/cyberpanel_color.svg'
+  },
+  {
     name: 'Discourse',
     description: `Launch a sleek forum with robust integrations to popular tools like Slack and WordPress to start more conversations.`,
     summary:
@@ -781,6 +800,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/secureyourserver_color.svg'
   },
   {
+    name: 'ServerWand',
+    description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
+    summary: 'Magical control panel for hosting websites and managing your servers.',
+    related_guides: [
+      {
+        title: 'Deploy ServerWand with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-serverwand-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://serverwand.com/',
+        href: 'https://serverwand.com/'
+      }
+    ],
+    logo_url: 'assets/serverwand_color.svg'
+  },
+  {
     name: 'Shadowsocks',
     description:
       'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
@@ -1126,5 +1164,43 @@ export const oneClickApps: OCA[] = [
       }
     ],
     logo_url: 'assets/wordpress_color.svg'
+  },
+  {
+    name: 'Yacht',
+    description: `Simplify Docker deployments and make containerization easy for anyone to use. Please note: Yacht is still in alpha and is not recommended for production use.`,
+    summary: 'Intuitive web interface for managing Docker containers.',
+    related_guides: [
+      {
+        title: 'Deploy Yacht with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-yacht-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://github.com/SelfhostedPro/Yacht/',
+        href: 'https://github.com/SelfhostedPro/Yacht/'
+      }
+    ],
+    logo_url: 'assets/yacht_color.svg'
+  },
+  {
+    name: 'Zabbix',
+    description: `Monitor, track performance and maintain availability for network servers, devices, services and other IT resources– all in one tool.`,
+    summary: 'Enterprise-class open source distributed monitoring solution.',
+    related_guides: [
+      {
+        title: 'Deploy Zabbix with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-zabbix-with-marketplace-apps'
+      }
+    ],
+    related_info: [
+      {
+        title: 'https://www.zabbix.com',
+        href: 'https://www.zabbix.com'
+      }
+    ],
+    logo_url: 'assets/zabbix_color.svg'
   }
 ];
