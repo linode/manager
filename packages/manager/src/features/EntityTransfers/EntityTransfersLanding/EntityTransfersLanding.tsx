@@ -32,19 +32,22 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
   }, [location]);
 
   const initialPage = 1;
-  const transfersTablePreferenceKey = 'entity-transfers-tables';
+  // Three separate preference keys to allow users to set the page size they want for each individual table.
+  const pendingTransfersTablePreferenceKey = 'pending-transfers-table';
+  const receivedTransfersTablePreferenceKey = 'received-transfers-table';
+  const sentTransfersTablePreferenceKey = 'sent-transfers-table';
 
   const paginationPendingTransfers = usePagination(
     initialPage,
-    transfersTablePreferenceKey
+    pendingTransfersTablePreferenceKey
   );
   const paginationReceivedTransfers = usePagination(
     initialPage,
-    transfersTablePreferenceKey
+    receivedTransfersTablePreferenceKey
   );
   const paginationSentTransfers = usePagination(
     initialPage,
-    transfersTablePreferenceKey
+    sentTransfersTablePreferenceKey
   );
 
   // Fetch the Pending Transfers
