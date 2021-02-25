@@ -2,9 +2,9 @@ import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DocumentationButton from 'src/components/DocumentationButton';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
@@ -18,7 +18,7 @@ interface VlanEntityDetailProps {
 
 export type CombinedProps = VlanEntityDetailProps;
 
-const VlanEntityDetail: React.FC<CombinedProps> = props => {
+const VlanEntityDetail: React.FC<CombinedProps> = (props) => {
   const { vlan } = props;
 
   const regionDisplay = dcDisplayNames[vlan.region] ?? null;
@@ -52,11 +52,11 @@ export interface HeaderProps {
 const useHeaderStyles = makeStyles(() => ({
   root: {
     margin: 0,
-    width: '100%'
-  }
+    width: '100%',
+  },
 }));
 
-const Header: React.FC<HeaderProps> = props => {
+const Header: React.FC<HeaderProps> = (props) => {
   const classes = useHeaderStyles();
 
   const { label } = props;
@@ -74,8 +74,8 @@ const Header: React.FC<HeaderProps> = props => {
             crumbOverrides={[
               {
                 label: 'VLANs',
-                position: 1
-              }
+                position: 1,
+              },
             ]}
             labelTitle={label}
             labelOptions={{ noCap: true }}
@@ -110,30 +110,30 @@ interface FooterProps {
 
 const useFooterStyles = makeStyles((theme: Theme) => ({
   label: {
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
   },
   listItem: {
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
     color: theme.cmrTextColors.tableStatic,
     padding: `0px 10px`,
     '&:last-of-type': {
-      borderRight: 'none'
-    }
+      borderRight: 'none',
+    },
   },
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    height: 40
+    height: 40,
   },
   actionItem: {
     minWidth: 'auto',
     paddingLeft: theme.spacing(),
-    paddingRight: theme.spacing()
-  }
+    paddingRight: theme.spacing(),
+  },
 }));
 
-export const Footer: React.FC<FooterProps> = React.memo(props => {
+export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const classes = useFooterStyles();
 
   const { label, regionDisplay, cidr, id, created } = props;

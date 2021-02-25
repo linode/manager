@@ -2,11 +2,11 @@ import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
 import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/DocumentationButton';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
@@ -19,12 +19,12 @@ const BucketSSL = React.lazy(() => import('./BucketSSL'));
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     [theme.breakpoints.down('sm')]: {
-      paddingRight: theme.spacing()
+      paddingRight: theme.spacing(),
     },
     [theme.breakpoints.down('xs')]: {
-      paddingLeft: theme.spacing()
-    }
-  }
+      paddingLeft: theme.spacing(),
+    },
+  },
 }));
 
 interface MatchProps {
@@ -34,7 +34,7 @@ interface MatchProps {
 
 type CombinedProps = RouteComponentProps<MatchProps>;
 
-export const BucketDetailLanding: React.FC<CombinedProps> = props => {
+export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const matches = (p: string) => {
@@ -45,20 +45,20 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
   const tabs = [
     {
       title: 'Objects',
-      routeName: `${props.match.url}/objects`
+      routeName: `${props.match.url}/objects`,
     },
     {
       title: 'Access',
-      routeName: `${props.match.url}/access`
+      routeName: `${props.match.url}/access`,
     },
     {
       title: 'SSL/TLS',
-      routeName: `${props.match.url}/ssl`
-    }
+      routeName: `${props.match.url}/ssl`,
+    },
   ];
 
   const [index, setIndex] = React.useState(
-    tabs.findIndex(tab => matches(tab.routeName)) || 0
+    tabs.findIndex((tab) => matches(tab.routeName)) || 0
   );
 
   const handleTabChange = (index: number) => {
@@ -82,8 +82,8 @@ export const BucketDetailLanding: React.FC<CombinedProps> = props => {
           crumbOverrides={[
             {
               position: 1,
-              label: 'Object Storage'
-            }
+              label: 'Object Storage',
+            },
           ]}
           labelOptions={{ noCap: true }}
         />
