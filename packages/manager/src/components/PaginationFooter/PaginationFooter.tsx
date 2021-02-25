@@ -26,6 +26,7 @@ const styles = (theme: Theme) =>
     },
     select: {
       '& .MuiInput-root': {
+        backgroundColor: theme.cmrBGColors.bgPaper,
         border: 'none',
         '&.Mui-focused': {
           boxShadow: 'none',
