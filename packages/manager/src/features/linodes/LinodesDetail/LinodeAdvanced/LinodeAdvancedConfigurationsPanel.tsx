@@ -37,8 +37,8 @@ const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
   const classes = useStyles();
 
   return (
-    <Grid container item xs={12}>
-      <Grid item className={classes.enclosingGrid}>
+    <Grid container item className="m0" xs={12}>
+      <Grid item className={`${classes.enclosingGrid} p0`}>
         <LinodeConfigs />
       </Grid>
     </Grid>

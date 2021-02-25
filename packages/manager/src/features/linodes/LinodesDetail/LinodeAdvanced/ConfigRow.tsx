@@ -28,11 +28,6 @@ const useStyles = makeStyles(() => ({
   alignTop: {
     verticalAlign: 'top',
   },
-  cellBase: {
-    '& td': {
-      padding: 8,
-    },
-  },
 }));
 
 interface Props {
@@ -150,11 +145,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
   return (
     <TableRow
-      className={
-        hasManyConfigs
-          ? `${classes.alignTop} ${classes.cellBase}`
-          : classes.cellBase
-      }
+      className={hasManyConfigs ? classes.alignTop : undefined}
       key={config.id}
       data-qa-config={config.label}
     >
