@@ -37,16 +37,16 @@ import createDevicesFromStrings, {
 } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import {
+  handleFieldErrors,
+  handleGeneralErrors,
+} from 'src/utilities/formikErrorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import {
   CreateLinodeConfig,
   UpdateLinodeConfig,
   withLinodeDetailContext,
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
