@@ -31,7 +31,4 @@ const isVolume = (
   return typeof (device as VolumeDevice).volume_id === 'number';
 };
 
-export default compose(
-  reduce(rdx, {}),
-  toPairs
-);
+export default compose(reduce(rdx, {}), toPairs);

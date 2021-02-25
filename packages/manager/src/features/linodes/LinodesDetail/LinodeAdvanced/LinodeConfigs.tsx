@@ -58,10 +58,8 @@ import ConfigRow from './ConfigRow';
 
 type ClassNames =
   | 'root'
-  | 'gridContainer'
   | 'headline'
   | 'addNewWrapper'
-  | 'labelCell'
   | 'tableCell'
   | 'labelColumn'
   | 'vmColumn'
@@ -90,9 +88,6 @@ const styles = (theme: Theme) =>
         marginTop: -theme.spacing(1),
       },
       padding: '5px !important',
-    },
-    labelCell: {
-      width: '25%',
     },
     tableCell: {
       borderRight: `1px solid ${theme.palette.divider}`,
