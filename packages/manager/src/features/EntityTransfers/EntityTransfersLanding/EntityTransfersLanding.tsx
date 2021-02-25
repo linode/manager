@@ -9,7 +9,7 @@ import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
 import TransferControls from './TransferControls';
 import CircleProgress from 'src/components/CircleProgress';
 
-export const EntityTransfersLanding: React.FC<{}> = _ => {
+export const EntityTransfersLanding: React.FC<{}> = (_) => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
   const [transfer, setTransfer] = React.useState<EntityTransfer | undefined>(
     undefined
@@ -31,23 +31,35 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
     }
   }, [location]);
 
-  const paginationPendingTransfers = usePagination();
-  const paginationReceivedTransfers = usePagination();
-  const paginationSentTransfers = usePagination();
+  const initialPage = 1;
+  const transfersTablePreferenceKey = 'entity-transfers-tables';
+
+  const paginationPendingTransfers = usePagination(
+    initialPage,
+    transfersTablePreferenceKey
+  );
+  const paginationReceivedTransfers = usePagination(
+    initialPage,
+    transfersTablePreferenceKey
+  );
+  const paginationSentTransfers = usePagination(
+    initialPage,
+    transfersTablePreferenceKey
+  );
 
   // Fetch the Pending Transfers
   const {
     data: pendingTransfersData,
     isLoading: pendingTransfersLoading,
-    error: pendingTransfersError
+    error: pendingTransfersError,
   } = useEntityTransfersQuery(
     {
       page: paginationPendingTransfers.page,
-      page_size: paginationPendingTransfers.pageSize
+      page_size: paginationPendingTransfers.pageSize,
     },
     {
       status: 'pending',
-      is_sender: true
+      is_sender: true,
     }
   );
   const pendingTransfers = Object.values(
@@ -59,14 +71,14 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const {
     data: receivedTransfersData,
     isLoading: receivedTransfersLoading,
-    error: receivedTransfersError
+    error: receivedTransfersError,
   } = useEntityTransfersQuery(
     {
       page: paginationReceivedTransfers.page,
-      page_size: paginationReceivedTransfers.pageSize
+      page_size: paginationReceivedTransfers.pageSize,
     },
     {
-      status: 'received'
+      status: 'received',
     }
   );
   const receivedTransfers = Object.values(
@@ -78,15 +90,15 @@ export const EntityTransfersLanding: React.FC<{}> = _ => {
   const {
     data: sentTransfersData,
     isLoading: sentTransfersLoading,
-    error: sentTransfersError
+    error: sentTransfersError,
   } = useEntityTransfersQuery(
     {
       page: paginationSentTransfers.page,
-      page_size: paginationSentTransfers.pageSize
+      page_size: paginationSentTransfers.pageSize,
     },
     {
       is_sender: true,
-      status: { '+neq': 'pending' }
+      status: { '+neq': 'pending' },
     }
   );
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});

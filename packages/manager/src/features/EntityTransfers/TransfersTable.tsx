@@ -1,6 +1,6 @@
 import {
   EntityTransfer,
-  TransferEntities
+  TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -23,23 +23,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(2),
     '& .MuiAccordionDetails-root': {
-      padding: 0
-    }
+      padding: 0,
+    },
   },
   table: {
-    width: '100%'
+    width: '100%',
   },
   cellContents: {
-    paddingLeft: '1rem'
+    paddingLeft: '1rem',
   },
   actionCell: {
     padding: 0,
-    paddingRight: '0 !important'
+    paddingRight: '0 !important',
   },
   link: {
     ...theme.applyLinkStyles,
-    fontSize: '0.875rem'
-  }
+    fontSize: '0.875rem',
+  },
+  paginationFooter: {
+    backgroundColor: theme.cmrBGColors.bgApp,
+  },
 }));
 
 interface Props {
@@ -56,7 +59,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const TransfersTable: React.FC<CombinedProps> = props => {
+export const TransfersTable: React.FC<CombinedProps> = (props) => {
   const {
     transferType,
     isLoading,
@@ -66,7 +69,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     page,
     pageSize,
     handlePageChange,
-    handlePageSizeChange
+    handlePageSizeChange,
   } = props;
 
   const classes = useStyles();
@@ -179,17 +182,19 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
               </TableContentWrapper>
             </TableBody>
           </Table>
+          {results > pageSize ? (
+            <div className={classes.paginationFooter}>
+              <PaginationFooter
+                count={results}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+                eventCategory="Entity Transfer Table"
+              />
+            </div>
+          ) : null}
         </Accordion>
-        {results > pageSize ? (
-          <PaginationFooter
-            count={results}
-            handlePageChange={handlePageChange}
-            handleSizeChange={handlePageSizeChange}
-            page={page}
-            pageSize={pageSize}
-            eventCategory="Entity Transfer Table"
-          />
-        ) : null}
         {transferTypeIsPending ? (
           // Only Pending Transfers can be canceled.
           <ConfirmTransferCancelDialog
