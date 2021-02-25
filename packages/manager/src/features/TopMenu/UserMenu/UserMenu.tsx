@@ -16,6 +16,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import useFlags from 'src/hooks/useFlags';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
@@ -239,6 +240,7 @@ const profileLinks: MenuLink[] = [
 
 export const UserMenu: React.FC<{}> = () => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
   const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
@@ -269,7 +271,7 @@ export const UserMenu: React.FC<{}> = () => {
       {
         display: 'Transfers',
         href: '/account/entity-transfers',
-        hide: _isRestrictedUser
+        hide: _isRestrictedUser || !flags.entityTransfers
       },
       // Restricted users with read_write account access can view Settings.
       {
@@ -278,7 +280,7 @@ export const UserMenu: React.FC<{}> = () => {
         hide: !hasFullAccountAccess
       }
     ],
-    [hasFullAccountAccess, _isRestrictedUser]
+    [hasFullAccountAccess, _isRestrictedUser, flags]
   );
 
   const userEmail = profile.data?.email;

@@ -1,4 +1,6 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import { Formik } from 'formik';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Region } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import { Formik } from 'formik';
@@ -41,7 +43,7 @@ import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
-import LinodeSelect from '../VolumeDrawer/LinodeSelect';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 
@@ -87,7 +89,7 @@ type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { onSuccess, createVolume, disabled, origin, history } = props;
+  const { onSuccess, createVolume, disabled, origin, history, regions } = props;
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
 
@@ -99,6 +101,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const configErrorMessage = configsError?.read
     ? 'Unable to load Configs for this Linode.' // More specific than the API error message
     : undefined;
+
+  const regionsWithBlockStorage = regions
+    .filter((thisRegion) => thisRegion.capabilities.includes('Block Storage'))
+    .map((thisRegion) => thisRegion.id);
 
   return (
     <Formik
@@ -255,6 +261,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     disabled={disabled}
                   />
                   <RegionSelect
+                    isClearable
                     errorText={touched.region ? errors.region : undefined}
                     regions={props.regions
                       .filter((eachRegion) =>
@@ -269,7 +276,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     name="region"
                     onBlur={handleBlur}
                     selectedID={values.region}
-                    handleSelection={(value) => setFieldValue('region', value)}
+                    handleSelection={(value) => {
+                      setFieldValue('region', value);
+                      setFieldValue('linode_id', initialValueDefaultId);
+                    }}
                     disabled={disabled}
                     styles={{
                       /** altering styles for mobile-view */
@@ -284,15 +294,19 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     regions supporting block storage are displayed.
                   </FormHelperText>
                   <LinodeSelect
-                    error={linodeError || configErrorMessage}
+                    linodeError={linodeError || configErrorMessage}
                     name="linodeId"
                     onBlur={handleBlur}
-                    onChange={(id: number) => {
-                      setFieldValue('linode_id', id);
-                      setLinodeId(id);
+                    handleChange={(linode: Linode) => {
+                      setFieldValue('linode_id', linode.id);
+                      setFieldValue('region', linode.region);
+                      setLinodeId(linode.id);
                     }}
+                    selectedLinode={values.linode_id}
                     region={values.region}
-                    shouldOnlyDisplayRegionsWithBlockStorage={true}
+                    filterCondition={(linode: Linode) =>
+                      regionsWithBlockStorage.includes(linode.region)
+                    }
                     disabled={disabled}
                   />
                   <ConfigSelect
@@ -355,7 +369,7 @@ interface FormState {
 const initialValues: FormState = {
   label: '',
   size: 20,
-  region: 'none',
+  region: '',
   linode_id: initialValueDefaultId,
   config_id: initialValueDefaultId,
   tags: [],

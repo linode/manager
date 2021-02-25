@@ -17,7 +17,7 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { nodeBalancerId, history, toggleDialog, label } = props;
 
@@ -44,7 +44,7 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {!matchesSmDown &&
+      {!matchesMdDown &&
         actions.map(action => {
           return (
             <InlineMenuAction
@@ -54,7 +54,7 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
             />
           );
         })}
-      <Hidden mdUp>
+      <Hidden lgUp>
         <ActionMenu
           actionsList={actions}
           ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}

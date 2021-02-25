@@ -16,7 +16,7 @@ import withManaged, {
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import usePolling from 'src/hooks/usePolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import DashboardCard from '../DashboardCard_CMR';
+import DashboardCard from './DashboardCard';
 import ManagedChartPanel from './ManagedChartPanel';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';

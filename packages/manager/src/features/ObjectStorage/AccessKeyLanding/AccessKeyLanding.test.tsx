@@ -16,7 +16,7 @@ const props = {
     helperText: '',
     labelCell: '',
     createdCell: '',
-    confirmationDialog: ''
+    confirmationDialog: '',
   },
   isRestrictedUser: false,
   object_storage: 'active' as AccountSettings['object_storage'],
@@ -25,14 +25,14 @@ const props = {
   openAccessDrawer: jest.fn(),
   closeAccessDrawer: jest.fn(),
   mode: 'creating' as any,
-  ...pageyProps
+  ...pageyProps,
 };
 
 describe('AccessKeyLanding', () => {
   const component = mount(
     <StaticRouter context={{}}>
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <AccessKeyLanding {...props} />
         </LinodeThemeWrapper>
       </Provider>
