@@ -9,7 +9,6 @@ import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
@@ -51,6 +50,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   selectedID: string | null;
   label?: string;
   helperText?: string;
+  isClearable?: boolean;
 }
 
 export const flags = {
@@ -169,6 +169,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
     label,
     disabled,
     handleSelection,
+    isClearable,
     helperText,
     regions,
     selectedID,
@@ -177,13 +178,17 @@ const SelectRegionPanel: React.FC<Props> = props => {
   } = props;
 
   const onChange = React.useCallback(
-    (selection: RegionItem) => {
+    (selection: RegionItem | null) => {
+      if (selection === null) {
+        handleSelection('');
+        return;
+      }
       if (selection.disabledMessage) {
         // React Select's disabled state should prevent anything
         // from firing, this is basic paranoia.
         return;
       }
-      handleSelection(selection.value);
+      handleSelection(selection?.value);
     },
     [handleSelection]
   );
@@ -195,7 +200,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
   return (
     <div className={classes.root}>
       <Select
-        isClearable={false}
+        isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
         value={getSelectedRegionById(selectedID || '', options)}
         label={label ?? 'Region'}
         disabled={disabled}
@@ -216,4 +221,4 @@ const SelectRegionPanel: React.FC<Props> = props => {
   );
 };
 
-export default compose<Props, Props>(React.memo)(SelectRegionPanel);
+export default React.memo(SelectRegionPanel);
