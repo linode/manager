@@ -9,28 +9,29 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import InformationDialog from 'src/components/InformationDialog';
+import { parseAPIDate } from 'src/utilities/date';
 import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingBottom: theme.spacing()
+    paddingBottom: theme.spacing(),
   },
   tokenInput: {
-    maxWidth: '100%'
+    maxWidth: '100%',
   },
   copyButton: {
     marginTop: theme.spacing(2),
     maxWidth: 220,
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
   },
   text: {
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   inputSection: {
     display: 'flex',
     flexFlow: 'column nowrap',
-    paddingBottom: theme.spacing(1)
-  }
+    paddingBottom: theme.spacing(1),
+  },
 }));
 
 interface Props {
@@ -39,15 +40,18 @@ interface Props {
   onClose: () => void;
 }
 
-export const CreateTransferSuccessDialog: React.FC<Props> = props => {
+export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
   const { isOpen, onClose, transfer } = props;
   const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
   const classes = useStyles();
 
   const handleCopy = (idx: number, text: string) => {
     copy(text);
-    setTooltipOpen(state => update(idx, true, state));
-    setTimeout(() => setTooltipOpen(state => update(idx, false, state)), 1000);
+    setTooltipOpen((state) => update(idx, true, state));
+    setTimeout(
+      () => setTooltipOpen((state) => update(idx, false, state)),
+      1000
+    );
   };
 
   if (!transfer) {
@@ -61,9 +65,9 @@ export const CreateTransferSuccessDialog: React.FC<Props> = props => {
    2) Navigate to the Transfers tab on your Account page.\t
    3) Copy and paste the token into the Enter Transfer Token field to view\n\tdetails and accept the transfer.\n
    If you do not have an account with Linode you will need to create one.
-   This token will expire at ${DateTime.fromISO(transfer.expiry)
-     .toUTC()
-     .toLocaleString(DateTime.DATETIME_FULL)}.`;
+   This token will expire at ${parseAPIDate(transfer.expiry).toLocaleString(
+     DateTime.DATETIME_FULL
+   )}.`;
 
   return (
     <InformationDialog
