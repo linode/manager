@@ -36,14 +36,17 @@ import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
   CreateLinodeConfig,
   UpdateLinodeConfig,
   withLinodeDetailContext,
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
+import {
+  handleFieldErrors,
+  handleGeneralErrors,
+} from 'src/utilities/formikErrorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -144,17 +147,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     maxMemory,
     readOnly,
   } = props;
+
   const classes = useStyles();
   const [counter, setCounter] = React.useState(1);
-  const [submitting, setSubmitting] = React.useState(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
-  // state: State = {
-  //   loading: false,
-  //   counter: 1,
-  //   kernels: [],
-  //   fields: LinodeConfigDialog.defaultFieldsValues(),
-  //   submitting: false,
-  // };
 
   const { values, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
@@ -194,27 +189,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const onSubmit = (values: EditableFields) => {
     const { linodeConfigId, createLinodeConfig, updateLinodeConfig } = props;
 
-    /**
-     * This is client-side validation to patch an API bug.
-     * Currently, POST requests don't verify that the selected root device
-     * has a valid device attached to it. PUT requests do this, however,
-     * leading to a discrepancy. If root_device is sda and sda is null,
-     * we should head off that error before submitting the request.
-     * @todo remove once the API has fixed this behavior.
-     */
-
-    const isValid = validateConfigData(values);
-    if (!isValid) {
-      setErrors([
-        {
-          reason: 'You must select a valid Disk or Volume as your root device.',
-          field: 'root_device',
-        },
-      ]);
-      return;
-    }
-
-    setSubmitting(true);
+    formik.setSubmitting(true);
 
     const configData = convertStateToData(values);
 
@@ -222,46 +197,45 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     if (linodeConfigId) {
       return updateLinodeConfig(linodeConfigId, configData)
         .then((_) => {
-          setSubmitting(false);
+          formik.setSubmitting(false);
           onClose();
         })
         .catch((error) => {
-          setErrors(
-            getAPIErrorOrDefault(
-              error,
-              'Unable to update config. Please try again.'
-            )
+          const mapErrorToStatus = (generalError: string) =>
+            formik.setStatus({ generalError });
+          formik.setSubmitting(false);
+          handleFieldErrors(formik.setErrors, error);
+          handleGeneralErrors(
+            mapErrorToStatus,
+            error,
+            'An unexpected error occurred.'
           );
-          setSubmitting(false);
+          scrollErrorIntoView();
         });
     }
 
     /** Creating */
     return createLinodeConfig(configData)
       .then((_) => {
-        setSubmitting(false);
+        formik.setSubmitting(false);
         onClose();
       })
       .catch((error) => {
-        setErrors(
-          getAPIErrorOrDefault(
-            error,
-            'Unable to create config. Please try again.'
-          )
+        const mapErrorToStatus = (generalError: string) =>
+          formik.setStatus({ generalError });
+        formik.setSubmitting(false);
+        handleFieldErrors(formik.setErrors, error);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          error,
+          'An unexpected error occurred.'
         );
-        setSubmitting(false);
+        scrollErrorIntoView();
       });
   };
 
   React.useEffect(() => {
     if (open) {
-      /** Reset the form to the default create state. */
-      // this.setState({
-      //   fields: LinodeConfigDialog.defaultFieldsValues(),
-      // });
-
-      setErrors(undefined);
-
       /**
        * If config is defined, we're editing. Set the state
        * to the values of the config.
@@ -286,26 +260,16 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
         });
+      } else {
+        // Create mode; make sure loading/error states are cleared.
+        formik.resetForm();
       }
     }
   }, [open, config]);
 
   const isLoading = props.kernelsLoading;
 
-  const errorFor = getAPIErrorsFor(
-    {
-      label: 'label',
-      kernel: 'kernel',
-      comments: 'comments',
-      memory_limit: 'memory limit',
-      run_level: 'run level',
-      virt_mode: 'virtualization mode',
-      root_device: 'root device',
-    },
-    errors
-  );
-
-  const generalError = errorFor('none');
+  const generalError = formik.status?.generalError;
 
   const availableDevices = {
     disks: props.disks,
@@ -326,7 +290,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const handleDevicesChanges = React.useCallback(
     (slot: string, value: string) => {
-      formik.setFieldValue(`devices[${slot}]`, slot);
+      formik.setFieldValue(`devices[${slot}]`, value);
     },
     []
   );
@@ -340,7 +304,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       fullWidth
     >
       <Grid container direction="row">
-        <DialogContent loading={isLoading} errors={errors}>
+        <DialogContent loading={isLoading} errors={props.kernelError}>
           <React.Fragment>
             {generalError && (
               <Notice
@@ -354,8 +318,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               xs={12}
               className={classes.section}
               updateFor={[
-                errorFor('label'),
-                errorFor('comments'),
+                formik.errors.label,
+                formik.errors.comments,
                 values.label,
                 values.comments,
                 formik.handleChange,
@@ -369,7 +333,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 required
                 value={values.label}
                 onChange={formik.handleChange}
-                errorText={errorFor('label')}
+                errorText={formik.errors.label}
                 errorGroup="linode-config-dialog"
                 disabled={readOnly}
               />
@@ -381,7 +345,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 onChange={formik.handleChange}
                 multiline={true}
                 rows={3}
-                errorText={errorFor('comments')}
+                errorText={formik.errors.comments}
                 errorGroup="linode-config-dialog"
                 disabled={readOnly}
               />
@@ -443,10 +407,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 values.kernel,
                 values.setMemoryLimit,
                 kernels,
-                errorFor('kernel'),
+                formik.errors.kernel,
                 values.run_level,
                 values.memory_limit,
-                errorFor('memory_limit'),
+                formik.errors.memory_limit,
                 classes,
               ]}
             >
@@ -457,7 +421,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   selectedKernel={values.kernel}
                   onChange={handleChangeKernel}
                   readOnly={readOnly}
-                  errorText={errorFor('kernel')}
+                  errorText={formik.errors.kernel}
                 />
               )}
 
@@ -546,7 +510,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   max={maxMemory}
                   onChange={formik.handleChange}
                   helperText={`Max: ${maxMemory} MB`}
-                  errorText={errorFor('memory_limit')}
+                  errorText={formik.errors.memory_limit}
                   disabled={readOnly}
                 />
               )}
@@ -596,7 +560,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     onChange={formik.handleChange}
                     name="root_device"
                     id="root_device"
-                    errorText={errorFor('root_device')}
+                    errorText={formik.errors.root_device}
                     placeholder="None"
                     disabled={readOnly}
                     isClearable={false}
@@ -609,7 +573,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     onChange={formik.handleChange}
                     inputProps={{ name: 'root_device', id: 'root_device' }}
                     fullWidth
-                    errorText={errorFor('root_device')}
+                    errorText={formik.errors.root_device}
                     errorGroup="linode-config-dialog"
                     disabled={readOnly}
                   />
@@ -724,7 +688,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   onClick={formik.submitForm}
                   buttonType="primary"
                   disabled={readOnly}
-                  loading={submitting}
+                  loading={formik.isSubmitting}
                 >
                   Submit
                 </Button>
@@ -746,85 +710,12 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
 interface ConfigFormProps {
   loading: boolean;
-  errors: APIError[] | undefined;
+  errors: APIError[] | null;
   children: JSX.Element;
 }
 
 const DialogContent: React.FC<ConfigFormProps> = (props) => {
   const { loading, errors } = props;
-
-  /**
-   * this is not responsible for setting the memory limits.
-   * This is instead only responsible for indicating that "yes I would
-   * like the option to set a memory limit to be visible."
-   */
-  // const handleToggleMemoryLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const limit = e.target.value as 'no_limit' | 'set_limit';
-  //   this.setState({ fields: { ...this.state.fields, setMemoryLimit: limit } });
-  // };
-
-  // /** Helper to update a slice of state.  */
-  // const updateField = (field: Partial<EditableFields>) =>
-  //   this.setState({ fields: { ...this.state.fields, ...field } });
-
-  // const handleAuthConfigureNetworkHelper = (e: any, result: boolean) =>
-  //   updateField({
-  //     helpers: { ...this.state.fields.helpers, network: result },
-  //   });
-
-  // const handleToggleAutoMountHelper = (e: any, result: boolean) =>
-  //   updateField({
-  //     helpers: { ...this.state.fields.helpers, devtmpfs_automount: result },
-  //   });
-
-  // const handleToggleModulesDepHelper = (e: any, result: boolean) =>
-  //   updateField({
-  //     helpers: { ...this.state.fields.helpers, modules_dep: result },
-  //   });
-
-  // const handleToggleUpdateDBHelper = (e: any, result: boolean) =>
-  //   updateField({
-  //     helpers: { ...this.state.fields.helpers, updatedb_disabled: result },
-  //   });
-
-  // const handleToggleDistroHelper = (e: any, result: boolean) =>
-  //   updateField({
-  //     helpers: { ...this.state.fields.helpers, distro: result },
-  //   });
-
-  // const handleRootDeviceChange = (e: Item<string>) =>
-  //   updateField({ root_device: e.value || '' });
-
-  // const handleRootDeviceChangeTextfield = (e: React.ChangeEvent<HTMLInputElement>) =>
-  //   updateField({ root_device: e.target.value || '' });
-
-  // const handleUseCustomRootChange = (e: any, useCustomRoot: boolean) =>
-  //   updateField({ useCustomRoot });
-
-  // const handleDevicesChanges = (slot: string, value: string) =>
-  //   updateField({
-  //     devices: { ...this.state.fields.devices, [slot]: value },
-  //   });
-
-  // const handleMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-  //   updateField({ memory_limit: e.target.valueAsNumber || 0 });
-
-  // const handleChangeRunLevel = (
-  //   e: any,
-  //   run_level: 'binbash' | 'default' | 'single'
-  // ) => updateField({ run_level });
-
-  // const handleChangeVirtMode = (e: any, virt_mode: 'fullvirt' | 'paravirt') =>
-  //   updateField({ virt_mode });
-
-  // const handleChangeComments = (e: React.ChangeEvent<HTMLInputElement>) =>
-  //   updateField({ comments: e.target.value || '' });
-
-  // const handleChangeKernel = (e: Item<string>) =>
-  //   updateField({ kernel: e.value });
-
-  // const handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
-  //   updateField({ label: e.target.value || '' });
 
   if (loading) {
     return <CircleProgress />;
@@ -848,17 +739,6 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sdg',
     '/dev/sdh',
   ].includes(value) === false;
-
-const validateConfigData = (configData: EditableFields) => {
-  /**
-   * Whatever disk is selected for root_disk can't have a value of null ('none'
-   * in our form state).
-   *
-   */
-  const rootDevice = pathOr('none', [0], configData.root_device.match(/sd./));
-  const selectedDisk = pathOr('none', ['devices', rootDevice], configData);
-  return selectedDisk !== 'none';
-};
 
 interface StateProps {
   disks: ExtendedDisk[];
