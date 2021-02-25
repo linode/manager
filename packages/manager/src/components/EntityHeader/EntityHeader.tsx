@@ -4,7 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
-import DocumentationButton from '../CMR_DocumentationButton';
+import DocumentationButton from '../DocumentationButton';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
@@ -27,27 +27,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: 0,
-    width: '100%'
+    width: '100%',
   },
   landing: {
     marginBottom: 0,
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
-      padding: 0
-    }
+      padding: 0,
+    },
   },
   docs: {
-    marginRight: theme.spacing()
+    marginRight: theme.spacing(),
   },
   actions: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   details: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     margin: 0,
     [theme.breakpoints.down('xs')]: {
-      flexWrap: 'wrap'
-    }
+      flexWrap: 'wrap',
+    },
   },
   breadcrumbOuter: {
     display: 'flex',
@@ -57,25 +57,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '4px 16px',
     paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
-      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
-    }
+      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    },
   },
   breadCrumbDetail: {
-    padding: 0
+    padding: 0,
   },
   breadCrumbSecondary: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   label: {
-    marginLeft: 15
+    marginLeft: 15,
   },
   breadCrumbDetailLanding: {
     margin: 0,
     padding: 0,
     paddingLeft: theme.spacing(),
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   contentOuter: {
     display: 'flex',
@@ -87,21 +87,21 @@ const useStyles = makeStyles((theme: Theme) => ({
       ...theme.applyStatusPillStyles,
       height: 30,
       fontSize: '.875rem',
-      letterSpacing: '.5px'
-    }
+      letterSpacing: '.5px',
+    },
   },
   actionsWrapper: {
     [theme.breakpoints.only('sm')]: {
-      marginRight: 0
+      marginRight: 0,
     },
     [theme.breakpoints.down('xs')]: {
-      marginBottom: 0
-    }
-  }
+      marginBottom: 0,
+    },
+  },
 }));
 
 // @todo: Refactor this entire component now that we have less variants.
-export const EntityHeader: React.FC<HeaderProps> = props => {
+export const EntityHeader: React.FC<HeaderProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -117,7 +117,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
     isDetailLanding,
     headerOnly,
     removeCrumbX,
-    breadcrumbProps
+    breadcrumbProps,
   } = props;
 
   const labelTitle = title.toString();
@@ -168,7 +168,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             [classes.breadcrumbOuter]: isDetailLanding,
             [classes.breadCrumbDetail]: Boolean(parentLink),
             [classes.breadCrumbSecondary]: Boolean(isSecondary),
-            [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding)
+            [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding),
           })}
         >
           {isSecondary ? (
@@ -180,7 +180,7 @@ export const EntityHeader: React.FC<HeaderProps> = props => {
             <Grid
               className={classnames({
                 [classes.contentOuter]: true,
-                [bodyClassName ?? '']: Boolean(bodyClassName)
+                [bodyClassName ?? '']: Boolean(bodyClassName),
               })}
               item
             >

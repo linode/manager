@@ -1,6 +1,6 @@
 import {
   createKubernetesCluster,
-  PoolNodeRequest
+  PoolNodeRequest,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
@@ -11,7 +11,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -23,13 +23,12 @@ import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
-import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 import KubeCheckoutBar from '../KubeCheckoutBar';
-
 import NodePoolPanel from './NodePoolPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexBasis: '100%',
       [theme.breakpoints.up('lg')]: {
         maxWidth: '78.8%',
-        flexBasis: '78.8%'
-      }
+        flexBasis: '78.8%',
+      },
     },
     '& .mlSidebar': {
       position: 'static',
@@ -50,37 +49,37 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.up('lg')]: {
         position: 'sticky',
         maxWidth: '21.2%',
-        flexBasis: '21.2%'
-      }
-    }
+        flexBasis: '21.2%',
+      },
+    },
   },
   main: {},
   sidebar: {
     background: theme.color.white,
     padding: `0px 0px ${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
     [theme.breakpoints.up('lg')]: {
-      background: 'none'
-    }
+      background: 'none',
+    },
   },
   inner: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
     '& > div': {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     '& label': {
       color: theme.color.headline,
       fontWeight: 600,
       lineHeight: '1.33rem',
       letterSpacing: '0.25px',
-      margin: 0
-    }
+      margin: 0,
+    },
   },
   inputWidth: {
     maxWidth: 440,
     '& .react-select__menu': {
-      maxWidth: 440
-    }
+      maxWidth: 440,
+    },
   },
   regionSubtitle: {
     '& p': {
@@ -88,15 +87,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       lineHeight: '1.43rem',
       margin: 0,
       marginBottom: 4,
-      maxWidth: '100%'
+      maxWidth: '100%',
     },
     '& .MuiInput-root': {
-      maxWidth: 440
+      maxWidth: 440,
     },
     '& .react-select__menu': {
-      maxWidth: 440
-    }
-  }
+      maxWidth: 440,
+    },
+  },
 }));
 
 type CombinedProps = RouteComponentProps<{}> &
@@ -121,14 +120,14 @@ const regionHelperText = (
   </React.Fragment>
 );
 
-export const CreateCluster: React.FC<CombinedProps> = props => {
+export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     regionsData,
     typesData: allTypes,
     typesLoading,
     typesError,
-    regionsError
+    regionsError,
   } = props;
 
   // Only want to use current types here.
@@ -137,7 +136,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   // Only include regions that have LKE capability
   const filteredRegions = React.useMemo(() => {
     return regionsData
-      ? regionsData.filter(thisRegion =>
+      ? regionsData.filter((thisRegion) =>
           thisRegion.capabilities.includes('Kubernetes')
         )
       : [];
@@ -151,11 +150,11 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const {
     data: versionData,
-    isError: versionLoadError
+    isError: versionLoadError,
   } = useKubernetesVersionQuery();
-  const versions = (versionData ?? []).map(thisVersion => ({
+  const versions = (versionData ?? []).map((thisVersion) => ({
     value: thisVersion.id,
-    label: thisVersion.id
+    label: thisVersion.id,
   }));
 
   React.useEffect(() => {
@@ -166,7 +165,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
 
   const createCluster = () => {
     const {
-      history: { push }
+      history: { push },
     } = props;
 
     setErrors(undefined);
@@ -185,12 +184,12 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
       region: selectedRegion,
       node_pools,
       label,
-      k8s_version
+      k8s_version,
     };
 
     createKubernetesCluster(payload)
-      .then(cluster => push(`/kubernetes/clusters/${cluster.id}`))
-      .catch(err => {
+      .then((cluster) => push(`/kubernetes/clusters/${cluster.id}`))
+      .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
         setSubmitting(false);
         scrollErrorIntoView();
@@ -208,7 +207,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
         updatedPool.type,
         updatedPool.count,
         props.typesData || []
-      )
+      ),
     };
     setNodePools(update(poolIdx, updatedPoolWithPrice, nodePools));
   };
@@ -295,7 +294,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                     filteredRegions.length > 1
                       ? {
                           helperText: regionHelperText,
-                          helperTextPosition: 'top'
+                          helperTextPosition: 'top',
                         }
                       : undefined
                   }
@@ -333,7 +332,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
                   typesData,
                   errorMap,
                   typesLoading,
-                  classes
+                  classes,
                 ]}
                 isOnCreate
               />
@@ -360,7 +359,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
             updatePool,
             removePool,
             createCluster,
-            classes
+            classes,
           ]}
         />
       </Grid>
@@ -369,9 +368,9 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
 };
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })), // @todo DRY this up
+  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })), // @todo DRY this up
   regionsLoading: loading,
-  regionsError: error
+  regionsError: error,
 }));
 
 const enhanced = compose<CombinedProps, {}>(withRouter, withRegions, withTypes);
