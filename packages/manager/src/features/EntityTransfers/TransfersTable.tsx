@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiAccordionDetails-root': {
       padding: 0,
     },
+    '& .MuiAccordion-root table': {
+      border: 'none',
+    },
   },
   table: {
     width: '100%',
@@ -39,9 +42,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     ...theme.applyLinkStyles,
     fontSize: '0.875rem',
-  },
-  paginationFooter: {
-    backgroundColor: theme.cmrBGColors.bgApp,
   },
 }));
 
@@ -183,16 +183,14 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
             </TableBody>
           </Table>
           {results > pageSize ? (
-            <div className={classes.paginationFooter}>
-              <PaginationFooter
-                count={results}
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                page={page}
-                pageSize={pageSize}
-                eventCategory="Entity Transfer Table"
-              />
-            </div>
+            <PaginationFooter
+              count={results}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+              eventCategory="Entity Transfer Table"
+            />
           ) : null}
         </Accordion>
         {transferTypeIsPending ? (
