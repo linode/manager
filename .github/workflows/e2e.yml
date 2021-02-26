@@ -12,7 +12,7 @@ on:
     paths:
     - '**/cypress/**'
     - '**/e2e.yml'
-  
+
 jobs:
   run-cypress-e2e:
     runs-on: ubuntu-latest
@@ -66,3 +66,4 @@ jobs:
           headless: true
           record: true
           parallel: true
+          

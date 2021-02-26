@@ -3,7 +3,7 @@ import { createLinode, deleteLinodeById } from '../support/api/linodes';
 import {
   createClient,
   deleteClientById,
-  makeClientLabel
+  makeClientLabel,
 } from '../support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
@@ -14,18 +14,16 @@ describe('longview', () => {
     const linodePassword = strings.randomPass();
     const clientLabel = makeClientLabel();
     cy.visitWithLogin('/dashboard');
-    createLinode({ root_pass: linodePassword }).then(linode => {
-      createClient(undefined, clientLabel).then(client => {
+    createLinode({ root_pass: linodePassword }).then((linode) => {
+      createClient(undefined, clientLabel).then((client) => {
         const linodeIp = linode['ipv4'][0];
         const clientLabel = client.label;
         cy.visit('/longview');
         containsVisible(clientLabel);
-        cy.findByText('Waiting for data...')
-          .first()
-          .should('be.visible');
+        cy.contains('Waiting for data...').first().should('be.visible');
         cy.get('code')
           .first()
-          .then($code => {
+          .then(($code) => {
             const curlCommand = $code.text();
             cy.exec('./cypress/support/longview.sh', {
               failOnNonZeroExit: false,
@@ -33,9 +31,9 @@ describe('longview', () => {
               env: {
                 LINODEIP: `${linodeIp}`,
                 LINODEPASSWORD: `${linodePassword}`,
-                CURLCOMMAND: `${curlCommand}`
-              }
-            }).then(out => {
+                CURLCOMMAND: `${curlCommand}`,
+              },
+            }).then((out) => {
               console.log(out.stdout);
               console.log(out.stderr);
             });
@@ -44,7 +42,7 @@ describe('longview', () => {
               if (
                 cy
                   .contains('Waiting for data...', {
-                    timeout: 300000
+                    timeout: 300000,
                   })
                   .should('not.exist')
               ) {
