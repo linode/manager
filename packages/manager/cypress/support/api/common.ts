@@ -17,13 +17,14 @@ export const apiCheckErrors = (resp, failOnError = true) => {
   return errs;
 };
 
-export const getAll = (path: string) => {
+export const getAll = (path: string, headers = {}) => {
   return cy.request({
     method: 'GET',
     url: `${apiroot}${path}`,
+    headers,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -32,8 +33,8 @@ export const getAllBeta = (path: string) => {
     method: 'GET',
     url: `${apirootBeta}${path}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -42,8 +43,8 @@ export const deleteById = (path: string, id: number) => {
     method: 'DELETE',
     url: `${apiroot}${path}/${id}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -52,8 +53,8 @@ export const deleteByIdBeta = (path: string, id: number) => {
     method: 'DELETE',
     url: `${apirootBeta}${path}/${id}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -61,7 +62,7 @@ export const testTag = 'cy-test';
 export const testNamePrefix = 'cy-test-';
 
 // Images do not have tags
-export const isTestEntity = entity =>
+export const isTestEntity = (entity) =>
   entity.tags?.includes(testTag) ||
   entity.label?.startsWith(testNamePrefix) ||
   entity.summary?.includes(testTag);
