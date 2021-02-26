@@ -4,7 +4,7 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
 import { CreateTransferSchema } from './transfers.schema';
