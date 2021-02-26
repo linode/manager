@@ -14,18 +14,16 @@ describe('longview', () => {
     const linodePassword = strings.randomPass();
     const clientLabel = makeClientLabel();
     cy.visitWithLogin('/dashboard');
-    createLinode({ root_pass: linodePassword }).then(linode => {
-      createClient(undefined, clientLabel).then(client => {
+    createLinode({ root_pass: linodePassword }).then((linode) => {
+      createClient(undefined, clientLabel).then((client) => {
         const linodeIp = linode['ipv4'][0];
         const clientLabel = client.label;
         cy.visit('/longview');
         containsVisible(clientLabel);
-        cy.findByText('Waiting for data...')
-          .first()
-          .should('be.visible');
+        cy.contains('Waiting for data...').first().should('be.visible');
         cy.get('code')
           .first()
-          .then($code => {
+          .then(($code) => {
             const curlCommand = $code.text();
             cy.exec('./cypress/support/longview.sh', {
               failOnNonZeroExit: false,
@@ -35,7 +33,7 @@ describe('longview', () => {
                 LINODEPASSWORD: `${linodePassword}`,
                 CURLCOMMAND: `${curlCommand}`,
               },
-            }).then(out => {
+            }).then((out) => {
               console.log(out.stdout);
               console.log(out.stderr);
             });

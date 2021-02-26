@@ -17,10 +17,11 @@ export const apiCheckErrors = (resp, failOnError = true) => {
   return errs;
 };
 
-export const getAll = (path: string) => {
+export const getAll = (path: string, headers = {}) => {
   return cy.request({
     method: 'GET',
     url: `${apiroot}${path}`,
+    headers,
     auth: {
       bearer: oauthtoken,
     },
@@ -61,7 +62,7 @@ export const testTag = 'cy-test';
 export const testNamePrefix = 'cy-test-';
 
 // Images do not have tags
-export const isTestEntity = entity =>
+export const isTestEntity = (entity) =>
   entity.tags?.includes(testTag) ||
   entity.label?.startsWith(testNamePrefix) ||
   entity.summary?.includes(testTag);
