@@ -10,7 +10,7 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -22,15 +22,15 @@ export const useStyles = makeStyles((theme: Theme) => ({
     padding: `0`,
     textAlign: 'center',
     [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing(2)}px 0 0`
-    }
+      padding: `${theme.spacing(2)}px 0 0`,
+    },
   },
   icon: {
     '& svg': {
       display: 'flex',
       width: 56,
-      height: 56
-    }
+      height: 56,
+    },
   },
   error: {
     position: 'relative',
@@ -44,15 +44,15 @@ export const useStyles = makeStyles((theme: Theme) => ({
       left: -30,
       backgroundColor: theme.color.red,
       height: 3,
-      width: 16
+      width: 16,
     },
     '&:last-of-type': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
   text: {
-    maxWidth: 250
-  }
+    maxWidth: 250,
+  },
 }));
 
 export interface Props {
@@ -61,7 +61,7 @@ export interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const MonitorStatus: React.FC<CombinedProps> = props => {
+export const MonitorStatus: React.FC<CombinedProps> = (props) => {
   const { monitors } = props;
   const classes = useStyles();
 

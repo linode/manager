@@ -28,7 +28,7 @@ it('renders without crashing.', () => {
               pathname: '',
               hash: '',
               search: '',
-              state: {}
+              state: {},
             }}
             userId={123456}
             documentation={[]}
@@ -52,16 +52,16 @@ it('renders without crashing.', () => {
 const errors: (APIError[] | Error)[] = [
   [
     {
-      reason: 'invalid OAuTh token'
-    }
+      reason: 'invalid OAuTh token',
+    },
   ],
   new Error('hello world'),
   [
     {
-      reason: 'Invalid Something else'
-    }
+      reason: 'Invalid Something else',
+    },
   ],
-  new Error('hello world again')
+  new Error('hello world again'),
 ];
 
 it('isOAuthError returns true for errors that have oauth errors in them', () => {

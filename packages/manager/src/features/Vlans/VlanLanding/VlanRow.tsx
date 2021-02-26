@@ -16,23 +16,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     lineHeight: '1.14rem',
     '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   linodesWrapper: {
-    padding: '8px 0'
+    padding: '8px 0',
   },
   labelWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    whiteSpace: 'nowrap'
-  }
+    whiteSpace: 'nowrap',
+  },
 }));
 
 export type CombinedProps = VLAN & ActionHandlers;
 
-export const VlanRow: React.FC<CombinedProps> = props => {
+export const VlanRow: React.FC<CombinedProps> = (props) => {
   const {
     id,
     description,
@@ -69,7 +69,7 @@ export const VlanRow: React.FC<CombinedProps> = props => {
     return (
       // eslint-disable-next-line
       <>
-        {vlanLinodes.map(thisVLANLinode => (
+        {vlanLinodes.map((thisVLANLinode) => (
           <Link
             className={classes.link}
             key={thisVLANLinode.id}

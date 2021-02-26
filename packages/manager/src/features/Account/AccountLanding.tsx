@@ -10,20 +10,20 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
 import withProfile, {
-  Props as ProfileActionsProps
+  Props as ProfileActionsProps,
 } from 'src/containers/profile.container';
 import useFlags from 'src/hooks/useFlags';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const Billing = React.lazy(() => import('src/features/Billing'));
-const EntityTransfersLanding = React.lazy(() =>
-  import('src/features/EntityTransfers/EntityTransfersLanding')
+const EntityTransfersLanding = React.lazy(
+  () => import('src/features/EntityTransfers/EntityTransfersLanding')
 );
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 
-const AccountLanding: React.FC<Props> = props => {
+const AccountLanding: React.FC<Props> = (props) => {
   const { location } = props;
   const flags = useFlags();
 
@@ -31,23 +31,23 @@ const AccountLanding: React.FC<Props> = props => {
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Billing Info',
-      routeName: `${props.match.url}/billing`
+      routeName: `${props.match.url}/billing`,
     },
     {
       title: 'Users & Grants',
-      routeName: `${props.match.url}/users`
+      routeName: `${props.match.url}/users`,
     },
     flags.entityTransfers
       ? {
           title: 'Transfers',
           routeName: `${props.match.url}/entity-transfers`,
-          hide: !flags.entityTransfers
+          hide: !flags.entityTransfers,
         }
       : null,
     {
       title: 'Settings',
-      routeName: `${props.match.url}/settings`
-    }
+      routeName: `${props.match.url}/settings`,
+    },
   ].filter(Boolean) as Tab[];
 
   const matches = (p: string) => {
@@ -68,7 +68,7 @@ const AccountLanding: React.FC<Props> = props => {
 
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
@@ -104,6 +104,6 @@ interface StateProps {
 
 export default compose<Props, {}>(
   withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
-    isRestrictedUser: data?.restricted ?? false
+    isRestrictedUser: data?.restricted ?? false,
   }))
 )(AccountLanding);

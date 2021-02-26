@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import Hidden from 'src/components/core/Hidden';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
+export const NodeBalancerActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -26,26 +26,26 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
       title: 'Configurations',
       onClick: () => {
         history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
-      }
+      },
     },
     {
       title: 'Settings',
       onClick: () => {
         history.push(`/nodebalancers/${nodeBalancerId}/settings`);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         toggleDialog(nodeBalancerId, label);
-      }
-    }
+      },
+    },
   ];
 
   return (
     <>
       {!matchesMdDown &&
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

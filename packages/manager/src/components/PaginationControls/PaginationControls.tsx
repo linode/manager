@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import PageButton from 'src/components/PaginationControls/PageButton';
 import { sendPaginationEvent } from 'src/utilities/ga';
@@ -18,13 +18,21 @@ const styles = (theme: Theme) =>
     root: {
       display: 'flex',
       flexWrap: 'wrap',
-      alignItems: 'center'
-    }
+      alignItems: 'center',
+      '& [aria-label="Previous Page"]:disabled': {
+        backgroundColor: theme.cmrBGColors.bgPaper,
+        color: theme.cmrTextColors.tableHeader,
+      },
+      '& [aria-label="Next Page"]:disabled': {
+        backgroundColor: theme.cmrBGColors.bgPaper,
+        color: theme.cmrTextColors.tableHeader,
+      },
+    },
   });
 
 const styled = withStyles(styles);
 
-interface Props {
+export interface Props {
   count: number;
   page: number;
   pageSize: number;
@@ -91,23 +99,25 @@ export class PaginationControls extends React.Component<CombinedProps, {}> {
     return (
       <div className={classes.root}>
         <PageButton
-          data-qa-page-previous
-          onClick={this.handlePreviousPageClick}
           disabled={disableHead}
+          onClick={this.handlePreviousPageClick}
           aria-label="Previous Page"
+          data-qa-page-previous
+          data-testid="previous-page"
         >
           <KeyboardArrowLeft />
         </PageButton>
         <PageNumbers
-          numOfPages={calNumOfPages(count, pageSize)}
-          handlePageClick={this.handlePageClick}
           currentPage={page}
+          handlePageClick={this.handlePageClick}
+          numOfPages={calNumOfPages(count, pageSize)}
         />
         <PageButton
-          data-qa-page-next
-          onClick={this.handleNextPageClick}
           disabled={disableTail}
+          onClick={this.handleNextPageClick}
           aria-label="Next Page"
+          data-qa-page-next
+          data-testid="next-page"
         >
           <KeyboardArrowRight />
         </PageButton>

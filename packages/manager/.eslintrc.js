@@ -5,7 +5,7 @@ module.exports = {
     '.storybook',
     'e2e',
     'public',
-    '!.eslintrc.js'
+    '!.eslintrc.js',
   ],
 
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
@@ -16,14 +16,14 @@ module.exports = {
     // Only ESLint 6.2.0 and later support ES2020.
     ecmaVersion: 2020,
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
-    warnOnUnsupportedTypeScriptVersion: true
+    warnOnUnsupportedTypeScriptVersion: true,
   },
   settings: {
     react: {
-      version: 'detect' // Tells eslint-plugin-react to automatically detect the version of React to use
-    }
+      version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
+    },
   },
   plugins: [
     '@typescript-eslint',
@@ -36,7 +36,7 @@ module.exports = {
     'prettier',
     'testing-library',
     'scanjs-rules',
-    'xss'
+    'xss',
   ],
   extends: [
     // disables a few of the recommended rules from the previous set that we know are already covered by TypeScript's typechecker
@@ -50,7 +50,7 @@ module.exports = {
     'plugin:ramda/recommended',
     'plugin:cypress/recommended',
     'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
-    'plugin:testing-library/react'
+    'plugin:testing-library/react',
   ],
   rules: {
     // prepend `_` to an arg you accept to ignore
@@ -71,7 +71,7 @@ module.exports = {
       'error',
       'rxjs',
       '@material-ui/core',
-      '@material-ui/icons'
+      '@material-ui/icons',
     ],
     'no-console': 'error',
     // allowing to init vars to undefined
@@ -149,14 +149,14 @@ module.exports = {
           sanitizeHTML: {
             htmlInput: true,
             htmlOutput: true,
-            safe: true
-          }
-        }
-      }
-    ]
+            safe: true,
+          },
+        },
+      },
+    ],
   },
   env: {
-    browser: true
+    browser: true,
   },
   overrides: [
     {
@@ -166,15 +166,24 @@ module.exports = {
         'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': [
           'warn',
-          { argsIgnorePattern: '^_' }
-        ]
-      }
+          { argsIgnorePattern: '^_' },
+        ],
+        '@typescript-eslint/ban-types': [
+          'error',
+          {
+            extendDefaults: true,
+            types: {
+              '{}': false,
+            },
+          },
+        ],
+      },
     },
     {
       files: ['*js'],
       rules: {
-        '@typescript-eslint/explicit-function-return-type': 'off'
-      }
+        '@typescript-eslint/explicit-function-return-type': 'off',
+      },
     },
     {
       // node files
@@ -184,15 +193,15 @@ module.exports = {
         '**/*.stories.js',
         'scripts/**',
         'config/**',
-        'cypress/**'
+        'cypress/**',
       ],
       rules: {
         'array-callback-return': 'off',
         'no-unused-expressions': 'off',
         '@typescript-eslint/no-var-requires': 'off',
-        '@typescript-eslint/no-empty-function': 'warn' // possible for tests
+        '@typescript-eslint/no-empty-function': 'warn', // possible for tests
       },
-      env: { node: true }
+      env: { node: true },
     },
     {
       // scrips, config and cypress files can use console
@@ -200,12 +209,12 @@ module.exports = {
       rules: {
         'no-console': 'off',
         // here we get false positives as cypress self handles async/await
-        'testing-library/await-async-query': 'off'
+        'testing-library/await-async-query': 'off',
       },
       env: {
         node: true,
-        'cypress/globals': true
-      }
-    }
-  ]
+        'cypress/globals': true,
+      },
+    },
+  ],
 };

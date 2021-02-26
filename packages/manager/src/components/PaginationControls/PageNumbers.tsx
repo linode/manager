@@ -1,13 +1,11 @@
 import { take } from 'ramda';
 import * as React from 'react';
+import PageButton, {
+  Props as PageButtonProps,
+} from 'src/components/PaginationControls/PageButton';
+import windowIsNarrowerThan from 'src/utilities/breakpoints';
 import { debounce } from 'throttle-debounce';
 import withStyles, { StyleProps } from './PageNumbers.styles';
-
-import windowIsNarrowerThan from 'src/utilities/breakpoints';
-
-import PageButton, {
-  Props as PageButtonProps
-} from 'src/components/PaginationControls/PageButton';
 
 interface Props {
   currentPage: number;
@@ -76,14 +74,14 @@ export class PageNumbers extends React.PureComponent<CombinedProps> {
             )}
           </React.Fragment>
         )}
-        {pageNumbers.map(eachPage => (
+        {pageNumbers.map((eachPage) => (
           <PageNumber
-            number={eachPage}
-            data-qa-page-to={eachPage}
-            data-testid={eachPage}
             key={eachPage}
+            number={eachPage}
             disabled={eachPage === currentPage}
             aria-label={`Page ${eachPage}`}
+            data-qa-page-to={eachPage}
+            data-testid={eachPage}
             {...rest}
           >
             {eachPage}
