@@ -11,7 +11,7 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import MainContentBanner from 'src/components/MainContentBanner';
@@ -20,7 +20,7 @@ import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
-  Props as GlobalErrorProps
+  Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { dbaasContext, useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
@@ -30,7 +30,7 @@ import Footer from 'src/features/Footer';
 import GlobalNotifications from 'src/features/GlobalNotifications';
 import {
   notificationContext,
-  useNotificationContext
+  useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationContext';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: '100vh',
     flexDirection: 'column',
     backgroundColor: theme.cmrBGColors.bgApp,
-    zIndex: 1
+    zIndex: 1,
   },
   wrapper: {
     padding: theme.spacing(3),
@@ -57,8 +57,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
-    }
+      paddingRight: theme.spacing(2),
+    },
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
@@ -68,37 +68,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing(2),
       paddingLeft: 0,
-      paddingRight: 0
+      paddingRight: 0,
     },
     [theme.breakpoints.between('md', 'lg')]: {
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
-    }
+      paddingRight: theme.spacing(2),
+    },
   },
   content: {
     flex: 1,
     transition: 'margin-left .1s linear',
     [theme.breakpoints.up('md')]: {
-      marginLeft: 190
-    }
+      marginLeft: 190,
+    },
   },
   fullWidthContent: {
     marginLeft: 0,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 52
-    }
+      marginLeft: 52,
+    },
   },
   hidden: {
     display: 'none',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   grid: {
     marginLeft: 0,
     marginRight: 0,
     width: '100%',
     [theme.breakpoints.up('lg')]: {
-      height: '100%'
-    }
+      height: '100%',
+    },
   },
   switchWrapper: {
     flex: 1,
@@ -106,31 +106,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     '& > .MuiGrid-container': {
       maxWidth: theme.breakpoints.values.lg,
-      width: '100%'
+      width: '100%',
     },
     '&.mlMain': {
       [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%'
-      }
+        maxWidth: '78.8%',
+      },
     },
     '& .mlSidebar': {
       [theme.breakpoints.up('lg')]: {
-        paddingRight: `0 !important`
-      }
-    }
+        paddingRight: `0 !important`,
+      },
+    },
   },
   logo: {
     '& > g': {
-      fill: theme.color.black
-    }
+      fill: theme.color.black,
+    },
   },
   activationWrapper: {
     padding: theme.spacing(4),
     [theme.breakpoints.up('xl')]: {
       width: '50%',
-      margin: '0 auto'
-    }
-  }
+      margin: '0 auto',
+    },
+  },
 }));
 
 interface Props {
@@ -157,29 +157,29 @@ const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile'));
 const NodeBalancers = React.lazy(() => import('src/features/NodeBalancers'));
 const StackScripts = React.lazy(() => import('src/features/StackScripts'));
-const SupportTickets = React.lazy(() =>
-  import('src/features/Support/SupportTickets')
+const SupportTickets = React.lazy(
+  () => import('src/features/Support/SupportTickets')
 );
-const SupportTicketDetail = React.lazy(() =>
-  import('src/features/Support/SupportTicketDetail')
+const SupportTicketDetail = React.lazy(
+  () => import('src/features/Support/SupportTicketDetail')
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
 const Help = React.lazy(() => import('src/features/Help'));
-const SupportSearchLanding = React.lazy(() =>
-  import('src/features/Help/SupportSearchLanding')
+const SupportSearchLanding = React.lazy(
+  () => import('src/features/Help/SupportSearchLanding')
 );
 const SearchLanding = React.lazy(() => import('src/features/Search'));
-const EventsLanding = React.lazy(() =>
-  import('src/features/Events/EventsLanding')
+const EventsLanding = React.lazy(
+  () => import('src/features/Events/EventsLanding')
 );
-const AccountActivationLanding = React.lazy(() =>
-  import('src/components/AccountActivation/AccountActivationLanding')
+const AccountActivationLanding = React.lazy(
+  () => import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const MainContent: React.FC<CombinedProps> = props => {
+const MainContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
   const { preferences } = usePreferences();
@@ -230,13 +230,13 @@ const MainContent: React.FC<CombinedProps> = props => {
       <div
         style={{
           backgroundColor: props.theme.bg.main,
-          minHeight: '100vh'
+          minHeight: '100vh',
         }}
       >
         <div className={classes.activationWrapper}>
           <Box
             style={{
-              display: 'flex'
+              display: 'flex',
             }}
           >
             <Logo width={150} height={87} className={classes.logo} />
@@ -272,7 +272,7 @@ const MainContent: React.FC<CombinedProps> = props => {
         /**
          * hidden to prevent some jankiness with the app loading before the splash screen
          */
-        [classes.hidden]: props.appIsLoading
+        [classes.hidden]: props.appIsLoading,
       })}
     >
       <PreferenceToggle<boolean>
@@ -281,7 +281,7 @@ const MainContent: React.FC<CombinedProps> = props => {
       >
         {({
           preference: desktopMenuIsOpen,
-          togglePreference: desktopMenuToggle
+          togglePreference: desktopMenuToggle,
         }: ToggleProps<boolean>) => (
           <DbaasContextProvider value={dbaasContextValue}>
             <NotificationProvider value={contextValue}>
@@ -369,7 +369,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                             />
                             <Route
                               path="/profile"
-                              render={routeProps => (
+                              render={(routeProps) => (
                                 <Profile
                                   {...routeProps}
                                   toggleTheme={props.toggleTheme}

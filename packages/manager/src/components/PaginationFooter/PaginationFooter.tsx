@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -12,21 +12,30 @@ import PaginationControls from '../PaginationControls';
 
 export const MIN_PAGE_SIZE = 25;
 
-type ClassNames = 'root' | 'padded' | 'column';
+type ClassNames = 'root' | 'padded' | 'select';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: 4
+      background: theme.cmrBGColors.bgPaper,
+      margin: 0,
+      width: '100%',
     },
     padded: {
-      padding: `0 ${theme.spacing(2)}px ${theme.spacing(1)}px`
+      padding: `0 ${theme.spacing(2)}px ${theme.spacing(1)}px`,
     },
-    column: {
-      '&.MuiGrid-item': {
-        paddingBottom: 0
-      }
-    }
+    select: {
+      '& .MuiInput-root': {
+        backgroundColor: theme.cmrBGColors.bgPaper,
+        border: 'none',
+        '&.Mui-focused': {
+          boxShadow: 'none',
+        },
+      },
+      '& .react-select__value-container': {
+        paddingLeft: 12,
+      },
+    },
   });
 
 export interface PaginationProps {
@@ -52,7 +61,7 @@ const baseOptions = [
   { label: 'Show 25', value: PAGE_SIZES[0] },
   { label: 'Show 50', value: PAGE_SIZES[1] },
   { label: 'Show 75', value: PAGE_SIZES[2] },
-  { label: 'Show 100', value: PAGE_SIZES[3] }
+  { label: 'Show 100', value: PAGE_SIZES[3] },
 ];
 
 class PaginationFooter extends React.PureComponent<CombinedProps> {
@@ -68,7 +77,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       handlePageChange,
       padded,
       eventCategory,
-      showAll
+      showAll,
     } = this.props;
 
     if (count <= MIN_PAGE_SIZE && !fixedSize) {
@@ -81,7 +90,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       finalOptions.push({ label: 'Show All', value: Infinity });
     }
 
-    const defaultPagination = finalOptions.find(eachOption => {
+    const defaultPagination = finalOptions.find((eachOption) => {
       return eachOption.value === pageSize;
     });
 
@@ -95,10 +104,10 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
         alignItems="center"
         className={classNames({
           [classes.root]: true,
-          [classes.padded]: padded
+          [classes.padded]: padded,
         })}
       >
-        <Grid item className={classes.column}>
+        <Grid item className="p0">
           {!isShowingAll && (
             <PaginationControls
               onClickHandler={handlePageChange}
@@ -110,7 +119,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
           )}
         </Grid>
         {!fixedSize ? (
-          <Grid item className={classes.column}>
+          <Grid item className={`${classes.select} p0`}>
             <Select
               options={finalOptions}
               defaultValue={defaultPagination}
