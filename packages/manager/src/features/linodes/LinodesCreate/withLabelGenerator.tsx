@@ -28,13 +28,13 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
   class WrappedComponent extends React.PureComponent<any, LabelState> {
     state: LabelState = {
       customLabel: '',
-      hasUserTypedCustomLabel: false
+      hasUserTypedCustomLabel: false,
     };
 
     updateCustomLabel = (e: any) => {
       this.setState({
         customLabel: e.target.value,
-        hasUserTypedCustomLabel: true
+        hasUserTypedCustomLabel: true,
       });
     };
 
@@ -63,7 +63,7 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
         updateCustomLabel: this.updateCustomLabel,
         getLabel: this.getLabel,
         ...this.props,
-        ...this.state
+        ...this.state,
       });
     }
   }
@@ -74,7 +74,7 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
 const connected = connect((state: ApplicationState) => ({
   linodeLabels: Object.values(state.__resources.linodes.itemsById).map(
     l => l.label
-  )
+  ),
 }));
 
 // Regex taken from API documentation.

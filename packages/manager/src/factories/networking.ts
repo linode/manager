@@ -10,5 +10,5 @@ export const ipAddressFactory = Factory.Sync.makeFactory<IPAddress>({
   public: true,
   rdns: null,
   linode_id: Factory.each(id => id),
-  region: 'us-east'
+  region: 'us-east',
 });

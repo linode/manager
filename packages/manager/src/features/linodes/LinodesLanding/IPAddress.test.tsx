@@ -17,7 +17,7 @@ const classes = {
   multipleAddresses: '',
   ip: '',
   ipLink: '',
-  hide: 'hide'
+  hide: 'hide',
 };
 
 const component = shallow(
@@ -64,21 +64,21 @@ describe('IPAddress', () => {
     it('should place private IPs after public IPs', () => {
       expect([publicIP, privateIP].sort(sortIPAddress)).toEqual([
         publicIP,
-        privateIP
+        privateIP,
       ]);
       expect([privateIP, publicIP].sort(sortIPAddress)).toEqual([
         publicIP,
-        privateIP
+        privateIP,
       ]);
     });
     it('should not change order of two addresses of the same type', () => {
       expect([publicIP, publicIP2].sort(sortIPAddress)).toEqual([
         publicIP,
-        publicIP2
+        publicIP2,
       ]);
       expect([privateIP, privateIP2].sort(sortIPAddress)).toEqual([
         privateIP,
-        privateIP2
+        privateIP2,
       ]);
     });
     it('should sort longer lists correctly', () => {

@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'destructive';
@@ -21,18 +21,18 @@ interface Props extends IconButtonProps {
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      transition: theme.transitions.create(['opacity'])
+      transition: theme.transitions.create(['opacity']),
     },
     destructive: {
       color: theme.palette.status.errorDark,
       '&:hover': {
         color: theme.palette.status.errorDark,
-        opacity: 0.8
+        opacity: 0.8,
       },
       '&:focus': {
-        color: theme.palette.status.errorDark
-      }
-    }
+        color: theme.palette.status.errorDark,
+      },
+    },
   });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -45,7 +45,7 @@ const IconButtonWrapper: React.FC<CombinedProps> = props => {
       className={classNames(
         {
           [classes.root]: true,
-          [classes.destructive]: destructive
+          [classes.destructive]: destructive,
         },
         className
       )}

@@ -18,7 +18,7 @@ import {
   imageToSearchableItem,
   kubernetesClusterToSearchableItem,
   nodeBalToSearchableItem,
-  volumeToSearchableItem
+  volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 
 import { emptyResults, separateResultsByEntity } from './utils';
@@ -36,7 +36,7 @@ export const useAPISearch = (): Search => {
       if (!searchText || searchText === '') {
         return Promise.resolve({
           searchResultsByEntity: emptyResults,
-          combinedResults: []
+          combinedResults: [],
         });
       }
 
@@ -49,7 +49,7 @@ export const useAPISearch = (): Search => {
         const combinedResults = refinedSearch(searchText, results);
         return {
           combinedResults,
-          searchResultsByEntity: separateResultsByEntity(combinedResults)
+          searchResultsByEntity: separateResultsByEntity(combinedResults),
         };
       });
     },
@@ -63,12 +63,12 @@ const generateFilter = (text: string, labelFieldName: string = 'label') => {
   return {
     '+or': [
       {
-        [labelFieldName]: { '+contains': text }
+        [labelFieldName]: { '+contains': text },
       },
       {
-        tags: { '+contains': text }
-      }
-    ]
+        tags: { '+contains': text },
+      },
+    ],
   };
 };
 
@@ -92,7 +92,7 @@ const requestEntities = (
       // Images can't be tagged and we have to filter only private Images
       // Use custom filters for this
       {
-        '+and': [{ label: { '+contains': searchText } }, { is_public: false }]
+        '+and': [{ label: { '+contains': searchText } }, { is_public: false }],
       }
     ).then(results => results.data.map(imageToSearchableItem)),
     getVolumes(params, generateFilter(searchText)).then(results =>
@@ -109,7 +109,7 @@ const requestEntities = (
           // @todo replace with generateFilter() when LKE-1889 is complete
           results.data.map(kubernetesClusterToSearchableItem)
         )
-      : Promise.resolve([])
+      : Promise.resolve([]),
     // API filtering on Object Storage buckets does not work.
   ]).then(results => (flatten(results) as unknown) as SearchableItem[]);
 };

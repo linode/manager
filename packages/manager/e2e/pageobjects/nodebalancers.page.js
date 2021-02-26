@@ -151,9 +151,7 @@ class NodeBalancers extends Page {
         .toBe(true);
       expect(this.placeholderButton.getTagName())
         .withContext(
-          `${assertLog.incorrectTagName} "${
-            this.placeholderButton.selector
-          }" selector`
+          `${assertLog.incorrectTagName} "${this.placeholderButton.selector}" selector`
         )
         .toBe('button');
     } else {
@@ -186,24 +184,18 @@ class NodeBalancers extends Page {
         .toBe(true);
       expect(this.algorithmSelect.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.algorithmSelect.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.algorithmSelect.selector}" selector`
         )
         .toContain('Round Robin');
       expect(this.sessionStickiness.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.sessionStickiness.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.sessionStickiness.selector}" selector`
         )
         .toContain('Table');
 
       expect(this.activeChecksHeader.isDisplayed())
         .withContext(
-          `"${this.activeChecksHeader.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.activeChecksHeader.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       expect(this.activeCheckType.isDisplayed())
@@ -221,9 +213,7 @@ class NodeBalancers extends Page {
       //   .toBe(true);
       expect(this.passiveChecksToggle.isDisplayed())
         .withContext(
-          `"${this.passiveChecksToggle.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.passiveChecksToggle.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       // TODO waitForText is no longer a valid command
@@ -251,9 +241,7 @@ class NodeBalancers extends Page {
         .toBe(true);
       expect(this.backendIpWeight.getValue())
         .withContext(
-          `${assertLog.incorrectVal} fo "${
-            this.backendIpWeight.selector
-          }" selector `
+          `${assertLog.incorrectVal} fo "${this.backendIpWeight.selector}" selector `
         )
         .toBe('100');
     }
@@ -282,9 +270,7 @@ class NodeBalancers extends Page {
     );
     expect(this.algorithmSelect.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.algorithmSelect.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.algorithmSelect.selector}" selector`
       )
       .toContain('Round Robin');
     console.log(
@@ -315,9 +301,7 @@ class NodeBalancers extends Page {
       this.passiveChecksToggle.getAttribute('data-qa-passive-checks-toggle')
     )
       .withContext(
-        `${assertLog.incorrectAttr} "${
-          this.passiveChecksToggle.selector
-        }" selector`
+        `${assertLog.incorrectAttr} "${this.passiveChecksToggle.selector}" selector`
       )
       .toBe('true');
     // TODO waitForText is no longer a valid command
@@ -345,16 +329,12 @@ class NodeBalancers extends Page {
       .toBe(true);
     expect(this.backendIpWeight.getValue())
       .withContext(
-        `${assertLog.incorrectVal} for "${
-          this.backendIpWeight.selector
-        }" selector`
+        `${assertLog.incorrectVal} for "${this.backendIpWeight.selector}" selector`
       )
       .toBe('100');
     expect(this.backendIpMode.getText())
       .withContext(
-        ` ${assertLog.incorrectText} for "${
-          this.backendIpMode.selector
-        }" selector`
+        ` ${assertLog.incorrectText} for "${this.backendIpMode.selector}" selector`
       )
       .toContain('Accept');
     expect(this.addNode.isDisplayed())
@@ -367,16 +347,12 @@ class NodeBalancers extends Page {
       .toBe('button');
     expect(this.addConfiguration.getTagName())
       .withContext(
-        `${assertLog.incorrectTagName} "${
-          this.addConfiguration.selector
-        }" selector`
+        `${assertLog.incorrectTagName} "${this.addConfiguration.selector}" selector`
       )
       .toBe('button');
     expect(this.addConfiguration.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.addConfiguration.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.addConfiguration.selector}" selector`
       )
       .toBe('Add another Configuration');
     expect(this.removeNode.isDisplayed())
@@ -399,23 +375,17 @@ class NodeBalancers extends Page {
       .toMatch('Delete');
     expect(this.dialogContent.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.dialogContent.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.dialogContent.selector}" selector`
       )
       .toBe(confirmMsg);
     expect(this.dialogConfirm.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.dialogConfirm.selector
-        }" selector `
+        `${assertLog.incorrectText} for "${this.dialogConfirm.selector}" selector `
       )
       .toBe('Delete');
     expect(this.dialogCancel.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.dialogCancel.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.dialogCancel.selector}" selector`
       )
       .toBe('Cancel');
 
@@ -493,7 +463,7 @@ class NodeBalancers extends Page {
       healthCheckInterval: 5,
       healthCheckTimeout: 3,
       healthCheckAttempts: 2,
-      passiveChecksToggle: true
+      passiveChecksToggle: true,
     }
   ) {
     this.label.waitForDisplayed(constants.wait.normal);

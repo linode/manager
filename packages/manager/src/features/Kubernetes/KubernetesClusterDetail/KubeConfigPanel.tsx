@@ -21,9 +21,8 @@ import KubeConfigDrawer from './KubeConfigDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) + 1}px ${
-      theme.spacing(2) - 3
-    }px`,
+    padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
+      1}px ${theme.spacing(2) - 3}px`,
     [theme.breakpoints.up('md')]: {
       marginTop: 66,
     },
@@ -65,7 +64,7 @@ interface Props {
 
 export type CombinedProps = Props & WithSnackbarProps & WithTheme;
 
-export const KubeConfigPanel: React.FC<CombinedProps> = (props) => {
+export const KubeConfigPanel: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const { clusterID, clusterLabel, enqueueSnackbar } = props;
@@ -75,7 +74,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = (props) => {
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
   const fetchKubeConfig = () => {
-    return getKubeConfig(clusterID).then((response) => {
+    return getKubeConfig(clusterID).then(response => {
       // Convert to utf-8 from base64
       try {
         const decodedFile = window.atob(response.kubeconfig);
@@ -97,7 +96,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = (props) => {
     setDrawerLoading(true);
     setDrawerOpen(true);
     fetchKubeConfig()
-      .then((decodedFile) => {
+      .then(decodedFile => {
         setDrawerLoading(false);
         if (decodedFile) {
           setKubeConfig(decodedFile);
@@ -113,7 +112,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = (props) => {
 
   const downloadKubeConfig = () => {
     fetchKubeConfig()
-      .then((decodedFile) => {
+      .then(decodedFile => {
         if (decodedFile) {
           downloadFile(`${clusterLabel}-kubeconfig.yaml`, decodedFile);
         } else {
@@ -121,7 +120,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = (props) => {
           return;
         }
       })
-      .catch((errorResponse) => {
+      .catch(errorResponse => {
         const error = getAPIErrorOrDefault(
           errorResponse,
           'Unable to download your kubeconfig'

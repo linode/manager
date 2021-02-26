@@ -7,7 +7,7 @@ import {
   pathOr,
   reject,
   sort,
-  uniq
+  uniq,
 } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -21,13 +21,13 @@ import Notice from 'src/components/Notice';
 import { ApplicationState } from 'src/store';
 import getEntitiesWithGroupsToImport, {
   GroupedEntitiesForImport,
-  GroupImportProps
+  GroupImportProps,
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import {
   addTagsToEntities,
   closeDrawer as _close,
   handleReset,
-  TagError
+  TagError,
 } from 'src/store/tagImportDrawer';
 import { ThunkDispatch } from 'src/store/types';
 import { sendImportDisplayGroupSubmitEvent } from 'src/utilities/ga';
@@ -67,7 +67,7 @@ export const TagImportDrawer: React.FC<CombinedProps> = props => {
     entitiesWithGroupsToImport: { linodes, domains },
     errors,
     loading,
-    open
+    open,
   } = props;
 
   const handleSubmit = () => {
@@ -141,7 +141,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     loading: pathOr(false, ['tagImportDrawer', 'loading'], state),
     errors: pathOr([], ['tagImportDrawer', 'errors'], state),
     success: pathOr(false, ['tagImportDrawer', 'success'], state),
-    entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state)
+    entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state),
   };
 };
 
@@ -152,8 +152,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   return {
     actions: {
       close: () => dispatch(_close()),
-      update: () => dispatch(addTagsToEntities())
-    }
+      update: () => dispatch(addTagsToEntities()),
+    },
   };
 };
 
@@ -174,16 +174,16 @@ export const withUpdates = lifecycle({
     const {
       actions: { close },
       success,
-      enqueueSnackbar
+      enqueueSnackbar,
     } = this.props;
     if (!prevProps.success && success) {
       enqueueSnackbar('Your display groups have been imported successfully.', {
-        variant: 'success'
+        variant: 'success',
       });
       close();
       handleReset();
     }
-  }
+  },
 });
 
 const enhanced = compose<CombinedProps, {}>(

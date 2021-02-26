@@ -3,7 +3,7 @@ import {
   containsClick,
   fbtClick,
   fbtVisible,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
@@ -35,7 +35,7 @@ describe('LKE Create Cluster', () => {
     const lkeId = Math.ceil(Math.random() * 9999);
     // intercept request to stub response
     cy.intercept('POST', '*/lke/clusters', {
-      id: lkeId
+      id: lkeId,
     }).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
     fbtVisible('Add Node Pools');

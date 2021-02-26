@@ -3,7 +3,7 @@ const { constants } = require('../../../constants');
 import {
   apiCreateLinode,
   apiDeleteAllLinodes,
-  generatePassword
+  generatePassword,
 } from '../../../utils/common';
 import Rebuild from '../../../pageobjects/linode-detail/linode-detail-rebuild.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
@@ -44,7 +44,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     expect(rebuildOptions.sort()).toEqual([
       'From Account StackScript',
       'From Community StackScript',
-      'From Image'
+      'From Image',
     ]);
     $('body').click();
   });

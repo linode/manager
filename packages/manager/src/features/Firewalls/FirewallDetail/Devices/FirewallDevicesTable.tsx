@@ -44,7 +44,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Paper>

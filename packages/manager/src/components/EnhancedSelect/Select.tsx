@@ -2,13 +2,13 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import ReactSelect, { Props as SelectProps } from 'react-select';
 import CreatableSelect, {
-  Props as CreatableSelectProps
+  Props as CreatableSelectProps,
 } from 'react-select/creatable';
 import {
   withStyles,
   WithStyles,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
@@ -64,7 +64,7 @@ const _components = {
   Option,
   DropdownIndicator,
   LoadingIndicator,
-  Input
+  Input,
 };
 
 interface OwnProps {
@@ -223,7 +223,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         isDisabled={disabled}
         classes={classes}
         className={classNames(className, {
-          [classes.root]: true
+          [classes.root]: true,
         })}
         classNamePrefix="react-select"
         /*
@@ -241,16 +241,16 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           disabled,
           noMarginTop,
           InputLabelProps: {
-            shrink: true
+            shrink: true,
           },
           className: classNames(
             {
               [classes.medium]: medium,
               [classes.small]: small,
-              [classes.inline]: inline
+              [classes.inline]: inline,
             },
             className
-          )
+          ),
         }}
         /**
          * react-select wants you to pass "null" to clear out the value

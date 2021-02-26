@@ -18,37 +18,37 @@ import imageToItem from 'src/utilities/imageToItem';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
   backButton: {
     margin: '5px 0 0 -16px',
     '& svg': {
       width: 34,
-      height: 34
-    }
+      height: 34,
+    },
   },
   createTitle: {
-    lineHeight: '2.25em'
+    lineHeight: '2.25em',
   },
   divider: {
     margin: `0 0 ${theme.spacing(2)}px 0`,
-    height: 0
+    height: 0,
   },
   labelField: {
     '& input': {
-      paddingLeft: 0
-    }
+      paddingLeft: 0,
+    },
   },
   titleWrapper: {
     display: 'flex',
-    marginTop: 5
+    marginTop: 5,
   },
   gridWithTips: {
     maxWidth: '50%',
     [theme.breakpoints.down('sm')]: {
       maxWidth: '100%',
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   tips: {
     marginLeft: theme.spacing(4),
@@ -56,31 +56,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(4),
     backgroundColor: theme.palette.divider,
     [theme.breakpoints.down('lg')]: {
-      marginLeft: 0
+      marginLeft: 0,
     },
     [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(2)
-    }
+      paddingLeft: theme.spacing(2),
+    },
   },
   chipsContainer: {
-    maxWidth: 415
+    maxWidth: 415,
   },
   warning: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
   },
   targetTag: {
-    margin: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 0`
+    margin: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 0`,
   },
   scriptTextarea: {
     maxWidth: '100%',
     height: 400,
     '& textarea': {
-      height: '100%'
-    }
+      height: '100%',
+    },
   },
   revisionTextarea: {
-    maxWidth: '100%'
-  }
+    maxWidth: '100%',
+  },
 }));
 
 interface TextFieldHandler {
@@ -117,7 +117,7 @@ type CombinedProps = Props;
 const errorResources = {
   label: 'A label',
   images: 'Images',
-  script: 'A script'
+  script: 'A script',
 };
 
 // exported as a class component, otherwise no display name
@@ -137,7 +137,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
     images,
     mode,
     disabled,
-    disableSubmit
+    disableSubmit,
   } = props;
 
   const classes = useStyles();
@@ -153,7 +153,7 @@ export const StackScriptForm: React.FC<CombinedProps> = props => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="end">{currentUser} /</InputAdornment>
-              )
+              ),
             }}
             label="StackScript Label"
             required

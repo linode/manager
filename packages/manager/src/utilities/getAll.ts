@@ -63,7 +63,7 @@ export const getAll: <T>(
       if (page === pages) {
         return {
           data: firstPageData,
-          results
+          results,
         };
       }
 
@@ -93,7 +93,7 @@ export const getAll: <T>(
             }, firstPageData);
             return {
               data: combinedData,
-              results
+              results,
             };
           })
       );
@@ -116,7 +116,7 @@ export const getAllWithArguments: <T>(
       if (page === pages) {
         return {
           data: firstPageData,
-          results
+          results,
         };
       }
 
@@ -142,7 +142,7 @@ export const getAllWithArguments: <T>(
             }, firstPageData);
             return {
               data: combinedData,
-              results
+              results,
             };
           })
       );

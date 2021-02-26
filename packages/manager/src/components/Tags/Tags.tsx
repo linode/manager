@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
@@ -21,8 +21,8 @@ const styles = (theme: Theme) =>
     root: {},
     tag: {
       color: theme.palette.text.primary,
-      fontFamily: 'LatoWeb'
-    }
+      fontFamily: 'LatoWeb',
+    },
   });
 
 type CombinedProps = Props & WithStyles<ClassNames>;

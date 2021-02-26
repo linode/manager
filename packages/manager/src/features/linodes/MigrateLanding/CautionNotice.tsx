@@ -21,23 +21,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& ul:first-of-type': {
       fontFamily: theme.font.normal,
       '& li': {
-        marginBottom: theme.spacing()
-      }
-    }
+        marginBottom: theme.spacing(),
+      },
+    },
   },
   header: {
     marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   volumes: {
     marginTop: theme.spacing(),
     '& li': {
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   },
   checkbox: {
-    marginLeft: theme.spacing(2)
-  }
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 interface Props {

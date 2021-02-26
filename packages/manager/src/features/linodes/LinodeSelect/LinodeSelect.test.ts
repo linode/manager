@@ -3,7 +3,7 @@ import {
   linodeFromGroupedItems,
   linodeFromItems,
   linodesToGroupedItems,
-  linodesToItems
+  linodesToItems,
 } from './LinodeSelect';
 
 describe('utilities', () => {

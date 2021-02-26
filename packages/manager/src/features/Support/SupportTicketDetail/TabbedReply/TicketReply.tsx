@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 
@@ -14,9 +14,9 @@ const styles = () =>
       height: 320,
       marginTop: 0,
       '& > div': {
-        maxWidth: '100% !important'
-      }
-    }
+        maxWidth: '100% !important',
+      },
+    },
   });
 
 export interface Props {

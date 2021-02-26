@@ -52,30 +52,30 @@ class UserDetail extends React.Component<CombinedProps> {
     accountSaving: false,
     profileSaving: false,
     email: '',
-    username: ''
+    username: '',
   };
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'User Profile',
-      routeName: `${this.props.match.url}/profile`
+      routeName: `${this.props.match.url}/profile`,
     },
     {
       title: 'User Permissions',
-      routeName: `${this.props.match.url}/permissions`
-    }
+      routeName: `${this.props.match.url}/permissions`,
+    },
   ];
 
   componentDidMount() {
     const {
       match: {
-        params: { username }
-      }
+        params: { username },
+      },
     } = this.props;
     const {
       history,
-      location: { state: locationState }
+      location: { state: locationState },
     } = this.props;
 
     getUser(username)
@@ -87,7 +87,7 @@ class UserDetail extends React.Component<CombinedProps> {
             username: user.username,
             originalEmail: user.email,
             email: user.email,
-            restricted: user.restricted
+            restricted: user.restricted,
           });
         });
       })
@@ -96,19 +96,19 @@ class UserDetail extends React.Component<CombinedProps> {
           error: getAPIErrorOrDefault(
             errorResponse,
             'Error loading user data.'
-          )[0].reason
+          )[0].reason,
         });
       });
 
     if (locationState) {
       this.setState({
         accountSuccess: clone(locationState.success),
-        createdUsername: clone(locationState.newUsername)
+        createdUsername: clone(locationState.newUsername),
       });
       /* don't show the success message again on refresh */
       history.replace({
         pathname: history.location.pathname,
-        state: {}
+        state: {},
       });
     }
   }
@@ -124,7 +124,7 @@ class UserDetail extends React.Component<CombinedProps> {
 
   onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      username: e.target.value
+      username: e.target.value,
     });
   };
 
@@ -132,13 +132,13 @@ class UserDetail extends React.Component<CombinedProps> {
     this.setState({
       username: this.state.originalUsername,
       profileErrors: [],
-      profileSuccess: false
+      profileSuccess: false,
     });
   };
 
   onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      email: e.target.value
+      email: e.target.value,
     });
   };
 
@@ -147,7 +147,7 @@ class UserDetail extends React.Component<CombinedProps> {
       history,
       match: { path },
       profileUsername,
-      refreshProfile
+      refreshProfile,
     } = this.props;
 
     const { originalUsername, username, restricted } = this.state;
@@ -161,7 +161,7 @@ class UserDetail extends React.Component<CombinedProps> {
       accountSaving: true,
       accountErrors: [],
       profileSuccess: false,
-      profileErrors: []
+      profileErrors: [],
     });
 
     updateUser(originalUsername, { username, restricted })
@@ -173,7 +173,7 @@ class UserDetail extends React.Component<CombinedProps> {
           originalUsername: user.username,
           username: user.username,
           accountSaving: false,
-          accountErrors: undefined
+          accountErrors: undefined,
         });
 
         /**
@@ -187,7 +187,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * I really have no idea whats going on here.
          */
         history.push(path.replace(':username', user.username), {
-          success: true
+          success: true,
         });
       })
       .catch(errResponse => {
@@ -197,7 +197,7 @@ class UserDetail extends React.Component<CombinedProps> {
             'Error updating username'
           ),
           accountSaving: false,
-          accountSuccess: false
+          accountSuccess: false,
         });
       });
   };
@@ -211,7 +211,7 @@ class UserDetail extends React.Component<CombinedProps> {
       profileSaving: true,
       profileErrors: [],
       accountSuccess: false,
-      accountErrors: []
+      accountErrors: [],
     });
 
     updateProfile({ email })
@@ -219,7 +219,7 @@ class UserDetail extends React.Component<CombinedProps> {
         this.setState({
           profileSaving: false,
           profileSuccess: true,
-          profileErrors: undefined
+          profileErrors: undefined,
         });
         /**
          * If the user we updated is the current user, we need to reflect that change at the global level.
@@ -235,7 +235,7 @@ class UserDetail extends React.Component<CombinedProps> {
             'Error updating email'
           ),
           profileSaving: false,
-          profileSuccess: false
+          profileSuccess: false,
         });
       });
   };
@@ -263,7 +263,7 @@ class UserDetail extends React.Component<CombinedProps> {
       accountSuccess,
       accountErrors,
       originalUsername,
-      originalEmail
+      originalEmail,
     } = this.state;
 
     if (error) {
@@ -292,16 +292,16 @@ class UserDetail extends React.Component<CombinedProps> {
           pathname={location.pathname}
           labelTitle={username}
           labelOptions={{
-            noCap: true
+            noCap: true,
           }}
           crumbOverrides={[
             {
               position: 2,
               label: 'Users',
               linkTo: {
-                pathname: `/account/users`
-              }
-            }
+                pathname: `/account/users`,
+              },
+            },
           ]}
           removeCrumbX={4}
         />
@@ -352,7 +352,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  profileUsername: pathRamda(['data', 'username'], state.__resources.profile)
+  profileUsername: pathRamda(['data', 'username'], state.__resources.profile),
 });
 
 interface DispatchProps {
@@ -360,7 +360,7 @@ interface DispatchProps {
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  refreshProfile: () => dispatch(requestProfile() as any)
+  refreshProfile: () => dispatch(requestProfile() as any),
 });
 
 const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(

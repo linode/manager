@@ -17,11 +17,11 @@ import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import {
   requestAccountSettings,
-  updateAccountSettings
+  updateAccountSettings,
 } from 'src/store/accountSettings/accountSettings.requests';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
-  GroupedEntitiesForImport
+  GroupedEntitiesForImport,
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
@@ -72,7 +72,7 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
     linodesWithoutBackups,
     entitiesWithGroupsToImport,
     isManaged,
-    object_storage
+    object_storage,
   } = props;
 
   const { _loading } = useReduxLoad(['accountSettings', 'domains', 'linodes']);
@@ -99,7 +99,7 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
     )[0].reason;
 
     return props.enqueueSnackbar(errorText, {
-      variant: 'error'
+      variant: 'error',
     });
   };
 
@@ -173,7 +173,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     'disabled',
     ['__resources', 'accountSettings', 'data', 'object_storage'],
     state
-  )
+  ),
 });
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
@@ -186,8 +186,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       openImportDrawer: () => dispatch(openGroupDrawer()),
       updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
         dispatch(updateSettingsInStore(data)),
-      requestSettings: () => dispatch(requestAccountSettings())
-    }
+      requestSettings: () => dispatch(requestAccountSettings()),
+    },
   };
 };
 

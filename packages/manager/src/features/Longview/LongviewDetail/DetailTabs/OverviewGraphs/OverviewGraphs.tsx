@@ -17,24 +17,24 @@ import { GraphProps } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
-    marginBottom: theme.spacing(1) + 3
+    marginBottom: theme.spacing(1) + 3,
   },
   selectTimeRange: {
-    width: 150
+    width: 150,
   },
   headerOuter: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing(1) + 2
+    marginBottom: theme.spacing(1) + 2,
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -52,7 +52,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
-    end: 0
+    end: 0,
   });
 
   const handleStatsChange = (start: number, end: number) => {
@@ -68,7 +68,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = props => {
     start: time.start,
     end: time.end,
     lastUpdatedError,
-    lastUpdated
+    lastUpdated,
   };
 
   return (

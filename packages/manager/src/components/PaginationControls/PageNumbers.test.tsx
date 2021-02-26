@@ -21,12 +21,12 @@ describe('PageNumbers', () => {
     const { queryByTestId, rerender } = render(
       wrapWithTheme(<PageNumbers {...props} numOfPages={3} />)
     );
-    ['1', '2', '3'].forEach((pageNumber) => {
+    ['1', '2', '3'].forEach(pageNumber => {
       expect(queryByTestId(pageNumber)).toBeInTheDocument();
     });
 
     rerender(wrapWithTheme(<PageNumbers {...props} numOfPages={6} />));
-    ['1', '2', '3', '4', '6'].forEach((pageNumber) => {
+    ['1', '2', '3', '4', '6'].forEach(pageNumber => {
       expect(queryByTestId(pageNumber)).toBeInTheDocument();
     });
   });
@@ -46,7 +46,7 @@ describe('PageNumbers', () => {
           <PageNumbers {...props} numOfPages={11} currentPage={4} />
         )
       );
-      ['1', '2', '3', '4', '5'].forEach((pageNumber) => {
+      ['1', '2', '3', '4', '5'].forEach(pageNumber => {
         expect(queryByTestId(pageNumber)).toBeInTheDocument();
       });
       expect(queryByTestId('6')).not.toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('PageNumbers', () => {
     );
     expect(queryByTestId('leading-ellipsis')).toBeInTheDocument();
     expect(queryByTestId('6')).not.toBeInTheDocument();
-    ['7', '8', '9', '10', '11'].forEach((pageNumber) => {
+    ['7', '8', '9', '10', '11'].forEach(pageNumber => {
       expect(queryByTestId(pageNumber)).toBeInTheDocument();
     });
   });
@@ -71,7 +71,7 @@ describe('PageNumbers', () => {
     );
     expect(queryByTestId('leading-ellipsis')).toBeInTheDocument();
     expect(queryByTestId('4')).not.toBeInTheDocument();
-    ['5', '6', '7', '8', '9'].forEach((pageNumber) => {
+    ['5', '6', '7', '8', '9'].forEach(pageNumber => {
       expect(queryByTestId(pageNumber)).toBeInTheDocument();
     });
     expect(queryByTestId('10')).not.toBeInTheDocument();

@@ -1,7 +1,7 @@
 import {
   createLinode,
   deleteLinodeById,
-  clickLinodeActionMenu
+  clickLinodeActionMenu,
 } from '../../support/api/linodes';
 import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';

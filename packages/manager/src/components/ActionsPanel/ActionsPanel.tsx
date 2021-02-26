@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 
@@ -17,13 +17,13 @@ const styles = (theme: Theme) =>
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(1),
       '& > button': {
-        marginBottom: theme.spacing(1)
+        marginBottom: theme.spacing(1),
       },
       '& > :first-child': {
         marginRight: theme.spacing(),
-        marginLeft: 0
-      }
-    }
+        marginLeft: 0,
+      },
+    },
   });
 
 interface Props {
@@ -42,7 +42,7 @@ const ActionPanel: React.FC<CombinedProps> = props => {
       className={classNames({
         [classes.root]: true,
         ...(className && { [className]: true }),
-        actionPanel: true
+        actionPanel: true,
       })}
       style={style}
     >

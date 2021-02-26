@@ -8,7 +8,7 @@ import {
   CombinedProps,
   formatPrice,
   LONGVIEW_FREE_ID,
-  LongviewPlans
+  LongviewPlans,
 } from './LongviewPlans';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
@@ -27,8 +27,8 @@ const props: CombinedProps = {
     lastUpdated: 0,
     update: jest.fn(),
     transformData: jest.fn(),
-    loading: false
-  }
+    loading: false,
+  },
 };
 
 const testRow = (

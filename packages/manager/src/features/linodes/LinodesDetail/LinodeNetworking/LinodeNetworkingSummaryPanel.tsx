@@ -13,23 +13,23 @@ import { MapState } from 'src/store/types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
+    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2,
   },
   section: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   title: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   individualContainer: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   ips: {
-    padding: `0 ${theme.spacing(1)}px !important`
+    padding: `0 ${theme.spacing(1)}px !important`,
   },
   error: {
-    color: theme.palette.status.errorDark
-  }
+    color: theme.palette.status.errorDark,
+  },
 }));
 
 interface Props {
@@ -139,7 +139,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
-  username: state.__resources?.profile?.data?.username
+  username: state.__resources?.profile?.data?.username,
 });
 
 const connected = connect(mapStateToProps);

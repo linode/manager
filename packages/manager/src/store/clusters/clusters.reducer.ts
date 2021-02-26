@@ -14,7 +14,7 @@ export const defaultState: State = {
   entities: [],
   loading: false,
   lastUpdated: 0,
-  error: undefined
+  error: undefined,
 };
 
 /**
@@ -24,7 +24,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, clustersRequestActions.started)) {
     return {
       ...state,
-      loading: true
+      loading: true,
     };
   }
 
@@ -37,7 +37,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       lastUpdated: Date.now(),
       entities: result,
       results: result.map(r => r.id),
-      error: undefined
+      error: undefined,
     };
   }
 
@@ -47,7 +47,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       loading: false,
-      error
+      error,
     };
   }
 

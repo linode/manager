@@ -5,7 +5,7 @@ import {
   MenuButton,
   MenuItem,
   MenuItems,
-  MenuPopover
+  MenuPopover,
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import { positionRight } from '@reach/popover';
@@ -34,29 +34,29 @@ const useStyles = makeStyles((theme: Theme) => ({
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
-        color: '#fff'
+        color: '#fff',
       },
       '&[aria-expanded="true"]': {
         backgroundColor: '#3683dc',
-        color: '#fff'
-      }
-    }
+        color: '#fff',
+      },
+    },
   },
   buttonWithLabel: {
-    padding: '15px 10px !important'
+    padding: '15px 10px !important',
   },
   buttonLabel: {
     margin: `0 0 0 ${theme.spacing() + 2}px`,
     fontFamily: theme.font.normal,
-    lineHeight: 1
+    lineHeight: 1,
   },
   icon: {
     '& svg': {
-      fill: theme.color.blue
-    }
+      fill: theme.color.blue,
+    },
   },
   popover: {
-    zIndex: 1
+    zIndex: 1,
   },
   itemsOuter: {
     '&[data-reach-menu-items]': {
@@ -66,8 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       border: 'none',
       fontSize: 14,
       color: '#fff',
-      textAlign: 'left'
-    }
+      textAlign: 'left',
+    },
   },
   item: {
     '&[data-reach-menu-item]': {
@@ -77,34 +77,34 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
-      color: '#fff'
+      color: '#fff',
     },
     '&[data-reach-menu-item][data-selected]': {
-      background: '#226dc3'
-    }
+      background: '#226dc3',
+    },
   },
   disabled: {
     '&[data-reach-menu-item]': {
       color: '#93bcec',
-      cursor: 'auto'
+      cursor: 'auto',
     },
     '&[data-reach-menu-item][data-selected]': {
       background: '#3683dc',
-      color: '#93bcec'
-    }
+      color: '#93bcec',
+    },
   },
   tooltip: {
     color: '#fff',
     '& :hover': {
       color: '#4d99f1',
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
     padding: '0 0 0 8px',
     '& svg': {
       height: 20,
-      width: 20
-    }
-  }
+      width: 20,
+    },
+  },
 }));
 
 export interface Props {
@@ -149,7 +149,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
         <MenuButton
           className={classNames({
             [classes.button]: true,
-            [classes.buttonWithLabel]: Boolean(inlineLabel)
+            [classes.buttonWithLabel]: Boolean(inlineLabel),
           })}
           aria-label={ariaLabel}
           onMouseDown={handleClick}
@@ -165,7 +165,7 @@ const ActionMenu: React.FC<CombinedProps> = props => {
                 key={idx}
                 className={classNames({
                   [classes.item]: true,
-                  [classes.disabled]: a.disabled
+                  [classes.disabled]: a.disabled,
                 })}
                 onSelect={() => {
                   if (!a.disabled) {

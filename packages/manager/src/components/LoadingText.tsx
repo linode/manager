@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root';
@@ -14,8 +14,8 @@ const styles = (theme: Theme) =>
       display: 'inline-block',
       backgroundImage: 'linear-gradient( #efefef 20px, transparent 0 )',
       backgroundRepeat: 'no-repeat',
-      backgroundPosition: '0 0'
-    }
+      backgroundPosition: '0 0',
+    },
   });
 
 interface Props {
@@ -30,7 +30,7 @@ const LoadingText: React.FC<CombinedProps> = props => {
   const style = {
     width: `${width || 100}px`,
     height: `${height || 16}px`,
-    backgroundSize: `${width || 100}px ${height || 16}px`
+    backgroundSize: `${width || 100}px ${height || 16}px`,
   };
 
   return <span className={props.classes.root} style={style} />;

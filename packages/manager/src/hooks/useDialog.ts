@@ -125,6 +125,6 @@ export const useDialog = <T extends string | number | undefined>(
     openDialog,
     closeDialog,
     submitDialog,
-    handleError
+    handleError,
   };
 };

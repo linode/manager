@@ -4,7 +4,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { parseQueryParams } from 'src/utilities/queryParams';
@@ -20,7 +20,7 @@ type Props = RouteComponentProps<{}>;
 export const StackScripts: React.FC<Props> = props => {
   const {
     match: { path },
-    location: { search }
+    location: { search },
   } = props;
 
   // Redirects to prevent breaking old stackscripts?type=whatever bookmarks

@@ -4,28 +4,28 @@ import {
   makeStyles,
   Theme,
   WithTheme,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   convertBytesToTarget,
-  readableBytes
+  readableBytes,
 } from 'src/utilities/unitConversions';
 import { LongviewProcesses } from '../../request.types';
 import { convertData, formatMemory } from '../../shared/formatters';
 import {
   statMax,
-  sumRelatedProcessesAcrossAllUsers
+  sumRelatedProcessesAcrossAllUsers,
 } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   smallGraph: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(3) + 2
+      marginTop: theme.spacing(3) + 2,
     },
-    marginTop: theme.spacing(6) + 3
-  }
+    marginTop: theme.spacing(6) + 3,
+  },
 }));
 
 interface Props {
@@ -46,7 +46,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
   const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
-    data
+    data,
   ]);
 
   /**
@@ -72,7 +72,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
     showToday: isToday,
     loading,
     error,
-    nativeLegend: true
+    nativeLegend: true,
   };
 
   return (
@@ -89,8 +89,8 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'CPU',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.cpu.percent,
-                  data: _convertData(cpu, start, end)
-                }
+                  data: _convertData(cpu, start, end),
+                },
               ]}
               {...graphProps}
             />
@@ -108,8 +108,8 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'RAM',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.ram,
-                  data: _convertData(memory, start, end, formatMemory)
-                }
+                  data: _convertData(memory, start, end, formatMemory),
+                },
               ]}
               {...graphProps}
             />
@@ -132,14 +132,14 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'Read',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.read,
-                  data: _convertData(diskRead, start, end)
+                  data: _convertData(diskRead, start, end),
                 },
                 {
                   label: 'Write',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.diskIO.write,
-                  data: _convertData(diskWrite, start, end)
-                }
+                  data: _convertData(diskWrite, start, end),
+                },
               ]}
               {...graphProps}
             />
@@ -153,8 +153,8 @@ export const ProcessGraphs: React.FC<CombinedProps> = props => {
                   label: 'Count',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.processCount,
-                  data: _convertData(processCount, start, end)
-                }
+                  data: _convertData(processCount, start, end),
+                },
               ]}
               {...graphProps}
             />

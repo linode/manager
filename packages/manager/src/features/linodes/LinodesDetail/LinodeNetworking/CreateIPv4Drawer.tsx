@@ -27,13 +27,13 @@ type CombinedProps = Props;
 
 class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
   state: State = {
-    forPublic: this.props.forPublic
+    forPublic: this.props.forPublic,
   };
 
   UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       errors: undefined,
-      forPublic: nextProps.forPublic
+      forPublic: nextProps.forPublic,
     });
   }
 
@@ -47,7 +47,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
       .catch(errResponse => {
         this.setState(
           {
-            errors: getAPIErrorOrDefault(errResponse)
+            errors: getAPIErrorOrDefault(errResponse),
           },
           () => {
             scrollErrorIntoView();

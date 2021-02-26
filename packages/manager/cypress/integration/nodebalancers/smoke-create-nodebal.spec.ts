@@ -1,12 +1,12 @@
 import {
   deleteNodeBalancerByLabel,
   makeNodeBalLabel,
-  testNodeBalTag
+  testNodeBalTag,
 } from '../../support/api/nodebalancers';
 import {
   makeLinodeLabel,
   createLinode,
-  deleteLinodeById
+  deleteLinodeById,
 } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
@@ -14,7 +14,7 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 
 const deployNodeBalancer = () => {
@@ -44,7 +44,7 @@ describe('create NodeBalancer', () => {
     createLinode().then(linode => {
       const nodeBal = {
         label: makeNodeBalLabel(),
-        linodePrivateIp: linode.ipv4[1]
+        linodePrivateIp: linode.ipv4[1],
       };
       // catch request
       cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
@@ -63,7 +63,7 @@ describe('create NodeBalancer', () => {
       cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
       createNodeBalancerWithUI({
         label: 'cy-test-dfghjk^uu7',
-        linodePrivateIp: linode.ipv4[1]
+        linodePrivateIp: linode.ipv4[1],
       });
       fbtVisible(`Label can't contain special characters or spaces.`);
       getVisible('[id="nodebalancer-label"]')
@@ -79,7 +79,7 @@ describe('create NodeBalancer', () => {
       cy.wait('@createNodeBalancer')
         .its('response.body')
         .should('deep.equal', {
-          errors: [{ field: 'configs[0].stickiness', reason: errMessage }]
+          errors: [{ field: 'configs[0].stickiness', reason: errMessage }],
         });
       fbtVisible(errMessage);
       deleteLinodeById(linode.id);

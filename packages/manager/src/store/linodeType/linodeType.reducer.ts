@@ -4,7 +4,7 @@ import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   getLinodeTypesActions,
-  getLinodeTypeActions
+  getLinodeTypeActions,
 } from './linodeType.actions';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 
@@ -22,14 +22,14 @@ export const defaultState: State = {
   results: [],
   error: undefined,
   loading: false,
-  lastUpdated: 0
+  lastUpdated: 0,
 };
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getLinodeTypesActions.started)) {
     return {
       ...state,
-      loading: true
+      loading: true,
     };
   }
 
@@ -43,7 +43,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       loading: false,
       lastUpdated: Date.now(),
       entities: extendedTypes,
-      results: extendedTypes.map(t => t.id)
+      results: extendedTypes.map(t => t.id),
     };
   }
 
@@ -53,7 +53,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       loading: false,
-      error
+      error,
     };
   }
 
@@ -77,7 +77,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       entities: [...state.entities, extendedType],
-      results: [...state.results, extendedType.id]
+      results: [...state.results, extendedType.id],
     };
   }
 
@@ -92,15 +92,15 @@ export const extendType = (type: LinodeType): ExtendedType => {
     memory,
     vcpus,
     disk,
-    price: { monthly, hourly }
+    price: { monthly, hourly },
   } = type;
   return {
     ...type,
     heading: label,
     subHeadings: [
       `$${monthly}/mo ($${hourly}/hr)`,
-      typeLabelDetails(memory, disk, vcpus)
+      typeLabelDetails(memory, disk, vcpus),
     ] as [string, string],
-    isDeprecated: type.successor !== null
+    isDeprecated: type.successor !== null,
   };
 };

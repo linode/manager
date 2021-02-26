@@ -11,18 +11,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     from: {
       opacity: 0,
       top: -10,
-      transform: 'scale(.1)'
+      transform: 'scale(.1)',
     },
     to: {
       opacity: 1,
       top: -45,
-      transform: 'scale(1)'
-    }
+      transform: 'scale(1)',
+    },
   },
   root: {
     display: 'flex',
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',
   },
   icon: {
     cursor: 'pointer',
@@ -36,25 +36,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: theme.shape.borderRadius,
     '&:hover': {
       backgroundColor: theme.color.grey1,
-      color: theme.color.white
-    }
+      color: theme.color.white,
+    },
   },
   prefixWrapper: {
     marginLeft: theme.spacing(1.5),
     display: 'flex',
     overflow: 'auto',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   slash: {
     marginRight: 4,
-    marginLeft: 4
+    marginLeft: 4,
   },
   link: {
     color: theme.cmrTextColors.linkActiveLight,
     cursor: 'pointer',
     '&:hover': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   copied: {
     fontSize: '.85rem',
@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     boxShadow: `0 0 5px ${theme.color.boxShadow}`,
     transition: 'opacity .5s ease-in-out',
-    animation: '$popUp 200ms ease-in-out forwards'
-  }
+    animation: '$popUp 200ms ease-in-out forwards',
+  },
 }));
 
 interface Props {

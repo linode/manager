@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 
@@ -36,21 +36,21 @@ const styles = (theme: Theme) =>
         color: theme.palette.primary.light,
         backgroundColor: 'transparent',
         '& .border': {
-          color: theme.palette.primary.light
-        }
+          color: theme.palette.primary.light,
+        },
       },
-      '&:focus': { outline: '1px dotted #999' }
+      '&:focus': { outline: '1px dotted #999' },
     },
     active: {
-      color: '#1f64b6'
+      color: '#1f64b6',
     },
     disabled: {
       color: '#939598',
       pointerEvents: 'none',
       '& $icon': {
         color: '#939598',
-        borderColor: '#939598'
-      }
+        borderColor: '#939598',
+      },
     },
     icon: {
       transition: 'none',
@@ -58,24 +58,24 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(0.5),
       color: 'inherit',
       '& .border': {
-        transition: 'none'
-      }
+        transition: 'none',
+      },
     },
     left: {
-      left: -(theme.spacing(1) + theme.spacing(1) / 2)
+      left: -(theme.spacing(1) + theme.spacing(1) / 2),
     },
     label: {
       whiteSpace: 'nowrap',
       position: 'relative',
-      top: -1
+      top: -1,
     },
     linkWrapper: {
       display: 'flex',
       justifyContent: 'center',
       '&:hover, &:focus': {
-        textDecoration: 'none'
-      }
-    }
+        textDecoration: 'none',
+      },
+    },
   });
 
 export interface Props {
@@ -105,7 +105,7 @@ const IconTextLink: React.FC<FinalProps> = props => {
     left,
     className,
     to,
-    hideText
+    hideText,
   } = props;
 
   return (
@@ -124,7 +124,7 @@ const IconTextLink: React.FC<FinalProps> = props => {
             [classes.disabled]: disabled === true,
             [classes.active]: active === true,
             [classes.left]: left === true,
-            iconTextLink: true
+            iconTextLink: true,
           },
           className
         )}
@@ -137,7 +137,7 @@ const IconTextLink: React.FC<FinalProps> = props => {
         <span
           className={classNames({
             [classes.label]: true,
-            ['visually-hidden']: hideText
+            ['visually-hidden']: hideText,
           })}
         >
           {text}

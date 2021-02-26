@@ -69,7 +69,7 @@ const RenderData: React.FC<{
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => (
         <React.Fragment>
           {paginatedData.map(
@@ -106,7 +106,7 @@ const RenderData: React.FC<{
             <TableRow>
               <TableCell
                 style={{
-                  paddingTop: 2
+                  paddingTop: 2,
                 }}
                 colSpan={8}
               >

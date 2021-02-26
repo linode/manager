@@ -5,7 +5,7 @@ import {
   getLinodes,
   Linode,
   linodeReboot as _rebootLinode,
-  updateLinode as _updateLinode
+  updateLinode as _updateLinode,
 } from '@linode/api-v4/lib/linodes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -18,7 +18,7 @@ import {
   getLinodesPageActions,
   rebootLinodeActions,
   updateLinodeActions,
-  upsertLinode
+  upsertLinode,
 } from './linodes.actions';
 
 export const getLinode = createRequestThunk(getLinodeActions, ({ linodeId }) =>

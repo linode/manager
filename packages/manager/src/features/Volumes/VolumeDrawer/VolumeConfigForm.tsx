@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import NoticePanel from './NoticePanel';
@@ -17,11 +17,11 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     copySection: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
     },
     copyField: {
-      marginTop: theme.spacing(1) / 2
-    }
+      marginTop: theme.spacing(1) / 2,
+    },
   });
 
 interface Props {

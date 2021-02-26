@@ -4,13 +4,13 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   formatNetworkTooltip,
-  getMaxUnitAndFormatNetwork
+  getMaxUnitAndFormatNetwork,
 } from 'src/features/Longview/shared/utilities';
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
@@ -19,14 +19,14 @@ import ProcessGraphs from '../ProcessGraphs';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) +
-      2}px ${theme.spacing(5) + 4}px`
+      2}px ${theme.spacing(5) + 4}px`,
   },
   smallGraph: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(3) + 2
+      marginTop: theme.spacing(3) + 2,
     },
-    marginTop: theme.spacing(6) + 3
-  }
+    marginTop: theme.spacing(6) + 3,
+  },
 }));
 
 interface Props {
@@ -56,7 +56,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
     processesData,
     processesLoading,
     processesError,
-    theme
+    theme,
   } = props;
 
   const classes = useStyles();
@@ -96,26 +96,26 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                 label: 'SELECT',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.select,
-                data: _convertData(selectQueries, start, end)
+                data: _convertData(selectQueries, start, end),
               },
               {
                 label: 'UPDATE',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.update,
-                data: _convertData(updateQueries, start, end)
+                data: _convertData(updateQueries, start, end),
               },
               {
                 label: 'INSERT',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.insert,
-                data: _convertData(insertQueries, start, end)
+                data: _convertData(insertQueries, start, end),
               },
               {
                 label: 'DELETE',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.queries.delete,
-                data: _convertData(deleteQueries, start, end)
-              }
+                data: _convertData(deleteQueries, start, end),
+              },
             ]}
           />
         </Grid>
@@ -138,14 +138,14 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Inbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(inbound, start, end)
+                    data: _convertData(inbound, start, end),
                   },
                   {
                     label: 'Outbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(outbound, start, end)
-                  }
+                    data: _convertData(outbound, start, end),
+                  },
                 ]}
               />
             </Grid>
@@ -164,8 +164,8 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Connections',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
-                    data: _convertData(connections, start, end)
-                  }
+                    data: _convertData(connections, start, end),
+                  },
                 ]}
               />
             </Grid>
@@ -186,8 +186,8 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                     label: 'Slow Queries',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.slowQueries,
-                    data: _convertData(slowQueries, start, end)
-                  }
+                    data: _convertData(slowQueries, start, end),
+                  },
                 ]}
               />
             </Grid>
@@ -209,7 +209,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                       start,
                       end,
                       formatAborted
-                    )
+                    ),
                   },
                   {
                     label: 'Clients',
@@ -220,8 +220,8 @@ export const MySQLGraphs: React.FC<CombinedProps> = props => {
                       start,
                       end,
                       formatAborted
-                    )
-                  }
+                    ),
+                  },
                 ]}
               />
             </Grid>

@@ -4,18 +4,18 @@ import {
   createCredentialSchema,
   credentialLabel,
   credentialPassword,
-  credentialUsername
+  credentialUsername,
 } from '@linode/api-v4/lib/managed';
 
 export const creationSchema = createCredentialSchema.shape({
-  password: string().required('Password is required.')
+  password: string().required('Password is required.'),
 } as any);
 
 export const updateLabelSchema = object().shape({
-  label: credentialLabel.required('Label is required.')
+  label: credentialLabel.required('Label is required.'),
 });
 
 export const updatePasswordSchema = object().shape({
   password: credentialPassword.required('Password is required.'),
-  username: credentialUsername
+  username: credentialUsername,
 });

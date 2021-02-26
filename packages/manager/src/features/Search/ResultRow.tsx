@@ -16,42 +16,42 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
     width: '100%',
-    transition: theme.transitions.create(['background-color'])
+    transition: theme.transitions.create(['background-color']),
   },
   labelCell: {
     width: '60%',
     [theme.breakpoints.up('md')]: {
-      width: '35%'
-    }
+      width: '35%',
+    },
   },
   regionCell: {
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '15%'
-    }
+      width: '15%',
+    },
   },
   createdCell: {
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '20%'
-    }
+      width: '20%',
+    },
   },
   tagCell: {
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '30%'
-    }
+      width: '30%',
+    },
   },
   tag: {
-    margin: theme.spacing() / 2
+    margin: theme.spacing() / 2,
   },
   link: {
     display: 'block',
     color: theme.cmrTextColors.linkActiveLight,
     fontFamily: theme.font.bold,
     fontSize: '.875rem',
-    lineHeight: '1.125rem'
-  }
+    lineHeight: '1.125rem',
+  },
 }));
 
 interface Props {

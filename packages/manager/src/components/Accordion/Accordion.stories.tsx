@@ -16,7 +16,7 @@ class AsyncContentExample extends React.Component {
     if (expanded && !this.state.data) {
       this.setState({ loading: true });
       const myPromise = () =>
-        new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
+        new Promise<void>(resolve => setTimeout(() => resolve(), 2000));
       myPromise().then(() =>
         this.setState({
           data: 'Your patience has been rewarded',

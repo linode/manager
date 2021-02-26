@@ -19,8 +19,8 @@ import ImageOption from './ImageOption';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
-  }
+    padding: theme.spacing(3),
+  },
 }));
 
 export type Variant = 'public' | 'private' | 'all';
@@ -102,11 +102,11 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 value: thisImage.id,
                 className: thisImage.vendor
                   ? `fl-${distroIcons[thisImage.vendor]}`
-                  : `fl-tux`
+                  : `fl-tux`,
               };
               return _option;
             })
-            .sort(sortByImageVersion)
+            .sort(sortByImageVersion),
         });
       });
     }, []);

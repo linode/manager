@@ -6,7 +6,7 @@ import DeletionDialog from 'src/components/DeletionDialog';
 import { useDialog } from 'src/hooks/useDialog';
 import {
   DomainActionsProps,
-  withDomainActions
+  withDomainActions,
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -25,7 +25,7 @@ export const DeleteDomain: React.FC<CombinedProps> = props => {
     openDialog,
     closeDialog,
     submitDialog,
-    handleError
+    handleError,
   } = useDialog<number>((domainId: number) =>
     props.domainActions.deleteDomain({ domainId })
   );
@@ -34,7 +34,7 @@ export const DeleteDomain: React.FC<CombinedProps> = props => {
     submitDialog(dialog.entityID)
       .then(() => {
         props.enqueueSnackbar('Domain deleted successfully.', {
-          variant: 'success'
+          variant: 'success',
         });
         if (props.onSuccess) {
           props.onSuccess();

@@ -4,7 +4,7 @@ import {
   getAll,
   deleteById,
   isTestEntity,
-  makeTestLabel
+  makeTestLabel,
 } from './common';
 import strings from '../cypresshelpers';
 import { deleteLinodeById } from './linodes';
@@ -20,7 +20,7 @@ const makeVolumeCreateReq = (linodeID, volume) => {
     label: makeVolumeLabel(),
     region: 'us-east',
     tags: [testVolumeTag],
-    linode_id: linodeID
+    linode_id: linodeID,
   };
 
   return cy.request({
@@ -28,8 +28,8 @@ const makeVolumeCreateReq = (linodeID, volume) => {
     url: apiroot + relativeApiPath,
     body: volumeData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -52,8 +52,8 @@ export const detachVolumeById = (path: string, id: number) => {
     method: 'POST',
     url: `${apiroot}${path}/${id}/detach`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 

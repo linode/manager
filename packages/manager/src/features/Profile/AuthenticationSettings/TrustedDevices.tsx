@@ -17,19 +17,19 @@ import TrustedDevicesTable from './TrustedDevicesTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   usedCell: {
-    minWidth: 125
+    minWidth: 125,
   },
   expireCell: {
-    minWidth: 95
+    minWidth: 95,
   },
   disabled: {
     '& *': {
-      color: theme.color.disabledText
-    }
-  }
+      color: theme.color.disabledText,
+    },
+  },
 }));
 
 interface Props {
@@ -57,7 +57,7 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
     pageSize,
     handlePageChange,
     handlePageSizeChange,
-    disabled
+    disabled,
   } = props;
 
   const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(0);

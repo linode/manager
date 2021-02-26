@@ -14,14 +14,14 @@ import Instructions from '../shared/InstallationInstructions';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   button: {
     padding: 0,
     '&:hover': {
-      color: theme.color.red
-    }
-  }
+      color: theme.color.red,
+    },
+  },
 }));
 
 interface Props extends ActionHandlers {
@@ -41,7 +41,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
     clientAPIKey,
     updateLongviewClient,
     triggerDeleteLongviewClient,
-    userCanModifyClient
+    userCanModifyClient,
   } = props;
   const classes = useStyles();
 

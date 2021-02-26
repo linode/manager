@@ -28,8 +28,8 @@ import { queryClient } from './queries/base';
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
 const Cancel = React.lazy(() => import('src/features/CancelLanding'));
-const LoginAsCustomerCallback = React.lazy(
-  () => import('src/layouts/LoginAsCustomerCallback')
+const LoginAsCustomerCallback = React.lazy(() =>
+  import('src/layouts/LoginAsCustomerCallback')
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
@@ -52,7 +52,7 @@ const renderApp = (props: RouteComponentProps) => (
   <QueryClientProvider client={queryClient}>
     <SplashScreen />
     <LinodeThemeWrapper>
-      {(toggle) => (
+      {toggle => (
         <SnackBar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           maxSnack={3}

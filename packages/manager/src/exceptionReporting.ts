@@ -60,7 +60,7 @@ export const configureErrorReportingUser = (
   configureScope(scope => {
     scope.setUser({
       user_id: userId,
-      username
+      username,
     });
   });
 };

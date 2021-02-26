@@ -7,7 +7,7 @@ import {
   LongviewFieldName,
   LongviewNotification,
   LongviewResponse,
-  Options
+  Options,
 } from './request.types';
 
 /**
@@ -79,13 +79,13 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   apache: 'Applications.Apache.*',
   apacheProcesses: 'Processes.apache.*',
   mysql: 'Applications.MySQL.*',
-  mysqlProcesses: 'Processes.mysql.*'
+  mysqlProcesses: 'Processes.mysql.*',
 };
 
 export const baseRequest = Axios.create({
   baseURL: LONGVIEW_ROOT,
   method: 'POST',
-  headers: { 'Content-Type': 'Multivalue-FormData' }
+  headers: { 'Content-Type': 'Multivalue-FormData' },
 });
 
 export const handleLongviewResponse = (
@@ -130,7 +130,7 @@ export const get: Get = (
     data.set('end', `${end}`);
   }
   return request({
-    data
+    data,
   }).then(handleLongviewResponse);
 };
 

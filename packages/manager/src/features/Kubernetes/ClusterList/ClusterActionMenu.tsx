@@ -30,14 +30,14 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
       title: 'Download kubeconfig',
       onClick: () => {
         downloadKubeConfig();
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         openDialog();
-      }
-    }
+      },
+    },
   ];
 
   const downloadKubeConfig = () => {
@@ -49,10 +49,10 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
           downloadFile(`${clusterLabel}-kubeconfig.yaml`, decodedFile);
         } catch (e) {
           reportException(e, {
-            'Encoded response': response.kubeconfig
+            'Encoded response': response.kubeconfig,
           });
           enqueueSnackbar('Error parsing your kubeconfig file', {
-            variant: 'error'
+            variant: 'error',
           });
           return;
         }

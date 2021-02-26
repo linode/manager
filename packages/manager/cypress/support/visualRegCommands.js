@@ -51,14 +51,14 @@ Cypress.Commands.add(
 
         if (visualRegMode === 'record') {
           cy.task('deleteVisualRegFiles', {
-            files: [toFilename(recordScreenShotName)]
+            files: [toFilename(recordScreenShotName)],
           });
         } else {
           cy.task('deleteVisualRegFiles', {
             files: [
               toFilename(actualScreenShotName),
-              toFilename(diffScreenShotName)
-            ]
+              toFilename(diffScreenShotName),
+            ],
           });
         }
         // take snapshot
@@ -73,7 +73,7 @@ Cypress.Commands.add(
           const options = {
             actualImage: toFilename(actualScreenShotName),
             diffImage: toFilename(diffScreenShotName),
-            expectedImage: toFilename(recordScreenShotName)
+            expectedImage: toFilename(recordScreenShotName),
           };
           cy.task('compareSnapshotsPlugin', options).then(res => {
             if (res.error) {

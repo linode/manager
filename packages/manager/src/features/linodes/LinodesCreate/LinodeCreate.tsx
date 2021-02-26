@@ -15,7 +15,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
@@ -33,12 +33,12 @@ import { AppsDocs } from 'src/documentation';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
-  getMineAndAccountStackScripts
+  getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
 import { ApplicationState } from 'src/store';
 import {
   CreateTypes,
-  handleChangeCreateType
+  handleChangeCreateType,
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -64,7 +64,7 @@ import {
   WithLinodesProps,
   WithRegionsProps,
   WithTypesProps,
-  WithTypesRegionsAndImages
+  WithTypesRegionsAndImages,
 } from './types';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
@@ -77,8 +77,8 @@ const styles = (theme: Theme) =>
         flexBasis: '100%',
         [theme.breakpoints.up('md')]: {
           maxWidth: '78.8%',
-          flexBasis: '78.8%'
-        }
+          flexBasis: '78.8%',
+        },
       },
       '& .mlSidebar': {
         position: 'static',
@@ -88,28 +88,28 @@ const styles = (theme: Theme) =>
         [theme.breakpoints.up('md')]: {
           position: 'sticky',
           maxWidth: '21.2%',
-          flexBasis: '21.2%'
-        }
-      }
+          flexBasis: '21.2%',
+        },
+      },
     },
     form: {
       width: '100%',
       [theme.breakpoints.up('md')]: {
-        display: 'flex'
-      }
+        display: 'flex',
+      },
     },
     stackScriptWrapper: {
       padding: theme.spacing(3),
       '& [role="tablist"]': {
         marginTop: theme.spacing(2),
-        marginBottom: theme.spacing()
-      }
+        marginBottom: theme.spacing(),
+      },
     },
     imageSelect: {
       '& .MuiPaper-root': {
-        padding: 0
-      }
-    }
+        padding: 0,
+      },
+    },
   });
 interface Props {
   history: any;
@@ -146,7 +146,7 @@ const errorMap = [
   'root_pass',
   'stackscript_id',
   'type',
-  'interfaces'
+  'interfaces',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -194,7 +194,7 @@ export class LinodeCreate extends React.PureComponent<
       'StackScripts',
       'Images',
       'Backups',
-      'Clone Linode'
+      'Clone Linode',
     ];
 
     /** Will be -1 if the query param is not found */
@@ -212,7 +212,7 @@ export class LinodeCreate extends React.PureComponent<
     this.state = {
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
-        preSelectedTab === 2 && location.search.search('Account') > -1 ? 1 : 0
+        preSelectedTab === 2 && location.search.search('Account') > -1 ? 1 : 0,
     };
   }
 
@@ -230,7 +230,7 @@ export class LinodeCreate extends React.PureComponent<
     this.props.setTab(this.tabs[index].type);
 
     this.setState({
-      selectedTab: index
+      selectedTab: index,
     });
   };
 
@@ -238,46 +238,46 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: 'Distributions',
       type: 'fromImage',
-      routeName: `${this.props.match.url}?type=Distributions`
+      routeName: `${this.props.match.url}?type=Distributions`,
     },
     {
       title: 'Marketplace',
       type: 'fromApp',
-      routeName: `${this.props.match.url}?type=One-Click`
+      routeName: `${this.props.match.url}?type=One-Click`,
     },
     {
       title: 'StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts`
+      routeName: `${this.props.match.url}?type=StackScripts`,
     },
     {
       title: 'Images',
       type: 'fromImage',
-      routeName: `${this.props.match.url}?type=Images`
+      routeName: `${this.props.match.url}?type=Images`,
     },
     {
       title: 'Backups',
       type: 'fromBackup',
-      routeName: `${this.props.match.url}?type=Backups`
+      routeName: `${this.props.match.url}?type=Backups`,
     },
     {
       title: 'Clone Linode',
       type: 'fromLinode',
-      routeName: `${this.props.match.url}?type=Clone%20Linode`
-    }
+      routeName: `${this.props.match.url}?type=Clone%20Linode`,
+    },
   ];
 
   stackScriptTabs: CreateTab[] = [
     {
       title: 'Account StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`,
     },
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`
-    }
+      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
+    },
   ];
 
   componentWillUnmount() {
@@ -305,7 +305,7 @@ export class LinodeCreate extends React.PureComponent<
 
         // StackScripts
         stackscript_id: this.props.selectedStackScriptID,
-        stackscript_data: this.props.selectedUDFs
+        stackscript_data: this.props.selectedUDFs,
       },
       this.props.selectedLinodeID
     );
@@ -369,7 +369,7 @@ export class LinodeCreate extends React.PureComponent<
       value: tags || [],
       onChange: updateTags,
       tagError: hasErrorFor.tags,
-      disabled: userCannotCreateLinode
+      disabled: userCannotCreateLinode,
     };
 
     const hasBackups = Boolean(
@@ -389,7 +389,7 @@ export class LinodeCreate extends React.PureComponent<
     if (regionDisplayInfo) {
       displaySections.push({
         title: regionDisplayInfo.title,
-        details: regionDisplayInfo.details
+        details: regionDisplayInfo.details,
       });
     }
 
@@ -400,7 +400,7 @@ export class LinodeCreate extends React.PureComponent<
     if (label) {
       displaySections.push({
         title: 'Linode Label',
-        details: label
+        details: label,
       });
     }
 
@@ -546,7 +546,7 @@ export class LinodeCreate extends React.PureComponent<
             updateFor={[
               this.props.selectedTypeID,
               this.props.disabledClasses,
-              errors
+              errors,
             ]}
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
@@ -559,7 +559,7 @@ export class LinodeCreate extends React.PureComponent<
               value: label || '',
               onChange: updateLabel,
               errorText: hasErrorFor.label,
-              disabled: userCannotCreateLinode
+              disabled: userCannotCreateLinode,
             }}
             tagsInputProps={
               this.props.createType !== 'fromLinode'
@@ -588,7 +588,7 @@ export class LinodeCreate extends React.PureComponent<
                 sshError,
                 userSSHKeys,
                 this.props.selectedImageID,
-                userCannotCreateLinode
+                userCannotCreateLinode,
               ]}
               users={userSSHKeys}
               requestKeys={requestKeys}
@@ -644,7 +644,7 @@ const mapDispatchToProps: MapDispatchToProps<
   DispatchProps,
   CombinedProps
 > = dispatch => ({
-  setTab: value => dispatch(handleChangeCreateType(value))
+  setTab: value => dispatch(handleChangeCreateType(value)),
 });
 
 interface StateProps {
@@ -656,7 +656,7 @@ const mapStateToProps: MapStateToProps<
   CombinedProps,
   ApplicationState
 > = state => ({
-  documentation: state.documentation
+  documentation: state.documentation,
 });
 
 const generateDocs = (ownProps: InnerProps & StateProps) => {

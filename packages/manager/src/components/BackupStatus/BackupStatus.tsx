@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
@@ -23,27 +23,27 @@ const styles = (theme: Theme) =>
   createStyles({
     icon: {
       fontSize: 18,
-      fill: theme.color.grey1
+      fill: theme.color.grey1,
     },
     noBackupText: {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     root: {},
     wrapper: {
       display: 'flex',
-      alignContent: 'center'
+      alignContent: 'center',
     },
     backupLink: {
       display: 'flex',
       '&:hover': {
         '& $icon': {
-          fill: theme.palette.primary.main
-        }
-      }
+          fill: theme.palette.primary.main,
+        },
+      },
     },
     backupText: {
-      whiteSpace: 'nowrap'
-    }
+      whiteSpace: 'nowrap',
+    },
   });
 
 interface Props {

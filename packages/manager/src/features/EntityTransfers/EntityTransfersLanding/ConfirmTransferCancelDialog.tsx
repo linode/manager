@@ -26,7 +26,7 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
+export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
   const { onClose, open, token } = props;
 
   const classes = useStyles();
@@ -66,7 +66,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
           variant: 'success',
         });
       })
-      .catch((e) => {
+      .catch(e => {
         setSubmissionErrors(
           getAPIErrorOrDefault(e, 'An unexpected error occurred.')
         );
@@ -97,18 +97,16 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
       open={open}
       actions={actions}
     >
-      {
-        // There could be multiple errors here that are relevant.
-        submissionErrors
-          ? submissionErrors.map((thisError, idx) => (
-              <Notice
-                key={`form-submit-error-${idx}`}
-                error
-                text={thisError.reason}
-              />
-            ))
-          : null
-      }
+      {// There could be multiple errors here that are relevant.
+      submissionErrors
+        ? submissionErrors.map((thisError, idx) => (
+            <Notice
+              key={`form-submit-error-${idx}`}
+              error
+              text={thisError.reason}
+            />
+          ))
+        : null}
       <Typography>
         Upon confirmation, the token generated for this transfer will no longer
         be valid. To transfer ownership of these Linodes, you will need to

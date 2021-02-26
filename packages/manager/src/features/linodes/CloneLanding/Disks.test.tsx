@@ -12,10 +12,10 @@ const props: Props = {
   disks,
   diskSelection: {
     18795181: { isSelected: false, associatedConfigIds: [] },
-    19040624: { isSelected: false, associatedConfigIds: [9859511] }
+    19040624: { isSelected: false, associatedConfigIds: [9859511] },
   },
   selectedConfigIds: [],
-  handleSelect: (id: number) => mockHandleSelect(id)
+  handleSelect: (id: number) => mockHandleSelect(id),
 };
 
 describe('Disks', () => {

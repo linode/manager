@@ -16,7 +16,7 @@ interface Props {
 
 const typeMap = {
   auto: 'Automatic',
-  snapshot: 'Manual'
+  snapshot: 'Manual',
 };
 
 const BackupTableRow: React.FC<Props> = props => {

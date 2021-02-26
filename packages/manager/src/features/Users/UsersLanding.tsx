@@ -12,7 +12,7 @@ import {
   makeStyles,
   useTheme,
   Theme,
-  useMediaQuery
+  useMediaQuery,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -36,44 +36,44 @@ import ActionMenu from './UsersActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.color.white
+    backgroundColor: theme.color.white,
   },
   userLandingHeader: {
     margin: 0,
-    width: '100%'
+    width: '100%',
   },
   headline: {
     marginTop: 8,
     marginBottom: 8,
     marginLeft: 15,
-    lineHeight: '1.5rem'
+    lineHeight: '1.5rem',
   },
   addNewWrapper: {
     [theme.breakpoints.down('xs')]: {
       marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      padding: 5
+      padding: 5,
     },
     '&.MuiGrid-item': {
-      padding: 5
-    }
+      padding: 5,
+    },
   },
   '@keyframes fadeIn': {
     from: {
-      opacity: 0
+      opacity: 0,
     },
     to: {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   title: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   avatar: {
     borderRadius: '50%',
     width: 30,
     height: 30,
     marginRight: theme.spacing(2),
-    animation: '$fadeIn 150ms linear forwards'
+    animation: '$fadeIn 150ms linear forwards',
   },
   emptyImage: {
     display: 'inline',
@@ -82,8 +82,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       width: 40,
-      height: 40
-    }
+      height: 40,
+    },
   },
   actionCell: {
     display: 'flex',
@@ -94,8 +94,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       Explicitly stating this as the theme file is automatically adding padding to the last cell
       We can remove once we make the full switch to CMR styling
       */
-    paddingRight: '0 !important'
-  }
+    paddingRight: '0 !important',
+  },
 }));
 
 interface Props {
@@ -114,7 +114,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
     enqueueSnackbar,
     data: users,
     error,
-    loading
+    loading,
   } = props;
 
   const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
@@ -162,7 +162,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
       .then(() => {
         onDelete();
         enqueueSnackbar(`User ${username} has been deleted successfully.`, {
-          variant: 'success'
+          variant: 'success',
         });
       })
       .catch(() => {
@@ -326,7 +326,7 @@ const paginated = Pagey((ownProps, params, filters) =>
     mapPromise(data, user =>
       memoizedGetGravatarURL(user.email).then((gravatarUrl: string) => ({
         ...user,
-        gravatarUrl
+        gravatarUrl,
       }))
     ).then(updatedUsers => ({ page, pages, results, data: updatedUsers }))
   )

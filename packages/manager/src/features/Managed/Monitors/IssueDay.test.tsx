@@ -8,7 +8,7 @@ describe('IssueDay', () => {
     const date = DateTime.fromISO('2020-10-01');
     const props: Props = {
       day: date.toISO(),
-      issues: []
+      issues: [],
     };
     const { getByText } = renderWithTheme(<IssueDay {...props} />);
     getByText('2020-10-01');

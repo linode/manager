@@ -2,7 +2,7 @@ import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import MUIDialog, {
-  DialogProps as _DialogProps
+  DialogProps as _DialogProps,
 } from 'src/components/core/Dialog';
 import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -23,43 +23,43 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: 0,
       maxHeight: '100%',
       '& .actionPanel': {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
       },
       '& .selectionCard': {
         maxWidth: '100%',
-        flexBasis: '100%'
-      }
+        flexBasis: '100%',
+      },
     },
     fullHeight: {
       '& .MuiDialog-paper': {
-        height: '100vh'
-      }
+        height: '100vh',
+      },
     },
     settingsBackdrop: {
-      backgroundColor: 'rgba(0,0,0,.3)'
+      backgroundColor: 'rgba(0,0,0,.3)',
     },
     drawerHeader: {
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
     dialogContent: {
       padding: theme.spacing(2),
       paddingTop: 0,
-      margin: 'auto'
+      margin: 'auto',
     },
     button: {
       minWidth: 'auto',
       minHeight: 'auto',
       padding: 0,
       '& > span': {
-        padding: 2
+        padding: 2,
       },
       '& :hover, & :focus': {
         color: 'white',
-        backgroundColor: theme.palette.primary.main
-      }
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     backDrop: {
-      backgroundColor: theme.color.drawerBackdrop
+      backgroundColor: theme.color.drawerBackdrop,
     },
     sticky: {
       backgroundColor: theme.cmrBGColors.bgPaper,
@@ -72,15 +72,15 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     titleBottomBorder: {
       backgroundColor: '#e3e5e8',
       height: 1,
       width: '100%',
       margin: '-2em 8px 0px 8px',
-      border: 'none'
-    }
+      border: 'none',
+    },
   })
 );
 
@@ -109,7 +109,7 @@ const Dialog: React.FC<DialogProps> = props => {
       role="dialog"
       aria-labelledby={titleID}
       BackdropProps={{
-        className: classes.settingsBackdrop
+        className: classes.settingsBackdrop,
       }}
       className={fullHeight ? classes.fullHeight : undefined}
     >

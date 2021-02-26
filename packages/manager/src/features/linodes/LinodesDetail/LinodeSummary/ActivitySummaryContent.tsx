@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -19,8 +19,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     emptyState: {
-      padding: theme.spacing(2)
-    }
+      padding: theme.spacing(2),
+    },
   });
 
 interface Props {

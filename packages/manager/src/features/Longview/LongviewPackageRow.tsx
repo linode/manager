@@ -8,8 +8,8 @@ import { LongviewPackage } from './request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   new: {
-    color: theme.color.green
-  }
+    color: theme.color.green,
+  },
 }));
 
 interface Props {

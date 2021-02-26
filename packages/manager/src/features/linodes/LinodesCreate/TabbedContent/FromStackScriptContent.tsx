@@ -10,14 +10,14 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import withFeatureFlags, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import SelectStackScriptPanel_CMR from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel_CMR';
@@ -28,7 +28,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
   ReduxStateProps,
   StackScriptFormStateHandlers,
-  WithTypesRegionsAndImages
+  WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 
@@ -38,16 +38,16 @@ const styles = (theme: Theme) =>
   createStyles({
     main: {
       [theme.breakpoints.up('md')]: {
-        maxWidth: '100%'
-      }
+        maxWidth: '100%',
+      },
     },
     emptyImagePanel: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     emptyImagePanelText: {
       marginTop: theme.spacing(1),
-      padding: `${theme.spacing(1)}px 0`
-    }
+      padding: `${theme.spacing(1)}px 0`,
+    },
   });
 
 interface Props {
@@ -68,7 +68,7 @@ const errorResources = {
   root_pass: 'A root password',
   image: 'image',
   tags: 'Tags',
-  stackscript_id: 'The selected StackScript'
+  stackscript_id: 'The selected StackScript',
 };
 
 type InnerProps = Props &
@@ -145,7 +145,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: compatibleImages,
       selectedUDFs: udf_data,
-      imagesData
+      imagesData,
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);

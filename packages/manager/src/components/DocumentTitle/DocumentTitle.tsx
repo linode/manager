@@ -9,7 +9,7 @@ interface DocumentTitleSegmentsContext {
 const documentTitleSegments = React.createContext<DocumentTitleSegmentsContext>(
   {
     appendSegment: () => null,
-    removeSegment: () => null
+    removeSegment: () => null,
   }
 );
 
@@ -77,7 +77,7 @@ export function withDocumentTitleProvider<P>(
         const targetIdx = this.titleSegments.findIndex(el => el === segment);
         this.titleSegments.splice(targetIdx, 1);
         this.updateDocumentTitle();
-      }
+      },
     };
 
     updateDocumentTitle = () => {

@@ -4,7 +4,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 
 const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
@@ -14,7 +14,7 @@ type Props = RouteComponentProps<{}>;
 
 const Volumes: React.FC<Props> = props => {
   const {
-    match: { path }
+    match: { path },
   } = props;
 
   return (

@@ -5,7 +5,7 @@ import {
   LinodeSpecs,
   LinodeStatus,
   LinodeType,
-  scheduleOrQueueMigration
+  scheduleOrQueueMigration,
 } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
@@ -39,7 +39,7 @@ import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
 
 import withRegions, {
-  DefaultProps as RegionProps
+  DefaultProps as RegionProps,
 } from 'src/containers/regions.container';
 
 import { MBpsInterDC } from 'src/constants';
@@ -49,11 +49,11 @@ import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   actionWrapper: {
-    marginTop: theme.spacing(2)
-  }
+    marginTop: theme.spacing(2),
+  },
 }));
 
 type CombinedProps = LinodeContextProps & WithTypesAndImages & RegionProps;
@@ -87,7 +87,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     regionsError,
     regionsLoading,
     regionsLastUpdated,
-    notifications
+    notifications,
   } = props;
 
   React.useEffect(() => {
@@ -115,7 +115,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     setLoading(true);
 
     return scheduleOrQueueMigration(linodeId, {
-      region: selectedRegion
+      region: selectedRegion,
     })
       .then(() => {
         resetEventsPolling();
@@ -124,7 +124,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
           region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
-            format: 'H'
+            format: 'H',
           })
         );
         history.push(`/linodes/${linodeId}`);
@@ -187,12 +187,12 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
               label,
               position: 2,
               linkTo: {
-                pathname: `/linodes/${linodeId}/summary`
+                pathname: `/linodes/${linodeId}/summary`,
               },
-              noCap: true
-            }
+              noCap: true,
+            },
           ],
-          onEditHandlers: undefined
+          onEditHandlers: undefined,
         }}
       />
       {linodeInTransition(linodeStatus, firstEventWithProgress) && (
@@ -263,7 +263,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeEvents: linode._events,
   linodeVolumes: linode._volumes,
   recentEvents: linode._events,
-  linodeDisks: linode._disks
+  linodeDisks: linode._disks,
 }));
 
 interface WithTypesAndImages {
@@ -279,7 +279,7 @@ const mapStateToProps: MapStateToProps<
 > = state => ({
   types: state.__resources.types.entities,
   images: state.__resources.images.itemsById,
-  notifications: state.__resources.notifications.data || []
+  notifications: state.__resources.notifications.data || [],
 });
 
 const withReduxState = connect(mapStateToProps);

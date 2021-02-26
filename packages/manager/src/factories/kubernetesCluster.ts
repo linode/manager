@@ -3,18 +3,18 @@ import {
   KubernetesCluster,
   KubernetesEndpointResponse,
   KubeNodePoolResponse,
-  PoolNodeResponse
+  PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes/types';
 import {
   ExtendedCluster,
-  PoolNodeWithPrice
+  PoolNodeWithPrice,
 } from 'src/features/Kubernetes/types';
 import { v4 } from 'uuid';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   id: Factory.each(id => `id-${id}`),
   instance_id: Factory.each(id => id),
-  status: 'ready'
+  status: 'ready',
 });
 
 export const nodePoolAPIFactory = Factory.Sync.makeFactory<
@@ -23,14 +23,14 @@ export const nodePoolAPIFactory = Factory.Sync.makeFactory<
   id: Factory.each(id => id),
   count: 3,
   type: 'g6-standard-1',
-  nodes: kubeLinodeFactory.buildList(3)
+  nodes: kubeLinodeFactory.buildList(3),
 });
 
 export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   id: Factory.each(id => id),
   count: 3,
   type: 'g6-standard-1',
-  totalMonthlyPrice: 1000
+  totalMonthlyPrice: 1000,
 });
 
 export const nodePoolFactory = _nodePoolFactory.withDerivation1(
@@ -60,13 +60,13 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<
   totalMemory: 1000,
   totalCPU: 4,
   totalStorage: 1000,
-  tags: []
+  tags: [],
 });
 
 export const kubeEndpointFactory = Factory.Sync.makeFactory<
   KubernetesEndpointResponse
 >({
-  endpoint: `https://${v4()}`
+  endpoint: `https://${v4()}`,
 });
 
 export const kubernetesAPIResponse = Factory.Sync.makeFactory<
@@ -79,5 +79,5 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<
   status: 'ready',
   label: Factory.each(i => `test-cluster-${i}`),
   k8s_version: '1.17',
-  tags: []
+  tags: [],
 });

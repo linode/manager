@@ -14,7 +14,7 @@ export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
   opened_by: 'test-account',
   entity: null,
   opened: '2018-11-01T01:00:00',
-  updated: '2018-11-01T01:00:00'
+  updated: '2018-11-01T01:00:00',
 });
 
 export const supportReplyFactory = Factory.Sync.makeFactory<SupportReply>({
@@ -23,5 +23,5 @@ export const supportReplyFactory = Factory.Sync.makeFactory<SupportReply>({
   created_by: 'support-staff',
   created: '2019-04-02T12:37:47',
   gravatar_id: 'xxxxx',
-  from_linode: true
+  from_linode: true,
 });

@@ -16,14 +16,14 @@ import MySQLGraphs from './MySQLGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 250
+    width: 250,
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -41,7 +41,7 @@ export const MySQLLanding: React.FC<Props> = props => {
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
-    end: 0
+    end: 0,
   });
 
   const { data, loading, error, request } = useGraphs(

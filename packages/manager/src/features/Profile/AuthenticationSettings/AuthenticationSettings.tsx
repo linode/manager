@@ -20,8 +20,8 @@ import TwoFactor from './TwoFactor';
 
 const useStyles = makeStyles(() => ({
   inner: {
-    paddingTop: 0
-  }
+    paddingTop: 0,
+  },
 }));
 
 export type CombinedProps = StateProps & DispatchProps;
@@ -34,7 +34,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
     ipAllowlisting,
     twoFactor,
     username,
-    updateProfile
+    updateProfile,
   } = props;
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
@@ -73,13 +73,13 @@ export const AuthenticationSettings: React.FC<CombinedProps> = props => {
             />
           )}
         </React.Fragment>
-      )
-    }
+      ),
+    },
   ];
 
   tabs.push({
     title: 'Third-Party Authentication',
-    render: () => <ThirdPartyContent authType={authType} />
+    render: () => <ThirdPartyContent authType={authType} />,
   });
 
   const initialTab = 0;
@@ -122,7 +122,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     ipAllowlisting: profile?.data?.ip_whitelist_enabled ?? false,
     twoFactor: profile?.data?.two_factor_auth,
     username: profile?.data?.username,
-    profileUpdateError: profile.error?.update
+    profileUpdateError: profile.error?.update,
   };
 };
 
@@ -131,7 +131,7 @@ interface DispatchProps {
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  updateProfile: (v: Partial<Profile>) => dispatch(_updateProfile(v) as any)
+  updateProfile: (v: Partial<Profile>) => dispatch(_updateProfile(v) as any),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

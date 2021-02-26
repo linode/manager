@@ -20,7 +20,7 @@ const container = (nodeBalancerId: number) => {
     return {
       configs: Object.values(thisNBConfigState.itemsById ?? {}),
       configsLoading: thisNBConfigState.loading ?? false,
-      configsError: thisNBConfigState.error?.read ?? []
+      configsError: thisNBConfigState.error?.read ?? [],
     };
   };
   return connect(mapStateToProps);

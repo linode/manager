@@ -31,7 +31,7 @@ class Example extends React.PureComponent<WithSnackbarProps, {}> {
       enqueueSnackbar(
         'Toast message. This will auto destruct after four seconds.',
         {
-          variant
+          variant,
         }
       );
 

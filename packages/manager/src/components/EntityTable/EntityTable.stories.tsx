@@ -18,40 +18,40 @@ const headers: HeaderCell[] = [
     label: 'Domain',
     dataColumn: 'domain',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 25,
   },
   {
     label: 'Type',
     dataColumn: 'type',
     sortable: true,
-    widthPercent: 15
+    widthPercent: 15,
   },
   {
     label: 'Status',
     dataColumn: 'status',
     sortable: false,
-    widthPercent: 25
+    widthPercent: 25,
   },
   {
     label: 'Last Modified',
     dataColumn: 'updated',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 25,
   },
   {
     label: 'Action Menu',
     visuallyHidden: true,
     dataColumn: '',
     sortable: false,
-    widthPercent: 5
-  }
+    widthPercent: 5,
+  },
 ];
 
 const domainRow: EntityTableRow<Domain> = {
   Component: DomainRow as any,
   data: domains,
   loading: false,
-  lastUpdated: 100
+  lastUpdated: 100,
 };
 
 storiesOf('EntityTable', module)

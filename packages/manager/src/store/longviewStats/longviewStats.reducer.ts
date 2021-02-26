@@ -1,6 +1,6 @@
 import {
   LongviewNotification,
-  LongviewResponse
+  LongviewResponse,
 } from 'src/features/Longview/request.types.ts';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { RelationalDataSet } from '../types';
@@ -27,8 +27,8 @@ const reducer = reducerWithInitialState(defaultState)
       : {
           ...state,
           [payload.clientID]: {
-            loading: true
-          }
+            loading: true,
+          },
         };
   })
   .caseWithAction(
@@ -39,8 +39,8 @@ const reducer = reducerWithInitialState(defaultState)
         data: result,
         loading: false,
         error: undefined,
-        lastUpdated: Date.now()
-      }
+        lastUpdated: Date.now(),
+      },
     })
   )
   .caseWithAction(
@@ -58,8 +58,8 @@ const reducer = reducerWithInitialState(defaultState)
             ...state,
             [params.clientID]: {
               loading: false,
-              error
-            }
+              error,
+            },
           };
     }
   )

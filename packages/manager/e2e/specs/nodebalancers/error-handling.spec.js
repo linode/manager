@@ -5,7 +5,7 @@ import NodeBalancers from '../../pageobjects/nodebalancers.page';
 import {
   apiCreateLinode,
   removeNodeBalancers,
-  apiDeleteAllLinodes
+  apiDeleteAllLinodes,
 } from '../../utils/common';
 
 //TODO investigate why these tests were skipped 10/17/2019
@@ -38,7 +38,7 @@ xdescribe('NodeBalancer - Negative Tests Suite', () => {
     $('[data-qa-panel-summary]').click();
 
     const invalidLabel = {
-      label: 'Something-NotLegit'
+      label: 'Something-NotLegit',
     };
     const invalidConfig = merge(linode, invalidLabel);
     const serviceError = `Label can't contain special characters, uppercase characters, or whitespace.`;
@@ -55,7 +55,7 @@ xdescribe('NodeBalancer - Negative Tests Suite', () => {
       healthCheckInterval: 5,
       healthCheckTimeout: 3,
       healthCheckAttempts: 2,
-      passiveChecksToggle: true
+      passiveChecksToggle: true,
     });
 
     browser.waitForDisplayed('[data-qa-backend-ip-label] p');
@@ -79,7 +79,7 @@ xdescribe('NodeBalancer - Negative Tests Suite', () => {
       healthCheckInterval: 5,
       healthCheckTimeout: 3,
       healthCheckAttempts: 2,
-      passiveChecksToggle: true
+      passiveChecksToggle: true,
     });
 
     browser.waitForDisplayed('[data-qa-backend-ip-address] p');

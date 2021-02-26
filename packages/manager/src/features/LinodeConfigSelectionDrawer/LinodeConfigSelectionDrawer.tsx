@@ -30,7 +30,7 @@ const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = props => {
     onSelectConfig,
     isOpen,
     linodeConfigs,
-    selectedConfigID
+    selectedConfigID,
   } = props;
 
   return (

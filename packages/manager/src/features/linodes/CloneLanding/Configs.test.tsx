@@ -9,7 +9,7 @@ const mockHandleSelect = jest.fn();
 const props: Props = {
   configs: linodeConfigs,
   configSelection: { 9859511: { isSelected: false, associatedDiskIds: [] } },
-  handleSelect: (id: number) => mockHandleSelect(id)
+  handleSelect: (id: number) => mockHandleSelect(id),
 };
 
 describe('Configs', () => {

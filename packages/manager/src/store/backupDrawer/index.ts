@@ -59,16 +59,16 @@ export const handleEnable: ActionCreator = () => ({ type: ENABLE });
 
 export const handleEnableSuccess: ActionCreator = (data: number[]) => ({
   type: ENABLE_SUCCESS,
-  data
+  data,
 });
 
 export const handleEnableError: ActionCreator = (data: Accumulator) => ({
   type: ENABLE_ERROR,
-  data
+  data,
 });
 
 export const handleResetSuccess: ActionCreator = () => ({
-  type: RESET_SUCCESS
+  type: RESET_SUCCESS,
 });
 
 export const handleResetError: ActionCreator = () => ({ type: RESET_ERRORS });
@@ -80,16 +80,16 @@ export const handleClose: ActionCreator = () => ({ type: CLOSE });
 export const handleAutoEnroll: ActionCreator = () => ({ type: AUTO_ENROLL });
 
 export const handleAutoEnrollSuccess: ActionCreator = () => ({
-  type: AUTO_ENROLL_SUCCESS
+  type: AUTO_ENROLL_SUCCESS,
 });
 
 export const handleAutoEnrollError: ActionCreator = (error: string) => ({
   type: AUTO_ENROLL_ERROR,
-  data: error
+  data: error,
 });
 
 export const handleAutoEnrollToggle: ActionCreator = () => ({
-  type: AUTO_ENROLL_TOGGLE
+  type: AUTO_ENROLL_TOGGLE,
 });
 
 // DEFAULT STATE
@@ -102,7 +102,7 @@ export const defaultState: State = {
   autoEnroll: false,
   autoEnrollError: undefined,
   enrolling: false,
-  updatedCount: 0
+  updatedCount: 0,
 };
 
 // REDUCER
@@ -120,7 +120,7 @@ const reducer: Reducer<State> = (
         enableErrors: [],
         autoEnrollError: undefined,
         updatedCount: 0,
-        autoEnroll: true
+        autoEnroll: true,
       };
 
     case CLOSE:
@@ -132,7 +132,7 @@ const reducer: Reducer<State> = (
         enabling: true,
         enableErrors: [],
         enableSuccess: false,
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
       };
 
     case ENABLE_SUCCESS:
@@ -142,7 +142,7 @@ const reducer: Reducer<State> = (
         lastUpdated: Date.now(),
         enableSuccess: true,
         data: action.data,
-        updatedCount: action.data.length
+        updatedCount: action.data.length,
       };
 
     case ENABLE_ERROR:
@@ -152,7 +152,7 @@ const reducer: Reducer<State> = (
         lastUpdated: Date.now(),
         enableErrors: action.data.errors,
         updatedCount: action.data.success.length,
-        error: action.error
+        error: action.error,
       };
 
     case RESET_ERRORS:
@@ -160,7 +160,7 @@ const reducer: Reducer<State> = (
         ...state,
         lastUpdated: Date.now(),
         enableErrors: [],
-        error: undefined
+        error: undefined,
       };
 
     case RESET_SUCCESS:
@@ -168,33 +168,33 @@ const reducer: Reducer<State> = (
         ...state,
         lastUpdated: Date.now(),
         enableSuccess: false,
-        updatedCount: 0
+        updatedCount: 0,
       };
 
     case AUTO_ENROLL:
       return {
         ...state,
-        enrolling: true
+        enrolling: true,
       };
 
     case AUTO_ENROLL_TOGGLE:
       return {
         ...state,
-        autoEnroll: !state.autoEnroll
+        autoEnroll: !state.autoEnroll,
       };
 
     case AUTO_ENROLL_SUCCESS:
       return {
         ...state,
         autoEnrollError: undefined,
-        enrolling: false
+        enrolling: false,
       };
 
     case AUTO_ENROLL_ERROR:
       return {
         ...state,
         autoEnrollError: action.data,
-        enrolling: false
+        enrolling: false,
       };
 
     default:
@@ -227,8 +227,8 @@ export const gatherResponsesAndErrors = (
       // This is accurate, since a 200 from the API means that backups were enabled.
       success: [
         ...accumulator.success,
-        { ...linode, backups: { ...linode.backups, enabled: true } }
-      ]
+        { ...linode, backups: { ...linode.backups, enabled: true } },
+      ],
     }))
     .catch(error => {
       const reason = getErrorStringOrDefault(
@@ -237,7 +237,7 @@ export const gatherResponsesAndErrors = (
       );
       return {
         ...accumulator,
-        errors: [...accumulator.errors, { linodeId: linode.id, reason }]
+        errors: [...accumulator.errors, { linodeId: linode.id, reason }],
       };
     });
 };
@@ -259,7 +259,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
   dispatch(handleEnable());
   Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
     success: [],
-    errors: []
+    errors: [],
   })
     .then(response => {
       if (response.errors && !isEmpty(response.errors)) {
@@ -276,7 +276,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
     .catch(() =>
       dispatch(
         handleEnableError([
-          { linodeId: 0, reason: 'There was an error enabling backups.' }
+          { linodeId: 0, reason: 'There was an error enabling backups.' },
         ])
       )
     );

@@ -1,7 +1,7 @@
 import {
   Account,
   getAccountInfo,
-  updateAccountInfo
+  updateAccountInfo,
 } from '@linode/api-v4/lib/account';
 
 import { createRequestThunk } from '../store.helpers';
@@ -27,7 +27,7 @@ export const stripInvalidPromos = (data: Account) => {
   );
   return {
     ...data,
-    active_promotions: filteredPromotions
+    active_promotions: filteredPromotions,
   };
 };
 

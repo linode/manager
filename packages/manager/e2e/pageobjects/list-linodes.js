@@ -333,9 +333,7 @@ export class ListLinodes extends Page {
     this.confirmDialogSubmit.waitForDisplayed();
     expect(this.confirmDialogTitle.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.confirmDialogTitle.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.confirmDialogTitle.selector}" selector`
       )
       .toMatch(dialogTitle);
     this.confirmDialogSubmit.click();

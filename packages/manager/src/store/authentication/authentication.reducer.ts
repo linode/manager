@@ -5,7 +5,7 @@ import {
   handleInitTokens,
   handleLogout,
   handleRefreshTokens,
-  handleStartSession
+  handleStartSession,
 } from './authentication.actions';
 import { clearLocalStorage } from './authentication.helpers';
 import { State } from './index';
@@ -14,13 +14,13 @@ export const defaultState: State = {
   token: null,
   scopes: null,
   expiration: null,
-  loggedInAsCustomer: false
+  loggedInAsCustomer: false,
 };
 
 const {
   token: tokenInLocalStorage,
   scopes: scopesInLocalStorage,
-  expire: expiryInLocalStorage
+  expire: expiryInLocalStorage,
 } = authentication;
 
 const reducer = reducerWithInitialState(defaultState)
@@ -37,7 +37,7 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       token: token || null,
       scopes: scopes || null,
-      expiration: expires || null
+      expiration: expires || null,
     };
   })
   .case(handleInitTokens, state => {
@@ -57,7 +57,7 @@ const reducer = reducerWithInitialState(defaultState)
         ...state,
         token: null,
         scopes: null,
-        expiration: null
+        expiration: null,
       };
     }
 
@@ -81,7 +81,7 @@ const reducer = reducerWithInitialState(defaultState)
       token,
       scopes,
       expiration: expiryDateFromLocalStorage,
-      loggedInAsCustomer: isLoggedInAsCustomer
+      loggedInAsCustomer: isLoggedInAsCustomer,
     };
   })
   .case(handleLogout, state => {
@@ -93,7 +93,7 @@ const reducer = reducerWithInitialState(defaultState)
       scopes: null,
       token: null,
       expiration: null,
-      loggedInAsCustomer: false
+      loggedInAsCustomer: false,
     };
   })
   .case(handleRefreshTokens, state => {
@@ -106,7 +106,7 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       token: localToken,
       scopes: localScopes,
-      expiration: localExpiry
+      expiration: localExpiry,
     };
   })
   .default(state => state);

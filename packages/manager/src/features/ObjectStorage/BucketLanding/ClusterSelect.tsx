@@ -6,7 +6,7 @@ import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionSelect';
 import { dcDisplayNames } from 'src/constants';
 import clustersContainer, {
-  StateProps
+  StateProps,
 } from 'src/containers/clusters.container';
 import { useRegionsQuery } from 'src/queries/regions';
 
@@ -27,7 +27,7 @@ export const ClusterSelect: React.FC<CombinedProps> = props => {
     onBlur,
     clustersData,
     clustersError,
-    disabled
+    disabled,
   } = props;
 
   const _regions = useRegionsQuery().data ?? [];
@@ -82,7 +82,7 @@ export const objectStorageClusterToExtendedRegion = (
       acc.push({
         ...region,
         id: thisCluster.id,
-        display: dcDisplayNames[region.id]
+        display: dcDisplayNames[region.id],
       });
     }
     return acc;

@@ -52,7 +52,7 @@ interface Handlers {
 
 export type CombinedProps = Props & Handlers;
 
-export const ConfigRow: React.FC<CombinedProps> = (props) => {
+export const ConfigRow: React.FC<CombinedProps> = props => {
   const {
     config,
     linodeId,
@@ -73,19 +73,18 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
   const validDevices = React.useMemo(
     () =>
       Object.keys(config.devices)
-        .map((thisDevice) => {
+        .map(thisDevice => {
           const device = config.devices[thisDevice];
           let label: string | null = null;
           if (device?.disk_id) {
             label =
               linodeDisks.find(
-                (thisDisk) =>
-                  thisDisk.id === config.devices[thisDevice]?.disk_id
+                thisDisk => thisDisk.id === config.devices[thisDevice]?.disk_id
               )?.label ?? `disk-${device.disk_id}`;
           } else if (device?.volume_id) {
             label =
               linodeVolumes.find(
-                (thisVolume) =>
+                thisVolume =>
                   thisVolume.id === config.devices[thisDevice]?.volume_id
               )?.label ?? `volume-${device.volume_id}`;
           }
@@ -108,13 +107,13 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
     [classes.interfaceList, validDevices]
   );
 
-  const hasPrivateIP = linodeIPs.some((thisIP) => privateIPRegex.test(thisIP));
+  const hasPrivateIP = linodeIPs.some(thisIP => privateIPRegex.test(thisIP));
 
   const InterfaceList = (
     <ul className={classes.interfaceList}>
-      {Object.keys(config.interfaces).map((interfaceName) => {
+      {Object.keys(config.interfaces).map(interfaceName => {
         const linodeInterface = linodeInterfaces.find(
-          (thisInterface) =>
+          thisInterface =>
             thisInterface.id === config.interfaces[interfaceName]?.id
         );
 

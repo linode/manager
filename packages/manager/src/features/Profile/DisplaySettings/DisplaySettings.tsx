@@ -10,7 +10,7 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useProfile from 'src/hooks/useProfile';
 import { ApplicationState } from 'src/store';
 import withNotifications, {
-  WithNotifications
+  WithNotifications,
 } from 'src/store/notification/notification.containers';
 import useTimezone from 'src/utilities/useTimezone';
 import { v4 } from 'uuid';
@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    marginBottom: theme.spacing(3)
-  }
+    marginBottom: theme.spacing(3),
+  },
 }));
 
 export const DisplaySettings: React.FC<WithNotifications> = props => {
@@ -54,7 +54,7 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
     setTimezoneResetToken(v4());
     // Default to empty string... but I don't believe this is possible.
     return updateUser(profile?.data?.username ?? '', {
-      username: newUsername
+      username: newUsername,
     });
   };
 

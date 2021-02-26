@@ -6,7 +6,7 @@ import InsertPhoto from '@material-ui/icons/InsertPhoto';
 
 import {
   addIconsToAttachments,
-  TicketAttachmentList
+  TicketAttachmentList,
 } from './TicketAttachmentList';
 
 const props = {
@@ -17,11 +17,11 @@ const props = {
     'file4.bmp',
     'file5.jpeg',
     'file6.txt',
-    'file7.pdf'
+    'file7.pdf',
   ],
   showMoreAttachments: false,
   toggle: jest.fn(),
-  classes: { root: '', attachmentPaperWrapper: '' }
+  classes: { root: '', attachmentPaperWrapper: '' },
 };
 
 const component = shallow(<TicketAttachmentList {...props} />);

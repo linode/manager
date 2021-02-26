@@ -29,7 +29,7 @@ const CheckoutBar: React.FC<CombinedProps> = props => {
     isMakingRequest,
     priceHelperText,
     submitText,
-    footer
+    footer,
   } = props;
 
   const price = calculatedPrice ?? 0;

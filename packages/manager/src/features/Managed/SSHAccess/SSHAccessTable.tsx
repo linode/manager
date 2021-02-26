@@ -1,6 +1,6 @@
 import {
   getLinodeSettings,
-  ManagedLinodeSetting
+  ManagedLinodeSetting,
 } from '@linode/api-v4/lib/managed';
 import produce from 'immer';
 import * as React from 'react';
@@ -27,9 +27,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(4),
     '&:before': {
-      display: 'none'
-    }
-  }
+      display: 'none',
+    },
+  },
 }));
 
 const request = () =>
@@ -82,7 +82,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                 handlePageChange,
                 handlePageSizeChange,
                 page,
-                pageSize
+                pageSize,
               }) => {
                 return (
                   <>

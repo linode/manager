@@ -1,7 +1,7 @@
 import {
   generateSelectOptions,
   generateStartTime,
-  Labels
+  Labels,
 } from './TimeRangeSelect';
 
 describe('Utility Functions', () => {
@@ -19,7 +19,7 @@ describe('Utility Functions', () => {
       'Past 7 Days',
       'Past 30 Days',
       'Past Year',
-      '2019'
+      '2019',
     ]);
   });
 
@@ -30,7 +30,7 @@ describe('Utility Functions', () => {
       /* 3 0s to turn into milliseconds */
       new Date(value * 1000).toLocaleString('en-US', {
         timeZoneName: 'short',
-        timeZone: 'GMT'
+        timeZone: 'GMT',
       });
 
     expect(

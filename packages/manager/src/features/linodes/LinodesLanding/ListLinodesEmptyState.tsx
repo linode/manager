@@ -16,8 +16,8 @@ export const ListLinodesEmptyState: React.FC<{}> = _ => {
       buttonProps={[
         {
           onClick: () => push('/linodes/create'),
-          children: 'Add a Linode'
-        }
+          children: 'Add a Linode',
+        },
       ]}
     >
       <Typography variant="subtitle1">

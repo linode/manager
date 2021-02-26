@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
-  Props as LoadingAndErrorProps
+  Props as LoadingAndErrorProps,
 } from 'src/components/withLoadingAndError';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -30,7 +30,7 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
       setLoadingAndClearErrors,
       clearLoadingAndErrors,
       setErrorAndClearLoading,
-      closeDialog
+      closeDialog,
     } = this.props;
     setLoadingAndClearErrors();
     deleteTrustedDevice(deviceId)

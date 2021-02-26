@@ -25,7 +25,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
     lastUpdated,
     updateOne,
     openDrawer,
-    error
+    error,
   } = props;
 
   if (loading && lastUpdated === 0) {

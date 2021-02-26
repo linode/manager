@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
 import bucketDrawerContainer, {
   DispatchProps,
-  StateProps
+  StateProps,
 } from 'src/containers/bucketDrawer.container';
 import CreateBucketForm from './CreateBucketForm';
 

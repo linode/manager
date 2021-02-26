@@ -4,7 +4,7 @@ import {
   ManagedCredential,
   ManagedServiceMonitor,
   ManagedServicePayload,
-  ServiceType
+  ServiceType,
 } from '@linode/api-v4/lib/managed';
 import { pickBy } from 'ramda';
 import * as React from 'react';
@@ -33,23 +33,23 @@ type CombinedProps = Props;
 
 export const modes = {
   CREATING: 'create',
-  EDITING: 'edit'
+  EDITING: 'edit',
 };
 
 const titleMap = {
   [modes.CREATING]: 'Add a Monitor',
-  [modes.EDITING]: 'Edit Monitor'
+  [modes.EDITING]: 'Edit Monitor',
 };
 
 const typeOptions: Item<ServiceType>[] = [
   {
     value: 'url',
-    label: 'URL'
+    label: 'URL',
   },
   {
     value: 'tcp',
-    label: 'TCP'
-  }
+    label: 'TCP',
+  },
 ];
 
 const getCredentialOptions = (
@@ -58,7 +58,7 @@ const getCredentialOptions = (
   return credentials.map(thisCredential => {
     return {
       value: thisCredential.id,
-      label: thisCredential.label
+      label: thisCredential.label,
     };
   });
 };
@@ -66,7 +66,7 @@ const getCredentialOptions = (
 const getGroupsOptions = (groups: string[]): Item<string>[] => {
   return groups.map(thisGroup => ({
     value: thisGroup,
-    label: thisGroup
+    label: thisGroup,
   }));
 };
 
@@ -76,7 +76,7 @@ const helperText = {
   url: 'The URL to request.',
   body: 'Response must contain this string or an alert will be triggered.',
   credentials:
-    'Any additional credentials required for incident response or routine maintenance.'
+    'Any additional credentials required for incident response or routine maintenance.',
 };
 
 const getValueFromItem = (value: string, options: Item<any>[]) => {
@@ -95,7 +95,7 @@ const emptyInitialValues = {
   address: '',
   body: '',
   timeout: 10,
-  notes: ''
+  notes: '',
 } as ManagedServicePayload;
 
 const MonitorDrawer: React.FC<CombinedProps> = props => {
@@ -133,7 +133,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          setFieldValue
+          setFieldValue,
         }) => (
           <>
             {status && (
@@ -178,7 +178,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 }
                 onBlur={handleBlur}
                 textFieldProps={{
-                  tooltipText: helperText.consultation_group
+                  tooltipText: helperText.consultation_group,
                 }}
               />
 
@@ -197,7 +197,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                     }
                     onBlur={handleBlur}
                     textFieldProps={{
-                      required: mode === modes.CREATING
+                      required: mode === modes.CREATING,
                     }}
                   />
                 </Grid>
@@ -216,7 +216,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">seconds</InputAdornment>
-                      )
+                      ),
                     }}
                   />
                 </Grid>
@@ -270,7 +270,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 )}
                 errorText={errors.credentials}
                 textFieldProps={{
-                  tooltipText: helperText.credentials
+                  tooltipText: helperText.credentials,
                 }}
                 onChange={(items: Item<number>[]) => {
                   setFieldValue(

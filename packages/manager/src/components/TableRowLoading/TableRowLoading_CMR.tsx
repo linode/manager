@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -18,11 +18,11 @@ const styles = (theme: Theme) =>
     tableCell: {
       paddingTop: 0,
       paddingBottom: 0,
-      textAlign: 'center'
+      textAlign: 'center',
     },
     transparent: {
-      backgroundColor: theme.bg.main
-    }
+      backgroundColor: theme.bg.main,
+    },
   });
 
 type Columns = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
@@ -50,7 +50,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
     numberOfRows,
     hasEntityIcon,
     compact,
-    numberOfColumns
+    numberOfColumns,
   } = props;
 
   // Default number of columns for the <Skeleton />.
@@ -73,7 +73,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
       rows.push(
         <TableRow
           className={classNames({
-            [classes.transparent]: transparent
+            [classes.transparent]: transparent,
           })}
           data-testid="table-row-loading"
           aria-label="Table content is loading"
@@ -84,7 +84,7 @@ const tableRowLoading: React.FC<CombinedProps> = props => {
             colSpan={colSpan}
             className={classNames({
               [classes.tableCell]: true,
-              [classes.transparent]: transparent
+              [classes.transparent]: transparent,
             })}
           >
             <Skeleton

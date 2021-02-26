@@ -3,5 +3,5 @@ export const renderBackupsDisplaySection = (
   price: number
 ) => ({
   title: accountBackups ? 'Backups Enabled (Auto Enrolled)' : 'Backups Enabled',
-  details: `$${price.toFixed(2)} / monthly`
+  details: `$${price.toFixed(2)} / monthly`,
 });

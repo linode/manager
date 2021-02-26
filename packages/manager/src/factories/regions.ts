@@ -4,7 +4,7 @@ import { dcDisplayNames } from 'src/constants';
 
 export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
   ipv4: '1.1.1.1',
-  ipv6: '2600:3c03::'
+  ipv6: '2600:3c03::',
 });
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({
@@ -12,5 +12,5 @@ export const regionFactory = Factory.Sync.makeFactory<Region>({
   status: 'ok',
   country: 'US',
   capabilities: ['Block Storage'],
-  resolvers: resolverFactory.build()
+  resolvers: resolverFactory.build(),
 });

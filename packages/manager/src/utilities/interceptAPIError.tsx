@@ -4,7 +4,7 @@ interface Intercept {
   condition: (e: APIError) => boolean;
   replacementText: JSX.Element | string;
   /** optional callback to fire when error is matched correctly */
-  callback?: Function;
+  callback?: () => void;
 }
 
 export const interceptErrors = (
@@ -15,7 +15,7 @@ export const interceptErrors = (
     return interceptors.reduce((acc, eachInterceptor) => {
       if (eachInterceptor.condition(thisError)) {
         acc = {
-          reason: eachInterceptor.replacementText as string
+          reason: eachInterceptor.replacementText as string,
         };
         if (eachInterceptor.callback) {
           eachInterceptor.callback();

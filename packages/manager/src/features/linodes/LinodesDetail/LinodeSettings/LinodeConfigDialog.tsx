@@ -137,7 +137,7 @@ const pathsOptions = [
   { label: '/dev/sdh', value: '/dev/sdh' },
 ];
 
-const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
+const LinodeConfigDialog: React.FC<CombinedProps> = props => {
   const {
     open,
     onClose,
@@ -155,7 +155,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     initialValues: defaultFieldsValues,
     validateOnChange: true,
     validateOnMount: true,
-    onSubmit: (values) => onSubmit(values),
+    onSubmit: values => onSubmit(values),
   });
 
   const convertStateToData = (state: EditableFields) => {
@@ -196,11 +196,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     /** Editing */
     if (linodeConfigId) {
       return updateLinodeConfig(linodeConfigId, configData)
-        .then((_) => {
+        .then(_ => {
           formik.setSubmitting(false);
           onClose();
         })
-        .catch((error) => {
+        .catch(error => {
           const mapErrorToStatus = (generalError: string) =>
             formik.setStatus({ generalError });
           formik.setSubmitting(false);
@@ -216,11 +216,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     /** Creating */
     return createLinodeConfig(configData)
-      .then((_) => {
+      .then(_ => {
         formik.setSubmitting(false);
         onClose();
       })
-      .catch((error) => {
+      .catch(error => {
         const mapErrorToStatus = (generalError: string) =>
           formik.setStatus({ generalError });
         formik.setSubmitting(false);
@@ -527,14 +527,14 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
                 devices={availableDevices}
                 onChange={handleDevicesChanges}
-                getSelected={(slot) => pathOr('', [slot], values.devices)}
+                getSelected={slot => pathOr('', [slot], values.devices)}
                 disabled={readOnly}
               />
               <Button
                 className={classes.button}
                 buttonType="secondary"
                 superCompact
-                onClick={() => setCounter((counter) => counter + 1)}
+                onClick={() => setCounter(counter => counter + 1)}
                 disabled={readOnly || counter >= 6}
               >
                 Add a Device
@@ -557,7 +557,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     options={pathsOptions}
                     label="Root Device"
                     defaultValue={pathsOptions.find(
-                      (device) => device.value === values.root_device
+                      device => device.value === values.root_device
                     )}
                     onChange={formik.handleChange}
                     name="root_device"
@@ -716,7 +716,7 @@ interface ConfigFormProps {
   children: JSX.Element;
 }
 
-const DialogContent: React.FC<ConfigFormProps> = (props) => {
+const DialogContent: React.FC<ConfigFormProps> = props => {
   const { loading, errors } = props;
 
   if (loading) {

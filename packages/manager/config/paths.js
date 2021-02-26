@@ -62,5 +62,5 @@ module.exports = {
   appEsLintConfig: resolveApp('.eslintrc.js'),
   publicUrl: getPublicUrl(packageJson),
   appVersion: getAppVersion(packageJson),
-  servedPath: getServedPath(packageJson)
+  servedPath: getServedPath(packageJson),
 };

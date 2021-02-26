@@ -34,13 +34,13 @@ export const generatePollingFilter = (
 
   if (neqIds.length > 0) {
     filter = {
-      '+and': [...filter, ...generateNeqFilter('id', neqIds)]
+      '+and': [...filter, ...generateNeqFilter('id', neqIds)],
     };
   }
 
   if (inIds.length > 0) {
     filter = {
-      '+or': [...filter, ...generateInFilter('id', inIds)]
+      '+or': [...filter, ...generateInFilter('id', inIds)],
     };
   }
 

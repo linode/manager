@@ -2,7 +2,7 @@ import * as React from 'react';
 import useProfile from 'src/hooks/useProfile';
 import { useHistory } from 'react-router-dom';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -28,13 +28,13 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
       title: 'User Profile',
       onClick: () => {
         history.push(`/account/users/${username}`);
-      }
+      },
     },
     {
       title: 'User Permissions',
       onClick: () => {
         history.push(`/account/users/${username}/permissions`);
-      }
+      },
     },
     {
       disabled: username === profileUsername,
@@ -45,8 +45,8 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
       tooltip:
         username === profileUsername
           ? "You can't delete the currently active user."
-          : undefined
-    }
+          : undefined,
+    },
   ];
 
   return (

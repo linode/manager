@@ -4,7 +4,7 @@ import {
   deleteCredential,
   ManagedCredential,
   updateCredential,
-  updatePassword
+  updatePassword,
 } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { FormikBag } from 'formik';
@@ -30,7 +30,7 @@ import { useDialog } from 'src/hooks/useDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
@@ -38,35 +38,35 @@ import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.color.white
+    backgroundColor: theme.color.white,
   },
   subHeader: {
     marginBottom: theme.spacing(4),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
+      marginRight: theme.spacing(),
+    },
   },
   credentialListHeader: {
     margin: 0,
-    width: '100%'
+    width: '100%',
   },
   headline: {
     marginTop: 8,
     marginBottom: 8,
     marginLeft: 15,
-    lineHeight: '1.5rem'
+    lineHeight: '1.5rem',
   },
   addNewWrapper: {
     '&.MuiGrid-item': {
-      padding: 5
-    }
+      padding: 5,
+    },
   },
   actionCell: {
     '&.emptyCell': {
-      fontSize: '0.875em !important'
-    }
-  }
+      fontSize: '0.875em !important',
+    },
+  },
 }));
 
 interface Props {
@@ -95,7 +95,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     openDialog,
     closeDialog,
     submitDialog,
-    handleError
+    handleError,
   } = useDialog<number>(deleteCredential);
 
   const selectedCredential = credentials.find(
@@ -106,7 +106,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     submitDialog(dialog.entityID)
       .then(() => {
         enqueueSnackbar('Credential deleted successfully.', {
-          variant: 'success'
+          variant: 'success',
         });
         update();
       })
@@ -164,7 +164,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     }
     updatePassword(editID, {
       password: values.password || undefined,
-      username: values.username || undefined
+      username: values.username || undefined,
     })
       .then(() => {
         setSubmitting(false);
@@ -257,7 +257,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
                 handlePageChange,
                 handlePageSizeChange,
                 page,
-                pageSize
+                pageSize,
               }) => (
                 <>
                   <Paper>

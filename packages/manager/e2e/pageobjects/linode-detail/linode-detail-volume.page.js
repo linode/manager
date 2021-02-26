@@ -526,7 +526,7 @@ export class VolumeDetail extends Page {
           'Resize',
           'Clone',
           'Attach',
-          'Delete'
+          'Delete',
         ];
     const actionMenuItem = this.actionMenuItem.selector.replace(']', '');
     menuItems.forEach(item =>
@@ -553,9 +553,7 @@ export class VolumeDetail extends Page {
       .toBe('button');
     expect(this.configHelpMessages.length)
       .withContext(
-        `${assertLog.incorrectNum} for "${
-          this.configHelpMessages.selector
-        }" selector`
+        `${assertLog.incorrectNum} for "${this.configHelpMessages.selector}" selector`
       )
       .toBe(4);
 

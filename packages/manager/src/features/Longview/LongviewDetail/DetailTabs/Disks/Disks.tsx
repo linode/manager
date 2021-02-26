@@ -18,13 +18,13 @@ import { useGraphs } from '../OverviewGraphs/useGraphs';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: 250,
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -46,12 +46,12 @@ const Disks: React.FC<CombinedProps> = props => {
     lastUpdated,
     lastUpdatedError,
     clientLastUpdated,
-    clientAPIKey
+    clientAPIKey,
   } = props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
-    end: 0
+    end: 0,
   });
 
   const handleStatsChange = (start: number, end: number) => {
@@ -73,7 +73,7 @@ const Disks: React.FC<CombinedProps> = props => {
     clientAPIKey,
     clientLastUpdated,
     lastUpdatedError,
-    lastUpdated
+    lastUpdated,
   ]);
 
   const renderContent = () => {

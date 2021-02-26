@@ -27,7 +27,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
     monitors,
     openDialog,
     openHistoryDrawer,
-    openMonitorDrawer
+    openMonitorDrawer,
   } = props;
 
   if (loading) {

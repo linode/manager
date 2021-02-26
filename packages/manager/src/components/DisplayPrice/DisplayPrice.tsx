@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
@@ -16,13 +16,13 @@ const styles = (theme: Theme) =>
     price: {
       fontSize: '1.5rem',
       color: theme.color.green,
-      display: 'inline-block'
+      display: 'inline-block',
     },
     per: {
       color: theme.color.green,
       display: 'inline-block',
-      fontWeight: 400
-    }
+      fontWeight: 400,
+    },
   });
 
 interface Props {

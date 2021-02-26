@@ -9,7 +9,7 @@ import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
 import TransferControls from './TransferControls';
 import CircleProgress from 'src/components/CircleProgress';
 
-export const EntityTransfersLanding: React.FC<{}> = (_) => {
+export const EntityTransfersLanding: React.FC<{}> = _ => {
   const [successDialogOpen, setSuccessDialogOpen] = React.useState(true);
   const [transfer, setTransfer] = React.useState<EntityTransfer | undefined>(
     undefined

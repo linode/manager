@@ -23,7 +23,7 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = props => {
     open,
     closeDialog,
     selectedLongviewClientID,
-    selectedLongviewClientLabel: label
+    selectedLongviewClientLabel: label,
   } = props;
 
   /** reset errors on open */
@@ -37,8 +37,8 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = props => {
     if (!selectedLongviewClientID) {
       return setErrors([
         {
-          reason: 'There was an issue deleting this Longview Client.'
-        }
+          reason: 'There was an issue deleting this Longview Client.',
+        },
       ]);
     }
 

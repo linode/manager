@@ -7,7 +7,7 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import { EntityError, RelationalMappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -18,7 +18,7 @@ import {
   getAllLinodeConfigsActions,
   getLinodeConfigActions,
   getLinodeConfigsPageActions,
-  updateLinodeConfigActions
+  updateLinodeConfigActions,
 } from './config.actions';
 import { Entity } from './config.types';
 
@@ -70,7 +70,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
 
       draft[linodeId] = onError(
         {
-          read: error
+          read: error,
         },
         draft[linodeId]
       );
@@ -98,13 +98,13 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
       draft = ensureInitializedNestedState(draft, linodeId);
       draft[linodeId].error = {
         ...draft[linodeId].error,
-        delete: undefined
+        delete: undefined,
       };
     }
 
     if (isType(action, deleteLinodeConfigActions.done)) {
       const {
-        params: { configId, linodeId }
+        params: { configId, linodeId },
       } = action.payload;
       draft = ensureInitializedNestedState(draft, linodeId);
       draft[linodeId] = onDeleteSuccess(configId, draft[linodeId]);
@@ -122,7 +122,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
 
     if (isType(action, deleteLinodeActions.done)) {
       const {
-        params: { linodeId }
+        params: { linodeId },
       } = action.payload;
 
       delete draft[linodeId];

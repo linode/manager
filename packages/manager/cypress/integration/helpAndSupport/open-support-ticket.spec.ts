@@ -4,7 +4,7 @@ import {
   getClick,
   containsClick,
   getVisible,
-  containsVisible
+  containsVisible,
 } from '../../support/helpers';
 import 'cypress-file-upload';
 
@@ -35,7 +35,7 @@ describe('help & support', () => {
         status: 'new',
         summary: 'cy-test ticket',
         updated: ts.toISOString(),
-        updated_by: user
+        updated_by: user,
       };
       // intercept create ticket request, stub response.
       cy.intercept('POST', '*/support/tickets', mockTicketData).as(
@@ -54,7 +54,7 @@ describe('help & support', () => {
         data: [],
         page: 1,
         pages: 1,
-        results: 0
+        results: 0,
       }).as('getReplies');
 
       containsClick('Open New Ticket');

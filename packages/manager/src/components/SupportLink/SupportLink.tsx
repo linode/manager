@@ -18,8 +18,8 @@ const SupportLink: React.FunctionComponent<CombinedProps> = props => {
         state: {
           open: true,
           title,
-          description
-        }
+          description,
+        },
       }}
     >
       {text}

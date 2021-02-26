@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
@@ -20,8 +20,8 @@ const styles = (theme: Theme) =>
     root: {},
     error: {
       color: theme.color.red,
-      fontSize: 13
-    }
+      fontSize: 13,
+    },
   });
 
 interface Props {

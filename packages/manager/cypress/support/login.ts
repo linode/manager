@@ -19,7 +19,7 @@ Cypress.Commands.add('visitWithLogin', (url, options) => {
   const opt = {
     onBeforeLoad: win => {
       _loginWithToken(win);
-    }
+    },
   };
   console.log('executing visit');
   return cy.visit(url, { ...options, ...opt });

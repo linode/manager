@@ -16,7 +16,7 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
     isToday,
     start,
     theme,
-    timezone
+    timezone,
   } = props;
 
   const { data, loading, error, request } = useGraphs(
@@ -46,8 +46,8 @@ export const LoadGraph: React.FC<CombinedProps> = props => {
           label: 'Load',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.load,
-          data: _convertData(data.Load || [], start, end)
-        }
+          data: _convertData(data.Load || [], start, end),
+        },
       ]}
     />
   );

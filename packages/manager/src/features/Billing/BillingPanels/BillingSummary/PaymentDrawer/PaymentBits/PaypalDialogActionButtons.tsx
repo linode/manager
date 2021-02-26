@@ -20,7 +20,7 @@ const PaypalDialogActionButtons: React.SFC<CombinedProps> = props => {
     paypalPaymentFailed,
     isExecutingPayment,
     initExecutePayment,
-    closeDialog
+    closeDialog,
   } = props;
 
   /** intentionally displays "payment cancelled" message to the user */

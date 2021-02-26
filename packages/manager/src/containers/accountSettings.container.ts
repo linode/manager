@@ -5,7 +5,7 @@ import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings
 import { State } from 'src/store/accountSettings/accountSettings.reducer';
 import {
   requestAccountSettings,
-  updateAccountSettings
+  updateAccountSettings,
 } from 'src/store/accountSettings/accountSettings.requests';
 import { ThunkDispatch } from 'src/store/types';
 
@@ -61,7 +61,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         loading: accountSettingsLoading,
         error: accountSettingsError,
         data: accountSettings,
-        lastUpdated: accountSettingsLastUpdated
+        lastUpdated: accountSettingsLastUpdated,
       } = state.__resources.accountSettings;
 
       if (mapStateToProps) {
@@ -78,14 +78,14 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         accountSettings,
         accountSettingsError,
         accountSettingsLastUpdated,
-        accountSettingsLoading
+        accountSettingsLoading,
       };
     },
     (dispatch: ThunkDispatch) => ({
       requestAccountSettings: () => dispatch(requestAccountSettings()),
       updateAccountSettings: data => dispatch(updateAccountSettings(data)),
       updateAccountSettingsInStore: data =>
-        dispatch(updateSettingsInStore(data))
+        dispatch(updateSettingsInStore(data)),
     })
   );
 

@@ -8,7 +8,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
@@ -20,38 +20,38 @@ const styles = (theme: Theme) =>
       color: '#ccc',
       transition: theme.transitions.create(['color']),
       '& .defaultFill': {
-        transition: theme.transitions.create(['fill'])
+        transition: theme.transitions.create(['fill']),
       },
       '&:hover': {
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
       },
       '&:hover$warning': {
-        color: '#ffd322'
+        color: '#ffd322',
       },
       '&:hover$error': {
-        color: '#cf1f1f'
-      }
+        color: '#cf1f1f',
+      },
     },
     checked: {
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
     },
     warning: {
       color: theme.palette.status.warningDark,
       '& .defaultFill': {
-        fill: theme.palette.status.warning
+        fill: theme.palette.status.warning,
       },
       '&$checked': {
-        color: theme.palette.status.warningDark
-      }
+        color: theme.palette.status.warningDark,
+      },
     },
     error: {
       color: theme.palette.status.errorDark,
       '& .defaultFill': {
-        fill: theme.palette.status.error
+        fill: theme.palette.status.error,
       },
       '&$checked': {
-        color: theme.palette.status.errorDark
-      }
+        color: theme.palette.status.errorDark,
+      },
     },
     disabled: {
       color: '#ccc !important',
@@ -59,9 +59,9 @@ const styles = (theme: Theme) =>
       pointerEvents: 'none',
       '& .defaultFill': {
         opacity: 0.5,
-        fill: `${theme.bg.main}`
-      }
-    }
+        fill: `${theme.bg.main}`,
+      },
+    },
   });
 
 interface Props extends CheckboxProps {
@@ -80,7 +80,7 @@ const LinodeCheckBox: React.FC<FinalProps> = props => {
     [classes.disabled]: props.disabled === true,
     [classes.checked]: Boolean(props.checked),
     [classes.warning]: props.variant === 'warning',
-    [classes.error]: props.variant === 'error'
+    [classes.error]: props.variant === 'error',
   });
 
   if (props.text) {

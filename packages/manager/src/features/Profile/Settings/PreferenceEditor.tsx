@@ -3,7 +3,7 @@ import Dialog, { DialogProps as _DialogProps } from 'src/components/Dialog';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import withPreferences, {
-  Props as PreferencesProps
+  Props as PreferencesProps,
 } from 'src/containers/preferences.container';
 import Button from 'src/components/Button';
 import Notice from 'src/components/Notice';
@@ -79,7 +79,7 @@ const PreferenceEditor: React.FC<CombinedProps> = props => {
             marginTop: 16,
             width: 400,
             height: 300,
-            fontFamily: '"Ubuntu Mono", monospace"'
+            fontFamily: '"Ubuntu Mono", monospace"',
           }}
           onChange={e => setUserPrefs(e.target.value)}
         ></textarea>

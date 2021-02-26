@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   Profile,
   OauthCreateDrawer,
-  dialogMap
+  dialogMap,
 } from '../../pageobjects/profile';
 
 const profile = new Profile();
@@ -13,12 +13,12 @@ xdescribe('Profile - OAuth Clients Suite', () => {
   const client = {
     label: `${timestamp} Test Client`,
     callback: 'https://test.com:3000',
-    access: 'Public'
+    access: 'Public',
   };
   const editedClient = {
     label: `${timestamp} Test Client Edit`,
     callback: 'https://test-edit.com:3000',
-    access: 'Public'
+    access: 'Public',
   };
   const editedRow = `[data-qa-table-row="${editedClient.label}"]`;
   const dialogTitle = dialogMap.title;

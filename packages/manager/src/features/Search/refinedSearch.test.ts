@@ -18,7 +18,7 @@ const {
   recursivelyTestItem,
   refinedSearch,
   searchDefaultFields,
-  testItem
+  testItem,
 } = RefinedSearch;
 
 const data = searchableItems as SearchableItem[];
@@ -57,7 +57,7 @@ describe('Refined Search', () => {
       expect(results).toEqual([
         'test-linode-001',
         'test-linode-002',
-        'test-linode-003'
+        'test-linode-003',
       ]);
     });
     it('should search by partial tag', () => {
@@ -174,8 +174,8 @@ const mockLinode: SearchableItem = {
   entityType: 'linode',
   data: {
     tags: ['my-app', 'production'],
-    ips: ['1234']
-  }
+    ips: ['1234'],
+  },
 };
 
 describe('formatQuery', () => {
@@ -212,16 +212,16 @@ describe('recursivelyTestItem', () => {
     type: 'and',
     values: [
       { type: 'string', value: 'tags:my-app' },
-      { type: 'string', value: 'tags:production' }
-    ]
+      { type: 'string', value: 'tags:production' },
+    ],
   };
 
   const queryJSON2: QueryJSON = {
     type: 'or',
     values: [
       { type: 'string', value: 'tags:my-app' },
-      { type: 'string', value: 'tags:production' }
-    ]
+      { type: 'string', value: 'tags:production' },
+    ],
   };
 
   const queryJSON3: QueryJSON = { type: 'string', value: 'tags:production' };
@@ -231,22 +231,22 @@ describe('recursivelyTestItem', () => {
     values: [
       {
         type: 'string',
-        value: 'type:linode'
+        value: 'type:linode',
       },
       {
         type: 'and',
         values: [
           {
             type: 'string',
-            value: 'tag:my-app'
+            value: 'tag:my-app',
           },
           {
             type: 'string',
-            value: 'type:domain'
-          }
-        ]
-      }
-    ]
+            value: 'type:domain',
+          },
+        ],
+      },
+    ],
   };
 
   const spy_areAnyTrue = jest.spyOn(RefinedSearch, 'areAnyTrue');
@@ -399,7 +399,7 @@ describe('getQueryInfo', () => {
     const parsedQuery2 = { exclude: {}, tags: ['my-app', 'my-other-app'] };
     expect(getQueryInfo(parsedQuery2).searchTerms).toEqual([
       'my-app',
-      'my-other-app'
+      'my-other-app',
     ]);
   });
 });

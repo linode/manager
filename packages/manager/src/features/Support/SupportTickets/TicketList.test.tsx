@@ -17,7 +17,7 @@ const props: CombinedProps = {
   orderBy: '',
   data: supportTickets,
   handlePageChange: mockPageChange,
-  request: mockRequest
+  request: mockRequest,
 };
 
 describe('TicketList', () => {

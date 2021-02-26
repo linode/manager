@@ -17,13 +17,13 @@ import useFlags from 'src/hooks/useFlags';
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const Billing = React.lazy(() => import('src/features/Billing'));
-const EntityTransfersLanding = React.lazy(
-  () => import('src/features/EntityTransfers/EntityTransfersLanding')
+const EntityTransfersLanding = React.lazy(() =>
+  import('src/features/EntityTransfers/EntityTransfersLanding')
 );
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 
-const AccountLanding: React.FC<Props> = (props) => {
+const AccountLanding: React.FC<Props> = props => {
   const { location } = props;
   const flags = useFlags();
 
@@ -68,7 +68,7 @@ const AccountLanding: React.FC<Props> = (props) => {
 
       <Tabs
         index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
+          tabs.findIndex(tab => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}

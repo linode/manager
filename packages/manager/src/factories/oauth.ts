@@ -8,5 +8,5 @@ export const appTokenFactory = Factory.Sync.makeFactory<Token>({
   scopes: 'linodes:create',
   created: '2020-01-01T12:00:00',
   expiry: null,
-  website: 'http://cloud.linode.com'
+  website: 'http://cloud.linode.com',
 });

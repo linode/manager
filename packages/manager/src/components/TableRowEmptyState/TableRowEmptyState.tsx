@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -14,8 +14,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       textAlign: 'center',
-      borderColor: theme.cmrBorderColors.borderTable
-    }
+      borderColor: theme.cmrBorderColors.borderTable,
+    },
   });
 
 export interface Props {

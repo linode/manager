@@ -37,7 +37,7 @@ const DiskSelect: React.FC<CombinedProps> = props => {
     diskError,
     generalError,
     handleChange,
-    selectedDisk
+    selectedDisk,
   } = props;
   const options = disksToOptions(disks);
   return (

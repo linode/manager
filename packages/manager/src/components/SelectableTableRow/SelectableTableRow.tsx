@@ -8,8 +8,8 @@ import CheckBox from 'src/components/CheckBox';
 const useStyles = makeStyles(() => ({
   root: {
     '& td': {
-      padding: '0px 15px'
-    }
+      padding: '0px 15px',
+    },
   },
   checkBox: {
     textAlign: 'center',
@@ -18,9 +18,9 @@ const useStyles = makeStyles(() => ({
     paddingRight: 0,
     '& svg': {
       width: 20,
-      height: 20
-    }
-  }
+      height: 20,
+    },
+  },
 }));
 
 interface Props {
@@ -39,7 +39,7 @@ export const SelectableTableRow: React.FC<Props> = props => {
           checked={isChecked}
           onChange={handleToggleCheck}
           inputProps={{
-            'aria-label': `Select all entities on page`
+            'aria-label': `Select all entities on page`,
           }}
         />
       </TableCell>

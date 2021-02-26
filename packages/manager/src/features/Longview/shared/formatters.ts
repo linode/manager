@@ -123,14 +123,14 @@ export const convertData = (
   if (d.length === 0) {
     return [
       [startTime * 1000, null],
-      [endTime * 1000, null]
+      [endTime * 1000, null],
     ] as [number, number | null][];
   }
   return maybeAddPastData(d, startTime).map(
     thisPoint =>
       [
         thisPoint.x * 1000,
-        formatter ? formatter(thisPoint.y) : thisPoint.y
+        formatter ? formatter(thisPoint.y) : thisPoint.y,
       ] as [number, number | null]
   );
 };

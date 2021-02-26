@@ -3,7 +3,7 @@ import {
   timestamp,
   apiCreateMultipleLinodes,
   apiDeleteAllLinodes,
-  getLocalStorageValue
+  getLocalStorageValue,
 } from '../../utils/common';
 import Dashboard from '../../pageobjects/dashboard.page';
 import ListLinodes from '../../pageobjects/list-linodes';
@@ -13,11 +13,11 @@ import ImportGroupsAsTagsDrawer from '../../pageobjects/import-groups-as-tags-dr
 describe('Import Display Groups as Tags - Linodes Suite', () => {
   const linode = {
     linodeLabel: `AutoLinode${timestamp()}`,
-    group: `group${timestamp()}`
+    group: `group${timestamp()}`,
   };
   const linode1 = {
     linodeLabel: `AutoLinode1${timestamp()}`,
-    group: `group1${timestamp()}`
+    group: `group1${timestamp()}`,
   };
   const importMessage =
     'You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Linodes and Domains. This will give you the ability to organize and view your Linodes and Domains by tags. Your existing tags will not be affected.';
@@ -87,7 +87,7 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
         constants.wait.normal
       );
       expect(ListLinodes.getLinodeTags(linode.linodeLabel)).toEqual([
-        linode.group.toLowerCase()
+        linode.group.toLowerCase(),
       ]);
     });
   });

@@ -78,7 +78,7 @@ const requestMap: RequestMap = {
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
   vlans: () => getAllVlans({}),
-  databaseTypes: () => getAllMySQLTypes({})
+  databaseTypes: () => getAllMySQLTypes({}),
 };
 
 export const useReduxLoad = (

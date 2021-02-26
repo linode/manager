@@ -17,7 +17,7 @@ describe('transitionText helper', () => {
         time_remaining: null,
         username: 'linode',
         duration: 0,
-        message: null
+        message: null,
       })
     ).toEqual('Snapshot');
   });
@@ -42,7 +42,7 @@ describe('transitionText helper', () => {
         time_remaining: null,
         username: 'linode',
         duration: 0,
-        message: null
+        message: null,
       })
     ).toEqual('Optimus');
   });

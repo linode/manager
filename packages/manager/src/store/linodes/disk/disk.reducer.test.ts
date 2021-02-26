@@ -5,7 +5,7 @@ import {
   deleteLinodeDiskActions,
   getAllLinodeDisksActions,
   getLinodeDiskActions,
-  updateLinodeDiskActions
+  updateLinodeDiskActions,
 } from './disk.actions';
 import reducer, { State } from './disk.reducer';
 import { Entity } from './disk.types';
@@ -16,17 +16,17 @@ describe('Disk reducer', () => {
     ...linodeDiskFactory.build({
       id: 2,
       label: 'test-disk1',
-      size: 1000
+      size: 1000,
     }),
-    linode_id: 1
+    linode_id: 1,
   };
   const mockDisk2 = {
     ...linodeDiskFactory.build({
       id: 3,
       label: 'test-disk2',
-      size: 2000
+      size: 2000,
     }),
-    linode_id: 1
+    linode_id: 1,
   };
 
   describe('getLinodeDiskActions', () => {
@@ -35,7 +35,7 @@ describe('Disk reducer', () => {
         defaultState,
         getLinodeDiskActions.started({
           linodeId: mockDisk1.linode_id,
-          diskId: mockDisk1.id
+          diskId: mockDisk1.id,
         })
       );
       expect(newState).toHaveProperty(String(mockDisk1.linode_id));
@@ -50,7 +50,7 @@ describe('Disk reducer', () => {
         defaultState,
         getLinodeDiskActions.done({
           params: { linodeId: mockDisk1.linode_id, diskId: mockDisk1.id },
-          result: mockDisk1
+          result: mockDisk1,
         })
       );
       verifyDisk(newState, mockDisk1);
@@ -62,7 +62,7 @@ describe('Disk reducer', () => {
       const newState = reducer(
         defaultState,
         getAllLinodeDisksActions.started({
-          linodeId: mockDisk1.linode_id
+          linodeId: mockDisk1.linode_id,
         })
       );
       expect(newState).toHaveProperty(String(mockDisk1.linode_id));
@@ -77,7 +77,7 @@ describe('Disk reducer', () => {
         defaultState,
         getAllLinodeDisksActions.done({
           params: { linodeId: mockDisk1.linode_id },
-          result: { results: 2, data: [mockDisk1, mockDisk2] }
+          result: { results: 2, data: [mockDisk1, mockDisk2] },
         })
       );
       verifyDisk(newState, mockDisk1);
@@ -90,7 +90,7 @@ describe('Disk reducer', () => {
         defaultState,
         getAllLinodeDisksActions.failed({
           params: { linodeId: mockDisk1.linode_id },
-          error: [{ reason: errorMessage }]
+          error: [{ reason: errorMessage }],
         })
       );
       expect(newState[mockDisk1.linode_id].error).toHaveProperty('read');
@@ -109,9 +109,9 @@ describe('Disk reducer', () => {
           params: {
             linodeId: mockDisk1.linode_id,
             label: mockDisk1.label,
-            size: mockDisk1.size
+            size: mockDisk1.size,
           },
-          result: mockDisk1
+          result: mockDisk1,
         })
       );
       verifyDisk(newState, mockDisk1);
@@ -126,9 +126,9 @@ describe('Disk reducer', () => {
           params: {
             linodeId: mockDisk1.linode_id,
             diskId: mockDisk1.id,
-            label: mockDisk1.label
+            label: mockDisk1.label,
           },
-          result: mockDisk1
+          result: mockDisk1,
         })
       );
       verifyDisk(newState, mockDisk1);
@@ -142,15 +142,15 @@ describe('Disk reducer', () => {
         itemsById: { [mockDisk1.id]: mockDisk1 },
         lastUpdated: 1,
         loading: false,
-        error: {}
+        error: {},
       },
       [mockDisk2.linode_id]: {
         results: 1,
         itemsById: { [mockDisk2.id]: mockDisk2 },
         lastUpdated: 1,
         loading: false,
-        error: {}
-      }
+        error: {},
+      },
     };
 
     it('sets error.delete to `undefined` when the request is started', () => {
@@ -158,7 +158,7 @@ describe('Disk reducer', () => {
         state,
         deleteLinodeDiskActions.started({
           linodeId: mockDisk1.linode_id,
-          diskId: mockDisk1.id
+          diskId: mockDisk1.id,
         })
       );
       expect(newState[mockDisk1.linode_id].error?.delete).toBeUndefined();
@@ -169,9 +169,9 @@ describe('Disk reducer', () => {
         deleteLinodeDiskActions.done({
           params: {
             linodeId: mockDisk1.linode_id,
-            diskId: mockDisk1.id
+            diskId: mockDisk1.id,
           },
-          result: {}
+          result: {},
         })
       );
       expect(
@@ -186,9 +186,9 @@ describe('Disk reducer', () => {
       defaultState,
       createLinodeDiskActions.done({
         params: {
-          linodeId: mockDisk1.linode_id
+          linodeId: mockDisk1.linode_id,
         } as any,
-        result: mockDisk1
+        result: mockDisk1,
       })
     );
     it('removes the linodeId from the state when the request is complete', () => {
@@ -196,7 +196,7 @@ describe('Disk reducer', () => {
         state,
         deleteLinodeActions.done({
           params: { linodeId: mockDisk1.linode_id },
-          result: {}
+          result: {},
         })
       );
       expect(newState[mockDisk1.linode_id]).toBeUndefined();

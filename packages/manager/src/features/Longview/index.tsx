@@ -10,7 +10,7 @@ type Props = RouteComponentProps<{}>;
 
 const Longview: React.FC<Props> = props => {
   const {
-    match: { path }
+    match: { path },
   } = props;
 
   return (

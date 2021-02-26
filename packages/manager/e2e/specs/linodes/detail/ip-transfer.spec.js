@@ -34,9 +34,7 @@ describe('Linode Detail - Ip Transfer Suite', () => {
   });
 
   it('should display an error on move to linode', () => {
-    singlePublicIpError = `${
-      linodeA.id
-    } must have at least one public IP after assignment`;
+    singlePublicIpError = `${linodeA.id} must have at least one public IP after assignment`;
     Networking.moveIpButton.click();
     Networking.moveIpButton.waitForDisplayed(constants.wait.normal, true);
     Networking.ipTransferSave.click();
@@ -49,9 +47,7 @@ describe('Linode Detail - Ip Transfer Suite', () => {
   });
 
   it('should fail to swap public to private ips', () => {
-    const errorMsg = `${
-      linodeA.id
-    } must have no more than one private IP after assignment.`;
+    const errorMsg = `${linodeA.id} must have no more than one private IP after assignment.`;
 
     chooseSwapAction();
 

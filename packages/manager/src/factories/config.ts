@@ -15,14 +15,14 @@ export const configFactory = Factory.Sync.makeFactory<Config>({
     sde: null,
     sdf: null,
     sdg: null,
-    sdh: null
+    sdh: null,
   },
   helpers: {
     distro: true,
     network: true,
     modules_dep: true,
     devtmpfs_automount: true,
-    updatedb_disabled: true
+    updatedb_disabled: true,
   },
   initrd: null,
   kernel: 'linode/grub2',
@@ -30,5 +30,5 @@ export const configFactory = Factory.Sync.makeFactory<Config>({
   root_device: 'sda',
   run_level: 'default',
   virt_mode: 'paravirt',
-  interfaces: {}
+  interfaces: {},
 });

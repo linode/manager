@@ -16,7 +16,7 @@ class Example extends React.Component<{}, State> {
   state: State = {
     // Changed this to hardcoded string so storybook won't break
     time: '2018-07-20T04:23:17',
-    cutoff: 'day'
+    cutoff: 'day',
   };
 
   toggleCutoff = (e: React.ChangeEvent<HTMLInputElement>) => {

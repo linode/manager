@@ -30,7 +30,7 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
     isSubmitting,
     firewallLabel,
     onClose,
-    open
+    open,
   } = props;
 
   const regions = useRegionsQuery().data ?? [];

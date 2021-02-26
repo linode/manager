@@ -12,7 +12,7 @@ window.matchMedia = jest.fn().mockImplementation(query => {
     media: query,
     onchange: null,
     addListener: jest.fn(),
-    removeListener: jest.fn()
+    removeListener: jest.fn(),
   };
 });
 

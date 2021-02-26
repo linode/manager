@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   button: {
     border: 'none',
@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 0,
     cursor: 'pointer',
     '&:hover': {
-      color: theme.color.blue
-    }
-  }
+      color: theme.color.blue,
+    },
+  },
 }));
 interface Props {
   title: string;

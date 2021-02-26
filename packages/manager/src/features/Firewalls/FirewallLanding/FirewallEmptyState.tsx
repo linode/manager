@@ -18,8 +18,8 @@ const FirewallEmptyState: React.FC<Props> = props => {
       buttonProps={[
         {
           onClick: openAddFirewallDrawer,
-          children: 'Add a Firewall'
-        }
+          children: 'Add a Firewall',
+        },
       ]}
     >
       <Typography variant="subtitle1">

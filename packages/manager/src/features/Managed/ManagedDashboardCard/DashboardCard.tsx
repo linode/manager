@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DashboardCard: React.FC<CombinedProps> = (props) => {
+const DashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {

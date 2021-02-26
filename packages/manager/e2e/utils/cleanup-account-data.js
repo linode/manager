@@ -10,14 +10,14 @@ const deleteAllData = (token, user, dev) => {
 
   const axiosInstance = axios.create({
     httpsAgent: new https.Agent({
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
     }),
     baseURL: api,
     timeout: 10000,
     headers: {
       Authorization: `Bearer ${token}`,
-      'User-Agent': 'WebdriverIO'
-    }
+      'User-Agent': 'WebdriverIO',
+    },
   });
 
   const endpoints = [
@@ -26,7 +26,7 @@ const deleteAllData = (token, user, dev) => {
     '/domains',
     '/nodebalancers',
     '/account/users',
-    '/images'
+    '/images',
   ];
 
   endpoints.forEach(entityEndpoint => {
@@ -58,8 +58,8 @@ const deleteAllData = (token, user, dev) => {
       headers: {
         Authorization: `Bearer ${token}`,
         'X-Filter': `{"username":"${user}","+order_by":"deployments_total","+order":"desc"}`,
-        'User-Agent': 'WebdriverIO'
-      }
+        'User-Agent': 'WebdriverIO',
+      },
     })
     .then(response => {
       if (response.data.data.length > 0) {

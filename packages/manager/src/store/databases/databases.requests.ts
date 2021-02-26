@@ -4,7 +4,7 @@ import {
   Database,
   getDatabases,
   updateDatabase as _update,
-  resetPassword as _reset
+  resetPassword as _reset,
 } from '@linode/api-v4/lib/databases';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';
@@ -13,7 +13,7 @@ import {
   deleteDatabaseActions,
   getDatabasesActions,
   updateDatabaseActions,
-  resetPasswordActions
+  resetPasswordActions,
 } from './databases.actions';
 
 const getAllDatabasesRequest = (payload?: { params?: any; filter?: any }) =>

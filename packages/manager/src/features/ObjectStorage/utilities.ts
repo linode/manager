@@ -3,7 +3,7 @@ import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   ObjectStorageClusterID,
   ObjectStorageObject,
-  ACLType
+  ACLType,
 } from '@linode/api-v4/lib/object-storage';
 import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -16,7 +16,7 @@ export const generateObjectUrl = (
   const path = `${bucketName}.${clusterId}.${OBJECT_STORAGE_ROOT}/${objectName}`;
   return {
     path,
-    absolute: 'https://' + path
+    absolute: 'https://' + path,
   };
 };
 
@@ -74,7 +74,7 @@ export const extendObject = (
     // called "my-folder/". We can look at the prefix to make this decision,
     // since it will also be "my-folder/".
     _shouldDisplayObject: object.name !== prefix,
-    _manuallyCreated: manuallyCreated
+    _manuallyCreated: manuallyCreated,
   };
 };
 
@@ -156,12 +156,12 @@ export const confirmObjectStorage = <T extends {}>(
 export const objectACLOptions: Item<ACLType>[] = [
   { label: 'Private', value: 'private' },
   { label: 'Authenticated Read', value: 'authenticated-read' },
-  { label: 'Public Read', value: 'public-read' }
+  { label: 'Public Read', value: 'public-read' },
 ];
 
 export const bucketACLOptions: Item<ACLType>[] = [
   ...objectACLOptions,
-  { label: 'Public Read/Write', value: 'public-read-write' }
+  { label: 'Public Read/Write', value: 'public-read-write' },
 ];
 
 export const objectACLHelperText: Record<ACLType, string> = {
@@ -169,5 +169,5 @@ export const objectACLHelperText: Record<ACLType, string> = {
   'public-read': 'Public Read ACL',
   'authenticated-read': 'Authenticated Read ACL',
   'public-read-write': 'Public Read/Write ACL',
-  custom: 'Custom ACL'
+  custom: 'Custom ACL',
 };

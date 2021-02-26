@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -33,20 +33,20 @@ export const OAuthClientActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         props.openEditDrawer(isPublic, redirectUri, label, clientID);
-      }
+      },
     },
     {
       title: 'Reset',
       onClick: () => {
         props.openSecretModal(clientID, label);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         props.openDeleteModal(clientID, label);
-      }
-    }
+      },
+    },
   ];
 
   return (

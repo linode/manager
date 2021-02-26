@@ -29,8 +29,8 @@ const SelectControl: React.FC<Props> = props => {
           className: props.selectProps.classes.input,
           inputRef: props.innerRef,
           children: props.children,
-          ...props.innerProps
-        }
+          ...props.innerProps,
+        },
       }}
       {...props.selectProps.textFieldProps}
     />

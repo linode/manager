@@ -15,7 +15,7 @@ import AccessSelect from '../BucketDetail/AccessSelect';
 import {
   getBucketAccess,
   updateBucketAccess,
-  ACLType
+  ACLType,
 } from '@linode/api-v4/lib/object-storage';
 
 const useStyles = makeStyles(() => ({
@@ -23,15 +23,15 @@ const useStyles = makeStyles(() => ({
     marginTop: 16,
     marginBottom: 16,
     height: 1,
-    backgroundColor: '#EBEBEB'
+    backgroundColor: '#EBEBEB',
   },
   copy: {
     marginLeft: '1em',
-    padding: 0
+    padding: 0,
   },
   link: {
-    display: 'flex'
-  }
+    display: 'flex',
+  },
 }));
 
 export interface Props {
@@ -54,7 +54,7 @@ const BucketDetailsDrawer: React.FC<Props> = props => {
     created,
     cluster,
     size,
-    objectsNumber
+    objectsNumber,
   } = props;
 
   let formattedCreated;

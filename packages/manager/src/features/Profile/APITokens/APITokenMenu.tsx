@@ -1,7 +1,7 @@
 import { Token } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -27,7 +27,7 @@ export const APITokenMenu: React.FC<CombinedProps> = props => {
     openEditDrawer,
     openRevokeDialog,
     token,
-    type
+    type,
   } = props;
 
   const actions = [
@@ -35,22 +35,22 @@ export const APITokenMenu: React.FC<CombinedProps> = props => {
       title: 'View Scopes',
       onClick: () => {
         openViewDrawer(token);
-      }
+      },
     },
     !isThirdPartyAccessToken
       ? {
           title: 'Rename',
           onClick: () => {
             openEditDrawer(token);
-          }
+          },
         }
       : null,
     {
       title: 'Revoke',
       onClick: () => {
         openRevokeDialog(token, type);
-      }
-    }
+      },
+    },
   ].filter(Boolean) as Action[];
 
   return (

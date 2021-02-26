@@ -2,7 +2,7 @@ import {
   Config,
   linodeBoot,
   linodeReboot,
-  linodeShutdown
+  linodeShutdown,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -27,19 +27,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: '1.25rem',
-    fontSize: '0.875rem'
+    fontSize: '0.875rem',
   },
   dialog: {
     '& .dialog-content': {
       paddingTop: 0,
-      paddingBottom: 0
-    }
+      paddingBottom: 0,
+    },
   },
   notice: {
     '& .noticeText': {
-      fontSize: '0.875rem !important'
-    }
-  }
+      fontSize: '0.875rem !important',
+    },
+  },
 }));
 
 interface Props {
@@ -102,7 +102,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
     ) {
       /** force the user into selecting a config when they boot */
       return setErrors([
-        { reason: 'Please select a Config Profile to boot with.' }
+        { reason: 'Please select a Config Profile to boot with.' },
       ]);
     }
 

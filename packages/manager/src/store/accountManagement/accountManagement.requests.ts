@@ -15,7 +15,7 @@ export const checkAccountSize: ThunkActionCreator<Promise<null>> = () => async (
    */
   return Promise.all([
     dispatch(getDomainsPage({ params: { page_size: 100 } })),
-    dispatch(getLinodesPage({ params: { page_size: 100 } }))
+    dispatch(getLinodesPage({ params: { page_size: 100 } })),
   ])
     .then(combinedResults => {
       dispatch(

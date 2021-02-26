@@ -22,8 +22,8 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
       display: 'Get Help',
       href: '/support',
       QAKey: 'help',
-      icon: <Help className="small wBorder" />
-    }
+      icon: <Help className="small wBorder" />,
+    },
   ];
 
   return (

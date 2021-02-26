@@ -8,7 +8,7 @@ import {
   createVolumes,
   apiDeleteAllLinodes,
   apiDeleteAllVolumes,
-  checkEnvironment
+  checkEnvironment,
 } from '../../../utils/common';
 
 const { constants } = require('../../../constants');
@@ -19,16 +19,16 @@ describe('Linode Detail - Volumes Suite', () => {
   const testVolume = {
     label: `AutoVolume${timestamp()}`,
     size: 100,
-    tags: `AutoTag${timestamp()}`
+    tags: `AutoTag${timestamp()}`,
   };
 
   const volumeEast = {
-    label: `testEast${timestamp()}`
+    label: `testEast${timestamp()}`,
   };
 
   const volumeCentral = {
     region: 'us-central',
-    label: `testWest${timestamp()}`
+    label: `testWest${timestamp()}`,
   };
 
   const checkAttachedVolumeInSummary = () => {

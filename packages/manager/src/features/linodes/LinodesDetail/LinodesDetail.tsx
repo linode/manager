@@ -5,7 +5,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import NotFound from 'src/components/NotFound';
@@ -14,7 +14,7 @@ import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
-  LinodeDetailContextProvider
+  LinodeDetailContextProvider,
 } from './linodeDetailContext';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 
@@ -33,7 +33,7 @@ type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 const LinodeDetail: React.FC<CombinedProps> = props => {
   const {
     linodeId,
-    match: { path, url }
+    match: { path, url },
   } = props;
 
   const dispatch = useDispatch();

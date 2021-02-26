@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -20,14 +20,14 @@ type ClassNames = 'root' | 'container';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     container: {
       width: '100%',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
-    }
+      justifyContent: 'center',
+    },
   });
 
 interface Props {

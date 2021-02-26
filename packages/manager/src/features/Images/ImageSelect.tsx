@@ -12,18 +12,18 @@ import { groupImages } from 'src/utilities/images';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   icon: {
     marginTop: theme.spacing(2) + 14,
-    marginLeft: -theme.spacing(1)
+    marginLeft: -theme.spacing(1),
   },
   selectContainer: {
     width: 415 + theme.spacing(2),
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  }
+      width: '100%',
+    },
+  },
 }));
 
 interface Props {
@@ -52,7 +52,7 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
     onSelect,
     value,
     disabled,
-    required
+    required,
   } = props;
 
   const classes = useStyles();
@@ -61,14 +61,14 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
 
   // Check for request errors in Redux
   const {
-    images: { error }
+    images: { error },
   } = useImages();
   const reduxError = error?.read
     ? getAPIErrorOrDefault(error.read, 'Unable to load Images')[0].reason
     : undefined;
 
   const renderedImages = React.useMemo(() => getImagesOptions(images), [
-    images
+    images,
   ]);
 
   return (
@@ -92,7 +92,7 @@ export const ImageSelect: React.FC<CombinedProps> = props => {
           options={renderedImages as any}
           placeholder="Select an Image"
           textFieldProps={{
-            required
+            required,
           }}
           label={label || 'Image'}
         />
@@ -118,9 +118,9 @@ export const getImagesOptions = (images: Image[]) => {
             label: getDisplayNameForGroup(category),
             options: groupedImages[category].map(({ id, label }: Image) => ({
               label,
-              value: id
-            }))
-          }
+              value: id,
+            })),
+          },
         ];
       }
       return accumulator;
@@ -134,7 +134,7 @@ export const groupNameMap = {
   deleted: 'Recently Deleted Disks',
   recommended: '64-bit Distributions - Recommended',
   older: 'Older Distributions',
-  images: 'Images'
+  images: 'Images',
 };
 
 const getDisplayNameForGroup = (key: string) =>

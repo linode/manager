@@ -3,11 +3,11 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import withManagedIssues, {
-  DispatchProps as IssuesDispatchProps
+  DispatchProps as IssuesDispatchProps,
 } from 'src/containers/managedIssues.container';
 import withManagedServices, {
   DispatchProps,
-  ManagedProps
+  ManagedProps,
 } from 'src/containers/managedServices.container';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import MonitorTable from './MonitorTable';

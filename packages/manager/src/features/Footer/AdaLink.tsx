@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import IconButton from 'src/components/IconButton';
@@ -18,11 +18,11 @@ const styles = (theme: Theme) =>
     root: {
       width: 44,
       height: 44,
-      padding: 0
+      padding: 0,
     },
     disabled: {
-      opacity: 0.3
-    }
+      opacity: 0.3,
+    },
   });
 
 interface Props {
@@ -43,7 +43,8 @@ const AdaLink: React.FC<CombinedProps> = props => {
      */
     if ('AdaChaperone' in window) {
       ada = new (window as any).AdaChaperone('linode', {
-        customStyles: '#topBar > div:nth-child(2) > div { margin-right: 2.5em }'
+        customStyles:
+          '#topBar > div:nth-child(2) > div { margin-right: 2.5em }',
       });
     } else {
       setAdaError(

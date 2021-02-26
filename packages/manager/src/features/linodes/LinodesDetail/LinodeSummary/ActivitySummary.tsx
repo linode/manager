@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ViewAllLink from 'src/components/ViewAllLink';
@@ -16,7 +16,7 @@ import ActivitySummaryContent from './ActivitySummaryContent';
 
 import {
   filterUniqueEvents,
-  shouldUpdateEvents
+  shouldUpdateEvents,
 } from 'src/features/Events/Event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
@@ -28,12 +28,12 @@ const styles = (theme: Theme) =>
     root: {},
     header: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     viewMore: {
       position: 'relative',
-      top: 2
-    }
+      top: 2,
+    },
   });
 
 interface Props {
@@ -55,7 +55,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
     error: undefined,
-    events: []
+    events: [],
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -75,11 +75,11 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
       shouldUpdateEvents(
         {
           mostRecentEventTime: prevProps.mostRecentEventTime,
-          inProgressEvents: prevProps.inProgressEvents
+          inProgressEvents: prevProps.inProgressEvents,
         },
         {
           mostRecentEventTime: this.props.mostRecentEventTime,
-          inProgressEvents: this.props.inProgressEvents
+          inProgressEvents: this.props.inProgressEvents,
         }
       )
     ) {
@@ -107,8 +107,8 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
           */
           ...this.state.events.filter(
             eachEvent => typeof eachEvent._initial === 'undefined'
-          )
-        ])
+          ),
+        ]),
       });
     }
   }
@@ -118,7 +118,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
       .then(response => {
         this.setState({
           events: response.data,
-          loading: false
+          loading: false,
         });
       })
       .catch(err => {
@@ -127,7 +127,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
             err,
             "Couldn't retrieve events for this Linode."
           ),
-          loading: false
+          loading: false,
         });
       });
   }

@@ -10,7 +10,7 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import { DispatchProps } from 'src/containers/longview.container';
 import withClientStats, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
@@ -22,20 +22,20 @@ import RestrictedUserLabel from './RestrictedUserLabel';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& a': {
-      color: theme.cmrTextColors.linkActiveLight
+      color: theme.cmrTextColors.linkActiveLight,
     },
     '& a:hover': {
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
     },
     [theme.breakpoints.down('md')]: {
       flexDirection: 'row',
-      alignItems: 'center'
-    }
+      alignItems: 'center',
+    },
   },
   updates: {
     [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(2)
-    }
+      marginRight: theme.spacing(2),
+    },
   },
   packageButton: {
     fontSize: '0.875rem',
@@ -44,17 +44,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       textDecoration: 'underline',
       color: 'inherit',
-      backgroundColor: 'inherit'
-    }
+      backgroundColor: 'inherit',
+    },
   },
   lastUpdatedOuter: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1)
-    }
+      marginTop: theme.spacing(1),
+    },
   },
   lastUpdatedText: {
-    fontSize: '0.75rem'
-  }
+    fontSize: '0.75rem',
+  },
 }));
 
 interface Props {
@@ -79,7 +79,7 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
     longviewClientLastUpdated,
     openPackageDrawer,
     updateLongviewClient,
-    userCanModifyClient
+    userCanModifyClient,
   } = props;
   const classes = useStyles();
   const [updating, setUpdating] = React.useState<boolean>(false);

@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
-  Props as LoadingErrorProps
+  Props as LoadingErrorProps,
 } from 'src/components/withLoadingAndError';
 import DeleteIPActions from './DeleteIPActions';
 
@@ -34,7 +34,7 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       clearLoadingAndErrors,
       ipRemoveSuccess,
       handleClose,
-      linode
+      linode,
     } = this.props;
 
     setLoadingAndClearErrors();
@@ -45,7 +45,7 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
         if (ipRemoveSuccess) {
           const linodeWithRemovedIP = {
             ...linode,
-            ipv4: linode.ipv4.filter(eachIP => eachIP !== data.IPAddress)
+            ipv4: linode.ipv4.filter(eachIP => eachIP !== data.IPAddress),
           };
           ipRemoveSuccess(linodeWithRemovedIP);
           handleClose();
@@ -66,7 +66,7 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       loading,
       error,
       IPAddress,
-      linode: { id: linodeID }
+      linode: { id: linodeID },
     } = this.props;
 
     return (

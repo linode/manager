@@ -5,7 +5,7 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from 'src/components/core/styles';
 
 interface Props {
@@ -18,8 +18,8 @@ const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 export const NodeActionMenu: React.FC<Props> = props => {
@@ -37,8 +37,8 @@ export const NodeActionMenu: React.FC<Props> = props => {
         }
         openRecycleNodeDialog(nodeId!, instanceLabel!);
       },
-      disabled: !nodeId || !instanceLabel
-    }
+      disabled: !nodeId || !instanceLabel,
+    },
   ];
 
   return (

@@ -3,7 +3,7 @@ import { createLinode, deleteLinodeById } from '../support/api/linodes';
 import {
   createClient,
   deleteClientById,
-  makeClientLabel
+  makeClientLabel,
 } from '../support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
@@ -33,8 +33,8 @@ describe('longview', () => {
               env: {
                 LINODEIP: `${linodeIp}`,
                 LINODEPASSWORD: `${linodePassword}`,
-                CURLCOMMAND: `${curlCommand}`
-              }
+                CURLCOMMAND: `${curlCommand}`,
+              },
             }).then(out => {
               console.log(out.stdout);
               console.log(out.stderr);
@@ -44,7 +44,7 @@ describe('longview', () => {
               if (
                 cy
                   .contains('Waiting for data...', {
-                    timeout: 300000
+                    timeout: 300000,
                   })
                   .should('not.exist')
               ) {

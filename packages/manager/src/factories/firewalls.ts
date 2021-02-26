@@ -25,8 +25,8 @@ export const firewallRulesFactory = Factory.Sync.makeFactory<FirewallRules>({
 });
 
 export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
-  id: Factory.each((id) => id),
-  label: Factory.each((id) => `mock-firewall-${id}`),
+  id: Factory.each(id => id),
+  label: Factory.each(id => `mock-firewall-${id}`),
   rules: firewallRulesFactory.build(),
   created_dt: '2020-01-01 00:00:00',
   updated_dt: '2020-01-01 00:00:00',
@@ -35,7 +35,7 @@ export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
 });
 
 export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
-  id: Factory.each((i) => i),
+  id: Factory.each(i => i),
   created: '2020-01-01',
   updated: '2020-01-01',
   entity: {

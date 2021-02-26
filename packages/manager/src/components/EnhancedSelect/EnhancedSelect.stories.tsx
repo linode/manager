@@ -10,24 +10,24 @@ const tz = timezones.map((timezone: any) => {
 const fruit = [
   {
     label: 'Apple',
-    value: 'apple'
+    value: 'apple',
   },
   {
     label: 'Pear',
-    value: 'pear'
+    value: 'pear',
   },
   {
     label: 'Mango',
-    value: 'mango'
+    value: 'mango',
   },
   {
     label: 'Durian',
-    value: 'durian'
+    value: 'durian',
   },
   {
     label: 'Strawberry',
-    value: 'strawberry'
-  }
+    value: 'strawberry',
+  },
 ];
 
 interface State {
@@ -48,7 +48,7 @@ class Example extends React.Component<{}, State> {
     valueMulti: [],
     valueSingle: null,
     valueAsync: null,
-    valueLoading: null
+    valueLoading: null,
   };
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
@@ -57,37 +57,37 @@ class Example extends React.Component<{}, State> {
 
   handleChangeSingle = (valueSingle: Item) => {
     this.setState({
-      valueSingle
+      valueSingle,
     });
   };
 
   handleChangeCreatable = (valueCreatable: Item[]) => {
     this.setState({
-      valueCreatable
+      valueCreatable,
     });
   };
 
   handleChangeMulti = (valueMulti: Item[]) => {
     this.setState({
-      valueMulti
+      valueMulti,
     });
   };
 
   handleChangeAsync = (valueAsync: Item) => {
     this.setState({
-      valueAsync
+      valueAsync,
     });
   };
 
   handleChangeError = (valueError: Item) => {
     this.setState({
-      valueError
+      valueError,
     });
   };
 
   handleChangeLoading = (valueLoading: Item) => {
     this.setState({
-      valueLoading
+      valueLoading,
     });
   };
 
@@ -118,7 +118,7 @@ class Example extends React.Component<{}, State> {
       valueMulti,
       valueSingle,
       valueError,
-      valueLoading
+      valueLoading,
     } = this.state;
 
     return (
@@ -127,8 +127,8 @@ class Example extends React.Component<{}, State> {
           label="Basic Select"
           textFieldProps={{
             dataAttrs: {
-              'data-qa-basic-select': true
-            }
+              'data-qa-basic-select': true,
+            },
           }}
           value={valueSingle}
           placeholder="Choose one fruit"
@@ -156,8 +156,8 @@ class Example extends React.Component<{}, State> {
           label="Multi Select"
           textFieldProps={{
             dataAttrs: {
-              'data-qa-moFruit-select': true
-            }
+              'data-qa-moFruit-select': true,
+            },
           }}
           isMulti={true}
           value={valueMulti}
@@ -170,8 +170,8 @@ class Example extends React.Component<{}, State> {
           label="Creatable Select"
           textFieldProps={{
             dataAttrs: {
-              'data-qa-creatable-select': true
-            }
+              'data-qa-creatable-select': true,
+            },
           }}
           variant="creatable"
           isMulti={true}
@@ -185,8 +185,8 @@ class Example extends React.Component<{}, State> {
           loadOptions={this.loadOptions}
           textFieldProps={{
             dataAttrs: {
-              'data-qa-small-select': true
-            }
+              'data-qa-small-select': true,
+            },
           }}
           label="Small Select"
           value={valueAsync}

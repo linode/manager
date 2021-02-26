@@ -13,7 +13,7 @@ describe('PromiseLoaderSpec', () => {
     resource: async () => {
       await mockAxiosResponse(100);
       return Promise.resolve(data);
-    }
+    },
   });
   const LoadedComponent = preloaded(Component);
   let wrapper: ShallowWrapper;

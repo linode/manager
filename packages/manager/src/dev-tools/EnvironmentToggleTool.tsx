@@ -37,8 +37,8 @@ export const getOptions = (env: typeof process.env) => {
         label: env[thisEnvVariable] ?? '',
         apiRoot: env[`${base}_API_ROOT`] ?? '',
         loginRoot: env[`${base}_LOGIN_ROOT`] ?? '',
-        clientID: env[`${base}_CLIENT_ID`] ?? ''
-      }
+        clientID: env[`${base}_CLIENT_ID`] ?? '',
+      },
     ];
   }, []);
 };

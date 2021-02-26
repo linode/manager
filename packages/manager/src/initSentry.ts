@@ -55,20 +55,20 @@ export const initSentry = () => {
         'ChunkLoadError',
         'Network Error',
         // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
-        'ResizeObserver loop limit exceeded'
+        'ResizeObserver loop limit exceeded',
       ],
       whitelistUrls: [
         /** anything from either *.linode.com/* or localhost:3000 */
         /linode.com{1}/g,
-        /localhost:3000{1}/g
+        /localhost:3000{1}/g,
       ],
       blacklistUrls: [
         // New Relic script
         /new-relic\.js/i,
         // Chrome extensions
         /extensions\//i,
-        /^chrome:\/\//i
-      ]
+        /^chrome:\/\//i,
+      ],
     });
   }
 };
@@ -114,7 +114,7 @@ export const errorsToIgnore: RegExp[] = [
   // Local storage errors:
   /Failed to read the 'localStorage' property from 'Window'/gi,
   /Cannot read property 'getItem' of null/gi,
-  /NS_ERROR_FILE_CORRUPTED/gi
+  /NS_ERROR_FILE_CORRUPTED/gi,
 ];
 
 // We can't trust the type of the "message" on a Sentry event, since it may
@@ -167,7 +167,7 @@ const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
   return !!fingerprint
     ? {
         ...event,
-        fingerprint: [fingerprint]
+        fingerprint: [fingerprint],
       }
     : event;
 };
@@ -188,5 +188,5 @@ const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
 const customFingerPrintMap = {
   /** group all local storage errors together */
   localstorage: 'Local Storage Error',
-  quotaExceeded: 'Local Storage Error'
+  quotaExceeded: 'Local Storage Error',
 };

@@ -8,7 +8,7 @@ const o = {
   labelField: `WithStyles(LinodeTextField)[data-qa-label-field=true]`,
   keyField: `WithStyles(LinodeTextField)[data-qa-ssh-key-field]`,
   submitButton: `WrappedButton[data-qa-submit]`,
-  cancelButton: `WrappedButton[data-qa-cancel]`
+  cancelButton: `WrappedButton[data-qa-cancel]`,
 };
 
 describe('SSHKeyCreationDrawer', () => {

@@ -1,7 +1,7 @@
 import {
   Account,
   AccountSettings,
-  Notification
+  Notification,
 } from '@linode/api-v4/lib/account';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
 import { Profile } from '@linode/api-v4/lib/profile';
@@ -22,7 +22,7 @@ import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import {
   requestLinodeType,
-  requestTypes
+  requestTypes,
 } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
@@ -36,11 +36,11 @@ type CombinedProps = DispatchProps & StateProps;
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
     showChildren: false,
-    hasEnsuredAllTypes: false
+    hasEnsuredAllTypes: false,
   };
 
   static defaultProps = {
-    isAuthenticated: false
+    isAuthenticated: false,
   };
 
   /**
@@ -69,7 +69,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestSettings(),
 
       // Is this a large account? (should we use API or Redux-based search/pagination)
-      this.props.checkAccountSize()
+      this.props.checkAccountSize(),
     ];
 
     // Start events polling
@@ -101,7 +101,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
          * Region.
          */
         this.props.requestRegions(),
-        this.props.requestNotifications()
+        this.props.requestNotifications(),
       ]);
     } catch {
       /** We choose to do nothing, relying on the Redux error state. */
@@ -130,7 +130,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       if (thisMissingTypeId !== null) {
         this.props.requestLinodeType({
           typeId: thisMissingTypeId,
-          isShadowPlan: true
+          isShadowPlan: true,
         });
       }
     });
@@ -211,7 +211,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
   linodesLastUpdated: state.__resources.linodes.lastUpdated,
   linodes: Object.values(state.__resources.linodes.itemsById),
   types: state.__resources.types.entities,
-  typesLastUpdated: state.__resources.types.lastUpdated
+  typesLastUpdated: state.__resources.types.lastUpdated,
 });
 
 interface DispatchProps {
@@ -241,7 +241,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestRegions: () => dispatch(requestRegions()),
   requestProfile: () => dispatch(requestProfile()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
-  requestLinodeType: options => dispatch(requestLinodeType(options))
+  requestLinodeType: options => dispatch(requestLinodeType(options)),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

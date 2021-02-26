@@ -10,7 +10,7 @@ import { PromotionalOffer } from 'src/featureFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   offSiteURL,
-  onSiteURL
+  onSiteURL,
 } from 'src/utilities/sanitize-html/sanitizeHTML';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     flexDirection: 'column',
     paddingBottom: 4,
-    backgroundColor: theme.bg.main
+    backgroundColor: theme.bg.main,
   },
   fullWidth: {
     flexDirection: 'row',
@@ -28,38 +28,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     '& svg': {
       marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(1) - 2
+      marginBottom: theme.spacing(1) - 2,
     },
     '& p:last-child': {
-      marginTop: theme.spacing(1)
-    }
+      marginTop: theme.spacing(1),
+    },
   },
   logo: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   copy: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   capMaxWidth: {
-    maxWidth: 400
+    maxWidth: 400,
   },
   alignLeft: {
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   footnote: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   centerText: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   buttonSection: {
     margin: theme.spacing(2),
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   button: {
     backgroundColor: '#4FAD62',
@@ -69,8 +69,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     '&:hover, &:focus': {
       backgroundColor: '#3f8a4e',
-      color: 'white'
-    }
+      color: 'white',
+    },
   },
   buttonSecondary: {
     backgroundColor: 'inherit',
@@ -81,9 +81,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       backgroundColor: 'inherit',
       color: '#72BD81',
-      borderColor: '#72BD81'
-    }
-  }
+      borderColor: '#72BD81',
+    },
+  },
 }));
 
 export interface Props extends PromotionalOffer {
@@ -99,7 +99,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
   const { fullWidth, ...promotionalOfferAttributes } = props;
 
   const offer = promotionalOfferOrDefaults({
-    ...promotionalOfferAttributes
+    ...promotionalOfferAttributes,
   });
 
   const Logo = logoMap[offer.logo];
@@ -114,7 +114,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
         [classes.root]: true,
         [classes.fullWidth]: props.fullWidth,
         // Inject the className if given as as prop.
-        [props.className ?? '']: Boolean(props.className)
+        [props.className ?? '']: Boolean(props.className),
       })}
     >
       {Logo && (
@@ -123,14 +123,14 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
       <div
         className={classnames({
           [classes.copy]: true,
-          [classes.alignLeft]: fullWidth
+          [classes.alignLeft]: fullWidth,
         })}
       >
         <Typography
           variant="subtitle2"
           className={classnames({
             [classes.centerText]: !fullWidth,
-            [classes.capMaxWidth]: !fullWidth
+            [classes.capMaxWidth]: !fullWidth,
           })}
         >
           {offer.body}
@@ -145,7 +145,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
                 key={button.text}
                 className={classnames({
                   [classes.button]: true,
-                  [classes.buttonSecondary]: button.type === 'secondary'
+                  [classes.buttonSecondary]: button.type === 'secondary',
                 })}
                 {...buttonProps(button.href)}
               >
@@ -161,7 +161,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
             className={classnames({
               [classes.footnote]: true,
               [classes.centerText]: !fullWidth,
-              [classes.capMaxWidth]: !fullWidth
+              [classes.capMaxWidth]: !fullWidth,
             })}
           >
             {offer.footnote}
@@ -188,7 +188,7 @@ export const promotionalOfferOrDefaults = (
   alt: checkStringOrDefault(offer.alt),
   features: offer.features ?? ['None'],
   displayOnDashboard: offer.displayOnDashboard ?? false,
-  buttons: offer.buttons ?? []
+  buttons: offer.buttons ?? [],
 });
 
 export const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
@@ -201,7 +201,7 @@ export const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
 };
 
 export const logoMap: Record<PromotionalOffer['logo'], any> = {
-  'heavenly-bucket.svg': HeavenlyBucketIcon
+  'heavenly-bucket.svg': HeavenlyBucketIcon,
 };
 
 /**
@@ -223,13 +223,13 @@ const buttonProps = (url: string) => {
   if (onSiteURL.test(url)) {
     linkProps = {
       component: Link,
-      to: url
+      to: url,
     };
   } else if (offSiteURL.test(url)) {
     linkProps = {
       href: url,
       target: '_blank',
-      rel: 'noopener noreferrer'
+      rel: 'noopener noreferrer',
     };
   }
   return linkProps;

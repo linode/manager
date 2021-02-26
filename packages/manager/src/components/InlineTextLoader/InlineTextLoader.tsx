@@ -13,18 +13,18 @@ interface InlineTextLoaderProps {
 const useInlineTextLoaderStyles = makeStyles((theme: Theme) => ({
   loadingContainer: {
     '& circle': {
-      stroke: theme.color.blue
-    }
+      stroke: theme.color.blue,
+    },
   },
   errorContainer: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   icon: {
     color: theme.color.red,
     margin: '0 8px 0 8px',
-    fontSize: 18
-  }
+    fontSize: 18,
+  },
 }));
 
 const InlineTextLoader: React.FC<InlineTextLoaderProps> = props => {

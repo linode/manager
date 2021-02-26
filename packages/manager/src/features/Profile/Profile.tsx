@@ -25,50 +25,50 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 const Profile: React.FC<CombinedProps> = props => {
   const {
     match: { url },
-    toggleTheme
+    toggleTheme,
   } = props;
 
   const tabs: NavTab[] = [
     {
       title: 'Display',
       routeName: `${url}/display`,
-      component: DisplaySettings
+      component: DisplaySettings,
     },
     {
       title: 'Password & Authentication',
       routeName: `${url}/auth`,
-      component: AuthenticationSettings
+      component: AuthenticationSettings,
     },
     {
       title: 'SSH Keys',
       routeName: `${url}/keys`,
-      component: SSHKeys
+      component: SSHKeys,
     },
     {
       title: 'LISH Console Settings',
       routeName: `${url}/lish`,
-      component: LishSettings
+      component: LishSettings,
     },
     {
       title: 'API Tokens',
       routeName: `${url}/tokens`,
-      component: APITokens
+      component: APITokens,
     },
     {
       title: 'OAuth Apps',
       routeName: `${url}/clients`,
-      component: OAuthClients
+      component: OAuthClients,
     },
     {
       title: 'Referrals',
       routeName: `${url}/referrals`,
-      component: Referrals
+      component: Referrals,
     },
     {
       title: 'My Settings',
       routeName: `${url}/settings`,
-      render: <Settings toggleTheme={toggleTheme} />
-    }
+      render: <Settings toggleTheme={toggleTheme} />,
+    },
   ];
 
   return (

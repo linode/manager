@@ -27,23 +27,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   table: {
     [theme.breakpoints.down('sm')]: {
       '& tbody > tr > td:first-child .data': {
-        textAlign: 'right'
-      }
+        textAlign: 'right',
+      },
     },
     [theme.breakpoints.up('md')]: {
       '& thead > tr > th:last-child': {
-        textAlign: 'right'
+        textAlign: 'right',
       },
       '& tbody > tr > td:last-child': {
-        textAlign: 'right'
-      }
-    }
+        textAlign: 'right',
+      },
+    },
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
-  }
+      marginLeft: theme.spacing(),
+    },
+  },
 }));
 
 export interface TableProps {
@@ -96,7 +96,7 @@ export const ServicesTable: React.FC<TableProps> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Table

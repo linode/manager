@@ -21,16 +21,16 @@ const useStyles = makeStyles({
     position: 'fixed',
     zIndex: 100,
     top: 0,
-    left: 0
+    left: 0,
   },
   layer: {
     position: 'absolute',
     boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.4)',
-    transform: 'rotateX(50deg) rotateY(0deg) rotateZ(45deg)'
+    transform: 'rotateX(50deg) rotateY(0deg) rotateZ(45deg)',
   },
   logo: {
-    position: 'relative'
-  }
+    position: 'relative',
+  },
 });
 
 type CombinedProps = StateProps;
@@ -47,7 +47,7 @@ const SplashScreen: React.FC<CombinedProps> = props => {
   return props.appIsLoading || featureFlagsLoading ? (
     <div
       className={classNames({
-        [classes.root]: true
+        [classes.root]: true,
       })}
       aria-label="Loading Cloud Manager"
     >
@@ -68,7 +68,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  appIsLoading: state.initialLoad.appIsLoading
+  appIsLoading: state.initialLoad.appIsLoading,
 });
 
 const connected = connect(mapStateToProps);

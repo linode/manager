@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   divider: {
     margin: `${theme.spacing(3)}px 0`,
-    width: `calc(100% - ${theme.spacing(2)}px)`
-  }
+    width: `calc(100% - ${theme.spacing(2)}px)`,
+  },
 }));
 
 interface Props {

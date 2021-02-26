@@ -12,7 +12,7 @@ const makeBucketCreateReq = (
 ) => {
   const bucketData = bucket ?? {
     cluster,
-    label
+    label,
   };
 
   return cy.request({
@@ -20,8 +20,8 @@ const makeBucketCreateReq = (
     url: apiroot + 'object-storage/buckets',
     body: bucketData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -42,8 +42,8 @@ export const deleteBucketByLabel = (cluster, bucket) => {
     method: 'DELETE',
     url: `${apiroot}object-storage/buckets/${cluster}/${bucket}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 

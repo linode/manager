@@ -42,7 +42,7 @@ const VATBanner: React.FC<Props> = props => {
       >
         {({
           preference: isDismissed,
-          togglePreference: dismissBanner
+          togglePreference: dismissBanner,
         }: ToggleProps<boolean>) => {
           return isDismissed ? (
             <React.Fragment />

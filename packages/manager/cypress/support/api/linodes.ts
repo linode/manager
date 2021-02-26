@@ -5,7 +5,7 @@ import {
   getAll,
   deleteById,
   isTestEntity,
-  makeTestLabel
+  makeTestLabel,
 } from './common';
 
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes/types';
@@ -25,7 +25,7 @@ const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
   booted: true,
   backups_enabled: false,
   authorized_users: [],
-  root_pass: strings.randomPass()
+  root_pass: strings.randomPass(),
 };
 
 const linodeRequest = linodeData => {
@@ -34,8 +34,8 @@ const linodeRequest = linodeData => {
     url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
     body: linodeData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 

@@ -9,21 +9,21 @@ import ActionMenu from './CredentialActionMenu';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     credentialDescription: {
-      paddingTop: theme.spacing(1) / 2
+      paddingTop: theme.spacing(1) / 2,
     },
     credentialRow: {
       '&:before': {
-        display: 'none'
-      }
+        display: 'none',
+      },
     },
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
       padding: 0,
       '&.MuiTableCell-root': {
-        paddingRight: 0
-      }
-    }
+        paddingRight: 0,
+      },
+    },
   })
 );
 

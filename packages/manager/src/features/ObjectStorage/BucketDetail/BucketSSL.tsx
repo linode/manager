@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import {
   getSSLCert,
   deleteSSLCert,
-  uploadSSLCert
+  uploadSSLCert,
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -22,17 +22,17 @@ import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   button: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
   },
   helperText: {
     paddingTop: theme.spacing(),
-    lineHeight: 1.5
+    lineHeight: 1.5,
   },
   textArea: {
-    minWidth: '100%'
+    minWidth: '100%',
   },
   wrapper: {
     display: 'flex',
@@ -40,21 +40,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'flex-start',
     flexFlow: 'row wrap',
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-start'
-    }
+      justifyContent: 'flex-start',
+    },
   },
   certWrapper: {
     paddingRight: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      padding: 0
-    }
+      padding: 0,
+    },
   },
   keyWrapper: {
     paddingLeft: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      padding: 0
-    }
-  }
+      padding: 0,
+    },
+  },
 }));
 
 interface Props {

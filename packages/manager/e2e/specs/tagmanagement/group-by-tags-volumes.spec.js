@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   createVolumes,
-  apiDeleteAllVolumes
+  apiDeleteAllVolumes,
 } from '../../utils/common';
 import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
@@ -10,7 +10,7 @@ xdescribe('Group by Tag - Volumes', () => {
   const tags = [
     `b${timestamp().toLowerCase()}`,
     `a${timestamp().toLowerCase()}`,
-    `c${timestamp().toLowerCase()}`
+    `c${timestamp().toLowerCase()}`,
   ];
   let volumes = [];
 
@@ -18,11 +18,11 @@ xdescribe('Group by Tag - Volumes', () => {
     tags.forEach(tag => {
       const vol = {
         label: `a${tag[0]}${timestamp()}.org`,
-        tags: [tag]
+        tags: [tag],
       };
       const vol1 = {
         label: `b${tag[0]}${timestamp()}.org`,
-        tags: [tag]
+        tags: [tag],
       };
       volumes.push(vol);
       volumes.push(vol1);

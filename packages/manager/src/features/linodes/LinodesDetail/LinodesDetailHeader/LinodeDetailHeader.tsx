@@ -6,7 +6,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
-  Action as BootAction
+  Action as BootAction,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
@@ -20,7 +20,7 @@ import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
-  withLinodeDetailContext
+  withLinodeDetailContext,
 } from '../linodeDetailContext';
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
@@ -68,7 +68,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const queryParams = parseQueryParams(location.search);
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
-    path: '/linodes/:linodeId/:subpath?'
+    path: '/linodes/:linodeId/:subpath?',
   });
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
@@ -80,43 +80,43 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
     open: false,
     linodeID: 0,
-    linodeLabel: ''
+    linodeLabel: '',
   });
 
   const [deleteDialog, setDeleteDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0,
-    linodeLabel: ''
+    linodeLabel: '',
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
     open: queryParams.resize === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
     open: queryParams.migrate === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
     open: queryParams.rescue === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
     open: queryParams.rebuild === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [backupsDialog, setBackupsDialog] = React.useState<DialogProps>({
     open: false,
-    linodeID: 0
+    linodeID: 0,
   });
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
-    tags: []
+    tags: [],
   });
 
   const { updateLinode, deleteLinode } = useLinodeActions();
@@ -133,7 +133,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       bootAction,
       linodeConfigs,
       linodeID,
-      linodeLabel
+      linodeLabel,
     });
   };
 
@@ -148,14 +148,14 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
           ...deleteDialog,
           open: true,
           linodeLabel,
-          linodeID
+          linodeID,
         }));
         break;
       case 'migrate':
         setMigrateDialog(migrateDialog => ({
           ...migrateDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'migrate=true' });
         break;
@@ -163,7 +163,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         setResizeDialog(resizeDialog => ({
           ...resizeDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'resize=true' });
         break;
@@ -171,7 +171,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         setRescueDialog(rescueDialog => ({
           ...rescueDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'rescue=true' });
         break;
@@ -179,7 +179,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         setRebuildDialog(rebuildDialog => ({
           ...rebuildDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'rebuild=true' });
         break;
@@ -187,7 +187,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
         setBackupsDialog(backupsDialog => ({
           ...backupsDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         break;
     }
@@ -221,7 +221,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const openTagDrawer = (tags: string[]) => {
     setTagDrawer({
       open: true,
-      tags
+      tags,
     });
   };
 
@@ -339,6 +339,6 @@ export default compose<CombinedProps, {}>(
     linode,
     linodeStatus: linode.status,
     linodeDisks: linode._disks,
-    configs: linode._configs
+    configs: linode._configs,
   }))
 )(LinodeDetailHeader);

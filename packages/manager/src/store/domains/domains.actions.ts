@@ -1,7 +1,7 @@
 import {
   CreateDomainPayload,
   Domain,
-  UpdateDomainPayload
+  UpdateDomainPayload,
 } from '@linode/api-v4/lib/domains';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';

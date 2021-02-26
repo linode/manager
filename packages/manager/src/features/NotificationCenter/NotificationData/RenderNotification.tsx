@@ -16,41 +16,41 @@ import { checkIfMaintenanceNotification } from './notificationUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingTop: 2,
-    paddingBottom: 2
+    paddingBottom: 2,
   },
   divider: {
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
   },
   criticalIcon: {
-    fill: theme.color.red
+    fill: theme.color.red,
   },
   majorIcon: {
-    fill: theme.palette.status.warningDark
+    fill: theme.palette.status.warningDark,
   },
   itemsWithoutIcon: {
-    marginLeft: '1.25rem'
+    marginLeft: '1.25rem',
   },
   severeAlert: {
-    color: theme.color.red
+    color: theme.color.red,
   },
   redLink: {
     '&:hover': {
-      textDecoration: `${theme.color.red} underline`
-    }
+      textDecoration: `${theme.color.red} underline`,
+    },
   },
   greyLink: {
     '&:hover': {
-      textDecoration: `${theme.palette.text.primary} underline`
-    }
+      textDecoration: `${theme.palette.text.primary} underline`,
+    },
   },
   notificationIcon: {
     lineHeight: '1rem',
     display: 'flex',
     '& svg': {
       height: '1.25rem',
-      width: '1.25rem'
-    }
-  }
+      width: '1.25rem',
+    },
+  },
 }));
 
 interface Props {
@@ -80,7 +80,7 @@ export const RenderNotification: React.FC<Props> = props => {
         [classes.severeAlert]:
           notification.severity === 'critical' &&
           notification.type === 'payment_due',
-        [classes.itemsWithoutIcon]: notification.severity === 'minor'
+        [classes.itemsWithoutIcon]: notification.severity === 'minor',
       })}
       dangerouslySetInnerHTML={{ __html: sanitizeHTML(notification.message) }}
     />
@@ -117,7 +117,7 @@ export const RenderNotification: React.FC<Props> = props => {
               to={linkTarget}
               className={classNames({
                 [classes.redLink]: notification.type === 'payment_due',
-                [classes.greyLink]: notification.type !== 'payment_due'
+                [classes.greyLink]: notification.type !== 'payment_due',
               })}
               onClick={onClose}
             >
@@ -178,7 +178,7 @@ const linkifiedOutageMessage = (notification: Notification) => {
         'Could not find the DC name for the outage notification',
         {
           rawRegion: notification.entity.id,
-          convertedRegion
+          convertedRegion,
         }
       );
     }

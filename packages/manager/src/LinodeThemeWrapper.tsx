@@ -43,7 +43,7 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
   });
 };
 
-const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
+const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
   const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
@@ -62,7 +62,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
     /** request the user preferences on app load */
     props
       .getUserPreferences()
-      .then((response) => {
+      .then(response => {
         // Without the timeout a race condition sometimes runs the theme
         // highlight checker before the stylesheets have fully loaded.
         window.setTimeout(
@@ -109,7 +109,7 @@ interface MemoizedThemeProviderProps {
   children: any;
 }
 
-const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = (props) => {
+const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = props => {
   const { themeChoice, toggleTheme, children } = props;
 
   const theme = React.useMemo(() => {
@@ -134,7 +134,7 @@ const safelyGetTheme = (
 ) => {
   /* tslint:disable */
   return !!Object.keys(themesToChoose).some(
-    (eachTheme) => eachTheme === themeChoice
+    eachTheme => eachTheme === themeChoice
   )
     ? themesToChoose[themeChoice]
     : themesToChoose['light'];

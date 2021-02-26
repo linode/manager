@@ -10,7 +10,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import withLinodes, {
-  Props as LinodesProps
+  Props as LinodesProps,
 } from 'src/containers/withLinodes.container';
 import { useDialog } from 'src/hooks/useDialog';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
@@ -22,17 +22,17 @@ import RemoveDeviceDialog from './RemoveDeviceDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   message: {
-    fontSize: '16px'
+    fontSize: '16px',
   },
   link: {
-    margin: '8px 8px 8px 0px'
+    margin: '8px 8px 8px 0px',
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -49,7 +49,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
     devices,
     requestDevices,
     removeDevice,
-    addDevice
+    addDevice,
   } = useFirewallDevices(firewallID);
 
   const deviceList = Object.values(devices.itemsById ?? {}); // Gives the devices as an array or [] if nothing is found
@@ -64,7 +64,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
     openDialog,
     closeDialog,
     handleError,
-    submitDialog
+    submitDialog,
   } = useDialog<number>(removeDevice);
 
   const flags = useFlags();
@@ -112,8 +112,8 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
                 );
                 return linode ? linode.label : match;
               }
-            )
-          }
+            ),
+          },
         ];
         setDeviceError(errorWithLinodeLabel);
         setDeviceSubmitting(false);
@@ -137,7 +137,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
       <Typography
         className={classnames({
           [classes.message]: true,
-          [classes.cmrSpacing]: flags.cmr
+          [classes.cmrSpacing]: flags.cmr,
         })}
       >
         The following Linodes have been assigned to this Firewall.

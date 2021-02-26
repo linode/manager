@@ -13,7 +13,7 @@ type CombinedProps = Props;
 
 const Database: React.FC<CombinedProps> = props => {
   const {
-    match: { path }
+    match: { path },
   } = props;
 
   useReduxLoad(['databases']);

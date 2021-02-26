@@ -8,13 +8,13 @@ export interface State {
 
 export const defaultState: State = {
   appIsLoading: true,
-  loadingText: ''
+  loadingText: '',
 };
 
 const reducer = reducerWithInitialState(defaultState)
   .case(handleLoadingDone, state => ({
     ...state,
-    appIsLoading: false
+    appIsLoading: false,
   }))
   .default(state => state);
 

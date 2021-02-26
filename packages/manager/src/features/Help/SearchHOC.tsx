@@ -7,7 +7,7 @@ import {
   ALGOLIA_APPLICATION_ID,
   ALGOLIA_SEARCH_KEY,
   COMMUNITY_BASE_URL,
-  DOCS_BASE_URL
+  DOCS_BASE_URL,
 } from 'src/constants';
 import truncate from 'src/utilities/truncateText';
 
@@ -53,8 +53,8 @@ export const convertDocsToItems = (
       label: getDocsResultLabel(hit, highlight),
       data: {
         source: 'Linode documentation',
-        href: DOCS_BASE_URL + hit.href
-      }
+        href: DOCS_BASE_URL + hit.href,
+      },
     };
   });
 };
@@ -69,8 +69,8 @@ export const convertCommunityToItems = (
       label: getCommunityResultLabel(hit, highlight),
       data: {
         source: 'Linode Community Site',
-        href: getCommunityUrl(hit.objectID)
-      }
+        href: getCommunityUrl(hit.objectID),
+      },
     };
   });
 };
@@ -139,7 +139,7 @@ export default (options: SearchOptions) => (
         // Disable search functionality in the component.
         this.setState({
           searchEnabled: false,
-          searchError: 'Search could not be enabled.'
+          searchError: 'Search could not be enabled.',
         });
         return;
       }
@@ -156,7 +156,7 @@ export default (options: SearchOptions) => (
       if (!this.searchIndex) {
         this.setState({
           searchResults: [[], []],
-          searchError: 'Search could not be enabled.'
+          searchError: 'Search could not be enabled.',
         });
         return;
       }
@@ -167,8 +167,8 @@ export default (options: SearchOptions) => (
             query: inputValue,
             params: {
               hitsPerPage,
-              attributesToRetrieve: ['title', '_highlightResult', 'href']
-            }
+              attributesToRetrieve: ['title', '_highlightResult', 'href'],
+            },
           },
           {
             indexName: 'linode-community',
@@ -176,9 +176,13 @@ export default (options: SearchOptions) => (
             params: {
               hitsPerPage,
               distinct: true,
-              attributesToRetrieve: ['title', 'description', '_highlightResult']
-            }
-          }
+              attributesToRetrieve: [
+                'title',
+                'description',
+                '_highlightResult',
+              ],
+            },
+          },
         ],
         this.searchSuccess
       );
@@ -195,7 +199,7 @@ export default (options: SearchOptions) => (
          * our control and can be account-related (e.g. "You have exceeded your quota").
          */
         this.setState({
-          searchError: 'There was an error retrieving your search results.'
+          searchError: 'There was an error retrieving your search results.',
         });
         return;
       }
@@ -207,7 +211,7 @@ export default (options: SearchOptions) => (
       const commResults = convertCommunityToItems(highlight, community);
       this.setState({
         searchResults: [docsResults, commResults],
-        searchError: undefined
+        searchError: undefined,
       });
     };
 
@@ -215,13 +219,13 @@ export default (options: SearchOptions) => (
       searchAlgolia: this.searchAlgolia,
       searchEnabled: false,
       searchError: undefined,
-      searchResults: [[], []]
+      searchResults: [[], []],
     };
 
     render() {
       return React.createElement(Component, {
         ...this.props,
-        ...this.state
+        ...this.state,
       });
     }
   }

@@ -11,15 +11,15 @@ import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import {
   BasicFromContentProps,
   ReduxStateProps,
-  WithTypesRegionsAndImages
+  WithTypesRegionsAndImages,
 } from '../types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
     [theme.breakpoints.up('md')]: {
-      maxWidth: '100%'
-    }
-  }
+      maxWidth: '100%',
+    },
+  },
 }));
 
 interface Props extends BasicFromContentProps {
@@ -41,7 +41,7 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     imagePanelTitle,
     imagesData,
     userCannotCreateLinode,
-    variant
+    variant,
   } = props;
 
   const privateImages = filterImagesByType(imagesData, 'private');

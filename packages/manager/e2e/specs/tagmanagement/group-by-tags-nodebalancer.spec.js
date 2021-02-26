@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 const {
   apiCreateNodeBalancers,
   removeNodeBalancers,
-  timestamp
+  timestamp,
 } = require('../../utils/common');
 import ListNodeBalancers from '../../pageobjects/list-nodebalancers.page';
 
@@ -14,11 +14,11 @@ describe('Group by Tags - NodeBalancers', () => {
     tags.forEach(tag => {
       const nb = {
         label: `a${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       const nb1 = {
         label: `b${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       nodebalancers.push(nb);
       nodebalancers.push(nb1);

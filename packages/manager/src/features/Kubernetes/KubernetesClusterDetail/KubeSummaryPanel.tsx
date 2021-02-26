@@ -1,6 +1,6 @@
 import {
   getKubeConfig,
-  KubernetesCluster
+  KubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -19,7 +19,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -53,41 +53,41 @@ const styles = (theme: Theme) =>
     root: {
       marginBottom: theme.spacing(3),
       padding: `${theme.spacing(2) + 4}px ${theme.spacing(2) +
-        4}px ${theme.spacing(3)}px`
+        4}px ${theme.spacing(3)}px`,
     },
     mainGridContainer: {
       [theme.breakpoints.up('lg')]: {
-        justifyContent: 'space-between'
-      }
+        justifyContent: 'space-between',
+      },
     },
     item: {
       '&:last-of-type': {
-        paddingBottom: 0
+        paddingBottom: 0,
       },
-      paddingBottom: theme.spacing(1)
+      paddingBottom: theme.spacing(1),
     },
     label: {
       marginBottom: `${theme.spacing(1) - 3}px`,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     },
     column: {},
     iconsSharedStyling: {
       width: 24,
       height: 24,
-      objectFit: 'contain'
+      objectFit: 'contain',
     },
     kubeconfigSection: {
-      marginTop: `${theme.spacing() + 2}px`
+      marginTop: `${theme.spacing() + 2}px`,
     },
     kubeconfigElements: {
       color: theme.palette.primary.main,
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     kubeconfigFileText: {
       cursor: 'pointer',
       color: theme.cmrTextColors.linkActiveLight,
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     kubeconfigIcons: {
       color: theme.cmrTextColors.linkActiveLight,
@@ -95,23 +95,23 @@ const styles = (theme: Theme) =>
       width: 16,
       height: 16,
       objectFit: 'contain',
-      margin: `0 ${theme.spacing(1)}px`
+      margin: `0 ${theme.spacing(1)}px`,
     },
     tagsSection: {
       display: 'flex',
       [theme.breakpoints.up('lg')]: {
         justifyContent: 'flex-end',
-        textAlign: 'right'
-      }
+        textAlign: 'right',
+      },
     },
     iconSharedOuter: {
       textAlign: 'center',
-      flexBasis: '28%'
+      flexBasis: '28%',
     },
     iconTextOuter: {
       flexBasis: '72%',
-      minWidth: 115
-    }
+      minWidth: 115,
+    },
   });
 
 interface Props {
@@ -152,7 +152,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     enqueueSnackbar,
     kubeconfigAvailable,
     kubeconfigError,
-    handleUpdateTags
+    handleUpdateTags,
   } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
@@ -168,10 +168,10 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
         return window.atob(response.kubeconfig);
       } catch (e) {
         reportException(e, {
-          'Encoded response': response.kubeconfig
+          'Encoded response': response.kubeconfig,
         });
         enqueueSnackbar('Error parsing your kubeconfig file', {
-          variant: 'error'
+          variant: 'error',
         });
         return;
       }

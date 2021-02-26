@@ -83,7 +83,7 @@ export const readableBytes = (
     return {
       value: 0,
       unit: storageUnits[0],
-      formatted: `0 ${storageUnits[0]}`
+      formatted: `0 ${storageUnits[0]}`,
     };
   }
 
@@ -111,14 +111,14 @@ export const readableBytes = (
     return {
       value: isNegative ? -value : value,
       unit: 'byte' as StorageSymbol,
-      formatted: (isNegative ? '-' : '') + value + ' byte'
+      formatted: (isNegative ? '-' : '') + value + ' byte',
     };
   }
 
   return {
     value: isNegative ? -value : value,
     unit,
-    formatted: (isNegative ? '-' : '') + value + ' ' + unit
+    formatted: (isNegative ? '-' : '') + value + ' ' + unit,
   };
 };
 

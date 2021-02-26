@@ -17,5 +17,5 @@ export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   updated: '2010-12-31T23:59:59',
   rev_note: 'Initial import.',
   ordinal: 1, // default value
-  logo_url: '' // default value
+  logo_url: '', // default value
 });

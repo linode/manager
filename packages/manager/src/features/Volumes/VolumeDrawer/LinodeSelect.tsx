@@ -8,7 +8,7 @@ import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBl
 import { debounce } from 'throttle-debounce';
 
 import withRegions, {
-  DefaultProps as RegionProps
+  DefaultProps as RegionProps,
 } from 'src/containers/regions.container';
 
 export const regionSupportMessage =
@@ -37,12 +37,12 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
   mounted: boolean;
 
   static defaultProps = {
-    region: 'none'
+    region: 'none',
   };
 
   state: State = {
     linodes: [],
-    loading: true
+    loading: true,
   };
 
   componentDidMount() {
@@ -97,7 +97,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
       return {
         value: linode.id,
         label: linode.label,
-        data: { region: linode.region }
+        data: { region: linode.region },
       };
     });
   };
@@ -108,15 +108,15 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
     if (region && region !== 'none') {
       return {
         label: {
-          '+contains': inputValue
+          '+contains': inputValue,
         },
-        region
+        region,
       };
     } else {
       return {
         label: {
-          '+contains': inputValue
-        }
+          '+contains': inputValue,
+        },
       };
     }
   };
@@ -188,8 +188,8 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
           onInputChange={this.onInputChange}
           textFieldProps={{
             dataAttrs: {
-              'data-qa-select-linode': true
-            }
+              'data-qa-select-linode': true,
+            },
           }}
           hideLabel
           {...rest}

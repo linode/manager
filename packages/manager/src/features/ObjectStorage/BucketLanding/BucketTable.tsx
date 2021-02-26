@@ -30,7 +30,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
     order,
     handleOrderChange,
     handleClickRemove,
-    handleClickDetails
+    handleClickDetails,
   } = props;
 
   return (
@@ -41,7 +41,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => (
         <React.Fragment>
           <Table aria-label="List of your Buckets">

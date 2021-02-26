@@ -26,7 +26,7 @@ describe('dashboard', () => {
       // Here we handle all requests passing through Cypress' server
       onRequest: req => {
         xhrData.push(req);
-      }
+      },
     });
     cy.route('/v4/**').as('apiGet');
 
@@ -40,7 +40,7 @@ describe('dashboard', () => {
 
   it.skip('Verify correct error message when unable to get linodes', () => {
     Route.getLinodes({
-      response: 'error'
+      response: 'error',
     });
     cy.visitWithLogin('/');
     cy.wait('@getLinodes');

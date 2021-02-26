@@ -9,7 +9,7 @@ export interface NotificationContextProps {
 const defaultContext = {
   drawerOpen: false,
   openDrawer: () => null,
-  closeDrawer: () => null
+  closeDrawer: () => null,
 };
 
 export const notificationContext = createContext<NotificationContextProps>(
@@ -25,6 +25,6 @@ export const useNotificationContext = (): NotificationContextProps => {
   return {
     drawerOpen,
     openDrawer,
-    closeDrawer
+    closeDrawer,
   };
 };

@@ -30,26 +30,26 @@ import ContactTableContact from './ContactsTableContent';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.color.white,
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
   },
   copy: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
+      marginRight: theme.spacing(),
+    },
   },
   contactsListHeader: {
     margin: 0,
-    width: '100%'
+    width: '100%',
   },
   headline: {
-    marginLeft: 15
+    marginLeft: 15,
   },
   addNewWrapper: {
     '&.MuiGrid-item': {
-      padding: 5
-    }
-  }
+      padding: 5,
+    },
+  },
 }));
 
 interface Props {
@@ -73,7 +73,7 @@ const Contacts: React.FC<CombinedProps> = props => {
     lastUpdated,
     transformData,
     update,
-    enqueueSnackbar
+    enqueueSnackbar,
   } = props;
 
   const updateOrAdd = (contact: ManagedContact) => {
@@ -102,7 +102,7 @@ const Contacts: React.FC<CombinedProps> = props => {
     openDialog,
     closeDialog,
     submitDialog,
-    handleError
+    handleError,
   } = useDialog<number>(deleteContact);
 
   const handleDelete = () => {
@@ -110,7 +110,7 @@ const Contacts: React.FC<CombinedProps> = props => {
       .then(() => {
         update();
         enqueueSnackbar('Contact deleted successfully.', {
-          variant: 'success'
+          variant: 'success',
         });
       })
       .catch(e =>
@@ -169,7 +169,7 @@ const Contacts: React.FC<CombinedProps> = props => {
                   handlePageChange,
                   handlePageSizeChange,
                   page,
-                  pageSize
+                  pageSize,
                 }) => {
                   return (
                     <>
@@ -312,7 +312,7 @@ export const generateGroupsFromContacts = (
     if (idx === -1) {
       groups.push({
         groupName: contact.group,
-        contactNames: [contact.name]
+        contactNames: [contact.name],
       });
     } else {
       // If we've already tracked the group, just add this contact's name.

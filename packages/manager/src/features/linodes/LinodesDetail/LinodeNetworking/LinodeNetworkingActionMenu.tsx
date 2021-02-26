@@ -7,7 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actionMenu: {
-    height: 40
+    height: 40,
   },
   button: {
     ...theme.applyLinkStyles,
@@ -19,13 +19,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       textDecoration: 'none',
       backgroundColor: '#3683dc',
-      color: '#ffffff'
-    }
+      color: '#ffffff',
+    },
   },
   disabled: {
     cursor: 'not-allowed',
-    color: theme.color.grey1
-  }
+    color: theme.color.grey1,
+  },
 }));
 
 interface Props {
@@ -52,7 +52,7 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
           disabled={readOnly}
           className={classnames({
             [classes.button]: true,
-            [classes.disabled]: readOnly
+            [classes.disabled]: readOnly,
           })}
           onClick={() => onRemove(ipAddress)}
         >
@@ -69,7 +69,7 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
             disabled={readOnly}
             className={classnames({
               [classes.button]: true,
-              [classes.disabled]: readOnly
+              [classes.disabled]: readOnly,
             })}
             onClick={() => onEdit(ipAddress)}
           >

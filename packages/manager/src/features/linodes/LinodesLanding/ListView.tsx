@@ -34,7 +34,7 @@ export const ListView: React.FC<CombinedProps> = props => {
     open: false,
     tags: [],
     label: '',
-    entityID: 0
+    entityID: 0,
   });
 
   const { updateLinode } = useLinodeActions();
@@ -54,7 +54,7 @@ export const ListView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      entityID: linodeID
+      entityID: linodeID,
     });
   };
 

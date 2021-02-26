@@ -5,12 +5,12 @@ import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
@@ -38,7 +38,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
     volumeRegion,
     volumeLabel,
     volumeSize,
-    cloneVolume
+    cloneVolume,
   } = props;
   return (
     <Formik
@@ -74,7 +74,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
         resetForm,
         status,
         touched,
-        values
+        values,
       }) => {
         return (
           <Form>

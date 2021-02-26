@@ -12,7 +12,7 @@ import {
   LongviewProcesses,
   ProcessStats,
   Stat,
-  StatWithDummyPoint
+  StatWithDummyPoint,
 } from '../request.types';
 
 interface Storage {
@@ -39,7 +39,7 @@ export const getTotalMemoryUsage = (used: number, free: number) => {
   const howManyBytesInGB = 1073741824;
   const memoryToBytes = total * 1024;
   return readableBytes(memoryToBytes, {
-    unit: memoryToBytes > howManyBytesInGB ? 'GB' : 'MB'
+    unit: memoryToBytes > howManyBytesInGB ? 'GB' : 'MB',
   });
 };
 
@@ -69,7 +69,7 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
   const result: CPU<'yAsNull'> = {
     system: [],
     user: [],
-    wait: []
+    wait: [],
   };
 
   // Protect against malformed data.
@@ -108,7 +108,7 @@ export const sumNetwork = (
 ): InboundOutboundNetwork<'yAsNull'> => {
   const result: InboundOutboundNetwork<'yAsNull'> = {
     tx_bytes: [],
-    rx_bytes: []
+    rx_bytes: [],
   };
 
   // Protect against malformed data.

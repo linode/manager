@@ -26,30 +26,30 @@ import ConnectionRow from './ConnectionRow';
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(3)
-    }
+      marginTop: theme.spacing(3),
+    },
   },
   table: {
     [theme.breakpoints.down('sm')]: {
       '& tbody > tr > td:first-child .data': {
-        textAlign: 'right'
-      }
+        textAlign: 'right',
+      },
     },
     [theme.breakpoints.up('md')]: {
       '& thead > tr > th:last-child': {
-        textAlign: 'right'
+        textAlign: 'right',
       },
       '& tbody > tr > td:last-child': {
-        textAlign: 'right'
-      }
-    }
+        textAlign: 'right',
+      },
+    },
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 export interface TableProps {
@@ -101,7 +101,7 @@ export const ConnectionsTable: React.FC<TableProps> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Table

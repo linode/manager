@@ -10,7 +10,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -29,7 +29,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   Permission,
   permTuplesToScopeString,
-  scopeStringToPermTuples
+  scopeStringToPermTuples,
 } from './utils';
 
 type Expiry = [string, string];
@@ -41,29 +41,29 @@ export const genExpiryTups = (): Expiry[] => {
       DateTime.local()
         .plus({ months: 6 })
         .startOf('day')
-        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
     ],
     [
       'In 3 months',
       DateTime.local()
         .plus({ months: 3 })
         .startOf('day')
-        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
     ],
     [
       'In 1 month',
       DateTime.local()
         .plus({ months: 1 })
         .startOf('day')
-        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
     ],
     [
       'Never',
       DateTime.local()
         .plus({ years: 200 })
         .startOf('day')
-        .toFormat(ISO_DATETIME_NO_TZ_FORMAT)
-    ]
+        .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
+    ],
   ];
 };
 
@@ -78,36 +78,36 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     permsTable: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
     },
     selectCell: {
       fontFamily: 'LatoWebBold', // we keep this bold at all times
-      fontSize: '.9rem'
+      fontSize: '.9rem',
     },
     accessCell: {
       width: '31%',
       [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     noneCell: {
       width: '23%',
       [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     readOnlyCell: {
       width: '23%',
       [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     readWritecell: {
       width: '23%',
       [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      }
-    }
+        width: '100%',
+      },
+    },
   });
 
 export type DrawerMode = 'view' | 'edit' | 'create';
@@ -147,7 +147,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
     scopes: scopeStringToPermTuples(this.props.scopes || '', this.props.perms),
     expiryTups: genExpiryTups(),
-    selectAllSelectedScope: null
+    selectAllSelectedScope: null,
   };
 
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
@@ -162,7 +162,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     ) {
       /* Then update our current scopes state */
       this.setState({
-        scopes: scopeStringToPermTuples(nextProps.scopes || '', nextProps.perms)
+        scopes: scopeStringToPermTuples(
+          nextProps.scopes || '',
+          nextProps.perms
+        ),
       });
     }
   }
@@ -183,7 +186,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     const value = +e.currentTarget.value;
     this.setState({
       scopes: scopes.map((scope): Permission => [scope[0], value]),
-      selectAllSelectedScope: value
+      selectAllSelectedScope: value,
     });
   };
 
@@ -244,7 +247,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-none-radio
                   inputProps={{
-                    'aria-label': 'Select none for all'
+                    'aria-label': 'Select none for all',
                   }}
                 />
               </TableCell>
@@ -263,7 +266,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-read-radio
                   inputProps={{
-                    'aria-label': 'Select read-only for all'
+                    'aria-label': 'Select read-only for all',
                   }}
                 />
               </TableCell>
@@ -282,7 +285,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-rw-radio
                   inputProps={{
-                    'aria-label': 'Select read/write for all'
+                    'aria-label': 'Select read/write for all',
                   }}
                 />
               </TableCell>
@@ -364,7 +367,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       closeDrawer,
       onCreate,
       onEdit,
-      submitting
+      submitting,
     } = this.props;
     const { expiryTups } = this.state;
 
@@ -458,7 +461,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               data-qa-cancel
             >
               Cancel
-            </Button>
+            </Button>,
           ]}
         </ActionsPanel>
       </Drawer>

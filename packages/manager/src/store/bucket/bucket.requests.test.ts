@@ -7,7 +7,7 @@ import { isType } from 'typescript-fsa';
 import { getAllBucketsForAllClustersActions as actions } from './bucket.actions';
 import {
   gatherDataAndErrors,
-  getAllBucketsFromClusters
+  getAllBucketsFromClusters,
 } from './bucket.requests';
 import { BucketError } from './types';
 
@@ -18,10 +18,10 @@ const euCentral1 = 'eu-central-1';
 
 jest.mock('@linode/api-v4/lib/object-storage', () => {
   const buckets1 = objectStorageBucketFactory.buildList(1, {
-    cluster: usEast1
+    cluster: usEast1,
   });
   const buckets2 = objectStorageBucketFactory.buildList(1, {
-    cluster: euCentral1
+    cluster: euCentral1,
   });
   return {
     getBucketsInCluster: jest
@@ -31,7 +31,7 @@ jest.mock('@linode/api-v4/lib/object-storage', () => {
       .mockResolvedValueOnce({ data: buckets2, results: 1 })
       // Second test
       .mockResolvedValueOnce({ data: buckets1, results: 1 })
-      .mockRejectedValueOnce([{ reason: 'An error occurred' }])
+      .mockRejectedValueOnce([{ reason: 'An error occurred' }]),
   };
 });
 
@@ -55,7 +55,7 @@ describe('getAllBucketsFromAllClusters', () => {
     expect(isType(secondAction, actions.failed)).toBe(true);
     expect(secondAction.payload.error).toHaveLength(1);
     expect(secondAction.payload.error[0]).toHaveProperty('error', [
-      { reason: 'An error occurred' }
+      { reason: 'An error occurred' },
     ]);
   });
 });
@@ -64,11 +64,11 @@ describe('gatherDataAndErrors', () => {
   const bucket = objectStorageBucketFactory.build();
   const makeData = (): GetAllData<ObjectStorageBucket> => ({
     data: [bucket],
-    results: 1
+    results: 1,
   });
   const makeError = (): BucketError => ({
     error: { reason: 'An error occurred.' },
-    clusterId: usEast1
+    clusterId: usEast1,
   });
 
   it('combines data', () => {

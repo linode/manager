@@ -45,14 +45,14 @@ const DeviceSelection: React.FC<CombinedProps> = props => {
             value: type,
             options: (items as any[]).map(({ _id, label }) => {
               return { label, value: _id };
-            })
+            }),
           };
         });
 
         deviceList.unshift({
           value: '',
           label: '',
-          options: [{ value: null, label: 'None' }]
+          options: [{ value: null, label: 'None' }],
         });
 
         const selectedDevice = getSelectedOptionFromGroupedOptions(

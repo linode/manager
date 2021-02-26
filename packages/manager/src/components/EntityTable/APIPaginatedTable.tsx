@@ -29,7 +29,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
     handlers,
     headers,
     initialOrder,
-    RowComponent
+    RowComponent,
   } = props;
 
   const _data = data ?? [];
@@ -92,7 +92,7 @@ const enhanced = compose<CombinedProps, any>(
       if (ownProps.persistData) {
         ownProps.persistData(response.data);
       }
-    }
+    },
   })
 );
 

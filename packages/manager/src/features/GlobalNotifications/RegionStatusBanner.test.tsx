@@ -16,7 +16,7 @@ describe('Region status banner', () => {
   it("should render the region's name, and not a list, for a single affected region", () => {
     const regions = regionFactory.buildList(1, {
       status: 'outage',
-      id: 'us-east'
+      id: 'us-east',
     });
     const { queryAllByText, queryAllByTestId } = renderWithTheme(
       <RegionStatusBanner regions={regions} />
@@ -27,7 +27,7 @@ describe('Region status banner', () => {
 
   it("should render a list with each region with a status of 'outage' when there are more than one such region", () => {
     const regions = regionFactory.buildList(5, {
-      status: 'outage'
+      status: 'outage',
     });
     const { queryAllByTestId } = renderWithTheme(
       <RegionStatusBanner regions={regions} />

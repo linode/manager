@@ -29,14 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     wordBreak: 'break-all',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   cmrTableModifier: {
     '& tbody': {
-      transition: theme.transitions.create(['opacity'])
+      transition: theme.transitions.create(['opacity']),
     },
     '& tbody.sorting': {
-      opacity: 0.5
+      opacity: 0.5,
     },
     '& thead': {
       '& th': {
@@ -49,14 +49,14 @@ const useStyles = makeStyles((theme: Theme) => ({
         color: theme.palette.text.primary,
         padding: '10px 15px',
         '&:first-of-type': {
-          borderLeft: 'none'
+          borderLeft: 'none',
         },
         '&:last-of-type': {
-          borderRight: 'none'
-        }
-      }
-    }
-  }
+          borderRight: 'none',
+        },
+      },
+    },
+  },
 }));
 
 export interface Props {
@@ -76,7 +76,7 @@ export const ProcessesTable: React.FC<CombinedProps> = props => {
     processesLoading,
     error,
     selectedProcess,
-    setSelectedProcess
+    setSelectedProcess,
   } = props;
 
   const flags = useFlags();
@@ -233,7 +233,7 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
       averageMem,
       setSelectedProcess,
       isSelected,
-      cmrFlag
+      cmrFlag,
     } = props;
 
     const classes = useStyles();

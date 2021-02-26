@@ -35,10 +35,10 @@ export const getClientStats = createRequestThunk(
       return Promise.resolve({ Packages: [...packages] });
     }
     return get(api_key, 'getLatestValue', {
-      fields: ['cpu', 'disk', 'load', 'memory', 'network', 'sysinfo', 'uptime']
+      fields: ['cpu', 'disk', 'load', 'memory', 'network', 'sysinfo', 'uptime'],
     }).then(response => ({
       ...response.DATA,
-      Packages: [...packages]
+      Packages: [...packages],
     }));
   }
 );

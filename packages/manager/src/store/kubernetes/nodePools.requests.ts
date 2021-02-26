@@ -4,7 +4,7 @@ import {
   getNodePool,
   getNodePools,
   KubeNodePoolResponse,
-  updateNodePool as _updateNodePool
+  updateNodePool as _updateNodePool,
 } from '@linode/api-v4/lib/kubernetes';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -15,7 +15,7 @@ import {
   ExtendedNodePool,
   requestNodePoolsActions,
   updateNodePoolActions,
-  upsertNodePool
+  upsertNodePool,
 } from './nodePools.actions';
 
 const getAllNodePools = getAllWithArguments<KubeNodePoolResponse>(getNodePools);
@@ -33,7 +33,7 @@ export const extendNodePools = (
 
 const extendNodePool = (clusterID: number, nodePool: KubeNodePoolResponse) => ({
   ...nodePool,
-  clusterID
+  clusterID,
 });
 
 export const requestNodePoolsForCluster: ThunkActionCreator<
@@ -49,7 +49,7 @@ export const requestNodePoolsForCluster: ThunkActionCreator<
     .then(extendedPools => {
       dispatch(
         requestNodePoolsActions.done({
-          result: extendedPools
+          result: extendedPools,
         })
       );
       return extendedPools;
@@ -66,7 +66,7 @@ type RequestNodePoolForStoreThunk = ThunkActionCreator<
 >;
 export const requestNodePoolForStore: RequestNodePoolForStoreThunk = ({
   clusterID,
-  nodePoolID
+  nodePoolID,
 }) => dispatch => {
   getNodePool(clusterID, nodePoolID)
     .then(pool => {

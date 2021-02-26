@@ -78,7 +78,7 @@ const getIcon = (variant: Variant) => {
   return iconMap[variant] ?? LinodeIcon;
 };
 
-const EntityIcon: React.FC<CombinedProps> = (props) => {
+const EntityIcon: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {

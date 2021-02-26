@@ -96,7 +96,7 @@ export const getTabMatch = (tabs: NavTab[], pathname: string) => {
     (acc, thisTab, i) => {
       const match = matchPath(pathname, {
         path: thisTab.routeName,
-        exact: false
+        exact: false,
       });
 
       if (match) {

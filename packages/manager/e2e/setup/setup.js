@@ -9,14 +9,14 @@ const getAxiosInstance = (function(token) {
     if (token && axiosInstance === undefined) {
       axiosInstance = axios.create({
         httpsAgent: new https.Agent({
-          rejectUnauthorized: false
+          rejectUnauthorized: false,
         }),
         baseURL: API_ROOT,
         timeout: 10000,
         headers: {
           Authorization: `Bearer ${token}`,
-          'User-Agent': 'WebdriverIO'
-        }
+          'User-Agent': 'WebdriverIO',
+        },
       });
     } else if (!token && axiosInstance === undefined) {
       throw new Error('getting axiosInstance without having initialized it');
@@ -31,7 +31,7 @@ exports.deleteAll = (token, user) => {
       '/domains',
       '/nodebalancers',
       '/images',
-      '/account/users'
+      '/account/users',
     ];
 
     const getEndpoint = (endpoint, user) => {
@@ -141,7 +141,7 @@ exports.createLinode = (
       booted: true,
       region: !region ? 'us-east' : region,
       root_pass: password,
-      type: !type ? 'g6-nanode-1' : type
+      type: !type ? 'g6-nanode-1' : type,
     };
 
     if (image) {
@@ -183,7 +183,7 @@ exports.createVolume = (token, label, region, size, tags, linode_id) => {
     const volumesConfig = {
       size: size ? size : 20,
       region: region ? region : 'us-east',
-      label: label
+      label: label,
     };
 
     if (tags) {
@@ -211,7 +211,7 @@ exports.allocatePrivateIp = (token, linodeId) => {
     const ipsEndpoint = `/linode/instances/${linodeId}/ips`;
     const requestPrivate = {
       public: false,
-      type: 'ipv4'
+      type: 'ipv4',
     };
 
     return getAxiosInstance(token)
@@ -259,7 +259,7 @@ exports.createNodeBalancer = (token, label, region, tags) => {
     const data = {
       region: region || 'us-east',
       label: label,
-      client_conn_throttle: 0
+      client_conn_throttle: 0,
     };
 
     if (tags) {
@@ -318,7 +318,7 @@ exports.createDomain = (token, type, domain, tags, group) => {
     const domainConfig = {
       type: type ? type : 'master',
       domain: domain,
-      soa_email: 'fake@gmail.com'
+      soa_email: 'fake@gmail.com',
     };
 
     if (group) {
@@ -375,8 +375,8 @@ exports.getMyStackScripts = token => {
         headers: {
           Authorization: `Bearer ${token}`,
           'X-Filter': `{"username":"${browser.options.testUser}","+order_by":"deployments_total","+order":"desc"}`,
-          'User-Agent': 'WebdriverIO'
-        }
+          'User-Agent': 'WebdriverIO',
+        },
       })
       .then(response => resolve(response.data))
       .catch(error => {
@@ -409,8 +409,8 @@ exports.getPrivateImages = token => {
           headers: {
             Authorization: `Bearer ${token}`,
             'X-Filter': '{"is_public":false}',
-            'User-Agent': 'WebdriverIO'
-          }
+            'User-Agent': 'WebdriverIO',
+          },
         })
         .then(response => resolve(response.data))
         .catch(error => {

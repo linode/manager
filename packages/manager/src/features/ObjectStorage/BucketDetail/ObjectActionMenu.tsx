@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -26,14 +26,14 @@ export const ObjectActionMenu: React.FC<Props> = props => {
       onClick: () => {
         const shouldOpenInNewTab = true;
         handleClickDownload(objectName, shouldOpenInNewTab);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         handleClickDelete(objectName);
-      }
-    }
+      },
+    },
   ];
 
   return (

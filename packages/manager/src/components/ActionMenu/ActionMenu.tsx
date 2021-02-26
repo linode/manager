@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   item: {
     paddingLeft: theme.spacing(2),
@@ -34,28 +34,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     `,
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
-      color: '#fff'
-    }
+      color: '#fff',
+    },
   },
   button: {
     width: 26,
     padding: 0,
     '& svg': {
-      fontSize: '28px'
+      fontSize: '28px',
     },
     '&[aria-expanded="true"] .kebob': {
-      fill: theme.palette.primary.dark
-    }
+      fill: theme.palette.primary.dark,
+    },
   },
   actionSingleLink: {
     marginRight: theme.spacing(1),
     whiteSpace: 'nowrap',
     float: 'right',
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
   },
   menu: {
-    maxWidth: theme.spacing(25)
-  }
+    maxWidth: theme.spacing(25),
+  },
 }));
 
 export interface Props {
@@ -125,8 +125,8 @@ const ActionMenu: React.FC<CombinedProps> = props => {
         onClose={handleClose}
         BackdropProps={{
           style: {
-            backgroundColor: 'transparent'
-          }
+            backgroundColor: 'transparent',
+          },
         }}
       >
         {(actions as Action[]).map((a, idx) => (

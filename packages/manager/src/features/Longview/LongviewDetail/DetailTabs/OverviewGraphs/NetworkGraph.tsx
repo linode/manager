@@ -6,7 +6,7 @@ import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   formatNetworkTooltip,
   getMaxUnitAndFormatNetwork,
-  sumNetwork
+  sumNetwork,
 } from 'src/features/Longview/shared/utilities';
 import { convertData } from '../../../shared/formatters';
 import { GraphProps } from './types';
@@ -23,7 +23,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
     lastUpdatedError,
     start,
     theme,
-    timezone
+    timezone,
   } = props;
 
   const { data, loading, error, request } = useGraphs(
@@ -68,14 +68,14 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
           label: 'Inbound',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.network.inbound,
-          data: _convertData(rx_bytes, start, end)
+          data: _convertData(rx_bytes, start, end),
         },
         {
           label: 'Outbound',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.network.outbound,
-          data: _convertData(tx_bytes, start, end)
-        }
+          data: _convertData(tx_bytes, start, end),
+        },
       ]}
     />
   );

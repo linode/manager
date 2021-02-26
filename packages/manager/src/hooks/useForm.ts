@@ -12,7 +12,7 @@ export const useForm = <T extends {}>(
   const updateField = (field: keyof T, value: any) => {
     setValues(prevForm => ({
       ...prevForm,
-      [field]: value
+      [field]: value,
     }));
   };
 

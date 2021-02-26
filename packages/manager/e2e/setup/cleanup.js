@@ -14,14 +14,14 @@ function removeEntity(token, entity, endpoint) {
 const getAxiosInstance = token => {
   const axiosInstance = axios.create({
     httpsAgent: new https.Agent({
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
     }),
     baseURL: API_ROOT,
     timeout: 10000,
     headers: {
       Authorization: `Bearer ${token}`,
-      'User-Agent': 'WebdriverIO'
-    }
+      'User-Agent': 'WebdriverIO',
+    },
   });
   return axiosInstance;
 };
@@ -79,7 +79,7 @@ exports.deleteAll = (token, user) => {
     '/domains',
     '/nodebalancers',
     '/images',
-    '/account/users'
+    '/account/users',
     // TODO JIRA - M3-3249: Uncomment this when we are ready to run on CI:
     // '/account/oauth-clients'
   ];

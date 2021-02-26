@@ -8,9 +8,9 @@ const useStyles = makeStyles({
       position: 'relative',
       marginRight: 8,
       marginLeft: 4,
-      top: -2
-    }
-  }
+      top: -2,
+    },
+  },
 });
 
 interface Props {

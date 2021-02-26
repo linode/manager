@@ -3,7 +3,7 @@ import {
   getAll,
   deleteById,
   isTestEntity,
-  makeTestLabel
+  makeTestLabel,
 } from './common';
 export const testNodeBalTag = testTag;
 export const makeNodeBalLabel = makeTestLabel;
@@ -16,7 +16,7 @@ export const makeNodeBalCreateReq = nodeBal => {
         label: makeNodeBalLabel(),
         tags: [testNodeBalTag],
         region: 'us-east',
-        configs: []
+        configs: [],
       };
 
   return cy.request({
@@ -24,8 +24,8 @@ export const makeNodeBalCreateReq = nodeBal => {
     url: Cypress.env('REACT_APP_API_ROOT') + '/v4/nodebalancers',
     body: nodeBalData,
     auth: {
-      bearer: Cypress.env('MANAGER_OAUTH')
-    }
+      bearer: Cypress.env('MANAGER_OAUTH'),
+    },
   });
 };
 

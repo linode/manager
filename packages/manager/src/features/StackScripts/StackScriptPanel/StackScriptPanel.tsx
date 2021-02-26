@@ -10,7 +10,7 @@ import RenderGuard from 'src/components/RenderGuard';
 import { MapState } from 'src/store/types';
 import {
   getCommunityStackscripts,
-  getMineAndAccountStackScripts
+  getMineAndAccountStackScripts,
 } from '../stackScriptUtils';
 
 const StackScriptPanelContent = React.lazy(() =>
@@ -47,7 +47,7 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
           currentUser={username}
           request={getMineAndAccountStackScripts}
         />
-      )
+      ),
     },
     {
       title: 'Community StackScripts',
@@ -60,8 +60,8 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
           currentUser={username}
           request={getCommunityStackscripts}
         />
-      )
-    }
+      ),
+    },
   ];
 
   return <NavTabs tabs={tabs} />;
@@ -72,7 +72,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
-  username: state.__resources.profile?.data?.username ?? ''
+  username: state.__resources.profile?.data?.username ?? '',
 });
 
 const connected = connect(mapStateToProps);

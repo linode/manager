@@ -7,7 +7,7 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import { EntityError, RelationalMappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -15,7 +15,7 @@ import {
   createNodeBalancerConfigNodeActions,
   deleteNodeBalancerConfigNodeActions,
   requestNodeBalancerConfigNodesActions,
-  updateNodeBalancerConfigNodeActions
+  updateNodeBalancerConfigNodeActions,
 } from './configNode.actions';
 
 /**

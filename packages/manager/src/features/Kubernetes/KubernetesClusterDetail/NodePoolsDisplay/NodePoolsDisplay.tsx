@@ -1,6 +1,6 @@
 import {
   PoolNodeRequest,
-  PoolNodeResponse
+  PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -28,39 +28,39 @@ import Button from 'src/components/Button';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
-    paddingTop: '4px'
+    paddingTop: '4px',
   },
   button: {
     marginBottom: theme.spacing(),
-    marginLeft: theme.spacing()
+    marginLeft: theme.spacing(),
   },
   displayTable: {
     width: '100%',
     '& > div': {
       marginTop: theme.spacing(),
-      marginBottom: theme.spacing(4)
+      marginBottom: theme.spacing(4),
     },
     '& > div:last-child': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
   nodePoolHeader: {
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   nodePoolHeaderOuter: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   nodePool: {
     marginTop: theme.spacing(),
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(4),
   },
   mobileSpacing: {
     [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 export interface Props {
@@ -88,7 +88,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     deletePool,
     recycleAllClusterNodes,
     recycleAllPoolNodes,
-    recycleNode
+    recycleNode,
   } = props;
 
   const classes = useStyles();

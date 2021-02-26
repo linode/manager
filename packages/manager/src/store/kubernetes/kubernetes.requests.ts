@@ -3,7 +3,7 @@ import {
   getKubernetesCluster,
   getKubernetesClusters,
   KubernetesCluster,
-  updateKubernetesCluster as _updateCluster
+  updateKubernetesCluster as _updateCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -12,7 +12,7 @@ import {
   deleteClusterActions,
   requestClusterActions,
   requestClustersActions,
-  updateClusterActions
+  updateClusterActions,
 } from './kubernetes.actions';
 import { requestNodePoolsForCluster } from './nodePools.requests';
 
@@ -33,7 +33,7 @@ export const requestKubernetesClusters: ThunkActionCreator<Promise<
       }
       dispatch(
         requestClustersActions.done({
-          result: response
+          result: response,
         })
       );
       return response;

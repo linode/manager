@@ -48,7 +48,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
-const LongviewClientRow: React.FC<CombinedProps> = (props) => {
+const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
@@ -66,8 +66,8 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
     lastUpdated,
     lastUpdatedError,
     authed,
-  } = useClientLastUpdated(clientAPIKey, (_lastUpdated) =>
-    props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
+  } = useClientLastUpdated(clientAPIKey, _lastUpdated =>
+    props.getClientStats(clientAPIKey, _lastUpdated).catch(_ => null)
   );
 
   /**
@@ -176,7 +176,7 @@ interface GrantProps {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>((ownProps) => ownProps.clientID),
+  withClientStats<Props>(ownProps => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */
   withLongviewClients(() => ({})),
   withProfile<GrantProps, Props>((ownProps, { profileData }) => {
@@ -187,7 +187,7 @@ export default compose<CombinedProps, Props>(
     );
 
     const thisPermission = (longviewPermissions as Grant[]).find(
-      (r) => r.id === ownProps.clientID
+      r => r.id === ownProps.clientID
     );
 
     return {

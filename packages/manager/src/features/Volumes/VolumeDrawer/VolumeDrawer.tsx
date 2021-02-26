@@ -10,7 +10,7 @@ import { MapState } from 'src/store/types';
 import {
   close,
   openForConfig,
-  viewResizeInstructions
+  viewResizeInstructions,
 } from 'src/store/volumeForm';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
@@ -40,7 +40,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeTags,
       volumePath,
       message,
-      readOnly
+      readOnly,
     } = this.props;
 
     return (
@@ -150,8 +150,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
       message?: string
     ) => dispatch(openForConfig(volumeLabel, volumePath, message)),
     openForResizeInstructions: (volumeLabel: string, message?: string) =>
-      dispatch(viewResizeInstructions({ volumeLabel, message }))
-  }
+      dispatch(viewResizeInstructions({ volumeLabel, message })),
+  },
 });
 
 interface StateProps {
@@ -184,7 +184,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     volumeSize,
     volumeTags,
     volumePath,
-    message
+    message,
   } = state.volumeDrawer;
 
   const volumesPermissions = pathOr(
@@ -214,7 +214,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     readOnly:
       isRestrictedUser(state) &&
       volumePermissions &&
-      volumePermissions.permissions === 'read_only'
+      volumePermissions.permissions === 'read_only',
   };
 };
 

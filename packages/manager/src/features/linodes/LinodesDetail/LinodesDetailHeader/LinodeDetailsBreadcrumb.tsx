@@ -59,7 +59,7 @@ type CombinedProps = Props &
   EditableLabelProps &
   RouteComponentProps<{}>;
 
-const LinodeControls: React.FC<CombinedProps> = (props) => {
+const LinodeControls: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const {
@@ -76,16 +76,16 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
 
   const handleSubmitLabelChange = (label: string) => {
     return updateLinode({ label })
-      .then((updatedLinode) => {
+      .then(updatedLinode => {
         resetEditableLabel();
       })
-      .catch((err) => {
+      .catch(err => {
         const errors: APIError[] = getAPIErrorOrDefault(
           err,
           'An error occurred while updating label',
           'label'
         );
-        const errorStrings: string[] = errors.map((e) => e.reason);
+        const errorStrings: string[] = errors.map(e => e.reason);
         setEditableLabelError(errorStrings[0]);
         scrollErrorIntoView();
         return Promise.reject(errorStrings[0]);

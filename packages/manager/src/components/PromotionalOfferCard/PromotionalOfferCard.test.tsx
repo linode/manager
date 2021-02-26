@@ -3,7 +3,7 @@ import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
   checkStringOrDefault,
-  PromotionalOfferCard
+  PromotionalOfferCard,
 } from './PromotionalOfferCard';
 
 const promo = promotionalOfferFactory.build();
@@ -31,7 +31,7 @@ describe('PromotionalOfferCard', () => {
       <PromotionalOfferCard
         {...promo}
         buttons={[
-          { text: 'Button Text', href: 'javascript:alert(1)', type: 'primary' }
+          { text: 'Button Text', href: 'javascript:alert(1)', type: 'primary' },
         ]}
       />
     );

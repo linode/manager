@@ -5,7 +5,7 @@ import Button from 'src/components/Button';
 import {
   makeStyles,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from 'src/components/core/styles';
 import { Theme } from 'src/components/core/styles/createMuiTheme';
 import Typography from 'src/components/core/Typography';
@@ -58,7 +58,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
           changeEmail={() =>
             history.push('/account', {
               contactDrawerOpen: true,
-              focusEmail: true
+              focusEmail: true,
             })
           }
         />
@@ -87,7 +87,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
 // =============================================================================
 const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
   updateButton: {
-    marginLeft: 16
+    marginLeft: 16,
   },
   buttonContainer: {
     justifyContent: 'flex-end',
@@ -95,9 +95,9 @@ const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
       marginTop: 8,
       marginBottom: 4,
       marginLeft: 2,
-      justifyContent: 'flex-start'
-    }
-  }
+      justifyContent: 'flex-start',
+    },
+  },
 }));
 
 interface Props {

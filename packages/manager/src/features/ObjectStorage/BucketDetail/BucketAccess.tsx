@@ -1,7 +1,7 @@
 import {
   ACLType,
   getBucketAccess,
-  updateBucketAccess
+  updateBucketAccess,
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -11,8 +11,8 @@ import AccessSelect from './AccessSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
-  }
+    padding: theme.spacing(3),
+  },
 }));
 
 interface Props {

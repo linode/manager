@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import RadioIcon from '../../assets/icons/radio.svg';
 import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
@@ -19,51 +19,51 @@ const styles = (theme: Theme) =>
       padding: '4px 10px',
       transition: theme.transitions.create(['color']),
       '& .defaultFill': {
-        transition: theme.transitions.create(['fill'])
+        transition: theme.transitions.create(['fill']),
       },
       '&:hover': {
         color: theme.palette.primary.main,
         fill: theme.color.white,
         '& .defaultFill': {
-          fill: theme.color.white
-        }
+          fill: theme.color.white,
+        },
       },
       '&:hover$warning': {
-        color: '#ffd322'
+        color: '#ffd322',
       },
       '&:hover$error': {
-        color: '#cf1f1f'
-      }
+        color: '#cf1f1f',
+      },
     },
     checked: {
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
     },
     warning: {
       color: theme.palette.status.warningDark,
       '& .defaultFill': {
-        fill: theme.palette.status.warning
+        fill: theme.palette.status.warning,
       },
       '&$checked': {
-        color: theme.palette.status.warningDark
-      }
+        color: theme.palette.status.warningDark,
+      },
     },
     error: {
       color: theme.palette.status.errorDark,
       '& .defaultFill': {
-        fill: theme.palette.status.error
+        fill: theme.palette.status.error,
       },
       '&$checked': {
-        color: theme.palette.status.errorDark
-      }
+        color: theme.palette.status.errorDark,
+      },
     },
     disabled: {
       color: '#ccc !important',
       fill: '#f4f4f4 !important',
       pointerEvents: 'none',
       '& .defaultFill': {
-        fill: '#f4f4f4'
-      }
-    }
+        fill: '#f4f4f4',
+      },
+    },
   });
 
 interface Props extends RadioProps {
@@ -80,7 +80,7 @@ const LinodeRadioControl: React.FC<FinalProps> = props => {
     [classes.disabled]: props.disabled === true,
     [classes.checked]: props.checked === true,
     [classes.warning]: props.variant === 'warning',
-    [classes.error]: props.variant === 'error'
+    [classes.error]: props.variant === 'error',
   });
 
   return (
@@ -95,7 +95,7 @@ const LinodeRadioControl: React.FC<FinalProps> = props => {
         role: 'radio',
         'aria-label': props.name,
         'aria-checked': props.checked,
-        ...props.inputProps
+        ...props.inputProps,
       }}
     />
   );

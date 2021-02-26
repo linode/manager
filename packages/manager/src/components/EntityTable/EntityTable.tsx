@@ -36,7 +36,7 @@ export const LandingTable: React.FC<CombinedProps> = props => {
       headers,
       entity,
       handlers: row.handlers,
-      lastUpdated: row.lastUpdated
+      lastUpdated: row.lastUpdated,
     };
     return (
       <APIPaginatedTable
@@ -55,7 +55,7 @@ export const LandingTable: React.FC<CombinedProps> = props => {
     entity,
     handlers: row.handlers,
     loading: row.loading,
-    lastUpdated: row.lastUpdated
+    lastUpdated: row.lastUpdated,
   };
 
   if (groupByTag) {

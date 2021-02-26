@@ -1,6 +1,6 @@
 import {
   ObjectStorageBucket,
-  ObjectStorageClusterID
+  ObjectStorageClusterID,
 } from '@linode/api-v4/lib/object-storage/types';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import { State } from 'src/store/bucket/bucket.reducer';
 import {
   deleteBucket,
   DeleteBucketRequest,
-  getAllBucketsFromClusters
+  getAllBucketsFromClusters,
 } from 'src/store/bucket/bucket.requests';
 import { Dispatch } from './types';
 import useAccountManagement from './useAccountManagement';
@@ -35,7 +35,7 @@ export const useObjectStorageBuckets = () => {
   return {
     objectStorageBuckets,
     requestObjectStorageBuckets,
-    deleteObjectStorageBucket
+    deleteObjectStorageBucket,
   };
 };
 
@@ -91,12 +91,12 @@ export const useObjectStorage = (predicate?: boolean) => {
     bucketsLoadingOrLoaded,
     objectStorageClusters,
     dispatch,
-    predicate
+    predicate,
   ]);
 
   return {
     objectStorageBuckets,
     objectStorageClusters,
-    loading: objectStorageClusters.loading || objectStorageBuckets.loading
+    loading: objectStorageClusters.loading || objectStorageBuckets.loading,
   };
 };

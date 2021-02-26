@@ -8,7 +8,7 @@ import {
   apiCreateLinode,
   createVolumes,
   apiDeleteAllLinodes,
-  apiDeleteAllVolumes
+  apiDeleteAllVolumes,
 } from '../../../utils/common';
 
 xdescribe('Rescue Linode Suite', () => {
@@ -27,7 +27,7 @@ xdescribe('Rescue Linode Suite', () => {
       const testVolume = {
         label: label,
         size: 10,
-        linode_id: linode_id
+        linode_id: linode_id,
       };
       volumes.push(testVolume);
     }

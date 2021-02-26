@@ -13,15 +13,15 @@ import BillingContactDrawer from './EditBillingContactDrawer';
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   wordWrap: {
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
   },
   cancel: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   grid: {
     [theme.breakpoints.up('lg')]: {
-      height: '100%'
-    }
+      height: '100%',
+    },
   },
   switchWrapper: {
     flex: 1,
@@ -29,20 +29,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     '&.mlMain': {
       [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%'
-      }
-    }
+        maxWidth: '78.8%',
+      },
+    },
   },
   switchWrapperFlex: {
     display: 'flex',
     flexDirection: 'column',
     alignContent: 'flex-start',
     '& > div:nth-last-child(2)': {
-      flexGrow: 1
+      flexGrow: 1,
     },
     '& > div:last-child': {
-      alignSelf: 'end'
-    }
+      alignSelf: 'end',
+    },
   },
   editBtn: {
     fontFamily: theme.font.normal,
@@ -56,9 +56,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       backgroundColor: 'transparent',
       color: theme.palette.primary.main,
-      textDecoration: 'underline'
-    }
-  }
+      textDecoration: 'underline',
+    },
+  },
 }));
 
 interface Props extends Pick<RouteComponentProps, 'history'> {
@@ -89,7 +89,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     address2,
     email,
     phone,
-    taxId
+    taxId,
   } = props;
 
   const classes = useStyles();
@@ -189,7 +189,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
             className={classNames({
               [classes.switchWrapper]: true,
               [classes.switchWrapperFlex]:
-                taxId !== undefined && taxId !== null && taxId !== ''
+                taxId !== undefined && taxId !== null && taxId !== '',
             })}
           >
             <div className={classes.section} data-qa-contact-email>

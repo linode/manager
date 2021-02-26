@@ -2,7 +2,7 @@ import Pagey, {
   HandleOrderChange as _HandleOrderChange,
   Order as _Order,
   OrderBy as _OrderBy,
-  PaginationProps as _PaginationProps
+  PaginationProps as _PaginationProps,
 } from './Pagey';
 
 /* tslint:disable */

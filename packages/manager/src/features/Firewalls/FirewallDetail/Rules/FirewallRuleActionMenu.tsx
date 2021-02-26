@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionMenu, {
   Action,
-  ActionMenuProps
+  ActionMenuProps,
 } from 'src/components/ActionMenu_CMR';
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -32,20 +32,20 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         triggerOpenRuleDrawerForEditing(idx);
-      }
+      },
     },
     {
       title: 'Clone',
       onClick: () => {
         triggerCloneFirewallRule(idx);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         triggerDeleteFirewallRule(idx);
-      }
-    }
+      },
+    },
   ];
 
   return (

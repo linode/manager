@@ -12,7 +12,7 @@ const props: Props = {
   nodes: mockKubeNodes,
   poolId: 1,
   typeLabel: 'Linode 2G',
-  openRecycleNodeDialog: jest.fn()
+  openRecycleNodeDialog: jest.fn(),
 };
 
 beforeAll(() => linodeFactory.resetSequenceNumber());

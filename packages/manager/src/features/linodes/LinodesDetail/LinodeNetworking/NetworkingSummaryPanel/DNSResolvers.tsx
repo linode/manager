@@ -13,23 +13,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflowX: 'scroll',
     overflowY: 'hidden',
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   wrapper: {
     marginTop: 2,
     marginRight: 0,
     width: '100%',
     [theme.breakpoints.down('xs')]: {
-      justifyContent: 'space-between'
-    }
+      justifyContent: 'space-between',
+    },
   },
   header: {
-    position: 'absolute'
+    position: 'absolute',
   },
   ipAddress: {
-    lineHeight: 1.43
-  }
+    lineHeight: 1.43,
+  },
 }));
 
 export const DNSResolvers: React.FC<Props> = props => {

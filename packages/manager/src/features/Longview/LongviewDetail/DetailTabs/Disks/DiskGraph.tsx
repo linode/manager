@@ -23,7 +23,7 @@ const DiskGraph: React.FC<CombinedProps> = props => {
     timezone,
     sysInfoType,
     startTime,
-    endTime
+    endTime,
   } = props;
 
   const isSwap = stats?.isswap ?? 0;

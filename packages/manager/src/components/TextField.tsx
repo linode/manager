@@ -12,7 +12,7 @@ import {
   Theme,
   withStyles,
   WithStyles,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
@@ -39,42 +39,42 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     noTransform: {
-      transform: 'none'
+      transform: 'none',
     },
     root: {
-      marginTop: 0
+      marginTop: 0,
     },
     helpWrapperContainer: {
       display: 'flex',
-      width: '100%'
+      width: '100%',
     },
     helpWrapper: {
       display: 'flex',
       alignItems: 'flex-end',
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
     },
     helpWrapperTextField: {
       width: 415,
       [theme.breakpoints.down('xs')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     helpIcon: {
-      padding: '0px 0px 0px 8px'
+      padding: '0px 0px 0px 8px',
     },
     expand: {
-      maxWidth: '100%'
+      maxWidth: '100%',
     },
     small: {
       minHeight: 32,
       marginTop: 0,
       '& input': {
         minHeight: 32,
-        padding: theme.spacing(1)
-      }
+        padding: theme.spacing(1),
+      },
     },
     selectSmall: {
       padding: '8px 32px 0 8px',
@@ -83,11 +83,11 @@ const styles = (theme: Theme) =>
       '& svg': {
         marginTop: 0,
         width: 24,
-        height: 24
-      }
+        height: 24,
+      },
     },
     tiny: {
-      width: '3.6em'
+      width: '3.6em',
     },
     errorText: {
       display: 'flex',
@@ -98,34 +98,34 @@ const styles = (theme: Theme) =>
       left: 280,
       width: 200,
       [theme.breakpoints.down('sm')]: {
-        left: 260
+        left: 260,
       },
       [theme.breakpoints.down('xs')]: {
         top: 26,
         left: 5,
-        width: 400
-      }
+        width: 400,
+      },
     },
     errorTextLong: {
       [theme.breakpoints.down(480)]: {
         top: 36,
-        width: 240
-      }
+        width: 240,
+      },
     },
     absolute: {
-      position: 'absolute'
+      position: 'absolute',
     },
     editable: {
       wordBreak: 'keep-all',
-      paddingLeft: 1
+      paddingLeft: 1,
     },
     helperTextTop: {
       marginBottom: theme.spacing(),
-      marginTop: theme.spacing()
+      marginTop: theme.spacing(),
     },
     noMarginTop: {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   });
 
 interface BaseProps {
@@ -174,7 +174,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       typeof this.props.value === 'string' ||
       typeof this.props.value === 'number'
         ? this.props.value
-        : ''
+        : '',
   };
 
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,7 +198,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
         : e.target.value;
 
     this.setState({
-      value: cleanedValue
+      value: cleanedValue,
     });
 
     /**
@@ -222,7 +222,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       if (e.target.value !== cleanedValue) {
         const clonedEvent = {
           ...e,
-          target: e.target.cloneNode()
+          target: e.target.cloneNode(),
         } as React.ChangeEvent<HTMLInputElement>;
 
         clonedEvent.target.value = `${cleanedValue}`;
@@ -287,7 +287,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       <div
         className={classNames({
           [classes.helpWrapper]: Boolean(tooltipText),
-          [errorScrollClassName]: !!errorText
+          [errorScrollClassName]: !!errorText,
         })}
       >
         {maybeRequiredLabel && (
@@ -296,7 +296,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
             className={classNames({
               [classes.wrapper]: noMarginTop ? false : true,
               [classes.noTransform]: true,
-              'visually-hidden': hideLabel
+              'visually-hidden': hideLabel,
             })}
             htmlFor={validInputId}
           >
@@ -313,7 +313,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
         )}
         <div
           className={classNames({
-            [classes.helpWrapperContainer]: Boolean(tooltipText)
+            [classes.helpWrapperContainer]: Boolean(tooltipText),
           })}
         >
           <TextField
@@ -337,12 +337,12 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
             InputLabelProps={{
               ...InputLabelProps,
               required: false,
-              shrink: true
+              shrink: true,
             }}
             inputProps={{
               'data-testid': 'textfield-input',
               id: validInputId,
-              ...inputProps
+              ...inputProps,
             }}
             InputProps={{
               disableUnderline: true,
@@ -357,11 +357,11 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
                   [classes.expand]: expand,
                   [classes.small]: small,
                   [classes.tiny]: tiny,
-                  affirmative: !!affirmative
+                  affirmative: !!affirmative,
                 },
                 className
               ),
-              ...InputProps
+              ...InputProps,
             }}
             SelectProps={{
               disableUnderline: true,
@@ -371,20 +371,20 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
                 anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
                 transformOrigin: { vertical: 'top', horizontal: 'left' },
                 MenuListProps: { className: 'selectMenuList' },
-                PaperProps: { className: 'selectMenuDropdown' }
+                PaperProps: { className: 'selectMenuDropdown' },
               },
               inputProps: {
                 className: classNames({
-                  [classes.selectSmall]: small
-                })
+                  [classes.selectSmall]: small,
+                }),
               },
-              ...SelectProps
+              ...SelectProps,
             }}
             className={classNames(
               {
                 [classes.helpWrapperTextField]: Boolean(tooltipText),
                 [classes.small]: small,
-                [classes.root]: true
+                [classes.root]: true,
               },
               className
             )}
@@ -400,7 +400,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
                 [classes.errorText]: true,
                 [classes.errorTextLong]: errorText.length > 60,
                 [classes.editable]: editable,
-                [classes.absolute]: editable || hasAbsoluteError
+                [classes.absolute]: editable || hasAbsoluteError,
               })}
               data-qa-textfield-error-text={this.props.label}
               role="alert"

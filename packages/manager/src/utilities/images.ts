@@ -11,7 +11,7 @@ import {
   propSatisfies,
   reverse,
   sortBy,
-  startsWith
+  startsWith,
 } from 'ramda';
 
 export const distroIcons = {
@@ -24,7 +24,7 @@ export const distroIcons = {
   Gentoo: 'gentoo',
   openSUSE: 'opensuse',
   Slackware: 'slackware',
-  Ubuntu: 'ubuntu'
+  Ubuntu: 'ubuntu',
 };
 
 export const sortCreatedDESC = compose<any, any, any>(
@@ -64,7 +64,7 @@ groupImages = groupBy(
     [isRecentlyDeleted, always('deleted')],
     [isRecommended, always('recommended')],
     [isOlderImage, always('older')],
-    [_ => true, always('images')]
+    [_ => true, always('images')],
   ])
 );
 
@@ -73,7 +73,7 @@ export const groupNameMap = {
   deleted: 'Recently Deleted Disks',
   recommended: '64-bit Distributions - Recommended',
   older: 'Older Distributions',
-  images: 'Images'
+  images: 'Images',
 };
 
 export const getDisplayNameForGroup = (key: string) =>

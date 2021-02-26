@@ -3,7 +3,7 @@ import {
   deleteById,
   makeTestLabel,
   testNamePrefix,
-  apiCheckErrors
+  apiCheckErrors,
 } from './common';
 
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
@@ -36,7 +36,7 @@ const makeDomainCreateReq = domain => {
     : {
         domain: makeDomainLabel(),
         type: 'master',
-        soa_email: 'admin@example.com'
+        soa_email: 'admin@example.com',
       };
 
   return cy.request({
@@ -44,8 +44,8 @@ const makeDomainCreateReq = domain => {
     url: Cypress.env('REACT_APP_API_ROOT') + '/domains',
     body: domainData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 

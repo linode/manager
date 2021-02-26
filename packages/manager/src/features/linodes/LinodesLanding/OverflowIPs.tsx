@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import IPAddress from './IPAddress';
 
@@ -15,15 +15,15 @@ const styles = (theme: Theme) =>
   createStyles({
     chip: {
       height: theme.typography.body1.fontSize,
-      marginLeft: theme.spacing(1) / 2
+      marginLeft: theme.spacing(1) / 2,
     },
     label: {
       paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
+      paddingRight: theme.spacing(1),
     },
     popover: {
-      padding: theme.spacing(2)
-    }
+      padding: theme.spacing(2),
+    },
   });
 
 interface Props {
@@ -32,7 +32,7 @@ interface Props {
 
 class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses>> {
   state = {
-    anchorEl: undefined
+    anchorEl: undefined,
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -62,11 +62,11 @@ class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses>> {
           onClose={this.handleClose}
           anchorOrigin={{
             vertical: 18,
-            horizontal: 'left'
+            horizontal: 'left',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left'
+            horizontal: 'left',
           }}
         >
           {ips.map(ip => (

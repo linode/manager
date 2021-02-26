@@ -3,7 +3,7 @@ import {
   makeStyles,
   Theme,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -13,8 +13,8 @@ const useStyles = makeStyles(() => ({
     padding: '0px !important',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 export interface ActionHandlers {
@@ -41,8 +41,8 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
       title: 'Delete',
       onClick: () => {
         triggerDeleteVlan(vlanID, vlanLabel);
-      }
-    }
+      },
+    },
   ];
 
   return (

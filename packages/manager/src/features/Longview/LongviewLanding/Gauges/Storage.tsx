@@ -3,7 +3,7 @@ import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { sumStorage } from '../../shared/utilities';
@@ -21,7 +21,7 @@ const StorageGauge: React.FC<CombinedProps> = props => {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
     longviewClientData,
-    lastUpdatedError
+    lastUpdatedError,
   } = props;
 
   const storageInBytes = sumStorage(longviewClientData.Disk);

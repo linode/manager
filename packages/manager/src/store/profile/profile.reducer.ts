@@ -5,7 +5,7 @@ import { EntityError, RequestableData } from '../types';
 import {
   ExtendedProfile,
   getProfileActions,
-  handleUpdateProfile
+  handleUpdateProfile,
 } from './profile.actions';
 
 export type State = RequestableData<ExtendedProfile, EntityError>;
@@ -20,7 +20,7 @@ export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
-  error: undefined
+  error: undefined,
 };
 
 const reducer: Reducer<State> = (
@@ -41,7 +41,7 @@ const reducer: Reducer<State> = (
       error: undefined,
       loading: false,
       lastUpdated: Date.now(),
-      data: result
+      data: result,
     };
   }
 
@@ -52,15 +52,15 @@ const reducer: Reducer<State> = (
       loading: false,
       lastUpdated: Date.now(),
       error: {
-        read: error
-      }
+        read: error,
+      },
     };
   }
 
   if (isType(action, handleUpdateProfile.started)) {
     return {
       ...state,
-      loading: true
+      loading: true,
     };
   }
 
@@ -76,8 +76,8 @@ const reducer: Reducer<State> = (
          * you can't update data without getting it first
          */
         ...state.data!,
-        ...action.payload.result
-      }
+        ...action.payload.result,
+      },
     };
   }
 
@@ -87,8 +87,8 @@ const reducer: Reducer<State> = (
       loading: false,
       lastUpdated: Date.now(),
       error: {
-        update: action.payload.error
-      }
+        update: action.payload.error,
+      },
     };
   }
 

@@ -1,6 +1,6 @@
 import {
   getClusters,
-  ObjectStorageCluster
+  ObjectStorageCluster,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
@@ -23,7 +23,7 @@ export const requestClusters: ThunkActionCreator<Promise<
     .then(({ data }) => {
       dispatch(
         clustersRequestActions.done({
-          result: data
+          result: data,
         })
       );
       return data;

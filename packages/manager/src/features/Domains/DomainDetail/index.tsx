@@ -38,7 +38,7 @@ export const DomainDetailRouting: React.FC<RouteComponentProps<{
     <DomainsLanding
       domainForEditing={{
         domainId: foundDomain.id,
-        domainLabel: foundDomain.domain
+        domainLabel: foundDomain.domain,
       }}
       {...props}
     />

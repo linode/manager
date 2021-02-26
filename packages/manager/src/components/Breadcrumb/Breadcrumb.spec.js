@@ -1,6 +1,6 @@
 const {
   navigateToStory,
-  executeInAllStories
+  executeInAllStories,
 } = require('../../../e2e/utils/storybook');
 const { constants } = require('../../../e2e/constants');
 
@@ -11,7 +11,7 @@ xdescribe('Breadcrumb Suite', () => {
   const childStories = [
     'Basic Breadcrumb',
     'Breadcrumb with custom label',
-    'Breadcrumb with editable text'
+    'Breadcrumb with editable text',
   ];
   const link = '[data-qa-link="true"]';
   const staticText = '[data-qa-label-text="true"]';

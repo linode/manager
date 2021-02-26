@@ -8,8 +8,8 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   borderRight: {
-    borderRight: `1px solid ${theme.palette.divider}`
-  }
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
 }));
 
 interface SortableVolumesTableHeaderProps {

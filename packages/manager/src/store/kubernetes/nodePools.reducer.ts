@@ -9,7 +9,7 @@ import {
   ExtendedNodePool,
   requestNodePoolsActions,
   setErrors,
-  updateNodePoolActions
+  updateNodePoolActions,
 } from './nodePools.actions';
 
 /**
@@ -23,7 +23,7 @@ export const defaultState: State = {
   entities: [],
   loading: false,
   lastUpdated: 0,
-  error: {}
+  error: {},
 };
 
 /**
@@ -94,7 +94,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     if (isType(action, deleteNodePoolActions.done)) {
       const {
-        params: { nodePoolID }
+        params: { nodePoolID },
       } = action.payload;
 
       const updatedPools = state.entities.filter(

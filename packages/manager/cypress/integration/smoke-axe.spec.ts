@@ -14,9 +14,9 @@ describe.skip('smoke - axe', () => {
           {
             // our design is not good for that
             id: 'color-contrast',
-            enabled: false
-          }
-        ]
+            enabled: false,
+          },
+        ],
       });
       cy.checkA11y();
     });

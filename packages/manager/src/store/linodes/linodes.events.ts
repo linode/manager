@@ -275,7 +275,7 @@ const eventsWithRelevantNotifications: EventAction[] = [
   'linode_mutate',
   'linode_mutate_create',
   'linode_migrate_datacenter_create',
-  'linode_migrate_datacenter'
+  'linode_migrate_datacenter',
 ];
 
 // If this is the first event coming in for the Linode, or if it's the first

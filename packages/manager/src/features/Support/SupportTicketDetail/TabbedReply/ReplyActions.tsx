@@ -22,7 +22,7 @@ const ReplyActions: React.FC<CombinedProps> = props => {
     closeTicketSuccess,
     closable,
     value,
-    ticketId
+    ticketId,
   } = props;
 
   const handleSubmitForm = () => {

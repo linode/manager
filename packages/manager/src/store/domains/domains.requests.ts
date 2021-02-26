@@ -5,7 +5,7 @@ import {
   Domain,
   getDomain,
   getDomains,
-  updateDomain as _updateDomain
+  updateDomain as _updateDomain,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Dispatch } from 'redux';
@@ -21,7 +21,7 @@ import {
   getDomainsPageActions,
   updateDomainActions,
   UpdateDomainParams,
-  upsertDomain
+  upsertDomain,
 } from './domains.actions';
 
 export const createDomain = createRequestThunk<

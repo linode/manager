@@ -10,7 +10,7 @@ export const clusters: KubernetesCluster[] = [
     id: 35,
     status: 'running',
     k8s_version: '1.13.5',
-    tags: []
+    tags: [],
   },
   {
     region: 'us-central',
@@ -20,8 +20,8 @@ export const clusters: KubernetesCluster[] = [
     id: 34,
     status: 'running',
     k8s_version: '1.13.5',
-    tags: []
-  }
+    tags: [],
+  },
 ];
 
 export const extendedClusters = clusters.map(cluster => {
@@ -30,6 +30,6 @@ export const extendedClusters = clusters.map(cluster => {
     node_pools: [pool1],
     totalMemory: 10,
     totalCPU: 2,
-    totalStorage: 10
+    totalStorage: 10,
   };
 });

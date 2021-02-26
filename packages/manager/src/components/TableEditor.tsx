@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
       position: 'absolute',
       borderLeft: '15px solid transparent',
       borderRight: '15px solid transparent',
-      borderBottom: '15px solid #a8c9f0'
+      borderBottom: '15px solid #a8c9f0',
     },
     '&:after': {
       content: "''",
@@ -33,21 +33,21 @@ const useStyles = makeStyles(() => ({
       position: 'absolute',
       borderLeft: '13px solid transparent',
       borderRight: '13px solid transparent',
-      borderBottom: '13px solid #fff'
-    }
+      borderBottom: '13px solid #fff',
+    },
   },
   form: {
-    padding: 14
+    padding: 14,
   },
   fieldset: {
     border: 'none',
     margin: 0,
-    padding: 0
+    padding: 0,
   },
   legendTitle: {
     marginBottom: 14,
     fontSize: 14,
-    color: '#32363c'
+    color: '#32363c',
   },
   optionOuter: {
     marginBottom: 8,
@@ -55,11 +55,11 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     cursor: 'pointer',
     '&:last-of-type': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
   draggableIcon: {
-    marginRight: 10
+    marginRight: 10,
   },
   optionCheckbox: {
     appearance: 'none',
@@ -78,16 +78,16 @@ const useStyles = makeStyles(() => ({
       width: 11,
       height: 11,
       background: '#75aef0',
-      borderRadius: 2
-    }
+      borderRadius: 2,
+    },
   },
   optionLabel: {
     marginLeft: 12,
     fontSize: 14,
     lineHeight: 1,
     color: '#1f61ad',
-    cursor: 'pointer'
-  }
+    cursor: 'pointer',
+  },
 }));
 
 interface Option {
@@ -154,11 +154,11 @@ const TableEditor: React.FC<CombinedProps> = props => {
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'right'
+          horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'right'
+          horizontal: 'right',
         }}
         PaperProps={{ className: classes.popover }}
         aria-labelledby={`legend-${convertForAria(optionsTitle)}`}

@@ -13,7 +13,7 @@ describe('AccessKeyDrawer', () => {
     onSubmit: jest.fn(),
     onClose: jest.fn(),
     mode: 'creating' as MODE,
-    isRestrictedUser: false
+    isRestrictedUser: false,
   };
   renderWithTheme(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {
@@ -31,19 +31,19 @@ describe('AccessKeyDrawer', () => {
       expect(getDefaultScopes([bucket])[0]).toEqual({
         cluster: bucket.cluster,
         bucket_name: bucket.label,
-        permissions: 'none'
+        permissions: 'none',
       });
     });
 
     it('should sort the permissions by cluster', () => {
       const usaBucket = objectStorageBucketFactory.build({
-        cluster: 'us-east-1'
+        cluster: 'us-east-1',
       });
       const germanBucket = objectStorageBucketFactory.build({
-        cluster: 'eu-central-1'
+        cluster: 'eu-central-1',
       });
       const asiaBucket = objectStorageBucketFactory.build({
-        cluster: 'ap-south-1'
+        cluster: 'ap-south-1',
       });
       const unsortedBuckets = [usaBucket, germanBucket, asiaBucket];
       expect(
@@ -77,7 +77,7 @@ describe('AccessKeyDrawer', () => {
       const newScope = {
         cluster: 'totally-fake',
         bucket_name: 'not-real',
-        permissions: 'read_only'
+        permissions: 'read_only',
       } as Scope;
       expect(getUpdatedScopes(mockScopes, newScope)).toEqual(mockScopes);
     });

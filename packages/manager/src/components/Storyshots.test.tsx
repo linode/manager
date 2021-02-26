@@ -4,7 +4,7 @@ const higherThresholdComponents = ['Skeleton Screen'];
 
 const getMatchOptions = ({ context: { kind, story }, url }) => ({
   failureThreshold: higherThresholdComponents.includes(kind) ? 0.05 : 0.02,
-  failureThresholdType: 'percent'
+  failureThresholdType: 'percent',
 });
 
 jest.setTimeout(30000);
@@ -23,6 +23,6 @@ initStoryshots({
   test: imageSnapshot({
     storybookUrl: 'http://manager-storybook:6006',
     getMatchOptions,
-    beforeScreenshot
-  })
+    beforeScreenshot,
+  }),
 });

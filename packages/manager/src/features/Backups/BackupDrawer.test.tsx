@@ -12,7 +12,7 @@ import {
   addTypeInfo,
   BackupDrawer,
   enhanceLinodes,
-  getTotalPrice
+  getTotalPrice,
 } from './BackupDrawer';
 import { ExtendedLinode } from './types';
 
@@ -20,7 +20,7 @@ const linodes = [linode1, linode3];
 
 const error = {
   linodeId: linode1.id,
-  reason: 'Error'
+  reason: 'Error',
 };
 
 const linode1Type = getTypeInfo(linode1.type, types.types);
@@ -28,7 +28,7 @@ const linode2Type = getTypeInfo(linode2.type, types.types);
 
 const extendedLinodes: ExtendedLinode[] = [
   { ...linode1, typeInfo: linode1Type, linodeError: error },
-  { ...linode2, typeInfo: linode2Type, linodeError: error }
+  { ...linode2, typeInfo: linode2Type, linodeError: error },
 ];
 
 // Props for shallow rendering
@@ -41,7 +41,7 @@ const actions = {
   dismissSuccess: jest.fn(),
   clearSidebar: jest.fn(),
   enroll: jest.fn(),
-  toggle: jest.fn()
+  toggle: jest.fn(),
 };
 
 const classes = { root: '' };
@@ -63,7 +63,7 @@ const props = {
   enrolling: false,
   autoEnroll: false,
   autoEnrollError: undefined,
-  updatedCount: 0
+  updatedCount: 0,
 };
 
 const { rerender, getByTestId, findByTestId, queryByTestId } = render(
@@ -99,7 +99,7 @@ describe('BackupDrawer component', () => {
     it('should set typeInfo and linodeError to undefined if nothing matches', () => {
       expect(enhanceLinodes(linodes, [], [])).toEqual([
         { ...linode1, typeInfo: undefined, linodeError: undefined },
-        { ...linode3, typeInfo: undefined, linodeError: undefined }
+        { ...linode3, typeInfo: undefined, linodeError: undefined },
       ]);
     });
   });
@@ -114,7 +114,7 @@ describe('BackupDrawer component', () => {
       extendedLinodes.push({
         ...linode3,
         typeInfo: undefined,
-        linodeError: error
+        linodeError: error,
       });
       expect(getTotalPrice(extendedLinodes)).toEqual(price);
     });

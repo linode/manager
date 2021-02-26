@@ -18,31 +18,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '4px 0px',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
     },
     [theme.breakpoints.up('md')]: {
-      paddingLeft: 200
-    }
+      paddingLeft: 200,
+    },
   },
   desktopMenuIsOpen: {
     paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
-      paddingLeft: 52
-    }
+      paddingLeft: 52,
+    },
   },
   version: {
     marginLeft: theme.spacing(2),
     '&.MuiGrid-item': {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     [theme.breakpoints.down('sm')]: {
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   linkContainer: {
     [theme.breakpoints.down('xs')]: {
-      padding: '0 8px !important'
-    }
+      padding: '0 8px !important',
+    },
   },
   link: {
     color: theme.palette.text.primary,
@@ -50,21 +50,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create('color'),
     '&:hover, &:focus': {
       color: theme.color.black,
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     },
     [theme.breakpoints.down('md')]: {
-      marginRight: theme.spacing(1)
-    }
+      marginRight: theme.spacing(1),
+    },
   },
   feedbackLink: {
     [theme.breakpoints.down('xs')]: {
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     [theme.breakpoints.up('xs')]: {
       '&.MuiGrid-item': {
-        paddingRight: 0
-      }
-    }
+        paddingRight: 0,
+      },
+    },
   },
   adaLink: {
     padding: '0 !important',
@@ -74,9 +74,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: 0,
     bottom: 8,
     [theme.breakpoints.up('sm')]: {
-      marginRight: theme.spacing(3)
-    }
-  }
+      marginRight: theme.spacing(3),
+    },
+  },
 }));
 
 export const Footer: React.FC<Props> = props => {
@@ -95,7 +95,7 @@ export const Footer: React.FC<Props> = props => {
         alignItems="center"
         className={classNames({
           [classes.container]: true,
-          [classes.desktopMenuIsOpen]: desktopMenuIsOpen
+          [classes.desktopMenuIsOpen]: desktopMenuIsOpen,
         })}
       >
         <Grid item className={classes.version}>
@@ -104,7 +104,7 @@ export const Footer: React.FC<Props> = props => {
         <Grid
           item
           className={classNames({
-            [classes.linkContainer]: true
+            [classes.linkContainer]: true,
           })}
         >
           <a
@@ -121,7 +121,7 @@ export const Footer: React.FC<Props> = props => {
           item
           className={classNames({
             [classes.linkContainer]: true,
-            [classes.feedbackLink]: true
+            [classes.feedbackLink]: true,
           })}
         >
           <a

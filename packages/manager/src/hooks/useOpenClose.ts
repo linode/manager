@@ -13,7 +13,7 @@ export interface OpenClose {
 }
 
 const defaultState = {
-  open: false
+  open: false,
 };
 
 // Simple hook to group "open/close" state & functionality.

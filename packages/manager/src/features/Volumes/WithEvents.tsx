@@ -17,7 +17,7 @@ interface State {
 export default () => (WrappedComponent: React.ComponentType<any>) => {
   return class extends React.Component<any, State> {
     state: State = {
-      volumes: undefined
+      volumes: undefined,
     };
     eventsSub: Subscription;
 
@@ -35,7 +35,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
               'volume_delete',
               'volume_detach',
               'volume_resize',
-              'volume_clone'
+              'volume_clone',
             ].includes(event.action)
         )
         .merge(updateVolumes$)
@@ -122,12 +122,12 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
                   ...volume,
                   ...maybeAddEvent(event, volume),
                   linodeLabel: linode.label,
-                  linodeStatus: linode.status
+                  linodeStatus: linode.status,
                 };
 
                 // finally update the list of volumes in state
                 this.setState({
-                  volumes: clonedVolumes
+                  volumes: clonedVolumes,
                 });
               });
             }
@@ -135,12 +135,12 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
             // now add our new volume with the event data to the list of volumes
             clonedVolumes[targetIndex] = {
               ...volume,
-              ...maybeAddEvent(event, volume)
+              ...maybeAddEvent(event, volume),
             };
 
             // finally update the list of volumes
             this.setState({
-              volumes: clonedVolumes
+              volumes: clonedVolumes,
             });
             return;
           });

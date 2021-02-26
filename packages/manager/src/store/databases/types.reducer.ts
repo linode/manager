@@ -11,7 +11,7 @@ export const defaultState: State = {
   loading: false,
   lastUpdated: 0,
   results: 0,
-  error: {}
+  error: {},
 };
 
 /**

@@ -8,7 +8,7 @@ describe('Expansion Panel Suite', () => {
     'Success!',
     'Warning!',
     'Error!',
-    'Asynchronous Content'
+    'Asynchronous Content',
   ];
 
   const panel = '[data-qa-panel]';

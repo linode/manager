@@ -14,7 +14,7 @@ export const linodeConfigs: Config[] = [
       network: true,
       modules_dep: true,
       devtmpfs_automount: true,
-      updatedb_disabled: true
+      updatedb_disabled: true,
     },
     root_device: '/dev/sda',
     label: 'My Arch Linux Disk Profile',
@@ -22,25 +22,25 @@ export const linodeConfigs: Config[] = [
     devices: {
       sdc: {
         volume_id: 8702,
-        disk_id: null
+        disk_id: null,
       },
       sda: {
         volume_id: null,
-        disk_id: 18795181
+        disk_id: 18795181,
       },
       sdd: null,
       sdf: null,
       sdb: {
         volume_id: null,
-        disk_id: 18795182
+        disk_id: 18795182,
       },
       sdh: null,
       sdg: null,
-      sde: null
+      sde: null,
     },
     kernel: 'linode/grub2',
-    interfaces: {}
-  }
+    interfaces: {},
+  },
 ];
 export const linodeConfig2: Config = {
   created: '2018-06-26T16:05:28',
@@ -55,7 +55,7 @@ export const linodeConfig2: Config = {
     network: true,
     modules_dep: true,
     devtmpfs_automount: true,
-    updatedb_disabled: true
+    updatedb_disabled: true,
   },
   root_device: '/dev/sda',
   label: 'My Arch Linux Disk Profile',
@@ -63,22 +63,22 @@ export const linodeConfig2: Config = {
   devices: {
     sdc: {
       volume_id: 8702,
-      disk_id: null
+      disk_id: null,
     },
     sda: {
       volume_id: null,
-      disk_id: 18795181
+      disk_id: 18795181,
     },
     sdd: null,
     sdf: null,
     sdb: {
       volume_id: null,
-      disk_id: 18795182
+      disk_id: 18795182,
     },
     sdh: null,
     sdg: null,
-    sde: null
+    sde: null,
   },
   kernel: 'linode/grub2',
-  interfaces: {}
+  interfaces: {},
 };

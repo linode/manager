@@ -47,7 +47,7 @@ export const DatabaseRow: React.FC<Props> = props => {
       const newTags = [..._tags, tag];
       updateDatabase(id, { tags: newTags }).catch(e =>
         enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error'
+          variant: 'error',
         })
       );
     },
@@ -61,7 +61,7 @@ export const DatabaseRow: React.FC<Props> = props => {
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
           {
-            variant: 'error'
+            variant: 'error',
           }
         )
       );

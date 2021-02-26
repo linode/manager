@@ -4,14 +4,14 @@ import { ApplicationState } from 'src/store';
 import {
   DomainId,
   UpdateDomainParams,
-  upsertDomain
+  upsertDomain,
 } from 'src/store/domains/domains.actions';
 import {
   createDomain,
   deleteDomain,
   getDomainsPage as getPage,
   requestDomains as getAll,
-  updateDomain
+  updateDomain,
 } from 'src/store/domains/domains.requests';
 import { EntityError, ThunkDispatch } from 'src/store/types';
 import { Action } from 'typescript-fsa';
@@ -64,7 +64,7 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
         domainsError: domains.error,
         domainsData: Object.values(domains.itemsById),
         domainsResults: domains.results,
-        domainsLastUpdated: domains.lastUpdated
+        domainsLastUpdated: domains.lastUpdated,
       };
     },
     (dispatch: ThunkDispatch) => ({
@@ -76,6 +76,6 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
       getDomainsPage: (params?: any, filters?: any) =>
         dispatch(getPage({ params, filters })),
       getAllDomains: () => dispatch(getAll()),
-      upsertDomain: (domain: Domain) => dispatch(upsertDomain(domain))
+      upsertDomain: (domain: Domain) => dispatch(upsertDomain(domain)),
     })
   );

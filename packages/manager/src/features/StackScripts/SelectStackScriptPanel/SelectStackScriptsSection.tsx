@@ -5,7 +5,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -22,8 +22,8 @@ const styles = () =>
     root: {},
     loadingWrapper: {
       border: 0,
-      paddingTop: 100
-    }
+      paddingTop: 100,
+    },
   });
 
 export interface Props {

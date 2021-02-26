@@ -34,7 +34,7 @@ interface MatchProps {
 
 type CombinedProps = RouteComponentProps<MatchProps>;
 
-export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
+export const BucketDetailLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const matches = (p: string) => {
@@ -58,7 +58,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
   ];
 
   const [index, setIndex] = React.useState(
-    tabs.findIndex((tab) => matches(tab.routeName)) || 0
+    tabs.findIndex(tab => matches(tab.routeName)) || 0
   );
 
   const handleTabChange = (index: number) => {

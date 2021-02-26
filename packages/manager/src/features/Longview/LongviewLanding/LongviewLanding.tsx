@@ -1,10 +1,10 @@
 import {
   getActiveLongviewPlan,
-  getLongviewSubscriptions
+  getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
 import {
   ActiveLongviewPlan,
-  LongviewSubscription
+  LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
@@ -18,10 +18,10 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import withSettings, {
-  Props as SettingsProps
+  Props as SettingsProps,
 } from 'src/containers/accountSettings.container';
 import withLongviewClients, {
-  Props as LongviewProps
+  Props as LongviewProps,
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
@@ -63,12 +63,12 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Clients',
-      routeName: `${props.match.url}/clients`
+      routeName: `${props.match.url}/clients`,
     },
     {
       title: 'Plan Details',
-      routeName: `${props.match.url}/plan-details`
-    }
+      routeName: `${props.match.url}/plan-details`,
+    },
   ];
 
   const matches = (p: string) => {
@@ -108,7 +108,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
 
   const handleSubmit = () => {
     const {
-      history: { push }
+      history: { push },
     } = props;
 
     if (isManaged) {
@@ -116,8 +116,8 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
         pathname: '/support/tickets',
         state: {
           open: true,
-          title: 'Request for additional Longview clients'
-        }
+          title: 'Request for additional Longview clients',
+        },
       });
       return;
     }
@@ -195,7 +195,7 @@ export default compose<CombinedProps, {} & RouteComponentProps>(
     );
     return {
       userCanCreateClient:
-        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser)
+        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser),
     };
   }),
   withSettings(),

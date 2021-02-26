@@ -1,6 +1,6 @@
 import * as React from 'react';
 import LinearProgress, {
-  LinearProgressProps
+  LinearProgressProps,
 } from 'src/components/core/LinearProgress';
 
 type CombinedProps = LinearProgressProps;

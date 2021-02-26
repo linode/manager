@@ -25,7 +25,7 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
   const [error, setError] = React.useState<APIError[]>([]);
   const { attachVlan } = useVlans();
   const {
-    linodes: { itemsById: linodesData }
+    linodes: { itemsById: linodesData },
   } = useLinodes();
 
   React.useEffect(() => {

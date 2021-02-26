@@ -27,7 +27,7 @@ const ObjectTableContent: React.FC<Props> = props => {
     prefix,
     handleClickDownload,
     handleClickDelete,
-    handleClickDetails
+    handleClickDetails,
   } = props;
 
   const { width } = useWindowDimensions();

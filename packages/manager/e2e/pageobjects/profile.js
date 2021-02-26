@@ -8,7 +8,7 @@ export const dialogMap = {
   content: '[data-qa-dialog-content]',
   close: '[data-qa-close-dialog]',
   cancel: '[data-qa-button-cancel]',
-  confirm: '[data-qa-button-confirm]'
+  confirm: '[data-qa-button-confirm]',
 };
 
 export class OauthCreateDrawer extends Page {

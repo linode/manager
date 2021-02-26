@@ -16,14 +16,14 @@ export const BucketActionMenu: React.FC<Props> = props => {
       title: 'Details',
       onClick: () => {
         props.onDetails();
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         props.onRemove();
-      }
-    }
+      },
+    },
   ];
 
   return (

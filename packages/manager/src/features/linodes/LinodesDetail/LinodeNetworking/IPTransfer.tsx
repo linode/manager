@@ -10,7 +10,7 @@ import {
   set,
   uniq,
   view,
-  when
+  when,
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -21,7 +21,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
@@ -29,7 +29,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withLinodes, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/withLinodes.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -47,47 +47,47 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     containerDivider: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     sourceIPWrapper: {
       display: 'flex',
       alignItems: 'center',
       [theme.breakpoints.down('xs')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     ipField: {
       marginTop: 0,
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: 175
-      }
+        width: 175,
+      },
     },
     ipFieldLabel: {
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: `calc(175px + ${theme.spacing(2)}px)`
-      }
+        width: `calc(175px + ${theme.spacing(2)}px)`,
+      },
     },
     actionsLabel: {
       [theme.breakpoints.down('sm')]: {
-        display: 'none'
-      }
+        display: 'none',
+      },
     },
     autoGridsm: {
       minWidth: 175,
       [theme.breakpoints.up('sm')]: {
         maxWidth: 'auto',
-        flexBasis: 'auto'
-      }
+        flexBasis: 'auto',
+      },
     },
     networkActionText: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     emptyStateText: {
       marginTop: theme.spacing(2),
-      color: theme.color.grey1
-    }
+      color: theme.color.grey1,
+    },
   });
 
 interface Props {
@@ -149,11 +149,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           [ip]: LinodeNetworkingIPTransferPanel.defaultState(
             ip,
             this.props.linodeID
-          )
+          ),
         }),
         {}
       ),
-      submitting: false
+      submitting: false,
     };
   }
 
@@ -165,7 +165,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   ): NoAction => ({
     mode: 'none',
     sourceIP,
-    sourceIPsLinodeID
+    sourceIPsLinodeID,
   });
 
   onModeChange = (ip: string) => (e: Item) => {
@@ -264,7 +264,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
     const actionsList = [
       { label: 'Move To', value: 'move' },
-      { label: 'Swap With', value: 'swap' }
+      { label: 'Swap With', value: 'swap' },
     ];
 
     return (
@@ -289,8 +289,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             options={actionsList}
             textFieldProps={{
               dataAttrs: {
-                'data-qa-ip-transfer-action-menu': state.mode
-              }
+                'data-qa-ip-transfer-action-menu': state.mode,
+              },
             }}
             onChange={this.onModeChange(state.sourceIP)}
             disabled={readOnly}
@@ -325,8 +325,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           options={linodeList}
           textFieldProps={{
             dataAttrs: {
-              'data-qa-linode-select': true
-            }
+              'data-qa-linode-select': true,
+            },
           }}
           disabled={readOnly || this.props.linodes.length === 1}
           defaultValue={defaultLinode}
@@ -361,8 +361,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           onChange={this.onSelectedIPChange(sourceIP)}
           textFieldProps={{
             dataAttrs: {
-              'data-qa-swap-ip-action-menu': true
-            }
+              'data-qa-swap-ip-action-menu': true,
+            },
           }}
           isClearable={false}
           noMarginTop
@@ -387,7 +387,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             this.props.linodeID
           );
           return acc;
-        }, {})
+        }, {}),
       });
     }
   }
@@ -412,7 +412,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     this.setState({
       submitting: true,
       error: undefined,
-      successMessage: undefined
+      successMessage: undefined,
     });
 
     assignAddresses(createRequestData(this.state.ips, this.props.linodeRegion))
@@ -425,7 +425,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             this.setState({
               submitting: false,
               error: undefined,
-              successMessage: 'IP transferred successfully.'
+              successMessage: 'IP transferred successfully.',
             });
           })
           .catch(err => {
@@ -433,7 +433,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
               error: getAPIErrorOrDefault(
                 err,
                 'Unable to refresh IPs. Please reload the screen.'
-              )
+              ),
             });
           });
       })
@@ -445,7 +445,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
         return this.setState({
           error: uniq(apiErrors),
-          submitting: false
+          submitting: false,
         });
       });
   };
@@ -460,10 +460,10 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           [ip]: LinodeNetworkingIPTransferPanel.defaultState(
             ip,
             this.props.linodeID
-          )
+          ),
         }),
         {}
-      )
+      ),
     });
   };
 
@@ -561,7 +561,7 @@ const L = {
   selectedLinodesIPs: (ip: string) =>
     lensPath(['ips', ip, 'selectedLinodesIPs']),
   sourceIP: (ip: string) => lensPath(['ips', ip, 'sourceIP']),
-  sourceIPsLinodeID: (ip: string) => lensPath(['ips', ip, 'sourceIPsLinodeID'])
+  sourceIPsLinodeID: (ip: string) => lensPath(['ips', ip, 'sourceIPsLinodeID']),
 };
 
 const setMode = (ip: string, mode: Mode) => set(L.mode(ip), mode);
@@ -608,8 +608,8 @@ const stateToAssignmentsReducer = (
       ...assignments,
       {
         address: current.sourceIP,
-        linode_id: current.selectedLinodeID
-      }
+        linode_id: current.selectedLinodeID,
+      },
     ];
   }
 
@@ -618,12 +618,12 @@ const stateToAssignmentsReducer = (
       ...assignments,
       {
         address: current.sourceIP,
-        linode_id: current.selectedLinodeID
+        linode_id: current.selectedLinodeID,
       },
       {
         address: current.selectedIP,
-        linode_id: current.sourceIPsLinodeID
-      }
+        linode_id: current.sourceIPsLinodeID,
+      },
     ];
   }
 
@@ -632,7 +632,7 @@ const stateToAssignmentsReducer = (
 
 const createRequestData = (state: IPRowState, region: string) => ({
   assignments: Object.values(state).reduce(stateToAssignmentsReducer, []),
-  region
+  region,
 });
 
 const styled = withStyles(styles);
@@ -650,7 +650,7 @@ const enhanced = recompose<CombinedProps, Props>(
       .map(linode => ({
         id: linode.id,
         ips: linode.ipv4,
-        label: linode.label
+        label: linode.label,
       }));
     return { linodes };
   })

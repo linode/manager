@@ -6,7 +6,7 @@ import {
   createLongviewClient,
   deleteLongviewClient,
   getLongviewClients,
-  updateLongviewClient
+  updateLongviewClient,
 } from './longview.actions';
 
 export type State = EntitiesAsObjectState<LongviewClient>;
@@ -16,7 +16,7 @@ export const defaultState: State = {
   lastUpdated: 0,
   results: 0,
   data: {},
-  error: {}
+  error: {},
 };
 
 const reducer = reducerWithInitialState(defaultState)
@@ -26,8 +26,8 @@ const reducer = reducerWithInitialState(defaultState)
     loading: true,
     error: {
       ...state.error,
-      read: undefined
-    }
+      read: undefined,
+    },
   }))
   .caseWithAction(
     getLongviewClients.done,
@@ -39,23 +39,23 @@ const reducer = reducerWithInitialState(defaultState)
       }, {}),
       loading: false,
       results: result.results,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
     })
   )
   .caseWithAction(getLongviewClients.failed, (state, { payload: result }) => ({
     ...state,
     error: {
-      read: result.error
+      read: result.error,
     },
-    loading: false
+    loading: false,
   }))
   /** START CREATE ACTIONS */
   .case(createLongviewClient.started, state => ({
     ...state,
     error: {
       ...state.error,
-      create: undefined
-    }
+      create: undefined,
+    },
   }))
   .caseWithAction(
     createLongviewClient.done,
@@ -63,10 +63,10 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       data: {
         ...state.data,
-        [result.id]: result
+        [result.id]: result,
       },
       results: state.results + 1,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
     })
   )
   .caseWithAction(
@@ -75,8 +75,8 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       error: {
         ...state.error,
-        create: error
-      }
+        create: error,
+      },
     })
   )
   /** START DELETE ACTIONS */
@@ -84,8 +84,8 @@ const reducer = reducerWithInitialState(defaultState)
     ...state,
     error: {
       ...state.error,
-      delete: undefined
-    }
+      delete: undefined,
+    },
   }))
   .caseWithAction(
     deleteLongviewClient.done,
@@ -98,7 +98,7 @@ const reducer = reducerWithInitialState(defaultState)
         ...state,
         data: dataCopy,
         results: state.results - 1,
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
       };
     }
   )
@@ -108,8 +108,8 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       error: {
         ...state.error,
-        delete: error
-      }
+        delete: error,
+      },
     })
   )
   /** START UPDATE ACTIONS */
@@ -117,8 +117,8 @@ const reducer = reducerWithInitialState(defaultState)
     ...state,
     error: {
       ...state.error,
-      update: undefined
-    }
+      update: undefined,
+    },
   }))
   .caseWithAction(
     updateLongviewClient.done,
@@ -130,7 +130,7 @@ const reducer = reducerWithInitialState(defaultState)
       return {
         ...state,
         data: dataCopy,
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
       };
     }
   )
@@ -140,8 +140,8 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       error: {
         ...state.error,
-        update: error
-      }
+        update: error,
+      },
     })
   )
   .default(state => state);

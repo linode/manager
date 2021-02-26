@@ -46,9 +46,7 @@ class Resize extends Page {
       .toBe(true);
     expect(this.currentHeader.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.currentHeader.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.currentHeader.selector}" selector`
       )
       .toBe(subHeader);
     expect(this.currentSelection.isDisplayed())
@@ -71,9 +69,7 @@ class Resize extends Page {
       .toBe(0);
     expect(selectedPlanTab[0].getAttribute('data-qa-tab'))
       .withContext(
-        `${assertLog.incorrectAttr} for "${
-          this.selectedPlanTab.selector
-        }" selector`
+        `${assertLog.incorrectAttr} for "${this.selectedPlanTab.selector}" selector`
       )
       .toBe('Standard');
   }

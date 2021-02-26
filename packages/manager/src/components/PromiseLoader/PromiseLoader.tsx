@@ -50,7 +50,7 @@ export default function preload<P>(requests: RequestMap<P>) {
 
               this.setState(prevState => ({
                 ...prevState,
-                [name]: { response }
+                [name]: { response },
               }));
             })
             .catch(response => {
@@ -60,7 +60,7 @@ export default function preload<P>(requests: RequestMap<P>) {
 
               this.setState(prevState => ({
                 ...prevState,
-                [name]: { error: true, response }
+                [name]: { error: true, response },
               }));
             })
         );

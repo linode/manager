@@ -61,7 +61,7 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
       label,
       images: getCompatibleImages(images, stackScriptImages),
       user_defined_fields,
-      udf_data: getDefaultUDFData(user_defined_fields)
+      udf_data: getDefaultUDFData(user_defined_fields),
     });
   };
 
@@ -74,8 +74,8 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
         ...prevState,
         udf_data: {
           ...prevState.udf_data,
-          ...newUDFData
-        }
+          ...newUDFData,
+        },
       };
     });
   };
@@ -86,7 +86,7 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
     stackScript,
     handleSelectStackScript,
     handleChangeUDF,
-    resetStackScript
+    resetStackScript,
   ];
 };
 
@@ -99,7 +99,7 @@ const emptyStackScriptState: StackScriptState = {
   images: [],
   username: '',
   user_defined_fields: [],
-  udf_data: []
+  udf_data: [],
 };
 
 const getCompatibleImages = (

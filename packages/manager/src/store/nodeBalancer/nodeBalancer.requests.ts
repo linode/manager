@@ -4,7 +4,7 @@ import {
   getNodeBalancer as _getNodeBalancer,
   getNodeBalancers,
   NodeBalancer,
-  updateNodeBalancer as _updateNodeBalancer
+  updateNodeBalancer as _updateNodeBalancer,
 } from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';
@@ -18,7 +18,7 @@ import {
   getNodeBalancersPageActions,
   getNodeBalancerWithConfigsActions,
   GetNodeBalancerWithConfigsParams,
-  updateNodeBalancersActions
+  updateNodeBalancersActions,
 } from './nodeBalancer.actions';
 
 const getAllNodeBalancersRequest = getAll<NodeBalancer>(getNodeBalancers);

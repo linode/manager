@@ -49,7 +49,7 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
     );
     days.push({
       issues: relevantIssues,
-      day: day.minus({ days: i }).toISO()
+      day: day.minus({ days: i }).toISO(),
     });
   }
 

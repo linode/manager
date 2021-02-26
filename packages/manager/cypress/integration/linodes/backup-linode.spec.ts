@@ -5,7 +5,7 @@ import {
   containsVisible,
   fbtClick,
   fbtVisible,
-  getClick
+  getClick,
 } from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';
 

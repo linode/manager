@@ -30,7 +30,7 @@ const nodeBalancersToItems = (nodeBalancers: NodeBalancer[]): Item<number>[] =>
   nodeBalancers.map(thisNodeBalancer => ({
     value: thisNodeBalancer.id,
     label: thisNodeBalancer.label,
-    data: thisNodeBalancer
+    data: thisNodeBalancer,
   }));
 
 const nodeBalancerFromItems = (
@@ -55,7 +55,7 @@ const NodeBalancerSelect: React.FC<CombinedProps> = props => {
     nodeBalancersLoading,
     nodeBalancersData,
     region,
-    selectedNodeBalancer
+    selectedNodeBalancer,
   } = props;
 
   const nodeBalancer = region
@@ -103,7 +103,7 @@ export default compose<CombinedProps, Props & RenderGuardProps>(
       ...ownProps,
       nodeBalancersData,
       nodeBalancersLoading,
-      nodeBalancersError
+      nodeBalancersError,
     })
   )
 )(NodeBalancerSelect);

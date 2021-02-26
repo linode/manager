@@ -15,7 +15,7 @@ const tags = [
   'tag3',
   'tagtagtagtagtagtag',
   'tag4',
-  'tagggg'
+  'tagggg',
 ];
 
 const TagTableCellStory: React.FC<{ tags: string[] }> = props => {

@@ -44,7 +44,7 @@ const RenderData: React.FC<{
     openForClone,
     openForConfig,
     openForEdit,
-    openForResize
+    openForResize,
   } = props;
 
   return (

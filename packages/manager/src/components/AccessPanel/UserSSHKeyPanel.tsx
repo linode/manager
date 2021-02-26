@@ -28,7 +28,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
@@ -38,20 +38,20 @@ const styles = (theme: Theme) =>
     cellCheckbox: {
       width: 50,
       paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
+      paddingRight: theme.spacing(1),
     },
     cellUser: {
-      width: '30%'
+      width: '30%',
     },
     userWrapper: {
       display: 'inline-flex',
       alignItems: 'center',
-      marginTop: theme.spacing(1) / 2
+      marginTop: theme.spacing(1) / 2,
     },
     gravatar: {
       borderRadius: '50%',
-      marginRight: theme.spacing(1)
-    }
+      marginRight: theme.spacing(1),
+    },
   });
 
 export interface UserSSHKeyObject {
@@ -140,7 +140,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = props => {
                       checked={selected}
                       onChange={onSSHKeyChange}
                       inputProps={{
-                        'aria-label': `Enable SSH for ${username}`
+                        'aria-label': `Enable SSH for ${username}`,
                       }}
                     />
                   </TableCell>

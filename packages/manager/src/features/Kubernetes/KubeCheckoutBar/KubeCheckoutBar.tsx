@@ -23,7 +23,7 @@ export const KubeCheckoutBar: React.FC<Props> = props => {
     createCluster,
     removePool,
     typesData,
-    updatePool
+    updatePool,
   } = props;
 
   // Show a warning if any of the pools have fewer than 3 nodes

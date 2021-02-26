@@ -117,9 +117,7 @@ class Backups extends Page {
       .toBe(true);
     expect(this.manualSnapshotHeading.isDisplayed())
       .withContext(
-        `"${this.manualSnapshotHeading.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${this.manualSnapshotHeading.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
     expect(this.manualDescription.isDisplayed())

@@ -29,7 +29,7 @@ const VlanDialog: React.FC<CombinedProps> = props => {
     closeDialog,
     selectedVlanID,
     selectedVlanLabel: label,
-    redirectToLanding
+    redirectToLanding,
   } = props;
 
   /** reset error on open */
@@ -55,7 +55,7 @@ const VlanDialog: React.FC<CombinedProps> = props => {
 
         if (redirectToLanding) {
           history.push({
-            pathname: `/vlans/`
+            pathname: `/vlans/`,
           });
         }
       })

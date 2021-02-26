@@ -16,7 +16,7 @@ const mapStateToProps: MapStateToProps<
 > = state => ({
   bucketsData: state.__resources.buckets.data,
   bucketsLoading: state.__resources.buckets.loading,
-  bucketErrors: state.__resources.buckets.bucketErrors
+  bucketErrors: state.__resources.buckets.bucketErrors,
 });
 
 export default connect(mapStateToProps);

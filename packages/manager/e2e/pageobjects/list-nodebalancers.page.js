@@ -48,9 +48,7 @@ class ListNodeBalancers extends Page {
     this.nodeBalancerElem.waitForDisplayed(constants.wait.long);
     expect(this.nodeBalancers.length)
       .withContext(
-        `${assertLog.incorrectNum} for "${
-          this.nodeBalancers.selector
-        }" selector`
+        `${assertLog.incorrectNum} for "${this.nodeBalancers.selector}" selector`
       )
       .toBeGreaterThan(0);
     expect(this.addNodeBalancer.isDisplayed())
@@ -67,16 +65,12 @@ class ListNodeBalancers extends Page {
         .toBe(true);
       expect(nb.$(this.nodeStatus.selector).getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.nodeStatus.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.nodeStatus.selector}" selector`
         )
         .toMatch(/\d* up -\s\d down/gm);
       expect(nb.$(this.transferred.selector).getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.transferred.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.transferred.selector}" selector`
         )
         .toMatch(/\d* bytes/gi);
       expect(nb.$(this.ports.selector).getText())
@@ -108,9 +102,7 @@ class ListNodeBalancers extends Page {
 
     expect(this.dialogContent.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.dialogContent.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.dialogContent.selector}" selector`
       )
       .toMatch('delete');
     expect(this.confirm.isDisplayed())

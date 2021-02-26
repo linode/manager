@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
@@ -17,8 +17,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     paperWrapper: {
-      backgroundColor: 'transparent'
-    }
+      backgroundColor: 'transparent',
+    },
   });
 
 interface VolumeTableWrapperProps {
@@ -37,7 +37,7 @@ const DomainsTableWrapper: React.FC<CombinedProps> = props => {
     handleOrderChange,
     classes,
     isVolumesLanding,
-    dataLength
+    dataLength,
   } = props;
 
   return (

@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& td': {
       borderBottom: 'none',
       paddingTop: 0,
-      paddingBottom: 0
-    }
-  }
+      paddingBottom: 0,
+    },
+  },
 }));
 export interface Props {
   configs: Config[];
@@ -39,7 +39,7 @@ export const Configs: React.FC<Props> = props => {
         handlePageSizeChange,
         page,
         pageSize,
-        count
+        count,
       }) => {
         return (
           <div>

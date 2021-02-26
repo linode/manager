@@ -52,7 +52,7 @@ describe('Domains - List Suite', () => {
       'Clone',
       'Delete',
       'Edit DNS Records',
-      'Check Zone'
+      'Check Zone',
     ];
 
     ListDomains.actionMenuItem.waitForDisplayed(constants.wait.normal);

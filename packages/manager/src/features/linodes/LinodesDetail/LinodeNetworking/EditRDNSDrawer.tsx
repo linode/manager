@@ -17,17 +17,17 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 const useStyles = makeStyles((theme: Theme) => ({
   section: {
     marginTop: theme.spacing(2),
-    borderTop: `1px solid ${theme.palette.divider}`
+    borderTop: `1px solid ${theme.palette.divider}`,
   },
   header: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   rdnsRecord: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   ipv6Input: {
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 interface Props {
@@ -83,7 +83,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
   }, [open]);
 
   const errorResources = {
-    rdns: 'RDNS'
+    rdns: 'RDNS',
   };
 
   const showDelayText = () => {
@@ -102,7 +102,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
     // If the field is blank, return an error.
     if (!ipToUpdate) {
       setErrors([
-        { field: 'ipv6Address', reason: 'Please enter an IPv6 Address' }
+        { field: 'ipv6Address', reason: 'Please enter an IPv6 Address' },
       ]);
 
       return;

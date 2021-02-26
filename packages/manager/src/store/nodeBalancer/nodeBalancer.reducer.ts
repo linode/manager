@@ -2,7 +2,7 @@ import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Reducer } from 'redux';
 import {
   EntityError,
-  MappedEntityState2 as MappedEntityState
+  MappedEntityState2 as MappedEntityState,
 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
@@ -12,7 +12,7 @@ import {
   onError,
   onGetAllSuccess,
   onGetPageSuccess,
-  onStart
+  onStart,
 } from '../store.helpers.tmp';
 import {
   createNodeBalancersActions,
@@ -20,7 +20,7 @@ import {
   getAllNodeBalancersActions,
   getNodeBalancersPageActions,
   getNodeBalancerWithConfigsActions,
-  updateNodeBalancersActions
+  updateNodeBalancersActions,
 } from './nodeBalancer.actions';
 
 export type State = MappedEntityState<NodeBalancer, EntityError>;
@@ -40,7 +40,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       return {
         ...state,
         loading: false,
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
       };
     }
 
@@ -51,7 +51,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError<MappedEntityState<NodeBalancer, EntityError>, EntityError>(
       {
-        read: error
+        read: error,
       },
       state
     );
@@ -101,7 +101,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, deleteNodeBalancerActions.done)) {
     const {
-      params: { nodeBalancerId }
+      params: { nodeBalancerId },
     } = action.payload;
 
     return onDeleteSuccess(nodeBalancerId, state);

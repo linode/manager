@@ -22,8 +22,8 @@ type CombinedProps = Props;
 
 const useStyles = makeStyles((theme: Theme) => ({
   dontgo: {
-    marginTop: theme.spacing(2)
-  }
+    marginTop: theme.spacing(2),
+  },
 }));
 
 const CloseAccountDialog: React.FC<CombinedProps> = props => {
@@ -83,7 +83,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
        * we don't care about soliciting comments from the user
        * since they're about to get redirected to a survey.
        */
-      comments
+      comments,
     })
       .then(response => {
         setIsClosingAccount(false);

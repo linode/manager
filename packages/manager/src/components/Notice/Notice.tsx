@@ -9,7 +9,7 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
@@ -18,11 +18,11 @@ import useFlags from 'src/hooks/useFlags';
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0
+      opacity: 0,
     },
     to: {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   root: {
     marginBottom: theme.spacing(2),
@@ -32,43 +32,43 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     '& + .notice': {
-      marginTop: `${theme.spacing(1)}px !important`
-    }
+      marginTop: `${theme.spacing(1)}px !important`,
+    },
   },
   cmr: {
     borderRadius: 3,
     '& $important': {
-      backgroundColor: theme.cmrBGColors.bgPaper
+      backgroundColor: theme.cmrBGColors.bgPaper,
     },
     '& $noticeText': {
-      color: theme.cmrTextColors.headlineStatic
+      color: theme.cmrTextColors.headlineStatic,
     },
     '& $error': {
-      borderLeftColor: theme.cmrIconColors.iRed
-    }
+      borderLeftColor: theme.cmrIconColors.iRed,
+    },
   },
   important: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     padding: theme.spacing(2),
     '& $noticeText': {
-      fontFamily: theme.font.normal
-    }
+      fontFamily: theme.font.normal,
+    },
   },
   icon: {
     color: 'white',
     position: 'absolute',
-    left: -25 // This value must be static regardless of theme selection
+    left: -25, // This value must be static regardless of theme selection
   },
   closeIcon: {
-    paddingLeft: theme.spacing(1)
+    paddingLeft: theme.spacing(1),
   },
   inner: {
-    width: '100%'
+    width: '100%',
   },
   breakWords: {
     '& $noticeText': {
-      wordBreak: 'break-all'
-    }
+      wordBreak: 'break-all',
+    },
   },
   noticeText: {
     color: theme.palette.text.primary,
@@ -76,45 +76,45 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: `20px`,
     fontFamily: 'LatoWebBold', // we keep this bold at all times
     '& p': {
-      fontSize: '1rem'
-    }
+      fontSize: '1rem',
+    },
   },
   error: {
     borderLeft: `5px solid ${theme.palette.status.errorDark}`,
     animation: '$fadeIn 225ms linear forwards',
     '&$important': {
-      borderLeftWidth: 32
-    }
+      borderLeftWidth: 32,
+    },
   },
   errorList: {
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`
+    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
   },
   warning: {
     borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     animation: '$fadeIn 225ms linear forwards',
     '&$important': {
-      borderLeftWidth: 32
+      borderLeftWidth: 32,
     },
     '& $icon': {
-      color: '#555'
-    }
+      color: '#555',
+    },
   },
   warningList: {
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`
+    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
   },
   success: {
     borderLeft: `5px solid ${theme.palette.status.successDark}`,
     animation: '$fadeIn 225ms linear forwards',
     '&$important': {
-      borderLeftWidth: 32
-    }
+      borderLeftWidth: 32,
+    },
   },
   successList: {
-    borderLeft: `5px solid ${theme.palette.status.successDark}`
+    borderLeft: `5px solid ${theme.palette.status.successDark}`,
   },
   flag: {
-    marginRight: theme.spacing(2)
-  }
+    marginRight: theme.spacing(2),
+  },
 }));
 
 interface Props extends GridProps {
@@ -157,7 +157,7 @@ const Notice: React.FC<CombinedProps> = props => {
     onClick,
     onClose,
     spacingTop,
-    spacingBottom
+    spacingBottom,
   } = props;
 
   const classes = useStyles();
@@ -196,11 +196,11 @@ const Notice: React.FC<CombinedProps> = props => {
 
   const dataAttributes = !props.error
     ? {
-        'data-qa-notice': true
+        'data-qa-notice': true,
       }
     : {
         'data-qa-notice': true,
-        'data-qa-error': true
+        'data-qa-error': true,
       };
 
   return (
@@ -219,11 +219,11 @@ const Notice: React.FC<CombinedProps> = props => {
         [classes.warningList]: warning && notificationList,
         [classes.cmr]: Boolean(flags.cmr),
         notice: true,
-        ...(className && { [className]: true })
+        ...(className && { [className]: true }),
       })}
       style={{
         marginTop: spacingTop !== undefined ? spacingTop : 0,
-        marginBottom: spacingBottom !== undefined ? spacingBottom : 24
+        marginBottom: spacingBottom !== undefined ? spacingBottom : 24,
       }}
       {...dataAttributes}
       role="alert"
@@ -244,7 +244,7 @@ const Notice: React.FC<CombinedProps> = props => {
         <Grid item className={classes.closeIcon}>
           <Close
             style={{
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
             onClick={onClose}
           />

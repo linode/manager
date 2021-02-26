@@ -15,17 +15,17 @@ import { OFFICIAL_USERNAMES } from './ticketUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0
+      opacity: 0,
     },
     to: {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   root: {
     width: '100%',
     padding: 0,
     marginBottom: theme.spacing(2),
-    position: 'relative'
+    position: 'relative',
   },
   userWrapper: {
     marginTop: theme.spacing(1) / 2,
@@ -40,14 +40,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       marginRight: theme.spacing(1),
       width: 40,
-      height: 40
-    }
+      height: 40,
+    },
   },
   leftIcon: {
     width: '100%',
     height: '100%',
     borderRadius: '50%',
-    color: theme.palette.text.primary
+    color: theme.palette.text.primary,
   },
   content: {
     width: '100%',
@@ -56,36 +56,36 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     backgroundColor: theme.color.white,
     border: `1px solid ${theme.color.grey2}`,
-    borderRadius: theme.shape.borderRadius
+    borderRadius: theme.shape.borderRadius,
   },
   header: {
     padding: `0 ${theme.spacing(1)}px`,
     minHeight: 40,
     backgroundColor: theme.color.grey2,
     borderTopLeftRadius: theme.shape.borderRadius,
-    borderTopRightRadius: theme.shape.borderRadius
+    borderTopRightRadius: theme.shape.borderRadius,
   },
   headerInner: {
     display: 'flex',
     flexWrap: 'wrap',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   userName: {
     whiteSpace: 'nowrap',
     fontFamily: 'LatoWebBold', // we keep this bold at all times
     color: theme.color.headline,
-    marginRight: 4
+    marginRight: 4,
   },
   expert: {
     marginRight: 4,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   isCurrentUser: {},
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
-  }
+      marginLeft: theme.spacing(),
+    },
+  },
 }));
 
 export interface Props {
@@ -121,7 +121,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
     ticket,
     open,
     reply,
-    ticketUpdated
+    ticketUpdated,
   } = props;
 
   const [data, setData] = React.useState<Data | undefined>(undefined);
@@ -140,7 +140,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
         description: ticket.description,
         username: ticket.opened_by,
         from_linode: false,
-        updated: ticket.updated
+        updated: ticket.updated,
       });
     } else if (reply) {
       return setData({
@@ -152,7 +152,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
         description: reply.description,
         username: reply.created_by,
         from_linode: reply.from_linode,
-        updated: ticketUpdated!
+        updated: ticketUpdated!,
       });
     }
   }, [parentTicket, reply, ticket, ticketUpdated]);

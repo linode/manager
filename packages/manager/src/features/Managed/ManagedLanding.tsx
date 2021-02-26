@@ -11,8 +11,8 @@ const docs: Linode.Doc[] = [
   {
     title: 'Linode Managed',
     src: 'https://linode.com/docs/platform/linode-managed/',
-    body: `How to configure service monitoring with Linode Managed.`
-  }
+    body: `How to configure service monitoring with Linode Managed.`,
+  },
 ];
 
 export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {

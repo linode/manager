@@ -21,14 +21,14 @@ export const ContactsActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         openDrawer(contactId);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         openDialog(contactId);
-      }
-    }
+      },
+    },
   ];
 
   return (

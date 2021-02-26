@@ -23,18 +23,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(),
     backgroundColor: theme.cmrBGColors.bgPaper,
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
+    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
   },
   footer: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: `10px 16px !important`
+    padding: `10px 16px !important`,
   },
   footerBorder: {
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`
-  }
+    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
+  },
 }));
 
 export const EntityDetail: React.FC<EntityDetailProps> = props => {

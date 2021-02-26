@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -32,23 +32,23 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(2),
       [theme.breakpoints.up('sm')]: {
         width: 480,
-        padding: theme.spacing(4)
+        padding: theme.spacing(4),
       },
       '& .actionPanel': {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
       },
       '& .selectionCard': {
         maxWidth: '100%',
-        flexBasis: '100%'
-      }
+        flexBasis: '100%',
+      },
     },
     wide: {
       [theme.breakpoints.up('sm')]: {
-        width: 700
-      }
+        width: 700,
+      },
     },
     drawerHeader: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     drawerContent: {},
     button: {
@@ -56,16 +56,16 @@ const styles = (theme: Theme) =>
       minHeight: 'auto',
       padding: 0,
       '& > span': {
-        padding: 2
+        padding: 2,
       },
       '& :hover, & :focus': {
         color: 'white',
-        backgroundColor: theme.palette.primary.main
-      }
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     backDrop: {
-      backgroundColor: theme.color.drawerBackdrop
-    }
+      backgroundColor: theme.color.drawerBackdrop,
+    },
   });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -82,7 +82,7 @@ const DDrawer: React.FC<CombinedProps> = props => {
       classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       ModalProps={{
         BackdropProps: { className: classes.backDrop },
-        disableBackdropClick: true
+        disableBackdropClick: true,
       }}
       data-qa-drawer
       data-testid="drawer"

@@ -13,18 +13,18 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles(() => ({
   copy: {
-    marginTop: 16
+    marginTop: 16,
   },
   ipv6: {
-    marginTop: 32
-  }
+    marginTop: 32,
+  },
 }));
 
 type IPType = 'v4Public' | 'v4Private';
 
 const ipOptions: Item<IPType>[] = [
   { value: 'v4Public', label: 'IPv4 – Public' },
-  { value: 'v4Private', label: 'IPv4 – Private' }
+  { value: 'v4Private', label: 'IPv4 – Private' },
 ];
 
 // @todo: Pre-fill support tickets.
@@ -45,12 +45,12 @@ const explainerCopy: Record<IPType, JSX.Element> = {
       usage. To ensure that the private IP is properly configured once added,
       it&apos;s best to reboot your Linode.
     </>
-  )
+  ),
 };
 
 const tooltipCopy: Record<IPType, JSX.Element | null> = {
   v4Public: null,
-  v4Private: <>This Linode already has a private IP address.</>
+  v4Private: <>This Linode already has a private IP address.</>,
 };
 
 interface Props {
@@ -77,7 +77,7 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
     linodeID,
     hasPrivateIPAddress,
     onSuccess,
-    readOnly
+    readOnly,
   } = props;
 
   React.useEffect(() => {
@@ -93,7 +93,7 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
     // Only IPv4 addresses can currently be allocated.
     allocateIPAddress(linodeID, {
       type: 'ipv4',
-      public: selected === 'v4Public'
+      public: selected === 'v4Public',
     })
       .then(_ => {
         setSubmitting(false);

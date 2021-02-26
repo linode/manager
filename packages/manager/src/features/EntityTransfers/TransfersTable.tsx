@@ -59,7 +59,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const TransfersTable: React.FC<CombinedProps> = (props) => {
+export const TransfersTable: React.FC<CombinedProps> = props => {
   const {
     transferType,
     isLoading,

@@ -46,7 +46,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
   const linodeIDToVLANIP = thisVlan.linodes.reduce<Record<number, string>>(
     (acc, thisVLANLinode) => ({
       ...acc,
-      [thisVLANLinode.id]: thisVLANLinode.ipv4_address
+      [thisVLANLinode.id]: thisVLANLinode.ipv4_address,
     }),
     {}
   );
@@ -58,7 +58,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
   // @todo: Rework the typing here once https://github.com/linode/manager/pull/6999 is merged.
   const extendLinodesFn = (linode: Linode): any => ({
     ...linode,
-    _vlanIP: linodeIDToVLANIP[linode.id]
+    _vlanIP: linodeIDToVLANIP[linode.id],
   });
 
   return (

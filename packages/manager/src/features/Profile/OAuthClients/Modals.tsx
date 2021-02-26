@@ -26,13 +26,13 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) => ({
   key: {
-    wordBreak: 'break-word'
+    wordBreak: 'break-word',
   },
   dialog: {
     '& > div > div': {
-      maxWidth: 800
-    }
-  }
+      maxWidth: 800,
+    },
+  },
 }));
 
 type CombinedProps = Props;
@@ -46,7 +46,7 @@ const Modals: React.FC<CombinedProps> = props => {
       <ConfirmationDialog
         title="Client Secret"
         actions={clientSecretActions({
-          closeDialogs
+          closeDialogs,
         })}
         open={props.secretSuccessOpen}
         onClose={props.closeDialogs}
@@ -70,7 +70,7 @@ const Modals: React.FC<CombinedProps> = props => {
         actions={deleteDialogActions({
           loading: props.isDeleting,
           deleteSecret: () => props.deleteClient(props.secretID),
-          closeDialogs
+          closeDialogs,
         })}
         onClose={props.closeDialogs}
       >
@@ -86,7 +86,7 @@ const Modals: React.FC<CombinedProps> = props => {
         actions={resetDialogActions({
           closeDialogs,
           resetSecret: () => resetClient(props.secretID),
-          loading: isResetting
+          loading: isResetting,
         })}
         onClose={props.closeDialogs}
       >
@@ -109,7 +109,7 @@ interface ActionsProps {
 const resetDialogActions = ({
   closeDialogs,
   resetSecret,
-  loading
+  loading,
 }: ActionsProps) => {
   return (
     <React.Fragment>
@@ -144,7 +144,7 @@ interface DeleteActionsProps {
 const deleteDialogActions = ({
   loading,
   deleteSecret,
-  closeDialogs
+  closeDialogs,
 }: DeleteActionsProps) => {
   return (
     <React.Fragment>

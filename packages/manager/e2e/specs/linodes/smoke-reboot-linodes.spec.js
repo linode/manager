@@ -5,7 +5,7 @@ import {
   apiCreateLinode,
   apiDeleteAllLinodes,
   timestamp,
-  waitForLinodeStatus
+  waitForLinodeStatus,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 

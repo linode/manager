@@ -11,18 +11,18 @@ import { ExtendedIssue } from 'src/store/managed/issues.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   icon: {
     marginLeft: theme.spacing(1),
     transition: 'color 225ms ease-in-out',
     '&:hover': {
-      color: theme.color.red
-    }
+      color: theme.color.red,
+    },
   },
   failureText: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 export interface Props {
@@ -74,7 +74,7 @@ const DayDisplay: React.FC<DisplayProps> = props => {
 
 const iconStyles = {
   width: 30,
-  height: 30
+  height: 30,
 };
 
 export const IssueDay: React.FC<Props> = props => {

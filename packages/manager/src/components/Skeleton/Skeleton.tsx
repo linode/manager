@@ -8,32 +8,32 @@ import Grid from 'src/components/Grid';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1),
-    marginBottom: 10
+    marginBottom: 10,
   },
   oneLine: {
-    marginBottom: 0
+    marginBottom: 0,
   },
   hasEntityIcon: {
     position: 'relative',
     '& > div:nth-of-type(2)': {
-      paddingLeft: 54
-    }
+      paddingLeft: 54,
+    },
   },
   columnTitle: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   columnText: {
     marginTop: theme.spacing(1),
-    marginBottom: 0
+    marginBottom: 0,
   },
   skeletonIconContainer: {
     position: 'absolute',
-    top: -10
+    top: -10,
   },
   skeletonIcon: {
     width: 36,
-    height: 36
-  }
+    height: 36,
+  },
 }));
 
 interface Props {
@@ -60,7 +60,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
     subtextHeight,
     oneLine,
     hasEntityIcon,
-    compact
+    compact,
   } = props;
 
   const totalColumns = numColumns ?? 1;
@@ -78,7 +78,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
           flexBasis: widths ? 'auto' : `${100 / totalColumns}%`,
           width: `${widths &&
             (widths[columnIdx] ||
-              totalWidth / (totalColumns - widths.length))}%`
+              totalWidth / (totalColumns - widths.length))}%`,
         }}
         key={`ske-${columnIdx}`}
         data-testid={'skeletonCol'}
@@ -117,7 +117,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
             className={classNames({
               [classes.root]: true,
               [classes.oneLine]: oneLine,
-              [classes.hasEntityIcon]: hasEntityIcon
+              [classes.hasEntityIcon]: hasEntityIcon,
             })}
             data-testid={'tableSkeleton'}
             aria-label="Table Content Loading"

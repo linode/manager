@@ -10,7 +10,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import EntityIcon from 'src/components/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
@@ -32,16 +32,16 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes fadeIn': {
       from: {
-        opacity: 0
+        opacity: 0,
       },
       to: {
-        opacity: 1
-      }
+        opacity: 1,
+      },
     },
     root: {
       '& svg': {
-        transition: theme.transitions.create(['color'])
-      }
+        transition: theme.transitions.create(['color']),
+      },
     },
     button: {
       position: 'relative',
@@ -49,15 +49,15 @@ const styles = (theme: Theme) =>
       minWidth: 145,
       padding: `${theme.spacing(1) - 2}px ${theme.spacing(1)}px`,
       '&:hover': {
-        textDecoration: 'underline'
+        textDecoration: 'underline',
       },
       '&:hover, &.active': {
         borderColor: theme.palette.primary.light,
-        backgroundColor: 'transparent'
-      }
+        backgroundColor: 'transparent',
+      },
     },
     buttonText: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     caret: {
       color: 'inherit',
@@ -65,10 +65,10 @@ const styles = (theme: Theme) =>
       position: 'relative',
       top: 2,
       left: 2,
-      marginLeft: theme.spacing(1) / 2
+      marginLeft: theme.spacing(1) / 2,
     },
     caretDisabled: {
-      color: theme.color.disabledText
+      color: theme.color.disabledText,
     },
     menuItem: {
       color: theme.palette.primary.main,
@@ -78,32 +78,32 @@ const styles = (theme: Theme) =>
       '&:not(.hasTooltip)': {
         '&:hover': {
           '& $buttonText': {
-            color: 'white'
+            color: 'white',
           },
           '& svg': {
-            fill: '#FFF'
+            fill: '#FFF',
           },
           '& .insidePath *, ': {
-            stroke: '#fff'
+            stroke: '#fff',
           },
           '& svg:not(.loading) .outerCircle': {
-            stroke: '#fff'
-          }
-        }
-      }
+            stroke: '#fff',
+          },
+        },
+      },
     },
     menuItemInner: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     buttonInner: {
       display: 'flex',
       animation: '$fadeIn .2s ease-in-out',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     hidden: {
-      ...theme.visually.hidden
-    }
+      ...theme.visually.hidden,
+    },
   });
 
 interface Props {
@@ -128,9 +128,9 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class LinodePowerButton extends React.Component<CombinedProps, State> {
   state: State = {
     menu: {
-      anchorEl: undefined
+      anchorEl: undefined,
     },
-    powerDialogOpen: false
+    powerDialogOpen: false,
   };
 
   _toggleMenu = (value?: HTMLElement) =>
@@ -152,7 +152,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
   openDialog = (bootOption: Action) => {
     this.setState({
       powerDialogOpen: true,
-      selectedBootAction: bootOption
+      selectedBootAction: bootOption,
     });
     this.closeMenu();
   };
@@ -167,10 +167,10 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
       classes,
       disabled,
       linodeEvents,
-      linodeConfigs
+      linodeConfigs,
     } = this.props;
     const {
-      menu: { anchorEl }
+      menu: { anchorEl },
     } = this.state;
 
     const hasNoConfigs = linodeConfigs.length === 0;
@@ -226,14 +226,14 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
             <KeyboardArrowUp
               className={classNames({
                 [classes.caret]: true,
-                [classes.caretDisabled]: isBusy
+                [classes.caretDisabled]: isBusy,
               })}
             />
           ) : (
             <KeyboardArrowDown
               className={classNames({
                 [classes.caret]: true,
-                [classes.caretDisabled]: isBusy
+                [classes.caretDisabled]: isBusy,
               })}
             />
           )}

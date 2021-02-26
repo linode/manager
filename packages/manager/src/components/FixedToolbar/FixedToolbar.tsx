@@ -9,12 +9,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: 0,
     top: 'auto',
     backgroundColor: theme.bg.offWhite,
-    zIndex: 99999
+    zIndex: 99999,
   },
   toolbar: {
     display: 'flex',
-    flexDirection: 'column'
-  }
+    flexDirection: 'column',
+  },
 }));
 
 const FixedToolBar: React.FC<{}> = props => {

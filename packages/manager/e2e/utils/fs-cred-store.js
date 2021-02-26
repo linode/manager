@@ -113,7 +113,7 @@ class FSCredStore extends CredStore {
         inUse: false,
         token: token,
         spec: '',
-        isPresetToken: tokenFlag
+        isPresetToken: tokenFlag,
       });
     };
 
@@ -205,11 +205,11 @@ if (process.argv[2] == 'test-fs') {
         imposterProtocol: 'https',
         imposterName: 'Linode-API',
         proxyHost: 'https://api.linode.com/v4',
-        mutualAuth: true
-      }
+        mutualAuth: true,
+      },
     },
     testUser: '',
-    watch: false
+    watch: false,
   };
 
   let credStore = new FSCredStore('/tmp/e2e-users.js', false);

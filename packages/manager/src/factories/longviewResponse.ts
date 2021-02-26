@@ -8,5 +8,5 @@ export const longviewResponseFactory = Factory.Sync.makeFactory<
   VERSION: 0.4,
   NOTIFICATIONS: [],
   ACTION: 'getValues',
-  DATA: longviewDiskFactory.build()
+  DATA: longviewDiskFactory.build(),
 });

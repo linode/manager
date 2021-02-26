@@ -14,11 +14,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   search: {
     marginBottom: theme.spacing() / 2,
-    maxWidth: 556
+    maxWidth: 556,
   },
   table: {
     marginTop: theme.spacing(),
@@ -36,27 +36,27 @@ const useStyles = makeStyles((theme: Theme) => ({
         '&:first-of-type': {
           borderLeft: 'none',
           paddingLeft: 0,
-          paddingRight: 0
+          paddingRight: 0,
         },
         '&:last-of-type': {
-          borderRight: 'none'
-        }
-      }
-    }
+          borderRight: 'none',
+        },
+      },
+    },
   },
   check: {
     '& svg': {
       width: 20,
-      height: 20
-    }
+      height: 20,
+    },
   },
   checkEmpty: {
-    '& svg': { color: '#cccccc' }
+    '& svg': { color: '#cccccc' },
   },
   footer: {
     padding: theme.spacing(),
-    marginBottom: theme.spacing()
-  }
+    marginBottom: theme.spacing(),
+  },
 }));
 
 export interface Props {
@@ -80,7 +80,7 @@ export const TransferTable: React.FC<Props> = props => {
     pageSize,
     handleSearch,
     requestPage,
-    toggleSelectAll
+    toggleSelectAll,
   } = props;
   const classes = useStyles();
 
@@ -113,7 +113,7 @@ export const TransferTable: React.FC<Props> = props => {
                 checked={hasSelectedAll}
                 onChange={handleToggleAll}
                 inputProps={{
-                  'aria-label': `Select all entities on page`
+                  'aria-label': `Select all entities on page`,
                 }}
               />
             </TableCell>

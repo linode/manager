@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem',
     borderLeft: `solid 6px ${theme.color.green}`,
     padding: theme.spacing(1),
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   upgradeMessage: {
-    marginLeft: theme.spacing()
-  }
+    marginLeft: theme.spacing(),
+  },
 }));
 
 interface Props {

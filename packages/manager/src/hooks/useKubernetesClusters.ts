@@ -4,7 +4,7 @@ import { ApplicationState } from 'src/store';
 import { State } from 'src/store/kubernetes/kubernetes.reducer';
 import {
   requestKubernetesClusters as _request,
-  updateCluster as _update
+  updateCluster as _update,
 } from 'src/store/kubernetes/kubernetes.requests';
 import { Dispatch } from './types';
 
@@ -33,7 +33,7 @@ export const useKubernetesClusters = (): KubernetesProps => {
   return {
     kubernetesClusters,
     requestKubernetesClusters,
-    updateKubernetesCluster
+    updateKubernetesCluster,
   };
 };
 

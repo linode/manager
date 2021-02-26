@@ -12,44 +12,44 @@ import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative'
+    position: 'relative',
   },
   inputError: {
     borderColor: `${theme.color.red} !important`,
     '&[class*="focused"]': {
-      borderColor: theme.color.red
-    }
+      borderColor: theme.color.red,
+    },
   },
   textError: {
     marginTop: theme.spacing(1),
     color: theme.color.red,
     fontSize: '0.8rem',
     minHeight: '1em',
-    lineHeight: '1em'
+    lineHeight: '1em',
   },
   helpWrapper: {
     display: 'flex',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   helpWrapperSelectField: {
     width: 415,
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   small: {
     minHeight: 32,
     '& [role="button"]': {
       minHeight: 32,
       padding: '8px 32px 0 8px',
-      minWidth: 132
+      minWidth: 132,
     },
     '& svg': {
       marginTop: 0,
       width: 24,
-      height: 24
-    }
-  }
+      height: 24,
+    },
+  },
 }));
 
 interface Props extends SelectProps {
@@ -90,14 +90,14 @@ const SSelect: React.FC<CombinedProps> = props => {
 
   const inputProps: InputProps = {
     disableUnderline: true,
-    fullWidth: true
+    fullWidth: true,
   };
 
   const c = classNames(
     {
       [classes.inputError]: error === true,
       [classes.helpWrapperSelectField]: Boolean(tooltipText),
-      [classes.small]: small
+      [classes.small]: small,
     },
     className
   );
@@ -111,12 +111,12 @@ const SSelect: React.FC<CombinedProps> = props => {
       <div
         className={classNames({
           [classes.root]: true,
-          [classes.helpWrapper]: Boolean(tooltipText)
+          [classes.helpWrapper]: Boolean(tooltipText),
         })}
       >
         <InputLabel
           className={classNames({
-            'visually-hidden': hideLabel
+            'visually-hidden': hideLabel,
           })}
           htmlFor={convertToKebabCase(label)}
           disableAnimation

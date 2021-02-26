@@ -2,7 +2,7 @@ import {
   CPU,
   InboundOutboundNetwork,
   LongviewNetwork,
-  Stat
+  Stat,
 } from '../request.types';
 import {
   appendStats,
@@ -14,7 +14,7 @@ import {
   statMax,
   sumCPU,
   sumNetwork,
-  sumStatsObject
+  sumStatsObject,
 } from './utilities';
 
 const generateStats = (yValues: number[]): Stat[] => {
@@ -86,14 +86,14 @@ describe('Utility Functions', () => {
     const mockCPU: CPU = {
       system: generateStats([1]),
       user: generateStats([2]),
-      wait: generateStats([3])
+      wait: generateStats([3]),
     };
 
     it('sums `system`, `user`, and `wait` stats (Y values) for each CPU', () => {
       const mockData: Record<string, CPU> = {
         cpu0: mockCPU,
         cpu1: mockCPU,
-        cpu2: mockCPU
+        cpu2: mockCPU,
       };
       const result = sumCPU(mockData);
 
@@ -117,8 +117,8 @@ describe('Utility Functions', () => {
         cpu0: {
           system: mockStats,
           user: mockStats,
-          wait: mockStats
-        }
+          wait: mockStats,
+        },
       };
       const result = sumCPU(mockData);
 
@@ -132,12 +132,12 @@ describe('Utility Functions', () => {
         cpu0: {
           system: [
             { x: 0, y: 1 },
-            { x: 0, y: 1 }
+            { x: 0, y: 1 },
           ],
           user: [],
-          wait: []
+          wait: [],
         },
-        cpu1: mockCPU
+        cpu1: mockCPU,
       };
       const result = sumCPU(mockData);
       expect(result.system).toHaveLength(2);
@@ -159,14 +159,14 @@ describe('Utility Functions', () => {
   describe('sumNetwork', () => {
     const mockNetworkInterface: InboundOutboundNetwork = {
       rx_bytes: generateStats([1]),
-      tx_bytes: generateStats([2])
+      tx_bytes: generateStats([2]),
     };
 
     it('sums `rx_bytes` and `tx_bytes` for each Network Interface', () => {
       const mockData: LongviewNetwork['Network']['Interface'] = {
         eth0: mockNetworkInterface,
         eth1: mockNetworkInterface,
-        eth2: mockNetworkInterface
+        eth2: mockNetworkInterface,
       };
       const result = sumNetwork(mockData);
 
@@ -176,7 +176,7 @@ describe('Utility Functions', () => {
 
     it('returns stats untouched if there is only one Network Interface', () => {
       const mockData: Record<string, InboundOutboundNetwork> = {
-        eth0: mockNetworkInterface
+        eth0: mockNetworkInterface,
       };
       const result = sumNetwork(mockData);
 
@@ -189,8 +189,8 @@ describe('Utility Functions', () => {
       const mockData: Record<string, InboundOutboundNetwork> = {
         cpu0: {
           rx_bytes: mockStats,
-          tx_bytes: mockStats
-        }
+          tx_bytes: mockStats,
+        },
       };
       const result = sumNetwork(mockData);
 
@@ -203,11 +203,11 @@ describe('Utility Functions', () => {
         eth0: {
           rx_bytes: [
             { x: 0, y: 1 },
-            { x: 0, y: 1 }
+            { x: 0, y: 1 },
           ],
-          tx_bytes: []
+          tx_bytes: [],
         },
-        eth1: mockNetworkInterface
+        eth1: mockNetworkInterface,
       };
       const result = sumNetwork(mockData);
       expect(result.rx_bytes).toHaveLength(2);
@@ -228,11 +228,11 @@ describe('Utility Functions', () => {
     it('sums Y values if X values are equal', () => {
       const a = [
         { y: 10, x: 1 },
-        { y: 100, x: 2 }
+        { y: 100, x: 2 },
       ];
       const b = [
         { y: 20, x: 1 },
-        { y: 200, x: 2 }
+        { y: 200, x: 2 },
       ];
       const result = appendStats(a, b);
       expect(result[0].y).toBe(30);
@@ -249,18 +249,18 @@ describe('Utility Functions', () => {
   describe('sumStatsObject', () => {
     const mockNetworkInterface: InboundOutboundNetwork = {
       rx_bytes: generateStats([1]),
-      tx_bytes: generateStats([2])
+      tx_bytes: generateStats([2]),
     };
     const emptyState = {
       rx_bytes: [],
-      tx_bytes: []
+      tx_bytes: [],
     };
 
     it('sums all sub-fields for a given data set', () => {
       const mockData: LongviewNetwork['Network']['Interface'] = {
         eth0: mockNetworkInterface,
         eth1: mockNetworkInterface,
-        eth2: mockNetworkInterface
+        eth2: mockNetworkInterface,
       };
       const result = sumStatsObject<InboundOutboundNetwork>(
         mockData,
@@ -273,7 +273,7 @@ describe('Utility Functions', () => {
 
     it('returns stats untouched if there is only one provided object', () => {
       const mockData: Record<string, InboundOutboundNetwork> = {
-        eth0: mockNetworkInterface
+        eth0: mockNetworkInterface,
       };
       const result = sumStatsObject<InboundOutboundNetwork>(
         mockData,
@@ -289,8 +289,8 @@ describe('Utility Functions', () => {
       const mockData: Record<string, InboundOutboundNetwork> = {
         cpu0: {
           rx_bytes: mockStats,
-          tx_bytes: mockStats
-        }
+          tx_bytes: mockStats,
+        },
       };
       const result = sumStatsObject<InboundOutboundNetwork>(
         mockData,
@@ -306,11 +306,11 @@ describe('Utility Functions', () => {
         eth0: {
           rx_bytes: [
             { x: 0, y: 1 },
-            { x: 0, y: 1 }
+            { x: 0, y: 1 },
           ],
-          tx_bytes: []
+          tx_bytes: [],
         },
-        eth1: mockNetworkInterface
+        eth1: mockNetworkInterface,
       };
       const result = sumStatsObject<InboundOutboundNetwork>(
         mockData,
@@ -347,13 +347,13 @@ describe('Utility Functions', () => {
         series1: {
           apples: generateStats([1]),
           oranges: generateStats([2]),
-          pears: generateStats([3])
+          pears: generateStats([3]),
         },
         series2: {
           apples: generateStats([1]),
           oranges: generateStats([2]),
-          pears: generateStats([3])
-        }
+          pears: generateStats([3]),
+        },
       };
       const result = sumStatsObject<any>(weirdData);
       expect(result).toHaveProperty('apples');

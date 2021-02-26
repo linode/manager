@@ -4,7 +4,7 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from 'src/components/core/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 
@@ -13,8 +13,8 @@ const useStyles = makeStyles(() => ({
     padding: '0px !important',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 export interface ActionHandlers {
@@ -42,7 +42,7 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
       title: 'Resize',
       onClick: () => {
         alert('Resize not yet implemented');
-      }
+      },
     },
     {
       title: 'Delete',
@@ -50,8 +50,8 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
         if (triggerDeleteDatabase !== undefined) {
           triggerDeleteDatabase(databaseID, databaseLabel);
         }
-      }
-    }
+      },
+    },
   ];
 
   return (

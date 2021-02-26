@@ -7,8 +7,8 @@ const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 interface Props {
@@ -27,8 +27,8 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = props => {
       title: 'Cancel',
       onClick: () => {
         onCancelClick();
-      }
-    }
+      },
+    },
   ];
 
   return (

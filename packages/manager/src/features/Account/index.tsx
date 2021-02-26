@@ -18,7 +18,7 @@ type Props = RouteComponentProps<{}>;
 class Account extends React.Component<Props> {
   render() {
     const {
-      match: { path }
+      match: { path },
     } = this.props;
 
     return (

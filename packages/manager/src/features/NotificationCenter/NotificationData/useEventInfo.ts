@@ -4,7 +4,7 @@ import eventMessageGenerator from 'src/eventMessageGenerator';
 import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 import {
   EntityType,
-  getEntityByIDFromStore
+  getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
@@ -51,7 +51,7 @@ export const useEventInfo = (event: Event): EventInfo => {
     message: messageWithUsername,
     status,
     type,
-    linkTarget
+    linkTarget,
   };
 };
 

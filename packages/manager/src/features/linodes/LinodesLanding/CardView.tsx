@@ -23,20 +23,20 @@ import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
     to: {
-      backgroundColor: `hsla(40, 100%, 55%, 0)`
-    }
+      backgroundColor: `hsla(40, 100%, 55%, 0)`,
+    },
   },
   summaryOuter: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     margin: `${theme.spacing()}px 0`,
     marginBottom: 20,
     '&.MuiGrid-item': {
-      padding: 0
+      padding: 0,
     },
     '& .statusOther:before': {
-      animation: '$pulse 1.5s ease-in-out infinite'
-    }
-  }
+      animation: '$pulse 1.5s ease-in-out infinite',
+    },
+  },
 }));
 
 interface Props {
@@ -69,7 +69,7 @@ const CardView: React.FC<CombinedProps> = props => {
     open: false,
     tags: [],
     label: '',
-    entityID: 0
+    entityID: 0,
   });
 
   const closeTagDrawer = () => {
@@ -81,7 +81,7 @@ const CardView: React.FC<CombinedProps> = props => {
       open: true,
       label: linodeLabel,
       tags,
-      entityID: linodeID
+      entityID: linodeID,
     });
   };
 
@@ -105,7 +105,7 @@ const CardView: React.FC<CombinedProps> = props => {
     openPowerActionDialog,
     linodeConfigs,
     linodeLabel,
-    linodeID
+    linodeID,
   } = props;
 
   if (!profile.data?.username) {
@@ -170,7 +170,7 @@ interface WithImagesProps {
 const enhanced = compose<CombinedProps, Props>(
   withImages((ownProps, imagesData) => ({
     ...ownProps,
-    imagesData
+    imagesData,
   }))
 );
 

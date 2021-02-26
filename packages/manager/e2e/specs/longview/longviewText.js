@@ -3,5 +3,5 @@ export const longviewText = {
   upgradeMessage:
     'Upgrade to Longview Pro for more clients, longer data retention, and more frequent data updates.',
   installCmd: `curl -s https://lv.linode.com/`,
-  installCmd2: ' | sudo bash'
+  installCmd2: ' | sudo bash',
 };

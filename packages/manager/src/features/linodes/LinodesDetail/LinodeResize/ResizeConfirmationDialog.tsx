@@ -50,7 +50,7 @@ export const ResizeDialog: React.FC<Props> = props => {
     currentPlan,
     targetPlan,
     onClose,
-    onResize
+    onResize,
   } = props;
 
   return (

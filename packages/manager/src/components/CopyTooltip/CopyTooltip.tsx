@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -30,13 +30,13 @@ const styles = (theme: Theme) =>
       from: {
         opacity: 0,
         top: -10,
-        transform: 'scale(.1)'
+        transform: 'scale(.1)',
       },
       to: {
         opacity: 1,
         top: -45,
-        transform: 'scale(1)'
-      }
+        transform: 'scale(1)',
+      },
     },
     root: {
       position: 'relative',
@@ -53,11 +53,11 @@ const styles = (theme: Theme) =>
         margin: 0,
         position: 'relative',
         width: 20,
-        height: 20
+        height: 20,
       },
       '&:hover': {
-        backgroundColor: theme.color.white
-      }
+        backgroundColor: theme.color.white,
+      },
     },
     copied: {
       fontSize: '.85rem',
@@ -68,35 +68,35 @@ const styles = (theme: Theme) =>
       position: 'absolute',
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
       transition: 'opacity .5s ease-in-out',
-      animation: '$popUp 200ms ease-in-out forwards'
+      animation: '$popUp 200ms ease-in-out forwards',
     },
     standAlone: {
       marginLeft: theme.spacing(1),
       '& svg': {
-        width: 14
-      }
+        width: 14,
+      },
     },
     flex: {
-      display: 'flex'
+      display: 'flex',
     },
     displayText: {
       alignSelf: 'flex-end',
       marginLeft: 6,
       fontSize: '1rem',
-      color: theme.color.blue
-    }
+      color: theme.color.blue,
+    },
   });
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
 class CopyTooltip extends React.Component<CombinedProps, State> {
   state = {
-    copied: false
+    copied: false,
   };
 
   clickIcon = () => {
     this.setState({
-      copied: true
+      copied: true,
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
     copy(this.props.text);
@@ -115,7 +115,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
         className={classNames(className, {
           [classes.root]: true,
           [classes.standAlone]: standAlone,
-          [classes.flex]: Boolean(displayText)
+          [classes.flex]: Boolean(displayText),
         })}
       >
         {copied && (

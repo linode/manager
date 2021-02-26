@@ -4,7 +4,7 @@ import {
   getPayments,
   Invoice,
   InvoiceItem,
-  Payment
+  Payment,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
@@ -27,7 +27,7 @@ import TableContentWrapper from 'src/components/TableContentWrapper/TableContent
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import {
   printInvoice,
-  printPayment
+  printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
-      alignItems: 'flex-start'
-    }
+      alignItems: 'flex-start',
+    },
   },
   headerRight: {
     display: 'flex',
@@ -62,26 +62,26 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'column',
       alignItems: 'flex-start',
       marginLeft: 15,
-      paddingLeft: 0
-    }
+      paddingLeft: 0,
+    },
   },
   flexContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   headline: {
     marginTop: 8,
     marginBottom: 8,
     marginLeft: 15,
-    lineHeight: '1.5rem'
+    lineHeight: '1.5rem',
   },
   activeSince: {
-    marginRight: theme.spacing() + 2
+    marginRight: theme.spacing() + 2,
   },
   cancelButton: {
     '&:focus, &:hover': {
-      backgroundColor: 'inherit !important'
+      backgroundColor: 'inherit !important',
     },
     borderLeft: `solid 1px ${
       theme.name === 'lightTheme' ? theme.color.border2 : theme.color.border3
@@ -90,37 +90,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 6,
     marginRight: theme.spacing() + 2,
     '& :first-child': {
-      marginLeft: 2
-    }
+      marginLeft: 2,
+    },
   },
   transactionType: {
     marginRight: theme.spacing(),
-    width: 200
+    width: 200,
   },
   transactionDate: {
-    width: 130
+    width: 130,
   },
   descriptionColumn: {
-    width: '25%'
+    width: '25%',
   },
   dateColumn: {
-    width: '25%'
+    width: '25%',
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
       textAlign: 'right',
-      width: '10%'
-    }
+      width: '10%',
+    },
   },
   pdfDownloadColumn: {
     textAlign: 'right',
     '& > .loading': {
-      width: 115
-    }
+      width: 115,
+    },
   },
   pdfError: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 interface ActivityFeedItem {
@@ -135,7 +135,7 @@ type TransactionTypes = ActivityFeedItem['type'] | 'all';
 const transactionTypeOptions: Item<TransactionTypes>[] = [
   { label: 'Invoices', value: 'invoice' },
   { label: 'Payments', value: 'payment' },
-  { label: 'All Transaction Types', value: 'all' }
+  { label: 'All Transaction Types', value: 'all' },
 ];
 
 type DateRange =
@@ -151,7 +151,7 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: '90 Days', value: '90 Days' },
   { label: '6 Months', value: '6 Months' },
   { label: '12 Months', value: '12 Months' },
-  { label: 'All Time', value: 'All Time' }
+  { label: 'All Time', value: 'All Time' },
 ];
 
 const defaultDateRange: DateRange = '6 Months';
@@ -169,7 +169,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const {
     mostRecentInvoiceId,
     setMostRecentInvoiceId,
-    accountActiveSince
+    accountActiveSince,
   } = props;
 
   const classes = useStyles();
@@ -342,7 +342,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const combinedData = React.useMemo(
     () => [
       ...invoices.map(invoiceToActivityFeedItem),
-      ...payments.map(paymentToActivityFeedItem)
+      ...payments.map(paymentToActivityFeedItem),
     ],
     [invoices, payments]
   );
@@ -374,7 +374,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               <Typography variant="body1" className={classes.activeSince}>
                 Account active since{' '}
                 {formatDate(accountActiveSince, {
-                  displayTime: false
+                  displayTime: false,
                 })}
               </Typography>
             </div>
@@ -425,7 +425,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
                 handlePageChange,
                 handlePageSizeChange,
                 page,
-                pageSize
+                pageSize,
               }) => (
                 <>
                   <Table aria-label="List of Invoices and Payments">
@@ -493,7 +493,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,
-            pdfLoading
+            pdfLoading,
           ]
         )}
       </OrderBy>
@@ -522,7 +522,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       type,
       downloadPDF,
       hasError,
-      isLoading
+      isLoading,
     } = props;
     const rowProps = { rowLink: '' };
     if (type === 'invoice' && !isLoading) {
@@ -541,7 +541,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
     const action = {
       title: hasError ? 'Error. Click to try again.' : 'Download PDF',
       className: hasError ? classes.pdfError : '',
-      onClick: handleClick
+      onClick: handleClick,
     };
 
     return (
@@ -584,7 +584,7 @@ export const invoiceToActivityFeedItem = (
 ): ActivityFeedItem => {
   return {
     ...invoice,
-    type: 'invoice'
+    type: 'invoice',
   };
 };
 
@@ -605,7 +605,7 @@ export const paymentToActivityFeedItem = (
     date,
     id,
     total,
-    type: 'payment'
+    type: 'payment',
   };
 };
 /**
@@ -648,12 +648,12 @@ export const getCutoffFromDateRange = (
 export const makeFilter = (endDate?: string) => {
   const filter: any = {
     '+order_by': 'date',
-    '+order': 'desc'
+    '+order': 'desc',
   };
   if (endDate) {
     const filterEndDate = parseAPIDate(endDate);
     filter.date = {
-      '+gte': filterEndDate.toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+      '+gte': filterEndDate.toFormat(ISO_DATETIME_NO_TZ_FORMAT),
     };
   }
 

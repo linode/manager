@@ -5,7 +5,7 @@ import {
   Config,
   Disk,
   Linode,
-  LinodeStatus
+  LinodeStatus,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { intersection, pathOr } from 'ramda';
@@ -15,7 +15,7 @@ import {
   matchPath,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
@@ -43,7 +43,7 @@ import Details from './Details';
 import {
   attachAssociatedDisksToConfigs,
   curriedCloneLandingReducer,
-  defaultState
+  defaultState,
 } from './utilities';
 
 const Configs = React.lazy(() => import('./Configs'));
@@ -54,27 +54,27 @@ const LinodesDetailHeader = React.lazy(() =>
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   paper: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0`
+    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0`,
   },
   appBar: {
     '& > div': {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   outerContainer: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
   },
   diskContainer: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
   },
   title: {
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 interface WithLinodesProps {
@@ -96,7 +96,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     region,
     requestDisks,
     linodeId,
-    linodesData
+    linodesData,
   } = props;
 
   const classes = useStyles();
@@ -108,12 +108,12 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     // These must correspond to the routes inside the Switch
     {
       title: 'Configuration Profiles',
-      routeName: `${props.match.url}/configs`
+      routeName: `${props.match.url}/configs`,
     },
     {
       title: 'Disks',
-      routeName: `${props.match.url}/disks`
-    }
+      routeName: `${props.match.url}/disks`,
+    },
   ];
 
   // Helper function for the <Tabs /> component
@@ -147,7 +147,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     dispatch({
       type: 'syncConfigsDisks',
       configs,
-      disks
+      disks,
     });
     // We can't use `configs` and `disks` as deps, since they are arrays.
     // Instead we use a serialized representation of their IDs.
@@ -156,7 +156,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
   const queryParams = React.useMemo(() => getParamsFromUrl(location.search), [
-    location.search
+    location.search,
   ]);
 
   // Toggle config if a valid configId is specified as a query param.
@@ -261,7 +261,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         cloneLinode(sourceLinodeId, {
           linode_id: destinationLinodeId,
           configs: selectedConfigIds,
-          disks: selectedDiskIds
+          disks: selectedDiskIds,
         });
     }
 
@@ -412,7 +412,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   region: linode.region,
   label: linode.label,
   linodeStatus: linode.status,
-  linodeEvents: linode._events
+  linodeEvents: linode._events,
 }));
 
 interface DispatchProps {
@@ -424,7 +424,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     requestDisks: (linodeId: number) =>
-      dispatch(getAllLinodeDisks({ linodeId }))
+      dispatch(getAllLinodeDisks({ linodeId })),
   };
 };
 
@@ -436,7 +436,7 @@ const enhanced = compose<CombinedProps, {}>(
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,
-    linodesError
+    linodesError,
   })),
   withRouter
 );

@@ -9,9 +9,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
       marginTop: theme.spacing(1.5),
-      transform: 'scale(0.8)'
-    }
-  }
+      transform: 'scale(0.8)',
+    },
+  },
 }));
 interface Props {
   openAddDatabaseDrawer?: () => void;
@@ -30,8 +30,8 @@ const FirewallEmptyState: React.FC<Props> = props => {
       buttonProps={[
         {
           onClick: openAddDatabaseDrawer,
-          children: 'Add a Database'
-        }
+          children: 'Add a Database',
+        },
       ]}
     >
       <Typography variant="subtitle1">

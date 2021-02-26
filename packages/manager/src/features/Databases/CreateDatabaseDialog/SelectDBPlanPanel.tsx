@@ -1,6 +1,6 @@
 import {
   DatabaseAvailability,
-  DatabaseType
+  DatabaseType,
 } from '@linode/api-v4/lib/databases/index';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -19,42 +19,42 @@ import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import {
   ExtendedType,
-  extendType
+  extendType,
 } from 'src/store/databases/databases.reducer';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: 'transparent',
-    width: '100%'
+    width: '100%',
   },
   headingCellContainer: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   headerCell: {
     borderTop: 'none !important',
     borderBottom: '1px solid #f4f5f6 !important',
     '&.emptyCell': {
-      borderRight: 'none'
+      borderRight: 'none',
     },
     '&:not(.emptyCell)': {
-      borderLeft: 'none !important'
-    }
+      borderLeft: 'none !important',
+    },
   },
   radioCell: {
     width: '5%',
-    height: 55
+    height: 55,
   },
   chip: {
     backgroundColor: theme.color.green,
     color: '#fff',
     textTransform: 'uppercase',
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   tabbedPanelInnerClass: {
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface Props {
@@ -95,7 +95,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
           // eslint-disable-next-line react/jsx-no-useless-fragment
           return <>{renderPlanContainer(standardAvailability)}</>;
         },
-        title: 'Standard Availability'
+        title: 'Standard Availability',
       });
       tabOrder.push('standard');
     }
@@ -106,7 +106,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
           // eslint-disable-next-line react/jsx-no-useless-fragment
           return <>{renderPlanContainer(highAvailability)}</>;
         },
-        title: 'High Availability'
+        title: 'High Availability',
       });
       tabOrder.push('high');
     }

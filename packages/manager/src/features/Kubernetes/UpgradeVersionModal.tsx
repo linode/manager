@@ -22,7 +22,7 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
     currentVersion,
     nextVersion,
     isOpen,
-    onClose
+    onClose,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
 
@@ -51,7 +51,7 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
     setSubmitting(true);
     setError(undefined);
     updateKubernetesCluster(clusterID, {
-      k8s_version: nextVersion
+      k8s_version: nextVersion,
     })
       .then(_ => {
         setHasUpdatedSuccessfully(true);
@@ -69,7 +69,7 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
     recycleClusterNodes(clusterID)
       .then(_ => {
         enqueueSnackbar('Recycle started successfully.', {
-          variant: 'success'
+          variant: 'success',
         });
         onClose();
       })

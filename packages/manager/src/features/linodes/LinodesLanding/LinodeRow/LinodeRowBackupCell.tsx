@@ -8,8 +8,8 @@ const useStyles = makeStyles(() => ({
   root: {
     borderTop: 'none',
     padding: '10px 15px',
-    width: '14%'
-  }
+    width: '14%',
+  },
 }));
 
 interface Props {

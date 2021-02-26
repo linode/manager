@@ -15,7 +15,7 @@ import ListeningServices from './ListeningServices';
 
 import {
   LongviewPortsResponse,
-  LongviewTopProcesses
+  LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
 import OverviewGraphs from './OverviewGraphs';
 import TopProcesses from './TopProcesses';
@@ -25,11 +25,11 @@ import useFlags from 'src/hooks/useFlags';
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
     padding: theme.spacing(3) + 1,
-    marginBottom: theme.spacing(1) + 3
+    marginBottom: theme.spacing(1) + 3,
   },
   overviewGrid: {
-    margin: 0
-  }
+    margin: 0,
+  },
 }));
 
 interface Props {
@@ -65,7 +65,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
     topProcessesLoading,
     topProcessesError,
     lastUpdatedError,
-    timezone
+    timezone,
   } = props;
 
   const flags = useFlags();

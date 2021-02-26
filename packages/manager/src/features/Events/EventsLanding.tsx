@@ -30,17 +30,17 @@ import EventRow from './EventRow';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   header: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   noMoreEvents: {
     padding: theme.spacing(4),
-    textAlign: 'center'
+    textAlign: 'center',
   },
   labelCell: {
     width: '60%',
     minWidth: 200,
-    paddingLeft: 10
-  }
+    paddingLeft: 10,
+  },
 }));
 
 interface Props {
@@ -89,8 +89,8 @@ export const reducer: EventsReducer = (state, action) => {
       inProgressEvents: nextInProgressEvents,
       reactStateEvents: nextReactEvents,
       mostRecentEventTime: nextMostRecentEventTime,
-      entityId
-    }
+      entityId,
+    },
   } = action;
 
   switch (action.type) {
@@ -99,11 +99,11 @@ export const reducer: EventsReducer = (state, action) => {
         shouldUpdateEvents(
           {
             mostRecentEventTime: state.mostRecentEventTime,
-            inProgressEvents: state.inProgressEvents
+            inProgressEvents: state.inProgressEvents,
           },
           {
             mostRecentEventTime: nextMostRecentEventTime,
-            inProgressEvents: nextInProgressEvents
+            inProgressEvents: nextInProgressEvents,
           }
         )
       ) {
@@ -137,15 +137,15 @@ export const reducer: EventsReducer = (state, action) => {
             */
             ...nextReactEvents.filter(
               eachEvent => typeof eachEvent._initial === 'undefined'
-            )
-          ])
+            ),
+          ]),
         };
       }
       return {
         eventsFromRedux: nextReduxEvents,
         reactStateEvents: nextReactEvents,
         inProgressEvents: nextInProgressEvents,
-        mostRecentEventTime: nextMostRecentEventTime
+        mostRecentEventTime: nextMostRecentEventTime,
       };
     case 'append':
     default:
@@ -156,7 +156,7 @@ export const reducer: EventsReducer = (state, action) => {
         ),
         eventsFromRedux: nextReduxEvents,
         inProgressEvents: nextInProgressEvents,
-        mostRecentEventTime: nextMostRecentEventTime
+        mostRecentEventTime: nextMostRecentEventTime,
       };
   }
 };
@@ -175,7 +175,7 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
     inProgressEvents: props.inProgressEvents,
     eventsFromRedux: props.eventsFromRedux,
     reactStateEvents: [],
-    mostRecentEventTime: props.mostRecentEventTime
+    mostRecentEventTime: props.mostRecentEventTime,
   });
 
   const getNext = () => {
@@ -190,7 +190,7 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
       .then(handleEventsRequestSuccess)
       .catch(() => {
         props.enqueueSnackbar('There was an error loading more events', {
-          variant: 'error'
+          variant: 'error',
         });
         setLoading(false);
         setRequesting(false);
@@ -208,8 +208,8 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
         reactStateEvents: response.data,
         entityId: props.entityId,
         inProgressEvents: props.inProgressEvents,
-        mostRecentEventTime: props.mostRecentEventTime
-      }
+        mostRecentEventTime: props.mostRecentEventTime,
+      },
     });
     setLoading(false);
     setRequesting(false);
@@ -249,8 +249,8 @@ export const EventsLanding: React.FC<CombinedProps> = props => {
         inProgressEvents,
         reactStateEvents: events.reactStateEvents,
         entityId: props.entityId,
-        mostRecentEventTime: props.mostRecentEventTime
-      }
+        mostRecentEventTime: props.mostRecentEventTime,
+      },
     });
   }, [props.eventsFromRedux, props.inProgressEvents]);
 
@@ -381,7 +381,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   entitiesLoading: areEntitiesLoading(state.__resources),
   inProgressEvents: state.events.inProgressEvents,
   eventsFromRedux: state.events.events,
-  mostRecentEventTime: state.events.mostRecentEventTime
+  mostRecentEventTime: state.events.mostRecentEventTime,
 });
 
 const connected = connect(mapStateToProps);

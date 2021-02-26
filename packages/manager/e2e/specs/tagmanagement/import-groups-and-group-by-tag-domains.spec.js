@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   apiCreateDomains,
   apiDeleteAllDomains,
-  timestamp
+  timestamp,
 } from '../../utils/common';
 import Dashboard from '../../pageobjects/dashboard.page';
 import ImportGroupsAsTagsDrawer from '../../pageobjects/import-groups-as-tags-drawer.page';
@@ -11,7 +11,7 @@ import ListDomains from '../../pageobjects/list-domains.page';
 xdescribe('Domain Tag Management Suite', () => {
   const groupsAsTags = [
     `a${timestamp().toLowerCase()}`,
-    `b${timestamp().toLowerCase()}`
+    `b${timestamp().toLowerCase()}`,
   ];
   let domains = [];
 
@@ -20,7 +20,7 @@ xdescribe('Domain Tag Management Suite', () => {
       for (let i = 0; i < 3; i++) {
         const domain = {
           domain: `test${group}${i}.com`,
-          group: group
+          group: group,
         };
         domains.push(domain);
       }

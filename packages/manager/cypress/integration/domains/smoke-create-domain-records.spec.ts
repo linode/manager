@@ -3,7 +3,7 @@ import {
   createDomain,
   deleteDomainById,
   deleteAllTestDomains,
-  makeRandomIP
+  makeRandomIP,
 } from '../../support/api/domains';
 
 import { makeTestLabel } from '../../support/api/common';
@@ -17,14 +17,14 @@ const createRecords = () => [
       {
         name: '[data-qa-target="Hostname"]',
         value: makeTestLabel(),
-        skipCheck: false
+        skipCheck: false,
       },
       {
         name: '[data-qa-target="IP Address"]',
         value: `${makeRandomIP()}`,
-        skipCheck: false
-      }
-    ]
+        skipCheck: false,
+      },
+    ],
   },
   {
     name: 'Add a CNAME Record',
@@ -33,14 +33,14 @@ const createRecords = () => [
       {
         name: '[data-qa-target="Hostname"]',
         value: makeTestLabel(),
-        skipCheck: false
+        skipCheck: false,
       },
       {
         name: '[data-qa-target="Alias to"]',
         value: `${makeTestLabel()}.net`,
-        skipCheck: false
-      }
-    ]
+        skipCheck: false,
+      },
+    ],
   },
   {
     name: 'Add a TXT Record',
@@ -49,14 +49,14 @@ const createRecords = () => [
       {
         name: '[data-qa-target="Hostname"]',
         value: makeTestLabel(),
-        skipCheck: false
+        skipCheck: false,
       },
       {
         name: '[data-qa-target="Value"]',
         value: makeTestLabel(),
-        skipCheck: false
-      }
-    ]
+        skipCheck: false,
+      },
+    ],
   },
   {
     name: 'Add a SRV Record',
@@ -65,14 +65,14 @@ const createRecords = () => [
       {
         name: '[data-qa-target="Service"]',
         value: makeTestLabel(),
-        skipCheck: true
+        skipCheck: true,
       },
       {
         name: '[data-qa-target="Target"]',
         value: makeTestLabel(),
-        approximate: true
-      }
-    ]
+        approximate: true,
+      },
+    ],
   },
   {
     name: 'Add a CAA Record',
@@ -81,15 +81,15 @@ const createRecords = () => [
       {
         name: '[data-qa-target="Name"]',
         value: makeTestLabel(),
-        skipCheck: false
+        skipCheck: false,
       },
       {
         name: '[data-qa-target="Value"]',
         value: makeTestLabel(),
-        skipCheck: false
-      }
-    ]
-  }
+        skipCheck: false,
+      },
+    ],
+  },
 ];
 
 describe('Creates Domains record with Form', () => {

@@ -3,7 +3,7 @@ import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
@@ -16,8 +16,8 @@ const styles = () =>
   createStyles({
     root: {},
     paperWrapper: {
-      backgroundColor: 'transparent'
-    }
+      backgroundColor: 'transparent',
+    },
   });
 
 interface Props {

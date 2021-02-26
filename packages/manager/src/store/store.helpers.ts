@@ -4,7 +4,7 @@ import {
   Entity,
   EntityMap,
   MappedEntityState,
-  ThunkActionCreator
+  ThunkActionCreator,
 } from 'src/store/types';
 import { AsyncActionCreators } from 'typescript-fsa';
 
@@ -32,7 +32,7 @@ export const onGetAllSuccess = <E extends Entity, S>(
     itemsById: items.reduce(
       (itemsById, item) => ({ ...itemsById, [item.id]: update(item) }),
       {}
-    )
+    ),
   });
 
 export const onError = <S = {}, E = APIError[] | undefined>(
@@ -51,7 +51,7 @@ export const createDefaultState = <
   loading: false,
   lastUpdated: 0,
   error: undefined,
-  ...override
+  ...override,
 });
 
 export const onDeleteSuccess = <E extends Entity, O = APIError[] | undefined>(
@@ -77,7 +77,7 @@ export const removeMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    items: keys(itemsById)
+    items: keys(itemsById),
   };
 };
 
@@ -93,7 +93,7 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    items: keys(itemsById)
+    items: keys(itemsById),
   };
 };
 
@@ -154,8 +154,8 @@ export const updateInPlace = <E extends Entity>(
     ...state,
     itemsById: {
       ...itemsById,
-      [id]: updated
-    }
+      [id]: updated,
+    },
   };
 };
 

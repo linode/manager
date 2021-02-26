@@ -84,7 +84,7 @@ type CombinedProps = Props & WithTheme;
 const chartHeight = 300;
 
 const formatData = (value: DataSeries[]): [number, number][] =>
-  value.map((thisPoint) => [thisPoint.x, thisPoint.y]);
+  value.map(thisPoint => [thisPoint.x, thisPoint.y]);
 
 const _formatTooltip = (valueInBytes: number) =>
   formatNetworkTooltip(valueInBytes / 8);
@@ -104,8 +104,8 @@ const createTabs = (
     return [];
   }
 
-  const formattedNetIn = data.net_in.map((dataPoint) => dataPoint.y);
-  const formattedNetOut = data.net_out.map((dataPoint) => dataPoint.y);
+  const formattedNetIn = data.net_in.map(dataPoint => dataPoint.y);
+  const formattedNetOut = data.net_out.map(dataPoint => dataPoint.y);
   const netInMax = Math.max(...formattedNetIn);
   const netOutMax = Math.max(...formattedNetOut);
 
@@ -207,7 +207,7 @@ const createTabs = (
   ];
 };
 
-export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
+export const ManagedChartPanel: React.FC<CombinedProps> = props => {
   const { data, error, loading, theme } = props;
   const classes = useStyles();
   const timezone = useTimezone();

@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import { Terminal } from 'xterm';
@@ -17,19 +17,19 @@ type ClassNames = 'progress' | 'message' | 'errorState';
 const styles = (theme: Theme) =>
   createStyles({
     progress: {
-      height: 'auto'
+      height: 'auto',
     },
     message: {
       color: 'white',
       textAlign: 'center',
       minHeight: '30px',
-      margin: theme.spacing(2)
+      margin: theme.spacing(2),
     },
     errorState: {
       '& *': {
-        color: '#f4f4f4 !important'
-      }
-    }
+        color: '#f4f4f4 !important',
+      },
+    },
   });
 
 interface Props {
@@ -56,7 +56,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     renderingLish: true,
     retryingConnection: false,
     retryAttempts: 0,
-    error: ''
+    error: '',
   };
 
   mounted: boolean = false;
@@ -131,7 +131,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
       cols: 120,
       rows: 40,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
-      screenReaderMode: true
+      screenReaderMode: true,
     });
 
     this.terminal.onData((data: string) => this.socket.send(data));
@@ -163,7 +163,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
          */
         if (retryAttempts === maxRetryAttempts) {
           this.setState({
-            error: 'Session could not be initialized. Please try again later'
+            error: 'Session could not be initialized. Please try again later',
           });
           return;
         }
@@ -172,13 +172,13 @@ export class Weblish extends React.Component<CombinedProps, State> {
          */
         this.setState({
           retryingConnection: true,
-          retryAttempts: retryAttempts + 1
+          retryAttempts: retryAttempts + 1,
         });
         return;
       }
       this.setState({
         retryingConnection: false,
-        retryAttempts: 0
+        retryAttempts: 0,
       });
       try {
         this.terminal.write(evt.data);

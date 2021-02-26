@@ -4,7 +4,7 @@ import AccessPanel, { UserSSHKeyObject } from './AccessPanel';
 
 class PasswordAccess extends React.Component<{}, { password: string }> {
   state = {
-    password: ''
+    password: '',
   };
 
   handlePasswordChange = (password: string) =>
@@ -46,12 +46,12 @@ class PasswordAndSSHAccess extends React.Component<
           'some-key',
           'some-key',
           'some-key',
-          'some-key'
+          'some-key',
         ],
         onSSHKeyChange: (
           e: React.ChangeEvent<HTMLInputElement>,
           result: boolean
-        ) => this.toggleSSHUserKeys('Joe', result)
+        ) => this.toggleSSHUserKeys('Joe', result),
       },
       {
         gravatarUrl:
@@ -62,7 +62,7 @@ class PasswordAndSSHAccess extends React.Component<
         onSSHKeyChange: (
           e: React.ChangeEvent<HTMLInputElement>,
           result: boolean
-        ) => this.toggleSSHUserKeys('Bob', result)
+        ) => this.toggleSSHUserKeys('Bob', result),
       },
       {
         gravatarUrl:
@@ -73,9 +73,9 @@ class PasswordAndSSHAccess extends React.Component<
         onSSHKeyChange: (
           e: React.ChangeEvent<HTMLInputElement>,
           result: boolean
-        ) => this.toggleSSHUserKeys('Mark', result)
-      }
-    ]
+        ) => this.toggleSSHUserKeys('Mark', result),
+      },
+    ],
   };
 
   toggleSSHUserKeys = (username: string, result: boolean) =>
@@ -83,7 +83,7 @@ class PasswordAndSSHAccess extends React.Component<
       ...state,
       users: state.users.map(user =>
         username === user.username ? { ...user, selected: result } : user
-      )
+      ),
     }));
 
   handlePasswordChange = (password: string) =>

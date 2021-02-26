@@ -7,7 +7,7 @@ import {
   timestamp,
   apiDeleteAllLinodes,
   apiDeleteAllVolumes,
-  checkEnvironment
+  checkEnvironment,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
@@ -16,18 +16,18 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   const linodeEast = {
     linodeLabel: `east${timestamp()}`,
     privateIp: false,
-    tags: []
+    tags: [],
   };
   const linodeCentral = {
     linodeLabel: `central${timestamp()}`,
     privateIp: false,
     tags: [],
     type: undefined,
-    region: 'us-central'
+    region: 'us-central',
   };
   const testVolume = {
     label: ``,
-    size: '10'
+    size: '10',
   };
 
   const getLinodeOptions = () => {
@@ -158,9 +158,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   });
 
   it('expected action menu options are displayed for a detached volume', () => {
-    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${
-      VolumeDetail.actionMenu.selector
-    }`;
+    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`;
     $(volumeActionMenu).waitForDisplayed(constants.wait.true);
     $(volumeActionMenu).click();
     VolumeDetail.assertActionMenuItems(false);
@@ -210,9 +208,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     expect(VolumeDetail.mountCommand.getAttribute('value'))
       .withContext(`${assertLog.incorrectText}`)
       .toEqual(
-        `mount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${
-          testVolume.label
-        }`
+        `mount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${testVolume.label}`
       );
     VolumeDetail.closeVolumeDrawer();
     browser.waitUntil(() => {
@@ -233,9 +229,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   });
 
   it('can detach an attached volume', () => {
-    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${
-      VolumeDetail.actionMenu.selector
-    }`;
+    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`;
     $(volumeActionMenu).waitForDisplayed(constants.wait.true);
     $(volumeActionMenu).click();
     VolumeDetail.assertActionMenuItems(true);
@@ -261,9 +255,9 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
       'Clone'
     );
     VolumeDetail.cloneVolume(cloneLabel, testVolume.size);
-    const clonedVolume = $$(VolumeDetail.volumeCellLabel.selector).find(
-      volume => volume.getText().includes(cloneLabel)
-    );
+    const clonedVolume = $$(
+      VolumeDetail.volumeCellLabel.selector
+    ).find(volume => volume.getText().includes(cloneLabel));
     expect(clonedVolume).toBeTruthy();
   });
 

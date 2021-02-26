@@ -9,15 +9,15 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
   },
   focused: {
     backgroundColor: theme.palette.primary.main,
-    color: 'white'
+    color: 'white',
   },
   disabled: {
-    cursor: 'not-allowed !important'
-  }
+    cursor: 'not-allowed !important',
+  },
 }));
 
 export interface RegionItem extends Item<string> {
@@ -40,7 +40,7 @@ export const RegionOption: React.FC<CombinedProps> = props => {
       className={classNames({
         [classes.root]: true,
         [classes.focused]: props.isFocused,
-        [classes.disabled]: isDisabled
+        [classes.disabled]: isDisabled,
       })}
       value={data.value}
       attrs={{ ['data-qa-region-select-item']: data.value }}

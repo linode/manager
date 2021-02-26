@@ -11,7 +11,7 @@ export const appTokens: Token[] = [
     id: 1,
     scopes: '*',
     website: 'http://localhost:3000',
-    label: 'test-app-1'
+    label: 'test-app-1',
   },
   {
     created: '2015-04-26T14:45:07',
@@ -22,7 +22,7 @@ export const appTokens: Token[] = [
     id: 2,
     scopes: '*',
     website: 'http://localhost:3000',
-    label: 'test-app-2'
+    label: 'test-app-2',
   },
   {
     created: '2017-04-26T14:45:07',
@@ -33,7 +33,7 @@ export const appTokens: Token[] = [
     id: 3,
     scopes: '*',
     website: 'http://localhost:3000',
-    label: 'test-app-3'
+    label: 'test-app-3',
   },
   {
     created: '2011-04-26T14:45:07',
@@ -44,7 +44,7 @@ export const appTokens: Token[] = [
     id: 4,
     scopes: '*',
     website: 'http://localhost:3000',
-    label: 'test-app-4'
+    label: 'test-app-4',
   },
   {
     created: '2028-04-26T14:45:07',
@@ -55,6 +55,6 @@ export const appTokens: Token[] = [
     id: 5,
     scopes: '*',
     website: 'http://localhost:3000',
-    label: ''
-  }
+    label: '',
+  },
 ];

@@ -4,7 +4,7 @@ import {
   createType,
   ipResponseToDisplayRows,
   listIPv6InRange,
-  uniqByIP
+  uniqByIP,
 } from './LinodeNetworking';
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 
@@ -12,7 +12,7 @@ const {
   private: _privateIPs,
   public: _publicIPs,
   shared: _sharedIPs,
-  reserved: _reservedIPs
+  reserved: _reservedIPs,
 } = ipResponse.ipv4;
 
 describe('Linode Networking tab', () => {
@@ -29,7 +29,7 @@ describe('listIPv6InRange utility function', () => {
   const ipv6Range = ipAddressFactory.build({
     type: 'ipv6/range',
     address: '2600:3c03:e000:3cb::2',
-    rdns: 'my-site.com'
+    rdns: 'my-site.com',
   });
   it('returns IPs within the given range', () => {
     expect(
@@ -40,7 +40,7 @@ describe('listIPv6InRange utility function', () => {
     const outOfRangeIP = ipAddressFactory.build({
       type: 'ipv6/range',
       address: '0000::',
-      rdns: 'my-site.com'
+      rdns: 'my-site.com',
     });
     expect(
       listIPv6InRange('2600:3c03:e000:3cb::', 64, [...ipv4List, outOfRangeIP])
@@ -50,7 +50,7 @@ describe('listIPv6InRange utility function', () => {
     const ipv6Pool = ipAddressFactory.build({
       type: 'ipv6/pool',
       address: '2600:3c03::e1:5000',
-      rdns: 'my-site.com'
+      rdns: 'my-site.com',
     });
     expect(
       listIPv6InRange('2600:3c03::e1:5000', 64, [...ipv4List, ipv6Pool])
@@ -64,7 +64,7 @@ describe('ipResponseToDisplayRows utility function', () => {
       public: ipAddressFactory.buildList(1, { type: 'ipv4', public: true }),
       private: ipAddressFactory.buildList(1, { type: 'ipv4', public: false }),
       shared: ipAddressFactory.buildList(1),
-      reserved: ipAddressFactory.buildList(1)
+      reserved: ipAddressFactory.buildList(1),
     },
     ipv6: {
       slaac: ipAddressFactory.build({ type: 'ipv6' }),
@@ -74,10 +74,10 @@ describe('ipResponseToDisplayRows utility function', () => {
           range: '0:0:0:0:0::',
           prefix: 64,
           region: 'us-east',
-          route_target: '0:0:0:0:0:0'
-        }
-      ]
-    }
+          route_target: '0:0:0:0:0:0',
+        },
+      ],
+    },
   };
 
   it('returns a display row for each IP/range', () => {

@@ -64,7 +64,7 @@ const KubernetesDialog: React.FC<CombinedProps> = props => {
     loading,
     open,
     onClose,
-    onDelete
+    onDelete,
   } = props;
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled = confirmText !== clusterLabel;

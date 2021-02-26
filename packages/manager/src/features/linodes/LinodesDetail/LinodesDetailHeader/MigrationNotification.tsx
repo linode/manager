@@ -8,8 +8,8 @@ import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
-    ...theme.applyLinkStyles
-  }
+    ...theme.applyLinkStyles,
+  },
 }));
 
 interface Props {
@@ -27,7 +27,7 @@ const MigrationNotification: React.FC<Props> = props => {
     linodeID,
     requestNotifications,
     notificationMessage,
-    notificationType
+    notificationType,
   } = props;
 
   /** Migrate */
@@ -49,7 +49,7 @@ const MigrationNotification: React.FC<Props> = props => {
             : 'An error occurred scheduling your migration.';
 
         enqueueSnackbar(errorMessage, {
-          variant: 'error'
+          variant: 'error',
         });
       });
   };

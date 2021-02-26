@@ -4,7 +4,7 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import {
   getStackScript,
   StackScript,
-  UserDefinedField
+  UserDefinedField,
 } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
@@ -18,7 +18,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -50,40 +50,40 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     table: {
       flexGrow: 1,
       width: '100%',
-      backgroundColor: theme.color.white
+      backgroundColor: theme.color.white,
     },
     selecting: {
       minHeight: '400px',
       maxHeight: '1000px',
       overflowY: 'scroll',
-      paddingTop: 0
+      paddingTop: 0,
     },
     link: {
       display: 'block',
       textAlign: 'right',
       marginBottom: 24,
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     panel: {
       flexGrow: 1,
       width: '100%',
       backgroundColor: theme.color.white,
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     inner: {
       padding: theme.spacing(2),
       paddingTop: theme.spacing(),
       [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(3),
-        paddingTop: theme.spacing()
-      }
+        paddingTop: theme.spacing(),
+      },
     },
-    header: {}
+    header: {},
   });
 
 interface Props extends RenderGuardProps {
@@ -125,7 +125,7 @@ interface State {
 class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   state: State = {
     stackScriptLoading: false,
-    stackScriptError: false
+    stackScriptError: false,
   };
 
   mounted: boolean = false;
@@ -194,7 +194,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, {
-                    displayTime: false
+                    displayTime: false,
                   })}
                   checked={selectedId === stackScript.id}
                   updateFor={[selectedId === stackScript.id]}
@@ -247,7 +247,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
-  username: pathOr('', ['data', 'username'], state.__resources.profile)
+  username: pathOr('', ['data', 'username'], state.__resources.profile),
 });
 
 const connected = connect(mapStateToProps);

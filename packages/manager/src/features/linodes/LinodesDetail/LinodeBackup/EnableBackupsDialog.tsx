@@ -48,7 +48,7 @@ export const EnableBackupsDialog: React.FC<Props> = props => {
         setSubmitting(false);
         resetEventsPolling();
         enqueueSnackbar('Backups are being enabled for this Linode.', {
-          variant: 'success'
+          variant: 'success',
         });
         onClose();
       })

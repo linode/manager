@@ -44,7 +44,7 @@ class MongoCredStore extends CredStore {
           .db(this.dbName)
           .collection(this.collectionName);
         return collection.createIndexes([
-          { key: { inUse: 1, username: 1, spec: 1 } }
+          { key: { inUse: 1, username: 1, spec: 1 } },
         ]);
       })
       .then(result => {
@@ -61,7 +61,7 @@ class MongoCredStore extends CredStore {
             inUse: false,
             token: token,
             spec: '',
-            isPresetToken: tokenFlag
+            isPresetToken: tokenFlag,
           };
 
           const collection = mongo
@@ -274,11 +274,11 @@ if (process.argv[2] == 'test-mongo') {
         imposterProtocol: 'https',
         imposterName: 'Linode-API',
         proxyHost: 'https://api.linode.com/v4',
-        mutualAuth: true
-      }
+        mutualAuth: true,
+      },
     },
     testUser: '',
-    watch: false
+    watch: false,
   };
   let mongoCredStore = new MongoCredStore('localhost', false);
 

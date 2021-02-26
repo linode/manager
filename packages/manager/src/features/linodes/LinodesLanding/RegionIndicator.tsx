@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import { formatRegion } from 'src/utilities';
 
@@ -13,8 +13,8 @@ const styles = (theme: Theme) =>
   createStyles({
     regionIndicator: {
       alignItems: 'center',
-      whiteSpace: 'nowrap'
-    }
+      whiteSpace: 'nowrap',
+    },
   });
 
 interface Props {

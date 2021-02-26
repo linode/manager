@@ -9,8 +9,8 @@ import CancelNotice from '../CancelNotice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   cancelNotice: {
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 
 interface RevokeKeysDialogProps {
@@ -31,7 +31,7 @@ export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = props => {
     handleClose,
     handleSubmit,
     numAccessKeys,
-    errors
+    errors,
   } = props;
 
   const classes = useStyles();

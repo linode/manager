@@ -38,7 +38,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
     isDisabled,
     linkClasses,
     listItemClasses,
-    closeMenu
+    closeMenu,
   } = props;
 
   if (!onClick && !href) {
@@ -58,7 +58,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
           data-qa-nav-item={QAKey}
           className={classNames({
             [linkClasses(href)]: true,
-            listItemCollapsed: isCollapsed
+            listItemCollapsed: isCollapsed,
           })}
         >
           {icon && isCollapsed && <div className="icon">{icon}</div>}
@@ -68,7 +68,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
             className={classNames({
               [listItemClasses]: true,
               primaryNavLink: true,
-              hiddenWhenCollapsed: isCollapsed
+              hiddenWhenCollapsed: isCollapsed,
             })}
           />
         </Link>

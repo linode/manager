@@ -5,7 +5,7 @@ import { saveCreditCard } from 'src/store/account/account.actions';
 import { State } from 'src/store/account/account.reducer';
 import {
   requestAccount,
-  updateAccount
+  updateAccount,
 } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
@@ -58,7 +58,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         accountData: data,
         accountError: error,
         accountLastUpdated: lastUpdated,
-        accountLoading: loading
+        accountLoading: loading,
       };
 
       return !!mapStateToProps ? mapStateToProps(ownProps, result) : result;
@@ -66,7 +66,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     (dispatch: ThunkDispatch) => ({
       requestAccount: () => dispatch(requestAccount()),
       updateAccount: data => dispatch(updateAccount(data)),
-      saveCreditCard: data => dispatch(saveCreditCard(data))
+      saveCreditCard: data => dispatch(saveCreditCard(data)),
     })
   );
 

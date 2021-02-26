@@ -23,7 +23,7 @@ const NodePool: React.FC<Props> = props => {
     openRecycleNodeDialog,
     nodes,
     typeLabel,
-    poolId
+    poolId,
   } = props;
 
   return (

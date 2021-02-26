@@ -52,7 +52,7 @@ interface NormalCellProps {
   thisCell: HeaderCell;
 }
 
-export const EntityTableHeader: React.FC<Props> = (props) => {
+export const EntityTableHeader: React.FC<Props> = props => {
   const {
     headers,
     handleOrderChange,
@@ -66,7 +66,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
 
   const SortCell = flags.cmr ? TableSortCell_CMR : TableSortCell;
 
-  const _SortCell: React.FC<SortCellProps> = (props) => {
+  const _SortCell: React.FC<SortCellProps> = props => {
     const { orderBy, order, thisCell, handleOrderChange } = props;
     return (
       <SortCell
@@ -82,7 +82,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     );
   };
 
-  const _NormalCell: React.FC<NormalCellProps> = (props) => {
+  const _NormalCell: React.FC<NormalCellProps> = props => {
     const { thisCell } = props;
     return (
       <TableCell
@@ -104,7 +104,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
   return (
     <TableHead>
       <TableRow>
-        {headers.map((thisCell) =>
+        {headers.map(thisCell =>
           thisCell.sortable ? (
             thisCell.hideOnTablet ? (
               <Hidden smDown key={thisCell.dataColumn}>
@@ -183,7 +183,7 @@ const useGroupByTagToggleStyles = makeStyles(() => ({
 }));
 
 export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
-  (props) => {
+  props => {
     const classes = useGroupByTagToggleStyles();
 
     const { toggleGroupByTag, isGroupedByTag } = props;

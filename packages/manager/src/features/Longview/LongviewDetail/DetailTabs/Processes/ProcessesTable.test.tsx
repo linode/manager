@@ -10,7 +10,7 @@ const props: Props = {
   processesData: [],
   processesLoading: false,
   selectedProcess: null,
-  setSelectedProcess: mockSetSelectedRow
+  setSelectedProcess: mockSetSelectedRow,
 };
 
 describe('ProcessTable', () => {

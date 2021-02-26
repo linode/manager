@@ -14,7 +14,7 @@ const props = {
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
   openDialog: jest.fn(),
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 describe('Kubernetes cluster action menu', () => {

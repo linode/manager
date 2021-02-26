@@ -17,7 +17,7 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import {
   generateAddressesLabel,
   generateRuleLabel,
-  predefinedFirewallFromRule as ruleToPredefinedFirewall
+  predefinedFirewallFromRule as ruleToPredefinedFirewall,
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
 import FirewallRuleActionMenu from './FirewallRuleActionMenu';
@@ -33,44 +33,44 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
+      marginRight: theme.spacing(),
+    },
   },
   undoButtonContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   undoButton: {
     cursor: 'pointer',
     backgroundColor: 'transparent',
-    border: 'none'
+    border: 'none',
   },
   highlight: {
-    backgroundColor: theme.bg.lightBlue
+    backgroundColor: theme.bg.lightBlue,
   },
   error: {
-    '& p': { color: theme.color.red }
+    '& p': { color: theme.color.red },
   },
   button: {
-    margin: '8px 0px'
+    margin: '8px 0px',
   },
   actionCell: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: 0
+    padding: 0,
   },
   actionHeader: {
     [theme.breakpoints.down('sm')]: {
-      minWidth: 70
+      minWidth: 70,
     },
-    minWidth: 140
+    minWidth: 140,
   },
   addLabelButton: {
-    ...theme.applyLinkStyles
-  }
+    ...theme.applyLinkStyles,
+  },
 }));
 
 interface RuleRow {
@@ -111,7 +111,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = props => {
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
-    triggerUndo
+    triggerUndo,
   } = props;
 
   const classes = useStyles();
@@ -239,14 +239,14 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
-      errors
+      errors,
     } = props;
 
     const actionMenuProps = {
       idx: id,
       triggerCloneFirewallRule,
       triggerDeleteFirewallRule,
-      triggerOpenRuleDrawerForEditing
+      triggerOpenRuleDrawerForEditing,
     };
 
     return (
@@ -287,7 +287,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
               <button
                 className={classnames({
                   [classes.undoButton]: true,
-                  [classes.highlight]: status !== 'PENDING_DELETION'
+                  [classes.highlight]: status !== 'PENDING_DELETION',
                 })}
                 onClick={() => triggerUndo(id)}
                 aria-label="Undo change to Firewall Rule"
@@ -359,7 +359,7 @@ export const firewallRuleToRowData = (
       ports: sortPortString(thisRule.ports || ''),
       type: generateRuleLabel(ruleType),
       addresses: generateAddressesLabel(thisRule.addresses),
-      id: idx
+      id: idx,
     };
   });
 };

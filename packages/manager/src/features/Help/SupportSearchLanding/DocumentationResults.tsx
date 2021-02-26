@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -27,39 +27,39 @@ const styles = (theme: Theme) =>
     root: {},
     resultsContainer: {
       '& em': {
-        fontStyle: 'normal'
-      }
+        fontStyle: 'normal',
+      },
     },
     noResultsContainer: {
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
     },
     moreResults: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     icon: {
       color: '#3683DC',
       fontSize: '0.8rem',
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     header: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     label: {
-      color: '#3683DC'
+      color: '#3683DC',
     },
     link: {
       marginTop: theme.spacing(2),
-      fontFamily: theme.font.bold
+      fontFamily: theme.font.bold,
     },
     searchItem: {
       position: 'initial',
       backgroundColor: theme.color.white,
       borderBottom: `1px solid ${theme.palette.divider}`,
       '&:hover': {
-        backgroundColor: theme.bg.offWhite
-      }
-    }
+        backgroundColor: theme.bg.offWhite,
+      },
+    },
   });
 
 export interface SearchResult {

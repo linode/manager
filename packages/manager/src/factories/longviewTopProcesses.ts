@@ -1,7 +1,7 @@
 import * as Factory from 'factory.ts';
 import {
   LongviewTopProcesses,
-  TopProcess
+  TopProcess,
 } from 'src/features/Longview/request.types';
 
 export const topProcessFactory = Factory.Sync.makeFactory<TopProcess>({
@@ -9,8 +9,8 @@ export const topProcessFactory = Factory.Sync.makeFactory<TopProcess>({
     cpu: 5,
     mem: 1024 * 2,
     count: 1,
-    entries: 2
-  }
+    entries: 2,
+  },
 });
 
 export const longviewTopProcessesFactory = Factory.Sync.makeFactory<
@@ -19,6 +19,6 @@ export const longviewTopProcessesFactory = Factory.Sync.makeFactory<
   Processes: {
     bash: topProcessFactory.build(),
     sshd: topProcessFactory.build(),
-    systemd: topProcessFactory.build()
-  }
+    systemd: topProcessFactory.build(),
+  },
 });

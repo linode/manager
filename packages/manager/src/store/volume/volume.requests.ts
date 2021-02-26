@@ -10,7 +10,7 @@ import {
   resizeVolume as _resizeVolume,
   updateVolume as _updateVolume,
   Volume,
-  VolumeRequestPayload as _VolumeRequestPayload
+  VolumeRequestPayload as _VolumeRequestPayload,
 } from '@linode/api-v4/lib/volumes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';
@@ -29,7 +29,7 @@ import {
   ResizeVolumeParams,
   updateVolumeActions,
   UpdateVolumeParams,
-  VolumeId
+  VolumeId,
 } from './volume.actions';
 
 /*

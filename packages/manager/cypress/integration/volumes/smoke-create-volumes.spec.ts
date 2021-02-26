@@ -4,13 +4,13 @@ import {
   deleteAllTestVolumes,
   clickVolumeActionMenu,
   createVolume,
-  deleteVolumeById
+  deleteVolumeById,
 } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
 import {
   createLinode,
   deleteAllTestLinodes,
-  deleteLinodeById
+  deleteLinodeById,
 } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
@@ -19,7 +19,7 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 
 const urlExtension = '/volumes/create';

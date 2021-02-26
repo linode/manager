@@ -11,9 +11,9 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     '& svg': {
       height: 25,
-      width: 25
-    }
-  }
+      width: 25,
+    },
+  },
 }));
 
 interface RadioButton extends HTMLInputElement {
@@ -57,7 +57,7 @@ export const AccessCell: React.FC<AccessCellProps> = props => {
       onChange={onChange}
       data-testid={`perm-${scopeDisplay}-radio`}
       inputProps={{
-        'aria-label': `${scope} for ${scopeDisplay}`
+        'aria-label': `${scope} for ${scopeDisplay}`,
       }}
     />
   );

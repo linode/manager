@@ -32,7 +32,7 @@ type CombinedProps = Props & StateProps;
 class VolumeSelect extends React.Component<CombinedProps, State> {
   state: State = {
     volumes: [],
-    loading: true
+    loading: true,
   };
 
   componentDidMount() {
@@ -100,8 +100,8 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
       value: volume.id,
       label: volume.label,
       data: {
-        region: volume.region
-      }
+        region: volume.region,
+      },
     }));
   };
 
@@ -111,15 +111,15 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     if (region && region !== 'none') {
       return {
         label: {
-          '+contains': inputValue
+          '+contains': inputValue,
         },
-        region
+        region,
       };
     } else {
       return {
         label: {
-          '+contains': inputValue
-        }
+          '+contains': inputValue,
+        },
       };
     }
   };
@@ -135,7 +135,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
           ...response,
           data: response.data.filter(
             v => v.region === this.props.region && v.linode_id === null
-          )
+          ),
         };
       })
       .then(response => {
@@ -197,7 +197,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
         ['__resources', 'profile', 'data', 'grants', 'volume'],
         state
       )
-    : undefined
+    : undefined,
 });
 
 const connected = connect(mapStateToProps);

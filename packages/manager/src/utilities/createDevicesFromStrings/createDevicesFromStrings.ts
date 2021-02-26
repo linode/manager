@@ -42,7 +42,7 @@ createDevicesFromStrings = devices => ({
   sde: createTypeRecord(devices.sde),
   sdf: createTypeRecord(devices.sdf),
   sdg: createTypeRecord(devices.sdg),
-  sdh: createTypeRecord(devices.sdh)
+  sdh: createTypeRecord(devices.sdh),
 });
 
 export default createDevicesFromStrings;

@@ -12,9 +12,9 @@ interface Props {
 const useStyles = makeStyles({
   root: {
     '&:focus': {
-      outline: 'none'
-    }
-  }
+      outline: 'none',
+    },
+  },
 });
 
 // Accessibility Feature:

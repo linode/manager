@@ -1,14 +1,14 @@
 import {
   SnackbarProvider,
   SnackbarProviderProps,
-  WithSnackbarProps
+  WithSnackbarProps,
 } from 'notistack';
 import * as React from 'react';
 import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import CloseSnackbar from './CloseSnackbar';
 
@@ -19,20 +19,20 @@ const styles = (theme: Theme) =>
     root: {},
     info: {
       backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.primary.main
+      borderLeftColor: theme.palette.primary.main,
     },
     success: {
       backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.primary.main
+      borderLeftColor: theme.palette.primary.main,
     },
     error: {
       backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.status.errorDark
+      borderLeftColor: theme.palette.status.errorDark,
     },
     warning: {
       backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.status.warningDark
-    }
+      borderLeftColor: theme.palette.status.warningDark,
+    },
   });
 
 type CombinedProps = SnackbarProviderProps & WithStyles<ClassNames>;
@@ -58,7 +58,7 @@ const SnackBar: React.FC<CombinedProps> = props => {
         variantSuccess: classes.success,
         variantError: classes.error,
         variantWarning: classes.warning,
-        variantInfo: classes.info
+        variantInfo: classes.info,
       }}
       action={key => (
         <CloseSnackbar

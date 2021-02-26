@@ -27,7 +27,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Paper>

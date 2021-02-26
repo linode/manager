@@ -8,7 +8,7 @@ export const initWindows = (timezone: string, unshift?: boolean) => {
     const finish = start.plus({ hours: 2 });
     return [
       `${start.toFormat('HH:mm')} - ${finish.toFormat('HH:mm')}`,
-      `W${evenizeNumber(start.setZone('utc').hour)}`
+      `W${evenizeNumber(start.setZone('utc').hour)}`,
     ];
   });
 

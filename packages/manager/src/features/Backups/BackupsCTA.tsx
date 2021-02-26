@@ -20,21 +20,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   enableButton: {
     height: 40,
     padding: 0,
-    width: 152
+    width: 152,
   },
   enableText: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
   },
   closeIcon: {
     ...theme.applyLinkStyles,
     marginLeft: 12,
-    lineHeight: '0.5rem'
-  }
+    lineHeight: '0.5rem',
+  },
 }));
 
 type CombinedProps = StateProps & DispatchProps;
@@ -43,7 +43,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
   const {
     linodesWithoutBackups,
     managed,
-    actions: { openBackupsDrawer }
+    actions: { openBackupsDrawer },
   } = props;
   const classes = useStyles();
 
@@ -65,7 +65,7 @@ const BackupsCTA: React.FC<CombinedProps> = props => {
     >
       {({
         preference: isDismissed,
-        togglePreference: dismissed
+        togglePreference: dismissed,
       }: ToggleProps<boolean>) => {
         return isDismissed ? (
           // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -106,14 +106,14 @@ interface DispatchProps {
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
-  managed: state?.__resources?.accountSettings?.data?.managed ?? false
+  managed: state?.__resources?.accountSettings?.data?.managed ?? false,
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   return {
     actions: {
-      openBackupsDrawer: () => dispatch(handleOpen())
-    }
+      openBackupsDrawer: () => dispatch(handleOpen()),
+    },
   };
 };
 

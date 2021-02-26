@@ -2,7 +2,7 @@ import {
   Entity,
   Event,
   EventAction,
-  EventStatus
+  EventStatus,
 } from '@linode/api-v4/lib/account';
 import { parseAPIDate } from 'src/utilities/date';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
@@ -149,7 +149,7 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) =>
   }, prevArr);
 
 export const isInProgressEvent = ({
-  percent_complete
+  percent_complete,
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete < 100;
 
@@ -157,13 +157,13 @@ export const isLongRunningProgressEventAction = (eventAction: EventAction) => {
   const longRunningProgressEventActions: EventAction[] = [
     'linode_resize',
     'linode_migrate',
-    'linode_migrate_datacenter'
+    'linode_migrate_datacenter',
   ];
   return longRunningProgressEventActions.includes(eventAction);
 };
 
 export const isCompletedEvent = ({
-  percent_complete
+  percent_complete,
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete === 100;
 

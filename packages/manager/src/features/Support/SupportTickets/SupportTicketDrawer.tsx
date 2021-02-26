@@ -1,7 +1,7 @@
 import * as Bluebird from 'bluebird';
 import {
   createSupportTicket,
-  uploadAttachment
+  uploadAttachment,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { update } from 'ramda';
@@ -24,7 +24,7 @@ import useEntities, { Entity } from 'src/hooks/useEntities';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
-  getErrorStringOrDefault
+  getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 import AttachFileForm from '../AttachFileForm';
@@ -39,27 +39,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   suffix: {
     fontSize: '.9rem',
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   actionPanel: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   expPanelSummary: {
     backgroundColor: theme.bg.offWhite,
-    borderTop: `1px solid ${theme.bg.main}`
+    borderTop: `1px solid ${theme.bg.main}`,
   },
   innerReply: {
-    padding: 0
+    padding: 0,
   },
   rootReply: {
     padding: 0,
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   reference: {
     '& > p': {
-      marginBottom: theme.spacing(1)
-    }
-  }
+      marginBottom: theme.spacing(1),
+    },
+  },
 }));
 
 interface Accumulator {
@@ -98,7 +98,7 @@ const entityMap: Record<string, EntityType> = {
   Volumes: 'volume_id',
   Domains: 'domain_id',
   NodeBalancers: 'nodebalancer_id',
-  Kubernetes: 'cluster_id'
+  Kubernetes: 'cluster_id',
 };
 
 const entityIdToNameMap: Partial<Record<EntityType, string>> = {
@@ -106,7 +106,7 @@ const entityIdToNameMap: Partial<Record<EntityType, string>> = {
   volume_id: 'Volume',
   domain_id: 'Domain',
   nodebalancer_id: 'NodeBalancer',
-  cluster_id: 'Kubernetes Cluster'
+  cluster_id: 'Kubernetes Cluster',
 };
 
 const entityIdToTypeMap: Record<EntityType, string> = {
@@ -116,7 +116,7 @@ const entityIdToTypeMap: Record<EntityType, string> = {
   nodebalancer_id: 'nodeBalancers',
   cluster_id: 'kubernetesClusters',
   none: 'linodes',
-  general: 'linodes'
+  general: 'linodes',
 };
 
 export const entitiesToItems = (type: string, entities: any) => {
@@ -344,8 +344,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
           ...accumulator,
           errors: [
             ...accumulator.errors,
-            { error: newError, file: attachment.file.get('name') }
-          ]
+            { error: newError, file: attachment.file.get('name') },
+          ],
         };
       });
   };
@@ -368,7 +368,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
      *  an array of aggregated errors that may have occurred for individual uploads. */
     return Bluebird.reduce(filesWithTarget, attachFileReducer, {
       success: [],
-      errors: []
+      errors: [],
     });
   };
 
@@ -378,8 +378,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
       setErrors([
         {
           field: 'input',
-          reason: `Please select a ${entityIdToNameMap[entityType]}.`
-        }
+          reason: `Please select a ${entityIdToNameMap[entityType]}.`,
+        },
       ]);
       return;
     }
@@ -389,7 +389,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     createSupportTicket({
       description,
       summary,
-      [entityType]: Number(entityID)
+      [entityType]: Number(entityID),
     })
       .then(response => {
         setErrors(undefined);
@@ -439,7 +439,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
 
   const topicOptions = [
     { label: 'General/Account/Billing', value: 'general' },
-    ...renderEntityTypes()
+    ...renderEntityTypes(),
   ];
 
   const selectedTopic = topicOptions.find(eachTopic => {

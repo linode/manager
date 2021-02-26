@@ -1,6 +1,6 @@
 import {
   NodeBalancer,
-  NodeBalancerConfig
+  NodeBalancerConfig,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { path } from 'ramda';
@@ -24,12 +24,12 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TransferDisplay from 'src/components/TransferDisplay';
 import {
   NodeBalancerGettingStarted,
-  NodeBalancerReference
+  NodeBalancerReference,
 } from 'src/documentation';
 import { ApplicationState } from 'src/store';
 import {
   withNodeBalancerActions,
-  WithNodeBalancerActions
+  WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -60,14 +60,14 @@ const headers: HeaderCell[] = [
     label: 'Name',
     dataColumn: 'label',
     sortable: true,
-    widthPercent: 20
+    widthPercent: 20,
   },
   {
     label: 'Backend Status',
     dataColumn: 'status',
     sortable: false,
     widthPercent: 15,
-    hideOnMobile: true
+    hideOnMobile: true,
   },
   {
     label: 'Transferred',
@@ -75,7 +75,7 @@ const headers: HeaderCell[] = [
     sortable: true,
     widthPercent: 5,
     hideOnMobile: true,
-    hideOnTablet: true
+    hideOnTablet: true,
   },
   {
     label: 'Ports',
@@ -83,21 +83,21 @@ const headers: HeaderCell[] = [
     sortable: true,
     widthPercent: 5,
     hideOnMobile: true,
-    hideOnTablet: true
+    hideOnTablet: true,
   },
   {
     label: 'IP Address',
     dataColumn: 'ip',
     sortable: false,
-    widthPercent: 5
+    widthPercent: 5,
   },
   {
     label: 'Region',
     dataColumn: 'region',
     sortable: true,
     widthPercent: 5,
-    hideOnMobile: true
-  }
+    hideOnMobile: true,
+  },
 ];
 
 export class NodeBalancersLanding extends React.Component<
@@ -107,12 +107,12 @@ export class NodeBalancersLanding extends React.Component<
   static defaultDeleteConfirmDialogState = {
     submitting: false,
     open: false,
-    errors: undefined
+    errors: undefined,
   };
 
   state: State = {
     deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-    selectedNodeBalancerLabel: ''
+    selectedNodeBalancerLabel: '',
   };
 
   pollInterval: number;
@@ -148,14 +148,14 @@ export class NodeBalancersLanding extends React.Component<
       selectedNodeBalancerLabel: label,
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
-        open: !this.state.deleteConfirmDialog.open
-      }
+        open: !this.state.deleteConfirmDialog.open,
+      },
     });
   };
 
   onSubmitDelete = () => {
     const {
-      nodeBalancerActions: { deleteNodeBalancer }
+      nodeBalancerActions: { deleteNodeBalancer },
     } = this.props;
     const { selectedNodeBalancerId } = this.state;
 
@@ -167,8 +167,8 @@ export class NodeBalancersLanding extends React.Component<
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
         errors: undefined,
-        submitting: true
-      }
+        submitting: true,
+      },
     });
 
     deleteNodeBalancer({ nodeBalancerId: selectedNodeBalancerId })
@@ -176,8 +176,8 @@ export class NodeBalancersLanding extends React.Component<
         this.setState({
           deleteConfirmDialog: {
             open: false,
-            submitting: false
-          }
+            submitting: false,
+          },
         });
       })
       .catch(err => {
@@ -189,8 +189,8 @@ export class NodeBalancersLanding extends React.Component<
               errors: getAPIErrorOrDefault(
                 err,
                 'There was an error deleting this NodeBalancer.'
-              )
-            }
+              ),
+            },
           },
           () => {
             scrollErrorIntoView();
@@ -205,11 +205,11 @@ export class NodeBalancersLanding extends React.Component<
       nodeBalancersLoading,
       nodeBalancersData,
       nodeBalancersLastUpdated,
-      nodeBalancersError
+      nodeBalancersError,
     } = this.props;
 
     const {
-      deleteConfirmDialog: { open: deleteConfirmAlertOpen }
+      deleteConfirmDialog: { open: deleteConfirmAlertOpen },
     } = this.state;
 
     if (nodeBalancersError) {
@@ -230,7 +230,7 @@ export class NodeBalancersLanding extends React.Component<
       handlers: { toggleDialog: this.toggleDialog },
       loading: nodeBalancersLoading,
       error: nodeBalancersError,
-      lastUpdated: nodeBalancersLastUpdated
+      lastUpdated: nodeBalancersLastUpdated,
     };
 
     return (
@@ -244,7 +244,7 @@ export class NodeBalancersLanding extends React.Component<
         >
           {({
             preference: nodeBalancersAreGrouped,
-            togglePreference: toggleNodeBalancerGroupByTag
+            togglePreference: toggleNodeBalancerGroupByTag,
           }: ToggleProps<boolean>) => {
             return (
               <>
@@ -312,7 +312,7 @@ export class NodeBalancersLanding extends React.Component<
 
   closeConfirmationDialog = () =>
     this.setState({
-      deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState
+      deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
     });
 }
 
@@ -341,7 +341,7 @@ export const enhanced = compose<CombinedProps, {}>(
       error,
       results,
       loading: nodeBalancersLoading,
-      lastUpdated
+      lastUpdated,
     } = nodeBalancers;
 
     return {
@@ -350,7 +350,7 @@ export const enhanced = compose<CombinedProps, {}>(
       nodeBalancersError: path(['read'], error),
       // In this component we only want to show loading state on initial load
       nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0,
-      nodeBalancersLastUpdated: lastUpdated
+      nodeBalancersLastUpdated: lastUpdated,
     };
   }),
   withRouter,

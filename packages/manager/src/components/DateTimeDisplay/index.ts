@@ -1,5 +1,5 @@
 import DateTimeDisplay, {
-  Props as _DateTimeDisplayProps
+  Props as _DateTimeDisplayProps,
 } from './DateTimeDisplay';
 /* tslint:disable */
 export interface DateTimeDisplayProps extends _DateTimeDisplayProps {}

@@ -1,6 +1,6 @@
 const {
   navigateToStory,
-  executeInAllStories
+  executeInAllStories,
 } = require('../../../e2e/utils/storybook');
 
 describe('Selection Card Suite', () => {
@@ -14,7 +14,7 @@ describe('Selection Card Suite', () => {
     'Checked with SvgIcon',
     'Checked with plain SVG',
     'Checked with font Icon',
-    'Checked with no Icon'
+    'Checked with no Icon',
   ];
 
   const selectionCard = '[data-qa-selection-card]';

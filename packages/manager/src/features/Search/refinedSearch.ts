@@ -44,7 +44,7 @@ export const refinedSearch = (
       if (recursivelyTestItem(queryJSON, item)) {
         results.push({
           ...item,
-          data: { ...item.data, searchText: query } // add the original query to item.data
+          data: { ...item.data, searchText: query }, // add the original query to item.data
         });
       }
     });
@@ -164,7 +164,7 @@ export const doesSearchTermMatchItemField = (
 export const flattenSearchableItem = (item: SearchableItem) => ({
   label: item.label,
   type: item.entityType,
-  ...item.data
+  ...item.data,
 });
 
 export const ensureValueIsString = (value: string | any[]): string =>
@@ -186,7 +186,7 @@ export const getQueryInfo = (parsedQuery: any) => {
   return {
     searchTerms,
     fieldName,
-    isNegated
+    isNegated,
   };
 };
 
@@ -205,7 +205,7 @@ export const getRealEntityKey = (key: string): SearchField | string => {
     name: LABEL,
     title: LABEL,
     ip: IPS,
-    is: TYPE
+    is: TYPE,
   };
 
   return substitutions[key] || key;

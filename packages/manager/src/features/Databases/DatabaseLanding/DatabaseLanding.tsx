@@ -10,7 +10,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import TagDrawer, {
   OpenTagDrawer,
-  TagDrawerProps
+  TagDrawerProps,
 } from 'src/components/TagCell/TagDrawer';
 import { dbaasContext } from 'src/context';
 import useDatabases from 'src/hooks/useDatabases';
@@ -25,31 +25,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyStatusPillStyles,
     marginRight: theme.spacing(3),
     paddingTop: '0px !important',
-    paddingBottom: '0px !important'
+    paddingBottom: '0px !important',
   },
   chipActive: {
-    backgroundColor: theme.bg.chipActive
+    backgroundColor: theme.bg.chipActive,
   },
   chipRunning: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGreen
-    }
+      backgroundColor: theme.cmrIconColors.iGreen,
+    },
   },
   chipError: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iRed
-    }
+      backgroundColor: theme.cmrIconColors.iRed,
+    },
   },
   chipOffline: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGrey
-    }
+      backgroundColor: theme.cmrIconColors.iGrey,
+    },
   },
   chipPending: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iOrange
-    }
-  }
+      backgroundColor: theme.cmrIconColors.iOrange,
+    },
+  },
 }));
 
 const headers = [
@@ -57,13 +57,13 @@ const headers = [
     label: 'Label',
     dataColumn: 'label',
     sortable: true,
-    widthPercent: 15
+    widthPercent: 15,
   },
   {
     label: 'Status',
     dataColumn: 'status',
     sortable: true,
-    widthPercent: 10
+    widthPercent: 10,
   },
   // @todo Pending API work
   // {
@@ -98,15 +98,15 @@ const headers = [
     dataColumn: 'tags',
     sortable: false,
     widthPercent: 30,
-    hideOnMobile: true
+    hideOnMobile: true,
   },
   {
     label: 'Action Menu',
     visuallyHidden: true,
     dataColumn: '',
     sortable: false,
-    widthPercent: 5
-  }
+    widthPercent: 5,
+  },
 ];
 
 interface CombinedHandlers extends DatabaseHandlers {
@@ -127,7 +127,7 @@ const DatabaseLanding: React.FC<{}> = _ => {
     open: false,
     tags: [],
     label: '',
-    entityID: 0
+    entityID: 0,
   });
 
   const openTagDrawer: OpenTagDrawer = (
@@ -139,7 +139,7 @@ const DatabaseLanding: React.FC<{}> = _ => {
       open: true,
       tags,
       label,
-      entityID: id
+      entityID: id,
     });
 
   const closeTagDrawer = () => {
@@ -164,7 +164,7 @@ const DatabaseLanding: React.FC<{}> = _ => {
 
   const handlers: CombinedHandlers = {
     triggerDeleteDatabase: openDialog,
-    openTagDrawer
+    openTagDrawer,
   };
 
   const _DatabaseRow = {
@@ -173,7 +173,7 @@ const DatabaseLanding: React.FC<{}> = _ => {
     data: databaseData,
     loading: databases.loading,
     lastUpdated: databases.lastUpdated,
-    error: databases.error.read
+    error: databases.error.read,
   };
 
   if (databases.error.read) {
@@ -271,7 +271,7 @@ export const getChipCounts = (databases: Database[]): ChipCounts => {
     ready: groups.ready ?? [],
     error: groups.error ?? [],
     unknown: groups.unknown ?? [],
-    initializing: groups.initializing ?? []
+    initializing: groups.initializing ?? [],
   };
 };
 

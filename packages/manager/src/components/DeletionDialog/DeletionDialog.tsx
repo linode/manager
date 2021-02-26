@@ -22,8 +22,8 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   text: {
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing()
-  }
+    paddingBottom: theme.spacing(),
+  },
 }));
 
 type CombinedProps = Props;
@@ -38,7 +38,7 @@ const DeletionDialog: React.FC<CombinedProps> = props => {
     onDelete,
     open,
     loading,
-    typeToConfirm
+    typeToConfirm,
   } = props;
   const [confirmationText, setConfirmationText] = React.useState('');
   const renderActions = () => (

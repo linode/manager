@@ -10,17 +10,17 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import AccountContainer, {
-  Props as AccountProps
+  Props as AccountProps,
 } from 'src/containers/account.container';
 import withNotifications, {
-  WithNotifications
+  WithNotifications,
 } from 'src/store/notification/notification.containers';
 import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -33,13 +33,13 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     mainFormContainer: {
-      maxWidth: 860
+      maxWidth: 860,
     },
     stateZip: {
       [theme.breakpoints.up('md')]: {
-        maxWidth: `calc(415px + ${theme.spacing(2)}px)`
-      }
-    }
+        maxWidth: `calc(415px + ${theme.spacing(2)}px)`,
+      },
+    },
   });
 
 interface Props {
@@ -88,8 +88,8 @@ const L = {
     tax_id: field(['tax_id']),
     zip: field(['zip']),
     country: field(['country']),
-    state: field(['state'])
-  }
+    state: field(['state']),
+  },
 };
 
 class UpdateContactInformationForm extends React.Component<
@@ -99,7 +99,7 @@ class UpdateContactInformationForm extends React.Component<
   state: State = {
     submitting: false,
     fields: {},
-    errResponse: undefined
+    errResponse: undefined,
   };
 
   composeState = composeState;
@@ -121,7 +121,7 @@ class UpdateContactInformationForm extends React.Component<
       this.emailRef.current.focus();
       this.emailRef.current.scrollIntoView();
       this.setState({
-        fields: { ...this.state.fields, email: account?.email }
+        fields: { ...this.state.fields, email: account?.email },
       });
     }
   }
@@ -132,8 +132,8 @@ class UpdateContactInformationForm extends React.Component<
     if (prevProps.open !== open) {
       this.setState({
         fields: {
-          state: this.props.accountData?.state
-        }
+          state: this.props.accountData?.state,
+        },
       });
     }
   }
@@ -170,7 +170,7 @@ class UpdateContactInformationForm extends React.Component<
         'phone',
         'state',
         'tax_id',
-        'zip'
+        'zip',
       ],
       this.state.errResponse
     );
@@ -181,7 +181,7 @@ class UpdateContactInformationForm extends React.Component<
       (country: Country) => {
         return {
           value: country.countryShortCode,
-          label: country.countryName
+          label: country.countryName,
         };
       }
     );
@@ -230,7 +230,7 @@ class UpdateContactInformationForm extends React.Component<
             account.first_name,
             fields.first_name,
             errorMap.first_name,
-            classes
+            classes,
           ]}
         >
           <TextField
@@ -250,7 +250,7 @@ class UpdateContactInformationForm extends React.Component<
             account.last_name,
             fields.last_name,
             errorMap.last_name,
-            classes
+            classes,
           ]}
         >
           <TextField
@@ -269,7 +269,7 @@ class UpdateContactInformationForm extends React.Component<
             account.company,
             fields.company,
             errorMap.company,
-            classes
+            classes,
           ]}
         >
           <Grid container>
@@ -292,7 +292,7 @@ class UpdateContactInformationForm extends React.Component<
             account.address_1,
             fields.address_1,
             errorMap.address_1,
-            classes
+            classes,
           ]}
         >
           <TextField
@@ -311,7 +311,7 @@ class UpdateContactInformationForm extends React.Component<
             account.address_2,
             fields.address_2,
             errorMap.address_2,
-            classes
+            classes,
           ]}
         >
           <TextField
@@ -349,7 +349,7 @@ class UpdateContactInformationForm extends React.Component<
             errorMap.state,
             errorMap.zip,
             errorMap.country,
-            classes
+            classes,
           ]}
         >
           {/*
@@ -394,11 +394,11 @@ class UpdateContactInformationForm extends React.Component<
             onChange={e =>
               this.updateState({
                 label: e.target.value,
-                value: e.target.value
+                value: e.target.value,
               })
             }
             dataAttrs={{
-              'data-qa-contact-province': true
+              'data-qa-contact-province': true,
             }}
             value={fields.state || ''}
           />
@@ -422,7 +422,7 @@ class UpdateContactInformationForm extends React.Component<
             account.country,
             fields.country,
             errorMap.country,
-            classes
+            classes,
           ]}
         >
           <EnhancedSelect
@@ -439,8 +439,8 @@ class UpdateContactInformationForm extends React.Component<
             )}
             textFieldProps={{
               dataAttrs: {
-                'data-qa-contact-country': true
-              }
+                'data-qa-contact-country': true,
+              },
             }}
           />
         </Grid>
@@ -566,8 +566,8 @@ class UpdateContactInformationForm extends React.Component<
     this.setState({
       fields: {
         ...this.state.fields,
-        state: undefined
-      }
+        state: undefined,
+      },
     });
     this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
@@ -583,7 +583,7 @@ class UpdateContactInformationForm extends React.Component<
   submitForm = () => {
     this.setState({
       success: undefined,
-      submitting: true
+      submitting: true,
     });
 
     this.props
@@ -602,7 +602,7 @@ class UpdateContactInformationForm extends React.Component<
         this.setState({
           success: 'Account information updated.',
           submitting: false,
-          errResponse: undefined
+          errResponse: undefined,
         });
         this.props.onClose();
       })
@@ -610,7 +610,7 @@ class UpdateContactInformationForm extends React.Component<
         this.setState({
           submitting: false,
           success: undefined,
-          errResponse
+          errResponse,
         });
         scrollErrorIntoView();
       });

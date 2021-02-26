@@ -157,29 +157,29 @@ const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile'));
 const NodeBalancers = React.lazy(() => import('src/features/NodeBalancers'));
 const StackScripts = React.lazy(() => import('src/features/StackScripts'));
-const SupportTickets = React.lazy(
-  () => import('src/features/Support/SupportTickets')
+const SupportTickets = React.lazy(() =>
+  import('src/features/Support/SupportTickets')
 );
-const SupportTicketDetail = React.lazy(
-  () => import('src/features/Support/SupportTicketDetail')
+const SupportTicketDetail = React.lazy(() =>
+  import('src/features/Support/SupportTicketDetail')
 );
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
 const Help = React.lazy(() => import('src/features/Help'));
-const SupportSearchLanding = React.lazy(
-  () => import('src/features/Help/SupportSearchLanding')
+const SupportSearchLanding = React.lazy(() =>
+  import('src/features/Help/SupportSearchLanding')
 );
 const SearchLanding = React.lazy(() => import('src/features/Search'));
-const EventsLanding = React.lazy(
-  () => import('src/features/Events/EventsLanding')
+const EventsLanding = React.lazy(() =>
+  import('src/features/Events/EventsLanding')
 );
-const AccountActivationLanding = React.lazy(
-  () => import('src/components/AccountActivation/AccountActivationLanding')
+const AccountActivationLanding = React.lazy(() =>
+  import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const MainContent: React.FC<CombinedProps> = (props) => {
+const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const flags = useFlags();
   const { preferences } = usePreferences();
@@ -369,7 +369,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             />
                             <Route
                               path="/profile"
-                              render={(routeProps) => (
+                              render={routeProps => (
                                 <Profile
                                   {...routeProps}
                                   toggleTheme={props.toggleTheme}

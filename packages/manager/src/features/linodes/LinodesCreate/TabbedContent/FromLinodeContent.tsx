@@ -9,23 +9,23 @@ import SelectLinodePanel from '../SelectLinodePanel';
 import {
   CloneFormStateHandlers,
   ReduxStateProps,
-  WithLinodesTypesRegionsAndImages
+  WithLinodesTypesRegionsAndImages,
 } from '../types';
 import { extendLinodes } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
     [theme.breakpoints.up('md')]: {
-      maxWidth: '100%'
-    }
-  }
+      maxWidth: '100%',
+    },
+  },
 }));
 
 const errorResources = {
   type: 'A plan selection',
   region: 'region',
   label: 'A label',
-  root_pass: 'A root password'
+  root_pass: 'A root password',
 };
 
 export type CombinedProps = CloneFormStateHandlers &
@@ -41,7 +41,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = props => {
     linodesData,
     selectedLinodeID,
     typesData,
-    userCannotCreateLinode
+    userCannotCreateLinode,
   } = props;
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -88,7 +88,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = props => {
             disabled={userCannotCreateLinode}
             notice={{
               level: 'warning',
-              text: `This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.`
+              text: `This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.`,
             }}
           />
         </Grid>

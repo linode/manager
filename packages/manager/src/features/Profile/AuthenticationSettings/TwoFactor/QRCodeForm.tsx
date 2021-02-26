@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
@@ -23,13 +23,13 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     instructions: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     qrcodeContainer: {
       margin: `${theme.spacing(2)}px 0`,
       border: `5px solid #fff`,
-      display: 'inline-block'
-    }
+      display: 'inline-block',
+    },
   });
 
 interface Props {

@@ -3,7 +3,7 @@ import {
   getType,
   LinodeSpecs,
   LinodeType,
-  startMutation
+  startMutation,
 } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -15,7 +15,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -26,7 +26,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import MutateDrawer from '../MutateDrawer';
 import withMutationDrawerState, {
-  MutationDrawerProps
+  MutationDrawerProps,
 } from './mutationDrawerState';
 
 import { MBpsIntraDC } from 'src/constants';
@@ -39,9 +39,9 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       cursor: 'pointer',
       '&:hover': {
-        textDecoration: 'underline'
-      }
-    }
+        textDecoration: 'underline',
+      },
+    },
   });
 
 interface Props {
@@ -70,12 +70,12 @@ const MutationNotification: React.FC<CombinedProps> = props => {
     mutationDrawerError,
     mutationDrawerLoading,
     mutationDrawerOpen,
-    updateLinode
+    updateLinode,
   } = props;
 
   const [
     successorMetaData,
-    setSuccessorMetaData
+    setSuccessorMetaData,
   ] = React.useState<LinodeType | null>(null);
 
   React.useEffect(() => {
@@ -123,7 +123,7 @@ const MutationNotification: React.FC<CombinedProps> = props => {
         resetEventsPolling();
         updateLinode(linodeId);
         enqueueSnackbar('Linode upgrade has been initiated.', {
-          variant: 'info'
+          variant: 'info',
         });
       })
       .catch(errors => {
@@ -198,14 +198,14 @@ const MutationNotification: React.FC<CombinedProps> = props => {
           memory:
             successorMetaData.memory !== memory
               ? successorMetaData.memory
-              : null
+              : null,
         }}
         currentTypeInfo={{
           vcpus: linodeSpecs.vcpus,
           transfer: linodeSpecs.transfer,
           disk: linodeSpecs.disk,
           memory: linodeSpecs.memory,
-          network_out
+          network_out,
         }}
         initMutation={initMutation}
       />
@@ -236,7 +236,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    updateLinode: (id: number) => dispatch(requestLinodeForStore(id))
+    updateLinode: (id: number) => dispatch(requestLinodeForStore(id)),
   };
 };
 
@@ -249,7 +249,7 @@ const enhanced = compose<CombinedProps, Props>(
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeSpecs: linode.specs,
     linodeId: linode.id,
-    linodeType: linode._type
+    linodeType: linode._type,
   })),
   withMutationDrawerState,
   withSnackbar

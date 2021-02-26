@@ -5,7 +5,7 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '33%',
       [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(),
-        width: '60%'
-      }
-    }
-  }
+        width: '60%',
+      },
+    },
+  },
 }));
 
 export interface Props {
@@ -68,7 +68,7 @@ const Graphs: React.FC<CombinedProps> = props => {
     startTime,
     endTime,
     reads,
-    writes
+    writes,
   } = props;
 
   const classes = useStyles();
@@ -92,7 +92,7 @@ const Graphs: React.FC<CombinedProps> = props => {
   const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
   const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
     iFree,
-    iTotal
+    iTotal,
   ]);
 
   return (
@@ -107,14 +107,14 @@ const Graphs: React.FC<CombinedProps> = props => {
                   data: convertData(writes, startTime, endTime, formatDiskIO),
                   label: 'Write',
                   borderColor: 'transparent',
-                  backgroundColor: theme.graphs.diskIO.write
+                  backgroundColor: theme.graphs.diskIO.write,
                 },
                 {
                   data: convertData(reads, startTime, endTime, formatDiskIO),
                   label: 'Read',
                   borderColor: 'transparent',
-                  backgroundColor: theme.graphs.diskIO.read
-                }
+                  backgroundColor: theme.graphs.diskIO.read,
+                },
               ]}
               title="Disk I/O"
               showToday={isToday}
@@ -138,8 +138,8 @@ const Graphs: React.FC<CombinedProps> = props => {
                     data: convertData(_free, startTime, endTime),
                     label: 'Space',
                     borderColor: 'transparent',
-                    backgroundColor: theme.graphs.space
-                  }
+                    backgroundColor: theme.graphs.space,
+                  },
                 ]}
                 showToday={isToday}
                 title="Space"
@@ -157,8 +157,8 @@ const Graphs: React.FC<CombinedProps> = props => {
                     data: convertData(_inodes, startTime, endTime),
                     label: 'Inodes',
                     borderColor: 'transparent',
-                    backgroundColor: theme.graphs.inodes
-                  }
+                    backgroundColor: theme.graphs.inodes,
+                  },
                 ]}
                 showToday={isToday}
                 title="Inodes"

@@ -9,20 +9,20 @@ import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   editableContainer: {
-    marginLeft: -theme.spacing()
+    marginLeft: -theme.spacing(),
   },
   labelWrapper: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   crumb: {
     color: theme.cmrTextColors.tableStatic,
     fontSize: '1.125rem',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   noCap: {
-    textTransform: 'initial'
-  }
+    textTransform: 'initial',
+  },
 }));
 
 interface Props {
@@ -58,7 +58,7 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
         title={crumb}
         className={classNames({
           [classes.crumb]: true,
-          [classes.noCap]: labelOptions && labelOptions.noCap
+          [classes.noCap]: labelOptions && labelOptions.noCap,
         })}
         dataQaEl={crumb}
       />

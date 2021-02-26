@@ -8,7 +8,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type Variants =
@@ -35,14 +35,14 @@ const styles = (theme: Theme) =>
       '&:hover': {
         backgroundColor: theme.color.tagButton,
         '& $deleteButton': {
-          color: theme.color.tagIcon
-        }
+          color: theme.color.tagIcon,
+        },
       },
       '&:focus': {
         backgroundColor: theme.color.tagButton,
         '& $deleteButton': {
-          color: theme.color.tagIcon
-        }
+          color: theme.color.tagIcon,
+        },
       },
       // Targets first span (tag label)
       '& > span': {
@@ -52,11 +52,11 @@ const styles = (theme: Theme) =>
         borderRadius: 3,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
-        borderRight: `1px solid ${theme.color.tagBorder}`
+        borderRight: `1px solid ${theme.color.tagBorder}`,
       },
       '&:last-child': {
-        marginRight: 8
-      }
+        marginRight: 8,
+      },
     },
     deleteButton: {
       ...theme.applyLinkStyles,
@@ -71,85 +71,85 @@ const styles = (theme: Theme) =>
         borderRadius: 0,
         width: 15,
         height: 15,
-        color: theme.color.tagIcon
+        color: theme.color.tagIcon,
       },
       '&:hover': {
         backgroundColor: `${theme.palette.primary.main} !important`,
         color: 'white !important',
         '& svg': {
-          color: 'white'
-        }
+          color: 'white',
+        },
       },
       '&:focus': {
         backgroundColor: theme.bg.lightBlue,
-        color: theme.color.black
-      }
+        color: theme.color.black,
+      },
     },
     white: {
       backgroundColor: theme.color.white,
       '&:hover': {
-        backgroundColor: theme.color.white
-      }
+        backgroundColor: theme.color.white,
+      },
     },
     gray: {
       backgroundColor: '#939598',
       color: 'white',
       '&:hover': {
-        backgroundColor: '#939598'
-      }
+        backgroundColor: '#939598',
+      },
     },
     lightGray: {
       backgroundColor: '#C9CACB',
       color: 'white',
       '&:hover': {
-        backgroundColor: '#C9CACB'
-      }
+        backgroundColor: '#C9CACB',
+      },
     },
     blue: {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
       '&:hover': {
-        backgroundColor: theme.palette.primary.main
-      }
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     lightBlue: {
       backgroundColor: theme.color.tagButton,
       '& > span': {
         '&:hover': {
           backgroundColor: theme.palette.primary.main,
-          color: 'white'
+          color: 'white',
         },
         '&:focus': {
           backgroundColor: theme.color.tagButton,
-          color: theme.color.black
-        }
-      }
+          color: theme.color.black,
+        },
+      },
     },
     green: {
       backgroundColor: '#61CD7B',
       color: 'white',
       '&:hover': {
-        backgroundColor: '#61CD7B'
-      }
+        backgroundColor: '#61CD7B',
+      },
     },
     lightGreen: {
       backgroundColor: '#DFF3E7',
       '&:hover': {
-        backgroundColor: '#DFF3E7'
-      }
+        backgroundColor: '#DFF3E7',
+      },
     },
     yellow: {
       backgroundColor: '#F8D147',
       '&:hover': {
-        backgroundColor: '#F8D147'
-      }
+        backgroundColor: '#F8D147',
+      },
     },
     lightYellow: {
       backgroundColor: '#FCF4DD',
       '&:hover': {
-        backgroundColor: '#FCF4DD'
-      }
-    }
+        backgroundColor: '#FCF4DD',
+      },
+    },
   });
 
 export interface Props extends ChipProps {
@@ -164,7 +164,7 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
 
 class Tag extends React.Component<CombinedProps, {}> {
   static defaultProps = {
-    colorVariant: 'gray' as Variants
+    colorVariant: 'gray' as Variants,
   };
 
   handleClick = (e: React.MouseEvent<any>) => {
@@ -197,7 +197,7 @@ class Tag extends React.Component<CombinedProps, {}> {
         className={classNames({
           ...(className && { [className]: true }),
           [classes[colorVariant!]]: true,
-          [classes.root]: true
+          [classes.root]: true,
         })}
         deleteIcon={
           chipProps.onDelete ? (

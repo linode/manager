@@ -13,15 +13,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   button: {
     ...theme.applyLinkStyles,
-    display: 'flex'
+    display: 'flex',
   },
   text: {
-    fontSize: '1rem'
-  }
+    fontSize: '1rem',
+  },
 }));
 
 interface Props {

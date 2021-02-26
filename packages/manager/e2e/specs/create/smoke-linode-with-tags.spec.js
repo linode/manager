@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   apiDeleteAllLinodes,
-  waitForLinodeStatus
+  waitForLinodeStatus,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';

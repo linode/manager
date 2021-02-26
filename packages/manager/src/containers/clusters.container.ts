@@ -12,5 +12,5 @@ export interface StateProps {
 export default connect((state: ApplicationState) => ({
   clustersData: state.__resources.clusters.entities,
   clustersLoading: state.__resources.clusters.loading,
-  clustersError: state.__resources.clusters.error
+  clustersError: state.__resources.clusters.error,
 }));

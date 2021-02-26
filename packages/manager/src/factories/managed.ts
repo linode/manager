@@ -2,13 +2,13 @@ import * as Factory from 'factory.ts';
 import {
   ManagedCredential,
   ManagedServiceMonitor,
-  ManagedStatsData
+  ManagedStatsData,
 } from '@linode/api-v4/lib/managed/types';
 
 export const credentialFactory = Factory.Sync.makeFactory<ManagedCredential>({
   id: Factory.each(i => i),
   last_decrypted: '2019-07-01',
-  label: 'credential-1'
+  label: 'credential-1',
 });
 
 export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
@@ -24,7 +24,7 @@ export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
   id: Factory.each(i => i),
   credentials: credentialFactory.buildList(3),
   address: 'http://www.example.com',
-  body: ''
+  body: '',
 });
 
 export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStatsData>({
@@ -32,5 +32,5 @@ export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStatsData>({
   disk: [],
   net_in: [],
   net_out: [],
-  swap: []
+  swap: [],
 });

@@ -14,17 +14,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `${theme.spacing(3)}px 0 ${theme.spacing(2)}px`,
     width: '100%',
     [theme.breakpoints.down('sm')]: {
-      alignItems: 'flex-end'
+      alignItems: 'flex-end',
     },
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       marginTop: theme.spacing(),
       marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2)
-    }
+      marginRight: theme.spacing(2),
+    },
   },
   reviewDetails: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   labelWrapper: {
     margin: 0,
@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   label: {
     color: theme.cmrTextColors.headlineStatic,
@@ -42,45 +42,45 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     [theme.breakpoints.down('sm')]: {
       marginBottom: 4,
-      marginLeft: 0
-    }
+      marginLeft: 0,
+    },
   },
   transferInputWrapper: {
     [theme.breakpoints.down('xs')]: {
       width: 'calc(100% - 16px)',
       '& > div': {
-        flexGrow: 1
-      }
-    }
+        flexGrow: 1,
+      },
+    },
   },
   transferInput: {
     width: 360,
     [theme.breakpoints.down('md')]: {
-      width: 220
+      width: 220,
     },
     [theme.breakpoints.down('sm')]: {
-      width: 240
+      width: 240,
     },
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   helpIcon: {
-    color: theme.color.grey1
+    color: theme.color.grey1,
   },
   makeTransfer: {
     [theme.breakpoints.up('md')]: {
       '&.MuiGrid-item': {
-        paddingRight: 0
-      }
+        paddingRight: 0,
+      },
     },
     [theme.breakpoints.down('xs')]: {
       margin: 0,
       width: '100%',
       '&.MuiGrid-item': {
-        padding: 0
-      }
-    }
+        padding: 0,
+      },
+    },
   },
   makeTransferButton: {
     minWidth: 152,
@@ -89,9 +89,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: 0,
       marginTop: theme.spacing(),
       marginBottom: theme.spacing(),
-      width: 'calc(100% - 32px)'
-    }
-  }
+      width: 'calc(100% - 32px)',
+    },
+  },
 }));
 
 export const TransferControls: React.FC<{}> = _ => {

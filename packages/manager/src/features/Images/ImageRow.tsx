@@ -14,27 +14,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     width: '30%',
     [theme.breakpoints.down('sm')]: {
-      width: '45%'
+      width: '45%',
     },
     [theme.breakpoints.down('xs')]: {
-      width: '65%'
-    }
+      width: '65%',
+    },
   },
   size: {
     [theme.breakpoints.down('sm')]: {
-      width: '15%'
+      width: '15%',
     },
     [theme.breakpoints.down('xs')]: {
-      width: '20%'
-    }
+      width: '20%',
+    },
   },
   loadingStatus: {
-    marginBottom: theme.spacing() / 2
+    marginBottom: theme.spacing() / 2,
   },
   actionMenu: {
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 }));
 
 export interface ImageWithEvent extends Image {

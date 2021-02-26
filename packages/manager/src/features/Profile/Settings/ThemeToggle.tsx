@@ -29,7 +29,7 @@ export const ThemeToggle: React.FC<CombinedProps> = props => {
         onChange={toggle}
         checked={themeName !== 'lightTheme'}
         className={classNames({
-          [themeName]: true
+          [themeName]: true,
         })}
         aria-label="Switch Theme"
       />

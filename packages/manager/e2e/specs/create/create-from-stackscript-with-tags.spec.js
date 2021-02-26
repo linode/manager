@@ -6,7 +6,7 @@ import ConfigureLinode from '../../pageobjects/configure-linode';
 import {
   apiDeleteAllLinodes,
   timestamp,
-  waitForLinodeStatus
+  waitForLinodeStatus,
 } from '../../utils/common';
 
 describe('Create Linode From StackScript - Tags Suite', () => {
@@ -15,7 +15,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     label: `${new Date().getTime()}-MyStackScript`,
     description: 'test stackscript example',
     revisionNote: new Date().getTime(),
-    script: 'bad script'
+    script: 'bad script',
   };
 
   beforeAll(() => {

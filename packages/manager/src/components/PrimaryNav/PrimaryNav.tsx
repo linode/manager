@@ -67,7 +67,7 @@ export interface Props {
   isCollapsed: boolean;
 }
 
-export const PrimaryNav: React.FC<Props> = (props) => {
+export const PrimaryNav: React.FC<Props> = props => {
   const { closeMenu, isCollapsed } = props;
   const classes = useStyles();
 
@@ -115,7 +115,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
   ]);
 
   const clusterIds = objectStorageClusters.entities.map(
-    (thisCluster) => thisCluster.id
+    thisCluster => thisCluster.id
   );
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
@@ -272,14 +272,14 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         })}
       >
         {primaryLinkGroups.map((thisGroup, idx) => {
-          const filteredLinks = thisGroup.filter((thisLink) => !thisLink.hide);
+          const filteredLinks = thisGroup.filter(thisLink => !thisLink.hide);
           if (filteredLinks.length === 0) {
             return null;
           }
           return (
             <div key={idx}>
               <Divider className={classes.divider} />
-              {filteredLinks.map((thisLink) => {
+              {filteredLinks.map(thisLink => {
                 const props = {
                   key: thisLink.display,
                   closeMenu,
@@ -327,7 +327,7 @@ interface PrimaryLinkProps extends PrimaryLink {
   };
 }
 
-const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
+const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
   const classes = useStyles();
 
   const {
@@ -394,9 +394,8 @@ interface PrefetchPrimaryLinkProps {
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<
-  PrimaryLinkProps & PrefetchPrimaryLinkProps
-> = React.memo((props) => {
+export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
+  PrefetchPrimaryLinkProps> = React.memo(props => {
   const { makeRequest, cancelRequest } = usePrefetch(
     props.prefetchRequestFn,
     props.prefetchRequestCondition

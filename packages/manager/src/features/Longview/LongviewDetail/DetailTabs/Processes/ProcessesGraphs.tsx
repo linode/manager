@@ -4,38 +4,38 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   LongviewProcesses,
-  WithStartAndEnd
+  WithStartAndEnd,
 } from 'src/features/Longview/request.types';
 import {
   convertData,
-  formatMemory
+  formatMemory,
 } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
 import useFlags from 'src/hooks/useFlags';
 import {
   convertBytesToTarget,
-  readableBytes
+  readableBytes,
 } from 'src/utilities/unitConversions';
 import { Process } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1) + 2,
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   graphWrap: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
-  }
+      marginLeft: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -64,7 +64,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
     timezone,
     isToday,
     time,
-    theme
+    theme,
   } = props;
 
   const { start, end } = time;
@@ -99,14 +99,14 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
   const _convertData = React.useCallback(convertData, [
     processesData,
     start,
-    end
+    end,
   ]);
 
   const commonGraphProps = {
     timezone,
     showToday: isToday,
     loading: processesLoading,
-    error
+    error,
   };
 
   return (
@@ -124,8 +124,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
               data: _convertData(cpu, start, end),
               label: 'CPU',
               borderColor: 'transparent',
-              backgroundColor: theme.graphs.cpu.system
-            }
+              backgroundColor: theme.graphs.cpu.system,
+            },
           ]}
           {...commonGraphProps}
         />
@@ -140,8 +140,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
                 data: _convertData(memory, start, end, formatMemory),
                 label: 'RAM',
                 borderColor: 'transparent',
-                backgroundColor: theme.graphs.memory.used
-              }
+                backgroundColor: theme.graphs.memory.used,
+              },
             ]}
             {...commonGraphProps}
           />
@@ -155,8 +155,8 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
                 data: _convertData(count, start, end, formatCount),
                 label: 'Count',
                 borderColor: 'transparent',
-                backgroundColor: theme.graphs.processCount
-              }
+                backgroundColor: theme.graphs.processCount,
+              },
             ]}
             {...commonGraphProps}
           />
@@ -174,14 +174,14 @@ const ProcessesGraphs: React.FC<CombinedProps> = props => {
                 label: 'Write',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.diskIO.write,
-                data: _convertData(iowritekbytes, start, end, formatDisk)
+                data: _convertData(iowritekbytes, start, end, formatDisk),
               },
               {
                 label: 'Read',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.diskIO.read,
-                data: _convertData(ioreadkbytes, start, end, formatDisk)
-              }
+                data: _convertData(ioreadkbytes, start, end, formatDisk),
+              },
             ]}
             {...commonGraphProps}
           />

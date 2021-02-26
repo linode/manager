@@ -19,7 +19,7 @@ const LongviewListRows: React.FC<CombinedProps> = props => {
   const {
     longviewClientsData,
     openPackageDrawer,
-    triggerDeleteLongviewClient
+    triggerDeleteLongviewClient,
   } = props;
 
   return (

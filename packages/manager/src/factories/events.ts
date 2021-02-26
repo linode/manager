@@ -6,7 +6,7 @@ export const entityFactory = Factory.Sync.makeFactory<Entity>({
   id: Factory.each(id => id),
   label: Factory.each(i => `event-entity-${i}`),
   type: 'linode',
-  url: 'https://www.example.com'
+  url: 'https://www.example.com',
 });
 
 export const eventFactory = Factory.Sync.makeFactory<Event>({
@@ -23,5 +23,5 @@ export const eventFactory = Factory.Sync.makeFactory<Event>({
   percent_complete: 10,
   time_remaining: null,
   duration: 0,
-  message: null
+  message: null,
 });

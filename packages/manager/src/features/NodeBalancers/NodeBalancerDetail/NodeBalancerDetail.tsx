@@ -90,7 +90,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         this.setState({ nodeBalancer });
         this.props.clearLoadingAndErrors();
       })
-      .catch((error) => {
+      .catch(error => {
         if (!this.state.nodeBalancer) {
           this.props.setErrorAndClearLoading(
             getErrorStringOrDefault(
@@ -144,7 +144,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           labelInput: label,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState(
           () => ({
             ApiError: getAPIErrorOrDefault(
@@ -179,7 +179,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           ApiError: undefined,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         const ApiError = getAPIErrorOrDefault(error, 'Error creating tag');
         this.setState({
           ApiError,
@@ -298,7 +298,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           {errorMap.none && <Notice error text={errorMap.none} />}
           <Tabs
             index={Math.max(
-              this.tabs.findIndex((tab) => matches(tab.routeName)),
+              this.tabs.findIndex(tab => matches(tab.routeName)),
               0
             )}
             onChange={navToURL}

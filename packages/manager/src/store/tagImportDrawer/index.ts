@@ -9,7 +9,7 @@ import { ApplicationState } from 'src/store';
 import { updateDomain } from 'src/store/domains/domains.requests';
 import { updateLinode } from 'src/store/linodes/linode.requests';
 import getEntitiesWithGroupsToImport, {
-  GroupImportProps
+  GroupImportProps,
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { ThunkActionCreator } from 'src/store/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -49,7 +49,7 @@ export const defaultState: State = {
   open: false,
   errors: [],
   loading: false,
-  success: false
+  success: false,
 };
 
 export const tagImportDrawer: Reducer<State> = (
@@ -127,7 +127,7 @@ const createAccumulator = <T extends Linode | Domain>(
   return dispatch(action)
     .then((updatedEntity: T) => ({
       ...accumulator,
-      success: [...accumulator.success, updatedEntity]
+      success: [...accumulator.success, updatedEntity],
     }))
     .catch(error => {
       const reason = getErrorStringOrDefault(error, 'Error adding tag.');
@@ -135,8 +135,8 @@ const createAccumulator = <T extends Linode | Domain>(
         ...accumulator,
         errors: [
           ...accumulator.errors,
-          { entityId: entity.id, reason, entityLabel: entity.label }
-        ]
+          { entityId: entity.id, reason, entityLabel: entity.label },
+        ],
       };
     });
 };
@@ -187,11 +187,11 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
   Bluebird.join(
     Bluebird.reduce(entities.linodes, linodeAccumulator, {
       success: [],
-      errors: []
+      errors: [],
     }),
     Bluebird.reduce(entities.domains, domainAccumulator, {
       success: [],
-      errors: []
+      errors: [],
     }),
     dispatch,
     handleAccumulatedResponsesAndErrors
@@ -204,9 +204,9 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
         error: [
           {
             entityId: 0,
-            reason: 'There was an error importing your display groups.'
-          }
-        ]
+            reason: 'There was an error importing your display groups.',
+          },
+        ],
       })
     )
   );

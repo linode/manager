@@ -18,14 +18,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   tableCell: {
     paddingTop: 0,
-    paddingBottom: 0
+    paddingBottom: 0,
   },
   labelCol: {
-    width: '65%'
+    width: '65%',
   },
   sizeCol: {
-    width: '35%'
-  }
+    width: '35%',
+  },
 }));
 
 export interface Props {
@@ -48,7 +48,7 @@ export const Disks: React.FC<Props> = props => {
         handlePageSizeChange,
         page,
         pageSize,
-        count
+        count,
       }) => {
         return (
           <React.Fragment>

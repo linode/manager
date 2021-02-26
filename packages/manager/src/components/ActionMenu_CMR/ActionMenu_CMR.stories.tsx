@@ -12,20 +12,20 @@ class StoryActionMenu extends React.Component<CombinedProps> {
   actions: Action[] = [
     {
       title: 'First Action',
-      onClick: () => null
+      onClick: () => null,
     },
     {
       title: 'Action 1',
-      onClick: () => null
+      onClick: () => null,
     },
     {
       title: 'Action 3',
-      onClick: () => null
+      onClick: () => null,
     },
     {
       title: 'Last Action',
-      onClick: () => null
-    }
+      onClick: () => null,
+    },
   ];
 
   render() {
@@ -37,18 +37,18 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
   actions: Action[] = [
     {
       title: 'First Action',
-      onClick: () => null
+      onClick: () => null,
     },
     {
       title: 'Another Action',
-      onClick: () => null
+      onClick: () => null,
     },
     {
       title: 'Disabled Action',
       disabled: true,
       onClick: () => null,
-      tooltip: 'An explanation as to why this item is disabled'
-    }
+      tooltip: 'An explanation as to why this item is disabled',
+    },
   ];
 
   render() {
@@ -60,8 +60,8 @@ class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
   actions: Action[] = [
     {
       title: 'Single Action',
-      onClick: () => null
-    }
+      onClick: () => null,
+    },
   ];
 
   render() {

@@ -7,18 +7,18 @@ import EditableInput from './EditableInput';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: 40
+    minHeight: 40,
   },
   icon: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   smallInput: {
     position: 'relative',
     paddingRight: 20,
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-all',
-    fontSize: 15
-  }
+    fontSize: 15,
+  },
 }));
 
 interface Props {

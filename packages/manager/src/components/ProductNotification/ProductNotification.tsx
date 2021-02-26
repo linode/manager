@@ -18,7 +18,7 @@ const ProductNotifications: React.FC<CombinedProps> = props => {
 const severityLevelMap = {
   minor: 'warning',
   major: 'warning',
-  critical: 'error'
+  critical: 'error',
 };
 
 export default ProductNotifications;

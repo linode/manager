@@ -165,7 +165,7 @@ export const defaultState: CloneLandingState = {
   configSelection: {},
   diskSelection: {},
   selectedLinodeId: null,
-  isSubmitting: false
+  isSubmitting: false,
 };
 
 // Returns an array of IDs of configs/disks that are selected.
@@ -207,7 +207,7 @@ export const createConfigDiskSelection = (
 
     configSelection[eachConfig.id] = {
       isSelected,
-      associatedDiskIds
+      associatedDiskIds,
     };
   });
 
@@ -220,7 +220,7 @@ export const createConfigDiskSelection = (
 
     diskSelection[eachDisk.id] = {
       isSelected,
-      associatedConfigIds
+      associatedConfigIds,
     };
   });
 
@@ -302,7 +302,7 @@ export const getEstimatedCloneTime = (
   // Adding a few seconds avoids this problem
   const then = now.plus({
     minutes: estimatedTimeInMinutes,
-    seconds: estimatedTimeInMinutes > 0 ? 1 : 0 // in case less than 1 min
+    seconds: estimatedTimeInMinutes > 0 ? 1 : 0, // in case less than 1 min
   });
   let humanizedEstimate = then.toRelative(now.toObject());
   const prefixHumanized = 'in ';

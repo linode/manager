@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -15,7 +15,7 @@ import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
-  MIN_PAGE_SIZE
+  MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     tagGridRow: {
-      marginBottom: 20
+      marginBottom: 20,
     },
     tagHeaderRow: {
       backgroundColor: theme.bg.main,
@@ -54,42 +54,42 @@ const styles = (theme: Theme) =>
         // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
         padding: `${theme.spacing(2) + 4}px 0 ${theme.spacing(1) + 2}px`,
         borderBottom: 'none',
-        borderTop: 'none'
-      }
+        borderTop: 'none',
+      },
     },
     groupContainer: {
       [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
           padding: '10px 0',
-          borderTop: 'none'
-        }
-      }
+          borderTop: 'none',
+        },
+      },
     },
     tagHeader: {
       marginBottom: 2,
-      marginLeft: theme.spacing()
+      marginLeft: theme.spacing(),
     },
     tagHeaderOuter: {},
     paginationCell: {
       paddingTop: 2,
       '& div:first-child': {
-        marginTop: 0
-      }
+        marginTop: 0,
+      },
     },
     controlHeader: {
       marginBottom: 28,
       display: 'flex',
       justifyContent: 'flex-end',
-      backgroundColor: theme.cmrBGColors.bgTableHeader
+      backgroundColor: theme.cmrBGColors.bgTableHeader,
     },
     toggleButton: {
       color: '#d2d3d4',
       padding: 10,
       '&:focus': {
         // Browser default until we get styling direction for focus states
-        outline: '1px dotted #999'
-      }
-    }
+        outline: '1px dotted #999',
+      },
+    },
   });
 
 interface Props {
@@ -139,7 +139,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
     orderBy,
     someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
     dataLength,
-    isVLAN
+    isVLAN,
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -232,7 +232,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                   handlePageSizeChange,
                   page,
                   pageSize,
-                  count
+                  count,
                 }) => {
                   const finalProps = {
                     ...rest,
@@ -244,7 +244,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                     handleOrderChange,
                     order,
                     orderBy,
-                    isVLAN
+                    isVLAN,
                   };
                   return (
                     <React.Fragment>
@@ -299,7 +299,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                   handlePageSizeChange,
                   page,
                   pageSize,
-                  count
+                  count,
                 }) => {
                   const finalProps = {
                     ...rest,
@@ -311,7 +311,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = props => {
                     handleOrderChange,
                     order,
                     orderBy,
-                    isVLAN
+                    isVLAN,
                   };
                   return (
                     <TableBody

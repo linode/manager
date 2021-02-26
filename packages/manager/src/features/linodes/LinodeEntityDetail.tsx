@@ -15,7 +15,7 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
@@ -43,12 +43,12 @@ import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 import withRecentEvent, {
-  WithRecentEvent
+  WithRecentEvent,
 } from './LinodesLanding/withRecentEvent';
 import {
   getProgressOrDefault,
   isEventWithSecondaryLinodeStatus,
-  transitionText as _transitionText
+  transitionText as _transitionText,
 } from './transitions';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
@@ -88,7 +88,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
     isDetailLanding,
     openTagDrawer,
     openNotificationDrawer,
-    recentEvent
+    recentEvent,
   } = props;
 
   useReduxLoad(['images', 'types']);
@@ -205,71 +205,71 @@ export interface HeaderProps {
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgPaper
+    backgroundColor: theme.cmrBGColors.bgPaper,
   },
   linodeLabel: {
     color: theme.cmrTextColors.linkActiveLight,
     marginLeft: theme.spacing(),
     '&:hover': {
       color: theme.palette.primary.light,
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   body: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     padding: 0,
-    width: '100%'
+    width: '100%',
   },
   chipWrapper: {
     [theme.breakpoints.up('sm')]: {
       '&.MuiGrid-item': {
-        marginTop: 2
-      }
-    }
+        marginTop: 2,
+      },
+    },
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
     borderRadius: 0,
     height: `24px !important`,
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   statusChipLandingDetailView: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   statusRunning: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGreen
-    }
+      backgroundColor: theme.cmrIconColors.iGreen,
+    },
   },
   statusOffline: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGrey
-    }
+      backgroundColor: theme.cmrIconColors.iGrey,
+    },
   },
   statusOther: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iOrange
-    }
+      backgroundColor: theme.cmrIconColors.iOrange,
+    },
   },
   divider: {
     borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
-    paddingRight: `16px !important`
+    paddingRight: `16px !important`,
   },
   actionItemsOuter: {
     display: 'flex',
     alignItems: 'center',
     '&.MuiGrid-item': {
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   actionItem: {
     '&:focus': {
-      outline: '1px dotted #999'
-    }
+      outline: '1px dotted #999',
+    },
   },
   statusLink: {
     backgroundColor: 'transparent',
@@ -278,9 +278,9 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     '& p': {
       color: theme.palette.primary.main,
-      fontFamily: theme.font.bold
-    }
-  }
+      fontFamily: theme.font.bold,
+    },
+  },
 }));
 
 const Header: React.FC<HeaderProps> = props => {
@@ -300,7 +300,7 @@ const Header: React.FC<HeaderProps> = props => {
     isDetailLanding,
     progress,
     transitionText,
-    openNotificationDrawer
+    openNotificationDrawer,
   } = props;
 
   const isDetails = variant === 'details';
@@ -355,7 +355,7 @@ const Header: React.FC<HeaderProps> = props => {
                   [classes.statusOffline]: isOffline,
                   [classes.statusOther]: isOther,
                   [classes.divider]: hasSecondaryStatus,
-                  statusOtherDetail: isOther
+                  statusOtherDetail: isOther,
                 })}
                 label={formattedStatus}
                 component="span"
@@ -465,33 +465,33 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   body: {
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
   columnLabel: {
     color: theme.cmrTextColors.headlineStatic,
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
   },
   summaryContainer: {
-    flexBasis: '25%'
+    flexBasis: '25%',
   },
   summaryContent: {
     '& > div': {
       flexBasis: '50%',
       [theme.breakpoints.down('sm')]: {
-        flexBasis: '100%'
-      }
+        flexBasis: '100%',
+      },
     },
     '& p': {
-      color: theme.cmrTextColors.tableStatic
-    }
+      color: theme.cmrTextColors.tableStatic,
+    },
   },
   rightColumn: {
     flexBasis: '75%',
     flexWrap: 'nowrap',
     [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column'
-    }
-  }
+      flexDirection: 'column',
+    },
+  },
 }));
 
 export const Body: React.FC<BodyProps> = React.memo(props => {
@@ -506,7 +506,7 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
     username,
     linodeLabel,
     linodeId,
-    numVolumes
+    numVolumes,
   } = props;
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
@@ -579,8 +579,8 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
             { heading: 'SSH Access', text: sshLink(ipv4[0]) },
             {
               heading: 'LISH Console via SSH',
-              text: lishLink(username, region, linodeLabel)
-            }
+              text: lishLink(username, region, linodeLabel),
+            },
           ]}
           gridProps={{ md: 7 }}
         />
@@ -597,18 +597,18 @@ export const Body: React.FC<BodyProps> = React.memo(props => {
 const useAccessTableStyles = makeStyles((theme: Theme) => ({
   columnLabel: {
     color: theme.cmrTextColors.headlineStatic,
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
   },
   accessTableContent: {
     '&.MuiGrid-item': {
       padding: 0,
-      paddingLeft: theme.spacing()
-    }
+      paddingLeft: theme.spacing(),
+    },
   },
   accessTable: {
     tableLayout: 'fixed',
     '& tr': {
-      height: 32
+      height: 32,
     },
     '& th': {
       backgroundColor: theme.cmrBGColors.bgApp,
@@ -620,7 +620,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(),
       textAlign: 'left',
       whiteSpace: 'nowrap',
-      width: 170
+      width: 170,
     },
     '& td': {
       backgroundColor: theme.cmrBGColors.bgAccessRow,
@@ -629,13 +629,13 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       fontSize: '0.875rem',
       lineHeight: 1,
       padding: theme.spacing(),
-      whiteSpace: 'nowrap'
-    }
+      whiteSpace: 'nowrap',
+    },
   },
   code: {
     color: theme.cmrTextColors.tableStatic,
     fontFamily: '"SourceCodePro", monospace, sans-serif',
-    position: 'relative'
+    position: 'relative',
   },
   copyCell: {
     width: 36,
@@ -646,15 +646,15 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: 16,
       height: 16,
       '& path': {
-        fill: theme.cmrBorderColors.borderBalance
-      }
+        fill: theme.cmrBorderColors.borderBalance,
+      },
     },
     '& button': {
-      padding: 0
+      padding: 0,
     },
     '&:last-child': {
-      paddingRight: theme.spacing()
-    }
+      paddingRight: theme.spacing(),
+    },
   },
   copyButton: {
     display: 'flex',
@@ -663,8 +663,8 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     height: '100%',
     '&:hover': {
-      backgroundColor: 'transparent'
-    }
+      backgroundColor: 'transparent',
+    },
   },
   gradient: {
     overflowY: 'hidden', // For Edge
@@ -677,9 +677,9 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       right: 0,
       bottom: 0,
-      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`
-    }
-  }
+      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`,
+    },
+  },
 }));
 
 interface AccessTableRow {
@@ -748,30 +748,30 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   details: {
     flexWrap: 'nowrap',
     '&.MuiGrid-item': {
-      paddingRight: 0
+      paddingRight: 0,
     },
     [theme.breakpoints.up(1400)]: {
       flexBasis: '66.67%',
       flexGrow: 0,
-      maxWidth: '66.67%'
+      maxWidth: '66.67%',
     },
     [theme.breakpoints.down(1400)]: {
       marginTop: 0,
-      marginBottom: 0
+      marginBottom: 0,
     },
     [theme.breakpoints.down('sm')]: {
       alignItems: 'stretch',
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   },
   detailRow: {
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
       '&:first-of-type': {
-        paddingBottom: theme.spacing(0.5)
-      }
-    }
+        paddingBottom: theme.spacing(0.5),
+      },
+    },
   },
   listItem: {
     display: 'flex',
@@ -781,36 +781,36 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       flex: '50%',
       borderRight: 'none',
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   listItemLast: {
     borderRight: 'none',
-    paddingRight: 0
+    paddingRight: 0,
   },
   label: {
     fontFamily: theme.font.bold,
-    marginRight: 4
+    marginRight: 4,
   },
   tags: {
     [theme.breakpoints.up(1400)]: {
       flexBasis: '33.33%',
       flexGrow: 0,
-      maxWidth: '33.33%'
+      maxWidth: '33.33%',
     },
     [theme.breakpoints.down(1400)]: {
       marginLeft: theme.spacing(),
       '& > div': {
         flexDirection: 'row-reverse',
         '& > button': {
-          marginRight: 4
+          marginRight: 4,
         },
         '& > div': {
-          justifyContent: 'flex-start !important'
-        }
-      }
-    }
-  }
+          justifyContent: 'flex-start !important',
+        },
+      },
+    },
+  },
 }));
 
 export const Footer: React.FC<FooterProps> = React.memo(props => {
@@ -824,7 +824,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
     linodeId,
     linodeCreated,
     linodeTags,
-    openTagDrawer
+    openTagDrawer,
   } = props;
 
   const { updateLinode } = useLinodeActions();
@@ -835,7 +835,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
       const newTags = [...linodeTags, tag];
       updateLinode({ linodeId, tags: newTags }).catch(e =>
         enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error'
+          variant: 'error',
         })
       );
     },
@@ -849,7 +849,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
           {
-            variant: 'error'
+            variant: 'error',
           }
         )
       );
@@ -876,7 +876,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
             <Typography
               className={classnames({
                 [classes.listItem]: true,
-                [classes.listItemLast]: matchesSmDown
+                [classes.listItemLast]: matchesSmDown,
               })}
             >
               <span className={classes.label}>Region:</span>{' '}

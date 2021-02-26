@@ -17,16 +17,16 @@ import { OpenAccessDrawer } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
-    width: '35%'
+    width: '35%',
   },
   copyIcon: {
     marginLeft: theme.spacing(),
     '& svg': {
       top: 1,
       width: 12,
-      height: 12
-    }
-  }
+      height: 12,
+    },
+  },
 }));
 
 interface Props {
@@ -44,7 +44,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = props => {
     error,
     isRestrictedUser,
     openRevokeDialog,
-    openDrawer
+    openDrawer,
   } = props;
 
   const classes = useStyles();

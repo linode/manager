@@ -15,15 +15,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(),
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   rootHeaderOnly: {
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.up('sm')]: {
-      flexBasis: '100%'
-    }
-  }
+      flexBasis: '100%',
+    },
+  },
 }));
 
 export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {

@@ -26,15 +26,15 @@ describe('deepStringTransform utility function', () => {
       key1: 'Hello',
       key2: {
         key3: 'World',
-        key4: true
-      }
+        key4: true,
+      },
     };
     expect(_deepStringTransform(input)).toEqual({
       key1: 'HELLO',
       key2: {
         key3: 'WORLD',
-        key4: true
-      }
+        key4: true,
+      },
     });
   });
 });

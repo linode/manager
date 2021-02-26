@@ -5,7 +5,7 @@ jest.mock('./usePageVisibility', () => ({
   default: jest
     .fn()
     .mockReturnValueOnce(true)
-    .mockReturnValueOnce(false)
+    .mockReturnValueOnce(false),
 }));
 
 const f1 = jest.fn();

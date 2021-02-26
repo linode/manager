@@ -22,8 +22,8 @@ export const getAll = (path: string) => {
     method: 'GET',
     url: `${apiroot}${path}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -32,8 +32,8 @@ export const getAllBeta = (path: string) => {
     method: 'GET',
     url: `${apirootBeta}${path}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -42,8 +42,8 @@ export const deleteById = (path: string, id: number) => {
     method: 'DELETE',
     url: `${apiroot}${path}/${id}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -52,8 +52,8 @@ export const deleteByIdBeta = (path: string, id: number) => {
     method: 'DELETE',
     url: `${apirootBeta}${path}/${id}`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 

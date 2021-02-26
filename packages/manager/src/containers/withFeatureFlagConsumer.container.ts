@@ -32,8 +32,8 @@ export const withFeatureFlagConsumer = (
           // @todo: clean up all conditional logic based on this flag.
           cmr: true,
           // Mock flags from Redux.
-          ...this.props.mockFlags
-        }
+          ...this.props.mockFlags,
+        },
       });
     }
   }
@@ -51,7 +51,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  mockFlags: state.mockFeatureFlags
+  mockFlags: state.mockFeatureFlags,
 });
 
 const connected = connect(mapStateToProps);

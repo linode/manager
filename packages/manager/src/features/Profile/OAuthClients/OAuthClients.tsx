@@ -4,7 +4,7 @@ import {
   getOAuthClients,
   OAuthClient,
   resetOAuthClientSecret,
-  updateOAuthClient
+  updateOAuthClient,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -16,7 +16,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -46,20 +46,20 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: theme.color.white,
-      width: '100%'
+      width: '100%',
     },
     headline: {
-      marginLeft: 15
+      marginLeft: 15,
     },
     addNewWrapper: {
       '&.MuiGrid-item': {
-        padding: 5
-      }
+        padding: 5,
+      },
     },
     actionCell: {
       display: 'flex',
-      justifyContent: 'flex-end'
-    }
+      justifyContent: 'flex-end',
+    },
   });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -100,17 +100,17 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     drawerIsInEditMode: false,
     isResetting: false,
     isDeleting: false,
-    drawerLoading: false
+    drawerLoading: false,
   };
 
   mounted: boolean = false;
 
   state: State = {
-    ...this.defaultState
+    ...this.defaultState,
   };
 
   static defaultProps = {
-    data: []
+    data: [],
   };
 
   static docs = [LinodeAPI];
@@ -120,7 +120,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       secretModalOpen: true,
       modalErrors: undefined,
       clientLabel: label,
-      clientID: id
+      clientID: id,
     });
 
   openDeleteModal = (id: string, label: string) =>
@@ -128,14 +128,14 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       deleteModalOpen: true,
       modalErrors: undefined,
       clientID: id,
-      clientLabel: label
+      clientLabel: label,
     });
 
   closeModals = () =>
     this.setState({
       deleteModalOpen: false,
       secretModalOpen: false,
-      secretModalSuccessOpen: false
+      secretModalSuccessOpen: false,
     });
 
   openDrawer = (isEditMode: boolean = false) => (
@@ -151,7 +151,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       redirectUri,
       clientLabel: label,
       clientID,
-      isPublic
+      isPublic,
     });
   };
 
@@ -162,14 +162,14 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       return this.setState({
         modalErrors: [
           {
-            reason: 'Something went wrong.'
-          }
-        ]
+            reason: 'Something went wrong.',
+          },
+        ],
       });
     }
     this.setState({
       modalErrors: undefined,
-      isDeleting: true
+      isDeleting: true,
     });
     deleteOAuthClient(id)
       .then(() => {
@@ -186,15 +186,15 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       return this.setState({
         modalErrors: [
           {
-            reason: 'Something went wrong.'
-          }
-        ]
+            reason: 'Something went wrong.',
+          },
+        ],
       });
     }
 
     this.setState({
       modalErrors: undefined,
-      isResetting: true
+      isResetting: true,
     });
     resetOAuthClientSecret(id)
       .then(({ secret }) => {
@@ -206,7 +206,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           ...this.defaultState,
           secret,
           secretModalSuccessOpen: true,
-          isResetting: false
+          isResetting: false,
         });
       })
       .catch((e: APIError[]) => {
@@ -216,13 +216,13 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
   createClient = () => {
     this.setState({
-      drawerLoading: true
+      drawerLoading: true,
     });
 
     createOAuthClient({
       label: this.state.clientLabel,
       redirect_uri: this.state.redirectUri,
-      public: this.state.isPublic
+      public: this.state.isPublic,
     })
       .then(data => {
         if (!this.mounted) {
@@ -231,7 +231,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         return this.setState({
           ...this.defaultState,
           secretModalSuccessOpen: true,
-          secret: data.secret
+          secret: data.secret,
         });
       })
       .then(_ => {
@@ -251,7 +251,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
               errResponse,
               'There was an error creating this OAuth Client.'
             ),
-            drawerLoading: false
+            drawerLoading: false,
           },
           () => scrollErrorIntoView()
         );
@@ -265,9 +265,9 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       return this.setState({
         drawerErrors: [
           {
-            reason: 'Something went wrong.'
-          }
-        ]
+            reason: 'Something went wrong.',
+          },
+        ],
       });
     }
 
@@ -275,7 +275,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
     updateOAuthClient(clientID, {
       label: clientLabel,
-      redirect_uri: redirectUri
+      redirect_uri: redirectUri,
     })
       .then(_ => {
         this.setState({ ...this.defaultState });
@@ -290,7 +290,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
               errResponse,
               'Your OAuth App could not be updated.'
             ),
-            drawerLoading: false
+            drawerLoading: false,
           },
           () => scrollErrorIntoView()
         );

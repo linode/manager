@@ -5,7 +5,7 @@ import {
   MenuButton,
   MenuItems,
   MenuLink,
-  MenuPopover
+  MenuPopover,
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
@@ -24,10 +24,10 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import withFeatureFlags, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { dbaasContext } from 'src/context';
 import { MapState } from 'src/store/types';
@@ -48,8 +48,8 @@ const styles = (theme: Theme) =>
       position: 'relative',
       marginRight: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
-        flex: 1
-      }
+        flex: 1,
+      },
     },
     button: {
       display: 'flex',
@@ -71,26 +71,26 @@ const styles = (theme: Theme) =>
         border: 'none',
         [theme.breakpoints.down('sm')]: {
           maxHeight: 34,
-          minWidth: 100
+          minWidth: 100,
         },
         '&:hover': {
-          backgroundColor: theme.palette.primary.light
+          backgroundColor: theme.palette.primary.light,
         },
         '&:focus': {
-          backgroundColor: theme.palette.primary.light
+          backgroundColor: theme.palette.primary.light,
         },
         '&[aria-expanded="true"]': {
           backgroundColor: theme.palette.primary.light,
           '& $caret': {
             marginTop: 4,
-            transform: 'rotate(180deg)'
-          }
-        }
-      }
+            transform: 'rotate(180deg)',
+          },
+        },
+      },
     },
     caret: {
       marginTop: 2,
-      marginLeft: 4
+      marginLeft: 4,
     },
     menuItemLink: {
       '&[data-reach-menu-item]': {
@@ -98,27 +98,27 @@ const styles = (theme: Theme) =>
         cursor: 'pointer',
         textDecoration: 'none',
         '& h3': {
-          color: theme.cmrTextColors.linkActiveLight
+          color: theme.cmrTextColors.linkActiveLight,
         },
         '&:hover': {
           '& h3': {
             color: theme.palette.primary.main,
-            textDecoration: 'underline'
-          }
-        }
+            textDecoration: 'underline',
+          },
+        },
       },
       '&[data-reach-menu-item][data-selected]': {
         background: theme.bg.main,
         '& svg': {
           ...theme.addCircleHoverEffect,
           backgroundColor: theme.bg.main,
-          color: theme.palette.text.primary
-        }
+          color: theme.palette.text.primary,
+        },
       },
       '& svg': {
         width: 20,
-        height: 20
-      }
+        height: 20,
+      },
     },
     menuItemList: {
       '&[data-reach-menu-items]': {
@@ -127,18 +127,18 @@ const styles = (theme: Theme) =>
         border: 'none',
         whiteSpace: 'normal',
         boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-        backgroundColor: theme.bg.white
-      }
+        backgroundColor: theme.bg.white,
+      },
     },
     menuPopover: {
       '&[data-reach-menu], &[data-reach-menu-popover]': {
         width: 350,
         left: theme.spacing(),
         [theme.breakpoints.up('md')]: {
-          left: 0
-        }
-      }
-    }
+          left: 0,
+        },
+      },
+    },
   });
 
 type CombinedProps = WithStyles<CSSClasses> &
@@ -286,7 +286,7 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => {
   return {
-    accountCapabilities: state?.__resources?.account?.data?.capabilities ?? []
+    accountCapabilities: state?.__resources?.account?.data?.capabilities ?? [],
   };
 };
 

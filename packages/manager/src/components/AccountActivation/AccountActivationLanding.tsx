@@ -6,7 +6,7 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -16,16 +16,16 @@ import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTick
 
 const useStyles = makeStyles((theme: Theme) => ({
   errorHeading: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   subheading: {
     margin: '0 auto',
-    maxWidth: '60%'
+    maxWidth: '60%',
   },
   cta: {
     color: theme.color.blue,
-    cursor: 'pointer'
-  }
+    cursor: 'pointer',
+  },
 }));
 
 type CombinedProps = WithTheme & RouteComponentProps;
@@ -43,7 +43,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
   ) => {
     props.history.push({
       pathname: `/support/tickets/${ticketID}`,
-      state: { attachmentErrors }
+      state: { attachmentErrors },
     });
 
     toggleSupportDrawer(false);
@@ -53,7 +53,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
     <ErrorState
       CustomIcon={Warning}
       CustomIconStyles={{
-        color: props.theme.color.blue
+        color: props.theme.color.blue,
       }}
       errorText={
         <React.Fragment>

@@ -169,10 +169,10 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     this.mounted = true;
 
     getStackScript(+stackScriptId)
-      .then((stackScript) => {
+      .then(stackScript => {
         this.setState({ stackScript, loading: false });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ error, loading: false });
       });
   }
@@ -208,7 +208,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           labelInput: label,
         });
       })
-      .catch((e) => {
+      .catch(e => {
         this.setState(() => ({
           errors: getAPIErrorOrDefault(e, 'Error updating label', 'label'),
           labelInput: label,
@@ -288,7 +288,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       },
     });
     deleteStackScript(this.state.dialog.stackScriptID!)
-      .then((_) => {
+      .then(_ => {
         if (!this.mounted) {
           return;
         }
@@ -308,7 +308,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
         });
         history.push('/stackscripts');
       })
-      .catch((e) => {
+      .catch(e => {
         if (!this.mounted) {
           return;
         }
@@ -333,7 +333,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     const { dialog } = this.state;
 
     updateStackScript(dialog.stackScriptID!, { is_public: true })
-      .then((_) => {
+      .then(_ => {
         if (!this.mounted) {
           return;
         }
@@ -353,7 +353,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           },
         });
       })
-      .catch((_) => {
+      .catch(_ => {
         if (!this.mounted) {
           return;
         }
@@ -543,7 +543,7 @@ interface StateProps {
   userCannotAddLinodes: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = state => ({
   isRestrictedUser: _isRestrictedUser(state),
   stackScriptGrants: pathOr(
     [],

@@ -6,12 +6,12 @@ import UpdateContactInformationForm from './UpdateContactInformationForm';
 const useStyles = makeStyles(() => ({
   drawer: {
     '& .MuiDrawer-paper': {
-      overflowX: 'hidden'
+      overflowX: 'hidden',
     },
     '& .MuiGrid-root': {
-      marginBottom: 0
-    }
-  }
+      marginBottom: 0,
+    },
+  },
 }));
 
 export interface Props {

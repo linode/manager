@@ -5,7 +5,7 @@ import ErrorState from 'src/components/ErrorState';
 import TransferDisplay from 'src/components/TransferDisplay';
 import withKubernetes, {
   DispatchProps,
-  KubernetesProps
+  KubernetesProps,
 } from 'src/containers/kubernetes.container';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 

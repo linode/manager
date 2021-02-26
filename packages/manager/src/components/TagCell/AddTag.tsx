@@ -8,19 +8,19 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 const useStyles = makeStyles((_: Theme) => ({
   root: {
     width: '100%',
-    padding: '0px'
+    padding: '0px',
   },
   hasFixedMenu: {
     '& .react-select__menu': {
-      margin: '2px 0 0 0'
-    }
+      margin: '2px 0 0 0',
+    },
   },
   inDetailsContext: {
     width: '415px',
     flexBasis: '100%',
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 }));
 
 interface Props {
@@ -43,7 +43,7 @@ export const AddTag: React.FC<Props> = props => {
       .then(response =>
         response.data.map(thisTag => ({
           value: thisTag.label,
-          label: thisTag.label
+          label: thisTag.label,
         }))
       )
       .then(tags => setAccountTags(tags))
@@ -74,7 +74,7 @@ export const AddTag: React.FC<Props> = props => {
       className={classNames({
         [classes.root]: true,
         [classes.hasFixedMenu]: fixedMenu,
-        [classes.inDetailsContext]: inDetailsContext
+        [classes.inDetailsContext]: inDetailsContext,
       })}
       onChange={handleAddTag}
       options={tagOptions}

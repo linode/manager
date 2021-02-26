@@ -87,7 +87,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
 export const metricsBySection = (data: Metrics): number[] => [
   data.max,
   data.average,
-  data.last
+  data.last,
 ];
 
 export default styled(MetricsDisplay);

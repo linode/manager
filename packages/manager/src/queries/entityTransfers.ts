@@ -3,7 +3,7 @@ import {
   CreateTransferPayload,
   EntityTransfer,
   getEntityTransfer,
-  getEntityTransfers
+  getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -22,7 +22,7 @@ const getAllEntityTransfersRequest = (
 ) =>
   getEntityTransfers(passedParams, passedFilter).then(data => ({
     entityTransfers: listToItemsByID(data.data, 'token'),
-    results: data.results
+    results: data.results,
   }));
 
 export const useEntityTransfersQuery = (params: any = {}, filter: any = {}) => {

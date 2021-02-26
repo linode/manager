@@ -4,7 +4,7 @@ import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { sumCPU } from 'src/features/Longview/shared/utilities';
 import {
   convertData,
-  pathMaybeAddDataInThePast
+  pathMaybeAddDataInThePast,
 } from '../../../shared/formatters';
 import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
@@ -20,7 +20,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     lastUpdatedError,
     start,
     theme,
-    timezone
+    timezone,
   } = props;
 
   const { data, loading, error, request } = useGraphs(
@@ -35,7 +35,7 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
     return pathMaybeAddDataInThePast(summedCPUData, start, [
       ['system'],
       ['user'],
-      ['wait']
+      ['wait'],
     ]);
   }, [data.CPU]);
 
@@ -60,20 +60,20 @@ export const CPUGraph: React.FC<CombinedProps> = props => {
           label: 'System',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.system,
-          data: _convertData(cpuData.system, start, end)
+          data: _convertData(cpuData.system, start, end),
         },
         {
           label: 'User',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.user,
-          data: _convertData(cpuData.user, start, end)
+          data: _convertData(cpuData.user, start, end),
         },
         {
           label: 'Wait',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.cpu.wait,
-          data: _convertData(cpuData.wait, start, end)
-        }
+          data: _convertData(cpuData.wait, start, end),
+        },
       ]}
     />
   );

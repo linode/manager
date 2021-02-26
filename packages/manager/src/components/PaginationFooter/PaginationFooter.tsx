@@ -90,7 +90,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       finalOptions.push({ label: 'Show All', value: Infinity });
     }
 
-    const defaultPagination = finalOptions.find((eachOption) => {
+    const defaultPagination = finalOptions.find(eachOption => {
       return eachOption.value === pageSize;
     });
 

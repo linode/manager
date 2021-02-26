@@ -4,7 +4,7 @@ import {
   getImage,
   getImages,
   Image,
-  updateImage as _update
+  updateImage as _update,
 } from '@linode/api-v4/lib/images';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -13,7 +13,7 @@ import {
   deleteImageActions,
   requestImageForStoreActions,
   requestImagesActions,
-  updateImageActions
+  updateImageActions,
 } from './image.actions';
 
 // Currently there is an API bug in which the pagination of GET /images is

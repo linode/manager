@@ -13,7 +13,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
   LinodeActionsProps,
-  withLinodeActions
+  withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -34,12 +34,12 @@ type CombinedProps = Props &
 
 class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   state: State = {
-    open: false
+    open: false,
   };
 
   deleteLinode = () => {
     const {
-      linodeActions: { deleteLinode }
+      linodeActions: { deleteLinode },
     } = this.props;
     this.setState(set(lensPath(['submitting']), true));
 
@@ -128,7 +128,7 @@ interface ContextProps {
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  readOnly: linode._permissions === 'read_only'
+  readOnly: linode._permissions === 'read_only',
 }));
 
 const enhanced = compose<CombinedProps, Props>(

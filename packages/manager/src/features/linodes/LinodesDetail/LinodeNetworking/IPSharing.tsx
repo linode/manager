@@ -12,7 +12,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
@@ -22,7 +22,7 @@ import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import withLinodes, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/withLinodes.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -42,41 +42,41 @@ const styles = (theme: Theme) =>
   createStyles({
     addNewButton: {
       marginTop: theme.spacing(3),
-      marginBottom: -theme.spacing(2)
+      marginBottom: -theme.spacing(2),
     },
     containerDivider: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     ipField: {
       width: '100%',
-      marginTop: 0
+      marginTop: 0,
     },
     ipFieldLabel: {
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: `calc(175px + ${theme.spacing(2)}px)`
-      }
+        width: `calc(175px + ${theme.spacing(2)}px)`,
+      },
     },
     noIPsMessage: {
       marginTop: theme.spacing(2),
-      color: theme.color.grey1
+      color: theme.color.grey1,
     },
     networkActionText: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     removeCont: {
       [theme.breakpoints.down('xs')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     addNewIP: {
-      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2)
+      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
     },
     remove: {
       [theme.breakpoints.down('xs')]: {
-        margin: '-16px 0 0 -26px'
-      }
-    }
+        margin: '-16px 0 0 -26px',
+      },
+    },
   });
 
 interface Props {
@@ -105,7 +105,7 @@ type CombinedProps = Props &
 class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
     ipsToShare: this.props.linodeSharedIPs,
-    submitting: false
+    submitting: false,
   };
   mounted = false;
 
@@ -125,7 +125,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       return;
     }
     this.setState({
-      ipsToShare: nextProps.linodeSharedIPs
+      ipsToShare: nextProps.linodeSharedIPs,
     });
   }
 
@@ -159,7 +159,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       return;
     }
     this.setState({
-      ipsToShare: newIPsToShare
+      ipsToShare: newIPsToShare,
     });
   };
 
@@ -173,7 +173,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       return;
     }
     this.setState({
-      ipsToShare: newIPsToShare
+      ipsToShare: newIPsToShare,
     });
   };
 
@@ -213,8 +213,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             className={classes.ipField}
             textFieldProps={{
               dataAttrs: {
-                'data-qa-share-ip': true
-              }
+                'data-qa-share-ip': true,
+              },
             }}
             disabled={readOnly}
             isClearable={false}
@@ -242,7 +242,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       return;
     }
     this.setState({
-      ipsToShare: [...this.state.ipsToShare, IPSharingPanel.selectIPText]
+      ipsToShare: [...this.state.ipsToShare, IPSharingPanel.selectIPText],
     });
   };
 
@@ -258,7 +258,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     this.setState({
       errors: undefined,
       submitting: true,
-      successMessage: undefined
+      successMessage: undefined,
     });
     shareAddresses({ linode_id: this.props.linodeID, ips: finalIPs })
       .then(_ => {
@@ -269,7 +269,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         this.setState({
           errors: undefined,
           submitting: false,
-          successMessage: 'IP Sharing updated successfully'
+          successMessage: 'IP Sharing updated successfully',
         });
       })
       .catch(errorResponse => {
@@ -284,7 +284,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         this.setState({
           errors,
           submitting: false,
-          successMessage: undefined
+          successMessage: undefined,
         });
       });
   };
@@ -296,7 +296,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
     this.setState({
       errors: undefined,
       successMessage: undefined,
-      ipsToShare: this.props.linodeSharedIPs
+      ipsToShare: this.props.linodeSharedIPs,
     });
   };
 
@@ -429,7 +429,7 @@ const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
     ipChoices.unshift(IPSharingPanel.selectIPText);
     return {
       ipChoices,
-      ipChoiceLabels: choiceLabels
+      ipChoiceLabels: choiceLabels,
     };
   })
 );

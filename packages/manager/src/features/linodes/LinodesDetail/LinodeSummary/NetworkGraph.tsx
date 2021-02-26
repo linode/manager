@@ -6,7 +6,7 @@ import {
   makeStyles,
   Theme,
   WithTheme,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
@@ -14,12 +14,12 @@ import {
   convertNetworkToUnit,
   formatBitsPerSecond,
   formatNetworkTooltip,
-  generateNetworkUnits
+  generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import {
   getMetrics,
   getTotalTraffic,
-  Metrics
+  Metrics,
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
 import StatsPanel from './StatsPanel';
@@ -33,15 +33,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   chart: {
     position: 'relative',
     paddingTop: theme.spacing(2),
-    paddingLeft: theme.spacing(3)
+    paddingLeft: theme.spacing(3),
   },
   graphGrids: {
     flexWrap: 'nowrap',
     paddingLeft: '8px',
     [theme.breakpoints.down('sm')]: {
-      flexWrap: 'wrap'
-    }
-  }
+      flexWrap: 'wrap',
+    },
+  },
 }));
 
 interface Props extends ChartProps {
@@ -71,7 +71,7 @@ const _getMetrics = (data: NetworkStats) => {
     publicIn: getMetrics(data.publicIn),
     publicOut: getMetrics(data.publicOut),
     privateIn: getMetrics(data.privateIn),
-    privateOut: getMetrics(data.privateOut ?? [])
+    privateOut: getMetrics(data.privateOut ?? []),
   };
 };
 
@@ -84,14 +84,14 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
     publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
     publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
-    privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats)
+    privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats),
   };
 
   const v6Data: NetworkStats = {
     publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
     publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
     privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
-    privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats)
+    privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats),
   };
 
   const v4Metrics = _getMetrics(v4Data);
@@ -141,7 +141,7 @@ export const NetworkGraph: React.FC<CombinedProps> = props => {
     timezone: props.timezone,
     theme,
     chartHeight: props.height,
-    rangeSelection
+    rangeSelection,
   };
 
   return (
@@ -200,7 +200,7 @@ const Graph: React.FC<GraphProps> = props => {
     rangeSelection,
     theme,
     timezone,
-    unit
+    unit,
   } = props;
 
   const format = formatBitsPerSecond;
@@ -239,44 +239,44 @@ const Graph: React.FC<GraphProps> = props => {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.network.inbound,
             data: convertedPublicIn,
-            label: 'Public Inbound'
+            label: 'Public Inbound',
           },
           {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.network.outbound,
             data: convertedPublicOut,
-            label: 'Public Outbound'
+            label: 'Public Outbound',
           },
           {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.purple,
             data: convertedPrivateIn,
-            label: 'Private Inbound'
+            label: 'Private Inbound',
           },
           {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.yellow,
             data: convertedPrivateOut,
-            label: 'Private Outbound'
-          }
+            label: 'Private Outbound',
+          },
         ]}
         legendRows={[
           {
             data: metrics.publicIn,
-            format
+            format,
           },
           {
             data: metrics.publicOut,
-            format
+            format,
           },
           {
             data: metrics.privateIn,
-            format
+            format,
           },
           {
             data: metrics.privateOut,
-            format
-          }
+            format,
+          },
         ]}
       />
     </div>

@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph, {
   DataSet,
-  Props as LineGraphProps
+  Props as LineGraphProps,
 } from 'src/components/LineGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -15,22 +15,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     marginTop: theme.spacing(2) - 1,
     marginBottom: theme.spacing(2) - 1,
-    marginRight: theme.spacing(2.5)
+    marginRight: theme.spacing(2.5),
   },
   title: {
     color: theme.color.headline,
     fontWeight: 'bold',
     fontSize: '1rem',
     '& > span': {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   },
   message: {
     position: 'absolute',
     left: '50%',
     top: '45%',
-    transform: 'translate(-50%, -50%)'
-  }
+    transform: 'translate(-50%, -50%)',
+  },
 }));
 
 export interface Props extends LineGraphProps {

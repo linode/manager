@@ -6,7 +6,7 @@ import { isType } from 'typescript-fsa';
 import {
   requestAccountActions,
   saveCreditCard,
-  updateAccountActions
+  updateAccountActions,
 } from './account.actions';
 
 /**
@@ -18,7 +18,7 @@ export const defaultState: State = {
   loading: false,
   error: {},
   lastUpdated: 0,
-  data: undefined
+  data: undefined,
 };
 
 /**

@@ -1,7 +1,7 @@
 import { Formik, FormikProps } from 'formik';
 import {
   rebuildLinode,
-  RebuildLinodeFromStackScriptSchema
+  RebuildLinodeFromStackScriptSchema,
 } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -22,20 +22,20 @@ import Notice from 'src/components/Notice';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
-  UserSSHKeyProps
+  UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import {
   getCommunityStackscripts,
-  getMineAndAccountStackScripts
+  getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
@@ -45,18 +45,18 @@ import { filterImagesByType } from 'src/store/image/image.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(3)
+    paddingTop: theme.spacing(3),
   },
   error: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   emptyImagePanel: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   emptyImagePanelText: {
     marginTop: theme.spacing(1),
-    padding: `${theme.spacing(1)}px 0`
-  }
+    padding: `${theme.spacing(1)}px 0`,
+  },
 }));
 
 interface Props {
@@ -84,7 +84,7 @@ interface RebuildFromStackScriptForm {
 const initialValues: RebuildFromStackScriptForm = {
   image: '',
   root_pass: '',
-  stackscript_id: ''
+  stackscript_id: '',
 };
 
 export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
@@ -98,7 +98,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     handleRebuildError,
     onClose,
     enqueueSnackbar,
-    passwordHelperText
+    passwordHelperText,
   } = props;
 
   const classes = useStyles();
@@ -118,7 +118,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     ss,
     handleSelectStackScript,
     handleChangeUDF,
-    resetStackScript
+    resetStackScript,
   ] = useStackScript(
     Object.keys(imagesData).map(eachKey => imagesData[eachKey])
   );
@@ -135,7 +135,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     {
       setSubmitting,
       setStatus,
-      setErrors
+      setErrors,
     }: FormikProps<RebuildFromStackScriptForm>
   ) => {
     setSubmitting(true);
@@ -145,7 +145,9 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
       stackscript_data: ss.udf_data,
       root_pass,
       image,
-      authorized_users: userSSHKeys.filter(u => u.selected).map(u => u.username)
+      authorized_users: userSSHKeys
+        .filter(u => u.selected)
+        .map(u => u.username),
     })
       .then(_ => {
         // Reset events polling since an in-progress event (rebuild) is happening.
@@ -154,7 +156,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         setSubmitting(false);
 
         enqueueSnackbar('Linode rebuild started', {
-          variant: 'info'
+          variant: 'info',
         });
         onClose();
       })
@@ -208,7 +210,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         // If not, we've got an error.
         maybeErrors.push({
           field: eachUdf.name,
-          reason: `A value for the ${eachUdf.name} is required.`
+          reason: `A value for the ${eachUdf.name} is required.`,
         });
       }
     });
@@ -229,7 +231,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         setFieldValue,
         status, // holds generalError messages
         values,
-        validateForm
+        validateForm,
       }) => {
         // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {
@@ -303,7 +305,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                     classes,
                     ss.user_defined_fields,
                     ss.udf_data,
-                    udfErrors
+                    udfErrors,
                   ]}
                   udf_data={ss.udf_data}
                 />

@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   apiCreateMultipleLinodes,
-  apiDeleteAllLinodes
+  apiDeleteAllLinodes,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 // TODO refactor these tests. User settings are being stored on some values that cause tests to fail
@@ -15,11 +15,11 @@ xdescribe('Group Linodes by Tags - Suite', () => {
     tags.forEach(tag => {
       const lin = {
         linodeLabel: `A${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       const lin1 = {
         linodeLabel: `B${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       linodes.push(lin);
       linodes.push(lin1);

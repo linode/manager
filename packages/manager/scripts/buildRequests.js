@@ -51,21 +51,21 @@ const handleRequest = async (endpoint, filename) => {
 const cachedRequests = [
   {
     endpoint: 'regions',
-    filename: 'regions.json'
+    filename: 'regions.json',
   },
   {
     endpoint: 'linode/types-legacy',
-    filename: 'typesLegacy.json'
+    filename: 'typesLegacy.json',
   },
   {
     endpoint: 'linode/types',
-    filename: 'types.json'
+    filename: 'types.json',
   },
   // Only used for testing purposes, never for displaying data to users
   {
     endpoint: 'linode/kernels',
-    filename: 'kernels.json'
-  }
+    filename: 'kernels.json',
+  },
 ];
 
 const buildRequests = async () => {

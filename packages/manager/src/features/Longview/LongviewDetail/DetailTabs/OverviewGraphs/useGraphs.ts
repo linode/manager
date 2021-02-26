@@ -29,7 +29,7 @@ export const useGraphs = (
     return getValues(clientAPIKey, {
       fields: requestFields,
       start,
-      end
+      end,
     })
       .then(response => {
         if (mounted.current) {

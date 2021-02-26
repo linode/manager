@@ -8,11 +8,11 @@ import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   expired: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 interface Props {

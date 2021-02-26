@@ -9,7 +9,7 @@ import Grid from 'src/components/core/Grid';
 
 const options: { label: string; flag: keyof Flags }[] = [
   { label: 'CMR', flag: 'cmr' },
-  { label: 'Databases', flag: 'databases' }
+  { label: 'Databases', flag: 'databases' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
@@ -38,7 +38,7 @@ const FeatureFlagTool: React.FC<{}> = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  flexDirection: 'row'
+                  flexDirection: 'row',
                 }}
               >
                 <span>{thisOption.label} </span>

@@ -18,7 +18,7 @@ interface VlanEntityDetailProps {
 
 export type CombinedProps = VlanEntityDetailProps;
 
-const VlanEntityDetail: React.FC<CombinedProps> = (props) => {
+const VlanEntityDetail: React.FC<CombinedProps> = props => {
   const { vlan } = props;
 
   const regionDisplay = dcDisplayNames[vlan.region] ?? null;
@@ -56,7 +56,7 @@ const useHeaderStyles = makeStyles(() => ({
   },
 }));
 
-const Header: React.FC<HeaderProps> = (props) => {
+const Header: React.FC<HeaderProps> = props => {
   const classes = useHeaderStyles();
 
   const { label } = props;
@@ -133,7 +133,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Footer: React.FC<FooterProps> = React.memo((props) => {
+export const Footer: React.FC<FooterProps> = React.memo(props => {
   const classes = useFooterStyles();
 
   const { label, regionDisplay, cidr, id, created } = props;

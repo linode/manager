@@ -17,7 +17,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  submitButton: { marginTop: theme.spacing(3) }
+  submitButton: { marginTop: theme.spacing(3) },
 }));
 
 interface AccessPayload {
@@ -276,7 +276,7 @@ const copy: Record<
         />{' '}
         to edit the ACL, or select a predefined ACL.
       </>
-    )
+    ),
   },
   bucket: {
     private: (
@@ -314,6 +314,6 @@ const copy: Record<
         />{' '}
         to edit the ACL, or select a pre-defined ACL here.
       </>
-    )
-  }
+    ),
+  },
 };

@@ -16,7 +16,7 @@ import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 const useStyles = makeStyles(() => ({
   volumePath: {
     width: '35%',
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
   },
   actionCell: {
     display: 'flex',
@@ -27,8 +27,8 @@ const useStyles = makeStyles(() => ({
       Explicitly stating this as the theme file is automatically adding padding to the last cell
       We can remove once we make the full switch to CMR styling
       */
-    paddingRight: '0 !important'
-  }
+    paddingRight: '0 !important',
+  },
 }));
 
 export type CombinedProps = ExtendedVolume & ActionHandlers;
@@ -65,7 +65,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = props => {
     filesystem_path: filesystemPath,
     linodeLabel,
     linode_id: linodeId,
-    linodeStatus
+    linodeStatus,
   } = props;
 
   const location = useLocation();

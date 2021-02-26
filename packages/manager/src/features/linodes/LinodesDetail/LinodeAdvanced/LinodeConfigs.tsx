@@ -193,7 +193,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           kernelsLoading: false,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           kernelError: getAPIErrorOrDefault(error, 'Unable to load kernels.'),
           kernelsLoading: false,
@@ -211,7 +211,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           interfacesLoading: false,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           interfacesLoading: false,
           interfacesError: getAPIErrorOrDefault(
@@ -446,7 +446,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
         resetEventsPolling();
       })
-      .catch((errorResponse) => {
+      .catch(errorResponse => {
         const error = getAPIErrorOrDefault(
           errorResponse,
           `Error booting ${this.state.confirmBoot.label}`
@@ -483,7 +483,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           }
         );
       })
-      .catch((err) => {
+      .catch(err => {
         this.setConfirmDelete({
           submitting: false,
           error: getAPIErrorOrDefault(err, 'Unable to delete configuration.')[0]
@@ -577,9 +577,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           undefined
                         }
                       >
-                        {paginatedData.map((thisConfig) => {
+                        {paginatedData.map(thisConfig => {
                           const kernel = this.state.kernels.find(
-                            (kernelName) => kernelName.id === thisConfig.kernel
+                            kernelName => kernelName.id === thisConfig.kernel
                           );
                           return (
                             <ConfigRow

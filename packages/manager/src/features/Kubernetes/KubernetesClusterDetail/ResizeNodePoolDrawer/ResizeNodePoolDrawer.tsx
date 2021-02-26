@@ -15,14 +15,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   summary: {
     fontWeight: 'bold',
     lineHeight: '20px',
-    fontSize: '16px'
+    fontSize: '16px',
   },
   helperText: {
-    paddingBottom: theme.spacing(2) + 1
+    paddingBottom: theme.spacing(2) + 1,
   },
   section: {
-    paddingBottom: theme.spacing(3)
-  }
+    paddingBottom: theme.spacing(3),
+  },
 }));
 
 export interface Props {

@@ -3,7 +3,7 @@ import {
   deleteById,
   getAll,
   isTestEntity,
-  makeTestLabel
+  makeTestLabel,
 } from './common';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 
@@ -27,7 +27,7 @@ const makeClientCreateReq = (client, label) => {
   const linodeData = client
     ? client
     : {
-        label
+        label,
       };
 
   return cy.request({
@@ -35,8 +35,8 @@ const makeClientCreateReq = (client, label) => {
     url: Cypress.env('REACT_APP_API_ROOT') + '/longview/clients',
     body: linodeData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 

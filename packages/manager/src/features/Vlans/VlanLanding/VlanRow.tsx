@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export type CombinedProps = VLAN & ActionHandlers;
 
-export const VlanRow: React.FC<CombinedProps> = (props) => {
+export const VlanRow: React.FC<CombinedProps> = props => {
   const {
     id,
     description,
@@ -69,7 +69,7 @@ export const VlanRow: React.FC<CombinedProps> = (props) => {
     return (
       // eslint-disable-next-line
       <>
-        {vlanLinodes.map((thisVLANLinode) => (
+        {vlanLinodes.map(thisVLANLinode => (
           <Link
             className={classes.link}
             key={thisVLANLinode.id}

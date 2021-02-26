@@ -41,6 +41,6 @@ export const useSet = <T>(initial?: Iterable<T>) => {
     has,
     forEach,
     clear,
-    set
+    set,
   };
 };

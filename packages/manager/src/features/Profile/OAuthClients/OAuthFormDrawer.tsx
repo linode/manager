@@ -37,12 +37,12 @@ const OAuthCreationDrawer: React.FC<CombinedProps> = props => {
     errors,
     loading,
     onClose,
-    onSubmit
+    onSubmit,
   } = props;
 
   const errorResources = {
     label: 'A label',
-    redirect_uri: 'A callback URL'
+    redirect_uri: 'A callback URL',
   };
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -106,7 +106,7 @@ const OAuthCreationDrawer: React.FC<CombinedProps> = props => {
 OAuthCreationDrawer.defaultProps = {
   label: '',
   redirect_uri: '',
-  errors: []
+  errors: [],
 };
 
 export default OAuthCreationDrawer;

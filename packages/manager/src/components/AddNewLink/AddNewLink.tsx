@@ -33,7 +33,7 @@ const AddNewLink: React.FC<CombinedProps> = props => {
     text: label,
     disabled,
     left,
-    className
+    className,
   };
 
   if (!!disabled && !!disabledReason) {

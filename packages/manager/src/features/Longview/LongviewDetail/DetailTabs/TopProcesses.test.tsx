@@ -8,7 +8,7 @@ import { extendTopProcesses, Props, TopProcesses } from './TopProcesses';
 const props: Props = {
   topProcessesData: longviewTopProcessesFactory.build(),
   topProcessesLoading: false,
-  clientID: 1
+  clientID: 1,
 };
 
 describe('Top Processes', () => {

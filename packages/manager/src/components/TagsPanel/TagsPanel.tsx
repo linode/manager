@@ -10,7 +10,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -33,54 +33,54 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes fadeIn': {
       from: {
-        opacity: 0
+        opacity: 0,
       },
       to: {
-        opacity: 1
-      }
+        opacity: 1,
+      },
     },
     root: {
       display: 'flex',
       alignItems: 'center',
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
     },
     tag: {
       marginTop: theme.spacing(1) / 2,
       marginRight: theme.spacing(1),
       [theme.breakpoints.down('xs')]: {
-        marginRight: theme.spacing(2)
-      }
+        marginRight: theme.spacing(2),
+      },
     },
     addButtonWrapper: {
       width: '100%',
       marginTop: theme.spacing(2) - 1,
-      marginBottom: theme.spacing(2) + 1
+      marginBottom: theme.spacing(2) + 1,
     },
     hasError: {
-      marginTop: 0
+      marginTop: 0,
     },
     errorNotice: {
       '& .noticeText': {
         ...theme.typography.body1,
-        fontFamily: '"LatoWeb", sans-serif'
-      }
+        fontFamily: '"LatoWeb", sans-serif',
+      },
     },
     addButton: {
       padding: 0,
       position: 'relative',
       top: 2,
       '& svg': {
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(1),
       },
       '&:hover': {
         '& p': {
-          color: theme.palette.primary.main
-        }
-      }
+          color: theme.palette.primary.main,
+        },
+      },
     },
     tagsPanelItemWrapper: {
       marginBottom: theme.spacing(2),
-      position: 'relative'
+      position: 'relative',
     },
     selectTag: {
       marginTop: theme.spacing(1),
@@ -90,27 +90,27 @@ const styles = (theme: Theme) =>
       animation: '$fadeIn .3s ease-in-out forwards',
       maxWidth: 275,
       '& > div > div': {
-        marginTop: 0
+        marginTop: 0,
       },
       '& .error-for-scroll > div': {
         flexDirection: 'row',
-        flexWrap: 'wrap-reverse'
+        flexWrap: 'wrap-reverse',
       },
       '& .input': {
         '& p': {
           fontSize: '.9rem',
           color: theme.color.grey1,
-          borderLeft: 'none'
-        }
+          borderLeft: 'none',
+        },
       },
       '& .react-select__input': {
         fontSize: '.9rem',
         color: theme.palette.text.primary,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
       },
       '& .react-select__value-container': {
-        padding: '6px'
-      }
+        padding: '6px',
+      },
     },
     progress: {
       position: 'absolute',
@@ -119,11 +119,11 @@ const styles = (theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      zIndex: 2
+      zIndex: 2,
     },
     loading: {
-      opacity: 0.4
-    }
+      opacity: 0.4,
+    },
   });
 
 interface Item {
@@ -163,7 +163,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     isCreatingTag: false,
     tagInputValue: '',
     listDeletingTags: [],
-    loading: false
+    loading: false,
   };
 
   componentDidMount() {
@@ -187,7 +187,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         const reshapedTags = filteredTags.map((eachTag: Tag) => {
           return {
             label: eachTag.label,
-            value: eachTag.label
+            value: eachTag.label,
           };
         });
         this.setState({ tagsToSuggest: reshapedTags });
@@ -199,7 +199,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     if (!this.props.disabled) {
       this.setState({
         tagError: '',
-        isCreatingTag: !this.state.isCreatingTag
+        isCreatingTag: !this.state.isCreatingTag,
       });
     }
   };
@@ -212,7 +212,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     this.setState(
       {
         listDeletingTags: [...this.state.listDeletingTags, label],
-        loading: true
+        loading: true,
       },
       () => {
         /*
@@ -233,20 +233,20 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               tagsToSuggest: [
                 {
                   value: label,
-                  label
+                  label,
                 },
-                ...cloneTagSuggestions
+                ...cloneTagSuggestions,
               ],
               listDeletingTags: this.state.listDeletingTags.filter(
                 eachTag => eachTag !== label
               ),
               loading: false,
-              tagError: ''
+              tagError: '',
             });
           })
           .catch(e => {
             this.props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
-              variant: 'error'
+              variant: 'error',
             });
             /*
              * Remove this tag from the current list of tags that are queued for deletion
@@ -255,7 +255,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               listDeletingTags: this.state.listDeletingTags.filter(
                 eachTag => eachTag !== label
               ),
-              loading: false
+              loading: false,
             });
           });
       }
@@ -289,15 +289,15 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
     if (inputValue.length < 3 || inputValue.length > 50) {
       this.setState({
-        tagError: `Tag "${inputValue}" length must be 3-50 characters`
+        tagError: `Tag "${inputValue}" length must be 3-50 characters`,
       });
     } else if (tagExists(inputValue)) {
       this.setState({
-        tagError: `Tag "${inputValue}" is a duplicate`
+        tagError: `Tag "${inputValue}" is a duplicate`,
       });
     } else {
       this.setState({
-        loading: true
+        loading: true,
       });
       updateTags([...tags, value.label])
         .then(() => {
@@ -313,7 +313,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           });
           this.setState({
             tagsToSuggest: filteredTags,
-            loading: false
+            loading: false,
           });
         })
         .catch(e => {
@@ -335,18 +335,18 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       tagsToSuggest,
       tagInputValue,
       tagError,
-      loading
+      loading,
     } = this.state;
 
     return (
       <div
         className={classNames({
-          [classes.root]: true
+          [classes.root]: true,
         })}
       >
         <div
           className={classNames({
-            [classes.tagsPanelItemWrapper]: true
+            [classes.tagsPanelItemWrapper]: true,
           })}
         >
           {loading && (
@@ -356,7 +356,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           )}
           <div
             className={classNames({
-              [classes.loading]: loading
+              [classes.loading]: loading,
             })}
           >
             {tags.map(eachTag => {
@@ -407,7 +407,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           <div
             className={classNames({
               [classes.addButtonWrapper]: true,
-              [classes.hasError]: tagError
+              [classes.hasError]: tagError,
             })}
           >
             <AddNewLink

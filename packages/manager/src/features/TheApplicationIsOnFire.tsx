@@ -7,8 +7,8 @@ import DialogTitle from 'src/components/DialogTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   restartButton: {
-    ...theme.applyLinkStyles
-  }
+    ...theme.applyLinkStyles,
+  },
 }));
 
 const TheApplicationIsOnFire: React.FC<{}> = props => {

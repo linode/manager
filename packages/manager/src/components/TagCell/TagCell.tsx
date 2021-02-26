@@ -12,10 +12,10 @@ import AddTag from './AddTag';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minHeight: 40,
-    position: 'relative'
+    position: 'relative',
   },
   rootDetails: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   menuItem: {
     display: 'flex',
@@ -25,29 +25,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '30px',
     height: '30px',
     '& svg': {
-      color: theme.color.tagIcon
+      color: theme.color.tagIcon,
     },
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
       '& svg': {
-        color: 'white'
-      }
-    }
+        color: 'white',
+      },
+    },
   },
   addTag: {
     cursor: 'pointer',
-    marginRight: theme.spacing()
+    marginRight: theme.spacing(),
   },
   tagList: {
     display: 'flex',
     flexWrap: 'nowrap',
     overflow: 'hidden',
     position: 'relative',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   tagListOverflow: {
-    maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`
+    maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`,
   },
   button: {
     backgroundColor: theme.color.tagButton,
@@ -59,11 +59,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '40px',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
-      color: '#ffff'
-    }
+      color: '#ffff',
+    },
   },
   tagInput: {
-    overflow: 'visible !important'
+    overflow: 'visible !important',
   },
   addTagButton: {
     display: 'flex',
@@ -82,9 +82,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.tagIcon,
       marginLeft: 10,
       height: 10,
-      width: 10
-    }
-  }
+      width: 10,
+    },
+  },
 }));
 
 interface Props {
@@ -140,7 +140,7 @@ export const TagCell: React.FC<Props> = props => {
       className={`${classes.root} ${className}`}
       style={{
         overflow: addingTag ? 'visible' : 'hidden',
-        minWidth: width
+        minWidth: width,
       }}
     >
       <Grid container direction="row" alignItems="center" wrap="nowrap">
@@ -157,7 +157,7 @@ export const TagCell: React.FC<Props> = props => {
               item
               className={classNames({
                 [classes.addTag]: true,
-                [classes.menuItem]: true
+                [classes.menuItem]: true,
               })}
               onClick={() => setAddingTag(true)}
             >
@@ -168,7 +168,7 @@ export const TagCell: React.FC<Props> = props => {
               style={{ width: `${width - 100}px` }}
               className={classNames({
                 [classes.tagList]: true,
-                [classes.tagListOverflow]: hasOverflow
+                [classes.tagListOverflow]: hasOverflow,
               })}
             >
               {tags.map(thisTag => (
@@ -200,7 +200,7 @@ export const TagCell: React.FC<Props> = props => {
     <Grid
       className={classNames({
         [classes.root]: true,
-        [classes.rootDetails]: true
+        [classes.rootDetails]: true,
       })}
       container
       direction="row"
@@ -220,7 +220,7 @@ export const TagCell: React.FC<Props> = props => {
             ref={overflowRef}
             className={classNames({
               [classes.tagList]: true,
-              [classes.tagListOverflow]: hasOverflow
+              [classes.tagListOverflow]: hasOverflow,
             })}
           >
             {tags.map(thisTag => (

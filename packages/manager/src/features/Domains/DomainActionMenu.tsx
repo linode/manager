@@ -34,7 +34,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
     onDisableOrEnable,
     onEdit,
     onRemove,
-    status
+    status,
   } = props;
 
   const theme = useTheme<Theme>();
@@ -57,7 +57,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         handleEdit();
-      }
+      },
     },
     {
       title: status === 'active' ? 'Disable' : 'Enable',
@@ -67,20 +67,20 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
           domain,
           id
         );
-      }
+      },
     },
     {
       title: 'Clone',
       onClick: () => {
         handleClone();
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         handleRemove();
-      }
-    }
+      },
+    },
   ];
 
   // Index at which non-inline actions begin. Our convention: place actions that are inline (at non-mobile/non-tablet viewports) at start of the array.

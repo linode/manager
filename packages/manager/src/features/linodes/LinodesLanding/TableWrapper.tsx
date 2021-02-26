@@ -10,8 +10,8 @@ import SortableTableHead_CMR from './SortableTableHead';
 
 const useStyles = makeStyles(() => ({
   paperWrapper: {
-    backgroundColor: 'transparent'
-  }
+    backgroundColor: 'transparent',
+  },
 }));
 
 interface Props {
@@ -39,7 +39,7 @@ const TableWrapper: React.FC<CombinedProps> = props => {
     toggleGroupLinodes,
     linodesAreGrouped,
     isVLAN,
-    tableProps
+    tableProps,
   } = props;
 
   React.useEffect(() => {

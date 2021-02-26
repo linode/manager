@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
@@ -19,11 +19,11 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3),
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     status: {
-      marginBottom: theme.spacing(1)
-    }
+      marginBottom: theme.spacing(1),
+    },
   });
 
 interface LinodeDetailContextProps {
@@ -64,7 +64,7 @@ const enhanced = compose<CombinedProps, {}>(
   withLinodeDetailContext(({ linode }) => ({
     status: linode.status,
     linodeEvents: linode._events,
-    linodeId: linode.id
+    linodeId: linode.id,
   }))
 );
 

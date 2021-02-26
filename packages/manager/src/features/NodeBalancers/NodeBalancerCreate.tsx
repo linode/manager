@@ -9,7 +9,7 @@ import {
   over,
   pathOr,
   set,
-  view
+  view,
 } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -26,7 +26,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -40,11 +40,11 @@ import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import {
   withNodeBalancerActions,
-  WithNodeBalancerActions
+  WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -56,7 +56,7 @@ import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   NodeBalancerConfigFieldsWithStatus,
-  transformConfigsForRequest
+  transformConfigsForRequest,
 } from './utils';
 
 type ClassNames = 'title' | 'sidebar';
@@ -64,19 +64,19 @@ type ClassNames = 'title' | 'sidebar';
 const styles = (theme: Theme) =>
   createStyles({
     title: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
     },
     sidebar: {
       [theme.breakpoints.up('md')]: {
-        marginTop: '60px !important'
+        marginTop: '60px !important',
       },
       [theme.breakpoints.down('md')]: {
         '&.MuiGrid-item': {
           paddingLeft: 0,
-          paddingRight: 0
-        }
-      }
-    }
+          paddingRight: 0,
+        },
+      },
+    },
   });
 
 type CombinedProps = WithNodeBalancerActions &
@@ -108,7 +108,7 @@ const errorResources = {
   label: 'label',
   region: 'region',
   address: 'address',
-  tags: 'tags'
+  tags: 'tags',
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
@@ -116,11 +116,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     submitting: false,
     open: false,
     errors: undefined,
-    idxToDelete: undefined
+    idxToDelete: undefined,
   };
 
   static defaultFieldsStates = {
-    configs: [createNewNodeBalancerConfig(true)]
+    configs: [createNewNodeBalancerConfig(true)],
   };
 
   state: State = {
@@ -128,7 +128,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
     deleteConfigConfirmDialog: clone(
       NodeBalancerCreate.defaultDeleteConfigConfirmDialogState
-    )
+    ),
   };
 
   addNodeBalancer = () => {
@@ -140,9 +140,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         ...this.state.nodeBalancerFields,
         configs: [
           ...this.state.nodeBalancerFields.configs,
-          createNewNodeBalancerConfig()
-        ]
-      }
+          createNewNodeBalancerConfig(),
+        ],
+      },
     });
   };
 
@@ -171,7 +171,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           cidx,
           'nodes',
           nodeidx,
-          key
+          key,
         ]),
         value
       )
@@ -242,7 +242,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     const paths = [
       ...configPaths,
-      ...nodePaths.reduce((acc, pathArr) => [...acc, ...pathArr], [])
+      ...nodePaths.reduce((acc, pathArr) => [...acc, ...pathArr], []),
     ];
 
     if (paths.length === 0) {
@@ -294,7 +294,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   createNodeBalancer = () => {
     const {
-      nodeBalancerActions: { createNodeBalancer }
+      nodeBalancerActions: { createNodeBalancer },
     } = this.props;
     const { nodeBalancerFields } = this.state;
 
@@ -323,7 +323,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         this.setNodeErrors(
           errors.map((e: APIError) => ({
             ...e,
-            ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
+            ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') }),
           }))
         );
 
@@ -338,13 +338,13 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       deleteConfigConfirmDialog: {
         ...clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
         open: true,
-        idxToDelete: configIdx
-      }
+        idxToDelete: configIdx,
+      },
     });
 
   onRemoveConfig = () => {
     const {
-      deleteConfigConfirmDialog: { idxToDelete }
+      deleteConfigConfirmDialog: { idxToDelete },
     } = this.state;
 
     /* show the submitting indicator */
@@ -352,8 +352,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       deleteConfigConfirmDialog: {
         ...this.state.deleteConfigConfirmDialog,
         errors: undefined,
-        submitting: true
-      }
+        submitting: true,
+      },
     });
 
     /* remove the config */
@@ -364,8 +364,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           (config: NodeBalancerConfigFieldsWithStatus, idx: number) => {
             return idx !== idxToDelete;
           }
-        )
-      }
+        ),
+      },
     });
 
     /* remove the errors related to that config */
@@ -374,7 +374,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         errors: this.state.errors!.filter((error: APIError) => {
           const t = new RegExp(`configs_${idxToDelete}_`);
           return error.field && !t.test(error.field);
-        })
+        }),
       });
     }
 
@@ -382,7 +382,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState({
       deleteConfigConfirmDialog: clone(
         NodeBalancerCreate.defaultDeleteConfigConfirmDialogState
-      )
+      ),
     });
   };
 
@@ -412,9 +412,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           nodes: [
             ...thisConfig.nodes.map(thisNode => {
               return { ...thisNode, address: '' };
-            })
-          ]
-        }
+            }),
+          ],
+        },
       ];
     }, []);
     this.setState(set(lensPath(['nodeBalancerFields', 'configs']), newConfigs));
@@ -434,7 +434,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState({
       deleteConfigConfirmDialog: clone(
         NodeBalancerCreate.defaultDeleteConfigConfirmDialogState
-      )
+      ),
     });
 
   updateState = (
@@ -486,8 +486,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         displaySections = [
           {
             title: dcDisplayCountry[foundRegion.id],
-            details: foundRegion.display
-          }
+            details: foundRegion.display,
+          },
         ];
       } else {
         displaySections = [{ title: 'Unknown Region' }];
@@ -529,18 +529,18 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 label: 'NodeBalancer Label',
                 onChange: this.labelChange,
                 value: nodeBalancerFields.label || '',
-                disabled
+                disabled,
               }}
               tagsInputProps={{
                 value: nodeBalancerFields.tags
                   ? nodeBalancerFields.tags.map(tag => ({
                       label: tag,
-                      value: tag
+                      value: tag,
                     }))
                   : [],
                 onChange: this.tagsChange,
                 tagError: hasErrorFor('tags'),
-                disabled
+                disabled,
               }}
             />
             <SelectRegionPanel
@@ -567,7 +567,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   const lensTo = lensFrom([
                     'nodeBalancerFields',
                     'configs',
-                    idx
+                    idx,
                   ]);
 
                   const L = {
@@ -584,7 +584,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     healthCheckTimeoutLens: lensTo(['check_timeout']),
                     sessionStickinessLens: lensTo(['stickiness']),
                     sslCertificateLens: lensTo(['ssl_cert']),
-                    privateKeyLens: lensTo(['ssl_key'])
+                    privateKeyLens: lensTo(['ssl_key']),
                   };
 
                   return (
@@ -790,11 +790,11 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
         return {
           error: {
             field: err.field,
-            reason: error.reason
+            reason: error.reason,
           },
-          path: [...err.path, 'errors']
+          path: [...err.path, 'errors'],
         };
-      })
+      }),
     ];
   }, []);
 };
@@ -810,7 +810,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_nodebalancers')
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_nodebalancers'),
 });
 
 const connected = connect(mapStateToProps);
@@ -820,7 +820,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
     .filter(region => region.id !== 'ap-northeast-1a') // Don't show Tokyo1 as an option
     .map(r => ({ ...r, display: dcDisplayNames[r.id] })),
   regionsLoading: loading,
-  regionsError: error
+  regionsError: error,
 }));
 
 export default recompose<CombinedProps, {}>(

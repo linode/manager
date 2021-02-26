@@ -8,11 +8,11 @@ import {
   convertNetworkToUnit,
   formatNetworkTooltip,
   generateNetworkUnits,
-  statMax
+  statMax,
 } from 'src/features/Longview/shared/utilities';
 import {
   InboundOutboundNetwork,
-  LongviewNetworkInterface
+  LongviewNetworkInterface,
 } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
 import GraphCard from '../../GraphCard';
@@ -38,13 +38,13 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
     networkData,
     start,
     theme,
-    timezone
+    timezone,
   } = props;
 
   const _convertData = React.useCallback(convertData, [
     networkData,
     start,
-    end
+    end,
   ]);
 
   // Sort interfaces by label alphabetically
@@ -100,14 +100,14 @@ export const NetworkGraphs: React.FC<CombinedProps> = props => {
                     label: 'Inbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.inbound,
-                    data: _convertData(rx_bytes, start, end)
+                    data: _convertData(rx_bytes, start, end),
                   },
                   {
                     label: 'Outbound',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.network.outbound,
-                    data: _convertData(tx_bytes, start, end)
-                  }
+                    data: _convertData(tx_bytes, start, end),
+                  },
                 ]}
               />
             </div>

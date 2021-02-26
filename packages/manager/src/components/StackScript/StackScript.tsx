@@ -23,39 +23,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.color.white,
     '.detailsWrapper &': {
-      padding: theme.spacing(4)
-    }
+      padding: theme.spacing(4),
+    },
   },
   headerLabel: {
-    marginLeft: '0.25em'
+    marginLeft: '0.25em',
   },
   editBtn: {
-    minWidth: 'fit-content'
+    minWidth: 'fit-content',
   },
   deployments: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   author: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   description: {
-    whiteSpace: 'pre-wrap'
+    whiteSpace: 'pre-wrap',
   },
   scriptHeading: {
     marginBottom: theme.spacing(1),
-    fontSize: '1rem'
+    fontSize: '1rem',
   },
   descriptionText: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   deploymentSection: {
     marginTop: theme.spacing(1),
-    fontSize: '1rem'
+    fontSize: '1rem',
   },
   idSection: {
     marginTop: theme.spacing(1),
-    fontSize: '1rem'
+    fontSize: '1rem',
   },
   copyIcon: {
     color: theme.palette.primary.main,
@@ -64,21 +64,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['color']),
     '& svg': {
       width: '1em',
-      height: '1em'
-    }
+      height: '1em',
+    },
   },
   dateTimeDisplay: {
     display: 'inline-block',
-    fontSize: '1rem'
+    fontSize: '1rem',
   },
   compatibleImages: {
     display: 'block',
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   divider: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 export interface Props {
@@ -98,8 +98,8 @@ export const SStackScript: React.FC<CombinedProps> = props => {
       script,
       label,
       updated,
-      images
-    }
+      images,
+    },
   } = props;
 
   const classes = useStyles();

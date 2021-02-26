@@ -5,10 +5,10 @@ import { compose } from 'recompose';
 
 import Select, {
   BaseSelectProps,
-  Item
+  Item,
 } from 'src/components/EnhancedSelect/Select';
 import withPreferences, {
-  Props as PreferencesProps
+  Props as PreferencesProps,
 } from 'src/containers/preferences.container';
 
 interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
@@ -103,7 +103,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
       .then(response => {
         updateUserPreferences({
           ...response,
-          longviewTimeRange: item.value
+          longviewTimeRange: item.value,
         });
       })
       .catch(_ => null); // swallow the error, it's nbd if the choice isn't saved
@@ -151,12 +151,12 @@ export const generateSelectOptions = (
   const baseOptions: Item<Labels, Labels>[] = [
     {
       label: 'Past 30 Minutes',
-      value: 'Past 30 Minutes'
+      value: 'Past 30 Minutes',
     },
     {
       label: 'Past 12 Hours',
-      value: 'Past 12 Hours'
-    }
+      value: 'Past 12 Hours',
+    },
   ];
 
   return isLongviewPro
@@ -164,24 +164,24 @@ export const generateSelectOptions = (
         ...baseOptions,
         {
           label: 'Past 24 Hours',
-          value: 'Past 24 Hours'
+          value: 'Past 24 Hours',
         },
         {
           label: 'Past 7 Days',
-          value: 'Past 7 Days'
+          value: 'Past 7 Days',
         },
         {
           label: 'Past 30 Days',
-          value: 'Past 30 Days'
+          value: 'Past 30 Days',
         },
         {
           label: 'Past Year',
-          value: 'Past Year'
+          value: 'Past Year',
         },
         {
           label: `${currentYear}` as Labels,
-          value: `${currentYear}` as Labels
-        }
+          value: `${currentYear}` as Labels,
+        },
       ]
     : baseOptions;
 };

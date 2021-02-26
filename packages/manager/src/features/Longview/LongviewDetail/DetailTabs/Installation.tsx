@@ -8,8 +8,8 @@ import Instructions from '../../shared/InstallationInstructions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
-  }
+    padding: theme.spacing(3),
+  },
 }));
 
 interface Props {

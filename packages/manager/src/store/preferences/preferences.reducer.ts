@@ -4,7 +4,7 @@ import { EntityError, RequestableData } from '../types';
 import {
   handleGetPreferences,
   handleUpdatePreferences,
-  UserPreferences
+  UserPreferences,
 } from './preferences.actions';
 
 export type State = RequestableData<UserPreferences, EntityError>;
@@ -13,14 +13,14 @@ export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
-  error: undefined
+  error: undefined,
 };
 
 const reducer: Reducer<State> = reducerWithInitialState(defaultState)
   .case(handleGetPreferences.started, state => {
     return {
       ...state,
-      loading: true
+      loading: true,
       /**
        * intentionally not resetting error state here because it will cause
        * the PreferenceToggle.tsx component to re-render, causing the entire app
@@ -34,7 +34,7 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
       loading: false,
       error: undefined,
       lastUpdated: Date.now(),
-      data: action.payload.result
+      data: action.payload.result,
     };
   })
   .caseWithAction(handleGetPreferences.failed, (state, action) => {
@@ -43,13 +43,13 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
       loading: false,
       lastUpdated: Date.now(),
       error: {
-        read: action.payload.error
-      }
+        read: action.payload.error,
+      },
     };
   })
   .case(handleUpdatePreferences.started, state => {
     return {
-      ...state
+      ...state,
       /**
        * intentionally not resetting error state here because it will cause
        * the PreferenceToggle.tsx component to re-render, causing the entire app
@@ -63,16 +63,16 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
       data: action.payload.result,
       lastUpdated: Date.now(),
       loading: false,
-      error: undefined
+      error: undefined,
     };
   })
   .caseWithAction(handleUpdatePreferences.failed, (state, action) => {
     return {
       ...state,
       error: {
-        update: action.payload.error
+        update: action.payload.error,
       },
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
     };
   })
   .default(state => state);

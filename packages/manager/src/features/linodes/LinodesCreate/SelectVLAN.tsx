@@ -12,12 +12,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.headline,
     fontFamily: theme.font.bold,
     fontSize: '1rem',
-    lineHeight: '1.2em'
+    lineHeight: '1.2em',
   },
   helperText: {
     paddingTop: theme.spacing(),
-    paddingBottom: theme.spacing()
-  }
+    paddingBottom: theme.spacing(),
+  },
 }));
 
 export interface Props {
@@ -55,13 +55,13 @@ export const SelectVLAN: React.FC<Props> = props => {
       .filter(thisVlan => thisVlan.region === selectedRegionID)
       .map(thisVlan => ({
         label: thisVlan.description || thisVlan.id,
-        value: thisVlan.id
+        value: thisVlan.id,
       }));
   }, [selectedRegionID, vlans]);
 
   const selected = selectedVlanIDs.map(thisID => ({
     label: vlans.itemsById[thisID].description,
-    value: thisID
+    value: thisID,
   }));
 
   const onChange = (selected: Item<number>[]) => {

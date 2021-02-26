@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import {
   Profile,
   TokenCreateDrawer,
-  dialogMap
+  dialogMap,
 } from '../../pageobjects/profile';
 
 const profile = new Profile();

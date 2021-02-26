@@ -6,12 +6,12 @@ import Form from 'src/components/core/Form';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import withVolumesRequest, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
@@ -41,7 +41,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
     volumeTags,
     onClose,
     updateVolume,
-    readOnly
+    readOnly,
   } = props;
   const initialValues: FormState = { label: volumeLabel, tags: volumeTags };
 
@@ -59,7 +59,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
         updateVolume({
           volumeId,
           label,
-          tags: tags.map(v => v.value)
+          tags: tags.map(v => v.value),
         })
           .then(_ => {
             resetForm();
@@ -92,7 +92,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
         setFieldValue,
         status,
         touched,
-        values
+        values,
       }) => {
         return (
           <Form>

@@ -110,26 +110,26 @@ export const storage: Storage = {
   authentication: {
     token: {
       get: () => getStorage(TOKEN),
-      set: v => setStorage(TOKEN, v)
+      set: v => setStorage(TOKEN, v),
     },
     nonce: {
       get: () => getStorage(NONCE),
-      set: v => setStorage(NONCE, v)
+      set: v => setStorage(NONCE, v),
     },
     scopes: {
       get: () => getStorage(SCOPES),
-      set: v => setStorage(SCOPES, v)
+      set: v => setStorage(SCOPES, v),
     },
     expire: {
       get: () => getStorage(EXPIRE),
-      set: v => setStorage(EXPIRE, v)
-    }
+      set: v => setStorage(EXPIRE, v),
+    },
   },
   pageSize: {
     get: () => {
       return parseInt(getStorage(PAGE_SIZE, '25'), 10);
     },
-    set: v => setStorage(PAGE_SIZE, `${v}`)
+    set: v => setStorage(PAGE_SIZE, `${v}`),
   },
   // Page Size of Linodes Landing page.
   infinitePageSize: {
@@ -142,15 +142,15 @@ export const storage: Storage = {
       // parse the string "Infinity" as a Number.
       return Number(getStorage(INFINITE_PAGE_SIZE, fallback));
     },
-    set: v => setStorage(INFINITE_PAGE_SIZE, `${v}`)
+    set: v => setStorage(INFINITE_PAGE_SIZE, `${v}`),
   },
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
-    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
+    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
   },
   supportText: {
     get: () => getStorage(SUPPORT, { title: '', description: '' }),
-    set: v => setStorage(SUPPORT, JSON.stringify(v))
+    set: v => setStorage(SUPPORT, JSON.stringify(v)),
   },
   stackScriptInProgress: {
     get: () =>
@@ -158,24 +158,24 @@ export const storage: Storage = {
         id: -1,
         script: '',
         label: '',
-        images: []
+        images: [],
       }),
-    set: s => setStorage(STACKSCRIPT, JSON.stringify(s))
+    set: s => setStorage(STACKSCRIPT, JSON.stringify(s)),
   },
   devToolsEnv: {
     get: () => {
       const value = getStorage(DEV_TOOLS_ENV);
       return isDevToolsEnvValid(value) ? value : undefined;
     },
-    set: devToolsEnv => setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv))
-  }
+    set: devToolsEnv => setStorage(DEV_TOOLS_ENV, JSON.stringify(devToolsEnv)),
+  },
 };
 
 export const {
   authentication,
   BackupsCtaDismissed,
   stackScriptInProgress,
-  supportText
+  supportText,
 } = storage;
 
 // Only return these if the dev tools are enabled and we're in development mode.

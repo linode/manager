@@ -8,26 +8,26 @@ import { useTheme } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& h2': {
-      color: '#32363c'
-    }
+      color: '#32363c',
+    },
   },
   swatchWrapper: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '15%'
+    width: '15%',
   },
   swatch: {
     content: '',
     height: 64,
     width: 64,
-    margin: theme.spacing(2)
+    margin: theme.spacing(2),
   },
   label: {
     color: '#606469',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 }));
 
 interface Props {
@@ -44,14 +44,14 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     { color: theme.palette.primary.main, alias: 'theme.palette.primary.main' },
     {
       color: theme.palette.primary.light,
-      alias: 'theme.palette.primary.light'
+      alias: 'theme.palette.primary.light',
     },
     { color: theme.palette.primary.dark, alias: 'theme.palette.primary.dark' },
     { color: theme.palette.text.primary, alias: 'theme.palette.text.primary' },
     { color: theme.color.headline, alias: 'theme.color.headline' },
     { color: theme.palette.divider, alias: 'theme.palette.divider' },
     { color: theme.color.offBlack, alias: 'theme.color.offBlack' },
-    { color: theme.color.white, alias: 'theme.color.white' }
+    { color: theme.color.white, alias: 'theme.color.white' },
   ];
 
   const etc = [
@@ -65,7 +65,7 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     { color: theme.color.grey3, alias: 'theme.color.grey3' },
     { color: theme.color.grey4, alias: 'theme.color.grey4' },
     { color: theme.color.grey5, alias: 'theme.color.grey5' },
-    { color: theme.color.grey6, alias: 'theme.color.grey6' }
+    { color: theme.color.grey6, alias: 'theme.color.grey6' },
   ];
 
   const bgColors = [
@@ -80,11 +80,11 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     { color: theme.bg.primaryNavActive, alias: 'theme.bg.primaryNavActive' },
     {
       color: theme.bg.primaryNavActiveBG,
-      alias: 'theme.bg.primaryNavActiveBG'
+      alias: 'theme.bg.primaryNavActiveBG',
     },
     { color: theme.bg.primaryNavPaper, alias: 'theme.bg.primaryNavPaper' },
     { color: theme.bg.topMenu, alias: 'theme.bg.topMenu' },
-    { color: theme.bg.billingHeader, alias: 'theme.bg.billingHeader' }
+    { color: theme.bg.billingHeader, alias: 'theme.bg.billingHeader' },
   ];
 
   const createSwatch = (idx: number, color: string, alias: string) => {

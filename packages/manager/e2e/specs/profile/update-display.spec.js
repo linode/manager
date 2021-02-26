@@ -10,7 +10,7 @@ describe('Profile - Update Display Settings', () => {
     const startProfile = getProfile();
     resetProfileBody = {
       email: startProfile.email,
-      timezone: startProfile.timezone
+      timezone: startProfile.timezone,
     };
   });
 

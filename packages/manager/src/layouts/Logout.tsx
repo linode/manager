@@ -35,7 +35,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
   state,
   ownProps
 ) => ({
-  token: pathOr('', ['authentication', 'token'], state)
+  token: pathOr('', ['authentication', 'token'], state),
 });
 
 interface DispatchProps {
@@ -47,7 +47,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     dispatchLogout: (client_id: string, token: string) =>
-      dispatch(handleLogout({ client_id, token }))
+      dispatch(handleLogout({ client_id, token })),
   };
 };
 

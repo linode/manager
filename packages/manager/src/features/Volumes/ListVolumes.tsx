@@ -36,7 +36,7 @@ const ListVolumes: React.FC<CombinedProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => (
         <React.Fragment>
           <Paper>

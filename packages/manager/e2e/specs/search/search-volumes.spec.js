@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   createVolumes,
-  apiDeleteAllVolumes
+  apiDeleteAllVolumes,
 } from '../../utils/common';
 import SearchBar from '../../pageobjects/search.page';
 import SearchResults from '../../pageobjects/search-results.page';
@@ -12,7 +12,7 @@ import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.p
 describe('Header - Search - Volumes Suite', () => {
   const testVolume = {
     label: `AutoVolume${timestamp()}`,
-    tags: [`AutoTag${timestamp()}`]
+    tags: [`AutoTag${timestamp()}`],
   };
 
   const assertVolumeDisplaysInSearchSuggestion = query => {

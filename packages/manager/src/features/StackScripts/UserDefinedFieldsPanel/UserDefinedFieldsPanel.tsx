@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -31,16 +31,16 @@ const styles = (theme: Theme) =>
       '& > div:last-child': {
         border: 0,
         marginBottom: 0,
-        paddingBottom: 0
-      }
+        paddingBottom: 0,
+      },
     },
     advDescription: {
-      margin: `${theme.spacing(2)}px 0`
+      margin: `${theme.spacing(2)}px 0`,
     },
     username: {
-      color: theme.color.grey1
+      color: theme.color.grey1,
     },
-    optionalFieldWrapper: {}
+    optionalFieldWrapper: {},
   });
 
 interface Props {

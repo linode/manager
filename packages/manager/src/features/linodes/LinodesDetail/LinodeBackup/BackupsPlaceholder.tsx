@@ -18,9 +18,9 @@ export type CombinedProps = Props;
 const useStyles = makeStyles(() => ({
   empty: {
     '& svg': {
-      transform: 'scale(0.75)'
-    }
-  }
+      transform: 'scale(0.75)',
+    },
+  },
 }));
 
 export const BackupsPlaceholder: React.FC<Props> = props => {
@@ -61,8 +61,8 @@ export const BackupsPlaceholder: React.FC<Props> = props => {
           {
             onClick: () => setDialogOpen(true),
             children: 'Enable Backups',
-            disabled
-          }
+            disabled,
+          },
         ]}
       >
         {backupPlaceholderText}

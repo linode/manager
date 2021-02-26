@@ -19,12 +19,12 @@ import withVolumes from 'src/containers/volumes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
-  DevicesAsStrings
+  DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
 import LinodePermissionsError from '../LinodePermissionsError';
 import DeviceSelection, {
   ExtendedDisk,
-  ExtendedVolume
+  ExtendedVolume,
 } from './DeviceSelection';
 import Dialog from 'src/components/Dialog';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
@@ -35,9 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
     '& .iconTextLink': {
       display: 'inline-flex',
-      margin: `${theme.spacing(3)}px 0 0 0`
-    }
-  }
+      margin: `${theme.spacing(3)}px 0 0 0`,
+    },
+  },
 }));
 
 interface StateProps {
@@ -97,7 +97,7 @@ export const getDefaultDeviceMapAndCounter = (
     sdd: defaultDisks[3],
     sde: defaultDisks[4],
     sdf: defaultDisks[5],
-    sdg: defaultDisks[6]
+    sdg: defaultDisks[6],
   };
   return [deviceMap, counter];
 };
@@ -109,7 +109,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
     volumesError,
     open,
     onClose,
-    linodeId
+    linodeId,
   } = props;
 
   const classes = useStyles();
@@ -161,7 +161,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
 
   const devices = {
     disks: linodeDisks ?? [],
-    volumes: filteredVolumes ?? []
+    volumes: filteredVolumes ?? [],
   };
 
   const unauthorized = linode?._permissions === 'read_only';
@@ -173,7 +173,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then(_ => {
         enqueueSnackbar('Linode rescue started.', {
-          variant: 'info'
+          variant: 'info',
         });
         resetEventsPolling();
         onClose();
@@ -191,7 +191,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
   const onChange = (slot: string, _id: string) =>
     setRescueDevices(rescueDevices => ({
       ...rescueDevices,
-      [slot]: _id
+      [slot]: _id,
     }));
 
   return (
@@ -261,7 +261,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
   state,
   ownProps
 ) => ({
-  diskError: state.__resources.linodeDisks[ownProps.linodeId]?.error?.read
+  diskError: state.__resources.linodeDisks[ownProps.linodeId]?.error?.read,
 });
 
 const connected = connect(mapStateToProps);
@@ -281,7 +281,7 @@ export default compose<CombinedProps, Props>(
     ) => {
       const mappedData = volumesData.map(volume => ({
         ...volume,
-        _id: `volume-${volume.id}`
+        _id: `volume-${volume.id}`,
       }));
       const _error = volumesError?.read
         ? volumesError.read[0]?.reason
@@ -290,7 +290,7 @@ export default compose<CombinedProps, Props>(
         ...ownProps,
         volumesData: mappedData,
         volumesError: _error,
-        volumesLastUpdated
+        volumesLastUpdated,
       };
     }
   ),

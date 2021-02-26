@@ -62,7 +62,7 @@ const parallelRunners = getRunnerCount();
 const credStores = {
   fs: new FSCredStore('./e2e/creds.js'),
   mongodb: new MongoCredStore('mongodb'),
-  mongolocal: new MongoCredStore('localhost')
+  mongolocal: new MongoCredStore('localhost'),
 };
 
 let CRED_STORE_MODE = process.env.CRED_STORE_MODE
@@ -100,7 +100,7 @@ exports.config = {
   specs: specs,
   // Patterns to exclude.
   exclude: [
-    './e2e/specs/accessibility/*.spec.js'
+    './e2e/specs/accessibility/*.spec.js',
     // 'path/to/excluded/files'
   ],
   //
@@ -207,8 +207,8 @@ exports.config = {
   reporters: selectedReporters,
   reporterOptions: {
     junit: {
-      outputDir: './e2e/test-results'
-    }
+      outputDir: './e2e/test-results',
+    },
   },
 
   //
@@ -224,7 +224,7 @@ exports.config = {
     expectationResultHandler: function(passed, assertion) {
       // do something
     },
-    stopOnSpecFailure: true
+    stopOnSpecFailure: true,
   },
 
   mountebankConfig: {
@@ -233,8 +233,8 @@ exports.config = {
       imposterProtocol: 'https',
       imposterName: 'Linode-API',
       proxyHost: 'https://api.linode.com/v4',
-      mutualAuth: true
-    }
+      mutualAuth: true,
+    },
   },
 
   testUser: '', // SET IN THE BEFORE HOOK PRIOR TO EACH TEST
@@ -419,5 +419,5 @@ exports.config = {
     /* delete all data created during the test and remove test credentials
            from the underlying store */
     return credStore.cleanupAccounts();
-  }
+  },
 };

@@ -8,14 +8,14 @@ import {
   GetLinodeConfigsResponse,
   LinodeConfigCreateFields,
   LinodeConfigUpdateFields,
-  UpdateLinodeConfigResponse
+  UpdateLinodeConfigResponse,
 } from 'src/store/linodes/config/config.actions';
 import {
   createLinodeConfig as _createLinodeConfig,
   deleteLinodeConfig as _deleteLinodeConfig,
   getLinodeConfig as _getLinodeConfig,
   getLinodeConfigs as _getLinodeConfigs,
-  updateLinodeConfig as _updateLinodeConfig
+  updateLinodeConfig as _updateLinodeConfig,
 } from 'src/store/linodes/config/config.requests';
 import {
   CreateLinodeDiskResponse,
@@ -25,7 +25,7 @@ import {
   LinodeDiskCreateFields,
   LinodeDiskUpdateFields,
   ResizeLinodeDiskResponse,
-  UpdateLinodeDiskResponse
+  UpdateLinodeDiskResponse,
 } from 'src/store/linodes/disk/disk.actions';
 import {
   createLinodeDisk as _createLinodeDisk,
@@ -33,7 +33,7 @@ import {
   getLinodeDisk as _getLinodeDisk,
   getLinodeDisks as _getLinodeDisks,
   resizeLinodeDisk as _resizeLinodeDisk,
-  updateLinodeDisk as _updateLinodeDisk
+  updateLinodeDisk as _updateLinodeDisk,
 } from 'src/store/linodes/disk/disk.requests';
 import { updateLinode as _updateLinode } from 'src/store/linodes/linode.requests';
 import { ThunkDispatch } from 'src/store/types';
@@ -137,7 +137,7 @@ export const linodeDetailContextFactory = (
       dispatch(_deleteLinodeDisk({ linodeId, diskId })),
     resizeLinodeDisk: (diskId, size) =>
       dispatch(_resizeLinodeDisk({ linodeId, diskId, size })),
-    linode
+    linode,
   };
 };
 

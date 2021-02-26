@@ -3,13 +3,13 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { ExtendedNodeBalancer } from '../../types';
 import NodeBalancerCreationErrors, {
-  ConfigOrNodeErrorResponse
+  ConfigOrNodeErrorResponse,
 } from './NodeBalancerCreationErrors';
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
@@ -20,14 +20,14 @@ const styles = (theme: Theme) =>
   createStyles({
     main: {
       [theme.breakpoints.up('md')]: {
-        order: 1
-      }
+        order: 1,
+      },
     },
     sidebar: {
       [theme.breakpoints.up('md')]: {
-        order: 2
-      }
-    }
+        order: 2,
+      },
+    },
   });
 
 interface Props {

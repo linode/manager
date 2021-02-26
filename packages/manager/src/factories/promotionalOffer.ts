@@ -17,7 +17,7 @@ export const promotionalOfferFactory = Factory.Sync.makeFactory<
     {
       text: 'Cost Estimator',
       href: 'https://www.linode.com/products/object-storage/',
-      type: 'secondary'
-    }
-  ]
+      type: 'secondary',
+    },
+  ],
 });

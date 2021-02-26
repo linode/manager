@@ -8,7 +8,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -23,11 +23,11 @@ const styles = (theme: Theme) =>
     root: {
       padding: theme.spacing(3),
       paddingBottom: theme.spacing(3),
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     title: {
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   });
 
 interface Props {
@@ -59,7 +59,7 @@ export class SecuritySettings extends React.Component<CombinedProps, {}> {
     // This feature can only be disabled.
     this.props
       .updateProfile({
-        ip_whitelist_enabled: !this.props.ipAllowlistingEnabled
+        ip_whitelist_enabled: !this.props.ipAllowlistingEnabled,
       })
       .then(() => {
         onSuccess();

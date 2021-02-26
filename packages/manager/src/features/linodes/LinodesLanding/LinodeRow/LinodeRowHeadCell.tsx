@@ -22,19 +22,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.125rem',
     color: theme.cmrTextColors.linkActiveLight,
     '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   root: {
     '& h3': {
-      transition: theme.transitions.create(['color'])
+      transition: theme.transitions.create(['color']),
     },
     [theme.breakpoints.up('lg')]: {
-      width: '20%'
+      width: '20%',
     },
     [theme.breakpoints.up('xl')]: {
-      width: '35%'
-    }
+      width: '35%',
+    },
   },
   labelStatusWrapper: {
     display: 'flex',
@@ -44,8 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& a': {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      display: 'inline-block'
-    }
+      display: 'inline-block',
+    },
   },
   maintenanceContainer: {},
   maintenanceNotice: {
@@ -56,18 +56,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       fontSize: '.9rem',
       '& br': {
-        display: 'none'
-      }
-    }
+        display: 'none',
+      },
+    },
   },
   helpIcon: {
     paddingTop: 0,
-    paddingBottom: 0
+    paddingBottom: 0,
   },
   // The head cell in the VLAN Detail context.
   vlanContext: {
-    width: '14%'
-  }
+    width: '14%',
+  },
 }));
 
 interface Props {
@@ -107,7 +107,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
     width,
     maintenance,
     isDashboard,
-    isVLAN
+    isVLAN,
   } = props;
 
   const style = width ? { width: `${width}%` } : {};
@@ -125,7 +125,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
     <TableCell
       className={classnames({
         [classes.root]: true,
-        [classes.vlanContext]: isVLAN
+        [classes.vlanContext]: isVLAN,
       })}
       style={style}
     >
@@ -166,7 +166,7 @@ const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
   withImages((ownProps, imagesData) => ({
     ...ownProps,
-    imagesData: filterImagesByType(imagesData, 'public')
+    imagesData: filterImagesByType(imagesData, 'public'),
   }))
 );
 

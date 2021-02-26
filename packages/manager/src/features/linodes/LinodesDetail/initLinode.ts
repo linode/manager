@@ -12,10 +12,7 @@ interface OuterProps {
  */
 
 export default compose<OuterProps, {}>(
-  connect(
-    undefined,
-    { getLinode: _getLinode }
-  ),
+  connect(undefined, { getLinode: _getLinode }),
   lifecycle<OuterProps & { getLinode: GetLinodeRequest }, void>({
     componentDidMount() {
       const { linodeId, getLinode } = this.props;
@@ -27,6 +24,6 @@ export default compose<OuterProps, {}>(
       if (linodeId !== prevLinodeId) {
         _getLinode({ linodeId });
       }
-    }
+    },
   })
 );

@@ -37,7 +37,7 @@ describe('Header - Search Suite', () => {
         constants.routes.profile.view,
         constants.routes.profile.tokens,
         constants.routes.profile.oauth,
-        constants.routes.support.tickets
+        constants.routes.support.tickets,
       ];
 
       routes.forEach(r => {

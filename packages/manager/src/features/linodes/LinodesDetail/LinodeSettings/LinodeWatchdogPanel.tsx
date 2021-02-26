@@ -8,7 +8,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
@@ -19,7 +19,7 @@ import Toggle from 'src/components/Toggle';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
   LinodeActionsProps,
-  withLinodeActions
+  withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 
 type ClassNames = 'root' | 'shutDownWatchdog';
@@ -28,8 +28,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     shutDownWatchdog: {
-      margin: `${theme.spacing(2)}px 0`
-    }
+      margin: `${theme.spacing(2)}px 0`,
+    },
   });
 
 interface Props {
@@ -55,17 +55,17 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
   state: State = {
     currentStatus: this.props.currentStatus,
     linodeId: this.props.linodeId,
-    submitting: false
+    submitting: false,
   };
 
   toggleWatchdog = (e: React.ChangeEvent<HTMLElement>, value: boolean) => {
     const {
-      linodeActions: { updateLinode }
+      linodeActions: { updateLinode },
     } = this.props;
     this.setState({
       submitting: true,
       errors: undefined,
-      success: undefined
+      success: undefined,
     });
 
     updateLinode({ linodeId: this.props.linodeId, watchdog_enabled: value })
@@ -149,7 +149,7 @@ const L = {
   currentStatus: lensPath(['currentStatus']),
   error: lensPath(['errors']),
   submitting: lensPath(['submitting']),
-  success: lensPath(['success'])
+  success: lensPath(['success']),
 };
 
 const setCurrentStatus = (v: boolean) => set(L.currentStatus, v);
@@ -169,7 +169,7 @@ interface ContextProps {
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions
+  permissions: linode._permissions,
 }));
 
 export default recompose<CombinedProps, Props>(

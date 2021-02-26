@@ -22,7 +22,7 @@ export const defaultState: State = {
   entities: isProdAPI ? (regions?.data as Region[]) ?? [] : [],
   loading: true,
   lastUpdated: 0,
-  error: undefined
+  error: undefined,
 };
 
 /**
@@ -38,10 +38,10 @@ const fakeAtlanta = {
   resolvers: {
     ipv4:
       '173.230.129.5,173.230.136.5,173.230.140.5,66.228.59.5,66.228.62.5,50.116.35.5,50.116.41.5,23.239.18.5',
-    ipv6: ''
+    ipv6: '',
   },
   disabled: true,
-  display: 'Atlanta, GA'
+  display: 'Atlanta, GA',
 };
 
 /**

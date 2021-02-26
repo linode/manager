@@ -5,7 +5,7 @@ import { flatten } from 'ramda';
 import {
   apiCreateMultipleLinodes,
   apiDeleteAllLinodes,
-  timestamp
+  timestamp,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
@@ -15,7 +15,7 @@ describe('List Linodes Suite', () => {
   const linode = {
     linodeLabel: `AutoLinode${timestamp()}`,
     privateIp: false,
-    tags: [`AutoTag${timestamp()}`]
+    tags: [`AutoTag${timestamp()}`],
   };
 
   const assertActionMenuItems = linode => {
@@ -27,7 +27,7 @@ describe('List Linodes Suite', () => {
       'Resize',
       'View Backups',
       'Enable Backups',
-      'Delete'
+      'Delete',
     ];
     ListLinodes.actionMenuOptionExists(
       $(ListLinodes.getLinodeSelector(linode)),

@@ -23,7 +23,7 @@ import ScratchDialog from './ScratchCodeDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(4),
   },
   container: {
     display: 'flex',
@@ -31,22 +31,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'left',
     marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   copy: {
     lineHeight: '20px',
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(),
-    maxWidth: 900
+    maxWidth: 900,
   },
   button: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
   },
   disabled: {
     '& *': {
-      color: theme.color.disabledText
-    }
-  }
+      color: theme.color.disabledText,
+    },
+  },
 }));
 
 interface Props {
@@ -270,7 +270,7 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   twoFactor: path(['data', 'two_factor_auth'], state.__resources.profile),
-  username: path(['data', 'username'], state.__resources.profile)
+  username: path(['data', 'username'], state.__resources.profile),
 });
 
 interface DispatchProps {
@@ -281,7 +281,7 @@ const mapDispatchToProps: MapDispatchToProps<
   DispatchProps,
   Props
 > = dispatch => ({
-  refreshProfile: () => dispatch(requestProfile() as any)
+  refreshProfile: () => dispatch(requestProfile() as any),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

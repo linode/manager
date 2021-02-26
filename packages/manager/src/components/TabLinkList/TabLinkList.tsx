@@ -21,14 +21,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '6px 16px',
       textDecoration: 'none',
       '&:hover': {
-        color: theme.color.blue
-      }
+        color: theme.color.blue,
+      },
     },
     '&[data-reach-tab][data-selected]': {
       borderBottom: `3px solid ${theme.cmrTextColors.linkActiveLight}`,
       color: theme.cmrTextColors.headlineStatic,
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   },
   tabList: {
     color: theme.color.tableHeaderText,
@@ -38,10 +38,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: theme.spacing(),
       [theme.breakpoints.down('md')]: {
         overflowX: 'auto',
-        padding: 1
-      }
-    }
-  }
+        padding: 1,
+      },
+    },
+  },
 }));
 
 export interface Tab {

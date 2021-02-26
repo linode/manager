@@ -8,12 +8,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     width: '17%',
     [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   statusCellMaintenance: {
     [theme.breakpoints.up('md')]: {
-      width: '20%'
+      width: '20%',
     },
     '& .data': {
       display: 'flex',
@@ -22,20 +22,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: -12,
       [theme.breakpoints.down('sm')]: {
         minWidth: 200,
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
       },
       [theme.breakpoints.up('md')]: {
-        minWidth: 200
-      }
+        minWidth: 200,
+      },
     },
     '& button': {
       padding: '0 6px',
       position: 'relative',
       top: 1,
       [theme.breakpoints.up('md')]: {
-        padding: 6
-      }
-    }
+        padding: 6,
+      },
+    },
   },
   statusIcon: {
     display: 'inline-block',
@@ -44,24 +44,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '16px',
     marginRight: theme.spacing(),
     position: 'relative',
-    top: 2
+    top: 2,
   },
   statusIconRunning: {
-    backgroundColor: theme.cmrIconColors.iGreen
+    backgroundColor: theme.cmrIconColors.iGreen,
   },
   statusIconOther: {
-    backgroundColor: theme.cmrIconColors.iOrange
+    backgroundColor: theme.cmrIconColors.iOrange,
   },
   statusIconOffline: {
-    backgroundColor: theme.cmrIconColors.iGrey
+    backgroundColor: theme.cmrIconColors.iGrey,
   },
   statusIconError: {
-    backgroundColor: theme.color.red
+    backgroundColor: theme.color.red,
   },
   statusHelpIcon: {
     position: 'relative',
-    top: -2
-  }
+    top: -2,
+  },
 }));
 
 export type Status = 'active' | 'inactive' | 'error' | 'other';
@@ -85,7 +85,7 @@ export const StatusIcon: React.FC<StatusProps> = props => {
         [classes.statusIconOther]: !['inactive', 'active', 'error'].includes(
           status
         ),
-        statusOther: !['inactive', 'active', 'error'].includes(status)
+        statusOther: !['inactive', 'active', 'error'].includes(status),
       })}
     />
   );

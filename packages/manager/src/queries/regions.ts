@@ -13,5 +13,5 @@ export const useRegionsQuery = () =>
     placeholderData: cachedData as Region[],
     onError: () => {
       queryClient.setQueryData('regions', cachedData as Region[]);
-    }
+    },
   });

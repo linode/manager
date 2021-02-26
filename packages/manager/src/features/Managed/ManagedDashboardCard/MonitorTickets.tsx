@@ -31,12 +31,12 @@ interface Props {
   issues: ExtendedIssue[];
 }
 
-export const MonitorTickets: React.FC<Props> = (props) => {
+export const MonitorTickets: React.FC<Props> = props => {
   const { issues } = props;
   const classes = useStyles();
   const history = useHistory();
 
-  const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
+  const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
 
   const hasIssues = openIssues.length > 0;
 

@@ -23,7 +23,7 @@ describe('DateTimeDisplay component', () => {
         value: DateTime.utc()
           .minus({ minutes: 5 })
           .toFormat(ISO_DATETIME_NO_TZ_FORMAT),
-        humanizeCutoff: 'day'
+        humanizeCutoff: 'day',
       } as Props;
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
 
@@ -37,7 +37,7 @@ describe('DateTimeDisplay component', () => {
       it('cutoff month', () => {
         const props = {
           value: almostOneWeekString,
-          humanizeCutoff: 'month'
+          humanizeCutoff: 'month',
         } as Props;
         const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
         getByText('6 days ago');
@@ -46,7 +46,7 @@ describe('DateTimeDisplay component', () => {
       it('cutoff day', () => {
         const props = {
           value: almostOneWeekString,
-          humanizeCutoff: 'day'
+          humanizeCutoff: 'day',
         } as Props;
         const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
         getByText(`${almostOneWeek.year}`, { exact: false });
@@ -58,7 +58,7 @@ describe('DateTimeDisplay component', () => {
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const props = {
         value: aLongTimeAgo,
-        humanizeCutoff: 'never'
+        humanizeCutoff: 'never',
       } as Props;
       const { getByText } = renderWithTheme(<DateTimeDisplay {...props} />);
       getByText('10 years ago');

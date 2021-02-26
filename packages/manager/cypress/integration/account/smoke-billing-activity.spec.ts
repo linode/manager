@@ -16,7 +16,7 @@ const mockTwoInvoices = {
       label: 'Invoice adfgh',
       subtotal: 90.25,
       tax: 9.25,
-      total: 99.5
+      total: 99.5,
     },
     {
       id: '12345',
@@ -24,12 +24,12 @@ const mockTwoInvoices = {
       label: 'Invoice oiiohio',
       subtotal: 120.25,
       tax: 12.25,
-      total: 132.5
-    }
+      total: 132.5,
+    },
   ],
   page: 1,
   pages: 1,
-  results: 2
+  results: 2,
 };
 const timeZonesList = ['America/New_York', 'GMT', 'Asia/Hong_Kong'];
 
@@ -48,7 +48,7 @@ import { getProfile } from '../../support/api/account';
 import {
   containsClick,
   containsVisible,
-  fbtVisible
+  fbtVisible,
 } from '../../support/helpers';
 beforeEach(() => {
   getProfile().then(resp => {

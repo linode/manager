@@ -17,19 +17,19 @@ type CombinedProps = Props;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(4),
   },
   copy: {
     lineHeight: '20px',
     marginTop: 6,
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   link: {
-    fontWeight: 600
+    fontWeight: 600,
   },
   button: {
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 
 export const ThirdParty: React.FC<CombinedProps> = props => {

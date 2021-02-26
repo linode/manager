@@ -7,14 +7,14 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import withVolumesRequests, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeForm';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { number, object } from 'yup';
 import ConfigSelect from './ConfigSelect';
@@ -41,7 +41,7 @@ type CombinedProps = Props & StateProps & DispatchProps & VolumesRequests;
  */
 const validationScheme = object({
   volume_id: number().required(),
-  config_id: number().required()
+  config_id: number().required(),
 });
 
 const initialValues = { volume_id: -1, config_id: -1 };
@@ -53,7 +53,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
     linodeId,
     linodeRegion,
     linodeGrants,
-    readOnly
+    readOnly,
   } = props;
   const linodeGrant = linodeGrants.filter(
     (grant: Grant) => grant.id === linodeId
@@ -66,7 +66,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         attachVolume(values.volume_id, {
           linode_id: linodeId,
-          config_id: values.config_id
+          config_id: values.config_id,
         })
           .then(_ => {
             onClose();
@@ -97,7 +97,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
         setFieldValue,
         status,
         touched,
-        values
+        values,
       }) => {
         return (
           <Form>
@@ -175,10 +175,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
         openForCreating('Created from Linode Details', {
           linodeId: ownProps.linodeId,
           linodeLabel: ownProps.linodeLabel,
-          linodeRegion: ownProps.linodeRegion
+          linodeRegion: ownProps.linodeRegion,
         })
-      )
-  }
+      ),
+  },
 });
 
 interface StateProps {
@@ -190,7 +190,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
     [],
     ['__resources', 'profile', 'data', 'grants', 'linode'],
     state
-  )
+  ),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

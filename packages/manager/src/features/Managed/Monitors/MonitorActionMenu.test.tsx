@@ -4,7 +4,7 @@ import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   CombinedProps,
-  MonitorActionMenu as ActionMenu
+  MonitorActionMenu as ActionMenu,
 } from './MonitorActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
@@ -24,7 +24,7 @@ const props: CombinedProps = {
   enableServiceMonitor: jest.fn(),
   deleteServiceMonitor: jest.fn(),
   disableServiceMonitor: jest.fn(),
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 describe('Volume action menu', () => {

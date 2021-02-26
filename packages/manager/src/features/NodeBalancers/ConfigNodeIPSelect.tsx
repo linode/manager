@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 import { Props as TextFieldProps } from 'src/components/TextField';
@@ -17,8 +17,8 @@ type ClassNames = 'labelOuter';
 const styles = () =>
   createStyles({
     labelOuter: {
-      display: 'block'
-    }
+      display: 'block',
+    },
   });
 
 interface Props {
@@ -61,7 +61,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
         props.nodeAddress
           ? {
               value: props.nodeAddress,
-              label: props.nodeAddress
+              label: props.nodeAddress,
             }
           : null
       }

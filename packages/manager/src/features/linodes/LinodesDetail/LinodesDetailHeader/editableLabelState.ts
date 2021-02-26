@@ -14,17 +14,17 @@ export type EditableLabelProps = State & Handlers;
 
 export default withStateHandlers<State, Handlers, { linodeLabel: string }>(
   ({ linodeLabel }) => ({
-    editableLabelError: ''
+    editableLabelError: '',
   }),
   {
     resetEditableLabel: (state, { linodeLabel }) => () => ({
       ...state,
-      editableLabelError: ''
+      editableLabelError: '',
     }),
 
     setEditableLabelError: (state, ownProp) => errorText => ({
       ...state,
-      editableLabelError: errorText
-    })
+      editableLabelError: errorText,
+    }),
   }
 );

@@ -16,7 +16,7 @@ export const domainFactory = Factory.Sync.makeFactory<Domain>({
   refresh_sec: 100,
   expire_sec: 100,
   retry_sec: 100,
-  updated: '2020-01-01T13:00:00'
+  updated: '2020-01-01T13:00:00',
 });
 
 export const domainRecordFactory = Factory.Sync.makeFactory<DomainRecord>({
@@ -32,5 +32,5 @@ export const domainRecordFactory = Factory.Sync.makeFactory<DomainRecord>({
   ttl_sec: 0,
   tag: null,
   created: '2020-05-19T19:07:36',
-  updated: '2020-05-19T19:07:36'
+  updated: '2020-05-19T19:07:36',
 });

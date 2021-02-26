@@ -50,7 +50,7 @@ export class StackScriptSelectionRow extends React.Component<
       stackScriptID,
       stackScriptUsername,
       openStackScriptDrawer,
-      disabled
+      disabled,
     } = this.props;
 
     const renderLabel = () => {
@@ -127,7 +127,7 @@ const mapDispatchToProps: MapDispatchToProps<
 > = dispatch => {
   return {
     openStackScriptDrawer: (stackScriptId: number) =>
-      dispatch(openStackScriptDrawerAction(stackScriptId))
+      dispatch(openStackScriptDrawerAction(stackScriptId)),
   };
 };
 

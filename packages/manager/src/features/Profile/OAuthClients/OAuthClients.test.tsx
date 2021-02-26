@@ -16,7 +16,7 @@ describe('OAuth Clients', () => {
       redirect_uri: 'http://localhost:3000',
       thumbnail_url: 'http://localhost:3000',
       label: 'test1',
-      status: 'active'
+      status: 'active',
     },
     {
       public: true,
@@ -24,7 +24,7 @@ describe('OAuth Clients', () => {
       redirect_uri: 'http://localhost:3000',
       thumbnail_url: 'http://localhost:3000',
       label: 'test2',
-      status: 'active'
+      status: 'active',
     },
     {
       public: false,
@@ -32,8 +32,8 @@ describe('OAuth Clients', () => {
       redirect_uri: 'http://localhost:3000',
       thumbnail_url: 'http://localhost:3000',
       label: 'test3',
-      status: 'active'
-    }
+      status: 'active',
+    },
   ];
 
   let wrapper: ShallowWrapper;

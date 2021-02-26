@@ -9,26 +9,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     '& h2': {
-      color: '#32363c'
-    }
+      color: '#32363c',
+    },
   },
   swatchWrapper: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '20%'
+    width: '20%',
   },
   swatch: {
     content: '',
     height: 64,
     width: 64,
-    margin: theme.spacing(2)
+    margin: theme.spacing(2),
   },
   label: {
     color: '#606469',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 }));
 
 interface Props {
@@ -45,93 +45,93 @@ export const ColorPalette: React.FC<CombinedProps> = props => {
     { color: theme.cmrBGColors.bgApp, alias: 'theme.cmrBGColors.bgApp' },
     {
       color: theme.cmrBGColors.bgPrimaryNav,
-      alias: 'theme.cmrBGColors.bgPrimaryNav'
+      alias: 'theme.cmrBGColors.bgPrimaryNav',
     },
     {
       color: theme.cmrBGColors.bgPrimaryNavActive,
-      alias: 'theme.cmrBGColors.bgPrimaryNavActive'
+      alias: 'theme.cmrBGColors.bgPrimaryNavActive',
     },
     { color: theme.cmrBGColors.bgPaper, alias: 'theme.cmrBGColors.bgPaper' },
     {
       color: theme.cmrBGColors.bgPrimaryButton,
-      alias: 'theme.cmrBGColors.bgPrimaryButton'
+      alias: 'theme.cmrBGColors.bgPrimaryButton',
     },
     {
       color: theme.cmrBGColors.bgSecondaryButton,
-      alias: 'theme.cmrBGColors.bgSecondaryButton'
+      alias: 'theme.cmrBGColors.bgSecondaryButton',
     },
     {
       color: theme.cmrBGColors.bgTableHeader,
-      alias: 'theme.cmrBGColors.bgTableHeader'
+      alias: 'theme.cmrBGColors.bgTableHeader',
     },
     {
       color: theme.cmrBGColors.bgBillingSummary,
-      alias: 'theme.cmrBGColors.bgBillingSummary'
+      alias: 'theme.cmrBGColors.bgBillingSummary',
     },
     {
       color: theme.cmrBGColors.bgAccessRow,
-      alias: 'theme.cmrBGColors.bgAccessRow'
-    }
+      alias: 'theme.cmrBGColors.bgAccessRow',
+    },
   ];
 
   const cmrTextColors = [
     {
       color: theme.cmrTextColors.linkActiveLight,
-      alias: 'theme.cmrTextColors.linkActiveLight'
+      alias: 'theme.cmrTextColors.linkActiveLight',
     },
     {
       color: theme.cmrTextColors.headlineStatic,
-      alias: 'theme.cmrTextColors.headlineStatic'
+      alias: 'theme.cmrTextColors.headlineStatic',
     },
     {
       color: theme.cmrTextColors.tableStatic,
-      alias: 'theme.cmrTextColors.tableStatic'
+      alias: 'theme.cmrTextColors.tableStatic',
     },
     {
       color: theme.cmrTextColors.textAccessTable,
-      alias: 'theme.cmrTextColors.textAccessTable'
-    }
+      alias: 'theme.cmrTextColors.textAccessTable',
+    },
   ];
 
   const cmrBorderColors = [
     {
       color: theme.cmrBorderColors.borderTypography,
-      alias: 'theme.cmrBorderColors.borderTypography'
+      alias: 'theme.cmrBorderColors.borderTypography',
     },
     {
       color: theme.cmrBorderColors.borderTabs,
-      alias: 'theme.cmrBorderColors.borderTabs'
+      alias: 'theme.cmrBorderColors.borderTabs',
     },
     {
       color: theme.cmrBorderColors.borderTabActive,
-      alias: 'theme.cmrBorderColors.borderTabActive'
+      alias: 'theme.cmrBorderColors.borderTabActive',
     },
     {
       color: theme.cmrBorderColors.borderBillingSummary,
-      alias: 'theme.cmrBorderColors.borderBillingSummary'
+      alias: 'theme.cmrBorderColors.borderBillingSummary',
     },
     {
       color: theme.cmrBorderColors.borderBalance,
-      alias: 'theme.cmrBorderColors.borderBalance'
+      alias: 'theme.cmrBorderColors.borderBalance',
     },
     {
       color: theme.cmrBorderColors.borderTable,
-      alias: 'theme.cmrBorderColors.borderTable'
-    }
+      alias: 'theme.cmrBorderColors.borderTable',
+    },
   ];
 
   const cmrIconColors = [
     {
       color: theme.cmrIconColors.iActiveLight,
-      alias: 'theme.cmrIconColors.iActiveLight'
+      alias: 'theme.cmrIconColors.iActiveLight',
     },
     { color: theme.cmrIconColors.iGreen, alias: 'theme.cmrIconColors.iGreen' },
     {
       color: theme.cmrIconColors.iOrange,
-      alias: 'theme.cmrIconColors.iOrange'
+      alias: 'theme.cmrIconColors.iOrange',
     },
     { color: theme.cmrIconColors.iRed, alias: 'theme.cmrIconColors.iRed' },
-    { color: theme.cmrIconColors.iGrey, alias: 'theme.cmrIconColors.iGrey' }
+    { color: theme.cmrIconColors.iGrey, alias: 'theme.cmrIconColors.iGrey' },
   ];
 
   const createSwatch = (idx: number, color: string, alias: string) => {

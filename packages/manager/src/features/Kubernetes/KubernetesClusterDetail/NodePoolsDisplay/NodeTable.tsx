@@ -27,17 +27,17 @@ import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
-    width: '35%'
+    width: '35%',
   },
   statusCell: {
-    width: '15%'
+    width: '15%',
   },
   ipCell: {
-    width: '25%'
+    width: '25%',
   },
   error: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 // =============================================================================
@@ -72,7 +72,7 @@ export const NodeTable: React.FC<Props> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Paper>
@@ -188,7 +188,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
     typeLabel,
     nodeStatus,
     linodeError,
-    openRecycleNodeDialog
+    openRecycleNodeDialog,
   } = props;
 
   const classes = useStyles();
@@ -271,6 +271,6 @@ export const nodeToRow = (
     label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0],
-    nodeStatus: node.status
+    nodeStatus: node.status,
   };
 };

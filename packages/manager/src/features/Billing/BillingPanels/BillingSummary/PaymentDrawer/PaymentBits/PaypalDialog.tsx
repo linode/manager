@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import DialogActions, {
-  Props as ActionsProps
+  Props as ActionsProps,
 } from './PaypalDialogActionButtons';
 
 interface Props extends ActionsProps {
@@ -36,16 +36,16 @@ const PaypalDialog: React.SFC<CombinedProps> = props => {
 
   const dialogContent: Content = props.isStagingPaypalPayment
     ? {
-        title: 'Preparing Payment'
+        title: 'Preparing Payment',
       }
     : props.paypalPaymentFailed
     ? {
         title: 'Payment failed',
-        error: 'Could not complete PayPal payment'
+        error: 'Could not complete PayPal payment',
       }
     : {
         title: 'Confirm Payment',
-        message: `Confirm PayPal payment for $${usd} USD to Linode LLC?`
+        message: `Confirm PayPal payment for $${usd} USD to Linode LLC?`,
       };
 
   return (

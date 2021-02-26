@@ -8,7 +8,7 @@ import { CPU } from '../../request.types';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
 import withClientStats, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 
 type CombinedProps = Props & WithTheme & LVDataProps;
@@ -24,7 +24,7 @@ const CPUGauge: React.FC<CombinedProps> = props => {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
     longviewClientData,
-    lastUpdatedError
+    lastUpdatedError,
   } = props;
 
   const numberOfCores = pathOr(

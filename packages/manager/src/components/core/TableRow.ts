@@ -1,5 +1,5 @@
 import TableRow, {
-  TableRowProps as _TableRowProps
+  TableRowProps as _TableRowProps,
 } from '@material-ui/core/TableRow';
 
 /* tslint:disable-next-line:no-empty-interface */

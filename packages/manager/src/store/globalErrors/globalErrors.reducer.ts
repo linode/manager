@@ -10,7 +10,7 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
     return payload
       ? {
           ...state,
-          ...payload
+          ...payload,
         }
       : {};
   })
@@ -22,7 +22,7 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
     return payload
       ? {
           ...state,
-          ...payload
+          ...payload,
         }
       : {};
   })

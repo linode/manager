@@ -22,7 +22,7 @@ class Example extends React.Component<Props, State> {
     this.state = {
       list: [],
       isSearching: false,
-      selectedItem: ''
+      selectedItem: '',
     };
   }
 
@@ -39,7 +39,7 @@ class Example extends React.Component<Props, State> {
         .map(eachItem => {
           return {
             value: eachItem,
-            label: eachItem
+            label: eachItem,
           };
         });
 
@@ -47,7 +47,7 @@ class Example extends React.Component<Props, State> {
 
       this.setState({
         list: filteredList,
-        isSearching: false
+        isSearching: false,
       });
     }, 800);
   };

@@ -34,11 +34,11 @@ export const extendValidationSchema = (schema: any) => {
             return passwordError !== null
               ? this.createError({
                   message: passwordError,
-                  path: 'root_pass'
+                  path: 'root_pass',
                 })
               : true;
-          }
-        })
+          },
+        }),
     })
   );
 };

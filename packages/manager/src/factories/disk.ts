@@ -8,5 +8,5 @@ export const linodeDiskFactory = Factory.Sync.makeFactory<Disk>({
   created: '2018-01-01',
   updated: '2019-01-01',
   filesystem: 'raw',
-  size: 1000
+  size: 1000,
 });

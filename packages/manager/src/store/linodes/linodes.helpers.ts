@@ -48,12 +48,12 @@ export const addNotificationsToLinodes = (
              */
             when: foundNotification.when,
             until: foundNotification.until,
-            type: foundNotification.label as Type
-          }
+            type: foundNotification.label as Type,
+          },
         }
       : {
           ...eachLinode,
-          maintenance: null
+          maintenance: null,
         };
   });
 };

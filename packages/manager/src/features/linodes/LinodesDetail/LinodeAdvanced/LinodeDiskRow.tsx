@@ -11,26 +11,26 @@ import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   diskLabel: {
-    width: '20%'
+    width: '20%',
   },
   diskType: {
-    width: '10%'
+    width: '10%',
   },
   diskSize: {
-    width: '15%'
+    width: '15%',
   },
   diskCreated: {
-    width: '20%'
+    width: '20%',
   },
   progressBar: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   bar: {
     paddingLeft: theme.spacing(),
-    width: 250
-  }
+    width: 250,
+  },
 }));
 
 interface Props {
@@ -55,7 +55,7 @@ export const LinodeDiskRow: React.FC<Props> = props => {
     onRename,
     onResize,
     linodeStatus,
-    readOnly
+    readOnly,
   } = props;
 
   const resizeEvent = inProgressEvents.find(

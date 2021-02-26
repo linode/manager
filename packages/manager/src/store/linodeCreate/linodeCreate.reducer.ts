@@ -66,7 +66,7 @@ export const getInitialType = (): CreateTypes => {
 };
 
 export const defaultState: State = {
-  type: getInitialType()
+  type: getInitialType(),
 };
 
 const reducer: Reducer<State> = reducerWithInitialState(
@@ -76,7 +76,7 @@ const reducer: Reducer<State> = reducerWithInitialState(
 
   return {
     ...state,
-    type: payload
+    type: payload,
   };
 });
 

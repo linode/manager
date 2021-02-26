@@ -8,14 +8,14 @@ const stackConfig = {
   label: `${new Date().getTime()}-MyStackScript`,
   description: 'test stackscript example',
   revisionNote: new Date().getTime(),
-  script: '#!bin/bash'
+  script: '#!bin/bash',
 };
 
 const stackConfigWithRequiredUDFs = {
   label: `${new Date().getTime()}-MyStackScript`,
   description: 'test stackscript example',
   revisionNote: new Date().getTime(),
-  script: `#!bin/bash<br># <UDF name="DB_PASSWORD" Label="MySQL root Password" />`
+  script: `#!bin/bash<br># <UDF name="DB_PASSWORD" Label="MySQL root Password" />`,
 };
 
 class ConfigureStackScript extends Page {
@@ -185,18 +185,14 @@ class ConfigureStackScript extends Page {
         .getText()
     )
       .withContext(
-        `${assertLog.incorrectText} for ${
-          ListStackScripts.stackScriptDescription.selector
-        } selector`
+        `${assertLog.incorrectText} for ${ListStackScripts.stackScriptDescription.selector} selector`
       )
       .toContain(config.description);
     expect(
       myStackscript[0].$(ListStackScripts.stackScriptDeploys.selector).getText()
     )
       .withContext(
-        `${assertLog.incorrectText} for ${
-          ListStackScripts.stackScriptDescription.selector
-        } selector`
+        `${assertLog.incorrectText} for ${ListStackScripts.stackScriptDescription.selector} selector`
       )
       .toBe('0');
     expect(
@@ -205,9 +201,7 @@ class ConfigureStackScript extends Page {
         .isDisplayed()
     )
       .withContext(
-        `"${ListStackScripts.stackScriptRevision.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${ListStackScripts.stackScriptRevision.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
     expect(
@@ -216,9 +210,7 @@ class ConfigureStackScript extends Page {
         .isDisplayed()
     )
       .withContext(
-        `"${ListStackScripts.stackScriptActionMenu.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${ListStackScripts.stackScriptActionMenu.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
     ListStackScripts.waitForNotice(

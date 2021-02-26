@@ -68,8 +68,8 @@ export default (Component: React.ComponentType<any>) => {
                   userEmailAddress,
                   keys.map(k => k.label),
                   isCurrentUserSelected
-                )
-              ]
+                ),
+              ],
             });
           })
           .catch(() => {
@@ -101,10 +101,10 @@ export default (Component: React.ComponentType<any>) => {
                       user.email,
                       keys,
                       isSelected
-                    )
+                    ),
                   ];
-                }, [])
-              ]
+                }, []),
+              ],
             });
           })
           .catch(() => {
@@ -116,7 +116,7 @@ export default (Component: React.ComponentType<any>) => {
     state: State = {
       userSSHKeys: [],
       resetSSHKeys: this.resetSSHKeys,
-      requestKeys: this.requestKeys
+      requestKeys: this.requestKeys,
     };
 
     mounted: boolean = false;
@@ -133,7 +133,7 @@ export default (Component: React.ComponentType<any>) => {
     render() {
       return React.createElement(Component, {
         ...this.props,
-        ...this.state
+        ...this.state,
       });
     }
 
@@ -142,7 +142,7 @@ export default (Component: React.ComponentType<any>) => {
         ...state,
         userSSHKeys: state.userSSHKeys.map(user =>
           username === user.username ? { ...user, selected: result } : user
-        )
+        ),
       }));
 
     createUserObject = (
@@ -158,7 +158,7 @@ export default (Component: React.ComponentType<any>) => {
       )}?d=mp&s=24`,
       selected,
       onSSHKeyChange: (_: any, result: boolean) =>
-        this.toggleSSHUserKeys(username, result)
+        this.toggleSSHUserKeys(username, result),
     });
 
     isUserSelected = (
@@ -199,6 +199,6 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   username: path<string>(['data', 'username'], state.__resources.profile),
   userEmailAddress: path<string>(['data', 'email'], state.__resources.profile),
-  isRestricted: pathOr(false, ['restricted'], state.__resources.profile.data)
+  isRestricted: pathOr(false, ['restricted'], state.__resources.profile.data),
 });
 const connected = connect(mapStateToProps);

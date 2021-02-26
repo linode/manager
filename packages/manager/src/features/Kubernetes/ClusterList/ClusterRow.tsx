@@ -18,19 +18,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   clusterRow: {
     '&:before': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   actionCell: {
     display: 'flex',
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       Explicitly stating this as the theme file is automatically adding padding to the last cell
       We can remove once we make the full switch to CMR styling
       */
-    paddingRight: '0 !important'
+    paddingRight: '0 !important',
   },
   chip: {
     fontSize: '0.65rem',
@@ -53,13 +53,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 0,
     marginBottom: 0,
     marginLeft: theme.spacing(2),
-    borderRadius: '1px'
+    borderRadius: '1px',
   },
   version: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-start'
-  }
+    justifyContent: 'flex-start',
+  },
 }));
 
 export interface Props {

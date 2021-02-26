@@ -5,7 +5,7 @@ import {
   Payment,
   PaymentResponse,
   PaypalResponse,
-  Invoice
+  Invoice,
 } from '@linode/api-v4/lib/account';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
@@ -17,7 +17,7 @@ export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   total: 5,
   from: '2020-01-01T12:00:00',
   to: '2020-01-31T12:00:00',
-  type: 'hourly'
+  type: 'hourly',
 });
 
 const paymentDate = new Date('2020-01-01T00:00:00');
@@ -27,7 +27,7 @@ export const paymentFactory = Factory.Sync.makeFactory<Payment>({
     return paymentDate.toISOString();
   }),
   id: Factory.each(i => i),
-  usd: 5
+  usd: 5,
 });
 
 const invoiceDate = new Date('2020-01-01T00:00:00');
@@ -40,14 +40,14 @@ export const invoiceFactory = Factory.Sync.makeFactory<Invoice>({
   subtotal: 5,
   tax: 1,
   total: 6,
-  label: Factory.each(i => `Invoice #${i}`)
+  label: Factory.each(i => `Invoice #${i}`),
 });
 
 export const warningFactory = Factory.Sync.makeFactory<APIWarning>({
   title:
     'Your payment has been processed but we encountered an error releasing your resources.',
   detail:
-    'Object Storage could not be reactivated, please open a support ticket.'
+    'Object Storage could not be reactivated, please open a support ticket.',
 });
 
 export const creditPaymentResponseFactory = Factory.Sync.makeFactory<
@@ -56,9 +56,9 @@ export const creditPaymentResponseFactory = Factory.Sync.makeFactory<
   id: Factory.each(i => i),
   usd: 10,
   date: '2020-01-01T12:00:00',
-  warnings: warningFactory.buildList(1)
+  warnings: warningFactory.buildList(1),
 });
 
 export const paypalResponseFactory = Factory.Sync.makeFactory<PaypalResponse>({
-  warnings: warningFactory.buildList(1)
+  warnings: warningFactory.buildList(1),
 });

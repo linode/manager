@@ -9,7 +9,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type Variants =
@@ -30,75 +30,75 @@ const styles = (theme: Theme) =>
     label: {},
     root: {
       '&:last-child': {
-        marginRight: 8
+        marginRight: 8,
       },
     },
     deleteButton: {
-      minWidth: 'auto'
+      minWidth: 'auto',
     },
     white: {
       backgroundColor: theme.color.white,
       '&:hover': {
-        backgroundColor: theme.color.white
-      }
+        backgroundColor: theme.color.white,
+      },
     },
     gray: {
       backgroundColor: '#939598',
       color: 'white',
       '&:hover': {
-        backgroundColor: '#939598'
-      }
+        backgroundColor: '#939598',
+      },
     },
     lightGray: {
       backgroundColor: '#C9CACB',
       color: 'white',
       '&:hover': {
-        backgroundColor: '#C9CACB'
-      }
+        backgroundColor: '#C9CACB',
+      },
     },
     blue: {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
       '&:hover': {
-        backgroundColor: theme.palette.primary.main
-      }
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     lightBlue: {
       backgroundColor: theme.bg.lightBlue,
       '&:hover': {
         backgroundColor: theme.palette.primary.main,
-        color: 'white'
+        color: 'white',
       },
       '&:focus': {
         backgroundColor: theme.bg.lightBlue,
-        color: theme.color.black
-      }
+        color: theme.color.black,
+      },
     },
     green: {
       backgroundColor: '#61CD7B',
       color: 'white',
       '&:hover': {
-        backgroundColor: '#61CD7B'
-      }
+        backgroundColor: '#61CD7B',
+      },
     },
     lightGreen: {
       backgroundColor: '#DFF3E7',
       '&:hover': {
-        backgroundColor: '#DFF3E7'
-      }
+        backgroundColor: '#DFF3E7',
+      },
     },
     yellow: {
       backgroundColor: '#F8D147',
       '&:hover': {
-        backgroundColor: '#F8D147'
-      }
+        backgroundColor: '#F8D147',
+      },
     },
     lightYellow: {
       backgroundColor: '#FCF4DD',
       '&:hover': {
-        backgroundColor: '#FCF4DD'
-      }
-    }
+        backgroundColor: '#FCF4DD',
+      },
+    },
   });
 
 export interface Props extends ChipProps {
@@ -113,7 +113,7 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
 
 class Tag extends React.Component<CombinedProps, {}> {
   static defaultProps = {
-    colorVariant: 'gray' as Variants
+    colorVariant: 'gray' as Variants,
   };
 
   handleClick = (e: React.MouseEvent<any>) => {
@@ -146,7 +146,7 @@ class Tag extends React.Component<CombinedProps, {}> {
         className={classNames({
           ...(className && { [className]: true }),
           [classes[colorVariant!]]: true,
-          [classes.root]: true
+          [classes.root]: true,
         })}
         deleteIcon={
           chipProps.onDelete ? (
@@ -175,9 +175,6 @@ class Tag extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withRouter
-)(Tag);
+const enhanced = compose<CombinedProps, Props>(styled, withRouter)(Tag);
 
 export default enhanced;

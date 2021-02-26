@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import withPreferences, {
-  PreferencesActionsProps
+  PreferencesActionsProps,
 } from 'src/containers/preferences.container';
 
 import { getStorage } from 'src/utilities/storage';
@@ -47,7 +47,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
     toggleCallbackFn,
     children,
     preferences,
-    localStorageKey
+    localStorageKey,
   } = props;
 
   /** will be undefined and render-block children unless otherwise specified */
@@ -174,7 +174,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
               props
                 .updateUserPreferences({
                   ...response,
-                  [preferenceKey]: currentlySetPreference
+                  [preferenceKey]: currentlySetPreference,
                 })
                 .catch(() => /** swallow the error */ null);
             })
@@ -190,7 +190,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
           props
             .updateUserPreferences({
               ...props.preferences,
-              [preferenceKey]: currentlySetPreference
+              [preferenceKey]: currentlySetPreference,
             })
             .catch(() => /** swallow the error */ null);
 
@@ -312,7 +312,7 @@ export default (compose<CombinedProps, Props>(
     (ownProps, { data: preferences, error, lastUpdated }) => ({
       preferences,
       preferenceError: error,
-      preferencesLastUpdated: lastUpdated
+      preferencesLastUpdated: lastUpdated,
     })
   ),
   memoized

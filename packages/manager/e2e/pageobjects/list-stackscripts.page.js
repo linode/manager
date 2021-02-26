@@ -105,9 +105,7 @@ class ListStackScripts extends Page {
       .toBe(true);
     expect(this.landingHeader.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.stackScriptTable.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.stackScriptTable.selector}" selector`
       )
       .toBe('StackScripts');
     expect(this.create.isDisplayed())
@@ -120,16 +118,12 @@ class ListStackScripts extends Page {
       .toBe('button');
     expect(this.accountStackScriptTab.isDisplayed())
       .withContext(
-        `"${this.accountStackScriptTab.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${this.accountStackScriptTab.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
     expect(this.communityStackScriptTab.isDisplayed())
       .withContext(
-        `"${this.communityStackScriptTab.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${this.communityStackScriptTab.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
   }

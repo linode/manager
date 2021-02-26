@@ -23,14 +23,14 @@ const CredentialList = React.lazy(() => import('./Credentials/CredentialList'));
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
 const getAllCredentials = () =>
-  getAll<ManagedCredential>(getCredentials)().then((response) => response.data);
+  getAll<ManagedCredential>(getCredentials)().then(response => response.data);
 
 // We need to "Get All" on this request in order to handle Groups
 // as a quasi-independent entity.
 const getAllContacts = () =>
-  getAll<ManagedContact>(getManagedContacts)().then((res) => res.data);
+  getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
 
-export const ManagedLandingContent: React.FC<CombinedProps> = (props) => {
+export const ManagedLandingContent: React.FC<CombinedProps> = props => {
   const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
 
   const contacts = useAPIRequest<ManagedContact[]>(getAllContacts, []);

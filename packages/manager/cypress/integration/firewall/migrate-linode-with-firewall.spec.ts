@@ -2,7 +2,7 @@
 import {
   clickLinodeActionMenu,
   createLinode,
-  deleteAllTestLinodes
+  deleteAllTestLinodes,
 } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
 import {
@@ -11,7 +11,7 @@ import {
   fbtClick,
   getVisible,
   fbtVisible,
-  containsVisible
+  containsVisible,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
@@ -21,20 +21,20 @@ const fakeRegionsData = {
       capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
       country: 'uk',
       id: 'eu-west',
-      status: 'ok'
+      status: 'ok',
     },
     {
       capabilities: [
         'Linodes',
         'NodeBalancers',
         'Block Storage',
-        'Cloud Firewall'
+        'Cloud Firewall',
       ],
       country: 'sg',
       id: 'ap-south',
-      status: 'ok'
-    }
-  ]
+      status: 'ok',
+    },
+  ],
 };
 
 describe('Migrate Linode With Firewall', () => {
@@ -58,24 +58,24 @@ describe('Migrate Linode With Firewall', () => {
                   {
                     ports: '80',
                     protocol: 'TCP',
-                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
-                  }
+                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
+                  },
                 ],
                 outbound: [
                   {
                     ports: '80',
                     protocol: 'TCP',
-                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
-                  }
-                ]
+                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
+                  },
+                ],
               },
               tags: [],
-              devices: { linodes: [fakeLinodeId] }
-            }
+              devices: { linodes: [fakeLinodeId] },
+            },
           ],
           page: 1,
           pages: 1,
-          results: 1
+          results: 1,
         });
       });
     }).as('getFirewalls');
@@ -97,23 +97,23 @@ describe('Migrate Linode With Firewall', () => {
         memory: 2048,
         vcpus: 1,
         gpus: 0,
-        transfer: 2000
+        transfer: 2000,
       },
       alerts: {
         cpu: 90,
         network_in: 10,
         network_out: 10,
         transfer_quota: 80,
-        io: 10000
+        io: 10000,
       },
       backups: {
         enabled: true,
         schedule: { day: 'Scheduling', window: 'Scheduling' },
-        last_successful: '2020-08-02T22:26:19'
+        last_successful: '2020-08-02T22:26:19',
       },
       hypervisor: 'kvm',
       watchdog_enabled: true,
-      tags: []
+      tags: [],
     };
 
     // modify incoming response
@@ -125,7 +125,7 @@ describe('Migrate Linode With Firewall', () => {
 
     // intercept request and stub it, respond with 200
     cy.intercept('POST', `*/linode/instances/${fakeLinodeId}/migrate`, {
-      statusCode: 200
+      statusCode: 200,
     }).as('migrateReq');
 
     // modify incoming response
@@ -135,7 +135,7 @@ describe('Migrate Linode With Firewall', () => {
           data: [fakeLinodeData],
           page: 1,
           pages: 1,
-          results: 1
+          results: 1,
         });
       });
     }).as('getLinodes');

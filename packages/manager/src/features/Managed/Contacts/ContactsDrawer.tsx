@@ -4,7 +4,7 @@ import {
   createContact,
   createContactSchema,
   ManagedContact,
-  updateContact
+  updateContact,
 } from '@linode/api-v4/lib/managed';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
@@ -17,7 +17,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { ManagedContactGroup, Mode } from './common';
 
@@ -37,9 +37,9 @@ const emptyContactPayload: ContactPayload = {
   email: '',
   phone: {
     primary: '',
-    secondary: ''
+    secondary: '',
   },
-  group: ''
+  group: '',
 };
 
 const ContactsDrawer: React.FC<CombinedProps> = props => {
@@ -117,7 +117,7 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          setFieldValue
+          setFieldValue,
         }) => {
           const primaryPhoneError = pathOr('', ['phone', 'primary'], errors);
           // prettier-ignore
@@ -185,13 +185,13 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
                     values.group
                       ? {
                           value: values.group,
-                          label: values.group
+                          label: values.group,
                         }
                       : ''
                   }
                   options={groups.map(group => ({
                     label: group.groupName,
-                    value: group.groupName
+                    value: group.groupName,
                   }))}
                   onChange={(selectedGroup: Item) =>
                     setFieldValue('group', selectedGroup.value)

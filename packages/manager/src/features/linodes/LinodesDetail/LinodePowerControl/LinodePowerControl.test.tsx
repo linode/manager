@@ -15,7 +15,7 @@ describe('Linode Power Control Dialogs', () => {
         buttonInner: '',
         caret: '',
         caretDisabled: '',
-        hidden: ''
+        hidden: '',
       }}
       id={1}
       label="Test Linode"

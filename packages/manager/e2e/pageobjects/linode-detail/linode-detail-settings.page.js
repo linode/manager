@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 const { assertLog } = require('../../utils/assertionLog');
 const {
   generatePassword,
-  getDistributionLabel
+  getDistributionLabel,
 } = require('../../utils/common');
 
 import Page from '../page';

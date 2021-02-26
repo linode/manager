@@ -5,7 +5,7 @@ import {
   Grants,
   GrantType,
   updateGrants,
-  updateUser
+  updateUser,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
@@ -20,7 +20,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -56,46 +56,46 @@ const styles = (theme: Theme) =>
   createStyles({
     title: {
       [theme.breakpoints.down('sm')]: {
-        paddingLeft: theme.spacing()
-      }
+        paddingLeft: theme.spacing(),
+      },
     },
     toggle: {
-      marginRight: 3
+      marginRight: 3,
     },
     unrestrictedRoot: {
       marginTop: theme.spacing(2),
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     globalSection: {
       marginTop: theme.spacing(2),
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     globalRow: {
-      padding: `${theme.spacing(1)}px 0`
+      padding: `${theme.spacing(1)}px 0`,
     },
     section: {
       marginTop: theme.spacing(2),
-      paddingBottom: 0
+      paddingBottom: 0,
     },
     grantTable: {
       '& th': {
         width: '25%',
-        minWidth: 150
+        minWidth: 150,
       },
       '& td': {
         width: '100%',
         [theme.breakpoints.down('sm')]: {
           paddingRight: '0 !important',
-          paddingLeft: 0
-        }
-      }
+          paddingLeft: 0,
+        },
+      },
     },
     tableSubheading: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     selectAll: {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     setAll: {
       width: 300,
@@ -103,25 +103,25 @@ const styles = (theme: Theme) =>
       '& > div': {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
       },
       '& .react-select__menu, & .input': {
         width: 125,
         right: 0,
         marginLeft: theme.spacing(1),
-        textAlign: 'left'
+        textAlign: 'left',
       },
       '& .react-select__menu-list': {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     label: {
       '& div': {
         [theme.breakpoints.down('sm')]: {
-          width: '100%'
-        }
-      }
-    }
+          width: '100%',
+        },
+      },
+    },
   });
 
 interface Props {
@@ -160,8 +160,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     setAllPerm: 'null',
     saving: {
       global: false,
-      entity: false
-    }
+      entity: false,
+    },
   };
 
   globalBooleanPerms = [
@@ -173,7 +173,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'add_stackscripts',
     'add_images',
     'add_volumes',
-    'cancel_account'
+    'cancel_account',
   ];
 
   entityPerms = [
@@ -183,7 +183,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'volume',
     'nodebalancer',
     'domain',
-    'longview'
+    'longview',
   ];
 
   getUserGrants = () => {
@@ -197,14 +197,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               originalGrants: grants,
               loading: false,
               loadingGrants: false,
-              restricted: true
+              restricted: true,
             });
           } else {
             this.setState({
               grants,
               loading: false,
               loadingGrants: false,
-              restricted: false
+              restricted: false,
             });
           }
         })
@@ -213,7 +213,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             errors: getAPIErrorOrDefault(
               errResponse,
               'Unknown error occurred while fetching user permissions. Try again later.'
-            )
+            ),
           });
           scrollErrorIntoView();
         });
@@ -238,9 +238,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return this.setState({
         errors: [
           {
-            reason: `Can\'t set ${type} permissions at this time. Please try again later`
-          }
-        ]
+            reason: `Can\'t set ${type} permissions at this time. Please try again later`,
+          },
+        ],
       });
     }
 
@@ -275,7 +275,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             errors: getAPIErrorOrDefault(
               errResponse,
               'Error while updating global permissions for this user. Please try again later.'
-            )
+            ),
           });
           this.setState(set(lensPath(['saving', 'global']), false));
           scrollErrorIntoView();
@@ -294,9 +294,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return this.setState({
         errors: [
           {
-            reason: `Can\'t set entity-specific permissions at this time. Please try again later`
-          }
-        ]
+            reason: `Can\'t set entity-specific permissions at this time. Please try again later`,
+          },
+        ],
       });
     }
 
@@ -315,7 +315,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           const lensOrig = lensPath(['originalGrants', entity]);
           return [
             set(lens, grantsResponse[entity]),
-            set(lensOrig, grantsResponse[entity])
+            set(lensOrig, grantsResponse[entity]),
           ];
         });
         updateFns = flatten(updateFns);
@@ -338,7 +338,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           errors: getAPIErrorOrDefault(
             errResponse,
             'Error while updating entity-specific permissions for this user. Please try again later'
-          )
+          ),
         });
         this.setState(set(lensPath(['saving', 'entity']), false));
         scrollErrorIntoView();
@@ -374,14 +374,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { username } = this.props;
     this.setState({
       errors: [],
-      loadingGrants: true
+      loadingGrants: true,
     });
     if (username) {
       updateUser(username, { restricted: !this.state.restricted })
         .then(user => {
           this.setState({
             restricted: user.restricted,
-            success: undefined
+            success: undefined,
           });
         })
         .then(() => {
@@ -394,7 +394,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               errResponse,
               'Error when updating user restricted status. Please try again later.'
             ),
-            loadingGrants: false
+            loadingGrants: false,
           });
         });
     }
@@ -419,7 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_stackscripts: 'Can create StackScripts under this account',
       add_images: 'Can create frozen Images under this account',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
-      cancel_account: 'Can cancel the entire account'
+      cancel_account: 'Can cancel the entire account',
     };
     return (
       <Grid item key={perm} xs={12} sm={6} className="py0">
@@ -479,7 +479,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             heading="Read-Write"
             subheadings={[
-              'Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails.'
+              'Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails.',
             ]}
             checked={grants.global.account_access === 'read_write'}
             onClick={this.billingPermOnClick('read_write')}
@@ -606,7 +606,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       volume: 'Volumes',
       nodebalancer: 'NodeBalancers',
       domain: 'Domains',
-      longview: 'Longview Clients'
+      longview: 'Longview Clients',
     };
 
     return (
@@ -721,7 +721,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       this.entitySetAllTo(entity, value as GrantLevel)()
     );
     this.setState({
-      setAllPerm: e.value as 'null' | 'read_only' | 'read_write'
+      setAllPerm: e.value as 'null' | 'read_only' | 'read_write',
     });
   };
 
@@ -732,7 +732,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const permOptions = [
       { label: 'None', value: 'null' },
       { label: 'Read Only', value: 'read_only' },
-      { label: 'Read Write', value: 'read_write' }
+      { label: 'Read Write', value: 'read_write' },
     ];
 
     const defaultPerm = permOptions.find(eachPerm => {

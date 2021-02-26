@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import DialogTitle from 'src/components/DialogTitle';
 
@@ -18,11 +18,11 @@ const styles = (theme: Theme) =>
     root: {},
     error: {
       color: '#C44742',
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     actions: {
-      justifyContent: 'flex-end'
-    }
+      justifyContent: 'flex-end',
+    },
   });
 
 interface Props extends DialogProps {

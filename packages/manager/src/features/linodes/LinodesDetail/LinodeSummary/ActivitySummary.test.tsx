@@ -13,8 +13,8 @@ const props = {
   classes: {
     root: '',
     header: '',
-    viewMore: ''
-  }
+    viewMore: '',
+  },
 };
 const component = shallow(<ActivitySummary {...props} />);
 

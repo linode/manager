@@ -20,7 +20,7 @@ const initGTM = (w: any, d: any, s: any, l: any, i: any) => {
   w[l] = w[l] || [];
   w[l].push({
     'gtm.start': new Date().getTime(),
-    event: 'gtm.js'
+    event: 'gtm.js',
   });
   var f = d.getElementsByTagName(s)[0],
     j = d.createElement(s),
@@ -76,6 +76,6 @@ export const initGTMUser = (userId: string) => {
   (window as any).dataLayer.push({
     event: 'userInfo',
     gtmAccountID: GTM_ID,
-    gtmIndividualUserId: userId
+    gtmIndividualUserId: userId,
   });
 };

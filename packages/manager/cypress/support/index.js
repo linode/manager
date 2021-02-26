@@ -28,7 +28,7 @@ import { deleteAllTestImages } from './api/images';
 import { deleteAllTestClients } from './api/longview';
 import {
   deleteAllTestAccessKeys,
-  deleteAllTestBuckets
+  deleteAllTestBuckets,
 } from './api/objectStorage';
 import { deleteAllTestFirewalls } from './api/firewalls';
 it('Delete All Test Entities before anything happens', () => {

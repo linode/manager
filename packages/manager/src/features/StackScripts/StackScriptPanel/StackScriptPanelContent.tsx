@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import {
   deleteStackScript,
   StackScript,
-  updateStackScript
+  updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -12,7 +12,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import StackScriptBase, {
-  StateProps
+  StateProps,
 } from '../StackScriptBase/StackScriptBase';
 import StackScriptsSection from './StackScriptsSection';
 
@@ -44,14 +44,14 @@ type CombinedProps = Props & StateProps;
 const defaultDialogState = {
   delete: {
     open: false,
-    submitting: false
+    submitting: false,
   },
   makePublic: {
     open: false,
-    submitting: false
+    submitting: false,
   },
   stackScriptID: undefined,
-  stackScriptLabel: ''
+  stackScriptLabel: '',
 };
 
 export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
@@ -72,7 +72,7 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
 
   const handleCloseDialog = () => {
     setDialogState({
-      ...defaultDialogState
+      ...defaultDialogState,
     });
   };
 
@@ -80,14 +80,14 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
     setDialogState({
       delete: {
         open: true,
-        submitting: false
+        submitting: false,
       },
       makePublic: {
         open: false,
-        submitting: false
+        submitting: false,
       },
       stackScriptID: id,
-      stackScriptLabel: label
+      stackScriptLabel: label,
     });
   };
 
@@ -95,14 +95,14 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
     setDialogState({
       delete: {
         open: false,
-        submitting: false
+        submitting: false,
       },
       makePublic: {
         open: true,
-        submitting: false
+        submitting: false,
       },
       stackScriptID: id,
-      stackScriptLabel: label
+      stackScriptLabel: label,
     });
   };
 
@@ -112,8 +112,8 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
       delete: {
         ...dialog.delete,
         submitting: true,
-        error: undefined
-      }
+        error: undefined,
+      },
     });
     deleteStackScript(dialog.stackScriptID!)
       .then(_ => {
@@ -132,12 +132,12 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
           delete: {
             open: true,
             submitting: false,
-            error: e[0].reason
+            error: e[0].reason,
           },
           makePublic: {
             open: false,
-            submitting: false
-          }
+            submitting: false,
+          },
         });
       });
   };

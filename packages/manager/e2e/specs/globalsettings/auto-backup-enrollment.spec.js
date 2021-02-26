@@ -5,7 +5,7 @@ import {
   timestamp,
   retrieveGlobalSettings,
   apiDeleteAllLinodes,
-  switchTab
+  switchTab,
 } from '../../utils/common';
 import Dashboard from '../../pageobjects/dashboard.page';
 import GlobalSettings from '../../pageobjects/account/global-settings.page';

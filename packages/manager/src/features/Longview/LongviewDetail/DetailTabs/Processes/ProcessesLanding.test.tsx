@@ -42,7 +42,7 @@ describe('extendData utility function', () => {
     expect(extendData({ Processes: {} })).toEqual([]);
     expect(extendData({ Processes: { bash: {} } as any })).toEqual([]);
     const extendedMalformedData = extendData({
-      Processes: { bash: { root: {} } } as any
+      Processes: { bash: { root: {} } } as any,
     });
     expect(extendedMalformedData[0].name).toEqual('bash');
     expect(extendedMalformedData[0].user).toEqual('root');

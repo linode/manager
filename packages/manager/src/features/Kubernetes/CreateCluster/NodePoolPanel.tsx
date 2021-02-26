@@ -8,7 +8,7 @@ import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectPlanQuantityPanel, {
   ExtendedType,
-  ExtendedTypeWithCount
+  ExtendedTypeWithCount,
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
@@ -17,22 +17,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& .tabbedPanel': {
       marginTop: 0,
-      paddingTop: 0
-    }
+      paddingTop: 0,
+    },
   },
   title: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   gridItem: {
     paddingLeft: theme.spacing(3),
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   countInput: {
-    maxWidth: '5em'
+    maxWidth: '5em',
   },
   notice: {
-    paddingLeft: theme.spacing(3)
-  }
+    paddingLeft: theme.spacing(3),
+  },
 }));
 
 interface Props {
@@ -51,7 +51,7 @@ export const addCountToTypes = (
 ): ExtendedTypeWithCount[] => {
   return types.map(thisType => ({
     ...thisType,
-    count: 0
+    count: 0,
   }));
 };
 
@@ -94,7 +94,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       id: Math.random(),
       type: selectedPlanType,
       count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types)
+      totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types),
     });
     updatePlanCount(selectedPlanType, 0);
     setSelectedType(undefined);

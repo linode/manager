@@ -2,7 +2,7 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 
 /* eslint-disable sonarjs/no-duplicate-string */
@@ -20,7 +20,7 @@ const accountData = {
     'NodeBalancers',
     'Block Storage',
     'Object Storage',
-    'Kubernetes'
+    'Kubernetes',
   ],
   city: 'philadelphia',
   country: 'US',
@@ -30,7 +30,7 @@ const accountData = {
   state: 'Pennsylvania',
   tax_id: '1234567890',
   zip: '19109',
-  active_promotions: []
+  active_promotions: [],
 };
 
 const newAccountData = {
@@ -45,7 +45,7 @@ const newAccountData = {
   phone: '6104444444',
   state: 'New Pennsylvania',
   tax_id: '9234567890',
-  zip: '19108'
+  zip: '19108',
 };
 
 const checkAccountContactDisplay = data => {

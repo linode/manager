@@ -1,7 +1,7 @@
 import * as Factory from 'factory.ts';
 import {
   EntityTransfer,
-  TransferEntities
+  TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers/types';
 import { v4 } from 'uuid';
 import { DateTime } from 'luxon';
@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 export const transferEntitiesFactory = Factory.Sync.makeFactory<
   TransferEntities
 >({
-  linodes: [0, 1, 2, 3]
+  linodes: [0, 1, 2, 3],
 });
 
 export const entityTransferFactory = Factory.Sync.makeFactory<EntityTransfer>({
@@ -21,5 +21,5 @@ export const entityTransferFactory = Factory.Sync.makeFactory<EntityTransfer>({
     .toISO(),
   created: DateTime.local().toISO(),
   updated: DateTime.local().toISO(),
-  status: 'pending'
+  status: 'pending',
 });

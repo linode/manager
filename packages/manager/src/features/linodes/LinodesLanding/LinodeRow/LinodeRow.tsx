@@ -2,7 +2,7 @@ import { Notification } from '@linode/api-v4/lib/account';
 import {
   Config,
   LinodeBackups,
-  LinodeStatus
+  LinodeStatus,
 } from '@linode/api-v4/lib/linodes';
 import * as classNames from 'classnames';
 import * as React from 'react';
@@ -20,12 +20,12 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
   getProgressOrDefault,
   linodeInTransition,
-  transitionText
+  transitionText,
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import hasMutationAvailable, {
-  HasMutationAvailable
+  HasMutationAvailable,
 } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
@@ -112,7 +112,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
     // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable,
-    isVLAN
+    isVLAN,
   } = props;
 
   const loading = linodeInTransition(status, recentEvent);
@@ -177,7 +177,7 @@ export const LinodeRow: React.FC<CombinedProps> = props => {
         className={classNames({
           [classes.statusCell]: true,
           [classes.statusCellMaintenance]: maintenanceStartTime,
-          [classes.vlan_Status]: isVLAN
+          [classes.vlan_Status]: isVLAN,
         })}
         data-qa-status
       >

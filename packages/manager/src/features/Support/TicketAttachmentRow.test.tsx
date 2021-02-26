@@ -11,14 +11,14 @@ const props = {
   icons: [
     <InsertDriveFile key={0} />,
     <InsertPhoto key={1} />,
-    <InsertPhoto key={2} />
+    <InsertPhoto key={2} />,
   ],
   classes: {
     root: '',
     attachmentPaper: '',
     attachmentRow: '',
-    attachmentIcon: ''
-  }
+    attachmentIcon: '',
+  },
 };
 
 const component = shallow(<TicketAttachmentRow {...props} />);

@@ -2,7 +2,7 @@ import {
   getMyGrants,
   getProfile,
   Profile,
-  updateProfile as _updateProfile
+  updateProfile as _updateProfile,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
@@ -49,7 +49,7 @@ export const requestProfile: ThunkActionCreator<Promise<Profile>> = () => (
   return getProfile()
     .then(profile => ({
       ...profile,
-      timezone: getTimezone(getState(), profile.timezone)
+      timezone: getTimezone(getState(), profile.timezone),
     }))
     .then(maybeRequestGrants)
     .then(response => {
@@ -90,7 +90,7 @@ const handleUpdateSuccess = (
   dispatch(
     done({
       params: payload,
-      result
+      result,
     })
   );
   return result;
@@ -105,7 +105,7 @@ const handleUpdateFailure = (
   dispatch(
     failed({
       params: payload,
-      error
+      error,
     })
   );
   throw error;

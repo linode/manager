@@ -29,7 +29,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
         initialValues={{
           label: '',
           password: '',
-          username: ''
+          username: '',
         }}
         validationSchema={creationSchema}
         validateOnChange={false}
@@ -43,7 +43,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
           handleChange,
           handleBlur,
           handleSubmit,
-          isSubmitting
+          isSubmitting,
         }) => (
           <>
             {status && (

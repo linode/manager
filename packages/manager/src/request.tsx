@@ -38,7 +38,7 @@ export const handleError = (error: AxiosError) => {
   const url = config.url ?? '';
   const status: number = error.response?.status ?? 0;
   const errors: APIError[] = error.response?.data?.errors ?? [
-    { reason: DEFAULT_ERROR_MESSAGE }
+    { reason: DEFAULT_ERROR_MESSAGE },
   ];
 
   /** AxiosError contains the original POST data as stringified JSON */
@@ -61,7 +61,7 @@ export const handleError = (error: AxiosError) => {
           }
         />
       ),
-      condition: e => !!e.reason.match(/verification is required/i)
+      condition: e => !!e.reason.match(/verification is required/i),
     },
     {
       /**
@@ -82,11 +82,11 @@ export const handleError = (error: AxiosError) => {
         if (store && !store.getState().globalErrors.account_unactivated) {
           store.dispatch(
             setErrors({
-              account_unactivated: true
+              account_unactivated: true,
             })
           );
         }
-      }
+      },
     },
     {
       replacementText: <MigrateError />,
@@ -95,8 +95,8 @@ export const handleError = (error: AxiosError) => {
           !!e.reason.match(/migrations are currently disabled/i) &&
           !!url.match(/migrate/i)
         );
-      }
-    }
+      },
+    },
   ]);
 
   // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
@@ -115,8 +115,8 @@ baseRequest.interceptors.request.use(config => {
     url,
     headers: {
       ...config.headers,
-      ...(token && { Authorization: `${token}` })
-    }
+      ...(token && { Authorization: `${token}` }),
+    },
   };
 });
 
@@ -156,12 +156,12 @@ export const injectEuuidToProfile = (
     if (xCustomerUuidHeader) {
       const profileWithEuuid = {
         ...response.data,
-        _euuidFromHttpHeader: xCustomerUuidHeader
+        _euuidFromHttpHeader: xCustomerUuidHeader,
       };
 
       return {
         ...response,
-        data: profileWithEuuid
+        data: profileWithEuuid,
       };
     }
   }

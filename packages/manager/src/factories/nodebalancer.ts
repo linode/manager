@@ -2,7 +2,7 @@ import * as Factory from 'factory.ts';
 import {
   NodeBalancer,
   NodeBalancerConfig,
-  NodeBalancerConfigNode
+  NodeBalancerConfigNode,
 } from '@linode/api-v4/lib/nodebalancers/types';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
@@ -18,9 +18,9 @@ export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   transfer: {
     in: 0,
     out: 0,
-    total: 0
+    total: 0,
   },
-  tags: []
+  tags: [],
 });
 
 export const nodeBalancerConfigFactory = Factory.Sync.makeFactory<
@@ -46,7 +46,7 @@ export const nodeBalancerConfigFactory = Factory.Sync.makeFactory<
   ssl_commonname: '',
   ssl_fingerprint: '',
   ssl_key: '',
-  stickiness: 'table'
+  stickiness: 'table',
 });
 
 export const nodeBalancerConfigNodeFactory = Factory.Sync.makeFactory<
@@ -59,5 +59,5 @@ export const nodeBalancerConfigNodeFactory = Factory.Sync.makeFactory<
   mode: 'accept',
   nodebalancer_id: Factory.each(id => id),
   status: 'DOWN',
-  weight: 100
+  weight: 100,
 });

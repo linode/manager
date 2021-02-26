@@ -4,7 +4,7 @@ import store from 'src/store';
 import {
   dedupeLabel,
   LabelProps,
-  withLabelGenerator
+  withLabelGenerator,
 } from './withLabelGenerator';
 
 const RawComponent = withLabelGenerator(() => <div />);
@@ -29,7 +29,7 @@ describe('withLabelGenerator HOC', () => {
       >);
     expect(nestedComponent.props().customLabel).toBe('');
     nestedComponent.props().updateCustomLabel({
-      target: { value: 'hello world' }
+      target: { value: 'hello world' },
     } as React.ChangeEvent<HTMLInputElement>);
     expect(nestedComponent.props().customLabel).toBe('hello world');
   });
@@ -37,7 +37,7 @@ describe('withLabelGenerator HOC', () => {
   it('returns custom label after custom label has been altered', () => {
     expect(nestedComponent.props().getLabel('ubuntu')).toBe('ubuntu');
     nestedComponent.props().updateCustomLabel({
-      target: { value: 'hello world' }
+      target: { value: 'hello world' },
     } as React.ChangeEvent<HTMLInputElement>);
     expect(nestedComponent.props().getLabel('ubuntu')).toBe('hello world');
   });

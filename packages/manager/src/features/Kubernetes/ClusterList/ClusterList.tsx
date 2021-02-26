@@ -60,7 +60,7 @@ const defaultDialogState = {
   loading: false,
   selectedClusterID: 0,
   selectedClusterLabel: '',
-  selectedClusterNodePools: []
+  selectedClusterNodePools: [],
 };
 
 const defaultUpgradeDialogState = {
@@ -68,7 +68,7 @@ const defaultUpgradeDialogState = {
   selectedClusterID: 0,
   selectedClusterLabel: '',
   currentVersion: '',
-  nextVersion: null
+  nextVersion: null,
 };
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
@@ -87,7 +87,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   const clustersWithNextVersion: ClusterWithVersion[] = React.useMemo(() => {
     return clusters.map(thisCluster => ({
       ...thisCluster,
-      nextVersion: getNextVersion(thisCluster.k8s_version, versions)
+      nextVersion: getNextVersion(thisCluster.k8s_version, versions),
     }));
   }, [clusters, versions]);
 
@@ -107,7 +107,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
       selectedClusterID: clusterID,
       selectedClusterLabel: clusterLabel,
       currentVersion,
-      nextVersion
+      nextVersion,
     });
   };
 
@@ -126,7 +126,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
       loading: false,
       selectedClusterID: clusterID,
       selectedClusterLabel: clusterLabel,
-      selectedClusterNodePools: clusterPools
+      selectedClusterNodePools: clusterPools,
     });
   };
 
@@ -141,7 +141,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         setDialogState({
           ...dialog,
           loading: false,
-          open: false
+          open: false,
         });
       })
       .catch(() => {
@@ -168,7 +168,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
               handlePageChange,
               handlePageSizeChange,
               page,
-              pageSize
+              pageSize,
             }) => (
               <>
                 <Paper>

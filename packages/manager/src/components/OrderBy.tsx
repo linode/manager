@@ -9,7 +9,7 @@ import {
   sortByArrayLength,
   sortByNumber,
   sortByString,
-  sortByUTFDate
+  sortByUTFDate,
 } from 'src/utilities/sort-by';
 import { debounce } from 'throttle-debounce';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
@@ -68,13 +68,13 @@ export const getInitialValuesFromUserPreferences = (
   if (['asc', 'desc'].includes(params.order) && params.orderBy) {
     return {
       order: params.order,
-      orderBy: params.orderBy
+      orderBy: params.orderBy,
     };
   }
   return (
     preferences?.sortKeys?.[preferenceKey] ?? {
       orderBy: defaultOrderBy,
-      order: defaultOrder
+      order: defaultOrder,
     }
   );
 };
@@ -187,8 +187,8 @@ export const OrderBy: React.FC<CombinedProps> = props => {
         updatePreferences({
           sortKeys: {
             ...(preferences?.sortKeys ?? {}),
-            [props.preferenceKey]: { order, orderBy }
-          }
+            [props.preferenceKey]: { order, orderBy },
+          },
         });
       }
     })
@@ -210,7 +210,7 @@ export const OrderBy: React.FC<CombinedProps> = props => {
     orderBy,
     handleOrderChange,
     data: sortedData,
-    count: props.data.length
+    count: props.data.length,
   };
 
   // eslint-disable-next-line

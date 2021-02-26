@@ -9,8 +9,8 @@ export const deleteTicketById = (ticketId: number) => {
     url:
       Cypress.env('REACT_APP_API_ROOT') + `/support/tickets/${ticketId}/close`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 

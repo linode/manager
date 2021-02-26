@@ -14,24 +14,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
     margin: 'auto',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   barLabels: {
     display: 'flex',
     flexFlow: 'row nowrap',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(0.5)
+    marginBottom: theme.spacing(0.5),
   },
   poolUsageProgress: {
     marginBottom: theme.spacing(1) / 2,
     '& .MuiLinearProgress-root': {
-      borderRadius: 1
-    }
+      borderRadius: 1,
+    },
   },
   title: {
     marginBottom: theme.spacing(),
     paddingLeft: theme.spacing(),
-    fontSize: '0.95rem'
+    fontSize: '0.95rem',
   },
   link: {
     display: 'flex',
@@ -39,32 +39,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'row nowrap',
     marginTop: theme.spacing(1),
     '& p': {
-      marginRight: 4
+      marginRight: 4,
     },
     '& svg': {
       width: 15,
       height: 15,
       color: theme.palette.text.primary,
       '&:hover': {
-        color: 'inherit'
-      }
-    }
+        color: 'inherit',
+      },
+    },
   },
   paper: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   wrapper: {
     border: 'none',
     backgroundColor: 'inherit',
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   proratedNotice: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   openModalButton: {
-    ...theme.applyLinkStyles
-  }
+    ...theme.applyLinkStyles,
+  },
 }));
 
 export interface Props {

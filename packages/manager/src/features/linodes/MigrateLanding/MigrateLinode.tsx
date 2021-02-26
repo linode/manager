@@ -32,15 +32,15 @@ import ConfigureForm from './ConfigureForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   actionWrapper: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   vlanHelperText: {
-    marginTop: theme.spacing() / 2
-  }
+    marginTop: theme.spacing() / 2,
+  },
 }));
 
 interface Props {
@@ -117,7 +117,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     setLoading(true);
 
     return scheduleOrQueueMigration(linodeID, {
-      region: selectedRegion
+      region: selectedRegion,
     })
       .then(() => {
         resetEventsPolling();
@@ -126,7 +126,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
           region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
-            format: 'H'
+            format: 'H',
           })
         );
         enqueueSnackbar(
@@ -243,7 +243,7 @@ const mapStateToProps: MapStateToProps<
   {},
   ApplicationState
 > = state => ({
-  notifications: state.__resources.notifications.data || []
+  notifications: state.__resources.notifications.data || [],
 });
 
 const withReduxState = connect(mapStateToProps);

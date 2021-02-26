@@ -12,7 +12,7 @@ export const basePerms = [
   'nodebalancers',
   'object_storage',
   'stackscripts',
-  'volumes'
+  'volumes',
 ];
 
 export const basePermNameMap: Record<string, string> = {
@@ -27,7 +27,7 @@ export const basePermNameMap: Record<string, string> = {
   nodebalancers: 'NodeBalancers',
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
-  volumes: 'Volumes'
+  volumes: 'Volumes',
 };
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
@@ -39,7 +39,7 @@ export const levelMap = {
   view: 1,
   modify: 2,
   create: 2,
-  delete: 2
+  delete: 2,
 };
 
 const defaultScopeMap = (perms: string[]): Record<string, 0> =>
@@ -83,7 +83,7 @@ export const scopeStringToPermTuples = (
     const [perm, level] = scopeStr.split(':');
     return {
       ...map,
-      [perm]: levelMap[level]
+      [perm]: levelMap[level],
     };
   }, defaultScopeMap(perms));
 
@@ -99,7 +99,7 @@ export const scopeStringToPermTuples = (
    * So read above in Andrews comments about the deprecated levels.
    */
   const deprecatedPermissionsMap: Record<string, string[]> = {
-    account: ['tokens', 'clients', 'users', 'tickets', 'managed']
+    account: ['tokens', 'clients', 'users', 'tickets', 'managed'],
   };
 
   const combinedScopeMap = Object.entries(deprecatedPermissionsMap).reduce(

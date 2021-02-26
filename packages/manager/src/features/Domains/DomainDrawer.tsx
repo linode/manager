@@ -1,7 +1,7 @@
 import {
   cloneDomain,
   createDomainRecord,
-  Domain
+  Domain,
 } from '@linode/api-v4/lib/domains';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
@@ -22,7 +22,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import MultipleIPInput from 'src/components/MultipleIPInput';
@@ -32,25 +32,25 @@ import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import {
   CLONING,
   EDITING,
   Origin as DomainDrawerOrigin,
-  resetDrawer
+  resetDrawer,
 } from 'src/store/domainDrawer';
 import { upsertDomain } from 'src/store/domains/domains.actions';
 import {
   DomainActionsProps,
-  withDomainActions
+  withDomainActions,
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   ExtendedIP,
   extendedIPToString,
-  stringToExtendedIP
+  stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
@@ -62,8 +62,8 @@ const styles = (theme: Theme) =>
   createStyles({
     divider: {
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(4)
-    }
+      marginBottom: theme.spacing(4),
+    },
   });
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
@@ -110,18 +110,18 @@ export const generateDefaultDomainRecords = (
   const baseIPv4Requests = [
     createDomainRecord(domainID, {
       type: 'A',
-      target: ipv4
+      target: ipv4,
     }),
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4,
-      name: 'www'
+      name: 'www',
     }),
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4,
-      name: 'mail'
-    })
+      name: 'mail',
+    }),
   ];
 
   return Promise.all(
@@ -131,23 +131,23 @@ export const generateDefaultDomainRecords = (
           ...baseIPv4Requests,
           createDomainRecord(domainID, {
             type: 'AAAA',
-            target: cleanedIPv6
+            target: cleanedIPv6,
           }),
           createDomainRecord(domainID, {
             type: 'AAAA',
             target: cleanedIPv6,
-            name: 'www'
+            name: 'www',
           }),
           createDomainRecord(domainID, {
             type: 'AAAA',
             target: cleanedIPv6,
-            name: 'mail'
+            name: 'mail',
           }),
           createDomainRecord(domainID, {
             type: 'MX',
             priority: 10,
-            target: `mail.${domain}`
-          })
+            target: `mail.${domain}`,
+          }),
         ]
       : baseIPv4Requests
   );
@@ -167,11 +167,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     axfr_ips: [''],
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,
-    selectedDefaultNodeBalancer: undefined
+    selectedDefaultNodeBalancer: undefined,
   };
 
   state: State = {
-    ...this.defaultState
+    ...this.defaultState,
   };
 
   componentDidMount() {
@@ -203,7 +203,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         tags,
         master_ips,
         type,
-        soa_email
+        soa_email,
       } = this.props.domainProps;
       this.setState({
         tags: tags.map(tag => ({ label: tag, value: tag })),
@@ -211,7 +211,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         domain,
         master_ips: getInitialIPs(master_ips),
         axfr_ips: getInitialIPs(axfr_ips),
-        soaEmail: soa_email
+        soaEmail: soa_email,
       });
     }
   }
@@ -225,7 +225,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       cloneName,
       errors,
       submitting,
-      tags
+      tags,
     } = this.state;
 
     const errorMap = getErrorMap(
@@ -237,7 +237,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         'soa_email',
         'tags',
         'defaultNodeBalancer',
-        'defaultLinode'
+        'defaultLinode',
       ],
       errors
     );
@@ -413,7 +413,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     if (!id) {
       this.closeDrawer();
       this.props.enqueueSnackbar('Error cloning domain', {
-        variant: 'error'
+        variant: 'error',
       });
       return;
     }
@@ -435,7 +435,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         this.setState(
           {
             submitting: false,
-            errors: getAPIErrorOrDefault(err)
+            errors: getAPIErrorOrDefault(err),
           },
           () => {
             scrollErrorIntoView();
@@ -465,9 +465,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           {
             field: 'master_ips',
             reason:
-              'You must provide at least one Primary Nameserver IP Address'
-          }
-        ]
+              'You must provide at least one Primary Nameserver IP Address',
+          },
+        ],
       });
       return;
     }
@@ -482,7 +482,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             tags,
             master_ips: primaryIPs,
             domainId: id,
-            axfr_ips: finalTransferIPs
+            axfr_ips: finalTransferIPs,
           };
 
     this.setState({ submitting: true });
@@ -501,7 +501,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         this.setState(
           {
             submitting: false,
-            errors: getAPIErrorOrDefault(err)
+            errors: getAPIErrorOrDefault(err),
           },
           () => {
             scrollErrorIntoView();
@@ -582,7 +582,7 @@ const mapStateToProps = (state: ApplicationState) => {
     id,
     // Disabled if the profile is restricted and doesn't have add_domains grant
     disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
-    origin: state.domainDrawer.origin
+    origin: state.domainDrawer.origin,
   };
 };
 

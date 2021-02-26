@@ -2,13 +2,13 @@ import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import {
   Theme,
   useMediaQuery,
   useTheme,
-  makeStyles
+  makeStyles,
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 interface Props {
@@ -52,7 +52,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
   const disabledProps = _tooltip
     ? {
         tooltip: _tooltip,
-        disabled: true
+        disabled: true,
       }
     : {};
 
@@ -63,7 +63,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
         props.onRename();
       },
       disabled: readOnly,
-      tooltip: readOnly ? _tooltip : ''
+      tooltip: readOnly ? _tooltip : '',
     },
     {
       title: 'Resize',
@@ -71,29 +71,29 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
         props.onResize();
       },
       disabled: linodeStatus !== 'offline' || readOnly,
-      tooltip: linodeStatus !== 'offline' || readOnly ? _tooltip : ''
+      tooltip: linodeStatus !== 'offline' || readOnly ? _tooltip : '',
     },
     {
       title: 'Imagize',
       onClick: () => {
         props.onImagize();
       },
-      ...(readOnly ? disabledProps : {})
+      ...(readOnly ? disabledProps : {}),
     },
     {
       title: 'Clone',
       onClick: () => {
         history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
       },
-      ...(readOnly ? disabledProps : {})
+      ...(readOnly ? disabledProps : {}),
     },
     {
       title: 'Delete',
       onClick: () => {
         props.onDelete();
       },
-      ...(readOnly ? disabledProps : {})
-    }
+      ...(readOnly ? disabledProps : {}),
+    },
   ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;

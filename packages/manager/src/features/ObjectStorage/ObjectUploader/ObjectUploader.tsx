@@ -8,7 +8,7 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import bucketRequestsContainer, {
-  BucketsRequests
+  BucketsRequests,
 } from 'src/containers/bucketRequests.container';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -22,13 +22,13 @@ import {
   MAX_NUM_UPLOADS,
   MAX_PARALLEL_UPLOADS,
   ObjectUploaderAction,
-  pathOrFileName
+  pathOrFileName,
 } from './reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingBottom: 60,
-    position: 'relative'
+    position: 'relative',
   },
   dropzone: {
     display: 'flex',
@@ -50,32 +50,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['border-color', 'background-color']),
     [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing(),
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   active: {
     // The `active` class active when a user is hovering over the dropzone.
     borderColor: theme.palette.primary.light,
     backgroundColor: theme.color.white,
     '& $uploadButton': {
-      opacity: 0.5
-    }
+      opacity: 0.5,
+    },
   },
   accept: {
     // The `accept` class active when a user is hovering over the dropzone
     // with files that will be accepted (based on file size, number of files).
-    borderColor: theme.palette.primary.light
+    borderColor: theme.palette.primary.light,
   },
   reject: {
     // The `reject` class active when a user is hovering over the dropzone
     // with files that will be rejected (based on file size, number of files).
-    borderColor: theme.color.red
+    borderColor: theme.color.red,
   },
   fileUploads: {
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   dropzoneContent: {
     display: 'flex',
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     padding: theme.spacing(2),
     textAlign: 'center',
-    width: '100%'
+    width: '100%',
   },
   UploadZoneActiveButton: {
     backgroundColor: 'transparent',
@@ -94,18 +94,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: `calc(100% - ${theme.spacing(4)}px)`,
     zIndex: 10,
     '& $uploadButton': {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   copy: {
     color: theme.palette.primary.main,
-    margin: '0 auto'
+    margin: '0 auto',
   },
   uploadButton: {
     marginTop: theme.spacing(2),
     opacity: 1,
-    transition: theme.transitions.create(['opacity'])
-  }
+    transition: theme.transitions.create(['opacity']),
+  },
 }));
 
 interface Props {
@@ -136,7 +136,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       MAX_NUM_UPLOADS
     ) {
       props.enqueueSnackbar(`Upload up to ${MAX_NUM_UPLOADS} files at a time`, {
-        variant: 'error'
+        variant: 'error',
       });
       return;
     }
@@ -161,7 +161,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     }
 
     props.enqueueSnackbar(errorMessage, {
-      variant: 'error'
+      variant: 'error',
     });
   };
 
@@ -198,7 +198,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       filesToUpdate: nextBatch.map(fileUpload =>
         pathOrFileName(fileUpload.file)
       ),
-      data: { status: 'IN_PROGRESS' }
+      data: { status: 'IN_PROGRESS' },
     });
 
     nextBatch.forEach(fileUpload => {
@@ -234,8 +234,8 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           filesToUpdate: [path],
           data: {
             percentComplete: 100,
-            status: 'FINISHED'
-          }
+            status: 'FINISHED',
+          },
         });
       };
 
@@ -244,8 +244,8 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           type: 'UPDATE_FILES',
           filesToUpdate: [path],
           data: {
-            status: 'ERROR'
-          }
+            status: 'ERROR',
+          },
         });
       };
 
@@ -258,14 +258,14 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       } else {
         // Otherwise, we need to make an API request to get the URL.
         getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
-          content_type: file.type
+          content_type: file.type,
         })
           .then(({ url, exists }) => {
             if (exists) {
               dispatch({
                 type: 'NOTIFY_FILE_EXISTS',
                 fileName: path,
-                url
+                url,
               });
               return;
             }
@@ -285,13 +285,13 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     isDragActive,
     isDragAccept,
     isDragReject,
-    open
+    open,
   } = useDropzone({
     onDrop,
     onDropRejected,
     noClick: true,
     noKeyboard: true,
-    maxSize: MAX_FILE_SIZE_IN_BYTES
+    maxSize: MAX_FILE_SIZE_IN_BYTES,
   });
 
   const className = React.useMemo(
@@ -299,7 +299,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       classNames({
         [classes.active]: isDragActive,
         [classes.accept]: isDragAccept,
-        [classes.reject]: isDragReject
+        [classes.reject]: isDragReject,
       }),
     [isDragActive, isDragAccept, isDragReject]
   );
@@ -309,7 +309,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   return (
     <div
       className={classNames({
-        [classes.root]: UploadZoneActive
+        [classes.root]: UploadZoneActive,
       })}
     >
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
@@ -344,7 +344,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
         <div
           className={classNames({
             [classes.dropzoneContent]: true,
-            [classes.UploadZoneActiveButton]: UploadZoneActive
+            [classes.UploadZoneActiveButton]: UploadZoneActive,
           })}
         >
           {!UploadZoneActive && (
@@ -381,7 +381,7 @@ const onUploadProgressFactory = (
     type: 'UPDATE_FILES',
     filesToUpdate: [fileName],
     data: {
-      percentComplete: (progressEvent.loaded / progressEvent.total) * 100
-    }
+      percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
+    },
   });
 };

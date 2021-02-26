@@ -16,20 +16,20 @@ import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   maintenanceWrapper: {
-    display: 'flex'
+    display: 'flex',
   },
   chooseDay: {
     marginTop: 0,
     marginRight: theme.spacing(2),
-    minWidth: 150
+    minWidth: 150,
   },
   chooseTime: {
     marginTop: 0,
-    minWidth: 270
+    minWidth: 270,
   },
   timeHelperText: {
-    fontSize: '0.875em'
-  }
+    fontSize: '0.875em',
+  },
 }));
 
 interface Props {
@@ -86,10 +86,10 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     'Wednesday',
     'Thursday',
     'Friday',
-    'Saturday'
+    'Saturday',
   ].map(thisDay => ({
     label: thisDay,
-    value: thisDay
+    value: thisDay,
   }));
 
   const defaultDaySelection = daySelection.find(eachOption => {
@@ -131,11 +131,11 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
 
     const maintenanceSchedule = {
       day: maintenanceDay as DatabaseMaintenanceSchedule['day'],
-      window: maintenanceTime as DatabaseMaintenanceSchedule['window']
+      window: maintenanceTime as DatabaseMaintenanceSchedule['window'],
     };
 
     updateDatabase(databaseID, {
-      maintenance_schedule: maintenanceSchedule
+      maintenance_schedule: maintenanceSchedule,
     })
       .then(() => {
         setSubmitting(false);

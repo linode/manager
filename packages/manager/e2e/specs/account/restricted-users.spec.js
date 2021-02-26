@@ -6,7 +6,7 @@ describe('Account - Restricted User Suite', () => {
   const userConfig = {
     username: `test-user${new Date().getTime()}`,
     email: `pthiel@linode.com`,
-    restricted: true
+    restricted: true,
   };
 
   beforeAll(() => {

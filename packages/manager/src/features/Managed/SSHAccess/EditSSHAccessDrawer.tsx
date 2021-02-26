@@ -1,7 +1,7 @@
 import { Formik, FormikHelpers } from 'formik';
 import {
   ManagedLinodeSetting,
-  updateLinodeSettings
+  updateLinodeSettings,
 } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -17,7 +17,7 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
 import { DEFAULTS } from './common';
@@ -25,17 +25,17 @@ import { DEFAULTS } from './common';
 const useStyles = makeStyles((theme: Theme) => ({
   ip: {
     [theme.breakpoints.down('sm')]: {
-      paddingBottom: '0px !important'
-    }
+      paddingBottom: '0px !important',
+    },
   },
   port: {
     [theme.breakpoints.down('sm')]: {
-      paddingTop: '0px !important'
-    }
+      paddingTop: '0px !important',
+    },
   },
   helperText: {
-    marginBottom: theme.spacing(1) + 2
-  }
+    marginBottom: theme.spacing(1) + 2,
+  },
 }));
 
 interface Props {
@@ -75,7 +75,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
       String(values.ssh.port) !== '' ? values.ssh.port : DEFAULTS.port;
 
     updateLinodeSettings(linodeSetting.id, {
-      ssh: { ...values.ssh, user, port }
+      ssh: { ...values.ssh, user, port },
     })
       .then(updatedLinodeSetting => {
         setSubmitting(false);
@@ -107,8 +107,8 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                 access: linodeSetting.ssh.access,
                 user: linodeSetting.ssh.user,
                 ip: linodeSetting.ssh.ip,
-                port: linodeSetting.ssh.port
-              }
+                port: linodeSetting.ssh.port,
+              },
             }}
             onSubmit={onSubmit}
           >
@@ -120,7 +120,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
               handleBlur,
               handleSubmit,
               isSubmitting,
-              setFieldValue
+              setFieldValue,
             }) => {
               const { access, user, ip, port } = values.ssh;
 
@@ -173,13 +173,13 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                           linodeId={linodeSetting.id}
                           value={{
                             label: ip === 'any' ? 'Any' : ip,
-                            value: ip
+                            value: ip,
                           }}
                           customizeOptions={options => [
                             // The first option should always be "Any".
                             {
                               label: 'Any',
-                              value: 'any'
+                              value: 'any',
                             },
                             ...options
                               // Remove Private IPs
@@ -189,8 +189,8 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                               // Remove the prefix length from each option.
                               .map(option => ({
                                 label: removePrefixLength(option.value),
-                                value: removePrefixLength(option.value)
-                              }))
+                                value: removePrefixLength(option.value),
+                              })),
                           ]}
                           handleChange={(selectedIp: string) =>
                             setFieldValue('ssh.ip', selectedIp)

@@ -11,8 +11,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface Props {

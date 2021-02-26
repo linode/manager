@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
@@ -21,15 +21,15 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes rotate': {
       from: {
-        transform: 'rotate(0deg)'
+        transform: 'rotate(0deg)',
       },
       to: {
-        transform: 'rotate(360deg)'
-      }
+        transform: 'rotate(360deg)',
+      },
     },
     dot: {
       fontSize: '1.5rem',
-      userSelect: 'none'
+      userSelect: 'none',
     },
     transition: {
       position: 'relative',
@@ -37,18 +37,18 @@ const styles = (theme: Theme) =>
       left: -1,
       '& svg': {
         animation: '$rotate 2s linear infinite',
-        fill: theme.color.offBlack
-      }
+        fill: theme.color.offBlack,
+      },
     },
     green: {
-      color: '#01b159'
+      color: '#01b159',
     },
     red: {
-      color: '#d01e1e'
+      color: '#d01e1e',
     },
     grey: {
-      color: '#efefef'
-    }
+      color: '#efefef',
+    },
   });
 
 const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {

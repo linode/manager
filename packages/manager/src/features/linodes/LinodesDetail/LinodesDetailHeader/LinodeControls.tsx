@@ -9,7 +9,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -17,11 +17,11 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   LinodeDetailContext,
-  withLinodeDetailContext
+  withLinodeDetailContext,
 } from '../linodeDetailContext';
 import LinodePowerControl from '../LinodePowerControl';
 import withEditableLabelState, {
-  EditableLabelProps
+  EditableLabelProps,
 } from './editableLabelState';
 
 type ClassNames = 'breadCrumbs' | 'controls' | 'launchButton';
@@ -32,8 +32,8 @@ const styles = (theme: Theme) =>
       position: 'relative',
       top: -2,
       [theme.breakpoints.down('sm')]: {
-        top: 10
-      }
+        top: 10,
+      },
     },
     controls: {
       position: 'relative',
@@ -42,19 +42,19 @@ const styles = (theme: Theme) =>
         margin: 0,
         left: -8,
         display: 'flex',
-        flexBasis: '100%'
-      }
+        flexBasis: '100%',
+      },
     },
     launchButton: {
       lineHeight: 1,
       '&:hover': {
         backgroundColor: 'transparent',
-        textDecoration: 'underline'
+        textDecoration: 'underline',
       },
       '&:focus > span:first-child': {
-        outline: '1px dotted #999'
-      }
-    }
+        outline: '1px dotted #999',
+      },
+    },
   });
 
 interface Props {
@@ -76,7 +76,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
     resetEditableLabel,
     setEditableLabelError,
 
-    breadcrumbProps
+    breadcrumbProps,
   } = props;
 
   const disabled = linode._permissions === 'read_only';
@@ -123,7 +123,7 @@ const LinodeControls: React.FC<CombinedProps> = props => {
                   editableTextTitle: linode.label,
                   onEdit: handleSubmitLabelChange,
                   onCancel: resetEditableLabel,
-                  errorText: editableLabelError
+                  errorText: editableLabelError,
                 }
               : undefined
           }
@@ -165,7 +165,7 @@ const enhanced = compose<CombinedProps, Props>(
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
     updateLinode,
-    configs: linode._configs
+    configs: linode._configs,
   })),
   styled
 );

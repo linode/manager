@@ -4,7 +4,7 @@ import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientData, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
@@ -15,7 +15,7 @@ const LoadGauge: React.FC<CombinedProps> = props => {
     longviewClientData,
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
-    lastUpdatedError
+    lastUpdatedError,
   } = props;
 
   const load = pathOr<number>(0, ['Load', 0, 'y'], longviewClientData);
@@ -36,7 +36,7 @@ const LoadGauge: React.FC<CombinedProps> = props => {
           <Typography>
             <strong>Load</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -47,7 +47,7 @@ const LoadGauge: React.FC<CombinedProps> = props => {
           <Typography>
             <strong>Load</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -57,7 +57,7 @@ const LoadGauge: React.FC<CombinedProps> = props => {
         <Typography>
           <strong>Load</strong>
         </Typography>
-      )
+      ),
     };
   };
 

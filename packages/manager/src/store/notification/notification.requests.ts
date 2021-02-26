@@ -3,7 +3,7 @@ import { ThunkActionCreator } from '../types';
 import {
   handleError,
   handleSuccess,
-  startRequest
+  startRequest,
 } from './notification.actions';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 

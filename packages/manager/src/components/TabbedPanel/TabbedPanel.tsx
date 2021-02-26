@@ -11,23 +11,23 @@ import Notice from '../Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   inner: {
     padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing(3)
-    }
+      padding: theme.spacing(3),
+    },
   },
   copy: {
     fontSize: '0.875rem',
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   panelBody: {
-    padding: `${theme.spacing(2)}px 0 0`
+    padding: `${theme.spacing(2)}px 0 0`,
   },
   tabsWrapper: {
-    position: 'relative'
+    position: 'relative',
   },
   tab: {
     '&[data-reach-tab]': {
@@ -45,14 +45,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '6px 16px',
       textDecoration: 'none',
       '&:hover': {
-        color: theme.color.blue
-      }
+        color: theme.color.blue,
+      },
     },
     '&[data-reach-tab][data-selected]': {
       borderBottom: `3px solid ${theme.cmrTextColors.linkActiveLight}`,
       color: theme.cmrTextColors.headlineStatic,
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   },
   tabList: {
     '&[data-reach-tab-list]': {
@@ -62,12 +62,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
         overflowX: 'auto',
-        padding: 1
-      }
-    }
+        padding: 1,
+      },
+    },
   },
   tabPanelOuter: {},
-  tabPanel: {}
+  tabPanel: {},
 }));
 
 export interface Tab {

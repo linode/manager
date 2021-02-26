@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Select, { BaseSelectProps, Item } from 'src/components/EnhancedSelect';
 import withLinodes, {
-  Props as LinodeProps
+  Props as LinodeProps,
 } from 'src/containers/withLinodes.container';
 
 export interface Props extends Partial<BaseSelectProps> {
@@ -82,7 +82,7 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
         );
         return {
           value: thisLinodeID,
-          label: thisLinode?.label ?? thisLinodeID
+          label: thisLinode?.label ?? thisLinodeID,
         };
       })
     : undefined;
@@ -111,7 +111,7 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
       aria-label="Select one or more Linodes"
       textFieldProps={{
         helperTextPosition: 'top',
-        helperText
+        helperText,
       }}
       hideSelectedOptions={true}
       {...selectProps}
@@ -136,7 +136,7 @@ export const generateOptions = (
 
   const items = linodesData.map(eachLinode => ({
     value: eachLinode.id,
-    label: eachLinode.label
+    label: eachLinode.label,
   }));
 
   /** If there's no show all, just return the list of Items. */
@@ -148,15 +148,15 @@ export const generateOptions = (
     ? [
         {
           value: 'ALL',
-          label: 'All Linodes'
-        }
+          label: 'All Linodes',
+        },
       ]
     : [
         {
           value: 'ALL',
-          label: 'All Linodes'
+          label: 'All Linodes',
         },
-        ...items
+        ...items,
       ];
 };
 

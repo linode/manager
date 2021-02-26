@@ -3,7 +3,7 @@ import { ApplicationState } from 'src/store';
 import { UserPreferences } from 'src/store/preferences/preferences.actions';
 import {
   getUserPreferences,
-  updateUserPreferences
+  updateUserPreferences,
 } from 'src/store/preferences/preferences.requests';
 import { Dispatch } from './types';
 
@@ -29,7 +29,7 @@ export const usePreferences = () => {
 
   return {
     preferences,
-    updatePreferences
+    updatePreferences,
   };
 };
 

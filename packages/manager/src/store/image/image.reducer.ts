@@ -8,7 +8,7 @@ import {
   requestImageForStoreActions,
   requestImagesActions,
   updateImageActions,
-  upsertImage
+  upsertImage,
 } from './image.actions';
 import {
   createDefaultState,
@@ -18,7 +18,7 @@ import {
   onGetAllSuccess,
   onStart,
   removeMany,
-  setError
+  setError,
 } from '../store.helpers.tmp';
 
 import { MappedEntityState2 as MappedEntityState } from '../types';

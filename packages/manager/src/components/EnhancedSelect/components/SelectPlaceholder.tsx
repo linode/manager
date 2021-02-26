@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -18,8 +18,8 @@ const styles = (theme: Theme) =>
       wordWrap: 'normal',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-      fontSize: '0.9rem'
-    }
+      fontSize: '0.9rem',
+    },
   });
 
 interface Props extends PlaceholderProps<any> {}

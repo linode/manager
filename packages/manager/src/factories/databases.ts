@@ -8,7 +8,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   // region: 'us-east', @todo add this in when the API supports it
   maintenance_schedule: {
     day: 'Wednesday',
-    window: 'W0'
+    window: 'W0',
   },
   tags: ['tag1', 'tag2'],
   availability: 'standard',
@@ -16,7 +16,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   memory: 1024,
   disk: 25,
   created: '2020-10-01T00:00:00',
-  updated: '2020-10-20T17:15:12'
+  updated: '2020-10-20T17:15:12',
 });
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
@@ -24,11 +24,11 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   label: 'MySQL HA Tier 2',
   price: {
     hourly: 0.4,
-    monthly: 60
+    monthly: 60,
   },
   memory: 2048,
   disk: 40,
   transfer: null,
   vcpus: 2,
-  availability: 'high'
+  availability: 'high',
 });

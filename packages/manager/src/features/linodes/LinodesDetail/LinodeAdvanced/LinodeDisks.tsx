@@ -13,7 +13,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -36,10 +36,10 @@ import {
   DeleteLinodeDisk,
   ResizeLinodeDisk,
   UpdateLinodeDisk,
-  withLinodeDetailContext
+  withLinodeDetailContext,
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import userSSHKeyHoc, {
-  UserSSHKeyProps
+  UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
@@ -52,23 +52,23 @@ const styles = (theme: Theme) =>
     root: {
       backgroundColor: theme.color.white,
       margin: 0,
-      width: '100%'
+      width: '100%',
     },
     headline: {
       marginTop: 8,
       marginBottom: 8,
       marginLeft: 15,
-      lineHeight: '1.5rem'
+      lineHeight: '1.5rem',
     },
     addNewWrapper: {
       [theme.breakpoints.down('xs')]: {
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-        marginTop: -theme.spacing(1)
+        marginTop: -theme.spacing(1),
       },
       '&.MuiGrid-item': {
-        padding: 5
-      }
-    }
+        padding: 5,
+      },
+    },
   });
 
 interface ConfirmDeleteState {
@@ -112,21 +112,21 @@ type CombinedProps = Props &
 const defaultDrawerState: DrawerState = {
   open: false,
   mode: 'create',
-  maximumSize: 0
+  maximumSize: 0,
 };
 
 const defaultImagizeDrawerState: ImagizeDrawerState = {
   open: false,
   description: '',
   label: '',
-  disk: undefined
+  disk: undefined,
 };
 
 const defaultConfirmDeleteState: ConfirmDeleteState = {
   open: false,
   id: undefined,
   label: undefined,
-  submitting: false
+  submitting: false,
 };
 
 class LinodeDisks extends React.Component<CombinedProps, State> {
@@ -139,7 +139,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.state = {
       drawer: defaultDrawerState,
       imagizeDrawer: defaultImagizeDrawerState,
-      confirmDelete: defaultConfirmDeleteState
+      confirmDelete: defaultConfirmDeleteState,
     };
   }
 
@@ -149,7 +149,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       disks,
       linodeStatus,
       linodeTotalDisk,
-      readOnly
+      readOnly,
     } = this.props;
 
     const usedDiskSpace = addUsedDiskSpace(disks);
@@ -198,7 +198,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                 handlePageSizeChange,
                 page,
                 pageSize,
-                count
+                count,
               }) => {
                 return (
                   <React.Fragment>
@@ -355,7 +355,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       submitting: false,
       errors: undefined,
       id: disk.id,
-      label: disk.label
+      label: disk.label,
     });
   };
 
@@ -402,7 +402,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setImagizeDrawer({
       ...defaultImagizeDrawerState,
       open: true,
-      disk
+      disk,
     });
   };
 
@@ -412,13 +412,13 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   changeImageDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setImagizeDrawer({
-      description: e.target.value
+      description: e.target.value,
     });
   };
 
   changeImageLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setImagizeDrawer({
-      label: e.target.value
+      label: e.target.value,
     });
   };
 
@@ -470,7 +470,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     return resizeLinodeDisk(diskId, size).then(_ => {
       this.props.enqueueSnackbar(`Disk queued for resizing.`, {
-        variant: 'info'
+        variant: 'info',
       });
       resetEventsPolling();
     });
@@ -492,7 +492,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       root_pass: Boolean(root_pass) ? root_pass : undefined,
       authorized_users: userSSHKeys
         ? userSSHKeys.filter(u => u.selected).map(u => u.username)
-        : undefined
+        : undefined,
     }).then(_ => resetEventsPolling());
   };
 
@@ -534,7 +534,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({
       diskId,
       mode: 'rename',
-      open: true
+      open: true,
     });
   };
 
@@ -543,7 +543,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       diskId,
       maximumSize: Math.max(size, this.calculateDiskFree(diskId)),
       mode: 'resize',
-      open: true
+      open: true,
     });
   };
 
@@ -554,7 +554,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       diskId: undefined,
       maximumSize,
       mode: 'create',
-      open: true
+      open: true,
     });
   };
 
@@ -603,7 +603,7 @@ const linodeContext = withLinodeDetailContext(
     deleteLinodeDisk,
     updateLinodeDisk,
     createLinodeDisk,
-    resizeLinodeDisk
+    resizeLinodeDisk,
   }) => ({
     linodeId: linode.id,
     linodeTotalDisk: linode.specs.disk,
@@ -613,7 +613,7 @@ const linodeContext = withLinodeDetailContext(
     createLinodeDisk,
     resizeLinodeDisk,
     readOnly: linode._permissions === 'read_only',
-    disks: linode._disks
+    disks: linode._disks,
   })
 );
 

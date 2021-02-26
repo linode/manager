@@ -5,20 +5,20 @@ import { notificationFactory } from 'src/factories';
 const migrationScheduled = notificationFactory.build({
   type: 'migration_scheduled',
   entity: { id: 0, type: 'linode', label: 'linode-0' },
-  severity: 'major'
+  severity: 'major',
 });
 
 const migrationPending = notificationFactory.build({
   type: 'migration_pending',
   entity: { id: 1, type: 'linode', label: 'linode-1' },
-  severity: 'critical'
+  severity: 'critical',
 });
 
 const maintenanceNotice = notificationFactory.build();
 const maintenanceWithLowSeverity = notificationFactory.build({
   type: 'migration_pending',
   entity: { id: 4, type: 'linode', label: 'linode-4' },
-  severity: 'minor'
+  severity: 'minor',
 });
 
 const emailBounce = notificationFactory.build({
@@ -29,7 +29,7 @@ const emailBounce = notificationFactory.build({
   label: 'We are unable to send emails to your billing email address!',
   severity: 'major',
   until: null,
-  body: null
+  body: null,
 });
 
 describe('Notification Severity', () => {

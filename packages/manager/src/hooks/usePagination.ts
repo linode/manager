@@ -34,7 +34,7 @@ export const usePagination = (
     page,
     pageSize,
     handlePageChange,
-    handlePageSizeChange
+    handlePageSizeChange,
   };
 };
 

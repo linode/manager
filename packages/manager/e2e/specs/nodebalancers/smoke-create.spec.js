@@ -5,7 +5,7 @@ import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/details.pa
 import {
   apiCreateLinode,
   removeNodeBalancers,
-  apiDeleteAllLinodes
+  apiDeleteAllLinodes,
 } from '../../utils/common';
 
 describe('Nodebalancer - Create Suite', () => {

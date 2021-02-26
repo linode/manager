@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -25,25 +25,25 @@ const styles = (theme: Theme) =>
     root: {},
     header: {
       marginTop: theme.spacing(1) + 6,
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     bar: {
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     text: {
-      margin: `${theme.spacing(2)}px 0`
+      margin: `${theme.spacing(2)}px 0`,
       // paddingRight: 40
     },
     divider: {
-      backgroundColor: theme.color.grey2
+      backgroundColor: theme.color.grey2,
     },
     textOuter: {
-      margin: `${theme.spacing(1) + 2}px 0`
+      margin: `${theme.spacing(1) + 2}px 0`,
     },
     code: {
       color: theme.color.black,
-      margin: `0 0 ${theme.spacing(1) + 2}px`
-    }
+      margin: `0 0 ${theme.spacing(1) + 2}px`,
+    },
   });
 
 interface Props {

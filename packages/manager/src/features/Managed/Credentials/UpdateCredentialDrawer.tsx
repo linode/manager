@@ -31,7 +31,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
     <Drawer title={`Edit Credential: ${label}`} open={open} onClose={onClose}>
       <Formik
         initialValues={{
-          label
+          label,
         }}
         validationSchema={updateLabelSchema}
         validateOnChange={false}
@@ -45,7 +45,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
           handleChange,
           handleBlur,
           handleSubmit,
-          isSubmitting
+          isSubmitting,
         }) => (
           <>
             {status && status.generalError && (
@@ -95,7 +95,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
       <Formik
         initialValues={{
           password: '',
-          username: ''
+          username: '',
         }}
         validationSchema={updatePasswordSchema}
         validateOnChange={false}
@@ -109,7 +109,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
           handleChange,
           handleBlur,
           handleSubmit,
-          isSubmitting
+          isSubmitting,
         }) => (
           <div style={{ paddingTop: '1em' }}>
             {status && status.generalError && (

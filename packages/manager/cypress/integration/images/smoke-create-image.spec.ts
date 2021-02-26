@@ -5,7 +5,7 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 
 describe('create image', () => {
@@ -16,7 +16,7 @@ describe('create image', () => {
       results: 0,
       data: [],
       page: 1,
-      pages: 1
+      pages: 1,
     }).as('getImages');
     cy.intercept('POST', '*/images', req => {
       req.reply(200);
@@ -33,7 +33,7 @@ describe('create image', () => {
             created: '2020-08-21T17:26:14',
             updated: '2020-08-21T17:26:30',
             filesystem: 'ext4',
-            size: 81408
+            size: 81408,
           },
           {
             id: 44311274,
@@ -42,11 +42,11 @@ describe('create image', () => {
             created: '2020-08-21T17:26:14',
             updated: '2020-08-21T17:26:31',
             filesystem: 'swap',
-            size: 512
-          }
+            size: 512,
+          },
         ],
         page: 1,
-        pages: 1
+        pages: 1,
       }).as('getDisks');
       cy.visitWithLogin('/images');
       getVisible('[data-qa-header]').within(() => {

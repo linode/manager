@@ -12,7 +12,7 @@ import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import AccountContainer, {
-  DispatchProps as AccountDispatchProps
+  DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
 import { v4 } from 'uuid';
 import CreditCard from './CreditCardPayment';
@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   currentBalance: {
     fontSize: '1.1rem',
-    marginBottom: theme.spacing(4)
-  }
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 interface Props {
@@ -206,7 +206,7 @@ const withAccount = AccountContainer(
     accountLoading,
     balance: accountData?.balance ?? false,
     lastFour: accountData?.credit_card.last_four ?? '0000',
-    expiry: accountData?.credit_card.expiry ?? ''
+    expiry: accountData?.credit_card.expiry ?? '',
   })
 );
 

@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
@@ -20,23 +20,23 @@ const styles = (theme: Theme) =>
     container: {
       '& canvas': {
         margin: 'auto',
-        display: 'block'
-      }
+        display: 'block',
+      },
     },
     message: {
       color: 'white',
       textAlign: 'center',
       minHeight: '30px',
-      margin: theme.spacing(2)
+      margin: theme.spacing(2),
     },
     link: {
-      ...theme.applyLinkStyles
+      ...theme.applyLinkStyles,
     },
     errorState: {
       '& *': {
-        color: '#f4f4f4 !important'
-      }
-    }
+        color: '#f4f4f4 !important',
+      },
+    },
   });
 
 interface Props {
@@ -70,7 +70,7 @@ class Glish extends React.Component<CombinedProps, State> {
     initialConnect: false,
     isRetryingConnection: false,
     retryAttempts: 0,
-    error: ''
+    error: '',
   };
 
   mounted: boolean = false;
@@ -143,7 +143,7 @@ class Glish extends React.Component<CombinedProps, State> {
         }
         this.setState({
           connected: true,
-          initialConnect: true
+          initialConnect: true,
         });
         break;
       case 'disconnected':
@@ -154,7 +154,7 @@ class Glish extends React.Component<CombinedProps, State> {
         }
         this.setState({
           connected: false,
-          activeVnc: false
+          activeVnc: false,
         });
         setTimeout(() => {
           if (!this.mounted) {
@@ -177,7 +177,7 @@ class Glish extends React.Component<CombinedProps, State> {
     return (
       <button
         className={classNames('force-link', 'text-muted', {
-          [classes.link]: true
+          [classes.link]: true,
         })}
         onClick={this.linodeOnClick(linodeID)}
         title={linodeLabel}
@@ -242,7 +242,7 @@ class Glish extends React.Component<CombinedProps, State> {
          */
         if (retryAttempts === maxRetryAttempts) {
           this.setState({
-            error: 'Session could not be initialized. Please try again later'
+            error: 'Session could not be initialized. Please try again later',
           });
           return;
         }
@@ -251,7 +251,7 @@ class Glish extends React.Component<CombinedProps, State> {
          */
         this.setState({
           isRetryingConnection: true,
-          retryAttempts: retryAttempts + 1
+          retryAttempts: retryAttempts + 1,
         });
         return;
       }
@@ -296,7 +296,7 @@ class Glish extends React.Component<CombinedProps, State> {
       initialConnect,
       powered,
       error,
-      isRetryingConnection
+      isRetryingConnection,
     } = this.state;
     const region = linode && (linode as Linode).region;
 

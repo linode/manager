@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'link' | 'noCount' | 'count' | 'countNumber';
@@ -24,18 +24,18 @@ const styles = (theme: Theme) =>
   createStyles({
     link: {
       '&:hover': {
-        textDecoration: 'underline'
-      }
+        textDecoration: 'underline',
+      },
     },
     noCount: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     count: {
-      marginRight: theme.spacing(1) / 2
+      marginRight: theme.spacing(1) / 2,
     },
     countNumber: {
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   });
 
 const ViewAllLink: React.FC<CombinedProps> = props => {
@@ -57,7 +57,7 @@ const ViewAllLink: React.FC<CombinedProps> = props => {
           className={classNames(
             {
               [classes.link]: true,
-              [classes.noCount]: !count
+              [classes.noCount]: !count,
             },
             className
           )}
@@ -70,7 +70,7 @@ const ViewAllLink: React.FC<CombinedProps> = props => {
           href={link}
           className={classNames({
             [classes.link]: true,
-            [classes.noCount]: !count
+            [classes.noCount]: !count,
           })}
           data-qa-view-all-link
           target="_blank"

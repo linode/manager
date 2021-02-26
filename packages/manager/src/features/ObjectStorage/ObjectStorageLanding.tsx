@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import {
   matchPath,
   RouteComponentProps,
-  useRouteMatch
+  useRouteMatch,
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
@@ -19,7 +19,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import bucketDrawerContainer, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/bucketDrawer.container';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
@@ -38,8 +38,8 @@ const AccessKeyLanding = React.lazy(() =>
 
 const useStyles = makeStyles((theme: Theme) => ({
   promo: {
-    marginBottom: theme.spacing() / 2
-  }
+    marginBottom: theme.spacing() / 2,
+  },
 }));
 
 type CombinedProps = DispatchProps & RouteComponentProps<{}>;
@@ -69,7 +69,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
     objectStorageBuckets,
-    requestObjectStorageBuckets
+    requestObjectStorageBuckets,
   } = useObjectStorageBuckets();
 
   const createOrEditDrawer = useOpenClose();
@@ -80,12 +80,12 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     /* NB: These must correspond to the routes, inside the Switch */
     {
       title: 'Buckets',
-      routeName: `${props.match.url}/buckets`
+      routeName: `${props.match.url}/buckets`,
     },
     {
       title: 'Access Keys',
-      routeName: `${props.match.url}/access-keys`
-    }
+      routeName: `${props.match.url}/access-keys`,
+    },
   ];
 
   const openDrawer = (mode: MODE) => {
@@ -123,7 +123,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     clustersLoaded,
     bucketsLoadingOrLoaded,
     objectStorageClusters,
-    requestObjectStorageBuckets
+    requestObjectStorageBuckets,
   ]);
 
   React.useEffect(() => {
@@ -158,7 +158,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const matchesAccessKeys = Boolean(
     matchPath(props.location.pathname, {
       path: '/object-storage/access-keys',
-      exact: true
+      exact: true,
     })
   );
 
@@ -239,8 +239,8 @@ export default enhanced(ObjectStorageLanding);
 // ============================================================================
 const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
   button: {
-    ...theme.applyLinkStyles
-  }
+    ...theme.applyLinkStyles,
+  },
 }));
 
 export const BillingNotice: React.FC<{}> = React.memo(() => {

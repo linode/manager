@@ -7,7 +7,7 @@ import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import {
   LongviewProcesses,
-  WithStartAndEnd
+  WithStartAndEnd,
 } from 'src/features/Longview/request.types';
 import { statAverage, statMax } from 'src/features/Longview/shared/utilities';
 import { escapeRegExp } from 'src/utilities/escapeRegExp';
@@ -21,17 +21,17 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
   filterInput: {
-    width: 300
+    width: 300,
   },
   selectTimeRange: {
-    width: 200
+    width: 200,
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -74,7 +74,7 @@ const ProcessesLanding: React.FC<Props> = props => {
   // For the TimeRangeSelect.
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
-    end: 0
+    end: 0,
   });
   const handleStatsChange = (start: number, end: number) => {
     setTimeBox({ start, end });
@@ -119,7 +119,7 @@ const ProcessesLanding: React.FC<Props> = props => {
       const { name, user } = sortedByName[0];
       setSelectedProcess({
         name,
-        user
+        user,
       });
     }
   }, [selectedProcess, memoizedFilteredData]);
@@ -212,7 +212,7 @@ export const extendData = (
           statAverage(userProcess.ioreadkbytes) +
           statAverage(userProcess.iowritekbytes),
         averageCPU: statAverage(userProcess.cpu),
-        averageMem: statAverage(userProcess.mem)
+        averageMem: statAverage(userProcess.mem),
       });
     });
   });

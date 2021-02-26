@@ -12,7 +12,7 @@ type CombinedProps = Props;
 
 const VLan: React.FC<CombinedProps> = props => {
   const {
-    match: { path }
+    match: { path },
   } = props;
 
   return (

@@ -11,7 +11,7 @@ function compareSnapshotsPlugin(args) {
     if (!fs.existsSync(expectedImage)) {
       console.error(`did not find ${expectedImage}`);
       resolve({
-        error: `The reference snapshot for this test cannot be found ${expectedImage}`
+        error: `The reference snapshot for this test cannot be found ${expectedImage}`,
       });
       return;
     } else {
@@ -20,7 +20,7 @@ function compareSnapshotsPlugin(args) {
     if (!fs.existsSync(actualImage)) {
       console.error(`did not find ${actualImage}`);
       resolve({
-        error: `The test snapshot for this test cannot be found ${actualImage}`
+        error: `The test snapshot for this test cannot be found ${actualImage}`,
       });
       return;
     } else {
@@ -58,8 +58,8 @@ function compareSnapshotsPlugin(args) {
         resolve({
           result: {
             percentage: diff.percent,
-            scaled: isScaled
-          }
+            scaled: isScaled,
+          },
         });
       });
     });

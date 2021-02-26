@@ -13,5 +13,5 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   size: 1500,
   type: 'image',
   vendor: null,
-  expiry: null
+  expiry: null,
 });

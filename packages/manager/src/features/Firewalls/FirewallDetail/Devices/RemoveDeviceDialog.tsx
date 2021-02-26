@@ -23,7 +23,7 @@ export const RemoveDeviceDialog: React.FC<Props> = props => {
     loading,
     onClose,
     onRemove,
-    open
+    open,
   } = props;
   return (
     <ConfirmationDialog

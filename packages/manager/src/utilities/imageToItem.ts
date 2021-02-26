@@ -10,7 +10,7 @@ export default (images: string[]): Item[] => {
   return images.map(image => {
     return {
       value: image,
-      label: image.replace('linode/', '')
+      label: image.replace('linode/', ''),
     };
   });
 };

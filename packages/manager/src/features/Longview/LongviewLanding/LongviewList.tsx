@@ -17,14 +17,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '20em',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   button: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
   },
   emptyText: {
-    fontSize: '1.1em'
-  }
+    fontSize: '1.1em',
+  },
 }));
 
 type LongviewProps = Omit<
@@ -61,7 +61,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
     longviewClientsResults,
     openPackageDrawer,
     triggerDeleteLongviewClient,
-    userCanCreateLongviewClient
+    userCanCreateLongviewClient,
   } = props;
 
   const classes = useStyles();
@@ -124,7 +124,7 @@ const LongviewList: React.FC<CombinedProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => (
         <>
           <Box flexDirection="column">

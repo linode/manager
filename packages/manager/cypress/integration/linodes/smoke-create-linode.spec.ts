@@ -1,13 +1,13 @@
 import strings from '../../support/cypresshelpers';
 import {
   makeLinodeLabel,
-  deleteAllTestLinodes
+  deleteAllTestLinodes,
 } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
 import {
   containsClick,
   containsVisible,
-  getClick
+  getClick,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 

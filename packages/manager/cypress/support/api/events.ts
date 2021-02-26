@@ -15,10 +15,10 @@ const LINODE_DEFAULT_DATA = {
     id: 17950183,
     label: 'linode11440645',
     type: 'linode',
-    url: '/v4/linode/instances/11440645'
+    url: '/v4/linode/instances/11440645',
   },
   status: 'failed',
-  duration: 0
+  duration: 0,
 };
 const makeEventData = event => {
   return { data: [event], page: 1, pages: 1, results: 1 };

@@ -21,7 +21,7 @@ const baseProps: Props = {
   startTime: 0,
   endTime: 0,
   reads: [],
-  writes: []
+  writes: [],
 };
 
 describe('UI', () => {

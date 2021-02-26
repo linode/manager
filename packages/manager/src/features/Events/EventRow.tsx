@@ -22,8 +22,8 @@ import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conve
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
-    marginLeft: theme.spacing(1.5)
-  }
+    marginLeft: theme.spacing(1.5),
+  },
 }));
 
 interface ExtendedEvent extends Event {
@@ -58,7 +58,7 @@ export const EventRow: React.FC<CombinedProps> = props => {
     entityId,
     duration: event.duration,
     username: event.username,
-    action: event.action
+    action: event.action,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -88,7 +88,7 @@ export const Row: React.FC<RowProps> = props => {
     type,
     created,
     username,
-    duration
+    duration,
   } = props;
 
   /** Some event types may not be handled by our system (or new types

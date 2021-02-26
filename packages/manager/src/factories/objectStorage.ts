@@ -1,7 +1,7 @@
 import * as Factory from 'factory.ts';
 import {
   ObjectStorageBucket,
-  ObjectStorageCluster
+  ObjectStorageCluster,
 } from '@linode/api-v4/lib/object-storage/types';
 
 export const objectStorageBucketFactory = Factory.Sync.makeFactory<
@@ -12,7 +12,7 @@ export const objectStorageBucketFactory = Factory.Sync.makeFactory<
   cluster: 'us-east-1',
   created: '2019-12-12T00:00:00',
   size: 999999,
-  objects: 103
+  objects: 103,
 });
 
 export const objectStorageClusterFactory = Factory.Sync.makeFactory<
@@ -24,5 +24,5 @@ export const objectStorageClusterFactory = Factory.Sync.makeFactory<
   static_site_domain: Factory.each(
     id => `website-cluster-${id}.linodeobjects.com`
   ),
-  status: 'available'
+  status: 'available',
 });

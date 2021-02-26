@@ -6,7 +6,7 @@ import {
   FirewallRules,
   getFirewalls,
   updateFirewall,
-  updateFirewallRules as _updateFirewallRules
+  updateFirewallRules as _updateFirewallRules,
 } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -18,7 +18,7 @@ import {
   creationHandlers,
   deletionHandlers,
   queryClient,
-  ItemsByID
+  ItemsByID,
 } from './base';
 
 const getAllFirewallsRequest = () =>
@@ -66,7 +66,7 @@ export const updateFirewallRules = (id: number, rules: FirewallRules) => {
       queryKey,
       (oldData: ItemsByID<Firewall>) => ({
         ...oldData,
-        [id]: { ...oldData[id], rules: updatedRules }
+        [id]: { ...oldData[id], rules: updatedRules },
       })
     );
     return updatedRules;

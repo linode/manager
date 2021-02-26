@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
@@ -15,24 +15,24 @@ type ClassNames = 'root' | 'icon' | 'tip' | 'title';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(4)
+      marginTop: theme.spacing(4),
     },
     icon: {
       width: 24,
       position: 'relative',
       top: 2,
       marginRight: 8,
-      color: theme.color.headline
+      color: theme.color.headline,
     },
     tip: {
       marginLeft: 32,
       fontSize: '1em',
-      lineHeight: 2
+      lineHeight: 2,
     },
     title: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
-    }
+      marginBottom: theme.spacing(1),
+    },
   });
 
 interface Props {

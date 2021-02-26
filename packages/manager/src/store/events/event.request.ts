@@ -1,7 +1,7 @@
 import {
   Event,
   getEvents as _getEvents,
-  markEventSeen
+  markEventSeen,
 } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
@@ -22,7 +22,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   const {
     mostRecentEventTime,
     inProgressEvents,
-    events: _events
+    events: _events,
   } = getState().events;
 
   // Regardless of date created, we request events that are still in-progress.
@@ -85,7 +85,7 @@ export const markAllSeen: ThunkActionCreator<Promise<any>> = () => (
   getState
 ) => {
   const {
-    events: { events }
+    events: { events },
   } = getState();
   /** */
   const latestId = events.reduce(

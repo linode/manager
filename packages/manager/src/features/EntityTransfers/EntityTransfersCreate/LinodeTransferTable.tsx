@@ -28,7 +28,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
   const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery(
     {
       page: pagination.page,
-      page_size: pagination.pageSize
+      page_size: pagination.pageSize,
     },
     generateLinodeXFilter(searchText)
   );
@@ -121,7 +121,7 @@ export const generateLinodeXFilter = (searchText: string) => {
   }
 
   return {
-    label: { '+contains': searchText }
+    label: { '+contains': searchText },
   };
 };
 

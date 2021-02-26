@@ -8,37 +8,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   base: {
     position: 'relative',
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   root: {
     padding: 12,
     width: '100%',
     backgroundColor: theme.color.grey2,
     '&.narrow': {
-      padding: 8
-    }
+      padding: 8,
+    },
   },
   primaryColor: {
-    backgroundColor: '#5ad865'
+    backgroundColor: '#5ad865',
   },
   secondaryColor: {
-    backgroundColor: '#99ec79'
+    backgroundColor: '#99ec79',
   },
   overLimit: {
     '& > div': {
-      backgroundColor: theme.palette.status.warningDark
-    }
+      backgroundColor: theme.palette.status.warningDark,
+    },
   },
   rounded: {
-    borderRadius: theme.shape.borderRadius
+    borderRadius: theme.shape.borderRadius,
   },
   loadingText: {
     marginBottom: theme.spacing(2),
-    textAlign: 'center'
+    textAlign: 'center',
   },
   dashed: {
-    display: 'none'
-  }
+    display: 'none',
+  },
 }));
 
 interface Props {
@@ -69,7 +69,7 @@ export const BarPercent: React.FC<CombinedProps> = props => {
     isFetchingValue,
     loadingText,
     rounded,
-    overLimit
+    overLimit,
   } = props;
   return (
     <div className={`${className} ${classes.base}`}>
@@ -92,12 +92,12 @@ export const BarPercent: React.FC<CombinedProps> = props => {
           root: classes.root,
           barColorPrimary: classes.primaryColor,
           bar2Buffer: classes.secondaryColor,
-          dashed: classes.dashed
+          dashed: classes.dashed,
         }}
         className={classNames({
           [classes.rounded]: rounded,
           [classes.overLimit]: overLimit,
-          narrow
+          narrow,
         })}
       />
       {displayValueInline ? (
@@ -106,7 +106,7 @@ export const BarPercent: React.FC<CombinedProps> = props => {
             position: 'absolute',
             left: `${Math.min(value + 4, 70)}%`,
             color: theme.palette.text.primary,
-            fontSize: '14px'
+            fontSize: '14px',
           }}
         >
           `${value > 1 ? Math.round(value) : value.toFixed(2)}%`

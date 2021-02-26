@@ -1,6 +1,6 @@
 const {
   navigateToStory,
-  executeInAllStories
+  executeInAllStories,
 } = require('../../../e2e/utils/storybook');
 
 describe('Button Suite', () => {
@@ -10,7 +10,7 @@ describe('Button Suite', () => {
     'Disabled',
     'Primary Dropdown',
     'Secondary Dropdown',
-    'Destructive'
+    'Destructive',
   ];
   const button = {
     generic: '[data-qa-button]',
@@ -18,7 +18,7 @@ describe('Button Suite', () => {
     secondary: '[data-qa-button="secondary"]',
     primaryDropdown: '[data-qa-button="Primary Dropdown"]',
     secondaryDropdown: '[data-qa-button="Secondary Dropdown"]',
-    destructive: '[data-qa-button="Destructive"]'
+    destructive: '[data-qa-button="Destructive"]',
   };
 
   it('should display buttons in each story', () => {

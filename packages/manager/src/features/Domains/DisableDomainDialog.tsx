@@ -35,8 +35,8 @@ const DisableDomainDialog: React.FC<CombinedProps> = props => {
     if (!props.selectedDomainID) {
       return setErrors([
         {
-          reason: 'Something went wrong.'
-        }
+          reason: 'Something went wrong.',
+        },
       ]);
     }
 
@@ -45,7 +45,7 @@ const DisableDomainDialog: React.FC<CombinedProps> = props => {
     props
       .updateDomain({
         domainId: props.selectedDomainID,
-        status: 'disabled'
+        status: 'disabled',
       })
       .then(() => {
         setSubmitting(false);

@@ -27,7 +27,7 @@ export default createSelector<ApplicationState, Linode[], Event[], Linode[]>(
 
     return linodes.map(linode => ({
       ...linode,
-      recentEvent: eventFor(linode.id)
+      recentEvent: eventFor(linode.id),
     }));
   }
 );

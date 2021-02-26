@@ -8,9 +8,9 @@ import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addTag: {
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
   },
-  tag: {}
+  tag: {},
 }));
 
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;

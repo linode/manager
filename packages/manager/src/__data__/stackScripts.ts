@@ -17,7 +17,7 @@ export const stackScripts: StackScript[] = [
     label: 'is_public',
     id: 326426,
     ordinal: 1,
-    logo_url: ''
+    logo_url: '',
   },
   {
     username: 'mmckenna',
@@ -28,7 +28,7 @@ export const stackScripts: StackScript[] = [
       'linode/fedora27',
       'linode/centos7',
       'linode/centos6',
-      'linode/coreos'
+      'linode/coreos',
     ],
     deployments_active: 0,
     deployments_total: 0,
@@ -42,6 +42,6 @@ export const stackScripts: StackScript[] = [
     label: 'is_public',
     id: 326432426,
     ordinal: 1,
-    logo_url: ''
-  }
+    logo_url: '',
+  },
 ];

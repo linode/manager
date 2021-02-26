@@ -6,13 +6,13 @@ const recentIssues = managedIssues.map((thisIssue, idx) => ({
   ...thisIssue,
   created: DateTime.local()
     .minus({ days: idx })
-    .toISO()
+    .toISO(),
 }));
 
 describe('IssueCalendar methods', () => {
   describe('createdOnTargetDay', () => {
     const targetDay = DateTime.fromISO(managedIssues[1].created, {
-      zone: 'utc'
+      zone: 'utc',
     }).setZone('GMT');
 
     it('should return true for an issue created on the target day', () => {

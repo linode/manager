@@ -2,15 +2,15 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import EntityHeader, {
-  HeaderProps
+  HeaderProps,
 } from 'src/components/EntityHeader/EntityHeader';
 import { BreadcrumbProps } from '../Breadcrumb';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     marginLeft: theme.spacing(),
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface Props extends Omit<HeaderProps, 'actions'> {
@@ -42,7 +42,7 @@ export const LandingHeader: React.FC<Props> = props => {
     createButtonWidth,
     createButtonText,
     loading,
-    breadcrumbProps
+    breadcrumbProps,
   } = props;
 
   const defaultCreateButtonWidth = 152;
@@ -77,7 +77,7 @@ export const LandingHeader: React.FC<Props> = props => {
       createButtonWidth,
       createButtonText,
       startsWithVowel,
-      entity
+      entity,
     ]
   );
 

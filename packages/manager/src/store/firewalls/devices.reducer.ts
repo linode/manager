@@ -7,14 +7,14 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import { isType } from 'typescript-fsa';
 import { EntityError, RelationalMappedEntityState } from '../types';
 import {
   addFirewallDeviceActions,
   getAllFirewallDevicesActions,
-  removeFirewallDeviceActions
+  removeFirewallDeviceActions,
 } from './devices.actions';
 
 export type State = RelationalMappedEntityState<FirewallDevice, EntityError>;

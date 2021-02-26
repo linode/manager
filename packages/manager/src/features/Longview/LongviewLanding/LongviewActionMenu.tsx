@@ -22,7 +22,7 @@ const LongviewActionMenu: React.FC<CombinedProps> = props => {
     longviewClientID,
     longviewClientLabel,
     triggerDeleteLongviewClient,
-    userCanModifyClient
+    userCanModifyClient,
   } = props;
 
   const actions: Action[] = [
@@ -34,8 +34,8 @@ const LongviewActionMenu: React.FC<CombinedProps> = props => {
         : 'Contact an account administrator for permission.',
       onClick: () => {
         triggerDeleteLongviewClient(longviewClientID, longviewClientLabel);
-      }
-    }
+      },
+    },
   ];
 
   return (

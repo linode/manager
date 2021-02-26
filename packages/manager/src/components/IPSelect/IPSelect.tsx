@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import withLinodes, {
-  Props as LinodeProps
+  Props as LinodeProps,
 } from 'src/containers/withLinodes.container';
 
 interface Props {
@@ -28,7 +28,7 @@ const IPSelect: React.FC<CombinedProps> = props => {
     handleChange,
     linodesLoading,
     linodesError,
-    customizeOptions
+    customizeOptions,
   } = props;
 
   const ips: string[] = [];
@@ -80,7 +80,7 @@ const enhanced = compose<CombinedProps, Props>(
       // Find the Linode in Redux that corresponds with the given ID.
       linode: linodesData.find(linode => linode.id === ownProps.linodeId),
       linodesLoading,
-      linodesError
+      linodesError,
     })
   )
 );

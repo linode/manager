@@ -5,7 +5,7 @@ import DomainDetail from '../../pageobjects/domain-detail/detail.page';
 import {
   apiCreateDomains,
   apiDeleteAllDomains,
-  timestamp
+  timestamp,
 } from '../../utils/common';
 
 describe('Domains - Detail - Add Records Suite', () => {
@@ -15,8 +15,8 @@ describe('Domains - Detail - Add Records Suite', () => {
   let domain = [
     {
       domain: domainName,
-      tags: domainTags
-    }
+      tags: domainTags,
+    },
   ];
 
   const expectedTagsDisplay = () => {

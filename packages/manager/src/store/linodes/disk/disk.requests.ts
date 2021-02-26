@@ -9,7 +9,7 @@ import {
   getLinodeDisk as _getLinodeDisk,
   getLinodeDisks as _getLinodeDisks,
   resizeLinodeDisk as _resizeLinodeDisk,
-  updateLinodeDisk as _updateLinodeDisk
+  updateLinodeDisk as _updateLinodeDisk,
 } from '@linode/api-v4/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { getAll } from 'src/utilities/getAll';
@@ -20,13 +20,13 @@ import {
   getLinodeDiskActions,
   getLinodeDisksActions,
   resizeLinodeDiskActions,
-  updateLinodeDiskActions
+  updateLinodeDiskActions,
 } from './disk.actions';
 import { Entity } from './disk.types';
 
 const addLinodeIdToDisk = (linodeId: number) => (disk: Disk): Entity => ({
   ...disk,
-  linode_id: linodeId
+  linode_id: linodeId,
 });
 
 export const createLinodeDisk = createRequestThunk(
@@ -40,7 +40,7 @@ export const getLinodeDisks = createRequestThunk(
   ({ linodeId }) =>
     _getLinodeDisks(linodeId).then(result => ({
       results: result.results,
-      data: result.data.map(addLinodeIdToDisk(linodeId))
+      data: result.data.map(addLinodeIdToDisk(linodeId)),
     }))
 );
 
@@ -51,7 +51,7 @@ export const getAllLinodeDisks = createRequestThunk(
       _getLinodeDisks(linodeId, diskParams, filter)
     )().then(result => ({
       results: result.results,
-      data: result.data.map(addLinodeIdToDisk(linodeId))
+      data: result.data.map(addLinodeIdToDisk(linodeId)),
     }))
 );
 

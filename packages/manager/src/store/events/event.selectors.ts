@@ -26,7 +26,7 @@ export const isSecondaryEntity = (event: Event, linodeId: number) =>
 // consumer of the `eventsForLinode` selector to have access to these events so
 // it can do things like display progress bars.
 export const eventActionsForLinodeAsSecondaryEntity: EventAction[] = [
-  'linode_clone'
+  'linode_clone',
 ];
 export const isEventRelevantToLinodeAsSecondaryEntity = (event: Event) =>
   eventActionsForLinodeAsSecondaryEntity.includes(event?.action);

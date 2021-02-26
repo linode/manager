@@ -4,7 +4,7 @@ import { Apps, LongviewClient } from '@linode/api-v4/lib/longview';
 export const longviewAppsFactory = Factory.Sync.makeFactory<Apps>({
   nginx: false,
   mysql: false,
-  apache: false
+  apache: false,
 });
 
 export const longviewClientFactory = Factory.Sync.makeFactory<LongviewClient>({
@@ -14,5 +14,5 @@ export const longviewClientFactory = Factory.Sync.makeFactory<LongviewClient>({
   label: Factory.each(i => `longview-client-${i}`),
   api_key: 'EXAMPLE_API_KEY',
   apps: longviewAppsFactory.build(),
-  install_code: 'INSTALL_ME'
+  install_code: 'INSTALL_ME',
 });

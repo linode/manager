@@ -5,7 +5,7 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
-  updateObjectStorageKey
+  updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
 import { FormikBag } from 'formik';
 import { pathOr } from 'ramda';
@@ -25,7 +25,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
-  sendRevokeAccessKeyEvent
+  sendRevokeAccessKeyEvent,
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
@@ -71,7 +71,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
   // Key to display in Confirmation Modal upon creation
   const [
     keyToDisplay,
-    setKeyToDisplay
+    setKeyToDisplay,
   ] = React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
@@ -317,7 +317,7 @@ const mapStateToProps = (state: ApplicationState) => {
       'disabled',
       ['data', 'object_storage'],
       state.__resources.accountSettings
-    )
+    ),
   };
 };
 
@@ -325,7 +325,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {
-    requestSettings: () => dispatch(requestAccountSettings())
+    requestSettings: () => dispatch(requestAccountSettings()),
   };
 };
 

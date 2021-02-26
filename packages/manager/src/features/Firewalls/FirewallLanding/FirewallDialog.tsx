@@ -37,7 +37,7 @@ const FirewallDialog: React.FC<CombinedProps> = props => {
     enableFirewall,
     mode,
     selectedFirewallID,
-    selectedFirewallLabel: label
+    selectedFirewallLabel: label,
   } = props;
 
   /** reset error on open */

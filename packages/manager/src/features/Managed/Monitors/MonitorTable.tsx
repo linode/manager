@@ -1,7 +1,7 @@
 import {
   ManagedCredential,
   ManagedServiceMonitor,
-  ManagedServicePayload
+  ManagedServicePayload,
 } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { FormikBag } from 'formik';
@@ -29,7 +29,7 @@ import { useDialog } from 'src/hooks/useDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import MonitorDrawer from '../MonitorDrawer';
 import HistoryDrawer from './HistoryDrawer';
@@ -39,13 +39,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   addNewWrapper: {
     marginBottom: 5,
     [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing()
-    }
+      marginRight: theme.spacing(),
+    },
   },
   headers: {
     '& > th': {
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   },
   labelHeader: {
     paddingLeft: `62px !important`,
@@ -54,13 +54,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.palette.primary.main,
       cursor: 'pointer',
       '& span': {
-        color: theme.color.white
+        color: theme.color.white,
       },
       '& svg path': {
-        color: theme.color.white
-      }
-    }
-  }
+        color: theme.color.white,
+      },
+    },
+  },
 }));
 
 interface Props {
@@ -93,7 +93,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     issues,
     issuesError,
     issuesLoading,
-    issuesLastUpdated
+    issuesLastUpdated,
   } = props;
 
   const {
@@ -101,7 +101,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     openDialog,
     closeDialog,
     submitDialog,
-    handleError
+    handleError,
   } = useDialog<number>(deleteServiceMonitor);
 
   const [historyDrawerOpen, setHistoryDrawerOpen] = React.useState<boolean>(
@@ -141,7 +141,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     submitDialog(dialog.entityID)
       .then(_ => {
         enqueueSnackbar('Successfully deleted Service Monitor', {
-          variant: 'success'
+          variant: 'success',
         });
       })
       .catch(err => {
@@ -186,7 +186,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       : updateServiceMonitor({
           ...values,
           monitorID: editID,
-          timeout: +values.timeout
+          timeout: +values.timeout,
         })
           .then(_success)
           .catch(_error);
@@ -221,7 +221,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
               handlePageChange,
               handlePageSizeChange,
               page,
-              pageSize
+              pageSize,
             }) => (
               <>
                 <Paper>

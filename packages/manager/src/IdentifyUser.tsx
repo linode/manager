@@ -30,7 +30,7 @@ export const IdentifyUser: React.FC<Props> = props => {
     accountError,
     username,
     taxID,
-    euuid
+    euuid,
   } = props;
   const client = useLDClient();
 
@@ -84,8 +84,8 @@ export const IdentifyUser: React.FC<Props> = props => {
             name: username,
             country,
             custom: {
-              taxID: _taxID
-            }
+              taxID: _taxID,
+            },
           })
           .then(() => setFeatureFlagsLoaded())
           /**

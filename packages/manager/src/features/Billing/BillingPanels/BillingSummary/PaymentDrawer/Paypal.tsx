@@ -21,7 +21,7 @@
  */
 import {
   executePaypalPayment,
-  stagePaypalPayment
+  stagePaypalPayment,
 } from '@linode/api-v4/lib/account';
 import * as classnames from 'classnames';
 import * as React from 'react';
@@ -40,10 +40,10 @@ import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
   },
   header: {
-    fontSize: '1.1rem'
+    fontSize: '1.1rem',
   },
   paypalMask: {
     width: 200,
@@ -51,20 +51,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     zIndex: 10,
     left: 0,
-    top: 0
+    top: 0,
   },
   paypalButtonWrapper: {
     position: 'relative',
     left: theme.spacing(),
     zIndex: 1,
-    transition: theme.transitions.create(['opacity'])
+    transition: theme.transitions.create(['opacity']),
   },
   PaypalHidden: {
-    opacity: 0.3
+    opacity: 0.3,
   },
   text: {
-    marginBottom: theme.spacing(2) - 1
-  }
+    marginBottom: theme.spacing(2) - 1,
+  },
 }));
 
 interface PaypalScript {
@@ -86,7 +86,7 @@ const client = {
   sandbox: 'sb',
   // 'YbjxBCou-0Aum1f2K1xqSgrJqhNCHOEbdmvi1pPQhk-bj_dLrJ41Cssm_ektzlNxZJc9A-dx6UkYu2n',
   production:
-    'AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA'
+    'AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA',
 };
 
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
@@ -122,7 +122,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
   );
   const [
     errorLoadingPaypalScript,
-    setErrorLoadingPaypalScript
+    setErrorLoadingPaypalScript,
   ] = React.useState<boolean | undefined>();
 
   React.useEffect(() => {
@@ -137,7 +137,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
        */
       PaypalButton.current = (window as any).paypal.Buttons.driver('react', {
         React,
-        ReactDOM
+        ReactDOM,
       });
       setErrorLoadingPaypalScript(false);
       setShouldRenderButton(true);
@@ -161,7 +161,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
     setExecuting(true);
     executePaypalPayment({
       payer_id: payerID,
-      payment_id: paymentID
+      payment_id: paymentID,
     })
       .then(response => {
         setExecuting(false);
@@ -216,7 +216,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
     return stagePaypalPayment({
       cancel_url: 'https://www.paypal.com/checkoutnow/error',
       redirect_url: 'https://www.paypal.com/checkoutnow/error',
-      usd: (+usd).toFixed(2)
+      usd: (+usd).toFixed(2),
     })
       .then(response => {
         setStaging(false);
@@ -235,7 +235,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
          */
         reportException(cleanedError, {
           'Raw USD': usd,
-          'USD converted to number': (+usd).toFixed(2)
+          'USD converted to number': (+usd).toFixed(2),
         });
 
         setStaging(false);
@@ -302,7 +302,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
               data-qa-paypal-button
               className={classnames({
                 [classes.paypalButtonWrapper]: true,
-                [classes.PaypalHidden]: !enabled
+                [classes.PaypalHidden]: !enabled,
               })}
             >
               {PaypalButton.current && shouldRenderButton && (
@@ -314,7 +314,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
                   onCancel={onCancel}
                   style={{
                     color: 'blue',
-                    shape: 'rect'
+                    shape: 'rect',
                   }}
                 />
               )}

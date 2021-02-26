@@ -14,12 +14,12 @@ const maintenanceNotification: (
       id: linodeID,
       label: 'linode1234',
       type: 'linode',
-      url: 'https://hello.world'
+      url: 'https://hello.world',
     },
     when: 'rightnow',
     until: 'later',
-    body: null
-  }
+    body: null,
+  },
 ];
 
 describe('Linode Redux Helpers', () => {
@@ -32,9 +32,9 @@ describe('Linode Redux Helpers', () => {
         maintenance: {
           when: 'rightnow',
           until: 'later',
-          type: 'reboot'
-        }
-      }
+          type: 'reboot',
+        },
+      },
     ]);
   });
 
@@ -43,7 +43,7 @@ describe('Linode Redux Helpers', () => {
   ).toEqual([
     {
       ...linode1,
-      maintenance: null
-    }
+      maintenance: null,
+    },
   ]);
 });

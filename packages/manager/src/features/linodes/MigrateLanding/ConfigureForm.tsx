@@ -5,13 +5,13 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect, {
-  flags
+  flags,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { dcDisplayNames } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   formatRegion,
-  getHumanReadableCountry
+  getHumanReadableCountry,
 } from 'src/utilities/formatRegion';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(4),
       marginBottom: theme.spacing(1.5),
       fontSize: theme.spacing(2),
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   },
   rootCMR: {
     padding: 0,
@@ -30,20 +30,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(4),
       marginBottom: theme.spacing(1.5),
       fontSize: theme.spacing(2),
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   },
   currentRegion: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     '& svg': {
-      marginRight: theme.spacing()
-    }
+      marginRight: theme.spacing(),
+    },
   },
   select: {
-    marginTop: theme.spacing(2)
-  }
+    marginTop: theme.spacing(2),
+  },
 }));
 
 interface Props {
@@ -82,17 +82,17 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
           .filter(eachRegion => eachRegion.id !== props.currentRegion)
           .map(eachRegion => ({
             ...eachRegion,
-            display: dcDisplayNames[eachRegion.id]
+            display: dcDisplayNames[eachRegion.id],
           }))}
         handleSelection={props.handleSelectRegion}
         selectedID={props.selectedRegion}
         errorText={props.errorText}
         textFieldProps={{
-          helperText: props.helperText
+          helperText: props.helperText,
         }}
         menuPlacement="top"
         styles={{
-          menuList: (base: any) => ({ ...base, maxHeight: `30vh !important` })
+          menuList: (base: any) => ({ ...base, maxHeight: `30vh !important` }),
         }}
       />
     </Paper>

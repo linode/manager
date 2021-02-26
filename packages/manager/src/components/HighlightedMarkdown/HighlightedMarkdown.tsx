@@ -20,9 +20,9 @@ hljs.registerLanguage('yaml', require('highlight.js/lib/languages/yaml'));
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& .hljs': {
-      color: theme.color.offBlack
-    }
-  }
+      color: theme.color.offBlack,
+    },
+  },
 }));
 
 export type SupportedLanguage =
@@ -50,7 +50,7 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
   React.useEffect(() => {
     if (language) {
       hljs.configure({
-        languages: [language]
+        languages: [language],
       });
     }
   }, [language]);
@@ -80,11 +80,11 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => 
     <Typography
       className={classNames({
         [classes.root]: true,
-        'formatted-text': true
+        'formatted-text': true,
       })}
       ref={rootRef}
       dangerouslySetInnerHTML={{
-        __html: sanitizedHtml
+        __html: sanitizedHtml,
       }}
     />
   );

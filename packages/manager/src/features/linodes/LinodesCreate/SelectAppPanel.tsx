@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -27,29 +27,29 @@ const styles = (theme: Theme) =>
   createStyles({
     flatImagePanelSelections: {
       marginTop: theme.spacing(2),
-      padding: `${theme.spacing(1)}px 0`
+      padding: `${theme.spacing(1)}px 0`,
     },
     panel: {
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     loading: {
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     selectionCard: {
       '& .cardBaseIcon': {
         width: 40,
         paddingRight: 0,
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
       },
       '& .cardBaseInfo': {
         paddingLeft: 0,
         '& svg': {
           width: 28,
-          height: 28
-        }
-      }
-    }
+          height: 28,
+        },
+      },
+    },
   });
 
 interface Props extends AppsData {
@@ -120,7 +120,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       appInstancesError,
       appInstancesLoading,
       handleClick,
-      openDrawer
+      openDrawer,
     } = this.props;
 
     if (appInstancesError) {

@@ -4,14 +4,14 @@ import {
   addEvents,
   setPollingInterval,
   setRequestDeadline,
-  updateEventsAsSeen
+  updateEventsAsSeen,
 } from './event.actions';
 import {
   epoch,
   getNumUnseenEvents,
   mostRecentCreated,
   updateEvents,
-  updateInProgressEvents
+  updateInProgressEvents,
 } from './event.helpers';
 import { ExtendedEvent } from './event.types';
 
@@ -30,7 +30,7 @@ export const defaultState: State = {
   countUnseenEvents: 0,
   inProgressEvents: {},
   pollingInterval: 1,
-  requestDeadline: Date.now()
+  requestDeadline: Date.now(),
 };
 
 const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
@@ -39,7 +39,7 @@ const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
     const {
       events: prevEvents,
       inProgressEvents: prevInProgressEvents,
-      mostRecentEventTime
+      mostRecentEventTime,
     } = state;
     const updatedEvents = updateEvents(prevEvents, events);
 
@@ -51,7 +51,7 @@ const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
         mostRecentEventTime
       ),
       countUnseenEvents: getNumUnseenEvents(updatedEvents),
-      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events)
+      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
     };
   }
 
@@ -59,21 +59,21 @@ const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
     return {
       ...state,
       events: state.events.map(event => ({ ...event, seen: true })),
-      countUnseenEvents: 0
+      countUnseenEvents: 0,
     };
   }
 
   if (isType(action, setPollingInterval)) {
     return {
       ...state,
-      pollingInterval: action.payload
+      pollingInterval: action.payload,
     };
   }
 
   if (isType(action, setRequestDeadline)) {
     return {
       ...state,
-      requestDeadline: action.payload
+      requestDeadline: action.payload,
     };
   }
 

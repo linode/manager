@@ -21,10 +21,10 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import withBackupCta, {
-  BackupCTAProps
+  BackupCTAProps,
 } from 'src/containers/withBackupCTA.container';
 import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
@@ -35,13 +35,13 @@ import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import {
   addNotificationsToLinodes,
-  LinodeWithMaintenance
+  LinodeWithMaintenance,
 } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
 import formatDate, { formatDateISO } from 'src/utilities/formatDate';
 import {
   sendGroupByTagEnabledEvent,
-  sendLinodesViewEvent
+  sendLinodesViewEvent,
 } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import getUserTimezone from 'src/utilities/getUserTimezone';
@@ -116,7 +116,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     groupByTag: false,
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
-    detachLinodeFromVlanDialogOpen: false
+    detachLinodeFromVlanDialogOpen: false,
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
@@ -129,7 +129,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     const updatedParams = updateParams<Params>(location.search, params => ({
       ...params,
-      view: style
+      view: style,
     }));
 
     history.push(`?${updatedParams}`);
@@ -153,7 +153,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       powerDialogAction: bootAction,
       selectedLinodeConfigs: linodeConfigs,
       selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel
+      selectedLinodeLabel: linodeLabel,
     });
   };
 
@@ -161,42 +161,42 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     switch (type) {
       case 'delete':
         this.setState({
-          deleteDialogOpen: true
+          deleteDialogOpen: true,
         });
         break;
       case 'resize':
         this.setState({
-          linodeResizeOpen: true
+          linodeResizeOpen: true,
         });
         break;
       case 'migrate':
         this.setState({
-          linodeMigrateOpen: true
+          linodeMigrateOpen: true,
         });
         break;
       case 'rebuild':
         this.setState({
-          rebuildDialogOpen: true
+          rebuildDialogOpen: true,
         });
         break;
       case 'rescue':
         this.setState({
-          rescueDialogOpen: true
+          rescueDialogOpen: true,
         });
         break;
       case 'enable_backups':
         this.setState({
-          enableBackupsDialogOpen: true
+          enableBackupsDialogOpen: true,
         });
         break;
       case 'detach_vlan':
         this.setState({
-          detachLinodeFromVlanDialogOpen: true
+          detachLinodeFromVlanDialogOpen: true,
         });
     }
     this.setState({
       selectedLinodeID: linodeID,
-      selectedLinodeLabel: linodeLabel
+      selectedLinodeLabel: linodeLabel,
     });
   };
 
@@ -209,7 +209,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodeResizeOpen: false,
       linodeMigrateOpen: false,
       enableBackupsDialogOpen: false,
-      detachLinodeFromVlanDialogOpen: false
+      detachLinodeFromVlanDialogOpen: false,
     });
   };
 
@@ -222,11 +222,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesCount,
       linodesData,
       classes,
-      linodesInTransition
+      linodesInTransition,
     } = this.props;
 
     const params: Params = parse(this.props.location.search, {
-      ignoreQueryPrefix: true
+      ignoreQueryPrefix: true,
     });
 
     // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
@@ -245,7 +245,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
       openPowerActionDialog: this.openPowerDialog,
-      openDialog: this.openDialog
+      openDialog: this.openDialog,
     };
 
     if (imagesError.read || linodesRequestError) {
@@ -290,7 +290,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
       { label: 'Created', key: 'created' },
-      { label: 'Last Backup', key: 'lastBackup' }
+      { label: 'Last Backup', key: 'lastBackup' },
     ];
 
     return (
@@ -351,7 +351,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             >
               {({
                 preference: linodesAreGrouped,
-                togglePreference: toggleGroupLinodes
+                togglePreference: toggleGroupLinodes,
               }: ToggleProps<boolean>) => {
                 return (
                   <PreferenceToggle<'grid' | 'list'>
@@ -372,7 +372,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                   >
                     {({
                       preference: linodeViewPreference,
-                      togglePreference: toggleLinodeView
+                      togglePreference: toggleLinodeView,
                     }: ToggleProps<'list' | 'grid'>) => {
                       return (
                         <React.Fragment>
@@ -414,7 +414,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   displayStatus: linode.maintenance
                                     ? 'maintenance'
                                     : linode.status,
-                                  _statusPriority: statusToPriority(_status)
+                                  _statusPriority: statusToPriority(_status),
                                 };
                               })}
                               // If there are Linodes with scheduled maintenance, default to
@@ -430,7 +430,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 data,
                                 handleOrderChange,
                                 order,
-                                orderBy
+                                orderBy,
                               }) => {
                                 const finalProps = {
                                   ...componentProps,
@@ -438,7 +438,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   handleOrderChange,
                                   order,
                                   orderBy,
-                                  isVLAN: this.props.isVLAN
+                                  isVLAN: this.props.isVLAN,
                                 };
 
                                 return linodesAreGrouped ? (
@@ -486,7 +486,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                             ...e.maintenance,
                                             when: formatDateISO(
                                               e.maintenance?.when
-                                            )
+                                            ),
                                           }
                                         : { when: null };
 
@@ -508,7 +508,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           e.specs.vcpus,
                                           '',
                                           {}
-                                        )
+                                        ),
                                       };
                                     })}
                                     headers={
@@ -519,8 +519,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                             /** only add maintenance window to CSV if one Linode has a window */
                                             {
                                               label: 'Maintenance Status',
-                                              key: 'maintenance.when'
-                                            }
+                                              key: 'maintenance.when',
+                                            },
                                           ]
                                         : headers
                                     }
@@ -606,7 +606,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   const linodeTypesMap = state.__resources.types.entities.reduce(
     (accumulator, thisType) => ({
       ...accumulator,
-      [thisType.id]: thisType
+      [thisType.id]: thisType,
     }),
     {}
   );
@@ -614,7 +614,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
   const linodesDataWithPlan = linodes.map(thisLinode => {
     return {
       ...thisLinode,
-      plan: linodeTypesMap[thisLinode.type ?? '']?.label ?? 'Unknown'
+      plan: linodeTypesMap[thisLinode.type ?? '']?.label ?? 'Unknown',
     };
   });
 
@@ -643,7 +643,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
       ['read'],
       state.__resources.profile.error
     ),
-    linodesInTransition: _linodesInTransition(state.events.events)
+    linodesInTransition: _linodesInTransition(state.events.events),
   };
 };
 
@@ -654,7 +654,7 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId }))
+  deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId })),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

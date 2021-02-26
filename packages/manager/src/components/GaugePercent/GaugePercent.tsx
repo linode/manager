@@ -4,7 +4,7 @@ import {
   makeStyles,
   Theme,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 
 import { Chart } from 'chart.js';
@@ -19,7 +19,7 @@ const useStyles = (options: Options) =>
   makeStyles((theme: Theme) => ({
     gaugeWrapper: {
       position: 'relative',
-      width: `50%`
+      width: `50%`,
     },
     innerText: {
       position: 'absolute',
@@ -27,7 +27,7 @@ const useStyles = (options: Options) =>
       width: options.width,
       textAlign: 'center',
       fontSize: '1rem',
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
     },
     subTitle: {
       position: 'absolute',
@@ -35,8 +35,8 @@ const useStyles = (options: Options) =>
       textAlign: 'center',
       top: `calc(${options.height + theme.spacing(1.25)}px)`,
       fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
-      color: theme.color.headline
-    }
+      color: theme.color.headline,
+    },
   }));
 
 interface Props {
@@ -59,7 +59,7 @@ const GaugePercent: React.FC<CombinedProps> = props => {
   const classes = useStyles({
     width,
     height,
-    fontSize: props.innerTextFontSize
+    fontSize: props.innerTextFontSize,
   })();
 
   /**
@@ -78,20 +78,20 @@ const GaugePercent: React.FC<CombinedProps> = props => {
       borderWidth: 0,
       hoverBackgroundColor: [
         props.filledInColor || props.theme.color.blue,
-        props.nonFilledInColor || props.theme.color.grey2
+        props.nonFilledInColor || props.theme.color.grey2,
       ],
       /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
       data: [props.value, finalMax],
       backgroundColor: [
         props.filledInColor || props.theme.color.blue,
-        props.nonFilledInColor || props.theme.color.grey2
-      ]
-    }
+        props.nonFilledInColor || props.theme.color.grey2,
+      ],
+    },
   ];
   const graphOptions = {
     animation: {
       animateRotate: false,
-      animateScale: false
+      animateScale: false,
     },
     maintainAspectRatio: false,
     rotation: -1.25 * Math.PI,
@@ -101,8 +101,8 @@ const GaugePercent: React.FC<CombinedProps> = props => {
     /** get rid of all hover events with events: [] */
     events: [],
     legend: {
-      display: false
-    }
+      display: false,
+    },
   };
 
   const graphRef: React.RefObject<any> = React.useRef(null);
@@ -115,9 +115,9 @@ const GaugePercent: React.FC<CombinedProps> = props => {
       new Chart(graphRef.current.getContext('2d'), {
         type: 'doughnut',
         data: {
-          datasets: graphDatasets
+          datasets: graphDatasets,
         },
-        options: graphOptions
+        options: graphOptions,
       });
     }
   });
@@ -126,7 +126,7 @@ const GaugePercent: React.FC<CombinedProps> = props => {
       className={classes.gaugeWrapper}
       style={{
         width,
-        height: height + props.theme.spacing(3.75)
+        height: height + props.theme.spacing(3.75),
       }}
     >
       <canvas height={height} ref={graphRef} />

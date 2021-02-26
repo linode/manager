@@ -14,28 +14,28 @@ type CombinedProps = Props;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(4),
   },
   copy: {
     lineHeight: '20px',
     marginTop: theme.spacing(),
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   link: {
     color: theme.cmrTextColors.linkActiveLight,
     marginTop: theme.spacing(),
     '&:hover': {
-      color: theme.palette.primary.main
-    }
+      color: theme.palette.primary.main,
+    },
   },
   disabled: {
     '& *': {
-      color: theme.color.disabledText
-    }
+      color: theme.color.disabledText,
+    },
   },
   disabledLink: {
-    pointerEvents: 'none'
-  }
+    pointerEvents: 'none',
+  },
 }));
 
 export const ResetPassword: React.FC<CombinedProps> = props => {

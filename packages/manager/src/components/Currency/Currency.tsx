@@ -12,7 +12,7 @@ export const Currency: React.FC<CurrencyFormatterProps> = props => {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: props.decimalPlaces ?? 2
+    minimumFractionDigits: props.decimalPlaces ?? 2,
   });
 
   const formattedQuantity = formatter.format(Math.abs(quantity));

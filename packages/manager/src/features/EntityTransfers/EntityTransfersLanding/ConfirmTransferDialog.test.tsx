@@ -6,13 +6,13 @@ import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import ConfirmTransferDialog, {
   getTimeRemaining,
-  Props
+  Props,
 } from './ConfirmTransferDialog';
 
 const props: Props = {
   open: true,
   onClose: jest.fn(),
-  token: 'blahblah'
+  token: 'blahblah',
 };
 
 describe('Accept Entity Transfer confirmation dialog', () => {
@@ -21,7 +21,7 @@ describe('Accept Entity Transfer confirmation dialog', () => {
       server.use(
         rest.get('*/account/entity-transfers/:transferId', (req, res, ctx) => {
           const transfer = entityTransferFactory.build({
-            is_sender: true
+            is_sender: true,
           });
           return res(ctx.json(transfer));
         })
@@ -37,8 +37,8 @@ describe('Accept Entity Transfer confirmation dialog', () => {
             is_sender: false,
             entities: {
               linodes: [0, 1, 2, 3],
-              domains: [1, 2, 3, 4, 5]
-            } as any // Domains aren't allowed yet
+              domains: [1, 2, 3, 4, 5],
+            } as any, // Domains aren't allowed yet
           });
           return res(ctx.json(transfer));
         })

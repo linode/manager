@@ -1,7 +1,7 @@
 import createDatabaseSchema from '@linode/api-v4/lib/databases/databases.schema';
 import {
   CreateDatabasePayload,
-  DatabaseMaintenanceSchedule
+  DatabaseMaintenanceSchedule,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
@@ -16,7 +16,7 @@ import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect, {
-  ExtendedRegion
+  ExtendedRegion,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Notice from 'src/components/Notice';
 import TagsInput from 'src/components/TagsInput';
@@ -31,7 +31,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { initWindows } from 'src/utilities/initWindows';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import useTimezone from 'src/utilities/useTimezone';
 import SelectDBPlanPanel from './SelectDBPlanPanel';
@@ -41,34 +41,34 @@ const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 const useStyles = makeStyles((theme: Theme) => ({
   form: {},
   formSection: {
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   maintenanceSelectsOuter: {
     display: 'flex',
     maxWidth: '415px',
     [theme.breakpoints.down('xs')]: {
       display: 'block',
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   maintenanceSelectsInner: {
     display: 'inline-block',
     [theme.breakpoints.down('xs')]: {
-      display: 'block'
-    }
+      display: 'block',
+    },
   },
   chooseDay: {
     marginTop: 0,
     marginRight: theme.spacing(2),
-    minWidth: 160
+    minWidth: 160,
   },
   chooseTime: {
     marginTop: 0,
-    minWidth: 240
+    minWidth: 240,
   },
   timeHelperText: {
-    fontSize: '0.875em'
-  }
+    fontSize: '0.875em',
+  },
 }));
 
 export const CreateDatabaseDialog: React.FC<{}> = _ => {
@@ -141,12 +141,12 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
         day: (daySelection[randomNumberForDaySelection]?.value ??
           '') as DatabaseMaintenanceSchedule['day'],
         window: (windowSelection[randomNumberForWindowSelection]?.value ??
-          '') as DatabaseMaintenanceSchedule['window']
-      }
+          '') as DatabaseMaintenanceSchedule['window'],
+      },
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
-    onSubmit: values => submitForm(values)
+    onSubmit: values => submitForm(values),
   });
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -347,7 +347,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
             onChange={handleTagChange}
             value={formik.values.tags.map(tagString => ({
               label: tagString,
-              value: tagString
+              value: tagString,
             }))}
           />
         </div>
@@ -373,8 +373,8 @@ const daySelection = [
   'Wednesday',
   'Thursday',
   'Friday',
-  'Saturday'
+  'Saturday',
 ].map(thisDay => ({
   label: thisDay,
-  value: thisDay
+  value: thisDay,
 }));

@@ -13,11 +13,11 @@ import TextField from 'src/components/TextField';
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0
+      opacity: 0,
     },
     to: {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   root: {
     padding: '5px 8px',
@@ -25,41 +25,41 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
     textDecoration: 'inherit',
-    lineHeight: 1
+    lineHeight: 1,
   },
   container: {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',
   },
   containerEditing: {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    position: 'relative'
+    position: 'relative',
   },
   initial: {
     '&:hover, &:focus': {
       '& $editIcon': {
-        opacity: 1
+        opacity: 1,
       },
       '& $icon': {
         color: theme.color.grey1,
         '&:hover': {
-          color: theme.color.black
-        }
-      }
-    }
+          color: theme.color.black,
+        },
+      },
+    },
   },
   edit: {
     fontSize: 22,
-    border: '1px solid transparent'
+    border: '1px solid transparent',
   },
   textField: {
     opacity: 0,
     animation: '$fadeIn .3s ease-in-out forwards',
-    margin: 0
+    margin: 0,
   },
   inputRoot: {
     maxWidth: 170,
@@ -69,8 +69,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: 40,
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   button: {
     padding: 0,
@@ -79,34 +79,34 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 'auto',
     minHeight: 'auto',
     marginTop: 5,
-    background: 'transparent !important'
+    background: 'transparent !important',
   },
   icon: {
     margin: '0 10px',
     color: theme.palette.text.primary,
     '&:hover, &:focus': {
-      color: theme.palette.primary.light
-    }
+      color: theme.palette.primary.light,
+    },
   },
   saveButton: {
     marginLeft: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   save: {
-    fontSize: 26
+    fontSize: 26,
   },
   close: {
-    fontSize: 26
+    fontSize: 26,
   },
   input: {
     padding: '5px 8px',
-    ...theme.typography.body1
+    ...theme.typography.body1,
   },
   headline: {
-    ...theme.typography.h1
+    ...theme.typography.h1,
   },
   title: {
-    ...theme.typography.h1
+    ...theme.typography.h1,
   },
   editIcon: {
     position: 'absolute',
@@ -115,10 +115,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       opacity: 0,
       '&:focus': {
-        opacity: 1
-      }
-    }
-  }
+        opacity: 1,
+      },
+    },
+  },
 }));
 
 export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
@@ -222,8 +222,8 @@ export const EditableInput: React.FC<FinalProps> = props => {
             className: classnames({
               [classes.headline]: typeVariant === 'h1',
               [classes.title]: typeVariant === 'h2',
-              [classes.input]: true
-            })
+              [classes.input]: true,
+            }),
           }}
           autoFocus={true}
           editable

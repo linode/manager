@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const getRegionOptions = (regions: ExtendedRegion[]) => {
-  const groupedRegions = groupBy<ExtendedRegion>((thisRegion) => {
+  const groupedRegions = groupBy<ExtendedRegion>(thisRegion => {
     if (thisRegion.country.match(/(us|ca)/)) {
       return 'North America';
     }
@@ -116,7 +116,7 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
         {
           label: thisGroup,
           options: groupedRegions[thisGroup]
-            .map((thisRegion) => ({
+            .map(thisRegion => ({
               label: thisRegion.display,
               value: thisRegion.id,
               flag:
@@ -143,7 +143,7 @@ export const getSelectedRegionById = (
     (accum, thisGroup) => [...accum, ...thisGroup.options],
     []
   );
-  return regions.find((thisRegion) => regionID === thisRegion.value);
+  return regions.find(thisRegion => regionID === thisRegion.value);
 };
 
 const sortRegions = (region1: RegionItem, region2: RegionItem) => {
@@ -164,7 +164,7 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-const SelectRegionPanel: React.FC<Props> = (props) => {
+const SelectRegionPanel: React.FC<Props> = props => {
   const {
     label,
     disabled,

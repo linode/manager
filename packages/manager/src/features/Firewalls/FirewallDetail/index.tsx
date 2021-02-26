@@ -19,8 +19,8 @@ import withFirewalls, {
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-const FirewallRulesLanding = React.lazy(
-  () => import('./Rules/FirewallRulesLanding')
+const FirewallRulesLanding = React.lazy(() =>
+  import('./Rules/FirewallRulesLanding')
 );
 
 const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const FirewallDetail: React.FC<CombinedProps> = (props) => {
+export const FirewallDetail: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   // Source the Firewall's ID from the /:id path param.
@@ -126,7 +126,7 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
       </Box>
       <Tabs
         index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
+          tabs.findIndex(tab => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}

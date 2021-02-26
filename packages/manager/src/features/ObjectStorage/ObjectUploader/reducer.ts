@@ -72,7 +72,7 @@ const cloneLandingReducer = (
               status: 'QUEUED',
               percentComplete: 0,
               file,
-              prefix: action.prefix
+              prefix: action.prefix,
             });
           }
         }
@@ -82,7 +82,7 @@ const cloneLandingReducer = (
         status: 'QUEUED',
         percentComplete: 0,
         file,
-        prefix: action.prefix
+        prefix: action.prefix,
       }));
 
       draft.files = [...extendedFiles, ...draft.files];
@@ -150,7 +150,7 @@ export const defaultState: ObjectUploaderState = {
   numInProgress: 0,
   numFinished: 0,
   numCancelled: 0,
-  numErrors: 0
+  numErrors: 0,
 };
 
 const updateCount = (draft: ObjectUploaderState) => {

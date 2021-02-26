@@ -176,7 +176,7 @@ const enhanced = compose<CombinedProps, {}>(
   linodeContext,
   withLinodeActions,
   withImage<LinodeContextProps & WithImage, LinodeContextProps>(
-    (props) => props.linodeImageId,
+    props => props.linodeImageId,
     (ownProps, image) => ({ ...ownProps, image })
   ),
   localStyles

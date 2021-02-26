@@ -6,7 +6,7 @@ import { RequestableDataWithEntityError } from '../types';
 import {
   requestAccountSettingsActions,
   updateAccountSettingsActions,
-  updateSettingsInStore
+  updateSettingsInStore,
 } from './accountSettings.actions';
 
 export type State = RequestableDataWithEntityError<AccountSettings>;
@@ -16,7 +16,7 @@ export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
-  error: {}
+  error: {},
 };
 
 // REDUCER

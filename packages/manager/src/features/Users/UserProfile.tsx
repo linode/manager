@@ -14,7 +14,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -33,21 +33,21 @@ const styles = (theme: Theme) =>
     title: {
       marginTop: theme.spacing(2),
       [theme.breakpoints.down('sm')]: {
-        marginLeft: theme.spacing()
-      }
+        marginLeft: theme.spacing(),
+      },
     },
     wrapper: {
       backgroundColor: theme.color.white,
       marginTop: theme.spacing(),
       padding: theme.spacing(3),
       '&:not(:last-child)': {
-        marginBottom: theme.spacing(3)
-      }
+        marginBottom: theme.spacing(3),
+      },
     },
     topMargin: {
       marginTop: theme.spacing(2),
-      marginLeft: 0
-    }
+      marginLeft: 0,
+    },
   });
 
 interface Props {
@@ -83,13 +83,13 @@ class UserProfile extends React.Component<CombinedProps> {
   state: State = {
     deleteConfirmDialogOpen: false,
     toDeleteUsername: this.props.username,
-    userDeleteError: false
+    userDeleteError: false,
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (this.props.username && !prevProps.username) {
       this.setState({
-        toDeleteUsername: this.props.username
+        toDeleteUsername: this.props.username,
       });
     }
   }
@@ -111,7 +111,7 @@ class UserProfile extends React.Component<CombinedProps> {
       profileErrors,
       profileUsername,
       originalUsername,
-      originalEmail
+      originalEmail,
     } = this.props;
 
     const hasAccountErrorFor = getAPIErrorsFor(
@@ -209,11 +209,11 @@ class UserProfile extends React.Component<CombinedProps> {
 
   onDeleteConfirm = (username: string) => {
     const {
-      history: { push }
+      history: { push },
     } = this.props;
     this.setState({
       userDeleteError: false,
-      deleteConfirmDialogOpen: false
+      deleteConfirmDialogOpen: false,
     });
     deleteUser(username)
       .then(() => {
@@ -225,7 +225,7 @@ class UserProfile extends React.Component<CombinedProps> {
       })
       .catch(() => {
         this.setState({
-          userDeleteError: true
+          userDeleteError: true,
         });
         scrollErrorIntoView();
       });
@@ -233,13 +233,13 @@ class UserProfile extends React.Component<CombinedProps> {
 
   onDelete = () => {
     this.setState({
-      deleteConfirmDialogOpen: true
+      deleteConfirmDialogOpen: true,
     });
   };
 
   onDeleteCancel = () => {
     this.setState({
-      deleteConfirmDialogOpen: false
+      deleteConfirmDialogOpen: false,
     });
   };
 
@@ -313,7 +313,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile)
+  profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 
 export const connected = connect(mapStateToProps);

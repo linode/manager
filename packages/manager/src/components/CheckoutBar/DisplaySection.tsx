@@ -16,7 +16,7 @@ export const DisplaySection: React.FC<Props> = props => {
     <div
       className={classNames({
         [classes.checkoutSection]: true,
-        [classes.noBorder]: hideBorder
+        [classes.noBorder]: hideBorder,
       })}
     >
       {title && (

@@ -5,14 +5,14 @@ import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import {
   generateTotalMemory,
-  generateUsedMemory
+  generateUsedMemory,
 } from '../../shared/utilities';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
 import { readableBytes } from 'src/utilities/unitConversions';
 
 import withClientData, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 
 type commbinedProps = Props & WithTheme & LVDataProps;
@@ -22,7 +22,7 @@ const RAMGauge: React.FC<commbinedProps> = props => {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
     longviewClientData,
-    lastUpdatedError
+    lastUpdatedError,
   } = props;
 
   const usedMemory = pathOr(
@@ -60,7 +60,7 @@ const RAMGauge: React.FC<commbinedProps> = props => {
           <Typography>
             <strong>RAM</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -71,7 +71,7 @@ const RAMGauge: React.FC<commbinedProps> = props => {
           <Typography>
             <strong>RAM</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -83,7 +83,7 @@ const RAMGauge: React.FC<commbinedProps> = props => {
       /** convert KB to bytes */
       usedMemoryToBytes,
       {
-        unit: usedMemoryToBytes > howManyBytesInGB ? 'GB' : 'MB'
+        unit: usedMemoryToBytes > howManyBytesInGB ? 'GB' : 'MB',
       }
     );
 
@@ -91,7 +91,7 @@ const RAMGauge: React.FC<commbinedProps> = props => {
       /** convert KB to bytes */
       totalMemory * 1024,
       {
-        unit: 'GB'
+        unit: 'GB',
       }
     );
 
@@ -104,7 +104,7 @@ const RAMGauge: React.FC<commbinedProps> = props => {
           </Typography>
           <Typography>{`${convertedTotalMemory.value} GB`}</Typography>
         </React.Fragment>
-      )
+      ),
     };
   };
 

@@ -12,15 +12,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
     '& .dialog-content': {
       paddingTop: 0,
-      paddingBottom: 0
+      paddingBottom: 0,
     },
     '& p': {
-      lineHeight: '1.25rem'
+      lineHeight: '1.25rem',
     },
     '& p:first-child': {
-      marginBottom: theme.spacing(2)
-    }
-  }
+      marginBottom: theme.spacing(2),
+    },
+  },
 }));
 
 interface Props {

@@ -4,7 +4,7 @@ import {
   DomainRecord,
   DomainType,
   RecordType,
-  updateDomainRecord
+  updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
@@ -16,7 +16,7 @@ import {
   path,
   pathOr,
   pick,
-  set
+  set,
 } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -29,14 +29,14 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
   DomainActionsProps,
-  withDomainActions
+  withDomainActions,
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
   ExtendedIP,
   extendedIPToString,
-  stringToExtendedIP
+  stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -44,7 +44,7 @@ import {
   getInitialIPs,
   isValidCNAME,
   isValidDomainRecord,
-  transferHelperText as helperText
+  transferHelperText as helperText,
 } from './domainUtils';
 
 interface Props
@@ -133,12 +133,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     axfr_ips: getInitialIPs(props.axfr_ips),
     refresh_sec: props.refresh_sec ?? 0,
     retry_sec: props.retry_sec ?? 0,
-    expire_sec: props.expire_sec ?? 0
+    expire_sec: props.expire_sec ?? 0,
   });
 
   state: State = {
     submitting: false,
-    fields: DomainRecordDrawer.defaultFieldsState(this.props)
+    fields: DomainRecordDrawer.defaultFieldsState(this.props),
   };
 
   updateField = (
@@ -168,7 +168,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     axfr_ips: 'domain transfers',
     refresh_sec: 'refresh rate',
     retry_sec: 'retry rate',
-    expire_sec: 'expire rate'
+    expire_sec: 'expire rate',
   };
 
   handleTransferUpdate = (transferIPs: ExtendedIP[]) => {
@@ -182,7 +182,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     field,
     helperText,
     placeholder,
-    multiline
+    multiline,
   }: AdjustedTextFieldProps) => (
     <TextField
       label={label}
@@ -226,7 +226,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   NameOrTargetField = ({
     label,
     field,
-    multiline
+    multiline,
   }: {
     label: string;
     field: 'name' | 'target';
@@ -284,7 +284,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       { label: 'Default', value: 0 },
       { label: '1 week', value: 604800 },
       { label: '2 weeks', value: 1209600 },
-      { label: '4 weeks', value: 2419200 }
+      { label: '4 weeks', value: 2419200 },
     ];
 
     const defaultRate = rateOptions.find(eachRate => {
@@ -306,8 +306,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         isClearable={false}
         textFieldProps={{
           dataAttrs: {
-            'data-qa-domain-select': 'Expire Rate'
-          }
+            'data-qa-domain-select': 'Expire Rate',
+          },
         }}
       />
     );
@@ -316,7 +316,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   MSSelect = ({
     label,
     field,
-    fn
+    fn,
   }: {
     label: string;
     field: keyof EditableRecordFields | keyof EditableDomainFields;
@@ -335,7 +335,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       { label: '4 days', value: 345600 },
       { label: '1 week', value: 604800 },
       { label: '2 weeks', value: 1209600 },
-      { label: '4 weeks', value: 2419200 }
+      { label: '4 weeks', value: 2419200 },
     ];
 
     const defaultOption = MSSelectOptions.find(eachOption => {
@@ -357,8 +357,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         isClearable={false}
         textFieldProps={{
           dataAttrs: {
-            'data-qa-domain-select': label
-          }
+            'data-qa-domain-select': label,
+          },
         }}
       />
     );
@@ -370,7 +370,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       { label: 'udp', value: 'udp' },
       { label: 'xmpp', value: 'xmpp' },
       { label: 'tls', value: 'tls' },
-      { label: 'smtp', value: 'smtp' }
+      { label: 'smtp', value: 'smtp' },
     ];
 
     const defaultProtocol = protocolOptions.find(eachProtocol => {
@@ -392,8 +392,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         isClearable={false}
         textFieldProps={{
           dataAttrs: {
-            'data-qa-domain-select': 'Protocol'
-          }
+            'data-qa-domain-select': 'Protocol',
+          },
         }}
       />
     );
@@ -403,7 +403,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const tagOptions = [
       { label: 'issue', value: 'issue' },
       { label: 'issuewild', value: 'issuewild' },
-      { label: 'iodef', value: 'iodef' }
+      { label: 'iodef', value: 'iodef' },
     ];
 
     const defaultTag = tagOptions.find(eachTag => {
@@ -424,8 +424,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         isClearable={false}
         textFieldProps={{
           dataAttrs: {
-            'data-qa-domain-select': 'caa tag'
-          }
+            'data-qa-domain-select': 'caa tag',
+          },
         }}
       />
     );
@@ -466,7 +466,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
-      ...this.filterDataByType(this.state.fields, type)
+      ...this.filterDataByType(this.state.fields, type),
     } as Partial<EditableDomainFields>;
 
     if (data.axfr_ips) {
@@ -499,7 +499,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true, errors: undefined });
     const _data = {
       type,
-      ...this.filterDataByType(this.state.fields, type)
+      ...this.filterDataByType(this.state.fields, type),
     };
 
     // Expand @ to the Domain in appropriate fields
@@ -520,7 +520,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     if (!isValidDomainRecord(_domain, records) || invalidCNAME) {
       const error = {
         field: 'name',
-        reason: 'Record conflict - CNAMES must be unique'
+        reason: 'Record conflict - CNAMES must be unique',
       };
       this.handleSubmissionErrors([error]);
       return;
@@ -543,7 +543,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true, errors: undefined });
 
     const _data = {
-      ...this.filterDataByType(fields, type)
+      ...this.filterDataByType(fields, type),
     };
 
     // Expand @ to the Domain in appropriate fields
@@ -571,10 +571,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
               'retry_sec',
               'expire_sec',
               'ttl_sec',
-              'axfr_ips'
+              'axfr_ips',
             ],
             fields
-          )
+          ),
       ],
       // [
       //   () => equals('slave', t),
@@ -583,23 +583,23 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       [() => equals('A', t), () => pick(['name', 'target', 'ttl_sec'], fields)],
       [
         () => equals('AAAA', t),
-        () => pick(['name', 'target', 'ttl_sec'], fields)
+        () => pick(['name', 'target', 'ttl_sec'], fields),
       ],
       [
         () => equals('CAA', t),
-        () => pick(['name', 'tag', 'target', 'ttl_sec'], fields)
+        () => pick(['name', 'tag', 'target', 'ttl_sec'], fields),
       ],
       [
         () => equals('CNAME', t),
-        () => pick(['name', 'target', 'ttl_sec'], fields)
+        () => pick(['name', 'target', 'ttl_sec'], fields),
       ],
       [
         () => equals('MX', t),
-        () => pick(['target', 'priority', 'ttl_sec', 'name'], fields)
+        () => pick(['target', 'priority', 'ttl_sec', 'name'], fields),
       ],
       [
         () => equals('NS', t),
-        () => pick(['target', 'name', 'ttl_sec'], fields)
+        () => pick(['target', 'name', 'ttl_sec'], fields),
       ],
       [
         () => equals('SRV', t),
@@ -612,15 +612,15 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
               'port',
               'weight',
               'target',
-              'ttl_sec'
+              'ttl_sec',
             ],
             fields
-          )
+          ),
       ],
       [
         () => equals('TXT', t),
-        () => pick(['name', 'target', 'ttl_sec'], fields)
-      ]
+        () => pick(['name', 'target', 'ttl_sec'], fields),
+      ],
     ])();
 
   types = {
@@ -636,8 +636,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => <this.DefaultTTLField key={idx} />,
         (idx: number) => <this.RefreshRateField key={idx} />,
         (idx: number) => <this.RetryRateField key={idx} />,
-        (idx: number) => <this.ExpireField key={idx} />
-      ]
+        (idx: number) => <this.ExpireField key={idx} />,
+      ],
     },
     // slave: {
     //   fields: [
@@ -654,8 +654,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => (
           <this.NameOrTargetField label="IP Address" field="target" key={idx} />
         ),
-        (idx: number) => <this.TTLField key={idx} />
-      ]
+        (idx: number) => <this.TTLField key={idx} />,
+      ],
     },
     NS: {
       fields: [
@@ -669,8 +669,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => (
           <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
         ),
-        (idx: number) => <this.TTLField key={idx} />
-      ]
+        (idx: number) => <this.TTLField key={idx} />,
+      ],
     },
     MX: {
       fields: [
@@ -688,8 +688,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => <this.TTLField key={idx} />,
         (idx: number) => (
           <this.NameOrTargetField label="Subdomain" field="name" key={idx} />
-        )
-      ]
+        ),
+      ],
     },
     CNAME: {
       fields: [
@@ -701,7 +701,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         ),
         (idx: number) => <this.TTLField key={idx} />,
         ,
-      ]
+      ],
     },
     TXT: {
       fields: [
@@ -716,8 +716,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
             key={idx}
           />
         ),
-        (idx: number) => <this.TTLField key={idx} />
-      ]
+        (idx: number) => <this.TTLField key={idx} />,
+      ],
     },
     SRV: {
       fields: [
@@ -731,8 +731,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => (
           <this.NameOrTargetField label="Target" field="target" key={idx} />
         ),
-        (idx: number) => <this.TTLField key={idx} />
-      ]
+        (idx: number) => <this.TTLField key={idx} />,
+      ],
     },
     CAA: {
       fields: [
@@ -743,16 +743,16 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => (
           <this.NameOrTargetField label="Value" field="target" key={idx} />
         ),
-        (idx: number) => <this.TTLField key={idx} />
-      ]
-    }
+        (idx: number) => <this.TTLField key={idx} />,
+      ],
+    },
   };
 
   onClose = () => {
     this.setState({
       submitting: false,
       errors: undefined,
-      fields: DomainRecordDrawer.defaultFieldsState({})
+      fields: DomainRecordDrawer.defaultFieldsState({}),
     });
     this.props.onClose();
   };
@@ -761,7 +761,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     if (this.props.open && !prevProps.open) {
       // Drawer is opening, set the fields according to props
       this.setState({
-        fields: DomainRecordDrawer.defaultFieldsState(this.props)
+        fields: DomainRecordDrawer.defaultFieldsState(this.props),
       });
     }
   }
@@ -789,12 +789,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         : isCreating
         ? this.onRecordCreate
         : this.onRecordEdit,
-      children: 'Save'
+      children: 'Save',
     };
 
     const otherErrors = [
       getAPIErrorsFor({}, this.state.errors)('_unknown'),
-      getAPIErrorsFor({}, this.state.errors)('none')
+      getAPIErrorsFor({}, this.state.errors)('none'),
     ].filter(Boolean);
 
     return (
@@ -830,7 +830,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
 const modeMap = {
   create: 'Create',
-  edit: 'Edit'
+  edit: 'Edit',
 };
 
 const typeMap = {
@@ -844,7 +844,7 @@ const typeMap = {
   NS: 'NS',
   PTR: 'PTR',
   SRV: 'SRV',
-  TXT: 'TXT'
+  TXT: 'TXT',
 };
 
 export const shouldResolve = (type: string, field: string) => {

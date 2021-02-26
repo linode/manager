@@ -20,14 +20,14 @@ const {
   createNodeBalancer,
   createLongviewClient,
   deleteLongviewClient,
-  getLVClients
+  getLVClients,
 } = require('../setup/setup');
 
 const {
   loadProxyImposter,
   getImposters,
   deleteImposters,
-  loadImposter
+  loadImposter,
 } = require('../utils/mb-utils');
 
 const { getToken } = require('../utils/config-utils');

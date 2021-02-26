@@ -2,7 +2,7 @@ import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   changeLinodeDiskPassword,
   Disk,
-  getLinodeDisks
+  getLinodeDisks,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { compose, lensPath, set } from 'ramda';
@@ -55,7 +55,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     submitting: false,
     value: '',
     disksLoading: true,
-    disks: []
+    disks: [],
   };
 
   changeDiskPassword = () => {
@@ -141,7 +141,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           .map(disk => ({
             value: disk.id,
             label: disk.label,
-            data: disk
+            data: disk,
           }))
       )
       .then(disks => {
@@ -155,7 +155,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
       .catch(_ =>
         this.setState({
           disksError: 'An error occurred while searching for disks.',
-          disksLoading: false
+          disksLoading: false,
         })
       );
   };
@@ -252,7 +252,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions
+  permissions: linode._permissions,
 }));
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });

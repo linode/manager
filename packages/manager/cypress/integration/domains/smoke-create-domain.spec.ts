@@ -1,6 +1,6 @@
 import {
   deleteAllTestDomains,
-  makeDomainLabel
+  makeDomainLabel,
 } from '../../support/api/domains';
 import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 
@@ -15,7 +15,7 @@ describe('Create a Domain', () => {
           results: 0,
           page: 1,
           pages: 1,
-          data: []
+          data: [],
         });
       });
     }).as('getDomains');

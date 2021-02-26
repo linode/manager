@@ -12,7 +12,7 @@ import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
   LinodeActionsProps,
-  withLinodeActions
+  withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -64,24 +64,24 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     submitting: false,
     cpuusage: {
       state: this.props.linodeAlerts.cpu > 0,
-      value: this.props.linodeAlerts.cpu
+      value: this.props.linodeAlerts.cpu,
     },
     diskio: {
       state: this.props.linodeAlerts.io > 0,
-      value: this.props.linodeAlerts.io
+      value: this.props.linodeAlerts.io,
     },
     incoming: {
       state: this.props.linodeAlerts.network_in > 0,
-      value: this.props.linodeAlerts.network_in
+      value: this.props.linodeAlerts.network_in,
     },
     outbound: {
       state: this.props.linodeAlerts.network_out > 0,
-      value: this.props.linodeAlerts.network_out
+      value: this.props.linodeAlerts.network_out,
     },
     transfer: {
       state: this.props.linodeAlerts.transfer_quota > 0,
-      value: this.props.linodeAlerts.transfer_quota
-    }
+      value: this.props.linodeAlerts.transfer_quota,
+    },
   };
 
   renderAlertSections = () => {
@@ -91,7 +91,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         'alerts.network_in': 'Incoming traffic',
         'alerts.network_out': 'Outbound traffic',
         'alerts.transfer_quota': 'Transfer quota',
-        'alerts.io': 'Disk IO rate'
+        'alerts.io': 'Disk IO rate',
       },
       this.state.errors
     );
@@ -116,7 +116,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           );
         },
         error: hasErrorFor('alerts.cpu'),
-        endAdornment: '%'
+        endAdornment: '%',
       },
       {
         radioInputLabel: 'disk_io_state',
@@ -136,7 +136,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             set(lensPath(['diskio', 'value']), maybeNumber(e.target.value))
           ),
         error: hasErrorFor('alerts.io'),
-        endAdornment: 'IOPS'
+        endAdornment: 'IOPS',
       },
       {
         radioInputLabel: 'incoming_traffic_state',
@@ -156,7 +156,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             set(lensPath(['incoming', 'value']), maybeNumber(e.target.value))
           ),
         error: hasErrorFor('alerts.network_in'),
-        endAdornment: 'Mb/s'
+        endAdornment: 'Mb/s',
       },
       {
         radioInputLabel: 'outbound_traffic_state',
@@ -176,7 +176,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             set(lensPath(['outbound', 'value']), maybeNumber(e.target.value))
           ),
         error: hasErrorFor('alerts.network_out'),
-        endAdornment: 'Mb/s'
+        endAdornment: 'Mb/s',
       },
       {
         radioInputLabel: 'transfer_quota_state',
@@ -196,8 +196,8 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             set(lensPath(['transfer', 'value']), maybeNumber(e.target.value))
           ),
         error: hasErrorFor('alerts.transfer_quota'),
-        endAdornment: '%'
-      }
+        endAdornment: '%',
+      },
     ];
   };
 
@@ -228,7 +228,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 
   setLinodeAlertThresholds = () => {
     const {
-      linodeActions: { updateLinode }
+      linodeActions: { updateLinode },
     } = this.props;
     this.setState(set(lensPath(['errors']), undefined));
     this.setState(set(lensPath(['success']), undefined));
@@ -241,8 +241,8 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         network_in: valueUnlessOff(this.state.incoming),
         network_out: valueUnlessOff(this.state.outbound),
         transfer_quota: valueUnlessOff(this.state.transfer),
-        io: valueUnlessOff(this.state.diskio)
-      }
+        io: valueUnlessOff(this.state.diskio),
+      },
     })
       .then(_ => {
         this.setState(
@@ -262,7 +262,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             errors: getAPIErrorOrDefault(
               error,
               'Unable to update alerts thresholds.'
-            )
+            ),
           },
           () => scrollErrorIntoView()
         );
@@ -299,7 +299,7 @@ const valueUnlessOff = ({ state, value }: { state: boolean; value: number }) =>
   state ? value : 0;
 
 const errorBoundary = PanelErrorBoundary({
-  heading: 'Notification Thresholds'
+  heading: 'Notification Thresholds',
 });
 
 interface ContextProps {
@@ -307,7 +307,7 @@ interface ContextProps {
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions
+  permissions: linode._permissions,
 }));
 
 export default rCompose<CombinedProps, Props>(

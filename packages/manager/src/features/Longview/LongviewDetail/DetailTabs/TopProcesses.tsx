@@ -24,7 +24,7 @@ import TableSortCell_PreCMR from 'src/components/TableSortCell';
 import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
 import {
   LongviewTopProcesses,
-  TopProcessStat
+  TopProcessStat,
 } from 'src/features/Longview/request.types';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { formatCPU } from '../../shared/formatters';
@@ -34,8 +34,8 @@ const useStyles = makeStyles(() => ({
     fontSize: 16,
     fontWeight: 'bold',
     position: 'relative',
-    top: 3
-  }
+    top: 3,
+  },
 }));
 
 export interface Props {
@@ -55,7 +55,7 @@ export const TopProcesses: React.FC<Props> = props => {
     topProcessesError,
     lastUpdatedError,
     cmrFlag,
-    clientID
+    clientID,
   } = props;
 
   const errorMessage = Boolean(topProcessesError || lastUpdatedError)

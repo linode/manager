@@ -24,7 +24,7 @@ export const extendLinodes = (
       subHeadings: formatLinodeSubheading(
         displayType(linode.type, typesData),
         linodeImageMetaData ? linodeImageMetaData.label : ''
-      )
+      ),
     };
   });
 };
@@ -50,7 +50,7 @@ export const getRegionIDFromLinodeID = (
 export const gpuPlanText = (useTypography?: boolean): JSX.Element => {
   const gpuPlanTextSegments = [
     'Linode GPU plans have limited availability and may not be available at the time of your request. Some additional verification may be required to access these services. ',
-    'with information on getting started.'
+    'with information on getting started.',
   ];
 
   if (useTypography) {

@@ -75,7 +75,7 @@ class LongviewPlanDetails extends Page {
       this.lv3Plan,
       this.lv10Plan,
       this.lv40Plan,
-      this.lv100Plan
+      this.lv100Plan,
     ];
 
     this.currentPlan.waitForDisplayed(constants.wait.short);

@@ -16,7 +16,7 @@ class DomainDetail extends Page {
       'CNAME Record',
       'TXT Record',
       'SRV Record',
-      'CAA Record'
+      'CAA Record',
     ];
   }
   get confirmButton() {

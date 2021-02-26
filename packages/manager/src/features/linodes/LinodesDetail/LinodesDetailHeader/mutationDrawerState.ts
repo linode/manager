@@ -19,24 +19,24 @@ export default withStateHandlers<State, Handlers>(
   ownProps => ({
     mutationDrawerError: '',
     mutationDrawerLoading: false,
-    mutationDrawerOpen: false
+    mutationDrawerOpen: false,
   }),
   {
     openMutationDrawer: state => () => ({
       mutationDrawerError: '',
       mutationDrawerLoading: false,
-      mutationDrawerOpen: true
+      mutationDrawerOpen: true,
     }),
 
     closeMutationDrawer: state => () => ({
       ...state,
-      mutationDrawerOpen: false
+      mutationDrawerOpen: false,
     }),
 
     mutationFailed: state => (error: string) => ({
       mutationDrawerError: error,
       mutationDrawerLoading: false,
-      mutationDrawerOpen: true
-    })
+      mutationDrawerOpen: true,
+    }),
   }
 );
