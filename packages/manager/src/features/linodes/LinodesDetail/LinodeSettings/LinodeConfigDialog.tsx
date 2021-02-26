@@ -210,7 +210,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             error,
             'An unexpected error occurred.'
           );
-          scrollErrorIntoView();
+          scrollErrorIntoView('linode-config-dialog');
         });
     }
 
@@ -230,7 +230,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
           error,
           'An unexpected error occurred.'
         );
-        scrollErrorIntoView();
+        scrollErrorIntoView('linode-config-dialog');
       });
   };
 
@@ -307,16 +307,18 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         <DialogContent loading={isLoading} errors={props.kernelError}>
           <React.Fragment>
             {generalError && (
-              <Notice
-                error
-                errorGroup="linode-config-dialog"
-                text={generalError}
-              />
+              <Grid item>
+                <Notice
+                  error
+                  errorGroup="linode-config-dialog"
+                  text={generalError}
+                  spacingBottom={0}
+                />
+              </Grid>
             )}
             <Grid
               item
               xs={12}
-              className={classes.section}
               updateFor={[
                 formik.errors.label,
                 formik.errors.comments,
