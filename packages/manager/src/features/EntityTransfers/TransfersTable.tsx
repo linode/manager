@@ -1,6 +1,6 @@
 import {
   EntityTransfer,
-  TransferEntities
+  TransferEntities,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -10,54 +10,69 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-// import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import capitalize from 'src/utilities/capitalize';
-import { pluralize } from 'src/utilities/pluralize';
 import ConfirmTransferCancelDialog from './EntityTransfersLanding/ConfirmTransferCancelDialog';
 import TransferDetailsDialog from './EntityTransfersLanding/TransferDetailsDialog';
-import ActionMenu from './TransfersPendingActionMenu';
-import { isEmpty } from 'ramda';
+import RenderTransferRow from './RenderTransferRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(2),
     '& .MuiAccordionDetails-root': {
-      padding: 0
-    }
+      padding: 0,
+    },
+    '& .MuiAccordion-root table': {
+      border: 'none',
+    },
   },
   table: {
-    width: '100%'
+    width: '100%',
   },
   cellContents: {
-    paddingLeft: '1rem'
+    paddingLeft: '1rem',
   },
   actionCell: {
     padding: 0,
-    paddingRight: '0 !important'
+    paddingRight: '0 !important',
   },
   link: {
     ...theme.applyLinkStyles,
-    fontSize: '0.875rem'
-  }
+    fontSize: '0.875rem',
+  },
 }));
 
 interface Props {
-  transferType: string;
+  transferType: 'pending' | 'received' | 'sent';
   error: APIError[] | null;
   isLoading: boolean;
   transfers?: EntityTransfer[];
+  results: number;
+  page: number;
+  pageSize: number;
+  handlePageChange: (v: number, showSpinner?: boolean | undefined) => void;
+  handlePageSizeChange: (v: number) => void;
 }
 
 type CombinedProps = Props;
 
-export const TransfersTable: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
+export const TransfersTable: React.FC<CombinedProps> = (props) => {
+  const {
+    transferType,
+    isLoading,
+    error,
+    transfers,
+    results,
+    page,
+    pageSize,
+    handlePageChange,
+    handlePageSizeChange,
+  } = props;
 
-  const { transferType, isLoading, error, transfers } = props;
+  const classes = useStyles();
 
   const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
     false
@@ -69,7 +84,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     TransferEntities | undefined
   >(undefined);
 
-  // const transfersCount = transfers?.length ?? 0;
+  const transfersCount = transfers?.length ?? 0;
 
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
@@ -84,81 +99,10 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
     setCancelPendingDialogOpen(false);
   };
 
-  const renderTransferRow = (transfer: EntityTransfer, idx: number) => {
-    const entitiesBeingTransferred = transfer.entities;
-    const entitiesAndTheirCounts = Object.entries(
-      entitiesBeingTransferred ?? {}
-    );
-
-    if (isEmpty(entitiesAndTheirCounts)) {
-      return null;
-    }
-
-    return (
-      <TableRow key={`transfer-${idx}`}>
-        <TableCell className={classes.cellContents} noWrap>
-          <button
-            className={classes.link}
-            onClick={() => {
-              setDetailsDialogOpen(true);
-              setCurrentToken(transfer.token);
-              setCurrentEntities(transfer.entities);
-            }}
-          >
-            {transfer.token}
-          </button>
-        </TableCell>
-        <Hidden smDown>
-          <TableCell className={classes.cellContents}>
-            <DateTimeDisplay value={transfer.created} />
-          </TableCell>
-        </Hidden>
-        {transferTypeIsPending ? (
-          <Hidden xsDown>
-            <TableCell className={classes.cellContents} noWrap>
-              {entitiesAndTheirCounts.map((entry, idx) => {
-                return (
-                  <span key={idx}>
-                    {formatEntitiesCell(entry)}
-                    <br />
-                  </span>
-                );
-              })}
-            </TableCell>
-          </Hidden>
-        ) : (
-          <TableCell className={classes.cellContents} noWrap>
-            {entitiesAndTheirCounts.map((entry, idx) => {
-              return (
-                <span key={idx}>
-                  {formatEntitiesCell(entry)}
-                  <br />
-                </span>
-              );
-            })}
-          </TableCell>
-        )}
-        {transferTypeIsPending ? (
-          <>
-            <TableCell className={classes.cellContents} noWrap>
-              <DateTimeDisplay value={transfer.expiry} />
-            </TableCell>
-            <TableCell className={classes.actionCell}>
-              <ActionMenu
-                onCancelClick={() =>
-                  handleCancelPendingTransferClick(transfer.token)
-                }
-              />
-            </TableCell>
-          </>
-        ) : null}
-        {transferTypeIsSent ? (
-          <TableCell className={classes.cellContents}>
-            {capitalize(transfer.status)}
-          </TableCell>
-        ) : null}
-      </TableRow>
-    );
+  const handleTokenClick = (token: string, entities: TransferEntities) => {
+    setCurrentToken(token);
+    setCurrentEntities(entities);
+    setDetailsDialogOpen(true);
   };
 
   return (
@@ -166,7 +110,7 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
       <div className={classes.root}>
         <Accordion
           heading={`Transfers ${capitalize(transferType)}`}
-          defaultExpanded
+          defaultExpanded={transfersCount > 0}
         >
           <Table className={classes.table}>
             <TableHead>
@@ -220,24 +164,33 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
                 error={error ?? undefined}
                 length={transfers?.length ?? 0}
               >
-                {transfers?.map((transfer, idx) =>
-                  renderTransferRow(transfer, idx)
-                )}
+                {transfers?.map((transfer, idx) => (
+                  <RenderTransferRow
+                    key={`${transferType}-${idx}`}
+                    token={transfer.token}
+                    created={transfer.created}
+                    entities={transfer.entities}
+                    expiry={transfer.expiry}
+                    status={transfer.status}
+                    transferType={transferType}
+                    handleCancelPendingTransferClick={
+                      handleCancelPendingTransferClick
+                    }
+                    handleTokenClick={handleTokenClick}
+                  />
+                ))}
               </TableContentWrapper>
             </TableBody>
           </Table>
+          <PaginationFooter
+            count={results}
+            handlePageChange={handlePageChange}
+            handleSizeChange={handlePageSizeChange}
+            page={page}
+            pageSize={pageSize}
+            eventCategory="Entity Transfer Table"
+          />
         </Accordion>
-        {/* {transfersCount > pageSize ? (
-        <PaginationFooter
-          count={transfersCount}
-          handlePageChange={handlePageChange}
-          handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
-          page={page}
-          pageSize={pageSize}
-          eventCategory="Entity Transfer Table"
-          fixedSize
-        />
-      ) : null} */}
         {transferTypeIsPending ? (
           // Only Pending Transfers can be canceled.
           <ConfirmTransferCancelDialog
@@ -255,16 +208,6 @@ export const TransfersTable: React.FC<CombinedProps> = props => {
       />
     </>
   );
-};
-
-export const formatEntitiesCell = (entityAndCount: [string, number[]]) => {
-  const [entity, count] = entityAndCount;
-  const pluralEntity = capitalize(entity);
-  const singleEntity = capitalize(entity.slice(0, -1));
-
-  const entityCount = count.length;
-
-  return `${pluralize(singleEntity, pluralEntity, entityCount)}`;
 };
 
 export default React.memo(TransfersTable);

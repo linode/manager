@@ -1,5 +1,5 @@
 import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { formatEntitiesCell } from './TransfersTable';
+import { formatEntitiesCell } from './RenderTransferRow';
 
 const entityTransfer1 = entityTransferFactory.build();
 const entityTransfer1Entities = Object.entries(entityTransfer1.entities)[0];
