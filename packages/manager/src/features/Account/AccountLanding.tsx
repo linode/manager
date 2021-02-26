@@ -7,43 +7,48 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
+import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
 import withProfile, {
-  Props as ProfileActionsProps
+  Props as ProfileActionsProps,
 } from 'src/containers/profile.container';
+import useFlags from 'src/hooks/useFlags';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const Billing = React.lazy(() => import('src/features/Billing'));
-const EntityTransfersLanding = React.lazy(() =>
-  import('src/features/EntityTransfers/EntityTransfersLanding')
+const EntityTransfersLanding = React.lazy(
+  () => import('src/features/EntityTransfers/EntityTransfersLanding')
 );
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 
-const AccountLanding: React.FC<Props> = props => {
+const AccountLanding: React.FC<Props> = (props) => {
   const { location } = props;
+  const flags = useFlags();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Billing Info',
-      routeName: `${props.match.url}/billing`
+      routeName: `${props.match.url}/billing`,
     },
     {
       title: 'Users & Grants',
-      routeName: `${props.match.url}/users`
+      routeName: `${props.match.url}/users`,
     },
-    {
-      title: 'Transfers',
-      routeName: `${props.match.url}/entity-transfers`
-    },
+    flags.entityTransfers
+      ? {
+          title: 'Transfers',
+          routeName: `${props.match.url}/entity-transfers`,
+          hide: !flags.entityTransfers,
+        }
+      : null,
     {
       title: 'Settings',
-      routeName: `${props.match.url}/settings`
-    }
-  ];
+      routeName: `${props.match.url}/settings`,
+    },
+  ].filter(Boolean) as Tab[];
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: location.pathname }));
@@ -53,6 +58,8 @@ const AccountLanding: React.FC<Props> = props => {
     props.history.push(tabs[index].routeName);
   };
 
+  let idx = 0;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
@@ -61,7 +68,7 @@ const AccountLanding: React.FC<Props> = props => {
 
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
@@ -70,16 +77,18 @@ const AccountLanding: React.FC<Props> = props => {
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <SafeTabPanel index={0}>
+            <SafeTabPanel index={idx}>
               <Billing />
             </SafeTabPanel>
-            <SafeTabPanel index={1}>
+            <SafeTabPanel index={++idx}>
               <Users isRestrictedUser={props.isRestrictedUser} />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <EntityTransfersLanding />
-            </SafeTabPanel>
-            <SafeTabPanel index={3}>
+            {flags.entityTransfers ? (
+              <SafeTabPanel index={++idx}>
+                <EntityTransfersLanding />
+              </SafeTabPanel>
+            ) : null}
+            <SafeTabPanel index={++idx}>
               <GlobalSettings />
             </SafeTabPanel>
           </TabPanels>
@@ -95,6 +104,6 @@ interface StateProps {
 
 export default compose<Props, {}>(
   withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
-    isRestrictedUser: data?.restricted ?? false
+    isRestrictedUser: data?.restricted ?? false,
   }))
 )(AccountLanding);

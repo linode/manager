@@ -7,7 +7,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ActionMenu, { ActionHandlers } from './VlanActionMenu';
-import { getLinodeLabel } from 'src/features/Dashboard/VolumesDashboardCard/VolumeDashboardRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -17,23 +16,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     lineHeight: '1.14rem',
     '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   linodesWrapper: {
-    padding: '8px 0'
+    padding: '8px 0',
   },
   labelWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    whiteSpace: 'nowrap'
-  }
+    whiteSpace: 'nowrap',
+  },
 }));
 
 export type CombinedProps = VLAN & ActionHandlers;
 
-export const VlanRow: React.FC<CombinedProps> = props => {
+export const VlanRow: React.FC<CombinedProps> = (props) => {
   const {
     id,
     description,
@@ -70,14 +69,14 @@ export const VlanRow: React.FC<CombinedProps> = props => {
     return (
       // eslint-disable-next-line
       <>
-        {vlanLinodes.map(thisVLANLinode => (
+        {vlanLinodes.map((thisVLANLinode) => (
           <Link
             className={classes.link}
             key={thisVLANLinode.id}
             to={`/linodes/${thisVLANLinode.id}`}
             data-testid="vlan-row-link"
           >
-            {getLinodeLabel(thisVLANLinode.id)}
+            {/* {getLinodeLabel(thisVLANLinode.id)} */}
           </Link>
         ))}
       </>

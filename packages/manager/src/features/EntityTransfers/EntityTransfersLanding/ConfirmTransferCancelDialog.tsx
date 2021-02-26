@@ -11,12 +11,13 @@ import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendEntityTransferCancelEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles(() => ({
   actions: {
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 }));
 
 export interface Props {
@@ -25,7 +26,7 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
+export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
   const { onClose, open, token } = props;
 
   const classes = useStyles();
@@ -53,16 +54,19 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
 
     cancelTransfer(token)
       .then(() => {
+        // @analytics
+        sendEntityTransferCancelEvent();
+
         // Refresh the query for Entity Transfers.
         queryClient.invalidateQueries(queryKey);
 
         onClose();
         setSubmitting(false);
         enqueueSnackbar('Transfer canceled successfully.', {
-          variant: 'success'
+          variant: 'success',
         });
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmissionErrors(
           getAPIErrorOrDefault(e, 'An unexpected error occurred.')
         );
@@ -93,16 +97,18 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
       open={open}
       actions={actions}
     >
-      {// There could be multiple errors here that are relevant.
-      submissionErrors
-        ? submissionErrors.map((thisError, idx) => (
-            <Notice
-              key={`form-submit-error-${idx}`}
-              error
-              text={thisError.reason}
-            />
-          ))
-        : null}
+      {
+        // There could be multiple errors here that are relevant.
+        submissionErrors
+          ? submissionErrors.map((thisError, idx) => (
+              <Notice
+                key={`form-submit-error-${idx}`}
+                error
+                text={thisError.reason}
+              />
+            ))
+          : null
+      }
       <Typography>
         Upon confirmation, the token generated for this transfer will no longer
         be valid. To transfer ownership of these Linodes, you will need to
