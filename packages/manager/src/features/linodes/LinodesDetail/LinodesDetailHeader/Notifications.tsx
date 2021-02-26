@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import ProductNotification from 'src/components/ProductNotification';
 import withProfile from 'src/containers/profile.container';
+import { useAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { Maintenance } from 'src/store/linodes/linodes.helpers';
 import { withNotifications } from 'src/store/notification/notification.containers';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -16,7 +17,7 @@ type CombinedProps = ProfileProps &
     requestNotifications: () => void;
   };
 
-const Notifications: React.FC<CombinedProps> = props => {
+const Notifications: React.FC<CombinedProps> = (props) => {
   const {
     requestNotifications,
     linodeNotifications,
@@ -24,24 +25,19 @@ const Notifications: React.FC<CombinedProps> = props => {
     userProfileError,
     userProfileLoading,
     linodeId,
-    linodeStatus
+    linodeStatus,
   } = props;
+
+  const { data: accountMaintenanceData } = useAccountMaintenanceQuery();
+
+  const maintenanceForThisLinode = accountMaintenanceData?.find(
+    (thisMaintenance) =>
+      thisMaintenance.entity.type === 'linode' &&
+      thisMaintenance.entity.id === linodeId
+  );
 
   const generateNotificationBody = (notification: Notification) => {
     switch (notification.type) {
-      case 'maintenance':
-        return (
-          <MaintenanceBanner
-            userTimezone={userTimezone}
-            userProfileLoading={userProfileLoading}
-            userProfileError={userProfileError}
-            maintenanceStart={notification.when}
-            maintenanceEnd={notification.until}
-            type={
-              notification.label.includes('reboot') ? 'reboot' : 'migration'
-            }
-          />
-        );
       case 'migration_pending':
       case 'migration_scheduled':
         /** don't show any banner if the migration is in progress */
@@ -69,6 +65,15 @@ const Notifications: React.FC<CombinedProps> = props => {
   return (
     // eslint-disable-next-line
     <>
+      {maintenanceForThisLinode ? (
+        <MaintenanceBanner
+          userTimezone={userTimezone}
+          userProfileLoading={userProfileLoading}
+          userProfileError={userProfileError}
+          maintenanceStart={maintenanceForThisLinode.when}
+          type={maintenanceForThisLinode.type}
+        />
+      ) : null}
       {linodeNotifications.map((n, idx) => {
         return (
           <React.Fragment key={idx}>
@@ -98,17 +103,17 @@ const enhanced = compose<CombinedProps, {}>(
     linodeNotifications: linode._notifications,
     linodeId: linode.id,
     linodeStatus: linode.status,
-    maintenance: linode.maintenance
+    maintenance: linode.maintenance,
   })),
   withNotifications(undefined, ({ requestNotifications }) => ({
-    requestNotifications
+    requestNotifications,
   })),
   withProfile<ProfileProps, {}>(
     (undefined, { profileData: profile, profileLoading, profileError }) => {
       return {
         userTimezone: profile?.timezone,
         userProfileError: profileError?.read,
-        userProfileLoading: profileLoading
+        userProfileLoading: profileLoading,
       };
     }
   )

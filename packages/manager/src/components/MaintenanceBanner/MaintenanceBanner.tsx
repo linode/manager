@@ -1,3 +1,4 @@
+import { AccountMaintenance } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -6,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -19,16 +20,16 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       '& p': {
-        lineHeight: `20px`
+        lineHeight: `20px`,
       },
       '& p:last-child': {
-        marginBottom: 0
-      }
+        marginBottom: 0,
+      },
     },
     dateTime: {
       fontSize: theme.spacing(2),
-      lineHeight: `${theme.spacing(2.5)}px`
-    }
+      lineHeight: `${theme.spacing(2.5)}px`,
+    },
   });
 
 interface Props {
@@ -38,19 +39,19 @@ interface Props {
   userTimezone?: string;
   userProfileLoading: boolean;
   userProfileError?: APIError[];
-  type?: 'migration' | 'reboot';
+  type?: AccountMaintenance['type'];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const MaintenanceBanner: React.FC<CombinedProps> = props => {
+const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
   const {
     type,
     maintenanceEnd,
     maintenanceStart,
     userTimezone,
     userProfileError,
-    userProfileLoading
+    userProfileLoading,
   } = props;
 
   const timezoneMsg = () => {
@@ -91,12 +92,14 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
       <Typography>
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
-      {/** only display timezone on the Linode detail */
-      maintenanceStart && (
-        <Typography>
-          Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
-        </Typography>
-      )}
+      {
+        /** only display timezone on the Linode detail */
+        maintenanceStart && (
+          <Typography>
+            Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
+          </Typography>
+        )
+      }
       <Typography>
         For more information, please see your{' '}
         <Link to="/support/tickets?type=open">open support tickets.</Link>
@@ -113,7 +116,7 @@ export default compose<CombinedProps, Props>(
 )(MaintenanceBanner);
 
 const generateIntroText = (
-  type?: 'migration' | 'reboot',
+  type?: AccountMaintenance['type'],
   start?: string | null,
   end?: string | null
 ) => {
@@ -127,12 +130,7 @@ const generateIntroText = (
       return (
         <React.Fragment>
           This Linode&apos;s physical host is currently undergoing maintenance.
-          During the maintenance, your Linode will be shut down
-          {type === 'migration'
-            ? ', cold migrated to a new host, '
-            : ' and remain offline, '}
-          then returned to its last state (running or powered off). Please refer
-          to
+          {maintenanceActionTextMap[type]} Please refer to
           <Link to="/support/tickets"> your Support tickets </Link> for more
           information.
         </React.Fragment>
@@ -152,11 +150,7 @@ const generateIntroText = (
           This Linode&apos;s physical host will be undergoing maintenance at{' '}
           {rawDate}
           {'. '}
-          During this time, your Linode will be shut down
-          {type === 'migration'
-            ? ', cold migrated to a new host, '
-            : ' and remain offline, '}{' '}
-          then returned to its last state (running or powered off).
+          {maintenanceActionTextMap[type]}
         </React.Fragment>
       );
     } else {
@@ -184,4 +178,16 @@ const generateIntroText = (
       .
     </React.Fragment>
   );
+};
+
+export const maintenanceActionTextMap: Record<
+  AccountMaintenance['type'],
+  string
+> = {
+  cold_migration:
+    'During this time, your Linode will be shut down, cold migrated to a new host, then returned to its last state (running or powered off).',
+  live_migration:
+    'During this time, your Linode will be live migrated to a new host, then returned to its last state (running or powered off).',
+  reboot:
+    'During this time, your Linode will be shut down and remain offline, then returned to its last state (running or powered off).',
 };
