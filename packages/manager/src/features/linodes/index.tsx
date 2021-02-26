@@ -27,9 +27,13 @@ const LinodesRoutes: React.FC = () => {
 
 export default LinodesRoutes;
 
-const LinodesLandingWrapper: React.FC = () => {
+// Light wrapper around LinodesLanding that injects "extended" Linodes (with
+// plan type and maintenance information). This extra data used to come from
+// mapStateToProps, but since I wanted to use a query (for accountMaintenance)
+// I needed a Function Component. It seemed safer to do it this way instead of
+// refactoring LinodesLanding.
+const LinodesLandingWrapper: React.FC = React.memo(() => {
   const { data: accountMaintenanceData } = useAccountMaintenanceQuery();
-
   const { linodes } = useLinodes();
   const { typesMap } = useTypes();
 
@@ -63,4 +67,4 @@ const LinodesLandingWrapper: React.FC = () => {
       linodesRequestError={linodes.error.read}
     />
   );
-};
+});
