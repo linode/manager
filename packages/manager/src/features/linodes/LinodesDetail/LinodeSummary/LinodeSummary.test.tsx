@@ -20,9 +20,9 @@ describe('LinodeSummary', () => {
         graphGrids: '',
         chartSelect: '',
         headerOuter: '',
-        labelRangeSelect: ''
+        labelRangeSelect: '',
       }}
-      theme={light(4)}
+      theme={light()}
       linodeVolumes={[]}
       typesData={[]}
       imagesData={{}}

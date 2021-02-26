@@ -222,8 +222,6 @@ const visuallyHidden = {
 
 const graphTransparency = '0.7';
 
-export const COMPACT_SPACING_UNIT = 8;
-
 type ThemeDefaults = () => ThemeOptions;
 
 const themeDefaults: ThemeDefaults = () => {

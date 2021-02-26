@@ -1,4 +1,3 @@
-import { Formik } from 'formik';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Region } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';

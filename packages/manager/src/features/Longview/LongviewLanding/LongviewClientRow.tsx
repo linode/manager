@@ -5,8 +5,15 @@ import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import CPUGauge from './Gauges/CPU';
+import withLongviewClients, {
+  DispatchProps,
+} from 'src/containers/longview.container';
+import withClientStats, {
+  Props as LVDataProps,
+} from 'src/containers/longview.stats.container';
+import withProfile from 'src/containers/profile.container';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
+import CPUGauge from './Gauges/CPU';
 import LoadGauge from './Gauges/Load';
 import NetworkGauge from './Gauges/Network';
 import RAMGauge from './Gauges/RAM';
@@ -15,35 +22,20 @@ import SwapGauge from './Gauges/Swap';
 import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 import LongviewClientHeader from './LongviewClientHeader';
 import LongviewClientInstructions from './LongviewClientInstructions';
-import withLongviewClients, {
-  DispatchProps
-} from 'src/containers/longview.container';
-import withClientStats, {
-  Props as LVDataProps
-} from 'src/containers/longview.stats.container';
-import withProfile from 'src/containers/profile.container';
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
     padding: theme.spacing(3),
     [theme.breakpoints.up('md')]: {
-      height: theme.spacing() === COMPACT_SPACING_UNIT ? 180 : 220
-    }
+      height: theme.spacing() === 220,
+    },
   },
   gaugeContainer: {
     [theme.breakpoints.down('sm')]: {
-      marginBottom: 30
-    }
+      marginBottom: 30,
+    },
   },
-  button: {
-    padding: 0,
-    '&:hover': {
-      color: theme.color.red
-    }
-  },
-  label: {}
 }));
 
 interface Props extends ActionHandlers {
@@ -56,7 +48,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
-const LongviewClientRow: React.FC<CombinedProps> = props => {
+const LongviewClientRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -67,15 +59,15 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     clientInstallKey,
     openPackageDrawer,
     updateLongviewClient,
-    userCanModifyClient
+    userCanModifyClient,
   } = props;
 
   const {
     lastUpdated,
     lastUpdatedError,
-    authed
-  } = useClientLastUpdated(clientAPIKey, _lastUpdated =>
-    props.getClientStats(clientAPIKey, _lastUpdated).catch(_ => null)
+    authed,
+  } = useClientLastUpdated(clientAPIKey, (_lastUpdated) =>
+    props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
   );
 
   /**
@@ -184,7 +176,7 @@ interface GrantProps {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID),
+  withClientStats<Props>((ownProps) => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */
   withLongviewClients(() => ({})),
   withProfile<GrantProps, Props>((ownProps, { profileData }) => {
@@ -195,13 +187,13 @@ export default compose<CombinedProps, Props>(
     );
 
     const thisPermission = (longviewPermissions as Grant[]).find(
-      r => r.id === ownProps.clientID
+      (r) => r.id === ownProps.clientID
     );
 
     return {
       userCanModifyClient: thisPermission
         ? thisPermission.permissions === 'read_write'
-        : true
+        : true,
     };
   })
 )(LongviewClientRow);

@@ -1,112 +1,91 @@
-import * as classNames from 'classnames';
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  createStyles,
+  makeStyles,
   Theme,
-  withStyles,
-  WithStyles,
-  WithTheme
+  withTheme,
+  WithTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { reportException } from 'src/exceptionReporting';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import KubeConfigDrawer from './KubeConfigDrawer';
 
-type ClassNames =
-  | 'root'
-  | 'item'
-  | 'button'
-  | 'icon'
-  | 'buttonSecondary'
-  | 'rootCompact';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
-        1}px ${theme.spacing(2) - 3}px`,
-      [theme.breakpoints.up('md')]: {
-        marginTop: 66
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) + 1}px ${
+      theme.spacing(2) - 3
+    }px`,
+    [theme.breakpoints.up('md')]: {
+      marginTop: 66,
     },
-    rootCompact: {
-      [theme.breakpoints.up('md')]: {
-        marginTop: 42
-      }
+  },
+  item: {
+    paddingBottom: theme.spacing(2),
+    [theme.breakpoints.up('xl')]: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
     },
-    item: {
-      paddingBottom: theme.spacing(2),
-      [theme.breakpoints.up('xl')]: {
-        display: 'flex',
-        flexFlow: 'row nowrap'
-      }
+  },
+  button: {
+    padding: theme.spacing(2) - 2,
+    display: 'block',
+    fontSize: '0.9rem',
+    marginRight: 12,
+    minWidth: 124,
+    [theme.breakpoints.down('lg')]: {
+      marginBottom: theme.spacing(2),
+      marginRight: 0,
     },
-    button: {
-      padding: theme.spacing(2) - 2,
-      display: 'block',
-      fontSize: '0.9rem',
-      marginRight: 12,
-      minWidth: 124,
-      [theme.breakpoints.down('lg')]: {
-        marginBottom: theme.spacing(2),
-        marginRight: 0
-      }
+  },
+  buttonSecondary: {
+    minWidth: 88,
+    [theme.breakpoints.down('lg')]: {
+      marginBottom: 0,
+      marginRight: 0,
     },
-    buttonSecondary: {
-      minWidth: 88,
-      [theme.breakpoints.down('lg')]: {
-        marginBottom: 0,
-        marginRight: 0
-      }
-    },
-    icon: {
-      marginLeft: theme.spacing(1) + 3
-    }
-  });
+  },
+  icon: {
+    marginLeft: theme.spacing(1) + 3,
+  },
+}));
 
 interface Props {
   clusterID: number;
   clusterLabel: string;
 }
 
-export type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  WithSnackbarProps &
-  WithTheme;
+export type CombinedProps = Props & WithSnackbarProps & WithTheme;
 
-export const KubeConfigPanel: React.FC<CombinedProps> = props => {
-  const { classes, clusterID, clusterLabel, enqueueSnackbar, theme } = props;
+export const KubeConfigPanel: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
+  const { clusterID, clusterLabel, enqueueSnackbar } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
-  const spacingMode =
-    theme.spacing() === COMPACT_SPACING_UNIT ? 'compact' : 'normal';
 
   const fetchKubeConfig = () => {
-    return getKubeConfig(clusterID).then(response => {
+    return getKubeConfig(clusterID).then((response) => {
       // Convert to utf-8 from base64
       try {
         const decodedFile = window.atob(response.kubeconfig);
         return decodedFile;
       } catch (e) {
         reportException(e, {
-          'Encoded response': response.kubeconfig
+          'Encoded response': response.kubeconfig,
         });
         enqueueSnackbar('Error parsing your kubeconfig file', {
-          variant: 'error'
+          variant: 'error',
         });
         return;
       }
@@ -118,7 +97,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
     setDrawerLoading(true);
     setDrawerOpen(true);
     fetchKubeConfig()
-      .then(decodedFile => {
+      .then((decodedFile) => {
         setDrawerLoading(false);
         if (decodedFile) {
           setKubeConfig(decodedFile);
@@ -134,7 +113,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
 
   const downloadKubeConfig = () => {
     fetchKubeConfig()
-      .then(decodedFile => {
+      .then((decodedFile) => {
         if (decodedFile) {
           downloadFile(`${clusterLabel}-kubeconfig.yaml`, decodedFile);
         } else {
@@ -142,7 +121,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
           return;
         }
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const error = getAPIErrorOrDefault(
           errorResponse,
           'Unable to download your kubeconfig'
@@ -153,12 +132,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <Paper
-        className={classNames({
-          [classes.root]: true,
-          [classes.rootCompact]: spacingMode === 'compact'
-        })}
-      >
+      <Paper className={classes.root}>
         <Paper className={classes.item}>
           <Typography variant="h2">Kubeconfig</Typography>
         </Paper>
@@ -193,9 +167,8 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
 const enhanced = compose<CombinedProps, Props>(
-  styled,
+  withTheme,
   withSnackbar
 )(KubeConfigPanel);
 

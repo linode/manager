@@ -3,12 +3,8 @@ import createTheme from './themeFactory';
 
 const breakpoints = createBreakpoints({});
 
-export const light = (spacingOverride?: number) => {
+export const light = () => {
   const options: any = { name: 'lightTheme' };
-
-  if (spacingOverride) {
-    options.spacingOverride = spacingOverride;
-  }
 
   return createTheme(options);
 };
@@ -114,11 +110,9 @@ const genericStatusPillStyle = {
   },
 };
 
-export const dark = (spacingOverride?: number) => {
+export const dark = () => {
   const options: any = { ...darkThemeOptions };
-  if (spacingOverride) {
-    options.spacingOverride = spacingOverride;
-  }
+
   return createTheme(options);
 };
 

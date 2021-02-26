@@ -10,64 +10,57 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconTextLink from 'src/components/IconTextLink';
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
+import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { formatUptime } from 'src/utilities/formatUptime';
 import { readableBytes } from 'src/utilities/unitConversions';
-
-import { Props as LVDataProps } from 'src/containers/longview.stats.container';
 import { LongviewPackage } from '../../request.types';
 import {
   getPackageNoticeText,
   getTotalMemoryUsage,
-  sumStorage
+  sumStorage,
 } from '../../shared/utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
   wrapHeader: {
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
   },
   headerSection: {
-    marginBottom: theme.spacing(3) - 2
+    marginBottom: theme.spacing(3) - 2,
   },
   iconSection: {
     marginBottom: theme.spacing(2) - 2,
     '&:last-of-type': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
   packageButton: {
     fontSize: '0.875rem',
     padding: 0,
     '& svg': {
-      marginRight: 15
+      marginRight: 15,
     },
     '& g': {
-      stroke: theme.palette.primary.main
-    }
+      stroke: theme.palette.primary.main,
+    },
   },
   packageStaticOuter: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   packageStaticIcon: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   iconItem: {
     alignSelf: 'center',
-    marginLeft: theme.spacing() === COMPACT_SPACING_UNIT ? -theme.spacing() : 0,
+    marginLeft: 0,
     '& svg': {
       display: 'block',
-      margin: '0 auto'
-    }
+      margin: '0 auto',
+    },
   },
   iconItemLast: {
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+  },
 }));
 
 interface Props {
@@ -76,7 +69,7 @@ interface Props {
   openPackageDrawer: () => void;
 }
 
-const IconSection: React.FC<Props> = props => {
+const IconSection: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const hostname = pathOr(

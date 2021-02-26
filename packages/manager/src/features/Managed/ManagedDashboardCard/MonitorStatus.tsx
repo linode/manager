@@ -2,10 +2,8 @@ import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';
-
 import {
   makeStyles,
   Theme,
@@ -14,8 +12,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -62,12 +58,12 @@ export interface Props {
 type CombinedProps = Props & WithTheme;
 
 export const MonitorStatus: React.FC<CombinedProps> = (props) => {
-  const { monitors } = props;
   const classes = useStyles();
 
-  const iconSize = props.theme.spacing(1) === COMPACT_SPACING_UNIT ? 75 : 50;
+  const { monitors } = props;
 
   const failedMonitors = getFailedMonitors(monitors);
+  const iconSize = 50;
 
   return (
     <>
@@ -80,15 +76,7 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
         item
       >
         <Grid item>
-          <Grid
-            item
-            style={
-              props.theme.spacing(1) === COMPACT_SPACING_UNIT
-                ? { padding: '0 3px' }
-                : undefined
-            }
-            className={classes.icon}
-          >
+          <Grid item className={classes.icon}>
             {failedMonitors.length === 0 ? (
               <MonitorOK width={iconSize} height={iconSize} />
             ) : (
