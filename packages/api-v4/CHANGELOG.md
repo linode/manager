@@ -1,3 +1,7 @@
+## [2021-02-24] - v0.44.0
+### Added
+- Entity Transfer event actions, schema, types, and methods
+
 ## [2021-02-22] - v0.43.0
 
 ### Changed

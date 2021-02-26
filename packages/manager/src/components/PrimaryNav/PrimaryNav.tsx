@@ -67,7 +67,7 @@ export interface Props {
   isCollapsed: boolean;
 }
 
-export const PrimaryNav: React.FC<Props> = props => {
+export const PrimaryNav: React.FC<Props> = (props) => {
   const { closeMenu, isCollapsed } = props;
   const classes = useStyles();
 
@@ -76,18 +76,18 @@ export const PrimaryNav: React.FC<Props> = props => {
   const { domains, requestDomains } = useDomains();
   const {
     objectStorageClusters,
-    requestObjectStorageClusters
+    requestObjectStorageClusters,
   } = useObjectStorageClusters();
   const {
     objectStorageBuckets,
-    requestObjectStorageBuckets
+    requestObjectStorageBuckets,
   } = useObjectStorageBuckets();
 
   const {
     _isManagedAccount,
     _isLargeAccount,
     _isRestrictedUser,
-    account
+    account,
   } = useAccountManagement();
 
   const showFirewalls = isFeatureEnabled(
@@ -111,11 +111,11 @@ export const PrimaryNav: React.FC<Props> = props => {
   }, [
     _isRestrictedUser,
     clustersLoadedOrLoadingOrHasError,
-    requestObjectStorageClusters
+    requestObjectStorageClusters,
   ]);
 
   const clusterIds = objectStorageClusters.entities.map(
-    thisCluster => thisCluster.id
+    (thisCluster) => thisCluster.id
   );
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
@@ -125,25 +125,25 @@ export const PrimaryNav: React.FC<Props> = props => {
           hide: !_isManagedAccount,
           display: 'Managed',
           href: '/managed',
-          icon: <Managed />
-        }
+          icon: <Managed />,
+        },
       ],
       [
         {
           display: 'Linodes',
           href: '/linodes',
           activeLinks: ['/linodes', '/linodes/create'],
-          icon: <Linode />
+          icon: <Linode />,
         },
         {
           display: 'Volumes',
           href: '/volumes',
-          icon: <Volume />
+          icon: <Volume />,
         },
         {
           display: 'NodeBalancers',
           href: '/nodebalancers',
-          icon: <NodeBalancer />
+          icon: <NodeBalancer />,
         },
 
         {
@@ -151,18 +151,18 @@ export const PrimaryNav: React.FC<Props> = props => {
           display: 'Firewalls',
           href: '/firewalls',
           icon: <Firewall />,
-          isBeta: true
+          isBeta: true,
         },
         {
           display: 'StackScripts',
           href: '/stackscripts',
-          icon: <StackScript />
+          icon: <StackScript />,
         },
         {
           display: 'Images',
           href: '/images',
-          icon: <Image />
-        }
+          icon: <Image />,
+        },
       ],
       [
         {
@@ -171,56 +171,56 @@ export const PrimaryNav: React.FC<Props> = props => {
           icon: <Domain />,
           prefetchRequestFn: requestDomains,
           prefetchRequestCondition:
-            !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount
+            !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount,
         },
         {
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
-          icon: <Kubernetes />
+          icon: <Kubernetes />,
         },
         {
           hide: !showDatabases,
           display: 'Databases',
           href: '/databases',
-          icon: <Database />
+          icon: <Database />,
         },
         {
           display: 'Object Storage',
           href: '/object-storage/buckets',
           activeLinks: [
             '/object-storage/buckets',
-            '/object-storage/access-keys'
+            '/object-storage/access-keys',
           ],
           icon: <Storage />,
           prefetchRequestFn: () => requestObjectStorageBuckets(clusterIds),
           prefetchRequestCondition:
             !objectStorageBuckets.loading &&
-            objectStorageBuckets.lastUpdated === 0
+            objectStorageBuckets.lastUpdated === 0,
         },
         {
           display: 'Longview',
           href: '/longview',
-          icon: <Longview />
+          icon: <Longview />,
         },
         {
           display: 'Marketplace',
           href: '/linodes/create?type=One-Click',
           attr: { 'data-qa-one-click-nav-btn': true },
-          icon: <OCA />
-        }
+          icon: <OCA />,
+        },
       ],
       [
         {
           display: 'Account',
           href: '/account',
-          icon: <Account />
+          icon: <Account />,
         },
         {
           display: 'Help & Support',
           href: '/support',
-          icon: <HelpIcon />
-        }
-      ]
+          icon: <HelpIcon />,
+        },
+      ],
     ],
     [
       showFirewalls,
@@ -233,7 +233,7 @@ export const PrimaryNav: React.FC<Props> = props => {
       objectStorageBuckets.loading,
       objectStorageBuckets.lastUpdated,
       requestObjectStorageBuckets,
-      clusterIds
+      clusterIds,
     ]
   );
 
@@ -268,25 +268,25 @@ export const PrimaryNav: React.FC<Props> = props => {
       <div
         className={classNames({
           ['fade-in-table']: true,
-          [classes.fadeContainer]: true
+          [classes.fadeContainer]: true,
         })}
       >
         {primaryLinkGroups.map((thisGroup, idx) => {
-          const filteredLinks = thisGroup.filter(thisLink => !thisLink.hide);
+          const filteredLinks = thisGroup.filter((thisLink) => !thisLink.hide);
           if (filteredLinks.length === 0) {
             return null;
           }
           return (
             <div key={idx}>
               <Divider className={classes.divider} />
-              {filteredLinks.map(thisLink => {
+              {filteredLinks.map((thisLink) => {
                 const props = {
                   key: thisLink.display,
                   closeMenu,
                   isCollapsed,
                   locationSearch: location.search,
                   locationPathname: location.pathname,
-                  ...thisLink
+                  ...thisLink,
                 };
 
                 // PrefetchPrimaryLink and PrimaryLink are two separate components because invocation of
@@ -327,7 +327,7 @@ interface PrimaryLinkProps extends PrimaryLink {
   };
 }
 
-const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
+const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
   const classes = useStyles();
 
   const {
@@ -342,7 +342,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
     display,
     locationSearch,
     locationPathname,
-    prefetchProps
+    prefetchProps,
   } = props;
 
   return (
@@ -363,7 +363,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
           locationSearch,
           locationPathname,
           activeLinks
-        )
+        ),
       })}
       data-testid={`menu-item-${display}`}
     >
@@ -376,7 +376,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo(props => {
         className={classNames({
           [classes.linkItem]: true,
           primaryNavLink: true,
-          hiddenWhenCollapsed: isCollapsed
+          hiddenWhenCollapsed: isCollapsed,
         })}
       >
         {display}
@@ -394,8 +394,9 @@ interface PrefetchPrimaryLinkProps {
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
-  PrefetchPrimaryLinkProps> = React.memo(props => {
+export const PrefetchPrimaryLink: React.FC<
+  PrimaryLinkProps & PrefetchPrimaryLinkProps
+> = React.memo((props) => {
   const { makeRequest, cancelRequest } = usePrefetch(
     props.prefetchRequestFn,
     props.prefetchRequestCondition
@@ -405,7 +406,7 @@ export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
     onMouseEnter: makeRequest,
     onFocus: makeRequest,
     onMouseLeave: cancelRequest,
-    onBlur: cancelRequest
+    onBlur: cancelRequest,
   };
 
   return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
