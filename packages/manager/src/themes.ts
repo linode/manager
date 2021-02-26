@@ -24,7 +24,7 @@ const cmrBGColors = {
   bgTableHeader: '#33373e',
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',
-  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)'
+  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
 };
 
 const cmrTextColors = {
@@ -32,7 +32,7 @@ const cmrTextColors = {
   headlineStatic: '#e6e6e6',
   tableHeader: '#888F91',
   tableStatic: '#e6e6e6',
-  textAccessTable: '#acb0b4'
+  textAccessTable: '#acb0b4',
 };
 
 const cmrBorderColors = {
@@ -40,7 +40,7 @@ const cmrBorderColors = {
   borderTabs: '#5c6470',
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
-  borderTable: '#3a3f46'
+  borderTable: '#3a3f46',
 };
 
 const cmrIconColors = {
@@ -49,7 +49,7 @@ const cmrIconColors = {
   iOrange: '#ffb31a',
   iRed: '#cf1e1e',
   // Offline status
-  iGrey: '#dbdde1'
+  iGrey: '#dbdde1',
 };
 
 const primaryColors = {
@@ -60,24 +60,24 @@ const primaryColors = {
   headline: '#f4f4f4',
   divider: '#222222',
   offBlack: '#fff',
-  white: '#222'
+  white: '#222',
 };
 
 const iconCircleAnimation = {
   '& .circle': {
     fill: primaryColors.main,
-    transition: 'fill .2s ease-in-out .2s'
+    transition: 'fill .2s ease-in-out .2s',
   },
   '& .outerCircle': {
     stroke: primaryColors.dark,
     strokeDasharray: 1000,
     strokeDashoffset: 1000,
-    animation: '$dash 2s linear forwards'
+    animation: '$dash 2s linear forwards',
   },
   '& .insidePath *': {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
-    stroke: 'white'
-  }
+    stroke: 'white',
+  },
 };
 
 // Used for styling html buttons to look like our generic links
@@ -90,8 +90,8 @@ const genericLinkStyle = {
   cursor: 'pointer',
   '&:hover': {
     color: primaryColors.main,
-    textDecoration: 'underline'
-  }
+    textDecoration: 'underline',
+  },
 };
 
 // Used for styling status pills as seen on Linodes
@@ -107,11 +107,11 @@ const genericStatusPillStyle = {
     height: 16,
     width: 16,
     minWidth: 16,
-    marginRight: 8
+    marginRight: 8,
   },
   [breakpoints.down('sm')]: {
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 };
 
 export const dark = (spacingOverride?: number) => {
@@ -127,16 +127,16 @@ const darkThemeOptions = {
   breakpoints,
   '@keyframes rotate': {
     from: {
-      transform: 'rotate(0deg)'
+      transform: 'rotate(0deg)',
     },
     to: {
-      transform: 'rotate(360deg)'
-    }
+      transform: 'rotate(360deg)',
+    },
   },
   '@keyframes dash': {
     to: {
-      'stroke-dashoffset': 0
-    }
+      'stroke-dashoffset': 0,
+    },
   },
   bg: {
     main: '#2f3236',
@@ -154,7 +154,7 @@ const darkThemeOptions = {
     topMenu: '#33383d',
     billingHeader: '#222',
     controlHeader: 'rgba(0, 0, 0, 0.2)',
-    chipActive: 'rgba(0,0,0,0.9)'
+    chipActive: 'rgba(0,0,0,0.9)',
   },
   color: {
     headline: primaryColors.headline,
@@ -169,6 +169,7 @@ const darkThemeOptions = {
     grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
+    grey6: '#606469',
     grey9: primaryColors.divider,
     grey10: '#dbdde1',
     white: '#32363c',
@@ -195,87 +196,87 @@ const darkThemeOptions = {
     tagButton: '#364863',
     tagText: '#9caec9',
     tagIcon: '#9caec9',
-    tagBorder: '#2e3238'
+    tagBorder: '#2e3238',
   },
   cmrBGColors,
   cmrBorderColors,
   cmrTextColors,
   cmrIconColors,
   animateCircleIcon: {
-    ...iconCircleAnimation
+    ...iconCircleAnimation,
   },
   notificationList: {
     borderBottom: '1px solid #f4f4f4',
     '&:hover': {
-      backgroundColor: '#111111'
-    }
+      backgroundColor: '#111111',
+    },
   },
   palette: {
     divider: primaryColors.divider,
     primary: primaryColors,
     text: {
-      primary: primaryColors.text
-    }
+      primary: primaryColors.text,
+    },
   },
   typography: {
     h1: {
-      color: primaryColors.headline
+      color: primaryColors.headline,
     },
     h2: {
-      color: primaryColors.headline
+      color: primaryColors.headline,
     },
     h3: {
-      color: primaryColors.headline
+      color: primaryColors.headline,
     },
     caption: {
-      color: primaryColors.text
+      color: primaryColors.text,
     },
     h4: {
-      color: primaryColors.text
+      color: primaryColors.text,
     },
     body1: {
-      color: primaryColors.text
+      color: primaryColors.text,
     },
     subtitle1: {
-      color: primaryColors.text
-    }
+      color: primaryColors.text,
+    },
   },
   applyLinkStyles: {
-    ...genericLinkStyle
+    ...genericLinkStyle,
   },
   applyStatusPillStyles: {
-    ...genericStatusPillStyle
+    ...genericStatusPillStyle,
   },
   overrides: {
     MuiAppBar: {
       colorDefault: {
-        backgroundColor: 'transparent'
-      }
+        backgroundColor: 'transparent',
+      },
     },
     MuiBackdrop: {
       root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
-      }
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
     },
     MuiButton: {
       label: {
-        position: 'relative'
+        position: 'relative',
       },
       root: {
         color: primaryColors.main,
         '&:hover': {
-          backgroundColor: '#000'
+          backgroundColor: '#000',
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: primaryColors.dark
+          backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
           color: '#888',
-          opacity: 0.5
+          opacity: 0.5,
         },
         '&.loading': {
-          color: primaryColors.text
-        }
+          color: primaryColors.text,
+        },
       },
       // text: {
       //   '&:hover': {
@@ -284,40 +285,40 @@ const darkThemeOptions = {
       // },
       containedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.light
+          backgroundColor: primaryColors.light,
         },
         '&:active': {
-          backgroundColor: primaryColors.dark
+          backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#888'
+          color: '#888',
         },
         '&.loading': {
-          backgroundColor: primaryColors.text
+          backgroundColor: primaryColors.text,
         },
         '&.cancel': {
           '&:hover, &:focus': {
-            borderColor: '#fff'
-          }
-        }
+            borderColor: '#fff',
+          },
+        },
       },
       containedSecondary: {
         color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
-          color: primaryColors.main
+          color: primaryColors.main,
         },
         '&:active': {
           color: primaryColors.dark,
-          borderColor: primaryColors.dark
+          borderColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#c9cacb'
+          color: '#c9cacb',
         },
         '&.cancel': {
           borderColor: 'transparent',
           '&:hover, &:focus': {
-            borderColor: primaryColors.light
-          }
+            borderColor: primaryColors.light,
+          },
         },
         // '&.destructive': {
         //   borderColor: '#c44742',
@@ -337,123 +338,123 @@ const darkThemeOptions = {
           minWidth: 100,
           '& svg': {
             width: 22,
-            height: 22
-          }
-        }
-      }
+            height: 22,
+          },
+        },
+      },
     },
     MuiButtonBase: {
       root: {
-        fontSize: '1rem'
-      }
+        fontSize: '1rem',
+      },
     },
     MuiCardHeader: {
       root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.2)'
-      }
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      },
     },
     MuiChip: {
       root: {
         color: primaryColors.text,
-        backgroundColor: primaryColors.main
-      }
+        backgroundColor: primaryColors.main,
+      },
     },
     MuiCardActions: {
       root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.2) !important'
-      }
+        backgroundColor: 'rgba(0, 0, 0, 0.2) !important',
+      },
     },
     MuiDialog: {
       paper: {
-        boxShadow: '0 0 5px #222'
-      }
+        boxShadow: '0 0 5px #222',
+      },
     },
     MuiDialogTitle: {
       root: {
         borderBottom: '1px solid #222',
         '& h2': {
-          color: primaryColors.headline
-        }
-      }
+          color: primaryColors.headline,
+        },
+      },
     },
     MuiDrawer: {
       paper: {
-        boxShadow: '0 0 5px #222'
-      }
+        boxShadow: '0 0 5px #222',
+      },
     },
     MuiAccordion: {
       root: {
         '& table': {
-          border: `1px solid ${primaryColors.divider}`
-        }
-      }
+          border: `1px solid ${primaryColors.divider}`,
+        },
+      },
     },
     MuiAccordionDetails: {
       root: {
-        backgroundColor: '#32363c'
-      }
+        backgroundColor: '#32363c',
+      },
     },
     MuiAccordionSummary: {
       root: {
         backgroundColor: '#32363c',
         '&:hover': {
           '& h3': {
-            color: primaryColors.light
-          }
+            color: primaryColors.light,
+          },
         },
         '&$focused': {
-          backgroundColor: '#111111'
-        }
-      }
+          backgroundColor: '#111111',
+        },
+      },
     },
     MuiFormControl: {
       root: {
         '&.copy > div': {
-          backgroundColor: '#2f3236'
-        }
-      }
+          backgroundColor: '#2f3236',
+        },
+      },
     },
     MuiFormControlLabel: {
       root: {
         '& $disabled': {
-          color: '#aaa !important'
-        }
+          color: '#aaa !important',
+        },
       },
       label: {
-        color: primaryColors.text
+        color: primaryColors.text,
       },
-      disabled: {}
+      disabled: {},
     },
     MuiFormLabel: {
       root: {
         color: '#c9cacb',
         '&$focused': {
-          color: '#c9cacb'
+          color: '#c9cacb',
         },
         '&$error': {
-          color: '#c9cacb'
+          color: '#c9cacb',
         },
         '&$disabled': {
-          color: '#c9cacb'
-        }
-      }
+          color: '#c9cacb',
+        },
+      },
     },
     MuiFormHelperText: {
       root: {
         color: '#c9cacb',
         lineHeight: 1.25,
         '&$error': {
-          color: '#ca0813'
-        }
-      }
+          color: '#ca0813',
+        },
+      },
     },
     MuiIconButton: {
       root: {
         color: primaryColors.main,
         '&:hover': {
-          color: primaryColors.light
-        }
-      }
+          color: primaryColors.light,
+        },
+      },
     },
     MuiInput: {
       root: {
@@ -462,34 +463,34 @@ const darkThemeOptions = {
         color: primaryColors.text,
         '&$disabled': {
           borderColor: '#606469',
-          color: '#ccc !important'
+          color: '#ccc !important',
         },
         '&$focused': {
           borderColor: primaryColors.main,
-          boxShadow: '0 0 2px 1px #222'
+          boxShadow: '0 0 2px 1px #222',
         },
         '& svg': {
-          color: primaryColors.main
-        }
+          color: primaryColors.main,
+        },
       },
       focused: {},
-      disabled: {}
+      disabled: {},
     },
     MuiInputAdornment: {
       root: {
         color: '#eee',
         '& p': {
-          color: '#eee'
-        }
-      }
+          color: '#eee',
+        },
+      },
     },
     MuiListItem: {
       root: {
         color: primaryColors.text,
         '&.selectHeader': {
-          color: primaryColors.text
-        }
-      }
+          color: primaryColors.text,
+        },
+      },
     },
     MuiMenuItem: {
       root: {
@@ -497,130 +498,130 @@ const darkThemeOptions = {
         '&$selected, &$selected:hover': {
           backgroundColor: 'transparent',
           color: primaryColors.main,
-          opacity: 1
-        }
+          opacity: 1,
+        },
       },
-      selected: {}
+      selected: {},
     },
     MuiPaper: {
       root: {
-        backgroundColor: cmrBGColors.bgPaper
-      }
+        backgroundColor: cmrBGColors.bgPaper,
+      },
     },
     MuiPopover: {
       paper: {
-        boxShadow: '0 0 5px #222'
-      }
+        boxShadow: '0 0 5px #222',
+      },
     },
     MuiSelect: {
       selectMenu: {
         color: primaryColors.text,
         backgroundColor: '#444',
         '&:focus': {
-          backgroundColor: '#444'
-        }
-      }
+          backgroundColor: '#444',
+        },
+      },
     },
     MuiSnackbarContent: {
       root: {
         backgroundColor: '#32363c',
         color: primaryColors.text,
-        boxShadow: '0 0 5px #222'
-      }
+        boxShadow: '0 0 5px #222',
+      },
     },
     MuiTab: {
       root: {
         color: '#fff',
         '&$selected, &$selected:hover': {
-          color: '#fff'
-        }
+          color: '#fff',
+        },
       },
       textColorPrimary: {
         color: '#fff',
         '&$selected, &$selected:hover': {
-          color: '#fff'
-        }
+          color: '#fff',
+        },
       },
-      selected: {}
+      selected: {},
     },
     MuiTableCell: {
       root: {
         borderTop: `1px solid ${primaryColors.divider}`,
         borderBottom: `1px solid ${primaryColors.divider}`,
         '& a': {
-          color: cmrTextColors.linkActiveLight
+          color: cmrTextColors.linkActiveLight,
         },
         '& a:hover': {
-          color: primaryColors.main
-        }
+          color: primaryColors.main,
+        },
       },
       head: {
         color: primaryColors.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)'
-      }
+        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+      },
     },
     MuiTabs: {
       root: {
-        boxShadow: 'inset 0 -1px 0 #222'
+        boxShadow: 'inset 0 -1px 0 #222',
       },
       flexContainer: {
         '& $scrollButtons:first-child': {
-          color: '#222'
-        }
+          color: '#222',
+        },
       },
       scrollButtons: {
-        color: '#fff'
-      }
+        color: '#fff',
+      },
     },
     MuiTableRow: {
       root: {
         backgroundColor: '#32363c',
         '&:before': {
-          borderLeftColor: '#32363c'
+          borderLeftColor: '#32363c',
         },
         '&:hover, &:focus': {
           '&$hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.1)'
-          }
-        }
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          },
+        },
       },
       head: {
         backgroundColor: '#32363c',
         '&:before': {
-          backgroundColor: 'rgba(0, 0, 0, 0.15) !important'
-        }
+          backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
+        },
       },
       hover: {
         '& a': {
-          color: primaryColors.text
-        }
-      }
+          color: primaryColors.text,
+        },
+      },
     },
     MuiTooltip: {
       tooltip: {
         backgroundColor: '#444',
         boxShadow: '0 0 5px #222',
-        color: '#fff'
-      }
+        color: '#fff',
+      },
     },
     MuiTypography: {
       root: {
         '& a': {
-          color: cmrTextColors.linkActiveLight
+          color: cmrTextColors.linkActiveLight,
         },
         '& a:hover': {
-          color: primaryColors.main
+          color: primaryColors.main,
         },
         '& a.black': {
-          color: primaryColors.text
+          color: primaryColors.text,
         },
         '& a.black:visited': {
-          color: primaryColors.text
+          color: primaryColors.text,
         },
         '& a.black:hover': {
-          color: primaryColors.text
-        }
-      }
-    }
-  }
+          color: primaryColors.text,
+        },
+      },
+    },
+  },
 };
