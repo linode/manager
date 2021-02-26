@@ -41,6 +41,9 @@ export const validateFirewallPorts = string().matches(
 
 const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP'];
 export const FirewallRuleTypeSchema = object().shape({
+  action: mixed()
+    .oneOf(['ACCEPT', 'DROP'])
+    .required('Action is required'),
   protocol: mixed()
     .oneOf(validFirewallRuleProtocol)
     .required('Protocol is required.'),
@@ -69,7 +72,13 @@ export const FirewallRuleTypeSchema = object().shape({
 
 export const FirewallRuleSchema = object().shape({
   inbound: array(FirewallRuleTypeSchema).nullable(true),
-  outbound: array(FirewallRuleTypeSchema).nullable(true)
+  outbound: array(FirewallRuleTypeSchema).nullable(true),
+  inbound_policy: mixed()
+    .oneOf(['ACCEPT', 'DROP'])
+    .required('Inbound policy is required.'),
+  outbound_policy: mixed()
+    .oneOf(['ACCEPT', 'DROP'])
+    .required('Outbound policy is required.')
 });
 
 export const CreateFirewallSchema = object().shape({

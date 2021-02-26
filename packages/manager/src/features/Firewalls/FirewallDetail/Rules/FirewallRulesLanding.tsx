@@ -1,4 +1,8 @@
-import { FirewallRules, FirewallRuleType } from '@linode/api-v4/lib/firewalls';
+import {
+  FirewallRules,
+  FirewallRuleType,
+  FirewallPolicyType,
+} from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -11,7 +15,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
 import withFirewalls, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/firewalls.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
@@ -21,7 +25,7 @@ import curriedFirewallRuleEditorReducer, {
   hasModified as _hasModified,
   initRuleEditorState,
   prepareRules,
-  stripExtendedFields
+  stripExtendedFields,
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
 import { Category, parseFirewallRuleError } from './shared';
@@ -31,21 +35,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     fontSize: '0.875rem',
     lineHeight: 1.5,
-    paddingBottom: theme.spacing(1)
+    paddingBottom: theme.spacing(1),
   },
   table: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(4),
   },
   actions: {
-    float: 'right'
+    float: 'right',
   },
   mobileSpacing: {
     [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -62,7 +66,7 @@ interface Drawer {
 
 type CombinedProps = Props & DispatchProps & RouteComponentProps;
 
-const FirewallRulesLanding: React.FC<CombinedProps> = props => {
+const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { firewallID, rules } = props;
 
@@ -72,23 +76,24 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>({
     mode: 'create',
     category: 'inbound',
-    isOpen: false
+    isOpen: false,
   });
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   // @todo fine-grained error handling.
   const [generalErrors, setGeneralErrors] = React.useState<
     APIError[] | undefined
   >();
-  const [discardChangesModalOpen, setDiscardChangesModalOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    discardChangesModalOpen,
+    setDiscardChangesModalOpen,
+  ] = React.useState<boolean>(false);
 
   const openRuleDrawer = (category: Category, mode: Mode, idx?: number) =>
     setRuleDrawer({
       mode,
       ruleIdx: idx,
       category,
-      isOpen: true
+      isOpen: true,
     });
 
   const closeRuleDrawer = () => setRuleDrawer({ ...ruleDrawer, isOpen: false });
@@ -134,7 +139,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     dispatch({
       type: 'MODIFY_RULE',
       modifiedRule: rule,
-      idx: ruleDrawer.ruleIdx
+      idx: ruleDrawer.ruleIdx,
     });
   };
 
@@ -157,22 +162,24 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     // because we may need to reference extended fields like "index" for error handling.
     const preparedRules = {
       inbound: prepareRules(inboundState),
-      outbound: prepareRules(outboundState)
+      outbound: prepareRules(outboundState),
     };
 
     const finalRules = {
       inbound: preparedRules.inbound.map(stripExtendedFields),
-      outbound: preparedRules.outbound.map(stripExtendedFields)
+      outbound: preparedRules.outbound.map(stripExtendedFields),
+      inbound_policy: 'DROP' as FirewallPolicyType, // @todo fix these defaults
+      outbound_policy: 'ACCEPT' as FirewallPolicyType, // @todo fix these defaults
     };
 
     updateFirewallRules(firewallID, finalRules)
-      .then(_rules => {
+      .then((_rules) => {
         setSubmitting(false);
         // Reset editor state.
         inboundDispatch({ type: 'RESET', rules: _rules.inbound ?? [] });
         outboundDispatch({ type: 'RESET', rules: _rules.outbound ?? [] });
       })
-      .catch(err => {
+      .catch((err) => {
         setSubmitting(false);
 
         const _err = getAPIErrorOrDefault(err);
@@ -183,9 +190,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           // If we are unable to parse this error as a FirewallRuleError,
           // consider it a general error.
           if (parsedError === null) {
-            setGeneralErrors(prevGeneralErrors => [
+            setGeneralErrors((prevGeneralErrors) => [
               ...(prevGeneralErrors ?? []),
-              thisError
+              thisError,
             ]);
           } else {
             const { idx, category } = parsedError;
@@ -208,7 +215,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
             dispatch({
               type: 'SET_ERROR',
               idx: originalIndex,
-              error: parsedError
+              error: parsedError,
             });
           }
         }
@@ -221,10 +228,10 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
   );
 
   const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
-    inboundState
+    inboundState,
   ]);
   const outboundRules = React.useMemo(() => editorStateToRules(outboundState), [
-    outboundState
+    outboundState,
   ]);
 
   // This is for the Rule Drawer. If there is a rule to modify,
@@ -291,8 +298,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           triggerOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('inbound', 'edit', idx)
           }
-          triggerDeleteFirewallRule={idx => handleDeleteRule('inbound', idx)}
-          triggerUndo={idx => handleUndo('inbound', idx)}
+          triggerDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
+          triggerUndo={(idx) => handleUndo('inbound', idx)}
         />
       </div>
       <div className={classes.table}>
@@ -306,8 +313,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           triggerOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('outbound', 'edit', idx)
           }
-          triggerDeleteFirewallRule={idx => handleDeleteRule('outbound', idx)}
-          triggerUndo={idx => handleUndo('outbound', idx)}
+          triggerDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
+          triggerUndo={(idx) => handleUndo('outbound', idx)}
         />
       </div>
       <FirewallRuleDrawer
@@ -361,7 +368,7 @@ interface DiscardChangesDialogProps {
 }
 
 export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.memo(
-  props => {
+  (props) => {
     const { isOpen, handleClose, handleDiscard } = props;
 
     const actions = React.useCallback(

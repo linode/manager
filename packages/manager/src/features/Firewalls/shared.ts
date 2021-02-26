@@ -1,6 +1,6 @@
 import {
   FirewallRuleProtocol,
-  FirewallRuleType
+  FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
@@ -11,61 +11,61 @@ export type FirewallPreset = 'ssh' | 'http' | 'https' | 'mysql' | 'dns';
 export const firewallOptionItemsLong = [
   {
     label: 'SSH (TCP 22 - All IPv4, All IPv6)',
-    value: 'ssh'
+    value: 'ssh',
   },
   {
     label: 'HTTP (TCP 80 - All IPv4, All IPv6)',
-    value: 'http'
+    value: 'http',
   },
   {
     label: 'HTTPS (TCP 443 - All IPv4, All IPv6)',
-    value: 'https'
+    value: 'https',
   },
   {
     label: 'MySQL (TCP 3306 - All IPv4, All IPv6)',
-    value: 'mysql'
+    value: 'mysql',
   },
   {
     label: 'DNS (TCP 53 - All IPv4, All IPv6)',
-    value: 'dns'
-  }
+    value: 'dns',
+  },
 ];
 
 // Predefined Firewall options for Select components (short-form).
 export const firewallOptionItemsShort = [
   {
     label: 'SSH',
-    value: 'ssh'
+    value: 'ssh',
   },
   {
     label: 'HTTP',
-    value: 'http'
+    value: 'http',
   },
   {
     label: 'HTTPS',
-    value: 'https'
+    value: 'https',
   },
   {
     label: 'MySQL',
-    value: 'mysql'
+    value: 'mysql',
   },
   {
     label: 'DNS',
-    value: 'dns'
-  }
+    value: 'dns',
+  },
 ];
 
 export const protocolOptions: Item<FirewallRuleProtocol>[] = [
   { label: 'TCP', value: 'TCP' },
   { label: 'ICMP', value: 'ICMP' },
-  { label: 'UDP', value: 'UDP' }
+  { label: 'UDP', value: 'UDP' },
 ];
 
 export const addressOptions = [
   { label: 'All IPv4, All IPv6', value: 'all' },
   { label: 'All IPv4', value: 'allIPv4' },
   { label: 'All IPv6', value: 'allIPv6' },
-  { label: 'IP / Netmask', value: 'ip/netmask' }
+  { label: 'IP / Netmask', value: 'ip/netmask' },
 ];
 
 export const portPresets: Record<FirewallPreset, string> = {
@@ -73,7 +73,7 @@ export const portPresets: Record<FirewallPreset, string> = {
   http: '80',
   https: '443',
   mysql: '3306',
-  dns: '53'
+  dns: '53',
 };
 
 export const allIPv4 = '0.0.0.0/0';
@@ -81,7 +81,7 @@ export const allIPv6 = '::/0';
 
 export const allIPs = {
   ipv4: [allIPv4],
-  ipv6: [allIPv6]
+  ipv6: [allIPv6],
 };
 
 export interface PredefinedFirewall {
@@ -96,9 +96,10 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
       {
         ports: portPresets.ssh,
         protocol: 'TCP',
-        addresses: allIPs
-      }
-    ]
+        addresses: allIPs,
+        action: 'ACCEPT',
+      },
+    ],
   },
   http: {
     label: 'HTTP',
@@ -106,9 +107,10 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
       {
         ports: portPresets.http,
         protocol: 'TCP',
-        addresses: allIPs
-      }
-    ]
+        addresses: allIPs,
+        action: 'ACCEPT',
+      },
+    ],
   },
   https: {
     label: 'HTTPS',
@@ -116,9 +118,10 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
       {
         ports: portPresets.https,
         protocol: 'TCP',
-        addresses: allIPs
-      }
-    ]
+        addresses: allIPs,
+        action: 'ACCEPT',
+      },
+    ],
   },
   mysql: {
     label: 'MySQL',
@@ -126,9 +129,10 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
       {
         ports: portPresets.mysql,
         protocol: 'TCP',
-        addresses: allIPs
-      }
-    ]
+        addresses: allIPs,
+        action: 'ACCEPT',
+      },
+    ],
   },
   dns: {
     label: 'DNS',
@@ -136,10 +140,11 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
       {
         ports: portPresets.dns,
         protocol: 'TCP',
-        addresses: allIPs
-      }
-    ]
-  }
+        addresses: allIPs,
+        action: 'ACCEPT',
+      },
+    ],
+  },
 };
 
 export const predefinedFirewallFromRule = (
@@ -205,13 +210,13 @@ export const generateAddressesLabel = (
 
   // Now we can look at the rest of the rules:
   if (!allowedAllIPv4) {
-    addresses?.ipv4?.forEach(thisIP => {
+    addresses?.ipv4?.forEach((thisIP) => {
       strBuilder.push(thisIP);
     });
   }
 
   if (!allowedAllIPv6) {
-    addresses?.ipv6?.forEach(thisIP => {
+    addresses?.ipv6?.forEach((thisIP) => {
       strBuilder.push(thisIP);
     });
   }

@@ -4,6 +4,8 @@ export type FirewallRuleProtocol = 'ALL' | 'TCP' | 'UDP' | 'ICMP';
 
 export type FirewallDeviceEntityType = 'linode' | 'nodebalancer';
 
+export type FirewallPolicyType = 'ACCEPT' | 'DROP';
+
 export interface Firewall {
   id: number;
   status: FirewallStatus;
@@ -17,6 +19,8 @@ export interface Firewall {
 export interface FirewallRules {
   inbound?: FirewallRuleType[] | null;
   outbound?: FirewallRuleType[] | null;
+  inbound_policy: FirewallPolicyType;
+  outbound_policy: FirewallPolicyType;
 }
 
 export interface FirewallRuleType {
@@ -24,6 +28,7 @@ export interface FirewallRuleType {
   description?: string;
   protocol: FirewallRuleProtocol;
   ports?: string;
+  action: FirewallPolicyType;
   addresses?: null | {
     ipv4?: null | string[];
     ipv6?: null | string[];

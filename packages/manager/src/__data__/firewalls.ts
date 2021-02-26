@@ -8,11 +8,14 @@ export const firewall: Firewall = {
   updated_dt: '2019-09-11T19:44:38.526Z',
   tags: [],
   rules: {
+    inbound_policy: 'DROP',
+    outbound_policy: 'DROP',
     inbound: [
       {
         protocol: 'ALL',
-        ports: '443'
-      }
+        ports: '443',
+        action: 'ACCEPT',
+      },
     ],
     outbound: [
       {
@@ -20,11 +23,12 @@ export const firewall: Firewall = {
         ports: '22',
         addresses: {
           ipv4: ['12.12.12.12'],
-          ipv6: ['192.168.12.12']
-        }
-      }
-    ]
-  }
+          ipv6: ['192.168.12.12'],
+        },
+        action: 'ACCEPT',
+      },
+    ],
+  },
 };
 
 export const firewall2: Firewall = {
@@ -35,18 +39,22 @@ export const firewall2: Firewall = {
   updated_dt: '2019-12-11T19:44:38.526Z',
   tags: [],
   rules: {
+    inbound_policy: 'DROP',
+    outbound_policy: 'DROP',
     inbound: [],
     outbound: [
       {
         protocol: 'ALL',
-        ports: '443'
+        ports: '443',
+        action: 'ACCEPT',
       },
       {
         protocol: 'ALL',
-        ports: '80'
-      }
-    ]
-  }
+        ports: '80',
+        action: 'ACCEPT',
+      },
+    ],
+  },
 };
 
 export const firewalls = [firewall, firewall2];

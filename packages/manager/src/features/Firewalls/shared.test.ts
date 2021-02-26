@@ -3,24 +3,25 @@ import {
   allIPv4,
   allIPv6,
   generateAddressesLabel,
-  predefinedFirewallFromRule
+  predefinedFirewallFromRule,
 } from './shared';
 
 const addresses = {
   ipv4: [allIPv4],
-  ipv6: [allIPv6]
+  ipv6: [allIPv6],
 };
 
 const limitedAddresses = {
   ipv4: ['1.1.1.1'],
-  ipv6: ['::']
+  ipv6: ['::'],
 };
 
 describe('predefinedFirewallFromRule', () => {
   const rule: FirewallRuleType = {
     ports: '',
     protocol: 'TCP',
-    addresses
+    addresses,
+    action: 'ACCEPT',
   };
 
   it('handles SSH', () => {
@@ -50,7 +51,8 @@ describe('predefinedFirewallFromRule', () => {
         // Test another port
         ports: '22-24',
         protocol: 'TCP',
-        addresses
+        addresses,
+        action: 'ACCEPT',
       })
     ).toBeUndefined();
 
@@ -59,7 +61,8 @@ describe('predefinedFirewallFromRule', () => {
         ports: '22',
         // Test another protocol
         protocol: 'UDP',
-        addresses
+        addresses,
+        action: 'ACCEPT',
       })
     ).toBeUndefined();
 
@@ -68,7 +71,8 @@ describe('predefinedFirewallFromRule', () => {
         ports: '22',
         protocol: 'TCP',
         // Test other addresses
-        addresses: limitedAddresses
+        addresses: limitedAddresses,
+        action: 'ACCEPT',
       })
     ).toBeUndefined();
   });
@@ -85,7 +89,7 @@ describe('generateAddressLabel', () => {
   it("doesn't include other IPv4 addresses if ALL are also specified", () => {
     const result = generateAddressesLabel({
       ...addresses,
-      ipv4: [allIPv4, '1.1.1.1']
+      ipv4: [allIPv4, '1.1.1.1'],
     });
     expect(result.includes('All IPv4')).toBe(true);
     expect(result.includes('1.1.1.1')).toBe(false);
@@ -98,7 +102,7 @@ describe('generateAddressLabel', () => {
   it("doesn't include other IPv6 addresses if ALL are also specified", () => {
     const result = generateAddressesLabel({
       ...addresses,
-      ipv6: [allIPv6, '::1']
+      ipv6: [allIPv6, '::1'],
     });
     expect(result.includes('All IPv6')).toBe(true);
     expect(result.includes('::1')).toBe(false);
@@ -119,7 +123,7 @@ describe('generateAddressLabel', () => {
   it('truncates large lists', () => {
     expect(
       generateAddressesLabel({
-        ipv4: ['1.1.1.1', '2.2.2.2', '3.3.3.3', '4.4.4.4', '5.5.5.5']
+        ipv4: ['1.1.1.1', '2.2.2.2', '3.3.3.3', '4.4.4.4', '5.5.5.5'],
       })
     ).toBe('1.1.1.1, 2.2.2.2, 3.3.3.3, plus 2 more');
   });
@@ -128,7 +132,7 @@ describe('generateAddressLabel', () => {
     expect(
       generateAddressesLabel({
         ipv4: ['1.1.1.1', '2.2.2.2', '3.3.3.3', '4.4.4.4', '5.5.5.5'],
-        ipv6: ['::/0']
+        ipv6: ['::/0'],
       })
     ).toBe('All IPv6, 1.1.1.1, 2.2.2.2, plus 3 more');
   });
