@@ -4,7 +4,7 @@ import {
   MenuButton,
   MenuItems,
   MenuLink,
-  MenuPopover
+  MenuPopover,
 } from '@reach/menu-button';
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
@@ -16,6 +16,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import useFlags from 'src/hooks/useFlags';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
@@ -26,7 +27,7 @@ interface MenuLink {
 
 const useStyles = makeStyles((theme: Theme) => ({
   menu: {
-    transform: `translateY(${theme.spacing(1)}px)`
+    transform: `translateY(${theme.spacing(1)}px)`,
   },
   button: {
     borderRadius: 30,
@@ -34,17 +35,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(1),
     '&:hover, &.active': {
       '& $username': {
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
       },
       '& $userWrapper': {
-        boxShadow: '0 0 10px #bbb'
-      }
+        boxShadow: '0 0 10px #bbb',
+      },
     },
     '&:focus': {
       '& $username': {
-        color: theme.palette.primary.main
-      }
-    }
+        color: theme.palette.primary.main,
+      },
+    },
   },
   userWrapper: {
     display: 'flex',
@@ -57,17 +58,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       color: '#c9c7c7',
       width: 28,
-      height: 28
+      height: 28,
     },
     [theme.breakpoints.down('md')]: {
       width: '28px',
-      height: '28px'
-    }
+      height: '28px',
+    },
   },
   leftIcon: {
     borderRadius: '50%',
     height: 30,
-    width: 30
+    width: 30,
   },
   username: {
     maxWidth: '135px',
@@ -78,29 +79,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     // Hides username as soon as things start to scroll
     [theme.breakpoints.down(1345)]: {
-      ...theme.visually.hidden
-    }
+      ...theme.visually.hidden,
+    },
   },
   menuItem: {
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     '&:hover, &:focus': {
       backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
-      color: 'white'
-    }
+      color: 'white',
+    },
   },
   hidden: {
-    ...theme.visually.hidden
+    ...theme.visually.hidden,
   },
   menuButton: {
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
     [theme.breakpoints.up('sm')]: {
-      paddingLeft: 12
+      paddingLeft: 12,
     },
     [theme.breakpoints.down(360)]: {
-      paddingLeft: 3
+      paddingLeft: 3,
     },
     '&[data-reach-menu-button]': {
       backgroundColor: 'transparent',
@@ -114,26 +115,26 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&[aria-expanded="true"]': {
         '& $caret': {
           marginTop: 4,
-          transform: 'rotate(180deg)'
-        }
+          transform: 'rotate(180deg)',
+        },
       },
       [theme.breakpoints.down('sm')]: {
         paddingRight: 12,
-        paddingLeft: 12
+        paddingLeft: 12,
       },
       [theme.breakpoints.down(360)]: {
         paddingRight: theme.spacing(),
-        paddingLeft: theme.spacing()
-      }
+        paddingLeft: theme.spacing(),
+      },
     },
     '&:hover, &:focus': {
-      backgroundColor: theme.cmrBGColors.bgApp
-    }
+      backgroundColor: theme.cmrBGColors.bgApp,
+    },
   },
   gravatar: {
     height: 30,
     width: 30,
-    borderRadius: '50%'
+    borderRadius: '50%',
   },
   menuPopover: {
     '&[data-reach-menu], &[data-reach-menu-popover]': {
@@ -141,9 +142,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 50,
       zIndex: 3000,
       [theme.breakpoints.down('md')]: {
-        left: 0
-      }
-    }
+        left: 0,
+      },
+    },
   },
   caret: {
     color: '#9ea4ae',
@@ -151,8 +152,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 2,
     marginLeft: 2,
     [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   menuItemList: {
     boxShadow: '0 6px 7px 0 rgba(0, 0, 0, 0.2)',
@@ -161,12 +162,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
-      width: 300
-    }
+      width: 300,
+    },
   },
   inlineUserName: {
     paddingRight: theme.spacing(),
-    fontSize: '0.875rem'
+    fontSize: '0.875rem',
   },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
@@ -177,18 +178,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
     padding: '16px 0 8px',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
   profileWrapper: {
     marginBottom: theme.spacing(2),
     width: '100%',
     '& > div': {
-      whiteSpace: 'normal'
-    }
+      whiteSpace: 'normal',
+    },
   },
   accountColumn: {
     whiteSpace: 'normal',
-    width: '100%'
+    width: '100%',
   },
   menuItemLink: {
     lineHeight: 1,
@@ -201,13 +202,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '8px 24px',
       '&:focus, &:hover': {
         backgroundColor: theme.cmrBGColors.bgApp,
-        color: theme.palette.primary.main
-      }
+        color: theme.palette.primary.main,
+      },
     },
     '&[data-reach-menu-item][data-selected]': {
       backgroundColor: theme.cmrBGColors.bgApp,
-      color: theme.cmrTextColors.linkActiveLight
-    }
+      color: theme.cmrTextColors.linkActiveLight,
+    },
   },
   userName: {
     color: theme.cmrTextColors.headlineStatic,
@@ -215,30 +216,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: -1,
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    paddingTop: theme.spacing(2)
-  }
+    paddingTop: theme.spacing(2),
+  },
 }));
 
 const profileLinks: MenuLink[] = [
   {
     display: 'Display',
-    href: '/profile/display'
+    href: '/profile/display',
   },
   { display: 'Password & Authentication', href: '/profile/auth' },
   { display: 'SSH Keys', href: '/profile/keys' },
   { display: 'LISH Console Settings', href: '/profile/lish' },
   {
     display: 'API Tokens',
-    href: '/profile/tokens'
+    href: '/profile/tokens',
   },
   { display: 'OAuth Apps', href: '/profile/clients' },
   { display: 'Referrals', href: '/profile/referrals' },
   { display: 'My Settings', href: '/profile/settings' },
-  { display: 'Log Out', href: '/logout' }
+  { display: 'Log Out', href: '/logout' },
 ];
 
 export const UserMenu: React.FC<{}> = () => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
   const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
@@ -246,7 +248,7 @@ export const UserMenu: React.FC<{}> = () => {
   const {
     profile,
     _hasAccountAccess,
-    _isRestrictedUser
+    _isRestrictedUser,
   } = useAccountManagement();
 
   const hasFullAccountAccess =
@@ -257,28 +259,28 @@ export const UserMenu: React.FC<{}> = () => {
     () => [
       {
         display: 'Billing & Contact Information',
-        href: '/account/billing'
+        href: '/account/billing',
       },
       // Restricted users can't view the Users tab regardless of their grants
       {
         display: 'Users & Grants',
         href: '/account/users',
-        hide: _isRestrictedUser
+        hide: _isRestrictedUser,
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Transfers',
         href: '/account/entity-transfers',
-        hide: _isRestrictedUser
+        hide: _isRestrictedUser || !flags.entityTransfers,
       },
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
         href: '/account/settings',
-        hide: !hasFullAccountAccess
-      }
+        hide: !hasFullAccountAccess,
+      },
     ],
-    [hasFullAccountAccess, _isRestrictedUser]
+    [hasFullAccountAccess, _isRestrictedUser, flags]
   );
 
   const userEmail = profile.data?.email;
@@ -287,7 +289,7 @@ export const UserMenu: React.FC<{}> = () => {
   React.useEffect(() => {
     if (userEmail) {
       setGravatarLoading(true);
-      getGravatarUrl(userEmail).then(url => {
+      getGravatarUrl(userEmail).then((url) => {
         setGravatarLoading(false);
         setGravatarURL(url);
       });
@@ -375,7 +377,7 @@ export const UserMenu: React.FC<{}> = () => {
                 <div className={classes.menuHeader}>Account</div>
                 <Grid container>
                   <Grid item className={classes.accountColumn}>
-                    {accountLinks.map(menuLink =>
+                    {accountLinks.map((menuLink) =>
                       menuLink.hide ? null : (
                         <MenuLink
                           key={menuLink.display}

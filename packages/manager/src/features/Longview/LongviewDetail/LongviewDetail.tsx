@@ -6,28 +6,29 @@ import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
-import DocumentationButton from 'src/components/CMR_DocumentationButton';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
+import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import TabLinkList from 'src/components/TabLinkList';
 import withLongviewClients, {
   DispatchProps,
-  Props as LVProps
+  Props as LVProps,
 } from 'src/containers/longview.container';
 import withClientStats, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import withProfile from 'src/containers/profile.container';
 import { get } from 'src/features/Longview/request';
 import {
   LongviewPortsResponse,
-  LongviewTopProcesses
+  LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
@@ -36,12 +37,11 @@ import MySQLLanding from './DetailTabs/MySQL';
 import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
-import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabList: {
-    marginBottom: theme.spacing(3) + 6
-  }
+    marginBottom: theme.spacing(3) + 6,
+  },
 }));
 
 const topProcessesEmptyDataSet: LongviewTopProcesses = { Processes: {} };
@@ -53,8 +53,8 @@ interface Props {
   longviewClientsError: LVProps['longviewClientsError'];
 }
 
-const Overview = React.lazy(() =>
-  import('./DetailTabs/LongviewDetailOverview')
+const Overview = React.lazy(
+  () => import('./DetailTabs/LongviewDetailOverview')
 );
 const Installation = React.lazy(() => import('./DetailTabs/Installation'));
 const Disks = React.lazy(() => import('./DetailTabs/Disks'));
@@ -65,14 +65,14 @@ export type CombinedProps = RouteComponentProps<{ id: string }> &
   ProfileProps &
   DispatchProps;
 
-export const LongviewDetail: React.FC<CombinedProps> = props => {
+export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   const {
     client,
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsError,
     longviewClientData,
-    timezone
+    timezone,
   } = props;
 
   const classes = useStyles();
@@ -88,8 +88,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   const { lastUpdated, lastUpdatedError, notifications } = useClientLastUpdated(
     clientAPIKey,
     clientAPIKey
-      ? _lastUpdated =>
-          props.getClientStats(clientAPIKey, _lastUpdated).catch(_ => null)
+      ? (_lastUpdated) =>
+          props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
       : undefined
   );
 
@@ -100,7 +100,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     // when it is retrieved.
     clientAPIKey && lastUpdated
       ? () =>
-          get(clientAPIKey, 'getTopProcesses').then(response => response.DATA)
+          get(clientAPIKey, 'getTopProcesses').then((response) => response.DATA)
       : null,
     topProcessesEmptyDataSet,
     [clientAPIKey, lastUpdated]
@@ -110,8 +110,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     clientAPIKey && lastUpdated
       ? () =>
           get(clientAPIKey, 'getValues', {
-            fields: ['listeningServices', 'activeConnections']
-          }).then(response => response.DATA)
+            fields: ['listeningServices', 'activeConnections'],
+          }).then((response) => response.DATA)
       : null,
     { Ports: { listening: [], active: [] } },
     [clientAPIKey, lastUpdated]
@@ -121,47 +121,47 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     {
       title: 'Overview',
       display: true,
-      routeName: `${props.match.url}/overview`
+      routeName: `${props.match.url}/overview`,
     },
     {
       title: 'Processes',
       display: true,
-      routeName: `${props.match.url}/processes`
+      routeName: `${props.match.url}/processes`,
     },
     {
       title: 'Network',
       display: true,
-      routeName: `${props.match.url}/network`
+      routeName: `${props.match.url}/network`,
     },
     {
       title: 'Disks',
       display: true,
-      routeName: `${props.match.url}/disks`
+      routeName: `${props.match.url}/disks`,
     },
     {
       title: 'Apache',
       display: client && client.apps.apache,
-      routeName: `${props.match.url}/apache`
+      routeName: `${props.match.url}/apache`,
     },
     {
       title: 'Nginx',
       display: client && client.apps.nginx,
-      routeName: `${props.match.url}/nginx`
+      routeName: `${props.match.url}/nginx`,
     },
     {
       title: 'MySQL',
       display: client && client.apps.mysql,
-      routeName: `${props.match.url}/mysql`
+      routeName: `${props.match.url}/mysql`,
     },
     {
       title: 'Installation',
       display: true,
-      routeName: `${props.match.url}/installation`
-    }
+      routeName: `${props.match.url}/installation`,
+    },
   ];
 
   // Filtering out conditional tabs if they don't exist on client
-  const tabs = tabOptions.filter(tab => tab.display === true);
+  const tabs = tabOptions.filter((tab) => tab.display === true);
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
@@ -201,7 +201,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   }
 
   // Determining true tab count for indexing based on tab display
-  const displayedTabs = tabs.filter(tab => tab.display === true);
+  const displayedTabs = tabs.filter((tab) => tab.display === true);
 
   return (
     <React.Fragment>
@@ -236,7 +236,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
       ))}
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
@@ -347,11 +347,11 @@ interface ProfileProps {
 
 export default compose<CombinedProps, {}>(
   React.memo,
-  withClientStats<RouteComponentProps<{ id: string }>>(ownProps => {
+  withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
     return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
   }),
   withProfile<ProfileProps, {}>((own, { profileData }) => ({
-    timezone: (profileData || {}).timezone || 'GMT'
+    timezone: (profileData || {}).timezone || 'GMT',
   })),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
@@ -360,7 +360,7 @@ export default compose<CombinedProps, {}>(
         longviewClientsData,
         longviewClientsLastUpdated,
         longviewClientsLoading,
-        longviewClientsError
+        longviewClientsError,
       }
     ) => {
       // This is explicitly typed, otherwise `client` would be typed as
@@ -372,7 +372,7 @@ export default compose<CombinedProps, {}>(
         client,
         longviewClientsLastUpdated,
         longviewClientsLoading,
-        longviewClientsError
+        longviewClientsError,
       };
     }
   )

@@ -12,7 +12,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -25,86 +25,21 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
 
-type ClassNames =
-  | 'divider'
-  | 'backendIPAction'
-  | 'suggestionsParent'
-  | 'suggestions'
-  | 'suggestionItem'
-  | 'selectedSuggestionItem'
-  | 'statusHeader'
-  | 'statusChip'
-  | 'passiveChecks';
+type ClassNames = 'divider' | 'passiveChecks' | 'actionsPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
     divider: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
-    },
-    backendIPAction: {
-      display: 'flex',
-      alignItems: 'flex-end',
-      paddingLeft: theme.spacing(2),
-      marginLeft: -theme.spacing(1),
-      [theme.breakpoints.down('md')]: {
-        marginTop: -theme.spacing(1)
-      },
-      [theme.breakpoints.down('xs')]: {
-        marginTop: 0
-      },
-      '& .remove': {
-        margin: 0,
-        padding: theme.spacing(2.5)
-      }
-    },
-    suggestionsParent: {
-      position: 'relative'
-    },
-    suggestions: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      top: 80,
-      padding: 0,
-      boxShadow: `0 0 10px ${theme.color.boxShadow}`,
-      maxHeight: 150,
-      overflowY: 'auto',
-      width: '100%',
-      maxWidth: 415,
-      zIndex: 2
-    },
-    suggestionItem: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      color: theme.palette.text.primary,
-      '&:hover, &:focus': {
-        backgroundColor: `${theme.palette.primary.main} !important`,
-        color: `white !important`
-      },
-      '&:last-item': {
-        border: 0
-      }
-    },
-    selectedSuggestionItem: {
-      backgroundColor: `${theme.palette.primary.main} !important`,
-      color: '#fff !important'
-    },
-    statusHeader: {
-      fontSize: '.9rem',
-      color: theme.color.label,
-      marginTop: theme.spacing(2) - 4
-    },
-    statusChip: {
-      marginTop: theme.spacing(1),
-      color: 'white',
-      '&.undefined': {
-        backgroundColor: theme.color.grey2,
-        color: theme.palette.text.primary
-      }
+      marginBottom: theme.spacing(1),
     },
     passiveChecks: {
-      marginTop: 4
-    }
+      marginTop: 4,
+    },
+    actionsPanel: {
+      paddingBottom: 0,
+      paddingRight: `${theme.spacing()}px !important`,
+    },
   });
 
 const styled = withStyles(styles);
@@ -183,7 +118,7 @@ const DATA_NODE = 'data-node-idx';
 
 class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   state: State = {
-    currentNodeAddressIndex: null
+    currentNodeAddressIndex: null,
   };
 
   static defaultProps: Partial<Props> = {};
@@ -320,7 +255,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckType,
       protocol,
       disabled,
-      classes
+      classes,
     } = this.props;
 
     const conditionalText = this.displayProtocolText(protocol);
@@ -328,25 +263,25 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const typeOptions = [
       {
         label: 'None',
-        value: 'none'
+        value: 'none',
       },
       {
         label: 'TCP Connection',
-        value: 'connection'
+        value: 'connection',
       },
       {
         label: 'HTTP Status',
         value: 'http',
-        disabled: protocol === 'tcp'
+        disabled: protocol === 'tcp',
       },
       {
         label: 'HTTP Body',
         value: 'http_body',
-        disabled: protocol === 'tcp'
-      }
+        disabled: protocol === 'tcp',
+      },
     ];
 
-    const defaultType = typeOptions.find(eachType => {
+    const defaultType = typeOptions.find((eachType) => {
       return eachType.value === healthCheckType;
     });
 
@@ -368,7 +303,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               healthCheckType,
               errorMap.check,
               configIdx,
-              classes
+              classes,
             ]}
             item
             xs={12}
@@ -384,8 +319,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 textFieldProps={{
                   dataAttrs: {
-                    'data-qa-active-check-select': true
-                  }
+                    'data-qa-active-check-select': true,
+                  },
                 }}
                 small
                 disabled={disabled}
@@ -405,7 +340,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   healthCheckInterval,
                   errorMap.check_interval,
                   configIdx,
-                  classes
+                  classes,
                 ]}
                 item
                 xs={12}
@@ -417,7 +352,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     'aria-label': 'Active Health Check Interval',
                     endAdornment: (
                       <InputAdornment position="end">seconds</InputAdornment>
-                    )
+                    ),
                   }}
                   value={healthCheckInterval}
                   onChange={this.onHealthCheckIntervalChange}
@@ -436,7 +371,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   healthCheckTimeout,
                   errorMap.check_timeout,
                   configIdx,
-                  classes
+                  classes,
                 ]}
                 item
                 xs={12}
@@ -448,7 +383,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     'aria-label': 'Active Health Check Timeout',
                     endAdornment: (
                       <InputAdornment position="end">seconds</InputAdornment>
-                    )
+                    ),
                   }}
                   value={healthCheckTimeout}
                   onChange={this.onHealthCheckTimeoutChange}
@@ -468,7 +403,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   healthCheckAttempts,
                   errorMap.check_attempts,
                   configIdx,
-                  classes
+                  classes,
                 ]}
                 item
                 xs={12}
@@ -482,7 +417,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={errorMap.check_attempts}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   InputProps={{
-                    'aria-label': 'Active Health Check Attempts'
+                    'aria-label': 'Active Health Check Attempts',
                   }}
                   data-qa-active-check-attempts
                   disabled={disabled}
@@ -500,7 +435,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     healthCheckType,
                     errorMap.check_path,
                     configIdx,
-                    classes
+                    classes,
                   ]}
                   item
                   xs={12}
@@ -525,7 +460,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     healthCheckType,
                     errorMap.check_body,
                     configIdx,
-                    classes
+                    classes,
                   ]}
                   item
                   xs={12}
@@ -600,13 +535,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       sessionStickiness,
       sslCertificate,
       submitting,
-      disabled
+      disabled,
     } = this.props;
 
     // We don't want to end up with nodes[3].ip_address as errorMap.none
     const filteredErrors = errors
       ? errors.filter(
-          thisError =>
+          (thisError) =>
             !thisError.field || !thisError.field.match(/nodes\[[0-9+]\]/)
         )
       : [];
@@ -627,7 +562,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         'ssl_cert',
         'ssl_key',
         'stickiness',
-        'nodes'
+        'nodes',
       ],
       filteredErrors
     );
@@ -637,21 +572,21 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const protocolOptions = [
       { label: 'TCP', value: 'tcp' },
       { label: 'HTTP', value: 'http' },
-      { label: 'HTTPS', value: 'https' }
+      { label: 'HTTPS', value: 'https' },
     ];
 
     const proxyProtocolOptions = [
       { label: 'None', value: 'none' },
       { label: 'v1', value: 'v1' },
-      { label: 'v2', value: 'v2' }
+      { label: 'v2', value: 'v2' },
     ];
 
-    const defaultProtocol = protocolOptions.find(eachProtocol => {
+    const defaultProtocol = protocolOptions.find((eachProtocol) => {
       return eachProtocol.value === protocol;
     });
 
     const selectedProxyProtocol = proxyProtocolOptions.find(
-      eachProxyProtocol => {
+      (eachProxyProtocol) => {
         return eachProxyProtocol.value === proxyProtocol;
       }
     );
@@ -659,20 +594,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const algOptions = [
       { label: 'Round Robin', value: 'roundrobin' },
       { label: 'Least Connections', value: 'leastconn' },
-      { label: 'Source', value: 'source' }
+      { label: 'Source', value: 'source' },
     ];
 
-    const defaultAlg = algOptions.find(eachAlg => {
+    const defaultAlg = algOptions.find((eachAlg) => {
       return eachAlg.value === algorithm;
     });
 
     const sessionOptions = [
       { label: 'None', value: 'none' },
       { label: 'Table', value: 'table' },
-      { label: 'HTTP Cookie', value: 'http_cookie' }
+      { label: 'HTTP Cookie', value: 'http_cookie' },
     ];
 
-    const defaultSession = sessionOptions.find(eachSession => {
+    const defaultSession = sessionOptions.find((eachSession) => {
       return eachSession.value === sessionStickiness;
     });
 
@@ -707,7 +642,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 configIdx,
                 sslCertificate,
                 privateKey,
-                classes
+                classes,
               ]}
               container
             >
@@ -744,8 +679,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
                     dataAttrs: {
-                      'data-qa-protocol-select': true
-                    }
+                      'data-qa-protocol-select': true,
+                    },
                   }}
                   disabled={disabled}
                   noMarginTop
@@ -764,7 +699,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       privateKey,
                       errorMap.ssl_key,
                       configIdx,
-                      classes
+                      classes,
                     ]}
                     container
                   >
@@ -814,8 +749,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     textFieldProps={{
                       dataAttrs: {
-                        'data-qa-proxy-protocol-select': true
-                      }
+                        'data-qa-proxy-protocol-select': true,
+                      },
                     }}
                     disabled={disabled}
                     noMarginTop
@@ -845,8 +780,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
                     dataAttrs: {
-                      'data-qa-algorithm-select': true
-                    }
+                      'data-qa-algorithm-select': true,
+                    },
                   }}
                   small
                   disabled={disabled}
@@ -871,8 +806,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
                     dataAttrs: {
-                      'data-qa-session-stickiness-select': true
-                    }
+                      'data-qa-session-stickiness-select': true,
+                    },
                   }}
                   small
                   disabled={disabled}
@@ -902,7 +837,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 nodeMessage,
                 classes,
                 errorMap.nodes,
-                this.props.nodeBalancerRegion
+                this.props.nodeBalancerRegion,
               ]}
               container
             >
@@ -952,6 +887,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       buttonType="secondary"
                       disabled={disabled}
                       onClick={this.addNode}
+                      outline
                     >
                       Add a Node
                     </Button>
@@ -968,35 +904,33 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Grid
                   updateFor={[submitting, classes]}
                   container
-                  justify="space-between"
+                  justify="flex-end"
                   alignItems="center"
                 >
-                  <Grid item>
-                    <ActionsPanel style={{ paddingLeft: 0 }}>
-                      {(forEdit || configIdx !== 0) && (
-                        <Button
-                          onClick={this.props.onDelete}
-                          buttonType="secondary"
-                          destructive
-                          data-qa-delete-config
-                          disabled={disabled}
-                        >
-                          Delete
-                        </Button>
-                      )}
-                      {forEdit && (
-                        <Button
-                          buttonType="primary"
-                          onClick={this.onSave}
-                          loading={submitting}
-                          data-qa-save-config
-                          disabled={disabled}
-                        >
-                          Save
-                        </Button>
-                      )}
-                    </ActionsPanel>
-                  </Grid>
+                  <ActionsPanel className={classes.actionsPanel}>
+                    {(forEdit || configIdx !== 0) && (
+                      <Button
+                        onClick={this.props.onDelete}
+                        buttonType="secondary"
+                        destructive
+                        data-qa-delete-config
+                        disabled={disabled}
+                      >
+                        Delete
+                      </Button>
+                    )}
+                    {forEdit && (
+                      <Button
+                        buttonType="primary"
+                        onClick={this.onSave}
+                        loading={submitting}
+                        data-qa-save-config
+                        disabled={disabled}
+                      >
+                        Save
+                      </Button>
+                    )}
+                  </ActionsPanel>
                 </Grid>
               </React.Fragment>
             )}

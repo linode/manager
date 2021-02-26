@@ -13,7 +13,7 @@ describe('AddNewMenuItem', () => {
   it('should render without error', () => {
     shallow(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <AddNewMenuItem
             title="shenanigans"
             body="These be the stories of shennanigans."
@@ -27,7 +27,7 @@ describe('AddNewMenuItem', () => {
   it('should not render a divider if not the last item', () => {
     const result = mount(
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
+        <LinodeThemeWrapper theme="dark">
           <AddNewMenuItem
             title="shenanigans"
             body="These be the stories of shennanigans."

@@ -2,7 +2,7 @@ import {
   getCredentials,
   getManagedContacts,
   ManagedContact,
-  ManagedCredential
+  ManagedCredential,
 } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { NavTab } from 'src/components/NavTabs/NavTabs';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
-import ManagedDashboardCard from '../Dashboard/ManagedDashboardCard';
+import ManagedDashboardCard from './ManagedDashboardCard';
 import SupportWidget from './SupportWidget';
 
 const Contacts = React.lazy(() => import('./Contacts/Contacts'));
@@ -23,14 +23,14 @@ const CredentialList = React.lazy(() => import('./Credentials/CredentialList'));
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
 const getAllCredentials = () =>
-  getAll<ManagedCredential>(getCredentials)().then(response => response.data);
+  getAll<ManagedCredential>(getCredentials)().then((response) => response.data);
 
 // We need to "Get All" on this request in order to handle Groups
 // as a quasi-independent entity.
 const getAllContacts = () =>
-  getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
+  getAll<ManagedContact>(getManagedContacts)().then((res) => res.data);
 
-export const ManagedLandingContent: React.FC<CombinedProps> = props => {
+export const ManagedLandingContent: React.FC<CombinedProps> = (props) => {
   const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
 
   const contacts = useAPIRequest<ManagedContact[]>(getAllContacts, []);
@@ -60,7 +60,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
     {
       title: 'Summary',
       routeName: `${props.match.url}/summary`,
-      component: ManagedDashboardCard
+      component: ManagedDashboardCard,
     },
     {
       title: 'Monitors',
@@ -75,12 +75,12 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           groups={groups}
           errorFromProps={credentials.error || contacts.error || undefined}
         />
-      )
+      ),
     },
     {
       title: 'SSH Access',
       routeName: `${props.match.url}/ssh-access`,
-      component: SSHAccess
+      component: SSHAccess,
     },
     {
       title: 'Credentials',
@@ -92,7 +92,7 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           credentials={credentials.data}
           update={credentials.update}
         />
-      )
+      ),
     },
     {
       title: 'Contacts',
@@ -106,8 +106,8 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           transformData={contacts.transformData}
           update={contacts.update}
         />
-      )
-    }
+      ),
+    },
   ];
 
   return (
