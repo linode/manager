@@ -12,55 +12,30 @@ import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import {
-  createStyles,
+  makeStyles,
   Theme,
-  withStyles,
-  WithStyles,
   withTheme,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
-type ClassNames =
-  | 'root'
-  | 'default'
-  | 'icon'
-  | 'running'
-  | 'offline'
-  | 'animated';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes rotate': {
-      from: {
-        transform: 'rotate(0deg)'
-      },
-      to: {
-        transform: 'rotate(360deg)'
-      }
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes rotate': {
+    from: {
+      transform: 'rotate(0deg)',
     },
-    root: {
-      position: 'relative',
-      color: 'transparent',
-      display: 'flex'
+    to: {
+      transform: 'rotate(360deg)',
     },
-    default: {
-      color: theme.color.grey1
-    },
-    icon: {},
-    running: {
-      color: theme.color.green
-    },
-    offline: {
-      color: theme.color.grey1
-    },
-    error: {
-      color: theme.color.red
-    },
-    animated: {
-      animation: '$rotate 2s linear infinite'
-    }
-  });
+  },
+  root: {
+    position: 'relative',
+    color: 'transparent',
+    display: 'flex',
+  },
+  default: {
+    color: theme.color.grey1,
+  },
+}));
 
 export type Variant =
   | 'linode'
@@ -84,7 +59,7 @@ interface Props {
   stopAnimation?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
+type CombinedProps = Props & WithTheme;
 
 const iconMap = {
   linode: LinodeIcon,
@@ -96,16 +71,17 @@ const iconMap = {
   bucket: BucketIcon,
   firewall: FirewallIcon,
   object: ObjectIcon,
-  folder: FolderIcon
+  folder: FolderIcon,
 };
 
 const getIcon = (variant: Variant) => {
   return iconMap[variant] ?? LinodeIcon;
 };
 
-const EntityIcon: React.FC<CombinedProps> = props => {
+const EntityIcon: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
-    classes,
     variant,
     status,
     loading,
@@ -115,11 +91,7 @@ const EntityIcon: React.FC<CombinedProps> = props => {
     ...rest
   } = props;
 
-  const iconSize = size
-    ? size
-    : props.theme.spacing(1) === COMPACT_SPACING_UNIT
-    ? 34
-    : 40;
+  const iconSize = size ? size : 40;
 
   const Icon = getIcon(variant);
 
@@ -154,7 +126,7 @@ const EntityIcon: React.FC<CombinedProps> = props => {
         {
           [classes.root]: true,
           [classes.default]: true,
-          [classes[`${finalStatus}`]]: true
+          [classes[`${finalStatus}`]]: true,
         },
         className
       )}
@@ -165,13 +137,11 @@ const EntityIcon: React.FC<CombinedProps> = props => {
       aria-label={`${variant} is ${finalStatus}`}
       {...rest}
     >
-      <Icon className={classes.icon} width={iconSize} height={iconSize} />
+      <Icon width={iconSize} height={iconSize} />
     </div>
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(styled, withTheme);
+const enhanced = compose<CombinedProps, Props>(withTheme);
 
 export default enhanced(EntityIcon);

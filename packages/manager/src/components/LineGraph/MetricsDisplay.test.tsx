@@ -3,7 +3,7 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import {
   metricsBySection,
-  MetricsDisplay
+  MetricsDisplay,
 } from 'src/components/LineGraph/MetricsDisplay';
 import { light } from 'src/themes';
 import { formatPercentage } from 'src/utilities/statMetrics';
@@ -14,7 +14,7 @@ describe('CPUMetrics', () => {
     average: 5.5,
     last: 7.75,
     total: 40,
-    length: 3
+    length: 3,
   };
 
   const wrapper = shallow(
@@ -31,16 +31,16 @@ describe('CPUMetrics', () => {
         text: '',
         tableHeadInner: '',
         simpleLegendRoot: '',
-        simpleLegend: ''
+        simpleLegend: '',
       }}
-      theme={light(4)}
+      theme={light()}
       rows={[
         {
           legendTitle: 'Legend Title',
           legendColor: 'blue',
           data: mockMetrics,
-          format: formatPercentage
-        }
+          format: formatPercentage,
+        },
       ]}
     />
   );
@@ -50,7 +50,7 @@ describe('CPUMetrics', () => {
   });
 
   it('renders Max, Avg, and Last table headers', () => {
-    ['Max', 'Avg', 'Last'].forEach(section => {
+    ['Max', 'Avg', 'Last'].forEach((section) => {
       expect(
         wrapper.containsMatchingElement(<Typography>{section}</Typography>)
       ).toBeTruthy();
@@ -71,7 +71,7 @@ describe('CPUMetrics', () => {
   });
 
   it('renders formatted Max, Avg, and Last values in the table body', () => {
-    ['10.00%', '5.50%', '7.75%'].forEach(section => {
+    ['10.00%', '5.50%', '7.75%'].forEach((section) => {
       expect(
         wrapper.containsMatchingElement(<Typography>{section}</Typography>)
       ).toBeTruthy();
@@ -85,15 +85,15 @@ describe('CPUMetrics', () => {
           legendTitle: 'Legend Title 1',
           legendColor: 'blue',
           data: mockMetrics,
-          format: formatPercentage
+          format: formatPercentage,
         },
         {
           legendTitle: 'Legend Title 2',
           legendColor: 'red',
           data: { max: 80, average: 90, last: 100, total: 110 },
-          format: formatPercentage
-        }
-      ]
+          format: formatPercentage,
+        },
+      ],
     });
     expect(wrapper.find('[data-qa-legend-title]')).toHaveLength(2);
   });
