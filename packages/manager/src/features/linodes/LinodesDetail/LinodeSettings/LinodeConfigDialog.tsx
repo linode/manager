@@ -1,6 +1,7 @@
 import { Config, Disk, Kernel } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
+import { useFormik } from 'formik';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -15,12 +16,7 @@ import FormGroup from 'src/components/core/FormGroup';
 import FormHelperText from 'src/components/core/FormHelperText';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -33,42 +29,42 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import DeviceSelection, {
   ExtendedDisk,
-  ExtendedVolume
+  ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
-  DevicesAsStrings
+  DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import {
+  handleFieldErrors,
+  handleGeneralErrors,
+} from 'src/utilities/formikErrorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   CreateLinodeConfig,
   UpdateLinodeConfig,
-  withLinodeDetailContext
+  withLinodeDetailContext,
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
 
-type ClassNames = 'button' | 'section' | 'divider' | 'formControlToggle';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    button: {
-      marginTop: theme.spacing()
+const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    marginTop: theme.spacing(),
+  },
+  section: {
+    marginTop: theme.spacing(2),
+  },
+  divider: {
+    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+    width: `calc(100% - ${theme.spacing(2)}px)`,
+  },
+  formControlToggle: {
+    '& button': {
+      order: 3,
     },
-    section: {
-      marginTop: theme.spacing(2)
-    },
-    divider: {
-      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
-      width: `calc(100% - ${theme.spacing(2)}px)`
-    },
-    formControlToggle: {
-      '& button': {
-        order: 3
-      }
-    }
-  });
+  },
+}));
 
 interface Helpers {
   updatedb_disabled: boolean;
@@ -78,6 +74,10 @@ interface Helpers {
   devtmpfs_automount: boolean;
 }
 
+type RunLevel = 'default' | 'single' | 'binbash';
+type VirtMode = 'fullvirt' | 'paravirt';
+type MemoryLimit = 'no_limit' | 'set_limit';
+
 interface EditableFields {
   useCustomRoot: boolean;
   label: string;
@@ -85,11 +85,11 @@ interface EditableFields {
   kernel?: string;
   comments?: string;
   memory_limit?: number;
-  run_level?: 'default' | 'single' | 'binbash';
-  virt_mode?: 'fullvirt' | 'paravirt';
+  run_level?: RunLevel;
+  virt_mode?: VirtMode;
   helpers: Helpers;
   root_device: string;
-  setMemoryLimit: 'no_limit' | 'set_limit';
+  setMemoryLimit: MemoryLimit;
 }
 
 interface Props {
@@ -104,637 +104,61 @@ interface Props {
   kernelsLoading: boolean;
 }
 
-interface State {
-  loading: boolean;
-  kernels: Kernel[];
-  errors?: Error | APIError[];
-  fields: EditableFields;
-  submitting: boolean;
-  counter: number;
-}
+type CombinedProps = LinodeContextProps & Props & StateProps;
 
-type CombinedProps = LinodeContextProps &
-  Props &
-  StateProps &
-  WithStyles<ClassNames>;
+const defaultFieldsValues = {
+  comments: '',
+  devices: {},
+  helpers: {
+    devtmpfs_automount: true,
+    distro: true,
+    modules_dep: true,
+    network: true,
+    updatedb_disabled: true,
+  },
+  kernel: 'linode/latest-64bit',
+  label: '',
+  memory_limit: 0,
+  root_device: '/dev/sda',
+  run_level: 'default' as RunLevel,
+  useCustomRoot: false,
+  virt_mode: 'paravirt' as VirtMode,
+  setMemoryLimit: 'no_limit' as MemoryLimit,
+};
 
-class LinodeConfigDialog extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: false,
-    counter: 1,
-    kernels: [],
-    fields: LinodeConfigDialog.defaultFieldsValues(),
-    submitting: false
-  };
+const pathsOptions = [
+  { label: '/dev/sda', value: '/dev/sda' },
+  { label: '/dev/sdb', value: '/dev/sdb' },
+  { label: '/dev/sdc', value: '/dev/sdc' },
+  { label: '/dev/sdd', value: '/dev/sdd' },
+  { label: '/dev/sde', value: '/dev/sde' },
+  { label: '/dev/sdf', value: '/dev/sdf' },
+  { label: '/dev/sdg', value: '/dev/sdg' },
+  { label: '/dev/sdh', value: '/dev/sdh' },
+];
 
-  static defaultFieldsValues: () => EditableFields = () => ({
-    comments: '',
-    devices: {},
-    helpers: {
-      devtmpfs_automount: true,
-      distro: true,
-      modules_dep: true,
-      network: true,
-      updatedb_disabled: true
-    },
-    kernel: 'linode/latest-64bit',
-    label: '',
-    memory_limit: 0,
-    root_device: '/dev/sda',
-    run_level: 'default',
-    useCustomRoot: false,
-    virt_mode: 'paravirt',
-    setMemoryLimit: 'no_limit'
+const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
+  const {
+    open,
+    onClose,
+    config,
+    kernels,
+    linodeConfigId,
+    maxMemory,
+    readOnly,
+  } = props;
+
+  const classes = useStyles();
+  const [counter, setCounter] = React.useState(1);
+
+  const { values, ...formik } = useFormik({
+    initialValues: defaultFieldsValues,
+    validateOnChange: true,
+    validateOnMount: true,
+    onSubmit: (values) => onSubmit(values),
   });
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    const { config } = this.props;
-
-    if (this.isOpening(prevProps.open, this.props.open)) {
-      /** Reset the form to the default create state. */
-      this.setState({
-        fields: LinodeConfigDialog.defaultFieldsValues()
-      });
-
-      if (this.state.errors) {
-        this.setState({ errors: undefined });
-      }
-
-      /**
-       * If config is defined, we're editing. Set the state
-       * to the values of the config.
-       */
-      if (config) {
-        const devices = createStringsFromDevices(config.devices);
-        const initialCounter = Object.keys(devices).length;
-        this.setState({
-          counter: initialCounter,
-          fields: {
-            useCustomRoot: isUsingCustomRoot(config.root_device),
-            label: config.label,
-            devices,
-            kernel: config.kernel,
-            comments: config.comments,
-            memory_limit: config.memory_limit,
-            run_level: config.run_level,
-            virt_mode: config.virt_mode,
-            helpers: config.helpers,
-            root_device: config.root_device,
-            setMemoryLimit: config.memory_limit !== 0 ? 'set_limit' : 'no_limit'
-          }
-        });
-      }
-    }
-  }
-
-  render() {
-    const { open, onClose, linodeConfigId } = this.props;
-    const { errors } = this.state;
-    const loading = this.state.loading || this.props.kernelsLoading;
-
-    return (
-      <Dialog
-        title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`}
-        open={open}
-        onClose={onClose}
-        fullHeight
-        fullWidth
-      >
-        <Grid container direction="row">
-          {this.renderContent(errors, loading)}
-        </Grid>
-      </Dialog>
-    );
-  }
-
-  renderContent = (errors: Error | APIError[] = [], loading: boolean) => {
-    if (errors instanceof Error) {
-      return this.renderErrorState();
-    }
-
-    if (loading) {
-      return this.renderLoading();
-    }
-
-    const { kernelError } = this.props;
-
-    const combinedErrors = [];
-    if (Array.isArray(errors)) {
-      combinedErrors.push(...errors);
-    }
-    if (kernelError !== null) {
-      combinedErrors.push(...kernelError);
-    }
-
-    return this.renderForm(combinedErrors);
-  };
-
-  renderLoading = () => <CircleProgress />;
-
-  renderErrorState = () => (
-    <ErrorState errorText="Unable to load configurations." />
-  );
-
-  renderForm = (errors?: APIError[]) => {
-    const { onClose, maxMemory, classes, readOnly, kernels } = this.props;
-
-    const {
-      counter,
-      fields: {
-        useCustomRoot,
-        label,
-        kernel,
-        comments,
-        memory_limit,
-        run_level,
-        virt_mode,
-        helpers,
-        root_device
-      },
-      submitting
-    } = this.state;
-
-    const errorFor = getAPIErrorsFor(
-      {
-        label: 'label',
-        kernel: 'kernel',
-        comments: 'comments',
-        memory_limit: 'memory limit',
-        run_level: 'run level',
-        virt_mode: 'virtualization mode',
-        root_device: 'root device'
-      },
-      errors
-    );
-
-    const generalError = errorFor('none');
-
-    const availableDevices = {
-      disks: this.props.disks,
-      volumes: this.props.volumes
-    };
-
-    const pathsOptions = [
-      { label: '/dev/sda', value: '/dev/sda' },
-      { label: '/dev/sdb', value: '/dev/sdb' },
-      { label: '/dev/sdc', value: '/dev/sdc' },
-      { label: '/dev/sdd', value: '/dev/sdd' },
-      { label: '/dev/sde', value: '/dev/sde' },
-      { label: '/dev/sdf', value: '/dev/sdf' },
-      { label: '/dev/sdg', value: '/dev/sdg' },
-      { label: '/dev/sdh', value: '/dev/sdh' }
-    ];
-
-    return (
-      <React.Fragment>
-        {generalError && (
-          <Notice error errorGroup="linode-config-dialog" text={generalError} />
-        )}
-        <Grid
-          item
-          xs={12}
-          className={classes.section}
-          updateFor={[
-            errorFor('label'),
-            errorFor('comments'),
-            label,
-            comments,
-            classes
-          ]}
-        >
-          <Typography variant="h3">Label and Comments</Typography>
-          <TextField
-            label="Label"
-            required
-            value={label}
-            onChange={this.handleChangeLabel}
-            errorText={errorFor('label')}
-            errorGroup="linode-config-dialog"
-            disabled={readOnly}
-          />
-
-          <TextField
-            label="Comments"
-            value={comments}
-            onChange={this.handleChangeComments}
-            multiline={true}
-            rows={3}
-            errorText={errorFor('comments')}
-            errorGroup="linode-config-dialog"
-            disabled={readOnly}
-          />
-        </Grid>
-
-        <Divider className={classes.divider} />
-
-        <Grid
-          item
-          xs={12}
-          className={classes.section}
-          updateFor={[virt_mode, classes]}
-        >
-          <Typography variant="h3">Virtual Machine</Typography>
-          <FormControl>
-            <FormLabel
-              htmlFor="virt_mode"
-              component="label"
-              disabled={readOnly}
-              aria-describedby="virtModeCaption"
-            >
-              VM Mode
-            </FormLabel>
-            <RadioGroup
-              aria-label="virt_mode"
-              name="virt_mode"
-              value={virt_mode}
-              onChange={this.handleChangeVirtMode}
-            >
-              <FormControlLabel
-                value="paravirt"
-                label="Paravirtualization"
-                disabled={readOnly}
-                control={<Radio />}
-              />
-              <FormControlLabel
-                value="fullvirt"
-                label="Full virtualization"
-                disabled={readOnly}
-                control={<Radio />}
-              />
-              <FormHelperText id="virtModeCaption">
-                Controls if devices inside your virtual machine are
-                paravirtualized or fully virtualized. Paravirt is what you want,
-                unless you&apos;re doing weird things.
-              </FormHelperText>
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-
-        <Divider className={classes.divider} style={{ marginTop: 0 }} />
-
-        <Grid
-          item
-          xs={12}
-          className={classes.section}
-          updateFor={[
-            counter,
-            kernel,
-            this.state.fields.setMemoryLimit,
-            kernels,
-            errorFor('kernel'),
-            run_level,
-            memory_limit,
-            errorFor('memory_limit'),
-            classes
-          ]}
-        >
-          <Typography variant="h3">Boot Settings</Typography>
-          {kernels && (
-            <KernelSelect
-              kernels={kernels}
-              selectedKernel={kernel}
-              onChange={this.handleChangeKernel}
-              readOnly={readOnly}
-              errorText={errorFor('kernel')}
-            />
-          )}
-
-          <FormControl
-            updateFor={[run_level, classes]}
-            fullWidth
-            disabled={readOnly}
-          >
-            <FormLabel htmlFor="run_level" component="label">
-              Run Level
-            </FormLabel>
-            <RadioGroup
-              aria-label="run_level"
-              name="run_level"
-              value={run_level}
-              onChange={this.handleChangeRunLevel}
-            >
-              <FormControlLabel
-                value="default"
-                label="Run Default Level"
-                disabled={readOnly}
-                control={<Radio />}
-              />
-              <FormControlLabel
-                value="single"
-                label="Single user mode"
-                disabled={readOnly}
-                control={<Radio />}
-              />
-              <FormControlLabel
-                value="binbash"
-                label="init=/bin/bash"
-                disabled={readOnly}
-                control={<Radio />}
-              />
-            </RadioGroup>
-          </FormControl>
-
-          {/*
-                it's important to note here that if the memory limit
-                is set to 0, this config is going to use 100% of the
-                Linode's RAM. Otherwise, it only uses the limit
-                explicitly set by the user.
-
-                So to make this more clear to the user, we're going to
-                hide the option to change the RAM limit unless the
-                user explicity selects the option to change the
-                memory limit.
-              */}
-          <FormControl updateFor={[this.state.fields.setMemoryLimit, classes]}>
-            <FormLabel
-              htmlFor="memory_limit"
-              component="label"
-              disabled={readOnly}
-            >
-              Memory Limit
-            </FormLabel>
-            <RadioGroup
-              aria-label="memory_limit"
-              name="memory_limit"
-              value={this.state.fields.setMemoryLimit}
-              onChange={this.handleToggleMemoryLimit}
-            >
-              <FormControlLabel
-                value="no_limit"
-                label="Do not set any limits on memory usage"
-                disabled={readOnly}
-                control={<Radio />}
-              />
-              <FormControlLabel
-                value="set_limit"
-                label="Limit the amount of RAM this config uses"
-                disabled={readOnly}
-                control={<Radio />}
-              />
-            </RadioGroup>
-          </FormControl>
-
-          {this.state.fields.setMemoryLimit === 'set_limit' && (
-            <TextField
-              type="number"
-              label="Memory Limit Allotment (in MB)"
-              value={memory_limit}
-              min={0}
-              max={maxMemory}
-              onChange={this.handleMemoryLimitChange}
-              helperText={`Max: ${maxMemory} MB`}
-              errorText={errorFor('memory_limit')}
-              disabled={readOnly}
-            />
-          )}
-        </Grid>
-
-        <Divider className={classes.divider} />
-
-        <Grid item xs={12} className={classes.section}>
-          <Typography variant="h3">Block Device Assignment</Typography>
-          <DeviceSelection
-            counter={counter}
-            slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
-            devices={availableDevices}
-            onChange={this.handleDevicesChanges}
-            getSelected={slot => pathOr('', [slot], this.state.fields.devices)}
-            disabled={readOnly}
-          />
-          <Button
-            className={classes.button}
-            buttonType="secondary"
-            superCompact
-            onClick={() => this.setState({ counter: this.state.counter + 1 })}
-            disabled={readOnly || counter >= 6}
-          >
-            Add a Device
-          </Button>
-
-          <FormControl fullWidth>
-            <FormControlLabel
-              label="Use Custom Root"
-              control={
-                <Toggle
-                  checked={useCustomRoot}
-                  onChange={this.handleUseCustomRootChange}
-                  disabled={readOnly}
-                />
-              }
-            />
-            {!useCustomRoot ? (
-              <Select
-                options={pathsOptions}
-                label="Root Device"
-                defaultValue={pathsOptions.find(
-                  device => device.value === root_device
-                )}
-                onChange={this.handleRootDeviceChange}
-                name="root_device"
-                id="root_device"
-                errorText={errorFor('root_device')}
-                placeholder="None"
-                disabled={readOnly}
-                isClearable={false}
-              />
-            ) : (
-              <TextField
-                label="Custom"
-                value={root_device}
-                onChange={this.handleRootDeviceChangeTextfield}
-                inputProps={{ name: 'root_device', id: 'root_device' }}
-                fullWidth
-                errorText={errorFor('root_device')}
-                errorGroup="linode-config-dialog"
-                disabled={readOnly}
-              />
-            )}
-          </FormControl>
-        </Grid>
-
-        <Divider className={classes.divider} />
-
-        <Grid item xs={12} className={classes.section}>
-          <Typography variant="h3">Filesystem/Boot Helpers</Typography>
-          <FormControl
-            updateFor={[
-              helpers.distro,
-              helpers.updatedb_disabled,
-              helpers.modules_dep,
-              helpers.devtmpfs_automount,
-              helpers.network,
-              classes
-            ]}
-            fullWidth
-          >
-            <FormGroup>
-              <FormControlLabel
-                label="Enable distro helper"
-                className={classes.formControlToggle}
-                control={
-                  <Toggle
-                    checked={helpers.distro}
-                    onChange={this.handleToggleDistroHelper}
-                    disabled={readOnly}
-                    tooltipText="Helps maintain correct inittab/upstart console device"
-                  />
-                }
-              />
-
-              <FormControlLabel
-                label="Disable updatedb"
-                className={classes.formControlToggle}
-                control={
-                  <Toggle
-                    checked={helpers.updatedb_disabled}
-                    onChange={this.handleToggleUpdateDBHelper}
-                    disabled={readOnly}
-                    tooltipText="Disables updatedb cron job to avoid disk thrashing"
-                  />
-                }
-              />
-
-              <FormControlLabel
-                label="Enable modules.dep helper"
-                className={classes.formControlToggle}
-                control={
-                  <Toggle
-                    checked={helpers.modules_dep}
-                    onChange={this.handleToggleModulesDepHelper}
-                    disabled={readOnly}
-                    tooltipText="Creates a modules dependency file for the kernel you run"
-                  />
-                }
-              />
-
-              <FormControlLabel
-                label="Auto-mount devtmpfs"
-                className={classes.formControlToggle}
-                control={
-                  <Toggle
-                    checked={helpers.devtmpfs_automount}
-                    onChange={this.handleToggleAutoMountHelper}
-                    disabled={readOnly}
-                    tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
-                  />
-                }
-              />
-
-              <FormControlLabel
-                label="Auto-configure networking"
-                className={classes.formControlToggle}
-                control={
-                  <Toggle
-                    checked={helpers.network}
-                    onChange={this.handleAuthConfigureNetworkHelper}
-                    disabled={readOnly}
-                    tooltipText={
-                      <>
-                        Automatically configure static networking
-                        <ExternalLink
-                          text="(more info)"
-                          link="https://www.linode.com/docs/platform/network-helper/"
-                        />
-                      </>
-                    }
-                    interactive={true}
-                  />
-                }
-              />
-            </FormGroup>
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <ActionsPanel>
-            <Button
-              onClick={this.onSubmit}
-              buttonType="primary"
-              disabled={readOnly}
-              loading={submitting}
-            >
-              Submit
-            </Button>
-            <Button buttonType="secondary" className="cancel" onClick={onClose}>
-              Cancel
-            </Button>
-          </ActionsPanel>
-        </Grid>
-      </React.Fragment>
-    );
-  };
-
-  isOpening = (prevState: boolean, currentState: boolean) =>
-    prevState === false && currentState === true;
-
-  onSubmit = () => {
-    const {
-      linodeConfigId,
-      createLinodeConfig,
-      updateLinodeConfig
-    } = this.props;
-
-    /**
-     * This is client-side validation to patch an API bug.
-     * Currently, POST requests don't verify that the selected root device
-     * has a valid device attached to it. PUT requests do this, however,
-     * leading to a discrepancy. If root_device is sda and sda is null,
-     * we should head off that error before submitting the request.
-     * @todo remove once the API has fixed this behavior.
-     */
-
-    const isValid = validateConfigData(this.state.fields);
-    if (!isValid) {
-      return this.setState({
-        errors: [
-          {
-            reason:
-              'You must select a valid Disk or Volume as your root device.',
-            field: 'root_device'
-          }
-        ]
-      });
-    }
-
-    this.setState({ submitting: true });
-
-    const configData = this.convertStateToData(this.state.fields);
-
-    /** Editing */
-    if (linodeConfigId) {
-      return updateLinodeConfig(linodeConfigId, configData)
-        .then(_ => {
-          this.setState({ submitting: false });
-          this.props.onClose();
-        })
-        .catch(error => {
-          this.setState({
-            errors: getAPIErrorOrDefault(
-              error,
-              'Unable to update config. Please try again.'
-            ),
-            submitting: false
-          });
-        });
-    }
-
-    /** Creating */
-    return createLinodeConfig(configData)
-      .then(_ => {
-        this.setState({ submitting: false });
-        this.props.onClose();
-      })
-      .catch(error =>
-        this.setState({
-          errors: getAPIErrorOrDefault(
-            error,
-            'Unable to create config. Please try again.'
-          ),
-          submitting: false
-        })
-      );
-  };
-
-  convertStateToData = (state: EditableFields) => {
+  const convertStateToData = (state: EditableFields) => {
     const {
       label,
       devices,
@@ -745,7 +169,7 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
       virt_mode,
       setMemoryLimit,
       helpers,
-      root_device
+      root_device,
     } = state;
 
     return {
@@ -758,83 +182,553 @@ class LinodeConfigDialog extends React.Component<CombinedProps, State> {
       run_level,
       virt_mode,
       helpers,
-      root_device
+      root_device,
     };
   };
 
-  /**
-   * this is not responsible for setting the memory limits.
-   * This is instead only responsible for indicating that "yes I would
-   * like the option to set a memory limit to be visible."
-   */
-  handleToggleMemoryLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const limit = e.target.value as 'no_limit' | 'set_limit';
-    this.setState({ fields: { ...this.state.fields, setMemoryLimit: limit } });
+  const onSubmit = (values: EditableFields) => {
+    const { linodeConfigId, createLinodeConfig, updateLinodeConfig } = props;
+
+    formik.setSubmitting(true);
+
+    const configData = convertStateToData(values);
+
+    /** Editing */
+    if (linodeConfigId) {
+      return updateLinodeConfig(linodeConfigId, configData)
+        .then((_) => {
+          formik.setSubmitting(false);
+          onClose();
+        })
+        .catch((error) => {
+          const mapErrorToStatus = (generalError: string) =>
+            formik.setStatus({ generalError });
+          formik.setSubmitting(false);
+          handleFieldErrors(formik.setErrors, error);
+          handleGeneralErrors(
+            mapErrorToStatus,
+            error,
+            'An unexpected error occurred.'
+          );
+          scrollErrorIntoView('linode-config-dialog');
+        });
+    }
+
+    /** Creating */
+    return createLinodeConfig(configData)
+      .then((_) => {
+        formik.setSubmitting(false);
+        onClose();
+      })
+      .catch((error) => {
+        const mapErrorToStatus = (generalError: string) =>
+          formik.setStatus({ generalError });
+        formik.setSubmitting(false);
+        handleFieldErrors(formik.setErrors, error);
+        handleGeneralErrors(
+          mapErrorToStatus,
+          error,
+          'An unexpected error occurred.'
+        );
+        scrollErrorIntoView('linode-config-dialog');
+      });
   };
 
-  /** Helper to update a slice of state.  */
-  updateField = (field: Partial<EditableFields>) =>
-    this.setState({ fields: { ...this.state.fields, ...field } });
+  React.useEffect(() => {
+    if (open) {
+      /**
+       * If config is defined, we're editing. Set the state
+       * to the values of the config.
+       */
+      if (config) {
+        const devices = createStringsFromDevices(config.devices);
+        const initialCounter = Object.keys(devices).length;
+        setCounter(initialCounter);
+        formik.resetForm({
+          values: {
+            useCustomRoot: isUsingCustomRoot(config.root_device),
+            label: config.label,
+            devices,
+            kernel: config.kernel,
+            comments: config.comments,
+            memory_limit: config.memory_limit,
+            run_level: config.run_level,
+            virt_mode: config.virt_mode,
+            helpers: config.helpers,
+            root_device: config.root_device,
+            setMemoryLimit:
+              config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
+          },
+        });
+      } else {
+        // Create mode; make sure loading/error states are cleared.
+        formik.resetForm();
+      }
+    }
+  }, [open, config]);
 
-  handleAuthConfigureNetworkHelper = (e: any, result: boolean) =>
-    this.updateField({
-      helpers: { ...this.state.fields.helpers, network: result }
-    });
+  const isLoading = props.kernelsLoading;
 
-  handleToggleAutoMountHelper = (e: any, result: boolean) =>
-    this.updateField({
-      helpers: { ...this.state.fields.helpers, devtmpfs_automount: result }
-    });
+  const generalError = formik.status?.generalError;
 
-  handleToggleModulesDepHelper = (e: any, result: boolean) =>
-    this.updateField({
-      helpers: { ...this.state.fields.helpers, modules_dep: result }
-    });
+  const availableDevices = {
+    disks: props.disks,
+    volumes: props.volumes,
+  };
 
-  handleToggleUpdateDBHelper = (e: any, result: boolean) =>
-    this.updateField({
-      helpers: { ...this.state.fields.helpers, updatedb_disabled: result }
-    });
+  /**
+   * Form change handlers
+   * (where formik.handleChange is insufficient)
+   */
 
-  handleToggleDistroHelper = (e: any, result: boolean) =>
-    this.updateField({
-      helpers: { ...this.state.fields.helpers, distro: result }
-    });
+  const handleChangeKernel = React.useCallback(
+    (selected: Item<string>) => {
+      formik.setFieldValue('kernel', selected?.value ?? '');
+    },
+    [formik]
+  );
 
-  handleRootDeviceChange = (e: Item<string>) =>
-    this.updateField({ root_device: e.value || '' });
+  const handleDevicesChanges = React.useCallback(
+    (slot: string, value: string) => {
+      formik.setFieldValue(`devices[${slot}]`, value);
+    },
+    []
+  );
 
-  handleRootDeviceChangeTextfield = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.updateField({ root_device: e.target.value || '' });
+  return (
+    <Dialog
+      title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`}
+      open={open}
+      onClose={onClose}
+      fullHeight
+      fullWidth
+    >
+      <Grid container direction="row">
+        <DialogContent loading={isLoading} errors={props.kernelError}>
+          <React.Fragment>
+            {generalError && (
+              <Grid item>
+                <Notice
+                  error
+                  errorGroup="linode-config-dialog"
+                  text={generalError}
+                  spacingBottom={0}
+                />
+              </Grid>
+            )}
+            <Grid
+              item
+              xs={12}
+              updateFor={[
+                formik.errors.label,
+                formik.errors.comments,
+                values.label,
+                values.comments,
+                formik.handleChange,
+                classes,
+              ]}
+            >
+              <Typography variant="h3">Label and Comments</Typography>
+              <TextField
+                label="Label"
+                name="label"
+                required
+                value={values.label}
+                onChange={formik.handleChange}
+                errorText={formik.errors.label}
+                errorGroup="linode-config-dialog"
+                disabled={readOnly}
+              />
 
-  handleUseCustomRootChange = (e: any, useCustomRoot: boolean) =>
-    this.updateField({ useCustomRoot });
+              <TextField
+                label="Comments"
+                name="comments"
+                value={values.comments}
+                onChange={formik.handleChange}
+                multiline={true}
+                rows={3}
+                errorText={formik.errors.comments}
+                errorGroup="linode-config-dialog"
+                disabled={readOnly}
+              />
+            </Grid>
 
-  handleDevicesChanges = (slot: string, value: string) =>
-    this.updateField({
-      devices: { ...this.state.fields.devices, [slot]: value }
-    });
+            <Divider className={classes.divider} />
 
-  handleMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.updateField({ memory_limit: e.target.valueAsNumber || 0 });
+            <Grid
+              item
+              xs={12}
+              className={classes.section}
+              updateFor={[values.virt_mode, classes]}
+            >
+              <Typography variant="h3">Virtual Machine</Typography>
+              <FormControl>
+                <FormLabel
+                  htmlFor="virt_mode"
+                  component="label"
+                  disabled={readOnly}
+                  aria-describedby="virtModeCaption"
+                >
+                  VM Mode
+                </FormLabel>
+                <RadioGroup
+                  aria-label="virt_mode"
+                  name="virt_mode"
+                  value={values.virt_mode}
+                  onChange={formik.handleChange}
+                >
+                  <FormControlLabel
+                    value="paravirt"
+                    label="Paravirtualization"
+                    disabled={readOnly}
+                    control={<Radio />}
+                  />
+                  <FormControlLabel
+                    value="fullvirt"
+                    label="Full virtualization"
+                    disabled={readOnly}
+                    control={<Radio />}
+                  />
+                  <FormHelperText id="virtModeCaption">
+                    Controls if devices inside your virtual machine are
+                    paravirtualized or fully virtualized. Paravirt is what you
+                    want, unless you&apos;re doing weird things.
+                  </FormHelperText>
+                </RadioGroup>
+              </FormControl>
+            </Grid>
 
-  handleChangeRunLevel = (
-    e: any,
-    run_level: 'binbash' | 'default' | 'single'
-  ) => this.updateField({ run_level });
+            <Divider className={classes.divider} style={{ marginTop: 0 }} />
 
-  handleChangeVirtMode = (e: any, virt_mode: 'fullvirt' | 'paravirt') =>
-    this.updateField({ virt_mode });
+            <Grid
+              item
+              xs={12}
+              className={classes.section}
+              updateFor={[
+                counter,
+                values.kernel,
+                values.setMemoryLimit,
+                kernels,
+                formik.errors.kernel,
+                values.run_level,
+                values.memory_limit,
+                formik.errors.memory_limit,
+                classes,
+              ]}
+            >
+              <Typography variant="h3">Boot Settings</Typography>
+              {kernels && (
+                <KernelSelect
+                  kernels={kernels}
+                  selectedKernel={values.kernel}
+                  onChange={handleChangeKernel}
+                  readOnly={readOnly}
+                  errorText={formik.errors.kernel}
+                />
+              )}
 
-  handleChangeComments = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.updateField({ comments: e.target.value || '' });
+              <FormControl
+                updateFor={[values.run_level, classes]}
+                fullWidth
+                disabled={readOnly}
+              >
+                <FormLabel htmlFor="run_level" component="label">
+                  Run Level
+                </FormLabel>
+                <RadioGroup
+                  aria-label="run_level"
+                  name="run_level"
+                  value={values.run_level}
+                  onChange={formik.handleChange}
+                >
+                  <FormControlLabel
+                    value="default"
+                    label="Run Default Level"
+                    disabled={readOnly}
+                    control={<Radio />}
+                  />
+                  <FormControlLabel
+                    value="single"
+                    label="Single user mode"
+                    disabled={readOnly}
+                    control={<Radio />}
+                  />
+                  <FormControlLabel
+                    value="binbash"
+                    label="init=/bin/bash"
+                    disabled={readOnly}
+                    control={<Radio />}
+                  />
+                </RadioGroup>
+              </FormControl>
 
-  handleChangeKernel = (e: Item<string>) =>
-    this.updateField({ kernel: e.value });
+              {/*
+                it's important to note here that if the memory limit
+                is set to 0, this config is going to use 100% of the
+                Linode's RAM. Otherwise, it only uses the limit
+                explicitly set by the user.
 
-  handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.updateField({ label: e.target.value || '' });
+                So to make this more clear to the user, we're going to
+                hide the option to change the RAM limit unless the
+                user explicity selects the option to change the
+                memory limit.
+              */}
+              <FormControl updateFor={[values.setMemoryLimit, classes]}>
+                <FormLabel
+                  htmlFor="memory_limit"
+                  component="label"
+                  disabled={readOnly}
+                >
+                  Memory Limit
+                </FormLabel>
+                <RadioGroup
+                  aria-label="memory_limit"
+                  name="setMemoryLimit"
+                  value={values.setMemoryLimit}
+                  onChange={formik.handleChange}
+                >
+                  <FormControlLabel
+                    value="no_limit"
+                    label="Do not set any limits on memory usage"
+                    disabled={readOnly}
+                    control={<Radio />}
+                  />
+                  <FormControlLabel
+                    value="set_limit"
+                    label="Limit the amount of RAM this config uses"
+                    disabled={readOnly}
+                    control={<Radio />}
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              {values.setMemoryLimit === 'set_limit' && (
+                <TextField
+                  type="number"
+                  name="memory_limit"
+                  label="Memory Limit Allotment (in MB)"
+                  value={values.memory_limit}
+                  min={0}
+                  max={maxMemory}
+                  onChange={formik.handleChange}
+                  helperText={`Max: ${maxMemory} MB`}
+                  errorText={formik.errors.memory_limit}
+                  disabled={readOnly}
+                />
+              )}
+            </Grid>
+
+            <Divider className={classes.divider} />
+
+            <Grid item xs={12} className={classes.section}>
+              <Typography variant="h3">Block Device Assignment</Typography>
+              <DeviceSelection
+                counter={counter}
+                slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
+                devices={availableDevices}
+                onChange={handleDevicesChanges}
+                getSelected={(slot) => pathOr('', [slot], values.devices)}
+                disabled={readOnly}
+              />
+              <Button
+                className={classes.button}
+                buttonType="secondary"
+                superCompact
+                onClick={() => setCounter((counter) => counter + 1)}
+                disabled={readOnly || counter >= 6}
+              >
+                Add a Device
+              </Button>
+
+              <FormControl fullWidth>
+                <FormControlLabel
+                  label="Use Custom Root"
+                  name="useCustomRoot"
+                  control={
+                    <Toggle
+                      checked={values.useCustomRoot}
+                      onChange={formik.handleChange}
+                      disabled={readOnly}
+                    />
+                  }
+                />
+                {!values.useCustomRoot ? (
+                  <Select
+                    options={pathsOptions}
+                    label="Root Device"
+                    defaultValue={pathsOptions.find(
+                      (device) => device.value === values.root_device
+                    )}
+                    onChange={formik.handleChange}
+                    name="root_device"
+                    id="root_device"
+                    errorText={formik.errors.root_device}
+                    placeholder="None"
+                    disabled={readOnly}
+                    isClearable={false}
+                  />
+                ) : (
+                  <TextField
+                    label="Custom"
+                    name="root_device"
+                    value={values.root_device}
+                    onChange={formik.handleChange}
+                    inputProps={{ name: 'root_device', id: 'root_device' }}
+                    fullWidth
+                    errorText={formik.errors.root_device}
+                    errorGroup="linode-config-dialog"
+                    disabled={readOnly}
+                  />
+                )}
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} className={classes.section}>
+              <Typography variant="h3">Network Interfaces</Typography>
+            </Grid>
+
+            <Divider className={classes.divider} />
+
+            <Grid item xs={12} className={classes.section}>
+              <Typography variant="h3">Filesystem/Boot Helpers</Typography>
+              <FormControl
+                updateFor={[
+                  values.helpers.distro,
+                  values.helpers.updatedb_disabled,
+                  values.helpers.modules_dep,
+                  values.helpers.devtmpfs_automount,
+                  values.helpers.network,
+                  classes,
+                ]}
+                fullWidth
+              >
+                <FormGroup>
+                  <FormControlLabel
+                    label="Enable distro helper"
+                    name="helpers.distro"
+                    className={classes.formControlToggle}
+                    control={
+                      <Toggle
+                        checked={values.helpers.distro}
+                        onChange={formik.handleChange}
+                        disabled={readOnly}
+                        tooltipText="Helps maintain correct inittab/upstart console device"
+                      />
+                    }
+                  />
+
+                  <FormControlLabel
+                    label="Disable updatedb"
+                    name="helpers.updatedb_disabled"
+                    className={classes.formControlToggle}
+                    control={
+                      <Toggle
+                        checked={values.helpers.updatedb_disabled}
+                        onChange={formik.handleChange}
+                        disabled={readOnly}
+                        tooltipText="Disables updatedb cron job to avoid disk thrashing"
+                      />
+                    }
+                  />
+
+                  <FormControlLabel
+                    label="Enable modules.dep helper"
+                    name="helpers.modules_dep"
+                    className={classes.formControlToggle}
+                    control={
+                      <Toggle
+                        checked={values.helpers.modules_dep}
+                        onChange={formik.handleChange}
+                        disabled={readOnly}
+                        tooltipText="Creates a modules dependency file for the kernel you run"
+                      />
+                    }
+                  />
+
+                  <FormControlLabel
+                    label="Auto-mount devtmpfs"
+                    name="helpers.devtmpfs_automount"
+                    className={classes.formControlToggle}
+                    control={
+                      <Toggle
+                        checked={values.helpers.devtmpfs_automount}
+                        onChange={formik.handleChange}
+                        disabled={readOnly}
+                        tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
+                      />
+                    }
+                  />
+
+                  <FormControlLabel
+                    label="Auto-configure networking"
+                    name="helpers.network"
+                    className={classes.formControlToggle}
+                    control={
+                      <Toggle
+                        checked={values.helpers.network}
+                        onChange={formik.handleChange}
+                        disabled={readOnly}
+                        tooltipText={
+                          <>
+                            Automatically configure static networking
+                            <ExternalLink
+                              text="(more info)"
+                              link="https://www.linode.com/docs/platform/network-helper/"
+                            />
+                          </>
+                        }
+                        interactive={true}
+                      />
+                    }
+                  />
+                </FormGroup>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <ActionsPanel>
+                <Button
+                  onClick={formik.submitForm}
+                  buttonType="primary"
+                  disabled={readOnly}
+                  loading={formik.isSubmitting}
+                >
+                  Submit
+                </Button>
+                <Button
+                  buttonType="secondary"
+                  className="cancel"
+                  onClick={onClose}
+                >
+                  Cancel
+                </Button>
+              </ActionsPanel>
+            </Grid>
+          </React.Fragment>
+        </DialogContent>
+      </Grid>
+    </Dialog>
+  );
+};
+
+interface ConfigFormProps {
+  loading: boolean;
+  errors: APIError[] | null;
+  children: JSX.Element;
 }
+
+const DialogContent: React.FC<ConfigFormProps> = (props) => {
+  const { loading, errors } = props;
+
+  if (loading) {
+    return <CircleProgress />;
+  }
+
+  if (errors) {
+    return <ErrorState errorText="Unable to load configurations." />;
+  }
+
+  return props.children;
+};
 
 const isUsingCustomRoot = (value: string) =>
   [
@@ -845,21 +739,8 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sde',
     '/dev/sdf',
     '/dev/sdg',
-    '/dev/sdh'
+    '/dev/sdh',
   ].includes(value) === false;
-
-const validateConfigData = (configData: EditableFields) => {
-  /**
-   * Whatever disk is selected for root_disk can't have a value of null ('none'
-   * in our form state).
-   *
-   */
-  const rootDevice = pathOr('none', [0], configData.root_device.match(/sd./));
-  const selectedDisk = pathOr('none', ['devices', rootDevice], configData);
-  return selectedDisk !== 'none';
-};
-
-const styled = withStyles(styles);
 
 interface StateProps {
   disks: ExtendedDisk[];
@@ -875,18 +756,16 @@ interface LinodeContextProps {
 }
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
-
   withLinodeDetailContext(
     ({ linode, createLinodeConfig, updateLinodeConfig }) => ({
       disks: linode._disks.map((disk: Disk) => ({
         ...disk,
-        _id: `disk-${disk.id}`
+        _id: `disk-${disk.id}`,
       })),
       linodeId: linode.id,
       readOnly: linode._permissions === 'read_only',
       createLinodeConfig,
-      updateLinodeConfig
+      updateLinodeConfig,
     })
   ),
 

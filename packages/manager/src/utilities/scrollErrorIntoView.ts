@@ -8,9 +8,9 @@ const scrollErrorIntoView = (
   const element = document.querySelectorAll(errorScrollClassSelector)[0];
   if (element) {
     element.scrollIntoView({
-      behavior: options?.behavior ?? 'smooth',
-      block: options?.block ?? 'start',
-      inline: options?.inline ?? 'nearest'
+      behavior: options?.behavior ?? 'auto',
+      block: options?.block ?? 'center',
+      inline: options?.inline ?? 'nearest',
     });
   }
 };
