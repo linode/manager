@@ -2,7 +2,7 @@ import { Formik, FormikBag } from 'formik';
 import {
   CreateFirewallPayload,
   CreateFirewallSchema,
-  Firewall
+  Firewall,
 } from '@linode/api-v4/lib/firewalls';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
@@ -19,7 +19,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { predefinedFirewalls } from '../shared';
 
@@ -35,17 +35,19 @@ export type CombinedProps = Props;
 const initialValues: CreateFirewallPayload = {
   label: '',
   rules: {
+    inbound_policy: 'DROP',
+    outbound_policy: 'ACCEPT',
     inbound: [
       ...predefinedFirewalls.ssh.inbound,
-      ...predefinedFirewalls.dns.inbound
-    ]
+      ...predefinedFirewalls.dns.inbound,
+    ],
   },
   devices: {
-    linodes: []
-  }
+    linodes: [],
+  },
 };
 
-const AddFirewallDrawer: React.FC<CombinedProps> = props => {
+const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
   const { onClose, onSubmit, ...restOfDrawerProps } = props;
 
   /**
@@ -57,10 +59,10 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   const regions = useRegionsQuery().data ?? [];
 
   const regionsWithFirewalls = regions
-    .filter(thisRegion =>
+    .filter((thisRegion) =>
       thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
     )
-    .map(thisRegion => thisRegion.id);
+    .map((thisRegion) => thisRegion.id);
 
   const submitForm = (
     values: CreateFirewallPayload,
@@ -94,7 +96,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         onClose();
       })
-      .catch(err => {
+      .catch((err) => {
         const mapErrorToStatus = (generalError: string) =>
           setStatus({ generalError });
 
@@ -121,7 +123,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
           handleBlur,
           handleSubmit,
           isSubmitting,
-          setFieldValue
+          setFieldValue,
         }) => {
           const generalError =
             status?.generalError ||
@@ -160,7 +162,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
                 errorText={errors.label}
                 onBlur={handleBlur}
                 inputProps={{
-                  autoFocus: true
+                  autoFocus: true,
                 }}
               />
               <LinodeMultiSelect
@@ -170,7 +172,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
                 helperText={`Assign one or more Linodes to this firewall. You can add
                  Linodes later if you want to customize your rules first. Only Linodes in
                  regions that support Firewalls (${arrayToList(
-                   regionsWithFirewalls.map(thisId => dcDisplayNames[thisId])
+                   regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId])
                  )}) will be displayed as options.`}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>
