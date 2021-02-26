@@ -182,16 +182,14 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
               </TableContentWrapper>
             </TableBody>
           </Table>
-          {results > pageSize ? (
-            <PaginationFooter
-              count={results}
-              handlePageChange={handlePageChange}
-              handleSizeChange={handlePageSizeChange}
-              page={page}
-              pageSize={pageSize}
-              eventCategory="Entity Transfer Table"
-            />
-          ) : null}
+          <PaginationFooter
+            count={results}
+            handlePageChange={handlePageChange}
+            handleSizeChange={handlePageSizeChange}
+            page={page}
+            pageSize={pageSize}
+            eventCategory="Entity Transfer Table"
+          />
         </Accordion>
         {transferTypeIsPending ? (
           // Only Pending Transfers can be canceled.
