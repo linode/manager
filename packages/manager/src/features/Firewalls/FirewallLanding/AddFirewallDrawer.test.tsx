@@ -9,7 +9,7 @@ const props: CombinedProps = {
   onClose: jest.fn(),
   onSubmit: jest.fn().mockResolvedValue({}),
   title: 'Add a Firewall',
-  open: true
+  open: true,
 };
 
 describe('Add Firewall Drawer', () => {
@@ -35,15 +35,17 @@ describe('Add Firewall Drawer', () => {
     await waitFor(() =>
       expect(props.onSubmit).toHaveBeenCalledWith({
         devices: {
-          linodes: []
+          linodes: [],
         },
         label: undefined,
         rules: {
+          inbound_policy: 'DROP',
+          outbound_policy: 'ACCEPT',
           inbound: [
             ...predefinedFirewalls.ssh.inbound,
-            ...predefinedFirewalls.dns.inbound
-          ]
-        }
+            ...predefinedFirewalls.dns.inbound,
+          ],
+        },
       })
     );
   });
