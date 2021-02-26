@@ -1,8 +1,8 @@
-import { Formik } from 'formik';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Region } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
+import { Formik } from 'formik';
 import * as React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -26,6 +26,7 @@ import {
   hasGrant,
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
+import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -44,7 +45,6 @@ import LabelField from '../VolumeDrawer/LabelField';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
-import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
@@ -54,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(4),
+    '& .MuiFormHelperText-root': {
+      marginBottom: theme.spacing(2),
+    },
   },
   sidebar: {
     [theme.breakpoints.down('sm')]: {
