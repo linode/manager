@@ -9,19 +9,19 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
-  StyleProps
+  StyleProps,
 } from 'src/containers/SummaryPanels.styles';
 import withImage from 'src/containers/withImage.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import {
   LinodeActionsProps,
-  withLinodeActions
+  withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
@@ -34,24 +34,24 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.between('sm', 'md')]: {
         flexBasis: '100%',
         maxWidth: '100%',
-        display: 'flex'
-      }
+        display: 'flex',
+      },
     },
     regionInner: {
       [theme.breakpoints.only('xs')]: {
-        padding: `0 ${theme.spacing(1)}px !important`
+        padding: `0 ${theme.spacing(1)}px !important`,
       },
       [theme.breakpoints.up('lg')]: {
         '&:first-of-type': {
           padding: `${theme.spacing(1)}px ${theme.spacing(
             1
-          )}px 0 ${theme.spacing(1)}px !important`
+          )}px 0 ${theme.spacing(1)}px !important`,
         },
         '&:last-of-type': {
-          padding: `0 ${theme.spacing(1)}px !important`
-        }
-      }
-    }
+          padding: `0 ${theme.spacing(1)}px !important`,
+        },
+      },
+    },
   });
 
 type CombinedProps = LinodeContextProps &
@@ -87,7 +87,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
       linodeIpv6,
       backupsEnabled,
       mostRecentBackup,
-      readOnly
+      readOnly,
     } = this.props;
 
     return (
@@ -169,14 +169,14 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeVolumes: linode._volumes,
   linodeVolumesError: linode._volumesError,
   readOnly: linode._permissions === 'read_only',
-  mostRecentBackup: linode.backups.last_successful
+  mostRecentBackup: linode.backups.last_successful,
 }));
 
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
   withLinodeActions,
   withImage<LinodeContextProps & WithImage, LinodeContextProps>(
-    props => props.linodeImageId,
+    (props) => props.linodeImageId,
     (ownProps, image) => ({ ...ownProps, image })
   ),
   localStyles

@@ -1,5 +1,6 @@
 import { Formik } from 'formik';
-import { Region } from '@linode/api-v4/lib/regions';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Region } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
@@ -19,28 +20,28 @@ import Tag from 'src/components/Tag';
 import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
 import ConfigSelect, {
-  initialValueDefaultId
+  initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
-import LinodeSelect from '../VolumeDrawer/LinodeSelect';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 import { ApplicationState } from 'src/store';
@@ -48,26 +49,26 @@ import { ApplicationState } from 'src/store';
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   container: {
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   sidebar: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: `0 !important`
+      marginTop: `0 !important`,
     },
     '& > div': {
       [theme.breakpoints.up('md')]: {
-        padding: `${theme.spacing(1)}px`
-      }
-    }
+        padding: `${theme.spacing(1)}px`,
+      },
+    },
   },
   copy: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3)
-  }
+    marginBottom: theme.spacing(3),
+  },
 }));
 
 interface Props {
@@ -82,9 +83,9 @@ interface Props {
 
 type CombinedProps = Props & VolumesRequests & StateProps;
 
-const CreateVolumeForm: React.FC<CombinedProps> = props => {
+const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { onSuccess, createVolume, disabled, origin, history } = props;
+  const { onSuccess, createVolume, disabled, origin, history, regions } = props;
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
 
@@ -96,6 +97,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
   const configErrorMessage = configsError?.read
     ? 'Unable to load Configs for this Linode.' // More specific than the API error message
     : undefined;
+
+  const regionsWithBlockStorage = regions
+    .filter((thisRegion) => thisRegion.capabilities.includes('Block Storage'))
+    .map((thisRegion) => thisRegion.id);
 
   return (
     <Formik
@@ -125,7 +130,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             config_id === initialValueDefaultId
               ? undefined
               : maybeCastToNumber(config_id),
-          tags: tags.map(v => v.value)
+          tags: tags.map((v) => v.value),
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
             resetForm({ values: initialValues });
@@ -140,7 +145,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             // GA Event
             sendCreateVolumeEvent(`${label}: ${size}GiB`, origin);
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -164,7 +169,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         setFieldValue,
         status,
         values,
-        touched
+        touched,
       }) => {
         const { region, linode_id, tags, config_id } = values;
 
@@ -180,26 +185,26 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         if (region) {
           displaySections.push({
             title: props.regions
-              .filter(c => c.id === region)
-              .map(eachRegion => eachRegion.country.toUpperCase())
+              .filter((c) => c.id === region)
+              .map((eachRegion) => eachRegion.country.toUpperCase())
               .join(),
             details: props.regions
-              .filter(c => c.id === region)
-              .map(eachRegion => dcDisplayNames[eachRegion.id])
-              .join()
+              .filter((c) => c.id === region)
+              .map((eachRegion) => dcDisplayNames[eachRegion.id])
+              .join(),
           });
         }
         if (linode_id !== initialValueDefaultId) {
           const linodeObject: any = getEntityByIDFromStore('linode', linode_id);
           displaySections.push({
             title: 'Attach To',
-            details: linodeObject ? linodeObject.label : null
+            details: linodeObject ? linodeObject.label : null,
           });
         }
         if (tags.length !== 0) {
           displaySections.push({
             title: 'Tags',
-            details: tags.map((tag, i) => <Tag key={i} label={tag.label} />)
+            details: tags.map((tag, i) => <Tag key={i} label={tag.label} />),
           });
         }
 
@@ -252,28 +257,32 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     disabled={disabled}
                   />
                   <RegionSelect
+                    isClearable
                     errorText={touched.region ? errors.region : undefined}
                     regions={props.regions
-                      .filter(eachRegion =>
-                        eachRegion.capabilities.some(eachCape =>
+                      .filter((eachRegion) =>
+                        eachRegion.capabilities.some((eachCape) =>
                           eachCape.match(/block/i)
                         )
                       )
-                      .map(eachRegion => ({
+                      .map((eachRegion) => ({
                         ...eachRegion,
-                        display: dcDisplayNames[eachRegion.id]
+                        display: dcDisplayNames[eachRegion.id],
                       }))}
                     name="region"
                     onBlur={handleBlur}
                     selectedID={values.region}
-                    handleSelection={value => setFieldValue('region', value)}
+                    handleSelection={(value) => {
+                      setFieldValue('region', value);
+                      setFieldValue('linode_id', initialValueDefaultId);
+                    }}
                     disabled={disabled}
                     styles={{
                       /** altering styles for mobile-view */
                       menuList: (base: any) => ({
                         ...base,
-                        maxHeight: `250px !important`
-                      })
+                        maxHeight: `250px !important`,
+                      }),
                     }}
                   />
                   <FormHelperText data-qa-volume-region>
@@ -281,15 +290,19 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     regions supporting block storage are displayed.
                   </FormHelperText>
                   <LinodeSelect
-                    error={linodeError || configErrorMessage}
+                    linodeError={linodeError || configErrorMessage}
                     name="linodeId"
                     onBlur={handleBlur}
-                    onChange={(id: number) => {
-                      setFieldValue('linode_id', id);
-                      setLinodeId(id);
+                    handleChange={(linode: Linode) => {
+                      setFieldValue('linode_id', linode.id);
+                      setFieldValue('region', linode.region);
+                      setLinodeId(linode.id);
                     }}
+                    selectedLinode={values.linode_id}
                     region={values.region}
-                    shouldOnlyDisplayRegionsWithBlockStorage={true}
+                    filterCondition={(linode: Linode) =>
+                      regionsWithBlockStorage.includes(linode.region)
+                    }
                     disabled={disabled}
                   />
                   <ConfigSelect
@@ -315,7 +328,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     name="tags"
                     label="Tags"
                     disabled={disabled}
-                    onChange={selected => setFieldValue('tags', selected)}
+                    onChange={(selected) => setFieldValue('tags', selected)}
                     value={values.tags}
                     menuPlacement="top"
                   />
@@ -352,10 +365,10 @@ interface FormState {
 const initialValues: FormState = {
   label: '',
   size: 20,
-  region: 'none',
+  region: '',
   linode_id: initialValueDefaultId,
   config_id: initialValueDefaultId,
-  tags: []
+  tags: [],
 };
 
 interface StateProps {
@@ -363,9 +376,9 @@ interface StateProps {
   origin?: VolumeDrawerOrigin;
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
-  origin: state.volumeDrawer.origin
+  origin: state.volumeDrawer.origin,
 });
 
 const connected = connect(mapStateToProps);

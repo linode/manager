@@ -11,32 +11,32 @@ import { ExtendedIssue } from 'src/store/managed/issues.actions';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(),
-    textAlign: 'center'
+    textAlign: 'center',
   },
   openTicketButton: {
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 12,
-      paddingRight: 12
-    }
+      paddingRight: 12,
+    },
   },
   happyTicket: {
-    color: theme.color.grey1
+    color: theme.color.grey1,
   },
   sadTicket: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 interface Props {
   issues: ExtendedIssue[];
 }
 
-export const MonitorTickets: React.FC<Props> = props => {
+export const MonitorTickets: React.FC<Props> = (props) => {
   const { issues } = props;
   const classes = useStyles();
   const history = useHistory();
 
-  const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
+  const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
 
   const hasIssues = openIssues.length > 0;
 
@@ -77,8 +77,8 @@ export const MonitorTickets: React.FC<Props> = props => {
                 pathname: '/support/tickets',
                 state: {
                   open: true,
-                  title: 'Managed monitor issue'
-                }
+                  title: 'Managed monitor issue',
+                },
               })
             }
             className={classes.openTicketButton}

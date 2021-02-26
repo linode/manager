@@ -9,13 +9,12 @@ import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
-  GroupType
+  GroupType,
 } from 'src/components/EnhancedSelect/Select';
 import Link from 'src/components/Link';
 import RegionOption, { RegionItem } from './RegionOption';
@@ -51,6 +50,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   selectedID: string | null;
   label?: string;
   helperText?: string;
+  isClearable?: boolean;
 }
 
 export const flags = {
@@ -70,28 +70,28 @@ export const flags = {
   eu: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   de: () => <DE width="32" height="24" viewBox="0 0 640 480" />,
   ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
-  in: () => <IN width="32" height="24" viewBox="0 0 640 480" />
+  in: () => <IN width="32" height="24" viewBox="0 0 640 480" />,
 };
 
 export const selectStyles = {
-  menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` })
+  menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` }),
 };
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
       '& g': {
         // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
-        clipPath: 'none !important' as 'none'
-      }
+        clipPath: 'none !important' as 'none',
+      },
     },
     '& #singapore, #japan': {
-      border: `1px solid ${theme.color.border3}`
-    }
-  }
+      border: `1px solid ${theme.color.border3}`,
+    },
+  },
 }));
 
 export const getRegionOptions = (regions: ExtendedRegion[]) => {
-  const groupedRegions = groupBy<ExtendedRegion>(thisRegion => {
+  const groupedRegions = groupBy<ExtendedRegion>((thisRegion) => {
     if (thisRegion.country.match(/(us|ca)/)) {
       return 'North America';
     }
@@ -116,7 +116,7 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
         {
           label: thisGroup,
           options: groupedRegions[thisGroup]
-            .map(thisRegion => ({
+            .map((thisRegion) => ({
               label: thisRegion.display,
               value: thisRegion.id,
               flag:
@@ -124,11 +124,11 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
               country: thisRegion.country,
               disabledMessage: thisRegion.disabled
                 ? atlantaDisabledMessage
-                : undefined
+                : undefined,
             }))
 
-            .sort(sortRegions)
-        }
+            .sort(sortRegions),
+        },
       ];
     },
     []
@@ -143,7 +143,7 @@ export const getSelectedRegionById = (
     (accum, thisGroup) => [...accum, ...thisGroup.options],
     []
   );
-  return regions.find(thisRegion => regionID === thisRegion.value);
+  return regions.find((thisRegion) => regionID === thisRegion.value);
 };
 
 const sortRegions = (region1: RegionItem, region2: RegionItem) => {
@@ -164,11 +164,12 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-const SelectRegionPanel: React.FC<Props> = props => {
+const SelectRegionPanel: React.FC<Props> = (props) => {
   const {
     label,
     disabled,
     handleSelection,
+    isClearable,
     helperText,
     regions,
     selectedID,
@@ -177,13 +178,17 @@ const SelectRegionPanel: React.FC<Props> = props => {
   } = props;
 
   const onChange = React.useCallback(
-    (selection: RegionItem) => {
+    (selection: RegionItem | null) => {
+      if (selection === null) {
+        handleSelection('');
+        return;
+      }
       if (selection.disabledMessage) {
         // React Select's disabled state should prevent anything
         // from firing, this is basic paranoia.
         return;
       }
-      handleSelection(selection.value);
+      handleSelection(selection?.value);
     },
     [handleSelection]
   );
@@ -195,7 +200,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
   return (
     <div className={classes.root}>
       <Select
-        isClearable={false}
+        isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
         value={getSelectedRegionById(selectedID || '', options)}
         label={label ?? 'Region'}
         disabled={disabled}
@@ -208,7 +213,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
         }
         styles={styles || selectStyles}
         textFieldProps={{
-          tooltipText: helperText
+          tooltipText: helperText,
         }}
         {...restOfReactSelectProps}
       />
@@ -216,4 +221,4 @@ const SelectRegionPanel: React.FC<Props> = props => {
   );
 };
 
-export default compose<Props, Props>(React.memo)(SelectRegionPanel);
+export default React.memo(SelectRegionPanel);
