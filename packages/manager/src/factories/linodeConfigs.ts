@@ -45,20 +45,20 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   kernel: 'linode/grub2',
   interfaces: {
     eth0: {
-      id: 111,
+      id: 3,
       devum: 1,
       label: 'Test eth0',
       purpose: 'public',
       ipam_address: '',
-      create_dt: createDate
+      create_dt: createDate,
     },
     eth1: {
-      id: 112,
+      id: 4,
       devum: 2,
       label: 'Test eth1',
       purpose: 'vlan',
       ipam_address: '10.0.0.1/24',
-      create_dt: createDate
-    }
-  }
+      create_dt: createDate,
+    },
+  },
 });
