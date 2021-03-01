@@ -2,7 +2,7 @@ import {
   formatNumber,
   formatPercentage,
   getMetrics,
-  getTotalTraffic
+  getTotalTraffic,
 } from './statMetrics';
 
 const data = [
@@ -13,7 +13,7 @@ const data = [
   [0, 0.7],
   [0, 1.2],
   [0, 0],
-  [0, 0]
+  [0, 0],
 ];
 
 describe('Stat Metrics', () => {
@@ -26,7 +26,7 @@ describe('Stat Metrics', () => {
     expect(
       getMetrics([
         [0, 0],
-        [0, 0]
+        [0, 0],
       ]).max
     ).toBe(0);
   });
@@ -37,20 +37,20 @@ describe('Stat Metrics', () => {
     expect(
       getMetrics([
         [0, 0],
-        [0, 0]
+        [0, 0],
       ]).average
     ).toBe(0);
     expect(
       getMetrics([
         [0, 0],
-        [0, 1]
+        [0, 1],
       ]).average
     ).toBe(0.5);
     expect(
       getMetrics([
         [0, 0],
         [0, 3],
-        [0, 12]
+        [0, 12],
       ]).average
     ).toBe(5);
   });
@@ -73,33 +73,33 @@ describe('Stat Metrics', () => {
       last: 0,
       length: 2,
       max: 0,
-      total: 0
+      total: 0,
     });
     expect(getMetrics([[], ['hello']] as any)).toEqual({
       average: 0,
       last: 0,
       length: 2,
       max: 0,
-      total: 0
+      total: 0,
     });
     expect(getMetrics([[], ['hello', 3]] as any)).toEqual({
       average: 1.5,
       last: 3,
       length: 2,
       max: 3,
-      total: 3
+      total: 3,
     });
     expect(
       getMetrics([
         [3, 'hello'],
-        ['hello', 3]
+        ['hello', 3],
       ] as any)
     ).toEqual({
       average: 1.5,
       last: 3,
       length: 2,
       max: 3,
-      total: 3
+      total: 3,
     });
   });
 });

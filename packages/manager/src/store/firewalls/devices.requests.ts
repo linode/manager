@@ -2,14 +2,14 @@ import {
   addFirewallDevice as _add,
   deleteFirewallDevice as _delete,
   FirewallDevice,
-  getFirewallDevices as _get
+  getFirewallDevices as _get,
 } from '@linode/api-v4/lib/firewalls';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
   addFirewallDeviceActions,
   getAllFirewallDevicesActions,
-  removeFirewallDeviceActions
+  removeFirewallDeviceActions,
 } from './devices.actions';
 
 const requestAll = (payload: {

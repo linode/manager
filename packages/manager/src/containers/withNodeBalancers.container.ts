@@ -21,7 +21,7 @@ export default <TInner extends {}, TOuter extends {}>(
       loading,
       error,
       itemsById,
-      results
+      results,
     } = state.__resources.nodeBalancers;
 
     /** itemsById looks like this

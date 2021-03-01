@@ -17,12 +17,12 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const LongviewActionMenu: React.FC<CombinedProps> = props => {
+const LongviewActionMenu: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientID,
     longviewClientLabel,
     triggerDeleteLongviewClient,
-    userCanModifyClient
+    userCanModifyClient,
   } = props;
 
   const actions: Action[] = [
@@ -34,8 +34,8 @@ const LongviewActionMenu: React.FC<CombinedProps> = props => {
         : 'Contact an account administrator for permission.',
       onClick: () => {
         triggerDeleteLongviewClient(longviewClientID, longviewClientLabel);
-      }
-    }
+      },
+    },
   ];
 
   return (

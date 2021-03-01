@@ -24,7 +24,7 @@ const mapStateToProps: MapState<
   const type = getLinodeType(entities, results, linodeType);
 
   return {
-    mutationAvailable: hasMutation(type)
+    mutationAvailable: hasMutation(type),
   };
 };
 

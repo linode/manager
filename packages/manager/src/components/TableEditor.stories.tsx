@@ -10,7 +10,7 @@ const linodeTableColumns = [
   { label: 'IP Address', id: 'linode-ips', selected: true },
   { label: 'Last Backup', id: 'linode-backups', selected: true },
   { label: 'Region', id: 'linode-region', selected: false },
-  { label: 'Tags', id: 'linode-tags', selected: true }
+  { label: 'Tags', id: 'linode-tags', selected: true },
 ];
 
 storiesOf('Table Editor', module).add('Default', () => (

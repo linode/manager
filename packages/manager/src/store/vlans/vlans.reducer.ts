@@ -8,7 +8,7 @@ import {
   onError,
   onGetAllSuccess,
   onStart,
-  setError
+  setError,
 } from '../store.helpers.tmp';
 import { MappedEntityState2 as MappedEntityState } from '../types';
 import {
@@ -16,7 +16,7 @@ import {
   deleteVlanActions,
   getVlansActions,
   attachVlanActions,
-  detachVlanActions
+  detachVlanActions,
 } from './vlans.actions';
 
 export type State = MappedEntityState<VLAN>;

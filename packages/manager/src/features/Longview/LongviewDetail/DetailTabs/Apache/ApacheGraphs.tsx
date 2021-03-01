@@ -5,7 +5,7 @@ import {
   makeStyles,
   Theme,
   WithTheme,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
@@ -13,7 +13,7 @@ import {
   convertNetworkToUnit,
   formatNetworkTooltip,
   generateNetworkUnits,
-  statMax
+  statMax,
 } from 'src/features/Longview/shared/utilities';
 import roundTo from 'src/utilities/roundTo';
 import { ApacheResponse, LongviewProcesses } from '../../../request.types';
@@ -22,15 +22,16 @@ import ProcessGraphs from '../ProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) +
-      2}px ${theme.spacing(5) + 4}px`
+    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) + 2}px ${
+      theme.spacing(5) + 4
+    }px`,
   },
   smallGraph: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(3) + 2
+      marginTop: theme.spacing(3) + 2,
     },
-    marginTop: theme.spacing(6) + 3
-  }
+    marginTop: theme.spacing(6) + 3,
+  },
 }));
 
 interface Props {
@@ -48,7 +49,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const ApacheGraphs: React.FC<CombinedProps> = props => {
+export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
     error,
@@ -60,7 +61,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
     theme,
     processesData,
     processesLoading,
-    processesError
+    processesError,
   } = props;
 
   const classes = useStyles();
@@ -101,7 +102,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
     showToday: isToday,
     loading,
     error,
-    nativeLegend: true
+    nativeLegend: true,
   };
 
   return (
@@ -116,8 +117,8 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                 label: 'Requests',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
-                data: _convertData(totalAccesses, start, end)
-              }
+                data: _convertData(totalAccesses, start, end),
+              },
             ]}
             {...graphProps}
           />
@@ -143,8 +144,8 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                       start,
                       end,
                       kilobytesToBytes
-                    )
-                  }
+                    ),
+                  },
                 ]}
                 {...graphProps}
               />
@@ -157,62 +158,62 @@ export const ApacheGraphs: React.FC<CombinedProps> = props => {
                     label: 'Waiting',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
-                    data: _convertData(workersWaiting, start, end)
+                    data: _convertData(workersWaiting, start, end),
                   },
                   {
                     label: 'Starting',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.starting,
-                    data: _convertData(workersStarting, start, end)
+                    data: _convertData(workersStarting, start, end),
                   },
                   {
                     label: 'Reading',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
-                    data: _convertData(workersReading, start, end)
+                    data: _convertData(workersReading, start, end),
                   },
                   {
                     label: 'Sending',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.sending,
-                    data: _convertData(workersSending, start, end)
+                    data: _convertData(workersSending, start, end),
                   },
                   {
                     label: 'Keepalive',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.keepAlive,
-                    data: _convertData(workersKeepAlive, start, end)
+                    data: _convertData(workersKeepAlive, start, end),
                   },
                   {
                     label: 'DNS Lookup',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.DNSLookup,
-                    data: _convertData(workersDNSLookup, start, end)
+                    data: _convertData(workersDNSLookup, start, end),
                   },
                   {
                     label: 'Closing',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.closing,
-                    data: _convertData(workersClosing, start, end)
+                    data: _convertData(workersClosing, start, end),
                   },
                   {
                     label: 'Logging',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.logging,
-                    data: _convertData(workersLogging, start, end)
+                    data: _convertData(workersLogging, start, end),
                   },
                   {
                     label: 'Finishing',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.finishing,
-                    data: _convertData(workersFinishing, start, end)
+                    data: _convertData(workersFinishing, start, end),
                   },
                   {
                     label: 'Cleanup',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.cleanup,
-                    data: _convertData(workersCleanup, start, end)
-                  }
+                    data: _convertData(workersCleanup, start, end),
+                  },
                 ]}
                 {...graphProps}
               />

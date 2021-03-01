@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 import Button from 'src/components/Button';
@@ -23,8 +23,8 @@ const styles = (theme: Theme) =>
     attachFileButton: {
       padding: '4px 8px 4px 4px',
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   });
 
 interface Props {

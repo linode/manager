@@ -5,7 +5,7 @@ const isExternal = (href: string) => {
   return href.match(/http/) || href.match(/mailto/);
 };
 
-export const Link: React.FC<LinkProps> = props => {
+export const Link: React.FC<LinkProps> = (props) => {
   const isLinkExternal = isExternal(props.to as string);
   return isLinkExternal ? (
     <a

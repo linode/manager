@@ -50,7 +50,7 @@ export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
       access_token: accessToken,
       destination,
       token_type: tokenType,
-      expires_in: expiresIn
+      expires_in: expiresIn,
     } = hashParams;
 
     /** If the access token wasn't returned, something is wrong and we should bail. */
@@ -94,7 +94,9 @@ interface DispatchProps {
   ) => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => {
   return {
     dispatchStartSession: (token, tokenType, expires) =>
       dispatch(
@@ -103,16 +105,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
             1
           )} ${token}`,
           scopes: '*',
-          expires
+          expires,
         })
-      )
+      ),
   };
 };
 
-const connected = connect(
-  undefined,
-  mapDispatchToProps
-);
+const connected = connect(undefined, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   connected,

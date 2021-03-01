@@ -6,5 +6,5 @@ export const DatabaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   id: Factory.each(() => v4()),
   status: 'running',
   created: '2020-10-01T00:00:00',
-  finished: '2020-10-01T00:00:25'
+  finished: '2020-10-01T00:00:25',
 });

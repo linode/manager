@@ -14,7 +14,7 @@ describe('Redux backups', () => {
           ...B.defaultState,
           error: apiError,
           enableErrors: [error],
-          autoEnrollError: 'Error'
+          autoEnrollError: 'Error',
         },
         B.handleOpen()
       );

@@ -8,7 +8,7 @@ import {
   onError,
   onGetAllSuccess,
   onStart,
-  setError
+  setError,
 } from '../store.helpers.tmp';
 import { MappedEntityState2 as MappedEntityState } from '../types';
 import {
@@ -16,7 +16,7 @@ import {
   deleteFirewallActions,
   getFirewalls,
   updateFirewallActions,
-  updateFirewallRulesActions
+  updateFirewallRulesActions,
 } from './firewalls.actions';
 
 export type State = MappedEntityState<Firewall>;

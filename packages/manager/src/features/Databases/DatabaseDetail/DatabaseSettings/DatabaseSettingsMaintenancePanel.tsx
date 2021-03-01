@@ -16,20 +16,20 @@ import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   maintenanceWrapper: {
-    display: 'flex'
+    display: 'flex',
   },
   chooseDay: {
     marginTop: 0,
     marginRight: theme.spacing(2),
-    minWidth: 150
+    minWidth: 150,
   },
   chooseTime: {
     marginTop: 0,
-    minWidth: 270
+    minWidth: 270,
   },
   timeHelperText: {
-    fontSize: '0.875em'
-  }
+    fontSize: '0.875em',
+  },
 }));
 
 interface Props {
@@ -39,7 +39,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props => {
+export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = (
+  props
+) => {
   const classes = useStyles();
   const timezone = useTimezone();
   const { updateDatabase } = useDatabases();
@@ -86,13 +88,13 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     'Wednesday',
     'Thursday',
     'Friday',
-    'Saturday'
-  ].map(thisDay => ({
+    'Saturday',
+  ].map((thisDay) => ({
     label: thisDay,
-    value: thisDay
+    value: thisDay,
   }));
 
-  const defaultDaySelection = daySelection.find(eachOption => {
+  const defaultDaySelection = daySelection.find((eachOption) => {
     return eachOption.value === maintenanceDay;
   });
 
@@ -112,7 +114,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     maintenanceWindowSelectOptions
   );
 
-  const defaultTimeSelection = windowSelection.find(eachOption => {
+  const defaultTimeSelection = windowSelection.find((eachOption) => {
     return eachOption.value === maintenanceTime;
   });
 
@@ -131,17 +133,17 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
 
     const maintenanceSchedule = {
       day: maintenanceDay as DatabaseMaintenanceSchedule['day'],
-      window: maintenanceTime as DatabaseMaintenanceSchedule['window']
+      window: maintenanceTime as DatabaseMaintenanceSchedule['window'],
     };
 
     updateDatabase(databaseID, {
-      maintenance_schedule: maintenanceSchedule
+      maintenance_schedule: maintenanceSchedule,
     })
       .then(() => {
         setSubmitting(false);
         setSuccess('Maintenance window changed successfully.');
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setErrors(
           getAPIErrorOrDefault(

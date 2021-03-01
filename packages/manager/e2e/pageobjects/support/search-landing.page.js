@@ -51,9 +51,7 @@ class SupportSearchLanding extends Page {
 
   resultSet(resultType) {
     this.resultsSection(resultType).WaitForDisplayed(constants.wait.normal);
-    return this.resultsSection(resultType)
-      .$('..')
-      .$$(this.searchResult);
+    return this.resultsSection(resultType).$('..').$$(this.searchResult);
   }
 }
 

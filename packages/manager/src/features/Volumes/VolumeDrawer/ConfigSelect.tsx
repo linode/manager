@@ -19,7 +19,7 @@ type CombinedProps = Props;
 
 export const initialValueDefaultId = -1;
 
-const ConfigSelect: React.FC<CombinedProps> = props => {
+const ConfigSelect: React.FC<CombinedProps> = (props) => {
   const { error, onChange, onBlur, linodeId, name, value, ...rest } = props;
 
   const { lastUpdated, error: configsError, loading, itemsById } = useSelector(
@@ -32,7 +32,7 @@ const ConfigSelect: React.FC<CombinedProps> = props => {
 
   const dispatch = useDispatch();
 
-  const configList = configs.map(config => {
+  const configList = configs.map((config) => {
     return { label: config.label, value: config.id };
   });
 
@@ -67,7 +67,7 @@ const ConfigSelect: React.FC<CombinedProps> = props => {
         <Select
           options={configList}
           name={name}
-          value={configList.find(thisConfig => thisConfig.value === value)}
+          value={configList.find((thisConfig) => thisConfig.value === value)}
           onChange={(e: Item) => {
             onChange(+e.value);
           }}

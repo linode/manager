@@ -1,6 +1,6 @@
 import {
   entityHasNeverBeenRequested,
-  shouldRequestEntity
+  shouldRequestEntity,
 } from './shouldRequestEntity';
 
 const baseEntity = {
@@ -8,7 +8,7 @@ const baseEntity = {
   error: {},
   loading: false,
   lastUpdated: 0,
-  results: 0
+  results: 0,
 };
 
 describe('Entity request helper logic', () => {
@@ -29,7 +29,7 @@ describe('Entity request helper logic', () => {
       expect(
         shouldRequestEntity({
           ...baseEntity,
-          lastUpdated: Date.now() - 60 * 60 * 1000 // one hour
+          lastUpdated: Date.now() - 60 * 60 * 1000, // one hour
         })
       ).toBe(true);
     });
@@ -38,7 +38,7 @@ describe('Entity request helper logic', () => {
       expect(
         shouldRequestEntity({
           ...baseEntity,
-          lastUpdated: Date.now() - 10000 // 10 seconds
+          lastUpdated: Date.now() - 10000, // 10 seconds
         })
       ).toBe(false);
     });

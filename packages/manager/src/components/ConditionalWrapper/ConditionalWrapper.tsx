@@ -19,7 +19,7 @@ interface Props {
   wrapper: (children: React.ReactNode) => React.ReactElement;
 }
 
-export const ConditionalWrapper: React.FC<Props> = props => {
+export const ConditionalWrapper: React.FC<Props> = (props) => {
   const { condition, wrapper, children } = props;
   return condition ? wrapper(children) : <>{children}</>;
 };

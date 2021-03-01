@@ -12,7 +12,7 @@ const classes = {
   searchBoxInner: '',
   searchHeading: '',
   searchField: '',
-  searchIcon: ''
+  searchIcon: '',
 };
 
 const props: CombinedProps = {
@@ -20,7 +20,7 @@ const props: CombinedProps = {
   searchAlgolia: jest.fn(),
   searchResults: [[], []],
   searchEnabled: true,
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 const propsWithMultiWordURLQuery = assocPath(

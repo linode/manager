@@ -4,7 +4,7 @@ import {
   Account,
   Invoice,
   InvoiceItem,
-  Payment
+  Payment,
 } from '@linode/api-v4/lib/account';
 import { splitEvery } from 'ramda';
 import { reportException } from 'src/exceptionReporting';
@@ -16,7 +16,7 @@ import {
   createInvoiceItemsTable,
   createInvoiceTotalsTable,
   createPaymentsTable,
-  createPaymentsTotalsTable
+  createPaymentsTotalsTable,
 } from './utils';
 
 const leftMargin = 30; // space that needs to be applied to every parent element
@@ -70,7 +70,7 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
     first_name,
     last_name,
     state,
-    zip
+    zip,
   } = account;
 
   const RightHeaderPadding = 300;
@@ -113,10 +113,10 @@ interface Title {
 const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFontSize(12);
   doc.setFontStyle('bold');
-  textStrings.forEach(eachString => {
+  textStrings.forEach((eachString) => {
     doc.text(eachString.text, eachString.leftMargin || leftMargin, y, {
       charSpace: 0.75,
-      maxWidth: 100
+      maxWidth: 100,
     });
   });
   // reset text format
@@ -147,7 +147,7 @@ export const printInvoice = (
     const itemsChunks = items ? splitEvery(itemsPerPage, items) : [[]];
 
     const doc = new jsPDF({
-      unit: 'px'
+      unit: 'px',
     });
 
     const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
@@ -190,7 +190,7 @@ export const printInvoice = (
       const rightHeaderYPosition = addRightHeader(doc, account);
 
       addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
-        text: `Invoice: #${invoiceId}`
+        text: `Invoice: #${invoiceId}`,
       });
 
       createInvoiceItemsTable(doc, itemsChunk);
@@ -205,13 +205,13 @@ export const printInvoice = (
 
     doc.save(`invoice-${date}.pdf`);
     return {
-      status: 'success'
+      status: 'success',
     };
   } catch (e) {
     reportException(Error('Error while generating Invoice PDF.'), e);
     return {
       status: 'error',
-      error: e
+      error: e,
     };
   }
 };
@@ -224,7 +224,7 @@ export const printPayment = (
   try {
     const date = formatDate(payment.date, { displayTime: true });
     const doc = new jsPDF({
-      unit: 'px'
+      unit: 'px',
     });
 
     doc.setFontSize(10);
@@ -243,7 +243,7 @@ export const printPayment = (
     );
     const rightHeaderYPosition = addRightHeader(doc, account);
     addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
-      text: `Receipt for Payment #${payment.id}`
+      text: `Receipt for Payment #${payment.id}`,
     });
 
     createPaymentsTable(doc, payment);
@@ -253,13 +253,13 @@ export const printPayment = (
     doc.save(`payment-${date}.pdf`);
 
     return {
-      status: 'success'
+      status: 'success',
     };
   } catch (e) {
     reportException(Error('Error while generating Payment PDF.'), e);
     return {
       status: 'error',
-      error: e
+      error: e,
     };
   }
 };

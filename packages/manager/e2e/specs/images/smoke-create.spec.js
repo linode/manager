@@ -6,7 +6,7 @@ import ConfigureImage from '../../pageobjects/configure-image.page';
 import {
   apiCreateLinode,
   apiDeleteAllLinodes,
-  apiDeletePrivateImages
+  apiDeletePrivateImages,
 } from '../../utils/common';
 
 describe('Images - Create Suite', () => {
@@ -30,7 +30,7 @@ describe('Images - Create Suite', () => {
   xit('should configure the image', () => {
     const imageConfig = {
       label: 'my-test-image',
-      description: 'some image description!'
+      description: 'some image description!',
     };
     ConfigureImage.configure(imageConfig);
   });

@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import {
   eventLabelGenerator,
-  eventMessageGenerator
+  eventMessageGenerator,
 } from 'src/eventMessageGenerator_CMR';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
@@ -19,20 +19,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   action: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    width: '100%'
+    width: '100%',
   },
   bar: {
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
   },
   icon: {
     marginRight: theme.spacing(2),
     '& svg': {
       height: 20,
-      width: 20
-    }
+      width: 20,
+    },
   },
   message: {
-    width: '100%'
+    width: '100%',
   },
   link: {
     color: theme.palette.text.primary,
@@ -40,9 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',
-      textDecorationColor: 'inherit'
-    }
-  }
+      textDecorationColor: 'inherit',
+    },
+  },
 }));
 
 interface Props {
@@ -52,7 +52,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const RenderProgressEvent: React.FC<Props> = props => {
+export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { event, onClose } = props;
   const classes = useStyles();
 
@@ -123,7 +123,7 @@ export const formatTimeRemaining = (time: string | null) => {
     const [hours, minutes, seconds] = time.split(':').map(Number);
     if (
       [hours, minutes, seconds].some(
-        thisNumber => typeof thisNumber === 'undefined'
+        (thisNumber) => typeof thisNumber === 'undefined'
       ) ||
       [hours, minutes, seconds].some(isNaN)
     ) {

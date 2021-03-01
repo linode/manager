@@ -10,7 +10,7 @@ export interface Props {
 
 const getFacilitiesList = (warnings: string[]) => (
   <ul>
-    {warnings.map(thisWarning => (
+    {warnings.map((thisWarning) => (
       <li
         key={`facility-outage-${thisWarning}`}
         data-testid={`facility-outage-${thisWarning}`}
@@ -59,15 +59,15 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
   );
 };
 
-export const RegionStatusBanner: React.FC<Props> = props => {
+export const RegionStatusBanner: React.FC<Props> = (props) => {
   const { regions } = props;
 
   const statusWarnings = regions
     .filter(
-      thisRegion =>
+      (thisRegion) =>
         thisRegion.status === 'outage' && !!dcDisplayNames[thisRegion.id]
     )
-    .map(thisRegion => dcDisplayNames[thisRegion.id]);
+    .map((thisRegion) => dcDisplayNames[thisRegion.id]);
 
   if (statusWarnings.length === 0) {
     return null;

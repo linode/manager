@@ -12,25 +12,27 @@ describe('getSearchEntities selector', () => {
   const mockState: any = {
     domains: { itemsById: apiResponseToMappedState(domains) },
     linodes: {
-      itemsById: apiResponseToMappedState(linodes)
+      itemsById: apiResponseToMappedState(linodes),
     },
     images: { itemsById: apiResponseToMappedState(images) },
     types: { entities: types },
     volumes: {
-      itemsById: volumes.reduce((result, c) => ({ ...result, [c.id]: c }), {})
+      itemsById: volumes.reduce((result, c) => ({ ...result, [c.id]: c }), {}),
     },
     nodeBalancers: {
-      itemsById: apiResponseToMappedState(nodeBalancers)
+      itemsById: apiResponseToMappedState(nodeBalancers),
     },
     kubernetes: {
-      itemsById: apiResponseToMappedState(kubernetesClusterFactory.buildList(2))
+      itemsById: apiResponseToMappedState(
+        kubernetesClusterFactory.buildList(2)
+      ),
     },
     nodePools: {
-      entities: []
+      entities: [],
     },
     buckets: {
-      data: []
-    }
+      data: [],
+    },
   };
   it('should return an array of SearchableItems', () => {
     const results = getSearchEntities(mockState);
@@ -52,8 +54,8 @@ describe('getSearchEntities selector', () => {
     getSearchEntities({
       ...mockState,
       linodes: {
-        itemsById: apiResponseToMappedState(updatedLinodes)
-      }
+        itemsById: apiResponseToMappedState(updatedLinodes),
+      },
     });
     expect(getSearchEntities.recomputations()).toEqual(1);
   });

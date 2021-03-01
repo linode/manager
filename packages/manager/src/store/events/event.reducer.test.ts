@@ -31,11 +31,11 @@ describe('events.reducer', () => {
               id: 11241778,
               label: 'node-server',
               type: 'linode',
-              url: '/v4/linode/instances/11241778'
+              url: '/v4/linode/instances/11241778',
             },
             status: 'finished',
             duration: 0,
-            message: null
+            message: null,
           },
           {
             id: 18022171,
@@ -52,12 +52,12 @@ describe('events.reducer', () => {
               id: 11642886,
               label: 'linode11642886',
               type: 'linode',
-              url: '/v4/linode/instances/11642886'
+              url: '/v4/linode/instances/11642886',
             },
             status: 'started',
             duration: 0,
-            message: null
-          }
+            message: null,
+          },
         ];
         const action = addEvents(events);
         const state = reducer(defaultState, action);

@@ -7,7 +7,7 @@ import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import withImagesContainer, {
-  WithImages
+  WithImages,
 } from 'src/containers/withImages.container';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -15,7 +15,7 @@ import StackScriptPanel from './StackScriptPanel';
 
 type CombinedProps = WithImages & RouteComponentProps<{}>;
 
-export const StackScriptsLanding: React.FC<CombinedProps> = props => {
+export const StackScriptsLanding: React.FC<CombinedProps> = (props) => {
   const { history, imagesData } = props;
   const { _loading } = useReduxLoad(['images']);
 
@@ -60,6 +60,6 @@ export default compose<CombinedProps, {}>(
     ...ownProps,
     imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
-    imagesError
+    imagesError,
   }))
 )(StackScriptsLanding);

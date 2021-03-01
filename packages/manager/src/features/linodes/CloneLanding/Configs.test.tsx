@@ -9,20 +9,20 @@ const mockHandleSelect = jest.fn();
 const props: Props = {
   configs: linodeConfigs,
   configSelection: { 9859511: { isSelected: false, associatedDiskIds: [] } },
-  handleSelect: (id: number) => mockHandleSelect(id)
+  handleSelect: (id: number) => mockHandleSelect(id),
 };
 
 describe('Configs', () => {
   it('renders a row for each config', () => {
     const { getByText } = render(wrapWithTheme(<Configs {...props} />));
-    linodeConfigs.forEach(eachConfig => {
+    linodeConfigs.forEach((eachConfig) => {
       expect(getByText(eachConfig.label)).toBeDefined();
     });
   });
 
   it('fires the handle event when clicked', () => {
     const { getByTestId } = render(wrapWithTheme(<Configs {...props} />));
-    linodeConfigs.forEach(eachConfig => {
+    linodeConfigs.forEach((eachConfig) => {
       const checkbox = getByTestId(`checkbox-${eachConfig.id}`).parentNode;
       fireEvent.click(checkbox as any);
       expect(mockHandleSelect).toHaveBeenCalledWith(eachConfig.id);

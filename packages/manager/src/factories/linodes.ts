@@ -7,7 +7,7 @@ import {
   LinodeSpecs,
   NetStats,
   Stats,
-  StatsData
+  StatsData,
 } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
 
@@ -16,7 +16,7 @@ export const linodeAlertsFactory = Factory.Sync.makeFactory<LinodeAlerts>({
   network_in: 0,
   network_out: 0,
   transfer_quota: 80,
-  io: 10000
+  io: 10000,
 });
 
 export const linodeSpecsFactory = Factory.Sync.makeFactory<LinodeSpecs>({
@@ -24,7 +24,7 @@ export const linodeSpecsFactory = Factory.Sync.makeFactory<LinodeSpecs>({
   memory: 2048,
   vcpus: 1,
   gpus: 0,
-  transfer: 2000
+  transfer: 2000,
 });
 
 export const generateLinodeStatSeries = (): [number, number][] => {
@@ -40,22 +40,22 @@ export const linodeNetStatsFactory = Factory.Sync.makeFactory<NetStats>({
   in: generateLinodeStatSeries(),
   out: generateLinodeStatSeries(),
   private_in: generateLinodeStatSeries(),
-  private_out: generateLinodeStatSeries()
+  private_out: generateLinodeStatSeries(),
 });
 
 export const statsDataFactory = Factory.Sync.makeFactory<StatsData>({
   cpu: generateLinodeStatSeries(),
   io: {
     io: generateLinodeStatSeries(),
-    swap: generateLinodeStatSeries()
+    swap: generateLinodeStatSeries(),
   },
   netv4: linodeNetStatsFactory.build(),
-  netv6: linodeNetStatsFactory.build()
+  netv6: linodeNetStatsFactory.build(),
 });
 
 export const linodeStatsFactory = Factory.Sync.makeFactory<Stats>({
   title: 'Some fake stats',
-  data: statsDataFactory.build()
+  data: statsDataFactory.build(),
 });
 
 export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
@@ -70,12 +70,12 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
         public: true,
         rdns: 'lixxx-xxxxxx.members.linode.com',
         linode_id: 1,
-        region: 'us-southeast'
-      }
+        region: 'us-southeast',
+      },
     ],
     private: [],
     shared: [],
-    reserved: []
+    reserved: [],
   },
   ipv6: {
     slaac: {
@@ -87,7 +87,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       rdns: null,
       linode_id: 1,
       region: 'us-southeast',
-      public: true
+      public: true,
     },
     link_local: {
       address: '2001:DB8::0000',
@@ -98,32 +98,32 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       rdns: null,
       linode_id: 1,
       region: 'us-southeast',
-      public: false
+      public: false,
     },
-    global: []
-  }
+    global: [],
+  },
 });
 
 export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   enabled: true,
   schedule: {
     day: 'Scheduling',
-    window: 'Scheduling'
+    window: 'Scheduling',
   },
-  last_successful: '2020-01-01'
+  last_successful: '2020-01-01',
 });
 
-export const linodeTransferFactory = Factory.Sync.makeFactory<
-  NetworkUtilization
->({
-  used: 13956637,
-  quota: 1950,
-  billable: 0
-});
+export const linodeTransferFactory = Factory.Sync.makeFactory<NetworkUtilization>(
+  {
+    used: 13956637,
+    quota: 1950,
+    billable: 0,
+  }
+);
 
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
-  id: Factory.each(i => i),
-  label: Factory.each(i => `linode-${i}`),
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `linode-${i}`),
   type: 'g6-standard-1',
   region: 'us-east',
   created: '2020-01-01',
@@ -138,5 +138,5 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   alerts: linodeAlertsFactory.build(),
   specs: linodeSpecsFactory.build(),
   tags: [],
-  backups: linodeBackupsFactory.build()
+  backups: linodeBackupsFactory.build(),
 });

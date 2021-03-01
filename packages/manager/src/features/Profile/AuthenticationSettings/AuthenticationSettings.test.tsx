@@ -5,7 +5,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   AuthenticationSettings,
-  CombinedProps
+  CombinedProps,
 } from './AuthenticationSettings';
 
 const ALLOWLIST = 'allowlisting-form';
@@ -16,7 +16,7 @@ const props: CombinedProps = {
   ipAllowlisting: true,
   twoFactor: true,
   username: 'username',
-  updateProfile: jest.fn()
+  updateProfile: jest.fn(),
 };
 
 describe('Authentication settings profile tab', () => {

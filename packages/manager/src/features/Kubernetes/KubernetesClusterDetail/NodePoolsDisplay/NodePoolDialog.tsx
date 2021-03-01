@@ -46,7 +46,7 @@ const renderActions = (
   );
 };
 
-const NodePoolDialog: React.FC<CombinedProps> = props => {
+const NodePoolDialog: React.FC<CombinedProps> = (props) => {
   const { error, loading, nodeCount, open, onClose, onDelete } = props;
 
   return (

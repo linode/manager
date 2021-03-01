@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DetachLinodeDialog: React.FC<CombinedProps> = props => {
+const DetachLinodeDialog: React.FC<CombinedProps> = (props) => {
   const { detachVlan } = useVlans();
 
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
@@ -41,11 +41,11 @@ const DetachLinodeDialog: React.FC<CombinedProps> = props => {
     setError(undefined);
 
     detachVlan(vlanID, [linodeID])
-      .then(_ => {
+      .then((_) => {
         setSubmitting(false);
         closeDialog();
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmitting(false);
         setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
@@ -76,7 +76,7 @@ interface ActionsProps {
   isSubmitting: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

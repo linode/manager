@@ -1,5 +1,5 @@
 import CssBaseline, {
-  CssBaselineProps as _CssBaselineProps
+  CssBaselineProps as _CssBaselineProps,
 } from '@material-ui/core/CssBaseline';
 
 /* tslint:disable-next-line:no-empty-interface */

@@ -8,7 +8,7 @@ import {
   CombinedProps,
   generateOptions,
   LinodeMultiSelect,
-  userSelectedAllLinodes
+  userSelectedAllLinodes,
 } from './LinodeMultiSelect';
 
 jest.mock('src/components/EnhancedSelect/Select');
@@ -23,19 +23,19 @@ const props: CombinedProps = {
   linodesLastUpdated: 1000,
   selectedLinodes: [],
   showAllOption: true,
-  getLinodes: jest.fn()
+  getLinodes: jest.fn(),
 };
 
 const allLinodesOption = { label: 'All Linodes', value: 'ALL' };
 
 const optionsWithSelectAll = [
   allLinodesOption,
-  { label: 'my-linode', value: 1234456 }
+  { label: 'my-linode', value: 1234456 },
 ];
 
 const optionsWithoutSelectAll = [
   { label: 'my-linode', value: 1234456 },
-  { label: 'my-linode-2', value: 999999 }
+  { label: 'my-linode-2', value: 999999 },
 ];
 
 describe('Linode Multi Select', () => {
@@ -68,7 +68,7 @@ describe('Linode Multi Select', () => {
 
     it('should return nothing if there is an error', () => {
       const options = generateOptions(false, true, linodes, [
-        { reason: 'an error ' }
+        { reason: 'an error ' },
       ]);
       expect(options).toEqual([]);
     });
@@ -109,7 +109,7 @@ describe('Linode Multi Select', () => {
 
       await waitFor(() =>
         fireEvent.change(getByTestId('select'), {
-          target: { value: [linodes[1].id] }
+          target: { value: [linodes[1].id] },
         })
       );
       expect(props.handleChange).toHaveBeenCalledWith([linodes[1].id]);
@@ -120,10 +120,10 @@ describe('Linode Multi Select', () => {
 
       await waitFor(() =>
         fireEvent.change(getByTestId('select'), {
-          target: { value: ['ALL'] }
+          target: { value: ['ALL'] },
         })
       );
-      expect(props.handleChange).toHaveBeenCalledWith(linodes.map(i => i.id));
+      expect(props.handleChange).toHaveBeenCalledWith(linodes.map((i) => i.id));
     });
   });
 });

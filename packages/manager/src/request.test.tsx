@@ -6,7 +6,7 @@ import store from './store';
 
 const baseErrorConfig: AxiosRequestConfig = {
   method: 'POST',
-  headers: {}
+  headers: {},
 };
 const baseError = {
   config: baseErrorConfig,
@@ -16,29 +16,29 @@ const baseError = {
     statusText: '',
     data: [],
     config: {},
-    headers: {}
+    headers: {},
   },
-  isAxiosError: true
+  isAxiosError: true,
 };
 const baseErrorWithJson = {
   ...baseError,
-  toJSON: () => baseError
+  toJSON: () => baseError,
 };
 
 const error400: AxiosError = {
   ...baseErrorWithJson,
   response: {
     ...baseError.response,
-    status: 400
-  }
+    status: 400,
+  },
 };
 
 const error401: AxiosError = {
   ...baseErrorWithJson,
   response: {
     ...baseError.response,
-    status: 401
-  }
+    status: 401,
+  },
 };
 
 describe('Expiring Tokens', () => {
@@ -47,7 +47,7 @@ describe('Expiring Tokens', () => {
       handleStartSession({
         token: 'helloworld',
         scopes: '*',
-        expires: 'never'
+        expires: 'never',
       })
     );
     const expireToken = handleError(error401);
@@ -60,7 +60,7 @@ describe('Expiring Tokens', () => {
       token: null,
       scopes: null,
       expiration: null,
-      loggedInAsCustomer: false
+      loggedInAsCustomer: false,
     });
     expireToken.catch((e: AxiosError) =>
       expect(e[0].reason).toMatch(/unexpected error/)
@@ -72,7 +72,7 @@ describe('Expiring Tokens', () => {
       handleStartSession({
         token: 'helloworld',
         scopes: '*',
-        expires: 'never'
+        expires: 'never',
       })
     );
     const expireToken = handleError(error400);
@@ -85,7 +85,7 @@ describe('Expiring Tokens', () => {
       token: 'helloworld',
       scopes: '*',
       expiration: 'never',
-      loggedInAsCustomer: false
+      loggedInAsCustomer: false,
     });
     expireToken.catch((e: AxiosError) =>
       expect(e[0].reason).toMatch(/unexpected error/)
@@ -104,7 +104,7 @@ describe('getURL', () => {
   it('replaces the API baseURL with the one from the environment', () => {
     const config = {
       baseURL: 'http://localhost:5000',
-      url: 'http://localhost:5000/profile'
+      url: 'http://localhost:5000/profile',
     };
     process.env.API_ROOT = 'https://api.linode.com/v4';
 
@@ -118,7 +118,7 @@ describe('injectEuuidToProfile', () => {
     data: profile,
     status: 200,
     config: { url: '/profile', method: 'get' },
-    headers: { 'x-customer-uuid': '1234' }
+    headers: { 'x-customer-uuid': '1234' },
   };
 
   it('injects the euuid on successful GET profile response ', () => {

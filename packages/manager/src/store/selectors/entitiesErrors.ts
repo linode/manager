@@ -81,6 +81,6 @@ export default createSelector<
       images ||
       kubernetes ||
       objectStorageClusters ||
-      objectStorageBuckets
+      objectStorageBuckets,
   })
 );

@@ -3,7 +3,7 @@ import {
   Theme,
   withStyles,
   WithStyles,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
@@ -35,38 +35,38 @@ const styles = (theme: Theme) =>
       width: '22%',
       textAlign: 'right',
       '&:last-child': {
-        paddingRight: 0
+        paddingRight: 0,
       },
       [theme.breakpoints.down('sm')]: {
-        width: '5%'
-      }
+        width: '5%',
+      },
     },
     actionInner: {
       display: 'flex',
       justifyContent: 'flex-end',
       marginRight: 1,
       '& a': {
-        lineHeight: '1rem'
-      }
+        lineHeight: '1rem',
+      },
     },
     bodyRow: {
       height: 'auto',
       '&:hover': {
         '& [data-qa-copy-ip]': {
-          opacity: 1
-        }
-      }
+          opacity: 1,
+        },
+      },
     },
     progressDisplay: {
-      display: 'inline-block'
+      display: 'inline-block',
     },
     statusCell: {
       whiteSpace: 'nowrap',
-      width: '17%'
+      width: '17%',
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
-        width: '20%'
+        width: '20%',
       },
       '& .data': {
         display: 'flex',
@@ -74,19 +74,19 @@ const styles = (theme: Theme) =>
         lineHeight: 1.2,
         marginRight: -12,
         [theme.breakpoints.up('md')]: {
-          minWidth: 200
-        }
+          minWidth: 200,
+        },
       },
       '& button': {
         color: theme.cmrTextColors.linkActiveLight,
         padding: '0 6px',
         position: 'relative',
-        top: 1
-      }
+        top: 1,
+      },
     },
     statusHelpIcon: {
       position: 'relative',
-      top: -2
+      top: -2,
     },
     statusLink: {
       backgroundColor: 'transparent',
@@ -96,14 +96,14 @@ const styles = (theme: Theme) =>
       padding: 0,
       '& p': {
         color: theme.cmrTextColors.linkActiveLight,
-        fontFamily: theme.font.bold
-      }
+        fontFamily: theme.font.bold,
+      },
     },
     planCell: {
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
     },
     ipCell: {
-      width: '14%'
+      width: '14%',
     },
     ipCellWrapper: {
       display: 'inline-flex',
@@ -112,33 +112,33 @@ const styles = (theme: Theme) =>
       '& *': {
         fontSize: '.875rem',
         paddingTop: 0,
-        paddingBottom: 0
+        paddingBottom: 0,
       },
       '& [data-qa-copy-ip]': {
-        opacity: 0
+        opacity: 0,
       },
       '& svg': {
-        marginTop: 2
-      }
+        marginTop: 2,
+      },
     },
     regionCell: {
-      width: '14%'
+      width: '14%',
     },
     tagCell: {
-      borderRight: 'none'
+      borderRight: 'none',
     },
     maintenanceOuter: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
 
     // The "Status" cell in the VLAN Detail context.
     vlan_Status: {
-      width: '14%'
+      width: '14%',
     },
     maintenanceTooltip: {
-      maxWidth: 300
-    }
+      maxWidth: 300,
+    },
   });
 
 export default withStyles(styles, { withTheme: true });

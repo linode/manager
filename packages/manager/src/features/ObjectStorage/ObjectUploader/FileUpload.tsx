@@ -19,12 +19,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:last-child ': {
       '&$overwriteNotice': {
         borderBottom: 0,
-        paddingBottom: theme.spacing(1)
-      }
-    }
+        paddingBottom: theme.spacing(1),
+      },
+    },
   },
   errorState: {
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   progressBar: {
     backgroundColor: theme.cmrBGColors.bgApp,
@@ -32,10 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: theme.spacing(5.25),
     width: '100%',
     position: 'absolute',
-    zIndex: 1
+    zIndex: 1,
   },
   barColorPrimary: {
-    backgroundColor: theme.cmrBorderColors.borderBillingSummary
+    backgroundColor: theme.cmrBorderColors.borderBillingSummary,
   },
   container: {
     display: 'flex',
@@ -43,39 +43,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     padding: theme.spacing(),
     position: 'relative',
-    zIndex: 2
+    zIndex: 2,
   },
   leftWrapper: {
     display: 'flex',
     alignItems: 'center',
-    marginRight: theme.spacing()
+    marginRight: theme.spacing(),
   },
   rightWrapper: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   iconRight: {
-    color: theme.cmrTextColors.headlineStatic
+    color: theme.cmrTextColors.headlineStatic,
   },
   error: {
     color: theme.color.red,
     '& g': {
-      stroke: theme.color.red
-    }
+      stroke: theme.color.red,
+    },
   },
   fileSize: {
-    marginRight: theme.spacing()
+    marginRight: theme.spacing(),
   },
   rotate: {
-    animation: '$rotate 2s linear infinite'
+    animation: '$rotate 2s linear infinite',
   },
   '@keyframes rotate': {
     from: {
-      transform: 'rotate(360deg)'
+      transform: 'rotate(360deg)',
     },
     to: {
-      transform: 'rotate(0deg)'
-    }
+      transform: 'rotate(0deg)',
+    },
   },
   overwriteNotice: {
     display: 'flex',
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(),
     paddingTop: 0,
     position: 'relative',
-    zIndex: 10
+    zIndex: 10,
   },
   actions: {
     display: 'flex',
@@ -93,12 +93,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& button': {
       padding: theme.spacing(),
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
+      marginRight: theme.spacing(),
     },
     '& button:last-child': {
-      marginRight: 0
-    }
-  }
+      marginRight: 0,
+    },
+  },
 }));
 
 interface Props {
@@ -112,19 +112,19 @@ interface Props {
   url?: string;
 }
 
-const FileUpload: React.FC<Props> = props => {
+const FileUpload: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const resumeUpload = () =>
     props.dispatch({
       type: 'RESUME_UPLOAD',
-      fileName: props.fileName
+      fileName: props.fileName,
     });
 
   const cancelOverwrite = () =>
     props.dispatch({
       type: 'CANCEL_OVERWRITE',
-      fileName: props.fileName
+      fileName: props.fileName,
     });
 
   const handleClickRow = () => {
@@ -137,7 +137,7 @@ const FileUpload: React.FC<Props> = props => {
     <div
       className={classNames({
         [classes.root]: true,
-        [classes.errorState]: props.error
+        [classes.errorState]: props.error,
       })}
       key={props.displayName}
       onClick={handleClickRow}
@@ -150,7 +150,7 @@ const FileUpload: React.FC<Props> = props => {
         value={props.percentCompleted}
         classes={{
           root: classes.progressBar,
-          barColorPrimary: classes.barColorPrimary
+          barColorPrimary: classes.barColorPrimary,
         }}
         className={classes.progressBar}
       />
@@ -159,7 +159,7 @@ const FileUpload: React.FC<Props> = props => {
           <Typography
             variant="body1"
             className={classNames({
-              [classes.error]: props.error
+              [classes.error]: props.error,
             })}
           >
             {props.displayName}
@@ -170,7 +170,7 @@ const FileUpload: React.FC<Props> = props => {
             variant="body1"
             className={classNames({
               [classes.fileSize]: true,
-              [classes.error]: props.error
+              [classes.error]: props.error,
             })}
           >
             {readableBytes(props.sizeInBytes).formatted}
@@ -185,7 +185,7 @@ const FileUpload: React.FC<Props> = props => {
             <CautionIcon
               className={classNames({
                 [classes.iconRight]: true,
-                [classes.error]: props.error
+                [classes.error]: props.error,
               })}
               height={22}
               width={22}

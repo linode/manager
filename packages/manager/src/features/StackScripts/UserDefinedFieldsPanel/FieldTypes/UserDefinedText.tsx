@@ -4,7 +4,7 @@ import AccessPanel from 'src/components/AccessPanel';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -15,8 +15,8 @@ const styles = () =>
   createStyles({
     root: {},
     accessPanel: {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   });
 
 interface Props {

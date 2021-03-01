@@ -15,7 +15,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import withProfile from 'src/containers/profile.container';
 import withLinodes, {
-  Props as LinodeProps
+  Props as LinodeProps,
 } from 'src/containers/withLinodes.container';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -54,7 +54,7 @@ export class RestoreToLinodeDrawer extends React.Component<
   defaultState = {
     overwrite: false,
     selectedLinode: 'none',
-    errors: []
+    errors: [],
   };
 
   mounted: boolean = false;
@@ -87,8 +87,8 @@ export class RestoreToLinodeDrawer extends React.Component<
         {
           errors: [
             ...(this.state.errors || []),
-            { field: 'linode_id', reason: 'You must select a Linode' }
-          ]
+            { field: 'linode_id', reason: 'You must select a Linode' },
+          ],
         },
         () => {
           scrollErrorIntoView();
@@ -101,7 +101,7 @@ export class RestoreToLinodeDrawer extends React.Component<
         this.reset();
         onSubmit();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         if (!this.mounted) {
           return;
         }
@@ -126,7 +126,7 @@ export class RestoreToLinodeDrawer extends React.Component<
 
   errorResources = {
     linode_id: 'Linode',
-    overwrite: 'Overwrite'
+    overwrite: 'Overwrite',
   };
 
   render() {
@@ -142,7 +142,7 @@ export class RestoreToLinodeDrawer extends React.Component<
     const selectError = Boolean(linodeError) || readOnly;
 
     const linodeOptions = this.props.linodesData
-      .filter(linode => linode.region === this.props.linodeRegion)
+      .filter((linode) => linode.region === this.props.linodeRegion)
       .map(({ label, id }) => {
         return { label, value: id };
       });
@@ -165,8 +165,8 @@ export class RestoreToLinodeDrawer extends React.Component<
           <Select
             textFieldProps={{
               dataAttrs: {
-                'data-qa-select-linode': true
-              }
+                'data-qa-select-linode': true,
+              },
             }}
             defaultValue={selectedLinode || ''}
             options={linodeOptions}
@@ -225,7 +225,7 @@ export class RestoreToLinodeDrawer extends React.Component<
 const enhanced = compose<CombinedProps, Props>(
   withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
     return {
-      profile
+      profile,
     };
   }),
   withLinodes()

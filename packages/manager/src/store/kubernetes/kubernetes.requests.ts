@@ -3,7 +3,7 @@ import {
   getKubernetesCluster,
   getKubernetesClusters,
   KubernetesCluster,
-  updateKubernetesCluster as _updateCluster
+  updateKubernetesCluster as _updateCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -12,19 +12,19 @@ import {
   deleteClusterActions,
   requestClusterActions,
   requestClustersActions,
-  updateClusterActions
+  updateClusterActions,
 } from './kubernetes.actions';
 import { requestNodePoolsForCluster } from './nodePools.requests';
 
 const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
-export const requestKubernetesClusters: ThunkActionCreator<Promise<
-  GetAllData<KubernetesCluster>
->> = () => dispatch => {
+export const requestKubernetesClusters: ThunkActionCreator<
+  Promise<GetAllData<KubernetesCluster>>
+> = () => (dispatch) => {
   dispatch(requestClustersActions.started());
 
   return getAllClusters()
-    .then(response => {
+    .then((response) => {
       let i = 0;
       for (; i < response.data.length; i++) {
         dispatch(
@@ -33,12 +33,12 @@ export const requestKubernetesClusters: ThunkActionCreator<Promise<
       }
       dispatch(
         requestClustersActions.done({
-          result: response
+          result: response,
         })
       );
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(requestClustersActions.failed({ error }));
       return error;
     });
@@ -48,17 +48,19 @@ type RequestClusterForStoreThunk = ThunkActionCreator<
   Promise<KubernetesCluster>,
   number
 >;
-export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
+export const requestClusterForStore: RequestClusterForStoreThunk = (
+  clusterID
+) => (dispatch) => {
   dispatch(requestClusterActions.started({ clusterID }));
   return getKubernetesCluster(clusterID)
-    .then(cluster => {
+    .then((cluster) => {
       dispatch(requestNodePoolsForCluster({ clusterID }));
       dispatch(
         requestClusterActions.done({ result: cluster, params: { clusterID } })
       );
       return cluster;
     })
-    .catch(err => {
+    .catch((err) => {
       dispatch(
         requestClusterActions.failed({ error: err, params: { clusterID } })
       );

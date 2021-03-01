@@ -6,14 +6,14 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'error' | 'warning' | 'success';
 
 const styles = (theme: Theme) => {
   const {
-    palette: { status }
+    palette: { status },
   } = theme;
   return createStyles({
     root: {
@@ -24,18 +24,18 @@ const styles = (theme: Theme) => {
       borderLeftColor: 'transparent',
       transition: theme.transitions.create(['background-color']),
       '&:hover': {
-        backgroundColor: theme.bg.offWhite
-      }
+        backgroundColor: theme.bg.offWhite,
+      },
     },
     error: {
-      borderLeftColor: status.errorDark
+      borderLeftColor: status.errorDark,
     },
     warning: {
-      borderLeftColor: status.warningDark
+      borderLeftColor: status.warningDark,
     },
     success: {
-      borderLeftColor: status.successDark
-    }
+      borderLeftColor: status.successDark,
+    },
   });
 };
 
@@ -50,7 +50,7 @@ interface Props extends MenuItemProps {
 
 type FinalProps = Props & WithStyles<ClassNames>;
 
-const EventListItem: React.FC<FinalProps> = props => {
+const EventListItem: React.FC<FinalProps> = (props) => {
   const {
     classes,
     title,
@@ -68,7 +68,7 @@ const EventListItem: React.FC<FinalProps> = props => {
         [classes.root]: true,
         [classes.error]: error,
         [classes.warning]: warning,
-        [classes.success]: success
+        [classes.success]: success,
       })}
       role="menu"
       {...rest}

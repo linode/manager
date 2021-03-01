@@ -19,7 +19,7 @@ const reply = supportReplyFactory.build();
 
 const props: Props = {
   reply: { ...reply, gravatarUrl: '' },
-  isCurrentUser: false
+  isCurrentUser: false,
 };
 
 describe('Expandable ticket panel', () => {
@@ -33,9 +33,9 @@ describe('Expandable ticket panel', () => {
       const replyFromLinode = {
         ...supportReplyFactory.build({
           created_by: 'Linode',
-          from_linode: true
+          from_linode: true,
         }),
-        gravatarUrl: ''
+        gravatarUrl: '',
       };
       renderWithTheme(
         <ExpandableTicketPanel {...props} reply={replyFromLinode} />
@@ -47,9 +47,9 @@ describe('Expandable ticket panel', () => {
       const replyFromLinode = {
         ...supportReplyFactory.build({
           created_by: 'Linode Trust & Safety',
-          from_linode: true
+          from_linode: true,
         }),
-        gravatarUrl: ''
+        gravatarUrl: '',
       };
       renderWithTheme(
         <ExpandableTicketPanel {...props} reply={replyFromLinode} />

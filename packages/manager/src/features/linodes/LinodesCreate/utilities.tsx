@@ -14,7 +14,7 @@ export const extendLinodes = (
   imagesData: Record<string, Image> = {},
   typesData: ExtendedType[] = []
 ): ExtendedLinode[] => {
-  return linodes.map(linode => {
+  return linodes.map((linode) => {
     /** get image data based on the Linode's image key */
     const linodeImageMetaData = imagesData[linode.image || ''];
 
@@ -24,7 +24,7 @@ export const extendLinodes = (
       subHeadings: formatLinodeSubheading(
         displayType(linode.type, typesData),
         linodeImageMetaData ? linodeImageMetaData.label : ''
-      )
+      ),
     };
   });
 };
@@ -43,14 +43,14 @@ export const getRegionIDFromLinodeID = (
   linodes: Linode[],
   id: number
 ): string | undefined => {
-  const thisLinode = linodes.find(linode => linode.id === id);
+  const thisLinode = linodes.find((linode) => linode.id === id);
   return thisLinode ? thisLinode.region : undefined;
 };
 
 export const gpuPlanText = (useTypography?: boolean): JSX.Element => {
   const gpuPlanTextSegments = [
     'Linode GPU plans have limited availability and may not be available at the time of your request. Some additional verification may be required to access these services. ',
-    'with information on getting started.'
+    'with information on getting started.',
   ];
 
   if (useTypography) {

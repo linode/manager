@@ -56,7 +56,7 @@ export const getTotalLinodes = (pools: PoolNodeWithPrice[]) => {
   }, 0);
 };
 
-const KubernetesDialog: React.FC<CombinedProps> = props => {
+const KubernetesDialog: React.FC<CombinedProps> = (props) => {
   const {
     clusterLabel,
     clusterPools,
@@ -64,7 +64,7 @@ const KubernetesDialog: React.FC<CombinedProps> = props => {
     loading,
     open,
     onClose,
-    onDelete
+    onDelete,
   } = props;
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled = confirmText !== clusterLabel;

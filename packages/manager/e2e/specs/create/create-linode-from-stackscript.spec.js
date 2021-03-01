@@ -45,7 +45,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
     dockerStackScript.click();
 
     const checkedRows = ConfigureLinode.stackScriptRows.filter(
-      row => row.$('[data-qa-radio]').getAttribute('data-qa-radio') === 'true'
+      (row) => row.$('[data-qa-radio]').getAttribute('data-qa-radio') === 'true'
     );
 
     expect(checkedRows.length).toEqual(1);

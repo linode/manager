@@ -17,8 +17,8 @@ class KubernetesEmptyState extends React.Component<Props> {
         buttonProps={[
           {
             onClick: () => this.props.history.push('/kubernetes/create'),
-            children: 'Create a Cluster'
-          }
+            children: 'Create a Cluster',
+          },
         ]}
       >
         {' '}

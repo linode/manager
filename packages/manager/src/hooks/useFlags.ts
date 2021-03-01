@@ -30,7 +30,7 @@ export const useFlags = () => {
     // !!! Override the CMR flag so that it's officially "released" !!!!
     // @todo: clean up all conditional logic based on this flag.
     cmr: true,
-    ...mockFlags
+    ...mockFlags,
   };
 };
 

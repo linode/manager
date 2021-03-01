@@ -6,12 +6,12 @@ import Form from 'src/components/core/Form';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import withVolumesRequest, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
@@ -34,14 +34,14 @@ interface FormState {
   tags: Tag[];
 }
 
-const RenameVolumeForm: React.FC<CombinedProps> = props => {
+const RenameVolumeForm: React.FC<CombinedProps> = (props) => {
   const {
     volumeId,
     volumeLabel,
     volumeTags,
     onClose,
     updateVolume,
-    readOnly
+    readOnly,
   } = props;
   const initialValues: FormState = { label: volumeLabel, tags: volumeTags };
 
@@ -59,14 +59,14 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
         updateVolume({
           volumeId,
           label,
-          tags: tags.map(v => v.value)
+          tags: tags.map((v) => v.value),
         })
-          .then(_ => {
+          .then((_) => {
             resetForm();
             updateVolumes$.next(true);
             onClose();
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to edit this Volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -92,7 +92,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
         setFieldValue,
         status,
         touched,
-        values
+        values,
       }) => {
         return (
           <Form>
@@ -129,7 +129,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
               }
               name="tags"
               label="Tags"
-              onChange={selected => setFieldValue('tags', selected)}
+              onChange={(selected) => setFieldValue('tags', selected)}
               value={values.tags}
               disabled={readOnly}
             />

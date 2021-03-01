@@ -1,5 +1,5 @@
 import CardActions, {
-  CardActionsProps as _CardActionsProps
+  CardActionsProps as _CardActionsProps,
 } from '@material-ui/core/CardActions';
 
 /* tslint:disable-next-line:no-empty-interface */

@@ -5,7 +5,7 @@ import {
   makeStyles,
   Theme,
   WithTheme,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
@@ -15,15 +15,16 @@ import ProcessGraphs from '../ProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) +
-      2}px ${theme.spacing(5) + 4}px`
+    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) + 2}px ${
+      theme.spacing(5) + 4
+    }px`,
   },
   smallGraph: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(3) + 2
+      marginTop: theme.spacing(3) + 2,
     },
-    marginTop: theme.spacing(6) + 3
-  }
+    marginTop: theme.spacing(6) + 3,
+  },
 }));
 
 interface Props {
@@ -41,7 +42,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const NGINXGraphs: React.FC<CombinedProps> = props => {
+export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
     error,
@@ -53,7 +54,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
     processesData,
     processesLoading,
     processesError,
-    theme
+    theme,
   } = props;
 
   const classes = useStyles();
@@ -65,7 +66,7 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
     timezone,
     loading,
     showToday: isToday,
-    nativeLegend: true
+    nativeLegend: true,
   };
 
   return (
@@ -81,8 +82,8 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                 label: 'Requests',
                 borderColor: 'transparent',
                 backgroundColor: theme.graphs.requests,
-                data: _convertData(data?.requests ?? [], start, end)
-              }
+                data: _convertData(data?.requests ?? [], start, end),
+              },
             ]}
             {...graphProps}
           />
@@ -99,14 +100,14 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                     label: 'Accepted',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.accepted,
-                    data: _convertData(data?.accepted_cons ?? [], start, end)
+                    data: _convertData(data?.accepted_cons ?? [], start, end),
                   },
                   {
                     label: 'Handled',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.connections.handled,
-                    data: _convertData(data?.handled_cons ?? [], start, end)
-                  }
+                    data: _convertData(data?.handled_cons ?? [], start, end),
+                  },
                 ]}
                 {...graphProps}
               />
@@ -119,20 +120,20 @@ export const NGINXGraphs: React.FC<CombinedProps> = props => {
                     label: 'Waiting',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.waiting,
-                    data: _convertData(data?.waiting ?? [], start, end)
+                    data: _convertData(data?.waiting ?? [], start, end),
                   },
                   {
                     label: 'Reading',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.reading,
-                    data: _convertData(data?.reading ?? [], start, end)
+                    data: _convertData(data?.reading ?? [], start, end),
                   },
                   {
                     label: 'Writing',
                     borderColor: 'transparent',
                     backgroundColor: theme.graphs.workers.writing,
-                    data: _convertData(data?.writing ?? [], start, end)
-                  }
+                    data: _convertData(data?.writing ?? [], start, end),
+                  },
                 ]}
                 {...graphProps}
               />

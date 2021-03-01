@@ -7,14 +7,14 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import { isType } from 'typescript-fsa';
 import { EntityError, RelationalMappedEntityState } from '../types';
 import {
   addFirewallDeviceActions,
   getAllFirewallDevicesActions,
-  removeFirewallDeviceActions
+  removeFirewallDeviceActions,
 } from './devices.actions';
 
 export type State = RelationalMappedEntityState<FirewallDevice, EntityError>;
@@ -25,7 +25,7 @@ export const defaultState: State = {};
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, getAllFirewallDevicesActions.started)) {
       const { firewallID } = action.payload;
       draft = ensureInitializedNestedState(draft, firewallID, { results: 0 });

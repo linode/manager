@@ -3,7 +3,7 @@ import { stringify } from 'querystring';
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import {
   authentication,
-  getEnvLocalStorageOverrides
+  getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
 import { v4 } from 'uuid';
 
@@ -30,7 +30,7 @@ export const genOAuthEndpoint = (
     scope,
     response_type: 'token',
     redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`,
-    state: nonce
+    state: nonce,
   };
 
   return `${loginRoot}/oauth/authorize?${stringify(query)}`;
@@ -80,7 +80,7 @@ export const revokeToken = (client_id: string, token: string) => {
     method: 'POST',
     data: stringify({ client_id, token }),
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-    }
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    },
   });
 };

@@ -11,16 +11,16 @@ import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   cellContents: {
-    paddingLeft: '1rem'
+    paddingLeft: '1rem',
   },
   actionCell: {
     padding: 0,
-    paddingRight: '0 !important'
+    paddingRight: '0 !important',
   },
   link: {
     ...theme.applyLinkStyles,
-    fontSize: '0.875rem'
-  }
+    fontSize: '0.875rem',
+  },
 }));
 
 interface Props {
@@ -36,7 +36,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const RenderTransferRow: React.FC<CombinedProps> = props => {
+export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   const {
     token,
     created,
@@ -45,7 +45,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = props => {
     status,
     transferType,
     handleCancelPendingTransferClick,
-    handleTokenClick
+    handleTokenClick,
   } = props;
 
   const classes = useStyles();

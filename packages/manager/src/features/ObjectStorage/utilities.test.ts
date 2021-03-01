@@ -8,7 +8,7 @@ import {
   isFile,
   isFolder,
   prefixArrayToString,
-  tableUpdateAction
+  tableUpdateAction,
 } from './utilities';
 
 const folder: ObjectStorageObject = {
@@ -16,28 +16,28 @@ const folder: ObjectStorageObject = {
   etag: null,
   last_modified: null,
   owner: null,
-  size: null
+  size: null,
 };
 const object1: ObjectStorageObject = {
   name: 'file1.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
-  size: 0
+  size: 0,
 };
 const object2: ObjectStorageObject = {
   name: 'my-folder/file2.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
-  size: 0
+  size: 0,
 };
 const object3: ObjectStorageObject = {
   name: 'my-folder/',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
-  size: 0
+  size: 0,
 };
 
 describe('Object Storage utilities', () => {
@@ -46,7 +46,7 @@ describe('Object Storage utilities', () => {
       expect(isFolder(folder)).toBe(true);
       const notAFolder = {
         ...folder,
-        etag: 'my-etag'
+        etag: 'my-etag',
       };
       expect(isFolder(notAFolder)).toBe(false);
       expect(isFolder(object1)).toBe(false);
@@ -136,16 +136,16 @@ describe('Object Storage utilities', () => {
     it('should return files', () => {
       expect(tableUpdateAction('', 'file.txt')).toEqual({
         type: 'FILE',
-        name: 'file.txt'
+        name: 'file.txt',
       });
       expect(tableUpdateAction('hello/', 'hello/file.txt')).toEqual({
         type: 'FILE',
-        name: 'file.txt'
+        name: 'file.txt',
       });
       expect(tableUpdateAction('hello/world/', 'hello/world/file.txt')).toEqual(
         {
           type: 'FILE',
-          name: 'file.txt'
+          name: 'file.txt',
         }
       );
     });
@@ -153,17 +153,17 @@ describe('Object Storage utilities', () => {
     it('should return folders', () => {
       expect(tableUpdateAction('', 'hello/file.txt')).toEqual({
         type: 'FOLDER',
-        name: 'hello'
+        name: 'hello',
       });
       expect(tableUpdateAction('hello/', 'hello/world/file.txt')).toEqual({
         type: 'FOLDER',
-        name: 'world'
+        name: 'world',
       });
       expect(
         tableUpdateAction('hello/world/', 'hello/world/path/file.txt')
       ).toEqual({
         type: 'FOLDER',
-        name: 'path'
+        name: 'path',
       });
     });
 
@@ -208,7 +208,7 @@ describe('Object Storage utilities', () => {
       validateForm,
       setFieldTouched,
       setFieldError,
-      handleSubmit
+      handleSubmit,
     } as any;
 
     it("doesn't call the confirmation handler if OBJ is active", async () => {

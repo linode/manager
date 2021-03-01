@@ -4,8 +4,8 @@ export const mockNodeBalancerActions = {
     getAllNodeBalancers: jest.fn(),
     createNodeBalancer: jest.fn(),
     deleteNodeBalancer: jest.fn(),
-    updateNodeBalancer: jest.fn()
-  }
+    updateNodeBalancer: jest.fn(),
+  },
 };
 
 export const modeNodeBalancerConfigActions = {
@@ -13,6 +13,6 @@ export const modeNodeBalancerConfigActions = {
     getAllNodeBalancerConfigs: jest.fn(),
     createNodeBalancerConfig: jest.fn(),
     updateNodeBalancerConfig: jest.fn(),
-    deleteNodeBalancerConfig: jest.fn()
-  }
+    deleteNodeBalancerConfig: jest.fn(),
+  },
 };

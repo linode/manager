@@ -11,8 +11,8 @@ import usePrevious from 'src/hooks/usePrevious';
 
 const useStyles = makeStyles((theme: Theme) => ({
   searchIcon: {
-    color: `${theme.color.grey1} !important`
-  }
+    color: `${theme.color.grey1} !important`,
+  },
 }));
 
 interface Props extends TextFieldProps {
@@ -28,7 +28,7 @@ interface Props extends TextFieldProps {
 
 type CombinedProps = Props;
 
-const DebouncedSearch: React.FC<CombinedProps> = props => {
+const DebouncedSearch: React.FC<CombinedProps> = (props) => {
   const {
     className,
     isSearching,
@@ -94,7 +94,7 @@ const DebouncedSearch: React.FC<CombinedProps> = props => {
         ) : (
           <React.Fragment />
         ),
-        ...InputProps
+        ...InputProps,
       }}
       {...restOfTextFieldProps}
     />

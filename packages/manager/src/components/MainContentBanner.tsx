@@ -5,7 +5,7 @@ import Grid from 'src/components/core/Grid';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import withPreferences, {
-  Props as PreferencesProps
+  Props as PreferencesProps,
 } from 'src/containers/preferences.container';
 import { compose } from 'recompose';
 
@@ -18,18 +18,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1110,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   header: {
     color: '#fff',
     textAlign: 'center',
     [theme.breakpoints.only('xs')]: {
-      paddingRight: 30
-    }
+      paddingRight: 30,
+    },
   },
   link: {
     color: '#fff',
-    textDecoration: 'underline'
+    textDecoration: 'underline',
   },
   closeIcon: {
     position: 'absolute',
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     border: 'none',
     color: theme.palette.text.primary,
-    backgroundColor: 'transparent'
-  }
+    backgroundColor: 'transparent',
+  },
 }));
 
 interface Props {
@@ -51,7 +51,7 @@ interface Props {
 
 type CombinedProps = Props & PreferencesProps;
 
-const MainContentBanner: React.FC<CombinedProps> = props => {
+const MainContentBanner: React.FC<CombinedProps> = (props) => {
   const {
     bannerText,
     url,
@@ -59,7 +59,7 @@ const MainContentBanner: React.FC<CombinedProps> = props => {
     bannerKey,
     getUserPreferences,
     updateUserPreferences,
-    onClose
+    onClose,
   } = props;
 
   const classes = useStyles();
@@ -67,17 +67,17 @@ const MainContentBanner: React.FC<CombinedProps> = props => {
   const dismiss = () => {
     onClose();
     getUserPreferences()
-      .then(preferences => {
+      .then((preferences) => {
         updateUserPreferences({
           ...preferences,
           main_content_banner_dismissal: {
             ...preferences.main_content_banner_dismissal,
-            [bannerKey]: true
-          }
+            [bannerKey]: true,
+          },
         });
       })
       // It's OK if this fails (the banner is still dismissed in the UI due to local state).
-      .catch(_ => null);
+      .catch((_) => null);
   };
 
   return (

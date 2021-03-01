@@ -4,5 +4,5 @@ import * as _MarkdownIt from 'markdown-it';
 // needs to be sanitized before rendered as HTML.
 export const unsafe_MarkdownIt = new _MarkdownIt({
   html: true,
-  linkify: true
+  linkify: true,
 });

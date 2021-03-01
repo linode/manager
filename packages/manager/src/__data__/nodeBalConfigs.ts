@@ -9,7 +9,7 @@ export const nodes: NodeBalancerConfigNode[] = [
     status: 'UP',
     config_id: 1,
     id: 571,
-    weight: 100
+    weight: 100,
   },
   {
     label: 'config 2',
@@ -19,7 +19,7 @@ export const nodes: NodeBalancerConfigNode[] = [
     status: 'UP',
     config_id: 1,
     id: 572,
-    weight: 100
+    weight: 100,
   },
   {
     label: 'config 3',
@@ -29,6 +29,6 @@ export const nodes: NodeBalancerConfigNode[] = [
     status: 'UP',
     config_id: 1,
     id: 573,
-    weight: 100
-  }
+    weight: 100,
+  },
 ];

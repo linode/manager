@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -15,18 +15,18 @@ const styles = (theme: Theme) =>
     guidance: {
       backgroundColor: theme.bg.offWhiteDT,
       borderTop: `1px solid ${theme.palette.divider}`,
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
     text: {
-      fontSize: '.8rem'
+      fontSize: '.8rem',
     },
     helpIcon: {
       width: 16,
       height: 16,
       position: 'relative',
       top: 3,
-      marginRight: theme.spacing(1)
-    }
+      marginRight: theme.spacing(1),
+    },
   });
 
 interface GuidanceProps {
@@ -34,7 +34,7 @@ interface GuidanceProps {
 }
 type CombinedProps = GuidanceProps & WithStyles<ClassNames>;
 
-const Guidance: React.FC<CombinedProps> = props => {
+const Guidance: React.FC<CombinedProps> = (props) => {
   const { classes, text } = props;
   return (
     <div className={classes.guidance}>

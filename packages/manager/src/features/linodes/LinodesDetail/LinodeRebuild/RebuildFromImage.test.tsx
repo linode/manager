@@ -8,10 +8,10 @@ import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
 jest.mock('src/hooks/useReduxLoad', () => ({
-  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
+  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false }),
 }));
 jest.mock('src/hooks/useImages', () => ({
-  useImages: jest.fn().mockResolvedValue({ error: {} })
+  useImages: jest.fn().mockResolvedValue({ error: {} }),
 }));
 
 const images = normalizeEntities(imageFactory.buildList(10));
@@ -30,7 +30,7 @@ const props: CombinedProps = {
   passwordHelperText: '',
   requestKeys: jest.fn(),
   disabled: false,
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 describe('RebuildFromImage', () => {
@@ -56,14 +56,14 @@ describe('RebuildFromImage', () => {
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     fireEvent.change(getByTestId('select'), {
-      target: { value: 'private/1' }
+      target: { value: 'private/1' },
     });
 
     fireEvent.blur(getByTestId('select'));
 
     await waitFor(() =>
       fireEvent.change(getByPlaceholderText('Enter a password.'), {
-        target: { value: 'xE7%9hX#hJsM' }
+        target: { value: 'xE7%9hX#hJsM' },
       })
     );
     fireEvent.click(getByTestId('rebuild-button'));

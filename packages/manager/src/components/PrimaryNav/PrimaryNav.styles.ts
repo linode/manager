@@ -8,17 +8,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: 0,
     padding: 0,
     [theme.breakpoints.up('sm')]: {
-      minHeight: 72
+      minHeight: 72,
     },
     [theme.breakpoints.up('md')]: {
-      minHeight: 80
-    }
+      minHeight: 80,
+    },
   },
   fadeContainer: {
     display: 'flex',
     flexDirection: 'column',
     height: 'calc(100% - 90px)',
-    width: '100%'
+    width: '100%',
   },
   logoItem: {
     display: 'flex',
@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 12px 0 14px',
     position: 'relative',
     '& svg': {
-      maxWidth: theme.spacing(3) + 91
-    }
+      maxWidth: theme.spacing(3) + 91,
+    },
   },
   logoCollapsed: {
     background: theme.cmrBGColors.bgPrimaryNav,
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 100,
     position: 'absolute',
     top: 12,
-    left: 48
+    left: 48,
   },
   listItem: {
     display: 'flex',
@@ -48,22 +48,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['background-color']),
     '& p': {
       marginTop: 0,
-      marginBottom: 0
+      marginBottom: 0,
     },
     '&:focus': {
-      textDecoration: 'none'
+      textDecoration: 'none',
     },
     '&:hover': {
       border: 'red',
       backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
       textDecoration: 'none',
       '& $linkItem': {
-        color: 'white'
+        color: 'white',
       },
       '& svg': {
         color: theme.color.greenCyan,
-        fill: theme.color.greenCyan
-      }
+        fill: theme.color.greenCyan,
+      },
     },
     '& .icon': {
       color: '#CFD0D2',
@@ -75,10 +75,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: 20,
         width: 20,
         '&:not(.wBorder) circle, & .circle': {
-          display: 'none'
-        }
-      }
-    }
+          display: 'none',
+        },
+      },
+    },
   },
   linkItem: {
     display: 'flex',
@@ -89,21 +89,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['color']),
     whiteSpace: 'nowrap',
     '&.hiddenWhenCollapsed': {
-      opacity: 0
-    }
+      opacity: 0,
+    },
   },
   active: {
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
     textDecoration: 'none',
     '& svg': {
-      color: theme.color.greenCyan
+      color: theme.color.greenCyan,
     },
-    '&:hover': {}
+    '&:hover': {},
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)',
     marginTop: theme.spacing(1.5),
-    marginBottom: theme.spacing(1.5)
+    marginBottom: theme.spacing(1.5),
   },
   chip: {
     fontSize: '0.625rem',
@@ -112,8 +112,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
     letterSpacing: '.25px',
     opacity: 0.4,
-    textTransform: 'uppercase'
-  }
+    textTransform: 'uppercase',
+  },
 }));
 
 export default useStyles;

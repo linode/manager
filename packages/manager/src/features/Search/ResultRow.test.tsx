@@ -24,14 +24,14 @@ const classes = {
   tagCell: '',
   linkCMR: '',
   preCMRCell: '',
-  labelCellCMR: ''
+  labelCellCMR: '',
 };
 
 const props = {
   result: searchbarResult1,
   redirect: jest.fn(),
   openDomainDrawerForEditing: jest.fn(),
-  classes
+  classes,
 };
 
 describe('ResultRow component', () => {

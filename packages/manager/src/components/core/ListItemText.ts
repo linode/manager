@@ -1,5 +1,5 @@
 import ListItemText, {
-  ListItemTextProps as _ListItemTextProps
+  ListItemTextProps as _ListItemTextProps,
 } from '@material-ui/core/ListItemText';
 
 /* tslint:disable-next-line:no-empty-interface */

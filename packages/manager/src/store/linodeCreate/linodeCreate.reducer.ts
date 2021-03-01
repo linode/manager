@@ -22,7 +22,7 @@ export const getInitialType = (): CreateTypes => {
       const normalizedSubtype =
         typeof queryParams.subtype === 'string'
           ? queryParams.subtype.toLowerCase()
-          : queryParams.subtype.map(s => s.toLowerCase());
+          : queryParams.subtype.map((s) => s.toLowerCase());
 
       /**
        * we have a subtype in the query string so now we need to deduce what
@@ -42,7 +42,7 @@ export const getInitialType = (): CreateTypes => {
       const normalizedType =
         typeof queryParams.type === 'string'
           ? queryParams.type.toLowerCase()
-          : queryParams.type.map(s => s.toLowerCase());
+          : queryParams.type.map((s) => s.toLowerCase());
       /**
        * here we know we don't have a subtype in the query string
        * but we do have a type (AKA a parent tab is selected). In this case,
@@ -66,7 +66,7 @@ export const getInitialType = (): CreateTypes => {
 };
 
 export const defaultState: State = {
-  type: getInitialType()
+  type: getInitialType(),
 };
 
 const reducer: Reducer<State> = reducerWithInitialState(
@@ -76,7 +76,7 @@ const reducer: Reducer<State> = reducerWithInitialState(
 
   return {
     ...state,
-    type: payload
+    type: payload,
   };
 });
 

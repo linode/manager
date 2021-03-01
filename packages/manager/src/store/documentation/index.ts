@@ -15,12 +15,12 @@ const CLEAR = '@@manager/documentation/CLEAR';
 const SET = '@@manager/documentation/SET';
 
 export const clearDocs = (): ClearType => ({
-  type: CLEAR
+  type: CLEAR,
 });
 
 export const setDocs = (docs: Linode.Doc[]): SetType => ({
   type: SET,
-  payload: docs
+  payload: docs,
 });
 
 export const defaultState: Linode.Doc[] = [];

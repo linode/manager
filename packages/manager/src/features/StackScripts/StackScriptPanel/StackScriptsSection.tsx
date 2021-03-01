@@ -12,11 +12,11 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import {
   hasGrant,
-  isRestrictedUser as _isRestrictedUser
+  isRestrictedUser as _isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import {
   canUserModifyAccountStackScript,
-  StackScriptCategory
+  StackScriptCategory,
 } from 'src/features/StackScripts/stackScriptUtils';
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/formatDate';
@@ -27,8 +27,8 @@ import StackScriptRow from './StackScriptRow';
 const useStyles = makeStyles(() => ({
   loadingWrapper: {
     border: 0,
-    paddingTop: 100
-  }
+    paddingTop: 100,
+  },
 }));
 
 export interface Props {
@@ -47,7 +47,7 @@ export interface Props {
 
 type CombinedProps = Props & StateProps;
 
-const StackScriptsSection: React.FC<CombinedProps> = props => {
+const StackScriptsSection: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     data,
@@ -57,7 +57,7 @@ const StackScriptsSection: React.FC<CombinedProps> = props => {
     isRestrictedUser,
     stackScriptGrants,
     category,
-    userCannotAddLinodes
+    userCannotAddLinodes,
   } = props;
 
   const listStackScript = (s: StackScript) => (
@@ -104,7 +104,7 @@ interface StateProps {
   userCannotAddLinodes: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isRestrictedUser: _isRestrictedUser(state),
   stackScriptGrants: pathOr(
     [],
@@ -112,7 +112,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     state
   ),
   userCannotAddLinodes:
-    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
+    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
 });
 
 const connected = connect(mapStateToProps);

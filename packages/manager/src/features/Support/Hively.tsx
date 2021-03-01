@@ -13,21 +13,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     margin: `${theme.spacing(3)}px ${theme.spacing(1)}px 0`,
     paddingTop: theme.spacing(1),
-    borderTop: `1px solid ${theme.color.grey2}`
+    borderTop: `1px solid ${theme.color.grey2}`,
   },
   hivelyLink: {
     textDecoration: 'none',
     color: theme.color.black,
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   hivelyImage: {
     width: '25px',
-    margin: 3
+    margin: 3,
   },
   hivelyLinkIcon: {
     display: 'inline-block',
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 
 interface Props {
@@ -61,7 +61,7 @@ export const shouldRenderHively = (
   }
 };
 
-export const Hively: React.FC<Props> = props => {
+export const Hively: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { linodeUsername, ticketId, replyId } = props;
   const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;

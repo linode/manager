@@ -10,7 +10,7 @@ interface Props {
   cmrFlag?: boolean;
 }
 
-export const ConnectionRow: React.FC<Props> = props => {
+export const ConnectionRow: React.FC<Props> = (props) => {
   const { connection, cmrFlag } = props;
 
   const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;

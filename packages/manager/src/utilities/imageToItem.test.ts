@@ -8,7 +8,7 @@ describe('imageToItem utility function', () => {
     expect(items).toHaveLength(mockImages.length);
     expect(items[0]).toEqual({
       label: 'debian9',
-      value: 'linode/debian9'
+      value: 'linode/debian9',
     });
   });
 
@@ -19,7 +19,7 @@ describe('imageToItem utility function', () => {
   it('should leave non-linode image labels unchanged', () => {
     expect(imageToItem(['exampleuser/myprivateimage'])[0]).toEqual({
       label: 'exampleuser/myprivateimage',
-      value: 'exampleuser/myprivateimage'
+      value: 'exampleuser/myprivateimage',
     });
   });
 });

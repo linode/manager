@@ -11,7 +11,7 @@ describe('Security settings (IP allowlisting) form', () => {
     <SecuritySettings
       classes={{
         root: '',
-        title: ''
+        title: '',
       }}
       ipAllowlistingEnabled={false}
       onSuccess={onSuccess}

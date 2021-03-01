@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
@@ -34,33 +34,33 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      position: 'relative'
+      position: 'relative',
     },
     searchBar: {
-      maxWidth: '100%'
+      maxWidth: '100%',
     },
     searchBoxInner: {
       padding: theme.spacing(3),
       backgroundColor: theme.color.grey2,
       marginTop: 0,
       '& > div': {
-        maxWidth: '100%'
-      }
+        maxWidth: '100%',
+      },
     },
     searchHeading: {
       color: theme.color.black,
       marginBottom: theme.spacing(2),
-      fontSize: '175%'
+      fontSize: '175%',
     },
     searchField: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     searchIcon: {
       marginRight: 0,
       '& svg': {
-        color: theme.palette.text.primary
-      }
-    }
+        color: theme.palette.text.primary,
+      },
+    },
   });
 
 interface State {
@@ -77,7 +77,7 @@ export class SupportSearchLanding extends React.Component<
 > {
   searchIndex: any = null;
   state: State = {
-    query: ''
+    query: '',
   };
 
   componentDidMount() {
@@ -140,7 +140,7 @@ export class SupportSearchLanding extends React.Component<
                 <InputAdornment position="end" className={classes.searchIcon}>
                   <Search />
                 </InputAdornment>
-              )
+              ),
             }}
           />
         </Grid>

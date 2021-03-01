@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
@@ -17,13 +17,13 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     label: {
-      paddingLeft: 65
-    }
+      paddingLeft: 65,
+    },
   });
 
 type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 
-const SortableTableHead: React.FC<combinedProps> = props => {
+const SortableTableHead: React.FC<combinedProps> = (props) => {
   const { order, orderBy, handleOrderChange, classes } = props;
 
   const isActive = (label: string) => label === orderBy;

@@ -3,7 +3,7 @@ import { containsVisible, fbtVisible, getClick } from '../../support/helpers';
 
 describe('resize linode', () => {
   it('resizes a linode', () => {
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       cy.intercept('POST', `*/linode/instances/${linode.id}/resize`).as(
         'linodeResize'
       );

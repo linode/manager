@@ -18,8 +18,8 @@ const props: CombinedProps = {
   domainActions: {
     createDomain: jest.fn(),
     deleteDomain: mockDeleteDomain,
-    updateDomain: jest.fn()
-  }
+    updateDomain: jest.fn(),
+  },
 };
 
 describe('DeleteDomain', () => {

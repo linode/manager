@@ -16,7 +16,7 @@ export default function reloadableWithRouter<P, R>(
   reloadIf: ReloadIf<R>,
   alreadyHasRouter: boolean = false
 ) {
-  return function(Component: React.ComponentType<P & RouteComponentProps<R>>) {
+  return function (Component: React.ComponentType<P & RouteComponentProps<R>>) {
     /* tslint:enable */
     class ReloadableComponent extends React.Component<
       P & RouteComponentProps<R>,
@@ -29,14 +29,14 @@ export default function reloadableWithRouter<P, R>(
           match: prevProps.match,
           location: prevProps.location,
           history: prevProps.history,
-          staticContext: prevProps.staticContext
+          staticContext: prevProps.staticContext,
         };
 
         const routePropsNew = {
           match: this.props.match,
           location: this.props.location,
           history: this.props.history,
-          staticContext: this.props.staticContext
+          staticContext: this.props.staticContext,
         };
 
         /* The reloadIf function provided as an argument to this HOC takes two arguments, the

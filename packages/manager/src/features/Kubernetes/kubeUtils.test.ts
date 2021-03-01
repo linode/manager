@@ -4,7 +4,7 @@ import { nodePoolRequests } from 'src/__data__/nodePools';
 import {
   getMonthlyPrice,
   getTotalClusterMemoryCPUAndStorage,
-  getTotalClusterPrice
+  getTotalClusterPrice,
 } from './kubeUtils';
 
 const mockNodePool = {
@@ -13,7 +13,7 @@ const mockNodePool = {
   linodes: [],
   type: extendedTypes[0].id,
   count: 4,
-  totalMonthlyPrice: 10
+  totalMonthlyPrice: 10,
 };
 
 const badNodePool = {
@@ -22,7 +22,7 @@ const badNodePool = {
   linodes: [],
   type: 'not-a-real-type',
   count: 1,
-  totalMonthlyPrice: 0
+  totalMonthlyPrice: 0,
 };
 
 describe('helper functions', () => {
@@ -72,7 +72,7 @@ describe('helper functions', () => {
       ).toEqual({
         CPU: 0,
         RAM: 0,
-        Storage: 0
+        Storage: 0,
       });
     });
 
@@ -80,7 +80,7 @@ describe('helper functions', () => {
       expect(getTotalClusterMemoryCPUAndStorage([], extendedTypes)).toEqual({
         CPU: 0,
         RAM: 0,
-        Storage: 0
+        Storage: 0,
       });
     });
   });

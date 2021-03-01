@@ -12,7 +12,7 @@ import {
   LongviewProcesses,
   ProcessStats,
   Stat,
-  StatWithDummyPoint
+  StatWithDummyPoint,
 } from '../request.types';
 
 interface Storage {
@@ -39,14 +39,14 @@ export const getTotalMemoryUsage = (used: number, free: number) => {
   const howManyBytesInGB = 1073741824;
   const memoryToBytes = total * 1024;
   return readableBytes(memoryToBytes, {
-    unit: memoryToBytes > howManyBytesInGB ? 'GB' : 'MB'
+    unit: memoryToBytes > howManyBytesInGB ? 'GB' : 'MB',
   });
 };
 
 export const sumStorage = (DiskData: Record<string, Disk> = {}): Storage => {
   let free = 0;
   let total = 0;
-  Object.keys(DiskData).forEach(key => {
+  Object.keys(DiskData).forEach((key) => {
     const disk = DiskData[key];
     free += pathOr(0, ['fs', 'free', 0, 'y'], disk);
     total += pathOr(0, ['fs', 'total', 0, 'y'], disk);
@@ -69,7 +69,7 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
   const result: CPU<'yAsNull'> = {
     system: [],
     user: [],
-    wait: []
+    wait: [],
   };
 
   // Protect against malformed data.
@@ -78,7 +78,7 @@ export const sumCPU = (CPUData: Record<string, CPU> = {}): CPU<'yAsNull'> => {
   }
 
   // Iterate through each CPU and combine stats.
-  Object.values(CPUData).forEach(thisCPU => {
+  Object.values(CPUData).forEach((thisCPU) => {
     result.system = appendStats(result.system, thisCPU.system);
     result.user = appendStats(result.user, thisCPU.user);
     result.wait = appendStats(result.wait, thisCPU.wait);
@@ -108,7 +108,7 @@ export const sumNetwork = (
 ): InboundOutboundNetwork<'yAsNull'> => {
   const result: InboundOutboundNetwork<'yAsNull'> = {
     tx_bytes: [],
-    rx_bytes: []
+    rx_bytes: [],
   };
 
   // Protect against malformed data.
@@ -117,7 +117,7 @@ export const sumNetwork = (
   }
 
   // Iterate through each CPU and combine stats.
-  Object.values(networkData).forEach(thisNetworkInterface => {
+  Object.values(networkData).forEach((thisNetworkInterface) => {
     result.rx_bytes = appendStats(
       result.rx_bytes,
       thisNetworkInterface.rx_bytes
@@ -249,9 +249,9 @@ export const sumStatsObject = <T>(
   }
   return Object.values(data).reduce(
     (accum, thisObject) => {
-      return produce(accum, draft => {
+      return produce(accum, (draft) => {
         if (thisObject && typeof thisObject === 'object') {
-          Object.keys(thisObject).forEach(thisKey => {
+          Object.keys(thisObject).forEach((thisKey) => {
             if (thisKey in accum) {
               draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
             } else {
@@ -296,7 +296,7 @@ export const sumRelatedProcessesAcrossAllUsers = (
   relatedProcesses: LongviewProcesses
 ) =>
   Object.values(relatedProcesses).reduce((accum, thisProcess) => {
-    Object.keys(thisProcess).forEach(thisUser => {
+    Object.keys(thisProcess).forEach((thisUser) => {
       if (thisUser !== 'longname') {
         accum = sumStatsObject(
           { thisUser: thisProcess[thisUser] },

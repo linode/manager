@@ -15,8 +15,8 @@ const props = {
     attachFileButton: '',
     attachmentsContainer: '',
     attachmentField: '',
-    uploadProgress: ''
-  }
+    uploadProgress: '',
+  },
 };
 
 const component = shallow(<AttachFileForm {...props} />);

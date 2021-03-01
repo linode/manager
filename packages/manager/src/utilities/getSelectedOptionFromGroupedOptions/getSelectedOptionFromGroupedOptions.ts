@@ -10,7 +10,7 @@ export const getSelectedOptionFromGroupedOptions = (
   }
   // Ramda's flatten doesn't seem able to handle the typing issues here, but this returns an array of Item<T>.
   const optionsList = (flatten(
-    options.map(group => group.options)
+    options.map((group) => group.options)
   ) as unknown) as Item<any>[];
-  return optionsList.find(option => option.value === selectedValue) || null;
+  return optionsList.find((option) => option.value === selectedValue) || null;
 };

@@ -4,7 +4,7 @@ import {
   getPayments,
   Invoice,
   InvoiceItem,
-  Payment
+  Payment,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
@@ -28,7 +28,7 @@ import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow, { TableRowProps } from 'src/components/TableRow';
 import {
   printInvoice,
-  printPayment
+  printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
-      alignItems: 'flex-start'
-    }
+      alignItems: 'flex-start',
+    },
   },
   headerRight: {
     display: 'flex',
@@ -59,20 +59,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
-      alignItems: 'flex-start'
-    }
+      alignItems: 'flex-start',
+    },
   },
   flexContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   activeSince: {
-    marginRight: theme.spacing() + 2
+    marginRight: theme.spacing() + 2,
   },
   cancelButton: {
     '&:focus, &:hover': {
-      backgroundColor: 'inherit !important'
+      backgroundColor: 'inherit !important',
     },
     borderLeft: `solid 1px ${
       theme.name === 'lightTheme' ? theme.color.border2 : theme.color.border3
@@ -81,48 +81,48 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 6,
     marginRight: theme.spacing() + 2,
     '& :first-child': {
-      marginLeft: 2
-    }
+      marginLeft: 2,
+    },
   },
   transactionType: {
     marginRight: theme.spacing() + 2,
     width: 200,
     [theme.breakpoints.down('sm')]: {
-      marginTop: 4
-    }
+      marginTop: 4,
+    },
   },
   transactionDate: {
     width: 130,
     [theme.breakpoints.down('sm')]: {
-      marginTop: 4
-    }
+      marginTop: 4,
+    },
   },
   descriptionColumn: {
-    width: '17%'
+    width: '17%',
   },
   dateColumn: {
-    width: '10%'
+    width: '10%',
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
       textAlign: 'right',
-      width: '10%'
-    }
+      width: '10%',
+    },
   },
   pdfDownloadColumn: {
-    textAlign: 'right'
+    textAlign: 'right',
   },
   progress: {
     '& circle': {
-      stroke: theme.color.blue
-    }
+      stroke: theme.color.blue,
+    },
   },
   pdfDownloadButton: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
   },
   pdfError: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 interface ActivityFeedItem {
@@ -137,7 +137,7 @@ type TransactionTypes = ActivityFeedItem['type'] | 'all';
 const transactionTypeOptions: Item<TransactionTypes>[] = [
   { label: 'Invoices', value: 'invoice' },
   { label: 'Payments', value: 'payment' },
-  { label: 'All Transaction Types', value: 'all' }
+  { label: 'All Transaction Types', value: 'all' },
 ];
 
 type DateRange =
@@ -153,7 +153,7 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: '90 Days', value: '90 Days' },
   { label: '6 Months', value: '6 Months' },
   { label: '12 Months', value: '12 Months' },
-  { label: 'All Time', value: 'All Time' }
+  { label: 'All Time', value: 'All Time' },
 ];
 
 const defaultDateRange: DateRange = '6 Months';
@@ -167,11 +167,11 @@ export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel: React.FC<Props> = props => {
+export const BillingActivityPanel: React.FC<Props> = (props) => {
   const {
     mostRecentInvoiceId,
     setMostRecentInvoiceId,
-    accountActiveSince
+    accountActiveSince,
   } = props;
 
   const classes = useStyles();
@@ -186,13 +186,15 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
-  const [selectedTransactionType, setSelectedTransactionType] = React.useState<
-    TransactionTypes
-  >('all');
+  const [
+    selectedTransactionType,
+    setSelectedTransactionType,
+  ] = React.useState<TransactionTypes>('all');
 
-  const [selectedTransactionDate, setSelectedTransactionDate] = React.useState<
-    DateRange
-  >(defaultDateRange);
+  const [
+    selectedTransactionDate,
+    setSelectedTransactionDate,
+  ] = React.useState<DateRange>(defaultDateRange);
 
   const requestAllInvoicesAndPayments = React.useCallback(
     (endDate?: string) => {
@@ -211,7 +213,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
             setMostRecentInvoiceId(invoices.data[0].id);
           }
         })
-        .catch(_error => {
+        .catch((_error) => {
           setError(
             getAPIErrorOrDefault(
               _error,
@@ -234,7 +236,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
       const invoice = invoices.find(
-        thisInvoice => thisInvoice.id === invoiceId
+        (thisInvoice) => thisInvoice.id === invoiceId
       );
 
       const id = `invoice-${invoiceId}`;
@@ -249,7 +251,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
       pdfLoading.add(id);
 
       getAllInvoiceItems([invoiceId])
-        .then(response => {
+        .then((response) => {
           pdfLoading.delete(id);
 
           const invoiceItems = response.data;
@@ -275,7 +277,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const downloadPaymentPDF = React.useCallback(
     (paymentId: number) => {
       const payment = payments.find(
-        thisPayment => thisPayment.id === paymentId
+        (thisPayment) => thisPayment.id === paymentId
       );
 
       const id = `payment-${paymentId}`;
@@ -344,14 +346,14 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const combinedData = React.useMemo(
     () => [
       ...invoices.map(invoiceToActivityFeedItem),
-      ...payments.map(paymentToActivityFeedItem)
+      ...payments.map(paymentToActivityFeedItem),
     ],
     [invoices, payments]
   );
 
   // Filter on transaction type and transaction date.
   const filteredData = React.useMemo(() => {
-    return combinedData.filter(thisBillingItem => {
+    return combinedData.filter((thisBillingItem) => {
       const matchesType =
         selectedTransactionType !== 'all'
           ? thisBillingItem.type === selectedTransactionType
@@ -374,7 +376,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               <Typography variant="body1" className={classes.activeSince}>
                 Account active since{' '}
                 {formatDate(accountActiveSince, {
-                  displayTime: false
+                  displayTime: false,
                 })}
               </Typography>
             </div>
@@ -386,7 +388,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               onChange={handleTransactionTypeChange}
               value={
                 transactionTypeOptions.find(
-                  thisOption => thisOption.value === selectedTransactionType
+                  (thisOption) => thisOption.value === selectedTransactionType
                 ) || null
               }
               isClearable={false}
@@ -402,7 +404,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               onChange={handleTransactionDateChange}
               value={
                 transactionDateOptions.find(
-                  thisOption => thisOption.value === selectedTransactionDate
+                  (thisOption) => thisOption.value === selectedTransactionDate
                 ) || null
               }
               isClearable={false}
@@ -425,7 +427,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
                 handlePageChange,
                 handlePageSizeChange,
                 page,
-                pageSize
+                pageSize,
               }) => (
                 <>
                   <Paper>
@@ -450,7 +452,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
                           loading={loading}
                           error={error}
                         >
-                          {paginatedAndOrderedData.map(thisItem => {
+                          {paginatedAndOrderedData.map((thisItem) => {
                             return (
                               <ActivityFeedItem
                                 key={`${thisItem.type}-${thisItem.id}`}
@@ -495,7 +497,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,
-            pdfLoading
+            pdfLoading,
           ]
         )}
       </OrderBy>
@@ -513,7 +515,7 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
 }
 
 export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
-  props => {
+  (props) => {
     const classes = useStyles();
 
     const {
@@ -524,7 +526,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       type,
       downloadPDF,
       hasError,
-      isLoading
+      isLoading,
     } = props;
     const rowProps: TableRowProps = {};
     if (type === 'invoice' && !isLoading) {
@@ -584,7 +586,7 @@ export const invoiceToActivityFeedItem = (
 ): ActivityFeedItem => {
   return {
     ...invoice,
-    type: 'invoice'
+    type: 'invoice',
   };
 };
 
@@ -605,7 +607,7 @@ export const paymentToActivityFeedItem = (
     date,
     id,
     total,
-    type: 'payment'
+    type: 'payment',
   };
 };
 /**
@@ -648,12 +650,12 @@ export const getCutoffFromDateRange = (
 export const makeFilter = (endDate?: string) => {
   const filter: any = {
     '+order_by': 'date',
-    '+order': 'desc'
+    '+order': 'desc',
   };
   if (endDate) {
     const filterEndDate = parseAPIDate(endDate);
     filter.date = {
-      '+gte': filterEndDate.toFormat(ISO_DATETIME_NO_TZ_FORMAT)
+      '+gte': filterEndDate.toFormat(ISO_DATETIME_NO_TZ_FORMAT),
     };
   }
 

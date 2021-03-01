@@ -5,11 +5,11 @@ import {
   createDefaultState,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import {
   EntityError,
-  MappedEntityState2 as MappedEntityState
+  MappedEntityState2 as MappedEntityState,
 } from 'src/store/types';
 import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
 

@@ -5,13 +5,13 @@ import {
   createNodeBalancerConfig,
   deleteNodeBalancerConfig,
   getAllNodeBalancerConfigs,
-  updateNodeBalancerConfig
+  updateNodeBalancerConfig,
 } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.requests';
 import {
   CreateNodeBalancerConfigParams,
   DeleteNodeBalancerConfigParams,
   GetAllNodeBalancerConfigsParams,
-  UpdateNodeBalancerConfigParams
+  UpdateNodeBalancerConfigParams,
 } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 
 export interface WithNodeBalancerConfigActions {
@@ -31,14 +31,14 @@ export interface WithNodeBalancerConfigActions {
   };
 }
 
-export const withNodeBalancerConfigActions = connect(undefined, dispatch => ({
+export const withNodeBalancerConfigActions = connect(undefined, (dispatch) => ({
   nodeBalancerConfigActions: bindActionCreators(
     {
       getAllNodeBalancerConfigs,
       createNodeBalancerConfig,
       updateNodeBalancerConfig,
-      deleteNodeBalancerConfig
+      deleteNodeBalancerConfig,
     },
     dispatch
-  )
+  ),
 }));

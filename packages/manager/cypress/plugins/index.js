@@ -17,7 +17,7 @@ const path = require('path');
 function getConfiguration() {
   const dotenvPath = path.resolve(__dirname, '../../.env');
   const conf = require('dotenv').config({
-    path: dotenvPath
+    path: dotenvPath,
   });
   if (conf.error) {
     throw Error(
@@ -42,7 +42,7 @@ module.exports = (on, _config) => {
   on('task', {
     datenow() {
       return Date.now();
-    }
+    },
   });
 
   return getConfiguration();

@@ -1,6 +1,6 @@
 import {
   getKubernetesVersions,
-  KubernetesVersion
+  KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
@@ -10,7 +10,7 @@ const _getVersions = () => {
   return getKubernetesVersions(
     {},
     { '+order_by': 'id', '+order': 'desc' }
-  ).then(response => response.data);
+  ).then((response) => response.data);
 };
 
 export const useKubernetesVersionQuery = () =>

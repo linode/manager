@@ -2,7 +2,7 @@ import { Event, EventAction } from '@linode/api-v4/lib/account';
 import {
   isEventRelevantToLinode,
   isPrimaryEntity,
-  isSecondaryEntity
+  isSecondaryEntity,
 } from 'src/store/events/event.selectors';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
@@ -19,7 +19,7 @@ export const transitionStatus = [
   'rebuilding',
   'restoring',
   'cloning',
-  'edit_mode'
+  'edit_mode',
 ];
 
 export const transitionAction = [
@@ -30,7 +30,7 @@ export const transitionAction = [
   'disk_duplicate',
   'linode_mutate',
   'linode_clone',
-  'linode_migrate_datacenter'
+  'linode_migrate_datacenter',
 ];
 
 export const linodeInTransition = (
@@ -121,7 +121,7 @@ export const buildLinodeCloneTransitionText = (
 export const linodesInTransition = (events: Event[]) => {
   const set = new Set<number>();
 
-  events.forEach(thisEvent => {
+  events.forEach((thisEvent) => {
     const { entity, secondary_entity } = thisEvent;
     if (isInProgressEvent(thisEvent)) {
       if (entity?.type === 'linode') {
@@ -158,7 +158,7 @@ const eventsWithSecondaryStatus: EventAction[] = [
   'linode_snapshot',
   'linode_migrate',
   'linode_migrate_datacenter',
-  'linode_mutate'
+  'linode_mutate',
 ];
 
 export const isEventWithSecondaryLinodeStatus = (

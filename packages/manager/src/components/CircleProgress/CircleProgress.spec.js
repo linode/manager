@@ -16,9 +16,7 @@ describe('Circle Progress Indicator Component Suite', () => {
       const progressIndicator = $('[data-qa-circle-progress]');
       const role = progressIndicator.getAttribute('role');
 
-      expect(role)
-        .withContext(`Incorrect role`)
-        .toBe('progressbar');
+      expect(role).withContext(`Incorrect role`).toBe('progressbar');
       expect(progressIndicator.isDisplayed())
         .withContext(`Progress indicator should be displayed`)
         .toBe(true);

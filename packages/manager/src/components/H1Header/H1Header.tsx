@@ -12,16 +12,16 @@ interface Props {
 const useStyles = makeStyles({
   root: {
     '&:focus': {
-      outline: 'none'
-    }
-  }
+      outline: 'none',
+    },
+  },
 });
 
 // Accessibility Feature:
 // The role of this component is to implement focus to the main content when navigating the application
 // Since it is a one page APP, we need to help users focus on the main content when switching views
 // It should serve as the only source for all H1s
-const H1Header: React.FC<Props> = props => {
+const H1Header: React.FC<Props> = (props) => {
   const h1Header = React.useRef<HTMLDivElement>(null);
   const { className, title, dataQaEl, renderAsSecondary } = props;
   const classes = useStyles();

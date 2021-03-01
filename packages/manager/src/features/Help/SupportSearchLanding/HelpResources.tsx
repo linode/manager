@@ -8,7 +8,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -28,11 +28,11 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     wrapper: {
-      marginTop: theme.spacing(4)
+      marginTop: theme.spacing(4),
     },
     heading: {
       textAlign: 'center',
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     card: {
       display: 'flex',
@@ -41,12 +41,12 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.color.white,
       padding: theme.spacing(4),
       border: `1px solid ${theme.color.grey2}`,
-      height: '100%'
+      height: '100%',
     },
     tileTitle: {
       fontSize: '1.2rem',
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     icon: {
       margin: '0 auto 16px',
@@ -56,8 +56,8 @@ const styles = (theme: Theme) =>
       border: `2px solid ${theme.palette.divider}`,
       width: 66,
       height: 66,
-      color: theme.palette.primary.main
-    }
+      color: theme.palette.primary.main,
+    },
   });
 
 interface State {
@@ -69,7 +69,7 @@ type CombinedProps = RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
   state: State = {
-    drawerOpen: false
+    drawerOpen: false,
   };
 
   ada: any = undefined;
@@ -91,7 +91,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     if (typeof this.ada === 'undefined') {
       this.setState({
         error:
-          'There was an issue loading the chat at this time. Please try again later.'
+          'There was an issue loading the chat at this time. Please try again later.',
       });
       return;
     }
@@ -114,10 +114,10 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     const { history } = this.props;
     history.push({
       pathname: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors }
+      state: { attachmentErrors },
     });
     this.setState({
-      drawerOpen: false
+      drawerOpen: false,
     });
   };
 

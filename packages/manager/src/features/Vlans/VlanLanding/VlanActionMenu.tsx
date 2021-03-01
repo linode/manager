@@ -3,7 +3,7 @@ import {
   makeStyles,
   Theme,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from 'src/components/core/styles';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -13,8 +13,8 @@ const useStyles = makeStyles(() => ({
     padding: '0px !important',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 export interface ActionHandlers {
@@ -29,7 +29,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const VlanActionMenu: React.FC<CombinedProps> = props => {
+const VlanActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,14 +41,14 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
       title: 'Delete',
       onClick: () => {
         triggerDeleteVlan(vlanID, vlanLabel);
-      }
-    }
+      },
+    },
   ];
 
   return (
     <div className={classes.root}>
       {!matchesSmDown &&
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

@@ -7,7 +7,7 @@ import { UpdateImagePayload } from 'src/store/image/image.actions';
 import {
   createImage as _create,
   requestImages as _request,
-  updateImage as _update
+  updateImage as _update,
 } from 'src/store/image/image.requests';
 import { EntityError } from 'src/store/types';
 
@@ -29,7 +29,7 @@ const mapDispatchToProps: MapDispatchToProps<ImagesDispatch, {}> = (
 ) => ({
   createImage: (payload: CreateImagePayload) => dispatch(_create(payload)),
   requestImages: () => dispatch(_request()),
-  updateImage: (payload: UpdateImagePayload) => dispatch(_update(payload))
+  updateImage: (payload: UpdateImagePayload) => dispatch(_update(payload)),
 });
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -46,7 +46,7 @@ export default <TInner extends {}, TOuter extends {}>(
       itemsById: imagesData,
       error: imagesError,
       loading,
-      lastUpdated
+      lastUpdated,
     } = state.__resources.images;
 
     if (!mapImagesToProps) {
@@ -55,7 +55,7 @@ export default <TInner extends {}, TOuter extends {}>(
         imagesData,
         imagesLoading: loading,
         imagesError,
-        imagesLastUpdated: lastUpdated
+        imagesLastUpdated: lastUpdated,
       };
     }
 

@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import {
   sumPublicOutboundTraffic,
   parseMonthOffset,
-  getOffsetFromDate
+  getOffsetFromDate,
 } from './TransferHistory';
 import { Stats } from '@linode/api-v4/lib/linodes';
 
@@ -14,8 +14,8 @@ describe('combineGraphData', () => {
     out: [
       [1, 100],
       [1, 200],
-      [1, 300]
-    ]
+      [1, 300],
+    ],
   };
 
   const stats: Stats = {
@@ -24,15 +24,15 @@ describe('combineGraphData', () => {
       cpu: [],
       netv4: netStats,
       netv6: netStats,
-      io: { io: [], swap: [] }
-    }
+      io: { io: [], swap: [] },
+    },
   };
 
   it('sums  public outbound v4 and v6 data', () => {
     expect(sumPublicOutboundTraffic(stats)).toEqual([
       [1, 200],
       [1, 400],
-      [1, 600]
+      [1, 600],
     ]);
   });
 });

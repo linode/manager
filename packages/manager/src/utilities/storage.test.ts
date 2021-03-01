@@ -12,7 +12,7 @@ describe('getLocalStorageOverrides', () => {
     apiRoot: 'http://localhost:5000/v4',
     loginRoot: 'http://login.localhost:5000',
     clientID: 'MY_CLIENT_ID',
-    label: 'My Env'
+    label: 'My Env',
   };
 
   it('it returns overrides if defined and if dev tools are enabled', () => {
@@ -60,7 +60,7 @@ describe('isDevToolsEnvValid', () => {
         apiRoot: 'string-a',
         loginRoot: 'string-b',
         clientID: 'string-c',
-        label: 'string-d'
+        label: 'string-d',
       })
     ).toBe(true);
     expect(
@@ -68,7 +68,7 @@ describe('isDevToolsEnvValid', () => {
         apiRoot: {},
         loginRoot: 'string-b',
         clientID: 'string-c',
-        label: 'string-d'
+        label: 'string-d',
       })
     ).toBe(false);
   });

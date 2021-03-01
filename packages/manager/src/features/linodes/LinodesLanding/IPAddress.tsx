@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 import { privateIPRegex } from 'src/utilities/ipUtils';
@@ -28,74 +28,74 @@ const styles = (theme: Theme) =>
       from: {
         opacity: 0,
         top: -10,
-        transform: 'scale(.1)'
+        transform: 'scale(.1)',
       },
       to: {
         opacity: 1,
         top: -40,
-        transform: 'scale(1)'
-      }
+        transform: 'scale(1)',
+      },
     },
     root: {
       marginBottom: theme.spacing(1) / 2,
       width: '100%',
       maxWidth: '100%',
       '&:last-child': {
-        marginBottom: 0
+        marginBottom: 0,
       },
       '&:hover': {
         '& $hide': {
-          opacity: 1
-        }
-      }
+          opacity: 1,
+        },
+      },
     },
     row: {
       display: 'flex',
       alignItems: 'flex-start',
-      width: '100%'
+      width: '100%',
     },
     multipleAddresses: {
       '&:not(:last-child)': {
-        marginBottom: theme.spacing(1) / 2
-      }
+        marginBottom: theme.spacing(1) / 2,
+      },
     },
     left: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     right: {
       marginLeft: theme.spacing(1),
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     icon: {
       '& svg': {
         width: 12,
-        height: 12
-      }
+        height: 12,
+      },
     },
     ip: {
       // color: theme.palette.text.primary,
-      fontSize: '.9rem'
+      fontSize: '.9rem',
     },
     ipLink: {
       color: theme.palette.primary.main,
       top: -1,
       position: 'relative',
       display: 'inline-block',
-      transition: theme.transitions.create(['color'])
+      transition: theme.transitions.create(['color']),
     },
     hide: {
       [theme.breakpoints.up('md')]: {
         // Hide until the component is hovered,
         // when props.showCopyOnHover is true (only on desktop)
-        opacity: 0
+        opacity: 0,
       },
       transition: theme.transitions.create(['opacity']),
       '&:focus': {
-        opacity: 1
-      }
-    }
+        opacity: 1,
+      },
+    },
   });
 
 interface Props {
@@ -111,7 +111,7 @@ export const sortIPAddress = (ip1: string, ip2: string) =>
 
 export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   state = {
-    copied: false
+    copied: false,
   };
 
   copiedTimeout: number | null = null;
@@ -124,7 +124,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
   clickIcon = (ip: string) => {
     this.setState({
-      copied: true
+      copied: true,
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
     copy(ip);
@@ -163,7 +163,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes, ips, copyRight, showMore, showAll } = this.props;
 
     const formattedIPS = ips
-      .map(ip => ip.replace('/64', ''))
+      .map((ip) => ip.replace('/64', ''))
       .sort(sortIPAddress);
 
     return (

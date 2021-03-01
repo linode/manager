@@ -14,9 +14,9 @@ export const filterUDFErrors = (
   }
   return !errors
     ? []
-    : errors.filter(eachError => {
+    : errors.filter((eachError) => {
         return !Object.keys(errorResources).some(
-          eachKey => eachKey === eachError.field
+          (eachKey) => eachKey === eachError.field
         );
       });
 };

@@ -2,7 +2,7 @@ import {
   Config,
   linodeBoot,
   linodeReboot,
-  linodeShutdown
+  linodeShutdown,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -27,19 +27,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: '1.25rem',
-    fontSize: '0.875rem'
+    fontSize: '0.875rem',
   },
   dialog: {
     '& .dialog-content': {
       paddingTop: 0,
-      paddingBottom: 0
-    }
+      paddingBottom: 0,
+    },
   },
   notice: {
     '& .noticeText': {
-      fontSize: '0.875rem !important'
-    }
-  }
+      fontSize: '0.875rem !important',
+    },
+  },
 }));
 
 interface Props {
@@ -65,7 +65,7 @@ type CombinedProps = Props;
 export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
-const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
+const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
   const { linodeConfigs } = props;
   const classes = useStyles();
   const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
@@ -102,7 +102,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
     ) {
       /** force the user into selecting a config when they boot */
       return setErrors([
-        { reason: 'Please select a Config Profile to boot with.' }
+        { reason: 'Please select a Config Profile to boot with.' },
       ]);
     }
 
@@ -112,7 +112,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         resetEventsPolling();
         props.close();
       })
-      .catch(e => {
+      .catch((e) => {
         setTakingAction(false);
         setErrors(e);
       });
@@ -191,7 +191,7 @@ interface ActionsProps {
   action: Action;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

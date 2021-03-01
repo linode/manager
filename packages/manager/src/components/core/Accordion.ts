@@ -1,5 +1,5 @@
 import Accordion, {
-  AccordionProps as _AccordionProps
+  AccordionProps as _AccordionProps,
 } from '@material-ui/core/Accordion';
 
 /* tslint:disable-next-line:no-empty-interface */

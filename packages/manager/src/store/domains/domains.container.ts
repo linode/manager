@@ -19,8 +19,8 @@ export const withDomainActions = connect(
       createDomain: (payload: CreateDomainPayload) =>
         dispatch(createDomain(payload)),
       updateDomain: (params: DomainId) => dispatch(updateDomain(params)),
-      deleteDomain: (domainId: DomainId) => dispatch(deleteDomain(domainId))
-    }
+      deleteDomain: (domainId: DomainId) => dispatch(deleteDomain(domainId)),
+    },
   })
 );
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
 import { ApplicationState } from 'src/store';
 import entitiesErrors, {
-  ErrorObject
+  ErrorObject,
 } from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities from 'src/store/selectors/getSearchEntities';
@@ -11,7 +11,7 @@ import { refinedSearch } from './refinedSearch';
 import {
   SearchableItem,
   SearchResults,
-  SearchResultsByEntity
+  SearchResultsByEntity,
 } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
 
@@ -38,14 +38,14 @@ export const search = (
 
   return {
     combinedResults,
-    searchResultsByEntity: separateResultsByEntity(combinedResults)
+    searchResultsByEntity: separateResultsByEntity(combinedResults),
   };
 };
 
 export default () => (Component: React.ComponentType<any>) => {
-  const WrappedComponent: React.FC<SearchProps> = props => {
+  const WrappedComponent: React.FC<SearchProps> = (props) => {
     return React.createElement(Component, {
-      ...props
+      ...props,
     });
   };
 
@@ -53,7 +53,7 @@ export default () => (Component: React.ComponentType<any>) => {
     return {
       entities: getSearchEntities(state.__resources),
       entitiesLoading: entitiesLoading(state.__resources),
-      errors: entitiesErrors(state.__resources)
+      errors: entitiesErrors(state.__resources),
     };
   });
 
@@ -67,9 +67,9 @@ export default () => (Component: React.ComponentType<any>) => {
           const { searchResultsByEntity, combinedResults } = results;
           return {
             searchResultsByEntity,
-            combinedResults
+            combinedResults,
           };
-        }
+        },
       }
     )
   )(WrappedComponent);

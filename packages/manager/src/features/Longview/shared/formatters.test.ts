@@ -33,23 +33,23 @@ describe('pathMaybeAddDataInThePast', () => {
           user: [
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
+              y: 123,
+            },
           ],
           wait: [
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
+              y: 123,
+            },
           ],
           system: [
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
-          ]
-        }
-      }
+              y: 123,
+            },
+          ],
+        },
+      },
     };
 
     const result = pathMaybeAddDataInThePast<LongviewCPU>(
@@ -58,7 +58,7 @@ describe('pathMaybeAddDataInThePast', () => {
       [
         ['CPU', 'cpu1', 'user'],
         ['CPU', 'cpu1', 'wait'],
-        ['CPU', 'cpu1', 'system']
+        ['CPU', 'cpu1', 'system'],
       ]
     );
 
@@ -68,35 +68,35 @@ describe('pathMaybeAddDataInThePast', () => {
           user: [
             {
               x: oct18GMTInSeconds,
-              y: null
+              y: null,
             },
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
+              y: 123,
+            },
           ],
           wait: [
             {
               x: oct18GMTInSeconds,
-              y: null
+              y: null,
             },
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
+              y: 123,
+            },
           ],
           system: [
             {
               x: oct18GMTInSeconds,
-              y: null
+              y: null,
             },
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
-          ]
-        }
-      }
+              y: 123,
+            },
+          ],
+        },
+      },
     });
 
     const result2 = pathMaybeAddDataInThePast<LongviewCPU>(
@@ -105,7 +105,7 @@ describe('pathMaybeAddDataInThePast', () => {
       [
         ['CPU', 'cpu1', 'user'],
         ['CPU', 'cpu1', 'wait'],
-        ['CPU', 'cpu1', 'system']
+        ['CPU', 'cpu1', 'system'],
       ]
     );
 
@@ -115,23 +115,23 @@ describe('pathMaybeAddDataInThePast', () => {
           user: [
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
+              y: 123,
+            },
           ],
           wait: [
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
+              y: 123,
+            },
           ],
           system: [
             {
               x: oct29GMTInSeconds,
-              y: 123
-            }
-          ]
-        }
-      }
+              y: 123,
+            },
+          ],
+        },
+      },
     });
 
     const result3 = pathMaybeAddDataInThePast<LongviewCPU>(
@@ -140,15 +140,15 @@ describe('pathMaybeAddDataInThePast', () => {
           cpu1: {
             wait: [],
             user: [],
-            system: []
-          }
-        }
+            system: [],
+          },
+        },
       },
       oct18GMTInSeconds,
       [
         ['CPU', 'cpu1', 'user'],
         ['CPU', 'cpu1', 'wait'],
-        ['CPU', 'cpu1', 'system']
+        ['CPU', 'cpu1', 'system'],
       ]
     );
 
@@ -157,9 +157,9 @@ describe('pathMaybeAddDataInThePast', () => {
         cpu1: {
           wait: [],
           user: [],
-          system: []
-        }
-      }
+          system: [],
+        },
+      },
     });
   });
 });

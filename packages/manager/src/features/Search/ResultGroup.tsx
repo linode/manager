@@ -18,18 +18,18 @@ import ResultRow from './ResultRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   entityHeading: {
     marginBottom: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   button: {
     marginTop: theme.spacing(),
-    width: '10%'
-  }
+    width: '10%',
+  },
 }));
 
 interface Props {
@@ -44,7 +44,7 @@ interface HandlerProps {
 
 type CombinedProps = Props & HandlerProps;
 
-export const ResultGroup: React.FC<CombinedProps> = props => {
+export const ResultGroup: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { entity, groupSize, results, toggle, showMore } = props;
@@ -113,7 +113,7 @@ export const ResultGroup: React.FC<CombinedProps> = props => {
 const handlers = withStateHandlers(
   { showMore: false },
   {
-    toggle: ({ showMore }) => () => ({ showMore: !showMore })
+    toggle: ({ showMore }) => () => ({ showMore: !showMore }),
   }
 );
 

@@ -9,7 +9,7 @@ const {
   apiDeleteAllDomains,
   removeNodeBalancers,
   timestamp,
-  checkEnvironment
+  checkEnvironment,
 } = require('../../utils/common');
 import Dashboard from '../../pageobjects/dashboard.page';
 import ListLinodes from '../../pageobjects/list-linodes';
@@ -22,32 +22,32 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
 
   const entities = ['Linodes', 'Volumes', 'NodeBalancers', 'Domains'];
 
-  const expectedDataDisplays = entity => {
+  const expectedDataDisplays = (entity) => {
     browser.pause(500);
     switch (entity) {
       case 'Linodes':
-        linodes.forEach(linode => {
+        linodes.forEach((linode) => {
           $(ListLinodes.getLinodeSelector(linode.label)).waitForDisplayed(
             constants.wait.normal
           );
         });
         break;
       case 'Volumes':
-        volumes.forEach(volume => {
+        volumes.forEach((volume) => {
           VolumeDetail.volumeRow(volume.label).waitForDisplayed(
             constants.wait.normal
           );
         });
         break;
       case 'NodeBalancers':
-        nodebalancers.forEach(nodebalancer => {
+        nodebalancers.forEach((nodebalancer) => {
           ListNodeBalancers.nodeBlanacerRow(
             nodebalancer.label
           ).waitForDisplayed(constants.wait.normal);
         });
         break;
       case 'Domains':
-        domains.forEach(domain => {
+        domains.forEach((domain) => {
           ListDomains.domainRow(domain.domain).waitForDisplayed(
             constants.wait.normal
           );
@@ -65,7 +65,7 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
       { linodeLabel: `Auto2${timestamp()}` },
       { linodeLabel: `Auto3${timestamp()}` },
       { linodeLabel: `Auto4${timestamp()}` },
-      { linodeLabel: `Auto5${timestamp()}` }
+      { linodeLabel: `Auto5${timestamp()}` },
     ]);
 
     volumes = createVolumes([
@@ -74,7 +74,7 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
       { label: `AutoV2${timestamp()}` },
       { label: `AutoV3${timestamp()}` },
       { label: `AutoV4${timestamp()}` },
-      { label: `AutoV5${timestamp()}` }
+      { label: `AutoV5${timestamp()}` },
     ]);
 
     nodebalancers = apiCreateNodeBalancers([
@@ -83,7 +83,7 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
       { label: `AutoNB2${timestamp()}` },
       { label: `AutoNB3${timestamp()}` },
       { label: `AutoNB4${timestamp()}` },
-      { label: `AutoNB5${timestamp()}` }
+      { label: `AutoNB5${timestamp()}` },
     ]);
 
     domains = apiCreateDomains([
@@ -92,7 +92,7 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
       { domain: `autodomain2${timestamp()}.org` },
       { domain: `autodomain3${timestamp()}.org` },
       { domain: `autodomain4${timestamp()}.org` },
-      { domain: `autodomain5${timestamp()}.org` }
+      { domain: `autodomain5${timestamp()}.org` },
     ]);
 
     browser.url(constants.routes.dashboard);
@@ -107,7 +107,7 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
     removeNodeBalancers('do not remove linodes');
   });
 
-  entities.forEach(entity => {
+  entities.forEach((entity) => {
     it(`View all links display on the dashboard ${entity} table`, () => {
       Dashboard.viewAllLink(entity).waitForDisplayed(constants.wait.minute);
       expect(Dashboard.entityCount(entity)).toBe('6');
