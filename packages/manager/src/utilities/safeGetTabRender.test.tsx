@@ -7,12 +7,12 @@ const mockFn = jest.fn();
 const mockTabs: Tab[] = [
   {
     title: 'Example Tab',
-    render: mockFn
+    render: mockFn,
   },
   {
     title: 'Example Tab 2',
-    render: mockFn
-  }
+    render: mockFn,
+  },
 ];
 
 describe('getSafeTabRender', () => {

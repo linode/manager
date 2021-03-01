@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   apiDeleteMyStackScripts,
   timestamp,
-  switchTab
+  switchTab,
 } from '../../utils/common';
 import ConfigureStackScripts from '../../pageobjects/configure-stackscript.page';
 import ListStackScripts from '../../pageobjects/list-stackscripts.page';
@@ -28,14 +28,14 @@ xdescribe('StackScript - detail page and drawer suite', () => {
       ListStackScripts.stackScriptCompatibleDistributions.selector
     )[0]
       .$$('div')
-      .map(distro => distro.getText())
-      .filter(d => !d.includes(`\n+`));
+      .map((distro) => distro.getText())
+      .filter((d) => !d.includes(`\n+`));
     const getTitleAndAuthor = titleAndAuthor.split('/');
     const stackScriptDetails = {
       author: getTitleAndAuthor[0].trim(),
       deploys: deploys,
       distributions: compatibleDistributions,
-      title: getTitleAndAuthor[1].trim()
+      title: getTitleAndAuthor[1].trim(),
     };
     return stackScriptDetails;
   };
@@ -109,7 +109,7 @@ xdescribe('StackScript - detail page and drawer suite', () => {
       description: 'test stackscript example',
       images: ['debian9', 'arch', 'containerlinux'],
       label: `AutoStackScript${timestamp()}`,
-      script: '#!/bin/bash\necho "Hello Linode"'
+      script: '#!/bin/bash\necho "Hello Linode"',
     };
 
     beforeAll(() => {
@@ -193,7 +193,7 @@ xdescribe('StackScript - detail page and drawer suite', () => {
 
     it('Can dismiss selected StackScript', () => {
       const chooseFromOthers = $$('button span').find(
-        it => it.getText() === 'Choose another StackScript'
+        (it) => it.getText() === 'Choose another StackScript'
       );
       expect(chooseFromOthers.isDisplayed()).toBe(true);
       chooseFromOthers.click();

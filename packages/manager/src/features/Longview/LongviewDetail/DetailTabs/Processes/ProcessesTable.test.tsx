@@ -10,7 +10,7 @@ const props: Props = {
   processesData: [],
   processesLoading: false,
   selectedProcess: null,
-  setSelectedProcess: mockSetSelectedRow
+  setSelectedProcess: mockSetSelectedRow,
 };
 
 describe('ProcessTable', () => {
@@ -20,7 +20,7 @@ describe('ProcessTable', () => {
     const { getAllByText, getAllByTestId } = renderWithTheme(
       <ProcessesTable {...props} processesData={extendedData} />
     );
-    extendedData.forEach(row => {
+    extendedData.forEach((row) => {
       getAllByText(row.name);
       getAllByText(row.user);
       getAllByTestId(`max-count-${row.maxCount}`);

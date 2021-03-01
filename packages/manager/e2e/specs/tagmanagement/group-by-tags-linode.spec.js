@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   apiCreateMultipleLinodes,
-  apiDeleteAllLinodes
+  apiDeleteAllLinodes,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 // TODO refactor these tests. User settings are being stored on some values that cause tests to fail
@@ -12,14 +12,14 @@ xdescribe('Group Linodes by Tags - Suite', () => {
   let linodes = [];
 
   const generateTagGroups = () => {
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const lin = {
         linodeLabel: `A${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       const lin1 = {
         linodeLabel: `B${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       linodes.push(lin);
       linodes.push(lin1);
@@ -27,10 +27,10 @@ xdescribe('Group Linodes by Tags - Suite', () => {
   };
 
   const checkGroupedByTags = () => {
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const expectedLinodes = linodes
-        .filter(linode => linode.tags[0] === tag)
-        .map(filteredLinode => filteredLinode.linodeLabel);
+        .filter((linode) => linode.tags[0] === tag)
+        .map((filteredLinode) => filteredLinode.linodeLabel);
       const displayedGroup = ListLinodes.getLinodesInTagsGroup(tag);
       expect(displayedGroup.sort()).toEqual(expectedLinodes.sort());
     });
@@ -40,7 +40,7 @@ xdescribe('Group Linodes by Tags - Suite', () => {
     const ascOrDesc = ListLinodes.sortLinodesByLabel.getAttribute(
       ListLinodes.linodeSortAttribute
     );
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const linodesInGroup = ListLinodes.getLinodesInTagsGroup(tag);
       ascOrDesc === 'asc'
         ? expect(linodesInGroup).toEqual(linodesInGroup.sort().reverse())
@@ -79,7 +79,7 @@ xdescribe('Group Linodes by Tags - Suite', () => {
 
     it('Linodes are sortable within tag groups', () => {
       expect(ListLinodes.sortLinodesByLabel.isDisplayed()).toBe(true);
-      [1, 2].forEach(iterator => {
+      [1, 2].forEach((iterator) => {
         ListLinodes.sortLinodesByLabel.$('svg').click();
         browser.pause(500);
         checkSortOrder();

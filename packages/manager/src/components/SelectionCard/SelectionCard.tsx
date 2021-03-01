@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
@@ -31,11 +31,11 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes fadeIn': {
       from: {
-        opacity: 0
+        opacity: 0,
       },
       to: {
-        opacity: 1
-      }
+        opacity: 1,
+      },
     },
     root: {
       minWidth: 200,
@@ -47,32 +47,32 @@ const styles = (theme: Theme) =>
       '&.checked .innerGrid': {
         borderColor: theme.palette.primary.main,
         '& span': {
-          color: theme.palette.primary.main
-        }
+          color: theme.palette.primary.main,
+        },
       },
       '&:focus .innerGrid': {
-        outline: `1px dotted ${theme.color.focusBorder}`
+        outline: `1px dotted ${theme.color.focusBorder}`,
       },
       '& .disabledInnerGrid': {
         width: '100%',
         backgroundColor: theme.bg.offWhiteDT,
-        border: '1px solid ' + `${theme.color.grey1}`
+        border: '1px solid ' + `${theme.color.grey1}`,
       },
       '& [class^="fl-"]': {
-        transition: 'color 225ms ease-in-out'
-      }
+        transition: 'color 225ms ease-in-out',
+      },
     },
     icon: {
       display: 'flex',
       justifyContent: 'flex-end',
       '& svg, & span': {
         fontSize: '32px',
-        color: '#939598'
+        color: '#939598',
       },
       '& img': {
         maxHeight: '32px',
-        maxWidth: '32px'
-      }
+        maxWidth: '32px',
+      },
     },
     checked: {
       display: 'flex',
@@ -82,30 +82,30 @@ const styles = (theme: Theme) =>
         border: '1px solid',
         borderColor: theme.palette.primary.main,
         fontSize: '16px',
-        color: theme.palette.primary.main
-      }
+        color: theme.palette.primary.main,
+      },
     },
 
     '&:focus .innerGrid': {
-      outline: `1px dotted ${theme.color.focusBorder}`
+      outline: `1px dotted ${theme.color.focusBorder}`,
     },
     showCursor: {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     disabled: {
       cursor: 'not-allowed',
       '& > div': {
-        opacity: 0.4
-      }
+        opacity: 0.4,
+      },
     },
     heading: {
       fontFamily: theme.font.bold,
       fontSize: '1rem',
-      color: theme.color.headline
+      color: theme.color.headline,
     },
     subheading: {
       fontSize: '0.875rem',
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
     },
     innerGrid: {
       width: '100%',
@@ -121,8 +121,8 @@ const styles = (theme: Theme) =>
     `,
       '&:hover': {
         backgroundColor: theme.bg.main,
-        borderColor: theme.color.border2
-      }
+        borderColor: theme.color.border2,
+      },
     },
     info: {
       display: 'flex',
@@ -130,32 +130,32 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       maxWidth: 40,
       '& .circle': {
-        transition: theme.transitions.create('fill')
+        transition: theme.transitions.create('fill'),
       },
       '& .path': {
-        transition: theme.transitions.create('stroke')
+        transition: theme.transitions.create('stroke'),
       },
       '&:hover': {
         color: theme.palette.primary.main,
         '& .circle': {
-          fill: theme.palette.primary.main
+          fill: theme.palette.primary.main,
         },
         '& .path': {
-          color: 'white'
-        }
-      }
+          color: 'white',
+        },
+      },
     },
     flex: {
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-around',
       '&> div': {
-        lineHeight: 1.3
-      }
+        lineHeight: 1.3,
+      },
     },
     enhancedInputOuter: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     enhancedInputButton: {
       marginLeft: 10,
@@ -163,9 +163,9 @@ const styles = (theme: Theme) =>
       paddingTop: 12,
       paddingBottom: 12,
       '& span': {
-        color: '#fff !important'
-      }
-    }
+        color: '#fff !important',
+      },
+    },
   });
 
 export interface Props {
@@ -242,7 +242,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
       setInputValue,
       submitForm,
       buttonDisabled,
-      displayButton
+      displayButton,
     } = this.props;
     switch (variant) {
       case 'info':
@@ -304,7 +304,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
       disabled,
       onClick,
       tooltip,
-      className
+      className,
     } = this.props;
 
     const cardGrid = () => (
@@ -321,7 +321,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
             checked: checked === true,
             [classes.disabled]: disabled === true,
             [classes.showCursor]: onClick && !disabled,
-            selectionCard: true
+            selectionCard: true,
           },
           className
         )}

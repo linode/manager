@@ -14,16 +14,16 @@ import SwapGauge from '../../LongviewLanding/Gauges/Swap';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gaugeContainer: {
-    marginBottom: theme.spacing(5) + 8
+    marginBottom: theme.spacing(5) + 8,
   },
   gaugesOuter: {
     [theme.breakpoints.down('md')]: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     [theme.breakpoints.up('lg')]: {
-      maxWidth: 450
-    }
-  }
+      maxWidth: 450,
+    },
+  },
 }));
 
 interface Props {
@@ -31,7 +31,7 @@ interface Props {
   lastUpdatedError?: APIError[];
 }
 
-const GaugesSection: React.FC<Props> = props => {
+const GaugesSection: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (

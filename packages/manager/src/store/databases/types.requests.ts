@@ -1,6 +1,6 @@
 import {
   getMySQLTypes as _get,
-  DatabaseType
+  DatabaseType,
 } from '@linode/api-v4/lib/databases';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';

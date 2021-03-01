@@ -10,13 +10,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.grey5,
     margin: `${theme.spacing(1)}px 0`,
     borderRadius: theme.shape.borderRadius,
-    maxWidth: '100%'
+    maxWidth: '100%',
   },
   copyCode: {
-    overflowX: 'auto'
+    overflowX: 'auto',
   },
   apiKey: {
-    color: theme.color.grey1
+    color: theme.color.grey1,
   },
   instruction: {
     width: '100%',
@@ -30,11 +30,11 @@ const useStyles = makeStyles((theme: Theme) => ({
           content: "'|'",
           position: 'absolute',
           top: theme.spacing(1) - 3,
-          left: -theme.spacing(1) + 2
-        }
-      }
-    }
-  }
+          left: -theme.spacing(1) + 2,
+        },
+      },
+    },
+  },
 }));
 
 interface Props {
@@ -44,7 +44,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const InstallationInstructions: React.FC<CombinedProps> = props => {
+const InstallationInstructions: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;

@@ -9,7 +9,7 @@ export interface State {
 }
 
 export const defaultState: State = {
-  isLargeAccount: false
+  isLargeAccount: false,
 };
 
 /** Reducer */
@@ -18,9 +18,9 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
   .caseWithAction(setLargeAccount, (state, action) => {
     return {
       ...state,
-      isLargeAccount: action.payload
+      isLargeAccount: action.payload,
     };
   })
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

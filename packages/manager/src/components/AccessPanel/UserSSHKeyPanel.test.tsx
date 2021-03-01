@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 const props = {
-  onKeyAddSuccess: jest.fn()
+  onKeyAddSuccess: jest.fn(),
 };
 
 describe('UserSSHKeyPanel', () => {

@@ -7,7 +7,7 @@ describe('formatDuration', () => {
       days: 2,
       hours: 1,
       seconds: 20,
-      minutes: 1
+      minutes: 1,
     });
     expect(formatDuration(dur)).toBe('49 hours, 1 minute');
   });
@@ -16,7 +16,7 @@ describe('formatDuration', () => {
       days: 2,
       hours: 1,
       seconds: 31,
-      minutes: 1
+      minutes: 1,
     });
     expect(formatDuration(dur)).toBe('49 hours, 2 minutes');
   });
@@ -24,7 +24,7 @@ describe('formatDuration', () => {
     const dur = Duration.fromObject({
       seconds: 1,
       minutes: 5,
-      milliseconds: 300
+      milliseconds: 300,
     });
     expect(formatDuration(dur)).toBe('5 minutes, 1 second');
   });
@@ -32,21 +32,21 @@ describe('formatDuration', () => {
     const dur = Duration.fromObject({
       seconds: 1,
       milliseconds: 600,
-      minutes: 5
+      minutes: 5,
     });
     expect(formatDuration(dur)).toBe('5 minutes, 2 seconds');
   });
   it('format seconds in seconds', () => {
     const dur = Duration.fromObject({
       seconds: 1,
-      milliseconds: 400
+      milliseconds: 400,
     });
     expect(formatDuration(dur)).toBe('1 second');
   });
   it('format seconds in seconds and rounds up if >= 500msecs', () => {
     const dur = Duration.fromObject({
       seconds: 1,
-      milliseconds: 600
+      milliseconds: 600,
     });
     expect(formatDuration(dur)).toBe('2 seconds');
   });

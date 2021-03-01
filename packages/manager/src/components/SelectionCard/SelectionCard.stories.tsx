@@ -17,7 +17,7 @@ class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
         },
         heading: 'Photos',
         subheadings: ['Use a photo', 'Select up to 3'],
-        checked: true
+        checked: true,
       },
       {
         renderIcon: () => {
@@ -26,7 +26,7 @@ class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
         heading: 'Photos',
         subheadings: ['Use a photo', 'Select up to 3'],
         disabled: true,
-        tooltip: 'Something... something... whatever...'
+        tooltip: 'Something... something... whatever...',
       },
       {
         renderIcon: () => {
@@ -34,18 +34,18 @@ class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
         },
         heading: 'Photos 2',
         subheadings: ['Use a photo', 'Select up to 3'],
-        tooltip: 'Here is another tooltip!'
-      }
-    ]
+        tooltip: 'Here is another tooltip!',
+      },
+    ],
   };
 
   handleClick = (id: number) => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         cards: prevState.cards.map((e, idx) => {
           e.checked = id === idx;
           return e;
-        })
+        }),
       };
     });
   };
@@ -94,7 +94,7 @@ storiesOf('SelectionCard', module)
           subheadings={[
             // fdafds
             'The United States of America',
-            "'Mericaaaaa, oh yeah!"
+            "'Mericaaaaa, oh yeah!",
           ]}
         />
         <br />
@@ -172,7 +172,7 @@ storiesOf('SelectionCard', module)
           heading="United States"
           subheadings={[
             'The United States of America',
-            "'Mericaaaaa, oh yeah!"
+            "'Mericaaaaa, oh yeah!",
           ]}
         />
         <SelectionCard

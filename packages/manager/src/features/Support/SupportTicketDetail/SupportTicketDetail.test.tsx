@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   ClassNames,
   SupportTicketDetail,
-  CombinedProps
+  CombinedProps,
 } from './SupportTicketDetail';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -21,13 +21,13 @@ const classes: Record<ClassNames, string> = {
   open: '',
   ticketLabel: '',
   closed: '',
-  breadcrumbs: ''
+  breadcrumbs: '',
 };
 
 const props: CombinedProps = {
   classes,
   profileUsername: 'username',
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 const mockClosedTicket = () => {
@@ -35,7 +35,7 @@ const mockClosedTicket = () => {
     rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
       const ticket = supportTicketFactory.build({
         id: req.params.ticketId,
-        status: 'closed'
+        status: 'closed',
       });
       return res(ctx.json(ticket));
     })

@@ -18,25 +18,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     width: '100%',
     marginTop: theme.spacing(3),
-    backgroundColor: theme.color.white
+    backgroundColor: theme.color.white,
   },
   flex: {
-    flex: 1
+    flex: 1,
   },
   title: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   divider: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   lastItem: {
-    paddingBottom: '0 !important'
+    paddingBottom: '0 !important',
   },
   inner: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   panelBody: {
-    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
+    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
   },
   label: {
     '& > span:last-child': {
@@ -45,30 +45,30 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1rem',
       lineHeight: '1.2em',
       [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing(2)
-      }
-    }
+        marginLeft: theme.spacing(2),
+      },
+    },
   },
   subLabel: {
     display: 'inline-block',
     position: 'relative',
-    top: 3
+    top: 3,
   },
   caption: {
     marginTop: -8,
     paddingLeft: theme.spacing(2) + 18, // 34,
     [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing(4) + 18 // 50
-    }
+      paddingLeft: theme.spacing(4) + 18, // 50
+    },
   },
   vlanSelect: {
     paddingLeft: theme.spacing(2) + 24,
     paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
     [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing(4) + 24
-    }
-  }
+      paddingLeft: theme.spacing(4) + 24,
+    },
+  },
 }));
 
 interface Props {
@@ -87,14 +87,14 @@ interface Props {
 }
 
 type CombinedProps = Props;
-const AddonsPanel: React.FC<CombinedProps> = props => {
+const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const {
     accountBackups,
     changeBackups,
     changePrivateIP,
     changeSelectedVLAN,
     vlanError,
-    disabled
+    disabled,
   } = props;
 
   const flags = useFlags();
@@ -171,32 +171,34 @@ const AddonsPanel: React.FC<CombinedProps> = props => {
             </Typography>
           </Grid>
         </Grid>
-        {/** /v4/linodes/instances/clone does *not* support the private IP flag */
-        props.hidePrivateIP ? null : (
-          <React.Fragment>
-            <Grid container className={classes.divider}>
-              <Grid item xs={12}>
-                <Divider />
+        {
+          /** /v4/linodes/instances/clone does *not* support the private IP flag */
+          props.hidePrivateIP ? null : (
+            <React.Fragment>
+              <Grid container className={classes.divider}>
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
               </Grid>
-            </Grid>
-            <Grid container>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  className={classes.label}
-                  control={
-                    <CheckBox
-                      checked={props.privateIP}
-                      onChange={() => changePrivateIP()}
-                      data-qa-check-private-ip
-                      disabled={disabled}
-                    />
-                  }
-                  label="Private IP"
-                />
+              <Grid container>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    className={classes.label}
+                    control={
+                      <CheckBox
+                        checked={props.privateIP}
+                        onChange={() => changePrivateIP()}
+                        data-qa-check-private-ip
+                        disabled={disabled}
+                      />
+                    }
+                    label="Private IP"
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-          </React.Fragment>
-        )}
+            </React.Fragment>
+          )
+        }
         {flags.cmr && showVlans ? (
           <Grid container className={classes.lastItem}>
             <Grid item xs={12}>

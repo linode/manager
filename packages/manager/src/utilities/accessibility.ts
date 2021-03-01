@@ -2,11 +2,7 @@
 // Fo instance, when page is loading
 export const srSpeak = (text: string, priority: 'polite' | 'assertive') => {
   const el = document.createElement('div');
-  const id =
-    'speak-' +
-    Math.random()
-      .toString(36)
-      .substr(2, 9);
+  const id = 'speak-' + Math.random().toString(36).substr(2, 9);
   el.setAttribute('id', id);
   el.setAttribute('aria-live', priority || 'polite');
   el.classList.add('sr-only');

@@ -30,7 +30,7 @@ describe('StackScripts - List Suite', () => {
       'Deploy New Linode'
     );
     ConfigureLinode.stackScriptTableDisplay();
-    const selectedStackScript = ConfigureLinode.stackScriptRows.find(row =>
+    const selectedStackScript = ConfigureLinode.stackScriptRows.find((row) =>
       row.$('[data-qa-radio="true"]')
     );
     expect(

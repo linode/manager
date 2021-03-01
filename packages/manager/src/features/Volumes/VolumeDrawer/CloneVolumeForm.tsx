@@ -5,12 +5,12 @@ import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
@@ -31,14 +31,14 @@ const validationScheme = CloneVolumeSchema;
 
 const initialValues = { label: '' };
 
-const CloneVolumeForm: React.FC<CombinedProps> = props => {
+const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
   const {
     onClose,
     volumeId,
     volumeRegion,
     volumeLabel,
     volumeSize,
-    cloneVolume
+    cloneVolume,
   } = props;
   return (
     <Formik
@@ -46,11 +46,11 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume({ volumeId, label: values.label })
-          .then(_ => {
+          .then((_) => {
             onClose();
             resetEventsPolling();
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -74,7 +74,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
         resetForm,
         status,
         touched,
-        values
+        values,
       }) => {
         return (
           <Form>

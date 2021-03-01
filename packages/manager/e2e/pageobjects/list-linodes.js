@@ -104,7 +104,7 @@ export class ListLinodes extends Page {
   linodesDisplay() {
     console.log(`checking for linodes to be displayed`);
     try {
-      browser.waitUntil(function() {
+      browser.waitUntil(function () {
         return (
           $('[data-qa-linode]').waitForDisplayed() &&
           $$('[data-qa-linode]').length > 0
@@ -130,14 +130,14 @@ export class ListLinodes extends Page {
   getLinodeTags(linode) {
     return $(this.getLinodeSelector(linode))
       .$$(this.tag.selector)
-      .map(tag => tag.getText());
+      .map((tag) => tag.getText());
   }
 
   getLinodesInTagsGroup(tag) {
     const attribute = this.linodeElem.selector.substr(1).slice(0, -1);
     return this.tagHeader(tag)
       .$$(this.linodeElem.selector)
-      .map(linode => linode.getAttribute(attribute));
+      .map((linode) => linode.getAttribute(attribute));
   }
 
   navigateToDetail(linode) {
@@ -153,7 +153,7 @@ export class ListLinodes extends Page {
 
   gridElemsDisplay() {
     const header = this.subheader;
-    this.linode.forEach(l => {
+    this.linode.forEach((l) => {
       expect(l.isDisplayed()).toBe(true);
       expect(l.$(this.linodeLabel.selector).isDisplayed())
         .withContext(
@@ -212,44 +212,34 @@ export class ListLinodes extends Page {
   }
 
   listElemsDisplay() {
-    const linodeDisplays = this.linode.map(l => l.isDisplayed());
-    const labelDisplays = this.linode.map(l =>
+    const linodeDisplays = this.linode.map((l) => l.isDisplayed());
+    const labelDisplays = this.linode.map((l) =>
       l.$(this.linodeLabel.selector).isDisplayed()
     );
-    const ipDisplays = this.linode.map(l =>
+    const ipDisplays = this.linode.map((l) =>
       l.$(this.ip.selector).isDisplayed()
     );
-    const regionDisplays = this.linode.map(l =>
+    const regionDisplays = this.linode.map((l) =>
       l.$(this.region.selector).isDisplayed()
     );
-    const actionMenu = this.linode.map(l =>
+    const actionMenu = this.linode.map((l) =>
       l.$(this.linodeActionMenu.selector).isDisplayed()
     );
 
-    linodeDisplays.forEach(l =>
-      expect(l)
-        .withContext(`"${l}" selector ${assertLog.displayed}`)
-        .toBe(true)
+    linodeDisplays.forEach((l) =>
+      expect(l).withContext(`"${l}" selector ${assertLog.displayed}`).toBe(true)
     );
-    labelDisplays.forEach(l =>
-      expect(l)
-        .withContext(`"${l}" selector ${assertLog.displayed}`)
-        .toBe(true)
+    labelDisplays.forEach((l) =>
+      expect(l).withContext(`"${l}" selector ${assertLog.displayed}`).toBe(true)
     );
-    ipDisplays.forEach(i =>
-      expect(i)
-        .withContext(`"${i}" selector ${assertLog.displayed}`)
-        .toBe(true)
+    ipDisplays.forEach((i) =>
+      expect(i).withContext(`"${i}" selector ${assertLog.displayed}`).toBe(true)
     );
-    regionDisplays.forEach(r =>
-      expect(r)
-        .withContext(`"${r}" selector ${assertLog.displayed}`)
-        .toBe(true)
+    regionDisplays.forEach((r) =>
+      expect(r).withContext(`"${r}" selector ${assertLog.displayed}`).toBe(true)
     );
-    actionMenu.forEach(a =>
-      expect(a)
-        .withContext(`"${a}" selector ${assertLog.displayed}`)
-        .toBe(true)
+    actionMenu.forEach((a) =>
+      expect(a).withContext(`"${a}" selector ${assertLog.displayed}`).toBe(true)
     );
   }
 
@@ -276,14 +266,14 @@ export class ListLinodes extends Page {
       $().waitForDisplayed();
     }
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return (
         linode.$(this.status.selector).getAttribute('data-qa-entity-status') ===
         'rebooting'
       );
     }, constants.wait.long);
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return (
         linode.$(this.status).getAttribute('data-qa-entity-status') ===
         'running'
@@ -296,7 +286,7 @@ export class ListLinodes extends Page {
     this.acceptDialog('Power Off');
 
     browser.waitUntil(
-      function() {
+      function () {
         return $(
           `${this.getLinodeSelector(linode)} [data-qa-entity-status="offline"]`
         ).isDisplayed();
@@ -309,7 +299,7 @@ export class ListLinodes extends Page {
   powerOn(linode) {
     this.selectActionMenuItem(linode, 'Power On');
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return $('[data-qa-entity-status="running"]').isDisplayed();
     }, constants.wait.minute * 2);
   }
@@ -322,7 +312,7 @@ export class ListLinodes extends Page {
 
   switchView(view) {
     $(`[data-qa-view="${view}"]`).click();
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return $(`[data-qa-active-view="${view}"]`).isDisplayed();
     }, constants.wait.short);
   }
@@ -333,9 +323,7 @@ export class ListLinodes extends Page {
     this.confirmDialogSubmit.waitForDisplayed();
     expect(this.confirmDialogTitle.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.confirmDialogTitle.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.confirmDialogTitle.selector}" selector`
       )
       .toMatch(dialogTitle);
     this.confirmDialogSubmit.click();

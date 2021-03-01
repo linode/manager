@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -15,24 +15,24 @@ type ClassNames = 'root' | 'icon' | 'link' | 'title';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(4)
+      marginTop: theme.spacing(4),
     },
     icon: {
       width: 24,
       position: 'relative',
       top: 2,
       marginRight: 8,
-      color: theme.color.headline
+      color: theme.color.headline,
     },
     link: {
       marginLeft: 32,
       fontSize: '1em',
-      lineHeight: 2
+      lineHeight: 2,
     },
     title: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1)
-    }
+      marginBottom: theme.spacing(1),
+    },
   });
 
 interface Link {
@@ -48,7 +48,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const LinkSection: React.FunctionComponent<CombinedProps> = props => {
+export const LinkSection: React.FunctionComponent<CombinedProps> = (props) => {
   const { classes, icon, links, title } = props;
   const Icon = icon;
   return (

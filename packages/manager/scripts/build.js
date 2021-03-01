@@ -7,7 +7,7 @@ process.env.NODE_ENV = 'production';
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
@@ -47,7 +47,7 @@ const _build = async () => {
    * as hard-coded JSON to save network requests on load
    */
   console.log('Caching common requests');
-  await buildRequests().then(response =>
+  await buildRequests().then((response) =>
     console.log(
       response === 0
         ? chalk.green('Caching successful\n')
@@ -58,7 +58,7 @@ const _build = async () => {
   // Read the current file sizes in build directory.
   // This lets us display how much they changed later.
   measureFileSizesBeforeBuild(paths.appBuild)
-    .then(previousFileSizes => {
+    .then((previousFileSizes) => {
       // Remove all content but keep the directory so that
       // if you're in it, you don't end up in Trash
       fs.emptyDirSync(paths.appBuild);
@@ -107,7 +107,7 @@ const _build = async () => {
           useYarn
         );
       },
-      err => {
+      (err) => {
         console.log(chalk.red('Failed to compile.\n'));
         printBuildError(err);
         process.exit(1);
@@ -151,7 +151,7 @@ function build(previousFileSizes) {
       return resolve({
         stats,
         previousFileSizes,
-        warnings: messages.warnings
+        warnings: messages.warnings,
       });
     });
   });
@@ -160,7 +160,7 @@ function build(previousFileSizes) {
 function copyPublicFolder() {
   fs.copySync(paths.appPublic, paths.appBuild, {
     dereference: true,
-    filter: file => file !== paths.appHtml
+    filter: (file) => file !== paths.appHtml,
   });
 }
 

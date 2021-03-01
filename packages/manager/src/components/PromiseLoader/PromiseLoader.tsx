@@ -18,21 +18,22 @@ export interface PromiseLoaderResponse<T> {
 
 /* tslint:disable */
 export default function preload<P>(requests: RequestMap<P>) {
-  return function(Component: React.ComponentType<P>) {
+  return function (Component: React.ComponentType<P>) {
     /* tslint:enable */
     return class LoadedComponent extends React.Component<P, State> {
       mounted: boolean = false;
       state = { loading: true };
 
-      static displayName = `PromiseLoader(${Component.displayName ||
-        Component.name})`;
+      static displayName = `PromiseLoader(${
+        Component.displayName || Component.name
+      })`;
 
       handleDone = () => {
         if (!this.mounted) {
           return;
         }
 
-        this.setState(prevState => ({ ...prevState, loading: false }));
+        this.setState((prevState) => ({ ...prevState, loading: false }));
       };
 
       componentWillUnmount() {
@@ -43,31 +44,29 @@ export default function preload<P>(requests: RequestMap<P>) {
         this.mounted = true;
         const promises = Object.entries(requests).map(([name, request]) =>
           request(this.props)
-            .then(response => {
+            .then((response) => {
               if (!this.mounted) {
                 return;
               }
 
-              this.setState(prevState => ({
+              this.setState((prevState) => ({
                 ...prevState,
-                [name]: { response }
+                [name]: { response },
               }));
             })
-            .catch(response => {
+            .catch((response) => {
               if (!this.mounted) {
                 return;
               }
 
-              this.setState(prevState => ({
+              this.setState((prevState) => ({
                 ...prevState,
-                [name]: { error: true, response }
+                [name]: { error: true, response },
               }));
             })
         );
 
-        Promise.all(promises)
-          .then(this.handleDone)
-          .catch(this.handleDone);
+        Promise.all(promises).then(this.handleDone).catch(this.handleDone);
       }
 
       render() {

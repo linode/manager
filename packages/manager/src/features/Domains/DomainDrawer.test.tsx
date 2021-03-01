@@ -3,7 +3,7 @@ import { linodeFactory } from 'src/factories/linodes';
 import { generateDefaultDomainRecords } from './DomainDrawer';
 
 const testLinode = linodeFactory.build({
-  ipv6: null
+  ipv6: null,
 });
 
 const testDomain = 'example.com';

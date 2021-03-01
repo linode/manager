@@ -6,7 +6,7 @@ import { isType } from 'typescript-fsa';
 import {
   requestAccountActions,
   saveCreditCard,
-  updateAccountActions
+  updateAccountActions,
 } from './account.actions';
 
 /**
@@ -18,14 +18,14 @@ export const defaultState: State = {
   loading: false,
   error: {},
   lastUpdated: 0,
-  data: undefined
+  data: undefined,
 };
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state: State = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, requestAccountActions.started)) {
       draft.loading = true;
     }

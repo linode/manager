@@ -21,7 +21,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table/Table_CMR';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -33,7 +33,7 @@ import StackScriptTableHead from '../Partials/StackScriptTableHead_CMR';
 import {
   AcceptedFilters,
   generateCatchAllFilter,
-  generateSpecificFilter
+  generateSpecificFilter,
 } from '../stackScriptUtils';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
 
@@ -118,7 +118,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       currentFilterType: null,
       currentFilter: {
         ['+order_by']: 'deployments_total',
-        ['+order']: 'desc'
+        ['+order']: 'desc',
       },
       currentSearchFilter: {},
       isSorting: false,
@@ -126,7 +126,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       fieldError: undefined,
       isSearching: false,
       didSearch: false,
-      successMessage: ''
+      successMessage: '',
     };
 
     componentDidMount() {
@@ -153,7 +153,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       this.setState({
         gettingMoreStackScripts: true,
         isSorting,
-        currentPage: page
+        currentPage: page,
       });
 
       const filteredUser = category === 'linode' ? 'linode' : currentUser;
@@ -192,8 +192,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
            * basically, if the result set after filtering out StackScripts with
            * deprecated distros is 0, request the next page with the same filter.
            */
-          const newDataWithoutDeprecatedDistros = newData.filter(stackScript =>
-            this.hasNonDeprecatedImages(stackScript.images)
+          const newDataWithoutDeprecatedDistros = newData.filter(
+            (stackScript) => this.hasNonDeprecatedImages(stackScript.images)
           );
 
           // we have to make sure both the original data set
@@ -211,7 +211,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             gettingMoreStackScripts: false,
             loading: false,
             isSorting: false,
-            getMoreStackScriptsFailed: false
+            getMoreStackScriptsFailed: false,
           });
           return newDataWithoutDeprecatedDistros;
         })
@@ -228,7 +228,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               'There was an error loading StackScripts'
             ),
             loading: false,
-            gettingMoreStackScripts: false
+            gettingMoreStackScripts: false,
           });
         });
     };
@@ -261,22 +261,22 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         case 'label':
           return {
             apiFilter: 'label',
-            currentFilter: 'label'
+            currentFilter: 'label',
           };
         case 'deploys':
           return {
             apiFilter: 'deployments_total',
-            currentFilter: 'deploys'
+            currentFilter: 'deploys',
           };
         case 'revision':
           return {
             apiFilter: 'updated',
-            currentFilter: 'revision'
+            currentFilter: 'revision',
           };
         default:
           return {
             apiFilter: null,
-            currentFilter: null
+            currentFilter: null,
           };
       }
     };
@@ -296,7 +296,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         ? {
             ['+order_by']: filterInfo.apiFilter,
             ['+order']: sortOrder,
-            ...currentSearchFilter
+            ...currentSearchFilter,
           }
         : { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder };
 
@@ -307,8 +307,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         currentFilterType: filterInfo.currentFilter,
         currentFilter: {
           ['+order_by']: filterInfo.apiFilter,
-          ['+order']: sortOrder
-        }
+          ['+order']: sortOrder,
+        },
       });
     };
 
@@ -324,7 +324,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         currentUser,
         request,
         stackScriptGrants,
-        history
+        history,
       } = this.props;
       const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
@@ -374,7 +374,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       this.setState({
         isSearching: true, // wether to show the loading spinner in search bar
-        didSearch: true // table will show default empty state unless didSearch is true
+        didSearch: true, // table will show default empty state unless didSearch is true
       });
 
       sendStackscriptsSearchEvent(lowerCaseValue);
@@ -392,7 +392,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           this.setState({
             listOfStackScripts: response.data,
             isSearching: false,
-            loading: false
+            loading: false,
           });
           /*
            * If we're searching for search result, prevent the user
@@ -401,12 +401,12 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           if (value) {
             this.setState({
               allStackScriptsLoaded: true,
-              currentSearchFilter: filter
+              currentSearchFilter: filter,
             });
           } else {
             this.setState({
               allStackScriptsLoaded: false,
-              currentSearchFilter: []
+              currentSearchFilter: [],
             });
           }
         })
@@ -420,7 +420,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               'There was an error loading StackScripts'
             ),
             isSearching: false,
-            loading: false
+            loading: false,
           });
         });
     };
@@ -438,7 +438,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         sortOrder,
         allStackScriptsLoaded,
         gettingMoreStackScripts,
-        getMoreStackScriptsFailed
+        getMoreStackScriptsFailed,
       } = this.state;
 
       const { classes, userCannotCreateStackScripts } = this.props;
@@ -507,8 +507,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   buttonProps={[
                     {
                       children: 'Create New StackScript',
-                      onClick: () => this.goToCreateStackScript()
-                    }
+                      onClick: () => this.goToCreateStackScript(),
+                    },
                   ]}
                   className={classes.stackscriptPlaceholder}
                 >
@@ -544,7 +544,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               <div
                 className={classnames({
                   [classes.searchWrapper]: true,
-                  [classes.landing]: !isSelecting
+                  [classes.landing]: !isSelecting,
                 })}
               >
                 <DebouncedSearch
@@ -638,7 +638,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     }
   }
 
-  const mapStateToProps: MapState<StoreProps, CombinedProps> = state => ({
+  const mapStateToProps: MapState<StoreProps, CombinedProps> = (state) => ({
     stackScriptGrants: isRestrictedUser(state)
       ? pathOr(
           undefined,
@@ -647,7 +647,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         )
       : undefined,
     userCannotCreateStackScripts:
-      isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts')
+      isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
   });
 
   const connected = connect(mapStateToProps);
@@ -667,6 +667,6 @@ const updateQueryString = (
   // Use `replace` instead of `push` so that each keystroke is not a separate
   // browser history item.
   history.replace({
-    search: queryString
+    search: queryString,
   });
 };

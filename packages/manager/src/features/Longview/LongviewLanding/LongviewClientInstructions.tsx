@@ -14,14 +14,14 @@ import Instructions from '../shared/InstallationInstructions';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   button: {
     padding: 0,
     '&:hover': {
-      color: theme.color.red
-    }
-  }
+      color: theme.color.red,
+    },
+  },
 }));
 
 interface Props extends ActionHandlers {
@@ -33,7 +33,7 @@ interface Props extends ActionHandlers {
   userCanModifyClient: boolean;
 }
 
-export const LongviewClientInstructions: React.FC<Props> = props => {
+export const LongviewClientInstructions: React.FC<Props> = (props) => {
   const {
     clientID,
     clientLabel,
@@ -41,7 +41,7 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
     clientAPIKey,
     updateLongviewClient,
     triggerDeleteLongviewClient,
-    userCanModifyClient
+    userCanModifyClient,
   } = props;
   const classes = useStyles();
 
@@ -50,10 +50,10 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
   const handleUpdateLabel = (newLabel: string) => {
     setUpdating(true);
     return updateLongviewClient(clientID, newLabel)
-      .then(_ => {
+      .then((_) => {
         setUpdating(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setUpdating(false);
         return Promise.reject(
           getAPIErrorOrDefault(error, 'Error updating label')[0].reason

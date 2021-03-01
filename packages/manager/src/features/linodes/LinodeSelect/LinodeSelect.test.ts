@@ -3,20 +3,20 @@ import {
   linodeFromGroupedItems,
   linodeFromItems,
   linodesToGroupedItems,
-  linodesToItems
+  linodesToItems,
 } from './LinodeSelect';
 
 describe('utilities', () => {
   describe('linodesToItems', () => {
     const items = linodesToItems(linodes);
     it('includes a value with the Linode ID', () => {
-      items.forEach(item => {
+      items.forEach((item) => {
         expect(item.value).toBe(item.data.id);
       });
     });
 
     it('includes a label with the Linode label', () => {
-      items.forEach(item => {
+      items.forEach((item) => {
         expect(item.label).toBe(item.data.label);
       });
     });
@@ -42,10 +42,10 @@ describe('utilities', () => {
     });
 
     it('includes all options in a specific regions in each group', () => {
-      groupedItems[0].options.forEach(option => {
+      groupedItems[0].options.forEach((option) => {
         expect(option.data.region).toBe('us-east-1a');
       });
-      groupedItems[1].options.forEach(option => {
+      groupedItems[1].options.forEach((option) => {
         expect(option.data.region).toBe('eu-west');
       });
     });

@@ -20,7 +20,7 @@ const mapStateToProps: MapState<WithNotifications, { linodeId: number }> = (
 ) => ({
   linodeNotifications: notificationsForLinode(props.linodeId)(
     state.__resources.notifications.data || []
-  )
+  ),
 });
 
 export default connect(mapStateToProps);

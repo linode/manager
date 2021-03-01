@@ -11,14 +11,14 @@ export const defaultState: State = {
   loading: false,
   lastUpdated: 0,
   results: 0,
-  error: {}
+  error: {},
 };
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, getDatabaseTypesActions.started)) {
       draft.loading = true;
       draft.error.read = undefined;

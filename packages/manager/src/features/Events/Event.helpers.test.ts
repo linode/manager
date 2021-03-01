@@ -5,16 +5,16 @@ import {
   formatEventWithUsername,
   maybeRemoveTrailingPeriod,
   percentCompleteHasUpdated,
-  shouldUpdateEvents
+  shouldUpdateEvents,
 } from './Event.helpers';
 
 const inProgressEvents = {
   1234: 50,
-  1235: 20
+  1235: 20,
 };
 
 const nextInProgressEvents = {
-  1234: 80
+  1234: 80,
 };
 
 const mostRecentEventTime = '1556810353941';
@@ -41,11 +41,11 @@ describe('Utility Functions', () => {
       shouldUpdateEvents(
         {
           inProgressEvents,
-          mostRecentEventTime
+          mostRecentEventTime,
         },
         {
           inProgressEvents,
-          mostRecentEventTime: nextTime
+          mostRecentEventTime: nextTime,
         }
       )
     ).toBeTruthy();
@@ -56,11 +56,11 @@ describe('Utility Functions', () => {
       shouldUpdateEvents(
         {
           inProgressEvents,
-          mostRecentEventTime
+          mostRecentEventTime,
         },
         {
           inProgressEvents: nextInProgressEvents,
-          mostRecentEventTime
+          mostRecentEventTime,
         }
       )
     ).toBeTruthy();
@@ -68,11 +68,11 @@ describe('Utility Functions', () => {
       shouldUpdateEvents(
         {
           inProgressEvents,
-          mostRecentEventTime
+          mostRecentEventTime,
         },
         {
           inProgressEvents: {},
-          mostRecentEventTime
+          mostRecentEventTime,
         }
       )
     ).toBeTruthy();
@@ -83,11 +83,11 @@ describe('Utility Functions', () => {
       shouldUpdateEvents(
         {
           inProgressEvents,
-          mostRecentEventTime
+          mostRecentEventTime,
         },
         {
           inProgressEvents,
-          mostRecentEventTime
+          mostRecentEventTime,
         }
       )
     ).toBeFalsy();

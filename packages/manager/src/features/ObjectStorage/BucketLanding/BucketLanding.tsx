@@ -18,7 +18,7 @@ import TextField from 'src/components/TextField';
 import TransferDisplay from 'src/components/TransferDisplay';
 import { objectStorageClusterDisplay } from 'src/constants';
 import bucketDrawerContainer, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/bucketDrawer.container';
 import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
 import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
@@ -27,7 +27,7 @@ import { BucketError } from 'src/store/bucket/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   sendDeleteBucketEvent,
-  sendDeleteBucketFailedEvent
+  sendDeleteBucketFailedEvent,
 } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 import CancelNotice from '../CancelNotice';
@@ -36,14 +36,14 @@ import BucketTable from './BucketTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
   },
   empty: {
     '& svg': {
       marginTop: theme.spacing(1.5),
-      transform: 'scale(0.8)'
-    }
-  }
+      transform: 'scale(0.8)',
+    },
+  },
 }));
 
 interface Props {
@@ -52,7 +52,7 @@ interface Props {
 
 export type CombinedProps = Props & DispatchProps;
 
-export const BucketLanding: React.FC<CombinedProps> = props => {
+export const BucketLanding: React.FC<CombinedProps> = (props) => {
   const { isRestrictedUser, openBucketDrawer } = props;
 
   const classes = useStyles();
@@ -60,7 +60,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
     objectStorageBuckets,
-    deleteObjectStorageBucket
+    deleteObjectStorageBucket,
   } = useObjectStorageBuckets();
 
   const { data, loading, bucketErrors, lastUpdated } = objectStorageBuckets;
@@ -72,9 +72,10 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
-  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    bucketDetailDrawerOpen,
+    setBucketDetailDrawerOpen,
+  ] = React.useState<boolean>(false);
   const [bucketForDetails, setBucketForDetails] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);
@@ -112,7 +113,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         // @analytics
         sendDeleteBucketEvent(cluster);
       })
-      .catch(e => {
+      .catch((e) => {
         // @analytics
         sendDeleteBucketFailedEvent(cluster);
 
@@ -240,7 +241,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
               handleClickRemove,
               handleClickDetails,
               openBucketDrawer,
-              data: orderedData
+              data: orderedData,
             };
             return <BucketTable {...bucketTableProps} />;
           }}
@@ -298,7 +299,7 @@ const RenderError: React.FC<{}> = () => {
 
 const RenderEmpty: React.FC<{
   onClick: () => void;
-}> = props => {
+}> = (props) => {
   const classes = useStyles();
 
   return (
@@ -313,8 +314,8 @@ const RenderEmpty: React.FC<{
         buttonProps={[
           {
             onClick: props.onClick,
-            children: 'Add a Bucket'
-          }
+            children: 'Add a Bucket',
+          },
         ]}
       >
         <Typography variant="subtitle1">Need help getting started?</Typography>
@@ -351,7 +352,7 @@ const BucketErrorDisplay: React.FC<BucketErrorDisplayProps> = React.memo(
     return (
       <Banner
         regionsAffected={bucketErrors.map(
-          thisError =>
+          (thisError) =>
             objectStorageClusterDisplay[thisError.clusterId] ??
             thisError.clusterId
         )}
@@ -375,7 +376,7 @@ const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
         : `${regionsAffected[0]}.`}
       <ul>
         {moreThanOneRegionAffected &&
-          regionsAffected.map(thisRegion => (
+          regionsAffected.map((thisRegion) => (
             <li key={thisRegion}>{thisRegion}</li>
           ))}
       </ul>

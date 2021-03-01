@@ -7,7 +7,7 @@ const scrollTo = (ref?: React.RefObject<any>) => {
   window.scroll({
     behavior: 'smooth',
     left: 0,
-    top: ref ? ref.current.offsetTop : 0
+    top: ref ? ref.current.offsetTop : 0,
   });
 };
 

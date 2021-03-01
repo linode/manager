@@ -16,23 +16,23 @@ import { MODE } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   clusterCell: {
-    width: '18%'
+    width: '18%',
   },
   bucketCell: {
-    width: '28%'
+    width: '28%',
   },
   radioCell: {
-    width: '18%'
+    width: '18%',
   },
   disabledRow: {
     backgroundColor: theme.bg.tableHeader,
     cursor: 'not-allowed',
-    opacity: 0.4
+    opacity: 0.4,
   },
   tableRoot: {
     maxHeight: 800,
-    overflowY: 'auto'
-  }
+    overflowY: 'auto',
+  },
 }));
 
 interface Props {
@@ -49,7 +49,7 @@ export const getUpdatedScopes = (
 ): Scope[] => {
   // Cluster and bucket together form a primary key
   const scopeToUpdate = oldScopes.findIndex(
-    thisScope =>
+    (thisScope) =>
       thisScope.bucket_name === newScope.bucket_name &&
       thisScope.cluster === newScope.cluster
   );
@@ -62,10 +62,10 @@ export const getUpdatedScopes = (
 export const SCOPES: Record<string, AccessType> = {
   none: 'none',
   read: 'read_only',
-  write: 'read_write'
+  write: 'read_write',
 };
 
-export const LimitedAccessControls: React.FC<Props> = props => {
+export const LimitedAccessControls: React.FC<Props> = (props) => {
   const { checked, handleToggle, ...rest } = props;
 
   return (
@@ -100,7 +100,7 @@ interface TableProps {
   updateScopes: (newScopes: Scope[]) => void;
 }
 
-export const AccessTable: React.FC<TableProps> = React.memo(props => {
+export const AccessTable: React.FC<TableProps> = React.memo((props) => {
   const { checked, mode, bucket_access, updateScopes } = props;
 
   const classes = useStyles();
@@ -115,16 +115,16 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
   };
 
   const updateAllScopes = (accessType: AccessType) => {
-    const newScopes = bucket_access.map(thisScope => ({
+    const newScopes = bucket_access.map((thisScope) => ({
       ...thisScope,
-      permissions: accessType
+      permissions: accessType,
     }));
     updateScopes(newScopes);
   };
 
   const allScopesEqual = (accessType: AccessType) => {
     return bucket_access.every(
-      thisScope => thisScope.permissions === accessType
+      (thisScope) => thisScope.permissions === accessType
     );
   };
 
@@ -164,7 +164,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
                 onChange={() => updateAllScopes(SCOPES.none)}
                 data-qa-perm-none-radio
                 inputProps={{
-                  'aria-label': 'Select none for all'
+                  'aria-label': 'Select none for all',
                 }}
               />
             </TableCell>
@@ -178,7 +178,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
                 onChange={() => updateAllScopes('read_only')}
                 data-qa-perm-read-radio
                 inputProps={{
-                  'aria-label': 'Select read-only for all'
+                  'aria-label': 'Select read-only for all',
                 }}
               />
             </TableCell>
@@ -192,13 +192,13 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
                 onChange={() => updateAllScopes(SCOPES.write)}
                 data-qa-perm-rw-radio
                 inputProps={{
-                  'aria-label': 'Select read/write for all'
+                  'aria-label': 'Select read/write for all',
                 }}
               />
             </TableCell>
           </TableRow>
         )}
-        {bucket_access.map(thisScope => {
+        {bucket_access.map((thisScope) => {
           const scopeName = `${thisScope.cluster}-${thisScope.bucket_name}`;
           return (
             <TableRow
@@ -224,7 +224,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
-                      permissions: SCOPES.none
+                      permissions: SCOPES.none,
                     })
                   }
                 />
@@ -239,7 +239,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
-                      permissions: SCOPES.read
+                      permissions: SCOPES.read,
                     })
                   }
                 />
@@ -254,7 +254,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
-                      permissions: SCOPES.write
+                      permissions: SCOPES.write,
                     })
                   }
                 />

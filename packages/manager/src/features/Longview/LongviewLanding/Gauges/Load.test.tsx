@@ -8,9 +8,9 @@ const mockError = [{ TEXT: 'no reason', CODE: 0, SEVERITY: 3 }];
 const loadingStore = {
   longviewStats: {
     123: {
-      loading: true
-    }
-  }
+      loading: true,
+    },
+  },
 };
 
 const dataStore = {
@@ -19,25 +19,25 @@ const dataStore = {
       loading: false,
       data: {
         ...longviewLoad,
-        ...systemInfo
-      }
-    }
-  }
+        ...systemInfo,
+      },
+    },
+  },
 };
 
 const errorStore = {
   longviewStats: {
     123: {
       loading: false,
-      error: mockError
-    }
-  }
+      error: mockError,
+    },
+  },
 };
 
 describe('Longview Load Gauge UI', () => {
   it('should render a loading state initially', () => {
     const { getByText } = renderWithTheme(<Load clientID={123} />, {
-      customStore: loadingStore
+      customStore: loadingStore,
     });
 
     expect(getByText(/Loading/)).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('Longview Load Gauge UI', () => {
 
   it('should render an error state on 400 responses', async () => {
     const { findByText } = renderWithTheme(<Load clientID={123} />, {
-      customStore: errorStore
+      customStore: errorStore,
     });
 
     await findByText(/Error/);
@@ -53,7 +53,7 @@ describe('Longview Load Gauge UI', () => {
 
   it('should render a data state on 200 responses', async () => {
     const { findByTestId } = renderWithTheme(<Load clientID={123} />, {
-      customStore: dataStore
+      customStore: dataStore,
     });
 
     const innerText = await findByTestId('gauge-innertext');

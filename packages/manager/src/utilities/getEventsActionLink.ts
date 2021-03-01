@@ -3,7 +3,7 @@ import { path } from 'ramda';
 import { nonClickEvents } from 'src/constants';
 import {
   EntityType,
-  getEntityByIDFromStore
+  getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
 
 export default (

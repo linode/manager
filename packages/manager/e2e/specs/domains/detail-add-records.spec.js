@@ -5,7 +5,7 @@ import DomainDetail from '../../pageobjects/domain-detail/detail.page';
 import {
   apiCreateDomains,
   apiDeleteAllDomains,
-  timestamp
+  timestamp,
 } from '../../utils/common';
 
 describe('Domains - Detail - Add Records Suite', () => {
@@ -15,12 +15,12 @@ describe('Domains - Detail - Add Records Suite', () => {
   let domain = [
     {
       domain: domainName,
-      tags: domainTags
-    }
+      tags: domainTags,
+    },
   ];
 
   const expectedTagsDisplay = () => {
-    const displayedTags = DomainDetail.tags.map(tag => tag.getText());
+    const displayedTags = DomainDetail.tags.map((tag) => tag.getText());
     expect(displayedTags).toEqual(domainTags);
   };
 
@@ -71,7 +71,7 @@ describe('Domains - Detail - Add Records Suite', () => {
   };
 
   const checkNsRecords = () => {
-    [1, 2, 3, 4, 5].forEach(index => {
+    [1, 2, 3, 4, 5].forEach((index) => {
       const rowIndex = index - 1;
       const nameServerElement = DomainDetail.domainTableCellValue(
         'NS Record',
@@ -180,7 +180,7 @@ describe('Domains - Detail - Add Records Suite', () => {
       expect(ttlCell.getText()).toEqual(ttl);
     });
 
-    it('An added NS Record can be edited', function() {
+    it('An added NS Record can be edited', function () {
       const nameServerUpdate = `test-edit-${timestamp()}.com`;
       const subDomainUpdate = `sub-edit-${timestamp()}`;
       DomainDetail.selectActionMenuItemV2(
@@ -251,7 +251,7 @@ describe('Domains - Detail - Add Records Suite', () => {
       expect(subDomainCell.getText()).toEqual(subDomain);
     });
 
-    it('An added MX Record can be edited', function() {
+    it('An added MX Record can be edited', function () {
       const mailServerUpdate = `test-edit-${timestamp()}.com`;
       const subDomainUpdate = `sub-edit-${timestamp()}`;
       const preferenceUpdate = '255';
@@ -322,7 +322,7 @@ describe('Domains - Detail - Add Records Suite', () => {
       expect(ttlCell.getText()).toEqual(ttl);
     });
 
-    it('An added A/AAAA Record can be edited', function() {
+    it('An added A/AAAA Record can be edited', function () {
       const hostNameUpdate = `test-edit-${timestamp()}.com`;
       const ipAddressUpdate = '10.0.0.2';
       DomainDetail.selectActionMenuItemV2(
@@ -381,7 +381,7 @@ describe('Domains - Detail - Add Records Suite', () => {
       expect(ttlCell.getText()).toEqual(ttl);
     });
 
-    it('An added CNAME Record can be edited', function() {
+    it('An added CNAME Record can be edited', function () {
       const hostNameUpdate = `test-edit-${timestamp()}.com`;
       const aliasToUpdate = `alias-edit-${timestamp()}.com`;
       DomainDetail.selectActionMenuItemV2(
@@ -436,7 +436,7 @@ describe('Domains - Detail - Add Records Suite', () => {
       expect(ttlCell.getText()).toEqual(ttl);
     });
 
-    it('An added TXT Record can be edited', function() {
+    it('An added TXT Record can be edited', function () {
       const hostNameUpdate = `test-edit-${timestamp()}.com`;
       const valueUpdate = `10.0.0.2`;
       DomainDetail.selectActionMenuItemV2(
@@ -526,7 +526,7 @@ describe('Domains - Detail - Add Records Suite', () => {
       expect(ttlCell.getText()).toEqual(ttl);
     });
 
-    it('An added SRV Record can be edited', function() {
+    it('An added SRV Record can be edited', function () {
       const serviceNameUpdate = `test-edit`;
       const protocolUpdate = 'xmpp';
       const priorityUpdate = '22';
@@ -622,7 +622,7 @@ describe('Domains - Detail - Add Records Suite', () => {
       expect(ttlCell.getText()).toEqual(ttl);
     });
 
-    it('An added CAA Record can be edited', function() {
+    it('An added CAA Record can be edited', function () {
       const nameUpdate = `test-edit-${timestamp()}.com`;
       const tagUpdate = 'issuewild';
       const valueUpdate = '10.0.0.2';

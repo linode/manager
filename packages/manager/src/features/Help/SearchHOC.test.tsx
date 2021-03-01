@@ -8,13 +8,13 @@ import withSearch, {
   convertDocsToItems,
   getCommunityResultLabel,
   getCommunityUrl,
-  getDocsResultLabel
+  getDocsResultLabel,
 } from './SearchHOC';
 
 import {
   community_answer,
   community_question,
-  docs_result
+  docs_result,
 } from 'src/__data__/searchResults';
 import { COMMUNITY_BASE_URL, DOCS_BASE_URL } from 'src/constants';
 
@@ -25,17 +25,17 @@ const mockFn = jest.fn();
 jest.mock('algoliasearch', () =>
   jest.fn((key: string, appId: string) => {
     return {
-      search: mockFn
+      search: mockFn,
     };
   })
 );
 
 const mockResults = {
-  results: [{ hits: [docs_result] }, { hits: [community_question] }]
+  results: [{ hits: [docs_result] }, { hits: [community_question] }],
 };
 
 const emptyResults = {
-  results: [{ hits: [] }, { hits: [] }]
+  results: [{ hits: [] }, { hits: [] }],
 };
 
 const getSearchFromQuery = (query: string) => [
@@ -44,8 +44,8 @@ const getSearchFromQuery = (query: string) => [
     query,
     params: {
       hitsPerPage: HITS_PER_PAGE,
-      attributesToRetrieve: ['title', '_highlightResult', 'href']
-    }
+      attributesToRetrieve: ['title', '_highlightResult', 'href'],
+    },
   },
   {
     indexName: 'linode-community',
@@ -53,9 +53,9 @@ const getSearchFromQuery = (query: string) => [
     params: {
       hitsPerPage: HITS_PER_PAGE,
       distinct: true,
-      attributesToRetrieve: ['title', 'description', '_highlightResult']
-    }
-  }
+      attributesToRetrieve: ['title', 'description', '_highlightResult'],
+    },
+  },
 ];
 
 const searchable = withSearch({ hitsPerPage: HITS_PER_PAGE, highlight: false });
@@ -178,9 +178,9 @@ describe('Algolia Search HOC', () => {
             label: docs_result.title,
             data: {
               href: DOCS_BASE_URL + docs_result.href,
-              source: 'Linode documentation'
-            }
-          }
+              source: 'Linode documentation',
+            },
+          },
         ]);
       });
       it('should handle empty results lists correctly', () => {
@@ -191,7 +191,7 @@ describe('Algolia Search HOC', () => {
     describe('convertCommunityToItems', () => {
       it('should convert a community question to a correctly formatted Item', () => {
         const formattedResults = convertCommunityToItems(false, [
-          community_question
+          community_question,
         ] as any);
         expect(formattedResults).toEqual([
           {
@@ -199,14 +199,14 @@ describe('Algolia Search HOC', () => {
             label: community_question.title,
             data: {
               source: 'Linode Community Site',
-              href: expect.any(String)
-            }
-          }
+              href: expect.any(String),
+            },
+          },
         ]);
       });
       it('should convert a community answer to a correctly formatted Item', () => {
         const formattedResults = convertCommunityToItems(false, [
-          community_answer
+          community_answer,
         ] as any);
         expect(formattedResults).toEqual([
           {
@@ -214,9 +214,9 @@ describe('Algolia Search HOC', () => {
             label: community_question.description,
             data: {
               source: 'Linode Community Site',
-              href: expect.any(String)
-            }
-          }
+              href: expect.any(String),
+            },
+          },
         ]);
       });
     });

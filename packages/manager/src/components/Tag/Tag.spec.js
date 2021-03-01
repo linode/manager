@@ -1,6 +1,6 @@
 const {
   navigateToStory,
-  executeInAllStories
+  executeInAllStories,
 } = require('../../../e2e/utils/storybook');
 
 describe('Tags Suite', () => {

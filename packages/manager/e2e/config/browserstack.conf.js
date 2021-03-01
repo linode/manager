@@ -33,5 +33,5 @@ exports.config = merge(wdioMaster.config, {
   key: process.env.BROWSERSTACK_ACCESS_KEY,
   browserstackLocal: argv.local ? true : false,
   browserstackLocalForcedStop: true,
-  waitforTimeout: 25000
+  waitforTimeout: 25000,
 });

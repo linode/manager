@@ -8,7 +8,7 @@ import {
   onGetAllSuccess,
   onGetPageSuccess,
   onGetOneSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import { EntityError, MappedEntityState2 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -21,7 +21,7 @@ import {
   getLinodeActions,
   updateLinodeActions,
   updateMultipleLinodes,
-  upsertLinode
+  upsertLinode,
 } from './linodes.actions';
 
 import { LinodeWithMaintenanceAndDisplayStatus } from './types';
@@ -47,7 +47,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, getLinodesActions.done)) {
     const {
-      payload: { result }
+      payload: { result },
     } = action;
     return onGetAllSuccess(result.data, state, result.results);
   }
@@ -57,7 +57,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     return onError(
       {
-        read: error
+        read: error,
       },
       state
     );
@@ -108,7 +108,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, deleteLinodeActions.done)) {
     const {
-      params: { linodeId }
+      params: { linodeId },
     } = action.payload;
     return onDeleteSuccess(linodeId, state);
   }

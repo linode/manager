@@ -116,7 +116,7 @@ export const ZONES: Record<string, ZoneName> = {
   'ca-central': 'toronto1',
   'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'mumbai1',
-  'ap-southeast': 'sydney1'
+  'ap-southeast': 'sydney1',
 };
 
 export const dcDisplayNames = {
@@ -141,7 +141,7 @@ export const dcDisplayNames = {
   'ca-central': 'Toronto, ON',
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'Mumbai, IN',
-  'ap-southeast': 'Sydney, AU'
+  'ap-southeast': 'Sydney, AU',
 };
 
 // @todo no longer in use; remove if current design is approved.
@@ -165,7 +165,7 @@ export const extendedDCDisplayNames = {
   'ca-central': 'Canada: Toronto, ON',
   'ca-east': 'Canada: Toronto, ON',
   'ap-west': 'Asia-Pacific West: Mumbai, IN',
-  'ap-southeast': 'Asia-Pacific Southeast: Sydney, AU'
+  'ap-southeast': 'Asia-Pacific Southeast: Sydney, AU',
 };
 
 export const dcDisplayCountry = {
@@ -188,7 +188,7 @@ export const dcDisplayCountry = {
   'ca-central': 'CA',
   'ca-east': 'CA',
   'ap-west': 'IN',
-  'ap-southeast': 'AU'
+  'ap-southeast': 'AU',
 };
 
 // Map OBJ Cluster IDs to their display country.
@@ -198,7 +198,7 @@ export const objectStorageClusterDisplay: Record<
 > = {
   'us-east-1': 'Newark, NJ',
   'eu-central-1': 'Frankfurt, DE',
-  'ap-south-1': 'Singapore, SG'
+  'ap-south-1': 'Singapore, SG',
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
@@ -221,7 +221,7 @@ export const dcContinent: Record<string, ContinentKey> = {
   'ap-northeast': 'AS',
   'ca-central': 'NA',
   'ca-east': 'NA',
-  'ap-west': 'AS'
+  'ap-west': 'AS',
 };
 
 // Default error message for non-API errors
@@ -260,7 +260,7 @@ export const allowedHTMLTags = [
   'td',
   'th',
   'thead',
-  'tr'
+  'tr',
 ];
 
 export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];

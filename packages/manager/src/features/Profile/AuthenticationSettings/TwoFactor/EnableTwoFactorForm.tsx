@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   divider: {
     margin: `${theme.spacing(3)}px 0`,
-    width: `calc(100% - ${theme.spacing(2)}px)`
-  }
+    width: `calc(100% - ${theme.spacing(2)}px)`,
+  },
 }));
 
 interface Props {
@@ -30,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const EnableTwoFactorForm: React.FC<CombinedProps> = props => {
+export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
@@ -51,7 +51,7 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = props => {
     const safeToken = token.replace(/ /g, '');
     setSubmitting(true);
     confirmTwoFactor(safeToken)
-      .then(response => {
+      .then((response) => {
         setErrors(undefined);
         setSubmitting(false);
         setToken('');
@@ -60,7 +60,7 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = props => {
         /* Toggle the scratch code dialog */
         props.toggleDialog();
       })
-      .catch(error => {
+      .catch((error) => {
         let APIErrors = getAPIErrorOrDefault(
           error,
           'Could not confirm code.',

@@ -16,10 +16,10 @@ interface Props {
 
 const typeMap = {
   auto: 'Automatic',
-  snapshot: 'Manual'
+  snapshot: 'Manual',
 };
 
-const BackupTableRow: React.FC<Props> = props => {
+const BackupTableRow: React.FC<Props> = (props) => {
   const onDeploy = () => {
     props.handleDeploy(props.backup);
   };

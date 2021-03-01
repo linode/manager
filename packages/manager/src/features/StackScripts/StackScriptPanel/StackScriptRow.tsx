@@ -12,7 +12,7 @@ import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils'
 import {
   ClassNames,
   displayTagsAndShowMore,
-  styles
+  styles,
 } from '../StackScriptRowHelpers';
 
 export interface Props {
@@ -37,7 +37,7 @@ export interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
-export const StackScriptRow: React.FC<CombinedProps> = props => {
+export const StackScriptRow: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     label,
@@ -52,7 +52,7 @@ export const StackScriptRow: React.FC<CombinedProps> = props => {
     canModify,
     isPublic,
     category,
-    canAddLinodes
+    canAddLinodes,
   } = props;
 
   const renderLabel = () => {

@@ -6,17 +6,17 @@ module.exports = {
     chrome: {
       version: '80.0.3987.106',
       arch: process.arch,
-      baseURL: 'https://chromedriver.storage.googleapis.com'
+      baseURL: 'https://chromedriver.storage.googleapis.com',
     },
     ie: {
       version: '3.8.0',
       arch: process.arch,
-      baseURL: 'https://selenium-release.storage.googleapis.com'
+      baseURL: 'https://selenium-release.storage.googleapis.com',
     },
     firefox: {
       version: '0.24.0',
       arch: process.arch,
-      baseURL: 'https://github.com/mozilla/geckodriver/releases/download'
-    }
-  }
+      baseURL: 'https://github.com/mozilla/geckodriver/releases/download',
+    },
+  },
 };

@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {
   DomainId,
-  UpdateDomainParams
+  UpdateDomainParams,
 } from 'src/store/domains/domains.actions';
 import { State } from 'src/store/domains/domains.reducer';
 import {
   requestDomainForStore as _requestOne,
   requestDomains as _request,
-  updateDomain as _update
+  updateDomain as _update,
 } from 'src/store/domains/domains.requests';
 import { Dispatch } from './types';
 

@@ -9,7 +9,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const SSHKeyActionMenu: React.FC<CombinedProps> = props => {
+export const SSHKeyActionMenu: React.FC<CombinedProps> = (props) => {
   const { id, label, onDelete } = props;
 
   return (

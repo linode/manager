@@ -8,8 +8,8 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({
   borderRight: {
-    borderRight: `1px solid ${theme.palette.divider}`
-  }
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
 }));
 
 interface SortableVolumesTableHeaderProps {
@@ -19,7 +19,7 @@ interface SortableVolumesTableHeaderProps {
 type CombinedProps = SortableVolumesTableHeaderProps &
   Omit<OrderByProps, 'data'>;
 
-const SortableTableHeader: React.FC<CombinedProps> = props => {
+const SortableTableHeader: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { order, orderBy, handleOrderChange, isVolumesLanding } = props;
 

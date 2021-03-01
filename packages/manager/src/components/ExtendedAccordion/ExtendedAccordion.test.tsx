@@ -14,7 +14,7 @@ const props = {
   heading: 'Header',
   loading: false,
   onChange,
-  renderMainContent
+  renderMainContent,
 };
 
 describe('ExtendedAccordion', () => {

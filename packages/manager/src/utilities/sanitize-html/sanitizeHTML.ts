@@ -5,10 +5,10 @@ export const sanitizeHTML = (text: string) =>
   sanitize(text, {
     allowedTags: allowedHTMLTags,
     allowedAttributes: {
-      '*': allowedHTMLAttr
+      '*': allowedHTMLAttr,
     },
     allowedClasses: {
-      span: ['version']
+      span: ['version'],
     },
     transformTags: {
       a: (tagName, attribs) => {
@@ -18,18 +18,18 @@ export const sanitizeHTML = (text: string) =>
         if (href && !isURLValid(href)) {
           return {
             tagName: 'span',
-            attribs: {}
+            attribs: {},
           };
         }
 
         // Otherwise, return the tag as-is.
         return {
           tagName,
-          attribs
+          attribs,
         };
-      }
+      },
     },
-    disallowedTagsMode: 'escape'
+    disallowedTagsMode: 'escape',
   }).trim();
 
 export const isURLValid = (url: string) =>

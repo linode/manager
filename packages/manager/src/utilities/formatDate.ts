@@ -12,7 +12,7 @@ const durationMap = {
   week: () => Duration.fromObject({ weeks: 1 }),
   month: () => Duration.fromObject({ months: 1 }),
   year: () => Duration.fromObject({ years: 1 }),
-  never: () => Duration.fromObject({ years: 1000 })
+  never: () => Duration.fromObject({ years: 1000 }),
 };
 
 export const shouldHumanize = (

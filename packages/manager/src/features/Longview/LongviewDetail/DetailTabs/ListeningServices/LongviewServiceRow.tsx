@@ -10,7 +10,7 @@ interface Props {
   cmrFlag?: boolean;
 }
 
-export const LongviewServiceRow: React.FC<Props> = props => {
+export const LongviewServiceRow: React.FC<Props> = (props) => {
   const { service, cmrFlag } = props;
 
   const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;

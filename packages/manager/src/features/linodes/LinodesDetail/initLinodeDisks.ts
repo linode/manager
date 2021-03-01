@@ -12,10 +12,7 @@ interface OuterProps {
  */
 
 export default compose(
-  connect(
-    undefined,
-    { getAllLinodeDisks }
-  ),
+  connect(undefined, { getAllLinodeDisks }),
   lifecycle<OuterProps & { getAllLinodeDisks: GetAllLinodeConfigsRequest }, {}>(
     {
       componentDidMount() {
@@ -35,7 +32,7 @@ export default compose(
         }
 
         getAllLinodeDisks({ linodeId });
-      }
+      },
     }
   )
 );

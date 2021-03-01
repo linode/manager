@@ -21,9 +21,9 @@ export default (
   let err;
 
   if (field === 'none') {
-    err = arr.find(e => !e.hasOwnProperty('field'));
+    err = arr.find((e) => !e.hasOwnProperty('field'));
   } else {
-    err = arr.find(e => e.field === field);
+    err = arr.find((e) => e.field === field);
   }
 
   if (!err) {

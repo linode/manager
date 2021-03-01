@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 const { assertLog } = require('../../utils/assertionLog');
 const {
   generatePassword,
-  getDistributionLabel
+  getDistributionLabel,
 } = require('../../utils/common');
 
 import Page from '../page';
@@ -45,7 +45,7 @@ class Settings extends Page {
     return $$('[data-qa-notice]');
   }
   get selectDisk() {
-    return $$('[data-qa-enhanced-select]').find(s =>
+    return $$('[data-qa-enhanced-select]').find((s) =>
       s.getAttribute('data-qa-enhanced-select').includes('Disk')
     );
   }
@@ -156,7 +156,7 @@ class Settings extends Page {
   }
 
   getConfigLabels() {
-    return this.linodeConfigs.map(c => c.getAttribute('data-qa-config'));
+    return this.linodeConfigs.map((c) => c.getAttribute('data-qa-config'));
   }
 
   deleteConfig(configLabel) {
@@ -223,7 +223,7 @@ class Settings extends Page {
   getDiskLabels() {
     this.selectDisk.click();
     this.disk.waitForDisplayed();
-    const disks = this.disks.map(d => d.getText());
+    const disks = this.disks.map((d) => d.getText());
     // Refactor this to use the actions api when chrome supports
     browser.keys('\uE00C');
     this.disk.waitForDisplayed(constants.wait.short, true);

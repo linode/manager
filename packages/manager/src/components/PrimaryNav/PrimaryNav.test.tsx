@@ -7,7 +7,7 @@ const props = {
   closeMenu: jest.fn(),
   toggleTheme: jest.fn(),
   toggleSpacing: jest.fn(),
-  isCollapsed: false
+  isCollapsed: false,
 };
 
 describe('PrimaryNav', () => {
@@ -15,14 +15,14 @@ describe('PrimaryNav', () => {
     const { getByTestId, rerender, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
-        customStore: withoutManaged
+        customStore: withoutManaged,
       }
     );
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 
     rerender(
       wrapWithTheme(<PrimaryNav {...props} />, {
-        customStore: withManaged
+        customStore: withManaged,
       })
     );
 
@@ -33,14 +33,14 @@ describe('PrimaryNav', () => {
     const { getByTestId, rerender, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
-        flags: { firewalls: false }
+        flags: { firewalls: false },
       }
     );
     expect(queryByTestId('menu-item-Firewalls')).not.toBeInTheDocument();
 
     rerender(
       wrapWithTheme(<PrimaryNav {...props} />, {
-        flags: { firewalls: true }
+        flags: { firewalls: true },
       })
     );
 

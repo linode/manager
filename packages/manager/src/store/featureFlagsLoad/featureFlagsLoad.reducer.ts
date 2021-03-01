@@ -6,13 +6,13 @@ export interface State {
 }
 
 export const defaultState: State = {
-  featureFlagsLoading: true
+  featureFlagsLoading: true,
 };
 
 const reducer = reducerWithInitialState(defaultState)
   .case(setFeatureFlagsLoaded, () => ({
-    featureFlagsLoading: false
+    featureFlagsLoading: false,
   }))
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

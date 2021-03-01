@@ -1,7 +1,7 @@
 import { DateTime, Duration } from 'luxon';
 import {
   ISO_DATETIME_NO_TZ_FORMAT,
-  DATETIME_DISPLAY_FORMAT
+  DATETIME_DISPLAY_FORMAT,
 } from 'src/constants';
 import { formatDate, shouldHumanize } from './formatDate';
 jest.mock('./getUserTimezone');
@@ -41,7 +41,7 @@ describe('formatDate utility', () => {
         .minus({ seconds: 20 })
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const formattedDate = formatDate(thirtySecsAgo, {
-        humanizeCutoff: 'day'
+        humanizeCutoff: 'day',
       });
       expect(formattedDate).toBe('a few seconds ago');
     });
@@ -51,7 +51,7 @@ describe('formatDate utility', () => {
         .minus({ minutes: 5 })
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const formattedDate = formatDate(fiveMinutesAgo, {
-        humanizeCutoff: 'day'
+        humanizeCutoff: 'day',
       });
       expect(formattedDate).toBe('5 minutes ago');
     });
@@ -62,7 +62,7 @@ describe('formatDate utility', () => {
           .minus({ days: 6 })
           .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
         const formattedDate = formatDate(almostOneWeek, {
-          humanizeCutoff: 'month'
+          humanizeCutoff: 'month',
         });
         expect(formattedDate).toBe('6 days ago');
       });
@@ -72,7 +72,7 @@ describe('formatDate utility', () => {
           .minus({ days: 6 })
           .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
         const formattedDate = formatDate(almostOneWeek, {
-          humanizeCutoff: 'day'
+          humanizeCutoff: 'day',
         });
         expect(formattedDate).toContain(
           DateTime.fromISO(almostOneWeek, { zone: 'utc' }).year
@@ -85,7 +85,7 @@ describe('formatDate utility', () => {
         .minus({ years: 10 })
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const formattedDate = formatDate(aLongTimeAgo, {
-        humanizeCutoff: 'never'
+        humanizeCutoff: 'never',
       });
       expect(formattedDate).toBe('10 years ago');
     });
@@ -97,7 +97,7 @@ describe('formatDate utility', () => {
         .plus({ days: 31, minutes: 2 })
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const formattedDate = formatDate(daysInTheFuture, {
-        humanizeCutoff: 'year'
+        humanizeCutoff: 'year',
       });
       expect(formattedDate).toBe('in 1 month');
     });
@@ -107,7 +107,7 @@ describe('formatDate utility', () => {
         .plus({ days: 23, hours: 6 })
         .toFormat(ISO_DATETIME_NO_TZ_FORMAT);
       const formattedDate = formatDate(daysInTheFuture, {
-        humanizeCutoff: 'month'
+        humanizeCutoff: 'month',
       });
       expect(formattedDate).toBe('in 23 days');
     });

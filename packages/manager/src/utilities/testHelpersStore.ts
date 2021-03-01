@@ -5,36 +5,36 @@ export const withManaged: DeepPartial<ApplicationState> = {
   __resources: {
     accountSettings: {
       data: {
-        managed: true
-      } as any
-    }
-  }
+        managed: true,
+      } as any,
+    },
+  },
 };
 
 export const withoutManaged: DeepPartial<ApplicationState> = {
   __resources: {
     accountSettings: {
       data: {
-        managed: false
-      } as any
-    }
-  }
+        managed: false,
+      } as any,
+    },
+  },
 };
 
 export const withAccountLoaded: DeepPartial<ApplicationState> = {
   __resources: {
     account: {
-      lastUpdated: 1
-    }
-  }
+      lastUpdated: 1,
+    },
+  },
 };
 
 export const withAccountNotLoaded: DeepPartial<ApplicationState> = {
   __resources: {
     account: {
-      lastUpdated: 0
-    }
-  }
+      lastUpdated: 0,
+    },
+  },
 };
 
 export const withRestrictedUser: DeepPartial<ApplicationState> = {
@@ -44,14 +44,14 @@ export const withRestrictedUser: DeepPartial<ApplicationState> = {
         restricted: true,
         grants: {
           global: {
-            account_access: false
-          } as any
-        }
-      } as any
-    }
-  }
+            account_access: false,
+          } as any,
+        },
+      } as any,
+    },
+  },
 };
 
 export const withLinodesLoaded = {
-  __resources: { linodes: { loading: false, lastUpdated: 1 } }
+  __resources: { linodes: { loading: false, lastUpdated: 1 } },
 };

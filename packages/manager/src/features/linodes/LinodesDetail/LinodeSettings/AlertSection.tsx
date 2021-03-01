@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -21,17 +21,17 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes fadeIn': {
       from: {
-        opacity: 0
+        opacity: 0,
       },
       to: {
-        opacity: 1
-      }
+        opacity: 1,
+      },
     },
     root: {
       position: 'relative',
       padding: `${theme.spacing(3)}px 0`,
       '&:last-of-type + hr': {
-        display: 'none'
+        display: 'none',
       },
       '& .toggleLabel > span:last-child': {
         position: 'absolute',
@@ -40,36 +40,36 @@ const styles = (theme: Theme) =>
         ...theme.typography.h3,
         [theme.breakpoints.up('md')]: {
           top: theme.spacing(3) + 8,
-          left: `calc(58px + ${theme.spacing(4)}px)`
-        }
-      }
+          left: `calc(58px + ${theme.spacing(4)}px)`,
+        },
+      },
     },
     switch: {
       width: 50,
-      padding: '2px 0 !important'
+      padding: '2px 0 !important',
     },
     copy: {
       [theme.breakpoints.down('sm')]: {
-        flexBasis: '100%'
+        flexBasis: '100%',
       },
       [theme.breakpoints.up('md')]: {
-        margin: `24px ${theme.spacing(3) + 8}px 0`
+        margin: `24px ${theme.spacing(3) + 8}px 0`,
       },
       [theme.breakpoints.up('lg')]: {
-        width: 600
-      }
+        width: 600,
+      },
     },
     usageWrapper: {
       [theme.breakpoints.down('md')]: {
         width: '100%',
-        marginTop: theme.spacing(2)
-      }
+        marginTop: theme.spacing(2),
+      },
     },
     usage: {
       animation: '$fadeIn .3s ease-in-out forwards',
       marginTop: 0,
-      maxWidth: 150
-    }
+      maxWidth: 150,
+    },
   });
 
 interface Props {
@@ -131,7 +131,7 @@ class AlertSection extends React.Component<CombinedProps> {
                   <InputAdornment position="end">
                     {this.props.endAdornment}
                   </InputAdornment>
-                )
+                ),
               }}
               error={Boolean(this.props.error)}
               errorText={this.props.error}
@@ -148,7 +148,4 @@ class AlertSection extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, any>(
-  RenderGuard,
-  styled
-)(AlertSection);
+export default compose<CombinedProps, any>(RenderGuard, styled)(AlertSection);

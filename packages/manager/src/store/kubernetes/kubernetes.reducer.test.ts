@@ -6,7 +6,7 @@ import {
   requestClusterActions,
   requestClustersActions,
   updateClusterActions,
-  upsertCluster
+  upsertCluster,
 } from './kubernetes.actions';
 import reducer, { defaultState } from './kubernetes.reducer';
 
@@ -16,7 +16,7 @@ const addEntities = () =>
   reducer(
     defaultState,
     requestClustersActions.done({
-      result: { data: extendedClusters, results: extendedClusters.length }
+      result: { data: extendedClusters, results: extendedClusters.length },
     })
   );
 
@@ -31,7 +31,7 @@ describe('Kubernetes clusters reducer', () => {
       const newState = reducer(
         { ...defaultState, loading: true },
         requestClustersActions.done({
-          result: { data: extendedClusters, results: extendedClusters.length }
+          result: { data: extendedClusters, results: extendedClusters.length },
         })
       );
       expect(sortBy(prop('id'), Object.values(newState.itemsById))).toEqual(
@@ -67,7 +67,7 @@ describe('Kubernetes clusters reducer', () => {
         withEntities,
         deleteClusterActions.done({
           params: { clusterID: extendedClusters[1].id },
-          result: {}
+          result: {},
         })
       );
       expect(newState[extendedClusters[1].id]).toBeUndefined();
@@ -82,7 +82,7 @@ describe('Kubernetes clusters reducer', () => {
         defaultState,
         deleteClusterActions.failed({
           params: { clusterID: 1 },
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState.error.delete).toEqual(mockError);
@@ -103,7 +103,7 @@ describe('Kubernetes clusters reducer', () => {
       expect(withEntities.results).toEqual(extendedClusters.length);
       const updatedCluster = {
         ...extendedClusters[1],
-        label: 'updated-cluster-label'
+        label: 'updated-cluster-label',
       };
       const newState = reducer(withEntities, upsertCluster(updatedCluster));
       // Length should be unchanged
@@ -126,7 +126,7 @@ describe('Kubernetes clusters reducer', () => {
         defaultState,
         requestClusterActions.done({
           params: { clusterID: 123 },
-          result: extendedClusters[0]
+          result: extendedClusters[0],
         })
       );
       expect(Object.values(newState.itemsById)).toEqual([extendedClusters[0]]);
@@ -137,7 +137,7 @@ describe('Kubernetes clusters reducer', () => {
         defaultState,
         requestClusterActions.failed({
           params: { clusterID: 123 },
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState.loading).toBe(false);
@@ -161,7 +161,7 @@ describe('Kubernetes clusters reducer', () => {
         withEntities,
         updateClusterActions.done({
           params: { clusterID: extendedClusters[1].id },
-          result: updatedCluster
+          result: updatedCluster,
         })
       );
       expect(newState.error.update).toBeUndefined();
@@ -173,7 +173,7 @@ describe('Kubernetes clusters reducer', () => {
         defaultState,
         updateClusterActions.failed({
           params: { clusterID: 1234 },
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState.error.update).toEqual(mockError);

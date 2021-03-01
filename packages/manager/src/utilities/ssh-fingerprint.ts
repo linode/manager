@@ -23,10 +23,7 @@ export default (pub: string, alg: string = 'md5') => {
 
 // hash a string with the given alg
 const hash = (s: Buffer, alg: string) => {
-  return crypto
-    .createHash(alg)
-    .update(s)
-    .digest('hex');
+  return crypto.createHash(alg).update(s).digest('hex');
 };
 
 // add colons, 'hello' => 'he:ll:o'

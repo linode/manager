@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'label';
@@ -16,9 +16,9 @@ const styles = (theme: Theme) =>
     root: {},
     label: {
       '& span': {
-        fontSize: '1rem'
-      }
-    }
+        fontSize: '1rem',
+      },
+    },
   });
 
 interface Props {
@@ -32,7 +32,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const DrawerModeSelection: React.FC<CombinedProps> = ({
   mode,
   onChange,
-  classes
+  classes,
 }) => {
   return (
     <RadioGroup

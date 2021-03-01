@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
@@ -15,11 +15,11 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     input: {
-      backgroundColor: theme.bg.offWhite
+      backgroundColor: theme.bg.offWhite,
     },
     copyIcon: {
-      marginRight: theme.spacing(1)
-    }
+      marginRight: theme.spacing(1),
+    },
   });
 
 type Props = TextFieldProps & {
@@ -32,7 +32,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class CopyableTextField extends React.Component<CombinedProps> {
   clickIcon = (value: string) => {
     this.setState({
-      copied: true
+      copied: true,
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
     copy(value);
@@ -48,11 +48,9 @@ class CopyableTextField extends React.Component<CombinedProps> {
         className={`${className} ${'copy'}`}
         data-qa-copy-tooltip
         InputProps={{
-          endAdornment: hideIcon ? (
-            undefined
-          ) : (
+          endAdornment: hideIcon ? undefined : (
             <CopyTooltip text={`${value}`} className={classes.copyIcon} />
-          )
+          ),
         }}
       />
     );

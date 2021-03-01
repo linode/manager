@@ -2,7 +2,7 @@ import { domainRecords as records } from 'src/__data__/domains';
 import {
   isEditableNameServer,
   isValidCNAME,
-  isValidDomainRecord
+  isValidDomainRecord,
 } from './domainUtils';
 
 describe('Domain-related utilities', () => {

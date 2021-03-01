@@ -2,7 +2,7 @@ import * as React from 'react';
 import useProfile from 'src/hooks/useProfile';
 import { useHistory } from 'react-router-dom';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useTheme, useMediaQuery } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -14,7 +14,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const UsersActionMenu: React.FC<CombinedProps> = props => {
+const UsersActionMenu: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -28,13 +28,13 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
       title: 'User Profile',
       onClick: () => {
         history.push(`/account/users/${username}`);
-      }
+      },
     },
     {
       title: 'User Permissions',
       onClick: () => {
         history.push(`/account/users/${username}/permissions`);
-      }
+      },
     },
     {
       disabled: username === profileUsername,
@@ -45,8 +45,8 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
       tooltip:
         username === profileUsername
           ? "You can't delete the currently active user."
-          : undefined
-    }
+          : undefined,
+    },
   ];
 
   return (
@@ -58,7 +58,7 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for user ${profileUsername}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

@@ -6,7 +6,7 @@ import {
   deleteBucket,
   getBucket,
   DeleteBucketRequest,
-  GetBucketRequest
+  GetBucketRequest,
 } from 'src/store/bucket/bucket.requests';
 
 export interface BucketsRequests {
@@ -21,6 +21,6 @@ export default connect(
   {
     createBucket,
     deleteBucket,
-    getBucket
+    getBucket,
   }
 );

@@ -5,7 +5,7 @@ export const mockNotification: Notification = {
     url: 'doesnt/matter/',
     type: 'linode',
     label: 'my-linode',
-    id: 8675309
+    id: 8675309,
   },
   label: "Here's a notification!",
   message: 'Something something... whatever.',
@@ -13,7 +13,7 @@ export const mockNotification: Notification = {
   when: null,
   until: null,
   body: null,
-  type: 'migration_pending'
+  type: 'migration_pending',
 };
 
 export const abuseTicketNotification: Notification = {
@@ -25,9 +25,9 @@ export const abuseTicketNotification: Notification = {
     url: '/support/tickets/123456 ',
     type: 'ticket',
     id: 123456,
-    label: 'Abuse Ticket'
+    label: 'Abuse Ticket',
   },
   label: 'You have an open abuse ticket!',
   when: null,
-  message: 'You have an open abuse ticket!'
+  message: 'You have an open abuse ticket!',
 };

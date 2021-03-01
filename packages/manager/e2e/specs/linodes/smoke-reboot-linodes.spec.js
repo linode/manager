@@ -5,14 +5,14 @@ import {
   apiCreateLinode,
   apiDeleteAllLinodes,
   timestamp,
-  waitForLinodeStatus
+  waitForLinodeStatus,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 
 describe('List Linodes - Actions - Reboot Suite', () => {
   const linode = `AutoLinode${timestamp()}`;
 
-  const waitForRebootListView = linode => {
+  const waitForRebootListView = (linode) => {
     const linodeRow = $(ListLinodes.getLinodeSelector(linode));
     browser.waitUntil(() => {
       return linodeRow

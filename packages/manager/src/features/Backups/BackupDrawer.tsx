@@ -20,7 +20,7 @@ import {
   handleAutoEnrollToggle,
   handleClose,
   handleResetError,
-  handleResetSuccess
+  handleResetSuccess,
 } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { ThunkDispatch } from 'src/store/types';
@@ -97,7 +97,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
         all new Linodes will automatically be backed up.`
         : `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups.`;
       this.props.enqueueSnackbar(text, {
-        variant: 'success'
+        variant: 'success',
       });
       dismissSuccess();
       close();
@@ -107,7 +107,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
   handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const {
       actions: { enable, enroll },
-      accountBackups
+      accountBackups,
     } = this.props;
     if (accountBackups) {
       enable();
@@ -128,7 +128,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       linodesWithoutBackups,
       loading,
       open,
-      updatedCount
+      updatedCount,
     } = this.props;
     const linodeCount = linodesWithoutBackups.length;
     return (
@@ -217,8 +217,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
       enroll: () => dispatch(enableAutoEnroll()),
-      toggle: () => dispatch(handleAutoEnrollToggle())
-    }
+      toggle: () => dispatch(handleAutoEnrollToggle()),
+    },
   };
 };
 
@@ -226,11 +226,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
  * price and label information in BackupsTable.tsx.
  */
 export const addTypeInfo = (types: LinodeType[], linodes: Linode[]) =>
-  linodes.map(linode => {
+  linodes.map((linode) => {
     const typeInfo = getTypeInfo(linode.type, types || []);
     return {
       ...linode,
-      typeInfo
+      typeInfo,
     };
   });
 
@@ -241,11 +241,11 @@ export const addErrors = (
 ) =>
   linodes.map((linode: LinodeWithTypeInfo) => {
     const linodeError = errors.find(
-      error => Number(error.linodeId) === Number(linode.id)
+      (error) => Number(error.linodeId) === Number(linode.id)
     );
     return {
       ...linode,
-      linodeError
+      linodeError,
     };
   });
 
@@ -287,7 +287,7 @@ const mapStateToProps: MapStateToProps<
     ),
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
-    autoEnrollError: path(['backups', 'autoEnrollError'], state)
+    autoEnrollError: path(['backups', 'autoEnrollError'], state),
   };
 };
 
@@ -298,7 +298,7 @@ interface WithTypesProps {
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
-  typesData: state.__resources.types.entities
+  typesData: state.__resources.types.entities,
 }));
 
 const enhanced = compose<CombinedProps, {}>(withTypes, connected, withSnackbar);

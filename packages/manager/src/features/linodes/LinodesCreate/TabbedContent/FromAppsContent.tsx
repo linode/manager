@@ -9,7 +9,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -26,7 +26,7 @@ import {
   AppsData,
   ReduxStateProps,
   StackScriptFormStateHandlers,
-  WithTypesRegionsAndImages
+  WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 
@@ -40,21 +40,21 @@ const styles = (theme: Theme) =>
   createStyles({
     sidebar: {
       [theme.breakpoints.up('md')]: {
-        marginTop: '-130px !important'
-      }
+        marginTop: '-130px !important',
+      },
     },
     main: {
       [theme.breakpoints.up('md')]: {
-        maxWidth: '100%'
-      }
+        maxWidth: '100%',
+      },
     },
     emptyImagePanel: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     emptyImagePanelText: {
       marginTop: theme.spacing(1),
-      padding: `${theme.spacing(1)}px 0`
-    }
+      padding: `${theme.spacing(1)}px 0`,
+    },
   });
 
 const errorResources = {
@@ -64,7 +64,7 @@ const errorResources = {
   root_pass: 'A root password',
   image: 'Image',
   tags: 'Tags',
-  stackscript_id: 'The selected App'
+  stackscript_id: 'The selected App',
 };
 
 type InnerProps = AppsData &
@@ -85,7 +85,7 @@ interface State {
 class FromAppsContent extends React.PureComponent<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
-    selectedScriptForDrawer: ''
+    selectedScriptForDrawer: '',
   };
 
   handleSelectStackScript = (
@@ -102,7 +102,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
      * that aren't compatible with our selected StackScript
      */
     const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+      if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
         acc.push(imagesData[eachKey]);
       }
 
@@ -140,13 +140,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
   openDrawer = (stackScriptLabel: string) => {
     this.setState({
       detailDrawerOpen: true,
-      selectedScriptForDrawer: stackScriptLabel
+      selectedScriptForDrawer: stackScriptLabel,
     });
   };
 
   closeDrawer = () => {
     this.setState({
-      detailDrawerOpen: false
+      detailDrawerOpen: false,
     });
   };
 
@@ -164,7 +164,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       appInstances,
       appInstancesError,
       appInstancesLoading,
-      userCannotCreateLinode
+      userCannotCreateLinode,
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -246,8 +246,8 @@ const mapStateToProps: MapStateToProps<
   StateProps,
   CombinedProps,
   ApplicationState
-> = state => ({
-  documentation: state.documentation
+> = (state) => ({
+  documentation: state.documentation,
 });
 
 const connected = connect(mapStateToProps);
@@ -255,7 +255,7 @@ const connected = connect(mapStateToProps);
 const generateDocs = (ownProps: InnerProps & StateProps) => {
   const { selectedStackScriptLabel } = ownProps;
   if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter(eachDoc => {
+    const foundDocs = AppsDocs.filter((eachDoc) => {
       return eachDoc.title
         .toLowerCase()
         .includes(

@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   button: {
     ...theme.applyLinkStyles,
@@ -21,16 +21,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
     '&:hover': {
       backgroundColor: '#3683dc',
-      color: '#ffffff'
+      color: '#ffffff',
     },
     '&[disabled]': {
       color: '#cdd0d5',
       cursor: 'default',
       '&:hover': {
-        backgroundColor: 'inherit'
-      }
-    }
-  }
+        backgroundColor: 'inherit',
+      },
+    },
+  },
 }));
 
 interface Props {
@@ -46,7 +46,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AccessKeyMenu: React.FC<CombinedProps> = props => {
+const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { openRevokeDialog, objectStorageKey, openDrawer } = props;
 
@@ -55,26 +55,26 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
       title: 'Edit Label',
       onClick: () => {
         openDrawer('editing', objectStorageKey);
-      }
+      },
     },
     {
       title: 'Permissions',
       onClick: () => {
         openDrawer('viewing', objectStorageKey);
-      }
+      },
     },
     {
       title: 'Revoke',
       onClick: () => {
         openRevokeDialog(objectStorageKey);
-      }
-    }
+      },
+    },
   ];
 
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
-        {actions.map(thisAction => (
+        {actions.map((thisAction) => (
           <InlineAction
             key={thisAction.title}
             actionText={thisAction.title}

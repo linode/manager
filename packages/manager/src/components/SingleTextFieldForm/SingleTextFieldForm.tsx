@@ -18,7 +18,9 @@ export interface Props {
   successCallback?: () => void;
 }
 
-export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
+export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
+  props
+) => {
   const {
     label,
     fieldName,
@@ -54,7 +56,7 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
           successCallback();
         }
       })
-      .catch(err => {
+      .catch((err) => {
         setSubmitting(false);
         setErrors(getAPIErrorOrDefault(err, _errorMessage));
       });
@@ -72,7 +74,7 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = props => {
         {...textFieldProps}
         label={label}
         value={value}
-        onChange={e => setValue(e.target.value)}
+        onChange={(e) => setValue(e.target.value)}
         errorText={fieldError}
         disabled={disabled}
       />

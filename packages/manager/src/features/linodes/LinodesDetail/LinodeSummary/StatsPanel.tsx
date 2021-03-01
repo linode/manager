@@ -12,14 +12,14 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     width: '100%',
     padding: 16,
-    paddingTop: 0
+    paddingTop: 0,
   },
   spinner: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
-  }
+    width: '100%',
+  },
 }));
 
 interface Props {
@@ -33,7 +33,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const StatsPanel: React.FC<CombinedProps> = props => {
+export const StatsPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -42,7 +42,7 @@ export const StatsPanel: React.FC<CombinedProps> = props => {
     loading,
     renderBody,
     title,
-    isTooEarlyForGraphData
+    isTooEarlyForGraphData,
   } = props;
 
   return (

@@ -32,9 +32,11 @@ export interface RenderVolumeDataProps {
   handleDelete: (volumeId: number, volumeLabel: string) => void;
 }
 
-const RenderData: React.FC<{
-  data: ExtendedVolume[];
-} & RenderVolumeDataProps> = props => {
+const RenderData: React.FC<
+  {
+    data: ExtendedVolume[];
+  } & RenderVolumeDataProps
+> = (props) => {
   const {
     data,
     isVolumesLanding,
@@ -44,7 +46,7 @@ const RenderData: React.FC<{
     openForClone,
     openForConfig,
     openForEdit,
-    openForResize
+    openForResize,
   } = props;
 
   return (

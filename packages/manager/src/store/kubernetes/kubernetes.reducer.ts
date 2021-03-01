@@ -7,11 +7,11 @@ import {
   onError,
   onGetAllSuccess,
   onStart,
-  setError
+  setError,
 } from 'src/store/store.helpers.tmp';
 import {
   EntityError,
-  MappedEntityState2 as MappedEntityState
+  MappedEntityState2 as MappedEntityState,
 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
@@ -20,7 +20,7 @@ import {
   requestClustersActions,
   setErrors,
   updateClusterActions,
-  upsertCluster
+  upsertCluster,
 } from './kubernetes.actions';
 
 /**
@@ -79,7 +79,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, deleteClusterActions.done)) {
     const {
-      params: { clusterID }
+      params: { clusterID },
     } = action.payload;
     return onDeleteSuccess(clusterID, state);
   }

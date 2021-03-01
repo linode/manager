@@ -15,11 +15,11 @@ import CreateVolumeForm from './CreateVolumeForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   title: {
-    marginBottom: theme.spacing(1)
-  }
+    marginBottom: theme.spacing(1),
+  },
 }));
 
 interface StateProps {
@@ -49,7 +49,9 @@ interface DispatchProps {
   };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
   actions: {
     openForConfig: (
       volumeLabel: string,
@@ -57,13 +59,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
       message?: string
     ) => dispatch(openForConfig(volumeLabel, volumePath, message)),
     openForResizeInstructions: (volumeLabel: string, message?: string) =>
-      dispatch(viewResizeInstructions({ volumeLabel, message }))
-  }
+      dispatch(viewResizeInstructions({ volumeLabel, message })),
+  },
 });
 
 type CombinedProps = StateProps & RouteComponentProps<{}> & DispatchProps;
 
-const VolumeCreate: React.FC<CombinedProps> = props => {
+const VolumeCreate: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { actions, regions, history } = props;
 
@@ -88,7 +90,7 @@ const VolumeCreate: React.FC<CombinedProps> = props => {
   );
 };
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const {
     linodeId,
     linodeLabel,
@@ -100,7 +102,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     volumeSize,
     volumeTags,
     volumePath,
-    message
+    message,
   } = state.volumeDrawer;
 
   const volumesPermissions = pathOr(
@@ -128,7 +130,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     readOnly:
       isRestrictedUser(state) &&
       volumePermissions &&
-      volumePermissions.permissions === 'read_only'
+      volumePermissions.permissions === 'read_only',
   };
 };
 

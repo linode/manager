@@ -11,10 +11,10 @@ export const uploadObject = (
     url: signedUrl,
     method: 'PUT',
     headers: {
-      'Content-Type': file.type
+      'Content-Type': file.type,
     },
     data: file,
-    onUploadProgress
+    onUploadProgress,
   };
   return axiosInstance.request(config);
 };
@@ -22,7 +22,7 @@ export const uploadObject = (
 export const deleteObject = (signedUrl: string) => {
   const config: AxiosRequestConfig = {
     url: signedUrl,
-    method: 'DELETE'
+    method: 'DELETE',
   };
   return axiosInstance.request(config);
 };

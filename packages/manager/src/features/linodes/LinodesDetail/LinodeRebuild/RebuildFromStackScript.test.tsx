@@ -5,14 +5,14 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
-  RebuildFromStackScript
+  RebuildFromStackScript,
 } from './RebuildFromStackScript';
 
 const request = jest.requireMock('@linode/api-v4/lib/account');
 
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: jest.fn()
+  getUsers: jest.fn(),
 }));
 
 const images = normalizeEntities(imageFactory.buildList(10));
@@ -26,7 +26,7 @@ const props: CombinedProps = {
     error: '',
     emptyImagePanel: '',
     emptyImagePanelText: '',
-    actions: ''
+    actions: '',
   },
   linodeId: 1234,
   imagesData: images,
@@ -39,7 +39,7 @@ const props: CombinedProps = {
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
   passwordHelperText: '',
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 describe('RebuildFromStackScript', () => {
@@ -66,7 +66,7 @@ describe('RebuildFromStackScript', () => {
       () => [
         getByText('A StackScript is required.'),
         getByText('An image is required.'),
-        getByText('Password is required.')
+        getByText('Password is required.'),
       ],
       {}
     );

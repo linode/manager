@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -26,40 +26,40 @@ const styles = (theme: Theme) =>
     root: {
       maxWidth: `calc(415px + ${theme.spacing(1)}px)`,
       [theme.breakpoints.down('xs')]: {
-        maxWidth: `calc(100% + ${theme.spacing(1)}px)`
-      }
+        maxWidth: `calc(100% + ${theme.spacing(1)}px)`,
+      },
     },
     block: {
       backgroundColor: '#C9CACB',
       height: '4px',
       transition: 'background-color .5s ease-in-out',
       '&[class*="strength-"]': {
-        backgroundColor: theme.palette.primary.main
-      }
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     strengthText: {
       position: 'relative',
       fontSize: '.85rem',
       textAlign: 'right',
       [theme.breakpoints.down('xs')]: {
-        textAlign: 'center'
-      }
+        textAlign: 'center',
+      },
     },
     strengthLabel: {
       [theme.breakpoints.down('xs')]: {
-        display: 'none'
-      }
+        display: 'none',
+      },
     },
     blockOuter: {
-      padding: '4px !important' as '4px'
-    }
+      padding: '4px !important' as '4px',
+    },
   });
 
 const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const StrengthIndicator: React.FC<CombinedProps> = props => {
+const StrengthIndicator: React.FC<CombinedProps> = (props) => {
   const { classes, strength, hideStrengthLabel } = props;
 
   return (
@@ -70,12 +70,12 @@ const StrengthIndicator: React.FC<CombinedProps> = props => {
       className={classes.root}
       data-qa-strength={strength}
     >
-      {Array.from(Array(3), (v, idx) => idx + 1).map(idx => (
+      {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
         <Grid item key={idx} xs={3} className={classes.blockOuter}>
           <div
             className={classNames({
               [classes.block]: true,
-              [`strength-${strength}`]: !isNil(strength) && idx <= strength
+              [`strength-${strength}`]: !isNil(strength) && idx <= strength,
             })}
           />
         </Grid>

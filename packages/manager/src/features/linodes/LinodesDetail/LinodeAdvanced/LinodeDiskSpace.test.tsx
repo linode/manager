@@ -13,7 +13,7 @@ const component = shallow(
       text: '',
       divider: '',
       textOuter: '',
-      code: ''
+      code: '',
     }}
     disks={disks}
     totalDiskSpace={100}

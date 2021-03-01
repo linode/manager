@@ -7,18 +7,18 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import {
   EntityError,
-  MappedEntityState2 as MappedEntityState
+  MappedEntityState2 as MappedEntityState,
 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   createLinodeInterfaceActions,
   deleteLinodeInterfaceActions,
   getAllLinodeInterfacesActions,
-  getLinodeInterfaceActions
+  getLinodeInterfaceActions,
 } from './interfaces.actions';
 
 export type State = Record<
@@ -29,7 +29,7 @@ export type State = Record<
 export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) =>
-  produce(state, draft => {
+  produce(state, (draft) => {
     // getAllLinodeInterfacesActions
     if (isType(action, getAllLinodeInterfacesActions.started)) {
       const { linodeId } = action.payload;
@@ -61,7 +61,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
         EntityError
       >(
         {
-          read: error
+          read: error,
         },
         draft[linodeId]
       );
@@ -90,7 +90,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
 
     if (isType(action, deleteLinodeInterfaceActions.done)) {
       const {
-        params: { interfaceId: InterfaceId, linodeId }
+        params: { interfaceId: InterfaceId, linodeId },
       } = action.payload;
       draft = ensureInitializedNestedState(draft, linodeId);
       draft[linodeId] = onDeleteSuccess(InterfaceId, draft[linodeId]);

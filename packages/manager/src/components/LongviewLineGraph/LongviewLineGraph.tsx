@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph, {
   DataSet,
-  Props as LineGraphProps
+  Props as LineGraphProps,
 } from 'src/components/LineGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -15,22 +15,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     marginTop: theme.spacing(2) - 1,
     marginBottom: theme.spacing(2) - 1,
-    marginRight: theme.spacing(2.5)
+    marginRight: theme.spacing(2.5),
   },
   title: {
     color: theme.color.headline,
     fontWeight: 'bold',
     fontSize: '1rem',
     '& > span': {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   },
   message: {
     position: 'absolute',
     left: '50%',
     top: '45%',
-    transform: 'translate(-50%, -50%)'
-  }
+    transform: 'translate(-50%, -50%)',
+  },
 }));
 
 export interface Props extends LineGraphProps {
@@ -42,7 +42,7 @@ export interface Props extends LineGraphProps {
 
 type CombinedProps = Props;
 
-const LongviewLineGraph: React.FC<CombinedProps> = props => {
+const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { error, loading, title, subtitle, ...rest } = props;
@@ -82,10 +82,10 @@ const LongviewLineGraph: React.FC<CombinedProps> = props => {
 
 export const isDataEmpty = (data: DataSet[]) => {
   return data.every(
-    thisSeries =>
+    (thisSeries) =>
       thisSeries.data.length === 0 ||
       // If we've padded the data, every y value will be null
-      thisSeries.data.every(thisPoint => thisPoint[1] === null)
+      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
 

@@ -3,7 +3,7 @@ import { authentication } from 'src/utilities/storage';
 import {
   handleInitTokens,
   handleLogout,
-  handleStartSession
+  handleStartSession,
 } from './authentication.actions';
 
 describe('Authentication', () => {
@@ -17,14 +17,14 @@ describe('Authentication', () => {
       handleStartSession({
         token: 'helloworld',
         scopes: '*',
-        expires: 'never'
+        expires: 'never',
       })
     );
     expect(store.getState().authentication).toEqual({
       token: 'helloworld',
       scopes: '*',
       expiration: 'never',
-      loggedInAsCustomer: false
+      loggedInAsCustomer: false,
     });
   });
 
@@ -33,7 +33,7 @@ describe('Authentication', () => {
       handleStartSession({
         token: 'helloworld',
         scopes: '*',
-        expires: 'never'
+        expires: 'never',
       })
     );
     store.dispatch(handleLogout());
@@ -45,7 +45,7 @@ describe('Authentication', () => {
       token: null,
       scopes: null,
       expiration: null,
-      loggedInAsCustomer: false
+      loggedInAsCustomer: false,
     });
   });
 
@@ -63,7 +63,7 @@ describe('Authentication', () => {
       token: 'Admin',
       scopes: 'hello world',
       expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
-      loggedInAsCustomer: true
+      loggedInAsCustomer: true,
     });
   });
 
@@ -81,7 +81,7 @@ describe('Authentication', () => {
       token: 'bearer',
       scopes: 'hello world',
       expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
-      loggedInAsCustomer: false
+      loggedInAsCustomer: false,
     });
   });
 });

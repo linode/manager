@@ -14,26 +14,26 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'flex-start',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   header: {
     borderBottom: `solid 1px ${theme.cmrBorderColors.borderTypography}`,
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   content: {
-    width: '100%'
+    width: '100%',
   },
   loading: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   icon: {
     marginRight: theme.spacing(),
     '& svg': {
       color: theme.color.grey1,
-      stroke: theme.color.grey1
-    }
+      stroke: theme.color.grey1,
+    },
   },
   notificationItem: {
     paddingTop: '10px',
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1.43,
     fontSize: '14px',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   showMore: {
     ...theme.applyLinkStyles,
@@ -51,15 +51,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      textDecoration: 'none'
-    }
+      textDecoration: 'none',
+    },
   },
   caret: {
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   inverted: {
-    transform: 'rotate(180deg)'
-  }
+    transform: 'rotate(180deg)',
+  },
 }));
 
 export interface NotificationItem {
@@ -81,7 +81,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const NotificationSection: React.FC<Props> = props => {
+export const NotificationSection: React.FC<Props> = (props) => {
   const {
     content,
     count,
@@ -90,7 +90,7 @@ export const NotificationSection: React.FC<Props> = props => {
     loading,
     showMoreText,
     showMoreTarget,
-    onClose
+    onClose,
   } = props;
 
   const _loading = Boolean(loading); // false if not provided
@@ -166,7 +166,7 @@ interface BodyProps {
   emptyMessage?: string;
 }
 
-const ContentBody: React.FC<BodyProps> = React.memo(props => {
+const ContentBody: React.FC<BodyProps> = React.memo((props) => {
   const { content, count, emptyMessage, header, loading } = props;
   const classes = useStyles();
   const [showAll, setShowAll] = React.useState(false);
@@ -184,7 +184,7 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
   return _content.length > 0 ? (
     // eslint-disable-next-line
     <>
-      {_content.map(thisItem => (
+      {_content.map((thisItem) => (
         <div
           className={classes.notificationItem}
           key={`notification-row-${thisItem.id}`}
@@ -202,7 +202,7 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
           <KeyboardArrowDown
             className={classNames({
               [classes.caret]: true,
-              [classes.inverted]: showAll
+              [classes.inverted]: showAll,
             })}
           />
         </button>

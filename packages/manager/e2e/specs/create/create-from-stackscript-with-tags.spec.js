@@ -6,7 +6,7 @@ import ConfigureLinode from '../../pageobjects/configure-linode';
 import {
   apiDeleteAllLinodes,
   timestamp,
-  waitForLinodeStatus
+  waitForLinodeStatus,
 } from '../../utils/common';
 
 describe('Create Linode From StackScript - Tags Suite', () => {
@@ -15,7 +15,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     label: `${new Date().getTime()}-MyStackScript`,
     description: 'test stackscript example',
     revisionNote: new Date().getTime(),
-    script: 'bad script'
+    script: 'bad script',
   };
 
   beforeAll(() => {
@@ -37,10 +37,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     newTag = timestamp();
 
     // Terrible Selector, but it seems to work for now:
-    ConfigureLinode.tagsMultiSelect
-      .$('..')
-      .$('input')
-      .setValue(newTag);
+    ConfigureLinode.tagsMultiSelect.$('..').$('input').setValue(newTag);
     ConfigureLinode.selectOption.waitForDisplayed(constants.wait.normal);
     ConfigureLinode.selectOption.click();
     ConfigureLinode.selectOption.waitForDisplayed(constants.wait.normal, true);
@@ -54,10 +51,10 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     existingTag = ConfigureLinode.selectOptions[0].getText();
     ConfigureLinode.selectOptions[0].click();
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       const tagsAdded = $$(ConfigureLinode.multiOption.selector).length === 2;
       const tagsIncludeExisting = $$(ConfigureLinode.multiOption.selector)
-        .map(t => t.getText())
+        .map((t) => t.getText())
         .includes(existingTag);
       return tagsAdded && tagsIncludeExisting;
     }, constants.wait.normal);
@@ -83,7 +80,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
   });
 
   xit('should display the tagged linode created from a stackscript on list linodes', () => {
-    const tagsDisplayed = ListLinodes.tags.map(t => t.getText());
+    const tagsDisplayed = ListLinodes.tags.map((t) => t.getText());
 
     expect(tagsDisplayed).toContain(existingTag);
     expect(tagsDisplayed).toContain(newTag);

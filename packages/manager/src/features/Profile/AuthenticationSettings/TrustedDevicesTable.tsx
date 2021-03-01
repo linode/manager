@@ -19,7 +19,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const TrustedDevicesTable: React.FC<CombinedProps> = props => {
+export const TrustedDevicesTable: React.FC<CombinedProps> = (props) => {
   const { loading, error, data } = props;
 
   const triggerDeletion = (deviceId: number) => {
@@ -47,7 +47,7 @@ export const TrustedDevicesTable: React.FC<CombinedProps> = props => {
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {data.map(eachDevice => {
+      {data.map((eachDevice) => {
         return (
           <TableRow ariaLabel={`Device ${eachDevice.id}`} key={eachDevice.id}>
             <TableCell>{eachDevice.user_agent}</TableCell>
@@ -77,7 +77,7 @@ interface ButtonProps {
   deviceId?: number;
   triggerDeletion: (deviceId: number) => void;
 }
-export const UntrustButton: React.FC<ButtonProps> = props => {
+export const UntrustButton: React.FC<ButtonProps> = (props) => {
   const handleDelete = () => {
     const { triggerDeletion, deviceId } = props;
     if (!!deviceId) {

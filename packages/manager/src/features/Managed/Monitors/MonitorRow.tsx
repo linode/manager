@@ -16,32 +16,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   label: {
     fontFamily: theme.font.bold,
-    width: '30%'
+    width: '30%',
   },
   icon: {
     alignItems: 'center',
     transition: 'color 225ms ease-in-out',
     '&:hover': {
-      color: theme.color.red
-    }
+      color: theme.color.red,
+    },
   },
   monitorDescription: {
-    paddingTop: theme.spacing(1) / 2
+    paddingTop: theme.spacing(1) / 2,
   },
   monitorRow: {
     '&:before': {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   errorStatus: {
-    color: theme.color.red
+    color: theme.color.red,
   },
   actionCell: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface Props {
@@ -54,7 +54,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const MonitorRow: React.FunctionComponent<CombinedProps> = props => {
+export const MonitorRow: React.FunctionComponent<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -62,13 +62,13 @@ export const MonitorRow: React.FunctionComponent<CombinedProps> = props => {
     issues,
     openDialog,
     openHistoryDrawer,
-    openMonitorDrawer
+    openMonitorDrawer,
   } = props;
 
   const Icon = statusIconMap[monitor.status];
 
   // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
-  const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
+  const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
 
   return (
     <TableRow

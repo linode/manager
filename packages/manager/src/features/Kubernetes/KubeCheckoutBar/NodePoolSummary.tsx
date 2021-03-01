@@ -12,18 +12,18 @@ import { pluralize } from 'src/utilities/pluralize';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingTop: theme.spacing(3),
-    marginBottom: theme.spacing(1) - 2
+    marginBottom: theme.spacing(1) - 2,
   },
   typeHeader: {
     paddingLeft: theme.spacing(),
     paddingBottom: theme.spacing(0.5),
     fontSize: '16px',
-    fontWeight: 600
+    fontWeight: 600,
   },
   typeSubheader: {
     paddingLeft: theme.spacing(),
-    fontSize: '14px'
-  }
+    fontSize: '14px',
+  },
 }));
 
 export interface Props {
@@ -34,7 +34,7 @@ export interface Props {
   onRemove: () => void;
 }
 
-export const NodePoolSummary: React.FC<Props> = props => {
+export const NodePoolSummary: React.FC<Props> = (props) => {
   const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
 
   const classes = useStyles();

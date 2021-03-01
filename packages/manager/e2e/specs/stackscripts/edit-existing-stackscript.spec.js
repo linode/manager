@@ -12,18 +12,18 @@ xdescribe('StackScript - Edit Existing', () => {
     description: 'test stackscript example',
     revisionNote: new Date().getTime(),
     script: '#!/bin/bash',
-    images: ['debian9']
+    images: ['debian9'],
   };
 
   const newConfig = {
     label: `someNewLabel`,
     description: 'new description!',
     revisionNote: 'new revision',
-    script: '#!/bin/bash \n echo fooooo'
+    script: '#!/bin/bash \n echo fooooo',
   };
 
   function assertOriginalDisplays() {
-    const compatibleImages = ConfigureStackScripts.imageTags.filter(t =>
+    const compatibleImages = ConfigureStackScripts.imageTags.filter((t) =>
       t.getText().includes(stackConfig.images[0])
     );
     const description = ConfigureStackScripts.description

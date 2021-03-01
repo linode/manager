@@ -1,6 +1,6 @@
 import {
   KubernetesCluster,
-  KubernetesVersion
+  KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { pluralize } from 'src/utilities/pluralize';
@@ -32,7 +32,7 @@ export const addPriceToNodePool = (
   typesData: LinodeType[]
 ) => ({
   ...pool,
-  totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, typesData)
+  totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, typesData),
 });
 
 /**
@@ -60,7 +60,7 @@ export const extendCluster = (
     node_pools: _pools,
     totalMemory: RAM,
     totalCPU: CPU,
-    totalStorage: Storage
+    totalStorage: Storage,
   };
 };
 
@@ -89,7 +89,7 @@ export const getTotalClusterMemoryCPUAndStorage = (
       return {
         RAM: accumulator.RAM + thisType.memory * thisPool.count,
         CPU: accumulator.CPU + thisType.vcpus * thisPool.count,
-        Storage: accumulator.Storage + thisType.disk * thisPool.count
+        Storage: accumulator.Storage + thisType.disk * thisPool.count,
       };
     },
     { RAM: 0, CPU: 0, Storage: 0 }
@@ -117,9 +117,9 @@ export const getNextVersion = (
   currentVersion: string,
   versions: KubernetesVersion[]
 ) => {
-  const versionStrings = versions.map(v => v.id).sort();
+  const versionStrings = versions.map((v) => v.id).sort();
   const currentIdx = versionStrings.findIndex(
-    thisVersion => currentVersion === thisVersion
+    (thisVersion) => currentVersion === thisVersion
   );
   if (currentIdx < 0) {
     // For now, assume that if nothing matches the user is on an obsolete version.

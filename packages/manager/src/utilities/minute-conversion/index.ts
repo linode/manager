@@ -1,4 +1,4 @@
 export {
   convertMinutesTo,
-  generateMigrationTimeString
+  generateMigrationTimeString,
 } from './minute-conversion';

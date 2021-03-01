@@ -7,9 +7,9 @@ export const contact1: ManagedContact = {
   email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
-    secondary: null
+    secondary: null,
   },
-  updated: '2019-08-01T12:00:00'
+  updated: '2019-08-01T12:00:00',
 };
 
 export const contact2: ManagedContact = {
@@ -19,9 +19,9 @@ export const contact2: ManagedContact = {
   email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
-    secondary: null
+    secondary: null,
   },
-  updated: '2019-08-01T12:00:00'
+  updated: '2019-08-01T12:00:00',
 };
 
 export const contact3: ManagedContact = {
@@ -31,9 +31,9 @@ export const contact3: ManagedContact = {
   email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
-    secondary: null
+    secondary: null,
   },
-  updated: '2019-08-01T12:00:00'
+  updated: '2019-08-01T12:00:00',
 };
 
 export const contactWithoutGroup: ManagedContact = {
@@ -43,9 +43,9 @@ export const contactWithoutGroup: ManagedContact = {
   email: 'user@host.com',
   phone: {
     primary: '555-555-5555',
-    secondary: null
+    secondary: null,
   },
-  updated: '2019-08-01T12:00:00'
+  updated: '2019-08-01T12:00:00',
 };
 
 export default [contact1, contact2, contact3];

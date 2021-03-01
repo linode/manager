@@ -3,6 +3,6 @@ export default {
     createLinode: jest.fn(),
     updateLinode: jest.fn(),
     deleteLinode: jest.fn(),
-    rebootLinode: jest.fn()
-  }
+    rebootLinode: jest.fn(),
+  },
 };

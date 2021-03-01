@@ -8,18 +8,18 @@ const resultsPage = {
   page: 1,
   pages: 3,
   results: 100,
-  data: mockDomains
+  data: mockDomains,
 };
 
 const resultsPageSmall = {
   ...resultsPage,
   pages: 1,
-  results: mockDomains.length
+  results: mockDomains.length,
 };
 
 const getAllResults = {
   data: mockDomains,
-  results: mockDomains.length
+  results: mockDomains.length,
 };
 
 const mockError = [{ reason: 'An error occurred.' }];
@@ -49,7 +49,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.getDomainsPageActions.done({
           params: {},
-          result: resultsPage
+          result: resultsPage,
         })
       );
       expect(newState).toHaveProperty('loading', false);
@@ -65,7 +65,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.getDomainsPageActions.done({
           params: {},
-          result: resultsPageSmall
+          result: resultsPageSmall,
         })
       );
       expect(newState).toHaveProperty('results', resultsPageSmall.results);
@@ -78,7 +78,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.getDomainsPageActions.failed({
           params: {},
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState.error).toHaveProperty('read', mockError);
@@ -110,7 +110,7 @@ describe('Domains Redux store', () => {
       const newState = reducer(
         defaultState,
         actions.getDomainsActions.failed({
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState).toHaveProperty('loading', false);
@@ -132,7 +132,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.createDomainActions.done({
           result: newDomain,
-          params: createDomainParams
+          params: createDomainParams,
         })
       );
       expect(newState.itemsById).toHaveProperty(
@@ -147,7 +147,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.createDomainActions.failed({
           error: mockError,
-          params: createDomainParams
+          params: createDomainParams,
         })
       );
       expect(newState.error.create).toEqual(mockError);
@@ -165,13 +165,13 @@ describe('Domains Redux store', () => {
       const withEntities = addEntities();
       const updatedDomain = {
         ...mockDomains[1],
-        label: 'updated-label'
+        label: 'updated-label',
       };
       const newState = reducer(
         withEntities,
         actions.updateDomainActions.done({
           result: updatedDomain,
-          params: { domainId: updatedDomain.id }
+          params: { domainId: updatedDomain.id },
         })
       );
       expect(newState.itemsById).toHaveProperty(
@@ -186,7 +186,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.updateDomainActions.failed({
           error: mockError,
-          params: { domainId: 1 }
+          params: { domainId: 1 },
         })
       );
       expect(newState.error.update).toEqual(mockError);
@@ -206,7 +206,7 @@ describe('Domains Redux store', () => {
         withEntities,
         actions.deleteDomainActions.done({
           result: {},
-          params: { domainId: mockDomains[5].id }
+          params: { domainId: mockDomains[5].id },
         })
       );
       expect(newState.itemsById).not.toHaveProperty(String(mockDomains[5].id));
@@ -219,7 +219,7 @@ describe('Domains Redux store', () => {
         defaultState,
         actions.deleteDomainActions.failed({
           error: mockError,
-          params: { domainId: 1 }
+          params: { domainId: 1 },
         })
       );
       expect(newState.error.delete).toEqual(mockError);

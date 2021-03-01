@@ -9,7 +9,7 @@ export interface DialogContextProps {
 export const defaultContext = {
   isOpen: false,
   open: () => void 0,
-  close: () => void 0
+  close: () => void 0,
 };
 
 export const dialogContext = createContext<DialogContextProps>(defaultContext);
@@ -21,7 +21,7 @@ export const useDialogContext = (): DialogContextProps => {
   return {
     isOpen,
     open,
-    close
+    close,
   };
 };
 

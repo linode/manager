@@ -5,7 +5,7 @@ import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/details.pa
 import {
   apiCreateLinode,
   removeNodeBalancers,
-  apiDeleteAllLinodes
+  apiDeleteAllLinodes,
 } from '../../utils/common';
 
 describe('Nodebalancer - Create Suite', () => {
@@ -60,7 +60,7 @@ describe('Nodebalancer - Create Suite', () => {
     NodeBalancers.regionSelect.waitForDisplayed();
     browser.enhancedSelect(NodeBalancers.regionSelect.selector, 'Newark, NJ');
     /** set the value of the IP Address field */
-    const privateIP = linode.ipv4.find(eachIP => eachIP.match(/192.168/));
+    const privateIP = linode.ipv4.find((eachIP) => eachIP.match(/192.168/));
     NodeBalancers.backendIpAddress.addValue(privateIP);
 
     /** wait for the dropdown options to appear */

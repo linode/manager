@@ -9,7 +9,7 @@ import {
   ExtendedNodePool,
   requestNodePoolsActions,
   setErrors,
-  updateNodePoolActions
+  updateNodePoolActions,
 } from './nodePools.actions';
 
 /**
@@ -23,14 +23,14 @@ export const defaultState: State = {
   entities: [],
   loading: false,
   lastUpdated: 0,
-  error: {}
+  error: {},
 };
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, requestNodePoolsActions.done)) {
       const { result } = action.payload;
       // If this condition is false we don't have to update the state
@@ -42,12 +42,12 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
          */
         const clusterID = result[0].clusterID;
         const filteredPools = state.entities.filter(
-          thisPool => thisPool.clusterID !== clusterID
+          (thisPool) => thisPool.clusterID !== clusterID
         );
         const newPools = [...filteredPools, ...result];
 
         draft.entities = newPools;
-        draft.results = newPools.map(p => p.id);
+        draft.results = newPools.map((p) => p.id);
       }
       draft.loading = false;
       draft.lastUpdated = Date.now();
@@ -89,20 +89,20 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const update = updateOrAdd(result, state.entities);
 
       draft.entities = update;
-      draft.results = update.map(c => c.id);
+      draft.results = update.map((c) => c.id);
     }
 
     if (isType(action, deleteNodePoolActions.done)) {
       const {
-        params: { nodePoolID }
+        params: { nodePoolID },
       } = action.payload;
 
       const updatedPools = state.entities.filter(
-        thisPool => thisPool.id !== nodePoolID
+        (thisPool) => thisPool.id !== nodePoolID
       );
 
       draft.entities = updatedPools;
-      draft.results = updatedPools.map(p => p.id);
+      draft.results = updatedPools.map((p) => p.id);
     }
 
     if (isType(action, deleteNodePoolActions.failed)) {

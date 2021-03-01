@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -19,16 +19,16 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       '& p': {
-        lineHeight: `20px`
+        lineHeight: `20px`,
       },
       '& p:last-child': {
-        marginBottom: 0
-      }
+        marginBottom: 0,
+      },
     },
     dateTime: {
       fontSize: theme.spacing(2),
-      lineHeight: `${theme.spacing(2.5)}px`
-    }
+      lineHeight: `${theme.spacing(2.5)}px`,
+    },
   });
 
 interface Props {
@@ -43,14 +43,14 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const MaintenanceBanner: React.FC<CombinedProps> = props => {
+const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
   const {
     type,
     maintenanceEnd,
     maintenanceStart,
     userTimezone,
     userProfileError,
-    userProfileLoading
+    userProfileLoading,
   } = props;
 
   const timezoneMsg = () => {
@@ -91,12 +91,14 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
       <Typography>
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
-      {/** only display timezone on the Linode detail */
-      maintenanceStart && (
-        <Typography>
-          Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
-        </Typography>
-      )}
+      {
+        /** only display timezone on the Linode detail */
+        maintenanceStart && (
+          <Typography>
+            Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
+          </Typography>
+        )
+      }
       <Typography>
         For more information, please see your{' '}
         <Link to="/support/tickets?type=open">open support tickets.</Link>

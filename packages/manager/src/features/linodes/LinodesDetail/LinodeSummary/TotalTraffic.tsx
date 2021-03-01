@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -17,19 +17,19 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(3),
       [theme.breakpoints.down('xs')]: {
         flexDirection: 'column',
-        alignItems: 'flex-start'
-      }
+        alignItems: 'flex-start',
+      },
     },
     text: {
       whiteSpace: 'nowrap',
       [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3)
-      }
+        marginLeft: theme.spacing(3),
+      },
     },
     heading: {
       fontSize: '0.9rem',
-      whiteSpace: 'nowrap'
-    }
+      whiteSpace: 'nowrap',
+    },
   });
 
 export interface TotalTrafficProps {

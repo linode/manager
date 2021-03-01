@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import {
   closeBucketDrawer,
-  openBucketDrawer
+  openBucketDrawer,
 } from 'src/store/bucketDrawer/bucketDrawer.actions';
 
 export interface StateProps {
@@ -16,12 +16,12 @@ export interface DispatchProps {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-  isOpen: state.bucketDrawer.isOpen
+  isOpen: state.bucketDrawer.isOpen,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   openBucketDrawer: () => dispatch(openBucketDrawer()),
-  closeBucketDrawer: () => dispatch(closeBucketDrawer())
+  closeBucketDrawer: () => dispatch(closeBucketDrawer()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps);

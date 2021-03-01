@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import {
   CreateLinodeRequest,
   Linode,
-  LinodeTypeClass
+  LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';

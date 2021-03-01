@@ -6,12 +6,12 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
-  StyleProps
+  StyleProps,
 } from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
@@ -29,24 +29,24 @@ const styles = (theme: Theme) =>
   createStyles({
     ...summaryPanelStyles(theme),
     root: {
-      paddingTop: theme.spacing()
+      paddingTop: theme.spacing(),
     },
     NBsummarySection: {
       [theme.breakpoints.up('md')]: {
-        marginTop: theme.spacing(3) + 24
-      }
+        marginTop: theme.spacing(3) + 24,
+      },
     },
     IPgrouping: {
       margin: '-2px 0 0 2px',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
     nodeTransfer: {
-      marginTop: 12
+      marginTop: 12,
     },
     hostName: {
-      wordBreak: 'break-word'
-    }
+      wordBreak: 'break-word',
+    },
   });
 
 interface Props {
@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props & StyleProps & WithStyles<ClassNames>;
 
-const SummaryPanel: React.FC<CombinedProps> = props => {
+const SummaryPanel: React.FC<CombinedProps> = (props) => {
   const { nodeBalancer, classes } = props;
 
   return (

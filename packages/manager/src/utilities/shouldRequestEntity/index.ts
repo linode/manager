@@ -1,4 +1,4 @@
 export {
   entityHasNeverBeenRequested,
-  shouldRequestEntity
+  shouldRequestEntity,
 } from './shouldRequestEntity';

@@ -27,17 +27,17 @@ import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
-    width: '35%'
+    width: '35%',
   },
   statusCell: {
-    width: '15%'
+    width: '15%',
   },
   ipCell: {
-    width: '25%'
+    width: '25%',
   },
   error: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 // =============================================================================
@@ -50,7 +50,7 @@ export interface Props {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
-export const NodeTable: React.FC<Props> = props => {
+export const NodeTable: React.FC<Props> = (props) => {
   const { nodes, poolId, typeLabel, openRecycleNodeDialog } = props;
 
   const classes = useStyles();
@@ -58,7 +58,7 @@ export const NodeTable: React.FC<Props> = props => {
   const { _loading } = useReduxLoad(['linodes']);
   const { linodes } = useLinodes();
 
-  const rowData = nodes.map(thisNode =>
+  const rowData = nodes.map((thisNode) =>
     nodeToRow(thisNode, Object.values(linodes.itemsById))
   );
 
@@ -72,7 +72,7 @@ export const NodeTable: React.FC<Props> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Paper>
@@ -115,7 +115,7 @@ export const NodeTable: React.FC<Props> = props => {
                       lastUpdated={linodes.lastUpdated}
                       length={paginatedAndOrderedData.length}
                     >
-                      {paginatedAndOrderedData.map(eachRow => {
+                      {paginatedAndOrderedData.map((eachRow) => {
                         return (
                           <NodeRow
                             key={`node-row-${eachRow.nodeId}`}
@@ -178,7 +178,7 @@ interface NodeRowProps extends NodeRow {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
-export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
+export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const {
     nodeId,
     instanceId,
@@ -188,7 +188,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo(props => {
     typeLabel,
     nodeStatus,
     linodeError,
-    openRecycleNodeDialog
+    openRecycleNodeDialog,
   } = props;
 
   const classes = useStyles();
@@ -263,7 +263,7 @@ export const nodeToRow = (
   linodes: LinodeWithMaintenanceAndDisplayStatus[]
 ): NodeRow => {
   const foundLinode = linodes.find(
-    thisLinode => thisLinode.id === node.instance_id
+    (thisLinode) => thisLinode.id === node.instance_id
   );
 
   return {
@@ -271,6 +271,6 @@ export const nodeToRow = (
     label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0],
-    nodeStatus: node.status
+    nodeStatus: node.status,
   };
 };

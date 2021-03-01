@@ -14,7 +14,7 @@ describe('Create - Menu Suite', () => {
     expect(Create.linodeMenuItem.isDisplayed()).toBe(true);
 
     Create.linode();
-    Create.selectionCards.forEach(card =>
+    Create.selectionCards.forEach((card) =>
       expect(card.isDisplayed()).toBe(true)
     );
   });

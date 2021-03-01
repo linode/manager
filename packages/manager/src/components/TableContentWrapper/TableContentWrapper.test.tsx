@@ -10,7 +10,7 @@ const children = [
   </tr>,
   <tr key={2}>
     <td>Another row!</td>
-  </tr>
+  </tr>,
 ];
 
 describe('TableContentWrapper component', () => {
@@ -19,7 +19,7 @@ describe('TableContentWrapper component', () => {
       lastUpdated: 100,
       loading: false,
       length: 1,
-      children
+      children,
     };
     const { getByText } = render(
       wrapWithTableBody(<TableContentWrapper {...kosherProps} />)
@@ -33,7 +33,7 @@ describe('TableContentWrapper component', () => {
       lastUpdated: 10,
       loading: true,
       length: 100,
-      children
+      children,
     };
     const { getByTestId, queryByText } = render(
       wrapWithTableBody(<TableContentWrapper {...loadingProps} />)
@@ -50,7 +50,7 @@ describe('TableContentWrapper component', () => {
       lastUpdated: 0,
       length: 0,
       error: mockError,
-      children
+      children,
     };
 
     const { getByTestId, getByText, queryByText } = render(
@@ -66,7 +66,7 @@ describe('TableContentWrapper component', () => {
       loading: false,
       lastUpdated: 10,
       length: 0,
-      children
+      children,
     };
 
     const { getByText, queryByText } = render(
@@ -82,7 +82,7 @@ describe('TableContentWrapper component', () => {
       lastUpdated: 10,
       length: 0,
       emptyMessage: 'Nothing to see here',
-      children
+      children,
     };
 
     const { getByText } = render(

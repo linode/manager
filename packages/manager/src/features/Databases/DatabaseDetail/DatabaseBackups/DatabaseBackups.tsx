@@ -1,6 +1,6 @@
 import {
   DatabaseBackup,
-  getDatabaseBackups
+  getDatabaseBackups,
 } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -18,21 +18,21 @@ import BackupTableRow from './DatabaseBackupTableRow';
 const useStyles = makeStyles((theme: Theme) => ({
   heading: {
     marginBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(2)
-  }
+    paddingLeft: theme.spacing(2),
+  },
 }));
 
 interface Props {
   databaseID: number;
 }
 
-export const DatabaseBackups: React.FC<Props> = props => {
+export const DatabaseBackups: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { databaseID } = props;
 
   const backups = useAPIRequest<DatabaseBackup[]>(
-    () => getDatabaseBackups(Number(databaseID)).then(res => res.data),
+    () => getDatabaseBackups(Number(databaseID)).then((res) => res.data),
     []
   );
 

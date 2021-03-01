@@ -3,7 +3,7 @@ import {
   Config,
   Disk,
   LinodeType,
-  LinodeInterface
+  LinodeInterface,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';

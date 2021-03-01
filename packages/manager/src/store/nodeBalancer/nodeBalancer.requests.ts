@@ -4,7 +4,7 @@ import {
   getNodeBalancer as _getNodeBalancer,
   getNodeBalancers,
   NodeBalancer,
-  updateNodeBalancer as _updateNodeBalancer
+  updateNodeBalancer as _updateNodeBalancer,
 } from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';
@@ -18,7 +18,7 @@ import {
   getNodeBalancersPageActions,
   getNodeBalancerWithConfigsActions,
   GetNodeBalancerWithConfigsParams,
-  updateNodeBalancersActions
+  updateNodeBalancersActions,
 } from './nodeBalancer.actions';
 
 const getAllNodeBalancersRequest = getAll<NodeBalancer>(getNodeBalancers);
@@ -41,13 +41,13 @@ export const getNodeBalancersPage = createRequestThunk(
 export const createNodeBalancer: ThunkActionCreator<
   Promise<NodeBalancer>,
   CreateNodeBalancerParams
-> = params => dispatch => {
+> = (params) => (dispatch) => {
   const { started, done, failed } = createNodeBalancersActions;
 
   dispatch(started(params));
 
   return _createNodeBalancer(params)
-    .then(response => {
+    .then((response) => {
       const { id: nodeBalancerId } = response;
 
       dispatch(getAllNodeBalancerConfigs({ nodeBalancerId }));
@@ -55,7 +55,7 @@ export const createNodeBalancer: ThunkActionCreator<
       dispatch(done({ result: response, params }));
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(failed({ error, params }));
       return Promise.reject(error);
     });
@@ -64,18 +64,18 @@ export const createNodeBalancer: ThunkActionCreator<
 export const deleteNodeBalancer: ThunkActionCreator<
   Promise<{}>,
   { nodeBalancerId: number }
-> = params => dispatch => {
+> = (params) => (dispatch) => {
   const { nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerActions;
 
   dispatch(started({ nodeBalancerId }));
 
   return _deleteNodeBalancer(nodeBalancerId)
-    .then(response => {
+    .then((response) => {
       dispatch(done({ params, result: {} }));
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(failed({ params, error }));
       return Promise.reject(error);
     });
@@ -86,18 +86,18 @@ export const updateNodeBalancer = createRequestThunk(
   ({ nodeBalancerId, ...data }) => _updateNodeBalancer(nodeBalancerId, data)
 );
 
-export const getAllNodeBalancersWithConfigs: ThunkActionCreator<Promise<
-  void
->> = () => async dispatch => {
+export const getAllNodeBalancersWithConfigs: ThunkActionCreator<
+  Promise<void>
+> = () => async (dispatch) => {
   const { started, done, failed } = getAllNodeBalancersActions;
   dispatch(started());
 
   try {
     const result = await getAllNodeBalancersRequest();
-    result.data.forEach(thisBalancer => {
+    result.data.forEach((thisBalancer) => {
       dispatch(getAllNodeBalancerConfigs({ nodeBalancerId: thisBalancer.id }))
         // Errors will be added to the Redux state for each individual set of configs
-        .catch(_ => null);
+        .catch((_) => null);
     });
 
     dispatch(done({ result }));
@@ -109,19 +109,19 @@ export const getAllNodeBalancersWithConfigs: ThunkActionCreator<Promise<
 export const getNodeBalancerWithConfigs: ThunkActionCreator<
   Promise<NodeBalancer>,
   GetNodeBalancerWithConfigsParams
-> = params => dispatch => {
+> = (params) => (dispatch) => {
   const { nodeBalancerId } = params;
   const { started, done, failed } = getNodeBalancerWithConfigsActions;
 
   dispatch(started(params));
   // This can be done in parallel.
-  dispatch(getAllNodeBalancerConfigs({ nodeBalancerId })).catch(_ => null);
+  dispatch(getAllNodeBalancerConfigs({ nodeBalancerId })).catch((_) => null);
   return _getNodeBalancer(nodeBalancerId)
-    .then(nodeBalancer => {
+    .then((nodeBalancer) => {
       dispatch(done({ params, result: nodeBalancer }));
       return nodeBalancer;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(failed({ params, error }));
       return error;
     });

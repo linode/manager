@@ -2,7 +2,7 @@
 import {
   clickLinodeActionMenu,
   createLinode,
-  deleteAllTestLinodes
+  deleteAllTestLinodes,
 } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
 import {
@@ -11,7 +11,7 @@ import {
   fbtClick,
   getVisible,
   fbtVisible,
-  containsVisible
+  containsVisible,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
@@ -21,20 +21,20 @@ const fakeRegionsData = {
       capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
       country: 'uk',
       id: 'eu-west',
-      status: 'ok'
+      status: 'ok',
     },
     {
       capabilities: [
         'Linodes',
         'NodeBalancers',
         'Block Storage',
-        'Cloud Firewall'
+        'Cloud Firewall',
       ],
       country: 'sg',
       id: 'ap-south',
-      status: 'ok'
-    }
-  ]
+      status: 'ok',
+    },
+  ],
 };
 
 describe('Migrate Linode With Firewall', () => {
@@ -43,8 +43,8 @@ describe('Migrate Linode With Firewall', () => {
     const fakeFirewallId = 6666;
 
     // modify incoming response
-    cy.intercept('*/networking/firewalls*', req => {
-      req.reply(res => {
+    cy.intercept('*/networking/firewalls*', (req) => {
+      req.reply((res) => {
         res.send({
           data: [
             {
@@ -58,24 +58,24 @@ describe('Migrate Linode With Firewall', () => {
                   {
                     ports: '80',
                     protocol: 'TCP',
-                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
-                  }
+                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
+                  },
                 ],
                 outbound: [
                   {
                     ports: '80',
                     protocol: 'TCP',
-                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] }
-                  }
-                ]
+                    addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
+                  },
+                ],
               },
               tags: [],
-              devices: { linodes: [fakeLinodeId] }
-            }
+              devices: { linodes: [fakeLinodeId] },
+            },
           ],
           page: 1,
           pages: 1,
-          results: 1
+          results: 1,
         });
       });
     }).as('getFirewalls');
@@ -97,52 +97,52 @@ describe('Migrate Linode With Firewall', () => {
         memory: 2048,
         vcpus: 1,
         gpus: 0,
-        transfer: 2000
+        transfer: 2000,
       },
       alerts: {
         cpu: 90,
         network_in: 10,
         network_out: 10,
         transfer_quota: 80,
-        io: 10000
+        io: 10000,
       },
       backups: {
         enabled: true,
         schedule: { day: 'Scheduling', window: 'Scheduling' },
-        last_successful: '2020-08-02T22:26:19'
+        last_successful: '2020-08-02T22:26:19',
       },
       hypervisor: 'kvm',
       watchdog_enabled: true,
-      tags: []
+      tags: [],
     };
 
     // modify incoming response
-    cy.intercept('*/regions', req => {
-      req.reply(res => {
+    cy.intercept('*/regions', (req) => {
+      req.reply((res) => {
         res.send(fakeRegionsData);
       });
     }).as('getRegions');
 
     // intercept request and stub it, respond with 200
     cy.intercept('POST', `*/linode/instances/${fakeLinodeId}/migrate`, {
-      statusCode: 200
+      statusCode: 200,
     }).as('migrateReq');
 
     // modify incoming response
-    cy.intercept('*/linode/instances/*', req => {
-      req.reply(res => {
+    cy.intercept('*/linode/instances/*', (req) => {
+      req.reply((res) => {
         res.send({
           data: [fakeLinodeData],
           page: 1,
           pages: 1,
-          results: 1
+          results: 1,
         });
       });
     }).as('getLinodes');
 
     // modify incoming response
-    cy.intercept(`*/linode/instances/${fakeLinodeId}/migrate`, req => {
-      req.reply(res => {
+    cy.intercept(`*/linode/instances/${fakeLinodeId}/migrate`, (req) => {
+      req.reply((res) => {
         res.send(fakeLinodeData);
       });
     }).as('getLinode');
@@ -156,9 +156,7 @@ describe('Migrate Linode With Firewall', () => {
     containsClick(selectRegionString);
     fbtClick('Singapore, SG');
     fbtClick('Enter Migration Queue');
-    cy.wait('@migrateReq')
-      .its('response.statusCode')
-      .should('eq', 200);
+    cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
   });
 
   // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
@@ -167,9 +165,7 @@ describe('Migrate Linode With Firewall', () => {
       getVisible('[type="button"]').within(() => {
         containsClick('Enter Migration Queue');
       });
-      cy.wait('@migrateLinode')
-        .its('response.statusCode')
-        .should('eq', 400);
+      cy.wait('@migrateLinode').its('response.statusCode').should('eq', 400);
       cy.findByText(
         'Target region for this Linode does not support Cloud Firewalls at this time. Please choose a different region or remove your firewall before migrating.',
         { timeout: 180000 }
@@ -184,7 +180,7 @@ describe('Migrate Linode With Firewall', () => {
 
     cy.visitWithLogin('/firewalls');
 
-    createLinode({ region: 'ap-southeast' }).then(linode => {
+    createLinode({ region: 'ap-southeast' }).then((linode) => {
       // intercept migrate linode request
       cy.intercept('POST', `*/linode/instances/${linode.id}/migrate`).as(
         'migrateLinode'
@@ -254,7 +250,7 @@ describe('Migrate Linode With Firewall', () => {
     // modify incoming response
     cy.intercept('*/networking/firewalls*').as('getFirewall');
     cy.visitWithLogin('/firewalls');
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // intercept migrate linode request
       cy.intercept('POST', `*/linode/instances/${linode.id}/migrate`).as(
         'migrateLinode'

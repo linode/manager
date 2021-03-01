@@ -13,7 +13,7 @@ const renderDrawer = (props: Props) =>
 const props: Props = {
   loading: true,
   error: false,
-  title: 'my-drawer'
+  title: 'my-drawer',
 };
 
 describe('DrawerContent', () => {
@@ -28,7 +28,7 @@ describe('DrawerContent', () => {
       ...props,
       loading: false,
       error: true,
-      errorMessage: 'My Error'
+      errorMessage: 'My Error',
     });
     expect(screen.getByText('My Error')).toBeInTheDocument();
     expect(screen.queryByText('Content')).not.toBeInTheDocument();

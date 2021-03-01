@@ -33,7 +33,7 @@ interface Close extends Action {
 }
 
 export const close = (): Close => ({
-  type: CLOSE
+  type: CLOSE,
 });
 
 interface Creating extends Action {
@@ -74,7 +74,7 @@ interface CreateVolumePayload {
 }
 
 const createVolume = actionCreator<CreateVolumePayload>(`CREATE_VOLUME`, {
-  mode: 'creating'
+  mode: 'creating',
 });
 
 interface CreateVolumeForLinodePayload {
@@ -93,9 +93,10 @@ interface ViewResizeInstructionsPayload {
   message?: string;
 }
 
-export const viewResizeInstructions = actionCreator<
-  ViewResizeInstructionsPayload
->(`VIEW_RESIZE_INSTRUCTIONS`, { mode: modes.VIEW_RESIZE_INSTRUCTIONS });
+export const viewResizeInstructions = actionCreator<ViewResizeInstructionsPayload>(
+  `VIEW_RESIZE_INSTRUCTIONS`,
+  { mode: modes.VIEW_RESIZE_INSTRUCTIONS }
+);
 
 interface Editing extends Action {
   type: typeof EDITING;
@@ -142,7 +143,7 @@ export const openForClone = (
     volumeId,
     volumeLabel,
     volumeSize,
-    volumeRegion
+    volumeRegion,
   };
 };
 interface Attaching extends Action {
@@ -161,7 +162,7 @@ export const openForAttaching = (
     type: ATTACHING,
     linodeId,
     linodeRegion,
-    linodeLabel
+    linodeLabel,
   };
 };
 
@@ -181,7 +182,7 @@ export const openForConfig = (
     type: VIEWING_CONFIG,
     volumeLabel,
     volumePath,
-    message
+    message,
   };
 };
 
@@ -189,7 +190,7 @@ export const defaultState: State = {
   mode: modes.CLOSED,
   volumeLabel: undefined,
   volumeId: undefined,
-  volumeSize: undefined
+  volumeSize: undefined,
 };
 
 type ActionTypes =
@@ -212,13 +213,13 @@ export const volumeForm: Reducer<State> = (
     return {
       ...state,
       mode: getMode(action),
-      origin: action.payload.origin
+      origin: action.payload.origin,
     };
   }
 
   if (isType(action, createVolumeForLinode)) {
     const {
-      payload: { linodeId, linodeLabel, linodeRegion }
+      payload: { linodeId, linodeLabel, linodeRegion },
     } = action;
 
     return {
@@ -227,19 +228,19 @@ export const volumeForm: Reducer<State> = (
       origin: 'Created from Linode Details',
       linodeId,
       linodeLabel,
-      linodeRegion
+      linodeRegion,
     };
   }
 
   if (isType(action, viewResizeInstructions)) {
     const {
-      payload: { volumeLabel, message }
+      payload: { volumeLabel, message },
     } = action;
     return {
       ...state,
       mode: getMode(action),
       volumeLabel,
-      message
+      message,
     };
   }
 
@@ -248,7 +249,7 @@ export const volumeForm: Reducer<State> = (
       return {
         ...state,
         mode: modes.CLOSED,
-        origin: undefined
+        origin: undefined,
       };
 
     case CREATING_FOR_LINODE:
@@ -257,7 +258,7 @@ export const volumeForm: Reducer<State> = (
         mode: modes.CREATING_FOR_LINODE,
         linodeId: action.linodeId,
         linodeLabel: action.linodeLabel,
-        linodeRegion: action.linodeRegion
+        linodeRegion: action.linodeRegion,
       };
 
     case EDITING:
@@ -266,7 +267,7 @@ export const volumeForm: Reducer<State> = (
         mode: modes.EDITING,
         volumeId: action.volumeId,
         volumeLabel: action.volumeLabel,
-        volumeTags: action.volumeTags
+        volumeTags: action.volumeTags,
       };
 
     case RESIZING:
@@ -275,7 +276,7 @@ export const volumeForm: Reducer<State> = (
         mode: modes.RESIZING,
         volumeId: action.volumeId,
         volumeSize: action.volumeSize,
-        volumeLabel: action.volumeLabel
+        volumeLabel: action.volumeLabel,
       };
 
     case CLONING:
@@ -285,7 +286,7 @@ export const volumeForm: Reducer<State> = (
         volumeLabel: action.volumeLabel,
         volumeRegion: action.volumeRegion,
         volumeSize: action.volumeSize,
-        mode: modes.CLONING
+        mode: modes.CLONING,
       };
 
     case ATTACHING:
@@ -294,7 +295,7 @@ export const volumeForm: Reducer<State> = (
         linodeId: action.linodeId,
         linodeRegion: action.linodeRegion,
         linodeLabel: action.linodeLabel,
-        mode: modes.ATTACHING
+        mode: modes.ATTACHING,
       };
 
     case VIEWING_CONFIG:
@@ -303,7 +304,7 @@ export const volumeForm: Reducer<State> = (
         volumeLabel: action.volumeLabel,
         volumePath: action.volumePath,
         message: action.message,
-        mode: modes.VIEWING_CONFIG
+        mode: modes.VIEWING_CONFIG,
       };
 
     default:

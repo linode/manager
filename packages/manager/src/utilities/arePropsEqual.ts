@@ -10,7 +10,7 @@ export const arePropsEqual = <T extends {}>(
   nextProps: T
 ): boolean => {
   let areEqual = true;
-  props.forEach(prop => {
+  props.forEach((prop) => {
     if (prevProps[prop] !== nextProps[prop]) {
       areEqual = false;
     }

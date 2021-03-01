@@ -8,8 +8,8 @@ const useStyles = makeStyles(() => ({
   root: {
     borderTop: 'none',
     padding: '10px 15px',
-    width: '14%'
-  }
+    width: '14%',
+  },
 }));
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LinodeRowBackupCell: React.FC<CombinedProps> = props => {
+const LinodeRowBackupCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { linodeId, backupsEnabled, mostRecentBackup } = props;

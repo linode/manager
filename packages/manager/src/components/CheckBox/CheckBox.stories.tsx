@@ -6,7 +6,7 @@ class InteractiveCheckboxes extends React.Component {
   state = {
     checkedDefault: false,
     checkedWarning: false,
-    checkedError: false
+    checkedError: false,
   };
 
   handleDefaultClick = () => {

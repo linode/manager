@@ -5,7 +5,7 @@ import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -32,7 +32,7 @@ type ClassNames = 'root';
 
 const styles = () =>
   createStyles({
-    root: {}
+    root: {},
   });
 
 export type CombinedProps = Props &
@@ -96,7 +96,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
       handleOrderChange,
       count,
       page,
-      pageSize
+      pageSize,
     } = this.props;
 
     const isActive = (label: string) => label === orderBy;

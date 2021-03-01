@@ -2,7 +2,7 @@ import { path, pathOr } from 'ramda';
 import { connect } from 'react-redux';
 import {
   LongviewNotification,
-  LongviewResponse
+  LongviewResponse,
 } from 'src/features/Longview/request.types';
 import { ApplicationState } from 'src/store';
 import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
@@ -65,7 +65,7 @@ const connected = <OwnProps extends {}>(
         longviewClientData: pathOr({}, ['data'], foundClient),
         longviewClientDataLoading: pathOr(true, ['loading'], foundClient),
         longviewClientDataError: path(['error'], foundClient),
-        longviewClientLastUpdated: path(['lastUpdated'], foundClient)
+        longviewClientLastUpdated: path(['lastUpdated'], foundClient),
       };
     },
     (dispatch: ThunkDispatch, ownProps: OwnProps) => ({
@@ -74,9 +74,9 @@ const connected = <OwnProps extends {}>(
           getClientStats({
             clientID: supplyClientID(ownProps),
             api_key,
-            lastUpdated
+            lastUpdated,
           })
-        )
+        ),
     })
   );
 

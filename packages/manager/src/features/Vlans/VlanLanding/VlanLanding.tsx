@@ -34,31 +34,31 @@ const VlanLanding: React.FC<CombinedProps> = () => {
       label: 'Label',
       dataColumn: 'description',
       sortable: true,
-      widthPercent: 10
+      widthPercent: 10,
     },
     {
       label: 'Region',
       dataColumn: 'region',
       sortable: true,
-      widthPercent: 10
+      widthPercent: 10,
     },
     {
       label: 'Linodes',
       dataColumn: 'linodes',
       sortable: false,
-      widthPercent: 15
+      widthPercent: 15,
     },
     {
       label: 'Action Menu',
       visuallyHidden: true,
       dataColumn: '',
       sortable: false,
-      widthPercent: 5
-    }
+      widthPercent: 5,
+    },
   ];
 
   const handlers: VlanHandlers = {
-    triggerDeleteVlan: handleOpenDeleteVlanModal
+    triggerDeleteVlan: handleOpenDeleteVlanModal,
   };
 
   const vLanRow = {
@@ -67,7 +67,7 @@ const VlanLanding: React.FC<CombinedProps> = () => {
     data: Object.values(vlans.itemsById) ?? [],
     loading: vlans.loading,
     lastUpdated: vlans.lastUpdated,
-    error: vlans.error.read
+    error: vlans.error.read,
   };
 
   return (

@@ -2,7 +2,7 @@ import { Event } from '@linode/api-v4/lib/account';
 import { entityFactory, eventFactory } from 'src/factories/events';
 import getEventMessage, {
   eventMessageCreators,
-  safeSecondaryEntityLabel
+  safeSecondaryEntityLabel,
 } from './eventMessageGenerator';
 
 beforeEach(() => {
@@ -15,7 +15,7 @@ describe('Event message generation', () => {
     it('should filter unknown events', () => {
       const mockEvent = {
         action: '__unknown__',
-        status: 'started'
+        status: 'started',
       };
       const result = getEventMessage(mockEvent as Event);
 
@@ -26,7 +26,7 @@ describe('Event message generation', () => {
       const mockEvent = {
         action: 'linode_reboot',
         status: 'scheduled',
-        entity: null
+        entity: null,
       };
       const result = getEventMessage(mockEvent as Event);
 
@@ -37,7 +37,7 @@ describe('Event message generation', () => {
       const mockEvent = {
         action: 'linode_reboot',
         status: 'scheduled',
-        entity: { label: 'test-linode-123' }
+        entity: { label: 'test-linode-123' },
       };
 
       /** Mock the message creator */
@@ -56,7 +56,7 @@ describe('Event message generation', () => {
   describe('safeSecondaryEventLabel', () => {
     it('should return a correct message if the secondary entity is present', () => {
       const mockEventWithSecondaryEntity = eventFactory.build({
-        secondary_entity: entityFactory.build({ label: 'secondary-entity' })
+        secondary_entity: entityFactory.build({ label: 'secondary-entity' }),
       });
       expect(
         safeSecondaryEntityLabel(

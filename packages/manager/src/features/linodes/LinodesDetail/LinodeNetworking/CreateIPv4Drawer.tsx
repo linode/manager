@@ -27,13 +27,13 @@ type CombinedProps = Props;
 
 class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
   state: State = {
-    forPublic: this.props.forPublic
+    forPublic: this.props.forPublic,
   };
 
   UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       errors: undefined,
-      forPublic: nextProps.forPublic
+      forPublic: nextProps.forPublic,
     });
   }
 
@@ -41,13 +41,13 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
     const { onClose, linodeID } = this.props;
     // Only IPv4 addresses can currently be allocated.
     allocateIPAddress(linodeID, { type: 'ipv4', public: this.state.forPublic })
-      .then(_ => {
+      .then((_) => {
         onClose();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         this.setState(
           {
-            errors: getAPIErrorOrDefault(errResponse)
+            errors: getAPIErrorOrDefault(errResponse),
           },
           () => {
             scrollErrorIntoView();

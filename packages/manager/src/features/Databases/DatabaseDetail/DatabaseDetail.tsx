@@ -30,14 +30,14 @@ const DatabaseDetail: React.FC<CombinedProps> = () => {
       title: 'Backups',
       routeName: `${baseURL}/backups`,
       render: <DatabaseBackups databaseID={Number(thisDatabaseID)} />,
-      backgroundRendering: true
+      backgroundRendering: true,
     },
     {
       title: 'Settings',
       routeName: `${baseURL}/settings`,
       render: <DatabaseSettings databaseID={Number(thisDatabaseID)} />,
-      backgroundRendering: true
-    }
+      backgroundRendering: true,
+    },
   ];
 
   return (

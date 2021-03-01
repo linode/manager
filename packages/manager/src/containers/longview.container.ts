@@ -6,7 +6,7 @@ import {
   createLongviewClient as create,
   deleteLongviewClient as _delete,
   getAllLongviewClients,
-  updateLongviewClient as update
+  updateLongviewClient as update,
 } from 'src/store/longview/longview.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
@@ -64,7 +64,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         error,
         data,
         lastUpdated,
-        results
+        results,
       } = state.longviewClients;
       if (mapStateToProps) {
         return mapStateToProps(ownProps, {
@@ -72,7 +72,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
           longviewClientsError: error,
           longviewClientsLastUpdated: lastUpdated,
           longviewClientsLoading: loading,
-          longviewClientsResults: results
+          longviewClientsResults: results,
         });
       }
 
@@ -81,15 +81,15 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         longviewClientsLoading: loading,
         longviewClientsData: data,
         longviewClientsResults: results,
-        longviewClientsLastUpdated: lastUpdated
+        longviewClientsLastUpdated: lastUpdated,
       };
     },
     (dispatch: ThunkDispatch) => ({
       getLongviewClients: (params, filter) =>
         dispatch(getAllLongviewClients({ params, filter })),
-      createLongviewClient: label => dispatch(create({ label })),
-      deleteLongviewClient: id => dispatch(_delete({ id })),
-      updateLongviewClient: (id, label) => dispatch(update({ id, label }))
+      createLongviewClient: (label) => dispatch(create({ label })),
+      deleteLongviewClient: (id) => dispatch(_delete({ id })),
+      updateLongviewClient: (id, label) => dispatch(update({ id, label })),
     })
   );
 

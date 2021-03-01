@@ -18,7 +18,7 @@ export const handleUnauthorizedErrors = (
   let filteredErrors: APIError[] = [];
 
   try {
-    filteredErrors = e.filter(eachError => {
+    filteredErrors = e.filter((eachError) => {
       if (
         typeof eachError.reason === 'string' &&
         eachError.reason.toLowerCase().includes('unauthorized')
@@ -30,7 +30,7 @@ export const handleUnauthorizedErrors = (
     });
   } catch (caughtError) {
     reportException(`Error with Unauthed error handling: ${caughtError}`, {
-      apiError: e
+      apiError: e,
     });
   }
 
@@ -41,9 +41,9 @@ export const handleUnauthorizedErrors = (
   return hasUnauthorizedError
     ? [
         {
-          reason: unauthedMessage
+          reason: unauthedMessage,
         },
-        ...filteredErrors
+        ...filteredErrors,
       ]
     : filteredErrors;
 };

@@ -8,7 +8,7 @@ describe('Expansion Panel Suite', () => {
     'Success!',
     'Warning!',
     'Error!',
-    'Asynchronous Content'
+    'Asynchronous Content',
   ];
 
   const panel = '[data-qa-panel]';
@@ -49,9 +49,7 @@ describe('Expansion Panel Suite', () => {
   }
 
   function checkButtons() {
-    expect($$('button').length)
-      .withContext(`should be two buttons`)
-      .toBe(2);
+    expect($$('button').length).withContext(`should be two buttons`).toBe(2);
     const saveBtn = $(saveButton);
     const cancelBtn = $(cancelButton);
     browser.pause(100);
@@ -62,9 +60,7 @@ describe('Expansion Panel Suite', () => {
     expect(cancelBtn.getText())
       .withContext(`incorrect cancel button text`)
       .toBe('Cancel');
-    expect(saveBtn.isDisplayed())
-      .withContext(`should be displayed`)
-      .toBe(true);
+    expect(saveBtn.isDisplayed()).withContext(`should be displayed`).toBe(true);
     expect(saveBtn.getText())
       .withContext(`incorrect save button text`)
       .toBe('Save');
@@ -173,20 +169,16 @@ describe('Expansion Panel Suite', () => {
     it('should expand on click and display loading text', () => {
       const loadingMsg = 'Loading...';
       expandAssertGridItem();
-      browser.waitUntil(function() {
-        return $(gridItem)
-          .getText()
-          .includes(loadingMsg);
+      browser.waitUntil(function () {
+        return $(gridItem).getText().includes(loadingMsg);
       }, constants.wait.normal);
     });
 
     it('should display message after loaded', () => {
       expandAssertGridItem();
       const loadedMsg = 'Your patience has been rewarded';
-      browser.waitUntil(function() {
-        return $(gridItem)
-          .getText()
-          .includes(loadedMsg);
+      browser.waitUntil(function () {
+        return $(gridItem).getText().includes(loadedMsg);
       }, constants.wait.normal);
     });
   });

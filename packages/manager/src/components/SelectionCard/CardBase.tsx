@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
@@ -19,23 +19,23 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes fadeIn': {
       from: {
-        opacity: 0
+        opacity: 0,
       },
       to: {
-        opacity: 1
-      }
+        opacity: 1,
+      },
     },
     icon: {
       display: 'flex',
       justifyContent: 'flex-end',
       '& svg, & span': {
         fontSize: '32px',
-        color: '#939598'
+        color: '#939598',
       },
       '& img': {
         maxHeight: '32px',
-        maxWidth: '32px'
-      }
+        maxWidth: '32px',
+      },
     },
     checked: {
       display: 'flex',
@@ -45,18 +45,18 @@ const styles = (theme: Theme) =>
         border: '1px solid',
         borderColor: theme.palette.primary.main,
         fontSize: '16px',
-        color: theme.palette.primary.main
-      }
+        color: theme.palette.primary.main,
+      },
     },
     heading: {
       fontFamily: theme.font.bold,
       fontSize: '1rem',
       color: theme.color.headline,
-      wordBreak: 'break-word'
+      wordBreak: 'break-word',
     },
     subheading: {
       fontSize: '0.875rem',
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
     },
     innerGrid: {
       position: 'relative',
@@ -73,7 +73,7 @@ const styles = (theme: Theme) =>
       `,
       '&:hover': {
         backgroundColor: theme.bg.main,
-        borderColor: theme.color.border2
+        borderColor: theme.color.border2,
       },
       '&:before': {
         content: '""',
@@ -84,17 +84,17 @@ const styles = (theme: Theme) =>
         width: 5,
         height: '100%',
         backgroundColor: 'transparent',
-        transition: theme.transitions.create('backgroundColor')
-      }
+        transition: theme.transitions.create('backgroundColor'),
+      },
     },
     flex: {
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-around',
       '&> div': {
-        lineHeight: 1.3
-      }
-    }
+        lineHeight: 1.3,
+      },
+    },
   });
 
 export interface Props {

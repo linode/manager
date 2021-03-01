@@ -15,29 +15,29 @@ import {
   EstimatedCloneTimeMode,
   ExtendedConfig,
   getAllDisks,
-  getEstimatedCloneTime
+  getEstimatedCloneTime,
 } from './utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
   },
   header: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   clearButton: {
-    top: -(theme.spacing(1) / 2)
+    top: -(theme.spacing(1) / 2),
   },
   list: {
     flexWrap: 'wrap',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   nestedList: {
     marginLeft: theme.spacing(2),
-    flexBasis: '100%'
+    flexBasis: '100%',
   },
   closeIcon: {
     cursor: 'pointer',
@@ -48,31 +48,31 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.white,
     border: 'none',
     '& path': {
-      fill: theme.color.blue
-    }
+      fill: theme.color.blue,
+    },
   },
   divider: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.color.grey3
+    backgroundColor: theme.color.grey3,
   },
   submitButton: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   labelOuter: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
   errorText: {
     color: theme.color.red,
     marginTop: theme.spacing(1),
     '& a': {
       textDecoration: 'underline',
-      color: theme.color.red
-    }
-  }
+      color: theme.color.red,
+    },
+  },
 }));
 
 interface Props {
@@ -91,7 +91,7 @@ interface Props {
   clearAll: () => void;
 }
 
-export const Configs: React.FC<Props> = props => {
+export const Configs: React.FC<Props> = (props) => {
   const {
     currentLinodeId,
     selectedConfigs,
@@ -105,7 +105,7 @@ export const Configs: React.FC<Props> = props => {
     handleSelectLinode,
     selectedLinodeRegion,
     handleClone,
-    clearAll
+    clearAll,
   } = props;
 
   const classes = useStyles();
@@ -136,7 +136,7 @@ export const Configs: React.FC<Props> = props => {
 
   const errorMessageLinks = {
     shrink: `/linodes/${selectedLinodeId}/advanced`,
-    resize: `/linodes/${selectedLinodeId}/resize`
+    resize: `/linodes/${selectedLinodeId}/resize`,
   };
 
   /**
@@ -185,7 +185,7 @@ export const Configs: React.FC<Props> = props => {
       )}
 
       <List>
-        {selectedConfigs.map(eachConfig => {
+        {selectedConfigs.map((eachConfig) => {
           return (
             <ListItem
               key={eachConfig.id}
@@ -204,7 +204,7 @@ export const Configs: React.FC<Props> = props => {
                 </button>
               </div>
               <List className={classes.nestedList}>
-                {eachConfig.associatedDisks.map(eachDisk => {
+                {eachConfig.associatedDisks.map((eachDisk) => {
                   return (
                     <ListItem key={eachDisk.label} disableGutters dense>
                       <Typography>{eachDisk.label}</Typography>
@@ -217,7 +217,7 @@ export const Configs: React.FC<Props> = props => {
         })}
       </List>
       <List>
-        {selectedDisks.map(eachDisk => {
+        {selectedDisks.map((eachDisk) => {
           return (
             <ListItem
               key={eachDisk.id}
@@ -254,21 +254,21 @@ export const Configs: React.FC<Props> = props => {
       <LinodeSelect
         label="Destination"
         selectedLinode={selectedLinodeId}
-        handleChange={linode => handleSelectLinode(linode.id)}
+        handleChange={(linode) => handleSelectLinode(linode.id)}
         filterCondition={
           shouldExcludeCurrentLinode
             ? (linode: Linode) => linode.id !== currentLinodeId
             : undefined
         }
         textFieldProps={{
-          error: !!linodeError
+          error: !!linodeError,
         }}
         groupByRegion
         updateFor={[
           selectedLinodeId,
           shouldExcludeCurrentLinode,
           errorMap,
-          classes
+          classes,
         ]}
       />
 

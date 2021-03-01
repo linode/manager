@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames =
@@ -25,8 +25,8 @@ const styles = (theme: Theme) =>
       marginRight: -theme.spacing(2),
       position: 'relative',
       '&.active $icon': {
-        backgroundColor: theme.palette.text.primary
-      }
+        backgroundColor: theme.palette.text.primary,
+      },
     },
     icon: {
       position: 'relative',
@@ -44,22 +44,22 @@ const styles = (theme: Theme) =>
       justifyContent: 'center',
       lineHeight: 1.1,
       '&:hover': {
-        backgroundColor: theme.palette.text.primary
-      }
+        backgroundColor: theme.palette.text.primary,
+      },
     },
     isCritical: {
-      backgroundColor: theme.palette.status.errorDark
+      backgroundColor: theme.palette.status.errorDark,
     },
     isMajor: {
-      backgroundColor: theme.palette.status.warningDark
+      backgroundColor: theme.palette.status.warningDark,
     },
     isMinor: {
-      backgroundColor: theme.palette.primary.main
+      backgroundColor: theme.palette.primary.main,
     },
     smaller: {
-      fontSize: 15
+      fontSize: 15,
     },
-    hasNoNotifications: {}
+    hasNoNotifications: {},
   });
 
 interface Props {
@@ -76,7 +76,7 @@ const userNotificationButton: React.FC<CombinedProps> = ({
   onClick,
   className,
   severity,
-  notifications
+  notifications,
 }) => {
   return (
     <IconButton
@@ -91,7 +91,7 @@ const userNotificationButton: React.FC<CombinedProps> = ({
           [classes.isMinor]: severity === 'minor',
           [classes.isMajor]: severity === 'major',
           [classes.isCritical]: severity === 'critical',
-          [classes.smaller]: notifications.length > 9
+          [classes.smaller]: notifications.length > 9,
         })}
       >
         {notifications.length <= 9 ? notifications.length : '9+'}

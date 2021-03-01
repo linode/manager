@@ -23,7 +23,7 @@ describe('ListLinodes', () => {
     toggleButton: '',
     clearFilters: '',
     cmrSpacing: '',
-    cmrCSVlink: ''
+    cmrCSVlink: '',
   };
 
   it('renders without error', () => {

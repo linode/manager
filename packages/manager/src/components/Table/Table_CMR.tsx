@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
 
@@ -16,10 +16,10 @@ const styles = (theme: Theme) =>
       overflowX: 'auto',
       overflowY: 'hidden',
       '& tbody': {
-        transition: theme.transitions.create(['opacity'])
+        transition: theme.transitions.create(['opacity']),
       },
       '& tbody.sorting': {
-        opacity: 0.5
+        opacity: 0.5,
       },
       '& thead': {
         '& th': {
@@ -33,18 +33,18 @@ const styles = (theme: Theme) =>
           color: theme.cmrTextColors.tableHeader,
           padding: '10px 15px',
           '&:first-of-type': {
-            borderLeft: 'none'
+            borderLeft: 'none',
           },
           '&:last-of-type': {
-            borderRight: 'none'
-          }
-        }
-      }
+            borderRight: 'none',
+          },
+        },
+      },
     },
     border: {
       border: `1px solid ${theme.cmrBorderColors.borderTable}`,
-      borderBottom: 0
-    }
+      borderBottom: 0,
+    },
   });
 
 export interface Props extends TableProps {
@@ -83,13 +83,13 @@ class WrappedTable extends React.Component<CombinedProps> {
           'tableWrapper',
           {
             [classes.root]: !noOverflow,
-            [classes.border]: border
+            [classes.border]: border,
           },
           className
         )}
         style={{
           marginTop: spacingTop !== undefined ? spacingTop : 0,
-          marginBottom: spacingBottom !== undefined ? spacingBottom : 0
+          marginBottom: spacingBottom !== undefined ? spacingBottom : 0,
         }}
       >
         <Table

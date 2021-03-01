@@ -30,7 +30,7 @@ class CredStore {
   cleanupAccounts() {
     if (this.shouldCleanupUsingAPI) {
       //console.log('cleaning up user resources via API');
-      return this.getAllCreds().then(credCollection => {
+      return this.getAllCreds().then((credCollection) => {
         //console.log(credCollection);
         return resetAccounts(credCollection);
       });
@@ -140,7 +140,7 @@ class CredStore {
         we can rework token handling in a followup feature branch.
      */
   getTokenFromLocalStorage() {
-    const browserLocalStorage = browser.execute(function() {
+    const browserLocalStorage = browser.execute(function () {
       return JSON.stringify(localStorage); // where does localStorage come from?
     });
     const parsedLocalStorage = JSON.parse(browserLocalStorage.value);

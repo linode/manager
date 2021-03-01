@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
@@ -18,16 +18,16 @@ const styles = (theme: Theme) =>
     root: {},
     footnote: {
       fontSize: 14,
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     link: {
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     },
     icon: {
       display: 'inline-block',
       fontSize: '0.8em',
-      marginLeft: theme.spacing(1) / 3
-    }
+      marginLeft: theme.spacing(1) / 3,
+    },
   });
 
 interface Props {
@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NetworkHelper: React.FC<CombinedProps> = props => {
+const NetworkHelper: React.FC<CombinedProps> = (props) => {
   const { classes, onChange, networkHelperEnabled } = props;
 
   return (

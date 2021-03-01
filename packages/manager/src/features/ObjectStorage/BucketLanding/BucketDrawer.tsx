@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
 import bucketDrawerContainer, {
   DispatchProps,
-  StateProps
+  StateProps,
 } from 'src/containers/bucketDrawer.container';
 import CreateBucketForm from './CreateBucketForm';
 
@@ -14,7 +14,7 @@ interface Props {
 
 export type CombinedProps = Props & StateProps & DispatchProps;
 
-export const BucketDrawer: React.FC<CombinedProps> = props => {
+export const BucketDrawer: React.FC<CombinedProps> = (props) => {
   const { isOpen, isRestrictedUser, closeBucketDrawer } = props;
 
   const { replace } = useHistory();

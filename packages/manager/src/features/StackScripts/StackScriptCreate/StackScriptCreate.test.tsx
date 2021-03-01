@@ -15,7 +15,7 @@ describe('StackScriptCreate', () => {
       mode="create"
       classes={{
         backButton: '',
-        createTitle: ''
+        createTitle: '',
       }}
       imagesData={images}
       imagesLoading={false}

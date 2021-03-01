@@ -1,6 +1,6 @@
 import {
   FirewallDevice,
-  FirewallDevicePayload
+  FirewallDevicePayload,
 } from '@linode/api-v4/lib/firewalls/types';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,12 +8,12 @@ import { ApplicationState } from 'src/store';
 import {
   addFirewallDevice,
   getAllFirewallDevices,
-  removeFirewallDevice
+  removeFirewallDevice,
 } from 'src/store/firewalls/devices.requests';
 import {
   EntityError,
   MappedEntityState2,
-  ThunkDispatch
+  ThunkDispatch,
 } from 'src/store/types';
 
 export interface UseDevicesProps {
@@ -28,7 +28,7 @@ const defaultState: MappedEntityState2<FirewallDevice, EntityError> = {
   lastUpdated: 0,
   itemsById: {},
   error: {},
-  results: 0
+  results: 0,
 };
 
 /**
@@ -42,8 +42,8 @@ export const useFirewallDevices = (firewallID: number): UseDevicesProps => {
   );
   const requestDevices = () =>
     dispatch(getAllFirewallDevices({ firewallID }))
-      .then(response => response.data)
-      .catch(_ => null); // Handle errors through Redux
+      .then((response) => response.data)
+      .catch((_) => null); // Handle errors through Redux
   const addDevice = (newDevice: FirewallDevicePayload) =>
     dispatch(addFirewallDevice({ firewallID, ...newDevice }));
   const removeDevice = (deviceID: number) =>

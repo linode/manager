@@ -9,7 +9,7 @@ const init = (window: any) => {
 
 const linkUserID = (opts: any, userId: number) => {
   opts.traits = {
-    user_id: userId
+    user_id: userId,
   };
 };
 

@@ -15,9 +15,7 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
 };
 
 export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
-  const result = parseAPIDate(a)
-    .diff(parseAPIDate(b))
-    .valueOf();
+  const result = parseAPIDate(a).diff(parseAPIDate(b)).valueOf();
   if (order === 'asc') {
     return result; // ascending order
   }

@@ -11,15 +11,15 @@ import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import {
   BasicFromContentProps,
   ReduxStateProps,
-  WithTypesRegionsAndImages
+  WithTypesRegionsAndImages,
 } from '../types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
     [theme.breakpoints.up('md')]: {
-      maxWidth: '100%'
-    }
-  }
+      maxWidth: '100%',
+    },
+  },
 }));
 
 interface Props extends BasicFromContentProps {
@@ -33,7 +33,7 @@ export type CombinedProps = Props &
   ReduxStateProps &
   WithTypesRegionsAndImages;
 
-export const FromImageContent: React.FC<CombinedProps> = props => {
+export const FromImageContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -41,7 +41,7 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     imagePanelTitle,
     imagesData,
     userCannotCreateLinode,
-    variant
+    variant,
   } = props;
 
   const privateImages = filterImagesByType(imagesData, 'private');
@@ -66,7 +66,7 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     <Grid item className={`${classes.main} mlMain py0`}>
       <ImageSelect
         title={imagePanelTitle || 'Choose an Image'}
-        images={Object.keys(imagesData).map(eachKey => imagesData[eachKey])}
+        images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}
         handleSelectImage={props.updateImageID}
         selectedImageID={props.selectedImageID}
         error={error}

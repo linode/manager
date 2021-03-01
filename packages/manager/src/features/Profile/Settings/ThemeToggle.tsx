@@ -13,7 +13,7 @@ const onClickHandler = () => {
 
 type CombinedProps = Props;
 
-export const ThemeToggle: React.FC<CombinedProps> = props => {
+export const ThemeToggle: React.FC<CombinedProps> = (props) => {
   const { toggleTheme } = props;
   const theme = useTheme<Theme>();
   const { name: themeName } = theme;
@@ -29,7 +29,7 @@ export const ThemeToggle: React.FC<CombinedProps> = props => {
         onChange={toggle}
         checked={themeName !== 'lightTheme'}
         className={classNames({
-          [themeName]: true
+          [themeName]: true,
         })}
         aria-label="Switch Theme"
       />

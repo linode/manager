@@ -12,7 +12,7 @@ interface Actions {
 }
 
 const actions: Actions = {
-  requestNotifications
+  requestNotifications,
 };
 
 export interface WithNotifications {
@@ -27,11 +27,11 @@ const defaultMapState = ({ data, error, lastUpdated, loading }: State) => ({
   notifications: data || [],
   notificationsError: error,
   notificationsLastUpdated: lastUpdated,
-  notificationsLoading: loading
+  notificationsLoading: loading,
 });
 
 const defaultMapDispatch = () => ({
-  requestNotifications
+  requestNotifications,
 });
 
 export const withNotifications = (

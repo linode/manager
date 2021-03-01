@@ -51,7 +51,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
       </TableHead>
       <TableBody>
         <React.Fragment>
-          {rows.map(row => {
+          {rows.map((row) => {
             const { legendTitle, legendColor, data, format } = row;
             return (
               <TableRow key={legendTitle} data-qa-metric-row>
@@ -87,7 +87,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
 export const metricsBySection = (data: Metrics): number[] => [
   data.max,
   data.average,
-  data.last
+  data.last,
 ];
 
 export default styled(MetricsDisplay);

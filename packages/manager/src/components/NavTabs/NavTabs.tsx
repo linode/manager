@@ -27,7 +27,7 @@ export interface NavTabsProps {
 
 type CombinedProps = NavTabsProps;
 
-const NavTabs: React.FC<CombinedProps> = props => {
+const NavTabs: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const reactRouterLocation = useLocation();
 
@@ -96,7 +96,7 @@ export const getTabMatch = (tabs: NavTab[], pathname: string) => {
     (acc, thisTab, i) => {
       const match = matchPath(pathname, {
         path: thisTab.routeName,
-        exact: false
+        exact: false,
       });
 
       if (match) {

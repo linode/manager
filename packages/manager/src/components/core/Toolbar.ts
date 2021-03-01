@@ -1,5 +1,5 @@
 import Toolbar, {
-  ToolbarProps as _ToolbarProps
+  ToolbarProps as _ToolbarProps,
 } from '@material-ui/core/Toolbar';
 
 /* tslint:disable-next-line:no-empty-interface */

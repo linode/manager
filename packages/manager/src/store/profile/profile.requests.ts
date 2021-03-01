@@ -2,7 +2,7 @@ import {
   getMyGrants,
   getProfile,
   Profile,
-  updateProfile as _updateProfile
+  updateProfile as _updateProfile,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { pathOr } from 'ramda';
@@ -14,14 +14,14 @@ import { ApplicationState } from 'src/store';
 import { ThunkActionCreator } from 'src/store/types';
 import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
-const maybeRequestGrants: (
-  response: Profile
-) => Promise<Profile> | Profile = profile => {
+const maybeRequestGrants: (response: Profile) => Promise<Profile> | Profile = (
+  profile
+) => {
   if (profile.restricted === false) {
     return profile;
   }
 
-  return getMyGrants().then(grants => ({ ...profile, grants }));
+  return getMyGrants().then((grants) => ({ ...profile, grants }));
 };
 
 export const getTimezone = (state: ApplicationState, timezone: string) => {
@@ -47,16 +47,16 @@ export const requestProfile: ThunkActionCreator<Promise<Profile>> = () => (
   dispatch(started());
 
   return getProfile()
-    .then(profile => ({
+    .then((profile) => ({
       ...profile,
-      timezone: getTimezone(getState(), profile.timezone)
+      timezone: getTimezone(getState(), profile.timezone),
     }))
     .then(maybeRequestGrants)
-    .then(response => {
+    .then((response) => {
       dispatch(done({ result: response }));
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(failed({ error }));
       throw error;
     });
@@ -68,7 +68,7 @@ export const requestProfile: ThunkActionCreator<Promise<Profile>> = () => (
 export const updateProfile: ThunkActionCreator<
   Promise<Profile>,
   Partial<Profile>
-> = payload => dispatch => {
+> = (payload) => (dispatch) => {
   const { done, failed } = handleUpdateProfile;
 
   /**
@@ -77,8 +77,8 @@ export const updateProfile: ThunkActionCreator<
    */
 
   return _updateProfile(payload)
-    .then(response => handleUpdateSuccess(payload, response, done, dispatch))
-    .catch(err => handleUpdateFailure(payload, err, failed, dispatch));
+    .then((response) => handleUpdateSuccess(payload, response, done, dispatch))
+    .catch((err) => handleUpdateFailure(payload, err, failed, dispatch));
 };
 
 const handleUpdateSuccess = (
@@ -90,7 +90,7 @@ const handleUpdateSuccess = (
   dispatch(
     done({
       params: payload,
-      result
+      result,
     })
   );
   return result;
@@ -105,7 +105,7 @@ const handleUpdateFailure = (
   dispatch(
     failed({
       params: payload,
-      error
+      error,
     })
   );
   throw error;

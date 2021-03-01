@@ -1,5 +1,5 @@
 import DialogContentText, {
-  DialogContentTextProps as _DialogContentTextProps
+  DialogContentTextProps as _DialogContentTextProps,
 } from '@material-ui/core/DialogContentText';
 
 /* tslint:disable-next-line:no-empty-interface */

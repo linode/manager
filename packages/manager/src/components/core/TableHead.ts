@@ -1,5 +1,5 @@
 import TableHead, {
-  TableHeadProps as _TableHeadProps
+  TableHeadProps as _TableHeadProps,
 } from '@material-ui/core/TableHead';
 
 /* tslint:disable-next-line:no-empty-interface */

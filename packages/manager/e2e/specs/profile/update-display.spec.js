@@ -10,7 +10,7 @@ describe('Profile - Update Display Settings', () => {
     const startProfile = getProfile();
     resetProfileBody = {
       email: startProfile.email,
-      timezone: startProfile.timezone
+      timezone: startProfile.timezone,
     };
   });
 
@@ -53,10 +53,7 @@ describe('Profile - Update Display Settings', () => {
     const gmtOffset = '(GMT -5:00) Eastern Time - New York';
     const timeZoneResponse = 'America/New_York';
     expect(Display.timeZoneSelect.isDisplayed()).toBe(true);
-    Display.timeZoneSelect
-      .$('..')
-      .$('input')
-      .setValue(gmtOffset);
+    Display.timeZoneSelect.$('..').$('input').setValue(gmtOffset);
     Display.selectOptions[0].waitForDisplayed(constants.wait.normal);
     Display.selectOptions[0].click(0);
     Display.saveTimeZone.click();

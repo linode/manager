@@ -3,7 +3,7 @@ import Dialog, { DialogProps as _DialogProps } from 'src/components/Dialog';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import withPreferences, {
-  Props as PreferencesProps
+  Props as PreferencesProps,
 } from 'src/containers/preferences.container';
 import Button from 'src/components/Button';
 import Notice from 'src/components/Notice';
@@ -13,7 +13,7 @@ type DialogProps = Pick<_DialogProps, 'onClose' | 'open'>;
 
 type CombinedProps = DialogProps & PreferencesProps;
 
-const PreferenceEditor: React.FC<CombinedProps> = props => {
+const PreferenceEditor: React.FC<CombinedProps> = (props) => {
   const { getUserPreferences, updateUserPreferences } = props;
 
   const [userPrefs, setUserPrefs] = React.useState('');
@@ -25,7 +25,7 @@ const PreferenceEditor: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     setLoading(true);
     getUserPreferences()
-      .then(userPreferences => {
+      .then((userPreferences) => {
         setLoading(false);
         setUserPrefs(JSON.stringify(userPreferences, null, 2));
       })
@@ -79,9 +79,9 @@ const PreferenceEditor: React.FC<CombinedProps> = props => {
             marginTop: 16,
             width: 400,
             height: 300,
-            fontFamily: '"Ubuntu Mono", monospace"'
+            fontFamily: '"Ubuntu Mono", monospace"',
           }}
-          onChange={e => setUserPrefs(e.target.value)}
+          onChange={(e) => setUserPrefs(e.target.value)}
         ></textarea>
       </div>
       <Button

@@ -6,5 +6,5 @@ export const modes = {
   EDITING: 'editing',
   RESIZING: 'resizing',
   VIEW_RESIZE_INSTRUCTIONS: 'viewing_resize_instructions',
-  VIEWING_CONFIG: 'viewing_config'
+  VIEWING_CONFIG: 'viewing_config',
 };

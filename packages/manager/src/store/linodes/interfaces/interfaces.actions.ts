@@ -1,6 +1,6 @@
 import {
   LinodeInterface,
-  LinodeInterfacePayload
+  LinodeInterfacePayload,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';

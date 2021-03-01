@@ -13,14 +13,14 @@ describe('tagImportDrawer Redux duck', () => {
         tagDrawer(
           {
             ...T.defaultState,
-            errors: [{ entityId: 'mock error', reason: 'mock reason' }]
+            errors: [{ entityId: 'mock error', reason: 'mock reason' }],
           },
           T.openDrawer()
         )
       ).toEqual({
         ...T.defaultState,
         open: true,
-        errors: []
+        errors: [],
       });
     });
 
@@ -50,7 +50,7 @@ describe('tagImportDrawer Redux duck', () => {
     it('should handle a failed import', () => {
       const errors = [
         { entityId: 12345, reason: 'No reason' },
-        { entityId: 6789, reason: 'Reason' }
+        { entityId: 6789, reason: 'Reason' },
       ];
       const newState = tagDrawer(
         { ...T.defaultState, loading: true },
@@ -65,7 +65,7 @@ describe('tagImportDrawer Redux duck', () => {
           open: true,
           loading: true,
           success: true,
-          errors: []
+          errors: [],
         },
         T.handleReset()
       );

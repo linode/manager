@@ -16,7 +16,7 @@ class DomainDetail extends Page {
       'CNAME Record',
       'TXT Record',
       'SRV Record',
-      'CAA Record'
+      'CAA Record',
     ];
   }
   get confirmButton() {
@@ -78,12 +78,12 @@ class DomainDetail extends Page {
 
   domainDetailDisplays(domainName) {
     this.domainTitle.waitForDisplayed(constants.wait.normal);
-    this.domainRecords.forEach(record => {
+    this.domainRecords.forEach((record) => {
       this.recordHeaderElementByLabel(record).waitForDisplayed(
         constants.wait.normal
       );
     });
-    this.domainRecords.forEach(record => {
+    this.domainRecords.forEach((record) => {
       if (record !== 'SOA Record') {
         this.addRecordButtonElementByLabel(record).waitForDisplayed(
           constants.wait.normal
@@ -99,11 +99,11 @@ class DomainDetail extends Page {
 
   editSoaRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Domain', 'SOA Email'].forEach(label => {
+    ['Domain', 'SOA Email'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     ['Default TTL', 'Refresh Rate', 'Retry Rate', 'Expire Rate'].forEach(
-      label => {
+      (label) => {
         this.selectElementByLabel(label).waitForDisplayed(
           constants.wait.normal
         );
@@ -118,7 +118,7 @@ class DomainDetail extends Page {
 
   nsRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Name Server', 'Subdomain'].forEach(label => {
+    ['Name Server', 'Subdomain'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
@@ -131,7 +131,7 @@ class DomainDetail extends Page {
 
   mxRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Mail Server', 'Preference', 'Subdomain'].forEach(label => {
+    ['Mail Server', 'Preference', 'Subdomain'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
@@ -144,7 +144,7 @@ class DomainDetail extends Page {
 
   aaaaRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Hostname', 'IP Address'].forEach(label => {
+    ['Hostname', 'IP Address'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
@@ -157,7 +157,7 @@ class DomainDetail extends Page {
 
   cNameRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Hostname', 'Alias to'].forEach(label => {
+    ['Hostname', 'Alias to'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
@@ -170,7 +170,7 @@ class DomainDetail extends Page {
 
   txtRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Hostname', 'Value'].forEach(label => {
+    ['Hostname', 'Value'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
@@ -183,7 +183,7 @@ class DomainDetail extends Page {
 
   srvRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Service', 'Priority', 'Weight', 'Port'].forEach(label => {
+    ['Service', 'Priority', 'Weight', 'Port'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
@@ -199,7 +199,7 @@ class DomainDetail extends Page {
 
   caaRecordDrawerDisplays() {
     this.drawerBase.waitForDisplayed(constants.wait.normal);
-    ['Name', 'Value'].forEach(label => {
+    ['Name', 'Value'].forEach((label) => {
       this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
     });
     this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
@@ -323,7 +323,7 @@ class DomainDetail extends Page {
     this.dialogContent
       .$('..')
       .$$('button')
-      .find(button => button.getText() === 'Delete')
+      .find((button) => button.getText() === 'Delete')
       .click();
   }
 

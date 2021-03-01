@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const VlanDialog: React.FC<CombinedProps> = props => {
+const VlanDialog: React.FC<CombinedProps> = (props) => {
   const { deleteVlan } = useVlans();
 
   const history = useHistory();
@@ -29,7 +29,7 @@ const VlanDialog: React.FC<CombinedProps> = props => {
     closeDialog,
     selectedVlanID,
     selectedVlanLabel: label,
-    redirectToLanding
+    redirectToLanding,
   } = props;
 
   /** reset error on open */
@@ -49,17 +49,17 @@ const VlanDialog: React.FC<CombinedProps> = props => {
     setError(undefined);
 
     deleteVlan(selectedVlanID)
-      .then(_ => {
+      .then((_) => {
         setSubmitting(false);
         closeDialog();
 
         if (redirectToLanding) {
           history.push({
-            pathname: `/vlans/`
+            pathname: `/vlans/`,
           });
         }
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmitting(false);
         setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
@@ -92,7 +92,7 @@ interface ActionsProps {
   isSubmitting: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

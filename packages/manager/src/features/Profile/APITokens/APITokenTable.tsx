@@ -6,7 +6,7 @@ import {
   getAppTokens,
   getPersonalAccessTokens,
   Token,
-  updatePersonalAccessToken
+  updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
@@ -22,7 +22,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -60,30 +60,30 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       background: theme.color.white,
-      width: '100%'
+      width: '100%',
     },
     headline: {
-      marginLeft: 7
+      marginLeft: 7,
     },
     paper: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     addNewWrapper: {
       '&.MuiGrid-item': {
-        padding: 5
-      }
+        padding: 5,
+      },
     },
     labelCell: {
       ...theme.applyTableHeaderStyles,
       width: '40%',
       [theme.breakpoints.down('md')]: {
-        width: '25%'
-      }
+        width: '25%',
+      },
     },
     actionMenu: {
       display: 'flex',
-      justifyContent: 'flex-end'
-    }
+      justifyContent: 'flex-end',
+    },
   });
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
@@ -144,8 +144,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       values: {
         scopes: undefined,
         expiry: genExpiryTups()[0][1],
-        label: ''
-      }
+        label: '',
+      },
     },
     dialog: {
       open: false,
@@ -153,19 +153,19 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       label: undefined,
       errors: undefined,
       type: '',
-      submittingDialog: false
+      submittingDialog: false,
     },
     token: {
       open: false,
-      value: undefined
+      value: undefined,
     },
-    submitting: false
+    submitting: false,
   };
 
   mounted: boolean = false;
 
   state = {
-    ...APITokenTable.defaultState
+    ...APITokenTable.defaultState,
   };
 
   openCreateDrawer = () => {
@@ -178,9 +178,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         values: {
           label: '',
           expiry: genExpiryTups()[0][1],
-          scopes: undefined
-        }
-      }
+          scopes: undefined,
+        },
+      },
     });
   };
 
@@ -194,9 +194,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         values: {
           scopes: token.scopes,
           expiry: token.expiry ?? '',
-          label: token.label
-        }
-      }
+          label: token.label,
+        },
+      },
     });
   };
 
@@ -210,9 +210,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         values: {
           scopes: token.scopes,
           expiry: token.expiry ?? '',
-          label: token.label
-        }
-      }
+          label: token.label,
+        },
+      },
     });
   };
 
@@ -222,8 +222,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     this.setState({
       form: {
         ...form,
-        open: false
-      }
+        open: false,
+      },
     });
   };
 
@@ -236,8 +236,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         label,
         id,
         type,
-        errors: undefined
-      }
+        errors: undefined,
+      },
     });
   };
 
@@ -247,8 +247,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         ...this.state.dialog,
         id: undefined,
         open: false,
-        submittingDialog: false
-      }
+        submittingDialog: false,
+      },
     });
   };
 
@@ -256,16 +256,16 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     this.setState({
       dialog: {
         ...this.state.dialog,
-        errors: undefined
+        errors: undefined,
       },
       form: {
         ...this.state.form,
-        errors: undefined
+        errors: undefined,
       },
       token: {
         open: true,
-        value: token
-      }
+        value: token,
+      },
     });
   };
 
@@ -277,14 +277,14 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { dialog } = this.state;
     this.setState({
       ...this.state,
-      dialog: { ...dialog, submittingDialog: true }
+      dialog: { ...dialog, submittingDialog: true },
     });
     deletePersonalAccessToken(dialog.id as number)
       .then(() => this.props.onDelete())
       .then(() =>
         this.setState({
           ...this.state,
-          dialog: { ...dialog, submittingDialog: false }
+          dialog: { ...dialog, submittingDialog: false },
         })
       )
       .then(() => this.closeRevokeDialog())
@@ -292,7 +292,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         this.setState(
           {
             ...this.state,
-            dialog: { ...dialog, submittingDialog: false }
+            dialog: { ...dialog, submittingDialog: false },
           },
           () => this.showDialogError(err)
         );
@@ -319,15 +319,15 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       dialog: {
         ...this.state.dialog,
         open: true,
-        errors: apiError
-      }
+        errors: apiError,
+      },
     });
   }
 
   handleDrawerChange = (key: string, value: string) => {
     const { form } = this.state;
     this.setState({
-      form: { ...form, values: { ...form.values, [key]: value } }
+      form: { ...form, values: { ...form.values, [key]: value } },
     });
   };
 
@@ -338,9 +338,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           form: {
             ...this.state.form,
             errors: [
-              { reason: 'You must select some permissions', field: 'scopes' }
-            ]
-          }
+              { reason: 'You must select some permissions', field: 'scopes' },
+            ],
+          },
         },
         () => {
           scrollErrorIntoView();
@@ -353,7 +353,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     this.setState(
       {
         submitting: true,
-        form: { ...form, values: { ...form.values, scopes } }
+        form: { ...form, values: { ...form.values, scopes } },
       },
       () => {
         createPersonalAccessToken(this.state.form.values)
@@ -365,9 +365,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
                   form: {
                     ...form,
                     errors: [
-                      { field: 'none', reason: 'API did not return a token.' }
-                    ]
-                  }
+                      { field: 'none', reason: 'API did not return a token.' },
+                    ],
+                  },
                 },
                 () => {
                   scrollErrorIntoView();
@@ -379,7 +379,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             this.openTokenDialog(token);
           })
           .then(() => this.props.request())
-          .catch(errResponse => {
+          .catch((errResponse) => {
             if (!this.mounted) {
               return;
             }
@@ -389,8 +389,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
                 submitting: false,
                 form: {
                   ...form,
-                  errors: getAPIErrorOrDefault(errResponse)
-                }
+                  errors: getAPIErrorOrDefault(errResponse),
+                },
               },
               () => {
                 scrollErrorIntoView();
@@ -405,8 +405,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const {
       form: {
         id,
-        values: { label }
-      }
+        values: { label },
+      },
     } = this.state;
     if (!id) {
       return;
@@ -418,9 +418,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           form: {
             ...this.state.form,
             errors: [
-              { reason: 'You must give your token a label.', field: 'label' }
-            ]
-          }
+              { reason: 'You must give your token a label.', field: 'label' },
+            ],
+          },
         },
         () => {
           scrollErrorIntoView();
@@ -434,7 +434,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         this.closeDrawer();
       })
       .then(() => this.props.request())
-      .catch(errResponse => {
+      .catch((errResponse) => {
         if (!this.mounted) {
           return;
         }
@@ -443,8 +443,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           {
             form: {
               ...this.state.form,
-              errors: getAPIErrorOrDefault(errResponse)
-            }
+              errors: getAPIErrorOrDefault(errResponse),
+            },
           },
           () => {
             scrollErrorIntoView();
@@ -503,7 +503,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell>
           <Typography variant="body1" data-qa-token-expiry>
-            {/*
+            {
+              /*
              The expiry time of tokens that never expire are returned from the API as
              200 years in the future, so we just need to check that they're at least
              100 years into the future to safely assume they never expire.
@@ -511,11 +512,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
              The expiry time of apps that don't expire until revoked come back as 'null'.
              In this case, we display an expiry time of "never" as well.
              */
-            token.expiry === null || isWayInTheFuture(token.expiry) ? (
-              'never'
-            ) : (
-              <DateTimeDisplay value={token.expiry} />
-            )}
+              token.expiry === null || isWayInTheFuture(token.expiry) ? (
+                'never'
+              ) : (
+                <DateTimeDisplay value={token.expiry} />
+              )
+            }
           </Typography>
         </TableCell>
         <TableCell className={classes.actionMenu}>
@@ -628,7 +630,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
               ? basePermNameMap
               : {
                   ...basePermNameMap,
-                  lke: 'Kubernetes'
+                  lke: 'Kubernetes',
                 }
           }
           closeDrawer={this.closeDrawer}
@@ -640,7 +642,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         <ConfirmationDialog
           title={`Revoking ${dialog.label}`}
           open={dialog.open}
-          error={(this.state.dialog.errors || []).map(e => e.reason).join(',')}
+          error={(this.state.dialog.errors || [])
+            .map((e) => e.reason)
+            .join(',')}
           actions={this.renderRevokeConfirmationActions}
           onClose={this.closeRevokeDialog}
         >
@@ -651,7 +655,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           title="Personal Access Token"
-          error={(this.state.dialog.errors || []).map(e => e.reason).join(',')}
+          error={(this.state.dialog.errors || [])
+            .map((e) => e.reason)
+            .join(',')}
           actions={this.renderPersonalAccessTokenDisplayActions}
           open={Boolean(this.state.token && this.state.token.open)}
           onClose={this.closeTokenDialog}
@@ -674,7 +680,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
   revokeAction = () => {
     const {
-      dialog: { type }
+      dialog: { type },
     } = this.state;
 
     return type === 'OAuth Client Token'
@@ -720,9 +726,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
  * return true if the given time is past 100 year in the future
  */
 export const isWayInTheFuture = (time: string) => {
-  const wayInTheFuture = DateTime.local()
-    .plus({ years: 100 })
-    .toISO();
+  const wayInTheFuture = DateTime.local().plus({ years: 100 }).toISO();
   return isPast(wayInTheFuture)(time);
 };
 
@@ -744,7 +748,7 @@ interface AccountStateProps {
 
 const enhanced = compose<CombinedProps, Props>(
   withAccount<AccountStateProps, {}>((_, { accountData }) => ({
-    accountCapabilities: pathOr([], ['capabilities'], accountData)
+    accountCapabilities: pathOr([], ['capabilities'], accountData),
   })),
   paginated,
   styled

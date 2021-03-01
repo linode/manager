@@ -3,7 +3,7 @@ import * as React from 'react';
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
-  SSHAccessActionMenu as ActionMenu
+  SSHAccessActionMenu as ActionMenu,
 } from './SSHAccessActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
@@ -17,7 +17,7 @@ const props: CombinedProps = {
   linodeLabel: 'label',
   openDrawer: mockOpenDrawer,
   enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn()
+  closeSnackbar: jest.fn(),
 };
 
 describe('SSH Access Action Menu', () => {

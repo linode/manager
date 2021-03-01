@@ -1,6 +1,6 @@
 import {
   getNodeBalancerStats,
-  NodeBalancerStats
+  NodeBalancerStats,
 } from '@linode/api-v4/lib/nodebalancers';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -14,7 +14,7 @@ import {
   withStyles,
   WithStyles,
   WithTheme,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -22,7 +22,7 @@ import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
 import withFeatureFlags, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
@@ -47,22 +47,22 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     header: {
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
     panel: {
       padding: theme.spacing(2),
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     graphWrapper: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     chart: {
       position: 'relative',
       width: '100%',
-      paddingLeft: theme.spacing(1)
+      paddingLeft: theme.spacing(1),
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -72,40 +72,40 @@ const styles = (theme: Theme) =>
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.color.border3}`,
-      fontSize: 14
+      fontSize: 14,
     },
     graphControls: {
       display: 'flex',
       alignItems: 'center',
       [theme.breakpoints.up('md')]: {
-        margin: `${theme.spacing(2)}px 0`
-      }
+        margin: `${theme.spacing(2)}px 0`,
+      },
     },
     blue: {
       '&:before': {
-        backgroundColor: theme.palette.primary.main
-      }
+        backgroundColor: theme.palette.primary.main,
+      },
     },
     green: {
       '&:before': {
-        backgroundColor: theme.color.green
-      }
+        backgroundColor: theme.color.green,
+      },
     },
     red: {
       '&:before': {
-        backgroundColor: theme.color.red
-      }
+        backgroundColor: theme.color.red,
+      },
     },
     yellow: {
       '&:before': {
-        backgroundColor: theme.color.yellow
-      }
+        backgroundColor: theme.color.yellow,
+      },
     },
     cmrSpacing: {
       [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing()
-      }
-    }
+        marginLeft: theme.spacing(),
+      },
+    },
   });
 
 interface Props {
@@ -133,7 +133,7 @@ const loading = () => (
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: 300
+      minHeight: 300,
     }}
   >
     <CircleProgress mini />
@@ -147,7 +147,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
   state: State = {
     stats: null,
     loadingStats: false,
-    openPanels: 0
+    openPanels: 0,
   };
 
   handleToggleExpand = (e: any, expanded: boolean) => {
@@ -191,10 +191,10 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           // the last element of each array in the stats response.
           stats: initAll(response),
           loadingStats: false,
-          statsError: undefined
+          statsError: undefined,
         });
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         if (!this.mounted) {
           return;
         }
@@ -258,8 +258,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                   label: 'Connections',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.purple,
-                  data
-                }
+                  data,
+                },
               ]}
             />
           </div>
@@ -272,8 +272,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                       legendTitle: 'Connections',
                       legendColor: 'purple',
                       data: metrics,
-                      format: formatNumber
-                    }
+                      format: formatNumber,
+                    },
                   ]}
                 />
               </Grid>
@@ -314,14 +314,14 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                   label: 'Traffic In',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.network.inbound,
-                  data: trafficIn
+                  data: trafficIn,
                 },
                 {
                   label: 'Traffic Out',
                   borderColor: 'transparent',
                   backgroundColor: theme.graphs.network.outbound,
-                  data: trafficOut
-                }
+                  data: trafficOut,
+                },
               ]}
             />
           </div>
@@ -332,14 +332,14 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                   legendTitle: 'Inbound',
                   legendColor: 'darkGreen',
                   data: getMetrics(trafficIn),
-                  format: formatBitsPerSecond
+                  format: formatBitsPerSecond,
                 },
                 {
                   legendTitle: 'Outbound',
                   legendColor: 'lightGreen',
                   data: getMetrics(trafficOut),
-                  format: formatBitsPerSecond
-                }
+                  format: formatBitsPerSecond,
+                },
               ]}
             />
           </div>
@@ -377,7 +377,11 @@ interface StateProps {
 }
 
 const withTimezone = connect((state: ApplicationState, ownProps) => ({
-  timezone: pathOr('UTC', ['__resources', 'profile', 'data', 'timezone'], state)
+  timezone: pathOr(
+    'UTC',
+    ['__resources', 'profile', 'data', 'timezone'],
+    state
+  ),
 }));
 
 const styled = withStyles(styles);

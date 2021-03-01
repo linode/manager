@@ -2,7 +2,7 @@ import {
   Hypervisor,
   LinodeBackupStatus,
   LinodeBackupType,
-  LinodeStatus
+  LinodeStatus,
 } from '@linode/api-v4/lib/linodes';
 
 export const LinodesWithBackups = [
@@ -16,7 +16,7 @@ export const LinodesWithBackups = [
       disk: 81920,
       memory: 4096,
       transfer: 4000,
-      vcpus: 2
+      vcpus: 2,
     },
     type: 'g6-standard-2' as LinodeBackupType,
     hypervisor: 'kvm' as Hypervisor,
@@ -25,8 +25,8 @@ export const LinodesWithBackups = [
       enabled: true,
       schedule: {
         day: 'Scheduling',
-        window: 'Scheduling'
-      }
+        window: 'Scheduling',
+      },
     },
     id: 8284376,
     alerts: {
@@ -34,7 +34,7 @@ export const LinodesWithBackups = [
       transfer_quota: 80,
       io: 10000,
       network_out: 10,
-      cpu: 90
+      cpu: 90,
     },
     status: 'offline' as LinodeStatus,
     group: '',
@@ -50,20 +50,20 @@ export const LinodesWithBackups = [
             {
               size: 1753,
               label: 'Restore 121454 - Arch Linux Disk',
-              filesystem: 'ext4'
+              filesystem: 'ext4',
             },
             {
               size: 0,
               label: 'Restore 121454 - 512 MB Swap Image',
-              filesystem: 'swap'
-            }
+              filesystem: 'swap',
+            },
           ],
           created: '2018-06-06T00:23:17',
           region: 'us-central',
           label: null,
           type: 'auto' as LinodeBackupType,
-          status: 'successful' as LinodeBackupStatus
-        }
+          status: 'successful' as LinodeBackupStatus,
+        },
       ],
       snapshot: {
         in_progress: null,
@@ -76,22 +76,22 @@ export const LinodesWithBackups = [
             {
               size: 1753,
               label: 'Restore 121454 - Arch Linux Disk',
-              filesystem: 'ext4'
+              filesystem: 'ext4',
             },
             {
               size: 0,
               label: 'Restore 121454 - 512 MB Swap Image',
-              filesystem: 'swap'
-            }
+              filesystem: 'swap',
+            },
           ],
           created: '2018-06-05T16:29:15',
           region: 'us-central',
           label: 'testing',
           type: 'snapshot' as LinodeBackupType,
-          status: 'successful' as LinodeBackupStatus
-        }
-      }
+          status: 'successful' as LinodeBackupStatus,
+        },
+      },
     },
-    watchdog_enabled: false
-  }
+    watchdog_enabled: false,
+  },
 ];

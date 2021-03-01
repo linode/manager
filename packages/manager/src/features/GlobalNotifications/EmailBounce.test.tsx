@@ -18,14 +18,14 @@ describe('EmailBounceNotificationSection', () => {
           __resources: {
             notifications: {
               data: [
-                notificationFactory.build({ type: 'billing_email_bounce' })
-              ]
+                notificationFactory.build({ type: 'billing_email_bounce' }),
+              ],
             },
             account: {
-              data: { email: 'account@example.com' } as any
-            }
-          }
-        }
+              data: { email: 'account@example.com' } as any,
+            },
+          },
+        },
       }
     );
     // Notice is visible.
@@ -36,7 +36,7 @@ describe('EmailBounceNotificationSection', () => {
 
     // PUT /account is called with the account's email.
     expect(mockUpdateAccountInfo).toHaveBeenCalledWith({
-      email: 'account@example.com'
+      email: 'account@example.com',
     });
 
     // The Notice disappears.
@@ -52,11 +52,11 @@ describe('EmailBounceNotificationSection', () => {
         customStore: {
           __resources: {
             notifications: {
-              data: [notificationFactory.build({ type: 'user_email_bounce' })]
+              data: [notificationFactory.build({ type: 'user_email_bounce' })],
             },
-            profile: { data: { email: 'profile@example.com' } as any }
-          }
-        }
+            profile: { data: { email: 'profile@example.com' } as any },
+          },
+        },
       }
     );
     // Notice is visible.
@@ -67,7 +67,7 @@ describe('EmailBounceNotificationSection', () => {
 
     // PUT /profile is called with the user's email.
     expect(mockUpdateProfile).toHaveBeenCalledWith({
-      email: 'profile@example.com'
+      email: 'profile@example.com',
     });
 
     // The Notice disappears.

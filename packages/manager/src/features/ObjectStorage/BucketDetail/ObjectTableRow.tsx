@@ -14,24 +14,24 @@ import ObjectActionMenu from './ObjectActionMenu';
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
-      backgroundColor: theme.bg.lightBlue
-    }
+      backgroundColor: theme.bg.lightBlue,
+    },
   },
   manuallyCreatedIcon: {
     '& g': {
-      fill: theme.bg.lightBlue
-    }
+      fill: theme.bg.lightBlue,
+    },
   },
   actionCell: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: 0
+    padding: 0,
   },
   objectNameButton: {
     ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight
-  }
+    color: theme.cmrTextColors.linkActiveLight,
+  },
 }));
 
 interface Props {
@@ -45,7 +45,7 @@ interface Props {
   manuallyCreated: boolean;
 }
 
-const ObjectTableRow: React.FC<Props> = props => {
+const ObjectTableRow: React.FC<Props> = (props) => {
   const {
     displayName,
     fullName,
@@ -54,7 +54,7 @@ const ObjectTableRow: React.FC<Props> = props => {
     handleClickDownload,
     handleClickDelete,
     handleClickDetails,
-    manuallyCreated
+    manuallyCreated,
   } = props;
 
   const classes = useStyles();

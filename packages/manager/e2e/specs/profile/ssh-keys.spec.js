@@ -6,13 +6,13 @@ import ListLinodes from '../../pageobjects/list-linodes';
 import {
   apiDeleteAllLinodes,
   apiRemoveSshKeys,
-  waitForLinodeStatus
+  waitForLinodeStatus,
 } from '../../utils/common';
 
 describe('Profile - SSH Keys Suite', () => {
   const testKey = {
     label: 'Test-SSH-Key',
-    publicKey: constants.testPublicKey
+    publicKey: constants.testPublicKey,
   };
 
   beforeAll(() => {

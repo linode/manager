@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -22,8 +22,8 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(1),
       borderBottom: `1px solid ${theme.palette.divider}`,
       width: '100%',
-      margin: 0
-    }
+      margin: 0,
+    },
   });
 
 interface Props {
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ActivityRow: React.FC<CombinedProps> = props => {
+export const ActivityRow: React.FC<CombinedProps> = (props) => {
   const { classes, event } = props;
 
   const message = eventMessageGenerator(event);

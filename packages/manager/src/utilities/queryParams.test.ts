@@ -1,14 +1,14 @@
 import {
   getParamFromUrl,
   getParamsFromUrl,
-  getQueryParam
+  getQueryParam,
 } from './queryParams';
 
 describe('Url/query parsing utilities', () => {
   describe('getParamsFromUrl function', () => {
     it('should parse a url', () => {
       expect(getParamsFromUrl('https://example.com/?query=false')).toEqual({
-        query: 'false'
+        query: 'false',
       });
     });
     it('should handle multiple key/value pairs', () => {

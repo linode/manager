@@ -15,7 +15,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -26,14 +26,14 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
-  DevicesAsStrings
+  DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import DeviceSelection, {
   ExtendedDisk,
-  ExtendedVolume
+  ExtendedVolume,
 } from './DeviceSelection';
 
 type ClassNames = 'root' | 'title' | 'intro';
@@ -45,15 +45,15 @@ const styles = (theme: Theme) =>
       paddingBottom: theme.spacing(1),
       '& .iconTextLink': {
         display: 'inline-flex',
-        margin: `${theme.spacing(3)}px 0 0 0`
-      }
+        margin: `${theme.spacing(3)}px 0 0 0`,
+      },
     },
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     intro: {
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   });
 
 interface ContextProps {
@@ -106,7 +106,7 @@ interface DeviceMap {
 export const getDefaultDeviceMapAndCounter = (
   disks: ExtendedDisk[]
 ): [DeviceMap, number] => {
-  const defaultDisks = disks.map(thisDisk => thisDisk._id);
+  const defaultDisks = disks.map((thisDisk) => thisDisk._id);
   const counter = defaultDisks.reduce(
     (c, thisDisk) => (!!thisDisk ? c + 1 : c),
     0
@@ -128,7 +128,7 @@ export const getDefaultDeviceMapAndCounter = (
     sdd: defaultDisks[3],
     sde: defaultDisks[4],
     sdf: defaultDisks[5],
-    sdg: defaultDisks[6]
+    sdg: defaultDisks[6],
   };
   return [deviceMap, counter];
 };
@@ -143,10 +143,10 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     this.state = {
       devices: {
         disks: props.linodeDisks || [],
-        volumes: filteredVolumes || []
+        volumes: filteredVolumes || [],
       },
       counter: initialCounter,
-      rescueDevices: deviceMap
+      rescueDevices: deviceMap,
     };
   }
 
@@ -158,8 +158,8 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       this.setState({
         devices: {
           ...this.state.devices,
-          disks: this.props.linodeDisks as ExtendedDisk[]
-        }
+          disks: this.props.linodeDisks as ExtendedDisk[],
+        },
       });
     }
   }
@@ -167,7 +167,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   getFilteredVolumes = () => {
     const { linodeId, linodeRegion, volumesData } = this.props;
     return volumesData
-      ? volumesData.filter(volume => {
+      ? volumesData.filter((volume) => {
           // whether volume is not attached to any Linode
           const volumeIsUnattached = volume.linode_id === null;
           // whether volume is attached to the current Linode we're viewing
@@ -187,20 +187,20 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     const { rescueDevices } = this.state;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
-      .then(_ => {
+      .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
-          variant: 'info'
+          variant: 'info',
         });
         resetEventsPolling();
         history.push(`/linodes/${linodeId}/summary`);
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         getAPIErrorOrDefault(
           errorResponse,
           'There was an issue rescuing your Linode.'
         ).forEach((err: APIError) =>
           enqueueSnackbar(err.reason, {
-            variant: 'error'
+            variant: 'error',
           })
         );
       });
@@ -215,8 +215,8 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     this.setState({
       rescueDevices: {
         ...this.state.rescueDevices,
-        [slot]: _id
-      }
+        [slot]: _id,
+      },
     });
 
   render() {
@@ -227,7 +227,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       classes,
       linodeLabel,
       linodeStatus,
-      permissions
+      permissions,
     } = this.props;
 
     const unauthorized = permissions === 'read_only';
@@ -278,7 +278,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             devices={devices}
             onChange={this.onChange}
-            getSelected={slot =>
+            getSelected={(slot) =>
               pathOr('', ['rescueDevices', slot], this.state)
             }
             counter={this.state.counter}
@@ -309,15 +309,17 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeRegion: linode.region,
   linodeLabel: linode.label,
   linodeStatus: linode.status,
-  linodeDisks: linode._disks.map(disk => assoc('_id', `disk-${disk.id}`, disk)),
-  permissions: linode._permissions
+  linodeDisks: linode._disks.map((disk) =>
+    assoc('_id', `disk-${disk.id}`, disk)
+  ),
+  permissions: linode._permissions,
 }));
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = (
   state,
   ownProps
 ) => ({
-  diskError: state.__resources.linodeDisks[ownProps.linodeId]?.error?.read
+  diskError: state.__resources.linodeDisks[ownProps.linodeId]?.error?.read,
 });
 
 const connected = connect(mapStateToProps);
@@ -337,9 +339,9 @@ export default compose<CombinedProps, {}>(
       volumesResults,
       volumesError
     ) => {
-      const mappedData = volumesData.map(volume => ({
+      const mappedData = volumesData.map((volume) => ({
         ...volume,
-        _id: `volume-${volume.id}`
+        _id: `volume-${volume.id}`,
       }));
       const _error = volumesError?.read
         ? volumesError.read[0]?.reason
@@ -348,7 +350,7 @@ export default compose<CombinedProps, {}>(
         ...ownProps,
         volumesData: mappedData,
         volumesError: _error,
-        volumesLastUpdated
+        volumesLastUpdated,
       };
     }
   ),

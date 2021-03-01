@@ -32,15 +32,15 @@ import ConfigureForm from './ConfigureForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   actionWrapper: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   vlanHelperText: {
-    marginTop: theme.spacing() / 2
-  }
+    marginTop: theme.spacing() / 2,
+  },
 }));
 
 interface Props {
@@ -51,7 +51,7 @@ interface Props {
 
 type CombinedProps = Props & WithTypesAndImages;
 
-const MigrateLanding: React.FC<CombinedProps> = props => {
+const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { linodeID, notifications, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -117,7 +117,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     setLoading(true);
 
     return scheduleOrQueueMigration(linodeID, {
-      region: selectedRegion
+      region: selectedRegion,
     })
       .then(() => {
         resetEventsPolling();
@@ -126,7 +126,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
           region,
           selectedRegion,
           +formatDate(new Date().toISOString(), {
-            format: 'H'
+            format: 'H',
           })
         );
         enqueueSnackbar(
@@ -174,9 +174,11 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   const shouldWarnAboutVlans =
     vlansEnabled &&
     selectedRegion !== null &&
-    linode._interfaces.some(thisInterface => Boolean(thisInterface.vlan_id)) &&
+    linode._interfaces.some((thisInterface) =>
+      Boolean(thisInterface.vlan_id)
+    ) &&
     !regions
-      .find(thisRegion => thisRegion.id === selectedRegion)
+      .find((thisRegion) => thisRegion.id === selectedRegion)
       ?.capabilities.includes('Vlans');
 
   return (
@@ -242,8 +244,8 @@ const mapStateToProps: MapStateToProps<
   WithTypesAndImages,
   {},
   ApplicationState
-> = state => ({
-  notifications: state.__resources.notifications.data || []
+> = (state) => ({
+  notifications: state.__resources.notifications.data || [],
 });
 
 const withReduxState = connect(mapStateToProps);

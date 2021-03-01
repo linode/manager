@@ -83,7 +83,7 @@ export const getTotalTraffic = (
   return {
     inTraffic,
     outTraffic,
-    combinedTraffic: inTraffic + outTraffic
+    combinedTraffic: inTraffic + outTraffic,
   };
 };
 

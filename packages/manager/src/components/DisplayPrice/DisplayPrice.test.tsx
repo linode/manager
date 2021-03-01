@@ -8,7 +8,7 @@ import { DisplayPrice, displayPrice } from './DisplayPrice';
 const classes = {
   root: '',
   price: '',
-  per: ''
+  per: '',
 };
 
 const component = shallow(<DisplayPrice price={100} classes={classes} />);

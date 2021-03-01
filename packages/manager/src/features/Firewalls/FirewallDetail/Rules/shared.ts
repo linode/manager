@@ -23,7 +23,7 @@ export const PORT_PRESETS = {
   '443': { label: 'HTTPS (443)', value: '443' },
   '3306': { label: 'MySQL (3306)', value: '3306' },
   '22': { label: 'SSH (22)', value: '22' },
-  CUSTOM: { label: 'Custom', value: 'CUSTOM' }
+  CUSTOM: { label: 'Custom', value: 'CUSTOM' },
 };
 
 export const PORT_PRESETS_ITEMS = sortBy(
@@ -64,13 +64,13 @@ export const parseFirewallRuleError = (
     reason,
     category,
     idx: +idx,
-    formField
+    formField,
   };
 
   if (ipType && ipIdx) {
     result.ip = {
       type: ipType,
-      idx: +ipIdx
+      idx: +ipIdx,
     };
   }
 
@@ -88,7 +88,7 @@ export const sortPortString = (portString: string) => {
     const ports = portString.split(',');
     return ports
       .sort(sortString)
-      .map(port => port.trim())
+      .map((port) => port.trim())
       .join(', ');
   } catch {
     // API responses should always work with this logic,

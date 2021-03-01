@@ -25,9 +25,7 @@ class NodeBalancerSettings extends Page {
       .toBe(true);
     expect(this.connectionThrottle.getValue())
       .withContext(
-        `${assertLog.incorrectVal} for "${
-          this.connectionThrottle.selector
-        }" selector`
+        `${assertLog.incorrectVal} for "${this.connectionThrottle.selector}" selector`
       )
       .toBe('0');
     expect(this.save.getTagName())
@@ -57,9 +55,7 @@ class NodeBalancerSettings extends Page {
     this.waitForNotice('NodeBalancer settings updated successfully');
     expect(this.connectionThrottle.getValue())
       .withContext(
-        `${assertLog.incorrectVal} for "${
-          this.connectionThrottle.selector
-        }" selector`
+        `${assertLog.incorrectVal} for "${this.connectionThrottle.selector}" selector`
       )
       .toBe(String(connections));
   }

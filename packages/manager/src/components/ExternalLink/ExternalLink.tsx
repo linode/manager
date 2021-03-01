@@ -8,7 +8,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black' | 'fixedIcon';
@@ -20,9 +20,9 @@ const styles = (theme: Theme) =>
       alignItems: 'baseline',
       '&:hover': {
         '& $icon': {
-          opacity: 1
-        }
-      }
+          opacity: 1,
+        },
+      },
     },
     icon: {
       color: theme.palette.primary.main,
@@ -30,7 +30,7 @@ const styles = (theme: Theme) =>
       left: theme.spacing(1),
       opacity: 0,
       width: 14,
-      height: 14
+      height: 14,
     },
     absoluteIcon: {
       display: 'inline',
@@ -41,16 +41,16 @@ const styles = (theme: Theme) =>
         right: 0,
         bottom: 2,
         opacity: 0,
-        left: 'initial'
-      }
+        left: 'initial',
+      },
     },
     fixedIcon: {
       display: 'inline-block',
-      fontSize: '0.8em'
+      fontSize: '0.8em',
     },
     black: {
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   });
 
 interface Props {
@@ -75,7 +75,7 @@ class ExternalLink extends React.Component<CombinedProps> {
       absoluteIcon,
       black,
       fixedIcon,
-      hideIcon
+      hideIcon,
     } = this.props;
 
     return (
@@ -88,7 +88,7 @@ class ExternalLink extends React.Component<CombinedProps> {
           {
             [classes.root]: true,
             [classes.absoluteIcon]: absoluteIcon,
-            [classes.black]: black
+            [classes.black]: black,
           },
           className
         )}

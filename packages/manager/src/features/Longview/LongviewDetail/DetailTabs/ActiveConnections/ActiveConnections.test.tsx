@@ -8,7 +8,7 @@ const mockConnections = longviewPortFactory.buildList(10);
 
 const props: TableProps = {
   connectionsLoading: false,
-  connections: mockConnections
+  connections: mockConnections,
 };
 
 describe('ActiveConnections (and by extension ListeningServices)', () => {

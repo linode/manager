@@ -1,7 +1,7 @@
 import createMuiTheme, {
   Direction as _Direction,
   Theme as _Theme,
-  ThemeOptions as _ThemeOptions
+  ThemeOptions as _ThemeOptions,
 } from '@material-ui/core/styles/createMuiTheme';
 export type Direction = _Direction;
 /* tslint:disable */

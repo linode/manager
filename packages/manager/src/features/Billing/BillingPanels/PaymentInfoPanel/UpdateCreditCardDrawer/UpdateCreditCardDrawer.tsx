@@ -16,7 +16,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import accountContainer, {
-  Props as AccountContainerProps
+  Props as AccountContainerProps,
 } from 'src/containers/account.container';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import useFlags from 'src/hooks/useFlags';
@@ -25,23 +25,23 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   expired: {
-    color: theme.color.red
+    color: theme.color.red,
   },
   newccContainer: {
-    padding: `${theme.spacing(1)}px 0 0`
+    padding: `${theme.spacing(1)}px 0 0`,
   },
   currentCCTitle: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   cardNumber: {
-    minWidth: 225
+    minWidth: 225,
   },
   fullWidthMobile: {
     flexBasis: '50%',
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  }
+      width: '100%',
+    },
+  },
 }));
 
 export interface Props {
@@ -51,7 +51,7 @@ export interface Props {
 
 type CombinedProps = Props & AccountContainerProps;
 
-export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
+export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { onClose, open } = props;
@@ -104,8 +104,8 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       setErrors([
         {
           field: 'expiry_year',
-          reason: 'Expiration date must have the format MM/YY.'
-        }
+          reason: 'Expiration date must have the format MM/YY.',
+        },
       ]);
       return;
     }
@@ -114,13 +114,13 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
       card_number: cardNumber,
       expiry_month: expMonth,
       expiry_year: expYear,
-      cvv
+      cvv,
     })
       .then(() => {
         const credit_card = {
           last_four: takeLast(4, cardNumber),
           expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
-          cvv
+          cvv,
         };
         // Update Redux store so subscribed components will display updated
         // information.
@@ -129,7 +129,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         onClose();
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
       });
@@ -174,7 +174,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
                 errorText={hasErrorFor.card_number}
                 className={classes.cardNumber}
                 InputProps={{
-                  inputComponent: creditCardField
+                  inputComponent: creditCardField,
                 }}
               />
             </Grid>
@@ -202,7 +202,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
               <Link
                 to={{
                   pathname: '/account',
-                  state: { contactDrawerOpen: true }
+                  state: { contactDrawerOpen: true },
                 }}
               >
                 contact information
@@ -247,11 +247,11 @@ const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
     <NumberFormat
       {...other}
       getInputRef={inputRef}
-      onValueChange={values => {
+      onValueChange={(values) => {
         onChange({
           target: {
-            value: values.value
-          }
+            value: values.value,
+          },
         });
       }}
       format="#### #### #### #######"

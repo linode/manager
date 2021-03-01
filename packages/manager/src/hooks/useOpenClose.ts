@@ -13,7 +13,7 @@ export interface OpenClose {
 }
 
 const defaultState = {
-  open: false
+  open: false,
 };
 
 // Simple hook to group "open/close" state & functionality.
@@ -24,8 +24,8 @@ export const useOpenClose = (
 ): OpenClose => {
   const [entity, setEntity] = React.useState<OpenCloseState>(initialState);
 
-  const open = () => setEntity(prevState => ({ ...prevState, open: true }));
-  const close = () => setEntity(prevState => ({ ...prevState, open: false }));
+  const open = () => setEntity((prevState) => ({ ...prevState, open: true }));
+  const close = () => setEntity((prevState) => ({ ...prevState, open: false }));
 
   const isOpen = entity.open;
 

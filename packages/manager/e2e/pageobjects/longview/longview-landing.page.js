@@ -123,7 +123,7 @@ class LongviewLanding extends Page {
   }
 
   deleteLVClientsAPI(token, lvClients) {
-    lvClients.forEach(id => {
+    lvClients.forEach((id) => {
       browser.deleteLongviewClient(token, id.id);
     });
   }

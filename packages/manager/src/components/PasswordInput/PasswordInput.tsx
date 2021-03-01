@@ -18,7 +18,7 @@ type Props = TextFieldProps & {
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     position: 'relative',
-    paddingBottom: theme.spacing(1) / 2
+    paddingBottom: theme.spacing(1) / 2,
   },
   requirementsListOuter: {
     margin: 0,
@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.offWhiteDT,
     border: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.up('sm')]: {
-      width: 415
-    }
+      width: 415,
+    },
   },
   requirementsList: {
     margin: 0,
@@ -36,29 +36,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& li': {
       margin: `${theme.spacing(1)}px 0`,
       '& > span': {
-        display: 'block'
-      }
-    }
+        display: 'block',
+      },
+    },
   },
   active: {
     color: theme.color.red,
     '&$valid': {
-      color: theme.color.green
-    }
+      color: theme.color.green,
+    },
   },
   valid: {},
   infoText: {
     fontSize: '0.85rem',
-    marginTop: 12
+    marginTop: 12,
   },
   usernameInput: {
-    display: 'none'
-  }
+    display: 'none',
+  },
 }));
 
 type CombinedProps = Props;
 
-const PasswordInput: React.FC<CombinedProps> = props => {
+const PasswordInput: React.FC<CombinedProps> = (props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onChange) {
       props.onChange(e);

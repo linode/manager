@@ -47,7 +47,7 @@ class Rebuild extends Page {
 
   selectImage(label) {
     if (label) {
-      const targetImage = this.imageNames.find(option =>
+      const targetImage = this.imageNames.find((option) =>
         option.getText().includes(label)
       );
       targetImage.click();

@@ -10,7 +10,7 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import withLinodes, {
-  Props as LinodesProps
+  Props as LinodesProps,
 } from 'src/containers/withLinodes.container';
 import { useDialog } from 'src/hooks/useDialog';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
@@ -22,17 +22,17 @@ import RemoveDeviceDialog from './RemoveDeviceDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   message: {
-    fontSize: '16px'
+    fontSize: '16px',
   },
   link: {
-    margin: '8px 8px 8px 0px'
+    margin: '8px 8px 8px 0px',
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing()
-    }
-  }
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -42,14 +42,14 @@ interface Props {
 
 type CombinedProps = RouteComponentProps & Props & LinodesProps;
 
-const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
+const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
   const { firewallID, firewallLabel } = props;
   const classes = useStyles();
   const {
     devices,
     requestDevices,
     removeDevice,
-    addDevice
+    addDevice,
   } = useFirewallDevices(firewallID);
 
   const deviceList = Object.values(devices.itemsById ?? {}); // Gives the devices as an array or [] if nothing is found
@@ -64,7 +64,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
     openDialog,
     closeDialog,
     handleError,
-    submitDialog
+    submitDialog,
   } = useDialog<number>(removeDevice);
 
   const flags = useFlags();
@@ -88,13 +88,13 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   const handleAddDevice = (selectedLinodes: number[]) => {
     setDeviceSubmitting(true);
     setDeviceError(undefined);
-    return Promise.map(selectedLinodes, thisLinode => {
+    return Promise.map(selectedLinodes, (thisLinode) => {
       return addDevice({ type: 'linode', id: thisLinode });
     })
-      .then(_ => {
+      .then((_) => {
         handleClose();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         /**
          * API errors here identify the invalid Linode
          * by its ID rather than label, which isn't helpful
@@ -108,12 +108,12 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
               /with ID ([0-9]+)/,
               (match: string, group: string) => {
                 const linode = props.linodesData.find(
-                  thisLinode => thisLinode.id === +group
+                  (thisLinode) => thisLinode.id === +group
                 );
                 return linode ? linode.label : match;
               }
-            )
-          }
+            ),
+          },
         ];
         setDeviceError(errorWithLinodeLabel);
         setDeviceSubmitting(false);
@@ -127,7 +127,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   };
 
   const handleRemoveDevice = () => {
-    _submitDialog(dialog.entityID).catch(e =>
+    _submitDialog(dialog.entityID).catch((e) =>
       handleError(getAPIErrorOrDefault(e, 'Error removing Device')[0].reason)
     );
   };
@@ -137,7 +137,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
       <Typography
         className={classnames({
           [classes.message]: true,
-          [classes.cmrSpacing]: flags.cmr
+          [classes.cmrSpacing]: flags.cmr,
         })}
       >
         The following Linodes have been assigned to this Firewall.
@@ -167,7 +167,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
         onClose={handleClose}
         addDevice={handleAddDevice}
         isSubmitting={deviceSubmitting}
-        currentDevices={deviceList.map(thisDevice => thisDevice.entity.id)}
+        currentDevices={deviceList.map((thisDevice) => thisDevice.entity.id)}
         firewallLabel={firewallLabel}
       />
       <RemoveDeviceDialog

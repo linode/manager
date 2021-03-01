@@ -12,29 +12,29 @@ import { EditableProps, LabelProps } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   crumbsWrapper: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   crumb: {
     fontSize: '1.125rem',
     lineHeight: 'normal',
     textTransform: 'capitalize',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   crumbLink: {
     color: theme.cmrTextColors.tableHeader,
     '&:hover': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   noCap: {
-    textTransform: 'initial'
+    textTransform: 'initial',
   },
   slash: {
     color: theme.cmrTextColors.tableHeader,
     fontSize: 20,
     marginRight: 2,
-    marginLeft: 2
-  }
+    marginLeft: 2,
+  },
 }));
 
 export interface CrumbOverridesProps {
@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Crumbs: React.FC<CombinedProps> = props => {
+const Crumbs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -64,7 +64,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
     firstAndLastOnly,
     labelOptions,
     labelTitle,
-    onEditHandlers
+    onEditHandlers,
   } = props;
 
   const allCrumbsButLast = pathMap.slice(0, -1);
@@ -79,7 +79,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         const link =
           '/' + pathMap.slice(0, -(pathMap.length - (key + 1))).join('/');
         const override =
-          crumbOverrides && crumbOverrides.find(e => e.position === key + 1);
+          crumbOverrides && crumbOverrides.find((e) => e.position === key + 1);
 
         return (
           <div key={key} className={classes.crumbsWrapper}>
@@ -97,7 +97,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
                 className={classNames({
                   [classes.crumb]: true,
                   [classes.crumbLink]: true,
-                  [classes.noCap]: override && override.noCap
+                  [classes.noCap]: override && override.noCap,
                 })}
                 data-qa-link-text
                 data-testid={'link-text'}

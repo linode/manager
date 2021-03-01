@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import * as React from 'react';
 import {
   objectStorageBucketFactory,
-  objectStorageClusterFactory
+  objectStorageClusterFactory,
 } from 'src/factories/objectStorage';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BucketLanding, { CombinedProps } from './BucketLanding';
@@ -13,7 +13,7 @@ const mockOpenBucketDrawer = jest.fn();
 const props: CombinedProps = {
   isRestrictedUser: false,
   openBucketDrawer: mockOpenBucketDrawer,
-  closeBucketDrawer: mockCloseBucketDrawer
+  closeBucketDrawer: mockCloseBucketDrawer,
 };
 
 describe('ObjectStorageLanding', () => {
@@ -24,7 +24,7 @@ describe('ObjectStorageLanding', () => {
 
   it('renders an empty state', () => {
     renderWithTheme(<BucketLanding {...props} />, {
-      customStore: { __resources: { buckets: { data: [], lastUpdated: 1 } } }
+      customStore: { __resources: { buckets: { data: [], lastUpdated: 1 } } },
     });
     screen.getByTestId('placeholder-button');
   });
@@ -37,11 +37,14 @@ describe('ObjectStorageLanding', () => {
             loading: false,
             lastUpdated: 1,
             bucketErrors: [
-              { clusterId: 'us-east-1', error: { reason: 'An error occurred' } }
-            ]
-          }
-        }
-      }
+              {
+                clusterId: 'us-east-1',
+                error: { reason: 'An error occurred' },
+              },
+            ],
+          },
+        },
+      },
     });
     screen.getByText(/^There was an error loading buckets in Newark, NJ/);
   });
@@ -54,14 +57,17 @@ describe('ObjectStorageLanding', () => {
             loading: false,
             lastUpdated: 1,
             bucketErrors: [
-              { clusterId: 'us-east-1', error: { reason: 'An error occurred' } }
-            ]
+              {
+                clusterId: 'us-east-1',
+                error: { reason: 'An error occurred' },
+              },
+            ],
           },
           clusters: {
-            entities: [objectStorageClusterFactory.build()]
-          }
-        }
-      }
+            entities: [objectStorageClusterFactory.build()],
+          },
+        },
+      },
     });
     screen.getByText(/^There was an error retrieving your buckets/);
   });
@@ -71,9 +77,9 @@ describe('ObjectStorageLanding', () => {
     renderWithTheme(<BucketLanding {...props} />, {
       customStore: {
         __resources: {
-          buckets: { data: buckets, lastUpdated: 1 }
-        }
-      }
+          buckets: { data: buckets, lastUpdated: 1 },
+        },
+      },
     });
     screen.getByText(buckets[0].label);
     screen.getByText(buckets[1].label);
@@ -85,13 +91,13 @@ describe('ObjectStorageLanding', () => {
         __resources: {
           buckets: {
             data: objectStorageBucketFactory.buildList(2, {
-              size: 1024 * 1024 * 1024 * 5
+              size: 1024 * 1024 * 1024 * 5,
             }),
             loading: false,
-            lastUpdated: 1
-          }
-        }
-      }
+            lastUpdated: 1,
+          },
+        },
+      },
     });
     screen.getByText(/Total storage used: 10 GB/);
   });

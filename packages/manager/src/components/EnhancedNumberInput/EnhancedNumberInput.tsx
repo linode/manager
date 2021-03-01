@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     width: 40,
     height: 40,
     minWidth: 40,
-    padding: 0
+    padding: 0,
   },
   textField: {
     margin: '0 5px',
@@ -19,53 +19,53 @@ const useStyles = makeStyles(() => ({
     minHeight: 40,
     width: 60,
     minWidth: 50,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   input: {
     textAlign: 'right',
     '-moz-appearance': 'textfield',
     '&::-webkit-inner-spin-button': {
       '-webkit-appearance': 'none',
-      margin: 0
+      margin: 0,
     },
     '&::-webkit-outer-spin-button': {
       '-webkit-appearance': 'none',
-      margin: 0
-    }
+      margin: 0,
+    },
   },
   plusIcon: {
-    width: 17
+    width: 17,
   },
   minusIcon: {
-    width: 14
+    width: 14,
   },
   inputGroup: {
     display: 'flex',
     position: 'relative',
     '& button': {
       borderRadius: 0,
-      minHeight: 'fit-content'
-    }
+      minHeight: 'fit-content',
+    },
   },
   small: {
     '& $button': {
       width: 30,
       height: 30,
-      minWidth: 30
+      minWidth: 30,
     },
     '& $input': {
-      padding: '0 8px'
+      padding: '0 8px',
     },
     '& $textField': {
       width: 50,
       minWidth: 40,
       height: 30,
-      minHeight: 30
+      minHeight: 30,
     },
     '& $plusIcon': {
-      width: 14
-    }
-  }
+      width: 14,
+    },
+  },
 }));
 
 interface Props {
@@ -80,7 +80,7 @@ interface Props {
 
 type FinalProps = Props;
 
-export const EnhancedNumberInput: React.FC<FinalProps> = props => {
+export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
   const { inputLabel, small, setValue, disabled } = props;
 
   const max = props.max ?? 100;
@@ -118,7 +118,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
     <div
       className={classnames({
         [classes.small]: small,
-        [classes.inputGroup]: true
+        [classes.inputGroup]: true,
       })}
     >
       <Button
@@ -145,10 +145,10 @@ export const EnhancedNumberInput: React.FC<FinalProps> = props => {
         onChange={onChange}
         inputProps={{
           className: classnames({
-            [classes.input]: true
+            [classes.input]: true,
           }),
           min,
-          max
+          max,
         }}
         disabled={disabled}
         data-testid={'quantity-input'}

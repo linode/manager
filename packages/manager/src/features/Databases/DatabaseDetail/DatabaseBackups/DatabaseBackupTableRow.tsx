@@ -16,7 +16,7 @@ interface Props {
   // handleDelete: (backup: DatabaseBackup) => void;
 }
 
-const BackupTableRow: React.FC<Props> = props => {
+const BackupTableRow: React.FC<Props> = (props) => {
   const { backup } = props;
   return (
     <TableRow key={backup.id} data-qa-backup>

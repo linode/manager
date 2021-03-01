@@ -59,7 +59,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
       scope: scopes,
       expires_in: expiresIn,
       state: nonce,
-      token_type: tokenType
+      token_type: tokenType,
     } = hashParams;
 
     /** If the access token wasn't returned, something is wrong and we should bail. */
@@ -124,7 +124,9 @@ interface DispatchProps {
   ) => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => {
   return {
     dispatchStartSession: (token, tokenType, scopes, expiry) =>
       dispatch(
@@ -133,9 +135,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
             1
           )} ${token}`,
           scopes,
-          expires: expiry
+          expires: expiry,
         })
-      )
+      ),
   };
 };
 

@@ -8,18 +8,18 @@ const resultsPage = {
   page: 1,
   pages: 3,
   results: 100,
-  data: mockNodeBalancers
+  data: mockNodeBalancers,
 };
 
 const resultsPageSmall = {
   ...resultsPage,
   pages: 1,
-  results: mockNodeBalancers.length
+  results: mockNodeBalancers.length,
 };
 
 const getAllResults = {
   data: mockNodeBalancers,
-  results: mockNodeBalancers.length
+  results: mockNodeBalancers.length,
 };
 
 const mockError = [{ reason: 'An error occurred.' }];
@@ -47,7 +47,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.getNodeBalancersPageActions.done({
           params: {},
-          result: resultsPage
+          result: resultsPage,
         })
       );
       expect(newState).toHaveProperty('loading', false);
@@ -65,7 +65,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.getNodeBalancersPageActions.done({
           params: {},
-          result: resultsPageSmall
+          result: resultsPageSmall,
         })
       );
       expect(newState).toHaveProperty('results', resultsPageSmall.results);
@@ -78,7 +78,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.getNodeBalancersPageActions.failed({
           params: {},
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState).toHaveProperty('loading', false);
@@ -112,7 +112,7 @@ describe('NodeBalancers Redux store', () => {
       const newState = reducer(
         defaultState,
         actions.getAllNodeBalancersActions.failed({
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState).toHaveProperty('loading', false);
@@ -134,7 +134,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.createNodeBalancersActions.done({
           result: newBalancer,
-          params: { configs: [] }
+          params: { configs: [] },
         })
       );
       expect(newState.itemsById).toHaveProperty(
@@ -149,7 +149,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.createNodeBalancersActions.failed({
           error: mockError,
-          params: { configs: [] }
+          params: { configs: [] },
         })
       );
       expect(newState.error.create).toEqual(mockError);
@@ -167,13 +167,13 @@ describe('NodeBalancers Redux store', () => {
       const withEntities = addEntities();
       const updatedBalancer = {
         ...mockNodeBalancers[1],
-        label: 'updated-label'
+        label: 'updated-label',
       };
       const newState = reducer(
         withEntities,
         actions.updateNodeBalancersActions.done({
           result: updatedBalancer,
-          params: { nodeBalancerId: updatedBalancer.id }
+          params: { nodeBalancerId: updatedBalancer.id },
         })
       );
       expect(newState.itemsById).toHaveProperty(
@@ -188,7 +188,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.updateNodeBalancersActions.failed({
           error: mockError,
-          params: { nodeBalancerId: 1 }
+          params: { nodeBalancerId: 1 },
         })
       );
       expect(newState.error.update).toEqual(mockError);
@@ -208,7 +208,7 @@ describe('NodeBalancers Redux store', () => {
         withEntities,
         actions.deleteNodeBalancerActions.done({
           result: {},
-          params: { nodeBalancerId: mockNodeBalancers[5].id }
+          params: { nodeBalancerId: mockNodeBalancers[5].id },
         })
       );
       expect(newState.itemsById).not.toHaveProperty(
@@ -223,7 +223,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.deleteNodeBalancerActions.failed({
           error: mockError,
-          params: { nodeBalancerId: 1 }
+          params: { nodeBalancerId: 1 },
         })
       );
       expect(newState.error.delete).toEqual(mockError);
@@ -235,7 +235,7 @@ describe('NodeBalancers Redux store', () => {
         defaultState,
         actions.getNodeBalancerWithConfigsActions.done({
           params: { nodeBalancerId: mockNodeBalancer.id },
-          result: mockNodeBalancer
+          result: mockNodeBalancer,
         })
       );
       expect(newState.itemsById).toHaveProperty(
@@ -249,13 +249,13 @@ describe('NodeBalancers Redux store', () => {
       const withEntities = addEntities();
       const updatedBalancer = {
         ...mockNodeBalancers[1],
-        label: 'updated-label'
+        label: 'updated-label',
       };
       const newState = reducer(
         withEntities,
         actions.getNodeBalancerWithConfigsActions.done({
           params: { nodeBalancerId: updatedBalancer.id },
-          result: updatedBalancer
+          result: updatedBalancer,
         })
       );
       expect(newState.itemsById).toHaveProperty(

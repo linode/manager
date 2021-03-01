@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const TableContentWrapper: React.FC<CombinedProps> = props => {
+const TableContentWrapper: React.FC<CombinedProps> = (props) => {
   const { length, loading, emptyMessage, error, lastUpdated } = props;
 
   if (loading) {

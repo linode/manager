@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import {
   Profile,
   TokenCreateDrawer,
-  dialogMap
+  dialogMap,
 } from '../../pageobjects/profile';
 
 const profile = new Profile();
@@ -84,7 +84,7 @@ describe('View - Personal Access Tokens', () => {
 
     it('should display tokens', () => {
       const labels = profile.tokenLabel;
-      labels.forEach(l => expect(l.isDisplayed()).toBe(true));
+      labels.forEach((l) => expect(l.isDisplayed()).toBe(true));
     });
 
     it('should display token scopes drawer', () => {

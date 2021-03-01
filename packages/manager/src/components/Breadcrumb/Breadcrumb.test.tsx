@@ -5,7 +5,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { Breadcrumb, CombinedProps as BreadCrumbProps } from './Breadcrumb';
 
 const props: BreadCrumbProps = {
-  pathname: '/linodes/9872893679817/test/lastcrumb'
+  pathname: '/linodes/9872893679817/test/lastcrumb',
 };
 
 describe('Breadcrumb component', () => {
@@ -29,7 +29,7 @@ describe('Breadcrumb component', () => {
           onEditHandlers={{
             editableTextTitle: 'Editable text',
             onEdit: jest.fn(),
-            onCancel: jest.fn()
+            onCancel: jest.fn(),
           }}
         />
       )

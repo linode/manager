@@ -19,7 +19,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const EnableBackupsDialog: React.FC<Props> = props => {
+export const EnableBackupsDialog: React.FC<Props> = (props) => {
   const { linodeId, onClose, open } = props;
   /**
    * Calculate the monthly backup price here.
@@ -31,7 +31,7 @@ export const EnableBackupsDialog: React.FC<Props> = props => {
   const { linodes } = useLinodes();
   const thisLinode = linodes.itemsById[linodeId];
   const thisLinodeType = types.entities.find(
-    thisType => thisType.id === thisLinode?.type
+    (thisType) => thisType.id === thisLinode?.type
   );
 
   const price = thisLinodeType?.addons.backups.price.monthly ?? 0;
@@ -48,11 +48,11 @@ export const EnableBackupsDialog: React.FC<Props> = props => {
         setSubmitting(false);
         resetEventsPolling();
         enqueueSnackbar('Backups are being enabled for this Linode.', {
-          variant: 'success'
+          variant: 'success',
         });
         onClose();
       })
-      .catch(error => {
+      .catch((error) => {
         setError(error[0].reason);
         setSubmitting(false);
       });

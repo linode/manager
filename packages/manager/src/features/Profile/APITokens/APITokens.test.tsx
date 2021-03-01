@@ -9,14 +9,12 @@ describe('APITokens', () => {
     const pats = [
       {
         created: '2018-04-09T20:00:00',
-        expiry: DateTime.local()
-          .minus({ days: 1 })
-          .toISO(),
+        expiry: DateTime.local().minus({ days: 1 }).toISO(),
         id: 1,
         token: 'aa588915b6368b80',
         scopes: 'account:read_write',
-        label: 'test-1'
-      }
+        label: 'test-1',
+      },
     ];
 
     const component = shallow<APITokenTable>(
@@ -31,7 +29,7 @@ describe('APITokens', () => {
           addNewWrapper: '',
           addNewLink: '',
           labelCell: '',
-          actionMenu: ''
+          actionMenu: '',
         }}
         title="Personal Access Tokens"
         type="Personal Access Token"
@@ -61,9 +59,9 @@ describe('APITokens', () => {
           errors: undefined, // important that we reset the errors here after the previous tests
           values: {
             ...component.state().form.values,
-            label: 'test label'
-          }
-        }
+            label: 'test label',
+          },
+        },
       });
       (component.instance() as APITokenTable).createToken('*');
       const errorsExist = !!component.state().form.errors;

@@ -29,7 +29,7 @@ import { deleteAllTestClients } from './api/longview';
 import { deleteAllTestStackscripts } from './api/stackscripts';
 import {
   deleteAllTestAccessKeys,
-  deleteAllTestBuckets
+  deleteAllTestBuckets,
 } from './api/objectStorage';
 import { deleteAllTestFirewalls } from './api/firewalls';
 it('Delete All Test Entities before anything happens', () => {

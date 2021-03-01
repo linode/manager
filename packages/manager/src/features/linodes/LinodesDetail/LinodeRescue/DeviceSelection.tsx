@@ -30,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeviceSelection: React.FC<CombinedProps> = props => {
+const DeviceSelection: React.FC<CombinedProps> = (props) => {
   const { devices, onChange, getSelected, slots, rescue, disabled } = props;
 
   const counter = defaultTo(0, props.counter) as number;
@@ -45,14 +45,14 @@ const DeviceSelection: React.FC<CombinedProps> = props => {
             value: type,
             options: (items as any[]).map(({ _id, label }) => {
               return { label, value: _id };
-            })
+            }),
           };
         });
 
         deviceList.unshift({
           value: '',
           label: '',
-          options: [{ value: null, label: 'None' }]
+          options: [{ value: null, label: 'None' }],
         });
 
         const selectedDevice = getSelectedOptionFromGroupedOptions(

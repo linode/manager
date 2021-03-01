@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -28,34 +28,34 @@ const styles = (theme: Theme) =>
       flexGrow: 1,
       width: '100%',
       marginTop: theme.spacing(3),
-      backgroundColor: theme.cmrBGColors.bgPaper
+      backgroundColor: theme.cmrBGColors.bgPaper,
     },
     inner: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     panelBody: {
-      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
+      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
     },
     small: {
       '&$root': {
-        marginTop: 0
+        marginTop: 0,
       },
       '& $passwordInputOuter': {
-        marginTop: 0
+        marginTop: 0,
       },
       '& .input': {
         minHeight: 32,
         '& input': {
-          padding: 8
-        }
-      }
+          padding: 8,
+        },
+      },
     },
     passwordInputOuter: {},
     isOptional: {
       '& $passwordInputOuter': {
-        marginTop: 0
-      }
-    }
+        marginTop: 0,
+      },
+    },
   });
 
 const styled = withStyles(styles);
@@ -112,7 +112,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       small,
       isOptional,
       passwordHelperText,
-      requestKeys
+      requestKeys,
     } = this.props;
 
     return (
@@ -121,7 +121,7 @@ class AccessPanel extends React.Component<CombinedProps> {
           {
             [classes.root]: true,
             [classes.small]: small,
-            [classes.isOptional]: isOptional
+            [classes.isOptional]: isOptional,
           },
           className
         )}

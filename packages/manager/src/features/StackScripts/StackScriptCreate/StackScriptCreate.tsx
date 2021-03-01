@@ -5,7 +5,7 @@ import {
   getStackScript,
   StackScript,
   StackScriptPayload,
-  updateStackScript
+  updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { equals, path } from 'ramda';
@@ -22,7 +22,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -35,7 +35,7 @@ import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { MapState } from 'src/store/types';
@@ -54,13 +54,13 @@ const styles = (theme: Theme) =>
       margin: '5px 0 0 -16px',
       '& svg': {
         width: 34,
-        height: 34
-      }
+        height: 34,
+      },
     },
     createTitle: {
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   });
 
 interface State {
@@ -90,7 +90,7 @@ type CombinedProps = Props &
 const errorResources = {
   label: 'A label',
   images: 'Images',
-  script: 'A script'
+  script: 'A script',
 };
 
 export class StackScriptCreate extends React.Component<CombinedProps, State> {
@@ -103,7 +103,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     revisionNote: '',
     isSubmitting: false,
     dialogOpen: false,
-    isLoadingStackScript: false
+    isLoadingStackScript: false,
   };
 
   static docs = [StackScripts];
@@ -114,9 +114,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.mounted = true;
     const {
       match: {
-        params: { stackScriptID }
+        params: { stackScriptID },
       },
-      euuid
+      euuid,
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
 
@@ -125,7 +125,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       // should request the stackscript.
       this.setState({ isLoadingStackScript: true });
       getStackScript(+stackScriptID)
-        .then(response => {
+        .then((response) => {
           if (response.id === valuesFromStorage.id) {
             this.setState({
               label: valuesFromStorage.label ?? '',
@@ -134,7 +134,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               script: valuesFromStorage.script ?? '',
               revisionNote: valuesFromStorage.rev_note ?? '',
               isLoadingStackScript: false,
-              apiResponse: response
+              apiResponse: response,
             });
           } else {
             this.setState({
@@ -144,11 +144,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               revisionNote: response.rev_note,
               script: response.script,
               apiResponse: response, // Saved for use when resetting the form
-              isLoadingStackScript: false
+              isLoadingStackScript: false,
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ errors: error, isLoadingStackScript: false });
         });
     } else if (valuesFromStorage.id === euuid) {
@@ -162,7 +162,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         description: valuesFromStorage.description ?? '',
         images: valuesFromStorage.images ?? [],
         script: valuesFromStorage.script ?? '',
-        revisionNote: valuesFromStorage.rev_note ?? ''
+        revisionNote: valuesFromStorage.rev_note ?? '',
       });
     }
   }
@@ -177,14 +177,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       description,
       script,
       images,
-      revisionNote: rev_note
+      revisionNote: rev_note,
     } = this.state;
     const {
       euuid,
       mode,
       match: {
-        params: { stackScriptID }
-      }
+        params: { stackScriptID },
+      },
     } = this.props;
 
     // Use the euuid if we're creating to avoid loading another user's data
@@ -197,7 +197,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       description,
       script,
       images,
-      rev_note
+      rev_note,
     });
   };
 
@@ -215,10 +215,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   handleChooseImage = (images: Item<string>[]) => {
-    const imageList = images.map(image => image.value);
+    const imageList = images.map((image) => image.value);
     this.setState(
       {
-        images: imageList
+        images: imageList,
       },
       this.saveStateToLocalStorage
     );
@@ -243,7 +243,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         label: payload?.label ?? '',
         images: payload?.images ?? [],
         description: payload?.description ?? '',
-        revisionNote: payload?.rev_note ?? ''
+        revisionNote: payload?.rev_note ?? '',
       },
       this.saveStateToLocalStorage
     );
@@ -257,7 +257,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState(
       () => ({
         isSubmitting: false,
-        errors
+        errors,
       }),
       () => {
         scrollErrorIntoView();
@@ -269,8 +269,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const {
       history,
       match: {
-        params: { stackScriptID }
-      }
+        params: { stackScriptID },
+      },
     } = this.props;
 
     return updateStackScript(+stackScriptID, payload)
@@ -281,7 +281,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         this.setState({ isSubmitting: false });
         this.resetAllFields(updatedStackScript);
         history.push('/stackscripts/account', {
-          successMessage: `${updatedStackScript.label} successfully updated`
+          successMessage: `${updatedStackScript.label} successfully updated`,
         });
       })
       .catch(this.handleError);
@@ -297,7 +297,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         this.setState({ isSubmitting: false });
         this.resetAllFields();
         history.push('/stackscripts/account', {
-          successMessage: `${stackScript.label} successfully created`
+          successMessage: `${stackScript.label} successfully created`,
         });
       })
       .catch(this.handleError);
@@ -311,7 +311,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       label,
       images,
       description,
-      rev_note: revisionNote
+      rev_note: revisionNote,
     };
   };
 
@@ -322,7 +322,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       label,
       images,
       description,
-      revisionNote
+      revisionNote,
     } = this.state;
     if (!apiResponse) {
       // Create flow; return true if there's any input anywhere
@@ -414,7 +414,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       classes,
       location,
       imagesData,
-      mode
+      mode,
     } = this.props;
     const {
       images,
@@ -424,7 +424,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       revisionNote,
       errors,
       isSubmitting,
-      isLoadingStackScript
+      isLoadingStackScript,
       // apiResponse
     } = this.state;
 
@@ -434,7 +434,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
     const availableImages = Object.values(imagesData).filter(
-      thisImage => !this.state.images.includes(thisImage.id)
+      (thisImage) => !this.state.images.includes(thisImage.id)
     );
 
     const shouldDisable =
@@ -467,8 +467,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               crumbOverrides={[
                 {
                   position: 1,
-                  label: 'StackScripts'
-                }
+                  label: 'StackScripts',
+                },
               ]}
               data-qa-create-stackscript-breadcrumb
             />
@@ -492,23 +492,23 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           mode={mode}
           images={{
             available: availableImages,
-            selected: images
+            selected: images,
           }}
           label={{
             value: label,
-            handler: this.handleLabelChange
+            handler: this.handleLabelChange,
           }}
           description={{
             value: description,
-            handler: this.handleDescriptionChange
+            handler: this.handleDescriptionChange,
           }}
           revision={{
             value: revisionNote,
-            handler: this.handleChangeRevisionNote
+            handler: this.handleChangeRevisionNote,
           }}
           script={{
             value: script,
-            handler: this.handleChangeScript
+            handler: this.handleChangeScript,
           }}
           onSelectChange={this.handleChooseImage}
           errors={errors}
@@ -548,7 +548,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
     userCannotModifyStackScript:
       isRestrictedUser(state) &&
-      grantsForThisStackScript?.permissions !== 'read_write'
+      grantsForThisStackScript?.permissions !== 'read_write',
   };
 };
 
@@ -568,7 +568,7 @@ const enhanced = compose<CombinedProps, Props>(
     ...ownProps,
     imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
-    imagesError
+    imagesError,
   })),
   styled,
   withRouter,

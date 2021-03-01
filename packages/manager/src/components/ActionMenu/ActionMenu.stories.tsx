@@ -16,29 +16,29 @@ class StoryActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        }
+        },
       },
       {
         title: 'Action 1',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        }
+        },
       },
       {
         title: 'Action 3',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        }
+        },
       },
       {
         title: 'Last Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        }
-      }
+        },
+      },
     ];
   };
 
@@ -57,14 +57,14 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        }
+        },
       },
       {
         title: 'Another Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        }
+        },
       },
       {
         title: 'Disabled Action',
@@ -73,8 +73,8 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
           closeMenu();
           e.preventDefault();
         },
-        tooltip: 'An explanation as to why this item is disabled'
-      }
+        tooltip: 'An explanation as to why this item is disabled',
+      },
     ];
   };
 
@@ -92,8 +92,8 @@ class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
         title: 'Single Action',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
-        }
-      }
+        },
+      },
     ];
   };
   render() {

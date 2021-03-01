@@ -3,7 +3,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import withLinodes, {
-  Props as LinodeProps
+  Props as LinodeProps,
 } from 'src/containers/withLinodes.container';
 
 interface Props {
@@ -21,14 +21,14 @@ interface WithLinodesProps
 
 type CombinedProps = Props & WithLinodesProps;
 
-const IPSelect: React.FC<CombinedProps> = props => {
+const IPSelect: React.FC<CombinedProps> = (props) => {
   const {
     linode,
     value,
     handleChange,
     linodesLoading,
     linodesError,
-    customizeOptions
+    customizeOptions,
   } = props;
 
   const ips: string[] = [];
@@ -44,7 +44,7 @@ const IPSelect: React.FC<CombinedProps> = props => {
   }
 
   // Create React-Select-friendly options.
-  let options: Item<string>[] = ips.map(ip => ({ value: ip, label: ip }));
+  let options: Item<string>[] = ips.map((ip) => ({ value: ip, label: ip }));
 
   // If a customizeOptions function was provided, apply it here.
   if (customizeOptions) {
@@ -61,7 +61,7 @@ const IPSelect: React.FC<CombinedProps> = props => {
 
   return (
     <Select
-      value={options.find(option => option.value === value.value)}
+      value={options.find((option) => option.value === value.value)}
       label="IP Address"
       options={options}
       isLoading={linodesLoading}
@@ -78,9 +78,9 @@ const enhanced = compose<CombinedProps, Props>(
     (ownProps, linodesData, linodesLoading, linodesError) => ({
       ...ownProps,
       // Find the Linode in Redux that corresponds with the given ID.
-      linode: linodesData.find(linode => linode.id === ownProps.linodeId),
+      linode: linodesData.find((linode) => linode.id === ownProps.linodeId),
       linodesLoading,
-      linodesError
+      linodesError,
     })
   )
 );

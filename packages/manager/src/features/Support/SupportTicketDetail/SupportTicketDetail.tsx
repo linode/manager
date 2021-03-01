@@ -4,7 +4,7 @@ import {
   getTicket,
   getTicketReplies,
   SupportReply,
-  SupportTicket
+  SupportTicket,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { compose, isEmpty, path, pathOr } from 'ramda';
@@ -22,7 +22,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -57,58 +57,58 @@ const styles = (theme: Theme) =>
   createStyles({
     title: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     breadcrumbs: {
       marginBottom: theme.spacing(2),
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     backButton: {
       margin: '-6px 0 0 -16px',
       '& svg': {
         width: 34,
-        height: 34
+        height: 34,
       },
-      padding: 0
+      padding: 0,
     },
     label: {
       marginLeft: 32,
       width: `calc(100% - (32px + ${theme.spacing(7)}px))`,
       [theme.breakpoints.up('sm')]: {
         marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
-        width: `calc(100% - (40px + ${theme.spacing(7)}px))`
-      }
+        width: `calc(100% - (40px + ${theme.spacing(7)}px))`,
+      },
     },
     ticketLabel: {
       position: 'relative',
-      top: -3
+      top: -3,
     },
     labelIcon: {
       paddingRight: 0,
       '& svg': {
         width: 40,
-        height: 40
+        height: 40,
       },
       '& .outerCircle': {
         fill: theme.bg.offWhiteDT,
-        stroke: theme.bg.main
+        stroke: theme.bg.main,
       },
       '& .circle': {
-        stroke: theme.bg.main
-      }
+        stroke: theme.bg.main,
+      },
     },
     listParent: {},
     status: {
       marginTop: 5,
       marginLeft: theme.spacing(1),
-      color: theme.color.white
+      color: theme.color.white,
     },
     open: {
-      backgroundColor: theme.color.green
+      backgroundColor: theme.color.green,
     },
     closed: {
-      backgroundColor: theme.color.red
-    }
+      backgroundColor: theme.color.red,
+    },
   });
 
 type RouteProps = RouteComponentProps<{ ticketId?: string }>;
@@ -138,7 +138,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       [],
       ['history', 'location', 'state', 'attachmentErrors'],
       this.props
-    )
+    ),
   };
 
   static docs: Linode.Doc[] = [
@@ -146,8 +146,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       title: 'Linode Support',
       src: 'https://linode.com/docs/platform/billing-and-support/support/',
       body: `Linode provides live technical support services 24 hours a day, 7 days a week. Linode Support ensures network availability, verifies that you can access your Linode, resolves performance issues with hosts, and works to fix any service-related issues you may be experiencing.
-      Linode also offers a number of resources you can refer to when troubleshooting application and server configuration issues. These issues are generally outside the scope of Linode Support, and the other resources Linode provides can help you find solutions for your questions.`
-    }
+      Linode also offers a number of resources you can refer to when troubleshooting application and server configuration issues. These issues are generally outside the scope of Linode Support, and the other resources Linode provides can help you find solutions for your questions.`,
+    },
   ];
 
   componentDidMount() {
@@ -179,7 +179,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     return (
       getTicketReplies(ticketId)
         // This is a paginated method but here we only need the list of replies
-        .then(response => response.data)
+        .then((response) => response.data)
     );
   };
 
@@ -188,9 +188,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.setState({
         ticket: {
           ...this.state.ticket!,
-          attachments: ticket.attachments
+          attachments: ticket.attachments,
         },
-        ticketCloseSuccess: false
+        ticketCloseSuccess: false,
       });
     });
   };
@@ -206,12 +206,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   ) => {
     /** Gets a unique list of gravatar IDs */
     const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [
-      ticketResponse.gravatar_id
+      ticketResponse.gravatar_id,
     ]);
 
     /** Send a request for the gravatar for each unique ID. */
     return Bluebird.reduce(uniqueGravatarIDs, requestAndMapGravatar, {}).then(
-      gravatarMap => {
+      (gravatarMap) => {
         /** We now have the gravatar map from the reducer above, and the replies from further up,
          * so we can merge them together.
          */
@@ -220,9 +220,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
             replies: replyResponse.map(matchGravatarURLToReply(gravatarMap)),
             ticket: {
               ...ticketResponse,
-              gravatarUrl: gravatarMap[ticketResponse.gravatar_id]
+              gravatarUrl: gravatarMap[ticketResponse.gravatar_id],
             },
-            loading: false
+            loading: false,
           });
         }
       }
@@ -234,26 +234,26 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.loadTicket(),
       this.loadReplies(),
       this.handleJoinedPromise
-    ).catch(err => {
+    ).catch((err) => {
       this.setState({
         loading: false,
-        errors: getAPIErrorOrDefault(err, 'Ticket not found.')
+        errors: getAPIErrorOrDefault(err, 'Ticket not found.'),
       });
     });
   };
 
   onCreateReplySuccess = (newReply: SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
-    getGravatarUrlFromHash(newReply.gravatar_id).then(url => {
+    getGravatarUrlFromHash(newReply.gravatar_id).then((url) => {
       const replyWithGravatar: ExtendedReply = {
         ...newReply,
-        gravatarUrl: url
+        gravatarUrl: url,
       };
       const updatedReplies = [...replies, ...[replyWithGravatar]];
       this.setState({
         replies: updatedReplies,
         ticketCloseSuccess: false,
-        attachmentErrors: []
+        attachmentErrors: [],
       });
     });
   };
@@ -312,7 +312,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   renderReplies = (replies: ExtendedReply[]) => {
     const { ticket } = this.state;
     return replies
-      .filter(reply => reply.description.trim() !== '')
+      .filter((reply) => reply.description.trim() !== '')
       .map((reply: ExtendedReply, idx: number) => {
         return (
           <ExpandableTicketPanel
@@ -335,7 +335,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       loading,
       replies,
       ticket,
-      ticketCloseSuccess
+      ticketCloseSuccess,
     } = this.state;
     const ticketId = this.props.match.params.ticketId;
     /*
@@ -367,7 +367,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         className={classNames({
           [classes.status]: true,
           [classes.open]: ticket.status === 'open' || ticket.status === 'new',
-          [classes.closed]: ticket.status === 'closed'
+          [classes.closed]: ticket.status === 'closed',
         })}
         label={ticket.status}
         component="div"
@@ -393,16 +393,16 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
                     // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
                     search: `type=${
                       ticket.status === 'closed' ? 'closed' : 'open'
-                    }`
-                  }
-                }
+                    }`,
+                  },
+                },
               ]}
               labelTitle={`#${ticket.id}: ${ticket.summary}`}
               labelOptions={{
                 subtitle: `${
                   ticket.status === 'closed' ? 'Closed' : 'Last updated'
                 } by ${ticket.updated_by} at ${formattedDate}`,
-                suffixComponent: <_Chip />
+                suffixComponent: <_Chip />,
               }}
               className={classes.breadcrumbs}
               data-qa-breadcrumb
@@ -467,7 +467,7 @@ const requestAndMapGravatar = (acc: any, id: string) => {
   return (
     getGravatarUrlFromHash(id)
       /* Map the response to a dict of { id: url }*/
-      .then(result => ({ ...acc, [id]: result }))
+      .then((result) => ({ ...acc, [id]: result }))
   );
 };
 
@@ -476,15 +476,15 @@ const styled = withStyles(styles);
 interface StateProps {
   profileUsername?: string;
 }
-const mapStateToProps: MapState<StateProps, {}> = state => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile)
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
+  profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 
 const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (
   reply: SupportReply
 ): ExtendedReply => ({
   ...reply,
-  gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap)
+  gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap),
 });
 
 export const connected = connect(mapStateToProps);

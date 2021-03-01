@@ -15,7 +15,7 @@ export interface Props {
 export const EnableObjectStorageModal: React.FC<Props> = ({
   open,
   onClose,
-  handleSubmit
+  handleSubmit,
 }) => {
   return (
     <ConfirmationDialog

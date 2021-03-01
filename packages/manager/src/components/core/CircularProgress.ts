@@ -1,5 +1,5 @@
 import CircularProgress, {
-  CircularProgressProps as _CircularProgressProps
+  CircularProgressProps as _CircularProgressProps,
 } from '@material-ui/core/CircularProgress';
 
 /* tslint:disable-next-line:no-empty-interface */

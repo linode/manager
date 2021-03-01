@@ -12,7 +12,7 @@ interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
 }
 
-const SMTPRestrictionText: React.FC<Props> = props => {
+const SMTPRestrictionText: React.FC<Props> = (props) => {
   const { account } = useAccount();
 
   // If there account was created before restrictions were put into place,

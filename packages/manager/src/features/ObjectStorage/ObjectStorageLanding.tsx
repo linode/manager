@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import {
   matchPath,
   RouteComponentProps,
-  useRouteMatch
+  useRouteMatch,
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
@@ -19,7 +19,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import bucketDrawerContainer, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/bucketDrawer.container';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
@@ -32,19 +32,19 @@ import { MODE } from './AccessKeyLanding/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
-const AccessKeyLanding = React.lazy(() =>
-  import('./AccessKeyLanding/AccessKeyLanding')
+const AccessKeyLanding = React.lazy(
+  () => import('./AccessKeyLanding/AccessKeyLanding')
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
   promo: {
-    marginBottom: theme.spacing() / 2
-  }
+    marginBottom: theme.spacing() / 2,
+  },
 }));
 
 type CombinedProps = DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
+export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { replace } = props.history;
   const [mode, setMode] = React.useState<MODE>('creating');
@@ -69,7 +69,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const { objectStorageClusters } = useObjectStorageClusters();
   const {
     objectStorageBuckets,
-    requestObjectStorageBuckets
+    requestObjectStorageBuckets,
   } = useObjectStorageBuckets();
 
   const createOrEditDrawer = useOpenClose();
@@ -80,12 +80,12 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     /* NB: These must correspond to the routes, inside the Switch */
     {
       title: 'Buckets',
-      routeName: `${props.match.url}/buckets`
+      routeName: `${props.match.url}/buckets`,
     },
     {
       title: 'Access Keys',
-      routeName: `${props.match.url}/access-keys`
-    }
+      routeName: `${props.match.url}/access-keys`,
+    },
   ];
 
   const openDrawer = (mode: MODE) => {
@@ -111,7 +111,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     // Once the OBJ Clusters have been loaded, request Buckets from each Cluster.
     if (clustersLoaded && !bucketsLoadingOrLoaded) {
       const clusterIds = objectStorageClusters.entities.map(
-        thisCluster => thisCluster.id
+        (thisCluster) => thisCluster.id
       );
 
       requestObjectStorageBuckets(clusterIds).catch(() => {
@@ -123,7 +123,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     clustersLoaded,
     bucketsLoadingOrLoaded,
     objectStorageClusters,
-    requestObjectStorageBuckets
+    requestObjectStorageBuckets,
   ]);
 
   React.useEffect(() => {
@@ -143,7 +143,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 
   const objPromotionalOffers = (
     flags.promotionalOffers ?? []
-  ).filter(promotionalOffer =>
+  ).filter((promotionalOffer) =>
     promotionalOffer.features.includes('Object Storage')
   );
 
@@ -158,7 +158,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
   const matchesAccessKeys = Boolean(
     matchPath(props.location.pathname, {
       path: '/object-storage/access-keys',
-      exact: true
+      exact: true,
     })
   );
 
@@ -192,14 +192,14 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
       />
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
       >
         <TabLinkList tabs={tabs} />
 
-        {objPromotionalOffers.map(promotionalOffer => (
+        {objPromotionalOffers.map((promotionalOffer) => (
           <PromotionalOfferCard
             key={promotionalOffer.name}
             {...promotionalOffer}
@@ -239,8 +239,8 @@ export default enhanced(ObjectStorageLanding);
 // ============================================================================
 const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
   button: {
-    ...theme.applyLinkStyles
-  }
+    ...theme.applyLinkStyles,
+  },
 }));
 
 export const BillingNotice: React.FC<{}> = React.memo(() => {

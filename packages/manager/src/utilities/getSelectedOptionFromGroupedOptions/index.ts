@@ -1,3 +1,1 @@
-export {
-  getSelectedOptionFromGroupedOptions as default
-} from './getSelectedOptionFromGroupedOptions';
+export { getSelectedOptionFromGroupedOptions as default } from './getSelectedOptionFromGroupedOptions';

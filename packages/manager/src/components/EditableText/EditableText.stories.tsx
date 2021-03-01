@@ -5,7 +5,7 @@ import EditableText from './EditableText';
 class InteractiveEditableText extends React.Component {
   mounted: boolean = false;
   state = {
-    text: 'Edit me!'
+    text: 'Edit me!',
   };
 
   componentWillUnmount() {

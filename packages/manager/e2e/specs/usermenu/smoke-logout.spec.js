@@ -14,13 +14,13 @@ describe('Log out Suite', () => {
 
   it('should not successfully navigate back to a manager app page', () => {
     browser.url(constants.routes.volumes);
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl().includes('returnTo%253D%252Fvolumes');
     }, constants.wait.normal);
   });
 
   it('should not contain a token in local storage', () => {
-    const tokenExists = browser.execute(function() {
+    const tokenExists = browser.execute(function () {
       if (!!localStorage['authentication/oauth-token']) {
         return true;
       }

@@ -11,7 +11,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -19,7 +19,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
   withNodeBalancerActions,
-  WithNodeBalancerActions
+  WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -31,19 +31,19 @@ type ClassNames = 'root' | 'title' | 'inner' | 'expPanelButton';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     title: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     inner: {
-      paddingBottom: theme.spacing(3)
+      paddingBottom: theme.spacing(3),
     },
     expPanelButton: {
       padding: 0,
-      marginTop: theme.spacing(2)
-    }
+      marginTop: theme.spacing(2),
+    },
   });
 
 interface Props {
@@ -68,20 +68,20 @@ type CombinedProps = Props & WithNodeBalancerActions & WithStyles<ClassNames>;
 
 const errorResources = {
   client_conn_throttle: 'client connection throttle',
-  label: 'label'
+  label: 'label',
 };
 
 class NodeBalancerSettings extends React.Component<CombinedProps, State> {
   static defaultFieldsStates = (props: CombinedProps) => ({
     client_conn_throttle: props.nodeBalancerClientConnThrottle,
-    label: props.nodeBalancerLabel
+    label: props.nodeBalancerLabel,
   });
 
   state: State = {
     errors: undefined,
     fields: NodeBalancerSettings.defaultFieldsStates(this.props),
     isSubmitting: false,
-    success: undefined
+    success: undefined,
   };
 
   handleLabelInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,8 +89,8 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     this.setState({
       fields: {
         ...fields,
-        label: e.target.value
-      }
+        label: e.target.value,
+      },
     });
   };
 
@@ -99,31 +99,31 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     this.setState({
       fields: {
         ...fields,
-        client_conn_throttle: controlClientConnectionThrottle(e.target.value)
-      }
+        client_conn_throttle: controlClientConnectionThrottle(e.target.value),
+      },
     });
   };
 
   onSubmitUpdateNodeBalancer = () => {
     const { label, client_conn_throttle } = this.state.fields;
     const {
-      nodeBalancerActions: { updateNodeBalancer }
+      nodeBalancerActions: { updateNodeBalancer },
     } = this.props;
 
     this.setState({
       errors: undefined,
       isSubmitting: true,
-      success: undefined
+      success: undefined,
     });
     const data = { label, client_conn_throttle };
     updateNodeBalancer({ nodeBalancerId: this.props.nodeBalancerId, ...data })
       .then(() => {
         this.setState({
           isSubmitting: false,
-          success: 'NodeBalancer settings updated successfully'
+          success: 'NodeBalancer settings updated successfully',
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           { isSubmitting: false, errors: getAPIErrorOrDefault(error) },
           () => {
@@ -164,7 +164,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">/ second</InputAdornment>
-                )
+                ),
               }}
               errorText={hasErrorFor('client_conn_throttle')}
               label="Client Connection Throttle"

@@ -10,16 +10,16 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 describe('LinodeRescue', () => {
   describe('volumes', () => {
-    const extendedDisks = disks.map(disk => {
+    const extendedDisks = disks.map((disk) => {
       return {
         ...disk,
-        _id: 'test-disk'
+        _id: 'test-disk',
       };
     });
-    const extendedVolumes = volumes.map(volume => {
+    const extendedVolumes = volumes.map((volume) => {
       return {
         ...volume,
-        _id: 'test-volume'
+        _id: 'test-volume',
       };
     });
 
@@ -31,7 +31,7 @@ describe('LinodeRescue', () => {
         classes={{
           root: '',
           title: '',
-          intro: ''
+          intro: '',
         }}
         linodeDisks={extendedDisks}
         linodeId={7843027}
@@ -73,7 +73,7 @@ describe('LinodeRescue', () => {
     const extendedDisks = disks.map((disk, idx) => {
       return {
         ...disk,
-        _id: `test-disk-${idx}`
+        _id: `test-disk-${idx}`,
       };
     });
 

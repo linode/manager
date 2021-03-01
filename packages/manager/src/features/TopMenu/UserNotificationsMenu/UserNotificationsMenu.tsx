@@ -2,7 +2,7 @@ import browser from 'browser-detect';
 import {
   Notification,
   NotificationSeverity,
-  NotificationType
+  NotificationType,
 } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,7 +12,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
@@ -26,7 +26,7 @@ type ClassNames = 'root' | 'dropDown' | 'hidden';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`
+      transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`,
     },
     dropDown: {
       position: 'absolute',
@@ -38,20 +38,20 @@ const styles = (theme: Theme) =>
       width: 250,
       maxHeight: 300,
       [theme.breakpoints.up('sm')]: {
-        width: 380
+        width: 380,
       },
       '& .notification': {
         margin: 0,
         ...theme.notificationList,
         ...theme.typography.h3,
         '& p': {
-          ...theme.typography.h3
-        }
-      }
+          ...theme.typography.h3,
+        },
+      },
     },
     hidden: {
-      ...theme.visually.hidden
-    }
+      ...theme.visually.hidden,
+    },
   });
 
 interface State {
@@ -97,18 +97,18 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     'maintenance',
     'notice',
     'migration_pending',
-    'migration_scheduled'
+    'migration_scheduled',
   ];
 
   state: State = {
     anchorEl: undefined,
     UserAgentNotification: true,
-    UserAgentNotificationWarning: false
+    UserAgentNotificationWarning: false,
   };
 
   componentDidMount() {
     this.setState({
-      UserAgentNotificationWarning: userAgentDetection()
+      UserAgentNotificationWarning: userAgentDetection(),
     });
   }
 
@@ -201,7 +201,7 @@ interface StateProps {
   notifications: Notification[];
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   notifications: (state.__resources.notifications.data || []).reduce(
     (result: Notification[], notification) => {
       /** Filter out any notifications that do not meet our expectations. */
@@ -221,8 +221,8 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
           ...result,
           {
             ...notification,
-            message: `An account administrator must accept the policies at login.linode.com/policies.`
-          }
+            message: `An account administrator must accept the policies at login.linode.com/policies.`,
+          },
         ];
       }
 
@@ -233,12 +233,12 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
           ...notification,
           message: notification.message
             .replace(notification.label, '')
-            .trimLeft()
-        }
+            .trimLeft(),
+        },
       ];
     },
     []
-  )
+  ),
 });
 
 const connected = connect(mapStateToProps);

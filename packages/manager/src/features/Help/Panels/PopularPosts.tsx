@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -25,31 +25,31 @@ const styles = (theme: Theme) =>
       paddingTop: theme.spacing(3),
       paddingBottom: theme.spacing(3),
       border: `1px solid ${theme.color.grey2}`,
-      margin: `${theme.spacing(6)}px 0`
+      margin: `${theme.spacing(6)}px 0`,
     },
     postCard: {
       height: '100%',
       paddingRight: theme.spacing(3),
-      paddingLeft: theme.spacing(3)
+      paddingLeft: theme.spacing(3),
     },
     wrapper: {},
     postTitle: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     post: {
       marginBottom: theme.spacing(1) / 2,
-      ...theme.typography.body1
+      ...theme.typography.body1,
     },
     postLink: {
       color: theme.cmrTextColors.linkActiveLight,
       '&:hover': {
         color: theme.palette.primary.main,
-        textDecoration: 'underline'
-      }
+        textDecoration: 'underline',
+      },
     },
     withSeparator: {
-      borderRight: `1px solid ${theme.palette.divider}`
-    }
+      borderRight: `1px solid ${theme.palette.divider}`,
+    },
   });
 
 type CombinedProps = WithStyles<ClassNames>;

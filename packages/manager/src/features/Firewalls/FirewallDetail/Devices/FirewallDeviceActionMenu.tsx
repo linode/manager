@@ -12,7 +12,7 @@ export interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const FirewallDeviceActionMenu: React.FC<CombinedProps> = props => {
+const FirewallDeviceActionMenu: React.FC<CombinedProps> = (props) => {
   const { deviceID, deviceLabel, triggerRemoveDevice } = props;
 
   return (

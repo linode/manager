@@ -11,7 +11,7 @@ export const useEvents = () => {
   const eventState = useSelector((state: ApplicationState) => state.events);
   const events = eventState.events;
   const inProgressIDs = Object.keys(eventState.inProgressEvents);
-  const inProgressEvents = events.filter(thisEvent =>
+  const inProgressEvents = events.filter((thisEvent) =>
     inProgressIDs.includes(String(thisEvent.id))
   );
 

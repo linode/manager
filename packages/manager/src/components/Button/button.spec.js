@@ -1,6 +1,6 @@
 const {
   navigateToStory,
-  executeInAllStories
+  executeInAllStories,
 } = require('../../../e2e/utils/storybook');
 
 describe('Button Suite', () => {
@@ -10,7 +10,7 @@ describe('Button Suite', () => {
     'Disabled',
     'Primary Dropdown',
     'Secondary Dropdown',
-    'Destructive'
+    'Destructive',
   ];
   const button = {
     generic: '[data-qa-button]',
@@ -18,14 +18,14 @@ describe('Button Suite', () => {
     secondary: '[data-qa-button="secondary"]',
     primaryDropdown: '[data-qa-button="Primary Dropdown"]',
     secondaryDropdown: '[data-qa-button="Secondary Dropdown"]',
-    destructive: '[data-qa-button="Destructive"]'
+    destructive: '[data-qa-button="Destructive"]',
   };
 
   it('should display buttons in each story', () => {
     executeInAllStories(component, childStories, () => {
       $(button.generic).waitForDisplayed();
       const buttons = $$(button.generic);
-      buttons.forEach(b =>
+      buttons.forEach((b) =>
         expect(b.isDisplayed())
           .withContext(`button should be displayed`)
           .toBe(true)
@@ -50,7 +50,7 @@ describe('Button Suite', () => {
     });
 
     it('should display primary buttons with white text', () => {
-      primaryButtons.forEach(button => {
+      primaryButtons.forEach((button) => {
         expect(button.getCSSProperty('color').parsed.hex.includes('#ffffff'))
           .withContext(`incorrect color`)
           .toBe(true);
@@ -58,7 +58,7 @@ describe('Button Suite', () => {
     });
 
     it('should have primary included in the class of each button', () => {
-      primaryButtons.forEach(button => {
+      primaryButtons.forEach((button) => {
         expect(button.getAttribute('class').includes('Primary'))
           .withContext(`missing Primary class`)
           .toBe(true);
@@ -78,7 +78,7 @@ describe('Button Suite', () => {
     });
 
     it('should display secondary buttons with transparent backgrounds', () => {
-      secondaryButtons.forEach(button => {
+      secondaryButtons.forEach((button) => {
         expect(button.getCSSProperty('background-color').parsed.hex)
           .withContext(`incorrect color background color`)
           .toBe('#000000');
@@ -86,7 +86,7 @@ describe('Button Suite', () => {
     });
 
     it('should have secondary included in class of each button', () => {
-      secondaryButtons.forEach(button => {
+      secondaryButtons.forEach((button) => {
         expect(button.getAttribute('class').includes('Secondary'))
           .withContext(`missing Secondary class`)
           .toBe(true);
@@ -104,7 +104,7 @@ describe('Button Suite', () => {
 
     it('should display dropdown buttons with carat', () => {
       primaryDropdowns = $$(button.primaryDropdown);
-      primaryDropdowns.forEach(d => {
+      primaryDropdowns.forEach((d) => {
         expect(d.$('svg').isDisplayed())
           .withContext(`svg should be displayed`)
           .toBe(true);
@@ -112,7 +112,7 @@ describe('Button Suite', () => {
     });
 
     it('should have primary included in class of each dropdown', () => {
-      primaryDropdowns.forEach(d => {
+      primaryDropdowns.forEach((d) => {
         expect(d.getAttribute('class').includes('Primary'))
           .withContext(`missing Primary class`)
           .toBe(true);
@@ -130,7 +130,7 @@ describe('Button Suite', () => {
 
     it('should display dropdown buttons with carat', () => {
       secondaryDropdowns = $$(button.secondaryDropdown);
-      secondaryDropdowns.forEach(s => {
+      secondaryDropdowns.forEach((s) => {
         expect(s.$('svg').isDisplayed())
           .withContext(`svg should be displayed`)
           .toBe(true);
@@ -138,7 +138,7 @@ describe('Button Suite', () => {
     });
 
     it('should have secondary included in class of each dropdown', () => {
-      secondaryDropdowns.forEach(d => {
+      secondaryDropdowns.forEach((d) => {
         expect(d.getAttribute('class').includes('Secondary'))
           .withContext(`missing Secondary class`)
           .toBe(true);
@@ -155,11 +155,11 @@ describe('Button Suite', () => {
 
     it('should display an enabled destructive button and a disabled button', () => {
       destructiveButtons = $$(button.generic);
-      const disabledButtons = destructiveButtons.filter(d =>
+      const disabledButtons = destructiveButtons.filter((d) =>
         d.getAttribute('class').includes('disabled')
       );
 
-      destructiveButtons.forEach(d => {
+      destructiveButtons.forEach((d) => {
         expect(d.isDisplayed())
           .withContext(`destructive button should be displayed`)
           .toBe(true);
@@ -169,7 +169,7 @@ describe('Button Suite', () => {
         .withContext(`incorrect number of destructive buttons`)
         .toBe(2);
 
-      disabledButtons.forEach(d => {
+      disabledButtons.forEach((d) => {
         expect(d.isDisplayed())
           .withContext(`disabled button should be displayed`)
           .toBe(true);

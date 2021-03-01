@@ -10,7 +10,7 @@ exports.constants = {
       process.env.DOCKER || process.env.BROWSERSTACK_USERNAME ? 40000 : 30000,
     minute:
       process.env.DOCKER || process.env.BROWSERSTACK_USERNAME ? 75000 : 60000,
-    custom: milliseconds => milliseconds
+    custom: (milliseconds) => milliseconds,
   },
   routes: {
     storybook: '/',
@@ -18,7 +18,7 @@ exports.constants = {
     create: {
       linode: '/linodes/create',
       nodebalancer: '/nodebalancers/create',
-      volume: 'volumes/create'
+      volume: 'volumes/create',
     },
     linodes: '/linodes',
     volumes: '/volumes',
@@ -27,7 +27,7 @@ exports.constants = {
     managed: '/managed',
     longview: {
       clients: '/longview/clients',
-      planDetails: 'longview/plan-details'
+      planDetails: 'longview/plan-details',
     },
     stackscripts: '/stackscripts',
     createStackScript: '/stackscripts/create',
@@ -35,7 +35,7 @@ exports.constants = {
     account: {
       billing: '/account/billing',
       users: '/account/users',
-      globalSettings: '/account/settings'
+      globalSettings: '/account/settings',
     },
     profile: {
       auth: '/profile/auth',
@@ -43,13 +43,13 @@ exports.constants = {
       tokens: '/profile/tokens',
       oauth: '/profile/clients',
       lish: '/profile/lish',
-      sshKeys: '/profile/keys'
+      sshKeys: '/profile/keys',
     },
     support: {
       landing: '/support',
       docs: '/documentation',
       community: '/community/questions/',
-      tickets: '/support/tickets'
-    }
-  }
+      tickets: '/support/tickets',
+    },
+  },
 };

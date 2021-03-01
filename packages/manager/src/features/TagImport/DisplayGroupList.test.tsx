@@ -8,7 +8,7 @@ const classes = { root: '', groupBox: '', groupItem: '' };
 const props = {
   classes,
   groups: ['group1', 'group2'],
-  entity: 'Linode' as 'Linode' | 'Domain'
+  entity: 'Linode' as 'Linode' | 'Domain',
 };
 
 const component = shallow(<DisplayGroupList {...props} />);

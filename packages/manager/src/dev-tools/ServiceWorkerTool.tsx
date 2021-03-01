@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { worker } from '../mocks/testBrowser';
 
-export const ServiceWorkerTool: React.FC<{}> = _ => {
+export const ServiceWorkerTool: React.FC<{}> = (_) => {
   const _workerActive =
     localStorage.getItem('devTools/mock-service-worker-enabled') ?? 'disabled';
   const workerActive = _workerActive === 'enabled';
@@ -32,7 +32,7 @@ export const ServiceWorkerTool: React.FC<{}> = _ => {
       <input
         type="checkbox"
         checked={workerActive}
-        onChange={e => handleToggleWorker(e)}
+        onChange={(e) => handleToggleWorker(e)}
         style={{ margin: 0 }}
       />
     </>

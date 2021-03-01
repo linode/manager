@@ -24,7 +24,7 @@ describe('Password Input Suite', () => {
   describe('should update the strength when complexity of password increases', () => {
     const testPasswords = ['weak', 'stronger1233', 'Stronger123#!'];
 
-    testPasswords.forEach(pass => {
+    testPasswords.forEach((pass) => {
       const expectedStrength = zxcvbn(pass).score;
       it(`check strength Indicator ${pass}, strength ${expectedStrength}`, () => {
         $(passwordInput).setValue(pass);
@@ -55,16 +55,10 @@ describe('Password Input Suite', () => {
     expect(isHidden())
       .withContext(`Password should be displayed`)
       .toBe('false');
-    expect(getType())
-      .withContext(`Incorrect type`)
-      .toBe('text');
+    expect(getType()).withContext(`Incorrect type`).toBe('text');
     // hide it again
     $('[data-qa-hide] svg').click();
-    expect(isHidden())
-      .withContext(`Password should be hidden`)
-      .toBe('true');
-    expect(getType())
-      .withContext(`Incorrect type`)
-      .toBe('password');
+    expect(isHidden()).withContext(`Password should be hidden`).toBe('true');
+    expect(getType()).withContext(`Incorrect type`).toBe('password');
   });
 });

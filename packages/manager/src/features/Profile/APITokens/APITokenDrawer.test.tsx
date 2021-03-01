@@ -12,7 +12,7 @@ const props = {
     accessCell: '',
     noneCell: '',
     readOnlyCell: '',
-    readWritecell: ''
+    readWritecell: '',
   },
   open: true,
   mode: 'create',
@@ -21,7 +21,7 @@ const props = {
   onCreate: jest.fn(),
   onEdit: jest.fn(),
   perms: basePerms,
-  permNameMap: basePermNameMap
+  permNameMap: basePermNameMap,
 };
 
 describe('API Token Drawer', () => {

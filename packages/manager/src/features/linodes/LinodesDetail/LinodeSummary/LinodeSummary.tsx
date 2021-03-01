@@ -3,7 +3,7 @@ import {
   getLinodeStatsByDate,
   Linode,
   LinodeType,
-  Stats
+  Stats,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
@@ -19,7 +19,7 @@ import {
   withStyles,
   WithStyles,
   WithTheme,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -37,7 +37,7 @@ import { isRecent } from 'src/utilities/isRecent';
 import {
   formatNumber,
   formatPercentage,
-  getMetrics
+  getMetrics,
 } from 'src/utilities/statMetrics';
 import NetworkGraph from './NetworkGraph';
 import StatsPanel from './StatsPanel';
@@ -57,33 +57,33 @@ const styles = (theme: Theme) =>
     chart: {
       position: 'relative',
       paddingTop: theme.spacing(2),
-      paddingLeft: theme.spacing(3)
+      paddingLeft: theme.spacing(3),
     },
     chartSelect: {
-      maxWidth: 150
+      maxWidth: 150,
     },
     graphControls: {
       display: 'flex',
       alignItems: 'center',
       marginTop: theme.spacing(0.5),
-      paddingLeft: theme.spacing()
+      paddingLeft: theme.spacing(),
     },
     graphGrids: {
       flexWrap: 'nowrap',
       margin: 0,
       [theme.breakpoints.down('sm')]: {
-        flexWrap: 'wrap'
-      }
+        flexWrap: 'wrap',
+      },
     },
     headerOuter: {
       [theme.breakpoints.up('md')]: {
         display: 'flex',
-        justifyContent: 'space-between'
-      }
+        justifyContent: 'space-between',
+      },
     },
     labelRangeSelect: {
-      paddingRight: '1em'
-    }
+      paddingRight: '1em',
+    },
   });
 
 interface LinodeContextProps {
@@ -120,7 +120,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   state: State = {
     stats: undefined,
     rangeSelection: '24',
-    dataIsLoading: false
+    dataIsLoading: false,
   };
 
   rangeSelectOptions: Item[] = [];
@@ -154,7 +154,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               .toFormat('LLL yyyy');
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
-        optionDisplay
+        optionDisplay,
       ]);
 
       if (testMonth === 1) {
@@ -168,10 +168,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       testDate = DateTime.fromObject({
         month: testMonth,
         year: testYear,
-        day: 1
+        day: 1,
       });
     } while (testDate >= creationFirstOfMonth);
-    this.rangeSelectOptions = options.map(option => {
+    this.rangeSelectOptions = options.map((option) => {
       return { label: option[1], value: option[0] };
     });
   }
@@ -199,7 +199,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     if (parseAPIDate(linodeCreated) > fiveMinutesAgo) {
       return this.setState({
         dataIsLoading: false,
-        isTooEarlyForGraphData: true
+        isTooEarlyForGraphData: true,
       });
     }
 
@@ -216,7 +216,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       req = getLinodeStatsByDate(linodeId, year, month);
     }
     req
-      .then(response => {
+      .then((response) => {
         if (!this.mounted) {
           return;
         }
@@ -226,10 +226,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           // Occasionally the last reading of each stats reading is incorrect, so we drop
           // the last element of each array in the stats response.
           stats: initAll(response),
-          dataIsLoading: false
+          dataIsLoading: false,
         });
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         if (!this.mounted) {
           return;
         }
@@ -240,7 +240,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         if (isRecent(linodeCreated, DateTime.local().toISO())) {
           return this.setState({
             dataIsLoading: false,
-            isTooEarlyForGraphData: true
+            isTooEarlyForGraphData: true,
           });
         }
 
@@ -283,16 +283,16 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               borderColor: 'transparent',
               backgroundColor: theme.graphs.cpu.percent,
               data,
-              label: 'CPU %'
-            }
+              label: 'CPU %',
+            },
           ]}
           legendRows={[
             {
               legendTitle: 'CPU %',
               legendColor: 'blue',
               data: metrics,
-              format
-            }
+              format,
+            },
           ]}
         />
       </div>
@@ -305,7 +305,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const data = {
       io: pathOr([], ['data', 'io', 'io'], stats),
-      swap: pathOr([], ['data', 'io', 'swap'], stats)
+      swap: pathOr([], ['data', 'io', 'swap'], stats),
     };
 
     const format = formatNumber;
@@ -321,24 +321,24 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               borderColor: 'transparent',
               backgroundColor: theme.graphs.diskIO.read,
               data: data.io,
-              label: 'I/O Rate'
+              label: 'I/O Rate',
             },
             {
               borderColor: 'transparent',
               backgroundColor: theme.graphs.diskIO.swap,
               data: data.swap,
-              label: 'Swap Rate'
-            }
+              label: 'Swap Rate',
+            },
           ]}
           legendRows={[
             {
               data: getMetrics(data.io),
-              format
+              format,
             },
             {
               data: getMetrics(data.swap),
-              format
-            }
+              format,
+            },
           ]}
         />
       </div>
@@ -357,7 +357,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       height: chartHeight,
       isTooEarlyForGraphData: Boolean(isTooEarlyForGraphData),
       timezone: this.props.timezone,
-      rangeSelection: this.state.rangeSelection
+      rangeSelection: this.state.rangeSelection,
     };
 
     if (!linode) {
@@ -422,7 +422,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeData: linode,
   linodeVolumes: linode._volumes,
-  linodeVolumesError: linode._volumesError
+  linodeVolumesError: linode._volumesError,
 }));
 
 interface WithTypesProps {
@@ -438,7 +438,7 @@ const withTypes = connect((state: ApplicationState, _ownProps) => ({
   timezone: getUserTimezone(state),
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
-  mostRecentEventTime: state.events.mostRecentEventTime
+  mostRecentEventTime: state.events.mostRecentEventTime,
 }));
 
 const enhanced = compose<CombinedProps, {}>(

@@ -1,5 +1,5 @@
 import Checkbox, {
-  CheckboxProps as _CheckboxProps
+  CheckboxProps as _CheckboxProps,
 } from '@material-ui/core/Checkbox';
 
 /* tslint:disable-next-line:no-empty-interface */

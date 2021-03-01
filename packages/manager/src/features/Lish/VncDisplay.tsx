@@ -36,7 +36,7 @@ class VncDisplay extends React.PureComponent<Props> {
     scale: 1,
     width: 1280,
     height: 720,
-    url: ''
+    url: '',
   };
 
   rfb: any;
@@ -98,7 +98,7 @@ class VncDisplay extends React.PureComponent<Props> {
       omit(['name', 'connectTimeout', 'url', 'width', 'height'], this.props),
       {
         encrypt: this.props.url.startsWith('wss:') || this.props.encrypt,
-        target: this.canvas
+        target: this.canvas,
       }
     );
 

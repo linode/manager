@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import {
   abuseTicketNotificationFactory,
-  notificationFactory
+  notificationFactory,
 } from 'src/factories/notification';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { AbuseTicketBanner } from './AbuseTicketBanner';
@@ -15,9 +15,9 @@ const makeMockStore = (notifications: Notification[]) => {
   return {
     __resources: {
       notifications: {
-        data: notifications
-      }
-    }
+        data: notifications,
+      },
+    },
   };
 };
 
@@ -25,7 +25,7 @@ describe('Abuse ticket banner', () => {
   it('should render a banner for an abuse ticket', () => {
     const { queryAllByText } = render(
       wrapWithTheme(<AbuseTicketBanner />, {
-        customStore: makeMockStore(abuseTicketNotificationFactory.buildList(1))
+        customStore: makeMockStore(abuseTicketNotificationFactory.buildList(1)),
       })
     );
     expect(queryAllByText(/an open abuse ticket/)).toHaveLength(1);
@@ -34,7 +34,7 @@ describe('Abuse ticket banner', () => {
   it('should aggregate multiple abuse tickets', () => {
     const { queryAllByText } = render(
       wrapWithTheme(<AbuseTicketBanner />, {
-        customStore: makeMockStore(abuseTicketNotificationFactory.buildList(2))
+        customStore: makeMockStore(abuseTicketNotificationFactory.buildList(2)),
       })
     );
     expect(queryAllByText(/2 open abuse tickets/)).toHaveLength(1);
@@ -44,7 +44,7 @@ describe('Abuse ticket banner', () => {
     const mockAbuseTicket = abuseTicketNotificationFactory.build();
     const { getByTestId } = render(
       wrapWithTheme(<AbuseTicketBanner />, {
-        customStore: makeMockStore([mockAbuseTicket])
+        customStore: makeMockStore([mockAbuseTicket]),
       })
     );
     const link = getByTestId('abuse-ticket-link');
@@ -63,8 +63,8 @@ describe('Abuse ticket banner', () => {
       const abuseTicketNotification = abuseTicketNotificationFactory.build();
       const tickets = filterAbuseTickets({
         notifications: {
-          data: [mockNotification, abuseTicketNotification]
-        }
+          data: [mockNotification, abuseTicketNotification],
+        },
       } as any);
       expect(tickets[0].label).toMatch(/abuse/);
     });

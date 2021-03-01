@@ -12,7 +12,7 @@ const props: Props = {
   variant: 'object',
   getAccess: mockGetAccess.mockResolvedValue({ acl: 'public-read' }),
   updateAccess: mockUpdateAccess.mockResolvedValue({}),
-  name: 'my-object-name'
+  name: 'my-object-name',
 };
 
 describe('AccessSelect', () => {
@@ -36,7 +36,7 @@ describe('AccessSelect', () => {
     await waitFor(() => {
       const aclSelect = screen.getByTestId('select');
       fireEvent.change(aclSelect, {
-        target: { value: 'private' }
+        target: { value: 'private' },
       });
 
       expect(screen.getByText('Private')).toHaveAttribute(

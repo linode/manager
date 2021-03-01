@@ -6,12 +6,12 @@ import UpdateContactInformationForm from './UpdateContactInformationForm';
 const useStyles = makeStyles(() => ({
   drawer: {
     '& .MuiDrawer-paper': {
-      overflowX: 'hidden'
+      overflowX: 'hidden',
     },
     '& .MuiGrid-root': {
-      marginBottom: 0
-    }
-  }
+      marginBottom: 0,
+    },
+  },
 }));
 
 export interface Props {
@@ -22,7 +22,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const BillingContactDrawer: React.FC<CombinedProps> = props => {
+export const BillingContactDrawer: React.FC<CombinedProps> = (props) => {
   const { open, onClose, focusEmail } = props;
 
   const classes = useStyles();

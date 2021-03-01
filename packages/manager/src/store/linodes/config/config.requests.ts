@@ -8,7 +8,7 @@ import {
   deleteLinodeConfig as _deleteLinodeConfig,
   getLinodeConfig as _getLinodeConfig,
   getLinodeConfigs as _getLinodeConfigs,
-  updateLinodeConfig as _updateLinodeConfig
+  updateLinodeConfig as _updateLinodeConfig,
 } from '@linode/api-v4/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { ThunkActionCreator } from 'src/store/types';
@@ -20,13 +20,13 @@ import {
   GetAllLinodeConfigsParams,
   getLinodeConfigActions,
   getLinodeConfigsPageActions,
-  updateLinodeConfigActions
+  updateLinodeConfigActions,
 } from './config.actions';
 import { Entity } from './config.types';
 
 const addLinodeIdToConfig = (linodeId: number) => (config: Config): Entity => ({
   ...config,
-  linode_id: linodeId
+  linode_id: linodeId,
 });
 
 export const createLinodeConfig = createRequestThunk(
@@ -38,9 +38,9 @@ export const createLinodeConfig = createRequestThunk(
 export const getLinodeConfigs = createRequestThunk(
   getLinodeConfigsPageActions,
   ({ linodeId }) =>
-    _getLinodeConfigs(linodeId).then(response => ({
+    _getLinodeConfigs(linodeId).then((response) => ({
       data: response.data.map(addLinodeIdToConfig(linodeId)),
-      results: response.results
+      results: response.results,
     }))
 );
 
@@ -66,7 +66,7 @@ export const deleteLinodeConfig = createRequestThunk(
 export const getAllLinodeConfigs: ThunkActionCreator<
   Promise<Entity[]>,
   GetAllLinodeConfigsParams
-> = params => async dispatch => {
+> = (params) => async (dispatch) => {
   const { linodeId } = params;
   const { started, done, failed } = getAllLinodeConfigsActions;
   dispatch(started(params));
@@ -81,8 +81,8 @@ export const getAllLinodeConfigs: ThunkActionCreator<
         params,
         result: {
           data: response.data.map(addLinodeIdToConfig(linodeId)),
-          results: response.results
-        }
+          results: response.results,
+        },
       })
     );
     return response.data;

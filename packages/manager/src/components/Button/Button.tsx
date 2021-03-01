@@ -22,45 +22,45 @@ export interface Props extends ButtonProps {
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes rotate': {
     from: {
-      transform: 'rotate(0deg)'
+      transform: 'rotate(0deg)',
     },
     to: {
-      transform: 'rotate(360deg)'
-    }
+      transform: 'rotate(360deg)',
+    },
   },
   root: {
     minWidth: '105px',
-    transition: 'none'
+    transition: 'none',
   },
   loading: {
     '& svg': {
       margin: '0 auto',
       width: `${theme.spacing(1) + 8}px !important`,
       height: `${theme.spacing(1) + 8}px !important`,
-      animation: '$rotate 2s linear infinite'
-    }
+      animation: '$rotate 2s linear infinite',
+    },
   },
   loadingText: {
-    marginRight: 8
+    marginRight: 8,
   },
   compact: {
     paddingLeft: theme.spacing(2) - 2,
     paddingRight: theme.spacing(2) - 2,
-    minWidth: '75px'
+    minWidth: '75px',
   },
   superCompact: {
     paddingLeft: 0,
-    paddingRight: 0
+    paddingRight: 0,
   },
   outline: {
     border: `1px solid ${theme.palette.primary.main}`,
     borderRadius: 1,
-    minHeight: 34
+    minHeight: 34,
   },
   reg: {
     display: 'flex',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 type CombinedProps = Props;
@@ -70,7 +70,7 @@ const getVariant = cond([
   [propEq('buttonType', 'secondary'), always('contained')],
   [propEq('buttonType', 'remove'), always('contained')],
   [propEq('buttonType', 'cancel'), always('contained')],
-  [() => true, always(undefined)]
+  [() => true, always(undefined)],
 ]);
 
 const getColor = cond([
@@ -79,13 +79,13 @@ const getColor = cond([
   [propEq('buttonType', 'remove'), always('primary')],
   [propEq('buttonType', 'destructive'), always('primary')],
   [propEq('buttonType', 'cancel'), always('secondary')],
-  [() => true, always(undefined)]
+  [() => true, always(undefined)],
 ]);
 
 // Add invariant warning if loading destructive cancel
 // Add invariant warning if destructive cancel
 
-const WrappedButton: React.FC<CombinedProps> = props => {
+const WrappedButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -117,14 +117,14 @@ const WrappedButton: React.FC<CombinedProps> = props => {
             [classes.compact]: compact,
             [classes.superCompact]: superCompact,
             [classes.outline]: outline,
-            disabled: props.disabled
+            disabled: props.disabled,
           },
           className
         )}
       >
         <span
           className={classNames({
-            [classes.reg]: true
+            [classes.reg]: true,
           })}
           data-qa-loading={loading}
         >

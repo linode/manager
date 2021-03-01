@@ -3,15 +3,15 @@ module.exports.readToken = () => {
   browser.call(() => {
     return browser.credStore
       .readToken(browser.options.testUser)
-      .then(t => (token = t));
+      .then((t) => (token = t));
   });
   return token;
 };
 
-module.exports.getToken = username => {
+module.exports.getToken = (username) => {
   let token = null;
   browser.call(() => {
-    return browser.credStore.readToken(username).then(t => (token = t));
+    return browser.credStore.readToken(username).then((t) => (token = t));
   });
   return token;
 };

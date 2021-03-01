@@ -63,8 +63,6 @@ export interface PaginationProps<T> extends State<T> {
   onDelete: () => void;
 }
 
-const asc: 'asc' = 'asc';
-
 export default (requestFn: PaginatedRequest, options: Options = {}) => (
   Component: React.ComponentType<any>
 ) => {
@@ -77,9 +75,9 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       pageSize: storage.pageSize.get() || 25,
       error: undefined,
       orderBy: options.orderBy,
-      order: options.order ?? asc,
+      order: options.order ?? ('asc' as Order),
       filter: {},
-      searching: false
+      searching: false,
     };
 
     mounted: boolean = false;
@@ -131,7 +129,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
         { page: this.state.page, page_size: this.state.pageSize },
         filters
       )
-        .then(response => {
+        .then((response) => {
           if (options.cb) {
             options.cb(this.props, response);
           }
@@ -145,11 +143,11 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
               loading: false,
               error: undefined,
               isSorting: false,
-              searching: false
+              searching: false,
             });
           }
         })
-        .catch(response => {
+        .catch((response) => {
           this.setState({ loading: false, error: response });
         });
     };
@@ -193,7 +191,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
         request: this.request,
         handleOrderChange: this.handleOrderChange,
         handleSearch: this.handleSearch,
-        onDelete: this.onDelete
+        onDelete: this.onDelete,
       });
     }
   };

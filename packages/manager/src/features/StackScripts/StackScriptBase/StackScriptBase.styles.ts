@@ -2,7 +2,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames =
@@ -19,15 +19,15 @@ const styles = (theme: Theme) =>
     loaderWrapper: {
       display: 'flex',
       justifyContent: 'center',
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
     emptyState: {
       color: theme.palette.text.primary,
-      textAlign: 'center'
+      textAlign: 'center',
     },
     table: {
       backgroundColor: theme.cmrBGColors.bgPaper,
-      overflow: 'scroll'
+      overflow: 'scroll',
     },
     searchWrapper: {
       display: 'flex',
@@ -42,8 +42,8 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
-      }
+        justifyContent: 'space-between',
+      },
     },
     searchBar: {
       backgroundColor: theme.color.white,
@@ -54,22 +54,22 @@ const styles = (theme: Theme) =>
         border: `1px solid ${theme.color.grey3}`,
         borderRadius: 0,
         minHeight: 'auto',
-        minWidth: 415
+        minWidth: 415,
       },
       '& > div': {
-        marginRight: 0
+        marginRight: 0,
       },
       '& > input': {
-        padding: theme.spacing()
+        padding: theme.spacing(),
       },
       '& + button': {
         paddingTop: 0,
-        paddingBottom: 0
-      }
+        paddingBottom: 0,
+      },
     },
     landing: {
       backgroundColor: `${theme.cmrBGColors.bgApp} !important`,
-      marginTop: -theme.spacing()
+      marginTop: -theme.spacing(),
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {
@@ -78,9 +78,9 @@ const styles = (theme: Theme) =>
       width: '100%',
       '& svg': {
         marginTop: 4,
-        transform: 'scale(0.8)'
-      }
-    }
+        transform: 'scale(0.8)',
+      },
+    },
   });
 
 export type StyleProps = WithStyles<ClassNames>;

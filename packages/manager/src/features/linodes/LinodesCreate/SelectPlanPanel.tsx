@@ -11,7 +11,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -30,7 +30,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { dcDisplayNames } from 'src/constants';
 import withRegions, {
-  DefaultProps as RegionsProps
+  DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
@@ -51,53 +51,53 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(3),
-      width: '100%'
+      width: '100%',
     },
     copy: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     disabledRow: {
       backgroundColor: theme.bg.tableHeader,
       cursor: 'not-allowed',
-      opacity: 0.4
+      opacity: 0.4,
     },
     headingCellContainer: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     headerCell: {
       borderTop: 'none !important',
       borderBottom: '1px solid #f4f5f6 !important',
       '&.emptyCell': {
-        borderRight: 'none'
+        borderRight: 'none',
       },
       '&:not(.emptyCell)': {
-        borderLeft: 'none !important'
+        borderLeft: 'none !important',
       },
       '&:last-child': {
-        paddingRight: 15
-      }
+        paddingRight: 15,
+      },
     },
     chip: {
       backgroundColor: theme.color.green,
       color: '#fff',
       textTransform: 'uppercase',
-      marginLeft: theme.spacing(2)
+      marginLeft: theme.spacing(2),
     },
     radioCell: {
       height: theme.spacing(6),
       width: '5%',
-      paddingRight: theme.spacing()
+      paddingRight: theme.spacing(),
     },
     gpuGuideLink: {
       '& a': {
-        color: theme.cmrTextColors.linkActiveLight
+        color: theme.cmrTextColors.linkActiveLight,
       },
       '& a:hover': {
-        color: '#3683dc'
-      }
-    }
+        color: '#3683dc',
+      },
+    },
   });
 
 interface Props {
@@ -117,19 +117,19 @@ interface Props {
 }
 
 const getNanodes = (types: ExtendedType[]) =>
-  types.filter(t => /nanode/.test(t.class));
+  types.filter((t) => /nanode/.test(t.class));
 
 const getStandard = (types: ExtendedType[]) =>
-  types.filter(t => /standard/.test(t.class));
+  types.filter((t) => /standard/.test(t.class));
 
 const getHighMem = (types: ExtendedType[]) =>
-  types.filter(t => /highmem/.test(t.class));
+  types.filter((t) => /highmem/.test(t.class));
 
 const getDedicated = (types: ExtendedType[]) =>
-  types.filter(t => /dedicated/.test(t.class));
+  types.filter((t) => /dedicated/.test(t.class));
 
 const getGPU = (types: ExtendedType[]) =>
-  types.filter(t => /gpu/.test(t.class));
+  types.filter((t) => /gpu/.test(t.class));
 
 type CombinedProps = Props & WithStyles<ClassNames> & RegionsProps;
 
@@ -144,8 +144,8 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   getRegionsWithGPU = () => {
     const regions = this.props.regionsData ?? [];
     const withGPU = regions
-      .filter(thisRegion => thisRegion.capabilities.includes('GPU Linodes'))
-      .map(thisRegion => dcDisplayNames[thisRegion.id]);
+      .filter((thisRegion) => thisRegion.capabilities.includes('GPU Linodes'))
+      .map((thisRegion) => dcDisplayNames[thisRegion.id]);
     return arrayToList(withGPU);
   };
 
@@ -155,7 +155,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       currentPlanHeading,
       disabled,
       classes,
-      isCreate
+      isCreate,
     } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
@@ -194,7 +194,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
             className={classnames({
               [classes.disabledRow]:
-                isSamePlan || planTooSmall || isDisabledClass
+                isSamePlan || planTooSmall || isDisabledClass,
             })}
           >
             <TableCell className={classes.radioCell}>
@@ -348,7 +348,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             </>
           );
         },
-        title: 'Shared CPU'
+        title: 'Shared CPU',
       });
       tabOrder.push('standard');
     }
@@ -366,7 +366,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             </>
           );
         },
-        title: 'Dedicated CPU'
+        title: 'Dedicated CPU',
       });
       tabOrder.push('dedicated');
     }
@@ -385,7 +385,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             </>
           );
         },
-        title: 'High Memory'
+        title: 'High Memory',
       });
       tabOrder.push('highmem');
     }
@@ -413,7 +413,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             </>
           );
         },
-        title: 'GPU'
+        title: 'GPU',
       });
       tabOrder.push('gpu');
     }
@@ -429,7 +429,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       header,
       types,
       currentPlanHeading,
-      selectedID
+      selectedID,
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
@@ -440,7 +440,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       'standard', // Use `standard` by default
       ['class'],
       types.find(
-        type => type.id === selectedID || type.heading === currentPlanHeading
+        (type) => type.id === selectedID || type.heading === currentPlanHeading
       )
     );
 

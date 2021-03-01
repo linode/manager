@@ -2,7 +2,7 @@ import { parseFirewallRuleError, sortPortString } from './shared';
 
 const generateError = (field: string) => ({
   reason: 'An error occurred.',
-  field
+  field,
 });
 
 describe('shared Firewall rule utilities', () => {

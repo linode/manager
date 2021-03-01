@@ -3,7 +3,7 @@ const { constants } = require('../../../constants');
 import {
   apiCreateLinode,
   apiDeleteAllLinodes,
-  timestamp
+  timestamp,
 } from '../../../utils/common';
 
 import ListLinodes from '../../../pageobjects/list-linodes';
@@ -80,7 +80,7 @@ describe('Linode Detail - Settings Suite', () => {
 
     it('should disable a notification threshold on toggle off', () => {
       const initialEnabledAlerts = $$('[data-qa-alert] :checked');
-      const alertLabels = Settings.alerts.map(a =>
+      const alertLabels = Settings.alerts.map((a) =>
         a.getAttribute('data-qa-alert')
       );
 
@@ -92,7 +92,7 @@ describe('Linode Detail - Settings Suite', () => {
     });
 
     it('should enable a notification on toggle on', () => {
-      const alertLabels = Settings.alerts.map(a =>
+      const alertLabels = Settings.alerts.map((a) =>
         a.getAttribute('data-qa-alert')
       );
       Settings.toggleAlert(alertLabels[0]);

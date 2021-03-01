@@ -63,7 +63,7 @@ class LinodeDetail extends Page {
     this.breadcrumbEditButton.click();
     this.breadcrumbEditableText.$('input').setValue(name);
     this.breadcrumbSaveEdit.click();
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return this.linodeLabel.getText() === name;
     }, constants.wait.normal);
   }
@@ -84,7 +84,7 @@ class LinodeDetail extends Page {
     if (powerState.includes('powerOff')) {
       this.dialogTitle.waitForDisplayed(constants.wait.normal);
       $('[data-qa-buttons] .secondary').click();
-      browser.waitUntil(function() {
+      browser.waitUntil(function () {
         return $('[data-qa-power-control="Offline"]').isDisplayed();
       }, constants.wait.minute * 2);
       return;

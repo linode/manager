@@ -11,7 +11,7 @@ const mapStateToProps: MapState<WithRecentEvent, { id: number }> = (
   state,
   props
 ) => ({
-  recentEvent: recentEventForLinode(props.id)(state)
+  recentEvent: recentEventForLinode(props.id)(state),
 });
 
 export default connect(mapStateToProps);

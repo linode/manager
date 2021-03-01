@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& td': {
       borderBottom: 'none',
       paddingTop: 0,
-      paddingBottom: 0
-    }
-  }
+      paddingBottom: 0,
+    },
+  },
 }));
 export interface Props {
   configs: Config[];
@@ -26,7 +26,7 @@ export interface Props {
   handleSelect: (id: number) => void;
 }
 
-export const Configs: React.FC<Props> = props => {
+export const Configs: React.FC<Props> = (props) => {
   const { configs, handleSelect, configSelection } = props;
 
   const classes = useStyles();
@@ -39,7 +39,7 @@ export const Configs: React.FC<Props> = props => {
         handlePageSizeChange,
         page,
         pageSize,
-        count
+        count,
       }) => {
         return (
           <div>

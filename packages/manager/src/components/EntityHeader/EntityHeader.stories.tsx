@@ -21,7 +21,7 @@ storiesOf('EntityHeader', module)
                 backgroundColor: '#00b159',
                 color: 'white',
                 fontSize: '1.1 rem',
-                padding: '10px'
+                padding: '10px',
               }}
               label={'2447 RUNNING'}
               component="span"
@@ -32,7 +32,7 @@ storiesOf('EntityHeader', module)
                 backgroundColor: '#ffb31a',
                 fontSize: '1.1 rem',
                 color: 'white',
-                padding: '10px'
+                padding: '10px',
               }}
               label={'46 PENDING'}
               component="span"
@@ -43,7 +43,7 @@ storiesOf('EntityHeader', module)
                 backgroundColor: '#9ea4ae',
                 color: 'white',
                 fontSize: '1.1 rem',
-                padding: '10px'
+                padding: '10px',
               }}
               label={'7 OFFLINE'}
               component="span"
@@ -69,7 +69,7 @@ storiesOf('EntityHeader', module)
               backgroundColor: '#00b159',
               color: 'white',
               fontSize: '1.1 rem',
-              padding: '10px'
+              padding: '10px',
             }}
             label={'RUNNING'}
             component="span"

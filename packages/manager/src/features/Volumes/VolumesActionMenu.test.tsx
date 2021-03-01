@@ -33,7 +33,7 @@ const props: Props = {
   handleAttach: jest.fn(),
   handleDelete: jest.fn(),
   handleDetach: jest.fn(),
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 describe('Volume action menu', () => {

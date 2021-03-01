@@ -20,15 +20,15 @@ export const startRequest: ActionCreator = () => ({ type: LOAD });
 
 export const handleError: ActionCreator = (error: APIError[]) => ({
   type: ERROR,
-  error
+  error,
 });
 
 export const handleSuccess: ActionCreator = (data: Notification[]) => ({
   type: SUCCESS,
-  data
+  data,
 });
 
 export const handleUpdate: ActionCreator = (data: Notification[]) => ({
   type: UPDATE,
-  data
+  data,
 });

@@ -19,30 +19,30 @@ export type ClassNames =
 export const styles = (theme: Theme) =>
   createStyles({
     link: {
-      color: theme.cmrTextColors.tableStatic
+      color: theme.cmrTextColors.tableStatic,
     },
     libRadio: {
       display: 'flex',
       flexWrap: 'wrap',
       height: '100%',
       alignItems: 'center',
-      width: 70
+      width: 70,
     },
     libRadioLabel: {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     libTitle: {
       [theme.breakpoints.down('sm')]: {
-        wordBreak: 'break-all'
-      }
+        wordBreak: 'break-all',
+      },
     },
     libDescription: {
       [theme.breakpoints.down('sm')]: {
-        fontSize: 12
+        fontSize: 12,
       },
       [theme.breakpoints.between('sm', 'lg')]: {
-        wordBreak: 'break-word'
-      }
+        wordBreak: 'break-word',
+      },
     },
     selectionGrid: {
       flexDirection: 'column',
@@ -51,14 +51,14 @@ export const styles = (theme: Theme) =>
         flexWrap: 'nowrap',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
-      }
+        alignItems: 'center',
+      },
     },
     stackScriptCell: {
-      width: '100%'
+      width: '100%',
     },
     stackScriptUsername: {
-      color: theme.color.grey1
+      color: theme.color.grey1,
     },
     detailsButton: {
       padding: 0,
@@ -67,20 +67,20 @@ export const styles = (theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(1),
         marginTop: 0,
-        width: 100
+        width: 100,
       },
       '&:hover, &:focus': {
-        backgroundColor: 'transparent'
-      }
+        backgroundColor: 'transparent',
+      },
     },
     chip: {
       '& .MuiChip-root:first-child': {
-        backgroundColor: theme.cmrBGColors.bgApp
-      }
-    }
+        backgroundColor: theme.cmrBGColors.bgApp,
+      },
+    },
   });
 
-const createTag: (images: string) => JSX.Element = v => {
+const createTag: (images: string) => JSX.Element = (v) => {
   const randomId = Math.floor(Math.random() * 1000);
   return (
     <Chip
@@ -94,7 +94,7 @@ const createTag: (images: string) => JSX.Element = v => {
 
 const createTags: (images: string[]) => JSX.Element[] = map(createTag);
 
-const createShowMore: (images: string[]) => JSX.Element = images => (
+const createShowMore: (images: string[]) => JSX.Element = (images) => (
   <ShowMore key={0} items={images} render={createTags} ariaItemType="images" />
 );
 

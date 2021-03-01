@@ -19,28 +19,28 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 40,
       padding: '10px 15px',
       '&:first-of-type': {
-        borderLeft: 'none'
+        borderLeft: 'none',
       },
       '&:last-of-type': {
-        borderRight: 'none'
+        borderRight: 'none',
       },
       '&:hover': {
         backgroundColor: '#3683dc',
         '& span': {
           color: '#ffffff',
           '& svg': {
-            color: '#ffffff !important'
-          }
-        }
-      }
-    }
+            color: '#ffffff !important',
+          },
+        },
+      },
+    },
   },
   noHover: {
     width: 'calc(100% - 65px)',
     '&:hover': {
       backgroundColor: `${theme.cmrBGColors.bgTableHeader} !important`,
-      cursor: 'default'
-    }
+      cursor: 'default',
+    },
   },
   stackscriptTitles: {
     width: '40%',
@@ -48,44 +48,44 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: '0 !important',
       left: '0 !important',
       width: '0 !important',
-      height: '0 !important'
+      height: '0 !important',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '50%'
-    }
+      width: '50%',
+    },
   },
   selectingStackscriptTitles: {
     paddingLeft: '10px !important',
-    width: 'calc(100% - 65px)'
+    width: 'calc(100% - 65px)',
   },
   deploys: {
     width: '13%',
     [theme.breakpoints.down('sm')]: {
-      width: '15%'
-    }
+      width: '15%',
+    },
   },
   revisions: {
-    width: '13%'
+    width: '13%',
   },
   tags: {
-    width: '17%'
+    width: '17%',
   },
   status: {
-    width: '5%'
+    width: '5%',
   },
   actionMenu: {
-    width: '10%'
+    width: '10%',
   },
   tr: {
-    height: 48
+    height: 48,
   },
   tableHead: {
     color: theme.cmrTextColors.tableHeader,
     top: 104,
     '& span': {
-      color: theme.cmrTextColors.tableHeader
-    }
-  }
+      color: theme.cmrTextColors.tableHeader,
+    },
+  },
 }));
 
 type SortOrder = 'asc' | 'desc';
@@ -101,13 +101,13 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const StackScriptTableHead: React.FC<CombinedProps> = props => {
+export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     currentFilterType,
     isSelecting,
     handleClickTableHeader,
-    sortOrder
+    sortOrder,
   } = props;
 
   const Cell: React.ComponentType<any> =
@@ -119,7 +119,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
           direction: sortOrder,
           active: currentFilterType === orderBy,
           label: orderBy,
-          handleClick: handleClickTableHeader
+          handleClick: handleClickTableHeader,
         }
       : {};
 
@@ -138,7 +138,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = props => {
           className={classNames({
             [classes.tableHead]: true,
             [classes.stackscriptTitles]: true,
-            [classes.selectingStackscriptTitles]: isSelecting
+            [classes.selectingStackscriptTitles]: isSelecting,
           })}
           colSpan={isSelecting ? 2 : 1}
           data-qa-stackscript-table-header

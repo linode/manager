@@ -7,15 +7,13 @@ describe('username', () => {
     cy.intercept('GET', '*/profile/logins').as('getLogin');
     cy.intercept('GET', '*/object-storage/clusters').as('getClusters');
     // cy.visitWithLogin(`/dashboard`);
-    getProfile().then(profile => {
+    getProfile().then((profile) => {
       const username = profile.body.username;
       cy.visitWithLogin(`account/users/${username}`);
       fbtVisible('Username');
       fbtVisible('Email');
       fbtVisible('Delete User');
-      getVisible('[id="username"]')
-        .clear()
-        .type(testText);
+      getVisible('[id="username"]').clear().type(testText);
       getVisible('[id="username"]').should('have.value', testText);
     });
   });

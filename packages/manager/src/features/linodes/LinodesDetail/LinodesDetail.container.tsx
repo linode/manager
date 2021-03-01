@@ -25,7 +25,7 @@ interface Props {
  * If we have recently requested all Linode data, we're good. If not,
  * we show a loading spinner until the requests are complete.
  */
-export const LinodesDetailContainer: React.FC<Props> = props => {
+export const LinodesDetailContainer: React.FC<Props> = (props) => {
   const { linodes } = useLinodes();
   const dispatch = useDispatch<ThunkDispatch>();
   const flags = useFlags();
@@ -52,7 +52,7 @@ export const LinodesDetailContainer: React.FC<Props> = props => {
 
   React.useEffect(() => {
     // Unconditionally request data for the Linode being viewed
-    dispatch(_getLinode({ linodeId: +linodeId })).catch(_ => null);
+    dispatch(_getLinode({ linodeId: +linodeId })).catch((_) => null);
   }, [linodeId, dispatch]);
 
   React.useEffect(() => {

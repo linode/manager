@@ -25,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const FirewallTable: React.FC<CombinedProps> = props => {
+const FirewallTable: React.FC<CombinedProps> = (props) => {
   const { devices, error, lastUpdated, loading, triggerRemoveDevice } = props;
 
   const _error =
@@ -44,7 +44,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Paper>
@@ -70,7 +70,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                       error={_error}
                       lastUpdated={lastUpdated}
                     >
-                      {paginatedAndOrderedData.map(thisDevice => (
+                      {paginatedAndOrderedData.map((thisDevice) => (
                         <FirewallDeviceRow
                           key={`device-row-${thisDevice.id}`}
                           deviceLabel={thisDevice.entity.label}

@@ -3,7 +3,7 @@ import { clamp, compose, filter, isNil, toString } from 'ramda';
 import {
   ExtendedNodeBalancerConfigNode,
   NodeBalancerConfigNodeFields,
-  NodeBalancerConfigFields
+  NodeBalancerConfigFields,
 } from './types';
 
 import defaultNumeric from 'src/utilities/defaultNumeric';
@@ -24,7 +24,7 @@ export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields 
   port: 80,
   weight: 100,
   mode: 'accept',
-  modifyStatus: 'new'
+  modifyStatus: 'new',
 });
 
 export const createNewNodeBalancerConfig = (
@@ -46,7 +46,7 @@ export const createNewNodeBalancerConfig = (
   ssl_key: undefined,
   stickiness: 'table',
   nodes: [createNewNodeBalancerConfigNode()],
-  modifyStatus: 'new'
+  modifyStatus: 'new',
 });
 
 export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
@@ -55,12 +55,12 @@ export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
   port: node.port,
   weight: +node.weight!,
   /* Force Node creation and updates to set mode to 'accept' */
-  mode: node.mode
+  mode: node.mode,
 });
 
 export const formatAddress = (node: ExtendedNodeBalancerConfigNode) => ({
   ...node,
-  address: `${node.address}:${node.port}`
+  address: `${node.address}:${node.port}`,
 });
 
 export const parseAddress = (node: NodeBalancerConfigNode) => {
@@ -69,7 +69,7 @@ export const parseAddress = (node: NodeBalancerConfigNode) => {
     return {
       ...node,
       address: match![1],
-      port: match![2]
+      port: match![2],
     };
   }
   return node;
@@ -87,7 +87,7 @@ export const transformConfigsForRequest = (
   return configs.map((config: NodeBalancerConfigFields) => {
     return filter(
       /* remove the (key: value) pairs that we set to undefined */
-      el => el !== undefined,
+      (el) => el !== undefined,
       {
         protocol:
           /*
@@ -136,7 +136,7 @@ export const transformConfigsForRequest = (
         nodebalancer_id: undefined,
         nodes_status: undefined,
         ssl_fingerprint: undefined,
-        ssl_commonname: undefined
+        ssl_commonname: undefined,
       }
     ) as any;
   }) as NodeBalancerConfigFields[];

@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { dcDisplayNames } from 'src/constants';
@@ -19,8 +19,8 @@ const styles = (theme: Theme) =>
   createStyles({
     emptyText: {
       padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   });
 
 interface Props {
@@ -36,7 +36,7 @@ class UserNotificationsList extends React.Component<CombinedProps, {}> {
       classes,
       notifications,
       closeMenu,
-      history: { push }
+      history: { push },
     } = this.props;
 
     if (notifications.length === 0) {
@@ -61,7 +61,7 @@ class UserNotificationsList extends React.Component<CombinedProps, {}> {
         label: interceptedNotification.label,
         message: interceptedNotification.message,
         severity: interceptedNotification.severity,
-        onClick
+        onClick,
       });
     });
   }
@@ -81,7 +81,7 @@ const interceptNotification = (notification: Notification): Notification => {
         'Could not find the DC name for the outage notification',
         {
           rawRegion: notification.entity.id,
-          convertedRegion
+          convertedRegion,
         }
       );
     }
@@ -94,7 +94,7 @@ const interceptNotification = (notification: Notification): Notification => {
         .replace('this facility', convertedRegion || 'one of our facilities'),
       message: notification.message
         .toLowerCase()
-        .replace('this facility', convertedRegion || 'one of our facilities')
+        .replace('this facility', convertedRegion || 'one of our facilities'),
     };
   }
 
@@ -115,7 +115,7 @@ const interceptNotification = (notification: Notification): Notification => {
           ? `Linode ${linodeAttachedToNotification}`
           : `This Linode`
       }
-          has scheduled maintenance`
+          has scheduled maintenance`,
     };
   }
 

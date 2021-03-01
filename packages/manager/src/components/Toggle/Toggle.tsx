@@ -12,7 +12,7 @@ interface Props {
 
 type CombinedProps = Props & SwitchProps;
 
-const LinodeSwitchControl: React.FC<CombinedProps> = props => {
+const LinodeSwitchControl: React.FC<CombinedProps> = (props) => {
   const { tooltipText, interactive, ...rest } = props;
 
   return (

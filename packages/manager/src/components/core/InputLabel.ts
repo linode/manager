@@ -1,5 +1,5 @@
 import InputLabel, {
-  InputLabelProps as _InputLabelProps
+  InputLabelProps as _InputLabelProps,
 } from '@material-ui/core/InputLabel';
 
 /* tslint:disable-next-line:no-empty-interface */

@@ -13,14 +13,14 @@ export const regionsRequestActions = actionCreator.async<
 >(`request`);
 
 type RequestRegionsThunk = ThunkActionCreator<Promise<Region[]>>;
-export const requestRegions: RequestRegionsThunk = () => dispatch => {
+export const requestRegions: RequestRegionsThunk = () => (dispatch) => {
   dispatch(regionsRequestActions.started());
   return getRegions()
-    .then(regions => {
+    .then((regions) => {
       dispatch(regionsRequestActions.done({ result: regions.data }));
       return regions;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(regionsRequestActions.failed({ error }));
       return error;
     });

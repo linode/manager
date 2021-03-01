@@ -8,7 +8,7 @@ import MultipleIPInput, { Props } from './MultipleIPInput';
 const baseProps: Props = {
   title: 'My Input',
   ips: [{ address: 'ip1' }, { address: 'ip2' }, { address: 'ip3' }],
-  onChange: jest.fn()
+  onChange: jest.fn(),
 };
 
 describe('MultipleIPInput', () => {
@@ -30,7 +30,7 @@ describe('MultipleIPInput', () => {
       { address: 'ip1' },
       { address: 'ip2' },
       { address: 'ip3' },
-      { address: '' }
+      { address: '' },
     ]);
   });
 
@@ -49,7 +49,7 @@ describe('MultipleIPInput', () => {
     fireEvent.click(closeButton);
     expect(baseProps.onChange).toHaveBeenCalledWith([
       { address: 'ip1' },
-      { address: 'ip3' }
+      { address: 'ip3' },
     ]);
   });
 });

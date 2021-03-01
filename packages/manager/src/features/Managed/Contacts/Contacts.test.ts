@@ -1,5 +1,5 @@
 import managedContacts, {
-  contactWithoutGroup
+  contactWithoutGroup,
 } from 'src/__data__/managedContacts';
 import { generateGroupsFromContacts } from './Contacts';
 
@@ -14,7 +14,7 @@ describe('groupsToContacts', () => {
   it('ignores contacts without a group', () => {
     const result = generateGroupsFromContacts([
       ...managedContacts,
-      contactWithoutGroup
+      contactWithoutGroup,
     ]);
     expect(result).toHaveLength(2);
   });

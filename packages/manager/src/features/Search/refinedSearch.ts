@@ -44,7 +44,7 @@ export const refinedSearch = (
       if (recursivelyTestItem(queryJSON, item)) {
         results.push({
           ...item,
-          data: { ...item.data, searchText: query } // add the original query to item.data
+          data: { ...item.data, searchText: query }, // add the original query to item.data
         });
       }
     });
@@ -55,10 +55,7 @@ export const refinedSearch = (
 };
 
 export const formatQuery = (query: string) => {
-  return query
-    .trim()
-    .replace(' && ', ' AND ')
-    .replace(' || ', ' OR ');
+  return query.trim().replace(' && ', ' AND ').replace(' || ', ' OR ');
 };
 
 // QueryJSON can contain either:
@@ -86,7 +83,7 @@ export const recursivelyTestItem = (
     (queryJSON.type === 'and' || queryJSON.type === 'or')
   ) {
     // Build an array of conditions for each value
-    const parsedValues = queryJSON.values.map(val =>
+    const parsedValues = queryJSON.values.map((val) =>
       recursivelyTestItem(val, item)
     );
 
@@ -117,7 +114,7 @@ export const testItem = (item: SearchableItem, query: string) => {
 
   const { fieldName, searchTerms, isNegated } = getQueryInfo(parsedQuery);
 
-  const matchedSearchTerms = searchTerms.map(searchTerm => {
+  const matchedSearchTerms = searchTerms.map((searchTerm) => {
     const isMatch = doesSearchTermMatchItemField(searchTerm, item, fieldName);
     return isNegated ? !isMatch : isMatch;
   });
@@ -164,7 +161,7 @@ export const doesSearchTermMatchItemField = (
 export const flattenSearchableItem = (item: SearchableItem) => ({
   label: item.label,
   type: item.entityType,
-  ...item.data
+  ...item.data,
 });
 
 export const ensureValueIsString = (value: string | any[]): string =>
@@ -186,7 +183,7 @@ export const getQueryInfo = (parsedQuery: any) => {
   return {
     searchTerms,
     fieldName,
-    isNegated
+    isNegated,
   };
 };
 
@@ -205,7 +202,7 @@ export const getRealEntityKey = (key: string): SearchField | string => {
     name: LABEL,
     title: LABEL,
     ip: IPS,
-    is: TYPE
+    is: TYPE,
   };
 
   return substitutions[key] || key;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -14,7 +14,7 @@ export interface Props extends Handlers {
   objectName: string;
 }
 
-export const ObjectActionMenu: React.FC<Props> = props => {
+export const ObjectActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -26,14 +26,14 @@ export const ObjectActionMenu: React.FC<Props> = props => {
       onClick: () => {
         const shouldOpenInNewTab = true;
         handleClickDownload(objectName, shouldOpenInNewTab);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         handleClickDelete(objectName);
-      }
-    }
+      },
+    },
   ];
 
   return (
@@ -45,7 +45,7 @@ export const ObjectActionMenu: React.FC<Props> = props => {
           ariaLabel={`Action menu for Object ${objectName}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

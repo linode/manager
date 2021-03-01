@@ -19,8 +19,8 @@ import ImageOption from './ImageOption';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
-  }
+    padding: theme.spacing(3),
+  },
 }));
 
 export type Variant = 'public' | 'private' | 'all';
@@ -88,11 +88,11 @@ export const imagesToGroupedItems = (images: Image[]) => {
       if (!group || group.length === 0) {
         return accum;
       }
-      return produce(accum, draft => {
+      return produce(accum, (draft) => {
         draft.push({
           label: thisGroup,
           options: group
-            .map(thisImage => {
+            .map((thisImage) => {
               const isDeprecated = thisImage.deprecated;
               const fullLabel =
                 thisImage.label + (isDeprecated ? ' (Deprecated)' : '');
@@ -102,17 +102,17 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 value: thisImage.id,
                 className: thisImage.vendor
                   ? `fl-${distroIcons[thisImage.vendor]}`
-                  : `fl-tux`
+                  : `fl-tux`,
               };
               return _option;
             })
-            .sort(sortByImageVersion)
+            .sort(sortByImageVersion),
         });
       });
     }, []);
 };
 
-export const ImageSelect: React.FC<Props> = props => {
+export const ImageSelect: React.FC<Props> = (props) => {
   const {
     disabled,
     error,
@@ -135,7 +135,7 @@ export const ImageSelect: React.FC<Props> = props => {
         .reason
     : undefined;
 
-  const filteredImages = images.filter(thisImage => {
+  const filteredImages = images.filter((thisImage) => {
     switch (variant) {
       case 'public':
         return thisImage.is_public;

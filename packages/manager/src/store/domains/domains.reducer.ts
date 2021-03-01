@@ -2,7 +2,7 @@ import { Domain } from '@linode/api-v4/lib/domains';
 import { Reducer } from 'redux';
 import {
   EntityError,
-  MappedEntityState2 as MappedEntityState
+  MappedEntityState2 as MappedEntityState,
 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
@@ -14,7 +14,7 @@ import {
   onGetAllSuccess,
   onGetPageSuccess,
   onStart,
-  setError
+  setError,
 } from '../store.helpers.tmp';
 import {
   createDomainActions,
@@ -24,7 +24,7 @@ import {
   getDomainsPageActions,
   updateDomainActions,
   upsertDomain,
-  upsertMultipleDomains
+  upsertMultipleDomains,
 } from './domains.actions';
 
 /**
@@ -52,7 +52,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError(
       {
-        read: error
+        read: error,
       },
       state
     );
@@ -65,7 +65,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       itemsById: updated,
-      results: Object.keys(updated).length
+      results: Object.keys(updated).length,
     };
   }
 
@@ -73,14 +73,14 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, upsertMultipleDomains)) {
     const { payload } = action;
     let updated = state.itemsById;
-    payload.forEach(thisDomain => {
+    payload.forEach((thisDomain) => {
       updated = addEntityRecord(updated, thisDomain);
     });
 
     return {
       ...state,
       itemsById: updated,
-      results: Object.keys(updated).length
+      results: Object.keys(updated).length,
     };
   }
 
@@ -102,7 +102,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError(
       {
-        create: error
+        create: error,
       },
       state
     );
@@ -121,7 +121,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError(
       {
-        update: error
+        update: error,
       },
       state
     );
@@ -139,7 +139,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError(
       {
-        delete: error
+        delete: error,
       },
       state
     );

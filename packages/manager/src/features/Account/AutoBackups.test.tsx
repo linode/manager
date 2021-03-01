@@ -17,7 +17,7 @@ describe('AutoBackups simple sanity check', () => {
       backups_enabled: false,
       onChange: jest.fn(),
       openBackupsDrawer: openDrawer,
-      hasLinodesWithoutBackups: true
+      hasLinodesWithoutBackups: true,
     };
     const res = renderWithTheme(<AutoBackups {...props} />);
     expect(res).toPassAxeCheck();

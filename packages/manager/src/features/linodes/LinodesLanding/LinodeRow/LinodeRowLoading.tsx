@@ -5,14 +5,14 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import {
   getProgressOrDefault,
-  linodeInTransition
+  linodeInTransition,
 } from 'src/features/linodes/transitions';
 
 type ClassNames = 'bodyRow' | 'status' | 'bodyCell';
@@ -22,19 +22,19 @@ const styles = (theme: Theme) =>
     bodyRow: {
       height: 'auto',
       '&:before': {
-        borderBottomColor: 'transparent'
-      }
+        borderBottomColor: 'transparent',
+      },
     },
     bodyCell: {
       border: 0,
-      paddingBottom: 0
+      paddingBottom: 0,
     },
     status: {
       textTransform: 'capitalize',
       marginBottom: theme.spacing(1),
       color: theme.palette.text.primary,
-      fontSize: '.92rem'
-    }
+      fontSize: '.92rem',
+    },
   });
 
 interface Props {
@@ -45,13 +45,13 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LinodeRowLoading: React.FC<CombinedProps> = props => {
+const LinodeRowLoading: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     linodeId,
     linodeStatus,
     linodeRecentEvent,
-    children
+    children,
   } = props;
 
   return (
@@ -77,7 +77,7 @@ export default styled(LinodeRowLoading);
 
 const ProgressDisplay: React.FC<{
   progress: null | number;
-}> = props => {
+}> = (props) => {
   const { progress } = props;
 
   return progress ? (

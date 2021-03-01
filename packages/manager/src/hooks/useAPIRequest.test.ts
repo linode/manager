@@ -4,10 +4,10 @@ import { useAPIRequest } from './useAPIRequest';
 const mockError = [{ reason: 'An error occurred.' }];
 
 const mockRequestSuccess = (): Promise<number> =>
-  new Promise(resolve => resolve(1));
+  new Promise((resolve) => resolve(1));
 
 const mockRequestWithDep = (n: number) => (): Promise<number> =>
-  new Promise(resolve => resolve(n));
+  new Promise((resolve) => resolve(n));
 
 const mockRequestFailure = (): Promise<number> =>
   new Promise((_, reject) => reject(mockError));

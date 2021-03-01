@@ -1,6 +1,6 @@
 import {
   WithStyles as _WithStyles,
-  WithTheme as _WithTheme
+  WithTheme as _WithTheme,
 } from '@material-ui/core/styles';
 import { SvgIconProps as _SVGIconProps } from '@material-ui/core/SvgIcon';
 import { CSSProperties as _CSSProperties } from '@material-ui/styles';
@@ -25,7 +25,7 @@ export {
   makeStyles,
   withStyles,
   withTheme,
-  useTheme
+  useTheme,
 } from '@material-ui/styles';
 
 export { createMuiTheme } from '@material-ui/core/styles';

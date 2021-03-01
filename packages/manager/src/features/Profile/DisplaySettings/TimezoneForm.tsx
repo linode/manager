@@ -9,7 +9,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -22,11 +22,11 @@ type ClassNames = 'root' | 'title';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      paddingTop: theme.spacing(2)
+      paddingTop: theme.spacing(2),
     },
     title: {
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   });
 
 interface Props {
@@ -79,11 +79,11 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     inputValue: '',
     submitting: false,
     success: undefined,
-    errors: this.props.errors
+    errors: this.props.errors,
   };
 
   getTimezone = (timezoneValue: string) => {
-    const idx = timezoneList.findIndex(el => {
+    const idx = timezoneList.findIndex((el) => {
       return el.value === timezoneValue;
     });
     return timezoneList[idx];
@@ -111,15 +111,15 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
           submitting: false,
           success: 'Account timezone updated.',
           updatedTimezone: null,
-          errors: undefined
+          errors: undefined,
         });
       })
-      .catch(e => {
+      .catch((e) => {
         this.setState(
           {
             submitting: false,
             success: undefined,
-            errors: e
+            errors: e,
           },
           () => {
             scrollErrorIntoView();
@@ -139,14 +139,14 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorFor(
       {
-        timezone: 'timezone'
+        timezone: 'timezone',
       },
       errors
     );
     const generalError = hasErrorFor('none');
     const timezoneError = hasErrorFor('timezone');
 
-    const defaultTimeZone = timezoneList.find(eachZone => {
+    const defaultTimeZone = timezoneList.find((eachZone) => {
       return eachZone.label === timezoneDisplay;
     });
 
@@ -158,7 +158,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
               backgroundColor: 'pink',
               padding: '1em',
               marginBottom: '0.5em',
-              textAlign: 'center'
+              textAlign: 'center',
             }}
             data-qa-admin-notice
           >

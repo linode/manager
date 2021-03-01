@@ -4,7 +4,7 @@ import {
   Entity,
   EntityMap,
   MappedEntityState,
-  ThunkActionCreator
+  ThunkActionCreator,
 } from 'src/store/types';
 import { AsyncActionCreators } from 'typescript-fsa';
 
@@ -23,7 +23,7 @@ export const onStart = <S>(state: S) =>
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
   state: S,
-  update: (e: E) => E = i => i
+  update: (e: E) => E = (i) => i
 ): S =>
   Object.assign({}, state, {
     loading: false,
@@ -32,7 +32,7 @@ export const onGetAllSuccess = <E extends Entity, S>(
     itemsById: items.reduce(
       (itemsById, item) => ({ ...itemsById, [item.id]: update(item) }),
       {}
-    )
+    ),
   });
 
 export const onError = <S = {}, E = APIError[] | undefined>(
@@ -51,7 +51,7 @@ export const createDefaultState = <
   loading: false,
   lastUpdated: 0,
   error: undefined,
-  ...override
+  ...override,
 });
 
 export const onDeleteSuccess = <E extends Entity, O = APIError[] | undefined>(
@@ -77,7 +77,7 @@ export const removeMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    items: keys(itemsById)
+    items: keys(itemsById),
   };
 };
 
@@ -93,7 +93,7 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    items: keys(itemsById)
+    items: keys(itemsById),
   };
 };
 
@@ -118,7 +118,7 @@ export const createRequestThunk = <Req extends any, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<Res>
 ): ThunkActionCreator<Promise<Res>, Req> => {
-  return (params: Req) => async dispatch => {
+  return (params: Req) => async (dispatch) => {
     const { started, done, failed } = actions;
 
     dispatch(started(params));
@@ -154,8 +154,8 @@ export const updateInPlace = <E extends Entity>(
     ...state,
     itemsById: {
       ...itemsById,
-      [id]: updated
-    }
+      [id]: updated,
+    },
   };
 };
 

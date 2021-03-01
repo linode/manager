@@ -16,7 +16,7 @@ export const generateHTMLFromString = (
 
     if (acc.length > 0) {
       // nth iteration after the first
-      return acc.map(eachValue => {
+      return acc.map((eachValue) => {
         if (typeof eachValue === 'string') {
           return wrapStringInLink(eachValue, text_to_replace, type, link);
         } else {
@@ -59,7 +59,7 @@ export const wrapStringInLink = (
    * iterate over the array and if we have a matched word, wrap
    * in an anchor tag or react-router link depending on the link type
    */
-  const arrayWithLink = sentenceAsArray.map(eachWord => {
+  const arrayWithLink = sentenceAsArray.map((eachWord) => {
     if (eachWord.match(new RegExp(textToReplace, 'gmi'))) {
       return type === 'external' ? (
         <a

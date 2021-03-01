@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.linkActiveLight,
     '&:hover, &:focus': {
       color: theme.palette.primary.main,
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   button: {
     ...theme.applyLinkStyles,
@@ -29,28 +29,28 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
       color: theme.palette.primary.main,
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   domain: {
-    width: '60%'
+    width: '60%',
   },
   domainRow: {
-    backgroundColor: theme.bg.white
+    backgroundColor: theme.bg.white,
   },
   domainCellContainer: {
     [theme.breakpoints.down('sm')]: {
-      textAlign: 'left'
-    }
+      textAlign: 'left',
+    },
   },
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   statusCell: {
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   actionCell: {
     display: 'flex',
@@ -61,13 +61,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     Explicitly stating this as the theme file is automatically adding padding to the last cell
     We can remove once we make the full switch to CMR styling
     */
-    paddingRight: '0 !important'
-  }
+    paddingRight: '0 !important',
+  },
 }));
 
 type CombinedProps = Domain & Handlers;
 
-const DomainTableRow: React.FC<CombinedProps> = props => {
+const DomainTableRow: React.FC<CombinedProps> = (props) => {
   const {
     domain,
     id,
@@ -77,7 +77,7 @@ const DomainTableRow: React.FC<CombinedProps> = props => {
     updated,
     onClone,
     onRemove,
-    onEdit
+    onEdit,
   } = props;
 
   const classes = useStyles();

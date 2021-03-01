@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -17,12 +17,12 @@ type ClassNames = 'helperText' | 'confirmationDialog';
 const styles = (theme: Theme) =>
   createStyles({
     helperText: {
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     confirmationDialog: {
       paddingBottom: 0,
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   });
 
 interface Props {
@@ -33,7 +33,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AccessKeyDisplayDialog: React.FC<CombinedProps> = props => {
+export const AccessKeyDisplayDialog: React.FC<CombinedProps> = (props) => {
   const { classes, objectStorageKey, isOpen, close } = props;
 
   // This should never happen, but just in case.

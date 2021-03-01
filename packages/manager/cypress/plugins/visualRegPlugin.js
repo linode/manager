@@ -11,7 +11,7 @@ function compareSnapshotsPlugin(args) {
     if (!fs.existsSync(expectedImage)) {
       console.error(`did not find ${expectedImage}`);
       resolve({
-        error: `The reference snapshot for this test cannot be found ${expectedImage}`
+        error: `The reference snapshot for this test cannot be found ${expectedImage}`,
       });
       return;
     } else {
@@ -20,15 +20,15 @@ function compareSnapshotsPlugin(args) {
     if (!fs.existsSync(actualImage)) {
       console.error(`did not find ${actualImage}`);
       resolve({
-        error: `The test snapshot for this test cannot be found ${actualImage}`
+        error: `The test snapshot for this test cannot be found ${actualImage}`,
       });
       return;
     } else {
       console.log(`found ${actualImage}`);
     }
 
-    Jimp.read(actualImage).then(imgActual => {
-      Jimp.read(expectedImage).then(imgExpected => {
+    Jimp.read(actualImage).then((imgActual) => {
+      Jimp.read(expectedImage).then((imgExpected) => {
         const wRatio = imgActual.bitmap.width / imgExpected.bitmap.width;
         const hRatio = imgActual.bitmap.height / imgExpected.bitmap.height;
 
@@ -58,8 +58,8 @@ function compareSnapshotsPlugin(args) {
         resolve({
           result: {
             percentage: diff.percent,
-            scaled: isScaled
-          }
+            scaled: isScaled,
+          },
         });
       });
     });
@@ -68,7 +68,7 @@ function compareSnapshotsPlugin(args) {
 
 function deleteVisualRegFiles(args) {
   const promises = args.files.map(
-    file =>
+    (file) =>
       new Promise((resolve, reject) => {
         const f = path.resolve(file);
         // console.log('file:'+f)
@@ -76,7 +76,7 @@ function deleteVisualRegFiles(args) {
           resolve({ path: f });
         }
         // console.log('file exists, deleting it');
-        fs.unlink(f, err => {
+        fs.unlink(f, (err) => {
           if (err) {
             // console.error('error deleting file', f);
             reject(err);

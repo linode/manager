@@ -1,6 +1,6 @@
 import {
   ManagedServiceMonitor,
-  MonitorStatus
+  MonitorStatus,
 } from '@linode/api-v4/lib/managed';
 import { monitorFactory } from 'src/factories/managed';
 
@@ -10,7 +10,7 @@ import {
   deleteServiceMonitorActions,
   disableServiceMonitorActions,
   enableServiceMonitorActions,
-  requestServicesActions
+  requestServicesActions,
 } from './managed.actions';
 import reducer, { defaultState } from './managed.reducer';
 
@@ -20,7 +20,7 @@ const addEntities = (entities: ManagedServiceMonitor[]) =>
   reducer(
     defaultState,
     requestServicesActions.done({
-      result: { data: entities, results: entities.length }
+      result: { data: entities, results: entities.length },
     })
   );
 
@@ -35,7 +35,7 @@ describe('Managed services reducer', () => {
     const newState = reducer(
       { ...defaultState, loading: true },
       requestServicesActions.done({
-        result: { data: monitors, results: monitors.length }
+        result: { data: monitors, results: monitors.length },
       })
     );
     expect(Object.values(newState.itemsById)).toEqual(monitors);
@@ -56,14 +56,14 @@ describe('Managed services reducer', () => {
   it('should handle a disable action', () => {
     const disabledMonitor = {
       ...monitors[0],
-      status: 'disabled' as MonitorStatus
+      status: 'disabled' as MonitorStatus,
     };
     const withEntities = addEntities(monitors);
     const newState = reducer(
       withEntities,
       disableServiceMonitorActions.done({
         params: { monitorID: monitors[0].id },
-        result: disabledMonitor
+        result: disabledMonitor,
       })
     );
     expect(Object.values(newState.itemsById)).toHaveProperty(
@@ -79,7 +79,7 @@ describe('Managed services reducer', () => {
       defaultState,
       disableServiceMonitorActions.failed({
         params: { monitorID: 12345 },
-        error: mockError
+        error: mockError,
       })
     );
     expect(newState.error).toHaveProperty('update', mockError);
@@ -91,7 +91,7 @@ describe('Managed services reducer', () => {
       withEntities,
       deleteServiceMonitorActions.done({
         params: { monitorID: monitors[0].id },
-        result: {}
+        result: {},
       })
     );
     expect(Object.keys(deletedState.itemsById)).not.toContain(monitors[0].id);
@@ -104,7 +104,7 @@ describe('Managed services reducer', () => {
       withEntities,
       deleteServiceMonitorActions.failed({
         error: mockError,
-        params: { monitorID: 12345 }
+        params: { monitorID: 12345 },
       })
     );
     expect(newState.error.delete).toEqual(mockError);
@@ -116,7 +116,7 @@ describe('Managed services reducer', () => {
       withEntities,
       enableServiceMonitorActions.done({
         params: { monitorID: monitors[0].id },
-        result: monitors[0]
+        result: monitors[0],
       })
     );
     expect(Object.values(enabledState.itemsById)[0]).toHaveProperty(
@@ -130,7 +130,7 @@ describe('Managed services reducer', () => {
       defaultState,
       enableServiceMonitorActions.failed({
         error: mockError,
-        params: { monitorID: 12345 }
+        params: { monitorID: 12345 },
       })
     );
     expect(newState.error!.update).toEqual(mockError);

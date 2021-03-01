@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type CSSClasses = 'chip' | 'label' | 'popover' | 'link';
@@ -23,22 +23,22 @@ const styles = (theme: Theme) =>
       lineHeight: 1,
       '&:hover, &.active': {
         backgroundColor: theme.palette.primary.main,
-        color: 'white'
+        color: 'white',
       },
       '&:focus': {
         backgroundColor: theme.bg.lightBlue,
-        outline: '1px dotted #999'
-      }
+        outline: '1px dotted #999',
+      },
     },
     label: {
       paddingLeft: 6,
-      paddingRight: 6
+      paddingRight: 6,
     },
     link: {
       color: `${theme.color.blueDTwhite} !important`,
       '&:hover': {
-        textDecoration: 'underline'
-      }
+        textDecoration: 'underline',
+      },
     },
     popover: {
       minWidth: 'auto',
@@ -47,18 +47,18 @@ const styles = (theme: Theme) =>
       overflowY: 'scroll',
       padding: theme.spacing(1),
       [theme.breakpoints.down('xs')]: {
-        maxWidth: 285
+        maxWidth: 285,
       },
       '&::-webkit-scrollbar': {
         webkitAppearance: 'none',
-        width: 7
+        width: 7,
       },
       '&::-webkit-scrollbar-thumb': {
         borderRadius: 4,
         backgroundColor: theme.color.grey2,
-        WebkitBoxShadow: '0 0 1px rgba(255,255,255,.5)'
-      }
-    }
+        WebkitBoxShadow: '0 0 1px rgba(255,255,255,.5)',
+      },
+    },
   });
 
 interface Props<T> {
@@ -72,13 +72,13 @@ export class ShowMore<T> extends React.Component<
   Props<T> & WithStyles<CSSClasses>
 > {
   state = {
-    anchorEl: undefined
+    anchorEl: undefined,
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     this.setState({
-      anchorEl: event.currentTarget
+      anchorEl: event.currentTarget,
     });
   };
 
@@ -97,7 +97,7 @@ export class ShowMore<T> extends React.Component<
           className={classNames(
             {
               [classes.chip]: true,
-              active: anchorEl
+              active: anchorEl,
             },
             'chip'
           )}
@@ -120,11 +120,11 @@ export class ShowMore<T> extends React.Component<
           onClose={this.handleClose}
           anchorOrigin={{
             vertical: 28,
-            horizontal: 'left'
+            horizontal: 'left',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left'
+            horizontal: 'left',
           }}
         >
           {render(items)}

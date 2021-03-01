@@ -8,7 +8,7 @@ import {
   makeStyles,
   Theme,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import withProfile from 'src/containers/profile.container';
@@ -19,8 +19,8 @@ const useStyles = makeStyles(() => ({
   stackScriptActionsWrapper: {
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 interface Props {
@@ -46,7 +46,7 @@ interface ProfileProps {
 
 type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
-const StackScriptActionMenu: React.FC<CombinedProps> = props => {
+const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -62,14 +62,14 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
     isPublic,
     username,
     category,
-    canAddLinodes
+    canAddLinodes,
   } = props;
 
   const readonlyProps = {
     disabled: !canModify,
     tooltip: !canModify
       ? "You don't have permissions to modify this StackScript"
-      : undefined
+      : undefined,
   };
 
   const actions = [
@@ -82,7 +82,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           ...readonlyProps,
           onClick: () => {
             history.push(`/stackscripts/${stackScriptID}/edit`);
-          }
+          },
         }
       : null,
     {
@@ -97,7 +97,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
         history.push(
           getStackScriptUrl(stackScriptUsername, stackScriptID, username)
         );
-      }
+      },
     },
     !isPublic
       ? {
@@ -105,7 +105,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           ...readonlyProps,
           onClick: () => {
             triggerMakePublic(stackScriptID, stackScriptLabel);
-          }
+          },
         }
       : null,
     !isPublic
@@ -114,9 +114,9 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
           ...readonlyProps,
           onClick: () => {
             triggerDelete(stackScriptID, stackScriptLabel);
-          }
+          },
         }
-      : null
+      : null,
   ].filter(Boolean) as Action[];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
@@ -125,7 +125,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.stackScriptActionsWrapper}>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}
@@ -157,7 +157,7 @@ const enhanced = compose<CombinedProps, Props>(
   withRouter,
   withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
     return {
-      username: path(['data', 'username'], profile)
+      username: path(['data', 'username'], profile),
     };
   })
 );

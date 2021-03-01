@@ -8,12 +8,12 @@ export const statusIconMap: Record<MonitorStatus, any> = {
   ok: Good,
   problem: Bad,
   disabled: Disabled,
-  pending: Pending
+  pending: Pending,
 };
 
 export const statusTextMap: Record<MonitorStatus, string> = {
   ok: 'Verified',
   problem: 'Failed',
   pending: 'Pending',
-  disabled: 'Disabled'
+  disabled: 'Disabled',
 };

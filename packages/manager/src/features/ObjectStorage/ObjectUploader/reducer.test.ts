@@ -1,6 +1,6 @@
 import {
   curriedObjectUploaderReducer as reducer,
-  ObjectUploaderState
+  ObjectUploaderState,
 } from './reducer';
 
 describe('reducer', () => {
@@ -10,7 +10,7 @@ describe('reducer', () => {
     numInProgress: 0,
     numFinished: 0,
     numCancelled: 0,
-    numErrors: 0
+    numErrors: 0,
   };
 
   const file1: File = {
@@ -21,7 +21,7 @@ describe('reducer', () => {
     slice: jest.fn(),
     arrayBuffer: jest.fn(),
     stream: jest.fn(),
-    text: jest.fn()
+    text: jest.fn(),
   };
   const file2: File = {
     name: 'my-file2',
@@ -31,14 +31,14 @@ describe('reducer', () => {
     slice: jest.fn(),
     arrayBuffer: jest.fn(),
     stream: jest.fn(),
-    text: jest.fn()
+    text: jest.fn(),
   };
 
   it('enqueues new files and updates the count', () => {
     const newState = reducer(baseState, {
       type: 'ENQUEUE',
       files: [file1, file2],
-      prefix: ''
+      prefix: '',
     });
     expect(newState.files).toHaveLength(2);
     expect(newState.numQueued).toBe(2);
@@ -52,14 +52,14 @@ describe('reducer', () => {
           file: file1,
           percentComplete: 0,
           status: 'IN_PROGRESS',
-          prefix: ''
-        }
-      ]
+          prefix: '',
+        },
+      ],
     };
     const newState = reducer(initialState, {
       type: 'ENQUEUE',
       files: [file1],
-      prefix: ''
+      prefix: '',
     });
 
     expect(newState.files[0].status).toBe('IN_PROGRESS');
@@ -73,14 +73,14 @@ describe('reducer', () => {
           file: file1,
           percentComplete: 0,
           status: 'FINISHED',
-          prefix: ''
-        }
-      ]
+          prefix: '',
+        },
+      ],
     };
     const newState = reducer(initialState, {
       type: 'ENQUEUE',
       files: [file1],
-      prefix: ''
+      prefix: '',
     });
 
     expect(newState.files[0].status).toBe('QUEUED');
@@ -91,13 +91,13 @@ describe('reducer', () => {
       {
         ...baseState,
         files: [
-          { status: 'QUEUED', percentComplete: 0, file: file1, prefix: '' }
-        ]
+          { status: 'QUEUED', percentComplete: 0, file: file1, prefix: '' },
+        ],
       },
       {
         type: 'UPDATE_FILES',
         filesToUpdate: [file1.name],
-        data: { status: 'IN_PROGRESS' }
+        data: { status: 'IN_PROGRESS' },
       }
     );
     expect(newState.files[0].status).toBe('IN_PROGRESS');

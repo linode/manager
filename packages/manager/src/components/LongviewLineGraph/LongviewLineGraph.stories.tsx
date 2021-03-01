@@ -17,20 +17,22 @@ const mockData: DataSet[] = [
     label: 'Volumes',
     borderColor: 'red',
     backgroundColor: 'rgba(211, 76, 151, 0.68)',
-    data: [[1537979728, 100], [1637979728, 200], [1737979728, 500]] as [
-      number,
-      number
-    ][]
+    data: [
+      [1537979728, 100],
+      [1637979728, 200],
+      [1737979728, 500],
+    ] as [number, number][],
   },
   {
     label: 'Linodes',
     borderColor: 'blue',
     backgroundColor: 'rgba(76, 161, 211, 0.68)',
-    data: [[1537979728, 1000], [1637979728, 2000], [1737979728, 5000]] as [
-      number,
-      number
-    ][]
-  }
+    data: [
+      [1537979728, 1000],
+      [1637979728, 2000],
+      [1737979728, 5000],
+    ] as [number, number][],
+  },
 ];
 
 const Example: React.FC<{}> = () => {
@@ -38,7 +40,7 @@ const Example: React.FC<{}> = () => {
     <div
       style={{
         padding: '1em',
-        width: '100%'
+        width: '100%',
       }}
     >
       <LongviewLineGraph

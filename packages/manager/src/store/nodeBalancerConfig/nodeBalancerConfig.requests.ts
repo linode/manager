@@ -3,7 +3,7 @@ import {
   deleteNodeBalancerConfig as _deleteNodeBalancerConfig,
   getNodeBalancerConfigs as _getNodeBalancerConfigs,
   NodeBalancerConfig,
-  updateNodeBalancerConfig as _updateNodeBalancerConfig
+  updateNodeBalancerConfig as _updateNodeBalancerConfig,
 } from '@linode/api-v4/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -12,7 +12,7 @@ import {
   createNodeBalancerConfigActions,
   deleteNodeBalancerConfigActions,
   getAllNodeBalancerConfigsActions,
-  updateNodeBalancerConfigActions
+  updateNodeBalancerConfigActions,
 } from './nodeBalancerConfig.actions';
 
 const getNodeBalancerConfigs = (nodeBalancerId: number) =>
@@ -38,18 +38,18 @@ export const updateNodeBalancerConfig = createRequestThunk(
 export const deleteNodeBalancerConfig: ThunkActionCreator<
   Promise<{}>,
   { nodeBalancerConfigId: number; nodeBalancerId: number }
-> = params => dispatch => {
+> = (params) => (dispatch) => {
   const { nodeBalancerConfigId, nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerConfigActions;
 
   dispatch(started(params));
 
   return _deleteNodeBalancerConfig(nodeBalancerId, nodeBalancerConfigId)
-    .then(response => {
+    .then((response) => {
       dispatch(done({ params, result: response }));
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(failed({ params, error }));
       return Promise.reject(error);
     });

@@ -9,7 +9,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ProductNotifications: React.FC<CombinedProps> = props => {
+const ProductNotifications: React.FC<CombinedProps> = (props) => {
   const { text, severity } = props;
   const level = severityLevelMap[severity] ?? 'warning';
   return React.createElement(Notice, { flag: true, [level]: true }, text);
@@ -18,7 +18,7 @@ const ProductNotifications: React.FC<CombinedProps> = props => {
 const severityLevelMap = {
   minor: 'warning',
   major: 'warning',
-  critical: 'error'
+  critical: 'error',
 };
 
 export default ProductNotifications;

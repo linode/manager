@@ -1,12 +1,12 @@
 import {
   deleteNodeBalancerByLabel,
   makeNodeBalLabel,
-  testNodeBalTag
+  testNodeBalTag,
 } from '../../support/api/nodebalancers';
 import {
   makeLinodeLabel,
   createLinode,
-  deleteLinodeById
+  deleteLinodeById,
 } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
@@ -14,20 +14,17 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
   cy.get('[data-qa-deploy-linode]').click();
 };
-const createNodeBalancerWithUI = nodeBal => {
+const createNodeBalancerWithUI = (nodeBal) => {
   cy.visitWithLogin('/nodebalancers/create');
   fbtVisible('NodeBalancer Settings');
-  getVisible('[id="nodebalancer-label"]')
-    .click()
-    .clear()
-    .type(nodeBal.label);
+  getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(testNodeBalTag);
   // this will create the NB in newark, where the default Linode was created
   containsClick(selectRegionString).type('new {enter}');
@@ -41,10 +38,10 @@ const createNodeBalancerWithUI = nodeBal => {
 describe('create NodeBalancer', () => {
   it('creates a nodebal - positive', () => {
     // create a linode in NW where the NB will be created
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       const nodeBal = {
         label: makeNodeBalLabel(),
-        linodePrivateIp: linode.ipv4[1]
+        linodePrivateIp: linode.ipv4[1],
       };
       // catch request
       cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
@@ -58,12 +55,12 @@ describe('create NodeBalancer', () => {
     });
   });
   it('API error Handling', () => {
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // catch request
       cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
       createNodeBalancerWithUI({
         label: 'cy-test-dfghjk^uu7',
-        linodePrivateIp: linode.ipv4[1]
+        linodePrivateIp: linode.ipv4[1],
       });
       fbtVisible(`Label can't contain special characters or spaces.`);
       getVisible('[id="nodebalancer-label"]')
@@ -79,7 +76,7 @@ describe('create NodeBalancer', () => {
       cy.wait('@createNodeBalancer')
         .its('response.body')
         .should('deep.equal', {
-          errors: [{ field: 'configs[0].stickiness', reason: errMessage }]
+          errors: [{ field: 'configs[0].stickiness', reason: errMessage }],
         });
       fbtVisible(errMessage);
       deleteLinodeById(linode.id);

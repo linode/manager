@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
     position: 'relative',
     '& pre': {
-      backgroundColor: theme.bg.tableHeader
-    }
+      backgroundColor: theme.bg.tableHeader,
+    },
   },
   expButton: {
     position: 'absolute',
@@ -21,16 +21,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: 0,
     left: 'auto',
     '& svg': {
-      stroke: theme.cmrTextColors.tableHeader
-    }
+      stroke: theme.cmrTextColors.tableHeader,
+    },
   },
   toggle: {
     height: 22,
-    width: 22
+    width: 22,
   },
   expand: {
-    transform: 'rotate(180deg)'
-  }
+    transform: 'rotate(180deg)',
+  },
 }));
 
 interface Props {
@@ -38,7 +38,7 @@ interface Props {
   open?: boolean;
 }
 
-const TicketDetailText: React.FC<Props> = props => {
+const TicketDetailText: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);

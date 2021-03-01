@@ -24,7 +24,7 @@ describe('Setup Tests Suite', () => {
 
     // it should wait for linodes to be removed
     browser.waitUntil(
-      function() {
+      function () {
         browser.refresh();
         $('[data-qa-add-new-menu-button]').WaitForDisplayed();
         $('[data-qa-circle-progress]').WaitForDisplayed(

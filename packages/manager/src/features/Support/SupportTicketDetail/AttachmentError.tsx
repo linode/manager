@@ -12,7 +12,7 @@ const getText = (fileName: string, reason: string) => {
   return `Error attaching ${fileName}: ${reason}`;
 };
 
-const AttachmentError: React.FC<CombinedProps> = props => {
+const AttachmentError: React.FC<CombinedProps> = (props) => {
   const { fileName, reason } = props;
   return <Notice error text={getText(fileName, reason)} />;
 };

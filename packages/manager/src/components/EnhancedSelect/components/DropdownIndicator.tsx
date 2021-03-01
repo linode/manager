@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'enhancedSelectDropdown';
@@ -21,8 +21,8 @@ const styles = (theme: Theme) =>
       marginTop: 0,
       transition: 'color 225ms ease-in-out',
       marginRight: '4px',
-      pointerEvents: 'none'
-    }
+      pointerEvents: 'none',
+    },
   });
 
 interface Props extends IndicatorProps<any> {}

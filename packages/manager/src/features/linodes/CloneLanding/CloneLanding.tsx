@@ -5,7 +5,7 @@ import {
   Config,
   Disk,
   Linode,
-  LinodeStatus
+  LinodeStatus,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { intersection, pathOr } from 'ramda';
@@ -15,7 +15,7 @@ import {
   matchPath,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
@@ -43,38 +43,38 @@ import Details from './Details';
 import {
   attachAssociatedDisksToConfigs,
   curriedCloneLandingReducer,
-  defaultState
+  defaultState,
 } from './utilities';
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
-const LinodesDetailHeader = React.lazy(() =>
-  import('../LinodesDetail/LinodesDetailHeader')
+const LinodesDetailHeader = React.lazy(
+  () => import('../LinodesDetail/LinodesDetailHeader')
 );
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   paper: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0`
+    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0`,
   },
   appBar: {
     '& > div': {
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   outerContainer: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    paddingBottom: theme.spacing(2)
+    paddingBottom: theme.spacing(2),
   },
   diskContainer: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
   },
   title: {
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 interface WithLinodesProps {
@@ -88,7 +88,7 @@ type CombinedProps = RouteComponentProps<{}> &
   WithLinodesProps &
   DispatchProps;
 
-export const CloneLanding: React.FC<CombinedProps> = props => {
+export const CloneLanding: React.FC<CombinedProps> = (props) => {
   const {
     configs,
     disks,
@@ -96,7 +96,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     region,
     requestDisks,
     linodeId,
-    linodesData
+    linodesData,
   } = props;
 
   const classes = useStyles();
@@ -108,12 +108,12 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     // These must correspond to the routes inside the Switch
     {
       title: 'Configuration Profiles',
-      routeName: `${props.match.url}/configs`
+      routeName: `${props.match.url}/configs`,
     },
     {
       title: 'Disks',
-      routeName: `${props.match.url}/disks`
-    }
+      routeName: `${props.match.url}/disks`,
+    },
   ];
 
   // Helper function for the <Tabs /> component
@@ -139,15 +139,15 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
    * (benchmarks: https://jsperf.com/json-stringify-vs-ramda-equals/1) or to
    * simply check the length of disks and configs, which could lead to edge-case bugs.
    */
-  const stringifiedConfigIds = JSON.stringify(configs.map(c => c.id));
-  const stringifiedDiskIds = JSON.stringify(disks.map(d => d.id));
+  const stringifiedConfigIds = JSON.stringify(configs.map((c) => c.id));
+  const stringifiedDiskIds = JSON.stringify(disks.map((d) => d.id));
 
   // Update configs and disks if they change
   React.useEffect(() => {
     dispatch({
       type: 'syncConfigsDisks',
       configs,
-      disks
+      disks,
     });
     // We can't use `configs` and `disks` as deps, since they are arrays.
     // Instead we use a serialized representation of their IDs.
@@ -156,7 +156,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
   const queryParams = React.useMemo(() => getParamsFromUrl(location.search), [
-    location.search
+    location.search,
   ]);
 
   // Toggle config if a valid configId is specified as a query param.
@@ -199,26 +199,26 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   const clearAll = () => dispatch({ type: 'clearAll' });
 
   // The configs we know about in our configSelection state.
-  const configsInState = configs.filter(eachConfig =>
+  const configsInState = configs.filter((eachConfig) =>
     state.configSelection.hasOwnProperty(eachConfig.id)
   );
   // The configs that are selected.
   const selectedConfigs = configsInState.filter(
-    eachConfig => state.configSelection[eachConfig.id].isSelected
+    (eachConfig) => state.configSelection[eachConfig.id].isSelected
   );
   // IDs of selected configs.
-  const selectedConfigIds = selectedConfigs.map(eachConfig => eachConfig.id);
+  const selectedConfigIds = selectedConfigs.map((eachConfig) => eachConfig.id);
 
   // The disks we know about in our diskSelection state.
-  const disksInState = disks.filter(eachDisk =>
+  const disksInState = disks.filter((eachDisk) =>
     state.diskSelection.hasOwnProperty(eachDisk.id)
   );
   // The disks that are selected.
   const selectedDisks = disksInState.filter(
-    eachDisk => state.diskSelection[eachDisk.id].isSelected
+    (eachDisk) => state.diskSelection[eachDisk.id].isSelected
   );
   // IDs of selected disks.
-  const selectedDiskIds = selectedDisks.map(eachDisk => eachDisk.id);
+  const selectedDiskIds = selectedDisks.map((eachDisk) => eachDisk.id);
 
   const handleClone = () => {
     // The "Clone" button should be disabled if there's no Linode selected,
@@ -261,7 +261,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         cloneLinode(sourceLinodeId, {
           linode_id: destinationLinodeId,
           configs: selectedConfigIds,
-          disks: selectedDiskIds
+          disks: selectedDiskIds,
         });
     }
 
@@ -275,7 +275,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         requestDisks(linodeId);
         history.push(`/linodes/${linodeId}/configurations`);
       })
-      .catch(errors => {
+      .catch((errors) => {
         setSubmitting(false);
         setErrors(errors);
       });
@@ -284,7 +284,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   const errorMap = getErrorMap(['disk_size'], state.errors);
 
   const selectedLinode = linodesData.find(
-    eachLinode => eachLinode.id === state.selectedLinodeId
+    (eachLinode) => eachLinode.id === state.selectedLinodeId
   );
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
   return (
@@ -312,7 +312,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
             <Tabs
               index={Math.max(
-                tabs.findIndex(tab => matches(tab.routeName)),
+                tabs.findIndex((tab) => matches(tab.routeName)),
                 0
               )}
               onChange={navToURL}
@@ -361,7 +361,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             // If a selected disk is associated with a selected config, we
             // don't want it to appear in the Details component, since
             // cloning the config takes precedence.
-            selectedDisks={disksInState.filter(disk => {
+            selectedDisks={disksInState.filter((disk) => {
               return (
                 // This disk has been individually selected ...
                 state.diskSelection[disk.id].isSelected &&
@@ -412,7 +412,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   region: linode.region,
   label: linode.label,
   linodeStatus: linode.status,
-  linodeEvents: linode._events
+  linodeEvents: linode._events,
 }));
 
 interface DispatchProps {
@@ -424,7 +424,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     requestDisks: (linodeId: number) =>
-      dispatch(getAllLinodeDisks({ linodeId }))
+      dispatch(getAllLinodeDisks({ linodeId })),
   };
 };
 
@@ -436,7 +436,7 @@ const enhanced = compose<CombinedProps, {}>(
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,
-    linodesError
+    linodesError,
   })),
   withRouter
 );

@@ -6,15 +6,15 @@ import InformationDialog from 'src/components/InformationDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   token: {
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   label: {
     color: theme.cmrTextColors.headlineStatic,
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
   },
   entities: {
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 export interface Props {
@@ -24,7 +24,7 @@ export interface Props {
   entities?: TransferEntities;
 }
 
-export const TransferDetailsDialog: React.FC<Props> = props => {
+export const TransferDetailsDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { isOpen, onClose, token, entities } = props;
 

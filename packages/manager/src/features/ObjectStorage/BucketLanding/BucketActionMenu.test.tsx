@@ -3,13 +3,13 @@ import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { BucketActionMenu } from './BucketActionMenu';
 
-window.matchMedia = jest.fn().mockImplementation(query => {
+window.matchMedia = jest.fn().mockImplementation((query) => {
   return {
     matches: true,
     media: query,
     onchange: null,
     addListener: jest.fn(),
-    removeListener: jest.fn()
+    removeListener: jest.fn(),
   };
 });
 
@@ -19,7 +19,7 @@ const props = {
   onRemove: mockOnRemove,
   onDetails: jest.fn(),
   label: '',
-  cluster: ''
+  cluster: '',
 };
 
 describe('BucketActionMenu', () => {

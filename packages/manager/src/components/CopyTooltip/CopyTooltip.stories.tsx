@@ -7,7 +7,7 @@ class Example extends React.Component {
     return (
       <div
         style={{
-          margin: '3.5em'
+          margin: '3.5em',
         }}
       >
         Hello World

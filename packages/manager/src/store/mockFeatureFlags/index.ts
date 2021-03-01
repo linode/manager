@@ -21,7 +21,7 @@ export const reducer: Reducer<MockFeatureFlagState> = (
   if (isType(action, setMockFeatureFlags)) {
     return {
       ...state,
-      ...action.payload
+      ...action.payload,
     };
   }
   return state;

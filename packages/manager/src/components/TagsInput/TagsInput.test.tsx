@@ -41,7 +41,7 @@ describe('TagsInput', () => {
 
     await waitFor(() =>
       expect(onChange).toHaveBeenCalledWith([
-        { label: 'tag-2', value: 'tag-2' }
+        { label: 'tag-2', value: 'tag-2' },
       ])
     );
   });

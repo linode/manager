@@ -3,26 +3,26 @@ import {
   isEventRelevantToLinode,
   isEventRelevantToLinodeAsSecondaryEntity,
   isPrimaryEntity,
-  isSecondaryEntity
+  isSecondaryEntity,
 } from './event.selectors';
 
 describe('event selector helpers', () => {
   describe('isEventRelevantToLinode', () => {
     const event0 = eventFactory.build({
       action: 'linode_create',
-      entity: entityFactory.build({ id: 0 })
+      entity: entityFactory.build({ id: 0 }),
     });
     const event1 = eventFactory.build({
       action: 'linode_create',
-      entity: entityFactory.build({ id: 1 })
+      entity: entityFactory.build({ id: 1 }),
     });
     const event2 = eventFactory.build({
       action: 'linode_create',
-      secondary_entity: entityFactory.build({ id: 1 })
+      secondary_entity: entityFactory.build({ id: 1 }),
     });
     const event3 = eventFactory.build({
       action: 'linode_clone',
-      secondary_entity: entityFactory.build({ id: 1 })
+      secondary_entity: entityFactory.build({ id: 1 }),
     });
     it("returns `true` when the linodeId is the event's entity ID, or if it's the event's secondary_entity ID and the event is relevant", () => {
       expect(isEventRelevantToLinode(event0, 0)).toBe(true);
@@ -34,7 +34,7 @@ describe('event selector helpers', () => {
 
   describe('isPrimaryEntity', () => {
     const event = eventFactory.build({
-      entity: entityFactory.build({ id: 1 })
+      entity: entityFactory.build({ id: 1 }),
     });
     it("returns `true` when the linodeId matches the event's entity ID", () => {
       expect(isPrimaryEntity(event, 0)).toBe(false);
@@ -44,7 +44,7 @@ describe('event selector helpers', () => {
 
   describe('isSecondaryEntity', () => {
     const event = eventFactory.build({
-      secondary_entity: entityFactory.build({ id: 1 })
+      secondary_entity: entityFactory.build({ id: 1 }),
     });
     it("returns `true` when the linodeId matches the event's secondary_entity ID", () => {
       expect(isSecondaryEntity(event, 0)).toBe(false);
@@ -54,10 +54,10 @@ describe('event selector helpers', () => {
 
   describe('isEventRelevantToLinodeAsSecondaryEntity', () => {
     const linodeCreateEvent = eventFactory.build({
-      action: 'linode_create'
+      action: 'linode_create',
     });
     const linodeCloneEvent = eventFactory.build({
-      action: 'linode_clone'
+      action: 'linode_clone',
     });
     it('returns `true` if the event type is relevant to Linodes as secondary entities', () => {
       expect(isEventRelevantToLinodeAsSecondaryEntity(linodeCreateEvent)).toBe(

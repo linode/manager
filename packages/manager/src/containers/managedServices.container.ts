@@ -1,6 +1,6 @@
 import {
   ManagedServiceMonitor,
-  ManagedServicePayload
+  ManagedServicePayload,
 } from '@linode/api-v4/lib/managed';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
@@ -13,7 +13,7 @@ import {
   disableServiceMonitor as _disableServiceMonitor,
   enableServiceMonitor as _enableServiceMonitor,
   requestManagedServices as _requestManagedServices,
-  updateServiceMonitor as _updateServiceMonitor
+  updateServiceMonitor as _updateServiceMonitor,
 } from 'src/store/managed/managed.requests';
 import { EntityError } from 'src/store/types';
 
@@ -46,7 +46,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   enableServiceMonitor: (monitorID: number) =>
     dispatch(_enableServiceMonitor({ monitorID })),
   updateServiceMonitor: (params: UpdateServicePayload) =>
-    dispatch(_updateServiceMonitor(params))
+    dispatch(_updateServiceMonitor(params)),
 });
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -79,6 +79,6 @@ export default <TInner extends {}, TOuter extends {}>(
       monitors,
       managedLoading,
       managedError,
-      lastUpdated
+      lastUpdated,
     };
   }, mapDispatchToProps);

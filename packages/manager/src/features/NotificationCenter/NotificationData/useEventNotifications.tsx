@@ -15,7 +15,7 @@ const unwantedEvents: EventAction[] = [
   'credit_card_updated',
   'profile_update',
   'ticket_attachment_upload',
-  'volume_update'
+  'volume_update',
 ];
 
 export const useEventNotifications = () => {
@@ -23,21 +23,21 @@ export const useEventNotifications = () => {
   const context = React.useContext(notificationContext);
 
   const _events = events.filter(
-    thisEvent => !unwantedEvents.includes(thisEvent.action)
+    (thisEvent) => !unwantedEvents.includes(thisEvent.action)
   );
 
   const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
 
   const allEvents = [
-    ...inProgress.map(thisEvent =>
+    ...inProgress.map((thisEvent) =>
       formatProgressEventForDisplay(thisEvent, context.closeDrawer)
     ),
-    ...completed.map(thisEvent =>
+    ...completed.map((thisEvent) =>
       formatEventForDisplay(thisEvent, context.closeDrawer)
-    )
+    ),
   ];
 
-  return allEvents.filter(thisAction =>
+  return allEvents.filter((thisAction) =>
     Boolean(thisAction.body)
   ) as NotificationItem[];
 };
@@ -48,7 +48,7 @@ const formatEventForDisplay = (
 ): NotificationItem => ({
   id: `event-${event.id}`,
   body: <RenderEvent event={event} onClose={onClose} />,
-  countInTotal: !event.seen
+  countInTotal: !event.seen,
 });
 
 const formatProgressEventForDisplay = (
@@ -57,7 +57,7 @@ const formatProgressEventForDisplay = (
 ): NotificationItem => ({
   id: `progress-event-${event.id}`,
   body: <RenderProgressEvent event={event} onClose={onClose} />,
-  countInTotal: !event.seen
+  countInTotal: !event.seen,
 });
 
 export default useEventNotifications;

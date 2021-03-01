@@ -4,7 +4,7 @@ import {
   getClick,
   containsClick,
   getVisible,
-  containsVisible
+  containsVisible,
 } from '../../support/helpers';
 import 'cypress-file-upload';
 
@@ -21,7 +21,7 @@ describe('help & support', () => {
     cy.intercept('GET', '*/profile').as('getProfile');
 
     cy.visitWithLogin('/support/tickets');
-    cy.wait('@getProfile').then(xhr => {
+    cy.wait('@getProfile').then((xhr) => {
       const user = xhr.response?.body['username'];
       const mockTicketData = {
         attachments: [image],
@@ -35,7 +35,7 @@ describe('help & support', () => {
         status: 'new',
         summary: 'cy-test ticket',
         updated: ts.toISOString(),
-        updated_by: user
+        updated_by: user,
       };
       // intercept create ticket request, stub response.
       cy.intercept('POST', '*/support/tickets', mockTicketData).as(
@@ -46,15 +46,19 @@ describe('help & support', () => {
         'getTicket'
       );
       // intercept create support ticket request, stub response with 200
-      cy.intercept('POST', `*/support/tickets/${ticketId}/attachments`, req => {
-        req.reply(200);
-      }).as('attachmentPost');
+      cy.intercept(
+        'POST',
+        `*/support/tickets/${ticketId}/attachments`,
+        (req) => {
+          req.reply(200);
+        }
+      ).as('attachmentPost');
       // stub incoming response
       cy.intercept(`*/support/tickets/${ticketId}/replies`, {
         data: [],
         page: 1,
         pages: 1,
-        results: 0
+        results: 0,
       }).as('getReplies');
 
       containsClick('Open New Ticket');
@@ -67,18 +71,10 @@ describe('help & support', () => {
       getVisible('[value="test_screenshot.png"]');
       getClick('[data-qa-submit="true"]');
 
-      cy.wait('@createTicket')
-        .its('response.statusCode')
-        .should('eq', 200);
-      cy.wait('@attachmentPost')
-        .its('response.statusCode')
-        .should('eq', 200);
-      cy.wait('@getReplies')
-        .its('response.statusCode')
-        .should('eq', 200);
-      cy.wait('@getTicket')
-        .its('response.statusCode')
-        .should('eq', 200);
+      cy.wait('@createTicket').its('response.statusCode').should('eq', 200);
+      cy.wait('@attachmentPost').its('response.statusCode').should('eq', 200);
+      cy.wait('@getReplies').its('response.statusCode').should('eq', 200);
+      cy.wait('@getTicket').its('response.statusCode').should('eq', 200);
 
       containsVisible(`#${ticketId}: ${ticketLabel}`);
       containsVisible(ticketDescription);

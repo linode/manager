@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -24,12 +24,12 @@ type ClassNames =
 
 const styles = (theme: Theme) => {
   const {
-    palette: { status }
+    palette: { status },
   } = theme;
 
   return createStyles({
     pointer: {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     root: {
       margin: 0,
@@ -38,50 +38,50 @@ const styles = (theme: Theme) => {
       borderBottom: `1px solid ${theme.palette.divider}`,
       transition: theme.transitions.create('background-color'),
       '& p': {
-        color: theme.color.headline
+        color: theme.color.headline,
       },
       '& + .notice': {
-        marginTop: '0 !important'
+        marginTop: '0 !important',
       },
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
         '& $noticeText, & p, & $innerTitle': {
-          color: 'white'
-        }
+          color: 'white',
+        },
       },
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
-      outline: 0
+      outline: 0,
     },
     inner: {
       width: '100%',
-      display: 'block'
+      display: 'block',
     },
     innerLink: {
       '& > h3': {
-        lineHeight: '1.2'
-      }
+        lineHeight: '1.2',
+      },
     },
     innerTitle: {
-      marginBottom: theme.spacing(1) / 2
+      marginBottom: theme.spacing(1) / 2,
     },
     noticeText: {
       color: theme.palette.text.primary,
-      fontFamily: theme.font.bold
+      fontFamily: theme.font.bold,
     },
     critical: {
-      borderLeft: `5px solid ${status.errorDark}`
+      borderLeft: `5px solid ${status.errorDark}`,
     },
     major: {
-      borderLeft: `5px solid ${status.warningDark}`
+      borderLeft: `5px solid ${status.warningDark}`,
     },
     minor: {
-      borderLeft: `5px solid ${status.successDark}`
+      borderLeft: `5px solid ${status.successDark}`,
     },
     flag: {
-      marginRight: theme.spacing(2)
-    }
+      marginRight: theme.spacing(2),
+    },
   });
 };
 
@@ -104,7 +104,7 @@ class UserNotificationListItem extends React.Component<CombinedProps> {
           [classes.root]: true,
           [classes[severity]]: true,
           [classes.pointer]: Boolean(onClick),
-          notice: true
+          notice: true,
         })}
         data-qa-notice
         component="li"
@@ -114,7 +114,7 @@ class UserNotificationListItem extends React.Component<CombinedProps> {
         <div
           className={classNames({
             [classes.inner]: true,
-            [classes.innerLink]: Boolean(onClick)
+            [classes.innerLink]: Boolean(onClick),
           })}
         >
           <Typography variant="h3" className={classes.innerTitle}>

@@ -1,5 +1,5 @@
 import FormControlLabel, {
-  FormControlLabelProps as _FormControlLabelProps
+  FormControlLabelProps as _FormControlLabelProps,
 } from '@material-ui/core/FormControlLabel';
 
 /* tslint:disable-next-line:no-empty-interface */

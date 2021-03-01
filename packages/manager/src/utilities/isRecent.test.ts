@@ -11,9 +11,7 @@ describe('isRecent', () => {
   });
 
   it('should return true if 1 min in the past', () => {
-    const t1 = DateTime.fromISO(m)
-      .minus({ minutes: 1 })
-      .toISO();
+    const t1 = DateTime.fromISO(m).minus({ minutes: 1 }).toISO();
     expect(isRecent(t1, m)).toBe(true);
   });
 

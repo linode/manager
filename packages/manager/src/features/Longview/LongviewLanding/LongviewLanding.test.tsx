@@ -4,7 +4,7 @@ import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   longviewSubscriptionFactory,
-  longviewClientFactory
+  longviewClientFactory,
 } from 'src/factories';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -13,7 +13,7 @@ import {
   filterLongviewClientsByQuery,
   LongviewClients,
   sortClientsBy,
-  sortFunc
+  sortFunc,
 } from './LongviewClients';
 import { LongviewLanding } from './LongviewLanding';
 
@@ -52,13 +52,13 @@ const props: CombinedProps = {
   userCanCreateClient: true,
   handleAddClient: jest.fn(),
   newClientLoading: false,
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 describe('Utility Functions', () => {
   it('should properly filter longview clients by query', () => {
     expect(filterLongviewClientsByQuery('client-1', clients, {})).toEqual([
-      clients[1]
+      clients[1],
     ]),
       expect(filterLongviewClientsByQuery('client', clients, {})).toEqual(
         clients
@@ -79,7 +79,7 @@ describe('Utility Functions', () => {
           'd',
           'c',
           'b',
-          'a'
+          'a',
         ]);
       });
 
@@ -89,7 +89,7 @@ describe('Utility Functions', () => {
           2,
           3,
           4,
-          5
+          5,
         ]);
 
         expect(
@@ -147,7 +147,7 @@ describe('Longview clients list view', () => {
       <LongviewClients
         {...props}
         activeSubscription={longviewSubscriptionFactory.build({
-          id: 'longview-100'
+          id: 'longview-100',
         })}
       />
     );

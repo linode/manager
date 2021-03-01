@@ -8,7 +8,7 @@ export default function composeState<S>(
   callback: Callback = () => null
 ) {
   this.setState(
-    state => fns.reverse().reduce((result, fn) => fn(result), state),
+    (state) => fns.reverse().reduce((result, fn) => fn(result), state),
     () => callback()
   );
 }

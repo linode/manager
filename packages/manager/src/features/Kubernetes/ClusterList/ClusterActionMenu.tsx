@@ -19,7 +19,9 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
-export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props => {
+export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -30,34 +32,34 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
       title: 'Download kubeconfig',
       onClick: () => {
         downloadKubeConfig();
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         openDialog();
-      }
-    }
+      },
+    },
   ];
 
   const downloadKubeConfig = () => {
     getKubeConfig(clusterId)
-      .then(response => {
+      .then((response) => {
         // Convert to utf-8 from base64
         try {
           const decodedFile = window.atob(response.kubeconfig);
           downloadFile(`${clusterLabel}-kubeconfig.yaml`, decodedFile);
         } catch (e) {
           reportException(e, {
-            'Encoded response': response.kubeconfig
+            'Encoded response': response.kubeconfig,
           });
           enqueueSnackbar('Error parsing your kubeconfig file', {
-            variant: 'error'
+            variant: 'error',
           });
           return;
         }
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const error = getErrorStringOrDefault(
           errorResponse,
           'Unable to download your kubeconfig'
@@ -69,7 +71,7 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = props =
   return (
     <>
       {!matchesSmDown &&
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

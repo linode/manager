@@ -1,7 +1,7 @@
 import {
   getLinode,
   getLinodeLishToken,
-  Linode
+  Linode,
 } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -10,7 +10,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -35,7 +35,7 @@ const styles = (theme: Theme) =>
         display: 'flex',
         backgroundColor: theme.bg.offWhite,
         margin: 0,
-        overflow: 'hidden'
+        overflow: 'hidden',
       },
       '& [role="tab"]': {
         backgroundColor: theme.bg.offWhite,
@@ -49,20 +49,20 @@ const styles = (theme: Theme) =>
           color: 'white !important',
           '&:hover': {
             backgroundColor: theme.palette.primary.light,
-            color: 'white'
-          }
-        }
-      }
+            color: 'white',
+          },
+        },
+      },
     },
     progress: {
-      height: 'auto'
+      height: 'auto',
     },
     notFound: {
       color: '#f4f4f4 !important',
       '& h1': {
-        color: '#f4f4f4 !important'
-      }
-    }
+        color: '#f4f4f4 !important',
+      },
+    },
   });
 
 interface State {
@@ -78,7 +78,7 @@ type CombinedProps = WithStyles<ClassNames> &
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
-    authenticated: true
+    authenticated: true,
   };
 
   interval: number;
@@ -88,8 +88,8 @@ class Lish extends React.Component<CombinedProps, State> {
     this.mounted = true;
     const {
       match: {
-        params: { linodeId }
-      }
+        params: { linodeId },
+      },
     } = this.props;
 
     const webLishCss = import('' + '../../assets/weblish/weblish.css');
@@ -102,14 +102,14 @@ class Lish extends React.Component<CombinedProps, State> {
     }
 
     getLinode(+linodeId)
-      .then(response => {
+      .then((response) => {
         const linode = response;
         if (!this.mounted) {
           return;
         }
         this.setState({
           linode,
-          loading: false
+          loading: false,
         });
       })
       .catch(() => {
@@ -162,8 +162,8 @@ class Lish extends React.Component<CombinedProps, State> {
   refreshToken = () => {
     const {
       match: {
-        params: { linodeId }
-      }
+        params: { linodeId },
+      },
     } = this.props;
 
     if (!linodeId) {
@@ -172,14 +172,14 @@ class Lish extends React.Component<CombinedProps, State> {
     }
 
     return getLinodeLishToken(+linodeId)
-      .then(response => {
+      .then((response) => {
         const { lish_token: token } = response;
         if (!this.mounted) {
           return;
         }
         this.setState({
           token,
-          loading: false
+          loading: false,
         });
       })
       .catch(() => {
@@ -194,12 +194,12 @@ class Lish extends React.Component<CombinedProps, State> {
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Weblish',
-      routeName: `${this.props.match.url}/weblish`
+      routeName: `${this.props.match.url}/weblish`,
     },
     {
       title: 'Glish',
-      routeName: `${this.props.match.url}/glish`
-    }
+      routeName: `${this.props.match.url}/glish`,
+    },
   ];
 
   matches = (p: string) =>

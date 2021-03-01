@@ -23,18 +23,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: '0 !important',
     display: 'flex',
     justifyContent: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   toolbar: {
     padding: 0,
     height: `50px !important`,
-    width: '100%'
+    width: '100%',
   },
   communityIcon: {
     [theme.breakpoints.down(370)]: {
-      ...theme.visually.hidden
-    }
-  }
+      ...theme.visually.hidden,
+    },
+  },
 }));
 
 interface Props {
@@ -47,13 +47,13 @@ interface Props {
 
 type PropsWithStyles = Props;
 
-const TopMenu: React.FC<PropsWithStyles> = props => {
+const TopMenu: React.FC<PropsWithStyles> = (props) => {
   const {
     isSideMenuOpen,
     openSideMenu,
     username,
     isLoggedInAsCustomer,
-    desktopMenuToggle
+    desktopMenuToggle,
   } = props;
 
   const classes = useStyles();
@@ -69,7 +69,7 @@ const TopMenu: React.FC<PropsWithStyles> = props => {
           style={{
             backgroundColor: 'pink',
             padding: '1em',
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           <Typography style={{ fontSize: '1.2em', color: 'black' }}>

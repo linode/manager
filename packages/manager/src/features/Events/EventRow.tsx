@@ -22,8 +22,8 @@ import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conve
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
-    marginLeft: theme.spacing(1.5)
-  }
+    marginLeft: theme.spacing(1.5),
+  },
 }));
 
 interface ExtendedEvent extends Event {
@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const EventRow: React.FC<CombinedProps> = props => {
+export const EventRow: React.FC<CombinedProps> = (props) => {
   const { event, entityId } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
@@ -58,7 +58,7 @@ export const EventRow: React.FC<CombinedProps> = props => {
     entityId,
     duration: event.duration,
     username: event.username,
-    action: event.action
+    action: event.action,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -76,7 +76,7 @@ export interface RowProps {
   duration: Event['duration'];
 }
 
-export const Row: React.FC<RowProps> = props => {
+export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -88,7 +88,7 @@ export const Row: React.FC<RowProps> = props => {
     type,
     created,
     username,
-    duration
+    duration,
   } = props;
 
   /** Some event types may not be handled by our system (or new types

@@ -4,7 +4,7 @@ import { isType } from 'typescript-fsa';
 
 import {
   EntityError,
-  MappedEntityState2 as MappedEntityState
+  MappedEntityState2 as MappedEntityState,
 } from 'src/store/types';
 import {
   createDefaultState,
@@ -13,7 +13,7 @@ import {
   onError,
   onGetAllSuccess,
   onStart,
-  setError
+  setError,
 } from 'src/store/store.helpers.tmp';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -23,7 +23,7 @@ import {
   disableServiceMonitorActions,
   enableServiceMonitorActions,
   requestServicesActions,
-  updateServiceMonitorActions
+  updateServiceMonitorActions,
 } from './managed.actions';
 
 /**
@@ -99,7 +99,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, deleteServiceMonitorActions.done)) {
     const {
-      params: { monitorID }
+      params: { monitorID },
     } = action.payload;
     return onDeleteSuccess(monitorID, state);
   }

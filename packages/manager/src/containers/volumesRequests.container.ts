@@ -5,7 +5,7 @@ import {
   CloneVolumeParams,
   ResizeVolumeParams,
   UpdateVolumeParams,
-  VolumeId
+  VolumeId,
 } from 'src/store/volume/volume.actions';
 import {
   attachVolume,
@@ -17,7 +17,7 @@ import {
   getAllVolumes,
   getVolumesPage,
   resizeVolume,
-  updateVolume
+  updateVolume,
 } from 'src/store/volume/volume.requests';
 
 export interface VolumesRequests {
@@ -41,5 +41,5 @@ export default connect(undefined, {
   cloneVolume,
   resizeVolume,
   getAllVolumes,
-  getVolumesPage
+  getVolumesPage,
 });

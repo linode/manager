@@ -15,16 +15,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff',
-      textDecoration: 'none'
+      textDecoration: 'none',
     },
     '&[disabled]': {
       color: '#cdd0d5',
       cursor: 'default',
       '&:hover': {
         backgroundColor: 'inherit',
-        textDecoration: 'none'
-      }
-    }
+        textDecoration: 'none',
+      },
+    },
   },
   linkRoot: {
     textAlign: 'center',
@@ -33,9 +33,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',
       color: '#ffffff',
-      textDecoration: 'none'
-    }
-  }
+      textDecoration: 'none',
+    },
+  },
 }));
 
 interface Props {
@@ -50,7 +50,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const InlineMenuAction: React.FC<CombinedProps> = props => {
+const InlineMenuAction: React.FC<CombinedProps> = (props) => {
   const {
     actionText,
     className,
@@ -58,7 +58,7 @@ const InlineMenuAction: React.FC<CombinedProps> = props => {
     disabled,
     tooltip,
     onClick,
-    loading
+    loading,
   } = props;
 
   const classes = useStyles();

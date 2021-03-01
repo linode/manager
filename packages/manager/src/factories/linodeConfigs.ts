@@ -9,14 +9,14 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   updated: '2018-06-26T16:04:28',
   comments: '',
   virt_mode: 'paravirt',
-  id: Factory.each(i => i),
+  id: Factory.each((i) => i),
   run_level: 'default',
   helpers: {
     distro: true,
     network: true,
     modules_dep: true,
     devtmpfs_automount: true,
-    updatedb_disabled: true
+    updatedb_disabled: true,
   },
   root_device: '/dev/sda',
   label: 'My Arch Linux Disk Profile',
@@ -24,22 +24,22 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   devices: {
     sdc: {
       volume_id: 8702,
-      disk_id: null
+      disk_id: null,
     },
     sda: {
       volume_id: null,
-      disk_id: generateRandomId()
+      disk_id: generateRandomId(),
     },
     sdd: null,
     sdf: null,
     sdb: {
       volume_id: null,
-      disk_id: generateRandomId()
+      disk_id: generateRandomId(),
     },
     sdh: null,
     sdg: null,
-    sde: null
+    sde: null,
   },
   kernel: 'linode/grub2',
-  interfaces: {}
+  interfaces: {},
 });

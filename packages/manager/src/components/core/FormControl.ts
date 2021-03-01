@@ -1,5 +1,5 @@
 import FormControl, {
-  FormControlProps as _FormControlProps
+  FormControlProps as _FormControlProps,
 } from '@material-ui/core/FormControl';
 import RenderGuard from 'src/components/RenderGuard';
 

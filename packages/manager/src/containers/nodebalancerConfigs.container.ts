@@ -10,17 +10,15 @@ export interface StateProps {
 }
 
 const container = (nodeBalancerId: number) => {
-  const mapStateToProps: MapStateToProps<
-    StateProps,
-    {},
-    ApplicationState
-  > = state => {
+  const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
+    state
+  ) => {
     const thisNBConfigState =
       state.__resources.nodeBalancerConfigs[nodeBalancerId];
     return {
       configs: Object.values(thisNBConfigState.itemsById ?? {}),
       configsLoading: thisNBConfigState.loading ?? false,
-      configsError: thisNBConfigState.error?.read ?? []
+      configsError: thisNBConfigState.error?.read ?? [],
     };
   };
   return connect(mapStateToProps);

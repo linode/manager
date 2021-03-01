@@ -1,7 +1,7 @@
 import {
   createLinode,
   deleteLinodeById,
-  clickLinodeActionMenu
+  clickLinodeActionMenu,
 } from '../../support/api/linodes';
 import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';
@@ -13,9 +13,9 @@ const rebootInRescueMode = () => {
 describe('rescue linode', () => {
   it('rescue a linode', () => {
     cy.visitWithLogin('/support');
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // mock 200 response
-      cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`, req => {
+      cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`, (req) => {
         req.reply(200);
       }).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}`;
@@ -34,7 +34,7 @@ describe('rescue linode', () => {
 
   it('rescue blocked', () => {
     cy.visitWithLogin('/support');
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // not mocking response here, intercepting post
       cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`).as(
         'postRebootInRescueMode'

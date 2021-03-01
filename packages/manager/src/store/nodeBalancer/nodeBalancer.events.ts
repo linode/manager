@@ -59,7 +59,7 @@ const handleNodeBalancerCreate: NodeBalancerActionHandler = (
     case 'notification':
     default:
       const {
-        nodeBalancers: { itemsById: nodeBalancers }
+        nodeBalancers: { itemsById: nodeBalancers },
       } = resourceState;
 
       /** If we already have it, don't request it. */
@@ -89,7 +89,7 @@ const handleNodeBalancerDelete: NodeBalancerActionHandler = (
       /** Delete NodeBalancer and all configs owned by the NodeBalancer. */
       const {
         nodeBalancers: { itemsById: nodeBalancers },
-        nodeBalancerConfigs: { itemsById: nodeBalancerConfigs }
+        nodeBalancerConfigs: { itemsById: nodeBalancerConfigs },
       } = resourceState;
 
       /** If it's already out of state, don't bother trying to delete. */
@@ -108,13 +108,13 @@ const handleNodeBalancerDelete: NodeBalancerActionHandler = (
       dispatch(
         removeNodeBalancerConfigs({
           configIDs: configsToDelete,
-          nodeBalancerId
+          nodeBalancerId,
         })
       );
       dispatch(
         deleteNodeBalancerActions.done({
           params: { nodeBalancerId },
-          result: {}
+          result: {},
         })
       );
       return;

@@ -12,7 +12,7 @@ describe('LinodeRescue', () => {
         sde: null,
         sdf: null,
         sdg: null,
-        sdh: null
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
@@ -20,7 +20,7 @@ describe('LinodeRescue', () => {
     it('should provide a disk_id for a given slot when provided a valid value', () => {
       const result = createDevicesFromStrings({
         sda: 'disk-123',
-        sdd: 'disk-456'
+        sdd: 'disk-456',
       });
       const expected = {
         sda: { disk_id: 123 },
@@ -30,7 +30,7 @@ describe('LinodeRescue', () => {
         sde: null,
         sdf: null,
         sdg: null,
-        sdh: null
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
@@ -39,7 +39,7 @@ describe('LinodeRescue', () => {
     it('should provide a volume_id for a given slot when provided a valid value', () => {
       const result = createDevicesFromStrings({
         sdb: 'volume-123',
-        sde: 'volume-456'
+        sde: 'volume-456',
       });
       const expected = {
         sda: null,
@@ -49,7 +49,7 @@ describe('LinodeRescue', () => {
         sde: { volume_id: 456 },
         sdf: null,
         sdg: null,
-        sdh: null
+        sdh: null,
       };
 
       expect(result).toEqual(expected);
@@ -58,7 +58,7 @@ describe('LinodeRescue', () => {
     it('should return null for a disk that is set to None', () => {
       const result = createDevicesFromStrings({
         sda: 'none',
-        sdd: 'disk-456'
+        sdd: 'disk-456',
       });
       const expected = {
         sda: null,
@@ -68,7 +68,7 @@ describe('LinodeRescue', () => {
         sde: null,
         sdf: null,
         sdg: null,
-        sdh: null
+        sdh: null,
       };
       expect(result).toEqual(expected);
     });

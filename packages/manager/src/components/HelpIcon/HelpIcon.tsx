@@ -27,14 +27,14 @@ interface Props
 
 type CombinedProps = Props;
 
-const HelpIcon: React.FC<CombinedProps> = props => {
+const HelpIcon: React.FC<CombinedProps> = (props) => {
   const {
     text,
     className,
     tooltipPosition,
     interactive,
     leaveDelay,
-    classes
+    classes,
   } = props;
 
   return (

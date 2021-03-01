@@ -9,7 +9,7 @@ export const deepStringTransform = (
   }
 
   if (Array.isArray(value)) {
-    return value.map(thisElement => deepStringTransform(thisElement, fn));
+    return value.map((thisElement) => deepStringTransform(thisElement, fn));
   }
 
   if (typeof value === 'object' && value !== null) {

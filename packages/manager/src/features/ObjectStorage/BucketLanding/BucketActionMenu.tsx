@@ -10,20 +10,20 @@ export interface Props {
   cluster: string;
 }
 
-export const BucketActionMenu: React.FC<Props> = props => {
+export const BucketActionMenu: React.FC<Props> = (props) => {
   const actions: Action[] = [
     {
       title: 'Details',
       onClick: () => {
         props.onDetails();
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         props.onRemove();
-      }
-    }
+      },
+    },
   ];
 
   return (

@@ -3,11 +3,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 export const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0
+      opacity: 0,
     },
     to: {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   root: {
     minHeight: '24px',
@@ -17,8 +17,8 @@ export const useStyles = makeStyles((theme: Theme) => ({
       left: '0 !important' as '0',
       bottom: '0 !important' as '0',
       background: theme.color.white,
-      padding: theme.spacing(2)
-    }
+      padding: theme.spacing(2),
+    },
   },
   checkoutSection: {
     opacity: 0,
@@ -27,34 +27,34 @@ export const useStyles = makeStyles((theme: Theme) => ({
     animation: '$fadeIn 225ms linear forwards',
     [theme.breakpoints.down('sm')]: {
       '& button': {
-        marginLeft: 0
-      }
-    }
+        marginLeft: 0,
+      },
+    },
   },
   noBorder: {
-    border: 0
+    border: 0,
   },
   sidebarTitle: {
     fontSize: '1.5rem',
     color: theme.color.green,
-    wordBreak: 'break-word'
+    wordBreak: 'break-word',
   },
   detail: {
     fontSize: '.8rem',
     color: theme.color.headline,
-    lineHeight: '1.5em'
+    lineHeight: '1.5em',
   },
   createButton: {
     [theme.breakpoints.up('lg')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   price: {
     fontSize: '.8rem',
     color: theme.color.headline,
     lineHeight: '1.5em',
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 
 export default useStyles;

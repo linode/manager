@@ -48,7 +48,7 @@ export class MockDataController {
   }
 
   private notifySubscribers() {
-    Object.values(this.subscribers).forEach(thisSubscriber => {
+    Object.values(this.subscribers).forEach((thisSubscriber) => {
       thisSubscriber(this.mockData);
     });
   }

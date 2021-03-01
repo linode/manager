@@ -2,7 +2,7 @@ import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -52,7 +52,7 @@ interface Props extends ActionHandlers {
 
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const VolumesActionMenu: React.FC<CombinedProps> = props => {
+export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   const { attached, poweredOff, isVolumesLanding } = props;
 
   const theme = useTheme<Theme>();
@@ -98,26 +98,26 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       title: 'Show Config',
       onClick: () => {
         handleShowConfig();
-      }
+      },
     },
     {
       title: 'Edit',
       onClick: () => {
         handleOpenEdit();
-      }
+      },
     },
     {
       title: 'Resize',
       onClick: () => {
         handleResize();
-      }
+      },
     },
     {
       title: 'Clone',
       onClick: () => {
         handleClone();
-      }
-    }
+      },
+    },
   ];
 
   if (!attached && isVolumesLanding) {
@@ -125,14 +125,14 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       title: 'Attach',
       onClick: () => {
         handleAttach();
-      }
+      },
     });
   } else {
     actions.push({
       title: 'Detach',
       onClick: () => {
         handleDetach();
-      }
+      },
     });
   }
 
@@ -141,7 +141,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
       title: 'Delete',
       onClick: () => {
         handleDelete();
-      }
+      },
     });
   }
 
@@ -151,7 +151,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

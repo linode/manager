@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -14,9 +14,9 @@ type ClassNames = 'root' | 'flatImagePanel';
 const styles = (theme: Theme) =>
   createStyles({
     flatImagePanel: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
-    root: {}
+    root: {},
   });
 
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Panel: React.FC<CombinedProps> = props => {
+const Panel: React.FC<CombinedProps> = (props) => {
   const { classes, children, error, title } = props;
   return (
     <Paper

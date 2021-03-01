@@ -7,7 +7,7 @@ const props: CombinedProps = {
   isOpen: true,
   openBucketDrawer: jest.fn(),
   closeBucketDrawer: jest.fn(),
-  isRestrictedUser: false
+  isRestrictedUser: false,
 };
 
 describe('BucketDrawer', () => {

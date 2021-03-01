@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -22,11 +22,11 @@ type ClassNames = 'summary' | 'regarding';
 const styles = () =>
   createStyles({
     summary: {
-      lineHeight: 1.1
+      lineHeight: 1.1,
     },
     regarding: {
-      lineHeight: 1.1
-    }
+      lineHeight: 1.1,
+    },
   });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -49,7 +49,7 @@ const renderEntityLink = (ticket: SupportTicket) => {
   null;
 };
 
-const TicketRow: React.FC<CombinedProps> = props => {
+const TicketRow: React.FC<CombinedProps> = (props) => {
   const { ticket, classes } = props;
   return (
     <TableRow

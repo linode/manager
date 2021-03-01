@@ -23,14 +23,14 @@ interface Props {
  * and this is a good side-effect usage of useEffect().
  */
 
-export const IdentifyUser: React.FC<Props> = props => {
+export const IdentifyUser: React.FC<Props> = (props) => {
   const {
     userID,
     accountCountry,
     accountError,
     username,
     taxID,
-    euuid
+    euuid,
   } = props;
   const client = useLDClient();
 
@@ -84,8 +84,8 @@ export const IdentifyUser: React.FC<Props> = props => {
             name: username,
             country,
             custom: {
-              taxID: _taxID
-            }
+              taxID: _taxID,
+            },
           })
           .then(() => setFeatureFlagsLoaded())
           /**

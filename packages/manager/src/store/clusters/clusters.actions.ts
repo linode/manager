@@ -1,6 +1,6 @@
 import {
   getClusters,
-  ObjectStorageCluster
+  ObjectStorageCluster,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
@@ -14,21 +14,21 @@ export const clustersRequestActions = actionCreator.async<
   APIError[]
 >(`request`);
 
-export const requestClusters: ThunkActionCreator<Promise<
-  ObjectStorageCluster[]
->> = () => dispatch => {
+export const requestClusters: ThunkActionCreator<
+  Promise<ObjectStorageCluster[]>
+> = () => (dispatch) => {
   dispatch(clustersRequestActions.started());
 
   return getClusters()
     .then(({ data }) => {
       dispatch(
         clustersRequestActions.done({
-          result: data
+          result: data,
         })
       );
       return data;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(clustersRequestActions.failed({ error }));
       return error;
     });

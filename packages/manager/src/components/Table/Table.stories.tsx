@@ -48,7 +48,7 @@ class StoryTable extends React.Component {
               />
 
               <TableBody>
-                {orderedData.map(linode => (
+                {orderedData.map((linode) => (
                   <LinodeRow
                     key={linode.id}
                     id={linode.id}

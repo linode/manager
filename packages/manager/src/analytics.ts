@@ -6,7 +6,7 @@ const gaInit = (i: any, s: any, o: any, g: any, r: any, a: any, m: any) => {
   i['GoogleAnalyticsObject'] = r;
   (i[r] =
     i[r] ||
-    function() {
+    function () {
       (i[r].q = i[r].q || []).push(arguments);
     }),
     (i[r].l = 1 * currdate);
@@ -20,7 +20,7 @@ const initGTM = (w: any, d: any, s: any, l: any, i: any) => {
   w[l] = w[l] || [];
   w[l].push({
     'gtm.start': new Date().getTime(),
-    event: 'gtm.js'
+    event: 'gtm.js',
   });
   var f = d.getElementsByTagName(s)[0],
     j = d.createElement(s),
@@ -76,6 +76,6 @@ export const initGTMUser = (userId: string) => {
   (window as any).dataLayer.push({
     event: 'userInfo',
     gtmAccountID: GTM_ID,
-    gtmIndividualUserId: userId
+    gtmIndividualUserId: userId,
   });
 };

@@ -12,15 +12,15 @@ jest.mock('@linode/api-v4/lib/account', () => {
       results: 2,
       page: 1,
       pages: 1,
-      data: invoiceFactory.buildList(2)
+      data: invoiceFactory.buildList(2),
     }),
     getPayments: jest.fn().mockResolvedValue({
       results: 2,
       page: 1,
       pages: 1,
-      data: paymentFactory.buildList(2)
+      data: paymentFactory.buildList(2),
     }),
-    getAccountInfo: jest.fn().mockResolvedValue([])
+    getAccountInfo: jest.fn().mockResolvedValue([]),
   };
 });
 
@@ -29,10 +29,10 @@ jest.mock('src/hooks/useAccount', () => ({
     account: {
       data: accountFactory.build(),
       loading: false,
-      error: {}
+      error: {},
     },
-    requestAccount: jest.fn()
-  })
+    requestAccount: jest.fn(),
+  }),
 }));
 
 describe('Account Landing', () => {

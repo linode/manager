@@ -48,7 +48,7 @@ class SearchBar extends Page {
   assertSuggestions() {
     $('[data-qa-suggestion]').waitForDisplayed(constants.wait.normal);
     // Assert suggestions display icons, titles, descriptions
-    this.suggestions.forEach(el => {
+    this.suggestions.forEach((el) => {
       const iconVisible = el.$('svg').isDisplayed();
       const titleVisible = el.$(this.suggestionTitle.selector).isDisplayed();
       const descriptionVisible = el

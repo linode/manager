@@ -5,7 +5,7 @@ interface Props {
   createActions: any;
 }
 
-const MockActionMenu: React.FC<Props> = props => {
+const MockActionMenu: React.FC<Props> = (props) => {
   const { createActions } = props;
   const actions = createActions(() => null);
   return (

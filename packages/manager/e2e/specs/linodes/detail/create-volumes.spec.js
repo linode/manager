@@ -8,7 +8,7 @@ import {
   createVolumes,
   apiDeleteAllLinodes,
   apiDeleteAllVolumes,
-  checkEnvironment
+  checkEnvironment,
 } from '../../../utils/common';
 
 const { constants } = require('../../../constants');
@@ -19,16 +19,16 @@ describe('Linode Detail - Volumes Suite', () => {
   const testVolume = {
     label: `AutoVolume${timestamp()}`,
     size: 100,
-    tags: `AutoTag${timestamp()}`
+    tags: `AutoTag${timestamp()}`,
   };
 
   const volumeEast = {
-    label: `testEast${timestamp()}`
+    label: `testEast${timestamp()}`,
   };
 
   const volumeCentral = {
     region: 'us-central',
-    label: `testWest${timestamp()}`
+    label: `testWest${timestamp()}`,
   };
 
   const checkAttachedVolumeInSummary = () => {
@@ -128,7 +128,7 @@ describe('Linode Detail - Volumes Suite', () => {
     });
 
     it('should display volume price dynamically based on size', () => {
-      [200, 333, 450].forEach(price => {
+      [200, 333, 450].forEach((price) => {
         browser.numberEntry(`${VolumeDetail.size.selector} input`, price);
         const volumePrice = price * 0.1;
         expect(VolumeDetail.volumePrice.getText()).toEqual(
@@ -192,12 +192,9 @@ describe('Linode Detail - Volumes Suite', () => {
 
     it("only volumes in the current linode's data center should display", () => {
       checkEnvironment();
-      VolumeDetail.selectLinodeOrVolume
-        .$('..')
-        .$('..')
-        .click();
+      VolumeDetail.selectLinodeOrVolume.$('..').$('..').click();
       VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal);
-      const volumes = VolumeDetail.selectOptions.map(option =>
+      const volumes = VolumeDetail.selectOptions.map((option) =>
         option.getText()
       );
       expect(volumes.includes(volumeEast.label)).toBe(true);

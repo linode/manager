@@ -13,11 +13,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem',
     borderLeft: `solid 6px ${theme.color.green}`,
     padding: theme.spacing(1),
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   upgradeMessage: {
-    marginLeft: theme.spacing()
-  }
+    marginLeft: theme.spacing(),
+  },
 }));
 
 interface Props {
@@ -28,7 +28,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
+export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
   const { clusterID, clusterLabel, currentVersion } = props;
   const classes = useStyles();
   const { data: versions } = useKubernetesVersionQuery();

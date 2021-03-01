@@ -5,13 +5,13 @@ import {
   createLinode,
   deleteLinode,
   rebootLinode,
-  updateLinode
+  updateLinode,
 } from './linode.requests';
 import {
   CreateLinodeParams,
   DeleteLinodeParams,
   RebootLinodeParams,
-  UpdateLinodeParams
+  UpdateLinodeParams,
 } from './linodes.actions';
 
 export interface Actions {
@@ -25,12 +25,9 @@ export interface LinodeActionsProps {
   linodeActions: Actions;
 }
 
-export const withLinodeActions = connect(
-  undefined,
-  dispatch => ({
-    linodeActions: bindActionCreators(
-      { createLinode, deleteLinode, updateLinode, rebootLinode },
-      dispatch
-    )
-  })
-);
+export const withLinodeActions = connect(undefined, (dispatch) => ({
+  linodeActions: bindActionCreators(
+    { createLinode, deleteLinode, updateLinode, rebootLinode },
+    dispatch
+  ),
+}));

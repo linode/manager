@@ -39,7 +39,7 @@ const renderContent = (
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          minHeight: height
+          minHeight: height,
         }}
       >
         <CircleProgress mini />
@@ -50,7 +50,7 @@ const renderContent = (
   return renderMainContent();
 };
 
-const ExtendedAccordion: React.FC<Props> = props => {
+const ExtendedAccordion: React.FC<Props> = (props) => {
   const {
     error,
     heading,
@@ -58,7 +58,7 @@ const ExtendedAccordion: React.FC<Props> = props => {
     loading,
     onChange,
     renderMainContent,
-    headingNumberCount
+    headingNumberCount,
   } = props;
   const flags = useFlags();
 

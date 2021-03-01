@@ -12,7 +12,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const CreateIPv6Drawer: React.FC<CombinedProps> = props => {
+const CreateIPv6Drawer: React.FC<CombinedProps> = (props) => {
   return (
     <Drawer
       open={props.open}

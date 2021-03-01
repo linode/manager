@@ -3,7 +3,7 @@ import {
   Domain,
   DomainRecord,
   DomainType,
-  RecordType
+  RecordType,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
@@ -16,7 +16,7 @@ import {
   over,
   pathOr,
   prepend,
-  propEq
+  propEq,
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -29,7 +29,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -44,11 +44,11 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import withFeatureFlags, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   getAPIErrorOrDefault,
-  getErrorStringOrDefault
+  getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
@@ -62,17 +62,17 @@ const styles = (theme: Theme) =>
     root: {
       margin: 0,
       '& .MuiGrid-item': {
-        paddingLeft: 0
+        paddingLeft: 0,
       },
       [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
-        marginRight: theme.spacing()
-      }
+        marginRight: theme.spacing(),
+      },
     },
     cells: {
       whiteSpace: 'nowrap',
       [theme.breakpoints.up('md')]: {
-        maxWidth: 300
+        maxWidth: 300,
       },
       '& .data': {
         maxWidth: 300,
@@ -80,16 +80,16 @@ const styles = (theme: Theme) =>
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         [theme.breakpoints.up('md')]: {
-          maxWidth: 750
-        }
-      }
+          maxWidth: 750,
+        },
+      },
     },
     linkContainer: {
       [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
-        marginRight: theme.spacing()
-      }
-    }
+        marginRight: theme.spacing(),
+      },
+    },
   });
 
 interface Props {
@@ -144,7 +144,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   static defaultDrawerState: DrawerState = {
     open: false,
     mode: 'create',
-    type: 'NS'
+    type: 'NS',
   };
 
   updateDrawer = (fn: (d: DrawerState) => DrawerState) =>
@@ -162,7 +162,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       open: true,
       submitting: false,
       mode: 'create',
-      type
+      type,
     }));
 
   openForEditing = (
@@ -174,7 +174,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       submitting: false,
       mode: 'edit',
       type,
-      fields
+      fields,
     }));
 
   openForEditPrimaryDomain = (f: Partial<Domain>) =>
@@ -222,49 +222,49 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   ) => this.openForEditing('CAA', f);
 
   confirmDeletion = (recordId: number) =>
-    this.updateConfirmDialog(confirmDialog => ({
+    this.updateConfirmDialog((confirmDialog) => ({
       ...confirmDialog,
       open: true,
-      recordId
+      recordId,
     }));
 
   deleteDomainRecord = () => {
     const {
-      domain: { id: domainId }
+      domain: { id: domainId },
     } = this.props;
     const {
-      confirmDialog: { recordId }
+      confirmDialog: { recordId },
     } = this.state;
     if (!domainId || !recordId) {
       return;
     }
 
-    this.updateConfirmDialog(c => ({
+    this.updateConfirmDialog((c) => ({
       ...c,
       submitting: true,
-      errors: undefined
+      errors: undefined,
     }));
 
     deleteDomainRecord(domainId, recordId)
       .then(() => {
         this.props.updateRecords();
 
-        this.updateConfirmDialog(_ => ({
+        this.updateConfirmDialog((_) => ({
           open: false,
           submitting: false,
           errors: undefined,
-          recordId: undefined
+          recordId: undefined,
         }));
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
-        this.updateConfirmDialog(c => ({
+        this.updateConfirmDialog((c) => ({
           ...c,
           submitting: false,
-          errors
+          errors,
         }));
       });
-    this.updateConfirmDialog(c => ({ ...c, submitting: true }));
+    this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
 
   handleOpenSOADrawer = (d: Domain) => {
@@ -283,27 +283,27 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         {
           title: 'Primary Domain',
-          render: (d: Domain) => d.domain
+          render: (d: Domain) => d.domain,
         },
         {
           title: 'Email',
-          render: (d: Domain) => d.soa_email
+          render: (d: Domain) => d.soa_email,
         },
         {
           title: 'Default TTL',
-          render: compose(msToReadable, pathOr(0, ['ttl_sec']))
+          render: compose(msToReadable, pathOr(0, ['ttl_sec'])),
         },
         {
           title: 'Refresh Rate',
-          render: compose(msToReadable, pathOr(0, ['refresh_sec']))
+          render: compose(msToReadable, pathOr(0, ['refresh_sec'])),
         },
         {
           title: 'Retry Rate',
-          render: compose(msToReadable, pathOr(0, ['retry_sec']))
+          render: compose(msToReadable, pathOr(0, ['retry_sec'])),
         },
         {
           title: 'Expire Time',
-          render: compose(msToReadable, pathOr(0, ['expire_sec']))
+          render: compose(msToReadable, pathOr(0, ['expire_sec'])),
         },
         {
           title: '',
@@ -315,9 +315,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 label={this.props.domain.domain}
               />
             ) : null;
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
 
     /** NS Record */
@@ -329,21 +329,21 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         {
           title: 'Name Server',
-          render: (r: DomainRecord) => r.target
+          render: (r: DomainRecord) => r.target,
         },
         {
           title: 'Subdomain',
           render: (r: DomainRecord) => {
             const sd = r.name;
             const {
-              domain: { domain }
+              domain: { domain },
             } = this.props;
             return isEmpty(sd) ? domain : `${sd}.${domain}`;
-          }
+          },
         },
         {
           title: 'TTL',
-          render: getTTL
+          render: getTTL,
         },
         {
           title: '',
@@ -358,19 +358,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   id,
                   name,
                   target,
-                  ttl_sec
+                  ttl_sec,
                 }}
                 label={name}
                 onEdit={this.openForEditNSRecord}
                 deleteData={{
                   recordID: id,
-                  onDelete: this.confirmDeletion
+                  onDelete: this.confirmDeletion,
                 }}
               />
-            )
-        }
+            ),
+        },
       ],
-      link: () => createLink('Add a NS Record', this.openForCreateNSRecord)
+      link: () => createLink('Add a NS Record', this.openForCreateNSRecord),
     },
 
     /** MX Record */
@@ -382,19 +382,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         {
           title: 'Mail Server',
-          render: (r: DomainRecord) => r.target
+          render: (r: DomainRecord) => r.target,
         },
         {
           title: 'Preference',
-          render: (r: DomainRecord) => String(r.priority)
+          render: (r: DomainRecord) => String(r.priority),
         },
         {
           title: 'Subdomain',
-          render: (r: DomainRecord) => r.name
+          render: (r: DomainRecord) => r.name,
         },
         {
           title: 'TTL',
-          render: getTTL
+          render: getTTL,
         },
         {
           title: '',
@@ -406,18 +406,18 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 name,
                 priority,
                 target,
-                ttl_sec
+                ttl_sec,
               }}
               label={name}
               deleteData={{
                 recordID: id,
-                onDelete: this.confirmDeletion
+                onDelete: this.confirmDeletion,
               }}
             />
-          )
-        }
+          ),
+        },
       ],
-      link: () => createLink('Add a MX Record', this.openForCreateMXRecord)
+      link: () => createLink('Add a MX Record', this.openForCreateMXRecord),
     },
 
     /** A/AAAA Record */
@@ -426,12 +426,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       orderBy: 'name',
       order: 'asc',
       data: this.props.domainRecords.filter(
-        r => typeEq('AAAA', r) || typeEq('A', r)
+        (r) => typeEq('AAAA', r) || typeEq('A', r)
       ),
       columns: [
         {
           title: 'Hostname',
-          render: (r: DomainRecord) => r.name || this.props.domain.domain
+          render: (r: DomainRecord) => r.name || this.props.domain.domain,
         },
         { title: 'IP Address', render: (r: DomainRecord) => r.target },
         { title: 'TTL', render: getTTL },
@@ -443,19 +443,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 id,
                 name,
                 target,
-                ttl_sec
+                ttl_sec,
               }}
               onEdit={this.openForEditARecord}
               label={name || this.props.domain.domain}
               deleteData={{
                 recordID: id,
-                onDelete: this.confirmDeletion
+                onDelete: this.confirmDeletion,
               }}
             />
-          )
-        }
+          ),
+        },
       ],
-      link: () => createLink('Add an A/AAAA Record', this.openForCreateARecord)
+      link: () => createLink('Add an A/AAAA Record', this.openForCreateARecord),
     },
 
     /** CNAME Record */
@@ -476,20 +476,20 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 id,
                 name,
                 target,
-                ttl_sec
+                ttl_sec,
               }}
               label={name}
               onEdit={this.openForEditCNAMERecord}
               deleteData={{
                 recordID: id,
-                onDelete: this.confirmDeletion
+                onDelete: this.confirmDeletion,
               }}
             />
-          )
-        }
+          ),
+        },
       ],
       link: () =>
-        createLink('Add a CNAME Record', this.openForCreateCNAMERecord)
+        createLink('Add a CNAME Record', this.openForCreateCNAMERecord),
     },
 
     /** TXT Record */
@@ -502,7 +502,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Hostname', render: (r: DomainRecord) => r.name },
         {
           title: 'Value',
-          render: (r: DomainRecord) => r.target
+          render: (r: DomainRecord) => r.target,
         },
         { title: 'TTL', render: getTTL },
         {
@@ -513,19 +513,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 id,
                 name,
                 target,
-                ttl_sec
+                ttl_sec,
               }}
               label={name}
               onEdit={this.openForEditTXTRecord}
               deleteData={{
                 recordID: id,
-                onDelete: this.confirmDeletion
+                onDelete: this.confirmDeletion,
               }}
             />
-          )
-        }
+          ),
+        },
       ],
-      link: () => createLink('Add a TXT Record', this.openForCreateTXTRecord)
+      link: () => createLink('Add a TXT Record', this.openForCreateTXTRecord),
     },
     /** SRV Record */
     {
@@ -537,15 +537,15 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Name', render: (r: DomainRecord) => r.name },
         {
           title: 'Domain',
-          render: () => this.props.domain.domain
+          render: () => this.props.domain.domain,
         },
         {
           title: 'Priority',
-          render: (r: DomainRecord) => String(r.priority)
+          render: (r: DomainRecord) => String(r.priority),
         },
         {
           title: 'Weight',
-          render: (r: DomainRecord) => String(r.weight)
+          render: (r: DomainRecord) => String(r.weight),
         },
         { title: 'Port', render: (r: DomainRecord) => String(r.port) },
         { title: 'Target', render: (r: DomainRecord) => r.target },
@@ -559,7 +559,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             priority,
             protocol,
             target,
-            weight
+            weight,
           }: DomainRecord) => (
             <ActionMenu
               editPayload={{
@@ -569,19 +569,19 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 priority,
                 protocol,
                 target,
-                weight
+                weight,
               }}
               label={this.props.domain.domain}
               onEdit={this.openForEditSRVRecord}
               deleteData={{
                 recordID: id,
-                onDelete: this.confirmDeletion
+                onDelete: this.confirmDeletion,
               }}
             />
-          )
-        }
+          ),
+        },
       ],
-      link: () => createLink('Add a SRV Record', this.openForCreateSRVRecord)
+      link: () => createLink('Add a SRV Record', this.openForCreateSRVRecord),
     },
 
     /** CAA Record */
@@ -595,7 +595,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         { title: 'Tag', render: (r: DomainRecord) => r.tag },
         {
           title: 'Value',
-          render: (r: DomainRecord) => r.target
+          render: (r: DomainRecord) => r.target,
         },
         { title: 'TTL', render: getTTL },
         {
@@ -607,27 +607,27 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 name,
                 tag,
                 target,
-                ttl_sec
+                ttl_sec,
               }}
               label={name}
               onEdit={this.openForEditCAARecord}
               deleteData={{
                 recordID: id,
-                onDelete: this.confirmDeletion
+                onDelete: this.confirmDeletion,
               }}
             />
-          )
-        }
+          ),
+        },
       ],
-      link: () => createLink('Add a CAA Record', this.openForCreateCAARecord)
-    }
+      link: () => createLink('Add a CAA Record', this.openForCreateCAARecord),
+    },
   ];
 
   handleCloseDialog = () => {
     this.updateConfirmDialog(() => ({
       open: false,
       submitting: false,
-      recordId: undefined
+      recordId: undefined,
     }));
   };
 
@@ -637,9 +637,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       drawer: DomainRecords.defaultDrawerState,
       confirmDialog: {
         open: false,
-        submitting: false
+        submitting: false,
       },
-      types: this.generateTypes()
+      types: this.generateTypes(),
     };
   }
 
@@ -726,7 +726,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                         handlePageChange,
                         handlePageSizeChange,
                         page,
-                        pageSize
+                        pageSize,
                       }) => {
                         return (
                           <>
@@ -845,7 +845,7 @@ const msToReadable = (v: number): null | string =>
     345600: '4 days',
     604800: '1 week',
     1209600: '2 weeks',
-    2419200: '4 weeks'
+    2419200: '4 weeks',
   });
 
 const getTTL = compose(msToReadable, pathOr(0, ['ttl_sec']));
@@ -866,7 +866,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       port: 0,
       target: 'ns1.linode.com',
       service: null,
-      ttl_sec: 0
+      ttl_sec: 0,
     },
     {
       priority: 0,
@@ -879,7 +879,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       port: 0,
       target: 'ns2.linode.com',
       service: null,
-      ttl_sec: 0
+      ttl_sec: 0,
     },
     {
       priority: 0,
@@ -892,7 +892,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       port: 0,
       target: 'ns3.linode.com',
       service: null,
-      ttl_sec: 0
+      ttl_sec: 0,
     },
     {
       priority: 0,
@@ -905,7 +905,7 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       port: 0,
       target: 'ns4.linode.com',
       service: null,
-      ttl_sec: 0
+      ttl_sec: 0,
     },
     {
       priority: 0,
@@ -918,8 +918,8 @@ const prependLinodeNS = compose<any, any, DomainRecord[]>(
       port: 0,
       target: 'ns5.linode.com',
       service: null,
-      ttl_sec: 0
-    }
+      ttl_sec: 0,
+    },
   ])
 );
 

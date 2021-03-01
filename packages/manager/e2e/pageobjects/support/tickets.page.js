@@ -83,9 +83,7 @@ export class SupportTickets extends Page {
 
     expect(this.supportHeader.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.supportHeader.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.supportHeader.selector}" selector`
       )
       .toBe('Tickets');
 
@@ -101,9 +99,7 @@ export class SupportTickets extends Page {
       .toBe(true);
     expect(this.supportCreateDateHeader.isDisplayed())
       .withContext(
-        `"${this.supportCreateDateHeader.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${this.supportCreateDateHeader.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
     expect(this.supportSubjectHeader.isDisplayed()).withContext(
@@ -111,9 +107,7 @@ export class SupportTickets extends Page {
     );
     expect(this.supportSubjectHeader.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.supportSubjectHeader.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.supportSubjectHeader.selector}" selector`
       )
       .toBe('Subject');
     expect(this.supportIdHeader.isDisplayed())
@@ -123,9 +117,7 @@ export class SupportTickets extends Page {
       .toBe(true);
     expect(this.supportIdHeader.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.supportIdHeader.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.supportIdHeader.selector}" selector`
       )
       .toBe('Ticket ID');
     expect(this.supportEntityHeader.isDisplayed())

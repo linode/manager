@@ -7,8 +7,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   title: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 interface Props {

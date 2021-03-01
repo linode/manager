@@ -6,7 +6,7 @@ export const objectStorageKey1: ObjectStorageKey = {
   access_key: '123ABC',
   secret_key: '[REDACTED]',
   limited: false,
-  bucket_access: null
+  bucket_access: null,
 };
 
 export const objectStorageKey2: ObjectStorageKey = {
@@ -15,7 +15,7 @@ export const objectStorageKey2: ObjectStorageKey = {
   access_key: '234BCD',
   secret_key: '[REDACTED]',
   limited: false,
-  bucket_access: null
+  bucket_access: null,
 };
 
 export const objectStorageKey3: ObjectStorageKey = {
@@ -24,7 +24,7 @@ export const objectStorageKey3: ObjectStorageKey = {
   access_key: '345CDE',
   secret_key: '[REDACTED]',
   limited: false,
-  bucket_access: null
+  bucket_access: null,
 };
 
 export default [objectStorageKey1, objectStorageKey2, objectStorageKey3];

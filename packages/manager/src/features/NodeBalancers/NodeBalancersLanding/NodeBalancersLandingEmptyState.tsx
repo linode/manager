@@ -6,7 +6,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 
-const NodeBalancerLandingEmptyState: React.FC<{}> = _ => {
+const NodeBalancerLandingEmptyState: React.FC<{}> = (_) => {
   const history = useHistory();
   return (
     <React.Fragment>
@@ -18,8 +18,8 @@ const NodeBalancerLandingEmptyState: React.FC<{}> = _ => {
         buttonProps={[
           {
             onClick: () => history.push('/nodebalancers/create'),
-            children: 'Add a NodeBalancer'
-          }
+            children: 'Add a NodeBalancer',
+          },
         ]}
       >
         <Typography variant="subtitle1">

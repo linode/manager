@@ -9,7 +9,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const SupportLink: React.FunctionComponent<CombinedProps> = props => {
+const SupportLink: React.FunctionComponent<CombinedProps> = (props) => {
   const { description, text, title } = props;
   return (
     <Link
@@ -18,8 +18,8 @@ const SupportLink: React.FunctionComponent<CombinedProps> = props => {
         state: {
           open: true,
           title,
-          description
-        }
+          description,
+        },
       }}
     >
       {text}

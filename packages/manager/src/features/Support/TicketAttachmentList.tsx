@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -21,15 +21,15 @@ const styles = (theme: Theme) =>
     root: {
       marginLeft: 32,
       [theme.breakpoints.up('sm')]: {
-        marginLeft: `calc(40px + ${theme.spacing(1)}px)`
+        marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
       },
       [theme.breakpoints.up('md')]: {
-        maxWidth: 600
-      }
+        maxWidth: 600,
+      },
     },
     attachmentPaperWrapper: {
-      overflowX: 'auto'
-    }
+      overflowX: 'auto',
+    },
   });
 
 interface ToggleProps {
@@ -58,7 +58,7 @@ export const addIconsToAttachments = (attachments: string[] = []) => {
   });
 };
 
-export const TicketAttachmentList: React.FC<CombinedProps> = props => {
+export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
   const { attachments, classes, showMoreAttachments, toggle } = props;
 
   if (isEmpty(attachments)) {
@@ -107,8 +107,8 @@ const enhanced = compose<CombinedProps, Props>(
     { showMoreAttachments: false },
     {
       toggle: ({ showMoreAttachments }) => () => ({
-        showMoreAttachments: !showMoreAttachments
-      })
+        showMoreAttachments: !showMoreAttachments,
+      }),
     }
   ),
   styled

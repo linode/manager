@@ -16,11 +16,11 @@ type CombinedProps = Props;
 
 const useStyles = makeStyles(() => ({
   root: {
-    minHeight: 30
-  }
+    minHeight: 30,
+  },
 }));
 
-const AddNewLink: React.FC<CombinedProps> = props => {
+const AddNewLink: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -38,7 +38,7 @@ const AddNewLink: React.FC<CombinedProps> = props => {
     left,
     onClick,
     text: label,
-    title: label
+    title: label,
   };
 
   if (!!disabled && !!disabledReason) {

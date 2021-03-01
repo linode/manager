@@ -19,7 +19,7 @@ interface Props {
   handleToggle: (linode: Entity) => void;
 }
 
-export const LinodeTransferTable: React.FC<Props> = props => {
+export const LinodeTransferTable: React.FC<Props> = (props) => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
   const [searchText, setSearchText] = React.useState('');
 
@@ -28,14 +28,14 @@ export const LinodeTransferTable: React.FC<Props> = props => {
   const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery(
     {
       page: pagination.page,
-      page_size: pagination.pageSize
+      page_size: pagination.pageSize,
     },
     generateLinodeXFilter(searchText)
   );
 
   const linodesCurrentPage = Object.values(data?.linodes ?? {});
   const hasSelectedAll =
-    linodesCurrentPage.every(thisLinode =>
+    linodesCurrentPage.every((thisLinode) =>
       Boolean(selectedLinodes[thisLinode.id])
     ) &&
     !isLoading &&
@@ -44,7 +44,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
 
   const toggleSelectAll = () => {
     if (hasSelectedAll) {
-      handleRemove(linodesCurrentPage.map(l => String(l.id)));
+      handleRemove(linodesCurrentPage.map((l) => String(l.id)));
     } else {
       handleSelect(linodesCurrentPage);
     }
@@ -77,7 +77,7 @@ export const LinodeTransferTable: React.FC<Props> = props => {
         length={data?.results ?? 0}
         lastUpdated={dataUpdatedAt}
       >
-        {linodesCurrentPage.map(thisLinode => (
+        {linodesCurrentPage.map((thisLinode) => (
           <LinodeRow
             key={thisLinode.id}
             linode={thisLinode}
@@ -96,7 +96,7 @@ interface RowProps {
   handleToggleCheck: () => void;
 }
 
-const LinodeRow: React.FC<RowProps> = props => {
+const LinodeRow: React.FC<RowProps> = (props) => {
   const { linode, isChecked, handleToggleCheck } = props;
   const { typesMap } = useTypes();
   const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
@@ -121,7 +121,7 @@ export const generateLinodeXFilter = (searchText: string) => {
   }
 
   return {
-    label: { '+contains': searchText }
+    label: { '+contains': searchText },
   };
 };
 

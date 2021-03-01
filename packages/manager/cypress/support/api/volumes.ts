@@ -4,7 +4,7 @@ import {
   getAll,
   deleteById,
   isTestEntity,
-  makeTestLabel
+  makeTestLabel,
 } from './common';
 import strings from '../cypresshelpers';
 import { deleteLinodeById } from './linodes';
@@ -20,7 +20,7 @@ const makeVolumeCreateReq = (linodeID, volume) => {
     label: makeVolumeLabel(),
     region: 'us-east',
     tags: [testVolumeTag],
-    linode_id: linodeID
+    linode_id: linodeID,
   };
 
   return cy.request({
@@ -28,13 +28,13 @@ const makeVolumeCreateReq = (linodeID, volume) => {
     url: apiroot + relativeApiPath,
     body: volumeData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
 export const createVolume = (linodeID, volume = undefined) => {
-  return makeVolumeCreateReq(linodeID, volume).then(resp => {
+  return makeVolumeCreateReq(linodeID, volume).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Volume ${resp.body.label} successfully`, resp);
     return resp.body;
@@ -45,22 +45,22 @@ export const makeVolumeLabel = makeTestLabel;
 
 export const getVolumes = () => getAll(relativeApiPath);
 
-export const deleteVolumeById = id => deleteById(relativeApiPath, id);
+export const deleteVolumeById = (id) => deleteById(relativeApiPath, id);
 
 export const detachVolumeById = (path: string, id: number) => {
   return cy.request({
     method: 'POST',
     url: `${apiroot}${path}/${id}/detach`,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
 // use this if you have any volumes attached to non test linodes
 export const detachAllTestVolumes = () => {
-  getVolumes().then(resp => {
-    resp.body.data.forEach(vol => {
+  getVolumes().then((resp) => {
+    resp.body.data.forEach((vol) => {
       if (isTestEntity(vol) && vol.linode_id != undefined) {
         detachVolumeById(relativeApiPath, vol.id);
       }
@@ -69,8 +69,8 @@ export const detachAllTestVolumes = () => {
 };
 
 export const deleteAllTestVolumes = () => {
-  getVolumes().then(resp => {
-    resp.body.data.forEach(vol => {
+  getVolumes().then((resp) => {
+    resp.body.data.forEach((vol) => {
       // catch delete linode request
       cy.intercept('DELETE', `linode/instances/${vol.linode_id}`).as(
         'deleteLinode'
@@ -90,6 +90,6 @@ export const deleteAllTestVolumes = () => {
   });
 };
 
-export const clickVolumeActionMenu = title => {
+export const clickVolumeActionMenu = (title) => {
   cy.get(`[aria-label="Action menu for Volume ${title}"]`).click();
 };

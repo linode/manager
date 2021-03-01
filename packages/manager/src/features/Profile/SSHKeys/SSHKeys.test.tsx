@@ -20,12 +20,12 @@ describe('SSHKeys', () => {
           headline: '',
           addNewWrapper: '',
           createdCell: '',
-          actionCell: ''
+          actionCell: '',
         }}
         data={[
           { id: 1, label: '', ssh_key: '', created: '', fingerprint: '' },
           { id: 2, label: '', ssh_key: '', created: '', fingerprint: '' },
-          { id: 3, label: '', ssh_key: '', created: '', fingerprint: '' }
+          { id: 3, label: '', ssh_key: '', created: '', fingerprint: '' },
         ]}
         timezone={'GMT'}
       />
@@ -66,7 +66,7 @@ describe('SSHKeys', () => {
           headline: '',
           addNewWrapper: '',
           createdCell: '',
-          actionCell: ''
+          actionCell: '',
         }}
         data={undefined}
         loading={true}
@@ -87,7 +87,7 @@ describe('SSHKeys', () => {
           headline: '',
           addNewWrapper: '',
           createdCell: '',
-          actionCell: ''
+          actionCell: '',
         }}
         data={undefined}
         error={[{ reason: 'error here' }]}
@@ -108,7 +108,7 @@ describe('SSHKeys', () => {
           headline: '',
           addNewWrapper: '',
           createdCell: '',
-          actionCell: ''
+          actionCell: '',
         }}
         data={undefined}
         timezone={'GMT'}

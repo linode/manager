@@ -22,7 +22,7 @@ interface Props {
   addDevice: (selectedLinodes: number[]) => void;
 }
 
-export const AddDeviceDrawer: React.FC<Props> = props => {
+export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const {
     addDevice,
     currentDevices,
@@ -30,16 +30,16 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
     isSubmitting,
     firewallLabel,
     onClose,
-    open
+    open,
   } = props;
 
   const regions = useRegionsQuery().data ?? [];
 
   const regionsWithFirewalls = regions
-    .filter(thisRegion =>
+    .filter((thisRegion) =>
       thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
     )
-    .map(thisRegion => thisRegion.id);
+    .map((thisRegion) => thisRegion.id);
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
@@ -80,10 +80,10 @@ export const AddDeviceDrawer: React.FC<Props> = props => {
         <LinodeMultiSelect
           key={key}
           allowedRegions={regionsWithFirewalls}
-          handleChange={selected => setSelectedLinodes(selected)}
+          handleChange={(selected) => setSelectedLinodes(selected)}
           helperText={`You can assign one or more Linodes to this Firewall. Only Linodes
           in regions that currently support Firewalls (${arrayToList(
-            regionsWithFirewalls.map(thisId => dcDisplayNames[thisId])
+            regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId])
           )}) will be displayed as options.`}
           filteredLinodes={currentDevices}
         />

@@ -10,7 +10,7 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useProfile from 'src/hooks/useProfile';
 import { ApplicationState } from 'src/store';
 import withNotifications, {
-  WithNotifications
+  WithNotifications,
 } from 'src/store/notification/notification.containers';
 import useTimezone from 'src/utilities/useTimezone';
 import { v4 } from 'uuid';
@@ -20,11 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    marginBottom: theme.spacing(3)
-  }
+    marginBottom: theme.spacing(3),
+  },
 }));
 
-export const DisplaySettings: React.FC<WithNotifications> = props => {
+export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   const classes = useStyles();
 
   const { updateProfile, requestProfile } = useProfile();
@@ -54,7 +54,7 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
     setTimezoneResetToken(v4());
     // Default to empty string... but I don't believe this is possible.
     return updateUser(profile?.data?.username ?? '', {
-      username: newUsername
+      username: newUsername,
     });
   };
 
@@ -99,7 +99,8 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
             // the user has just updated their email, re-request notifications to
             // potentially clear the email bounce notification.
             const hasUserEmailBounceNotification = props.notifications.find(
-              thisNotification => thisNotification.type === 'user_email_bounce'
+              (thisNotification) =>
+                thisNotification.type === 'user_email_bounce'
             );
             if (hasUserEmailBounceNotification) {
               props.requestNotifications();

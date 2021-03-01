@@ -3,7 +3,7 @@ const {
   apiCreateMultipleLinodes,
   apiDeleteAllLinodes,
   timestamp,
-  checkEnvironment
+  checkEnvironment,
 } = require('../../../utils/common');
 import Networking from '../../../pageobjects/linode-detail/linode-detail-networking.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
@@ -16,7 +16,7 @@ describe('Linode Detail - Netwrking - IP Sharing', () => {
     const environment = process.env.REACT_APP_API_ROOT;
     const testLinodes = [
       { linodeLabel: `Auto${timestamp()}` },
-      { linodeLabel: `Auto1${timestamp()}` }
+      { linodeLabel: `Auto1${timestamp()}` },
     ];
     if (!environment.includes('dev') && !environment.includes('testing')) {
       testLinodes.push({
@@ -24,7 +24,7 @@ describe('Linode Detail - Netwrking - IP Sharing', () => {
         privateIp: false,
         tags: [],
         type: undefined,
-        region: 'us-central'
+        region: 'us-central',
       });
     }
     const linodes = apiCreateMultipleLinodes(testLinodes);

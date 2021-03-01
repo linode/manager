@@ -7,11 +7,11 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from 'src/store/store.helpers.tmp';
 import {
   EntityError,
-  MappedEntityState2 as MappedEntityState
+  MappedEntityState2 as MappedEntityState,
 } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
@@ -21,7 +21,7 @@ import {
   getAllLinodeDisksActions,
   getLinodeDiskActions,
   getLinodeDisksActions,
-  updateLinodeDiskActions
+  updateLinodeDiskActions,
 } from './disk.actions';
 import { Entity } from './disk.types';
 
@@ -30,7 +30,7 @@ export type State = Record<number, MappedEntityState<Entity, EntityError>>;
 export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) =>
-  produce(state, draft => {
+  produce(state, (draft) => {
     // getLinodeDiskActions
     // getAllLinodeDiskActions
     if (
@@ -75,7 +75,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
         EntityError
       >(
         {
-          read: error
+          read: error,
         },
         draft[linodeId]
       );
@@ -106,7 +106,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
 
     if (isType(action, deleteLinodeDiskActions.done)) {
       const {
-        params: { diskId: DiskId, linodeId }
+        params: { diskId: DiskId, linodeId },
       } = action.payload;
       draft = ensureInitializedNestedState(draft, linodeId);
       draft[linodeId] = onDeleteSuccess(DiskId, draft[linodeId]);
@@ -124,7 +124,7 @@ const reducer: Reducer<State> = (state = defaultState, action) =>
 
     if (isType(action, deleteLinodeActions.done)) {
       const {
-        params: { linodeId }
+        params: { linodeId },
       } = action.payload;
 
       delete draft[linodeId];

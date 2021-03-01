@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -23,12 +23,12 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     icon: {
-      color: '#3683dc'
+      color: '#3683dc',
     },
     tooltip: {
       '& svg': {
-        color: '#3683dc'
-      }
+        color: '#3683dc',
+      },
     },
     iconLink: {
       marginRight: theme.spacing(1),
@@ -36,8 +36,8 @@ const styles = (theme: Theme) =>
       border: 'none',
       padding: 0,
       font: 'inherit',
-      cursor: 'pointer'
-    }
+      cursor: 'pointer',
+    },
   });
 
 interface Props {
@@ -51,7 +51,7 @@ interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
+export const KubeConfigDrawer: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     clusterLabel,
@@ -59,7 +59,7 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
     loading,
     kubeConfig,
     closeDrawer,
-    open
+    open,
   } = props;
 
   return (

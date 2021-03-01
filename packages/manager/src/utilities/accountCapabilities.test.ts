@@ -29,7 +29,7 @@ describe('isObjectStorageEnabled', () => {
         isObjectStorageEnabled(false, [
           'Hello',
           'World',
-          'Object Storage'
+          'Object Storage',
         ] as any)
       ).toBe(true);
     });
@@ -39,7 +39,7 @@ describe('isObjectStorageEnabled', () => {
         isObjectStorageEnabled(false, [
           'Hello',
           'World',
-          'Object Storage'
+          'Object Storage',
         ] as any)
       ).toBe(true);
     });

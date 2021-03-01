@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   button: {
     border: 'none',
@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 0,
     cursor: 'pointer',
     '&:hover': {
-      color: theme.color.blue
-    }
-  }
+      color: theme.color.blue,
+    },
+  },
 }));
 interface Props {
   title: string;
@@ -30,7 +30,7 @@ interface Props {
 // Accessibility Feature:
 // Focus on modal title on component mount
 
-const _DialogTitle: React.FC<Props> = props => {
+const _DialogTitle: React.FC<Props> = (props) => {
   const dialogTitle = React.useRef<HTMLDivElement>(null);
   const { className, onClose, title } = props;
   const classes = useStyles();

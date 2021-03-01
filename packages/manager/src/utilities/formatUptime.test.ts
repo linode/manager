@@ -45,7 +45,7 @@ describe('Formatting uptime', () => {
           days: 438,
           hours: 8,
           minutes: 15,
-          seconds: 54
+          seconds: 54,
         }).as('seconds')
       )
     ).toMatch('438d 8h 15m');

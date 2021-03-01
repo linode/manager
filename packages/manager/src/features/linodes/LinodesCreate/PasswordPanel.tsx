@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
@@ -19,14 +19,14 @@ const styles = (theme: Theme) =>
       flexGrow: 1,
       width: '100%',
       marginTop: theme.spacing(3),
-      backgroundColor: theme.color.white
+      backgroundColor: theme.color.white,
     },
     inner: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     panelBody: {
-      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
-    }
+      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
+    },
   });
 
 const styled = withStyles(styles);
@@ -56,7 +56,7 @@ class PasswordPanel extends React.Component<CombinedProps> {
       label,
       noPadding,
       required,
-      placeholder
+      placeholder,
     } = this.props;
 
     return (

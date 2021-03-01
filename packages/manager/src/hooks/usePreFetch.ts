@@ -50,7 +50,7 @@ export const usePrefetch = (
     onMouseEnter: makeRequest,
     onFocus: makeRequest,
     onMouseLeave: cancelRequest,
-    onBlur: cancelRequest
+    onBlur: cancelRequest,
   };
 
   return { makeRequest, cancelRequest, handlers };

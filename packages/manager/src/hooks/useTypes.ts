@@ -14,7 +14,7 @@ export const useTypes = () => {
     return types.entities.reduce(
       (accum, thisType) => ({
         ...accum,
-        [thisType.id]: thisType
+        [thisType.id]: thisType,
       }),
       {}
     );

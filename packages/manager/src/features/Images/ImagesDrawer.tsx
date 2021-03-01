@@ -11,7 +11,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -20,7 +20,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import withImages, {
-  ImagesDispatch
+  ImagesDispatch,
 } from 'src/containers/withImages.container';
 import withProfile from 'src/containers/profile.container';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -36,14 +36,14 @@ const styles = (theme: Theme) =>
     root: {},
     suffix: {
       fontSize: '.9rem',
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     actionPanel: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     helperText: {
-      paddingTop: theme.spacing(1) / 2
-    }
+      paddingTop: theme.spacing(1) / 2,
+    },
   });
 
 export interface Props {
@@ -84,7 +84,7 @@ const titleMap: Record<DrawerMode, string> = {
   create: 'Create an Image',
   imagize: 'Create an Image',
   edit: 'Edit an Image',
-  restore: 'Restore from an Image'
+  restore: 'Restore from an Image',
 };
 
 const buttonTextMap: Record<DrawerMode, string> = {
@@ -92,7 +92,7 @@ const buttonTextMap: Record<DrawerMode, string> = {
   create: 'Create',
   restore: 'Restore',
   edit: 'Update',
-  imagize: 'Create'
+  imagize: 'Create',
 };
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
@@ -101,7 +101,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     disks: [],
     errors: undefined,
     notice: undefined,
-    submitting: false
+    submitting: false,
   };
 
   componentDidMount() {
@@ -132,19 +132,19 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       this.props.selectedLinode !== prevProps.selectedLinode
     ) {
       getLinodeDisks(this.props.selectedLinode)
-        .then(response => {
+        .then((response) => {
           if (!this.mounted) {
             return;
           }
 
           const filteredDisks = response.data.filter(
-            disk => disk.filesystem !== 'swap'
+            (disk) => disk.filesystem !== 'swap'
           );
           if (!equals(this.state.disks, filteredDisks)) {
             this.setState({ disks: filteredDisks });
           }
         })
-        .catch(_ => {
+        .catch((_) => {
           if (!this.mounted) {
             return;
           }
@@ -154,9 +154,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               errors: [
                 {
                   field: 'disk_id',
-                  reason: 'Could not retrieve disks for this Linode.'
-                }
-              ]
+                  reason: 'Could not retrieve disks for this Linode.',
+                },
+              ],
             });
           }
         });
@@ -181,7 +181,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       this.setState({
         errors: undefined,
         notice: undefined,
-        submitting: false
+        submitting: false,
       });
     }
   };
@@ -197,7 +197,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedLinode,
       updateImage,
       createImage,
-      enqueueSnackbar
+      enqueueSnackbar,
     } = this.props;
 
     this.setState({ errors: undefined, notice: undefined, submitting: true });
@@ -217,7 +217,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
             this.close();
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             if (!this.mounted) {
               return;
             }
@@ -227,7 +227,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               errors: getAPIErrorOrDefault(
                 errorResponse,
                 'Unable to edit Image'
-              )
+              ),
             });
           });
         return;
@@ -237,9 +237,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         createImage({
           diskID: Number(selectedDisk),
           label,
-          description: safeDescription
+          description: safeDescription,
         })
-          .then(_ => {
+          .then((_) => {
             if (!this.mounted) {
               return;
             }
@@ -247,16 +247,16 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             resetEventsPolling();
 
             this.setState({
-              submitting: false
+              submitting: false,
             });
 
             this.close();
 
             enqueueSnackbar('Image scheduled for creation.', {
-              variant: 'info'
+              variant: 'info',
             });
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             if (!this.mounted) {
               return;
             }
@@ -266,7 +266,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               errors: getAPIErrorOrDefault(
                 errorResponse,
                 'There was an error creating the image.'
-              )
+              ),
             });
           });
         return;
@@ -275,14 +275,14 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         if (!selectedLinode) {
           this.setState({
             submitting: false,
-            errors: [{ field: 'linode_id', reason: 'Choose a Linode.' }]
+            errors: [{ field: 'linode_id', reason: 'Choose a Linode.' }],
           });
           return;
         }
         this.close();
         history.push({
           pathname: `/linodes/${selectedLinode}/rebuild`,
-          state: { selectedImageId: imageID }
+          state: { selectedImageId: imageID },
         });
       default:
         return;
@@ -320,7 +320,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       canCreateImage,
       changeLabel,
       changeDescription,
-      classes
+      classes,
     } = this.props;
     const { disks, errors, notice, submitting } = this.state;
 
@@ -332,7 +332,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         disk_id: 'Disk',
         region: 'Region',
         size: 'Size',
-        label: 'Label'
+        label: 'Label',
       },
       errors
     );
@@ -363,8 +363,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             selectedLinode={selectedLinode}
             linodeError={linodeError}
             disabled={!canCreateImage}
-            handleChange={linode => this.handleLinodeChange(linode.id)}
-            filterCondition={linode =>
+            handleChange={(linode) => this.handleLinodeChange(linode.id)}
+            filterCondition={(linode) =>
               availableImages ? availableImages.includes(linode.id) : true
             }
             updateFor={[
@@ -372,7 +372,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               linodeError,
               classes,
               canCreateImage,
-              availableImages
+              availableImages,
             ]}
           />
         )}
@@ -475,8 +475,8 @@ export default compose<CombinedProps, Props>(
     // (in addition to the global add_images grant).
     availableImages: profile?.restricted
       ? profile?.grants?.linode
-          .filter(thisGrant => thisGrant.permissions === 'read_write')
-          .map(thisGrant => thisGrant.id) ?? []
-      : null
+          .filter((thisGrant) => thisGrant.permissions === 'read_write')
+          .map((thisGrant) => thisGrant.id) ?? []
+      : null,
   }))
 )(ImageDrawer);

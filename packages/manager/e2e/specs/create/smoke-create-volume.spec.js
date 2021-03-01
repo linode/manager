@@ -7,7 +7,7 @@ import {
   timestamp,
   apiDeleteAllLinodes,
   apiDeleteAllVolumes,
-  checkEnvironment
+  checkEnvironment,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
@@ -16,25 +16,29 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   const linodeEast = {
     linodeLabel: `east${timestamp()}`,
     privateIp: false,
-    tags: []
+    tags: [],
   };
   const linodeCentral = {
     linodeLabel: `central${timestamp()}`,
     privateIp: false,
     tags: [],
     type: undefined,
-    region: 'us-central'
+    region: 'us-central',
   };
   const testVolume = {
     label: ``,
-    size: '10'
+    size: '10',
   };
 
   const getLinodeOptions = () => {
     VolumeDetail.selectLinodeOrVolume.click();
     VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal);
-    const linodes = VolumeDetail.selectOptions.map(option => option.getText());
-    const justLinodes = linodes.filter(options => options != 'Select a Linode');
+    const linodes = VolumeDetail.selectOptions.map((option) =>
+      option.getText()
+    );
+    const justLinodes = linodes.filter(
+      (options) => options != 'Select a Linode'
+    );
     $('body').click();
     VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal, true);
     return justLinodes;
@@ -83,7 +87,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   });
 
   it('should display volume price dynamically based on size', () => {
-    [200, 333, 450].forEach(price => {
+    [200, 333, 450].forEach((price) => {
       browser.trySetValue(`${VolumeDetail.size.selector} #size`, price);
       const volumePrice = price * 0.1;
       expect(VolumeDetail.volumePrice.getText()).toEqual(
@@ -158,9 +162,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   });
 
   it('expected action menu options are displayed for a detached volume', () => {
-    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${
-      VolumeDetail.actionMenu.selector
-    }`;
+    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`;
     $(volumeActionMenu).waitForDisplayed(constants.wait.true);
     $(volumeActionMenu).click();
     VolumeDetail.assertActionMenuItems(false);
@@ -210,9 +212,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     expect(VolumeDetail.mountCommand.getAttribute('value'))
       .withContext(`${assertLog.incorrectText}`)
       .toEqual(
-        `mount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${
-          testVolume.label
-        }`
+        `mount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${testVolume.label}`
       );
     VolumeDetail.closeVolumeDrawer();
     browser.waitUntil(() => {
@@ -233,9 +233,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   });
 
   it('can detach an attached volume', () => {
-    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${
-      VolumeDetail.actionMenu.selector
-    }`;
+    const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`;
     $(volumeActionMenu).waitForDisplayed(constants.wait.true);
     $(volumeActionMenu).click();
     VolumeDetail.assertActionMenuItems(true);
@@ -261,9 +259,9 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
       'Clone'
     );
     VolumeDetail.cloneVolume(cloneLabel, testVolume.size);
-    const clonedVolume = $$(VolumeDetail.volumeCellLabel.selector).find(
-      volume => volume.getText().includes(cloneLabel)
-    );
+    const clonedVolume = $$(
+      VolumeDetail.volumeCellLabel.selector
+    ).find((volume) => volume.getText().includes(cloneLabel));
     expect(clonedVolume).toBeTruthy();
   });
 

@@ -8,9 +8,9 @@ describe('Toast Notification Suite', () => {
   const toast = '[data-qa-toast] div';
   const toastColor = '[data-qa-toast] [role="alertdialog"]';
 
-  const notificationButton = state => {
+  const notificationButton = (state) => {
     const button = $$('#root>[type="button"]').find(
-      button => button.getText() === state
+      (button) => button.getText() === state
     );
     button.waitForDisplayed(constants.wait.normal);
     return button;
@@ -31,7 +31,7 @@ describe('Toast Notification Suite', () => {
   });
 
   it('Toast notification displays with expected variant', () => {
-    variants.forEach(variant => {
+    variants.forEach((variant) => {
       notificationButton(variant).click();
       $(toast).waitForDisplayed(constants.wait.normal);
       expect($(toast).getAttribute('class'))
@@ -67,7 +67,7 @@ describe('Toast Notification Suite', () => {
     notificationButton(variants[1]).click();
     notificationButton(variants[1]).click();
     browser.pause(500);
-    const successIsNull = $$(toast).find(toast =>
+    const successIsNull = $$(toast).find((toast) =>
       toast.getAttribute('class').includes('SnackBar-success')
     );
     expect(successIsNull)

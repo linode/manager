@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
@@ -21,19 +21,19 @@ const styles = (theme: Theme) =>
     root: {},
     footnote: {
       fontSize: 14,
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     link: {
-      ...theme.applyLinkStyles
+      ...theme.applyLinkStyles,
     },
     icon: {
       display: 'inline-block',
       fontSize: '0.8em',
-      marginLeft: theme.spacing(1) / 3
+      marginLeft: theme.spacing(1) / 3,
     },
     toolTip: {
-      paddingTop: theme.spacing(1)
-    }
+      paddingTop: theme.spacing(1),
+    },
   });
 
 interface Props {
@@ -46,14 +46,14 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const AutoBackups: React.FC<CombinedProps> = props => {
+const AutoBackups: React.FC<CombinedProps> = (props) => {
   const {
     backups_enabled,
     classes,
     hasLinodesWithoutBackups,
     onChange,
     openBackupsDrawer,
-    isManagedCustomer
+    isManagedCustomer,
   } = props;
 
   return (

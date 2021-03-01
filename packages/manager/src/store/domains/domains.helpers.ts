@@ -5,9 +5,9 @@ import { Domain } from '@linode/api-v4/lib/domains';
  */
 export const entitiesFromPayload = (domains: Domain[]) => {
   /** transform as necessary */
-  return domains.map(i => i);
+  return domains.map((i) => i);
 };
 
 export const resultsFromPayload = (domains: Domain[]) => {
-  return domains.map(l => l.id);
+  return domains.map((l) => l.id);
 };

@@ -32,7 +32,7 @@ const reduceEntitiesToTags = <T extends Tagged>(
 const addToArrayAtKey = <T>(value: T) => (obj: any, key: string) => {
   return {
     ...obj,
-    [key]: addTo(obj[key], value)
+    [key]: addTo(obj[key], value),
   };
 };
 
@@ -86,6 +86,6 @@ export const sortGroups = (groups: GroupedBy<any>) => {
     ...groups
       .filter(([tag]) => tag !== NONE)
       .sort(([firstTag], [secondTag]) => (firstTag > secondTag ? 0 : -1)),
-    groups[foundUntaggedIndex]
+    groups[foundUntaggedIndex],
   ];
 };

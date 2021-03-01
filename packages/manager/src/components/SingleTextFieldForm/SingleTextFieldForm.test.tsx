@@ -8,7 +8,7 @@ describe('SingleTextFieldForm', () => {
   const props: Props = {
     label: 'Username',
     submitForm: jest.fn(() => Promise.resolve()),
-    initialValue: 'jane-doe'
+    initialValue: 'jane-doe',
   };
 
   it('Renders a TextField with the given label and initial value', () => {

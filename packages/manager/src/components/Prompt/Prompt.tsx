@@ -40,7 +40,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Prompt: React.FC<CombinedProps> = props => {
+const Prompt: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
 
   React.useEffect(() => {

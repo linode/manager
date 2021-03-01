@@ -6,7 +6,7 @@ import { CombinedProps, FromBackupsContent } from './FromBackupsContent';
 
 const mockProps: CombinedProps = {
   classes: {
-    main: ''
+    main: '',
   },
   updateDiskSize: jest.fn(),
   updateImageID: jest.fn(),
@@ -19,7 +19,7 @@ const mockProps: CombinedProps = {
   typesData: [],
   userCannotCreateLinode: false,
   linodesData: [],
-  setBackupID: jest.fn()
+  setBackupID: jest.fn(),
 };
 
 describe('FromBackupsContent', () => {

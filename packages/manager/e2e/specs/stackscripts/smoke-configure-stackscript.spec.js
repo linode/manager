@@ -12,7 +12,7 @@ xdescribe('StackScript - Create Suite', () => {
     label: `${new Date().getTime()}-MyStackScript`,
     description: 'test stackscript example',
     revisionNote: new Date().getTime(),
-    script: 'bad script'
+    script: 'bad script',
   };
 
   beforeAll(() => {

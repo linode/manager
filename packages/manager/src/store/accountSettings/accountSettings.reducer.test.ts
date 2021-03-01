@@ -2,7 +2,7 @@ import { accountSettings } from 'src/__data__/account';
 import {
   requestAccountSettingsActions,
   updateAccountSettingsActions,
-  updateSettingsInStore
+  updateSettingsInStore,
 } from './accountSettings.actions';
 import reducer, { defaultState } from './accountSettings.reducer';
 

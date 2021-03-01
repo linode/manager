@@ -6,7 +6,7 @@ import {
   EntityError,
   EntityMap,
   MappedEntityState2 as MappedEntityState,
-  ThunkActionCreator
+  ThunkActionCreator,
 } from 'src/store/types';
 import { AsyncActionCreators } from 'typescript-fsa';
 
@@ -22,7 +22,7 @@ export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
   state: S,
   results: number,
-  update: (e: E) => E = i => i
+  update: (e: E) => E = (i) => i
 ): S =>
   Object.assign({}, state, {
     loading: false,
@@ -31,7 +31,7 @@ export const onGetAllSuccess = <E extends Entity, S>(
     itemsById: items.reduce(
       (itemsById, item) => ({ ...itemsById, [item.id]: update(item) }),
       {}
-    )
+    ),
   });
 
 export const setError = <E extends Entity>(
@@ -55,7 +55,7 @@ export const createDefaultState = <E extends Entity, O extends EntityError>(
   lastUpdated: 0,
   error: defaultError as O, // @todo decide on better approach to error typing
   results: 0,
-  ...override
+  ...override,
 });
 
 export const onDeleteSuccess = <E extends Entity, O = APIError[] | undefined>(
@@ -81,7 +81,7 @@ export const removeMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    results: Object.keys(itemsById).length
+    results: Object.keys(itemsById).length,
   };
 };
 
@@ -98,7 +98,7 @@ export const addMany = <E extends Entity, O = APIError[] | undefined>(
   return {
     ...state,
     itemsById,
-    results: results ?? Object.keys(itemsById).length
+    results: results ?? Object.keys(itemsById).length,
   };
 };
 
@@ -130,7 +130,7 @@ export const onGetPageSuccess = <E extends Entity>(
     ? {
         ...newState,
         lastUpdated: Date.now(),
-        loading: false
+        loading: false,
       }
     : { ...newState, loading: false };
 };
@@ -139,7 +139,7 @@ export const createRequestThunk = <Req extends any, Res extends any, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<any>
 ): ThunkActionCreator<Promise<Res>, Req> => {
-  return (params: Req) => async dispatch => {
+  return (params: Req) => async (dispatch) => {
     const { started, done, failed } = actions;
 
     dispatch(started(params));
@@ -175,8 +175,8 @@ export const updateInPlace = <E extends Entity>(
     ...state,
     itemsById: {
       ...itemsById,
-      [id]: updated
-    }
+      [id]: updated,
+    },
   };
 };
 
@@ -208,5 +208,5 @@ export const onGetOneSuccess = <E extends Entity>(
   Object.assign({}, state, {
     loading: false,
     results: Object.keys(state.itemsById).length,
-    itemsById: { ...state.itemsById, [entity.id]: entity }
+    itemsById: { ...state.itemsById, [entity.id]: entity },
   });

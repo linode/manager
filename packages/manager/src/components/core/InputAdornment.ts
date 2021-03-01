@@ -1,5 +1,5 @@
 import InputAdornment, {
-  InputAdornmentProps as _InputAdornmentProps
+  InputAdornmentProps as _InputAdornmentProps,
 } from '@material-ui/core/InputAdornment';
 
 /* tslint:disable-next-line:no-empty-interface */

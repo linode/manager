@@ -10,7 +10,7 @@ const WrappedGrid = React.forwardRef<HTMLDivElement, GridProps>(
     const updatedProps: GridProps = {
       ...props,
       /** re: https://github.com/mui-org/material-ui/pull/10768 */
-      ...(props.container && !props.spacing && { spacing: 2 })
+      ...(props.container && !props.spacing && { spacing: 2 }),
     };
 
     return (

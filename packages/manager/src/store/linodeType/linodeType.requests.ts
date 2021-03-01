@@ -2,7 +2,7 @@ import {
   getDeprecatedLinodeTypes,
   getLinodeTypes,
   getType,
-  LinodeType
+  LinodeType,
 } from '@linode/api-v4/lib/linodes';
 import cachedTypes from 'src/cachedData/types.json';
 import cachedDeprecatedTypes from 'src/cachedData/typesLegacy.json';
@@ -12,11 +12,11 @@ import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';
 import {
   getLinodeTypeActions,
-  getLinodeTypesActions
+  getLinodeTypesActions,
 } from './linodeType.actions';
 
 type RequestTypesThunk = ThunkActionCreator<Promise<LinodeType[]>>;
-export const requestTypes: RequestTypesThunk = () => dispatch => {
+export const requestTypes: RequestTypesThunk = () => (dispatch) => {
   /**
    * This is a semi-static endpoint, so use cached data
    * if it's available.
@@ -28,11 +28,11 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
     // AC: need to cast as the Class string cannot be assigned to a type enum in TS 3.9
     const allCachedTypes: LinodeType[] = [
       ...cachedTypes.data,
-      ...cachedDeprecatedTypes.data
+      ...cachedDeprecatedTypes.data,
     ] as LinodeType[];
     dispatch(
       getLinodeTypesActions.done({
-        result: allCachedTypes
+        result: allCachedTypes,
       })
     );
     return Promise.resolve(allCachedTypes);
@@ -40,17 +40,17 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
   dispatch(getLinodeTypesActions.started());
   return Promise.all([
     getAll<LinodeType>(getLinodeTypes)(),
-    getAll<LinodeType>(getDeprecatedLinodeTypes)()
+    getAll<LinodeType>(getDeprecatedLinodeTypes)(),
   ])
     .then(([{ data: types }, { data: legacyTypes }]) => [
       ...types,
-      ...legacyTypes
+      ...legacyTypes,
     ])
-    .then(allTypes => {
+    .then((allTypes) => {
       dispatch(getLinodeTypesActions.done({ result: allTypes }));
       return allTypes;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(getLinodeTypesActions.failed({ error }));
       return error;
     });

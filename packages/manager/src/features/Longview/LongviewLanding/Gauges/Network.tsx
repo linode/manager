@@ -4,23 +4,23 @@ import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { LongviewNetwork } from '../../request.types';
 import {
   convertNetworkToUnit,
-  generateNetworkUnits
+  generateNetworkUnits,
 } from '../../shared/utilities';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & LVDataProps & WithTheme;
 
-const NetworkGauge: React.FC<CombinedProps> = props => {
+const NetworkGauge: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
     longviewClientData,
-    lastUpdatedError
+    lastUpdatedError,
   } = props;
 
   const networkUsed = generateUsedNetworkAsBytes(
@@ -38,7 +38,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
           <Typography>
             <strong>Network</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -49,7 +49,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
           <Typography>
             <strong>Network</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -73,7 +73,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
             <strong>Network</strong>
           </Typography>
         </React.Fragment>
-      )
+      ),
     };
   };
 
@@ -101,7 +101,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID),
+  withClientStats<Props>((ownProps) => ownProps.clientID),
   withTheme
 )(NetworkGauge);
 

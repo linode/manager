@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DiskGraph: React.FC<CombinedProps> = props => {
+const DiskGraph: React.FC<CombinedProps> = (props) => {
   const {
     diskLabel,
     loading,
@@ -23,7 +23,7 @@ const DiskGraph: React.FC<CombinedProps> = props => {
     timezone,
     sysInfoType,
     startTime,
-    endTime
+    endTime,
   } = props;
 
   const isSwap = stats?.isswap ?? 0;

@@ -21,7 +21,7 @@ export const safeGetTabRender = (tabs: Tab[], selectedTab: number) => {
 
     reportException('Attempted to render undefined tab.', {
       'Selected tab': selectedTab,
-      Location: window.location.search
+      Location: window.location.search,
     });
     return <ErrorState errorText={'An unexpected error occurred.'} />;
   };

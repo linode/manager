@@ -9,10 +9,10 @@ export const pool1: ExtendedNodePool = {
     {
       status: 'ready',
       id: 'id-1',
-      instance_id: 1
-    }
+      instance_id: 1,
+    },
   ],
-  clusterID: 10
+  clusterID: 10,
 };
 
 export const pool2: ExtendedNodePool = {
@@ -23,15 +23,15 @@ export const pool2: ExtendedNodePool = {
     {
       status: 'ready',
       id: 'id-1',
-      instance_id: 1
+      instance_id: 1,
     },
     {
       status: 'ready',
       id: 'id-2',
-      instance_id: 2
-    }
+      instance_id: 2,
+    },
   ],
-  clusterID: 10
+  clusterID: 10,
 };
 
 export const pool3: ExtendedNodePool = {
@@ -42,10 +42,10 @@ export const pool3: ExtendedNodePool = {
     {
       status: 'ready',
       id: 'id-1',
-      instance_id: 1
-    }
+      instance_id: 1,
+    },
   ],
-  clusterID: 10
+  clusterID: 10,
 };
 
 export const extendedPools = [pool1, pool2, pool3];
@@ -53,28 +53,28 @@ export const extendedPools = [pool1, pool2, pool3];
 export const node1 = {
   ...pool1,
   totalMonthlyPrice: 5,
-  queuedForAddition: true
+  queuedForAddition: true,
 };
 
 export const node2 = {
   ...pool2,
   totalMonthlyPrice: 50,
-  queuedForDeletion: true
+  queuedForDeletion: true,
 };
 
 export const node3 = {
   ...pool3,
-  totalMonthlyPrice: 50
+  totalMonthlyPrice: 50,
 };
 
 export const node4 = {
   ...pool3,
-  totalMonthlyPrice: 1
+  totalMonthlyPrice: 1,
 };
 
 export const nodePoolRequests: PoolNodeWithPrice[] = [
   node1,
   node2,
   node3,
-  node4
+  node4,
 ];

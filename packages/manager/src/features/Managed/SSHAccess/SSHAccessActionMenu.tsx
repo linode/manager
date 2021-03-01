@@ -1,13 +1,13 @@
 import {
   ManagedLinodeSetting,
-  updateLinodeSettings
+  updateLinodeSettings,
 } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -23,7 +23,7 @@ interface Props {
 
 export type CombinedProps = Props & WithSnackbarProps;
 
-export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
+export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -39,43 +39,43 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         openDrawer(linodeId);
-      }
+      },
     },
     isEnabled
       ? {
           title: 'Disable',
           onClick: () => {
             updateLinodeSettings(linodeId, {
-              ssh: { access: false }
+              ssh: { access: false },
             })
-              .then(updatedLinodeSetting => {
+              .then((updatedLinodeSetting) => {
                 updateOne(updatedLinodeSetting);
                 enqueueSnackbar('SSH Access disabled successfully.', {
-                  variant: 'success'
+                  variant: 'success',
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 handleError('Error disabling SSH Access for this Linode.', err);
               });
-          }
+          },
         }
       : {
           title: 'Enable',
           onClick: () => {
             updateLinodeSettings(linodeId, {
-              ssh: { access: true }
+              ssh: { access: true },
             })
-              .then(updatedLinodeSetting => {
+              .then((updatedLinodeSetting) => {
                 updateOne(updatedLinodeSetting);
                 enqueueSnackbar('SSH Access enabled successfully.', {
-                  variant: 'success'
+                  variant: 'success',
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 handleError('Error enabling SSH Access for this Linode.', err);
               });
-          }
-        }
+          },
+        },
   ];
 
   return (
@@ -87,7 +87,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for SSH Access key for Linode ${props.linodeLabel}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

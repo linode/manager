@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -20,15 +20,15 @@ const styles = (theme: Theme) =>
       flexGrow: 1,
       width: '100%',
       marginTop: theme.spacing(3),
-      backgroundColor: theme.color.white
+      backgroundColor: theme.color.white,
     },
     inner: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     expPanelButton: {
       padding: 0,
-      marginTop: theme.spacing(2)
-    }
+      marginTop: theme.spacing(2),
+    },
   });
 
 const styled = withStyles(styles);
@@ -51,7 +51,7 @@ export class InfoPanel extends React.Component<CombinedProps> {
           <TextField
             {...(labelFieldProps || {
               label: 'Label',
-              placeholder: 'Enter a label'
+              placeholder: 'Enter a label',
             })}
             data-qa-label-input
           />

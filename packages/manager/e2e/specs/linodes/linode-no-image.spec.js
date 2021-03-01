@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   apiCreateMultipleLinodes,
   apiDeleteAllLinodes,
-  timestamp
+  timestamp,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
@@ -13,7 +13,7 @@ describe('Can not boot a linode without an Image', () => {
   const linode = {
     linodeLabel: `Auto${timestamp()}`,
     noImage: true,
-    timeout: 12000
+    timeout: 12000,
   };
   let testLinode;
 

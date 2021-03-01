@@ -2,7 +2,7 @@ import { firewallFactory, firewallRulesFactory } from 'src/factories/firewalls';
 import {
   createFirewallActions,
   deleteFirewallActions,
-  getFirewalls
+  getFirewalls,
   // updateFirewallActions
 } from './firewalls.actions';
 import reducer, { defaultState } from './firewalls.reducer';
@@ -16,7 +16,7 @@ const addEntities = () =>
     defaultState,
     getFirewalls.done({
       params: {},
-      result: { data: baseFirewall, results: 3 }
+      result: { data: baseFirewall, results: 3 },
     })
   );
 
@@ -42,7 +42,7 @@ describe('Cloud Firewalls Reducer', () => {
       { ...defaultState, loading: true },
       getFirewalls.done({
         params: {},
-        result: { data: baseFirewall, results: 3 }
+        result: { data: baseFirewall, results: 3 },
       })
     );
     expect(Object.values(newState.itemsById)).toEqual(baseFirewall);
@@ -56,7 +56,7 @@ describe('Cloud Firewalls Reducer', () => {
       { ...defaultState, loading: true },
       getFirewalls.done({
         params: {},
-        result: { data: [], results: 0 }
+        result: { data: [], results: 0 },
       })
     );
     expect(newState.itemsById).toEqual({});
@@ -67,7 +67,7 @@ describe('Cloud Firewalls Reducer', () => {
 
   it('should handle a successful Create action', () => {
     const params = {
-      rules: firewallRulesFactory.build()
+      rules: firewallRulesFactory.build(),
     };
     const newFirewall = firewallFactory.build();
     const newState = reducer(
@@ -84,7 +84,7 @@ describe('Cloud Firewalls Reducer', () => {
 
   it('should handle a failed Create action', () => {
     const params = {
-      rules: firewallRulesFactory.build()
+      rules: firewallRulesFactory.build(),
     };
     const newState = reducer(
       defaultState,
@@ -108,7 +108,7 @@ describe('Cloud Firewalls Reducer', () => {
       stateWithFirewalls,
       deleteFirewallActions.done({
         params: { firewallID: firewallToDelete.id },
-        result: {}
+        result: {},
       })
     );
     expect(newState.results).toBe(stateWithFirewalls.results - 1);
@@ -122,7 +122,7 @@ describe('Cloud Firewalls Reducer', () => {
       stateWithFirewalls,
       deleteFirewallActions.failed({
         params: { firewallID: firewallIDToDelete },
-        error: mockError
+        error: mockError,
       })
     );
     expect(newState.results).toBe(stateWithFirewalls.results);

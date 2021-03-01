@@ -42,7 +42,7 @@ const renderActions = (
   );
 };
 
-const RecycleAllClusterNodesDialog: React.FC<Props> = props => {
+const RecycleAllClusterNodesDialog: React.FC<Props> = (props) => {
   const { error, loading, open, onClose, onSubmit } = props;
 
   return (

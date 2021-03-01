@@ -6,7 +6,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 0,
-        balance: 0
+        balance: 0,
       })
     ).toBe(10);
   });
@@ -16,7 +16,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 0,
-        balance: 5
+        balance: 5,
       })
     ).toBe(10);
 
@@ -24,7 +24,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 0,
-        balance: -5
+        balance: -5,
       })
     ).toBe(5);
 
@@ -32,7 +32,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 0,
-        balance: -20
+        balance: -20,
       })
     ).toBe(-10);
   });
@@ -42,7 +42,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 5,
-        balance: 0
+        balance: 0,
       })
     ).toBe(5);
 
@@ -50,7 +50,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 5,
-        balance: -5
+        balance: -5,
       })
     ).toBe(0);
   });
@@ -60,7 +60,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 15,
-        balance: -5
+        balance: -5,
       })
     ).toBe(0);
 
@@ -68,7 +68,7 @@ describe('getNextCycleEstimatedBalance', () => {
       getNextCycleEstimatedBalance({
         balanceUninvoiced: 10,
         promoThisMonthCreditRemaining: 15,
-        balance: 0
+        balance: 0,
       })
     ).toBe(0);
   });

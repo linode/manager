@@ -8,19 +8,19 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 const useStyles = makeStyles((_: Theme) => ({
   root: {
     width: '100%',
-    padding: '0px'
+    padding: '0px',
   },
   hasFixedMenu: {
     '& .react-select__menu': {
-      margin: '2px 0 0 0'
-    }
+      margin: '2px 0 0 0',
+    },
   },
   inDetailsContext: {
     width: '415px',
     flexBasis: '100%',
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 }));
 
 interface Props {
@@ -34,27 +34,27 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const AddTag: React.FC<Props> = props => {
+export const AddTag: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
   const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
   React.useEffect(() => {
     getTags()
-      .then(response =>
-        response.data.map(thisTag => ({
+      .then((response) =>
+        response.data.map((thisTag) => ({
           value: thisTag.label,
-          label: thisTag.label
+          label: thisTag.label,
         }))
       )
-      .then(tags => setAccountTags(tags))
+      .then((tags) => setAccountTags(tags))
       // @todo should we toast for this? If we swallow the error the only
       // thing we lose is preexisting tabs as options; the add tag flow
       // should still work.
-      .catch(_ => null);
+      .catch((_) => null);
   }, []);
 
   const tagOptions = accountTags.filter(
-    thisTag => !tags.includes(thisTag.value)
+    (thisTag) => !tags.includes(thisTag.value)
   );
 
   const handleAddTag = (newTag: Item<string>) => {
@@ -74,7 +74,7 @@ export const AddTag: React.FC<Props> = props => {
       className={classNames({
         [classes.root]: true,
         [classes.hasFixedMenu]: fixedMenu,
-        [classes.inDetailsContext]: inDetailsContext
+        [classes.inDetailsContext]: inDetailsContext,
       })}
       onChange={handleAddTag}
       options={tagOptions}

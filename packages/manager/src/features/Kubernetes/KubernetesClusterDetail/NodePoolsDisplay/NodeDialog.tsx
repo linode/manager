@@ -43,7 +43,7 @@ const renderActions = (
   );
 };
 
-const NodeDialog: React.FC<Props> = props => {
+const NodeDialog: React.FC<Props> = (props) => {
   const { error, loading, open, onClose, onDelete, label } = props;
 
   return (

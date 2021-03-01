@@ -3,7 +3,7 @@ import {
   createNodePoolActions,
   deleteNodePoolActions,
   requestNodePoolsActions,
-  updateNodePoolActions
+  updateNodePoolActions,
 } from './nodePools.actions';
 
 import reducer, { defaultState } from './nodePools.reducer';
@@ -33,7 +33,7 @@ describe('NodePools reducer', () => {
       expect(newState.loading).toBe(false);
       expect(newState.entities).toEqual([]);
       expect(newState.error).toEqual({
-        read: mockError
+        read: mockError,
       });
     });
   });
@@ -43,7 +43,7 @@ describe('NodePools reducer', () => {
       const oldState = {
         ...defaultState,
         entities: [pool1, pool2],
-        results: [pool1.id, pool2.id]
+        results: [pool1.id, pool2.id],
       };
       const newState = reducer(
         oldState,
@@ -68,13 +68,13 @@ describe('NodePools reducer', () => {
       const oldState = {
         ...defaultState,
         entities: extendedPools,
-        results: extendedPools.map(p => p.id)
+        results: extendedPools.map((p) => p.id),
       };
       const newState = reducer(
         oldState,
         updateNodePoolActions.done({
           params: { ...mockParams, nodePoolID: 1 },
-          result: updatedPoolNode
+          result: updatedPoolNode,
         })
       );
       expect(newState.entities).toHaveLength(3);
@@ -87,7 +87,7 @@ describe('NodePools reducer', () => {
         defaultState,
         updateNodePoolActions.failed({
           params: { ...mockParams, nodePoolID: 1 },
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState.error).toHaveProperty('update', mockError);
@@ -99,13 +99,13 @@ describe('NodePools reducer', () => {
       const oldState = {
         ...defaultState,
         entities: [pool1, pool2, pool3],
-        results: [pool1.id, pool2.id, pool3.id]
+        results: [pool1.id, pool2.id, pool3.id],
       };
       const newState = reducer(
         oldState,
         deleteNodePoolActions.done({
           params: { clusterID: Infinity, nodePoolID: pool3.id },
-          result: {}
+          result: {},
         })
       );
       expect(newState.entities).toEqual([pool1, pool2]);
@@ -117,7 +117,7 @@ describe('NodePools reducer', () => {
         defaultState,
         deleteNodePoolActions.failed({
           params: { clusterID: Infinity, nodePoolID: Infinity },
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState.error).toHaveProperty('delete', mockError);

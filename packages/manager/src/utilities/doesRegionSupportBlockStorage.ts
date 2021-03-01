@@ -4,7 +4,7 @@ export const doesRegionSupportBlockStorage = (
   region: string,
   regionsData: Region[]
 ) => {
-  const regionMetaData = regionsData.find(thisRegion => {
+  const regionMetaData = regionsData.find((thisRegion) => {
     return thisRegion.id === region;
   });
   if (!regionMetaData) {

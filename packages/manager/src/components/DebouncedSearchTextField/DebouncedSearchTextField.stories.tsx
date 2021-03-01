@@ -11,7 +11,7 @@ const list = [
   'keyboards',
   'chairs',
   'speakers',
-  'ecumenical council number two'
+  'ecumenical council number two',
 ];
 
 storiesOf('Debounced Search', module)

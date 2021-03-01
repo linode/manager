@@ -4,7 +4,7 @@ import { concat } from 'ramda';
 import * as React from 'react';
 import Select, {
   Item,
-  NoOptionsMessageProps
+  NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
@@ -32,7 +32,7 @@ export interface Props {
 class TagsInput extends React.Component<Props, State> {
   static defaultProps = {
     label: 'Add Tags',
-    name: 'tags'
+    name: 'tags',
   };
   createTag = (inputValue: string) => {
     const { value, onChange } = this.props;
@@ -41,11 +41,11 @@ class TagsInput extends React.Component<Props, State> {
 
     if (inputValue.length < 3 || inputValue.length > 50) {
       this.setState({
-        errors: [{ field: 'label', reason: 'Length must be 3-50 characters' }]
+        errors: [{ field: 'label', reason: 'Length must be 3-50 characters' }],
       });
     } else {
       this.setState({
-        errors: []
+        errors: [],
       });
       onChange(updatedSelectedTags);
     }
@@ -53,20 +53,20 @@ class TagsInput extends React.Component<Props, State> {
 
   state: State = {
     accountTags: [],
-    errors: []
+    errors: [],
   };
 
   componentDidMount() {
     getTags()
-      .then(response => {
+      .then((response) => {
         const accountTags: Item[] = response.data.map((tag: Tag) => {
           return { label: tag.label, value: tag.label };
         });
         this.setState({ accountTags });
       })
-      .catch(_ => {
+      .catch((_) => {
         const defaultError = [
-          { reason: 'There was an error retrieving your tags.' }
+          { reason: 'There was an error retrieving your tags.' },
         ];
         this.setState({ errors: defaultError });
       });
@@ -74,7 +74,7 @@ class TagsInput extends React.Component<Props, State> {
 
   getEmptyMessage = (value: NoOptionsMessageProps) => {
     const { value: tags } = this.props;
-    if (tags.map(tag => tag.value).includes(value.inputValue)) {
+    if (tags.map((tag) => tag.value).includes(value.inputValue)) {
       return 'This tag is already selected.';
     } else {
       return 'No results.';
@@ -90,7 +90,7 @@ class TagsInput extends React.Component<Props, State> {
       label,
       hideLabel,
       disabled,
-      menuPlacement
+      menuPlacement,
     } = this.props;
     const { accountTags, errors } = this.state;
 

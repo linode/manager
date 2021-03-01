@@ -19,22 +19,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(4)}px ${theme.spacing(2)}px 0px`,
     '& h1': {
       marginTop: theme.spacing(4),
-      marginBottom: theme.spacing(4)
+      marginBottom: theme.spacing(4),
     },
     '& p': {
       marginTop: theme.spacing(2),
       fontSize: theme.spacing(2),
-      lineHeight: `${theme.spacing(3)}px`
+      lineHeight: `${theme.spacing(3)}px`,
     },
     '& button': {
       marginTop: theme.spacing(8),
       backgroundColor: '#00b159',
-      color: '#fff'
-    }
+      color: '#fff',
+    },
   },
   logo: {
-    width: '100px'
-  }
+    width: '100px',
+  },
 }));
 
 export const CancelLanding: React.FC<{}> = () => {

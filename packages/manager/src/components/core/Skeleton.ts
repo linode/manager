@@ -1,5 +1,5 @@
 import Skeleton, {
-  SkeletonProps as _SkeletonProps
+  SkeletonProps as _SkeletonProps,
 } from '@material-ui/lab/Skeleton';
 
 /* tslint:disable-next-line:no-empty-interface */

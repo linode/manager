@@ -5,7 +5,7 @@ import {
   deleteLinodeConfigActions,
   getAllLinodeConfigsActions,
   getLinodeConfigActions,
-  updateLinodeConfigActions
+  updateLinodeConfigActions,
 } from './config.actions';
 import reducer, { State } from './config.reducer';
 import { Entity } from './config.types';
@@ -15,16 +15,16 @@ describe('config reducer', () => {
   const mockConfig1 = {
     ...configFactory.build({
       id: 2,
-      label: 'test-config1'
+      label: 'test-config1',
     }),
-    linode_id: 1
+    linode_id: 1,
   };
   const mockConfig2 = {
     ...configFactory.build({
       id: 3,
-      label: 'test-config2'
+      label: 'test-config2',
     }),
-    linode_id: 1
+    linode_id: 1,
   };
 
   describe('getLinodeConfigActions', () => {
@@ -33,7 +33,7 @@ describe('config reducer', () => {
         defaultState,
         getLinodeConfigActions.started({
           linodeId: mockConfig1.linode_id,
-          configId: mockConfig1.id
+          configId: mockConfig1.id,
         })
       );
       expect(newState).toHaveProperty(String(mockConfig1.linode_id));
@@ -48,7 +48,7 @@ describe('config reducer', () => {
         defaultState,
         getLinodeConfigActions.done({
           params: { linodeId: mockConfig1.linode_id, configId: mockConfig1.id },
-          result: mockConfig1
+          result: mockConfig1,
         })
       );
       verifyConfig(newState, mockConfig1);
@@ -60,7 +60,7 @@ describe('config reducer', () => {
       const newState = reducer(
         defaultState,
         getAllLinodeConfigsActions.started({
-          linodeId: mockConfig1.linode_id
+          linodeId: mockConfig1.linode_id,
         })
       );
       expect(newState).toHaveProperty(String(mockConfig1.linode_id));
@@ -75,7 +75,7 @@ describe('config reducer', () => {
         defaultState,
         getAllLinodeConfigsActions.done({
           params: { linodeId: mockConfig1.linode_id },
-          result: { data: [mockConfig1, mockConfig2], results: 2 }
+          result: { data: [mockConfig1, mockConfig2], results: 2 },
         })
       );
       verifyConfig(newState, mockConfig1);
@@ -88,7 +88,7 @@ describe('config reducer', () => {
         defaultState,
         getAllLinodeConfigsActions.failed({
           params: { linodeId: mockConfig1.linode_id },
-          error: [{ reason: errorMessage }]
+          error: [{ reason: errorMessage }],
         })
       );
       expect(newState[mockConfig1.linode_id].error).toHaveProperty('read');
@@ -109,9 +109,9 @@ describe('config reducer', () => {
             label: mockConfig1.label,
             devices: mockConfig1.devices,
             root_device: mockConfig1.root_device,
-            helpers: mockConfig1.helpers
+            helpers: mockConfig1.helpers,
           },
-          result: mockConfig1
+          result: mockConfig1,
         })
       );
       verifyConfig(newState, mockConfig1);
@@ -126,9 +126,9 @@ describe('config reducer', () => {
           params: {
             linodeId: mockConfig1.linode_id,
             configId: mockConfig1.id,
-            label: mockConfig1.label
+            label: mockConfig1.label,
           },
-          result: mockConfig1
+          result: mockConfig1,
         })
       );
       verifyConfig(newState, mockConfig1);
@@ -142,15 +142,15 @@ describe('config reducer', () => {
         itemsById: { [mockConfig1.id]: mockConfig1 },
         lastUpdated: 1,
         loading: false,
-        error: {}
+        error: {},
       },
       [mockConfig2.linode_id]: {
         results: 1,
         itemsById: { [mockConfig2.id]: mockConfig2 },
         lastUpdated: 1,
         loading: false,
-        error: {}
-      }
+        error: {},
+      },
     };
 
     it('sets error.delete to `undefined` when the request is started', () => {
@@ -158,7 +158,7 @@ describe('config reducer', () => {
         state,
         deleteLinodeConfigActions.started({
           linodeId: mockConfig1.linode_id,
-          configId: mockConfig1.id
+          configId: mockConfig1.id,
         })
       );
       expect(newState[mockConfig1.linode_id].error?.delete).toBeUndefined();
@@ -169,9 +169,9 @@ describe('config reducer', () => {
         deleteLinodeConfigActions.done({
           params: {
             linodeId: mockConfig1.linode_id,
-            configId: mockConfig1.id
+            configId: mockConfig1.id,
           },
-          result: {}
+          result: {},
         })
       );
       expect(
@@ -186,9 +186,9 @@ describe('config reducer', () => {
       defaultState,
       createLinodeConfigActions.done({
         params: {
-          linodeId: mockConfig1.linode_id
+          linodeId: mockConfig1.linode_id,
         } as any,
-        result: mockConfig1
+        result: mockConfig1,
       })
     );
     it('removes the linodeId from the state when the request is complete', () => {
@@ -196,7 +196,7 @@ describe('config reducer', () => {
         state,
         deleteLinodeActions.done({
           params: { linodeId: mockConfig1.linode_id },
-          result: {}
+          result: {},
         })
       );
       expect(newState[mockConfig1.linode_id]).toBeUndefined();

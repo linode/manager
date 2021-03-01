@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
 
@@ -21,57 +21,57 @@ const styles = (theme: Theme) =>
       overflowX: 'auto',
       overflowY: 'hidden',
       '& tbody': {
-        transition: theme.transitions.create(['opacity'])
+        transition: theme.transitions.create(['opacity']),
       },
       '& tbody.sorting': {
-        opacity: 0.5
-      }
+        opacity: 0.5,
+      },
     },
     responsive: {
       [theme.breakpoints.down('sm')]: {
         '& .emptyCell': {
-          display: 'none'
+          display: 'none',
         },
         '& thead': {
-          display: 'none'
+          display: 'none',
         },
         '& tbody > tr': {
           marginBottom: 0,
           '& > td:first-child': {
             backgroundColor: theme.bg.tableHeader,
             '& .data': {
-              textAlign: 'right'
-            }
-          }
+              textAlign: 'right',
+            },
+          },
         },
         '& tr': {
           display: 'block',
           marginBottom: 20,
-          height: 'auto'
+          height: 'auto',
         },
         '& td': {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          minHeight: 32
-        }
-      }
+          minHeight: 32,
+        },
+      },
     },
     noMobileLabel: {
       [theme.breakpoints.down('sm')]: {
         '& tbody > tr > td:first-child': {
           '& > span:first-child': {
-            display: 'none'
-          }
+            display: 'none',
+          },
         },
         '& .data': {
-          marginLeft: 0
-        }
-      }
+          marginLeft: 0,
+        },
+      },
     },
     border: {
       border: `1px solid ${theme.palette.divider}`,
-      borderBottom: 0
+      borderBottom: 0,
     },
     stickyHeader: {
       borderTop: 0,
@@ -92,10 +92,10 @@ const styles = (theme: Theme) =>
           top: -1,
           borderBottom: `2px solid ${theme.palette.divider}`,
           height: 48,
-          left: -5
-        }
-      }
-    }
+          left: -5,
+        },
+      },
+    },
   });
 
 export interface Props extends TableProps {
@@ -143,13 +143,13 @@ class WrappedTable extends React.Component<CombinedProps> {
             [classes.responsive]: isResponsive !== false, // must be explicity set to false
             [classes.border]: border,
             [classes.noMobileLabel]: removeLabelonMobile,
-            [classes.stickyHeader]: stickyHeader
+            [classes.stickyHeader]: stickyHeader,
           },
           className
         )}
         style={{
           marginTop: spacingTop !== undefined ? spacingTop : 0,
-          marginBottom: spacingBottom !== undefined ? spacingBottom : 0
+          marginBottom: spacingBottom !== undefined ? spacingBottom : 0,
         }}
       >
         <Table

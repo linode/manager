@@ -4,13 +4,13 @@ import {
   deleteAllTestVolumes,
   clickVolumeActionMenu,
   createVolume,
-  deleteVolumeById
+  deleteVolumeById,
 } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
 import {
   createLinode,
   deleteAllTestLinodes,
-  deleteLinodeById
+  deleteLinodeById,
 } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
@@ -19,7 +19,7 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 
 const urlExtension = '/volumes/create';
@@ -56,7 +56,7 @@ const createBasicVolume = (linodeLabel?: string) => {
   }
   fbtClick('Type to choose or create a tag.').type(`${tag} {enter}`);
   clickCreate();
-  return cy.wait('@volumeCreated').then(xhr => {
+  return cy.wait('@volumeCreated').then((xhr) => {
     expect(xhr.response?.statusCode).to.equal(200);
     return { label: volLabel, id: xhr.response?.body['id'] };
   });
@@ -89,10 +89,10 @@ describe('volumes', () => {
 
   it('Detaches attached volume', () => {
     cy.visitWithLogin('/volumes');
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       const linodeId = linode.id;
       const linodeLabel = linode.label;
-      createVolume(linodeId).then(volume => {
+      createVolume(linodeId).then((volume) => {
         const volumeId = volume.id;
         // catch detach volume post
         cy.intercept('POST', '*/volumes/' + volume.id + '/detach').as(
@@ -108,9 +108,7 @@ describe('volumes', () => {
           `Are you sure you want to detach this Volume from ${linodeLabel}?`
         );
         getClick('[data-qa-confirm="true"]');
-        cy.wait('@volumeDetached')
-          .its('response.statusCode')
-          .should('eq', 200);
+        cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
         assertToast('Volume detachment started', 2);
         deleteLinodeById(linodeId);
         deleteVolumeById(volumeId);

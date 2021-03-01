@@ -19,23 +19,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& .MuiPaper-root': {
         padding: 0,
         '& > div': {
-          padding: 0
+          padding: 0,
         },
         '& .MuiTableCell-head': {
-          top: theme.spacing(11)
-        }
+          top: theme.spacing(11),
+        },
       },
       '& .notice': {
-        padding: theme.spacing(2)
-      }
-    }
+        padding: theme.spacing(2),
+      },
+    },
   },
   title: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   helperText: {
-    paddingBottom: theme.spacing(2)
-  }
+    paddingBottom: theme.spacing(2),
+  },
 }));
 
 interface Props {
@@ -53,12 +53,12 @@ type MODES =
 const options = [
   { value: 'fromImage', label: 'From Image' },
   { value: 'fromCommunityStackScript', label: 'From Community StackScript' },
-  { value: 'fromAccountStackScript', label: 'From Account StackScript' }
+  { value: 'fromAccountStackScript', label: 'From Account StackScript' },
 ];
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
+const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
   const { linodeId, open, onClose } = props;
   const linode = useExtendedLinode(linodeId);
   const linodeLabel = linode?.label;
@@ -109,7 +109,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         </Typography>
         <EnhancedSelect
           options={options}
-          defaultValue={options.find(option => option.value === mode)}
+          defaultValue={options.find((option) => option.value === mode)}
           onChange={(selected: Item<MODES>) => {
             setMode(selected.value);
             setRebuildError('');

@@ -10,8 +10,8 @@ const props = {
   events: [],
   classes: {
     root: '',
-    emptyState: ''
-  }
+    emptyState: '',
+  },
 };
 
 const component = shallow(<ActivitySummaryContent {...props} />);

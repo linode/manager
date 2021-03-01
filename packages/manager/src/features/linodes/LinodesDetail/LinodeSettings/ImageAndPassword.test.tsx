@@ -19,7 +19,7 @@ const props = {
   onPasswordChange: jest.fn(),
   userSSHKeys: [],
   requestKeys: jest.fn(),
-  permissions: null
+  permissions: null,
 };
 
 const component = shallow(<ImageAndPassword {...props} />);

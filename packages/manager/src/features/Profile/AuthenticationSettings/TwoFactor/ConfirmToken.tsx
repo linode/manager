@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   warning: {
     marginTop: theme.spacing(2),
-    marginLeft: '0 !important'
-  }
+    marginLeft: '0 !important',
+  },
 }));
 
 interface Props {
@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props & RenderGuardProps;
 
-const ConfirmToken: React.FC<CombinedProps> = props => {
+const ConfirmToken: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -38,7 +38,7 @@ const ConfirmToken: React.FC<CombinedProps> = props => {
     onSubmit,
     submitting,
     twoFactorConfirmed,
-    onCancel
+    onCancel,
   } = props;
 
   return (

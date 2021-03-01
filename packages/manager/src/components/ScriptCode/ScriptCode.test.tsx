@@ -17,7 +17,7 @@ describe('ScriptCode', () => {
           row: '',
           numberCell: '',
           codeCell: '',
-          code: ''
+          code: '',
         }}
       />
     );

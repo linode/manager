@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import {
   connect,
   InferableComponentEnhancerWithProps,
-  MapDispatchToProps
+  MapDispatchToProps,
 } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -14,24 +14,24 @@ import { ApplicationState } from 'src/store';
 import {
   DeleteClusterParams,
   setErrors as _setErrors,
-  UpdateClusterParams
+  UpdateClusterParams,
 } from 'src/store/kubernetes/kubernetes.actions';
 import {
   deleteCluster as _deleteCluster,
   requestClusterForStore as _requestClusterForStore,
   requestKubernetesClusters as _requestKubernetesClusters,
-  updateCluster as _updateCluster
+  updateCluster as _updateCluster,
 } from 'src/store/kubernetes/kubernetes.requests';
 import {
   CreateNodePoolParams,
   DeleteNodePoolParams,
-  UpdateNodePoolParams
+  UpdateNodePoolParams,
 } from 'src/store/kubernetes/nodePools.actions';
 import {
   createNodePool as _createNodePool,
   deleteNodePool as _deleteNodePool,
   requestNodePoolsForCluster as _requestNodePools,
-  updateNodePool as _updateNodePool
+  updateNodePool as _updateNodePool,
 } from 'src/store/kubernetes/nodePools.requests';
 import { EntityError } from 'src/store/types';
 
@@ -59,7 +59,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
   requestKubernetesClusters: () =>
-    dispatch(_requestKubernetesClusters()).then(response => response.data),
+    dispatch(_requestKubernetesClusters()).then((response) => response.data),
   requestClusterForStore: (clusterID: number) =>
     dispatch(_requestClusterForStore(clusterID)),
   updateCluster: (params: UpdateClusterParams) =>
@@ -75,7 +75,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   setKubernetesErrors: (newErrors: EntityError) =>
     dispatch(_setErrors(newErrors)),
   requestNodePools: (clusterID: number) =>
-    dispatch(_requestNodePools({ clusterID }))
+    dispatch(_requestNodePools({ clusterID })),
 });
 
 type MapProps<ReduxStateProps, OwnProps> = (
@@ -111,7 +111,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     // Add node pool and pricing data to clusters
     const nodePools = state.__resources.nodePools.entities;
     const types = state.__resources.types.entities;
-    const clusters = _clusters.map(thisCluster =>
+    const clusters = _clusters.map((thisCluster) =>
       extendCluster(thisCluster, nodePools, types)
     );
 
@@ -142,7 +142,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       clustersError,
       clusters,
       nodePoolsLoading,
-      nodePoolsError
+      nodePoolsError,
     };
   }, mapDispatchToProps);
 

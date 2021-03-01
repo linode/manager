@@ -11,7 +11,7 @@ export const usePolling = (
 
   useEffect(() => {
     const _request = () => {
-      requestArray.current.forEach(thisRequest => thisRequest());
+      requestArray.current.forEach((thisRequest) => thisRequest());
     };
     if (!isVisible) {
       // Page is not visible; clear any open intervals and don't make requests.

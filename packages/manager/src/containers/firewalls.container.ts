@@ -1,13 +1,13 @@
 import {
   CreateFirewallPayload,
   Firewall,
-  FirewallRules
+  FirewallRules,
 } from '@linode/api-v4/lib/firewalls';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {
   UpdateFirewallPayloadWithID,
-  UpdateFirewallRulesPayloadWithID
+  UpdateFirewallRulesPayloadWithID,
 } from 'src/store/firewalls/firewalls.actions';
 import { State } from 'src/store/firewalls/firewalls.reducer';
 import {
@@ -17,7 +17,7 @@ import {
   enableFirewall as _enable,
   getAllFirewalls as _getFirewalls,
   updateFirewall as _update,
-  updateFirewallRules as _updateFirewallRules
+  updateFirewallRules as _updateFirewallRules,
 } from 'src/store/firewalls/firewalls.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
@@ -61,13 +61,13 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
     (dispatch: ThunkDispatch) => ({
       getFirewalls: (params, filter) =>
         dispatch(_getFirewalls({ params, filter })),
-      createFirewall: payload => dispatch(_create(payload)),
+      createFirewall: (payload) => dispatch(_create(payload)),
       deleteFirewall: (firewallID: number) => dispatch(_delete({ firewallID })),
       disableFirewall: (firewallID: number) =>
         dispatch(_disable({ firewallID })),
       enableFirewall: (firewallID: number) => dispatch(_enable({ firewallID })),
-      updateFirewall: payload => dispatch(_update(payload)),
-      updateFirewallRules: payload => dispatch(_updateFirewallRules(payload))
+      updateFirewall: (payload) => dispatch(_update(payload)),
+      updateFirewallRules: (payload) => dispatch(_updateFirewallRules(payload)),
     })
   );
 

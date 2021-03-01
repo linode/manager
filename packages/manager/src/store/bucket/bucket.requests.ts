@@ -6,7 +6,7 @@ import {
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
   ObjectStorageClusterID,
-  ObjectStorageDeleteBucketRequestPayload
+  ObjectStorageDeleteBucketRequestPayload,
 } from '@linode/api-v4/lib/object-storage';
 import { GetAllData, getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -15,7 +15,7 @@ import {
   createBucketActions,
   deleteBucketActions,
   getAllBucketsForAllClustersActions,
-  getBucketActions
+  getBucketActions,
 } from './bucket.actions';
 import { BucketError } from './types';
 
@@ -24,7 +24,7 @@ import { BucketError } from './types';
  */
 
 export type CreateBucketRequest = ObjectStorageBucketRequestPayload;
-export const createBucket = createRequestThunk(createBucketActions, data =>
+export const createBucket = createRequestThunk(createBucketActions, (data) =>
   _createBucket(data)
 );
 
@@ -51,19 +51,19 @@ const _getAllBucketsInCluster = getAllWithArguments<ObjectStorageBucket>(
 export const getAllBucketsFromClusters: ThunkActionCreator<
   Promise<ObjectStorageBucket[]>,
   ObjectStorageClusterID[]
-> = clusterIds => dispatch => {
+> = (clusterIds) => (dispatch) => {
   dispatch(getAllBucketsForAllClustersActions.started());
 
-  const promises = clusterIds.map(thisClusterId =>
-    _getAllBucketsInCluster([thisClusterId]).catch(err => ({
+  const promises = clusterIds.map((thisClusterId) =>
+    _getAllBucketsInCluster([thisClusterId]).catch((err) => ({
       // We return a BucketError for each error. Errors are handled for each
       // promise so that we always end up in the `.then()` handler of `Promise.all()`.
       error: err,
-      clusterId: thisClusterId
+      clusterId: thisClusterId,
     }))
   );
 
-  return Promise.all(promises).then(res => {
+  return Promise.all(promises).then((res) => {
     const { data, errors } = gatherDataAndErrors(res);
 
     if (errors.length > 0) {
@@ -87,12 +87,12 @@ export const gatherDataAndErrors = (
       if ('error' in currentDataOrError) {
         return {
           ...accumulator,
-          errors: [...accumulator.errors, currentDataOrError]
+          errors: [...accumulator.errors, currentDataOrError],
         };
       }
       return {
         ...accumulator,
-        data: [...accumulator.data, ...currentDataOrError.data]
+        data: [...accumulator.data, ...currentDataOrError.data],
       };
     },
     { data: initialData, errors: initialError }
@@ -103,7 +103,7 @@ export const gatherDataAndErrors = (
  * Delete Bucket
  */
 export type DeleteBucketRequest = ObjectStorageDeleteBucketRequestPayload;
-export const deleteBucket = createRequestThunk(deleteBucketActions, data =>
+export const deleteBucket = createRequestThunk(deleteBucketActions, (data) =>
   _deleteBucket(data)
 );
 
@@ -111,6 +111,6 @@ export const deleteBucket = createRequestThunk(deleteBucketActions, data =>
  * Get a Bucket
  */
 export type GetBucketRequest = ObjectStorageBucketRequestPayload;
-export const getBucket = createRequestThunk(getBucketActions, data =>
+export const getBucket = createRequestThunk(getBucketActions, (data) =>
   _getBucket(data.cluster, data.label)
 );

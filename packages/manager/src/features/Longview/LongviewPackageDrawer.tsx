@@ -11,15 +11,15 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import withLongviewStats, {
   DispatchProps,
-  LVClientData
+  LVClientData,
 } from 'src/containers/longview.stats.container';
 import LongviewPackageRow from './LongviewPackageRow';
 import { LongviewPackage } from './request.types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   new: {
-    color: theme.color.green
-  }
+    color: theme.color.green,
+  },
 }));
 
 interface Props {
@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVClientData;
 
-export const LongviewPackageDrawer: React.FC<CombinedProps> = props => {
+export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
   const { isOpen, clientLabel, longviewClientData, onClose } = props;
 
   const classes = useStyles();
@@ -87,6 +87,6 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, Props>(
-  withLongviewStats<Props>(own => own.clientID)
+  withLongviewStats<Props>((own) => own.clientID)
 );
 export default enhanced(LongviewPackageDrawer);

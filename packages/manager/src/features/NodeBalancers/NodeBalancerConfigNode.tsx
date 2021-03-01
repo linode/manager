@@ -15,7 +15,7 @@ import { NodeBalancerConfigNodeFields } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   backendIPAction: {
     display: 'flex',
@@ -23,38 +23,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(2),
     marginLeft: -theme.spacing(1),
     [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing(1)
+      marginTop: -theme.spacing(1),
     },
     [theme.breakpoints.down('xs')]: {
-      marginTop: 0
+      marginTop: 0,
     },
     '& .remove': {
       margin: 0,
-      padding: theme.spacing(2.5)
-    }
+      padding: theme.spacing(2.5),
+    },
   },
   statusHeader: {
     fontSize: '.9rem',
     color: theme.color.label,
-    marginTop: theme.spacing(2) - 4
+    marginTop: theme.spacing(2) - 4,
   },
   statusChip: {
     marginTop: theme.spacing(1),
     color: 'white',
     '&.undefined': {
       backgroundColor: theme.color.grey2,
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   },
   'chip-UP': {
-    backgroundColor: theme.color.green
+    backgroundColor: theme.color.green,
   },
   'chip-DOWN': {
-    backgroundColor: theme.color.red
+    backgroundColor: theme.color.red,
   },
   button: {
-    ...theme.applyLinkStyles
-  }
+    ...theme.applyLinkStyles,
+  },
 }));
 
 export interface Props {
@@ -72,7 +72,7 @@ export interface Props {
   removeNode: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const NodeBalancerConfigNode: React.FC<Props> = props => {
+export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {
     disabled,
@@ -86,7 +86,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
     onNodeModeChange,
     onNodeWeightChange,
     onNodePortChange,
-    removeNode
+    removeNode,
   } = props;
 
   if (node.modifyStatus === 'delete') {
@@ -107,7 +107,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
             <Divider
               style={{
                 marginTop: forEdit ? 8 : 24,
-                marginBottom: 24
+                marginBottom: 24,
               }}
             />
           </Grid>
@@ -166,8 +166,8 @@ export const NodeBalancerConfigNode: React.FC<Props> = props => {
             <SelectIP
               textfieldProps={{
                 dataAttrs: {
-                  'data-qa-backend-ip-address': true
-                }
+                  'data-qa-backend-ip-address': true,
+                },
               }}
               disabled={disabled}
               handleChange={onNodeAddressChange}

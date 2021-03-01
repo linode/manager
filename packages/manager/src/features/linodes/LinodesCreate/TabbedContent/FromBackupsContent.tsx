@@ -1,7 +1,7 @@
 import {
   getLinodeBackups,
   Linode,
-  LinodeBackupsResponse
+  LinodeBackupsResponse,
 } from '@linode/api-v4/lib/linodes';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
@@ -11,7 +11,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
@@ -23,7 +23,7 @@ import {
   BackupFormStateHandlers,
   Info,
   ReduxStateProps,
-  WithLinodesTypesRegionsAndImages
+  WithLinodesTypesRegionsAndImages,
 } from '../types';
 import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
 
@@ -37,9 +37,9 @@ const styles = (theme: Theme) =>
   createStyles({
     main: {
       [theme.breakpoints.up('md')]: {
-        maxWidth: '100%'
-      }
-    }
+        maxWidth: '100%',
+      },
+    },
   });
 
 interface Props {
@@ -65,16 +65,16 @@ const errorResources = {
   label: 'A label',
   root_pass: 'A root password',
   tags: 'Tags for this Linode',
-  backup_id: 'Backup ID'
+  backup_id: 'Backup ID',
 };
 
 const filterLinodesWithBackups = (linodes: Linode[]) =>
-  linodes.filter(linode => linode.backups.enabled);
+  linodes.filter((linode) => linode.backups.enabled);
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
     backupInfo: undefined,
-    isGettingBackups: false
+    isGettingBackups: false,
   };
 
   mounted: boolean = false;
@@ -92,13 +92,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     this.setState({
       isGettingBackups: true,
-      backupsError: undefined
+      backupsError: undefined,
     });
 
     getLinodeBackups(linodeId)
-      .then(backups => {
+      .then((backups) => {
         const selectedLinode = linodesData.find(
-          thisLinode => thisLinode.id === linodeId
+          (thisLinode) => thisLinode.id === linodeId
         );
 
         if (!selectedLinode) {
@@ -107,16 +107,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
         const selectedLinodeWithBackups: LinodeWithBackups = {
           ...selectedLinode,
-          currentBackups: { ...backups }
+          currentBackups: { ...backups },
         };
 
         this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           isGettingBackups: false,
-          backupsError: 'Error retrieving backups for this Linode.'
+          backupsError: 'Error retrieving backups for this Linode.',
         });
       });
   };
@@ -129,7 +129,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
      */
     if (typeof selectedLinodeID !== 'number') {
       reportException(`selectedLinodeID's type is not a number`, {
-        selectedLinodeID
+        selectedLinodeID,
       });
       throw new Error('selectedLinodeID is not a number');
     }
@@ -171,13 +171,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
-      typesData
+      typesData,
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     const userHasBackups = linodesData.some(
-      thisLinode => thisLinode.backups.enabled
+      (thisLinode) => thisLinode.backups.enabled
     );
 
     return (
@@ -212,7 +212,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 text: `This newly created Linode will be created with
                           the same password and SSH Keys (if any) as the original Linode.
                           Also note that this Linode will need to be manually booted after it finishes
-                          provisioning.`
+                          provisioning.`,
               }}
             />
             <SelectBackupPanel
@@ -227,7 +227,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 selectedBackupID,
                 errors,
                 selectedLinodeWithBackups,
-                isGettingBackups
+                isGettingBackups,
               ]}
               loading={isGettingBackups}
             />

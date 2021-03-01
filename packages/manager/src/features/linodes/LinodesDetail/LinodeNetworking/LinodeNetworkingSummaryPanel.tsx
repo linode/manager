@@ -13,23 +13,23 @@ import { MapState } from 'src/store/types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
+    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2,
   },
   section: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   title: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   individualContainer: {
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   ips: {
-    padding: `0 ${theme.spacing(1)}px !important`
+    padding: `0 ${theme.spacing(1)}px !important`,
   },
   error: {
-    color: theme.palette.status.errorDark
-  }
+    color: theme.palette.status.errorDark,
+  },
 }));
 
 interface Props {
@@ -46,7 +46,7 @@ interface SummaryProps {
   title: string;
   renderValue: (args: any) => JSX.Element;
 }
-const SummarySection: React.FC<SummaryProps> = props => {
+const SummarySection: React.FC<SummaryProps> = (props) => {
   const { title, renderValue, ...rest } = props;
   const classes = useStyles();
   return (
@@ -69,13 +69,13 @@ const SummarySection: React.FC<SummaryProps> = props => {
 
 const StyledSummarySection = SummarySection;
 
-const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
+const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
   const { sshIPAddress, username, linodeRegion, linodeLabel, zoneName } = props;
   const classes = useStyles();
 
   const regions = useRegionsQuery().data ?? [];
   const currentRegion = regions.find(
-    thisRegion => thisRegion.id === linodeRegion
+    (thisRegion) => thisRegion.id === linodeRegion
   );
 
   const v4Resolvers = currentRegion?.resolvers?.ipv4.split(',') ?? [];
@@ -138,15 +138,15 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
-  username: state.__resources?.profile?.data?.username
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
+  username: state.__resources?.profile?.data?.username,
 });
 
 const connected = connect(mapStateToProps);
 
-export default connected(LinodeNetworkingSummaryPanel) as React.ComponentType<
-  Props
->;
+export default connected(
+  LinodeNetworkingSummaryPanel
+) as React.ComponentType<Props>;
 
 const renderDNSResolvers = (ips: string[]) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>

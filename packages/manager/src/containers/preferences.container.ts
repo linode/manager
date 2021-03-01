@@ -5,7 +5,7 @@ import { UserPreferences } from 'src/store/preferences/preferences.actions';
 import { State } from 'src/store/preferences/preferences.reducer';
 import {
   getUserPreferences,
-  updateUserPreferences
+  updateUserPreferences,
 } from 'src/store/preferences/preferences.requests';
 
 import { ThunkDispatch } from 'src/store/types';
@@ -34,6 +34,6 @@ export default <TInner extends {}, TOuter extends {}>(
     (dispatch: ThunkDispatch) => ({
       getUserPreferences: () => dispatch(getUserPreferences()),
       updateUserPreferences: (payload: UserPreferences) =>
-        dispatch(updateUserPreferences(payload))
+        dispatch(updateUserPreferences(payload)),
     })
   );

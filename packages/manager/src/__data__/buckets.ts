@@ -7,7 +7,7 @@ export const buckets: ObjectStorageBucket[] = [
     hostname: 'test-bucket-001.alpha.linodeobjects.com',
     cluster: 'us-east-1',
     size: 5418860544,
-    objects: 2
+    objects: 2,
   },
   {
     label: 'test-bucket-002',
@@ -15,6 +15,6 @@ export const buckets: ObjectStorageBucket[] = [
     hostname: 'test-bucket-002.alpha.linodeobjects.com',
     cluster: 'a-cluster',
     size: 1240,
-    objects: 4
-  }
+    objects: 4,
+  },
 ];

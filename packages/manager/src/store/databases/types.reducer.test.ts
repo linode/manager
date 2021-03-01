@@ -17,8 +17,8 @@ describe('Database types reducer', () => {
         params: {},
         result: {
           data: mockTypes,
-          results: mockTypes.length
-        }
+          results: mockTypes.length,
+        },
       })
     );
     expect(newState.loading).toBe(false);

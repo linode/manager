@@ -2,7 +2,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames =
@@ -41,28 +41,28 @@ const styles = (theme: Theme) =>
         '&.active': {
           visibility: 'visible',
           opacity: 1,
-          zIndex: 3
-        }
+          zIndex: 3,
+        },
       },
       [theme.breakpoints.down('xs')]: {
-        width: '100%'
+        width: '100%',
       },
       '& .react-select__menu-list': {
         padding: 0,
-        overflowX: 'hidden'
+        overflowX: 'hidden',
       },
       '& .react-select__control': {
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
       },
       '& .react-select__value-container': {
         overflow: 'hidden',
         '& p': {
           fontSize: '0.875rem',
-          overflow: 'visible'
-        }
+          overflow: 'visible',
+        },
       },
       '& .react-select__indicators': {
-        display: 'none'
+        display: 'none',
       },
       '& .react-select__menu': {
         marginTop: 12,
@@ -70,8 +70,8 @@ const styles = (theme: Theme) =>
         maxHeight: 350,
         overflowY: 'auto',
         border: 0,
-        borderRadius: 4
-      }
+        borderRadius: 4,
+      },
     },
     navIconHide: {
       cursor: 'pointer',
@@ -80,44 +80,44 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(),
       backgroundColor: 'inherit',
       '&:hover, &:focus': {
-        color: '#c1c1c0'
+        color: '#c1c1c0',
       },
       position: 'relative',
       top: 1,
       '& > span': {
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
       },
       '& svg': {
         width: 25,
-        height: 25
+        height: 25,
       },
       [theme.breakpoints.up('md')]: {
-        display: 'none'
-      }
+        display: 'none',
+      },
     },
     close: {
       '& > span': {
-        padding: 2
+        padding: 2,
       },
       '&:hover, &:focus': {
-        color: theme.palette.primary.main
-      }
+        color: theme.palette.primary.main,
+      },
     },
     icon: {
       color: '#c9cacb',
-      fontSize: '2rem'
+      fontSize: '2rem',
     },
     textfieldContainer: {
       width: '100%',
-      [theme.breakpoints.down('sm')]: {}
+      [theme.breakpoints.down('sm')]: {},
     },
     textfield: {
       margin: 0,
       flex: 1,
       minHeight: 'initial',
       '& input:focus': {
-        outline: '1px dotted #606469'
-      }
+        outline: '1px dotted #606469',
+      },
     },
     input: {
       maxWidth: '100%',
@@ -126,9 +126,9 @@ const styles = (theme: Theme) =>
       '& input': {
         transition: theme.transitions.create(['opacity']),
         fontSize: '1.0em',
-        [theme.breakpoints.down('sm')]: {}
-      }
-    }
+        [theme.breakpoints.down('sm')]: {},
+      },
+    },
   });
 
 export default withStyles(styles);

@@ -14,12 +14,12 @@ const defaultMap: (p: InjectedProps) => DefaultProps = ({
   data,
   error,
   loading,
-  lastUpdated
+  lastUpdated,
 }) => ({
   regionsData: data,
   regionsError: error,
   regionsLoading: loading,
-  regionsLastUpdated: lastUpdated
+  regionsLastUpdated: lastUpdated,
 });
 
 interface InjectedProps {
@@ -36,7 +36,7 @@ const mapStateToPropsFactory = <MappedProps>(
     entities: data,
     loading,
     error,
-    lastUpdated
+    lastUpdated,
   } = state.__resources.regions;
 
   return updater({ data, loading, error, lastUpdated });

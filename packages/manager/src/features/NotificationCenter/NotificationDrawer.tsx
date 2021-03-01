@@ -13,24 +13,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& .MuiDrawer-paper': {
       [theme.breakpoints.up('md')]: {
-        width: 620
+        width: 620,
       },
-      overflowX: 'hidden'
-    }
+      overflowX: 'hidden',
+    },
   },
   notificationSectionContainer: {
     '& > div': {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3)
-    }
+      marginBottom: theme.spacing(3),
+    },
   },
   actionHeader: {
     display: 'flex',
     paddingBottom: theme.spacing(),
     justifyContent: 'flex-end',
     borderBottom: `solid 1px ${theme.palette.divider}`,
-    marginBottom: theme.spacing(3)
-  }
+    marginBottom: theme.spacing(3),
+  },
 }));
 
 interface Props {
@@ -39,7 +39,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const NotificationDrawer: React.FC<Props> = props => {
+export const NotificationDrawer: React.FC<Props> = (props) => {
   const { data, open, onClose } = props;
   const classes = useStyles();
   const dispatch = useDispatch<ThunkDispatch>();

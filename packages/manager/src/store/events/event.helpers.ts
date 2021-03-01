@@ -2,7 +2,7 @@ import {
   Entity,
   Event,
   EventAction,
-  EventStatus
+  EventStatus,
 } from '@linode/api-v4/lib/account';
 import { parseAPIDate } from 'src/utilities/date';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
@@ -52,7 +52,7 @@ export const isRelevantDeletionEvent = (
 export const findInEvents = (
   events: Pick<ExtendedEvent, 'entity'>[],
   entity: null | Partial<Entity> = {}
-) => findIndex(e => equals(e.entity, entity), events);
+) => findIndex((e) => equals(e.entity, entity), events);
 
 export const setDeletedEvents = (events: Event[]) => {
   /** Create a list of deletion events. */
@@ -85,7 +85,7 @@ export const setDeletedEvents = (events: Event[]) => {
   }
 
   /** Map events to either deleted or not. */
-  return events.map(e => {
+  return events.map((e) => {
     const indexOfFoundEvent = findInEvents(deletions, e.entity);
 
     return indexOfFoundEvent > -1
@@ -149,7 +149,7 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) =>
   }, prevArr);
 
 export const isInProgressEvent = ({
-  percent_complete
+  percent_complete,
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete < 100;
 
@@ -157,13 +157,13 @@ export const isLongRunningProgressEventAction = (eventAction: EventAction) => {
   const longRunningProgressEventActions: EventAction[] = [
     'linode_resize',
     'linode_migrate',
-    'linode_migrate_datacenter'
+    'linode_migrate_datacenter',
   ];
   return longRunningProgressEventActions.includes(eventAction);
 };
 
 export const isCompletedEvent = ({
-  percent_complete
+  percent_complete,
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete === 100;
 

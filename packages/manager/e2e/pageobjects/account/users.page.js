@@ -121,10 +121,10 @@ class Users extends Page {
       $('[data-qa-user-row]').waitForDisplayed(constants.wait.normal);
 
       browser.waitUntil(
-        function() {
+        function () {
           return (
             $$('[data-qa-user-row]').filter(
-              u => u.$('[data-qa-username]').getText() === userConfig.username
+              (u) => u.$('[data-qa-username]').getText() === userConfig.username
             ).length > 0
           );
         },
@@ -144,7 +144,7 @@ class Users extends Page {
     this.dialogConfirmDelete.click();
 
     // Wait for only 1 user row in the table (the root user)
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return $$('[data-qa-user-row]').length === 1;
     }, constants.wait.normal);
     // this.waitForNotice(`User ${userConfig.username} deleted successfully`, constants.wait.normal);
@@ -176,7 +176,7 @@ class Users extends Page {
     let indexOfRow;
     if (index === undefined && tableKey !== undefined) {
       browser.waitUntil(() => {
-        indexOfRow = this.userRows.findIndex(row =>
+        indexOfRow = this.userRows.findIndex((row) =>
           row.getText().includes(tableKey)
         );
         return indexOfRow >= 0;

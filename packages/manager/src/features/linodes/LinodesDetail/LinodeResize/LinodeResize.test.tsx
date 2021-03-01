@@ -7,7 +7,7 @@ import { mockMatchMedia } from 'src/utilities/testHelpers';
 import {
   isSmallerThanCurrentPlan,
   LinodeResize,
-  shouldEnableAutoResizeDiskOption
+  shouldEnableAutoResizeDiskOption,
 } from './LinodeResize';
 
 beforeAll(() => {
@@ -31,7 +31,7 @@ describe('LinodeResize', () => {
         checkbox: '',
         currentHeaderEmptyCell: '',
         actions: '',
-        errorLink: ''
+        errorLink: '',
       }}
       linodeId={12}
       permissions={{} as any}
@@ -58,7 +58,7 @@ describe('LinodeResize', () => {
   describe('utility functions', () => {
     it('should allow for resizing disk with one ext disk with label "Arch Linux Disk"', () => {
       const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
-        extDisk
+        extDisk,
       ]);
       expect(diskLabel).toBe('Arch Linux Disk');
       expect(shouldEnable).toBeTruthy();
@@ -66,7 +66,7 @@ describe('LinodeResize', () => {
 
     it('should not allow resizing disk with only one swap disk', () => {
       const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
-        swapDisk
+        swapDisk,
       ]);
       expect(diskLabel).toBe(undefined);
       expect(shouldEnable).toBeFalsy();
@@ -75,7 +75,7 @@ describe('LinodeResize', () => {
     it('should allow for resizing with one swap and one ext disk', () => {
       const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
         extDisk,
-        swapDisk
+        swapDisk,
       ]);
       expect(diskLabel).toBe('Arch Linux Disk');
       expect(shouldEnable).toBeTruthy();
@@ -84,7 +84,7 @@ describe('LinodeResize', () => {
     it('should not allow resizing disk with more than one ext disk', () => {
       const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
         extDisk,
-        extDisk
+        extDisk,
       ]);
       expect(diskLabel).toBe('Arch Linux Disk');
       expect(shouldEnable).toBeFalsy();

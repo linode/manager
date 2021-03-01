@@ -7,9 +7,9 @@ jest.mock('@linode/api-v4/lib/object-storage/objects', () => {
   return {
     getObjectACL: jest.fn().mockResolvedValue({
       acl: 'public-read',
-      acl_xml: 'long xml string'
+      acl_xml: 'long xml string',
     }),
-    updateObjectACL: jest.fn().mockResolvedValue({})
+    updateObjectACL: jest.fn().mockResolvedValue({}),
   };
 });
 
@@ -24,7 +24,7 @@ const props: Props = {
   size: 12345,
   url: 'https://my-bucket.cluster-id.linodeobjects.com/my-image.png',
   bucketName: 'my-bucket',
-  clusterId: 'cluster-id'
+  clusterId: 'cluster-id',
 };
 
 describe('ObjectDetailsDrawer', () => {

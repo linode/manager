@@ -6,7 +6,7 @@ interface Props {
   children: JSX.Element;
 }
 
-export const TopMenuIcon: React.FC<Props> = props => {
+export const TopMenuIcon: React.FC<Props> = (props) => {
   const { title } = props;
   return (
     <Tooltip title={title} disableTouchListener enterDelay={500} leaveDelay={0}>

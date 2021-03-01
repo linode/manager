@@ -32,7 +32,7 @@ type CombinedProps = Props & StateProps;
 class VolumeSelect extends React.Component<CombinedProps, State> {
   state: State = {
     volumes: [],
-    loading: true
+    loading: true,
   };
 
   componentDidMount() {
@@ -53,7 +53,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
 
     const { volumes } = this.state;
     const idx = volumes.findIndex(
-      linode => Number(linodeId) === Number(linode.value)
+      (linode) => Number(linodeId) === Number(linode.value)
     );
     return idx > -1 ? volumes[idx] : -1;
   };
@@ -90,18 +90,18 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
       );
 
       volumeOptions = volumes.filter(
-        volume => allowedVolumeGrants.indexOf(volume.id) !== -1
+        (volume) => allowedVolumeGrants.indexOf(volume.id) !== -1
       );
     } else {
       volumeOptions = volumes;
     }
 
-    return volumeOptions.map(volume => ({
+    return volumeOptions.map((volume) => ({
       value: volume.id,
       label: volume.label,
       data: {
-        region: volume.region
-      }
+        region: volume.region,
+      },
     }));
   };
 
@@ -111,15 +111,15 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     if (region && region !== 'none') {
       return {
         label: {
-          '+contains': inputValue
+          '+contains': inputValue,
         },
-        region
+        region,
       };
     } else {
       return {
         label: {
-          '+contains': inputValue
-        }
+          '+contains': inputValue,
+        },
       };
     }
   };
@@ -130,15 +130,15 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     const filterVolumes = this.getVolumeFilter(inputValue);
 
     getVolumes({}, filterVolumes)
-      .then(response => {
+      .then((response) => {
         return {
           ...response,
           data: response.data.filter(
-            v => v.region === this.props.region && v.linode_id === null
-          )
+            (v) => v.region === this.props.region && v.linode_id === null
+          ),
         };
       })
-      .then(response => {
+      .then((response) => {
         const volumes = this.renderLinodeOptions(response.data);
         this.setState({ volumes, loading: false });
       })
@@ -190,14 +190,14 @@ interface StateProps {
   volumeGrants?: Grant[];
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   volumeGrants: isRestrictedUser(state)
     ? pathOr(
         undefined,
         ['__resources', 'profile', 'data', 'grants', 'volume'],
         state
       )
-    : undefined
+    : undefined,
 });
 
 const connected = connect(mapStateToProps);

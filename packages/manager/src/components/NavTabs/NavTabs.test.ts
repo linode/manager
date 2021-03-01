@@ -5,26 +5,26 @@ describe('getTabMatch', () => {
     {
       title: 'Backups',
       routeName: '/databases/1234/backups',
-      component: null as any
+      component: null as any,
     },
     {
       title: 'Settings',
       routeName: '/databases/1234/settings',
-      component: null as any
-    }
+      component: null as any,
+    },
   ];
 
   it('returns the index of the matched tab', () => {
     expect(getTabMatch(tabs, '/databases/1234/settings')).toEqual({
       idx: 1,
-      isExact: true
+      isExact: true,
     });
   });
 
   it('returns whether the match is exact', () => {
     expect(getTabMatch(tabs, '/databases/1234/settings/unknown-path')).toEqual({
       idx: 1,
-      isExact: false
+      isExact: false,
     });
   });
 

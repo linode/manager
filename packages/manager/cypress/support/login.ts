@@ -1,5 +1,5 @@
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
-const _loginWithToken = win => {
+const _loginWithToken = (win) => {
   win.localStorage.setItem('authentication/oauth-token', oauthtoken);
   win.localStorage.setItem('authentication/scopes', '*');
   // cy.log(window.localStorage.getItem('authentication/oauth-token'));
@@ -17,9 +17,9 @@ Cypress.Commands.add('visitWithLogin', (url, options) => {
   // failing the test with newrelic errors
   Cypress.on('uncaught:exception', (_err, _runnable) => false);
   const opt = {
-    onBeforeLoad: win => {
+    onBeforeLoad: (win) => {
       _loginWithToken(win);
-    }
+    },
   };
   console.log('executing visit');
   return cy.visit(url, { ...options, ...opt });

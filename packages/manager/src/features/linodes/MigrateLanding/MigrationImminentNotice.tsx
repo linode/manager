@@ -12,9 +12,9 @@ interface Props {
 }
 type CombinedProps = Props;
 
-const MigrationImminentNotice: React.FC<CombinedProps> = props => {
+const MigrationImminentNotice: React.FC<CombinedProps> = (props) => {
   const migrationScheduledForThisLinode = !!props.notifications.find(
-    eachNotification => {
+    (eachNotification) => {
       return (
         eachNotification.label.match(/migrat/i) &&
         eachNotification.entity &&

@@ -3,7 +3,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
@@ -14,7 +14,7 @@ type Props = RouteComponentProps<{}>;
 class Managed extends React.Component<Props> {
   render() {
     const {
-      match: { path }
+      match: { path },
     } = this.props;
 
     return (

@@ -11,7 +11,7 @@ const mockHandleClickDownload = jest.fn();
 const props: Props = {
   handleClickDownload: mockHandleClickDownload,
   handleClickDelete: mockHandleClickDelete,
-  objectName: 'my-object'
+  objectName: 'my-object',
 };
 
 describe('ObjectActionMenu', () => {

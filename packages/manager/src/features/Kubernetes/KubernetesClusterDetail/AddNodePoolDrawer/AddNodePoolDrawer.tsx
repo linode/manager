@@ -10,7 +10,7 @@ import Notice from 'src/components/Notice';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel.tsx';
 import SelectPlanQuantityPanel, {
-  ExtendedTypeWithCount
+  ExtendedTypeWithCount,
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
@@ -21,27 +21,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
     '& .MuiDrawer-paper': {
       [theme.breakpoints.up('md')]: {
-        width: 790
+        width: 790,
       },
-      overflowX: 'hidden'
+      overflowX: 'hidden',
     },
     '& .MuiGrid-root': {
-      marginBottom: 0
-    }
+      marginBottom: 0,
+    },
   },
   error: {
-    marginBottom: '0 !important'
+    marginBottom: '0 !important',
   },
   plans: {
     '& > *': {
       marginTop: 0,
       '& > *': {
-        padding: 0
-      }
-    }
+        padding: 0,
+      },
+    },
   },
   button: {
-    marginTop: '0 !important'
+    marginTop: '0 !important',
   },
   priceDisplay: {
     color: theme.color.headline,
@@ -50,19 +50,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.25rem',
     marginTop: theme.spacing(2),
     '& span': {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     },
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(2),
-      marginTop: 0
-    }
+      marginTop: 0,
+    },
   },
   boxOuter: {
     [theme.breakpoints.down('sm')]: {
       alignItems: 'flex-start',
-      flexDirection: 'column'
-    }
-  }
+      flexDirection: 'column',
+    },
+  },
 }));
 
 export interface Props {
@@ -76,7 +76,7 @@ export interface Props {
 
 type CombinedProps = Props & WithTypesProps;
 
-export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
+export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
   const {
     clusterLabel,
     error,
@@ -84,7 +84,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     onClose,
     onSubmit,
     open,
-    typesData: allTypes
+    typesData: allTypes,
   } = props;
   const classes = useStyles();
 
@@ -98,7 +98,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     addCountToTypes(typesData || [])
   );
 
-  const _selectedType = _types.find(thisType => thisType.id === selectedType);
+  const _selectedType = _types.find((thisType) => thisType.id === selectedType);
   const currentCount = _selectedType?.count ?? 0;
   const pricePerNode = _selectedType?.price?.monthly ?? 0;
 
@@ -115,10 +115,10 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   }, [error]);
 
   const resetDrawer = () => {
-    const newTypes = _types.map(thisType => {
+    const newTypes = _types.map((thisType) => {
       return {
         ...thisType,
-        count: 0
+        count: 0,
       };
     });
     setNewType(newTypes);
@@ -134,7 +134,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     });
     setNewType(newTypes);
     // If everything's empty, we need to reset the selected type.
-    if (newTypes.every(thisType => thisType.count === 0)) {
+    if (newTypes.every((thisType) => thisType.count === 0)) {
       setSelectedType(undefined);
     } else {
       setSelectedType(planId);
@@ -142,7 +142,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleAdd = () => {
-    const type = _types.find(thisType => thisType.id === selectedType);
+    const type = _types.find((thisType) => thisType.id === selectedType);
     if (!type || !selectedType) {
       return;
     }
@@ -160,7 +160,9 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       <form className={classes.plans}>
         <SelectPlanQuantityPanel
           // No nanodes or GPUs in clusters
-          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')}
+          types={_types.filter(
+            (t) => t.class !== 'nanode' && t.class !== 'gpu'
+          )}
           selectedID={selectedType}
           onSelect={(newType: string) => setSelectedType(newType)}
           updatePlanCount={updatePlanCount}

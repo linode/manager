@@ -2,14 +2,14 @@ import { makeTestLabel } from '../../support/api/common';
 import {
   createBucket,
   deleteAllTestAccessKeys,
-  deleteBucketByLabel
+  deleteBucketByLabel,
 } from '../../support/api/objectStorage';
 import {
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible
+  getVisible,
 } from '../../support/helpers';
 
 describe('access keys', () => {

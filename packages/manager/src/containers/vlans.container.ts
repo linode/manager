@@ -4,7 +4,7 @@ import { ApplicationState } from 'src/store';
 import {
   createVlan as _create,
   deleteVlan as _delete,
-  getAllVlans as _getVLANs
+  getAllVlans as _getVLANs,
 } from 'src/store/vlans/vlans.requests';
 import { EntityError, ThunkDispatch } from 'src/store/types';
 
@@ -53,12 +53,12 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
         vlansError: vlans.error,
         vlansData: Object.values(vlans.itemsById),
         vlansResults: vlans.results,
-        vlansLastUpdated: vlans.lastUpdated
+        vlansLastUpdated: vlans.lastUpdated,
       };
     },
     (dispatch: ThunkDispatch) => ({
       createVlan: (payload: CreateVLANPayload) => dispatch(_create(payload)),
       deleteVlan: (vlanID: number) => dispatch(_delete({ vlanID })),
-      getAllVlans: () => dispatch(_getVLANs({}))
+      getAllVlans: () => dispatch(_getVLANs({})),
     })
   );

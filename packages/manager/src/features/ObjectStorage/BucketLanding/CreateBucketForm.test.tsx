@@ -27,7 +27,7 @@ describe('CreateBucketForm', () => {
   it('initializes form with blank values', () => {
     expect(wrapper.find('Formik').prop('initialValues')).toEqual({
       label: '',
-      cluster: ''
+      cluster: '',
     });
   });
 });

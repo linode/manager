@@ -51,7 +51,7 @@ describe('Access Panel Suite', () => {
     const checkboxes = `[${checkboxAttribute}]`;
 
     function checkAllBoxes(checkOrUnchecked) {
-      $$(checkboxes).forEach(checkbox => {
+      $$(checkboxes).forEach((checkbox) => {
         checkbox.click();
         expect(checkbox.getAttribute(checkboxAttribute))
           .withContext(`Incorrect attribute`)

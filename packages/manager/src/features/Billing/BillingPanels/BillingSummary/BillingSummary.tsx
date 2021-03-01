@@ -22,44 +22,44 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3) + 1,
     border: `solid 1px ${theme.cmrBorderColors.borderBillingSummary}`,
     borderRadius: 8,
-    backgroundColor: theme.cmrBGColors.bgBillingSummary
+    backgroundColor: theme.cmrBGColors.bgBillingSummary,
   },
   header: {
-    marginBottom: theme.spacing(2) - 1
+    marginBottom: theme.spacing(2) - 1,
   },
   unpaidBalance: {
     marginBottom: theme.spacing(1) + 2,
     fontSize: 32,
-    color: '#cf1e1e'
+    color: '#cf1e1e',
   },
   gridItem: {
     padding: `0 0 ${theme.spacing(3) + 1}px`,
     [theme.breakpoints.up('md')]: {
-      padding: `0 ${theme.spacing(4) - 2}px`
+      padding: `0 ${theme.spacing(4) - 2}px`,
     },
     '&:first-of-type': {
       [theme.breakpoints.up('md')]: {
         paddingLeft: 0,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between'
-      }
+        justifyContent: 'space-between',
+      },
     },
     '&:nth-of-type(2)': {
       [theme.breakpoints.up('md')]: {
-        borderLeft: `1px solid ${theme.cmrBorderColors.borderBillingSummary}`
-      }
+        borderLeft: `1px solid ${theme.cmrBorderColors.borderBillingSummary}`,
+      },
     },
     '&:last-of-type': {
       paddingBottom: 0,
       [theme.breakpoints.up('md')]: {
-        paddingRight: 0
-      }
-    }
+        paddingRight: 0,
+      },
+    },
   },
   balanceOuter: {
     paddingTop: theme.spacing(1) - 3,
-    borderTop: `1px dashed ${theme.cmrBorderColors.borderBalance}`
+    borderTop: `1px dashed ${theme.cmrBorderColors.borderBalance}`,
   },
   label: {
     margin: `${theme.spacing(1) - 3}px 0`,
@@ -67,66 +67,66 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.headline,
     fontSize: '1rem',
     letterSpacing: 0.07,
-    lineHeight: 1.25
+    lineHeight: 1.25,
   },
   field: {
     margin: `${theme.spacing(1) - 3}px 0`,
     color: `${theme.color.headline}`,
     fontSize: '1rem',
-    lineHeight: 1.13
+    lineHeight: 1.13,
   },
   caption: {
     marginTop: theme.spacing(1) + 2,
-    textAlign: 'right'
+    textAlign: 'right',
   },
   text: {
     lineHeight: 1.43,
     letterSpacing: 0.1,
-    color: theme.color.billingText
+    color: theme.color.billingText,
   },
   iconButtonOuter: {
     display: 'flex',
     justifyContent: 'space-between',
     '& button, & a': {
-      justifyContent: 'flex-start'
+      justifyContent: 'flex-start',
     },
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-start'
+      justifyContent: 'flex-start',
     },
     [theme.breakpoints.only('xs')]: {
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
     [theme.breakpoints.only('md')]: {
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   },
   invoiceButton: {
     [theme.breakpoints.only('sm')]: {
-      paddingLeft: 32
+      paddingLeft: 32,
     },
     '& button': {
-      paddingLeft: '0'
-    }
+      paddingLeft: '0',
+    },
   },
   iconButton: {
     paddingLeft: 0,
     [theme.breakpoints.up('md')]: {
-      paddingBottom: 0
+      paddingBottom: 0,
     },
     '&:hover': {
       textDecoration: 'none',
       '& svg': {
-        color: `${theme.palette.primary.main} !important`
-      }
+        color: `${theme.palette.primary.main} !important`,
+      },
     },
     '&:focus': {
-      textDecoration: 'none'
-    }
+      textDecoration: 'none',
+    },
   },
   infoIcon: {
     padding: `0px ${theme.spacing(1) + 2}px`,
-    top: -2
-  }
+    top: -2,
+  },
 }));
 
 interface Props {
@@ -136,7 +136,7 @@ interface Props {
   mostRecentInvoiceId?: number;
 }
 
-export const BillingSummary: React.FC<Props> = props => {
+export const BillingSummary: React.FC<Props> = (props) => {
   const { promotion, balanceUninvoiced, balance, mostRecentInvoiceId } = props;
 
   // On-the-fly route matching so this component can open the drawer itself.
@@ -175,7 +175,7 @@ export const BillingSummary: React.FC<Props> = props => {
   const nextCycleEstimatedBalance = getNextCycleEstimatedBalance({
     balance,
     balanceUninvoiced,
-    promoThisMonthCreditRemaining
+    promoThisMonthCreditRemaining,
   });
 
   const shouldDisplayPromotion =

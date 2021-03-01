@@ -8,9 +8,9 @@ import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addTag: {
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
   },
-  tag: {}
+  tag: {},
 }));
 
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
@@ -33,7 +33,7 @@ export interface TagDrawerProps {
 
 export type CombinedProps = Props;
 
-export const TagDrawer: React.FC<Props> = props => {
+export const TagDrawer: React.FC<Props> = (props) => {
   const { addTag, entityLabel, deleteTag, onClose, open, tags } = props;
   // @todo the new tag component should have a loading state for when a tag is being deleted
   // const [loadingTag, setLoadingTag] = React.useState<string>('');
@@ -49,7 +49,7 @@ export const TagDrawer: React.FC<Props> = props => {
 
   const _addTag = (tag: string) => {
     setTagError(undefined);
-    addTag(tag).catch(e =>
+    addTag(tag).catch((e) =>
       setTagError(getAPIErrorOrDefault(e, 'Error adding tag.')[0].reason)
     );
   };
@@ -57,7 +57,7 @@ export const TagDrawer: React.FC<Props> = props => {
   const _deleteTag = (tag: string) => {
     setTagError(undefined);
     // setLoadingTag(tag);
-    deleteTag(tag).catch(e =>
+    deleteTag(tag).catch((e) =>
       setTagError(getAPIErrorOrDefault(e, 'Error deleting tag.')[0].reason)
     );
   };
@@ -65,7 +65,7 @@ export const TagDrawer: React.FC<Props> = props => {
   return (
     <Drawer open={open} title={`Tags (${entityLabel})`} onClose={onClose}>
       {tagError && <Notice error text={tagError} />}
-      {tags.map(thisTag => (
+      {tags.map((thisTag) => (
         <Tag
           className={classes.tag}
           key={`tag-item-${thisTag}`}

@@ -6,7 +6,7 @@ import { linodeBackupsFactory } from 'src/factories/linodes';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import LinodeActionMenu, {
   buildQueryStringForLinodeClone,
-  Props
+  Props,
 } from './LinodeActionMenu';
 
 const props: Props = {
@@ -18,7 +18,7 @@ const props: Props = {
   linodeStatus: 'running',
   linodeType: 'g6-standard-1',
   openDialog: jest.fn(),
-  openPowerActionDialog: jest.fn()
+  openPowerActionDialog: jest.fn(),
 };
 
 describe('LinodeActionMenu', () => {
@@ -36,7 +36,7 @@ describe('LinodeActionMenu', () => {
             'Rebuild',
             'Rescue',
             'Migrate',
-            'Delete'
+            'Delete',
           ],
           screen.queryByText
         )

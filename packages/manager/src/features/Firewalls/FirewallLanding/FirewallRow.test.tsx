@@ -3,20 +3,20 @@ import * as React from 'react';
 import { firewalls } from 'src/__data__/firewalls';
 import {
   firewallDeviceFactory,
-  firewallFactory
+  firewallFactory,
 } from 'src/factories/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 import {
   renderWithTheme,
   mockMatchMedia,
-  wrapWithTableBody
+  wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
   FirewallRow,
   getCountOfRules,
   getDeviceLinks,
-  getRuleString
+  getRuleString,
 } from './FirewallRow';
 
 beforeAll(() => mockMatchMedia());
@@ -46,7 +46,7 @@ describe('FirewallRow', () => {
       ...firewall,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
-      triggerEnableFirewall: mockTriggerEnableFirewall
+      triggerEnableFirewall: mockTriggerEnableFirewall,
     };
 
     it('renders a TableRow with label, status, rules, and Linodes', () => {

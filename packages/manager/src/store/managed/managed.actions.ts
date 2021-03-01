@@ -1,6 +1,6 @@
 import {
   ManagedServiceMonitor,
-  ManagedServicePayload
+  ManagedServicePayload,
 } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';

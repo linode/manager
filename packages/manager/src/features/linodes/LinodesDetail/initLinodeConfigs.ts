@@ -12,10 +12,7 @@ interface OuterProps {
  */
 
 export default compose(
-  connect(
-    undefined,
-    { getAllLinodeConfigs }
-  ),
+  connect(undefined, { getAllLinodeConfigs }),
   lifecycle<
     OuterProps & { getAllLinodeConfigs: GetAllLinodeConfigsRequest },
     {}
@@ -36,6 +33,6 @@ export default compose(
       }
 
       getAllLinodeConfigs({ linodeId });
-    }
+    },
   })
 );

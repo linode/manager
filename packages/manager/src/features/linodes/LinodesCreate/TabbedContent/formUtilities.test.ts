@@ -6,21 +6,21 @@ describe('Linode Create Utilities', () => {
     const mockErrors: APIError[] = [
       {
         field: 'label',
-        reason: 'label is required'
+        reason: 'label is required',
       },
       {
         field: 'ssh_keys',
-        reason: 'ssh_keys are required'
+        reason: 'ssh_keys are required',
       },
       {
         field: 'wp_password',
-        reason: 'a value for the UDF is required'
-      }
+        reason: 'a value for the UDF is required',
+      },
     ];
 
     const errorResources = {
       label: 'A label',
-      ssh_keys: 'ssh_keys'
+      ssh_keys: 'ssh_keys',
     };
 
     const filteredErrors = filterUDFErrors(errorResources, mockErrors);

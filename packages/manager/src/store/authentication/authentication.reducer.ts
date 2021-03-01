@@ -5,7 +5,7 @@ import {
   handleInitTokens,
   handleLogout,
   handleRefreshTokens,
-  handleStartSession
+  handleStartSession,
 } from './authentication.actions';
 import { clearLocalStorage } from './authentication.helpers';
 import { State } from './index';
@@ -14,13 +14,13 @@ export const defaultState: State = {
   token: null,
   scopes: null,
   expiration: null,
-  loggedInAsCustomer: false
+  loggedInAsCustomer: false,
 };
 
 const {
   token: tokenInLocalStorage,
   scopes: scopesInLocalStorage,
-  expire: expiryInLocalStorage
+  expire: expiryInLocalStorage,
 } = authentication;
 
 const reducer = reducerWithInitialState(defaultState)
@@ -37,10 +37,10 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       token: token || null,
       scopes: scopes || null,
-      expiration: expires || null
+      expiration: expires || null,
     };
   })
-  .case(handleInitTokens, state => {
+  .case(handleInitTokens, (state) => {
     /**
      * if our token is expired, clear local storage
      * and redux state
@@ -57,7 +57,7 @@ const reducer = reducerWithInitialState(defaultState)
         ...state,
         token: null,
         scopes: null,
-        expiration: null
+        expiration: null,
       };
     }
 
@@ -81,10 +81,10 @@ const reducer = reducerWithInitialState(defaultState)
       token,
       scopes,
       expiration: expiryDateFromLocalStorage,
-      loggedInAsCustomer: isLoggedInAsCustomer
+      loggedInAsCustomer: isLoggedInAsCustomer,
     };
   })
-  .case(handleLogout, state => {
+  .case(handleLogout, (state) => {
     /** clear local storage and redux state */
     clearLocalStorage();
 
@@ -93,10 +93,10 @@ const reducer = reducerWithInitialState(defaultState)
       scopes: null,
       token: null,
       expiration: null,
-      loggedInAsCustomer: false
+      loggedInAsCustomer: false,
     };
   })
-  .case(handleRefreshTokens, state => {
+  .case(handleRefreshTokens, (state) => {
     /** get local storage values and append to redux state */
     const [localToken, localScopes, localExpiry] =
       (tokenInLocalStorage.get(),
@@ -106,9 +106,9 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       token: localToken,
       scopes: localScopes,
-      expiration: localExpiry
+      expiration: localExpiry,
     };
   })
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

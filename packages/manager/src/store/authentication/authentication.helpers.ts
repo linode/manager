@@ -1,7 +1,7 @@
 import {
   authentication,
   stackScriptInProgress,
-  supportText
+  supportText,
 } from 'src/utilities/storage';
 
 export const clearLocalStorage = () => {
@@ -22,6 +22,6 @@ export const clearUserInput = () => {
     script: '',
     rev_note: '',
     description: '',
-    images: []
+    images: [],
   });
 };

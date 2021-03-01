@@ -14,7 +14,7 @@ interface Props extends OptionProps<any> {
   searchText: string;
 }
 
-const SearchItem: React.FC<Props> = props => {
+const SearchItem: React.FC<Props> = (props) => {
   const getLabel = () => {
     if (isFinal) {
       return props.label ? `Search for "${props.label}"` : 'Search';
@@ -26,7 +26,7 @@ const SearchItem: React.FC<Props> = props => {
   const {
     data,
     isFocused,
-    selectProps: { classes }
+    selectProps: { classes },
   } = props;
   const source = data.data ? data.data.source : '';
   const isFinal = source === 'finalLink';
@@ -35,7 +35,7 @@ const SearchItem: React.FC<Props> = props => {
     <Option
       className={classNames({
         [classes.algoliaRoot]: true,
-        [classes.selectedMenuItem]: isFocused
+        [classes.selectedMenuItem]: isFocused,
       })}
       value={data.label}
       aria-describedby={!isFinal ? 'external-site' : undefined}

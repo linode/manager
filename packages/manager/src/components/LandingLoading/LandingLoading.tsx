@@ -20,7 +20,7 @@ interface Props {
 export const LandingLoading: React.FC<Props> = ({
   shouldDelay,
   delayInMS,
-  children
+  children,
 }) => {
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
 

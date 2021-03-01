@@ -20,10 +20,10 @@ class LinodeBackupActionMenu extends React.Component<CombinedProps> {
       disabled,
       tooltip: disabled
         ? "You don't have permission to deploy from this Linode's backups"
-        : undefined
+        : undefined,
     };
 
-    return (closeMenu: Function): Action[] => {
+    return (closeMenu: () => void): Action[] => {
       const actions = [
         {
           title: 'Restore to Existing Linode',
@@ -32,7 +32,7 @@ class LinodeBackupActionMenu extends React.Component<CombinedProps> {
             closeMenu();
             e.preventDefault();
           },
-          ...disabledProps
+          ...disabledProps,
         },
         {
           title: 'Deploy New Linode',
@@ -41,8 +41,8 @@ class LinodeBackupActionMenu extends React.Component<CombinedProps> {
             closeMenu();
             e.preventDefault();
           },
-          ...disabledProps
-        }
+          ...disabledProps,
+        },
       ];
       return actions;
     };

@@ -13,6 +13,6 @@ export default connect((state: ApplicationState) => {
   return {
     typesData: state.__resources.types.entities,
     typesLoading: state.__resources.types?.loading ?? false,
-    typesError: state.__resources.types?.error
+    typesError: state.__resources.types?.error,
   };
 });

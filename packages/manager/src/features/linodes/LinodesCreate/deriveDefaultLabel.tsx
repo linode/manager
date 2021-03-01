@@ -17,10 +17,7 @@ export const deriveDefaultLabel = (...args: LabelArgTypes[]): string => {
   const withDash = join('-');
 
   if (withDash(cleaned).length <= MAX_LABEL_LENGTH) {
-    return compose(
-      ensureSingleDashesAndUnderscores,
-      withDash
-    )(cleaned);
+    return compose(ensureSingleDashesAndUnderscores, withDash)(cleaned);
   }
 
   // If the length will be more than MAX_LABEL_LENGTH, we'll need to do some calculation and clamp each section

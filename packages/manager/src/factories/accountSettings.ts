@@ -7,6 +7,6 @@ export const accountSettingsFactory = Factory.Sync.makeFactory<AccountSettings>(
     managed: false,
     network_helper: false,
     backups_enabled: false,
-    object_storage: 'active'
+    object_storage: 'active',
   }
 );

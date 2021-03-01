@@ -4,7 +4,7 @@ import { ApplicationState } from 'src/store';
 import { State } from 'src/store/profile/profile.reducer';
 import {
   requestProfile,
-  updateProfile
+  updateProfile,
 } from 'src/store/profile/profile.requests';
 import { ThunkDispatch } from 'src/store/types';
 
@@ -54,21 +54,21 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
         lastUpdated: profileLastUpdated,
         loading: profileLoading,
         error: profileError,
-        data: profileData
+        data: profileData,
       } = state.__resources.profile;
 
       const result = {
         profileLoading,
         profileError,
         profileData,
-        profileLastUpdated
+        profileLastUpdated,
       };
 
       return !!mapStateToProps ? mapStateToProps(ownProps, result) : result;
     },
     (dispatch: ThunkDispatch) => ({
       getProfile: () => dispatch(requestProfile()),
-      updateProfile: profile => dispatch(updateProfile(profile))
+      updateProfile: (profile) => dispatch(updateProfile(profile)),
     })
   );
 

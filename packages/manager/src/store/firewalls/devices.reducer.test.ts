@@ -3,7 +3,7 @@ import { firewallDeviceFactory } from 'src/factories/firewalls';
 import {
   addFirewallDeviceActions,
   getAllFirewallDevicesActions,
-  removeFirewallDeviceActions
+  removeFirewallDeviceActions,
 } from './devices.actions';
 import reducer, { defaultState } from './devices.reducer';
 
@@ -20,8 +20,8 @@ const addDevice = () =>
         data: mockDevices,
         results: mockDevices.length,
         page: 1,
-        pages: 1
-      }
+        pages: 1,
+      },
     })
   );
 
@@ -48,8 +48,8 @@ describe('Firewall devices reducer', () => {
           data: mockDevices,
           results: mockDevices.length,
           page: 1,
-          pages: 1
-        }
+          pages: 1,
+        },
       })
     );
     expect(newState).toHaveProperty('1');
@@ -63,7 +63,7 @@ describe('Firewall devices reducer', () => {
       defaultState,
       getAllFirewallDevicesActions.failed({
         params: { firewallID: 1 },
-        error: mockError
+        error: mockError,
       })
     );
 
@@ -78,7 +78,7 @@ describe('Firewall devices reducer', () => {
       addFirewallDeviceActions.started({
         firewallID: 1,
         type: 'linode',
-        id: 10
+        id: 10,
       })
     );
 
@@ -88,13 +88,13 @@ describe('Firewall devices reducer', () => {
   it('should handle an add.done action', () => {
     const newDevicePayload = { firewallID: 1, type: 'linode' as any, id: 10 };
     const newDeviceResponse = firewallDeviceFactory.build({
-      entity: { type: newDevicePayload.type, id: newDevicePayload.id }
+      entity: { type: newDevicePayload.type, id: newDevicePayload.id },
     });
     const newState = reducer(
       defaultState,
       addFirewallDeviceActions.done({
         params: newDevicePayload,
-        result: newDeviceResponse
+        result: newDeviceResponse,
       })
     );
 
@@ -110,7 +110,7 @@ describe('Firewall devices reducer', () => {
       defaultState,
       addFirewallDeviceActions.failed({
         params: newDevicePayload,
-        error: mockError
+        error: mockError,
       })
     );
 
@@ -123,7 +123,7 @@ describe('Firewall devices reducer', () => {
       { ...oldState, '1': { ...oldState['1'], error: { delete: mockError } } },
       removeFirewallDeviceActions.started({
         firewallID: 1,
-        deviceID: mockDevices[0].id
+        deviceID: mockDevices[0].id,
       })
     );
     expect(newState['1'].error).toHaveProperty('delete', undefined);
@@ -135,7 +135,7 @@ describe('Firewall devices reducer', () => {
       oldState,
       removeFirewallDeviceActions.done({
         params: { firewallID: 1, deviceID: mockDevices[0].id },
-        result: {}
+        result: {},
       })
     );
 
@@ -150,7 +150,7 @@ describe('Firewall devices reducer', () => {
       defaultState,
       removeFirewallDeviceActions.failed({
         params: { firewallID: 1, deviceID: 2 },
-        error: mockError
+        error: mockError,
       })
     );
 
@@ -163,7 +163,7 @@ describe('Firewall devices reducer', () => {
       oldState,
       removeFirewallDeviceActions.done({
         params: { firewallID: 1, deviceID: Infinity },
-        result: {}
+        result: {},
       })
     );
     // Can't just compare states because of lastUpdated variance

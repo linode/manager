@@ -6,7 +6,7 @@ const handler: EventHandler = (event, dispatch) => {
   const { action } = event;
   if (action === 'domain_create') {
     const { id } = event.entity;
-    return getDomain(id).then(domain => {
+    return getDomain(id).then((domain) => {
       dispatch(upsertDomain(domain));
     });
   }

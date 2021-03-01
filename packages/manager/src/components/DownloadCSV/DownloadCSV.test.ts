@@ -5,7 +5,7 @@ describe('should prevent CSV injection attacks', () => {
     expect(cleanCSVData(['+123', '=123', '-123'])).toEqual([
       ':+123',
       ':=123',
-      ':-123'
+      ':-123',
     ]);
   });
 
@@ -13,7 +13,7 @@ describe('should prevent CSV injection attacks', () => {
     expect(cleanCSVData([['+123'], ['=123'], ['-123']])).toEqual([
       [':+123'],
       [':=123'],
-      [':-123']
+      [':-123'],
     ]);
   });
 
@@ -21,25 +21,25 @@ describe('should prevent CSV injection attacks', () => {
     expect(
       cleanCSVData([
         {
-          key: '-123'
+          key: '-123',
         },
         {
-          key: '+123'
+          key: '+123',
         },
         {
-          key: '=123'
-        }
+          key: '=123',
+        },
       ])
     ).toEqual([
       {
-        key: ':-123'
+        key: ':-123',
       },
       {
-        key: ':+123'
+        key: ':+123',
       },
       {
-        key: ':=123'
-      }
+        key: ':=123',
+      },
     ]);
   });
 
@@ -48,36 +48,36 @@ describe('should prevent CSV injection attacks', () => {
       cleanCSVData([
         {
           key: {
-            nestedKey: '+123'
-          }
+            nestedKey: '+123',
+          },
         },
         {
           key: {
-            nestedKey: '-123'
-          }
+            nestedKey: '-123',
+          },
         },
         {
           key: {
-            nestedKey: '=123'
-          }
-        }
+            nestedKey: '=123',
+          },
+        },
       ])
     ).toEqual([
       {
         key: {
-          nestedKey: ':+123'
-        }
+          nestedKey: ':+123',
+        },
       },
       {
         key: {
-          nestedKey: ':-123'
-        }
+          nestedKey: ':-123',
+        },
       },
       {
         key: {
-          nestedKey: ':=123'
-        }
-      }
+          nestedKey: ':=123',
+        },
+      },
     ]);
   });
 
@@ -87,47 +87,47 @@ describe('should prevent CSV injection attacks', () => {
         {
           key: [
             {
-              nestedKey: '+123'
-            }
-          ]
+              nestedKey: '+123',
+            },
+          ],
         },
         {
           key: [
             {
-              nestedKey: '-123'
-            }
-          ]
+              nestedKey: '-123',
+            },
+          ],
         },
         {
           key: [
             {
-              nestedKey: '=123'
-            }
-          ]
-        }
+              nestedKey: '=123',
+            },
+          ],
+        },
       ])
     ).toEqual([
       {
         key: [
           {
-            nestedKey: ':+123'
-          }
-        ]
+            nestedKey: ':+123',
+          },
+        ],
       },
       {
         key: [
           {
-            nestedKey: ':-123'
-          }
-        ]
+            nestedKey: ':-123',
+          },
+        ],
       },
       {
         key: [
           {
-            nestedKey: ':=123'
-          }
-        ]
-      }
+            nestedKey: ':=123',
+          },
+        ],
+      },
     ]);
   });
 });

@@ -11,7 +11,7 @@ describe('LinodeRescue', () => {
         sde: null,
         sdf: null,
         sdg: null,
-        sdh: null
+        sdh: null,
       });
       const expected = {};
 
@@ -27,7 +27,7 @@ describe('LinodeRescue', () => {
         sde: null,
         sdf: { disk_id: 123 },
         sdg: null,
-        sdh: null
+        sdh: null,
       });
       const expected = { sdf: 'disk-123', sdd: 'disk-456' };
 
@@ -43,7 +43,7 @@ describe('LinodeRescue', () => {
         sde: { volume_id: 456 },
         sdf: null,
         sdg: null,
-        sdh: null
+        sdh: null,
       });
       const expected = { sdb: 'volume-123', sde: 'volume-456' };
 

@@ -3,7 +3,7 @@ import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -25,7 +25,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const ImagesActionMenu: React.FC<CombinedProps> = props => {
+export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -36,7 +36,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
     onRestore,
     onDeploy,
     onEdit,
-    onDelete
+    onDelete,
   } = props;
 
   const actions: Action[] = [
@@ -44,26 +44,26 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         onEdit(label, description ?? ' ', id);
-      }
+      },
     },
     {
       title: 'Deploy New Linode',
       onClick: () => {
         onDeploy(id);
-      }
+      },
     },
     {
       title: 'Restore to Existing Linode',
       onClick: () => {
         onRestore(id);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         onDelete(label, id);
-      }
-    }
+      },
+    },
   ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
@@ -72,7 +72,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

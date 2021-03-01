@@ -5,7 +5,7 @@ import Guidance from './Guidance';
 
 type CombinedProps = MenuListComponentProps<any>;
 
-const Menu: React.FC<CombinedProps> = props => {
+const Menu: React.FC<CombinedProps> = (props) => {
   const { guidance } = props.selectProps;
 
   return (

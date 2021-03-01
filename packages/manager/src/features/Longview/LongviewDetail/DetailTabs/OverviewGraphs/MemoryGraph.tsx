@@ -4,7 +4,7 @@ import { withTheme, WithTheme } from 'src/components/core/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   convertBytesToTarget,
-  readableBytes
+  readableBytes,
 } from 'src/utilities/unitConversions';
 import { Stat } from '../../../request.types';
 import { convertData, formatMemory } from '../../../shared/formatters';
@@ -14,7 +14,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const MemoryGraph: React.FC<CombinedProps> = props => {
+export const MemoryGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
     end,
@@ -23,7 +23,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
     lastUpdatedError,
     start,
     theme,
-    timezone
+    timezone,
   } = props;
 
   const { data, loading, error, request } = useGraphs(
@@ -53,7 +53,7 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
     buffers,
     cache,
     used,
-    swap
+    swap,
   ]);
 
   return (
@@ -72,26 +72,26 @@ export const MemoryGraph: React.FC<CombinedProps> = props => {
           label: 'Swap',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.swap,
-          data: _convertData(swap, start, end, formatMemory)
+          data: _convertData(swap, start, end, formatMemory),
         },
         {
           label: 'Buffers',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.buffers,
-          data: _convertData(buffers, start, end, formatMemory)
+          data: _convertData(buffers, start, end, formatMemory),
         },
         {
           label: 'Cache',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.cache,
-          data: _convertData(cache, start, end, formatMemory)
+          data: _convertData(cache, start, end, formatMemory),
         },
         {
           label: 'Used',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.memory.used,
-          data: _convertData(used, start, end, formatMemory)
-        }
+          data: _convertData(used, start, end, formatMemory),
+        },
       ]}
     />
   );
@@ -119,7 +119,7 @@ export const getUsedMemory = (used: Stat[], cache: Stat[], buffers: Stat[]) => {
     result.push({
       // Time will be converted to ms in convertData
       x: _used.x,
-      y: calculatedUsed
+      y: calculatedUsed,
     });
   }
   return result;

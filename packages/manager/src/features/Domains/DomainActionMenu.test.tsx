@@ -16,7 +16,7 @@ const props = {
   id: 1234456,
   onDisableOrEnable: jest.fn(),
   status: 'active' as DomainStatus,
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 describe('Domain action menu', () => {

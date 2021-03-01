@@ -11,8 +11,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
   openDialog: (contactId: number) => void;
 }
 
-export const ContactsRow: React.FunctionComponent<Props> = props => {
+export const ContactsRow: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
   const { contact, updateOrAdd, openDrawer, openDialog } = props;

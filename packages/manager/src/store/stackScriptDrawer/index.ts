@@ -25,15 +25,15 @@ export const openStackScriptDrawer: ActionCreator = (
   stackScriptId: number
 ): Open => ({
   type: OPEN,
-  stackScriptId
+  stackScriptId,
 });
 export const closeStackScriptDrawer: ActionCreator = (): Close => ({
-  type: CLOSE
+  type: CLOSE,
 });
 
 // DEFAULT STATE
 export const defaultState: State = {
-  open: false
+  open: false,
 };
 
 type ActionTypes = Open | Close;

@@ -27,7 +27,7 @@ export interface PrimaryLink {
 
 type CombinedProps = Props;
 
-const NavItem: React.SFC<CombinedProps> = props => {
+const NavItem: React.SFC<CombinedProps> = (props) => {
   const {
     href,
     onClick,
@@ -38,7 +38,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
     isDisabled,
     linkClasses,
     listItemClasses,
-    closeMenu
+    closeMenu,
   } = props;
 
   if (!onClick && !href) {
@@ -58,7 +58,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
           data-qa-nav-item={QAKey}
           className={classNames({
             [linkClasses(href)]: true,
-            listItemCollapsed: isCollapsed
+            listItemCollapsed: isCollapsed,
           })}
         >
           {icon && isCollapsed && <div className="icon">{icon}</div>}
@@ -68,14 +68,14 @@ const NavItem: React.SFC<CombinedProps> = props => {
             className={classNames({
               [listItemClasses]: true,
               primaryNavLink: true,
-              hiddenWhenCollapsed: isCollapsed
+              hiddenWhenCollapsed: isCollapsed,
             })}
           />
         </Link>
       ) : (
         <Tooltip title={isDisabled ? isDisabled() : ''} placement="left-end">
           <ListItem
-            onClick={e => {
+            onClick={(e) => {
               props.closeMenu();
               /* disregarding undefined is fine here because of the error handling thrown above */
               onClick!();

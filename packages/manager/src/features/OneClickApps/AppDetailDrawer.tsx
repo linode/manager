@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -35,37 +35,37 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     logo: {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     appName: {
       fontSize: '2.0rem',
       fontFamily: theme.font.normal,
       color: theme.color.grey4,
-      lineHeight: '2.5rem'
+      lineHeight: '2.5rem',
     },
     summary: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),
-      textAlign: 'center'
+      textAlign: 'center',
     },
     description: {
-      lineHeight: 1.5
+      lineHeight: 1.5,
     },
     divider: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     image: {
-      maxWidth: 50
+      maxWidth: 50,
     },
     wrapLogo: {
       alignSelf: 'flex-start',
-      marginLeft: -theme.spacing(3)
+      marginLeft: -theme.spacing(3),
     },
     wrapAppName: {
       maxWidth: 'fit-content',
-      minWidth: 170
-    }
+      minWidth: 170,
+    },
   });
 
 interface Props {
@@ -76,9 +76,11 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = props => {
+export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const { classes, stackscriptID, open, onClose } = props;
-  const app = oneClickApps.find(eachApp => {
+  const app = oneClickApps.find((eachApp) => {
     const cleanedAppName = eachApp.name.replace(
       /[-\/\\^$*+?.()|[\]{}]/g,
       '\\$&'

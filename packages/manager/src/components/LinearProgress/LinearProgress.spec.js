@@ -18,9 +18,7 @@ describe('Linear Progress Bar Suite', () => {
     expect(progressBar.isDisplayed())
       .withContext(`Progress bar should be displayed`)
       .toBe(true);
-    expect(role)
-      .withContext(`Incorrect role`)
-      .toBe('progressbar');
+    expect(role).withContext(`Incorrect role`).toBe('progressbar');
   });
 
   it('should have correct CSS properties', () => {
@@ -36,8 +34,6 @@ describe('Linear Progress Bar Suite', () => {
     expect(progressBarColor)
       .withContext(`Incorrect color used`)
       .toBe('#b7d6f9');
-    expect(barPrimaryColor)
-      .withContext(`Incorrect color used`)
-      .toBe('#3683dc');
+    expect(barPrimaryColor).withContext(`Incorrect color used`).toBe('#3683dc');
   });
 });

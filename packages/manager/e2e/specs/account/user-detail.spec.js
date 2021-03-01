@@ -7,7 +7,7 @@ import Users from '../../pageobjects/account/users.page';
 describe('Account - User Detail - Username Suite', () => {
   const userConfig = {
     username: `test-user${new Date().getTime()}`,
-    email: `pthiel@linode.com`
+    email: `pthiel@linode.com`,
   };
 
   beforeAll(() => {
@@ -107,9 +107,7 @@ describe('Account - User Detail - Username Suite', () => {
         .$('..')
         .$(UserDetail.dialogConfirmDelete.selector)
         .click();
-      const toastMess = `User ${
-        userConfig.username
-      } has been deleted successfully.`;
+      const toastMess = `User ${userConfig.username} has been deleted successfully.`;
       Users.toastDisplays(toastMess);
 
       browser.waitUntil(

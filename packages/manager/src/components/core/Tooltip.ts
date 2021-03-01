@@ -1,5 +1,5 @@
 import Tooltip, {
-  TooltipProps as _TooltipProps
+  TooltipProps as _TooltipProps,
 } from '@material-ui/core/Tooltip';
 
 /* tslint:disable-next-line:no-empty-interface */

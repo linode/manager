@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root';
@@ -14,8 +14,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       position: 'relative',
-      right: 20
-    }
+      right: 20,
+    },
   });
 
 interface Props extends IndicatorProps<any> {}

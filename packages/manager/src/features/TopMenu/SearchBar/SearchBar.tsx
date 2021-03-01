@@ -11,7 +11,7 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import withStoreSearch, {
-  SearchProps
+  SearchProps,
 } from 'src/features/Search/withStoreSearch';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -49,18 +49,18 @@ export const selectStyles = {
     backgroundColor: '#f4f4f4',
     margin: 0,
     width: '100%',
-    border: 0
+    border: 0,
   }),
   input: (base: any) => ({ ...base, margin: 0, width: '100%', border: 0 }),
   selectContainer: (base: any) => ({
     ...base,
     width: '100%',
     margin: 0,
-    border: 0
+    border: 0,
   }),
   dropdownIndicator: () => ({ display: 'none' }),
   placeholder: (base: any) => ({ ...base, color: 'blue' }),
-  menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
+  menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
 const searchDeps: ReduxEntity[] = [
@@ -69,10 +69,10 @@ const searchDeps: ReduxEntity[] = [
   'images',
   'domains',
   'volumes',
-  'kubernetes'
+  'kubernetes',
 ];
 
-export const SearchBar: React.FC<CombinedProps> = props => {
+export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
@@ -104,12 +104,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     debounce(500, false, (_searchText: string) => {
       setAPILoading(true);
       searchAPI(_searchText)
-        .then(searchResults => {
+        .then((searchResults) => {
           setAPIResults(searchResults.combinedResults);
           setAPILoading(false);
           setAPIError(null);
         })
-        .catch(error => {
+        .catch((error) => {
           setAPIError(
             getAPIErrorOrDefault(error, 'Error loading search results')[0]
               .reason
@@ -133,7 +133,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     search,
     searchText,
     _searchAPI,
-    _isLargeAccount
+    _isLargeAccount,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
@@ -171,7 +171,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     if (item.value === 'redirect') {
       props.history.push({
         pathname: `/search`,
-        search: `?query=${encodeURIComponent(text)}`
+        search: `?query=${encodeURIComponent(text)}`,
       });
       return;
     }
@@ -187,7 +187,7 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     ) {
       props.history.push({
         pathname: `/search`,
-        search: `?query=${encodeURIComponent(searchText)}`
+        search: `?query=${encodeURIComponent(searchText)}`,
       });
       onClose();
     }
@@ -301,19 +301,19 @@ export const createFinalOptions = (
   const redirectOption = {
     value: 'redirect',
     data: {
-      searchText
+      searchText,
     },
-    label: `View search results page for "${searchText}"`
+    label: `View search results page for "${searchText}"`,
   };
 
   const loadingResults = {
     value: 'info',
-    label: 'Loading results...'
+    label: 'Loading results...',
   };
 
   const searchError = {
     value: 'error',
-    label: 'Error retrieving search results'
+    label: 'Error retrieving search results',
   };
 
   // Results aren't final as we're loading data
@@ -340,9 +340,9 @@ export const createFinalOptions = (
   const lastOption = {
     value: 'redirect',
     data: {
-      searchText
+      searchText,
     },
-    label: `View all ${results.length} results for "${searchText}"`
+    label: `View all ${results.length} results for "${searchText}"`,
   };
 
   const first20Results = take(20, results);

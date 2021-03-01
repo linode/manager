@@ -10,14 +10,14 @@ describe('shallowCompareProps', () => {
   const prevProps: MockProps = {
     a: 1,
     b: 2,
-    c: [3, 4]
+    c: [3, 4],
   };
 
   it('should return `true` if the given props are shallowly equal.', () => {
     const nextProps: MockProps = {
       a: 1,
       b: 2,
-      c: [3, 4]
+      c: [3, 4],
     };
     const result1 = arePropsEqual<MockProps>(['a'], prevProps, nextProps);
     const result2 = arePropsEqual<MockProps>(['a', 'b'], prevProps, nextProps);
@@ -29,7 +29,7 @@ describe('shallowCompareProps', () => {
     const nextProps: MockProps = {
       a: 10,
       b: 20,
-      c: [3, 4]
+      c: [3, 4],
     };
     const result1 = arePropsEqual<MockProps>(['a'], prevProps, nextProps);
     const result2 = arePropsEqual<MockProps>(['a', 'b'], prevProps, nextProps);

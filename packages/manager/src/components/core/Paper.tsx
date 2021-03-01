@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'error' | 'errorText';
@@ -15,11 +15,11 @@ type ClassNames = 'error' | 'errorText';
 const styles = (theme: Theme) =>
   createStyles({
     error: {
-      borderColor: `#ca0813 !important`
+      borderColor: `#ca0813 !important`,
     },
     errorText: {
-      color: '#ca0813'
-    }
+      color: '#ca0813',
+    },
   });
 
 export interface PaperProps extends _PaperProps {

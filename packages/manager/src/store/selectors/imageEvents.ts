@@ -10,8 +10,8 @@ import { isInProgressEvent } from 'src/store/events/event.helpers';
  * (which will be the actual Image)
  */
 export default createSelector<ApplicationState['events'], Event[], Event[]>(
-  state => state.events || [],
-  events =>
+  (state) => state.events || [],
+  (events) =>
     events.filter(
       (thisEvent: Event) =>
         thisEvent.action === 'disk_imagize' &&

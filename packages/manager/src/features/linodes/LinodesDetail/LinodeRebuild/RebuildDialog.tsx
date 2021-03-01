@@ -12,7 +12,7 @@ interface RebuildDialogProps {
 }
 
 // During post-CMR cleanup, we should rename this component to something like "RebuildConfirmationDialog" or something similar, and rename LinodeRebuildDialog to "RebuildDialog"
-export const RebuildDialog: React.FC<RebuildDialogProps> = props => {
+export const RebuildDialog: React.FC<RebuildDialogProps> = (props) => {
   const { isOpen, isLoading, handleClose, handleSubmit } = props;
 
   const actions = () => (

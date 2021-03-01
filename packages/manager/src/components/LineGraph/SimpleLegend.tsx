@@ -21,7 +21,7 @@ interface Props {
 
 type CombinedProps = Props & StyleProps;
 
-const SimpleLegend: React.FC<CombinedProps> = props => {
+const SimpleLegend: React.FC<CombinedProps> = (props) => {
   const { classes, rows } = props;
   return (
     <Grid container className={`${classes.root} ${classes.simpleLegendRoot}`}>

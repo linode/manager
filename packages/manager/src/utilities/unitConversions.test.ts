@@ -1,7 +1,7 @@
 import {
   convertBytesToTarget,
   readableBytes,
-  ReadableBytesOptions
+  ReadableBytesOptions,
 } from './unitConversions';
 
 describe('conversion helper functions', () => {
@@ -137,7 +137,7 @@ describe('conversion helper functions', () => {
         KB: 'Kilobytes',
         MB: 'Megabytes',
         GB: 'Gigabytes',
-        TB: 'Terabytes'
+        TB: 'Terabytes',
       };
       expect(readableBytes(1, { unitLabels }).unit).toBe('B');
       expect(readableBytes(1024, { unitLabels }).unit).toBe('Kilobytes');
@@ -150,7 +150,7 @@ describe('conversion helper functions', () => {
 
     it('only affects values with custom labels that have been specified', () => {
       const unitLabels: ReadableBytesOptions['unitLabels'] = {
-        bytes: 'B'
+        bytes: 'B',
       };
       // Custom unit label:
       expect(readableBytes(1, { unitLabels }).unit).toBe('B');

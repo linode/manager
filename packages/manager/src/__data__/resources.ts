@@ -7,36 +7,36 @@ export default {
     loading: false,
     lastUpdated: 0,
     results: [linodes.map((linode: Linode) => linode.id)],
-    entities: linodes
+    entities: linodes,
   },
   volumes: {
     loading: false,
     lastUpdated: 0,
     results: [],
-    entities: []
+    entities: [],
   },
   nodebalancers: {
     loading: false,
     lastUpdated: 0,
     results: [],
-    entities: []
+    entities: [],
   },
   domains: {
     loading: false,
     lastUpdated: 0,
     results: [domains.map((domain: Domain) => domain.id)],
-    entities: domains
+    entities: domains,
   },
   images: {
     loading: false,
     lastUpdated: 0,
     results: [],
-    entities: []
+    entities: [],
   },
   types: {
     loading: false,
     lastUpdated: 0,
     results: [],
-    entities: []
-  }
+    entities: [],
+  },
 };

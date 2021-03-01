@@ -5,7 +5,7 @@ import SupportTicketDrawer, { Props } from './SupportTicketDrawer';
 const props: Props = {
   open: true,
   onClose: jest.fn(),
-  onSuccess: jest.fn()
+  onSuccess: jest.fn(),
 };
 
 // Mock React-Select

@@ -7,7 +7,7 @@ describe('Error State Component Suite', () => {
   const errorMsg = '[data-qa-error-msg="true"]';
   const fontValues = {
     property: 'font',
-    value: '16px / 22.4px latowebbold, sans-serif'
+    value: '16px / 22.4px latowebbold, sans-serif',
   };
 
   beforeAll(() => {

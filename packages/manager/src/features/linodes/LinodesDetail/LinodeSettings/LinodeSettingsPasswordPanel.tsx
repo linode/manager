@@ -2,7 +2,7 @@ import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   changeLinodeDiskPassword,
   Disk,
-  getLinodeDisks
+  getLinodeDisks,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { compose, lensPath, set } from 'ramda';
@@ -55,7 +55,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     submitting: false,
     value: '',
     disksLoading: true,
-    disks: []
+    disks: [],
   };
 
   changeDiskPassword = () => {
@@ -74,7 +74,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     );
 
     changeLinodeDiskPassword(linodeId, diskId, value)
-      .then(linode => {
+      .then((linode) => {
         this.setState(
           compose(
             set(lensPath(['success']), `Linode password changed successfully.`),
@@ -135,16 +135,16 @@ class LinodeSettingsPasswordPanel extends React.Component<
       {},
       { label: { '+contains': value } }
     )
-      .then(response =>
+      .then((response) =>
         response.data
           .filter((disk: Disk) => disk.filesystem !== 'swap')
-          .map(disk => ({
+          .map((disk) => ({
             value: disk.id,
             label: disk.label,
-            data: disk
+            data: disk,
           }))
       )
-      .then(disks => {
+      .then((disks) => {
         this.setState({ disks, disksLoading: false });
 
         /** TLDR; If we only have one disk we set that to state after the disks have been set */
@@ -152,10 +152,10 @@ class LinodeSettingsPasswordPanel extends React.Component<
           this.handleDiskSelection(disks[0]);
         }
       })
-      .catch(_ =>
+      .catch((_) =>
         this.setState({
           disksError: 'An error occurred while searching for disks.',
-          disksLoading: false
+          disksLoading: false,
         })
       );
   };
@@ -186,7 +186,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
 
   getSelectedDisk = (diskId: number) => {
     const { disks } = this.state;
-    const idx = disks.findIndex(disk => disk.value === diskId);
+    const idx = disks.findIndex((disk) => disk.value === diskId);
     if (idx > -1) {
       return disks[idx];
     } else {
@@ -252,7 +252,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions
+  permissions: linode._permissions,
 }));
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });

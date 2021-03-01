@@ -5,8 +5,8 @@ describe('initAll', () => {
     const obj = {
       x: [1, 2, 3],
       y: {
-        z: [1, 2, 3]
-      }
+        z: [1, 2, 3],
+      },
     };
     expect(initAll(obj).x).toEqual([1, 2]);
     expect(initAll(obj).y.z).toEqual([1, 2]);
@@ -21,7 +21,7 @@ describe('initAll', () => {
       e: 'hello',
       f: new Date(),
       g: () => null,
-      h: { x: {} }
+      h: { x: {} },
     };
     expect(initAll(obj)).toEqual(obj);
   });

@@ -19,7 +19,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ListVolumes: React.FC<CombinedProps> = props => {
+const ListVolumes: React.FC<CombinedProps> = (props) => {
   const { orderBy, order, handleOrderChange, data, renderProps } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -36,7 +36,7 @@ const ListVolumes: React.FC<CombinedProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => (
         <React.Fragment>
           <Paper>

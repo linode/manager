@@ -113,7 +113,7 @@ module.exports = {
     'no-multiple-empty-lines': 'error',
     curly: 'warn',
     'sort-keys': 'off',
-    'comma-dangle': 'warn',
+    'comma-dangle': 'off', // Prettier and TS both handle and check for this one
     'no-trailing-spaces': 'warn',
     'no-mixed-requires': 'warn',
     'spaced-comment': 'warn',

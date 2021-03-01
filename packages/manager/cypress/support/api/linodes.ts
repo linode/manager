@@ -5,7 +5,7 @@ import {
   getAll,
   deleteById,
   isTestEntity,
-  makeTestLabel
+  makeTestLabel,
 } from './common';
 
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes/types';
@@ -25,17 +25,17 @@ const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
   booted: true,
   backups_enabled: false,
   authorized_users: [],
-  root_pass: strings.randomPass()
+  root_pass: strings.randomPass(),
 };
 
-const linodeRequest = linodeData => {
+const linodeRequest = (linodeData) => {
   return cy.request({
     method: 'POST',
     url: Cypress.env('REACT_APP_API_ROOT') + '/linode/instances',
     body: linodeData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
@@ -45,7 +45,7 @@ export const requestBody = (data: Partial<CreateLinodeRequest>) => {
 };
 
 export const createLinode = (data = {}) => {
-  return requestBody(data).then(resp => {
+  return requestBody(data).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Linode ${resp.body.label} successfully`, resp);
     return resp.body;
@@ -59,18 +59,18 @@ export const deleteLinodeById = (linodeId: number) =>
   deleteById('linode/instances', linodeId);
 
 export const deleteLinodeByLabel = (label = undefined) => {
-  getLinodes().then(resp => {
-    const linodeToDelete = resp.body.data.find(l => l.label === label);
+  getLinodes().then((resp) => {
+    const linodeToDelete = resp.body.data.find((l) => l.label === label);
     deleteLinodeById(linodeToDelete.id);
   });
 };
 
 export const deleteAllTestLinodes = () => {
-  getLinodes().then(resp => {
+  getLinodes().then((resp) => {
     const pages = resp.body.pages;
     for (let page = 1; page <= pages; page++) {
-      getLinodes(page).then(resp => {
-        resp.body.data.forEach(linode => {
+      getLinodes(page).then((resp) => {
+        resp.body.data.forEach((linode) => {
           if (isTestEntity(linode)) {
             deleteLinodeById(linode.id);
           }
@@ -80,7 +80,7 @@ export const deleteAllTestLinodes = () => {
   });
 };
 
-export const clickLinodeActionMenu = title => {
+export const clickLinodeActionMenu = (title) => {
   cy.get(`[aria-label="Action menu for Linode ${title}"]`).click();
 };
 

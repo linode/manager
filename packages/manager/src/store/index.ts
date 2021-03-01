@@ -2,190 +2,190 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import account, {
   defaultState as defaultAccountState,
-  State as AccountState
+  State as AccountState,
 } from 'src/store/account/account.reducer';
 import accountManagement, {
   defaultState as defaultAccountManagementState,
-  State as AccountManagementState
+  State as AccountManagementState,
 } from 'src/store/accountManagement/accountManagement.reducer';
 import accountSettings, {
   defaultState as defaultAccountSettingsState,
-  State as AccountSettingsState
+  State as AccountSettingsState,
 } from 'src/store/accountSettings/accountSettings.reducer';
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
-  defaultState as authenticationDefaultState
+  defaultState as authenticationDefaultState,
 } from 'src/store/authentication/authentication.reducer';
 import backups, {
   defaultState as backupsDefaultState,
-  State as BackupDrawerState
+  State as BackupDrawerState,
 } from 'src/store/backupDrawer';
 import buckets, {
   defaultState as defaultBucketsState,
-  State as BucketsState
+  State as BucketsState,
 } from 'src/store/bucket/bucket.reducer';
 import bucketDrawer, {
   defaultState as bucketDrawerDefaultState,
-  State as BucketDrawerState
+  State as BucketDrawerState,
 } from 'src/store/bucketDrawer/bucketDrawer.reducer';
 import clusters, {
   defaultState as defaultClustersState,
-  State as ClustersState
+  State as ClustersState,
 } from 'src/store/clusters/clusters.reducer';
 import databases, {
   defaultState as defaultDatabasesState,
-  State as DatabasesState
+  State as DatabasesState,
 } from 'src/store/databases/databases.reducer';
 import databaseTypes, {
   defaultState as defaultDatabaseTypesState,
-  State as DatabaseTypesState
+  State as DatabaseTypesState,
 } from 'src/store/databases/types.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
-  State as DocumentationState
+  State as DocumentationState,
 } from 'src/store/documentation';
 import domainDrawer, {
   defaultState as domainDrawerDefaultState,
-  State as DomainDrawerState
+  State as DomainDrawerState,
 } from 'src/store/domainDrawer';
 import domainEvents from 'src/store/domains/domains.events';
 import domains, {
   defaultState as defaultDomainsState,
-  State as DomainsState
+  State as DomainsState,
 } from 'src/store/domains/domains.reducer';
 import events, {
   defaultState as eventsDefaultState,
-  State as EventsState
+  State as EventsState,
 } from 'src/store/events/event.reducer';
 import firewallDevices, {
   defaultState as defaultFirewallDevicesState,
-  State as FirewallDevicesState
+  State as FirewallDevicesState,
 } from 'src/store/firewalls/devices.reducer';
 import firewalls, {
   defaultState as defaultFirewallState,
-  State as FirewallState
+  State as FirewallState,
 } from 'src/store/firewalls/firewalls.reducer';
 import globalErrors, {
   defaultState as defaultGlobalErrorState,
-  State as GlobalErrorState
+  State as GlobalErrorState,
 } from 'src/store/globalErrors';
 import images, {
   defaultState as defaultImagesState,
-  State as ImagesState
+  State as ImagesState,
 } from 'src/store/image/image.reducer';
 import kubernetes, {
   defaultState as defaultKubernetesState,
-  State as KubernetesState
+  State as KubernetesState,
 } from 'src/store/kubernetes/kubernetes.reducer';
 import nodePools, {
   defaultState as defaultNodePoolsState,
-  State as KubeNodePoolsState
+  State as KubeNodePoolsState,
 } from 'src/store/kubernetes/nodePools.reducer';
 import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
-  State as LinodeCreateState
+  State as LinodeCreateState,
 } from 'src/store/linodeCreate/linodeCreate.reducer';
 import linodeConfigEvents from 'src/store/linodes/config/config.events';
 import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
-  State as LinodeConfigsState
+  State as LinodeConfigsState,
 } from 'src/store/linodes/config/config.reducer';
 import linodeDisks, {
   defaultState as defaultLinodeDisksState,
-  State as LinodeDisksState
+  State as LinodeDisksState,
 } from 'src/store/linodes/disk/disk.reducer';
 import interfaces, {
   defaultState as defaultInterfacesState,
-  State as InterfacesState
+  State as InterfacesState,
 } from 'src/store/linodes/interfaces/interfaces.reducer';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
-  State as LinodesState
+  State as LinodesState,
 } from 'src/store/linodes/linodes.reducer';
 import types, {
   defaultState as defaultTypesState,
-  State as TypesState
+  State as TypesState,
 } from 'src/store/linodeType/linodeType.reducer';
 import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
-  State as LongviewState
+  State as LongviewState,
 } from 'src/store/longview/longview.reducer';
 import longviewStats, {
   defaultState as defaultLongviewStatsState,
-  State as LongviewStatsState
+  State as LongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
 import managedIssues, {
   defaultState as defaultManagedIssuesState,
-  State as ManagedIssuesState
+  State as ManagedIssuesState,
 } from 'src/store/managed/issues.reducer';
 import managed, {
   defaultState as defaultManagedState,
-  State as ManagedState
+  State as ManagedState,
 } from 'src/store/managed/managed.reducer';
 import nodeBalancers, {
   defaultState as defaultNodeBalancerState,
-  State as NodeBalancersState
+  State as NodeBalancersState,
 } from 'src/store/nodeBalancer/nodeBalancer.reducer';
 import nodeBalancerConfigs, {
   defaultState as defaultNodeBalancerConfigState,
-  State as NodeBalancerConfigsState
+  State as NodeBalancerConfigsState,
 } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
 import profile, {
   defaultState as defaultProfileState,
-  State as ProfileState
+  State as ProfileState,
 } from 'src/store/profile/profile.reducer';
 import regions, {
   defaultState as defaultRegionsState,
-  State as RegionsState
+  State as RegionsState,
 } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, {
   defaultState as stackScriptDrawerDefaultState,
-  State as StackScriptDrawerState
+  State as StackScriptDrawerState,
 } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, {
   defaultState as tagDrawerDefaultState,
-  State as TagImportDrawerState
+  State as TagImportDrawerState,
 } from 'src/store/tagImportDrawer';
 import volumeEvents from 'src/store/volume/volume.events';
 import volumes, {
   defaultState as defaultVolumesState,
-  State as VolumesState
+  State as VolumesState,
 } from 'src/store/volume/volume.reducer';
 import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
-  State as VolumeDrawerState
+  State as VolumeDrawerState,
 } from 'src/store/volumeForm';
 import featureFlagsLoad, {
   defaultState as featureFlagsLoadState,
-  State as FeatureFlagsLoadState
+  State as FeatureFlagsLoadState,
 } from './featureFlagsLoad/featureFlagsLoad.reducer';
 import initialLoad, {
   defaultState as initialLoadState,
-  State as InitialLoadState
+  State as InitialLoadState,
 } from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
 import mockFeatureFlags, {
   defaultMockFeatureFlagState,
-  MockFeatureFlagState
+  MockFeatureFlagState,
 } from './mockFeatureFlags';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import notifications, {
   defaultState as notificationsDefaultState,
-  State as NotificationsState
+  State as NotificationsState,
 } from './notification/notification.reducer';
 import preferences, {
   defaultState as preferencesState,
-  State as PreferencesState
+  State as PreferencesState,
 } from './preferences/preferences.reducer';
 import { initReselectDevtools } from './selectors';
 import vlans, {
   defaultState as defaultVLANState,
-  State as VlanState
+  State as VlanState,
 } from './vlans/vlans.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
@@ -219,7 +219,7 @@ const __resourcesDefaultState = {
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
   clusters: defaultClustersState,
-  vlans: defaultVLANState
+  vlans: defaultVLANState,
 };
 
 export interface ResourcesState {
@@ -293,7 +293,7 @@ export const defaultState: ApplicationState = {
   globalErrors: defaultGlobalErrorState,
   longviewClients: defaultLongviewState,
   longviewStats: defaultLongviewStatsState,
-  mockFeatureFlags: defaultMockFeatureFlagState
+  mockFeatureFlags: defaultMockFeatureFlagState,
 };
 
 /**
@@ -324,7 +324,7 @@ const __resources = combineReducers({
   volumes,
   buckets,
   clusters,
-  vlans
+  vlans,
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -347,7 +347,7 @@ const reducers = combineReducers<ApplicationState>({
   globalErrors,
   longviewClients: longview,
   longviewStats,
-  mockFeatureFlags
+  mockFeatureFlags,
 });
 
 const enhancers = compose(

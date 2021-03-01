@@ -4,7 +4,7 @@ import {
   getNodePool,
   getNodePools,
   KubeNodePoolResponse,
-  updateNodePool as _updateNodePool
+  updateNodePool as _updateNodePool,
 } from '@linode/api-v4/lib/kubernetes';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -15,7 +15,7 @@ import {
   ExtendedNodePool,
   requestNodePoolsActions,
   updateNodePoolActions,
-  upsertNodePool
+  upsertNodePool,
 } from './nodePools.actions';
 
 const getAllNodePools = getAllWithArguments<KubeNodePoolResponse>(getNodePools);
@@ -28,33 +28,33 @@ export const extendNodePools = (
    * We store the ID of the associated cluster as part of the entity in the store,
    * to allow us to map pools to their cluster in the future.
    */
-  return nodePools.map(thisPool => extendNodePool(clusterID, thisPool));
+  return nodePools.map((thisPool) => extendNodePool(clusterID, thisPool));
 };
 
 const extendNodePool = (clusterID: number, nodePool: KubeNodePoolResponse) => ({
   ...nodePool,
-  clusterID
+  clusterID,
 });
 
 export const requestNodePoolsForCluster: ThunkActionCreator<
   Promise<KubeNodePoolResponse[]>,
   { clusterID: number }
-> = ({ clusterID }) => dispatch => {
+> = ({ clusterID }) => (dispatch) => {
   dispatch(requestNodePoolsActions.started());
 
   return getAllNodePools([clusterID])
     .then(({ data }) => {
       return extendNodePools(clusterID, data);
     })
-    .then(extendedPools => {
+    .then((extendedPools) => {
       dispatch(
         requestNodePoolsActions.done({
-          result: extendedPools
+          result: extendedPools,
         })
       );
       return extendedPools;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(requestNodePoolsActions.failed({ error }));
       return error;
     });
@@ -66,13 +66,13 @@ type RequestNodePoolForStoreThunk = ThunkActionCreator<
 >;
 export const requestNodePoolForStore: RequestNodePoolForStoreThunk = ({
   clusterID,
-  nodePoolID
-}) => dispatch => {
+  nodePoolID,
+}) => (dispatch) => {
   getNodePool(clusterID, nodePoolID)
-    .then(pool => {
+    .then((pool) => {
       return extendNodePool(clusterID, pool);
     })
-    .then(extendedPool => {
+    .then((extendedPool) => {
       return dispatch(upsertNodePool(extendedPool));
     });
 };
@@ -85,7 +85,7 @@ export const deleteNodePool = createRequestThunk(
 export const createNodePool = createRequestThunk(
   createNodePoolActions,
   ({ clusterID, ...data }) =>
-    _createNodePool(clusterID, data).then(pool =>
+    _createNodePool(clusterID, data).then((pool) =>
       extendNodePool(clusterID, pool)
     )
 );
@@ -93,7 +93,7 @@ export const createNodePool = createRequestThunk(
 export const updateNodePool = createRequestThunk(
   updateNodePoolActions,
   ({ clusterID, nodePoolID, ...data }) =>
-    _updateNodePool(clusterID, nodePoolID, data).then(pool =>
+    _updateNodePool(clusterID, nodePoolID, data).then((pool) =>
       extendNodePool(clusterID, pool)
     )
 );

@@ -44,7 +44,7 @@ class DomainRecordActionMenu extends React.Component<CombinedProps> {
     deleteData!.onDelete(deleteData!.recordID);
   };
 
-  createActions = () => (closeMenu: Function): Action[] =>
+  createActions = () => (closeMenu: () => void): Action[] =>
     compose<Action[], Action[], Action[]>(
       when(
         () => has('deleteData', this.props),
@@ -54,7 +54,7 @@ class DomainRecordActionMenu extends React.Component<CombinedProps> {
             this.handleDelete();
             closeMenu();
             e.preventDefault();
-          }
+          },
         })
       ),
       append({
@@ -63,7 +63,7 @@ class DomainRecordActionMenu extends React.Component<CombinedProps> {
           this.handleEdit();
           closeMenu();
           e.preventDefault();
-        }
+        },
       })
     )([]);
   render() {

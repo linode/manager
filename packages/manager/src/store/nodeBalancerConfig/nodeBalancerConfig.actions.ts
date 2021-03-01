@@ -1,7 +1,7 @@
 import {
   CreateNodeBalancerConfig,
   NodeBalancerConfig,
-  UpdateNodeBalancerConfig
+  UpdateNodeBalancerConfig,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';

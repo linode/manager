@@ -10,11 +10,11 @@ jest.mock('@linode/api-v4/lib/account', () => {
   const goodPromo = promoFactory.build();
   const badPromo = promoFactory.build({ expire_dt: null });
   const mockAccount = accountFactory.build({
-    active_promotions: [goodPromo, badPromo]
+    active_promotions: [goodPromo, badPromo],
   });
   return {
     getAccountInfo: jest.fn().mockResolvedValue(mockAccount),
-    updateAccountInfo: jest.fn().mockResolvedValue(mockAccount)
+    updateAccountInfo: jest.fn().mockResolvedValue(mockAccount),
   };
 });
 

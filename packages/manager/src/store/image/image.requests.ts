@@ -4,7 +4,7 @@ import {
   getImage,
   getImages,
   Image,
-  updateImage as _update
+  updateImage as _update,
 } from '@linode/api-v4/lib/images';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -13,7 +13,7 @@ import {
   deleteImageActions,
   requestImageForStoreActions,
   requestImagesActions,
-  updateImageActions
+  updateImageActions,
 } from './image.actions';
 
 // Currently there is an API bug in which the pagination of GET /images is
@@ -22,7 +22,7 @@ import {
 const getAllImages = getAll<Image>(getImages, 100);
 
 export const requestImages = createRequestThunk(requestImagesActions, () =>
-  getAllImages().then(response => response.data)
+  getAllImages().then((response) => response.data)
 );
 
 export const createImage = createRequestThunk(
@@ -32,7 +32,7 @@ export const createImage = createRequestThunk(
 
 export const requestImageForStore = createRequestThunk(
   requestImageForStoreActions,
-  imageID => getImage(imageID)
+  (imageID) => getImage(imageID)
 );
 
 export const updateImage = createRequestThunk(

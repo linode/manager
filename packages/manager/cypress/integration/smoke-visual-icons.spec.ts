@@ -3,14 +3,14 @@ describe.skip('Checking icons render correctly', () => {
     const linodeIconStatus = [
       {
         status: 'running',
-        name: 'linode-running'
+        name: 'linode-running',
       },
       {
         status: 'offline',
-        name: 'linode-offline'
-      }
+        name: 'linode-offline',
+      },
     ];
-    linodeIconStatus.forEach(s => {
+    linodeIconStatus.forEach((s) => {
       return it(`${s.name}`, () => {
         // not creating any linode, simply mocking them
         cy.server();
@@ -18,8 +18,8 @@ describe.skip('Checking icons render correctly', () => {
           url: '*/linode/instances/*',
           method: 'GET',
           response: {
-            data: [makeLinodeDataWithStatus(s.status)]
-          }
+            data: [makeLinodeDataWithStatus(s.status)],
+          },
         }).as('getLinodes');
 
         cy.visitWithLogin('/linodes');
@@ -38,17 +38,17 @@ describe.skip('Checking icons render correctly', () => {
         name: 'Running-Total',
         selector() {
           return cy.findByText('1 RUNNING');
-        }
+        },
       },
       {
         name: 'Docs-View',
         text: 'Docs',
         selector() {
           return cy.get('[data-qa-icon-text-link="Docs"]');
-        }
-      }
+        },
+      },
     ];
-    linodeLandingIcons.forEach(i => {
+    linodeLandingIcons.forEach((i) => {
       return it(`${i.name}`, () => {
         // here we mock to avoid being on No linode list
         cy.server();
@@ -57,7 +57,7 @@ describe.skip('Checking icons render correctly', () => {
           method: 'GET',
           response: {
             // data: [makeLinodeDataWithStatus('running')]
-          }
+          },
         }).as('getLinodes');
         cy.visitWithLogin('/linodes');
         i.selector()

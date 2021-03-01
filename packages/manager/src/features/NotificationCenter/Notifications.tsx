@@ -6,7 +6,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const Notifications: React.FC<Props> = props => {
+export const Notifications: React.FC<Props> = (props) => {
   const { notificationsList, onClose } = props;
 
   return (

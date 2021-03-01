@@ -27,7 +27,7 @@ type CombinedProps = Props;
 
 class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   state: State = {
-    manyof: this.props.field.manyof!.split(',')
+    manyof: this.props.field.manyof!.split(','),
   };
 
   handleSelectManyOf = (selectedOptions: Item) => {
@@ -49,16 +49,16 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
      * UDF, just pass undefined as the value, so the form is reset
      */
     const value = !!propValue
-      ? propValue.split(',').map(eachValue => ({
+      ? propValue.split(',').map((eachValue) => ({
           label: eachValue,
-          value: eachValue
+          value: eachValue,
         }))
       : undefined;
 
     const manyOfOptions = manyof.map((choice: string) => {
       return {
         label: choice,
-        value: choice
+        value: choice,
       };
     });
 
@@ -67,7 +67,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
         {error && <Notice error text={error} spacingTop={8} />}
         <Select
           label={field.label}
-          {...!isOptional && '*'}
+          {...(!isOptional && '*')}
           value={value}
           isMulti={true}
           onChange={this.handleSelectManyOf}

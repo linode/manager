@@ -7,7 +7,7 @@ import { useTabsContext } from '@reach/tabs';
  * child component of SafeTabPanel requests data when it is mounted. In this case, we may want to
  * avoid mounting the component until the tab is actually selected/visible.
  */
-const SafeTabPanel: React.FC<{ index: number | null }> = props => {
+const SafeTabPanel: React.FC<{ index: number | null }> = (props) => {
   const { index, ...tabPanelProps } = props;
 
   const { selectedIndex } = useTabsContext();

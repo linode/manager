@@ -7,7 +7,7 @@ import BillingActivityPanel, {
   invoiceToActivityFeedItem,
   paymentToActivityFeedItem,
   getCutoffFromDateRange,
-  makeFilter
+  makeFilter,
 } from './BillingActivityPanel';
 import { DateTime } from 'luxon';
 jest.mock('../../../../utilities/getUserTimezone');
@@ -20,11 +20,11 @@ jest.mock('@linode/api-v4/lib/account', () => {
     // eslint-disable-next-line
     invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
     // eslint-disable-next-line
-    invoiceFactory.build({ date: '2019-12-01T00:00:00' })
+    invoiceFactory.build({ date: '2019-12-01T00:00:00' }),
   ];
   const payments = [
     paymentFactory.build({ date: '2020-01-01T00:00:00' }),
-    paymentFactory.build({ date: '2019-12-01T00:00:00' })
+    paymentFactory.build({ date: '2019-12-01T00:00:00' }),
   ];
 
   return {
@@ -32,20 +32,20 @@ jest.mock('@linode/api-v4/lib/account', () => {
       results: 2,
       page: 1,
       pages: 1,
-      data: invoices
+      data: invoices,
     }),
     getPayments: jest.fn().mockResolvedValue({
       results: 2,
       page: 1,
       pages: 1,
-      data: payments
-    })
+      data: payments,
+    }),
   };
 });
 jest.mock('src/components/EnhancedSelect/Select');
 
 const props: Props = {
-  setMostRecentInvoiceId: jest.fn()
+  setMostRecentInvoiceId: jest.fn(),
 };
 
 describe('BillingActivityPanel', () => {
@@ -80,7 +80,7 @@ describe('BillingActivityPanel', () => {
     await waitFor(() => {
       const transactionTypeSelect = queryAllByTestId('select')?.[0];
       fireEvent.change(transactionTypeSelect, {
-        target: { value: 'invoice' }
+        target: { value: 'invoice' },
       });
       expect(queryByTestId('payment-0')).toBeFalsy();
     });
@@ -89,7 +89,7 @@ describe('BillingActivityPanel', () => {
     await waitFor(() => {
       const transactionTypeSelect = queryAllByTestId('select')?.[0];
       fireEvent.change(transactionTypeSelect, {
-        target: { value: 'payment' }
+        target: { value: 'payment' },
       });
       expect(queryByText('Invoice #0')).toBeFalsy();
     });
@@ -103,7 +103,7 @@ describe('BillingActivityPanel', () => {
     await waitFor(() => {
       const transactionDateSelect = queryAllByTestId('select')?.[1];
       fireEvent.change(transactionDateSelect, {
-        target: { value: '30 Days' }
+        target: { value: '30 Days' },
       });
       expect(queryByText('Invoice #1')).toBeFalsy();
       expect(queryByTestId('payment-1')).toBeFalsy();
@@ -164,7 +164,7 @@ describe('paymentToActivityFeedItem', () => {
         year: 2020,
         month: 1,
         day: 1,
-        zone: 'utc'
+        zone: 'utc',
       });
       const testDateISO = testDate.toISO();
       expect(getCutoffFromDateRange('30 Days', testDateISO)).toBe(
@@ -200,7 +200,7 @@ describe('paymentToActivityFeedItem', () => {
     it('includes a date filter only if given an endDate', () => {
       expect(makeFilter()).not.toHaveProperty('date');
       expect(makeFilter(endDate)).toHaveProperty('date', {
-        '+gte': '2020-01-01T00:00:00'
+        '+gte': '2020-01-01T00:00:00',
       });
     });
   });

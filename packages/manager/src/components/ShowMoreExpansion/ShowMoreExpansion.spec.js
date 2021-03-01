@@ -34,12 +34,8 @@ describe('Show More Expansion Suite', () => {
         .getAttribute('aria-expanded')
         .includes('false');
 
-      expect(collapsedState)
-        .withContext(`Menu should be collapsed`)
-        .toBe(true);
-      expect(ariaCollapsed)
-        .withContext(`${ariaMsg}`)
-        .toBe(true);
+      expect(collapsedState).withContext(`Menu should be collapsed`).toBe(true);
+      expect(ariaCollapsed).withContext(`${ariaMsg}`).toBe(true);
 
       $(showMoreToggle).click();
 
@@ -50,12 +46,8 @@ describe('Show More Expansion Suite', () => {
         .getAttribute('aria-expanded')
         .includes('true');
 
-      expect(afterClickState)
-        .withContext(`Menu should be expanded`)
-        .toBe(true);
-      expect(ariaAfterClick)
-        .withContext(`${ariaMsg}`)
-        .toBe(true);
+      expect(afterClickState).withContext(`Menu should be expanded`).toBe(true);
+      expect(ariaAfterClick).withContext(`${ariaMsg}`).toBe(true);
     });
 
     it('should display example text', () => {
@@ -75,12 +67,8 @@ describe('Show More Expansion Suite', () => {
         .getAttribute('aria-expanded')
         .includes('false');
 
-      expect(afterCollapse)
-        .withContext(`Menu should be collapsed`)
-        .toBe(true);
-      expect(ariaAfterCollapse)
-        .withContext(`${ariaMsg}`)
-        .toBe(true);
+      expect(afterCollapse).withContext(`Menu should be collapsed`).toBe(true);
+      expect(ariaAfterCollapse).withContext(`${ariaMsg}`).toBe(true);
     });
   });
 
@@ -117,12 +105,8 @@ describe('Show More Expansion Suite', () => {
         .getAttribute('aria-expanded')
         .includes('true');
 
-      expect(afterClickState)
-        .withContext(`Menu should be expanded`)
-        .toBe(true);
-      expect(ariaAfterClick)
-        .withContext(`${ariaMsg}`)
-        .toBe(true);
+      expect(afterClickState).withContext(`Menu should be expanded`).toBe(true);
+      expect(ariaAfterClick).withContext(`${ariaMsg}`).toBe(true);
 
       $(showMoreToggle).click();
 
@@ -133,12 +117,8 @@ describe('Show More Expansion Suite', () => {
         .getAttribute('aria-expanded')
         .includes('false');
 
-      expect(collapsedState)
-        .withContext(`Menu should be collapsed`)
-        .toBe(true);
-      expect(ariaCollapsed)
-        .withContext(`${ariaMsg}`)
-        .toBe(true);
+      expect(collapsedState).withContext(`Menu should be collapsed`).toBe(true);
+      expect(ariaCollapsed).withContext(`${ariaMsg}`).toBe(true);
     });
 
     it('should expand on click', () => {
@@ -151,12 +131,8 @@ describe('Show More Expansion Suite', () => {
         .getAttribute('aria-expanded')
         .includes('true');
 
-      expect(afterExpand)
-        .withContext(`Menu should be expanded`)
-        .toBe(true);
-      expect(ariaAfterExpand)
-        .withContext(`${ariaMsg}`)
-        .toBe(true);
+      expect(afterExpand).withContext(`Menu should be expanded`).toBe(true);
+      expect(ariaAfterExpand).withContext(`${ariaMsg}`).toBe(true);
     });
   });
 });

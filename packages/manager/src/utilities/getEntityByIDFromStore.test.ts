@@ -7,23 +7,23 @@ const mockState = {
   __resources: {
     linodes: {
       results: 1,
-      itemsById: { [mockLinode.id]: mockLinode }
+      itemsById: { [mockLinode.id]: mockLinode },
     },
     volumes: {
       items: [volume.id],
       itemsById: {
-        [volume.id]: volume
-      }
-    }
-  }
+        [volume.id]: volume,
+      },
+    },
+  },
 };
 
 import { getEntityByIDFromStore } from './getEntityByIDFromStore';
 
 jest.mock('src/store', () => ({
   default: {
-    getState: () => mockState
-  }
+    getState: () => mockState,
+  },
 }));
 
 describe('getEntityByIDFromStore utility function', () => {

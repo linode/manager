@@ -2,7 +2,7 @@ import {
   Disk,
   CreateLinodeDiskSchema,
   CreateLinodeDiskFromImageSchema,
-  ResizeLinodeDiskSchema
+  ResizeLinodeDiskSchema,
 } from '@linode/api-v4/lib/linodes';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -21,7 +21,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   section: {},
   divider: {
     margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
-    width: `calc(100% - ${theme.spacing(2)}px)`
-  }
+    width: `calc(100% - ${theme.spacing(2)}px)`,
+  },
 }));
 
 /**
@@ -46,7 +46,7 @@ const RenameDiskSchema = object({
   label: string()
     .required('Label is required.')
     .min(3, 'Label must contain between 3 and 32 characters.')
-    .max(32, 'Label must contain between 3 and 32 characters.')
+    .max(32, 'Label must contain between 3 and 32 characters.'),
 });
 
 type FileSystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
@@ -69,7 +69,7 @@ type CombinedProps = Props;
 
 export const modes = {
   EMPTY: 'create_empty' as diskMode,
-  IMAGE: 'from_image' as diskMode
+  IMAGE: 'from_image' as diskMode,
 };
 
 type diskMode = 'create_empty' | 'from_image';
@@ -77,18 +77,18 @@ type diskMode = 'create_empty' | 'from_image';
 const modeList: Mode<diskMode>[] = [
   {
     label: 'Create Empty Disk',
-    mode: modes.EMPTY
+    mode: modes.EMPTY,
   },
   {
     label: 'Create from Image',
-    mode: modes.IMAGE
-  }
+    mode: modes.IMAGE,
+  },
 ];
 
 const submitLabelMap = {
   create: 'Add',
   rename: 'Rename',
-  resize: 'Resize'
+  resize: 'Resize',
 };
 
 const getTitle = (v: DrawerMode) => {
@@ -104,7 +104,7 @@ const getTitle = (v: DrawerMode) => {
   }
 };
 
-export const DiskDrawer: React.FC<CombinedProps> = props => {
+export const DiskDrawer: React.FC<CombinedProps> = (props) => {
   const {
     disk,
     open,
@@ -113,7 +113,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
     onClose,
     onSubmit,
     userSSHKeys,
-    requestKeys
+    requestKeys,
   } = props;
 
   const CreateFromImageSchema = () =>
@@ -141,11 +141,11 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
       filesystem: disk?.filesystem ?? ('ext4' as FileSystem),
       size: disk?.size || maximumSize || 0,
       image: '',
-      root_pass: ''
+      root_pass: '',
     },
     validationSchema: getSchema(mode, selectedMode),
     validateOnChange: true,
-    onSubmit: values => submitForm(values)
+    onSubmit: (values) => submitForm(values),
   });
 
   React.useEffect(() => {
@@ -165,7 +165,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
         formik.setSubmitting(false);
         onClose();
       })
-      .catch(err => {
+      .catch((err) => {
         const mapErrorToStatus = (generalError: string) =>
           formik.setStatus({ generalError });
 
@@ -187,7 +187,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
             <ModeSelect
               modes={modeList}
               selected={selectedMode}
-              onChange={e => setSelectedMode(e.target.value as diskMode)}
+              onChange={(e) => setSelectedMode(e.target.value as diskMode)}
             />
           </Grid>
         )}
@@ -234,7 +234,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
                 <MenuItem value="_none_">
                   <em>Select a Filesystem</em>
                 </MenuItem>
-                {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs => (
+                {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map((fs) => (
                   <MenuItem value={fs} key={fs}>
                     {fs}
                   </MenuItem>
@@ -272,7 +272,9 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
               errorText={formik.touched.size ? formik.errors.size : undefined}
               errorGroup="linode-disk-drawer"
               InputProps={{
-                endAdornment: <InputAdornment position="end">MB</InputAdornment>
+                endAdornment: (
+                  <InputAdornment position="end">MB</InputAdornment>
+                ),
               }}
               data-qa-disk-size
             />

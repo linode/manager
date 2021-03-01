@@ -5,12 +5,12 @@ import { splitAt } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import withManagedServices, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/managedServices.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -25,7 +25,7 @@ interface Props {
 
 export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
 
-export const MonitorActionMenu: React.FC<CombinedProps> = props => {
+export const MonitorActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -38,7 +38,7 @@ export const MonitorActionMenu: React.FC<CombinedProps> = props => {
     openDialog,
     openHistoryDrawer,
     openMonitorDrawer,
-    status
+    status,
   } = props;
 
   const handleError = (message: string, error: APIError[]) => {
@@ -51,49 +51,49 @@ export const MonitorActionMenu: React.FC<CombinedProps> = props => {
       title: 'View Issue History',
       onClick: () => {
         openHistoryDrawer(monitorID, label);
-      }
+      },
     },
     {
       title: 'Edit',
       onClick: () => {
         openMonitorDrawer(monitorID, 'edit');
-      }
+      },
     },
     status === 'disabled'
       ? {
           title: 'Enable',
           onClick: () => {
             enableServiceMonitor(monitorID)
-              .then(_ => {
+              .then((_) => {
                 enqueueSnackbar('Monitor enabled successfully.', {
-                  variant: 'success'
+                  variant: 'success',
                 });
               })
-              .catch(e => {
+              .catch((e) => {
                 handleError('Error enabling this Service Monitor.', e);
               });
-          }
+          },
         }
       : {
           title: 'Disable',
           onClick: () => {
             disableServiceMonitor(monitorID)
-              .then(_ => {
+              .then((_) => {
                 enqueueSnackbar('Monitor disabled successfully.', {
-                  variant: 'success'
+                  variant: 'success',
                 });
               })
-              .catch(e => {
+              .catch((e) => {
                 handleError('Error disabling this Service Monitor.', e);
               });
-          }
+          },
         },
     {
       title: 'Delete',
       onClick: () => {
         openDialog(monitorID, label);
-      }
-    }
+      },
+    },
   ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
@@ -102,7 +102,7 @@ export const MonitorActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

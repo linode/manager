@@ -7,7 +7,7 @@ import { dark, light } from 'src/themes';
 
 const options = {
   dark,
-  light
+  light,
 };
 
 const ThemeDecorator = (story: Function) => {

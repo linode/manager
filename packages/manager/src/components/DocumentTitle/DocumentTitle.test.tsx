@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import {
   DocumentTitleSegment,
-  withDocumentTitleProvider
+  withDocumentTitleProvider,
 } from 'src/components/DocumentTitle';
 
 class MyParent extends React.Component<any, any> {

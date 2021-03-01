@@ -1,6 +1,6 @@
 import {
   LongviewNotification,
-  LongviewResponse
+  LongviewResponse,
 } from 'src/features/Longview/request.types.ts';
 
 import actionCreatorFactory from 'typescript-fsa';

@@ -17,46 +17,46 @@ const summaryPanelStyles = (theme: Theme) =>
       [theme.breakpoints.between('sm', 'md')]: {
         flexBasis: '100%',
         maxWidth: '100%',
-        display: 'flex'
-      }
+        display: 'flex',
+      },
     },
     regionInner: {
       [theme.breakpoints.only('xs')]: {
-        padding: '0 8px !important'
+        padding: '0 8px !important',
       },
       [theme.breakpoints.up('lg')]: {
         '&:first-of-type': {
-          padding: '8px 8px 0 8px !important'
+          padding: '8px 8px 0 8px !important',
         },
         '&:last-of-type': {
-          padding: '0 8px !important'
-        }
-      }
+          padding: '0 8px !important',
+        },
+      },
     },
     volumeLink: {
       color: theme.palette.primary.main,
       fontSize: '1rem',
       '&:hover, &:focus': {
-        textDecoration: 'underline'
-      }
+        textDecoration: 'underline',
+      },
     },
     root: {
       [theme.breakpoints.up('md')]: {
         paddingLeft: theme.spacing(1),
-        paddingTop: 0
+        paddingTop: 0,
       },
       [theme.breakpoints.up('lg')]: {
         padding: theme.spacing(1),
-        paddingRight: 0
-      }
+        paddingRight: 0,
+      },
     },
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     summarySection: {
       padding: theme.spacing(2) + 4,
       marginBottom: theme.spacing(3),
-      minHeight: '160px'
+      minHeight: '160px',
     },
     section: {
       marginBottom: theme.spacing(1),
@@ -67,10 +67,10 @@ const summaryPanelStyles = (theme: Theme) =>
         '& .chip': {
           position: 'absolute',
           top: '-4px',
-          right: -10
-        }
-      }
-    }
+          right: -10,
+        },
+      },
+    },
   });
 
 export default summaryPanelStyles;

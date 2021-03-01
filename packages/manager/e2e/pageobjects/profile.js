@@ -8,7 +8,7 @@ export const dialogMap = {
   content: '[data-qa-dialog-content]',
   close: '[data-qa-close-dialog]',
   cancel: '[data-qa-button-cancel]',
-  confirm: '[data-qa-button-confirm]'
+  confirm: '[data-qa-button-confirm]',
 };
 
 export class OauthCreateDrawer extends Page {
@@ -34,7 +34,7 @@ export class OauthCreateDrawer extends Page {
   updateLabel(updateMsg) {
     const labelField = this.label;
     // Hack needed to edit a label
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       try {
         labelField.clearElement();
         labelField.setValue(updateMsg);
@@ -200,7 +200,7 @@ export class TokenCreateDrawer extends Page {
 
   labelTimestamp(time) {
     this.label.setValue(time);
-    this.accessColumn.forEach(col =>
+    this.accessColumn.forEach((col) =>
       expect(col.isDisplayed())
         .withContext(`"${this.col}" selector ${assertLog.displayed}`)
         .toBe(true)
@@ -373,6 +373,6 @@ export class Profile extends Page {
   }
 
   profileTab(tabText) {
-    return $$('[data-qa-tabs] a').find(tab => tab.getText() === tabText);
+    return $$('[data-qa-tabs] a').find((tab) => tab.getText() === tabText);
   }
 }

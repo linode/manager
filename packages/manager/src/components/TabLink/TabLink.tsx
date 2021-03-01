@@ -4,7 +4,7 @@ import * as React from 'react';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'selected';
@@ -12,9 +12,9 @@ type ClassNames = 'root' | 'selected';
 const styles = (theme: any) =>
   createStyles({
     root: {
-      ...theme.overrides.MuiTab.root
+      ...theme.overrides.MuiTab.root,
     },
-    selected: {}
+    selected: {},
   });
 
 interface Props {
@@ -43,7 +43,7 @@ class TabLink extends React.Component<CombinedProps> {
         to={to}
         className={classNames({
           [classes.root]: true,
-          [classes.selected]: pathName === to
+          [classes.selected]: pathName === to,
         })}
         aria-selected={pathName === to}
         data-qa-tab={title}

@@ -55,9 +55,9 @@ class Invoice extends Page {
       'To',
       'Quantity',
       'Unit Price',
-      'Amount'
+      'Amount',
     ];
-    tableColumns.forEach(col => {
+    tableColumns.forEach((col) => {
       expect($(`[data-qa-column="${col}"]`).isDisplayed())
         .withContext(
           `"[data-qa-column="${col}"]" selector ${assertLog.displayed}`

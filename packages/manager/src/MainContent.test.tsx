@@ -1,15 +1,15 @@
 import {
   checkFlagsForMainContentBanner,
-  checkPreferencesForBannerDismissal
+  checkPreferencesForBannerDismissal,
 } from './MainContent';
 
 const mainContentBanner = {
   text: 'Test Text',
   link: {
     text: 'Test anchor text',
-    url: 'https://linode.com'
+    url: 'https://linode.com',
   },
-  key: 'Test Text Key'
+  key: 'Test Text Key',
 };
 
 describe('checkFlagsForMainContentBanner', () => {
@@ -27,7 +27,7 @@ describe('checkPreferencesForBannerDismissal', () => {
     expect(
       checkPreferencesForBannerDismissal(
         {
-          main_content_banner_dismissal: { key1: true }
+          main_content_banner_dismissal: { key1: true },
         },
         'key1'
       )
@@ -35,7 +35,7 @@ describe('checkPreferencesForBannerDismissal', () => {
     expect(
       checkPreferencesForBannerDismissal(
         {
-          main_content_banner_dismissal: { key1: true }
+          main_content_banner_dismissal: { key1: true },
         },
         'another-key'
       )

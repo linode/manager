@@ -1,7 +1,7 @@
 import withLoadingAndError, {
   LoadingAndErrorHandlers as _LoadingAndErrorHandlers,
   LoadingAndErrorState as _LoadingAndErrorState,
-  Props as _Props
+  Props as _Props,
 } from './withLoadingAndError';
 
 /* tslint:disable */

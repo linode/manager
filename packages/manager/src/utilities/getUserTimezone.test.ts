@@ -15,7 +15,7 @@ const setMockState = (setTimezone: any) => {
       total: 0,
       completed: 0,
       pending: 0,
-      credit: 0
+      credit: 0,
     },
     email_notifications: false,
     ip_whitelist_enabled: false,
@@ -23,7 +23,7 @@ const setMockState = (setTimezone: any) => {
     authentication_type: 'password',
     authorized_keys: [],
     two_factor_auth: false,
-    restricted: false
+    restricted: false,
   };
 };
 

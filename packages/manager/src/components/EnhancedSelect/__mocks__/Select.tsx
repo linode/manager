@@ -21,7 +21,7 @@ export default ({
   onChange,
   errorText,
   placeholder,
-  isMulti
+  isMulti,
 }: any) => {
   const handleChange = (event: any) => {
     const option = _options.find(

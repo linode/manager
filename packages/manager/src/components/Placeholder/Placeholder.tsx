@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -17,33 +17,33 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes scaleIn': {
       from: {
-        transform: 'translateX( -10px ) rotateY( -180deg )'
+        transform: 'translateX( -10px ) rotateY( -180deg )',
       },
       to: {
-        transformOrigin: 'center center'
-      }
+        transformOrigin: 'center center',
+      },
     },
     '@keyframes fadeIn': {
       from: {
-        opacity: 0
+        opacity: 0,
       },
       to: {
-        opacity: 1
-      }
+        opacity: 1,
+      },
     },
     root: {
       padding: `${theme.spacing(2)}px 0`,
       [theme.breakpoints.up('md')]: {
-        padding: `${theme.spacing(10)}px 0`
-      }
+        padding: `${theme.spacing(10)}px 0`,
+      },
     },
     copy: {
       textAlign: 'center',
       maxWidth: '85%',
       marginTop: -theme.spacing(3),
       [theme.breakpoints.up('md')]: {
-        maxWidth: 800
-      }
+        maxWidth: 800,
+      },
     },
     icon: {
       padding: theme.spacing(2),
@@ -51,18 +51,18 @@ const styles = (theme: Theme) =>
       height: '160px',
       '& .outerCircle': {
         fill: theme.color.absWhite,
-        stroke: theme.bg.offWhite
+        stroke: theme.bg.offWhite,
       },
       '& .circle': {
-        fill: theme.color.absWhite
+        fill: theme.color.absWhite,
       },
       '& .insidePath path': {
         opacity: 0,
-        stroke: theme.palette.primary.main
+        stroke: theme.palette.primary.main,
       },
       '& .bucket.insidePath path': {
-        fill: theme.palette.primary.main
-      }
+        fill: theme.palette.primary.main,
+      },
     },
     entity: {
       borderRadius: '50%',
@@ -70,23 +70,23 @@ const styles = (theme: Theme) =>
       color: theme.color.green,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     title: {
       textAlign: 'center',
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     '& .insidePath path': {
       opacity: 0,
       animation: '$fadeIn .2s ease-in-out forwards .3s',
-      stroke: theme.palette.primary.main
+      stroke: theme.palette.primary.main,
     },
     '& .bucket.insidePath path': {
-      fill: theme.palette.primary.main
+      fill: theme.palette.primary.main,
     },
     button: {
-      marginBottom: theme.spacing(4)
-    }
+      marginBottom: theme.spacing(4),
+    },
   });
 
 export interface ExtendedButtonProps extends ButtonProps {
@@ -105,14 +105,14 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Placeholder: React.FC<CombinedProps> = props => {
+const Placeholder: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     isEntity,
     title,
     icon: Icon,
     buttonProps,
-    renderAsSecondary
+    renderAsSecondary,
   } = props;
   return (
     <Grid
@@ -167,7 +167,7 @@ const Placeholder: React.FC<CombinedProps> = props => {
 };
 
 Placeholder.defaultProps = {
-  icon: LinodeIcon
+  icon: LinodeIcon,
 };
 
 const styled = withStyles(styles);

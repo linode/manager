@@ -9,20 +9,20 @@ xdescribe('Support Search - Suite', () => {
     SupportLanding.baseElemsDisplay();
   });
 
-  const filterSearchResults = resultType => {
+  const filterSearchResults = (resultType) => {
     return SupportLanding.searchResults.filter(
-      result =>
+      (result) =>
         result.getAttribute(SupportLanding.searchResultLinkType) === resultType
     );
   };
 
-  const scrollDownResultList = numberOfScrolls => {
+  const scrollDownResultList = (numberOfScrolls) => {
     for (let i = 0; i < numberOfScrolls; i++) {
       SupportLanding.searchField.addValue('\ue015');
     }
   };
 
-  const checkDocumentationLink = articleTitle => {
+  const checkDocumentationLink = (articleTitle) => {
     switchTab();
     expect(browser.getTitle()).toEqual(articleTitle.trim());
     expect(browser.getUrl()).toContain('/docs/');
@@ -30,7 +30,7 @@ xdescribe('Support Search - Suite', () => {
     $('body').click();
   };
 
-  const checkCommuntitySiteLink = postTitle => {
+  const checkCommuntitySiteLink = (postTitle) => {
     switchTab();
     expect(browser.getTitle()).toEqual(
       `${postTitle.trim()} | Linode Questions`

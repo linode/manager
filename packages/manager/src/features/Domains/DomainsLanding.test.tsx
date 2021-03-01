@@ -5,12 +5,12 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   mockMatchMedia,
   wrapWithTheme,
-  assertOrder
+  assertOrder,
 } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
   DomainsLanding,
-  getReduxCopyOfDomains
+  getReduxCopyOfDomains,
 } from './DomainsLanding';
 const domains = domainFactory.buildList(5);
 
@@ -46,11 +46,11 @@ const props: CombinedProps = {
     title: '',
     breadcrumbs: '',
     importButton: '',
-    banner: ''
+    banner: '',
   },
   domainsByID: {},
   upsertMultipleDomains: jest.fn(),
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 beforeAll(() => mockMatchMedia());
@@ -70,7 +70,7 @@ describe('Domains Landing', () => {
         'domain-1',
         'domain-2',
         'domain-3',
-        'domain-4'
+        'domain-4',
       ])
     );
   });
@@ -86,7 +86,7 @@ describe('getReduxCopyOfDomains fn', () => {
       getReduxCopyOfDomains([domain1, domain2], {
         1: domain1,
         2: domain2,
-        3: domain3
+        3: domain3,
       })
     ).toEqual([domain1, domain2]);
   });

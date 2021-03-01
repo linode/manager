@@ -17,16 +17,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
     paddingLeft: 0,
     '& span:first-of-type': {
-      justifyContent: 'flex-start'
-    }
+      justifyContent: 'flex-start',
+    },
   },
   input: {
     'nth-child(n+2)': {
-      marginTop: theme.spacing()
-    }
+      marginTop: theme.spacing(),
+    },
   },
   root: {
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
   },
   button: {
     minWidth: 'auto',
@@ -34,16 +34,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: -theme.spacing(),
     padding: 0,
     '& > span': {
-      padding: 2
+      padding: 2,
     },
     '& :hover, & :focus': {
       color: 'white',
-      backgroundColor: theme.palette.primary.main
-    }
+      backgroundColor: theme.palette.primary.main,
+    },
   },
   helperText: {
-    marginBottom: theme.spacing()
-  }
+    marginBottom: theme.spacing(),
+  },
 }));
 
 export interface Props {
@@ -57,7 +57,7 @@ export interface Props {
   className?: string;
 }
 
-export const MultipleIPInput: React.FC<Props> = props => {
+export const MultipleIPInput: React.FC<Props> = (props) => {
   const { error, onChange, ips, title, helperText } = props;
   const classes = useStyles();
 
@@ -89,7 +89,7 @@ export const MultipleIPInput: React.FC<Props> = props => {
       className={classnames({
         [classes.root]: true,
         // Inject the className if given as as prop.
-        [props.className ?? '']: Boolean(props.className)
+        [props.className ?? '']: Boolean(props.className),
       })}
     >
       <InputLabel>{title}</InputLabel>
@@ -113,7 +113,7 @@ export const MultipleIPInput: React.FC<Props> = props => {
               label={`domain-transfer-ip-${idx}`}
               InputProps={{
                 'aria-label': `${title} ip-address-${idx}`,
-                ...props.inputProps
+                ...props.inputProps,
               }}
               value={thisIP.address}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

@@ -4,37 +4,37 @@ import { assertOrder, wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   getInitialValuesFromUserPreferences,
   OrderBy,
-  sortData
+  sortData,
 } from './OrderBy';
 
 const a = {
   name: 'april',
   hobbies: ['this', 'that', 'the other'],
-  age: 43
+  age: 43,
 };
 
 const b = {
   name: 'may',
   hobbies: [],
-  age: 23
+  age: 23,
 };
 
 const c = {
   name: 'june',
   hobbies: ['traditional Irish bowling'],
-  age: 53
+  age: 53,
 };
 
 const d = {
   name: 'july',
   hobbies: ['one', 'two', 'three'],
-  age: 53
+  age: 53,
 };
 
 const e = {
   name: 'august',
   hobbies: ['traditional Irish bowling'],
-  age: 53
+  age: 53,
 };
 
 describe('OrderBy', () => {
@@ -63,9 +63,9 @@ describe('OrderBy', () => {
       sortKeys: {
         ['listening-services']: {
           orderBy: 'test-order',
-          order: 'desc' as any
-        }
-      }
+          order: 'desc' as any,
+        },
+      },
     };
     it('should return values from query params if available', () => {
       expect(
@@ -119,13 +119,13 @@ describe('OrderBy', () => {
     const componentProps = {
       preferences: {},
       getUserPreferences: jest.fn(),
-      updateUserPreferences: jest.fn()
+      updateUserPreferences: jest.fn(),
     };
 
     it('re-sorts (previously) sorted data when the order changes', () => {
       const data = [
         { name: 'april', age: 50 },
-        { name: 'may', age: 50 }
+        { name: 'may', age: 50 },
       ];
 
       const { container, getByTestId } = render(
@@ -134,7 +134,7 @@ describe('OrderBy', () => {
             {({ data, handleOrderChange }) => {
               return (
                 <>
-                  {data.map(d => (
+                  {data.map((d) => (
                     <div key={d.name} data-qa-name>
                       {d.name}
                     </div>

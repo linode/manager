@@ -3,7 +3,7 @@ import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   rebuildLinode,
   RebuildLinodeSchema,
-  RebuildRequest
+  RebuildRequest,
 } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -17,7 +17,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
@@ -25,11 +25,11 @@ import Notice from 'src/components/Notice';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
-  UserSSHKeyProps
+  UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
@@ -41,15 +41,15 @@ type ClassNames = 'root' | 'error' | 'actions';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      paddingTop: theme.spacing(3)
+      paddingTop: theme.spacing(3),
     },
     error: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     actions: {
       marginBottom: '16px !important',
-      marginLeft: theme.spacing(3)
-    }
+      marginLeft: theme.spacing(3),
+    },
   });
 
 interface Props {
@@ -77,10 +77,10 @@ interface RebuildFromImageForm {
 
 const initialValues: RebuildFromImageForm = {
   image: '',
-  root_pass: ''
+  root_pass: '',
 };
 
-export const RebuildFromImage: React.FC<CombinedProps> = props => {
+export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     disabled,
@@ -92,7 +92,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     linodeId,
     enqueueSnackbar,
     history,
-    passwordHelperText
+    passwordHelperText,
   } = props;
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
@@ -111,12 +111,14 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
     const params: RebuildRequest = {
       image,
       root_pass,
-      authorized_users: userSSHKeys.filter(u => u.selected).map(u => u.username)
+      authorized_users: userSSHKeys
+        .filter((u) => u.selected)
+        .map((u) => u.username),
     };
 
     // @todo: eventually this should be a dispatched action instead of a services library call
     rebuildLinode(linodeId, params)
-      .then(_ => {
+      .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
         resetEventsPolling();
 
@@ -124,11 +126,11 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
         setIsDialogOpen(false);
 
         enqueueSnackbar('Linode rebuild started', {
-          variant: 'info'
+          variant: 'info',
         });
         history.push(`/linodes/${linodeId}/summary`);
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const defaultMessage = `There was an issue rebuilding your Linode.`;
         const mapErrorToStatus = (generalError: string) =>
           setStatus({ generalError });
@@ -155,12 +157,12 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
         setFieldValue,
         status,
         values,
-        validateForm
+        validateForm,
       }) => {
         // The "Rebuild" button opens a confirmation modal.
         // We'd like to validate the form before this happens.
         const handleRebuildButtonClick = () => {
-          validateForm().then(maybeErrors => {
+          validateForm().then((maybeErrors) => {
             // If there aren't any errors, we can open the modal.
             if (isEmpty(maybeErrors)) {
               setIsDialogOpen(true);
@@ -182,7 +184,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
                 (imagesError.read && imagesError.read[0].reason) || errors.image
               }
               selectedImageID={values.image}
-              handleSelectImage={selected => setFieldValue('image', selected)}
+              handleSelectImage={(selected) => setFieldValue('image', selected)}
               disabled={disabled}
               variant="all"
               data-qa-select-image
@@ -190,7 +192,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
             <form>
               <AccessPanel
                 password={values.root_pass}
-                handleChange={input => setFieldValue('root_pass', input)}
+                handleChange={(input) => setFieldValue('root_pass', input)}
                 updateFor={[
                   classes,
                   disabled,
@@ -198,7 +200,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = props => {
                   errors,
                   sshError,
                   userSSHKeys,
-                  values.image
+                  values.image,
                 ]}
                 error={errors.root_pass}
                 sshKeyError={sshError}
@@ -237,7 +239,7 @@ const styled = withStyles(styles);
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
-  permissions: linode._permissions
+  permissions: linode._permissions,
 }));
 
 const enhanced = compose<CombinedProps, Props>(

@@ -9,14 +9,14 @@ import {
   onError,
   onGetAllSuccess,
   onStart,
-  setError
+  setError,
 } from '../store.helpers.tmp';
 import { MappedEntityState2 as MappedEntityState } from '../types';
 import {
   createDatabaseActions,
   deleteDatabaseActions,
   getDatabasesActions,
-  updateDatabaseActions
+  updateDatabaseActions,
 } from './databases.actions';
 
 export type State = MappedEntityState<Database>;
@@ -101,15 +101,15 @@ export const extendType = (type: DatabaseType): ExtendedType => {
     memory,
     vcpus,
     disk,
-    price: { monthly, hourly }
+    price: { monthly, hourly },
   } = type;
   return {
     ...type,
     heading: label,
     subHeadings: [
       `$${monthly}/mo ($${hourly}/hr)`,
-      typeLabelDetails(memory, disk, vcpus)
-    ] as [string, string]
+      typeLabelDetails(memory, disk, vcpus),
+    ] as [string, string],
   };
 };
 

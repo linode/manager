@@ -8,7 +8,7 @@ interface Props {
   description?: string;
 }
 
-export const VerificationError: React.FC<Props> = props => {
+export const VerificationError: React.FC<Props> = (props) => {
   const { title, description } = props;
   return (
     <Typography>

@@ -1,5 +1,5 @@
 import withWidth, {
-  WithWidth as _WithWidth
+  WithWidth as _WithWidth,
 } from '@material-ui/core/withWidth';
 
 /* tslint:disable-next-line:no-empty-interface */

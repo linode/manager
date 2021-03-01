@@ -14,13 +14,13 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withGlobalErrors, {
-  Props as GlobalErrorProps
+  Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -38,17 +38,17 @@ const styles = (theme: Theme) =>
   createStyles({
     title: {
       [theme.breakpoints.down('xs')]: {
-        marginLeft: theme.spacing()
-      }
+        marginLeft: theme.spacing(),
+      },
     },
     openTicketButton: {
       minWidth: 150,
       [theme.breakpoints.down('sm')]: {
-        marginRight: theme.spacing()
-      }
+        marginRight: theme.spacing(),
+      },
     },
     tabsWrapper: {
-      position: 'relative'
+      position: 'relative',
     },
     tab: {
       '&[data-reach-tab]': {
@@ -66,14 +66,14 @@ const styles = (theme: Theme) =>
         padding: '6px 16px',
         textDecoration: 'none',
         '&:hover': {
-          color: theme.color.blue
-        }
+          color: theme.color.blue,
+        },
       },
       '&[data-reach-tab][data-selected]': {
         borderBottom: `3px solid ${theme.color.blue}`,
         color: theme.color.headline,
-        fontFamily: theme.font.bold
-      }
+        fontFamily: theme.font.bold,
+      },
     },
     tabList: {
       '&[data-reach-tab-list]': {
@@ -82,10 +82,10 @@ const styles = (theme: Theme) =>
         marginBottom: theme.spacing(),
         [theme.breakpoints.down('md')]: {
           overflowX: 'auto',
-          padding: 1
-        }
-      }
-    }
+          padding: 1,
+        },
+      },
+    },
   });
 
 interface Props {
@@ -140,7 +140,7 @@ export class SupportTicketsLanding extends React.PureComponent<
        */
       drawerOpen: stateParams ? stateParams.open : drawerOpen,
       prefilledDescription: stateParams ? stateParams.description : undefined,
-      prefilledTitle: stateParams ? stateParams.title : undefined
+      prefilledTitle: stateParams ? stateParams.title : undefined,
     };
   }
 
@@ -168,7 +168,7 @@ export class SupportTicketsLanding extends React.PureComponent<
 
     if (selectedTab) {
       this.props.history.push({
-        search: `?type=${selectedTab}`
+        search: `?type=${selectedTab}`,
       });
     }
   };
@@ -188,13 +188,13 @@ export class SupportTicketsLanding extends React.PureComponent<
     const { history } = this.props;
     history.push({
       pathname: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors }
+      state: { attachmentErrors },
     });
     if (!this.mounted) {
       return;
     }
     this.setState({
-      drawerOpen: false
+      drawerOpen: false,
     });
   };
 
@@ -239,7 +239,7 @@ export class SupportTicketsLanding extends React.PureComponent<
                 onClick={this.openDrawer}
                 data-qa-open-ticket-link
                 className={classes.openTicketButton}
-                onKeyPress={e => {
+                onKeyPress={(e) => {
                   if (e.keyCode === 13) {
                     this.openDrawer();
                   }

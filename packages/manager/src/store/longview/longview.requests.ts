@@ -3,7 +3,7 @@ import {
   deleteLongviewClient as _delete,
   getLongviewClients,
   LongviewClient,
-  updateLongviewClient as update
+  updateLongviewClient as update,
 } from '@linode/api-v4/lib/longview';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -11,7 +11,7 @@ import {
   createLongviewClient as _createLongviewClientActions,
   deleteLongviewClient as _deleteLongviewClientActions,
   getLongviewClients as _getLongviewClientsActions,
-  updateLongviewClient as _updateLongviewClientActions
+  updateLongviewClient as _updateLongviewClientActions,
 } from './longview.actions';
 
 const _getAllLongviewClients = (payload: { params?: any; filter?: any }) =>

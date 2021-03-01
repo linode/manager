@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   apiDeleteAllLinodes,
-  waitForLinodeStatus
+  waitForLinodeStatus,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
@@ -15,12 +15,12 @@ describe('Create Linode from Image - With Tags Suite', () => {
   const customTagName = `foo-${timestamp()}`;
   const linodeName = `Lin-${timestamp()}`;
 
-  const assertTagsDisplay = tags => {
+  const assertTagsDisplay = (tags) => {
     ConfigureLinode.tag.waitForDisplayed(constants.wait.normal);
 
-    const displayedTags = ConfigureLinode.tags.map(t => t.getText());
+    const displayedTags = ConfigureLinode.tags.map((t) => t.getText());
 
-    tags.forEach(t => expect(displayedTags).toContain(t));
+    tags.forEach((t) => expect(displayedTags).toContain(t));
   };
 
   beforeAll(() => {
@@ -57,7 +57,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
     ConfigureLinode.selectOption.waitForDisplayed(constants.wait.normal, true);
     ConfigureLinode.multiOption.waitForDisplayed(constants.wait.normal);
 
-    const selectedTags = $$(ConfigureLinode.multiOption.selector).map(tag =>
+    const selectedTags = $$(ConfigureLinode.multiOption.selector).map((tag) =>
       tag.getText()
     );
 
@@ -74,7 +74,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
     addedTags.pop();
     $$('.react-select__multi-value__remove')[1].click();
 
-    const selectedTags = $$(ConfigureLinode.multiOption.selector).map(tag =>
+    const selectedTags = $$(ConfigureLinode.multiOption.selector).map((tag) =>
       tag.getText()
     );
 
