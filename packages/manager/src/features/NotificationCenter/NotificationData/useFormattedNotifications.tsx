@@ -15,7 +15,7 @@ export const useFormattedNotifications = () => {
 
   const dayOfMonth = DateTime.local().day;
 
-  // Filter out the late payment notification from the API (since we are using a custom one), and any bounced email notifications and abuse tickets because users are alerted to those by global notification banners already.
+  // Filter out any bounced email notifications and abuse tickets because users are alerted to those by global notification banners already.
   const combinedNotifications = [...notifications].filter(
     (notification) =>
       !['billing_email_bounce', 'user_email_bounce', 'ticket_abuse'].includes(
