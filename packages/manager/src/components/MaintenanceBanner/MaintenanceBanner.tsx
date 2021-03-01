@@ -129,7 +129,7 @@ const generateIntroText = (
     if (maintenanceInProgress) {
       return (
         <React.Fragment>
-          This Linode&apos;s physical host is currently undergoing maintenance.
+          This Linode&apos;s physical host is currently undergoing maintenance.{' '}
           {maintenanceActionTextMap[type]} Please refer to
           <Link to="/support/tickets"> your Support tickets </Link> for more
           information.
