@@ -81,12 +81,13 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
       page_size: paginationReceivedTransfers.pageSize,
     },
     {
-      status: 'received',
+      '+and': [{ is_sender: false }, { status: { '+neq': 'pending' } }],
     }
   );
   const receivedTransfers = Object.values(
     receivedTransfersData?.entityTransfers ?? {}
   );
+
   const receivedTransfersResults = receivedTransfersData?.results ?? 0;
 
   // Fetch the Sent Transfers
@@ -100,8 +101,7 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
       page_size: paginationSentTransfers.pageSize,
     },
     {
-      is_sender: true,
-      status: { '+neq': 'pending' },
+      '+and': [{ is_sender: true }, { status: { '+neq': 'pending' } }],
     }
   );
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});

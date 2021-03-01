@@ -14,7 +14,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
-import { useTransferQuery } from 'src/queries/entityTransfers';
+import { queryClient } from 'src/queries/base';
+import { queryKey, useTransferQuery } from 'src/queries/entityTransfers';
 import { capitalize } from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -105,6 +106,8 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
           const entityCount = countByEntity(data?.entities);
           sendEntityTransferReceiveEvent(entityCount);
         }
+        // Make sure we update the tables since we're already on the landing page
+        queryClient.invalidateQueries(queryKey);
         onClose();
         setSubmitting(false);
         enqueueSnackbar('Transfer accepted successfully.', {
