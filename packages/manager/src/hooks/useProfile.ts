@@ -4,7 +4,7 @@ import { ApplicationState } from 'src/store';
 import { State } from 'src/store/profile/profile.reducer';
 import {
   requestProfile as _request,
-  updateProfile as _update
+  updateProfile as _update,
 } from 'src/store/profile/profile.requests';
 import { Dispatch } from './types';
 

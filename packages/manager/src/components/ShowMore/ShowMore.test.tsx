@@ -9,14 +9,14 @@ const classes = {
   chip: '',
   label: '',
   popover: '',
-  link: ''
+  link: '',
 };
 
 const props = {
   classes,
   items: ['a', 'b'],
   render: mockRender,
-  ariaItemType: 'items'
+  ariaItemType: 'items',
 };
 
 describe('ShowMore', () => {

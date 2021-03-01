@@ -30,7 +30,7 @@ class ScratchCodeDialog extends React.PureComponent<Props, {}> {
         </Typography>
         <Typography
           style={{
-            marginTop: '16px'
+            marginTop: '16px',
           }}
           variant="h5"
         >

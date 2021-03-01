@@ -7,21 +7,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    paddingLeft: `45px !important`
+    paddingLeft: `45px !important`,
   },
   icon: {
     marginLeft: theme.spacing(1) - 2,
     marginRight: theme.spacing(1),
     fontSize: '1.8em',
-    position: 'absolute'
-  }
+    position: 'absolute',
+  },
 }));
 
 interface Props extends SingleValueProps<any> {}
 
 type CombinedProps = Props;
 
-const _SingleValue: React.FC<CombinedProps> = props => {
+const _SingleValue: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   return (
     <>

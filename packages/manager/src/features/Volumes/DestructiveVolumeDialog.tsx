@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -17,8 +17,8 @@ const styles = (theme: Theme) =>
   createStyles({
     warningCopy: {
       color: theme.color.red,
-      marginBottom: theme.spacing(2)
-    }
+      marginBottom: theme.spacing(2),
+    },
   });
 
 interface Props {
@@ -39,12 +39,12 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
     const method = {
       detach: this.props.onDetach,
-      delete: this.props.onDelete
+      delete: this.props.onDelete,
     }[this.props.mode];
 
     const action = {
       detach: 'Detach',
-      delete: 'Delete'
+      delete: 'Delete',
     }[this.props.mode];
 
     return (
@@ -71,11 +71,11 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
       volumeLabel: label,
       linodeLabel,
       poweredOff,
-      mode
+      mode,
     } = this.props;
     const title = {
       detach: `Detach ${label ? label : 'Volume'}?`,
-      delete: `Delete ${label ? label : 'Volume'}?`
+      delete: `Delete ${label ? label : 'Volume'}?`,
     }[this.props.mode];
 
     return (

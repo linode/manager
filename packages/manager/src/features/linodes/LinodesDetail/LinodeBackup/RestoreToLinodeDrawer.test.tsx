@@ -14,7 +14,7 @@ describe('RestoreToLinodeDrawer', () => {
     linodesLastUpdated: 0,
     linodesLoading: false,
     getLinodes: jest.fn(),
-    linodesResults: 0
+    linodesResults: 0,
   };
 
   const wrapper = shallow<RestoreToLinodeDrawer>(

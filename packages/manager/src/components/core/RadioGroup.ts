@@ -1,5 +1,5 @@
 import RadioGroup, {
-  RadioGroupProps as _RadioGroupProps
+  RadioGroupProps as _RadioGroupProps,
 } from '@material-ui/core/RadioGroup';
 
 /* tslint:disable-next-line:no-empty-interface */

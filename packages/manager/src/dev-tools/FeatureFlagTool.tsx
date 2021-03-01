@@ -9,7 +9,7 @@ import Grid from 'src/components/core/Grid';
 
 const options: { label: string; flag: keyof Flags }[] = [
   { label: 'CMR', flag: 'cmr' },
-  { label: 'Databases', flag: 'databases' }
+  { label: 'Databases', flag: 'databases' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
@@ -30,7 +30,7 @@ const FeatureFlagTool: React.FC<{}> = () => {
       </Grid>
       <Grid item xs={12}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {options.map(thisOption => {
+          {options.map((thisOption) => {
             return (
               <div
                 key={thisOption.flag}
@@ -38,14 +38,14 @@ const FeatureFlagTool: React.FC<{}> = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  flexDirection: 'row'
+                  flexDirection: 'row',
                 }}
               >
                 <span>{thisOption.label} </span>
                 <input
                   type="checkbox"
                   checked={Boolean(flags[thisOption.flag])}
-                  onChange={e => handleCheck(e, thisOption.flag)}
+                  onChange={(e) => handleCheck(e, thisOption.flag)}
                 />
               </div>
             );

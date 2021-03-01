@@ -23,21 +23,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.only('sm')]: {
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   preContainer: {
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    minHeight: 48
+    minHeight: 48,
   },
   editablePreContainer: {
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
-export const Breadcrumb: React.FC<CombinedProps> = props => {
+export const Breadcrumb: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -48,7 +48,7 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
     firstAndLastOnly,
     crumbOverrides,
     className,
-    pathname
+    pathname,
   } = props;
 
   const url = pathname && pathname.slice(1);
@@ -63,7 +63,7 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
       <div
         className={classNames({
           [classes.preContainer]: true,
-          [classes.editablePreContainer]: onEditHandlers !== undefined
+          [classes.editablePreContainer]: onEditHandlers !== undefined,
         })}
       >
         <Crumbs

@@ -29,7 +29,7 @@ type CombinedProps = DispatchProps & Props;
 export class StackScriptDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
-    error: false
+    error: false,
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -38,7 +38,7 @@ export class StackScriptDrawer extends React.Component<CombinedProps, State> {
     if (stackScriptId && !prevProps.open && this.props.open) {
       this.setState({ loading: true, stackScript: undefined });
       getStackScript(stackScriptId)
-        .then(stackScript => {
+        .then((stackScript) => {
           this.setState({ stackScript, loading: false, error: false });
         })
         .catch(() => {
@@ -73,16 +73,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   ownProps
 ) => {
   return {
-    closeDrawer: () => dispatch(closeStackScriptDrawer())
+    closeDrawer: () => dispatch(closeStackScriptDrawer()),
   };
 };
 
 const mapStateToProps: MapState<Props, {}> = (state: ApplicationState) => ({
   open: pathOr(false, ['stackScriptDrawer', 'open'], state),
-  stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state)
+  stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StackScriptDrawer);
+export default connect(mapStateToProps, mapDispatchToProps)(StackScriptDrawer);

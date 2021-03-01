@@ -21,5 +21,5 @@ function randomTitle(count) {
 
 export default {
   randomPass,
-  randomTitle
+  randomTitle,
 };

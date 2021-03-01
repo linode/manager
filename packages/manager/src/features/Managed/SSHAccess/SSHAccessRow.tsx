@@ -11,8 +11,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
   openDrawer: (linodeId: number) => void;
 }
 
-export const SSHAccessRow: React.FunctionComponent<Props> = props => {
+export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
   const { linodeSetting, updateOne, openDrawer } = props;

@@ -126,11 +126,11 @@ const cloneLandingReducer = (
     case 'clearAll':
       // Set all `isSelected`s to `false, and set selectedLinodeId to null
       draft.configSelection = map(
-        config => ({ ...config, isSelected: false }),
+        (config) => ({ ...config, isSelected: false }),
         draft.configSelection
       );
       draft.diskSelection = map(
-        disk => ({ ...disk, isSelected: false }),
+        (disk) => ({ ...disk, isSelected: false }),
         draft.diskSelection
       );
       draft.selectedLinodeId = null;
@@ -165,18 +165,18 @@ export const defaultState: CloneLandingState = {
   configSelection: {},
   diskSelection: {},
   selectedLinodeId: null,
-  isSubmitting: false
+  isSubmitting: false,
 };
 
 // Returns an array of IDs of configs/disks that are selected.
 const getSelectedIDs = (selection: ConfigSelection | DiskSelection) =>
   compose(
     // 3. Convert IDs to Numbers.
-    map(key => Number(key)),
+    map((key) => Number(key)),
     // 2. Get the keys (which are the IDs).
     keys,
     // 1. Only keep elements that are selected.
-    pickBy(c => c.isSelected)
+    pickBy((c) => c.isSelected)
   )(selection);
 
 export const createConfigDiskSelection = (
@@ -191,14 +191,14 @@ export const createConfigDiskSelection = (
   // Mapping of diskIds to an array of associated configIds
   const diskConfigMap: Record<number, number[]> = {};
 
-  configs.forEach(eachConfig => {
+  configs.forEach((eachConfig) => {
     // We default `isSelected` to `false`, unless this config was pre-selected.
     const isSelected = selectedConfigIds.includes(eachConfig.id);
 
     const associatedDisks = getAssociatedDisks(eachConfig, disks);
-    const associatedDiskIds = associatedDisks.map(eachDisk => eachDisk.id);
+    const associatedDiskIds = associatedDisks.map((eachDisk) => eachDisk.id);
 
-    associatedDiskIds.forEach(id => {
+    associatedDiskIds.forEach((id) => {
       if (!diskConfigMap[id]) {
         diskConfigMap[id] = [];
       }
@@ -207,11 +207,11 @@ export const createConfigDiskSelection = (
 
     configSelection[eachConfig.id] = {
       isSelected,
-      associatedDiskIds
+      associatedDiskIds,
     };
   });
 
-  disks.forEach(eachDisk => {
+  disks.forEach((eachDisk) => {
     // We default `isSelected` to `false`, unless this disk was pre-selected.
     const isSelected = selectedDiskIds.includes(eachDisk.id);
 
@@ -220,7 +220,7 @@ export const createConfigDiskSelection = (
 
     diskSelection[eachDisk.id] = {
       isSelected,
-      associatedConfigIds
+      associatedConfigIds,
     };
   });
 
@@ -240,14 +240,14 @@ export const getAssociatedDisks = (
   const disksOnConfig: number[] = [];
 
   // Go through the devices and grab all the disks
-  Object.keys(config.devices).forEach(key => {
+  Object.keys(config.devices).forEach((key) => {
     if (config.devices[key] && config.devices[key].disk_id) {
       disksOnConfig.push(config.devices[key].disk_id);
     }
   });
 
   // Only keep the disks that were found on the config
-  return allDisks.filter(eachDisk => disksOnConfig.includes(eachDisk.id));
+  return allDisks.filter((eachDisk) => disksOnConfig.includes(eachDisk.id));
 };
 
 // Grabs the associated disks and attaches them to each config
@@ -255,7 +255,7 @@ export const attachAssociatedDisksToConfigs = (
   configs: Config[],
   disks: Disk[]
 ): ExtendedConfig[] => {
-  return configs.map(eachConfig => {
+  return configs.map((eachConfig) => {
     const associatedDisks = getAssociatedDisks(eachConfig, disks);
     return { ...eachConfig, associatedDisks };
   });
@@ -302,7 +302,7 @@ export const getEstimatedCloneTime = (
   // Adding a few seconds avoids this problem
   const then = now.plus({
     minutes: estimatedTimeInMinutes,
-    seconds: estimatedTimeInMinutes > 0 ? 1 : 0 // in case less than 1 min
+    seconds: estimatedTimeInMinutes > 0 ? 1 : 0, // in case less than 1 min
   });
   let humanizedEstimate = then.toRelative(now.toObject());
   const prefixHumanized = 'in ';

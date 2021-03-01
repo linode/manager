@@ -4,14 +4,14 @@ import { dcDisplayNames } from 'src/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
 
-export const FirewallBanner: React.FC<{}> = _ => {
+export const FirewallBanner: React.FC<{}> = (_) => {
   const regions = useRegionsQuery().data ?? [];
-  const regionsWithFirewalls = regions.filter(thisRegion =>
+  const regionsWithFirewalls = regions.filter((thisRegion) =>
     thisRegion.capabilities.includes('Cloud Firewall')
   );
 
   const regionDisplayList = arrayToList(
-    regionsWithFirewalls.map(thisRegion => dcDisplayNames[thisRegion.id])
+    regionsWithFirewalls.map((thisRegion) => dcDisplayNames[thisRegion.id])
   );
 
   return (

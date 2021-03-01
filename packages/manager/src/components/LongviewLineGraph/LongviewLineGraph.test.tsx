@@ -7,8 +7,8 @@ describe('isDataEmpty helper function', () => {
         {
           label: 'Series 1',
           data: [],
-          borderColor: 'blue'
-        }
+          borderColor: 'blue',
+        },
       ])
     ).toBe(true);
   });
@@ -19,13 +19,13 @@ describe('isDataEmpty helper function', () => {
         {
           label: 'Series 1',
           data: [],
-          borderColor: 'blue'
+          borderColor: 'blue',
         },
         {
           label: 'Series 2',
           data: [],
-          borderColor: 'green'
-        }
+          borderColor: 'green',
+        },
       ])
     ).toBe(true);
   });
@@ -35,14 +35,17 @@ describe('isDataEmpty helper function', () => {
       isDataEmpty([
         {
           label: 'Series 1',
-          data: [[1, 2], [2, 3]],
-          borderColor: 'blue'
+          data: [
+            [1, 2],
+            [2, 3],
+          ],
+          borderColor: 'blue',
         },
         {
           label: 'Series 2',
           data: [],
-          borderColor: 'green'
-        }
+          borderColor: 'green',
+        },
       ])
     ).toBe(false);
   });

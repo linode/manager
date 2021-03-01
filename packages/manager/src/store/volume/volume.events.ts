@@ -75,7 +75,7 @@ const handleVolumeDelete = (
     case 'started':
       const action = deleteVolumeActions.done({
         params: { volumeId },
-        result: {}
+        result: {},
       });
       return dispatch(action);
   }

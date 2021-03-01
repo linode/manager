@@ -12,7 +12,7 @@ export const useLinodes = (): LinodesProps => {
   );
 
   return {
-    linodes
+    linodes,
   };
 };
 

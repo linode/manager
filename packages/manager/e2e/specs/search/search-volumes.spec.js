@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   createVolumes,
-  apiDeleteAllVolumes
+  apiDeleteAllVolumes,
 } from '../../utils/common';
 import SearchBar from '../../pageobjects/search.page';
 import SearchResults from '../../pageobjects/search-results.page';
@@ -12,13 +12,13 @@ import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.p
 describe('Header - Search - Volumes Suite', () => {
   const testVolume = {
     label: `AutoVolume${timestamp()}`,
-    tags: [`AutoTag${timestamp()}`]
+    tags: [`AutoTag${timestamp()}`],
   };
 
-  const assertVolumeDisplaysInSearchSuggestion = query => {
+  const assertVolumeDisplaysInSearchSuggestion = (query) => {
     SearchBar.executeSearch(query);
     SearchBar.suggestion.waitForDisplayed(constants.wait.normal);
-    const volumeSuggestion = SearchBar.suggestions.find(suggestion =>
+    const volumeSuggestion = SearchBar.suggestions.find((suggestion) =>
       suggestion.getText().includes(testVolume.label)
     );
     expect(volumeSuggestion).toBeTruthy();

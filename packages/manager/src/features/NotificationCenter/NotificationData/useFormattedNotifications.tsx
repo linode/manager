@@ -20,12 +20,12 @@ export const useFormattedNotifications = () => {
 
   // Filter out the late payment notification from the API (since we are using a custom one), and any bounced email notifications and abuse tickets because users are alerted to those by global notification banners already.
   const combinedNotifications = [...notifications].filter(
-    notification =>
+    (notification) =>
       ![
         'payment_due',
         'billing_email_bounce',
         'user_email_bounce',
-        'ticket_abuse'
+        'ticket_abuse',
       ].includes(notification.type)
   );
 
@@ -38,7 +38,7 @@ export const useFormattedNotifications = () => {
       severity: 'critical',
       when: null,
       until: null,
-      body: null
+      body: null,
     });
   }
 
@@ -55,7 +55,7 @@ const interceptNotification = (notification: Notification): Notification => {
   if (notification.type === 'ticket_abuse') {
     return {
       ...notification,
-      message: notification.message.replace('!', '.')
+      message: notification.message.replace('!', '.'),
     };
   }
 
@@ -80,7 +80,7 @@ const interceptNotification = (notification: Notification): Notification => {
               linodeAttachedToNotification
             )
           : notification.body
-        : notification.message
+        : notification.message,
     };
   }
 
@@ -94,13 +94,13 @@ const formatNotificationForDisplay = (
 ): NotificationItem => ({
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
-  countInTotal: true
+  countInTotal: true,
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
 export const adjustSeverity = ({
   severity,
-  type
+  type,
 }: Notification): NotificationSeverity => {
   if (checkIfMaintenanceNotification(type)) {
     return 'major';

@@ -10,12 +10,12 @@ interface InnerProps {
 
 type CombinedProps = Props & InnerProps;
 
-const AccountActivationError: React.FC<CombinedProps> = props => {
+const AccountActivationError: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     /** set an account_unactivated error if one hasn't already been set */
     if (!props.globalErrors.account_unactivated) {
       props.setErrors({
-        account_unactivated: true
+        account_unactivated: true,
       });
     }
   }, [props.globalErrors]);

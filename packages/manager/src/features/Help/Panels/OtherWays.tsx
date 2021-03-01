@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -19,12 +19,12 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     wrapper: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     heading: {
       textAlign: 'center',
-      marginBottom: theme.spacing(4)
-    }
+      marginBottom: theme.spacing(4),
+    },
   });
 
 interface State {
@@ -55,7 +55,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     if (typeof this.ada === 'undefined') {
       this.setState({
         error:
-          'There was an issue loading the chat at this time. Please try again later.'
+          'There was an issue loading the chat at this time. Please try again later.',
       });
       return;
     }

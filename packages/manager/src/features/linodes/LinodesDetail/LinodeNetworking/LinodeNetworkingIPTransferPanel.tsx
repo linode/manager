@@ -10,7 +10,7 @@ import {
   set,
   uniq,
   view,
-  when
+  when,
 } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -21,7 +21,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -30,7 +30,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import withLinodes, {
-  DispatchProps
+  DispatchProps,
 } from 'src/containers/withLinodes.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -47,45 +47,45 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     containerDivider: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     mobileFieldWrapper: {
       [theme.breakpoints.down('xs')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     ipField: {
       marginTop: 0,
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: 175
-      }
+        width: 175,
+      },
     },
     ipFieldLabel: {
       width: '100%',
       [theme.breakpoints.up('sm')]: {
-        width: `calc(175px + ${theme.spacing(2)}px)`
-      }
+        width: `calc(175px + ${theme.spacing(2)}px)`,
+      },
     },
     actionsLabel: {
       [theme.breakpoints.down('sm')]: {
-        display: 'none'
-      }
+        display: 'none',
+      },
     },
     autoGridsm: {
       minWidth: 175,
       [theme.breakpoints.up('sm')]: {
         maxWidth: 'auto',
-        flexBasis: 'auto'
-      }
+        flexBasis: 'auto',
+      },
     },
     networkActionText: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     emptyStateText: {
       marginTop: theme.spacing(2),
-      color: theme.color.grey1
-    }
+      color: theme.color.grey1,
+    },
   });
 
 interface Props {
@@ -145,11 +145,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           [ip]: LinodeNetworkingIPTransferPanel.defaultState(
             ip,
             this.props.linodeID
-          )
+          ),
         }),
         {}
       ),
-      submitting: false
+      submitting: false,
     };
   }
 
@@ -161,7 +161,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   ): NoAction => ({
     mode: 'none',
     sourceIP,
-    sourceIPsLinodeID
+    sourceIPsLinodeID,
   });
 
   onModeChange = (ip: string) => (e: Item) => {
@@ -176,7 +176,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         /** When switching back to none, reset the ipState. */
         when(
           () => isNone(mode),
-          updateIPState(ip, ipState =>
+          updateIPState(ip, (ipState) =>
             LinodeNetworkingIPTransferPanel.defaultState(
               ipState.sourceIP,
               ipState.sourceIPsLinodeID
@@ -223,7 +223,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             /** We need to find and return the newly selected Linode's IPs. */
             updateSelectedLinodesIPs(ip, () => {
               const linode = this.props.linodes.find(
-                l => l.id === Number(e.value)
+                (l) => l.id === Number(e.value)
               );
               if (linode) {
                 return linode.ips;
@@ -234,7 +234,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             /** We need to find the selected Linode's IPs and return the first. */
             updateSelectedIP(ip, () => {
               const linode = this.props.linodes.find(
-                l => l.id === Number(e.value)
+                (l) => l.id === Number(e.value)
               );
               if (linode) {
                 return linode.ips[0];
@@ -260,7 +260,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
     const actionsList = [
       { label: 'Move To', value: 'move' },
-      { label: 'Swap With', value: 'swap' }
+      { label: 'Swap With', value: 'swap' },
     ];
 
     return (
@@ -283,14 +283,14 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
               state.mode === 'none'
                 ? null
                 : actionsList.find(
-                    eachAction => eachAction.value === state.mode
+                    (eachAction) => eachAction.value === state.mode
                   )
             }
             options={actionsList}
             textFieldProps={{
               dataAttrs: {
-                'data-qa-ip-transfer-action-menu': state.mode
-              }
+                'data-qa-ip-transfer-action-menu': state.mode,
+              },
             }}
             onChange={this.onModeChange(state.sourceIP)}
             disabled={readOnly}
@@ -310,11 +310,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   linodeSelect = ({ sourceIP, selectedLinodeID }: Move) => {
     const { classes, readOnly } = this.props;
 
-    const linodeList = this.props.linodes.map(l => {
+    const linodeList = this.props.linodes.map((l) => {
       return { label: l.label, value: l.id };
     });
 
-    const defaultLinode = linodeList.find(eachLinode => {
+    const defaultLinode = linodeList.find((eachLinode) => {
       return eachLinode.value === selectedLinodeID;
     });
 
@@ -324,8 +324,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           options={linodeList}
           textFieldProps={{
             dataAttrs: {
-              'data-qa-linode-select': true
-            }
+              'data-qa-linode-select': true,
+            },
           }}
           disabled={readOnly || this.props.linodes.length === 1}
           defaultValue={defaultLinode}
@@ -342,11 +342,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
     const { classes, readOnly } = this.props;
 
-    const IPList = selectedLinodesIPs.map(ip => {
+    const IPList = selectedLinodesIPs.map((ip) => {
       return { label: ip, value: ip };
     });
 
-    const defaultIP = IPList.find(eachIP => {
+    const defaultIP = IPList.find((eachIP) => {
       return eachIP.value === selectedIP;
     });
 
@@ -359,8 +359,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           onChange={this.onSelectedIPChange(sourceIP)}
           textFieldProps={{
             dataAttrs: {
-              'data-qa-swap-ip-action-menu': true
-            }
+              'data-qa-swap-ip-action-menu': true,
+            },
           }}
           isClearable={false}
           noMarginTop
@@ -384,7 +384,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             this.props.linodeID
           );
           return acc;
-        }, {})
+        }, {}),
       });
     }
   }
@@ -409,7 +409,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     this.setState({
       submitting: true,
       error: undefined,
-      successMessage: undefined
+      successMessage: undefined,
     });
 
     assignAddresses(createRequestData(this.state.ips, this.props.linodeRegion))
@@ -423,19 +423,19 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             this.setState({
               submitting: false,
               error: undefined,
-              successMessage: 'IP transferred successfully.'
+              successMessage: 'IP transferred successfully.',
             });
           })
-          .catch(err => {
+          .catch((err) => {
             this.setState({
               error: getAPIErrorOrDefault(
                 err,
                 'Unable to refresh IPs. Please reload the screen.'
-              )
+              ),
             });
           });
       })
-      .catch(err => {
+      .catch((err) => {
         const apiErrors = getAPIErrorOrDefault(
           err,
           'Unable to transfer IP addresses at this time. Please try again later.'
@@ -443,7 +443,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
 
         return this.setState({
           error: uniq(apiErrors),
-          submitting: false
+          submitting: false,
         });
       });
   };
@@ -458,10 +458,10 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           [ip]: LinodeNetworkingIPTransferPanel.defaultState(
             ip,
             this.props.linodeID
-          )
+          ),
         }),
         {}
-      )
+      ),
     });
   };
 
@@ -562,7 +562,7 @@ const L = {
   selectedLinodesIPs: (ip: string) =>
     lensPath(['ips', ip, 'selectedLinodesIPs']),
   sourceIP: (ip: string) => lensPath(['ips', ip, 'sourceIP']),
-  sourceIPsLinodeID: (ip: string) => lensPath(['ips', ip, 'sourceIPsLinodeID'])
+  sourceIPsLinodeID: (ip: string) => lensPath(['ips', ip, 'sourceIPsLinodeID']),
 };
 
 const setMode = (ip: string, mode: Mode) => set(L.mode(ip), mode);
@@ -609,8 +609,8 @@ const stateToAssignmentsReducer = (
       ...assignments,
       {
         address: current.sourceIP,
-        linode_id: current.selectedLinodeID
-      }
+        linode_id: current.selectedLinodeID,
+      },
     ];
   }
 
@@ -619,12 +619,12 @@ const stateToAssignmentsReducer = (
       ...assignments,
       {
         address: current.sourceIP,
-        linode_id: current.selectedLinodeID
+        linode_id: current.selectedLinodeID,
       },
       {
         address: current.selectedIP,
-        linode_id: current.sourceIPsLinodeID
-      }
+        linode_id: current.sourceIPsLinodeID,
+      },
     ];
   }
 
@@ -633,7 +633,7 @@ const stateToAssignmentsReducer = (
 
 const createRequestData = (state: IPRowState, region: string) => ({
   assignments: Object.values(state).reduce(stateToAssignmentsReducer, []),
-  region
+  region,
 });
 
 const styled = withStyles(styles);
@@ -647,11 +647,11 @@ const enhanced = recompose<CombinedProps, Props>(
   withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
     const { linodeID, linodeRegion } = ownProps;
     const linodes = linodesData
-      .filter(l => l.id !== linodeID && l.region === linodeRegion)
-      .map(linode => ({
+      .filter((l) => l.id !== linodeID && l.region === linodeRegion)
+      .map((linode) => ({
         id: linode.id,
         ips: linode.ipv4,
-        label: linode.label
+        label: linode.label,
       }));
     return { linodes };
   })

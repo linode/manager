@@ -16,7 +16,7 @@ const props: Props = {
   recycleAllPoolNodes: jest.fn(),
   recycleAllClusterNodes: jest.fn(),
   recycleNode: jest.fn(),
-  clusterLabel: 'a cluster'
+  clusterLabel: 'a cluster',
 };
 
 describe('NodeTable', () => {

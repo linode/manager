@@ -4,19 +4,19 @@ import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientData, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & WithTheme & LVDataProps;
 
-const SwapGauge: React.FC<CombinedProps> = props => {
+const SwapGauge: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
     longviewClientData,
-    lastUpdatedError
+    lastUpdatedError,
   } = props;
 
   const freeMemory = pathOr<number>(
@@ -43,7 +43,7 @@ const SwapGauge: React.FC<CombinedProps> = props => {
           <Typography>
             <strong>Swap</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -54,7 +54,7 @@ const SwapGauge: React.FC<CombinedProps> = props => {
           <Typography>
             <strong>Swap</strong>
           </Typography>
-        )
+        ),
       };
     }
 
@@ -65,7 +65,7 @@ const SwapGauge: React.FC<CombinedProps> = props => {
       /** convert KB to bytes */
       usedMemoryToBytes,
       {
-        unit: 'MB'
+        unit: 'MB',
       }
     );
 
@@ -73,7 +73,7 @@ const SwapGauge: React.FC<CombinedProps> = props => {
       /** convert KB to bytes */
       totalMemory * 1024,
       {
-        unit: 'MB'
+        unit: 'MB',
       }
     );
 
@@ -86,7 +86,7 @@ const SwapGauge: React.FC<CombinedProps> = props => {
           </Typography>
           <Typography>{`${convertedTotalMemory.value} MB`}</Typography>
         </React.Fragment>
-      )
+      ),
     };
   };
 
@@ -101,6 +101,6 @@ const SwapGauge: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withClientData<Props>(ownProps => ownProps.clientID)(
+export default withClientData<Props>((ownProps) => ownProps.clientID)(
   withTheme(SwapGauge)
 );

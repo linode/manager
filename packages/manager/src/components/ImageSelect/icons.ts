@@ -8,5 +8,5 @@ export const distroIcons = {
   Gentoo: 'gentoo',
   openSUSE: 'opensuse',
   Slackware: 'slackware',
-  Ubuntu: 'ubuntu'
+  Ubuntu: 'ubuntu',
 };

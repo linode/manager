@@ -15,40 +15,40 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .react-select__menu-list': {
       padding: 0,
       overflowX: 'auto',
-      maxHeight: '100% !important'
+      maxHeight: '100% !important',
     },
     '& .react-select__control': {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
     '& .react-select__value-container': {
       overflow: 'auto',
       '& p': {
         fontSize: '1rem',
-        overflow: 'visible'
-      }
+        overflow: 'visible',
+      },
     },
     '& .react-select__indicators': {
-      display: 'none'
+      display: 'none',
     },
     '& .react-select__menu': {
       marginTop: 12,
       boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
       maxWidth: '100% !important',
       border: 0,
-      borderRadius: 4
+      borderRadius: 4,
     },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white'
+      color: 'white',
     },
     '& .MuiInput-root': {
       boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
-      border: 0
-    }
+      border: 0,
+    },
   },
   input: {
-    width: '100%'
-  }
+    width: '100%',
+  },
 }));
 
 interface Props {
@@ -58,14 +58,14 @@ interface Props {
 
 type CombinedProps = Props;
 
-const GoTo: React.FC<CombinedProps> = props => {
+const GoTo: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const flags = useFlags();
   const {
     _isManagedAccount,
     _hasAccountAccess,
-    account
+    account,
   } = useAccountManagement();
 
   const showFirewalls = isFeatureEnabled(
@@ -84,70 +84,70 @@ const GoTo: React.FC<CombinedProps> = props => {
       {
         hide: !_isManagedAccount,
         display: 'Managed',
-        href: '/managed'
+        href: '/managed',
       },
       {
         display: 'Linodes',
         href: '/linodes',
-        activeLinks: ['/linodes', '/linodes/create']
+        activeLinks: ['/linodes', '/linodes/create'],
       },
       {
         display: 'Volumes',
-        href: '/volumes'
+        href: '/volumes',
       },
       {
         display: 'NodeBalancers',
-        href: '/nodebalancers'
+        href: '/nodebalancers',
       },
       {
         hide: !showFirewalls,
         display: 'Firewalls',
-        href: '/firewalls'
+        href: '/firewalls',
       },
 
       {
         display: 'StackScripts',
-        href: '/stackscripts'
+        href: '/stackscripts',
       },
       {
         display: 'Images',
-        href: '/images'
+        href: '/images',
       },
       {
         display: 'Domains',
-        href: '/domains'
+        href: '/domains',
       },
       {
         display: 'Kubernetes',
-        href: '/kubernetes/clusters'
+        href: '/kubernetes/clusters',
       },
       {
         display: 'Object Storage',
         href: '/object-storage/buckets',
-        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys']
+        activeLinks: ['/object-storage/buckets', '/object-storage/access-keys'],
       },
       {
         display: 'Longview',
-        href: '/longview'
+        href: '/longview',
       },
 
       {
         display: 'Marketplace',
-        href: '/linodes/create?type=One-Click'
+        href: '/linodes/create?type=One-Click',
       },
       {
         hide: account.lastUpdated === 0 || !_hasAccountAccess,
         display: 'Account',
-        href: '/account/billing'
+        href: '/account/billing',
       },
       {
         display: 'Help & Support',
-        href: '/support'
+        href: '/support',
       },
       {
         display: 'Profile',
-        href: '/profile/display'
-      }
+        href: '/profile/display',
+      },
     ],
     [showFirewalls, _hasAccountAccess, _isManagedAccount, account.lastUpdated]
   );
@@ -155,16 +155,16 @@ const GoTo: React.FC<CombinedProps> = props => {
   const options: Item[] = React.useMemo(
     () =>
       links
-        .filter(thisLink => !thisLink.hide)
-        .map(thisLink => ({
+        .filter((thisLink) => !thisLink.hide)
+        .map((thisLink) => ({
           label: thisLink.display,
-          value: thisLink.href
+          value: thisLink.href,
         })),
     [links]
   );
 
   const dialogClasses = React.useMemo(() => ({ paper: classes.paper }), [
-    classes
+    classes,
   ]);
 
   return (

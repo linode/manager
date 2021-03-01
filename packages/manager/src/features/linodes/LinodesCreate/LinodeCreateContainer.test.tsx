@@ -7,7 +7,7 @@ describe('Linode Create container', () => {
       const payload = getInterfacePayload(ids);
       expect(payload).toEqual({
         eth0: { type: 'default' },
-        eth1: { type: 'additional', vlan_id: ids[0] }
+        eth1: { type: 'additional', vlan_id: ids[0] },
       });
     });
 
@@ -18,7 +18,7 @@ describe('Linode Create container', () => {
         eth0: { type: 'default' },
         eth1: { type: 'additional', vlan_id: ids[0] },
         eth2: { type: 'additional', vlan_id: ids[1] },
-        eth3: { type: 'additional', vlan_id: ids[2] }
+        eth3: { type: 'additional', vlan_id: ids[2] },
       });
     });
   });

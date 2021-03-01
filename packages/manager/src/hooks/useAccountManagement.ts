@@ -51,7 +51,7 @@ export const useAccountManagement = () => {
     _hasGrant,
     _hasAccountAccess,
     _isManagedAccount,
-    _isLargeAccount
+    _isLargeAccount,
   };
 };
 

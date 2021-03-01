@@ -29,16 +29,16 @@ export const extendValidationSchema = (schema: any) => {
         .test({
           name: 'root-password-strength',
           // eslint-disable-next-line object-shorthand
-          test: function(value) {
+          test: function (value) {
             const passwordError = validatePassword(value);
             return passwordError !== null
               ? this.createError({
                   message: passwordError,
-                  path: 'root_pass'
+                  path: 'root_pass',
                 })
               : true;
-          }
-        })
+          },
+        }),
     })
   );
 };

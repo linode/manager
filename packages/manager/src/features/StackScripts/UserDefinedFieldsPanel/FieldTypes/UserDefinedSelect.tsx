@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
@@ -19,11 +19,11 @@ type ClassNames = 'root' | 'radioGroupLabel';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: `${theme.spacing(3)}px 0 0`
+      margin: `${theme.spacing(3)}px 0 0`,
     },
     radioGroupLabel: {
-      display: 'block'
-    }
+      display: 'block',
+    },
   });
 
 interface Props {
@@ -44,7 +44,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class UserDefinedSelect extends React.Component<CombinedProps, State> {
   state: State = {
     oneof: this.props.field.oneof!.split(','),
-    selectedOption: ''
+    selectedOption: '',
   };
 
   handleSelectOneOf = (e: any) => {

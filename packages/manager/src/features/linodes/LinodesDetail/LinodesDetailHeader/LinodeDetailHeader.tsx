@@ -6,7 +6,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
-  Action as BootAction
+  Action as BootAction,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
@@ -20,7 +20,7 @@ import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
-  withLinodeDetailContext
+  withLinodeDetailContext,
 } from '../linodeDetailContext';
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue/RescueDialog';
@@ -58,7 +58,7 @@ interface DialogProps {
 
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
-const LinodeDetailHeader: React.FC<CombinedProps> = props => {
+const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
@@ -68,7 +68,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const queryParams = parseQueryParams(location.search);
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
-    path: '/linodes/:linodeId/:subpath?'
+    path: '/linodes/:linodeId/:subpath?',
   });
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
@@ -80,43 +80,43 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
     open: false,
     linodeID: 0,
-    linodeLabel: ''
+    linodeLabel: '',
   });
 
   const [deleteDialog, setDeleteDialog] = React.useState<DialogProps>({
     open: false,
     linodeID: 0,
-    linodeLabel: ''
+    linodeLabel: '',
   });
 
   const [resizeDialog, setResizeDialog] = React.useState<DialogProps>({
     open: queryParams.resize === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [migrateDialog, setMigrateDialog] = React.useState<DialogProps>({
     open: queryParams.migrate === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [rescueDialog, setRescueDialog] = React.useState<DialogProps>({
     open: queryParams.rescue === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [rebuildDialog, setRebuildDialog] = React.useState<DialogProps>({
     open: queryParams.rebuild === 'true',
-    linodeID: matchedLinodeId
+    linodeID: matchedLinodeId,
   });
 
   const [backupsDialog, setBackupsDialog] = React.useState<DialogProps>({
     open: false,
-    linodeID: 0
+    linodeID: 0,
   });
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
-    tags: []
+    tags: [],
   });
 
   const { updateLinode, deleteLinode } = useLinodeActions();
@@ -133,7 +133,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       bootAction,
       linodeConfigs,
       linodeID,
-      linodeLabel
+      linodeLabel,
     });
   };
 
@@ -144,50 +144,50 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
   ) => {
     switch (dialogType) {
       case 'delete':
-        setDeleteDialog(deleteDialog => ({
+        setDeleteDialog((deleteDialog) => ({
           ...deleteDialog,
           open: true,
           linodeLabel,
-          linodeID
+          linodeID,
         }));
         break;
       case 'migrate':
-        setMigrateDialog(migrateDialog => ({
+        setMigrateDialog((migrateDialog) => ({
           ...migrateDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'migrate=true' });
         break;
       case 'resize':
-        setResizeDialog(resizeDialog => ({
+        setResizeDialog((resizeDialog) => ({
           ...resizeDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'resize=true' });
         break;
       case 'rescue':
-        setRescueDialog(rescueDialog => ({
+        setRescueDialog((rescueDialog) => ({
           ...rescueDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'rescue=true' });
         break;
       case 'rebuild':
-        setRebuildDialog(rebuildDialog => ({
+        setRebuildDialog((rebuildDialog) => ({
           ...rebuildDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         history.replace({ search: 'rebuild=true' });
         break;
       case 'enable_backups':
-        setBackupsDialog(backupsDialog => ({
+        setBackupsDialog((backupsDialog) => ({
           ...backupsDialog,
           open: true,
-          linodeID
+          linodeID,
         }));
         break;
     }
@@ -205,37 +205,37 @@ const LinodeDetailHeader: React.FC<CombinedProps> = props => {
       history.replace({ search: undefined });
     }
 
-    setPowerDialog(powerDialog => ({ ...powerDialog, open: false }));
-    setDeleteDialog(deleteDialog => ({ ...deleteDialog, open: false }));
-    setResizeDialog(resizeDialog => ({ ...resizeDialog, open: false }));
-    setMigrateDialog(migrateDialog => ({ ...migrateDialog, open: false }));
-    setRescueDialog(rescueDialog => ({ ...rescueDialog, open: false }));
-    setRebuildDialog(rebuildDialog => ({ ...rebuildDialog, open: false }));
-    setBackupsDialog(backupsDialog => ({ ...backupsDialog, open: false }));
+    setPowerDialog((powerDialog) => ({ ...powerDialog, open: false }));
+    setDeleteDialog((deleteDialog) => ({ ...deleteDialog, open: false }));
+    setResizeDialog((resizeDialog) => ({ ...resizeDialog, open: false }));
+    setMigrateDialog((migrateDialog) => ({ ...migrateDialog, open: false }));
+    setRescueDialog((rescueDialog) => ({ ...rescueDialog, open: false }));
+    setRebuildDialog((rebuildDialog) => ({ ...rebuildDialog, open: false }));
+    setBackupsDialog((backupsDialog) => ({ ...backupsDialog, open: false }));
   };
 
   const closeTagDrawer = () => {
-    setTagDrawer(tagDrawer => ({ ...tagDrawer, open: false }));
+    setTagDrawer((tagDrawer) => ({ ...tagDrawer, open: false }));
   };
 
   const openTagDrawer = (tags: string[]) => {
     setTagDrawer({
       open: true,
-      tags
+      tags,
     });
   };
 
   const addTag = (linodeID: number, newTag: string) => {
     const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId: linodeID, tags: _tags }).then(_ => {
-      setTagDrawer(tagDrawer => ({ ...tagDrawer, tags: _tags }));
+    return updateLinode({ linodeId: linodeID, tags: _tags }).then((_) => {
+      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags: _tags }));
     });
   };
 
   const deleteTag = (linodeId: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter(thisTag => thisTag !== tagToDelete);
-    return updateLinode({ linodeId, tags: _tags }).then(_ => {
-      setTagDrawer(tagDrawer => ({ ...tagDrawer, tags: _tags }));
+    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
+    return updateLinode({ linodeId, tags: _tags }).then((_) => {
+      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags: _tags }));
     });
   };
   const { profile } = useProfile();
@@ -339,6 +339,6 @@ export default compose<CombinedProps, {}>(
     linode,
     linodeStatus: linode.status,
     linodeDisks: linode._disks,
-    configs: linode._configs
+    configs: linode._configs,
   }))
 )(LinodeDetailHeader);

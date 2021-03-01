@@ -57,13 +57,13 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           label: 'vCPUs',
           newAmount: props.mutateInfo.vcpus,
           currentAmount: props.currentTypeInfo.vcpus,
-          unit: ''
+          unit: '',
         },
         memory: {
           label: 'RAM',
           newAmount: props.mutateInfo.memory,
           currentAmount: props.currentTypeInfo.memory,
-          unit: 'MB'
+          unit: 'MB',
         },
         disk: {
           label: 'Storage',
@@ -75,21 +75,21 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             props.currentTypeInfo.disk !== null
               ? props.currentTypeInfo.disk / 1024
               : props.currentTypeInfo.disk,
-          unit: 'GB'
+          unit: 'GB',
         },
         transfer: {
           label: 'Transfer',
           newAmount: props.mutateInfo.transfer,
           currentAmount: props.currentTypeInfo.transfer,
-          unit: 'GB'
+          unit: 'GB',
         },
         network_out: {
           label: 'Outbound Mbits',
           newAmount: props.mutateInfo.network_out,
           currentAmount: props.currentTypeInfo.network_out,
-          unit: 'Mbits'
-        }
-      }
+          unit: 'Mbits',
+        },
+      },
     } as State;
   }
 
@@ -99,7 +99,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
       handleClose,
       loading,
       error,
-      estimatedTimeToUpgradeInMins
+      estimatedTimeToUpgradeInMins,
     } = this.props;
 
     const { extendedUpgradeInfo } = this.state;
@@ -115,12 +115,12 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           <HighmemG6ToG7 />
         ) : (
           <ul className="nonMUI-list">
-            {Object.keys(extendedUpgradeInfo).map(newSpec => {
+            {Object.keys(extendedUpgradeInfo).map((newSpec) => {
               const {
                 label,
                 currentAmount,
                 newAmount,
-                unit
+                unit,
               } = extendedUpgradeInfo[newSpec];
 
               if (newAmount === null) {

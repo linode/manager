@@ -22,6 +22,6 @@ export const initReselectDevtools = () => {
     getSearchEntities,
     inProgressEventForLinode,
     inProgressEvents,
-    recentEventForLinode
+    recentEventForLinode,
   });
 };

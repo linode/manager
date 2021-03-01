@@ -9,7 +9,7 @@ const props: Props = {
   idx: 1,
   triggerCloneFirewallRule: jest.fn(),
   triggerDeleteFirewallRule: jest.fn(),
-  triggerOpenRuleDrawerForEditing: jest.fn()
+  triggerOpenRuleDrawerForEditing: jest.fn(),
 };
 
 describe('Firewall rule action menu', () => {

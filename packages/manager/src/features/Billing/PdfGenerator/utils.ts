@@ -24,19 +24,19 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
   (doc as any).autoTable({
     startY: 150,
     styles: {
-      lineWidth: 1
+      lineWidth: 1,
     },
     headStyles: {
-      fillColor: '#444444'
+      fillColor: '#444444',
     },
     head: [['Description', 'Date', 'Amount']],
     body: [
       [
         { content: 'Payment: Thank You' },
         { content: formatDate(payment.date, { displayTime: true }) },
-        { content: `$${Number(payment.usd).toFixed(2)}` }
-      ]
-    ]
+        { content: `$${Number(payment.usd).toFixed(2)}` },
+      ],
+    ],
   });
 };
 
@@ -46,14 +46,14 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
 export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
   (doc as any).autoTable({
     styles: {
-      halign: 'right'
+      halign: 'right',
     },
     headStyles: {
-      fillColor: '#444444'
+      fillColor: '#444444',
     },
     body: [
-      ['Payment Total (USD)        ', `$${Number(payment.usd).toFixed(2)}`]
-    ]
+      ['Payment Total (USD)        ', `$${Number(payment.usd).toFixed(2)}`],
+    ],
   });
 };
 
@@ -64,10 +64,10 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
   (doc as any).autoTable({
     startY: 155,
     styles: {
-      lineWidth: 1
+      lineWidth: 1,
     },
     headStyles: {
-      fillColor: '#444444'
+      fillColor: '#444444',
     },
     head: [
       [
@@ -78,32 +78,32 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
         'Unit Price',
         'Amount',
         'Tax',
-        'Total'
-      ]
+        'Total',
+      ],
     ],
-    body: items.map(item => {
+    body: items.map((item) => {
       const [toDate, toTime] = formatDateForTable(item.to || '');
       const [fromDate, fromTime] = formatDateForTable(item.from || '');
       return [
         {
           styles: { fontSize: 8, cellWidth: 75, overflow: 'linebreak' },
-          content: formatDescription(item.label)
+          content: formatDescription(item.label),
         },
         {
           styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
-          content: item.from ? `${fromDate}\n${fromTime}` : ''
+          content: item.from ? `${fromDate}\n${fromTime}` : '',
         },
         {
           styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
-          content: item.to ? `${toDate}\n${toTime}` : ''
+          content: item.to ? `${toDate}\n${toTime}` : '',
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: item.quantity || ''
+          content: item.quantity || '',
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: item.unit_price || ''
+          content: item.unit_price || '',
         },
         /**
          * We do number conversion here because some older invoice items
@@ -113,18 +113,18 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
          */
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${Number(item.amount).toFixed(2)}`
+          content: `$${Number(item.amount).toFixed(2)}`,
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${Number(item.tax).toFixed(2)}`
+          content: `$${Number(item.tax).toFixed(2)}`,
         },
         {
           styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-          content: `$${Number(item.total).toFixed(2)}`
-        }
+          content: `$${Number(item.total).toFixed(2)}`,
+        },
       ];
-    })
+    }),
   });
 };
 
@@ -134,30 +134,30 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
 export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
   (doc as any).autoTable({
     styles: {
-      halign: 'right'
+      halign: 'right',
     },
     headStyles: {
-      fillColor: '#444444'
+      fillColor: '#444444',
     },
     columnStyles: {
       0: {
         cellPadding: {
-          right: 12
-        }
+          right: 12,
+        },
       },
       1: {
         cellWidth: 16,
         cellPadding: {
-          right: 6
-        }
-      }
+          right: 6,
+        },
+      },
     },
     pageBreak: 'avoid',
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
       ['Tax (USD)', `$${Number(invoice.tax).toFixed(2)}`],
-      [`Total (USD)`, `$${Number(invoice.total).toFixed(2)}`]
-    ]
+      [`Total (USD)`, `$${Number(invoice.total).toFixed(2)}`],
+    ],
   });
 };
 
@@ -176,7 +176,7 @@ export const createFooter = (doc: JSPDF, font: string) => {
 
   doc.text(footerText, left, top, {
     charSpace: 0.75,
-    align: 'center'
+    align: 'center',
   });
 };
 

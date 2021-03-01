@@ -7,19 +7,19 @@ const classes = { root: '' };
 const modes = [
   {
     label: 'Edit',
-    mode: 'edit'
+    mode: 'edit',
   },
   {
     label: 'Delete',
-    mode: 'delete'
-  }
+    mode: 'delete',
+  },
 ];
 
 const props = {
   classes,
   modes,
   selected: 'edit',
-  onChange: jest.fn()
+  onChange: jest.fn(),
 };
 
 const component = shallow(<ModeSelect {...props} />);

@@ -1,7 +1,7 @@
 import {
   createReply,
   SupportReply,
-  uploadAttachment
+  uploadAttachment,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import { lensPath, set } from 'ramda';
@@ -11,7 +11,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
@@ -34,34 +34,34 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     inner: {
-      padding: 0
+      padding: 0,
     },
     replyContainer: {
       paddingLeft: `calc(32px + ${theme.spacing(1)}px)`,
       [theme.breakpoints.up('sm')]: {
-        paddingLeft: `calc(40px + ${theme.spacing(2)}px)`
-      }
+        paddingLeft: `calc(40px + ${theme.spacing(2)}px)`,
+      },
     },
     expPanelSummary: {
       backgroundColor: theme.bg.offWhite,
-      borderTop: `1px solid ${theme.bg.main}`
+      borderTop: `1px solid ${theme.bg.main}`,
     },
     referenceRoot: {
       '& > p': {
-        marginBottom: theme.spacing(1)
-      }
+        marginBottom: theme.spacing(1),
+      },
     },
     reference: {
       [theme.breakpoints.up('sm')]: {
         marginTop: theme.spacing(7),
         marginRight: theme.spacing(1) / 2,
         marginLeft: theme.spacing(1) / 2,
-        padding: `0 !important`
+        padding: `0 !important`,
       },
       [theme.breakpoints.down('xs')]: {
-        padding: `${theme.spacing(2)}px !important`
-      }
-    }
+        padding: `${theme.spacing(2)}px !important`,
+      },
+    },
   });
 
 interface Props {
@@ -74,7 +74,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ReplyContainer: React.FC<CombinedProps> = props => {
+const ReplyContainer: React.FC<CombinedProps> = (props) => {
   const { classes, onSuccess, reloadAttachments, ...rest } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
@@ -91,7 +91,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
       since we're sanitizing again at render time.
     */
     createReply({ description: value, ticket_id: props.ticketId })
-      .then(response => {
+      .then((response) => {
         /** onSuccess callback */
         onSuccess(response);
 
@@ -116,7 +116,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
               const nullFileState = {
                 file: null,
                 uploading: false,
-                uploaded: true
+                uploaded: true,
               };
 
               setFiles(set(lensPath([idx]), nullFileState));
@@ -126,7 +126,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
              * Note! We want the first few uploads to succeed even if the last few
              * fail! Don't try to aggregate errors!
              */
-            .catch(fileErrors => {
+            .catch((fileErrors) => {
               setFiles(set(lensPath([idx, 'uploading']), false));
 
               const newErrors = getAPIErrorOrDefault(
@@ -138,7 +138,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
             });
         });
       })
-      .catch(fetchErrors => {
+      .catch((fetchErrors) => {
         setErrors(
           getAPIErrorOrDefault(
             fetchErrors,

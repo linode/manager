@@ -7,8 +7,8 @@ describe('CPU Gauge', () => {
       cpu0: {
         user: [{ x: 0, y: 1 }],
         system: [{ x: 0, y: 2 }],
-        wait: [{ x: 0, y: 3 }]
-      }
+        wait: [{ x: 0, y: 3 }],
+      },
     };
     it('sums CPU usage given data', () => {
       expect(sumCPUUsage(cpuData)).toBe(6);
@@ -19,8 +19,8 @@ describe('CPU Gauge', () => {
         cpu1: {
           user: [{ x: 0, y: 1 }],
           system: [{ x: 0, y: 2 }],
-          wait: [{ x: 0, y: 3 }]
-        }
+          wait: [{ x: 0, y: 3 }],
+        },
       };
       expect(sumCPUUsage(data)).toBe(12);
     });

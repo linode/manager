@@ -17,16 +17,16 @@ import { OpenAccessDrawer } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
-    width: '35%'
+    width: '35%',
   },
   copyIcon: {
     marginLeft: theme.spacing(),
     '& svg': {
       top: 1,
       width: 12,
-      height: 12
-    }
-  }
+      height: 12,
+    },
+  },
 }));
 
 interface Props {
@@ -37,14 +37,14 @@ interface Props {
 
 export type CombinedProps = Props & PaginationProps<ObjectStorageKey>;
 
-export const AccessKeyTable: React.FC<CombinedProps> = props => {
+export const AccessKeyTable: React.FC<CombinedProps> = (props) => {
   const {
     data,
     loading,
     error,
     isRestrictedUser,
     openRevokeDialog,
-    openDrawer
+    openDrawer,
   } = props;
 
   const classes = useStyles();

@@ -9,7 +9,7 @@ export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
-  error: undefined
+  error: undefined,
 };
 
 const reducer: Reducer<State> = (
@@ -25,7 +25,7 @@ const reducer: Reducer<State> = (
         ...state,
         loading: false,
         lastUpdated: Date.now(),
-        error: action.error
+        error: action.error,
       };
 
     case SUCCESS:
@@ -34,7 +34,7 @@ const reducer: Reducer<State> = (
         ...state,
         loading: false,
         lastUpdated: Date.now(),
-        data: action.data
+        data: action.data,
       };
 
     default:

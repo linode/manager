@@ -11,7 +11,7 @@ export const eventMessageGenerator = (
   types: LinodeType[] = []
 ) => {
   const eventLinode = linodes.find(
-    thisLinode => thisLinode.id === e.entity?.id
+    (thisLinode) => thisLinode.id === e.entity?.id
   );
   if (e.message) {
     return formatEventWithAPIMessage(e);
@@ -19,7 +19,7 @@ export const eventMessageGenerator = (
   switch (e.action) {
     case 'linode_resize':
       const eventLinodeType = types.find(
-        thisType => thisType.id === eventLinode?.type
+        (thisType) => thisType.id === eventLinode?.type
       );
       return `resize ${
         eventLinodeType ? `to ${eventLinodeType.label} Plan` : ''

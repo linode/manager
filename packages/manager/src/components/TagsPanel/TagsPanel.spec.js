@@ -1,6 +1,6 @@
 const {
   navigateToStory,
-  executeInAllStories
+  executeInAllStories,
 } = require('../../../e2e/utils/storybook');
 const { constants } = require('../../../e2e/constants');
 
@@ -14,7 +14,7 @@ describe('Tags Panel Suite', () => {
   const addTagParagraph = '[data-qa-tag-p]';
   const options = '[data-qa-option]';
 
-  const addNewTag = tagname => {
+  const addNewTag = (tagname) => {
     $(addTag).click();
     $(tagsSelect).waitForDisplayed(constants.wait.normal);
     const startTags = $$(tag).length;
@@ -33,7 +33,7 @@ describe('Tags Panel Suite', () => {
     }, constants.wait.normal);
   };
 
-  const verifyTagName = tagname => {
+  const verifyTagName = (tagname) => {
     expect($(`[data-qa-tag="${tagname}"]`).isExisting())
       .withContext(`incorrect tag name`)
       .toBe(true);
@@ -42,7 +42,7 @@ describe('Tags Panel Suite', () => {
       .toBe(tagname);
   };
 
-  const deleteTagName = tagname => {
+  const deleteTagName = (tagname) => {
     const tags = $$(tag).length;
     $(`[data-qa-tag="${tagname}"] [data-qa-delete-tag]`).click();
     browser.waitUntil(() => {
@@ -60,9 +60,7 @@ describe('Tags Panel Suite', () => {
 
   it('there should be a tag panel, and icons to add and delete tags', () => {
     $(tag).waitForDisplayed(constants.wait.normal);
-    expect($$(tag).length)
-      .withContext(`should be 3 tags`)
-      .toBe(3);
+    expect($$(tag).length).withContext(`should be 3 tags`).toBe(3);
     expect($$(deleteTag).length)
       .withContext(`should be 3 delete tag icons`)
       .toBe(3);

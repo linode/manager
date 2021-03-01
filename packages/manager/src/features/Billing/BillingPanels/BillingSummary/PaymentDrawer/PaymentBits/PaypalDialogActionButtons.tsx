@@ -14,13 +14,13 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const PaypalDialogActionButtons: React.SFC<CombinedProps> = props => {
+const PaypalDialogActionButtons: React.SFC<CombinedProps> = (props) => {
   const {
     isStagingPaypalPayment,
     paypalPaymentFailed,
     isExecutingPayment,
     initExecutePayment,
-    closeDialog
+    closeDialog,
   } = props;
 
   /** intentionally displays "payment cancelled" message to the user */

@@ -14,7 +14,7 @@ const privateImages = apiResponseToMappedState(
 );
 const allImages = {
   ...publicImages,
-  ...privateImages
+  ...privateImages,
 };
 
 describe('useHooks', () => {

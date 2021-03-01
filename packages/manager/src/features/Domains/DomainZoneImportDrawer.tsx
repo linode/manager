@@ -26,12 +26,12 @@ type CombinedProps = Props;
 
 class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
   state: State = {
-    submitting: false
+    submitting: false,
   };
 
   static errorResources = {
     domain: 'domain',
-    remote_nameserver: 'remote nameserver'
+    remote_nameserver: 'remote nameserver',
   };
 
   render() {
@@ -88,7 +88,7 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
       submitting: false,
       errors: undefined,
       domain: undefined,
-      remote_nameserver: undefined
+      remote_nameserver: undefined,
     });
 
   onClose = () => {
@@ -112,7 +112,7 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
     if (!remote_nameserver) {
       errors.push({
         field: 'remote_nameserver',
-        reason: 'Remote nameserver is required.'
+        reason: 'Remote nameserver is required.',
       });
     }
     if (errors.length > 0) {
@@ -125,13 +125,13 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
     // Since we've validated test fields, we can assume domain and
     // remote_nameserver won't be undefined
     importZone(domain!, remote_nameserver!)
-      .then(data => {
+      .then((data) => {
         this.props.onSuccess(data);
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           submitting: false,
-          errors: getAPIErrorOrDefault(error)
+          errors: getAPIErrorOrDefault(error),
         });
       });
   };

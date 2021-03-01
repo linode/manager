@@ -10,7 +10,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const DiskGraph: React.FC<CombinedProps> = props => {
+export const DiskGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
     end,
@@ -19,7 +19,7 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
     lastUpdatedError,
     start,
     theme,
-    timezone
+    timezone,
   } = props;
 
   const { data, loading, error: requestError, request } = useGraphs(
@@ -61,20 +61,20 @@ export const DiskGraph: React.FC<CombinedProps> = props => {
           label: 'Swap',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.swap,
-          data: _convertData(swap, start, end)
+          data: _convertData(swap, start, end),
         },
         {
           label: 'Write',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.write,
-          data: _convertData(write, start, end)
+          data: _convertData(write, start, end),
         },
         {
           label: 'Read',
           borderColor: 'transparent',
           backgroundColor: theme.graphs.diskIO.read,
-          data: _convertData(read, start, end)
-        }
+          data: _convertData(read, start, end),
+        },
       ]}
     />
   );
@@ -90,7 +90,7 @@ interface DiskData {
 export const emptyState: DiskData = {
   read: [],
   write: [],
-  swap: []
+  swap: [],
 };
 
 /**
@@ -121,7 +121,7 @@ export const processDiskData = (
   if (type.toLowerCase() === 'openvz') {
     return {
       ...emptyState,
-      error: 'Disk I/O not available for OpenVZ systems.'
+      error: 'Disk I/O not available for OpenVZ systems.',
     };
   }
   const disks = Object.values(d);
@@ -130,10 +130,10 @@ export const processDiskData = (
     return emptyState;
   }
   // For some special cases, disk data is not available and we want to show an error.
-  if (disks.some(thisDisk => thisDisk.childof !== 0)) {
+  if (disks.some((thisDisk) => thisDisk.childof !== 0)) {
     return {
       ...emptyState,
-      error: 'Disk I/O is not applicable for this type of device.'
+      error: 'Disk I/O is not applicable for this type of device.',
     };
   }
   // We have real data now; sum up however many disks there are,

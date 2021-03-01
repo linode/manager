@@ -18,13 +18,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   statusWrapper: {
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   portLink: {
-    color: theme.cmrTextColors.linkActiveLight
+    color: theme.cmrTextColors.linkActiveLight,
   },
   link: {
     display: 'block',
@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   ipsWrapper: {
     display: 'inline-flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   actionCell: {
     // @todo: remove action cell duplication (this is from DomainTableRow_CMR)
@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       Explicitly stating this as the theme file is automatically adding padding to the last cell
       We can remove once we make the full switch to CMR styling
       */
-    paddingRight: '0 !important'
-  }
+    paddingRight: '0 !important',
+  },
 }));
 
 interface Props {
@@ -59,7 +59,7 @@ interface Props {
 
 type CombinedProps = NodeBalancerWithConfigs & Props;
 
-const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
+const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { id, label, configs, transfer, ipv4, region, toggleDialog } = props;
 

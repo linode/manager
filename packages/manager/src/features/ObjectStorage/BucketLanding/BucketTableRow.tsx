@@ -14,31 +14,31 @@ import BucketActionMenu from './BucketActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bucketRow: {
-    backgroundColor: theme.bg.white
+    backgroundColor: theme.bg.white,
   },
   bucketNameWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
   },
   link: {
     '&:hover': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   bucketLabel: {
     color: theme.cmrTextColors.linkActiveLight,
     fontFamily: theme.font.bold,
     '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   actionCell: {
     display: 'flex',
     justifyContent: 'flex-end',
-    padding: 0
-  }
+    padding: 0,
+  },
 }));
 
 interface BucketTableRowProps extends ObjectStorageBucket {
@@ -48,7 +48,7 @@ interface BucketTableRowProps extends ObjectStorageBucket {
 
 export type CombinedProps = BucketTableRowProps;
 
-export const BucketTableRow: React.FC<CombinedProps> = props => {
+export const BucketTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -59,7 +59,7 @@ export const BucketTableRow: React.FC<CombinedProps> = props => {
     size,
     onRemove,
     objects,
-    onDetails
+    onDetails,
   } = props;
 
   return (

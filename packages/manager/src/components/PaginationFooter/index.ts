@@ -1,5 +1,5 @@
 import PaginationFooter, {
-  PaginationProps as _PaginationProps
+  PaginationProps as _PaginationProps,
 } from './PaginationFooter';
 /* tslint:disable */
 export interface PaginationProps extends _PaginationProps {}

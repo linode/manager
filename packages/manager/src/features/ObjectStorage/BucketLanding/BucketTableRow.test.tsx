@@ -15,7 +15,7 @@ describe('BucketTableRow', () => {
     size: bucket.size,
     objects: bucket.objects,
     onRemove: mockOnRemove,
-    onDetails: jest.fn()
+    onDetails: jest.fn(),
   };
 
   it('should render the bucket name', () => {

@@ -15,7 +15,7 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
   onSubmit,
   isSubmitting,
   onCancel,
-  disabled
+  disabled,
 }) => {
   return (
     <ActionsPanel style={{ marginTop: 16 }}>

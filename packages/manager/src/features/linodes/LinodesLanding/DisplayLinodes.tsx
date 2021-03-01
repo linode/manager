@@ -22,19 +22,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 28,
     display: 'flex',
     justifyContent: 'flex-end',
-    backgroundColor: theme.cmrBGColors.bgTableHeader
+    backgroundColor: theme.cmrBGColors.bgTableHeader,
   },
   toggleButton: {
     color: '#d2d3d4',
     padding: 10,
     '&:focus': {
       // Browser default until we get styling direction for focus states
-      outline: '1px dotted #999'
-    }
+      outline: '1px dotted #999',
+    },
   },
   table: {
     // tableLayout: 'fixed'
-  }
+  },
 }));
 
 interface Props {
@@ -58,7 +58,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps;
 
-const DisplayLinodes: React.FC<CombinedProps> = props => {
+const DisplayLinodes: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     data,
@@ -101,7 +101,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => {
         const componentProps = {
           ...rest,
@@ -110,7 +110,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
           page,
           handlePageSizeChange,
           handlePageChange,
-          isVLAN
+          isVLAN,
         };
         const tableWrapperProps = {
           handleOrderChange,
@@ -118,7 +118,7 @@ const DisplayLinodes: React.FC<CombinedProps> = props => {
           orderBy,
           someLinodesHaveMaintenance: props.someLinodesHaveMaintenance,
           dataLength: paginatedData.length,
-          isVLAN
+          isVLAN,
         };
         return (
           <React.Fragment>

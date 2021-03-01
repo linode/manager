@@ -12,15 +12,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
     '& .dialog-content': {
       paddingTop: 0,
-      paddingBottom: 0
+      paddingBottom: 0,
     },
     '& p': {
-      lineHeight: '1.25rem'
+      lineHeight: '1.25rem',
     },
     '& p:first-child': {
-      marginBottom: theme.spacing(2)
-    }
-  }
+      marginBottom: theme.spacing(2),
+    },
+  },
 }));
 
 interface Props {
@@ -33,12 +33,12 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ThirdPartyDialog: React.FC<CombinedProps> = props => {
+const ThirdPartyDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { open, error, loading, provider, onClose } = props;
 
   const displayName =
-    providers.find(thisProvider => thisProvider.name === provider)
+    providers.find((thisProvider) => thisProvider.name === provider)
       ?.displayName || '';
 
   return (

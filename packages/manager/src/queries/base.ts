@@ -11,22 +11,22 @@ export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
     staleTime: 0,
-    cacheTime: 5 * 60 * 1000
+    cacheTime: 5 * 60 * 1000,
   },
   longLived: {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
     staleTime: 5 * 60 * 1000,
-    cacheTime: 10 * 60 * 1000
+    cacheTime: 10 * 60 * 1000,
   },
   oneTimeFetch: {
     staleTime: Infinity,
-    cacheTime: Infinity
-  }
+    cacheTime: Infinity,
+  },
 };
 
 export const queryClient = new QueryClient({
-  defaultOptions: { queries: queryPresets.longLived }
+  defaultOptions: { queries: queryPresets.longLived },
 });
 
 // =============================================================================
@@ -65,11 +65,11 @@ export const mutationHandlers = <T, V, E = APIError[]>(
   return {
     onSuccess: (updatedEntity, variables) => {
       // Update the query data to include the newly updated Entity.
-      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
-        [variables[indexer]]: updatedEntity
+        [variables[indexer]]: updatedEntity,
       }));
-    }
+    },
   };
 };
 
@@ -78,13 +78,13 @@ export const creationHandlers = <T, V, E = APIError[]>(
   indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
-    onSuccess: updatedEntity => {
+    onSuccess: (updatedEntity) => {
       // Add the new Entity to the existing data.
-      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
-        [updatedEntity[indexer]]: updatedEntity
+        [updatedEntity[indexer]]: updatedEntity,
       }));
-    }
+    },
   };
 };
 
@@ -95,11 +95,11 @@ export const deletionHandlers = <T, V, E = APIError[]>(
   return {
     onSuccess: (_, variables) => {
       // Remove the Entity from the existing data.
-      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => {
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => {
         const oldDataCopy = { ...oldData };
         delete oldDataCopy[variables[indexer]];
         return oldDataCopy;
       });
-    }
+    },
   };
 };

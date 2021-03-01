@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LongviewDeleteDialog: React.FC<CombinedProps> = props => {
+const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
@@ -23,7 +23,7 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = props => {
     open,
     closeDialog,
     selectedLongviewClientID,
-    selectedLongviewClientLabel: label
+    selectedLongviewClientLabel: label,
   } = props;
 
   /** reset errors on open */
@@ -37,8 +37,8 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = props => {
     if (!selectedLongviewClientID) {
       return setErrors([
         {
-          reason: 'There was an issue deleting this Longview Client.'
-        }
+          reason: 'There was an issue deleting this Longview Client.',
+        },
       ]);
     }
 
@@ -81,7 +81,7 @@ interface ActionsProps {
   isDeleting: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

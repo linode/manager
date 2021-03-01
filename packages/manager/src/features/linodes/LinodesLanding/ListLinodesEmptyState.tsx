@@ -5,7 +5,7 @@ import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 
-export const ListLinodesEmptyState: React.FC<{}> = _ => {
+export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   const { push } = useHistory();
 
   return (
@@ -16,8 +16,8 @@ export const ListLinodesEmptyState: React.FC<{}> = _ => {
       buttonProps={[
         {
           onClick: () => push('/linodes/create'),
-          children: 'Add a Linode'
-        }
+          children: 'Add a Linode',
+        },
       ]}
     >
       <Typography variant="subtitle1">

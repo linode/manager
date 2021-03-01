@@ -5,7 +5,7 @@ import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -41,26 +41,26 @@ const styles = () =>
     root: {},
     cellSubject: {
       width: '35%',
-      minWidth: 175
+      minWidth: 175,
     },
     cellId: {
-      width: '10%'
+      width: '10%',
     },
     cellRegarding: {
-      width: '15%'
+      width: '15%',
     },
     cellCreated: {
       width: '15%',
-      minWidth: 175
+      minWidth: 175,
     },
     cellUpdated: {
       width: '15%',
-      minWidth: 175
+      minWidth: 175,
     },
     cellUpdatedBy: {
       width: '10%',
-      minWidth: 120
-    }
+      minWidth: 120,
+    },
   });
 
 type CombinedProps = Props &
@@ -124,7 +124,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
       count,
       page,
       pageSize,
-      classes
+      classes,
     } = this.props;
 
     const isActive = (label: string) => label === orderBy;

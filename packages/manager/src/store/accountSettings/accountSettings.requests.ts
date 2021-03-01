@@ -1,12 +1,12 @@
 import {
   getAccountSettings,
-  updateAccountSettings as _update
+  updateAccountSettings as _update,
 } from '@linode/api-v4/lib/account';
 import { createRequestThunk } from '../store.helpers';
 
 import {
   requestAccountSettingsActions,
-  updateAccountSettingsActions
+  updateAccountSettingsActions,
 } from './accountSettings.actions';
 
 export const requestAccountSettings = createRequestThunk(

@@ -8,7 +8,7 @@ describe('ObjectStorageKeyTable', () => {
     openDrawer: jest.fn(),
     openRevokeDialog: jest.fn(),
     isRestrictedUser: false,
-    ...pageyProps
+    ...pageyProps,
   };
 
   it('it includes a header with "Label" and "Access Key" cells', () => {

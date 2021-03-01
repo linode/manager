@@ -26,14 +26,14 @@ export const addNotificationsToLinodes = (
   notifications: Notification[],
   linodes: Linode[]
 ): LinodeWithMaintenance[] => {
-  const maintenanceNotifications = notifications.filter(eachNotification => {
+  const maintenanceNotifications = notifications.filter((eachNotification) => {
     return eachNotification.type === 'maintenance';
   });
 
   /** add the "maintenance" key to the Linode if we have one */
-  return linodes.map(eachLinode => {
+  return linodes.map((eachLinode) => {
     const foundNotification = maintenanceNotifications.find(
-      eachNotification => {
+      (eachNotification) => {
         return eachNotification.entity!.id === eachLinode.id;
       }
     );
@@ -48,12 +48,12 @@ export const addNotificationsToLinodes = (
              */
             when: foundNotification.when,
             until: foundNotification.until,
-            type: foundNotification.label as Type
-          }
+            type: foundNotification.label as Type,
+          },
         }
       : {
           ...eachLinode,
-          maintenance: null
+          maintenance: null,
         };
   });
 };

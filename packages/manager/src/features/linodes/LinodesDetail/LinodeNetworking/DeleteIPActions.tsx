@@ -18,7 +18,7 @@ class DeleteIPActions extends React.PureComponent<CombinedProps> {
     const { linodeID, IPAddress } = this.props;
     this.props.handleDelete({
       linodeID,
-      IPAddress
+      IPAddress,
     });
   };
 

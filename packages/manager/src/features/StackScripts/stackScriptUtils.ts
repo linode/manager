@@ -2,7 +2,7 @@ import { getUsers, Grant } from '@linode/api-v4/lib/account';
 import {
   getStackScript,
   getStackScripts,
-  StackScript
+  StackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
 
@@ -12,7 +12,7 @@ export const emptyResult: ResourcePage<StackScript> = {
   data: [],
   page: 1,
   pages: 1,
-  results: 0
+  results: 0,
 };
 
 /**
@@ -70,7 +70,7 @@ export const baseApps = {
   '691620': 'FileCloud',
   '691621': 'Cloudron',
   '691622': 'OpenLiteSpeed',
-  '692092': 'Secure Your Server'
+  '692092': 'Secure Your Server',
 };
 
 const oneClickFilter = [
@@ -79,12 +79,12 @@ const oneClickFilter = [
       { '+or': [{ username: 'linode-stackscripts' }, { username: 'linode' }] },
       {
         label: {
-          '+contains': 'One-Click'
-        }
-      }
-    ]
+          '+contains': 'One-Click',
+        },
+      },
+    ],
   },
-  { '+order_by': 'ordinal' }
+  { '+order_by': 'ordinal' },
 ];
 
 export const getOneClickApps = (params?: any) =>
@@ -97,7 +97,7 @@ export const getStackScriptsByUser = (
 ) =>
   getStackScripts(params, {
     ...filter,
-    username
+    username,
   });
 
 export const getMineAndAccountStackScripts = (
@@ -127,11 +127,11 @@ export const getMineAndAccountStackScripts = (
      * meta data about each StackScript
      */
     return Promise.all(
-      stackScriptGrants.map(grant => getStackScript(grant.id))
-    ).then(response => {
+      stackScriptGrants.map((grant) => getStackScript(grant.id))
+    ).then((response) => {
       return {
         ...emptyResult,
-        data: response
+        data: response,
       };
     });
   } else {
@@ -141,7 +141,7 @@ export const getMineAndAccountStackScripts = (
      * users on the account and make a GET /stackscripts call with the list
      * of users as a filter
      */
-    return getUsers().then(response => {
+    return getUsers().then((response) => {
       return getStackScripts(params, {
         ...filter,
         '+and': [
@@ -153,9 +153,9 @@ export const getMineAndAccountStackScripts = (
                   ? acc
                   : [...acc, { username: user.username }],
               [{ username: currentUser }]
-            )
-          }
-        ]
+            ),
+          },
+        ],
       });
     });
   }
@@ -179,11 +179,11 @@ export const getCommunityStackscripts = (
         { username: { '+neq': currentUser } },
         { username: { '+neq': 'linode' } },
         // linode-stackscripts is the account name on dev for Marketplace Apps
-        { username: { '+neq': 'linode-stackscripts' } }
-      ]
+        { username: { '+neq': 'linode-stackscripts' } },
+      ],
     });
   } else {
-    return getUsers().then(response => {
+    return getUsers().then((response) => {
       return getStackScripts(params, {
         ...filter,
         '+and': response.data.reduce(
@@ -192,9 +192,9 @@ export const getCommunityStackscripts = (
           [
             { username: { '+neq': 'linode' } },
             // linode-stackscripts is the account name on dev for Marketplace Apps
-            { username: { '+neq': 'linode-stackscripts' } }
+            { username: { '+neq': 'linode-stackscripts' } },
           ]
-        )
+        ),
       });
     });
   }
@@ -208,8 +208,8 @@ export const generateSpecificFilter = (
 ) => {
   return {
     [key]: {
-      ['+contains']: searchTerm
-    }
+      ['+contains']: searchTerm,
+    },
   };
 };
 
@@ -218,20 +218,20 @@ export const generateCatchAllFilter = (searchTerm: string) => {
     ['+or']: [
       {
         label: {
-          ['+contains']: searchTerm
-        }
+          ['+contains']: searchTerm,
+        },
       },
       {
         username: {
-          ['+contains']: searchTerm
-        }
+          ['+contains']: searchTerm,
+        },
       },
       {
         description: {
-          ['+contains']: searchTerm
-        }
-      }
-    ]
+          ['+contains']: searchTerm,
+        },
+      },
+    ],
   };
 };
 

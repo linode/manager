@@ -3,7 +3,7 @@ import { WithTheme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
-  Props as LVDataProps
+  Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { sumStorage } from '../../shared/utilities';
@@ -16,12 +16,12 @@ export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
   return storageInBytes ? storageInBytes.total - storageInBytes.free : 0;
 };
 
-const StorageGauge: React.FC<CombinedProps> = props => {
+const StorageGauge: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
     longviewClientData,
-    lastUpdatedError
+    lastUpdatedError,
   } = props;
 
   const storageInBytes = sumStorage(longviewClientData.Disk);
@@ -57,7 +57,7 @@ const StorageGauge: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withClientStats<Props>(props => props.clientID)(
+export default withClientStats<Props>((props) => props.clientID)(
   withTheme(StorageGauge)
 );
 

@@ -6,22 +6,22 @@ import {
   createLabel,
   getGroupImportList,
   TagImportDrawer,
-  withUpdates
+  withUpdates,
 } from './TagImportDrawer';
 jest.mock('src/utilities/ga', () => ({
-  sendImportDisplayGroupSubmitEvent: jest.fn()
+  sendImportDisplayGroupSubmitEvent: jest.fn(),
 }));
 
 const errors = [
   { reason: 'hello', entityId: 123, entityLabel: 'entity1' },
   { reason: 'one', entityId: 234, entityLabel: 'entity2' },
-  { reason: 'two', entityId: 345, entityLabel: 'entity3' }
+  { reason: 'two', entityId: 345, entityLabel: 'entity3' },
 ];
 
 const props = {
   actions: {
     update: jest.fn(),
-    close: jest.fn()
+    close: jest.fn(),
   },
   open: true,
   errors,
@@ -30,7 +30,7 @@ const props = {
   entitiesWithGroupsToImport: { domains, linodes },
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
-  classes: { root: '' }
+  classes: { root: '' },
 };
 
 const EnhancedComponent = withUpdates(TagImportDrawer);

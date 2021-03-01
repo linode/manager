@@ -5,7 +5,7 @@ import { fbtVisible } from '../../support/helpers';
 describe('delete linode', () => {
   it('deletes linode from linodes page', () => {
     cy.visitWithLogin('/linodes');
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // catch delete request
       cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
 
@@ -18,14 +18,10 @@ describe('delete linode', () => {
 
       fbtVisible(linode.label);
 
-      cy.get('[data-qa-loading="false"]')
-        .should('have.text', 'Delete')
-        .click();
+      cy.get('[data-qa-loading="false"]').should('have.text', 'Delete').click();
 
       // confirm delete
-      cy.wait('@deleteLinode')
-        .its('response.statusCode')
-        .should('eq', 200);
+      cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
       cy.url().should('contain', '/linodes');
       cy.findByText(linode.label).should('not.exist');
     });

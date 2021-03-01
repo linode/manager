@@ -11,14 +11,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     alignContent: 'center',
-    color: theme.color.grey6
+    color: theme.color.grey6,
   },
   active: {
-    color: '#0AC267'
-  }
+    color: '#0AC267',
+  },
 }));
 
-const StatusIndicator: React.FC<Props> = props => {
+const StatusIndicator: React.FC<Props> = (props) => {
   const { status } = props;
 
   const classes = useStyles();
@@ -27,7 +27,7 @@ const StatusIndicator: React.FC<Props> = props => {
     <span
       className={classnames({
         [classes.root]: true,
-        [classes.active]: status === 'active'
+        [classes.active]: status === 'active',
       })}
     >
       <Circle />

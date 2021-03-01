@@ -2,7 +2,7 @@ import * as Factory from 'factory.ts';
 import { StackScript } from '@linode/api-v4/lib/stackscripts/types';
 
 export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
-  id: Factory.each(i => i),
+  id: Factory.each((i) => i),
   label: 'MySQL',
   images: [],
   user_defined_fields: [],
@@ -17,5 +17,5 @@ export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   updated: '2010-12-31T23:59:59',
   rev_note: 'Initial import.',
   ordinal: 1, // default value
-  logo_url: '' // default value
+  logo_url: '', // default value
 });

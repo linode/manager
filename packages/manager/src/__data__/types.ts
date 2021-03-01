@@ -6,7 +6,7 @@ export const types: LinodeType[] = [
     network_out: 1000,
     price: {
       monthly: 10.0,
-      hourly: 0.015
+      hourly: 0.015,
     },
     id: 'g5-standard-1',
     label: 'Linode 2GB',
@@ -15,21 +15,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 2.5,
-          hourly: 0.004
-        }
-      }
+          hourly: 0.004,
+        },
+      },
     },
     successor: null,
     memory: 2048,
     vcpus: 1,
-    disk: 50 * 1024
+    disk: 50 * 1024,
   },
   {
     transfer: 3000,
     network_out: 1000,
     price: {
       monthly: 20.0,
-      hourly: 0.03
+      hourly: 0.03,
     },
     id: 'g5-standard-2',
     label: 'Linode 4096',
@@ -38,21 +38,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 5.0,
-          hourly: 0.008
-        }
-      }
+          hourly: 0.008,
+        },
+      },
     },
     successor: null,
     memory: 4096,
     vcpus: 2,
-    disk: 80 * 1024
+    disk: 80 * 1024,
   },
   {
     transfer: 4000,
     network_out: 1000,
     price: {
       monthly: 40.0,
-      hourly: 0.06
+      hourly: 0.06,
     },
     id: 'g5-standard-4',
     label: 'Linode 8192',
@@ -61,21 +61,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 10.0,
-          hourly: 0.015
-        }
-      }
+          hourly: 0.015,
+        },
+      },
     },
     successor: null,
     memory: 8192,
     vcpus: 4,
-    disk: 98304
+    disk: 98304,
   },
   {
     transfer: 8000,
     network_out: 1000,
     price: {
       monthly: 80.0,
-      hourly: 0.12
+      hourly: 0.12,
     },
     id: 'g5-standard-6',
     label: 'Linode 12288',
@@ -84,21 +84,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 20.0,
-          hourly: 0.03
-        }
-      }
+          hourly: 0.03,
+        },
+      },
     },
     successor: null,
     memory: 12288,
     vcpus: 6,
-    disk: 196608
+    disk: 196608,
   },
   {
     transfer: 16000,
     network_out: 2000,
     price: {
       monthly: 160.0,
-      hourly: 0.24
+      hourly: 0.24,
     },
     id: 'g5-standard-8',
     label: 'Linode 24576',
@@ -107,21 +107,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 40.0,
-          hourly: 0.06
-        }
-      }
+          hourly: 0.06,
+        },
+      },
     },
     successor: null,
     memory: 24576,
     vcpus: 8,
-    disk: 393216
+    disk: 393216,
   },
   {
     transfer: 20000,
     network_out: 4000,
     price: {
       monthly: 320.0,
-      hourly: 0.48
+      hourly: 0.48,
     },
     id: 'g5-standard-12',
     label: 'Linode 49152',
@@ -130,21 +130,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 80.0,
-          hourly: 0.12
-        }
-      }
+          hourly: 0.12,
+        },
+      },
     },
     successor: null,
     memory: 49152,
     vcpus: 12,
-    disk: 786432
+    disk: 786432,
   },
   {
     transfer: 20000,
     network_out: 6000,
     price: {
       monthly: 480.0,
-      hourly: 0.72
+      hourly: 0.72,
     },
     id: 'g5-standard-16',
     label: 'Linode 65536',
@@ -153,21 +153,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 120.0,
-          hourly: 0.18
-        }
-      }
+          hourly: 0.18,
+        },
+      },
     },
     successor: null,
     memory: 65536,
     vcpus: 16,
-    disk: 1179648
+    disk: 1179648,
   },
   {
     transfer: 20000,
     network_out: 8000,
     price: {
       monthly: 640.0,
-      hourly: 0.96
+      hourly: 0.96,
     },
     id: 'g5-standard-20',
     label: 'Linode 81920',
@@ -176,21 +176,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 160.0,
-          hourly: 0.24
-        }
-      }
+          hourly: 0.24,
+        },
+      },
     },
     successor: null,
     memory: 81920,
     vcpus: 20,
-    disk: 1572864
+    disk: 1572864,
   },
   {
     transfer: 1000,
     network_out: 1000,
     price: {
       monthly: 5.0,
-      hourly: 0.0075
+      hourly: 0.0075,
     },
     id: 'g5-nanode-1',
     label: 'Linode 1024',
@@ -199,21 +199,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 2.0,
-          hourly: 0.003
-        }
-      }
+          hourly: 0.003,
+        },
+      },
     },
     successor: null,
     memory: 1024,
     vcpus: 1,
-    disk: 20480
+    disk: 20480,
   },
   {
     transfer: 5000,
     network_out: 1000,
     price: {
       monthly: 60.0,
-      hourly: 0.09
+      hourly: 0.09,
     },
     id: 'g5-highmem-1',
     label: 'Linode 16384',
@@ -222,21 +222,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 5.0,
-          hourly: 0.008
-        }
-      }
+          hourly: 0.008,
+        },
+      },
     },
     successor: null,
     memory: 16384,
     vcpus: 1,
-    disk: 20480
+    disk: 20480,
   },
   {
     transfer: 6000,
     network_out: 1500,
     price: {
       monthly: 120.0,
-      hourly: 0.18
+      hourly: 0.18,
     },
     id: 'g5-highmem-2',
     label: 'Linode 32768',
@@ -245,21 +245,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 10.0,
-          hourly: 0.015
-        }
-      }
+          hourly: 0.015,
+        },
+      },
     },
     successor: null,
     memory: 32768,
     vcpus: 2,
-    disk: 40960
+    disk: 40960,
   },
   {
     transfer: 7000,
     network_out: 3000,
     price: {
       monthly: 240.0,
-      hourly: 0.36
+      hourly: 0.36,
     },
     id: 'g5-highmem-4',
     label: 'Linode 61440',
@@ -268,21 +268,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 20.0,
-          hourly: 0.03
-        }
-      }
+          hourly: 0.03,
+        },
+      },
     },
     successor: null,
     memory: 61440,
     vcpus: 4,
-    disk: 92160
+    disk: 92160,
   },
   {
     transfer: 8000,
     network_out: 6000,
     price: {
       monthly: 480.0,
-      hourly: 0.72
+      hourly: 0.72,
     },
     id: 'g5-highmem-8',
     label: 'Linode 102400',
@@ -291,21 +291,21 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 40.0,
-          hourly: 0.06
-        }
-      }
+          hourly: 0.06,
+        },
+      },
     },
     successor: null,
     memory: 102400,
     vcpus: 8,
-    disk: 204800
+    disk: 204800,
   },
   {
     transfer: 9000,
     network_out: 10000,
     price: {
       monthly: 960.0,
-      hourly: 1.44
+      hourly: 1.44,
     },
     id: 'g5-highmem-16',
     label: 'Linode 204800',
@@ -314,13 +314,13 @@ export const types: LinodeType[] = [
       backups: {
         price: {
           monthly: 60.0,
-          hourly: 0.09
-        }
-      }
+          hourly: 0.09,
+        },
+      },
     },
     successor: null,
     memory: 204800,
     vcpus: 16,
-    disk: 348160
-  }
+    disk: 348160,
+  },
 ];

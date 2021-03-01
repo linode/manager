@@ -45,7 +45,7 @@ export const percentCompleteHasUpdated = (
   nextEventsInProgress: Record<number, number>
 ) => {
   return Object.keys(prevEventsInProgress).some(
-    eachEventID =>
+    (eachEventID) =>
       prevEventsInProgress[eachEventID] !== nextEventsInProgress[eachEventID]
   );
 };

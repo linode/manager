@@ -5,8 +5,5 @@ export const capitalize = (s: string) => {
 export default capitalize;
 
 export const capitalizeAllWords = (s: string) => {
-  return s
-    .split(' ')
-    .map(capitalize)
-    .join(' ');
+  return s.split(' ').map(capitalize).join(' ');
 };

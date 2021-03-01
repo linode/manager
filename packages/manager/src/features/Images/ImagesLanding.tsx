@@ -28,7 +28,7 @@ import { ApplicationState } from 'src/store';
 import { DeleteImagePayload } from 'src/store/image/image.actions';
 import {
   deleteImage as _deleteImage,
-  requestImages as _requestImages
+  requestImages as _requestImages,
 } from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -66,7 +66,7 @@ const defaultDrawerState = {
   mode: 'edit' as DrawerMode,
   label: '',
   description: '',
-  selectedDisk: null
+  selectedDisk: null,
 };
 
 const defaultDialogState = {
@@ -74,10 +74,10 @@ const defaultDialogState = {
   submitting: false,
   image: '',
   imageID: '',
-  error: undefined
+  error: undefined,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = props => {
+export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
   const { imagesData, imagesLoading, imagesError, deleteImage } = props;
@@ -87,35 +87,35 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       label: 'Image',
       dataColumn: 'label',
       sortable: true,
-      widthPercent: 22
+      widthPercent: 22,
     },
     {
       label: 'Created',
       dataColumn: 'created',
       sortable: false,
       widthPercent: 15,
-      hideOnMobile: true
+      hideOnMobile: true,
     },
     {
       label: 'Expires',
       dataColumn: 'expires',
       sortable: false,
       widthPercent: 15,
-      hideOnMobile: true
+      hideOnMobile: true,
     },
     {
       label: 'Size',
       dataColumn: 'size',
       sortable: true,
-      widthPercent: 12
+      widthPercent: 12,
     },
     {
       label: 'Action Menu',
       visuallyHidden: true,
       dataColumn: '',
       sortable: false,
-      widthPercent: 35
-    }
+      widthPercent: 35,
+    },
   ];
 
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(
@@ -132,7 +132,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       submitting: false,
       image,
       imageID,
-      error: undefined
+      error: undefined,
     });
   };
 
@@ -142,15 +142,15 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
 
   const handleRemoveImage = () => {
     if (!dialog.imageID) {
-      setDialogState(dialog => ({
+      setDialogState((dialog) => ({
         ...dialog,
-        error: 'Image is not available.'
+        error: 'Image is not available.',
       }));
     }
-    setDialogState(dialog => ({
+    setDialogState((dialog) => ({
       ...dialog,
       submitting: true,
-      error: undefined
+      error: undefined,
     }));
 
     deleteImage({ imageID: dialog.imageID! })
@@ -167,18 +167,18 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
          */
         // this.props.onDelete();
         props.enqueueSnackbar('Image has been scheduled for deletion.', {
-          variant: 'info'
+          variant: 'info',
         });
       })
-      .catch(err => {
+      .catch((err) => {
         const _error = getErrorStringOrDefault(
           err,
           'There was an error deleting the image.'
         );
-        setDialogState(dialog => ({
+        setDialogState((dialog) => ({
           ...dialog,
           submitting: false,
-          error: _error
+          error: _error,
         }));
       });
   };
@@ -189,7 +189,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       mode: 'create',
       label: '',
       description: '',
-      selectedDisk: null
+      selectedDisk: null,
     });
   };
 
@@ -200,7 +200,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       description,
       imageID,
       label,
-      selectedDisk: null
+      selectedDisk: null,
     });
   };
 
@@ -209,7 +209,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
       open: true,
       mode: 'restore',
       imageID,
-      selectedDisk: null
+      selectedDisk: null,
     });
   };
 
@@ -218,39 +218,39 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     history.push({
       pathname: `/linodes/create/`,
       search: `?type=Images&imageID=${imageID}`,
-      state: { selectedImageId: imageID }
+      state: { selectedImageId: imageID },
     });
   };
 
   const changeSelectedLinode = (linodeId: number | null) => {
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       selectedDisk: null,
-      selectedLinode: linodeId ?? undefined
+      selectedLinode: linodeId ?? undefined,
     }));
   };
 
   const changeSelectedDisk = (disk: string | null) => {
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
-      selectedDisk: disk
+      selectedDisk: disk,
     }));
   };
 
   const setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
-      label: value
+      label: value,
     }));
   };
 
   const setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
-      description: value
+      description: value,
     }));
   };
 
@@ -274,9 +274,9 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   };
 
   const closeImageDrawer = () => {
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
-      open: false
+      open: false,
     }));
   };
 
@@ -303,7 +303,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     onRestore: openForRestore,
     onDeploy: deployNewLinode,
     onEdit: openForEdit,
-    onDelete: openDialog
+    onDelete: openDialog,
   };
 
   const imageRow: EntityTableRow<Image> = {
@@ -311,7 +311,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
     data: imagesData ?? [],
     loading: false,
     lastUpdated: 100,
-    handlers
+    handlers,
   };
 
   const renderError = (_: APIError[]) => {
@@ -338,8 +338,8 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
           buttonProps={[
             {
               onClick: openForCreate,
-              children: 'Add an Image'
-            }
+              children: 'Add an Image',
+            },
           ]}
         >
           <Typography variant="subtitle1">
@@ -415,7 +415,7 @@ const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
   deleteImage: (imageID: DeleteImagePayload) => dispatch(_deleteImage(imageID)),
-  requestImages: () => dispatch(_requestImages())
+  requestImages: () => dispatch(_requestImages()),
 });
 
 const withPrivateImages = connect(
@@ -424,11 +424,11 @@ const withPrivateImages = connect(
     const events = imageEvents(state.events);
     const privateImagesWithEvents = Object.values(itemsById).reduce(
       (accum, thisImage) =>
-        produce(accum, draft => {
+        produce(accum, (draft) => {
           if (!thisImage.is_public) {
             // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
             const matchingEvent = events.find(
-              thisEvent =>
+              (thisEvent) =>
                 thisEvent.secondary_entity &&
                 `private/${thisEvent.secondary_entity.id}` === thisImage.id
             );
@@ -445,7 +445,7 @@ const withPrivateImages = connect(
       imagesData: privateImagesWithEvents,
       imagesLoading: loading,
       imagesError: error?.read,
-      imagesLastUpdated: lastUpdated
+      imagesLastUpdated: lastUpdated,
     };
   },
   mapDispatchToProps

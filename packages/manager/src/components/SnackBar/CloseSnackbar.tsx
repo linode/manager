@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import IconButton from 'src/components/IconButton';
 
@@ -19,13 +19,13 @@ const styles = (theme: Theme) =>
   createStyles({
     icon: {
       color: theme.palette.text.primary,
-      padding: theme.spacing(1)
-    }
+      padding: theme.spacing(1),
+    },
   });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const CloseSnackbar: React.FC<CombinedProps> = props => {
+const CloseSnackbar: React.FC<CombinedProps> = (props) => {
   const { classes, text, onClick } = props;
 
   return (

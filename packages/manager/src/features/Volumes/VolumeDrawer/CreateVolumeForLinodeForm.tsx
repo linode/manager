@@ -12,28 +12,28 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import {
   openForAttaching,
-  Origin as VolumeDrawerOrigin
+  Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
@@ -51,8 +51,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     textWrapper: {
-      marginBottom: theme.spacing(1) + 2
-    }
+      marginBottom: theme.spacing(1) + 2,
+    },
   });
 
 interface Props {
@@ -73,7 +73,7 @@ type CombinedProps = Props &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const CreateVolumeForm: React.FC<CombinedProps> = props => {
+const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const {
     onClose,
     onSuccess,
@@ -83,7 +83,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
     actions,
     createVolume,
     disabled,
-    origin
+    origin,
   } = props;
 
   return (
@@ -105,7 +105,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           config_id:
             // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
             config_id === -1 ? undefined : maybeCastToNumber(config_id),
-          tags: tags.map(v => v.value)
+          tags: tags.map((v) => v.value),
         })
           .then(({ label: newLabel, filesystem_path }) => {
             resetEventsPolling();
@@ -117,7 +117,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             // GA Event
             sendCreateVolumeEvent(`${label}: ${size}GiB`, origin);
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -142,7 +142,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         setFieldValue,
         status,
         touched,
-        values
+        values,
       }) => {
         /**
          * This form doesn't have a region select (the region is auto-populated)
@@ -238,7 +238,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
               }
               name="tags"
               label="Tags"
-              onChange={selected => setFieldValue('tags', selected)}
+              onChange={(selected) => setFieldValue('tags', selected)}
               value={values.tags}
               disabled={disabled}
             />
@@ -275,7 +275,7 @@ const initialValues: FormState = {
   region: 'none',
   linode_id: -1,
   config_id: -1,
-  tags: []
+  tags: [],
 };
 
 const styled = withStyles(styles);
@@ -298,8 +298,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
           ownProps.linodeRegion,
           ownProps.linodeLabel
         )
-      )
-  }
+      ),
+  },
 });
 
 interface StateProps {
@@ -307,10 +307,10 @@ interface StateProps {
   origin?: VolumeDrawerOrigin;
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   // disabled if the profile is restricted and doesn't have add_volumes grant
   disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
-  origin: state.volumeDrawer.origin
+  origin: state.volumeDrawer.origin,
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

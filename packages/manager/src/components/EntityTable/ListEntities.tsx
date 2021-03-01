@@ -11,7 +11,7 @@ import { ListProps } from './types';
 
 export type CombinedProps = ListProps;
 
-export const ListEntities: React.FC<CombinedProps> = props => {
+export const ListEntities: React.FC<CombinedProps> = (props) => {
   const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
   return (
     <OrderBy
@@ -27,7 +27,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => (
             <>
               <Paper>
@@ -45,7 +45,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
                       error={undefined}
                       lastUpdated={100}
                     >
-                      {paginatedAndOrderedData.map(thisEntity => (
+                      {paginatedAndOrderedData.map((thisEntity) => (
                         <RowComponent
                           key={thisEntity.id}
                           {...thisEntity}

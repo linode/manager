@@ -8,7 +8,7 @@ import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBl
 import { debounce } from 'throttle-debounce';
 
 import withRegions, {
-  DefaultProps as RegionProps
+  DefaultProps as RegionProps,
 } from 'src/containers/regions.container';
 
 export const regionSupportMessage =
@@ -37,12 +37,12 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
   mounted: boolean;
 
   static defaultProps = {
-    region: 'none'
+    region: 'none',
   };
 
   state: State = {
     linodes: [],
-    loading: true
+    loading: true,
   };
 
   componentDidMount() {
@@ -69,7 +69,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
 
     const { linodes } = this.state;
     const idx = linodes.findIndex(
-      linode => Number(linodeId) === Number(linode.value)
+      (linode) => Number(linodeId) === Number(linode.value)
     );
     return idx > -1 ? linodes[idx] : -1;
   };
@@ -97,7 +97,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
       return {
         value: linode.id,
         label: linode.label,
-        data: { region: linode.region }
+        data: { region: linode.region },
       };
     });
   };
@@ -108,15 +108,15 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
     if (region && region !== 'none') {
       return {
         label: {
-          '+contains': inputValue
+          '+contains': inputValue,
         },
-        region
+        region,
       };
     } else {
       return {
         label: {
-          '+contains': inputValue
-        }
+          '+contains': inputValue,
+        },
       };
     }
   };
@@ -128,7 +128,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
 
     const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
-      .then(response => {
+      .then((response) => {
         const linodes = this.renderLinodeOptions(response.data);
         if (this.mounted) {
           this.setState({ linodes, loading: false });
@@ -168,7 +168,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
     const { loading, linodes, selectedLinodeId } = this.state;
 
     const options = shouldOnlyDisplayRegionsWithBlockStorage
-      ? linodes.filter(linode => {
+      ? linodes.filter((linode) => {
           const region = pathOr('', ['data', 'region'], linode);
           return doesRegionSupportBlockStorage(region, regionsData);
         })
@@ -188,8 +188,8 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
           onInputChange={this.onInputChange}
           textFieldProps={{
             dataAttrs: {
-              'data-qa-select-linode': true
-            }
+              'data-qa-select-linode': true,
+            },
           }}
           hideLabel
           {...rest}

@@ -1,12 +1,12 @@
 import {
   getUserPreferences as _getUserPreferences,
-  updateUserPreferences as _updateUserPreferences
+  updateUserPreferences as _updateUserPreferences,
 } from '@linode/api-v4/lib/profile';
 import { createRequestThunk } from '../store.helpers';
 
 import {
   handleGetPreferences,
-  handleUpdatePreferences
+  handleUpdatePreferences,
 } from './preferences.actions';
 
 export const getUserPreferences = createRequestThunk(

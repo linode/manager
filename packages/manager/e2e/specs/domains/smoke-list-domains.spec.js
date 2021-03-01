@@ -52,12 +52,12 @@ describe('Domains - List Suite', () => {
       'Clone',
       'Delete',
       'Edit DNS Records',
-      'Check Zone'
+      'Check Zone',
     ];
 
     ListDomains.actionMenuItem.waitForDisplayed(constants.wait.normal);
     const actionMenuItems = $$(ListDomains.actionMenuItem.selector);
-    actionMenuItems.forEach(i =>
+    actionMenuItems.forEach((i) =>
       expect(expectedMenuItems).toContain(i.getText())
     );
 

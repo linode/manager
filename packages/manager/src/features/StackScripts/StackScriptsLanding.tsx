@@ -9,7 +9,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withImagesContainer, {
-  WithImages
+  WithImages,
 } from 'src/containers/withImages.container';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import StackScriptPanel from './StackScriptPanel';
@@ -20,13 +20,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   title: {
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-  }
+    marginBottom: theme.spacing(1) + theme.spacing(1) / 2,
+  },
 }));
 
 type CombinedProps = WithImages & RouteComponentProps<{}>;
 
-export const StackScriptsLanding: React.FC<CombinedProps> = props => {
+export const StackScriptsLanding: React.FC<CombinedProps> = (props) => {
   const { history, imagesData, location } = props;
   const classes = useStyles();
 
@@ -91,6 +91,6 @@ export default compose<CombinedProps, {}>(
     ...ownProps,
     imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
-    imagesError
+    imagesError,
   }))
 )(StackScriptsLanding);

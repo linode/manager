@@ -15,7 +15,7 @@ const SubText = () => {
   );
 };
 
-const Example: React.FC<{}> = props => {
+const Example: React.FC<{}> = (props) => {
   return (
     <React.Fragment>
       <Gauge

@@ -41,7 +41,7 @@ import {
   tagFactory,
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
-  VLANFactory
+  VLANFactory,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -52,27 +52,27 @@ export const makeResourcePage = (
   e: any[],
   override: { page: number; pages: number; results?: number } = {
     page: 1,
-    pages: 1
+    pages: 1,
   }
 ) => ({
   page: override.page ?? 1,
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
-  data: e
+  data: e,
 });
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
     const transfers1 = entityTransferFactory.buildList(10);
     const transfers2 = entityTransferFactory.buildList(10, {
-      token: 'TEST123'
+      token: 'TEST123',
     });
     const transfers3 = entityTransferFactory.buildList(10, {
-      token: '987TEST'
+      token: '987TEST',
     });
     const transfer4 = entityTransferFactory.build({
       is_sender: true,
-      status: 'pending'
+      status: 'pending',
     });
 
     const combinedTransfers = transfers1.concat(
@@ -89,7 +89,7 @@ const entityTransfers = [
   rest.post('*/account/entity-transfers', (req, res, ctx) => {
     const payload = req.body as any;
     const newTransfer = entityTransferFactory.build({
-      entities: payload.entities
+      entities: payload.entities,
     });
     return res(ctx.json(newTransfer));
   }),
@@ -101,7 +101,7 @@ const entityTransfers = [
   ),
   rest.delete('*/account/entity-transfers/:transferId', (req, res, ctx) => {
     return res(ctx.json({}));
-  })
+  }),
 ];
 
 export const handlers = [
@@ -131,14 +131,14 @@ export const handlers = [
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(17, {
       backups: { enabled: false },
-      ipv4: ['000.000.000.000']
+      ipv4: ['000.000.000.000'],
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
     const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
-      label: 'eventful'
+      label: 'eventful',
     });
     const multipleIPLinode = linodeFactory.build({
       label: 'multiple-ips',
@@ -148,9 +148,9 @@ export const handlers = [
         '192.168.0.2',
         '192.168.0.3',
         '192.168.0.4',
-        '192.168.0.5'
+        '192.168.0.5',
       ],
-      tags: ['test1', 'test2', 'test3']
+      tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
       ...onlineLinodes,
@@ -159,16 +159,16 @@ export const handlers = [
       linodeFactory.build({
         label: 'shadow-plan',
         type: 'g5-standard-20-s1',
-        backups: { enabled: false }
+        backups: { enabled: false },
       }),
       linodeFactory.build({
         label: 'shadow-plan-with-tags',
         type: 'g5-standard-20-s1',
         backups: { enabled: false },
-        tags: ['test1', 'test2', 'test3']
+        tags: ['test1', 'test2', 'test3'],
       }),
       eventLinode,
-      multipleIPLinode
+      multipleIPLinode,
     ];
     return res(ctx.json(makeResourcePage(linodes)));
   }),
@@ -201,7 +201,7 @@ export const handlers = [
       label: payload?.label ?? 'new-linode',
       type: payload?.type ?? 'g6-standard-1',
       image: payload?.image ?? 'linode/debian-10',
-      region: payload?.region ?? 'us-east'
+      region: payload?.region ?? 'us-east',
     });
     return res(ctx.json(linode));
   }),
@@ -242,14 +242,14 @@ export const handlers = [
   }),
   rest.put('*/firewalls/:firewallId', (req, res, ctx) => {
     const firewall = firewallFactory.build({
-      status: req.body?.['status'] ?? 'disabled'
+      status: req.body?.['status'] ?? 'disabled',
     });
     return res(ctx.json(firewall));
   }),
   rest.post('*/firewalls', (req, res, ctx) => {
     const payload = req.body as any;
     const newFirewall = firewallFactory.build({
-      label: payload.label ?? 'mock-firewall'
+      label: payload.label ?? 'mock-firewall',
     });
     return res(ctx.json(newFirewall));
   }),
@@ -259,13 +259,13 @@ export const handlers = [
   }),
   rest.get('*/nodebalancers/:nodeBalancerID', (req, res, ctx) => {
     const nodeBalancer = nodeBalancerFactory.build({
-      id: req.params.nodeBalancerID
+      id: req.params.nodeBalancerID,
     });
     return res(ctx.json(nodeBalancer));
   }),
   rest.get('*/nodebalancers/:nodeBalancerID/configs', (req, res, ctx) => {
     const configs = nodeBalancerConfigFactory.buildList(2, {
-      nodebalancer_id: req.params.nodeBalancerID
+      nodebalancer_id: req.params.nodeBalancerID,
     });
     return res(ctx.json(makeResourcePage(configs)));
   }),
@@ -273,7 +273,7 @@ export const handlers = [
     '*/nodebalancers/:nodeBalancerID/configs/:configID/nodes',
     (req, res, ctx) => {
       const configs = nodeBalancerConfigNodeFactory.buildList(2, {
-        nodebalancer_id: req.params.nodeBalancerID
+        nodebalancer_id: req.params.nodeBalancerID,
       });
       return res(ctx.json(makeResourcePage(configs)));
     }
@@ -322,7 +322,7 @@ export const handlers = [
   rest.get('*/account', (req, res, ctx) => {
     const account = accountFactory.build({
       balance: 50,
-      active_since: '2019-11-05'
+      active_since: '2019-11-05',
     });
     return res(ctx.json(account));
   }),
@@ -343,7 +343,7 @@ export const handlers = [
       percent_complete: 15,
       entity: { type: 'linode', id: 999, label: 'linode-1' },
       message:
-        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.'
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
     });
     const diskResize = eventFactory.build({
       action: 'disk_resize',
@@ -351,13 +351,13 @@ export const handlers = [
       secondary_entity: {
         type: 'disk',
         id: 1,
-        label: 'my-disk'
-      }
+        label: 'my-disk',
+      },
     });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
       seen: true,
-      percent_complete: 100
+      percent_complete: 100,
     });
     return res.once(
       ctx.json(makeResourcePage([...events, diskResize, ...oldEvents]))
@@ -441,7 +441,7 @@ export const handlers = [
       label: "We've updated our policies.",
       severity: 'minor',
       until: null,
-      body: null
+      body: null,
     };
 
     const outageNotification = {
@@ -450,7 +450,7 @@ export const handlers = [
         type: 'region',
         label: null,
         id: 'us-east',
-        url: '/regions/us-east'
+        url: '/regions/us-east',
       },
       when: null,
       message:
@@ -458,7 +458,7 @@ export const handlers = [
       label: 'There is an issue affecting service in this facility',
       severity: 'major',
       until: null,
-      body: null
+      body: null,
     };
 
     const emailBounce = notificationFactory.build({
@@ -469,20 +469,20 @@ export const handlers = [
       label: 'We are unable to send emails to your billing email address!',
       severity: 'major',
       until: null,
-      body: null
+      body: null,
     });
     const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationTicket = notificationFactory.build({
       type: 'migration_pending',
       entity: { id: 0, type: 'linode', label: 'linode-0' },
-      severity: 'critical'
+      severity: 'critical',
     });
 
     const minorSeverityTicket = notificationFactory.build({
       type: 'notice',
       message: 'Testing for minor notification',
-      severity: 'minor'
+      severity: 'minor',
     });
 
     return res(
@@ -495,7 +495,7 @@ export const handlers = [
           minorSeverityTicket,
           abuseTicket,
           emailBounce,
-          migrationTicket
+          migrationTicket,
         ])
       )
     );
@@ -514,7 +514,7 @@ export const handlers = [
     const databases = [online, initializing, error, unknown];
     return res(ctx.json(makeResourcePage(databases)));
   }),
-  ...entityTransfers
+  ...entityTransfers,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.
@@ -522,24 +522,24 @@ export const mockDataHandlers: Record<
   keyof MockData,
   (count: number) => RequestHandler
 > = {
-  linode: count =>
+  linode: (count) =>
     rest.get('*/linode/instances', async (req, res, ctx) => {
       const linodes = linodeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(linodes)));
     }),
-  nodeBalancer: count =>
+  nodeBalancer: (count) =>
     rest.get('*/nodebalancers', (req, res, ctx) => {
       const nodeBalancers = nodeBalancerFactory.buildList(count);
       return res(ctx.json(makeResourcePage(nodeBalancers)));
     }),
-  domain: count =>
+  domain: (count) =>
     rest.get('*/domains', (req, res, ctx) => {
       const domains = domainFactory.buildList(count);
       return res(ctx.json(makeResourcePage(domains)));
     }),
-  volume: count =>
+  volume: (count) =>
     rest.get('*/volumes', (req, res, ctx) => {
       const volumes = volumeFactory.buildList(count);
       return res(ctx.json(makeResourcePage(volumes)));
-    })
+    }),
 };

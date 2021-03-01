@@ -15,5 +15,5 @@ export const pageyProps: PaginationProps<any> = {
   request: jest.fn(),
   handleSearch: jest.fn(),
   filter: {},
-  searching: false
+  searching: false,
 };

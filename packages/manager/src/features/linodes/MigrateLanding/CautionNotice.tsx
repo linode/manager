@@ -21,23 +21,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& ul:first-of-type': {
       fontFamily: theme.font.normal,
       '& li': {
-        marginBottom: theme.spacing()
-      }
-    }
+        marginBottom: theme.spacing(),
+      },
+    },
   },
   header: {
     marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
   },
   volumes: {
     marginTop: theme.spacing(),
     '& li': {
-      fontFamily: theme.font.bold
-    }
+      fontFamily: theme.font.bold,
+    },
   },
   checkbox: {
-    marginLeft: theme.spacing(2)
-  }
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 interface Props {
@@ -50,7 +50,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const CautionNotice: React.FC<CombinedProps> = props => {
+const CautionNotice: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { vlans } = useFlags();
   const { account } = useAccount();
@@ -102,7 +102,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
               {amountOfAttachedVolumes > 1 ? ' volumes' : ' volume'} will be
               detached from this Linode:
               <ul className={classes.volumes}>
-                {props.linodeVolumes.map(eachVolume => {
+                {props.linodeVolumes.map((eachVolume) => {
                   return <li key={eachVolume.id}>{eachVolume.label}</li>;
                 })}
               </ul>

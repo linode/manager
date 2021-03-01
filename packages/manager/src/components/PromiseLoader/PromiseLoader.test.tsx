@@ -4,7 +4,7 @@ import * as React from 'react';
 import PromiseLoader from './PromiseLoader';
 
 const mockAxiosResponse = (ms: number, result?: any) =>
-  new Promise(resolve => setTimeout(() => resolve(result), ms));
+  new Promise((resolve) => setTimeout(() => resolve(result), ms));
 
 describe('PromiseLoaderSpec', () => {
   const Component = () => <div id="component" />;
@@ -13,7 +13,7 @@ describe('PromiseLoaderSpec', () => {
     resource: async () => {
       await mockAxiosResponse(100);
       return Promise.resolve(data);
-    }
+    },
   });
   const LoadedComponent = preloaded(Component);
   let wrapper: ShallowWrapper;

@@ -6,14 +6,14 @@
  *   and reads as "where `id` is 1, 22, 333, or 4444."
  */
 export const generateInFilter = (keyName: string, arr: (string | number)[]) => {
-  return arr.map(el => ({ [keyName]: el }));
+  return arr.map((el) => ({ [keyName]: el }));
 };
 
 export const generateNeqFilter = (
   keyName: string,
   arr: (string | number)[]
 ) => {
-  return arr.map(el => ({ [keyName]: { '+neq': el } }));
+  return arr.map((el) => ({ [keyName]: { '+neq': el } }));
 };
 
 /**
@@ -34,13 +34,13 @@ export const generatePollingFilter = (
 
   if (neqIds.length > 0) {
     filter = {
-      '+and': [...filter, ...generateNeqFilter('id', neqIds)]
+      '+and': [...filter, ...generateNeqFilter('id', neqIds)],
     };
   }
 
   if (inIds.length > 0) {
     filter = {
-      '+or': [...filter, ...generateInFilter('id', inIds)]
+      '+or': [...filter, ...generateInFilter('id', inIds)],
     };
   }
 

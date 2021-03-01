@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -28,15 +28,15 @@ const styles = (theme: Theme) =>
     root: {
       flexGrow: 1,
       width: '100%',
-      backgroundColor: theme.color.white
+      backgroundColor: theme.color.white,
       // marginBottom: theme.spacing(3)
     },
     inner: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     panelBody: {
-      padding: `${theme.spacing(2)}px 0 0`
-    }
+      padding: `${theme.spacing(2)}px 0 0`,
+    },
   });
 
 interface Notice {
@@ -64,7 +64,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
     return (
       <SelectionCard
         key={`selection-card-${linode.id}`}
-        onClick={e => {
+        onClick={(e) => {
           handleSelection(linode.id, linode.specs.disk);
         }}
         checked={linode.id === Number(selectedLinodeID)}
@@ -88,7 +88,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
             handlePageChange,
             handlePageSizeChange,
             page,
-            pageSize
+            pageSize,
           }) => {
             return (
               <>
@@ -110,7 +110,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
                     </Typography>
                     <Typography component="div" className={classes.panelBody}>
                       <Grid container>
-                        {linodesData.map(linode => {
+                        {linodesData.map((linode) => {
                           return this.renderCard(linode);
                         })}
                       </Grid>

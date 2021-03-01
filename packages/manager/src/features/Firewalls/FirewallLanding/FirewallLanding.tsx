@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   RouteComponentProps,
   useHistory,
-  useRouteMatch
+  useRouteMatch,
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -13,7 +13,7 @@ import {
   useCreateFirewall,
   useDeleteFirewall,
   useFirewallQuery,
-  useMutateFirewall
+  useMutateFirewall,
 } from 'src/queries/firewalls';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
@@ -33,17 +33,19 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const { mutateAsync: _deleteFirewall } = useDeleteFirewall();
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
-  const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
-    boolean
-  >(false);
+  const [
+    addFirewallDrawerOpen,
+    toggleAddFirewallDrawer,
+  ] = React.useState<boolean>(false);
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
   const [selectedFirewallID, setSelectedFirewallID] = React.useState<
     number | undefined
   >(undefined);
-  const [selectedFirewallLabel, setSelectedFirewallLabel] = React.useState<
-    string
-  >('');
+  const [
+    selectedFirewallLabel,
+    setSelectedFirewallLabel,
+  ] = React.useState<string>('');
 
   const enableFirewall = (id: number) => {
     return updateFirewall({ id, payload: { status: 'enabled' } });
@@ -81,39 +83,39 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
       label: 'Firewall',
       dataColumn: 'label',
       sortable: true,
-      widthPercent: 25
+      widthPercent: 25,
     },
     {
       label: 'Status',
       dataColumn: 'status',
       sortable: true,
-      widthPercent: 15
+      widthPercent: 15,
     },
     {
       label: 'Rules',
       dataColumn: 'rules',
       sortable: false,
       widthPercent: 25,
-      hideOnMobile: true
+      hideOnMobile: true,
     },
     {
       label: 'Linodes',
       dataColumn: 'devices',
       sortable: false,
       widthPercent: 25,
-      hideOnMobile: true
+      hideOnMobile: true,
     },
     {
       label: 'Action Menu',
       visuallyHidden: true,
       dataColumn: '',
       sortable: false,
-      widthPercent: 5
-    }
+      widthPercent: 5,
+    },
   ];
 
   const openDrawer = React.useCallback(() => toggleAddFirewallDrawer(true), [
-    toggleAddFirewallDrawer
+    toggleAddFirewallDrawer,
   ]);
 
   // On-the-fly route matching so this component can open the drawer itself.
@@ -135,7 +137,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const handlers: FirewallHandlers = {
     triggerEnableFirewall: handleOpenEnableFirewallModal,
     triggerDisableFirewall: handleOpenDisableFirewallModal,
-    triggerDeleteFirewall: handleOpenDeleteFirewallModal
+    triggerDeleteFirewall: handleOpenDeleteFirewallModal,
   };
 
   const firewallArray = Object.values(data ?? {});
@@ -168,7 +170,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
     data: firewallArray,
     loading: isLoading,
     lastUpdated: dataUpdatedAt,
-    error: error ?? undefined
+    error: error ?? undefined,
   };
 
   return (

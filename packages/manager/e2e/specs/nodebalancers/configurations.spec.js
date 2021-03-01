@@ -73,7 +73,7 @@ xdescribe('NodeBalancer - Configurations Suite', () => {
   it('should attach a new node', () => {
     const nodeConfig = {
       label: nodeLabel,
-      ip: nodeIp
+      ip: nodeIp,
     };
     NodeBalancers.configAddNode(nodeConfig, 'editing');
     NodeBalancers.configSave();

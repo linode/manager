@@ -1,13 +1,13 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import CircularProgress, {
-  CircularProgressProps
+  CircularProgressProps,
 } from 'src/components/core/CircularProgress';
 import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type CSSClasses =
@@ -35,15 +35,15 @@ const styles = (theme: Theme) =>
       margin: '0 auto 20px',
       [theme.breakpoints.up('md')]: {
         flex: 1,
-        height: 300
-      }
+        height: 300,
+      },
     },
     progress: {
       position: 'relative',
       [theme.breakpoints.down('xs')]: {
         width: '72px !important',
-        height: '72px !important'
-      }
+        height: '72px !important',
+      },
     },
     top: {
       width: 70,
@@ -52,8 +52,8 @@ const styles = (theme: Theme) =>
       border: '1px solid #999',
       [theme.breakpoints.up('sm')]: {
         width: 120,
-        height: 120
-      }
+        height: 120,
+      },
     },
     topWrapper: {
       display: 'flex',
@@ -61,16 +61,16 @@ const styles = (theme: Theme) =>
       justifyContent: 'center',
       position: 'absolute',
       width: '100%',
-      height: '100%'
+      height: '100%',
     },
     noTopMargin: {
       [theme.breakpoints.up('md')]: {
         top: 0,
-        height: 'auto'
-      }
+        height: 'auto',
+      },
     },
     mini: {
-      padding: theme.spacing(1) * 1.3
+      padding: theme.spacing(1) * 1.3,
     },
     tag: {
       width: '12px !important',
@@ -79,8 +79,8 @@ const styles = (theme: Theme) =>
       marginLeft: 4,
       marginRight: 4,
       '& circle': {
-        stroke: 'white'
-      }
+        stroke: 'white',
+      },
     },
     sort: {
       width: '14px !important',
@@ -89,29 +89,29 @@ const styles = (theme: Theme) =>
       position: 'relative',
       top: 4,
       marginLeft: 8,
-      marginRight: 4
+      marginRight: 4,
     },
     valueInside: {
       position: 'absolute',
-      marginTop: 4
+      marginTop: 4,
     },
     hasValueInside: {},
     green: {
       '& circle': {
-        stroke: theme.color.green
+        stroke: theme.color.green,
       },
       '& $progress': {
         width: '93px !important',
-        height: '93px !important'
+        height: '93px !important',
       },
       '& $top': {
         width: 85,
-        height: 85
-      }
+        height: 85,
+      },
     },
     noPadding: {
-      padding: 0
-    }
+      padding: 0,
+    },
   });
 
 interface Props extends CircularProgressProps {
@@ -151,7 +151,7 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
       [classes.noTopMargin]: noTopMargin,
       [classes.hasValueInside]: children !== undefined,
       [classes.green]: green,
-      [classes.noPadding]: noPadding
+      [classes.noPadding]: noPadding,
     };
 
     if (this.props.className) {
@@ -163,7 +163,7 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
         className={classNames(
           {
             [classes.root]: true,
-            [classes.noTopMargin]: noTopMargin
+            [classes.noTopMargin]: noTopMargin,
           },
           outerClasses
         )}
@@ -194,7 +194,7 @@ class CircleProgressComponent extends React.Component<CombinedProps> {
           [classes.mini]: true,
           [classes.tag]: tag,
           [classes.sort]: sort,
-          [classes.noPadding]: noPadding
+          [classes.noPadding]: noPadding,
         })}
         size={noPadding ? 22 : 40}
         data-qa-circle-progress

@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -19,8 +19,8 @@ type ClassNames = 'closeLink';
 const styles = (theme: Theme) =>
   createStyles({
     closeLink: {
-      ...theme.applyLinkStyles
-    }
+      ...theme.applyLinkStyles,
+    },
   });
 
 interface Props {
@@ -40,7 +40,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
     dialogOpen: false,
-    isClosingTicket: false
+    isClosingTicket: false,
   };
 
   componentDidMount() {
@@ -58,7 +58,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     this.setState({
       dialogOpen: true,
       isClosingTicket: false,
-      ticketCloseError: undefined
+      ticketCloseError: undefined,
     });
   };
 
@@ -87,7 +87,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
         }
         closeTicketSuccess();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const apiError = getErrorStringOrDefault(
           errorResponse,
           'Ticket could not be closed.'
@@ -97,7 +97,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
         }
         this.setState({
           isClosingTicket: false,
-          ticketCloseError: apiError
+          ticketCloseError: apiError,
         });
       });
   };

@@ -25,14 +25,14 @@ export const uniqueGroup = (entity: GroupedEntity) => {
   }
 
   const lowercaseGroup = entity.group.toLowerCase();
-  const lowercaseTags = entity.tags.map(tag => tag.toLowerCase());
+  const lowercaseTags = entity.tags.map((tag) => tag.toLowerCase());
 
   return !lowercaseTags.includes(lowercaseGroup);
 };
 
 const L = {
   label: lensPath(['label']),
-  domain: lensPath(['domain'])
+  domain: lensPath(['domain']),
 };
 // We're only interested in a subset of an entities properties for group import,
 // so we extract them.
@@ -43,7 +43,7 @@ export const extractProps = (entity: GroupedEntity) => ({
     view<GroupedEntity, string>(L.domain, entity),
   id: entity.id,
   group: entity.group,
-  tags: entity.tags
+  tags: entity.tags,
 });
 
 const linodeSelector = (state: ApplicationState) =>
@@ -61,7 +61,7 @@ export const entitiesWithGroupsToImport = createSelector<
 >(linodeSelector, domainSelector, (linodes, domains) => {
   return {
     linodes: linodes.filter(uniqueGroup).map(extractProps),
-    domains: domains.filter(uniqueGroup).map(extractProps)
+    domains: domains.filter(uniqueGroup).map(extractProps),
   };
 });
 

@@ -14,23 +14,23 @@ export const useStyles = makeStyles((theme: Theme) => ({
     padding: 8,
     margin: 0,
     [theme.breakpoints.up('sm')]: {
-      padding: '8px 12px'
+      padding: '8px 12px',
     },
     [theme.breakpoints.down(370)]: {
-      padding: 3
+      padding: 3,
     },
     '&:hover, &:focus': {
-      color: '#c1c1c0'
+      color: '#c1c1c0',
     },
     '&:first-of-type': {
       [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing()
-      }
+        marginLeft: theme.spacing(),
+      },
     },
     '& svg': {
       width: 20,
-      height: 20
-    }
+      height: 20,
+    },
   },
   badge: {
     display: 'flex',
@@ -45,6 +45,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.72rem',
     borderRadius: '50%',
     minWidth: 16,
-    minHeight: 16
-  }
+    minHeight: 16,
+  },
 }));

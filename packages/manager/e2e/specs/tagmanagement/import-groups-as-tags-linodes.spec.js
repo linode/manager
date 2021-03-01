@@ -3,7 +3,7 @@ import {
   timestamp,
   apiCreateMultipleLinodes,
   apiDeleteAllLinodes,
-  getLocalStorageValue
+  getLocalStorageValue,
 } from '../../utils/common';
 import Dashboard from '../../pageobjects/dashboard.page';
 import ListLinodes from '../../pageobjects/list-linodes';
@@ -13,11 +13,11 @@ import ImportGroupsAsTagsDrawer from '../../pageobjects/import-groups-as-tags-dr
 describe('Import Display Groups as Tags - Linodes Suite', () => {
   const linode = {
     linodeLabel: `AutoLinode${timestamp()}`,
-    group: `group${timestamp()}`
+    group: `group${timestamp()}`,
   };
   const linode1 = {
     linodeLabel: `AutoLinode1${timestamp()}`,
-    group: `group1${timestamp()}`
+    group: `group1${timestamp()}`,
   };
   const importMessage =
     'You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Linodes and Domains. This will give you the ability to organize and view your Linodes and Domains by tags. Your existing tags will not be affected.';
@@ -43,7 +43,7 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
     expect(ImportGroupsAsTagsDrawer.importMessage.getText()).toEqual(
       importMessage
     );
-    const groupsToImport = ImportGroupsAsTagsDrawer.linodeGroups.map(group =>
+    const groupsToImport = ImportGroupsAsTagsDrawer.linodeGroups.map((group) =>
       group.getText().replace('- ', '')
     );
     expect(groupsToImport.sort()).toEqual([linode.group, linode1.group].sort());
@@ -82,12 +82,12 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
   //labeling style has changed
   xit('Verify groups are imported as tags', () => {
     browser.url(constants.routes.linodes);
-    [linode, linode1].forEach(linode => {
+    [linode, linode1].forEach((linode) => {
       $(ListLinodes.getLinodeSelector(linode.linodeLabel)).waitForDisplayed(
         constants.wait.normal
       );
       expect(ListLinodes.getLinodeTags(linode.linodeLabel)).toEqual([
-        linode.group.toLowerCase()
+        linode.group.toLowerCase(),
       ]);
     });
   });

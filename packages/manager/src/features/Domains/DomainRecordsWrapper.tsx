@@ -9,7 +9,7 @@ import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
 import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
 import summaryPanelStyles, {
-  StyleProps
+  StyleProps,
 } from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
 import DeleteDomain from './DeleteDomain';
@@ -19,34 +19,34 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(2),
     marginLeft: 0,
-    marginRight: 0
+    marginRight: 0,
   },
   main: {
     '&.MuiGrid-item': {
-      padding: 0
+      padding: 0,
     },
     [theme.breakpoints.up('md')]: {
-      order: 1
-    }
+      order: 1,
+    },
   },
   tagsSection: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(1),
-      order: 2
+      order: 2,
     },
     '&.MuiGrid-item': {
       paddingLeft: 0,
-      paddingRight: 0
-    }
+      paddingRight: 0,
+    },
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   tagPanel: {
-    maxWidth: 500
-  }
+    maxWidth: 500,
+  },
 }));
 
 interface Props {
@@ -58,7 +58,7 @@ interface Props {
 
 type CombinedProps = Props & StyleProps;
 
-const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
+const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
   const { domain, records, updateRecords, handleUpdateTags, classes } = props;
   const hookClasses = useStyles();
   const history = useHistory();
@@ -95,8 +95,9 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
           </div>
         </Paper>
         <div
-          className={`${hookClasses.tagPanel} ${flags.cmr &&
-            hookClasses.cmrSpacing}`}
+          className={`${hookClasses.tagPanel} ${
+            flags.cmr && hookClasses.cmrSpacing
+          }`}
         >
           <DeleteDomain
             domainId={domain.id}
