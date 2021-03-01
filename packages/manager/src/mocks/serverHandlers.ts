@@ -490,6 +490,12 @@ export const handlers = [
       severity: 'minor',
     });
 
+    const balanceNotification = notificationFactory.build({
+      type: 'payment_due',
+      message: 'You have an overdue balance!',
+      severity: 'major',
+    });
+
     return res(
       ctx.json(
         makeResourcePage([
@@ -501,6 +507,7 @@ export const handlers = [
           abuseTicket,
           emailBounce,
           migrationTicket,
+          balanceNotification,
         ])
       )
     );
