@@ -342,3 +342,16 @@ export interface SaveCreditCardData {
   expiry_month: number;
   cvv: string;
 }
+
+export interface AccountMaintenance {
+  reason: string;
+  status: 'pending' | 'ready' | 'started' | 'completed';
+  type: 'reboot' | 'cold_migration' | 'live_migration';
+  when: string;
+  entity: {
+    id: number;
+    label: string;
+    type: string;
+    url: string;
+  };
+}
