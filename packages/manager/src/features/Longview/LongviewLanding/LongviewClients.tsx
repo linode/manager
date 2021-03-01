@@ -1,7 +1,7 @@
 import {
   ActiveLongviewPlan,
   LongviewClient,
-  LongviewSubscription
+  LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
@@ -16,10 +16,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import withSettings, {
-  Props as SettingsProps
+  Props as SettingsProps,
 } from 'src/containers/accountSettings.container';
 import withLongviewClients, {
-  Props as LongviewProps
+  Props as LongviewProps,
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
 import useFlags from 'src/hooks/useFlags';
@@ -36,26 +36,26 @@ import SubscriptionDialog from './SubscriptionDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
-    marginBottom: theme.spacing()
+    marginBottom: theme.spacing(),
   },
   searchbar: {
     '&.MuiGrid-item': {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     '& > div': {
-      width: '300px'
+      width: '300px',
     },
     [theme.breakpoints.down('sm')]: {
       '&.MuiGrid-item': {
-        paddingLeft: theme.spacing()
-      }
+        paddingLeft: theme.spacing(),
+      },
     },
     [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   cta: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   sortSelect: {
     display: 'flex',
@@ -63,18 +63,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'row nowrap',
     width: 210,
     [theme.breakpoints.up('xs')]: {
-      width: 221
-    }
+      width: 221,
+    },
   },
   selectLabel: {
-    minWidth: '65px'
+    minWidth: '65px',
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,
-      marginRight: 0
-    }
-  }
+      marginRight: 0,
+    },
+  },
 }));
 
 interface Props {
@@ -94,7 +94,7 @@ export type CombinedProps = Props &
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
-export const LongviewClients: React.FC<CombinedProps> = props => {
+export const LongviewClients: React.FC<CombinedProps> = (props) => {
   const { getLongviewClients } = props;
 
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
@@ -108,32 +108,32 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
   const sortOptions: Item<string>[] = [
     {
       label: 'Client Name',
-      value: 'name'
+      value: 'name',
     },
     {
       label: 'CPU',
-      value: 'cpu'
+      value: 'cpu',
     },
     {
       label: 'RAM',
-      value: 'ram'
+      value: 'ram',
     },
     {
       label: 'Swap',
-      value: 'swap'
+      value: 'swap',
     },
     {
       label: 'Load',
-      value: 'load'
+      value: 'load',
     },
     {
       label: 'Network',
-      value: 'network'
+      value: 'network',
     },
     {
       label: 'Storage',
-      value: 'storage'
-    }
+      value: 'storage',
+    },
   ];
 
   const [sortKey, setSortKey] = React.useState<SortKey>('name');
@@ -144,9 +144,10 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
    * available LV clients)
    */
 
-  const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    subscriptionDialogOpen,
+    setSubscriptionDialogOpen,
+  ] = React.useState<boolean>(false);
 
   const classes = useStyles();
   const flags = useFlags();
@@ -163,7 +164,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
 
   const handleSubmit = () => {
     const {
-      history: { push }
+      history: { push },
     } = props;
 
     if (isManaged) {
@@ -171,8 +172,8 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
         pathname: '/support/tickets',
         state: {
           open: true,
-          title: 'Request for additional Longview clients'
-        }
+          title: 'Request for additional Longview clients',
+        },
       });
       return;
     }
@@ -203,7 +204,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
     deleteLongviewClient,
     userCanCreateClient,
     handleAddClient,
-    newClientLoading
+    newClientLoading,
   } = props;
 
   const handleSearch = (newQuery: string) => {
@@ -238,8 +239,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
       <DocumentTitleSegment segment="Clients" />
       <Grid
         container
-        className={`${classes.headingWrapper} ${flags.cmr &&
-          classes.cmrSpacing}`}
+        className={`${classes.headingWrapper} ${
+          flags.cmr && classes.cmrSpacing
+        }`}
         alignItems="center"
       >
         <Grid item className={classes.searchbar}>
@@ -258,7 +260,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             small
             isClearable={false}
             options={sortOptions}
-            value={sortOptions.find(thisOption => thisOption.value === sortKey)}
+            value={sortOptions.find(
+              (thisOption) => thisOption.value === sortKey
+            )}
             onChange={handleSortKeyChange}
             label="Sort by"
             hideLabel
@@ -332,7 +336,7 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
   const lvClientData = state.longviewStats ?? {};
   return {
-    lvClientData
+    lvClientData,
   };
 };
 
@@ -354,7 +358,7 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
     );
     return {
       userCanCreateClient:
-        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser)
+        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser),
     };
   }),
   withLongviewClients(),
@@ -481,7 +485,7 @@ export const filterLongviewClientsByQuery = (
   const cleanedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const queryRegex = new RegExp(`${cleanedQuery}`, 'gmi');
 
-  return clientList.filter(thisClient => {
+  return clientList.filter((thisClient) => {
     if (thisClient.label.match(queryRegex)) {
       return true;
     }

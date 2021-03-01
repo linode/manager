@@ -3,7 +3,7 @@ import { pages } from '../support/ui/constants';
 describe('smoke - deep link', () => {
   // check if we run oinly one test
 
-  pages.forEach(page => {
+  pages.forEach((page) => {
     if (!page.goWithUI) {
       return;
     }
@@ -14,7 +14,7 @@ describe('smoke - deep link', () => {
         cy.visitWithLogin('/null');
       });
 
-      page.goWithUI.forEach(uiPath => {
+      page.goWithUI.forEach((uiPath) => {
         (page.first ? it.only : page.skip ? it.skip : it)(
           `by ${uiPath.name}`,
           () => {

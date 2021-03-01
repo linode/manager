@@ -11,7 +11,7 @@ interface Props {
   marginBottom?: 0 | 8 | 16 | 24 | undefined;
 }
 
-const VATBanner: React.FC<Props> = props => {
+const VATBanner: React.FC<Props> = (props) => {
   const { marginBottom } = props;
   const flags = useFlags();
 
@@ -42,7 +42,7 @@ const VATBanner: React.FC<Props> = props => {
       >
         {({
           preference: isDismissed,
-          togglePreference: dismissBanner
+          togglePreference: dismissBanner,
         }: ToggleProps<boolean>) => {
           return isDismissed ? (
             <React.Fragment />

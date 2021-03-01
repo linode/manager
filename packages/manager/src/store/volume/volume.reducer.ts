@@ -10,7 +10,7 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
 } from '../store.helpers.tmp';
 import {
   createVolumeActions,
@@ -18,7 +18,7 @@ import {
   getAllVolumesActions,
   getOneVolumeActions,
   getVolumesPageActions,
-  updateVolumeActions
+  updateVolumeActions,
 } from './volume.actions';
 
 import { EntityError } from 'src/store/types';
@@ -31,8 +31,8 @@ export const defaultState: State = createDefaultState<Volume, EntityError>({
     create: undefined,
     update: undefined,
     delete: undefined,
-    read: undefined
-  }
+    read: undefined,
+  },
 });
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
@@ -47,7 +47,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
-        create: getAPIErrorOrDefault(error)
+        create: getAPIErrorOrDefault(error),
       },
       state
     );
@@ -64,7 +64,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
-        update: getAPIErrorOrDefault(error)
+        update: getAPIErrorOrDefault(error),
       },
       state
     );
@@ -81,7 +81,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
-        delete: getAPIErrorOrDefault(error)
+        delete: getAPIErrorOrDefault(error),
       },
       state
     );
@@ -116,7 +116,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { error } = action.payload;
     return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
-        read: getAPIErrorOrDefault(error)
+        read: getAPIErrorOrDefault(error),
       },
       state
     );

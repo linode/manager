@@ -16,27 +16,27 @@ interface Handlers {
 export type MutationDrawerProps = State & Handlers;
 
 export default withStateHandlers<State, Handlers>(
-  ownProps => ({
+  (ownProps) => ({
     mutationDrawerError: '',
     mutationDrawerLoading: false,
-    mutationDrawerOpen: false
+    mutationDrawerOpen: false,
   }),
   {
-    openMutationDrawer: state => () => ({
+    openMutationDrawer: (state) => () => ({
       mutationDrawerError: '',
       mutationDrawerLoading: false,
-      mutationDrawerOpen: true
+      mutationDrawerOpen: true,
     }),
 
-    closeMutationDrawer: state => () => ({
+    closeMutationDrawer: (state) => () => ({
       ...state,
-      mutationDrawerOpen: false
+      mutationDrawerOpen: false,
     }),
 
-    mutationFailed: state => (error: string) => ({
+    mutationFailed: (state) => (error: string) => ({
       mutationDrawerError: error,
       mutationDrawerLoading: false,
-      mutationDrawerOpen: true
-    })
+      mutationDrawerOpen: true,
+    }),
   }
 );

@@ -24,12 +24,12 @@ describe('Tabbed Panel Suite', () => {
 
   it('should display tabs as buttons', () => {
     const tabs = $$(tab);
-    tabs.forEach(t =>
+    tabs.forEach((t) =>
       expect(t.getAttribute('role'))
         .withContext(`Incorrect attribute for role ${t.index + 1}`)
         .toBe('tab')
     );
-    tabs.forEach(t =>
+    tabs.forEach((t) =>
       expect(t.getTagName())
         .withContext(`Incorrect TagName for button ${t.index + 1}`)
         .toBe('button')
@@ -59,7 +59,7 @@ describe('Tabbed Panel Suite', () => {
   it('should update panel text on tab change', () => {
     const tabs = $$(tab);
     let text;
-    tabs.forEach(t => {
+    tabs.forEach((t) => {
       t.click();
       $(tabBody).waitForDisplayed();
       const tabText = $(tabBody).getText();
@@ -73,7 +73,7 @@ describe('Tabbed Panel Suite', () => {
 
   it('should update tabs to selected on click', () => {
     const tabs = $$(tab);
-    tabs.forEach(t => {
+    tabs.forEach((t) => {
       t.click();
       const buttonColor = t.getCSSProperty('color');
       const selected = t.getAttribute('aria-selected').includes('true');

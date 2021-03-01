@@ -1,7 +1,7 @@
 import {
   generateInFilter,
   generateNeqFilter,
-  generatePollingFilter
+  generatePollingFilter,
 } from './requestFilters';
 
 describe('requestFilters', () => {
@@ -18,7 +18,7 @@ describe('requestFilters', () => {
       expect(result).toEqual([
         { id: { '+neq': 1 } },
         { id: { '+neq': 2 } },
-        { id: { '+neq': 3 } }
+        { id: { '+neq': 3 } },
       ]);
     });
   });
@@ -39,8 +39,8 @@ describe('requestFilters', () => {
           { created: { '+gte': timestamp } },
           { id: 1 },
           { id: 2 },
-          { id: 3 }
-        ]
+          { id: 3 },
+        ],
       });
     });
 
@@ -51,8 +51,8 @@ describe('requestFilters', () => {
           { created: { '+gte': timestamp } },
           { id: { '+neq': 1 } },
           { id: { '+neq': 2 } },
-          { id: { '+neq': 3 } }
-        ]
+          { id: { '+neq': 3 } },
+        ],
       });
     });
 
@@ -65,13 +65,13 @@ describe('requestFilters', () => {
               { created: { '+gte': timestamp } },
               { id: { '+neq': 4 } },
               { id: { '+neq': 5 } },
-              { id: { '+neq': 6 } }
-            ]
+              { id: { '+neq': 6 } },
+            ],
           },
           { id: 1 },
           { id: 2 },
-          { id: 3 }
-        ]
+          { id: 3 },
+        ],
       });
     });
   });

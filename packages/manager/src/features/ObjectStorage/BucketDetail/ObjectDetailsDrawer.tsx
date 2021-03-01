@@ -1,7 +1,7 @@
 import {
   ACLType,
   getObjectACL,
-  updateObjectACL
+  updateObjectACL,
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -20,18 +20,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 16,
     marginBottom: 16,
     height: 1,
-    backgroundColor: '#EBEBEB'
+    backgroundColor: '#EBEBEB',
   },
   copy: {
     marginLeft: '1em',
-    padding: 0
+    padding: 0,
   },
   link: {
-    display: 'flex'
+    display: 'flex',
   },
   submitButton: {
-    marginTop: theme.spacing(2)
-  }
+    marginTop: theme.spacing(2),
+  },
 }));
 
 export interface Props {
@@ -46,7 +46,7 @@ export interface Props {
   clusterId: string;
 }
 
-const ObjectDetailsDrawer: React.FC<Props> = props => {
+const ObjectDetailsDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {
@@ -58,7 +58,7 @@ const ObjectDetailsDrawer: React.FC<Props> = props => {
     lastModified,
     url,
     bucketName,
-    clusterId
+    clusterId,
   } = props;
 
   let formattedLastModified;

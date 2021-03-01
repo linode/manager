@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import {
   getSSLCert,
   deleteSSLCert,
-  uploadSSLCert
+  uploadSSLCert,
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -22,17 +22,17 @@ import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   button: {
-    ...theme.applyLinkStyles
+    ...theme.applyLinkStyles,
   },
   helperText: {
     paddingTop: theme.spacing(),
-    lineHeight: 1.5
+    lineHeight: 1.5,
   },
   textArea: {
-    minWidth: '100%'
+    minWidth: '100%',
   },
   wrapper: {
     display: 'flex',
@@ -40,21 +40,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'flex-start',
     flexFlow: 'row wrap',
     [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-start'
-    }
+      justifyContent: 'flex-start',
+    },
   },
   certWrapper: {
     paddingRight: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      padding: 0
-    }
+      padding: 0,
+    },
   },
   keyWrapper: {
     paddingLeft: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
-      padding: 0
-    }
-  }
+      padding: 0,
+    },
+  },
 }));
 
 interface Props {
@@ -62,7 +62,7 @@ interface Props {
   clusterId: string;
 }
 
-export const BucketSSL: React.FC<Props> = props => {
+export const BucketSSL: React.FC<Props> = (props) => {
   const { bucketName, clusterId } = props;
   const classes = useStyles();
 
@@ -92,11 +92,11 @@ interface BodyProps {
   clusterId: string;
 }
 
-export const SSLBody: React.FC<BodyProps> = props => {
+export const SSLBody: React.FC<BodyProps> = (props) => {
   const { bucketName, clusterId } = props;
 
   const request = useAPIRequest(
-    () => getSSLCert(clusterId, bucketName).then(response => response.ssl),
+    () => getSSLCert(clusterId, bucketName).then((response) => response.ssl),
     false
   );
 
@@ -121,7 +121,7 @@ export interface FormProps extends BodyProps {
   update: () => void;
 }
 
-export const AddCertForm: React.FC<FormProps> = props => {
+export const AddCertForm: React.FC<FormProps> = (props) => {
   const { bucketName, clusterId, update } = props;
   const [certificate, setCertificate] = React.useState('');
   const [sslKey, setSSLKey] = React.useState('');
@@ -136,13 +136,13 @@ export const AddCertForm: React.FC<FormProps> = props => {
     setSubmitting(true);
     setError(undefined);
     uploadSSLCert(clusterId, bucketName, { certificate, private_key: sslKey })
-      .then(_ => {
+      .then((_) => {
         setSubmitting(false);
         update();
         setCertificate('');
         setSSLKey('');
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setError(error);
       });
@@ -202,7 +202,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
   );
 };
 
-export const RemoveCertForm: React.FC<FormProps> = props => {
+export const RemoveCertForm: React.FC<FormProps> = (props) => {
   const { bucketName, clusterId, update } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -219,7 +219,7 @@ export const RemoveCertForm: React.FC<FormProps> = props => {
         setSubmittingDialog(false);
         update();
       })
-      .catch(error => {
+      .catch((error) => {
         setDialogError(error[0].reason);
         setSubmittingDialog(false);
       });

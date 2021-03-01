@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -15,14 +15,14 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       background: theme.bg.tableHeader,
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
     groupBox: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
     },
     groupItem: {
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   });
 
 interface Props {
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const DisplayGroupList: React.FC<CombinedProps> = props => {
+export const DisplayGroupList: React.FC<CombinedProps> = (props) => {
   const { classes, entity, groups } = props;
 
   if (isEmpty(groups)) {

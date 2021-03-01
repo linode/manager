@@ -12,7 +12,7 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
     total: 0,
     completed: 0,
     pending: 0,
-    credit: 0
+    credit: 0,
   },
   email_notifications: false,
   ip_whitelist_enabled: false,
@@ -20,5 +20,5 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
   authorized_keys: [],
   two_factor_auth: false,
   restricted: false,
-  authentication_type: 'password'
+  authentication_type: 'password',
 });

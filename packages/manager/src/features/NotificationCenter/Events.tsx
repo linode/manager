@@ -8,7 +8,7 @@ interface Props {
   onClose?: () => void;
 }
 
-export const Events: React.FC<Props> = props => {
+export const Events: React.FC<Props> = (props) => {
   const { events, onClose } = props;
 
   return (

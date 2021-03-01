@@ -9,7 +9,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -41,29 +41,29 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.color.white
+      backgroundColor: theme.color.white,
     },
     sshKeysHeader: {
       margin: 0,
-      width: '100%'
+      width: '100%',
     },
     headline: {
       marginTop: 8,
       marginBottom: 8,
       marginLeft: 15,
-      lineHeight: '1.5rem'
+      lineHeight: '1.5rem',
     },
     addNewWrapper: {
       '&.MuiGrid-item': {
-        padding: 5
-      }
+        padding: 5,
+      },
     },
     createdCell: {
-      width: '16%'
+      width: '16%',
     },
     actionCell: {
-      textAlign: 'right'
-    }
+      textAlign: 'right',
+    },
   });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -93,11 +93,11 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     confirmDelete: {
       open: false,
       id: undefined,
-      label: undefined
+      label: undefined,
     },
     creationDrawer: {
-      open: false
-    }
+      open: false,
+    },
   };
 
   static docs: Linode.Doc[] = [
@@ -107,8 +107,8 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
       because the private key used to secure the connection is never shared.`,
       src:
         'https://linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/',
-      title: 'Use Public Key Authentication with SSH'
-    }
+      title: 'Use Public Key Authentication with SSH',
+    },
   ];
 
   componentDidMount() {
@@ -215,7 +215,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
   renderData = (keys: ExtendedSSHKey[]) => {
     const { classes } = this.props;
-    return keys.map(key => (
+    return keys.map((key) => (
       <TableRow data-qa-content-row={key.label} key={key.id}>
         <TableCell>{key.label}</TableCell>
         <TableCell data-qa-public-key>
@@ -245,15 +245,15 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   };
 
   handleCancelDeletion = () => {
-    this.setState(prevState => ({
-      confirmDelete: { ...prevState.confirmDelete, open: false }
+    this.setState((prevState) => ({
+      confirmDelete: { ...prevState.confirmDelete, open: false },
     }));
   };
 
   handleSuccessfulDeletion = () => {
     this.setState(
-      prevState => ({
-        confirmDelete: { ...prevState.confirmDelete, open: false }
+      (prevState) => ({
+        confirmDelete: { ...prevState.confirmDelete, open: false },
       }),
       () => this.props.request()
     );
@@ -274,18 +274,18 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 }
 
 const updateResponseData = (keys: SSHKey[]) =>
-  keys.map(key => ({
+  keys.map((key) => ({
     ...key,
     fingerprint: fingerprint(key.ssh_key),
-    created: parseAPIDate(key.created).toRelative()
+    created: parseAPIDate(key.created).toRelative(),
   }));
 
 const documented = setDocs(SSHKeys.docs);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) =>
-  getSSHKeys(params, filters).then(response => ({
+  getSSHKeys(params, filters).then((response) => ({
     ...response,
-    data: updateResponseData(response.data)
+    data: updateResponseData(response.data),
   }));
 
 const styled = withStyles(styles);

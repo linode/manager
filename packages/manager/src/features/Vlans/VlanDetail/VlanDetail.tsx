@@ -14,7 +14,7 @@ import useReduxLoad from 'src/hooks/useReduxLoad';
 import VlanEntityDetail from './VlanEntityDetail';
 type CombinedProps = RouteComponentProps<{ id: string }>;
 
-const VlanDetail: React.FC<CombinedProps> = props => {
+const VlanDetail: React.FC<CombinedProps> = (props) => {
   const { vlans } = useVlans();
   useReduxLoad(['vlans']);
   const dialog = useOpenClose();
@@ -40,13 +40,13 @@ const VlanDetail: React.FC<CombinedProps> = props => {
   }
 
   const thisVlanLinodeIDs = thisVlan.linodes.map(
-    thisVLANLinode => thisVLANLinode.id
+    (thisVLANLinode) => thisVLANLinode.id
   );
 
   const linodeIDToVLANIP = thisVlan.linodes.reduce<Record<number, string>>(
     (acc, thisVLANLinode) => ({
       ...acc,
-      [thisVLANLinode.id]: thisVLANLinode.ipv4_address
+      [thisVLANLinode.id]: thisVLANLinode.ipv4_address,
     }),
     {}
   );
@@ -58,7 +58,7 @@ const VlanDetail: React.FC<CombinedProps> = props => {
   // @todo: Rework the typing here once https://github.com/linode/manager/pull/6999 is merged.
   const extendLinodesFn = (linode: Linode): any => ({
     ...linode,
-    _vlanIP: linodeIDToVLANIP[linode.id]
+    _vlanIP: linodeIDToVLANIP[linode.id],
   });
 
   return (

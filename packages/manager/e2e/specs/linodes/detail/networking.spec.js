@@ -67,10 +67,10 @@ describe('Linode Detail - Networking Suite', () => {
       const ipType = 'ipv6';
 
       const slaac = Networking.ips
-        .filter(ip => {
+        .filter((ip) => {
           return !!ip.getAttribute('data-qa-ip').match(ipv6Regex);
         })
-        .filter(ip => ip.$(Networking.type.selector).getText() === 'SLAAC');
+        .filter((ip) => ip.$(Networking.type.selector).getText() === 'SLAAC');
 
       const slaacIp = slaac[0].getAttribute('data-qa-ip');
 
@@ -80,9 +80,9 @@ describe('Linode Detail - Networking Suite', () => {
 
     it('should display ipv6 Configuration for Link Local type ip', () => {
       const linkLocal = Networking.ips
-        .filter(ip => !!ip.getAttribute('data-qa-ip').match(ipv6Regex))
+        .filter((ip) => !!ip.getAttribute('data-qa-ip').match(ipv6Regex))
         .filter(
-          ip => ip.$(Networking.type.selector).getText() === 'Link Local'
+          (ip) => ip.$(Networking.type.selector).getText() === 'Link Local'
         );
       const linkLocalIp = linkLocal[0].getAttribute('data-qa-ip');
 
@@ -132,8 +132,8 @@ describe('Linode Detail - Networking Suite', () => {
     it('should display edit rdns ipv6 drawer', () => {
       const v6ips = Networking.getIpsByType('ipv6');
       const slaac = v6ips
-        .filter(ip => ip.$(Networking.type.selector).getText() === 'SLAAC')
-        .map(ip => ip.getAttribute('data-qa-ip'));
+        .filter((ip) => ip.$(Networking.type.selector).getText() === 'SLAAC')
+        .map((ip) => ip.getAttribute('data-qa-ip'));
       Networking.editRdns(slaac[0]);
       Networking.editRdnsElemsDisplay();
     });
@@ -145,7 +145,8 @@ describe('Linode Detail - Networking Suite', () => {
 
   it('should display slaac and link local ipv6 ips', () => {
     const v6ips = Networking.getIpsByType('ipv6').filter(
-      ip => ip.$(Networking.type.selector).getText() === 'SLAAC' || 'Link Local'
+      (ip) =>
+        ip.$(Networking.type.selector).getText() === 'SLAAC' || 'Link Local'
     );
 
     expect(v6ips.length).toBeGreaterThanOrEqual(2);

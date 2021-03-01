@@ -39,7 +39,7 @@ interface Close extends Action {
 }
 
 export const closeDrawer = (): Close => ({
-  type: CLOSE
+  type: CLOSE,
 });
 
 interface Reset extends Action {
@@ -47,7 +47,7 @@ interface Reset extends Action {
 }
 
 export const resetDrawer = (): Reset => ({
-  type: RESET
+  type: RESET,
 });
 
 export type Origin =
@@ -61,25 +61,25 @@ interface CreateDomainPayload {
 }
 
 const createDomain = actionCreator<CreateDomainPayload>(`CREATE_DOMAIN`, {
-  mode: CREATING
+  mode: CREATING,
 });
 
 export const openForEditing = (domain: string, id: number): Editing => ({
   type: EDITING,
   domain,
-  id
+  id,
 });
 
 export const openForCloning = (domain: string, id: number): Cloning => ({
   type: CLONING,
   domain,
-  id
+  id,
 });
 
 // DEFAULT STATE
 export const defaultState: State = {
   open: false,
-  mode: CREATING
+  mode: CREATING,
 };
 
 type ActionTypes = Creating | Editing | Cloning | Close | Reset;
@@ -92,7 +92,7 @@ export const domainDrawer: Reducer<State> = (
     return {
       ...state,
       open: true,
-      origin: action.payload.origin
+      origin: action.payload.origin,
     };
   }
 
@@ -102,7 +102,7 @@ export const domainDrawer: Reducer<State> = (
         open: true,
         mode: EDITING,
         domain: action.domain,
-        id: action.id
+        id: action.id,
       };
 
     case CLONING:
@@ -110,7 +110,7 @@ export const domainDrawer: Reducer<State> = (
         open: true,
         mode: CLONING,
         domain: action.domain,
-        id: action.id
+        id: action.id,
       };
 
     case CLOSE:

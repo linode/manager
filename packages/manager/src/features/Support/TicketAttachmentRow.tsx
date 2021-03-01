@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -27,20 +27,20 @@ const styles = (theme: Theme) =>
       0
     `,
       overflowX: 'auto',
-      border: `1px solid ${theme.color.grey2}`
+      border: `1px solid ${theme.color.grey2}`,
     },
     attachmentRow: {
       borderBottom: `1px solid ${theme.palette.divider}`,
       marginBottom: 12,
       '&:last-child': {
         marginBottom: 0,
-        border: 0
-      }
+        border: 0,
+      },
     },
     attachmentIcon: {
       paddingLeft: `0 !important`,
-      color: theme.palette.text.primary
-    }
+      color: theme.palette.text.primary,
+    },
   });
 
 interface Props {
@@ -50,7 +50,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const TicketAttachmentRow: React.FC<CombinedProps> = props => {
+export const TicketAttachmentRow: React.FC<CombinedProps> = (props) => {
   const { attachments, classes, icons } = props;
   return (
     <Grid item>

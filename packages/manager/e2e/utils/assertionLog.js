@@ -13,5 +13,5 @@ export const assertLog = {
   incorrectTagName: 'incorrect tag name for',
   shouldNotBeNull: 'value should not be null',
   shouldExist: 'element should exist in DOM',
-  shouldContain: 'text should have contained'
+  shouldContain: 'text should have contained',
 };

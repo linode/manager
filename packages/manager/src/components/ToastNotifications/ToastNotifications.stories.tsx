@@ -31,13 +31,13 @@ class Example extends React.PureComponent<WithSnackbarProps, {}> {
       enqueueSnackbar(
         'Toast message. This will auto destruct after four seconds.',
         {
-          variant
+          variant,
         }
       );
 
     return (
       <React.Fragment>
-        {variants.map(eachVariant => {
+        {variants.map((eachVariant) => {
           // map over each variant and show a button for each
           return (
             <MyButton

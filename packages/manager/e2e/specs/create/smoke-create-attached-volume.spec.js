@@ -4,7 +4,7 @@ const { assertLog } = require('../../utils/assertionLog');
 import {
   apiCreateLinode,
   apiDeleteAllLinodes,
-  apiDeleteAllVolumes
+  apiDeleteAllVolumes,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
@@ -15,7 +15,7 @@ describe('Create - Volume Suite', () => {
   let volumeId;
   const testVolume = {
     label: ``,
-    size: '10'
+    size: '10',
   };
   let testLabel = `ASD${new Date().getTime()}`;
 

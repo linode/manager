@@ -49,8 +49,8 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
 
   componentDidMount() {
     this.subscription = events$
-      .filter(e => !e._initial)
-      .map(event => {
+      .filter((e) => !e._initial)
+      .map((event) => {
         const { enqueueSnackbar } = this.props;
         const _toast = toastSuccessAndFailure(enqueueSnackbar, event.status);
         const label = getLabel(event);
@@ -162,7 +162,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
        */
       .filter(Boolean)
       .bufferTime(500)
-      .subscribe(toasts => {
+      .subscribe((toasts) => {
         if (toasts.length === 0) {
           return;
         }

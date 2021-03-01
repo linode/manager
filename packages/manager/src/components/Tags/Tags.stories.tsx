@@ -17,7 +17,7 @@ storiesOf('Tags', module)
           'tagTwo',
           'someStrangeLongTagWithNumber123',
           'Tag1',
-          'Tag2'
+          'Tag2',
         ]}
       />
     );

@@ -15,7 +15,7 @@ interface Props {
   handleClickResize: (poolId: number) => void;
 }
 
-const NodePool: React.FC<Props> = props => {
+const NodePool: React.FC<Props> = (props) => {
   const {
     handleClickResize,
     openDeletePoolDialog,
@@ -23,7 +23,7 @@ const NodePool: React.FC<Props> = props => {
     openRecycleNodeDialog,
     nodes,
     typeLabel,
-    poolId
+    poolId,
   } = props;
 
   return (

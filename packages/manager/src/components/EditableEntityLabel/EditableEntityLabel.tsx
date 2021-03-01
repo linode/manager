@@ -7,18 +7,18 @@ import EditableInput from './EditableInput';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    minHeight: 40
+    minHeight: 40,
   },
   icon: {
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   smallInput: {
     position: 'relative',
     paddingRight: 20,
     whiteSpace: 'pre-wrap',
     wordBreak: 'break-all',
-    fontSize: 15
-  }
+    fontSize: 15,
+  },
 }));
 
 interface Props {
@@ -30,7 +30,7 @@ interface Props {
   status?: string;
 }
 
-export const EditableEntityLabel: React.FC<Props> = props => {
+export const EditableEntityLabel: React.FC<Props> = (props) => {
   const { iconVariant, loading, status, subText, text, onEdit } = props;
   const [isEditing, toggleEditing] = React.useState<boolean>(false);
   const [inputText, setInputText] = React.useState<string>(text);
@@ -42,7 +42,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
     if (inputText !== text) {
       onEdit(inputText)
         .then(() => toggleEditing(false))
-        .catch(e => setError(e)); // @todo have to make sure this is passed as a string
+        .catch((e) => setError(e)); // @todo have to make sure this is passed as a string
     } else {
       toggleEditing(false);
     }

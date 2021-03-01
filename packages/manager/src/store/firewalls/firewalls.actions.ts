@@ -2,7 +2,7 @@ import {
   CreateFirewallPayload,
   Firewall,
   FirewallRules,
-  UpdateFirewallPayload
+  UpdateFirewallPayload,
 } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';

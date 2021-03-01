@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DownloadCSV: React.FC<CombinedProps> = props => {
+const DownloadCSV: React.FC<CombinedProps> = (props) => {
   return (
     <CSVLink
       className={props.className}
@@ -46,7 +46,7 @@ export const cleanCSVData = (data: any): any => {
 
   /** if it's an array, recursively clean each element in the array */
   if (Array.isArray(data)) {
-    return data.map(eachValue => {
+    return data.map((eachValue) => {
       return cleanCSVData(eachValue);
     });
   }

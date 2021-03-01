@@ -1,6 +1,6 @@
 import {
   /* dcDisplayCountry, */ dcDisplayNames,
-  objectStorageClusterDisplay
+  objectStorageClusterDisplay,
 } from 'src/constants';
 
 export const formatRegion = (region: string) => {

@@ -28,7 +28,7 @@ export default <TInner extends {}, TOuter extends {}>(
       itemsById,
       lastUpdated,
       loading,
-      results
+      results,
     } = state.__resources.volumes;
 
     const volumesData = Object.values(itemsById);
@@ -41,7 +41,7 @@ export default <TInner extends {}, TOuter extends {}>(
         volumesLoading,
         volumesLastUpdated,
         volumesResults: results,
-        volumesError
+        volumesError,
       };
     }
     return mapVolumesToProps(

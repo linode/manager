@@ -14,7 +14,7 @@ const client: LDClient = {
   flush: jest.fn(),
   variation: jest.fn(),
   variationDetail: jest.fn(),
-  close: jest.fn()
+  close: jest.fn(),
 };
 
 export default client;

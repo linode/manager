@@ -5,7 +5,7 @@ import { paymentFactory } from 'src/factories/billing';
 import { rest, server } from 'src/mocks/testServer';
 import PaymentDrawer, {
   CombinedProps,
-  getMinimumPayment
+  getMinimumPayment,
 } from './PaymentDrawer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
@@ -20,7 +20,7 @@ const props: CombinedProps = {
   expiry: '',
   requestAccount: jest.fn(),
   updateAccount: jest.fn(),
-  saveCreditCard: jest.fn()
+  saveCreditCard: jest.fn(),
 };
 
 describe('Make a Payment Panel', () => {

@@ -8,7 +8,7 @@ function loadDevTools(callback: () => any) {
     // use a dynamic import so the dev-tools code isn't bundled with the regular
     // app code so we don't worry about bundle size.
     import('./dev-tools')
-      .then(devTools => devTools.install())
+      .then((devTools) => devTools.install())
       .finally(callback);
   } else {
     // if we don't need the DevTools, call the callback immediately.

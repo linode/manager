@@ -14,27 +14,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(2) + theme.spacing(1) / 2,
     [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   },
   transferHistoryContainer: {
     [theme.breakpoints.down('sm')]: {
-      order: 3
-    }
+      order: 3,
+    },
   },
   dnsResolverContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
     [theme.breakpoints.up('sm')]: {
-      paddingRight: theme.spacing()
+      paddingRight: theme.spacing(),
     },
     [theme.breakpoints.down('sm')]: {
-      order: 2
+      order: 2,
     },
     [theme.breakpoints.down('xs')]: {
-      justifyContent: 'center'
-    }
-  }
+      justifyContent: 'center',
+    },
+  },
 }));
 
 interface Props {
@@ -46,7 +46,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
+const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
   const { linodeID, linodeRegion, linodeCreated, linodeLabel } = props;
   const classes = useStyles();
 

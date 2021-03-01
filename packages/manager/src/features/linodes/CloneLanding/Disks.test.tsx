@@ -12,23 +12,23 @@ const props: Props = {
   disks,
   diskSelection: {
     18795181: { isSelected: false, associatedConfigIds: [] },
-    19040624: { isSelected: false, associatedConfigIds: [9859511] }
+    19040624: { isSelected: false, associatedConfigIds: [9859511] },
   },
   selectedConfigIds: [],
-  handleSelect: (id: number) => mockHandleSelect(id)
+  handleSelect: (id: number) => mockHandleSelect(id),
 };
 
 describe('Disks', () => {
   it('renders a row for each disk', () => {
     const { getByText } = render(wrapWithTheme(<Disks {...props} />));
-    disks.forEach(eachDisk => {
+    disks.forEach((eachDisk) => {
       expect(getByText(eachDisk.label)).toBeDefined();
     });
   });
 
   it('fires the handle event when clicked', () => {
     const { getByTestId } = render(wrapWithTheme(<Disks {...props} />));
-    disks.forEach(eachDisk => {
+    disks.forEach((eachDisk) => {
       const checkbox = getByTestId(`checkbox-${eachDisk.id}`).parentNode;
       fireEvent.click(checkbox as any);
       expect(mockHandleSelect).toHaveBeenCalledWith(eachDisk.id);

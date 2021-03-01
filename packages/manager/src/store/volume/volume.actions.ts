@@ -5,7 +5,7 @@ import {
   ResizeVolumePayload,
   UpdateVolumeRequest,
   Volume,
-  VolumeRequestPayload
+  VolumeRequestPayload,
 } from '@linode/api-v4/lib/volumes';
 import { GetAllData } from 'src/utilities/getAll';
 import { actionCreatorFactory } from 'typescript-fsa';

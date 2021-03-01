@@ -9,7 +9,7 @@ interface Props {
   text?: string;
 }
 
-const MonekyWrench: React.FC<Props> = props => {
+const MonekyWrench: React.FC<Props> = (props) => {
   throw Error(
     props.text || 'Oh no! Someone threw a monkey wrench in the works!'
   );

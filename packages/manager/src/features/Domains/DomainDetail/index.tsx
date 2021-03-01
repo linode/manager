@@ -7,16 +7,18 @@ import useDomains from 'src/hooks/useDomains';
 const DomainsLanding = React.lazy(() => import('../DomainsLanding'));
 const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
-export const DomainDetailRouting: React.FC<RouteComponentProps<{
-  domainId: string;
-}>> = props => {
+export const DomainDetailRouting: React.FC<
+  RouteComponentProps<{
+    domainId: string;
+  }>
+> = (props) => {
   const domainId = Number(props.match.params.domainId);
   const { domains, requestDomain } = useDomains();
   const request = useAPIRequest(() => requestDomain(domainId), undefined);
 
   // The Domain from the store that matches this ID.
   const foundDomain = Object.values(domains.itemsById).find(
-    thisDomain => thisDomain.id === domainId
+    (thisDomain) => thisDomain.id === domainId
   );
 
   if (!foundDomain) {
@@ -38,7 +40,7 @@ export const DomainDetailRouting: React.FC<RouteComponentProps<{
     <DomainsLanding
       domainForEditing={{
         domainId: foundDomain.id,
-        domainLabel: foundDomain.domain
+        domainLabel: foundDomain.domain,
       }}
       {...props}
     />

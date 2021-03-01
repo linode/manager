@@ -6,7 +6,7 @@ import { notificationContext as _notificationContext } from '../NotificationCent
 import { useStyles } from './iconStyles';
 import TopMenuIcon from './TopMenuIcon';
 
-export const NotificationButton: React.FC<{}> = _ => {
+export const NotificationButton: React.FC<{}> = (_) => {
   const notificationContext = React.useContext(_notificationContext);
 
   const classes = useStyles();
@@ -15,10 +15,10 @@ export const NotificationButton: React.FC<{}> = _ => {
 
   const numNotifications =
     notificationData.eventNotifications.filter(
-      thisEvent => thisEvent.countInTotal
+      (thisEvent) => thisEvent.countInTotal
     ).length +
     notificationData.formattedNotifications.filter(
-      thisEvent => thisEvent.countInTotal
+      (thisEvent) => thisEvent.countInTotal
     ).length;
 
   return (

@@ -79,16 +79,12 @@ class ListDomains extends Page {
 
       expect(this.placeholderText.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.placeholderText.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.placeholderText.selector}" selector`
         )
         .toMatch(placeholderTitle);
       expect(this.createButton.getText())
         .withContext(
-          `${assertLog.incorrectText} for "${
-            this.createButton.selector
-          }" selector`
+          `${assertLog.incorrectText} for "${this.createButton.selector}" selector`
         )
         .toMatch(buttonText);
       return this;
@@ -107,9 +103,7 @@ class ListDomains extends Page {
       .toBe(true);
     expect(this.domainNameHeader.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.domainNameHeader.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.domainNameHeader.selector}" selector`
       )
       .toBe('Domain');
     expect(this.domainTypeHeader.isDisplayed())
@@ -119,9 +113,7 @@ class ListDomains extends Page {
       .toBe(true);
     expect(this.domainTypeHeader.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.domainTypeHeader.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.domainTypeHeader.selector}" selector`
       )
       .toBe('Type');
     expect(this.domains.length)
@@ -164,16 +156,12 @@ class ListDomains extends Page {
       .toBe(true);
     expect(this.soaMailLabel.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.soaMailLabel.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.soaMailLabel.selector}" selector`
       )
       .toBe('SOA Email Address');
     expect(this.domainNameLabel.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.domainNameLabel.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.domainNameLabel.selector}" selector`
       )
       .toBe('Domain');
     expect(this.createDomainName.isDisplayed())
@@ -222,7 +210,7 @@ class ListDomains extends Page {
       constants.wait.normal
     );
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl().includes('/domains/');
     }, constants.wait.normal);
     console.log(`domain "${name}" created`);
@@ -238,7 +226,7 @@ class ListDomains extends Page {
 
   editDnsRecord(domain) {
     this.selectActionMenuItem(domain, 'Edit DNS Records');
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl().includes('/records');
     }, constants.wait.normal);
     $(this.breadcrumbStaticText.selector).waitForDisplayed();
@@ -270,9 +258,7 @@ class ListDomains extends Page {
     this.breadcrumbStaticText.waitForDisplayed(constants.wait.normal);
     expect(this.breadcrumbStaticText.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.breadcrumbStaticText.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.breadcrumbStaticText.selector}" selector`
       )
       .toBe(newDomainName);
     this.breadcrumbBackLink.click();
@@ -310,17 +296,17 @@ class ListDomains extends Page {
     this.domainRow(domain).waitForDisplayed(constants.wait.normal);
     return this.domainRow(domain)
       .$$(this.tag.selector)
-      .map(tag => tag.getText());
+      .map((tag) => tag.getText());
   }
 
   getDomainsInTagGroup(tag) {
     return this.tagHeader(tag)
       .$$(this.domainElem.selector)
-      .map(domain => domain.getAttribute(this.domainAttribute));
+      .map((domain) => domain.getAttribute(this.domainAttribute));
   }
 
   getListedDomains() {
-    return $$(this.domainElem.selector).map(domain =>
+    return $$(this.domainElem.selector).map((domain) =>
       domain.getAttribute(this.domainAttribute)
     );
   }

@@ -10,7 +10,7 @@ exports.navigateToStory = (component, story) => {
  * @returns { null } returns nothing
  */
 exports.executeInAllStories = (component, storyArray, callback) => {
-  storyArray.forEach(story => {
+  storyArray.forEach((story) => {
     exports.navigateToStory(component, story);
     callback();
   });

@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & ContextProps & WithImages;
 
-export const ImageAndPassword: React.FC<CombinedProps> = props => {
+export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
   const {
     imagesData,
     imagesError,
@@ -39,7 +39,7 @@ export const ImageAndPassword: React.FC<CombinedProps> = props => {
     requestKeys,
     userSSHKeys,
     sshError,
-    permissions
+    permissions,
   } = props;
 
   const disabled = permissions === 'read_only';
@@ -74,7 +74,7 @@ export const ImageAndPassword: React.FC<CombinedProps> = props => {
 };
 
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
-  permissions: linode._permissions
+  permissions: linode._permissions,
 }));
 
 const enhanced = compose<CombinedProps, Props>(

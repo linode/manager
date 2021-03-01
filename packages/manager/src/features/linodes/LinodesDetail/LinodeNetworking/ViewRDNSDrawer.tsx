@@ -6,8 +6,8 @@ import Drawer from 'src/components/Drawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   rdnsListItem: {
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 interface Props {
@@ -18,14 +18,14 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ViewRDNSDrawer: React.FC<CombinedProps> = props => {
+const ViewRDNSDrawer: React.FC<CombinedProps> = (props) => {
   const { open, onClose, ips } = props;
   const classes = useStyles();
 
   return (
     <Drawer open={open} onClose={onClose} title={`View Reverse DNS`}>
       <div>
-        {ips.map(ip => {
+        {ips.map((ip) => {
           return (
             <div key={ip.address} className={classes.rdnsListItem}>
               <Typography>{ip.address}</Typography>

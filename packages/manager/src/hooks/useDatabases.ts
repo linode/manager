@@ -1,7 +1,7 @@
 import {
   CreateDatabasePayload,
   Database,
-  UpdateDatabasePayload
+  UpdateDatabasePayload,
 } from '@linode/api-v4/lib/databases/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
@@ -11,7 +11,7 @@ import {
   deleteDatabase as _delete,
   getAllDatabases as _request,
   updateDatabase as _update,
-  resetPassword as _reset
+  resetPassword as _reset,
 } from 'src/store/databases/databases.requests';
 import { Dispatch } from './types';
 
@@ -45,7 +45,7 @@ export const useDatabases = () => {
     createDatabase,
     deleteDatabase,
     updateDatabase,
-    resetPassword
+    resetPassword,
   };
 };
 

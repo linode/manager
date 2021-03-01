@@ -24,23 +24,23 @@ const props: Props = {
     volumes: false,
     kubernetes: false,
     objectStorageClusters: false,
-    objectStorageBuckets: false
+    objectStorageBuckets: false,
   },
-  ...reactRouterProps
+  ...reactRouterProps,
 };
 
 const propsWithResults: Props = {
   ...props,
   combinedResults: [searchbarResult1],
-  searchResultsByEntity: { ...emptyResults, linodes: [searchbarResult1] }
+  searchResultsByEntity: { ...emptyResults, linodes: [searchbarResult1] },
 };
 
 jest.mock('src/hooks/useReduxLoad', () => ({
-  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false })
+  useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false }),
 }));
 
 jest.mock('src/hooks/useObjectStorageBuckets', () => ({
-  useObjectStorage: () => jest.fn().mockReturnValue({ loading: false })
+  useObjectStorage: () => jest.fn().mockReturnValue({ loading: false }),
 }));
 
 describe('Component', () => {

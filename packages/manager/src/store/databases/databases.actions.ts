@@ -1,7 +1,7 @@
 import {
   CreateDatabasePayload,
   Database,
-  UpdateDatabasePayload
+  UpdateDatabasePayload,
 } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';

@@ -42,7 +42,7 @@ const renderActions = (
   );
 };
 
-export const ResizeDialog: React.FC<Props> = props => {
+export const ResizeDialog: React.FC<Props> = (props) => {
   const {
     isOpen,
     error,
@@ -50,7 +50,7 @@ export const ResizeDialog: React.FC<Props> = props => {
     currentPlan,
     targetPlan,
     onClose,
-    onResize
+    onResize,
   } = props;
 
   return (

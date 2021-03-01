@@ -20,7 +20,7 @@ import { compose } from 'recompose';
 // let contentDocument: any;
 // let contentWindow: any;
 
-const _Frame: React.FC<{}> = props => {
+const _Frame: React.FC<{}> = (props) => {
   // const { children, classes } = props;
 
   // const handleRef = (ref: any) => {

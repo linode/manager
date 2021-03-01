@@ -9,15 +9,15 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(1),
   },
   focused: {
     backgroundColor: theme.palette.primary.main,
-    color: 'white'
+    color: 'white',
   },
   icon: {
-    fontSize: '1.8em'
-  }
+    fontSize: '1.8em',
+  },
 }));
 
 interface ImageItem extends Item<string> {
@@ -30,7 +30,7 @@ interface ImageOptionProps extends OptionProps<any> {
 
 type CombinedProps = ImageOptionProps;
 
-export const ImageOption: React.FC<CombinedProps> = props => {
+export const ImageOption: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data, label } = props;
 
@@ -38,7 +38,7 @@ export const ImageOption: React.FC<CombinedProps> = props => {
     <Option
       className={classNames({
         [classes.root]: true,
-        [classes.focused]: props.isFocused
+        [classes.focused]: props.isFocused,
       })}
       value={data.value}
       attrs={{ ['data-qa-region-select-item']: data.value }}

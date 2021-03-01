@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import NoticePanel from './NoticePanel';
@@ -17,11 +17,11 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     copySection: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     copyField: {
-      marginTop: theme.spacing(1)
-    }
+      marginTop: theme.spacing(1),
+    },
   });
 
 interface Props {
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ResizeVolumeInstructions: React.FC<CombinedProps> = props => {
+const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
   const { classes, message, onClose, volumeLabel } = props;
 
   return (

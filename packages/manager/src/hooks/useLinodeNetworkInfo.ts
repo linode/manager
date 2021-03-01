@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   Stats,
   getLinodeStatsByDate,
-  getLinodeTransferByDate
+  getLinodeTransferByDate,
 } from '@linode/api-v4/lib/linodes';
 import { NetworkTransfer } from '@linode/api-v4/lib/account';
 
@@ -34,14 +34,14 @@ export const useLinodeNetworkInfo = (
       getLinodeStatsByDate(linodeID, year, month),
       requestTransfer
         ? getLinodeTransferByDate(linodeID, year, month)
-        : Promise.resolve(undefined)
+        : Promise.resolve(undefined),
     ])
       .then(([stats, transfer]) => {
         setLoading(false);
         setStatsData(stats);
         setTransferData(transfer);
       })
-      .catch(_ => {
+      .catch((_) => {
         setLoading(false);
         setErrorMessage(
           'There was an error retrieving network information for this Linode.'

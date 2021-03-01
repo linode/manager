@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
-  MIN_PAGE_SIZE
+  MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -19,43 +19,43 @@ import { ListProps } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   tagGridRow: {
-    marginBottom: theme.spacing(2) + theme.spacing(1) / 2
+    marginBottom: theme.spacing(2) + theme.spacing(1) / 2,
   },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
     height: 'auto',
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: `${theme.spacing(2) + theme.spacing(1) / 2}px 0 ${theme.spacing(
-        1
-      ) + 2}px`,
+      padding: `${theme.spacing(2) + theme.spacing(1) / 2}px 0 ${
+        theme.spacing(1) + 2
+      }px`,
       borderBottom: 'none',
-      borderTop: 'none'
-    }
+      borderTop: 'none',
+    },
   },
   groupContainer: {
     [theme.breakpoints.up('md')]: {
       '& $tagHeaderRow > td': {
         padding: `${theme.spacing(1) + 2}px 0`,
-        borderTop: 'none'
-      }
-    }
+        borderTop: 'none',
+      },
+    },
   },
   tagHeader: {
-    marginBottom: 2
+    marginBottom: 2,
   },
   tagHeaderOuter: {},
   paginationCell: {
     paddingTop: 2,
     '& div:first-child': {
-      marginTop: 0
-    }
-  }
+      marginTop: 0,
+    },
+  },
 }));
 
 export type CombinedProps = ListProps;
 
-export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
+export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
   const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -91,7 +91,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
                       handlePageSizeChange,
                       page,
                       pageSize,
-                      count
+                      count,
                     }) => {
                       return (
                         <TableBody
@@ -112,7 +112,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
                               </Typography>
                             </TableCell>
                           </TableRow>
-                          {paginatedData.map(thisEntity => (
+                          {paginatedData.map((thisEntity) => (
                             <RowComponent
                               key={thisEntity.id}
                               {...thisEntity}

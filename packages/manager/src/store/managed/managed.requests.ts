@@ -5,7 +5,7 @@ import {
   enableServiceMonitor as _enable,
   getServices,
   ManagedServicePayload,
-  updateServiceMonitor as _update
+  updateServiceMonitor as _update,
 } from '@linode/api-v4/lib/managed';
 import { omit } from 'ramda';
 import { getAll } from 'src/utilities/getAll';
@@ -17,7 +17,7 @@ import {
   enableServiceMonitorActions,
   MonitorPayload,
   requestServicesActions,
-  updateServiceMonitorActions
+  updateServiceMonitorActions,
 } from './managed.actions';
 
 const _getAll = getAll(getServices);

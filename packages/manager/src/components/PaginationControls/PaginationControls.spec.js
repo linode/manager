@@ -4,7 +4,7 @@ describe('Pagination Controls Suite', () => {
   const component = 'Pagination Controls';
   const childStories = ['Interactive example'];
   const previous = '[data-qa-page-previous]';
-  const jumpToPage = page => `[data-qa-page-to="${page}"]`;
+  const jumpToPage = (page) => `[data-qa-page-to="${page}"]`;
   const next = '[data-qa-page-next="true"]';
   const trailingEllip = '[data-testid="trailing-ellipsis"]';
   const leadingEllip = '[data-testid="leading-ellipsis"]';
@@ -33,11 +33,7 @@ describe('Pagination Controls Suite', () => {
     expect($(previous).getAttribute('aria-label'))
       .withContext(`Incorrect aria label value`)
       .toEqual('Previous Page');
-    expect(
-      $(previous)
-        .getAttribute('class')
-        .includes('disabled')
-    )
+    expect($(previous).getAttribute('class').includes('disabled'))
       .withContext('Disabled class missing')
       .toBe(true);
     expect($(`${previous} svg`).isDisplayed())
@@ -47,7 +43,7 @@ describe('Pagination Controls Suite', () => {
 
   it('should default to page one', () => {
     $(next).waitForDisplayed();
-    const activePage = $$('[data-qa-page-to]').filter(e =>
+    const activePage = $$('[data-qa-page-to]').filter((e) =>
       e.getAttribute('class').includes('disabled')
     );
 
@@ -64,15 +60,13 @@ describe('Pagination Controls Suite', () => {
       $(next).waitForDisplayed();
       let currentPage = 1;
 
-      const canPage = nextOrPrevious => {
-        return !$(nextOrPrevious)
-          .getAttribute('class')
-          .includes('disabled');
+      const canPage = (nextOrPrevious) => {
+        return !$(nextOrPrevious).getAttribute('class').includes('disabled');
       };
 
       while (canPage(next)) {
         $(next).click();
-        const activePages = $$('[data-qa-page-to]').filter(e =>
+        const activePages = $$('[data-qa-page-to]').filter((e) =>
           e.getAttribute('class').includes('disabled')
         );
         const newPageNumber = parseInt(
@@ -92,15 +86,13 @@ describe('Pagination Controls Suite', () => {
       $('[data-qa-page-to="10"]').click();
       let currentPage = 10;
 
-      const canPage = nextOrPrevious => {
-        return !$(nextOrPrevious)
-          .getAttribute('class')
-          .includes('disabled');
+      const canPage = (nextOrPrevious) => {
+        return !$(nextOrPrevious).getAttribute('class').includes('disabled');
       };
 
       while (canPage(previous)) {
         $(previous).click();
-        const activePages = $$('[data-qa-page-to]').filter(e =>
+        const activePages = $$('[data-qa-page-to]').filter((e) =>
           e.getAttribute('class').includes('disabled')
         );
         const newPageNumber = parseInt(
@@ -127,9 +119,7 @@ describe('Pagination Controls Suite', () => {
 
       $(next).click();
 
-      previousDisabled = $(previous)
-        .getAttribute('class')
-        .includes('disabled');
+      previousDisabled = $(previous).getAttribute('class').includes('disabled');
       expect(previousDisabled)
         .withContext(`Previous button should be enabled`)
         .toBe(false);
@@ -139,13 +129,13 @@ describe('Pagination Controls Suite', () => {
       $(next).click();
 
       const currentPage = $$('[data-qa-page-to]')
-        .filter(e => e.getAttribute('class').includes('disabled'))[0]
+        .filter((e) => e.getAttribute('class').includes('disabled'))[0]
         .getAttribute('data-qa-page-to');
       $(previous).click();
 
       const prevPage = parseInt(
         $$('[data-qa-page-to]')
-          .filter(e => e.getAttribute('class').includes('disabled'))[0]
+          .filter((e) => e.getAttribute('class').includes('disabled'))[0]
           .getAttribute('data-qa-page-to'),
         10
       );

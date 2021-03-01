@@ -8,11 +8,11 @@ import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   expired: {
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const CreditCard: React.FC<CombinedProps> = props => {
+export const CreditCard: React.FC<CombinedProps> = (props) => {
   const { expiry, lastFour } = props;
   const classes = useStyles();
 

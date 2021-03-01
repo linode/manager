@@ -4,7 +4,7 @@ import {
   CreateLinodeRequest,
   Linode,
   LinodeInterfacePayload,
-  LinodeTypeClass
+  LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
@@ -20,17 +20,17 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import withImages, {
   ImagesDispatch,
-  WithImages
+  WithImages,
 } from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
-  withLinodeActions
+  withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -40,14 +40,14 @@ import { Tag } from 'src/components/TagsInput';
 
 import { dcDisplayNames } from 'src/constants';
 import withLabelGenerator, {
-  LabelProps
+  LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
 import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import LinodeCreate from './LinodeCreate';
@@ -61,13 +61,13 @@ import {
   TypeInfo,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps
+  WithTypesProps,
 } from './types';
 
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   baseApps,
-  getOneClickApps
+  getOneClickApps,
 } from 'src/features/StackScripts/stackScriptUtils';
 
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
@@ -141,11 +141,13 @@ const defaultState: State = {
   formIsSubmitting: false,
   errors: undefined,
   appInstancesLoading: false,
-  selectedVlanIDs: []
+  selectedVlanIDs: [],
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
-  const selectedRegion = regions.find(thisRegion => thisRegion.id === regionID);
+  const selectedRegion = regions.find(
+    (thisRegion) => thisRegion.id === regionID
+  );
   /** This approach is fine for just GPUs, which is all we have capability info for at this time.
    *  Refactor to a switch or .map() if additional support is needed.
    */
@@ -157,7 +159,7 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
 const trimOneClickFromLabel = (script: StackScript) => {
   return {
     ...script,
-    label: script.label.replace('One-Click', '')
+    label: script.label.replace('One-Click', ''),
   };
 };
 
@@ -165,7 +167,7 @@ const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
 
 const isNonDefaultImageType = (prevType: string, type: string) => {
   return nonImageCreateTypes.some(
-    thisEntry => prevType !== thisEntry && type === thisEntry
+    (thisEntry) => prevType !== thisEntry && type === thisEntry
   );
 };
 
@@ -185,7 +187,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
       : +this.params.backupID,
-    disabledClasses: []
+    disabledClasses: [],
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -211,27 +213,27 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     getOneClickApps()
       // Don't display One-Click Helpers to the user
       // Filter out any apps that we don't have info for
-      .then(response =>
-        response.data.filter(script => {
+      .then((response) =>
+        response.data.filter((script) => {
           return (
             !script.label.match(/helpers/i) &&
             allowedApps.includes(String(script.id))
           );
         })
       )
-      .then(response =>
-        response.map(stackscript => trimOneClickFromLabel(stackscript))
+      .then((response) =>
+        response.map((stackscript) => trimOneClickFromLabel(stackscript))
       )
-      .then(response => {
+      .then((response) => {
         this.setState({
           appInstancesLoading: false,
-          appInstances: response
+          appInstances: response,
         });
       })
-      .catch(_ => {
+      .catch((_) => {
         this.setState({
           appInstancesLoading: false,
-          appInstancesError: 'There was an error loading Marketplace Apps.'
+          appInstancesError: 'There was an error loading Marketplace Apps.',
         });
       });
 
@@ -293,7 +295,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedDiskSize: diskSize,
         selectedTypeID: undefined,
         selectedBackupID: undefined,
-        selectedRegionID
+        selectedRegionID,
       });
     }
   };
@@ -322,7 +324,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       udfs: defaultData,
       /** reset image because stackscript might not be compatible with selected one */
       selectedImageID: defaultImage,
-      errors: undefined
+      errors: undefined,
     });
   };
 
@@ -349,7 +351,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const {
       selectedImageID,
       selectedRegionID,
-      selectedStackScriptLabel
+      selectedStackScriptLabel,
     } = this.state;
 
     /* tslint:disable-next-line  */
@@ -393,7 +395,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * null checking happens in CALinodeCreate
        */
       const selectedRegion = regionsData!.find(
-        region => region.id === selectedRegionID
+        (region) => region.id === selectedRegionID
       );
 
       arg2 = selectedRegion ? selectedRegion.id : '';
@@ -437,9 +439,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           errors: [
             {
               field: 'root_pass',
-              reason: passwordError
-            }
-          ]
+              reason: passwordError,
+            },
+          ],
         });
         return;
       }
@@ -456,9 +458,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           errors: [
             {
               reason: 'You must select a Linode to clone from',
-              field: 'linode_id'
-            }
-          ]
+              field: 'linode_id',
+            },
+          ],
         }),
         () => scrollErrorIntoView()
       );
@@ -468,7 +470,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       /* a backup selection is also required */
       this.setState(
         {
-          errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }]
+          errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
         },
         () => {
           scrollErrorIntoView();
@@ -483,9 +485,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           errors: [
             {
               reason: 'You must select a StackScript.',
-              field: 'stackscript_id'
-            }
-          ]
+              field: 'stackscript_id',
+            },
+          ],
         }),
         () => scrollErrorIntoView()
       );
@@ -497,9 +499,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           errors: [
             {
               reason: 'You must select a Marketplace App.',
-              field: 'stackscript_id'
-            }
-          ]
+              field: 'stackscript_id',
+            },
+          ],
         }),
         () => scrollErrorIntoView()
       );
@@ -532,7 +534,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.props.enqueueSnackbar(
           `Your Linode ${response.label} is being created.`,
           {
-            variant: 'success'
+            variant: 'success',
           }
         );
 
@@ -542,11 +544,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           () => ({
             errors: getAPIErrorOrDefault(error),
-            formIsSubmitting: false
+            formIsSubmitting: false,
           }),
           () => scrollErrorIntoView()
         );
@@ -566,7 +568,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * null checking happens in CALinodeCreate
      */
     return this.reshapeTypeInfo(
-      this.props.typesData!.find(type => type.id === selectedTypeID)
+      this.props.typesData!.find((type) => type.id === selectedTypeID)
     );
   };
 
@@ -576,7 +578,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         title: type.label,
         details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
         monthly: type.price.monthly,
-        backupsMonthly: type.addons.backups.price.monthly
+        backupsMonthly: type.addons.backups.price.monthly,
       }
     );
   };
@@ -592,13 +594,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * null checking happens in CALinodeCreate
      */
     const selectedRegion = this.props.regionsData!.find(
-      region => region.id === selectedRegionID
+      (region) => region.id === selectedRegionID
     );
 
     return (
       selectedRegion && {
         title: selectedRegion.country.toUpperCase(),
-        details: selectedRegion.display
+        details: selectedRegion.display,
       }
     );
   };
@@ -619,7 +621,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       selectedImage && {
         title: `${selectedImage.vendor || selectedImage.label}`,
-        details: `${selectedImage.vendor ? selectedImage.label : ''}`
+        details: `${selectedImage.vendor ? selectedImage.label : ''}`,
       }
     );
   };
@@ -637,12 +639,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     // If the selected type is a GPU plan, only display region
     // options that support GPUs.
     const selectedType = this.props.typesData?.find(
-      thisType => thisType.id === this.state.selectedTypeID
+      (thisType) => thisType.id === this.state.selectedTypeID
     );
 
     const filteredRegions =
       selectedType?.class === 'gpu'
-        ? regionsData?.filter(thisRegion => {
+        ? regionsData?.filter((thisRegion) => {
             return thisRegion.capabilities.includes('GPU Linodes');
           })
         : regionsData;
@@ -702,10 +704,9 @@ interface CreateType {
   createType: CreateTypes;
 }
 
-const mapStateToProps: MapState<
-  ReduxStateProps & CreateType,
-  CombinedProps
-> = state => ({
+const mapStateToProps: MapState<ReduxStateProps & CreateType, CombinedProps> = (
+  state
+) => ({
   accountBackupsEnabled: pathOr(
     false,
     ['__resources', 'accountSettings', 'data', 'backups_enabled'],
@@ -717,7 +718,7 @@ const mapStateToProps: MapState<
    */
   userCannotCreateLinode:
     isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
-  createType: state.createLinode.type
+  createType: state.createLinode.type,
 });
 
 interface DispatchProps {
@@ -727,9 +728,9 @@ interface DispatchProps {
 const connected = connect(mapStateToProps, { upsertLinode });
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),
+  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
   regionsLoading: loading,
-  regionsError: error
+  regionsError: error,
 }));
 
 export default recompose<CombinedProps, {}>(
@@ -742,7 +743,7 @@ export default recompose<CombinedProps, {}>(
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,
-    linodesError
+    linodesError,
   })),
   withRegions,
   withTypes,
@@ -759,7 +760,7 @@ const actionsAndLabels = {
   fromBackup: { action: 'backup', labelPayloadKey: 'backup_id' },
   fromImage: { action: 'image', labelPayloadKey: 'image' },
   fromLinode: { action: 'clone', labelPayloadKey: 'type' },
-  fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' }
+  fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' },
 };
 
 const handleAnalytics = (
@@ -796,7 +797,7 @@ export const getInterfacePayload = (
       const slot = `eth${currentIdx + 1}`;
       return {
         ...acc,
-        [slot]: { type: 'additional', vlan_id: thisVLAN }
+        [slot]: { type: 'additional', vlan_id: thisVLAN },
       };
     },
     { eth0: { type: 'default' } }

@@ -7,14 +7,14 @@ export const mockLocation: Location = {
   pathname: '/',
   search: '?query=search',
   state: {},
-  hash: ''
+  hash: '',
 };
 
 export const match: RouteComponentProps<{}>['match'] = {
   params: 'test',
   isExact: false,
   path: 'localhost',
-  url: 'localhost'
+  url: 'localhost',
 };
 
 export const history: History = {
@@ -28,12 +28,12 @@ export const history: History = {
   goForward: jest.fn(),
   block: jest.fn(),
   listen: jest.fn(),
-  createHref: jest.fn()
+  createHref: jest.fn(),
 };
 
 export const reactRouterProps: RouteComponentProps<any> = {
   history,
   location: mockLocation,
   match,
-  staticContext: undefined
+  staticContext: undefined,
 };

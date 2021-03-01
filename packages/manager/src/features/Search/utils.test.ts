@@ -35,7 +35,7 @@ describe('separate results by entity', () => {
       images: [],
       nodebalancers: [],
       kubernetesClusters: [],
-      buckets: []
+      buckets: [],
     });
   });
 });

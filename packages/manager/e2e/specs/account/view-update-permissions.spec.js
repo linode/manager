@@ -8,7 +8,7 @@ describe('Account - Restricted User - Permissions Suite', () => {
   const userConfig = {
     username: `test-user${new Date().getTime()}`,
     email: `pthiel@linode.com`,
-    restricted: true
+    restricted: true,
   };
 
   let linode;

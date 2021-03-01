@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type CSSClasses =
@@ -21,7 +21,7 @@ type CSSClasses =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: 8
+      margin: 8,
     },
     button: {
       borderWidth: 1,
@@ -38,34 +38,34 @@ const styles = (theme: Theme) =>
       lineHeight: '1.3em',
       color: theme.palette.text.primary,
       '&:focus': {
-        backgroundColor: theme.color.white
+        backgroundColor: theme.color.white,
       },
       '&:hover': {
         backgroundColor: 'transparent',
         '& $icon': {
-          opacity: 1
-        }
-      }
+          opacity: 1,
+        },
+      },
     },
     buttonActive: {
       backgroundColor: theme.color.white,
       '&:hover': {
-        backgroundColor: theme.color.white
-      }
+        backgroundColor: theme.color.white,
+      },
     },
     buttonLeft: {
-      width: 79
+      width: 79,
     },
     buttonRight: {
-      borderLeftWidth: 0
+      borderLeftWidth: 0,
     },
     icon: {
       marginRight: 6,
       width: 18,
       height: 18,
       opacity: 0.4,
-      transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-    }
+      transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    },
   });
 
 interface Props {
@@ -77,7 +77,7 @@ const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-export const ToggleBox: React.FC<CombinedProps> = props => {
+export const ToggleBox: React.FC<CombinedProps> = (props) => {
   const { classes, handleClick, status } = props;
 
   return (

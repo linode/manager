@@ -5,7 +5,7 @@ const error = [{ field: 'a field', reason: 'a reason' }];
 
 const multiError = [
   { field: 'field 1', reason: 'reason 1' },
-  { field: 'field 2', reason: 'reason 2' }
+  { field: 'field 2', reason: 'reason 2' },
 ];
 
 describe('Error handling utilities', () => {

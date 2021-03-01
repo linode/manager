@@ -3,7 +3,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import {
   clearDocs as _clearDocs,
-  setDocs as _setDocs
+  setDocs as _setDocs,
 } from 'src/store/documentation';
 
 export type SetDocsProps = DispatchProps;
@@ -48,12 +48,11 @@ const setDocsHOC = (
     }
   }
 
-  const mapDispatchToProps: MapDispatchToProps<
-    DispatchProps,
-    OriginalProps
-  > = dispatch => ({
+  const mapDispatchToProps: MapDispatchToProps<DispatchProps, OriginalProps> = (
+    dispatch
+  ) => ({
     setDocs: (d: Linode.Doc[]) => dispatch(_setDocs(d)),
-    clearDocs: () => dispatch(_clearDocs())
+    clearDocs: () => dispatch(_clearDocs()),
   });
 
   const connected = compose<DispatchProps & OriginalProps, OriginalProps>(

@@ -25,9 +25,9 @@ describe('Linode Detail - Networking - Allocate IP Suite', () => {
   });
 
   it('should not display private ip', () => {
-    const ips = Networking.ips.map(ip => ip.getAttribute('data-qa-ip'));
+    const ips = Networking.ips.map((ip) => ip.getAttribute('data-qa-ip'));
     const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
-    ips.forEach(ip => expect(ip).not.toMatch(privateIPRegex));
+    ips.forEach((ip) => expect(ip).not.toMatch(privateIPRegex));
   });
 
   describe('Allocate Private Ip Suite', () => {
@@ -40,9 +40,9 @@ describe('Linode Detail - Networking - Allocate IP Suite', () => {
       Networking.allocate.click();
       Networking.drawerTitle.waitForExist(constants.wait.normal, true);
 
-      browser.waitUntil(function() {
+      browser.waitUntil(function () {
         const ips = Networking.ips.filter(
-          ip => !!ip.getAttribute('data-qa-ip').match(privateIPRegex)
+          (ip) => !!ip.getAttribute('data-qa-ip').match(privateIPRegex)
         );
         return ips.length > 0;
       }, constants.wait.normal);
@@ -50,7 +50,7 @@ describe('Linode Detail - Networking - Allocate IP Suite', () => {
 
     it('should display the private ip details', () => {
       const privateIps = Networking.ips.filter(
-        ip => !!ip.getAttribute('data-qa-ip').match(privateIPRegex)
+        (ip) => !!ip.getAttribute('data-qa-ip').match(privateIPRegex)
       );
       Networking.viewConfiguration(privateIps[0].getAttribute('data-qa-ip'));
       expect(Networking.configIp.isDisplayed()).toBe(true);

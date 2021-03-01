@@ -16,7 +16,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const CredentialTableContent: React.FC<CombinedProps> = props => {
+export const CredentialTableContent: React.FC<CombinedProps> = (props) => {
   const { error, loading, credentials, openDialog, openForEdit } = props;
   if (loading) {
     return <TableRowLoading widths={[35]} colSpan={2} oneLine />;

@@ -4,7 +4,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import {
   isEntityEvent,
   isInProgressEvent,
-  isLongRunningProgressEventAction
+  isLongRunningProgressEventAction,
 } from 'src/store/events/event.helpers';
 import { EventHandler } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -13,7 +13,7 @@ import { ExtendedEvent } from '../events/event.types';
 
 const eventsMiddlewareFactory = (
   ...eventHandlers: EventHandler[]
-): Middleware => ({ dispatch, getState }) => next => (action: any) => {
+): Middleware => ({ dispatch, getState }) => (next) => (action: any) => {
   if (isType(action, addEvents)) {
     const { payload } = action;
     /**
@@ -88,4 +88,4 @@ const uniqueEntityEvents = compose(
 );
 
 const filterInitial = (events: ExtendedEvent[]) =>
-  events.filter(e => !e._initial);
+  events.filter((e) => !e._initial);

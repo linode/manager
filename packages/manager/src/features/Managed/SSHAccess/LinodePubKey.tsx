@@ -19,35 +19,35 @@ const DOC_URL =
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(2.5),
-    minHeight: '112px'
+    minHeight: '112px',
   },
   copy: {
     paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4)
+    paddingRight: theme.spacing(4),
   },
   errorState: {
     padding: theme.spacing(2) - 1,
     '& > div': {
-      padding: 0
-    }
+      padding: 0,
+    },
   },
   loadingState: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   spinner: {
-    padding: theme.spacing(5)
+    padding: theme.spacing(5),
   },
   icon: {
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(1) - 2,
-    stroke: theme.color.offBlack
+    stroke: theme.color.offBlack,
   },
   sshKeyContainer: {
     display: 'flex',
     alignItems: 'center',
-    flex: 1
+    flex: 1,
   },
   sshKey: {
     // NOTE A:
@@ -65,32 +65,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.grey1,
     fontSize: '0.9rem',
     [theme.breakpoints.up('md')]: {
-      padding: `0 ${theme.spacing(4)}px 0 ${theme.spacing(1)}px`
+      padding: `0 ${theme.spacing(4)}px 0 ${theme.spacing(1)}px`,
     },
     [theme.breakpoints.up('lg')]: {
-      paddingRight: theme.spacing(6)
+      paddingRight: theme.spacing(6),
     },
     [theme.breakpoints.up('xl')]: {
       paddingRight: theme.spacing(4),
-      paddingLeft: theme.spacing(4)
+      paddingLeft: theme.spacing(4),
     },
     '&:hover': {
       transition: 'all 1s ease-in',
-      WebkitLineClamp: 'unset'
-    }
+      WebkitLineClamp: 'unset',
+    },
   },
   copyToClipboard: {
     alignItems: 'flex-start',
     display: 'flex',
     justifyContent: 'flex-start',
     [theme.breakpoints.up('sm')]: {
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
     },
     '& > button': {
       minWidth: 190,
-      marginTop: theme.spacing(1)
-    }
-  }
+      marginTop: theme.spacing(1),
+    },
+  },
 }));
 
 const LinodePubKey: React.FC<{}> = () => {

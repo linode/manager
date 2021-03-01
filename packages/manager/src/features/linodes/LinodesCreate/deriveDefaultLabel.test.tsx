@@ -1,6 +1,6 @@
 import {
   deriveDefaultLabel,
-  ensureSingleDashesAndUnderscores
+  ensureSingleDashesAndUnderscores,
 } from './deriveDefaultLabel';
 
 describe('create label name', () => {

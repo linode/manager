@@ -40,7 +40,7 @@ export const useClientLastUpdated = (
     // lexical scope, since it is a dependency in the effect that will call
     // this function.
     return getLastUpdated(apiKey)
-      .then(response => {
+      .then((response) => {
         /**
          * If there are any warnings in the response (found at response.NOTIFICATIONS)
          * we want to set them to state here so that consumers of this component
@@ -67,7 +67,7 @@ export const useClientLastUpdated = (
           }
         }
       })
-      .catch(e => {
+      .catch((e) => {
         /**
          * The first request we make after creating a new client will almost always
          * return an authentication failed error.

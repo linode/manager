@@ -1,5 +1,5 @@
 import AccessPanel, {
-  UserSSHKeyObject as _UserSSHKeyObject
+  UserSSHKeyObject as _UserSSHKeyObject,
 } from './AccessPanel';
 
 /* tslint:disable */

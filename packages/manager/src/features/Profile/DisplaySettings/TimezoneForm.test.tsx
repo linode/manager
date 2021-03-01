@@ -10,7 +10,7 @@ describe('Timezone change form', () => {
     <TimezoneForm
       classes={{
         root: '',
-        title: ''
+        title: '',
       }}
       timezone={'Pacific/Niue'}
       updateTimezone={updateProfile}
@@ -50,7 +50,7 @@ describe('formatOffset', () => {
       { offset: -3.5, label: 'Newfoundland Time', formattedOffset: '-3:30' },
       { offset: 0, label: 'TrollTime', formattedOffset: '+0:00' },
       { offset: 5.75, label: 'Nepal Time', formattedOffset: '+5:45' },
-      { offset: 13, label: 'New Zealand Time', formattedOffset: '+13:00' }
+      { offset: 13, label: 'New Zealand Time', formattedOffset: '+13:00' },
     ];
 
     testMap.forEach(({ offset, label, formattedOffset }) =>

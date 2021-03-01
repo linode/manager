@@ -5,7 +5,7 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
-  updateObjectStorageKey
+  updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
 import { FormikBag } from 'formik';
 import { pathOr } from 'ramda';
@@ -25,7 +25,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
-  sendRevokeAccessKeyEvent
+  sendRevokeAccessKeyEvent,
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
@@ -57,7 +57,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const AccessKeyLanding: React.FC<CombinedProps> = props => {
+export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
   const {
     object_storage,
     requestSettings,
@@ -71,7 +71,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
   // Key to display in Confirmation Modal upon creation
   const [
     keyToDisplay,
-    setKeyToDisplay
+    setKeyToDisplay,
   ] = React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
@@ -104,7 +104,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     setSubmitting(true);
 
     createObjectStorageKeys(values)
-      .then(data => {
+      .then((data) => {
         setSubmitting(false);
 
         setKeyToDisplay(data);
@@ -127,7 +127,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // @analytics
         sendCreateAccessKeyEvent();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         // We also need to refresh account settings on failure, since, depending
         // on the error, Object Storage service might have actually been enabled.
         if (object_storage === 'disabled') {
@@ -172,7 +172,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     setSubmitting(true);
 
     updateObjectStorageKey(keyToEdit.id, { label: values.label })
-      .then(_ => {
+      .then((_) => {
         setSubmitting(false);
 
         // "Refresh" keys to display the newly updated key
@@ -183,7 +183,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // @analytics
         sendEditAccessKeyEvent();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         setSubmitting(false);
 
         const errors = getAPIErrorOrDefault(
@@ -211,7 +211,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
     setRevokeErrors([]);
 
     revokeObjectStorageKey(keyToRevoke.id)
-      .then(_ => {
+      .then((_) => {
         setIsRevoking(false);
 
         // "Refresh" keys to remove the newly revoked key
@@ -222,7 +222,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = props => {
         // @analytics
         sendRevokeAccessKeyEvent();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         setIsRevoking(false);
 
         const errors = getAPIErrorOrDefault(
@@ -317,7 +317,7 @@ const mapStateToProps = (state: ApplicationState) => {
       'disabled',
       ['data', 'object_storage'],
       state.__resources.accountSettings
-    )
+    ),
   };
 };
 
@@ -325,7 +325,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {
-    requestSettings: () => dispatch(requestAccountSettings())
+    requestSettings: () => dispatch(requestAccountSettings()),
   };
 };
 

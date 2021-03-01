@@ -7,7 +7,7 @@ const mockData: ResourcePage<any> = {
   page: 1,
   pages: 1,
   results: 0,
-  data: []
+  data: [],
 };
 
 const mockFn = jest.fn(() => Promise.resolve(mockData));
@@ -17,7 +17,7 @@ const setup = (mockRequest: any = mockFn) => {
 
   return {
     mockRequest,
-    wrapper: shallow(<MyComponent />)
+    wrapper: shallow(<MyComponent />),
   };
 };
 
@@ -33,7 +33,7 @@ describe('Paginator 2: Pagement Day', () => {
       page,
       pageSize,
       request,
-      onDelete
+      onDelete,
     } = wrapper.props();
 
     it('should provide a count prop', () => {
@@ -102,7 +102,7 @@ describe('Paginator 2: Pagement Day', () => {
             data: [101],
             page: 6,
             pages: 5,
-            results: 101
+            results: 101,
           })
         );
 
@@ -126,7 +126,7 @@ describe('Paginator 2: Pagement Day', () => {
       /** We need to check that the second call to our request function is for the preceeding page. */
       expect((mockRequest.mock.calls as any)[1][1]).toEqual({
         page: 5,
-        page_size: 25
+        page_size: 25,
       });
     });
   });
@@ -194,7 +194,7 @@ describe('Paginator 2: Pagement Day', () => {
         page: 2,
         pages: 2,
         data: [1, 2, 3, 4],
-        results: 4
+        results: 4,
       };
 
       const { wrapper } = setup(() => Promise.resolve(mockDataWithData));
@@ -217,7 +217,7 @@ describe('Paginator 2: Pagement Day', () => {
       });
 
       it('should apply the map function to the response.result', async () => {
-        const fn = (numbers: number[]) => numbers.map(n => n + 1);
+        const fn = (numbers: number[]) => numbers.map((n) => n + 1);
         await wrapper.prop('request')(fn);
         wrapper.update();
         expect(wrapper.prop('data')).toEqual([2, 3, 4, 5]);

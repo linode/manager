@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -13,7 +13,7 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
-  MIN_PAGE_SIZE
+  MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
@@ -34,7 +34,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     tagGridRow: {
-      marginBottom: 20
+      marginBottom: 20,
     },
     tagHeaderRow: {
       backgroundColor: theme.bg.main,
@@ -42,26 +42,26 @@ const styles = (theme: Theme) =>
       '& td': {
         // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
         padding: '20px 0 10px',
-        borderBottom: 'none'
-      }
+        borderBottom: 'none',
+      },
     },
     groupContainer: {
       [theme.breakpoints.up('md')]: {
         '& $tagHeaderRow > td': {
-          padding: '10px 0'
-        }
-      }
+          padding: '10px 0',
+        },
+      },
     },
     tagHeader: {
-      marginBottom: 2
+      marginBottom: 2,
     },
     tagHeaderOuter: {},
     paginationCell: {
       paddingTop: 2,
       '& div:first-child': {
-        marginTop: 0
-      }
-    }
+        marginTop: 0,
+      },
+    },
   });
 interface Props {
   data: ExtendedVolume[];
@@ -73,14 +73,14 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListGroupedVolumes: React.FC<CombinedProps> = props => {
+const ListGroupedVolumes: React.FC<CombinedProps> = (props) => {
   const {
     data,
     order,
     handleOrderChange,
     orderBy,
     classes,
-    renderProps
+    renderProps,
   } = props;
 
   const groupedVolumes = compose(sortGroups, groupByTags)(data);
@@ -89,7 +89,7 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
     order,
     orderBy,
     isVolumesLanding: renderProps.isVolumesLanding,
-    dataLength: data.length
+    dataLength: data.length,
   };
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -110,7 +110,7 @@ const ListGroupedVolumes: React.FC<CombinedProps> = props => {
                 handlePageSizeChange,
                 page,
                 pageSize,
-                count
+                count,
               }) => {
                 return (
                   <React.Fragment>

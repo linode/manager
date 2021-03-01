@@ -7,10 +7,10 @@ import { Item } from 'src/components/EnhancedSelect/Select';
  * Also trims 'linode/' off the name of public images.
  */
 export default (images: string[]): Item[] => {
-  return images.map(image => {
+  return images.map((image) => {
     return {
       value: image,
-      label: image.replace('linode/', '')
+      label: image.replace('linode/', ''),
     };
   });
 };

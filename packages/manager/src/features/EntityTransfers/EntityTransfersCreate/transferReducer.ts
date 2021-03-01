@@ -26,14 +26,14 @@ const transferReducer = (draft: TransferState, action: TransferAction) => {
     // Add entities to the transfer
     case 'ADD':
       const newEntities = action.entitiesToAdd;
-      newEntities.forEach(thisEntity => {
+      newEntities.forEach((thisEntity) => {
         draft[action.entityType][thisEntity.id] = thisEntity.label;
       });
       break;
 
     // Remove entities
     case 'REMOVE':
-      action.entitiesToRemove.forEach(thisEntity => {
+      action.entitiesToRemove.forEach((thisEntity) => {
         delete draft[action.entityType][thisEntity];
       });
       break;

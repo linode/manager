@@ -17,24 +17,24 @@ storiesOf('TabbedPanel', module).add('default', () => {
           tabs={[
             {
               title: 'Tab One',
-              render: (renderProps: any) => <div>Panel 1</div>
+              render: (renderProps: any) => <div>Panel 1</div>,
             },
             {
               title: 'Tab Two',
-              render: (renderProps: any) => <div>Panel 2</div>
+              render: (renderProps: any) => <div>Panel 2</div>,
             },
             {
               title: 'Tab Three',
-              render: (renderProps: any) => <div>Panel 3</div>
+              render: (renderProps: any) => <div>Panel 3</div>,
             },
             {
               title: 'Tab Four',
-              render: (renderProps: any) => <div>Panel 4</div>
+              render: (renderProps: any) => <div>Panel 4</div>,
             },
             {
               title: 'Tab Five',
-              render: (renderProps: any) => <div>Panel 5</div>
-            }
+              render: (renderProps: any) => <div>Panel 5</div>,
+            },
           ]}
         />
       </Grid>

@@ -9,12 +9,12 @@ const setValue = jest.fn();
 
 const props = {
   value: 1,
-  setValue
+  setValue,
 };
 
 const disabledProps = {
   ...props,
-  disabled: true
+  disabled: true,
 };
 
 beforeEach(jest.clearAllMocks);

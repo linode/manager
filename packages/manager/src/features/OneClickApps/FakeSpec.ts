@@ -28,16 +28,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy an ARK: Survival Evolved Server with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-ark-survival-evolved-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploying-ark-survival-evolved-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://survivetheark.com/',
-        href: 'https://survivetheark.com/'
-      }
+        href: 'https://survivetheark.com/',
+      },
     ],
-    logo_url: 'assets/ark_color.svg'
+    logo_url: 'assets/ark_color.svg',
   },
   {
     name: 'Azuracast',
@@ -47,16 +47,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Azuracast with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-azuracast-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-azuracast-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.azuracast.com/',
-        href: 'https://www.azuracast.com/'
-      }
+        href: 'https://www.azuracast.com/',
+      },
     ],
-    logo_url: 'assets/azuracast.svg'
+    logo_url: 'assets/azuracast.svg',
   },
   {
     name: 'cPanel',
@@ -66,15 +66,15 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`,
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:2087</em> in a browser, where you'll be prompted to log in and begin your trial.`,
-      `Your credentials are <code>root</code> for the username and the <strong>Root Password</strong> you defined when you ran the cPanel One-Click App installer.`
+      `Your credentials are <code>root</code> for the username and the <strong>Root Password</strong> you defined when you ran the cPanel One-Click App installer.`,
     ],
     related_info: [
       {
         title: 'https://www.cpanel.net/',
-        href: 'https://www.cpanel.net/'
-      }
+        href: 'https://www.cpanel.net/',
+      },
     ],
-    logo_url: 'assets/cpanel_color.svg'
+    logo_url: 'assets/cpanel_color.svg',
   },
   {
     name: 'Cloudron',
@@ -85,16 +85,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Cloudron with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-cloudron-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-cloudron-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://docs.cloudron.io',
-        href: 'https://docs.cloudron.io'
-      }
+        href: 'https://docs.cloudron.io',
+      },
     ],
-    logo_url: 'assets/cloudron_color.svg'
+    logo_url: 'assets/cloudron_color.svg',
   },
   {
     name: 'CS:GO',
@@ -107,16 +107,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Counter-Strike: Global Offensive with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-cs-go-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploying-cs-go-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://blog.counter-strike.net/index.php/about/',
-        href: 'https://blog.counter-strike.net/index.php/about/'
-      }
+        href: 'https://blog.counter-strike.net/index.php/about/',
+      },
     ],
-    logo_url: 'assets/csgo_color.svg'
+    logo_url: 'assets/csgo_color.svg',
   },
   {
     name: 'CyberPanel',
@@ -126,16 +126,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy CyberPanel with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-cyberpanel-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-cyberpanel-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
-        href: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/'
-      }
+        href: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
+      },
     ],
-    logo_url: 'assets/cyberpanel_color.svg'
+    logo_url: 'assets/cyberpanel_color.svg',
   },
   {
     name: 'Discourse',
@@ -146,16 +146,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Discourse with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-discourse-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-discourse-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://www.discourse.org/',
-        href: 'https://www.discourse.org/'
-      }
+        href: 'https://www.discourse.org/',
+      },
     ],
-    logo_url: 'assets/discourse_color.svg'
+    logo_url: 'assets/discourse_color.svg',
   },
   {
     name: 'Django',
@@ -164,14 +164,14 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.djangoproject.com/',
-        href: 'https://www.djangoproject.com/'
-      }
+        href: 'https://www.djangoproject.com/',
+      },
     ],
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:8000</em> in a browser to visit the default web page.`,
-      `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Django admin panel.`
+      `You can also visit <em>https://[your-Linode's-IP-address]:8000/admin</em> to view the Django admin panel.`,
     ],
-    logo_url: 'assets/django_color.svg'
+    logo_url: 'assets/django_color.svg',
   },
   {
     name: 'Flask',
@@ -181,19 +181,19 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy a Flask Application on Ubuntu',
         href:
-          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/'
-      }
+          'https://www.linode.com/docs/development/python/flask-and-gunicorn-on-ubuntu/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.palletsprojects.com/p/flask/',
-        href: 'https://www.palletsprojects.com/p/flask/'
-      }
+        href: 'https://www.palletsprojects.com/p/flask/',
+      },
     ],
     tips: [
-      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser.`,
     ],
-    logo_url: 'assets/flask_color.svg'
+    logo_url: 'assets/flask_color.svg',
   },
   {
     name: 'Docker',
@@ -203,30 +203,30 @@ export const oneClickApps: OCA[] = [
       {
         title: 'An Introduction to Docker',
         href:
-          'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
+          'https://www.linode.com/docs/applications/containers/introduction-to-docker/',
       },
       {
         title: 'Docker Commands Quick Reference Cheat Sheet',
         href:
-          'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
+          'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/',
       },
       {
         title: 'How to Use Docker Compose',
         href:
-          'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
-      }
+          'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.docker.com/',
-        href: 'https://www.docker.com/'
+        href: 'https://www.docker.com/',
       },
       {
         title: 'https://docs.docker.com/compose/',
-        href: 'https://docs.docker.com/compose/'
-      }
+        href: 'https://docs.docker.com/compose/',
+      },
     ],
-    logo_url: 'assets/docker_color.svg'
+    logo_url: 'assets/docker_color.svg',
   },
   {
     name: 'Gitea',
@@ -236,16 +236,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Gitea with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-gitea-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-gitea-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://gitea.io/',
-        href: 'https://gitea.io/'
-      }
+        href: 'https://gitea.io/',
+      },
     ],
-    logo_url: 'assets/gitea_color.svg'
+    logo_url: 'assets/gitea_color.svg',
   },
   {
     name: 'GitLab',
@@ -263,25 +263,25 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy GitLab with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-gitlab-with-one-click-apps/'
+          'https://linode.com/docs/platform/one-click/deploy-gitlab-with-one-click-apps/',
       },
       {
         title: 'Getting Started with Git',
         href:
-          'https://www.linode.com/docs/development/version-control/how-to-configure-git/'
+          'https://www.linode.com/docs/development/version-control/how-to-configure-git/',
       },
       {
         title: 'How to Use Git the Version Control System',
-        href: 'https://linode.com/docs/quick-answers/linux/how-to-use-git/'
-      }
+        href: 'https://linode.com/docs/quick-answers/linux/how-to-use-git/',
+      },
     ],
     related_info: [
       {
         title: 'https://about.gitlab.com/',
-        href: 'https://about.gitlab.com/'
-      }
+        href: 'https://about.gitlab.com/',
+      },
     ],
-    logo_url: 'assets/gitlab_color.svg'
+    logo_url: 'assets/gitlab_color.svg',
   },
   {
     name: 'Drupal',
@@ -297,21 +297,21 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Drupal with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-drupal-with-one-click-apps/'
+          'https://linode.com/docs/platform/one-click/deploying-drupal-with-one-click-apps/',
       },
       {
         title: 'Update and Secure Drupal 8 on Ubuntu or Debian',
         href:
-          'https://linode.com/docs/websites/cms/update-and-secure-drupal-8-on-ubuntu/'
-      }
+          'https://linode.com/docs/websites/cms/update-and-secure-drupal-8-on-ubuntu/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.drupal.org/',
-        href: 'https://www.drupal.org/'
-      }
+        href: 'https://www.drupal.org/',
+      },
     ],
-    logo_url: 'assets/drupal_color.svg'
+    logo_url: 'assets/drupal_color.svg',
   },
   {
     name: 'FileCloud',
@@ -321,16 +321,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Filecloud with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-filecloud-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-filecloud-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://www.getfilecloud.com',
-        href: 'https://www.getfilecloud.com'
-      }
+        href: 'https://www.getfilecloud.com',
+      },
     ],
-    logo_url: 'assets/filecloud_color.svg'
+    logo_url: 'assets/filecloud_color.svg',
   },
   {
     name: 'Guacamole',
@@ -340,16 +340,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Guacamole with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-guacamole-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-guacamole-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://guacamole.apache.org/',
-        href: 'https://guacamole.apache.org/'
-      }
+        href: 'https://guacamole.apache.org/',
+      },
     ],
-    logo_url: 'assets/guacamole_color.svg'
+    logo_url: 'assets/guacamole_color.svg',
   },
   {
     name: 'Grafana',
@@ -358,13 +358,13 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://grafana.com/',
-        href: 'https://grafana.com/'
-      }
+        href: 'https://grafana.com/',
+      },
     ],
     tips: [
-      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`,
     ],
-    logo_url: 'assets/grafana_color.svg'
+    logo_url: 'assets/grafana_color.svg',
   },
   {
     name: 'Jenkins',
@@ -374,26 +374,26 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Using LISH to SSH into your Linode',
         href:
-          'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
+          'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser',
       },
       {
         title: 'Scripted vs. Declarative Pipeline Syntax',
         href:
-          'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
-      }
+          'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax',
+      },
     ],
     related_info: [
       {
         title: 'https://jenkins.io/',
-        href: 'https://jenkins.io/'
-      }
+        href: 'https://jenkins.io/',
+      },
     ],
     tips: [
       `Once the script finishes, go to <em>http://[your-Linode's-IP-address]:8080</em> in a browser to finish the configuration.`,
       `You will need to SSH into your Linode to retrieve the Jenkins one time password:`,
-      `<code>sudo cat /var/lib/jenkins/secrets/initialAdminPassword</code>`
+      `<code>sudo cat /var/lib/jenkins/secrets/initialAdminPassword</code>`,
     ],
-    logo_url: 'assets/jenkins_color.svg'
+    logo_url: 'assets/jenkins_color.svg',
   },
   {
     name: 'Jitsi',
@@ -403,16 +403,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Jitsi with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-jitsi-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-jitsi-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://jitsi.org/',
-        href: 'https://jitsi.org/'
-      }
+        href: 'https://jitsi.org/',
+      },
     ],
-    logo_url: 'assets/jitsi_color.svg'
+    logo_url: 'assets/jitsi_color.svg',
   },
   {
     name: 'Kepler Builder',
@@ -422,16 +422,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Kepler Builder with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-kepler-with-marketplace-apps/'
-      }
+          'https://www.linode.com/docs/guides/deploy-kepler-with-marketplace-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://kepler.app/',
-        href: 'https://kepler.app/'
-      }
+        href: 'https://kepler.app/',
+      },
     ],
-    logo_url: 'assets/keplerbuilder_color.svg'
+    logo_url: 'assets/keplerbuilder_color.svg',
   },
   {
     name: 'LAMP',
@@ -448,10 +448,10 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy a LAMP Stack with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/',
+      },
     ],
-    logo_url: 'assets/lamp_flame_color.svg'
+    logo_url: 'assets/lamp_flame_color.svg',
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
@@ -462,26 +462,26 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Create a MongoDB Replica Set',
         href:
-          'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/'
+          'https://www.linode.com/docs/databases/mongodb/create-a-mongodb-replica-set/',
       },
       {
         title: 'Build Database Clusters with MongoDB',
         href:
-          'https://www.linode.com/docs/databases/mongodb/build-database-clusters-with-mongodb/'
+          'https://www.linode.com/docs/databases/mongodb/build-database-clusters-with-mongodb/',
       },
       {
         title: 'Install MongoDB on Ubuntu 16.04',
         href:
-          'https://www.linode.com/docs/databases/mongodb/install-mongodb-on-ubuntu-16-04/'
-      }
+          'https://www.linode.com/docs/databases/mongodb/install-mongodb-on-ubuntu-16-04/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.mongodb.com/',
-        href: 'https://www.mongodb.com/'
-      }
+        href: 'https://www.mongodb.com/',
+      },
     ],
-    logo_url: 'assets/mongodb_color.svg'
+    logo_url: 'assets/mongodb_color.svg',
   },
   {
     name: 'MEAN',
@@ -490,10 +490,10 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'http://meanjs.org/',
-        href: 'http://meanjs.org/'
-      }
+        href: 'http://meanjs.org/',
+      },
     ],
-    logo_url: 'assets/mean_color.svg'
+    logo_url: 'assets/mean_color.svg',
   },
   {
     name: 'LEMP',
@@ -502,10 +502,10 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'LEMP Guides',
-        href: 'https://www.linode.com/docs/web-servers/lemp/'
-      }
+        href: 'https://www.linode.com/docs/web-servers/lemp/',
+      },
     ],
-    logo_url: 'assets/lemp_color.svg'
+    logo_url: 'assets/lemp_color.svg',
   },
   {
     name: 'Mist.io',
@@ -516,16 +516,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Mist.io with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-mistio-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-mistio-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://mist.io/',
-        href: 'https://mist.io/'
-      }
+        href: 'https://mist.io/',
+      },
     ],
-    logo_url: 'assets/mistio_color.svg'
+    logo_url: 'assets/mistio_color.svg',
   },
   {
     name: 'MySQL/MariaDB',
@@ -534,28 +534,28 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://www.mysql.com/',
-        href: 'https://www.mysql.com/'
+        href: 'https://www.mysql.com/',
       },
       {
         title: 'https://dev.mysql.com/downloads/workbench/',
-        href: 'https://dev.mysql.com/downloads/workbench/'
+        href: 'https://dev.mysql.com/downloads/workbench/',
       },
       {
         title: 'Sequel Pro - macOS database management client',
-        href: 'https://www.sequelpro.com/'
-      }
+        href: 'https://www.sequelpro.com/',
+      },
     ],
     related_guides: [
       {
         title: 'MySQL Guides',
-        href: 'https://www.linode.com/docs/databases/mysql/'
-      }
+        href: 'https://www.linode.com/docs/databases/mysql/',
+      },
     ],
     tips: [
       `<b>In addition to installing MySQL, this One-Click app also enables the following UFW firewall rules:</b>`,
-      ` - SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>`
+      ` - SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>`,
     ],
-    logo_url: 'assets/mysql_color.svg'
+    logo_url: 'assets/mysql_color.svg',
   },
   {
     name: 'Nextcloud',
@@ -565,10 +565,10 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploying Nextcloud on Linode with One-Click Apps',
         href:
-          'https://www.linode.com/docs/platform/one-click/how-to-deploy-nextcloud-with-one-click-apps/'
-      }
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-nextcloud-with-one-click-apps/',
+      },
     ],
-    logo_url: 'assets/nextcloud_color.svg'
+    logo_url: 'assets/nextcloud_color.svg',
   },
   {
     name: 'OpenLiteSpeed WordPress',
@@ -578,16 +578,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy OpenLiteSpeed WordPress with Marketplace Apps',
         href:
-          'https://linode.com/docs/guides/deploy-openlitespeedwordpress-with-marketplace-apps'
-      }
+          'https://linode.com/docs/guides/deploy-openlitespeedwordpress-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://openlitespeed.org/',
-        href: 'https://openlitespeed.org/'
-      }
+        href: 'https://openlitespeed.org/',
+      },
     ],
-    logo_url: 'assets/openlitespeedwordpress_color.svg'
+    logo_url: 'assets/openlitespeedwordpress_color.svg',
   },
   {
     name: 'Plesk',
@@ -597,15 +597,15 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Please allow the script around 15 minutes to finish.`,
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser, where you'll be prompted to log in and begin your trial.`,
-      `Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the Plesk One-Click App installer.`
+      `Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the Plesk One-Click App installer.`,
     ],
     related_info: [
       {
         title: 'https://www.plesk.com/',
-        href: 'https://www.plesk.com/'
-      }
+        href: 'https://www.plesk.com/',
+      },
     ],
-    logo_url: 'assets/plesk_color.svg'
+    logo_url: 'assets/plesk_color.svg',
   },
   {
     name: 'Plex',
@@ -616,16 +616,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Plex with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-plex-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-plex-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.plex.tv/',
-        href: 'https://www.plex.tv/'
-      }
+        href: 'https://www.plex.tv/',
+      },
     ],
-    logo_url: 'assets/plex_color.svg'
+    logo_url: 'assets/plex_color.svg',
   },
   {
     name: 'Percona (PMM)',
@@ -637,10 +637,10 @@ export const oneClickApps: OCA[] = [
         title:
           'Deploying Percona Monitoring Management (PMM) with One-Click Apps',
         href:
-          'https://www.linode.com/docs/platform/one-click/how-to-deploy-percona-monitoring-management-with-one-click-apps/'
-      }
+          'https://www.linode.com/docs/platform/one-click/how-to-deploy-percona-monitoring-management-with-one-click-apps/',
+      },
     ],
-    logo_url: 'assets/percona_color.svg'
+    logo_url: 'assets/percona_color.svg',
   },
   {
     name: 'RabbitMQ',
@@ -650,16 +650,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy RabbitMQ with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-rabbitmq-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-rabbitmq-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://www.rabbitmq.com/',
-        href: 'https://www.rabbitmq.com/'
-      }
+        href: 'https://www.rabbitmq.com/',
+      },
     ],
-    logo_url: 'assets/rabbitmq_color.svg'
+    logo_url: 'assets/rabbitmq_color.svg',
   },
   {
     name: 'Redis',
@@ -671,16 +671,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'How to Install a Redis Server on Ubuntu or Debian 8',
         href:
-          'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/'
-      }
+          'https://www.linode.com/docs/databases/redis/how-to-install-a-redis-server-on-ubuntu-or-debian8/',
+      },
     ],
     related_info: [
       {
         title: 'https://redis.io/',
-        href: 'https://redis.io/'
-      }
+        href: 'https://redis.io/',
+      },
     ],
-    logo_url: 'assets/redis_color.svg'
+    logo_url: 'assets/redis_color.svg',
   },
   {
     name: 'Ruby on Rails',
@@ -690,19 +690,19 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Ruby on Rails with NGINX On Debian 9',
         href:
-          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/'
-      }
+          'https://www.linode.com/docs/development/ror/ruby-on-rails-nginx-debian/',
+      },
     ],
     related_info: [
       {
         title: 'https://rubyonrails.org/',
-        href: 'https://rubyonrails.org/'
-      }
+        href: 'https://rubyonrails.org/',
+      },
     ],
     tips: [
-      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`,
     ],
-    logo_url: 'assets/rubyonrails_color.svg'
+    logo_url: 'assets/rubyonrails_color.svg',
   },
   {
     name: 'PostgreSQL',
@@ -712,21 +712,21 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Configure PostgreSQL',
         href:
-          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/'
+          'https://www.linode.com/docs/databases/postgresql/configure-postgresql/',
       },
       {
         title: 'How to Install PostgreSQL on Ubuntu 16.04',
         href:
-          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/'
-      }
+          'https://www.linode.com/docs/databases/postgresql/how-to-install-postgresql-on-ubuntu-16-04/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.postgresql.org/',
-        href: 'https://www.postgresql.org/'
-      }
+        href: 'https://www.postgresql.org/',
+      },
     ],
-    logo_url: 'assets/postgresql_color.svg'
+    logo_url: 'assets/postgresql_color.svg',
   },
   {
     name: 'phpMyAdmin',
@@ -736,19 +736,19 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy phpMyAdmin with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-phpmyadmin-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-phpmyadmin-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.phpmyadmin.net/',
-        href: 'https://www.phpmyadmin.net/'
-      }
+        href: 'https://www.phpmyadmin.net/',
+      },
     ],
     tips: [
-      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]/phpmyadmin</em> in a browser.`,
     ],
-    logo_url: 'assets/phpmyadmin_color.svg'
+    logo_url: 'assets/phpmyadmin_color.svg',
   },
   {
     name: 'Prometheus',
@@ -758,10 +758,10 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://prometheus.io/',
-        href: 'https://prometheus.io/'
-      }
+        href: 'https://prometheus.io/',
+      },
     ],
-    logo_url: 'assets/prometheus_color.svg'
+    logo_url: 'assets/prometheus_color.svg',
   },
   {
     name: 'Rust',
@@ -776,16 +776,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Rust with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-rust-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploying-rust-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://rust.facepunch.com/',
-        href: 'https://rust.facepunch.com/'
-      }
+        href: 'https://rust.facepunch.com/',
+      },
     ],
-    logo_url: 'assets/rust_color.svg'
+    logo_url: 'assets/rust_color.svg',
   },
   {
     name: 'Secure Your Server',
@@ -794,29 +794,30 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Securing your Server',
-        href: 'https://www.linode.com/docs/guides/securing-your-server/'
-      }
+        href: 'https://www.linode.com/docs/guides/securing-your-server/',
+      },
     ],
-    logo_url: 'assets/secureyourserver_color.svg'
+    logo_url: 'assets/secureyourserver_color.svg',
   },
   {
     name: 'ServerWand',
     description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
-    summary: 'Magical control panel for hosting websites and managing your servers.',
+    summary:
+      'Magical control panel for hosting websites and managing your servers.',
     related_guides: [
       {
         title: 'Deploy ServerWand with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-serverwand-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-serverwand-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://serverwand.com/',
-        href: 'https://serverwand.com/'
-      }
+        href: 'https://serverwand.com/',
+      },
     ],
-    logo_url: 'assets/serverwand_color.svg'
+    logo_url: 'assets/serverwand_color.svg',
   },
   {
     name: 'Shadowsocks',
@@ -827,33 +828,33 @@ export const oneClickApps: OCA[] = [
     related_info: [
       {
         title: 'https://shadowsocks.org/',
-        href: 'https://shadowsocks.org/'
+        href: 'https://shadowsocks.org/',
       },
       {
         title: 'ShadowsocksX-NG - macOS Client',
-        href: 'https://github.com/shadowsocks/ShadowsocksX-NG'
+        href: 'https://github.com/shadowsocks/ShadowsocksX-NG',
       },
       {
         title: 'shadowsocks-windows - Windows Client',
-        href: 'https://github.com/shadowsocks/shadowsocks-windows'
+        href: 'https://github.com/shadowsocks/shadowsocks-windows',
       },
       {
         title: 'shadowsocks-android - Android Client',
-        href: 'https://github.com/shadowsocks/shadowsocks-android'
+        href: 'https://github.com/shadowsocks/shadowsocks-android',
       },
       {
         title: 'Help with installing clients - macOS and Windows',
         href:
-          'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client'
-      }
+          'https://www.linode.com/docs/networking/vpn/create-a-socks5-proxy-server-with-shadowsocks-on-ubuntu-and-centos7/#install-a-shadowsocks-client',
+      },
     ],
     tips: [
       `<b>Server Preferences</b> on your Shadowsocks Client:`,
       `- set <b>Address</b> to <em>[your-linodes-IP]:8000</em>`,
       `- set <b>Encryption</b> to <em>aes-256-cfb</em>`,
-      `- set <b>Password</b> that was specified on configuration`
+      `- set <b>Password</b> that was specified on configuration`,
     ],
-    logo_url: 'assets/shadowsocks_color.svg'
+    logo_url: 'assets/shadowsocks_color.svg',
   },
   {
     name: 'Terraria',
@@ -868,16 +869,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy a Terraria Server with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-terraria-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploying-terraria-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://terraria.org/',
-        href: 'https://terraria.org/'
-      }
+        href: 'https://terraria.org/',
+      },
     ],
-    logo_url: 'assets/terraria_color.svg'
+    logo_url: 'assets/terraria_color.svg',
   },
   {
     name: 'TF2',
@@ -894,16 +895,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy a Team Fortress 2 Server with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-team-fortress-2-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploying-team-fortress-2-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'http://www.teamfortress.com/',
-        href: 'http://www.teamfortress.com/'
-      }
+        href: 'http://www.teamfortress.com/',
+      },
     ],
-    logo_url: 'assets/teamfortress_color.svg'
+    logo_url: 'assets/teamfortress_color.svg',
   },
   {
     name: 'WooCommerce',
@@ -916,16 +917,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy WooCommerce with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/one-click-woocommerce/'
-      }
+          'https://linode.com/docs/platform/one-click/one-click-woocommerce/',
+      },
     ],
     related_info: [
       {
         title: 'https://woocommerce.com/features/',
-        href: 'https://woocommerce.com/features/'
-      }
+        href: 'https://woocommerce.com/features/',
+      },
     ],
-    logo_url: 'assets/woocommerce_color.svg'
+    logo_url: 'assets/woocommerce_color.svg',
   },
   {
     name: 'MERN',
@@ -944,10 +945,10 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy a MERN Stack with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-mern-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-mern-with-one-click-apps/',
+      },
     ],
-    logo_url: 'assets/mern_color.svg'
+    logo_url: 'assets/mern_color.svg',
   },
   {
     name: 'OpenVPN',
@@ -961,20 +962,20 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploy OpenVPN Access Server with One-Click Apps',
-        href: 'https://linode.com/docs/platform/one-click/one-click-openvpn/'
+        href: 'https://linode.com/docs/platform/one-click/one-click-openvpn/',
       },
       {
         title: 'Manage OpenVPN with OpenVPN Access Server',
         href:
-          'https://linode.com/docs/networking/vpn/install-openvpn-access-server-on-linux/'
+          'https://linode.com/docs/networking/vpn/install-openvpn-access-server-on-linux/',
       },
       {
         title: 'Configure OpenVPN Client Devices',
         href:
-          'https://linode.com/docs/networking/vpn/configuring-openvpn-client-devices/'
-      }
+          'https://linode.com/docs/networking/vpn/configuring-openvpn-client-devices/',
+      },
     ],
-    logo_url: 'assets/openvpn_color.svg'
+    logo_url: 'assets/openvpn_color.svg',
   },
   {
     name: 'Minecraft: Java Edition',
@@ -996,16 +997,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy A Minecraft Server with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-minecraft-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploying-minecraft-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.minecraft.net/',
-        href: 'https://www.minecraft.net/'
-      }
+        href: 'https://www.minecraft.net/',
+      },
     ],
-    logo_url: 'assets/minecraft_color.svg'
+    logo_url: 'assets/minecraft_color.svg',
   },
   {
     name: 'Virtualmin',
@@ -1015,16 +1016,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Virtualmin with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-virtualmin-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-virtualmin-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.virtualmin.com/',
-        href: 'https://www.virtualmin.com/'
-      }
+        href: 'https://www.virtualmin.com/',
+      },
     ],
-    logo_url: 'assets/virtualmin_color.svg'
+    logo_url: 'assets/virtualmin_color.svg',
   },
   {
     name: 'VS Code Server',
@@ -1034,16 +1035,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy VS Code Server with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-vscodeserver-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-vscodeserver-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://github.com/cdr/code-server',
-        href: 'https://github.com/cdr/code-server'
-      }
+        href: 'https://github.com/cdr/code-server',
+      },
     ],
-    logo_url: 'assets/vscodeserver_color.svg'
+    logo_url: 'assets/vscodeserver_color.svg',
   },
   {
     name: 'Webmin',
@@ -1053,16 +1054,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Webmin with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-webmin-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-webmin-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'http://www.webmin.com/',
-        href: 'http://www.webmin.com/'
-      }
+        href: 'http://www.webmin.com/',
+      },
     ],
-    logo_url: 'assets/webmin_color.svg'
+    logo_url: 'assets/webmin_color.svg',
   },
   {
     name: 'Webuzo',
@@ -1073,16 +1074,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Webuzo with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-webuzo-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-webuzo-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'http://www.webuzo.com/',
-        href: 'http://www.webuzo.com/'
-      }
+        href: 'http://www.webuzo.com/',
+      },
     ],
-    logo_url: 'assets/webuzo_color.svg'
+    logo_url: 'assets/webuzo_color.svg',
   },
   {
     name: 'WireGuard&reg;',
@@ -1098,16 +1099,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy WireGuard with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-wireguard-with-one-click-apps/'
-      }
+          'https://linode.com/docs/platform/one-click/deploy-wireguard-with-one-click-apps/',
+      },
     ],
     related_info: [
       {
         title: 'https://www.wireguard.com/',
-        href: 'https://www.wireguard.com/'
-      }
+        href: 'https://www.wireguard.com/',
+      },
     ],
-    logo_url: 'assets/wireguard_color.svg'
+    logo_url: 'assets/wireguard_color.svg',
   },
   {
     name: 'WooCommerce',
@@ -1121,16 +1122,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy WooCommerce with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/one-click-woocommerce/'
-      }
+          'https://linode.com/docs/platform/one-click/one-click-woocommerce/',
+      },
     ],
     related_info: [
       {
         title: 'https://woocommerce.com/features/',
-        href: 'https://woocommerce.com/features/'
-      }
+        href: 'https://woocommerce.com/features/',
+      },
     ],
-    logo_url: 'assets/woocommerce_color.svg'
+    logo_url: 'assets/woocommerce_color.svg',
   },
   {
     name: 'WordPress',
@@ -1144,26 +1145,26 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy WordPress with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploying-wordpress-with-one-click-apps/'
+          'https://linode.com/docs/platform/one-click/deploying-wordpress-with-one-click-apps/',
       },
       {
         title: 'Configure WordPress to Use a Remote Database',
         href:
-          'https://linode.com/docs/databases/mariadb/configure-wordpress-remote-database/'
+          'https://linode.com/docs/databases/mariadb/configure-wordpress-remote-database/',
       },
       {
         title: 'Turbocharge Your WordPress Search Using Solr',
         href:
-          'https://linode.com/docs/websites/cms/turbocharge-wordpress-search-with-solr/'
-      }
+          'https://linode.com/docs/websites/cms/turbocharge-wordpress-search-with-solr/',
+      },
     ],
     related_info: [
       {
         title: 'https://wordpress.org/',
-        href: 'https://wordpress.org/'
-      }
+        href: 'https://wordpress.org/',
+      },
     ],
-    logo_url: 'assets/wordpress_color.svg'
+    logo_url: 'assets/wordpress_color.svg',
   },
   {
     name: 'Yacht',
@@ -1173,16 +1174,16 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Yacht with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-yacht-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-yacht-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://github.com/SelfhostedPro/Yacht/',
-        href: 'https://github.com/SelfhostedPro/Yacht/'
-      }
+        href: 'https://github.com/SelfhostedPro/Yacht/',
+      },
     ],
-    logo_url: 'assets/yacht_color.svg'
+    logo_url: 'assets/yacht_color.svg',
   },
   {
     name: 'Zabbix',
@@ -1192,15 +1193,15 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Zabbix with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-zabbix-with-marketplace-apps'
-      }
+          'https://www.linode.com/docs/guides/deploy-zabbix-with-marketplace-apps',
+      },
     ],
     related_info: [
       {
         title: 'https://www.zabbix.com',
-        href: 'https://www.zabbix.com'
-      }
+        href: 'https://www.zabbix.com',
+      },
     ],
-    logo_url: 'assets/zabbix_color.svg'
-  }
+    logo_url: 'assets/zabbix_color.svg',
+  },
 ];

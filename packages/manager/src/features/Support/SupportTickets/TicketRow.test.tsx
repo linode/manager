@@ -6,13 +6,13 @@ import TicketRow from './TicketRow';
 
 const supportTicket = supportTicketFactory.build();
 
-window.matchMedia = jest.fn().mockImplementation(query => {
+window.matchMedia = jest.fn().mockImplementation((query) => {
   return {
     matches: false,
     media: query,
     onchange: null,
     addListener: jest.fn(),
-    removeListener: jest.fn()
+    removeListener: jest.fn(),
   };
 });
 

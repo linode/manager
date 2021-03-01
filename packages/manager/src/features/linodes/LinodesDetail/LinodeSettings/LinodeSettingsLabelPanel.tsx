@@ -11,7 +11,7 @@ import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import {
   UpdateLinode,
-  withLinodeDetailContext
+  withLinodeDetailContext,
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -31,7 +31,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
     initialValue: this.props.linodeLabel,
     updatedValue: this.props.linodeLabel,
-    submitting: false
+    submitting: false,
   };
 
   changeLabel = () => {
@@ -39,24 +39,24 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
     this.setState({
       submitting: true,
       success: undefined,
-      errors: undefined
+      errors: undefined,
     });
 
     updateLinode({ label: this.state.updatedValue })
-      .then(linode => {
+      .then((linode) => {
         this.setState({
           success: 'Linode label changed successfully.',
-          submitting: false
+          submitting: false,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           {
             submitting: false,
             errors: getAPIErrorOrDefault(
               error,
               'An error occured while updating label'
-            )
+            ),
           },
           () => {
             scrollErrorIntoView('linode-settings-label');
@@ -128,7 +128,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(
   ({ linode, updateLinode }) => ({
     linodeLabel: linode.label,
     permissions: linode._permissions,
-    updateLinode
+    updateLinode,
   })
 );
 

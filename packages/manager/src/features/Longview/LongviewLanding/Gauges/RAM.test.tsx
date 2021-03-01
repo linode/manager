@@ -11,10 +11,10 @@ const loadingStore = {
     123: {
       loading: true,
       data: {
-        ...memory
-      }
-    }
-  }
+        ...memory,
+      },
+    },
+  },
 };
 
 const dataStore = {
@@ -22,33 +22,33 @@ const dataStore = {
     123: {
       loading: false,
       data: {
-        ...memory
-      }
-    }
-  }
+        ...memory,
+      },
+    },
+  },
 };
 
 const errorStore = {
   longviewStats: {
     123: {
       loading: false,
-      error: mockError
-    }
-  }
+      error: mockError,
+    },
+  },
 };
 
 describe('Longview RAM Gauge UI', () => {
   it('should render a loading state initially', () => {
     const { getByText } = renderWithTheme(<RAM clientID={123} />, {
-      customStore: loadingStore
+      customStore: loadingStore,
     });
 
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
-  it('should render error UI if an error comes back from Redux State', async done => {
+  it('should render error UI if an error comes back from Redux State', async (done) => {
     const { getByText } = renderWithTheme(<RAM clientID={123} />, {
-      customStore: errorStore
+      customStore: errorStore,
     });
 
     const resolvedDiv = await waitFor(() => getByText(/Error/));
@@ -57,9 +57,9 @@ describe('Longview RAM Gauge UI', () => {
     done();
   });
 
-  it('should render a data state UI if data comes back from Redux State', async done => {
+  it('should render a data state UI if data comes back from Redux State', async (done) => {
     const { getByTestId } = renderWithTheme(<RAM clientID={123} />, {
-      customStore: dataStore
+      customStore: dataStore,
     });
 
     const innerText = await waitFor(() => getByTestId('gauge-innertext'));

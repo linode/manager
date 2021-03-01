@@ -5,13 +5,13 @@ import { linode1, linode2 } from 'src/__data__/linodes';
 import {
   extendLinodes,
   formatLinodeSubheading,
-  getRegionIDFromLinodeID
+  getRegionIDFromLinodeID,
 } from './utilities';
 
 const linodeImage = imageFactory.build({
   vendor: 'linode',
   id: 'linode/debian10',
-  label: 'Debian 10'
+  label: 'Debian 10',
 });
 const images = normalizeEntities(imageFactory.buildList(10));
 images['linode/debian10'] = linodeImage;
@@ -22,8 +22,8 @@ describe('Extend Linode', () => {
       [
         {
           ...linode1,
-          image: 'linode/debian10'
-        }
+          image: 'linode/debian10',
+        },
       ],
       images,
       extendedTypes

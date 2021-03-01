@@ -2,7 +2,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -16,7 +16,7 @@ interface Props {
 
 export type CombinedProps = Props & WithSnackbarProps;
 
-const CredentialActionMenu: React.FC<CombinedProps> = props => {
+const CredentialActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -33,12 +33,12 @@ const CredentialActionMenu: React.FC<CombinedProps> = props => {
   const actions: Action[] = [
     {
       title: 'Edit',
-      onClick: onClickForEdit
+      onClick: onClickForEdit,
     },
     {
       title: 'Delete',
-      onClick: onClickForDelete
-    }
+      onClick: onClickForDelete,
+    },
   ];
 
   return (
@@ -50,7 +50,7 @@ const CredentialActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for Managed Credentials for ${label}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

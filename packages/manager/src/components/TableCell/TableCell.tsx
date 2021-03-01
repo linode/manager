@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 
@@ -21,10 +21,10 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       borderTop: 'none',
-      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`
+      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
     },
     noWrap: {
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
     },
     sortable: {
       color: theme.color.headline,
@@ -33,30 +33,30 @@ const styles = (theme: Theme) =>
       '& button, & button:focus': {
         color: theme.color.headline,
         fontWeight: 'normal',
-        fontSize: '.9rem'
+        fontSize: '.9rem',
       },
       '& .sortIcon': {
         position: 'relative',
         top: 2,
         left: 10,
-        color: theme.palette.primary.main
-      }
+        color: theme.palette.primary.main,
+      },
     },
     data: {
       [theme.breakpoints.down('sm')]: {
         textAlign: 'right',
-        marginLeft: theme.spacing(3)
+        marginLeft: theme.spacing(3),
       },
       [theme.breakpoints.down('xs')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     parentColSpan: {
-      width: '100%'
+      width: '100%',
     },
     compact: {
-      padding: 6
-    }
+      padding: 6,
+    },
   });
 
 export interface Props extends TableCellProps {
@@ -93,7 +93,7 @@ class WrappedTableCell extends React.Component<CombinedProps> {
           [classes.sortable]: sortable,
           [classes.compact]: compact,
           // hide the cell at small breakpoints if it's empty with no parent column
-          emptyCell: !parentColumn && !this.props.children
+          emptyCell: !parentColumn && !this.props.children,
         })}
         {...rest}
       >

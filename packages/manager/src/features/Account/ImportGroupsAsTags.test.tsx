@@ -6,7 +6,7 @@ const classes = { root: '', helperText: '' };
 
 const props = {
   classes,
-  openDrawer: jest.fn()
+  openDrawer: jest.fn(),
 };
 
 const component = shallow(<ImportGroupsAsTags {...props} />);

@@ -9,7 +9,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 import Button from 'src/components/Button';
@@ -34,24 +34,24 @@ const styles = (theme: Theme) =>
       marginTop: 0,
       width: 415,
       [theme.breakpoints.down('xs')]: {
-        width: 165
+        width: 165,
       },
       '& > div ': {
         backgroundColor: theme.bg.main,
-        border: 0
+        border: 0,
       },
       '& svg': {
         color: theme.palette.text.primary,
         width: 24,
-        fontSize: 22
-      }
+        fontSize: 22,
+      },
     },
     closeIcon: {
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
     uploadProgress: {
-      maxWidth: 415
-    }
+      maxWidth: 415,
+    },
   });
 
 interface HandlerProps {
@@ -67,7 +67,7 @@ interface Props {
 
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
-export const AttachFileListItem: React.FC<CombinedProps> = props => {
+export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
   const { classes, file, inlineDisplay, onClick } = props;
   if (file.uploaded) {
     return null;
@@ -98,7 +98,7 @@ export const AttachFileListItem: React.FC<CombinedProps> = props => {
                 >
                   <Close />
                 </InputAdornment>
-              )
+              ),
             }}
             label="File Attached"
             aria-label="Disabled Text Field"
@@ -133,7 +133,7 @@ const enhanced = compose<CombinedProps, Props>(
   withHandlers({
     onClick: (props: Props) => () => {
       props.removeFile(props.fileIdx);
-    }
+    },
   }),
   styled
 )(AttachFileListItem);

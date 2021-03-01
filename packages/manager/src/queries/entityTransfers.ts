@@ -3,7 +3,7 @@ import {
   CreateTransferPayload,
   EntityTransfer,
   getEntityTransfer,
-  getEntityTransfers
+  getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -20,9 +20,9 @@ const getAllEntityTransfersRequest = (
   passedParams: any = {},
   passedFilter: any = {}
 ) =>
-  getEntityTransfers(passedParams, passedFilter).then(data => ({
+  getEntityTransfers(passedParams, passedFilter).then((data) => ({
     entityTransfers: listToItemsByID(data.data, 'token'),
-    results: data.results
+    results: data.results,
   }));
 
 export const useEntityTransfersQuery = (params: any = {}, filter: any = {}) => {
@@ -43,7 +43,7 @@ export const useTransferQuery = (token: string, enabled: boolean = true) => {
 
 export const useCreateTransfer = () => {
   return useMutation<EntityTransfer, APIError[], CreateTransferPayload>(
-    createData => {
+    (createData) => {
       return createEntityTransfer(createData);
     },
     creationHandlers(queryKey, 'token')

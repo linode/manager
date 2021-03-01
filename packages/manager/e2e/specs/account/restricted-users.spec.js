@@ -6,7 +6,7 @@ describe('Account - Restricted User Suite', () => {
   const userConfig = {
     username: `test-user${new Date().getTime()}`,
     email: `pthiel@linode.com`,
-    restricted: true
+    restricted: true,
   };
 
   beforeAll(() => {
@@ -36,7 +36,7 @@ describe('Account - Restricted User Suite', () => {
   });
 
   it('should display user as restricted in users table', () => {
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return Users.userRows.length > 1;
     }, constants.wait.long);
 

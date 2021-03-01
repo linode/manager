@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TabbedPanel, { Tab } from 'src/components/TabbedPanel';
 import Preview from './PreviewReply';
@@ -22,13 +22,13 @@ interface Props {
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: 'transparent'
-    }
+      backgroundColor: 'transparent',
+    },
   });
 
 type CombinedProps = Props & ReplyProps & WithStyles<ClassNames>;
 
-const TabbedReply: React.FC<CombinedProps> = props => {
+const TabbedReply: React.FC<CombinedProps> = (props) => {
   const { innerClass, rootClass, classes, value, error, ...rest } = props;
 
   const title = props.isReply ? 'Reply' : 'Description';
@@ -38,14 +38,14 @@ const TabbedReply: React.FC<CombinedProps> = props => {
       title: props.required ? `${title} (required)` : title,
       render: () => {
         return <Reply {...rest} value={value} error={error} />;
-      }
+      },
     },
     {
       title: 'Preview',
       render: () => {
         return <Preview value={value} error={error} />;
-      }
-    }
+      },
+    },
   ];
 
   return (
