@@ -2,7 +2,7 @@ import {
   Config,
   getLinodeConfigs,
   LinodeBackups,
-  LinodeType
+  LinodeType,
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -13,13 +13,13 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionMenu, {
-  Action
+  Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -32,15 +32,15 @@ import { MapState } from 'src/store/types';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
-  sendMigrationNavigationEvent
+  sendMigrationNavigationEvent,
 } from 'src/utilities/ga';
 
 const useStyles = makeStyles(() => ({
   link: {
-    padding: '12px 10px'
+    padding: '12px 10px',
   },
   action: {
-    marginLeft: 10
+    marginLeft: 10,
   },
   powerOnOrOff: {
     borderRadius: 0,
@@ -48,9 +48,9 @@ const useStyles = makeStyles(() => ({
     minWidth: 83,
     whiteSpace: 'nowrap',
     '&:hover': {
-      textDecoration: 'none'
-    }
-  }
+      textDecoration: 'none',
+    },
+  },
 }));
 
 export interface Props {
@@ -88,23 +88,23 @@ export const buildQueryStringForLinodeClone = (
 ) => {
   const params: Record<string, string> = {
     type: 'Clone Linode',
-    linodeID: String(linodeId)
+    linodeID: String(linodeId),
   };
 
   // If the type of this Linode is a valid (current) type, use it in the QS
-  if (types && types.some(typeEntity => typeEntity.id === linodeType)) {
+  if (types && types.some((typeEntity) => typeEntity.id === linodeType)) {
     params.typeID = linodeType!;
   }
 
   // If the region of this Linode is a valid region, use it in the QS
-  if (regions && regions.some(region => region.id === linodeRegion)) {
+  if (regions && regions.some((region) => region.id === linodeRegion)) {
     params.regionID = linodeRegion;
   }
 
   return stringify(params);
 };
 
-export const LinodeActionMenu: React.FC<CombinedProps> = props => {
+export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
   const { linodeRegion, linodeType } = props;
   const classes = useStyles();
   const theme = useTheme<Theme>();
@@ -119,18 +119,19 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const [configsError, setConfigsError] = React.useState<
     APIError[] | undefined
   >(undefined);
-  const [hasMadeConfigsRequest, setHasMadeConfigsRequest] = React.useState<
-    boolean
-  >(false);
+  const [
+    hasMadeConfigsRequest,
+    setHasMadeConfigsRequest,
+  ] = React.useState<boolean>(false);
 
   const toggleOpenActionMenu = () => {
     getLinodeConfigs(props.linodeId)
-      .then(configs => {
+      .then((configs) => {
         setConfigs(configs.data);
         setConfigsError(undefined);
         setHasMadeConfigsRequest(true);
       })
-      .catch(err => {
+      .catch((err) => {
         setConfigsError(err);
         setHasMadeConfigsRequest(true);
       });
@@ -157,7 +158,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     inlineLabel,
     inTableContext,
     openDialog,
-    readOnly
+    readOnly,
   } = props;
 
   const hasHostMaintenance = linodeStatus === 'stopped';
@@ -165,7 +166,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     disabled: hasHostMaintenance,
     tooltip: hasHostMaintenance
       ? 'This action is unavailable while your Linode is undergoing host maintenance.'
-      : undefined
+      : undefined,
   };
 
   const noPermissionTooltipText =
@@ -174,7 +175,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
   const readOnlyProps = readOnly
     ? {
         disabled: true,
-        tooltip: noPermissionTooltipText
+        tooltip: noPermissionTooltipText,
       }
     : {};
 
@@ -188,7 +189,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
           className: classes.powerOnOrOff,
           disabled: !['running', 'offline'].includes(linodeStatus) || readOnly,
           tooltip: readOnly ? noPermissionTooltipText : undefined,
-          onClick: handlePowerAction
+          onClick: handlePowerAction,
         }
       : null,
     inLandingListView || inEntityView || inTableContext
@@ -209,7 +210,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             sendLinodeActionMenuItemEvent('Reboot Linode');
             openPowerActionDialog('Reboot', linodeId, linodeLabel, configs);
           },
-          ...readOnlyProps
+          ...readOnlyProps,
         }
       : null,
     inTableContext || matchesSmDown
@@ -219,7 +220,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             sendLinodeActionMenuItemEvent('Launch Console');
             lishLaunch(linodeId);
           },
-          ...readOnlyProps
+          ...readOnlyProps,
         }
       : null,
     {
@@ -234,11 +235,11 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             linodeType,
             types.entities,
             regions
-          )
+          ),
         });
       },
       ...maintenanceProps,
-      ...readOnlyProps
+      ...readOnlyProps,
     },
     {
       title: 'Resize',
@@ -246,7 +247,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         openDialog('resize', linodeId);
       },
       ...maintenanceProps,
-      ...readOnlyProps
+      ...readOnlyProps,
     },
     {
       title: 'Rebuild',
@@ -255,7 +256,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         openDialog('rebuild', linodeId);
       },
       ...maintenanceProps,
-      ...readOnlyProps
+      ...readOnlyProps,
     },
     {
       title: 'Rescue',
@@ -264,7 +265,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         openDialog('rescue', linodeId);
       },
       ...maintenanceProps,
-      ...readOnlyProps
+      ...readOnlyProps,
     },
     {
       title: 'Migrate',
@@ -273,7 +274,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
         sendLinodeActionMenuItemEvent('Migrate');
         openDialog('migrate', linodeId);
       },
-      ...readOnlyProps
+      ...readOnlyProps,
     },
     {
       title: 'Delete',
@@ -282,8 +283,8 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
         openDialog('delete', linodeId, linodeLabel);
       },
-      ...readOnlyProps
-    }
+      ...readOnlyProps,
+    },
   ].filter(Boolean) as ExtendedAction[];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
@@ -293,7 +294,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     <>
       {!matchesMdDown &&
         inTableContext &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}
@@ -305,15 +306,17 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
             />
           );
         })}
-      <ActionMenu
-        className={classes.action}
-        toggleOpenCallback={toggleOpenActionMenu}
-        // if inTableContext is false we're most likely in the detail header
-        // where we need all of the available actions
-        actionsList={inTableContext ? menuActions : actions}
-        ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
-        inlineLabel={inlineLabel}
-      />
+      {matchesMdDown && (
+        <ActionMenu
+          className={classes.action}
+          toggleOpenCallback={toggleOpenActionMenu}
+          // if inTableContext is false we're most likely in the detail header
+          // where we need all of the available actions
+          actionsList={inTableContext ? menuActions : actions}
+          ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+          inlineLabel={inlineLabel}
+        />
+      )}
     </>
   );
 };
@@ -334,7 +337,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
     getPermissionsForLinode(
       pathOr(null, ['__resources', 'profile', 'data'], state),
       ownProps.linodeId
-    ) === 'read_only'
+    ) === 'read_only',
 });
 
 const connected = connect(mapStateToProps);

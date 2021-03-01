@@ -291,7 +291,8 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#888',
+          backgroundColor: cmrBorderColors.borderTable,
+          color: cmrBorderColors.borderTabs,
         },
         '&.loading': {
           backgroundColor: primaryColors.text,
