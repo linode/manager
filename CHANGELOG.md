@@ -4,12 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-03-01] - v1.33.1
+
+### Fixed:
+
+- Display account balance correctly
+
+### Changed:
+
+- Use /account/maintenance endpoint to display maintenance information
+
+## JS Client
+
+### Added:
+
+- Types and methods for /account/maintenance
+
 ## [2021-02-24] - v1.33.0
 
 ### Added:
+
 - Ability to transfer Linodes to another account
 
 ### Changed:
+
 - Linode Configurations drawer is now a modal
 - Improve responsiveness of NodeBalancers display
 
@@ -38,6 +56,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed:
 
 - Event progress bars should always be full width
+
 ## [2021-02-15] - v1.30.0
 
 ### Added:
