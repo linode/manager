@@ -103,7 +103,7 @@ class ConfigureStackScript extends Page {
         `"${this.targetImagesSelect.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
-    this.imageTags.forEach(tag =>
+    this.imageTags.forEach((tag) =>
       expect(tag.isDisplayed())
         .withContext(`"${this.tag.selector}" selector ${assertLog.displayed}`)
         .toBe(true)
@@ -141,7 +141,7 @@ class ConfigureStackScript extends Page {
     const selectedImage = this.multiOption.selector.replace(']', '');
 
     if (config.images) {
-      config.images.forEach(i => {
+      config.images.forEach((i) => {
         this.targetImagesSelect.click();
         const imageElement = $(`[data-qa-option="linode/${i}"]`);
         browser.pause(500);
@@ -171,7 +171,7 @@ class ConfigureStackScript extends Page {
   create(config, update = false) {
     this.save();
 
-    const myStackscript = ListStackScripts.stackScriptRows.filter(t =>
+    const myStackscript = ListStackScripts.stackScriptRows.filter((t) =>
       t
         .$(ListStackScripts.stackScriptTitle.selector)
         .getText()
@@ -220,8 +220,8 @@ class ConfigureStackScript extends Page {
 
   removeImage(imageName) {
     this.imageTags
-      .filter(i => i.getText().includes(imageName))
-      .forEach(i => {
+      .filter((i) => i.getText().includes(imageName))
+      .forEach((i) => {
         i.$('..')
           .$('svg')
           .click();

@@ -88,11 +88,11 @@ export const imagesToGroupedItems = (images: Image[]) => {
       if (!group || group.length === 0) {
         return accum;
       }
-      return produce(accum, draft => {
+      return produce(accum, (draft) => {
         draft.push({
           label: thisGroup,
           options: group
-            .map(thisImage => {
+            .map((thisImage) => {
               const isDeprecated = thisImage.deprecated;
               const fullLabel =
                 thisImage.label + (isDeprecated ? ' (Deprecated)' : '');
@@ -112,7 +112,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
     }, []);
 };
 
-export const ImageSelect: React.FC<Props> = props => {
+export const ImageSelect: React.FC<Props> = (props) => {
   const {
     disabled,
     error,
@@ -135,7 +135,7 @@ export const ImageSelect: React.FC<Props> = props => {
         .reason
     : undefined;
 
-  const filteredImages = images.filter(thisImage => {
+  const filteredImages = images.filter((thisImage) => {
     switch (variant) {
       case 'public':
         return thisImage.is_public;

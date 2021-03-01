@@ -30,7 +30,7 @@ describe('DiskGraph helper methods', () => {
           writes: mockStats,
         }),
       };
-      const expected = mockStats.map(i => ({ x: i.x, y: i.y * 2 }));
+      const expected = mockStats.map((i) => ({ x: i.x, y: i.y * 2 }));
       const { swap, read, write } = processDiskData(mockDisk, 'kvm');
       expect(swap).toHaveLength(mockStats.length);
       // Since we're passing mockStats twice (for read and write),
@@ -59,8 +59,8 @@ describe('DiskGraph helper methods', () => {
         }),
       };
       // Using mockStats2 for reads, so mockStats[x] + 10 for each value
-      const expectedReads = mockStats.map(i => ({ x: i.x, y: i.y + 10 }));
-      const expectedWrites = mockStats.map(i => ({ x: i.x, y: i.y * 2 }));
+      const expectedReads = mockStats.map((i) => ({ x: i.x, y: i.y + 10 }));
+      const expectedWrites = mockStats.map((i) => ({ x: i.x, y: i.y * 2 }));
       const { swap, read, write } = processDiskData(mockDisk, 'kvm');
       expect(read).toEqual(expectedReads);
       expect(write).toEqual(expectedWrites);

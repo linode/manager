@@ -12,9 +12,9 @@ import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
-const handleSuccess: <T extends AxiosResponse<any>>(
-  response: T
-) => T | T = response => {
+const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
+  response
+) => {
   if (!!response.headers['x-maintenance-mode']) {
     store.dispatch(handleLogout());
     Promise.reject(response);
@@ -61,7 +61,7 @@ export const handleError = (error: AxiosError) => {
           }
         />
       ),
-      condition: e => !!e.reason.match(/verification is required/i),
+      condition: (e) => !!e.reason.match(/verification is required/i),
     },
     {
       /**
@@ -76,7 +76,7 @@ export const handleError = (error: AxiosError) => {
        * 2. Fix the Landing page components to display the actual error being passed.
        */
       replacementText: <AccountActivationError errors={errors} />,
-      condition: e =>
+      condition: (e) =>
         !!e.reason.match(/account must be activated/i) && status === 403,
       callback: () => {
         if (store && !store.getState().globalErrors.account_unactivated) {
@@ -90,7 +90,7 @@ export const handleError = (error: AxiosError) => {
     },
     {
       replacementText: <MigrateError />,
-      condition: e => {
+      condition: (e) => {
         return (
           !!e.reason.match(/migrations are currently disabled/i) &&
           !!url.match(/migrate/i)
@@ -103,7 +103,7 @@ export const handleError = (error: AxiosError) => {
   return Promise.reject(interceptedErrors);
 };
 
-baseRequest.interceptors.request.use(config => {
+baseRequest.interceptors.request.use((config) => {
   const state = store.getState();
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
   const token = ACCESS_TOKEN || (state.authentication?.token ?? '');

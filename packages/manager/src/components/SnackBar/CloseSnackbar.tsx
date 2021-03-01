@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const CloseSnackbar: React.FC<CombinedProps> = props => {
+const CloseSnackbar: React.FC<CombinedProps> = (props) => {
   const { classes, text, onClick } = props;
 
   return (

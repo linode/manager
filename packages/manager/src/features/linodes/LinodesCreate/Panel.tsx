@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Panel: React.FC<CombinedProps> = props => {
+const Panel: React.FC<CombinedProps> = (props) => {
   const { classes, children, error, title } = props;
   return (
     <Paper

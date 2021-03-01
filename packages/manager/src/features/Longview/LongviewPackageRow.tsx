@@ -18,7 +18,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const LongviewPackageRow: React.FC<CombinedProps> = props => {
+export const LongviewPackageRow: React.FC<CombinedProps> = (props) => {
   const { lvPackage } = props;
 
   const classes = useStyles();

@@ -32,7 +32,7 @@ interface Props {
   timezone: string;
 }
 
-export const NetworkLanding: React.FC<Props> = props => {
+export const NetworkLanding: React.FC<Props> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 

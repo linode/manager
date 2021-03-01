@@ -15,10 +15,10 @@ describe('Header - Search - Volumes Suite', () => {
     tags: [`AutoTag${timestamp()}`],
   };
 
-  const assertVolumeDisplaysInSearchSuggestion = query => {
+  const assertVolumeDisplaysInSearchSuggestion = (query) => {
     SearchBar.executeSearch(query);
     SearchBar.suggestion.waitForDisplayed(constants.wait.normal);
-    const volumeSuggestion = SearchBar.suggestions.find(suggestion =>
+    const volumeSuggestion = SearchBar.suggestions.find((suggestion) =>
       suggestion.getText().includes(testVolume.label)
     );
     expect(volumeSuggestion).toBeTruthy();

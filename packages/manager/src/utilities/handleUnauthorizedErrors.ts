@@ -18,7 +18,7 @@ export const handleUnauthorizedErrors = (
   let filteredErrors: APIError[] = [];
 
   try {
-    filteredErrors = e.filter(eachError => {
+    filteredErrors = e.filter((eachError) => {
       if (
         typeof eachError.reason === 'string' &&
         eachError.reason.toLowerCase().includes('unauthorized')

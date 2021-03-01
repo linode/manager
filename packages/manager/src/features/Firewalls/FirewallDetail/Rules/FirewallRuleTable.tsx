@@ -103,7 +103,7 @@ interface Props extends RowActionHandlers {
 
 type CombinedProps = Props;
 
-const FirewallRuleTable: React.FC<CombinedProps> = props => {
+const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
   const {
     category,
     openRuleDrawer,
@@ -224,7 +224,7 @@ export default React.memo(FirewallRuleTable);
 type FirewallRuleTableRowProps = RuleRow & RowActionHandlers;
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
-  props => {
+  (props) => {
     const classes = useStyles();
 
     const {
@@ -314,7 +314,7 @@ interface ConditionalErrorProps {
 }
 
 export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
-  props => {
+  (props) => {
     const classes = useStyles();
 
     const { formField, errors } = props;
@@ -325,7 +325,7 @@ export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
-        {uniqueByFormField.map(thisError => {
+        {uniqueByFormField.map((thisError) => {
           if (formField !== thisError.formField || !thisError.reason) {
             return null;
           }

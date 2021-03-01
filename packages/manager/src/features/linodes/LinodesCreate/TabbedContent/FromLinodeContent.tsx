@@ -32,7 +32,7 @@ export type CombinedProps = CloneFormStateHandlers &
   ReduxStateProps &
   WithLinodesTypesRegionsAndImages;
 
-export const FromLinodeContent: React.FC<CombinedProps> = props => {
+export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -49,7 +49,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = props => {
   /** Set the Linode ID and the disk size and reset the plan selection */
   const handleSelectLinode = (linodeID: number) => {
     const linode = props.linodesData.find(
-      eachLinode => eachLinode.id === linodeID
+      (eachLinode) => eachLinode.id === linodeID
     );
 
     if (linode) {

@@ -40,7 +40,7 @@ const reducer = reducerWithInitialState(defaultState)
       expiration: expires || null,
     };
   })
-  .case(handleInitTokens, state => {
+  .case(handleInitTokens, (state) => {
     /**
      * if our token is expired, clear local storage
      * and redux state
@@ -84,7 +84,7 @@ const reducer = reducerWithInitialState(defaultState)
       loggedInAsCustomer: isLoggedInAsCustomer,
     };
   })
-  .case(handleLogout, state => {
+  .case(handleLogout, (state) => {
     /** clear local storage and redux state */
     clearLocalStorage();
 
@@ -96,7 +96,7 @@ const reducer = reducerWithInitialState(defaultState)
       loggedInAsCustomer: false,
     };
   })
-  .case(handleRefreshTokens, state => {
+  .case(handleRefreshTokens, (state) => {
     /** get local storage values and append to redux state */
     const [localToken, localScopes, localExpiry] =
       (tokenInLocalStorage.get(),
@@ -109,6 +109,6 @@ const reducer = reducerWithInitialState(defaultState)
       expiration: localExpiry,
     };
   })
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

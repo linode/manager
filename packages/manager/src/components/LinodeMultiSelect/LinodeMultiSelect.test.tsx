@@ -123,7 +123,7 @@ describe('Linode Multi Select', () => {
           target: { value: ['ALL'] },
         })
       );
-      expect(props.handleChange).toHaveBeenCalledWith(linodes.map(i => i.id));
+      expect(props.handleChange).toHaveBeenCalledWith(linodes.map((i) => i.id));
     });
   });
 });

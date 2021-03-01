@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props & RenderGuardProps;
 
-const ConfirmToken: React.FC<CombinedProps> = props => {
+const ConfirmToken: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {

@@ -79,8 +79,8 @@ class UserDetail extends React.Component<CombinedProps> {
     } = this.props;
 
     getUser(username)
-      .then(user => {
-        getGravatarUrl(user.email).then(url => {
+      .then((user) => {
+        getGravatarUrl(user.email).then((url) => {
           this.setState({
             gravatarUrl: url,
             originalUsername: user.username,
@@ -91,7 +91,7 @@ class UserDetail extends React.Component<CombinedProps> {
           });
         });
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         this.setState({
           error: getAPIErrorOrDefault(
             errorResponse,
@@ -165,7 +165,7 @@ class UserDetail extends React.Component<CombinedProps> {
     });
 
     updateUser(originalUsername, { username, restricted })
-      .then(user => {
+      .then((user) => {
         /**
          * Update the state of the component with the updated information.
          */
@@ -190,7 +190,7 @@ class UserDetail extends React.Component<CombinedProps> {
           success: true,
         });
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         this.setState({
           accountErrors: getAPIErrorOrDefault(
             errResponse,
@@ -215,7 +215,7 @@ class UserDetail extends React.Component<CombinedProps> {
     });
 
     updateProfile({ email })
-      .then(profile => {
+      .then((profile) => {
         this.setState({
           profileSaving: false,
           profileSuccess: true,
@@ -228,7 +228,7 @@ class UserDetail extends React.Component<CombinedProps> {
           refreshProfile();
         }
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         this.setState({
           profileErrors: getAPIErrorOrDefault(
             errResponse,
@@ -245,7 +245,7 @@ class UserDetail extends React.Component<CombinedProps> {
   };
 
   clampTabChoice = () => {
-    const tabChoice = this.tabs.findIndex(tab => this.matches(tab.routeName));
+    const tabChoice = this.tabs.findIndex((tab) => this.matches(tab.routeName));
     return tabChoice < 0 ? 0 : tabChoice;
   };
 
@@ -351,7 +351,7 @@ interface StateProps {
   profileUsername?: string;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   profileUsername: pathRamda(['data', 'username'], state.__resources.profile),
 });
 
@@ -359,7 +359,9 @@ interface DispatchProps {
   refreshProfile: () => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
   refreshProfile: () => dispatch(requestProfile() as any),
 });
 

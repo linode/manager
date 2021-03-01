@@ -31,7 +31,7 @@ const validationScheme = CloneVolumeSchema;
 
 const initialValues = { label: '' };
 
-const CloneVolumeForm: React.FC<CombinedProps> = props => {
+const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
   const {
     onClose,
     volumeId,
@@ -46,11 +46,11 @@ const CloneVolumeForm: React.FC<CombinedProps> = props => {
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume({ volumeId, label: values.label })
-          .then(_ => {
+          .then((_) => {
             onClose();
             resetEventsPolling();
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });

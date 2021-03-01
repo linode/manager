@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ReplyActions: React.FC<CombinedProps> = props => {
+const ReplyActions: React.FC<CombinedProps> = (props) => {
   const {
     isSubmitting,
     submitForm,

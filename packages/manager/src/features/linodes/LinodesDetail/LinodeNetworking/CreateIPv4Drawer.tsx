@@ -41,10 +41,10 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
     const { onClose, linodeID } = this.props;
     // Only IPv4 addresses can currently be allocated.
     allocateIPAddress(linodeID, { type: 'ipv4', public: this.state.forPublic })
-      .then(_ => {
+      .then((_) => {
         onClose();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         this.setState(
           {
             errors: getAPIErrorOrDefault(errResponse),

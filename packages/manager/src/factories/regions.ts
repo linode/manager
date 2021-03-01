@@ -8,7 +8,9 @@ export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
 });
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({
-  id: Factory.each(id => Object.keys(dcDisplayNames)[id + 1] || `region-${id}`),
+  id: Factory.each(
+    (id) => Object.keys(dcDisplayNames)[id + 1] || `region-${id}`
+  ),
   status: 'ok',
   country: 'US',
   capabilities: ['Block Storage'],

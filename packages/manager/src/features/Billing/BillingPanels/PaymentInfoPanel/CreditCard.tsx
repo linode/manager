@@ -22,7 +22,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const CreditCard: React.FC<CombinedProps> = props => {
+export const CreditCard: React.FC<CombinedProps> = (props) => {
   const { expiry, lastFour } = props;
   const classes = useStyles();
 

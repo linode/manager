@@ -57,7 +57,7 @@ export interface Props {
   className?: string;
 }
 
-export const MultipleIPInput: React.FC<Props> = props => {
+export const MultipleIPInput: React.FC<Props> = (props) => {
   const { error, onChange, ips, title, helperText } = props;
   const classes = useStyles();
 

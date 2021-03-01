@@ -11,7 +11,7 @@ import { ListProps } from './types';
 
 export type CombinedProps = ListProps;
 
-export const ListEntities: React.FC<CombinedProps> = props => {
+export const ListEntities: React.FC<CombinedProps> = (props) => {
   const {
     data,
     entity,
@@ -62,7 +62,7 @@ export const ListEntities: React.FC<CombinedProps> = props => {
                       error={error}
                       lastUpdated={lastUpdated}
                     >
-                      {paginatedAndOrderedData.map(thisEntity => (
+                      {paginatedAndOrderedData.map((thisEntity) => (
                         <RowComponent
                           key={thisEntity.id}
                           {...thisEntity}

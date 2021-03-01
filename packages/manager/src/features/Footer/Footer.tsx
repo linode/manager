@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Footer: React.FC<Props> = props => {
+export const Footer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { desktopMenuIsOpen } = props;

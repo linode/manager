@@ -44,7 +44,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const MySQLGraphs: React.FC<CombinedProps> = props => {
+export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
     error,

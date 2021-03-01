@@ -28,7 +28,7 @@ class Resize extends Page {
   landingElemsDisplay() {
     const subHeader = 'Current Plan';
     const selectedPlanTab = this.tierTabs.filter(
-      tier =>
+      (tier) =>
         tier.getAttribute('aria-selected').includes('true') &&
         !tier.getText().includes('Resize')
     );

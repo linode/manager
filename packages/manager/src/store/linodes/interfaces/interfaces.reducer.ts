@@ -29,7 +29,7 @@ export type State = Record<
 export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) =>
-  produce(state, draft => {
+  produce(state, (draft) => {
     // getAllLinodeInterfacesActions
     if (isType(action, getAllLinodeInterfacesActions.started)) {
       const { linodeId } = action.payload;

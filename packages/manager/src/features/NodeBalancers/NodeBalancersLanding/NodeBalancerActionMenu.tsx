@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
+export const NodeBalancerActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -45,7 +45,7 @@ export const NodeBalancerActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesMdDown &&
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

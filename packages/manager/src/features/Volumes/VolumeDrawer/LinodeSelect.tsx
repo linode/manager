@@ -69,7 +69,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
 
     const { linodes } = this.state;
     const idx = linodes.findIndex(
-      linode => Number(linodeId) === Number(linode.value)
+      (linode) => Number(linodeId) === Number(linode.value)
     );
     return idx > -1 ? linodes[idx] : -1;
   };
@@ -128,7 +128,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
 
     const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
-      .then(response => {
+      .then((response) => {
         const linodes = this.renderLinodeOptions(response.data);
         if (this.mounted) {
           this.setState({ linodes, loading: false });
@@ -168,7 +168,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
     const { loading, linodes, selectedLinodeId } = this.state;
 
     const options = shouldOnlyDisplayRegionsWithBlockStorage
-      ? linodes.filter(linode => {
+      ? linodes.filter((linode) => {
           const region = pathOr('', ['data', 'region'], linode);
           return doesRegionSupportBlockStorage(region, regionsData);
         })

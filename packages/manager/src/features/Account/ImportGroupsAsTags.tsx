@@ -25,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ImportGroupsAsTags: React.FC<CombinedProps> = props => {
+export const ImportGroupsAsTags: React.FC<CombinedProps> = (props) => {
   const { classes, openDrawer } = props;
   return (
     <Accordion

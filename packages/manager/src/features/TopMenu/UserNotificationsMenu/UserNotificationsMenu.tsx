@@ -201,7 +201,7 @@ interface StateProps {
   notifications: Notification[];
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   notifications: (state.__resources.notifications.data || []).reduce(
     (result: Notification[], notification) => {
       /** Filter out any notifications that do not meet our expectations. */

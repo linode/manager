@@ -18,7 +18,7 @@ import {
 } from './utilities';
 
 const generateStats = (yValues: number[]): Stat[] => {
-  return yValues.map(n => ({ x: 0, y: n }));
+  return yValues.map((n) => ({ x: 0, y: n }));
 };
 
 describe('Utility Functions', () => {

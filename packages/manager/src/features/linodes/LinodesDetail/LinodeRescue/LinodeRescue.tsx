@@ -106,7 +106,7 @@ interface DeviceMap {
 export const getDefaultDeviceMapAndCounter = (
   disks: ExtendedDisk[]
 ): [DeviceMap, number] => {
-  const defaultDisks = disks.map(thisDisk => thisDisk._id);
+  const defaultDisks = disks.map((thisDisk) => thisDisk._id);
   const counter = defaultDisks.reduce(
     (c, thisDisk) => (!!thisDisk ? c + 1 : c),
     0
@@ -167,7 +167,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   getFilteredVolumes = () => {
     const { linodeId, linodeRegion, volumesData } = this.props;
     return volumesData
-      ? volumesData.filter(volume => {
+      ? volumesData.filter((volume) => {
           // whether volume is not attached to any Linode
           const volumeIsUnattached = volume.linode_id === null;
           // whether volume is attached to the current Linode we're viewing
@@ -187,14 +187,14 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     const { rescueDevices } = this.state;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
-      .then(_ => {
+      .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
         });
         resetEventsPolling();
         history.push(`/linodes/${linodeId}/summary`);
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         getAPIErrorOrDefault(
           errorResponse,
           'There was an issue rescuing your Linode.'
@@ -278,7 +278,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
             devices={devices}
             onChange={this.onChange}
-            getSelected={slot =>
+            getSelected={(slot) =>
               pathOr('', ['rescueDevices', slot], this.state)
             }
             counter={this.state.counter}
@@ -309,7 +309,9 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeRegion: linode.region,
   linodeLabel: linode.label,
   linodeStatus: linode.status,
-  linodeDisks: linode._disks.map(disk => assoc('_id', `disk-${disk.id}`, disk)),
+  linodeDisks: linode._disks.map((disk) =>
+    assoc('_id', `disk-${disk.id}`, disk)
+  ),
   permissions: linode._permissions,
 }));
 
@@ -337,7 +339,7 @@ export default compose<CombinedProps, {}>(
       volumesResults,
       volumesError
     ) => {
-      const mappedData = volumesData.map(volume => ({
+      const mappedData = volumesData.map((volume) => ({
         ...volume,
         _id: `volume-${volume.id}`,
       }));

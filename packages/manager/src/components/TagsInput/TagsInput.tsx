@@ -58,13 +58,13 @@ class TagsInput extends React.Component<Props, State> {
 
   componentDidMount() {
     getTags()
-      .then(response => {
+      .then((response) => {
         const accountTags: Item[] = response.data.map((tag: Tag) => {
           return { label: tag.label, value: tag.label };
         });
         this.setState({ accountTags });
       })
-      .catch(_ => {
+      .catch((_) => {
         const defaultError = [
           { reason: 'There was an error retrieving your tags.' },
         ];
@@ -74,7 +74,7 @@ class TagsInput extends React.Component<Props, State> {
 
   getEmptyMessage = (value: NoOptionsMessageProps) => {
     const { value: tags } = this.props;
-    if (tags.map(tag => tag.value).includes(value.inputValue)) {
+    if (tags.map((tag) => tag.value).includes(value.inputValue)) {
       return 'This tag is already selected.';
     } else {
       return 'No results.';

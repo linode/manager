@@ -124,11 +124,11 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
     this.setState({ submitting: true });
 
     createSSHKey({ label, ssh_key: sshKey })
-      .then(_ => {
+      .then((_) => {
         this.setState({ submitting: false });
         this.props.onSuccess();
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           errors: getAPIErrorOrDefault(
             error,

@@ -16,7 +16,7 @@ export interface Props {
   removePool: (poolIdx: number) => void;
 }
 
-export const KubeCheckoutBar: React.FC<Props> = props => {
+export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const {
     pools,
     submitting,
@@ -27,7 +27,7 @@ export const KubeCheckoutBar: React.FC<Props> = props => {
   } = props;
 
   // Show a warning if any of the pools have fewer than 3 nodes
-  const showWarning = pools.some(thisPool => thisPool.count < 3);
+  const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
   return (
     <CheckoutBar
@@ -50,7 +50,8 @@ export const KubeCheckoutBar: React.FC<Props> = props => {
             onRemove={() => removePool(idx)}
             price={thisPool.totalMonthlyPrice}
             poolType={
-              typesData.find(thisType => thisType.id === thisPool.type) || null
+              typesData.find((thisType) => thisType.id === thisPool.type) ||
+              null
             }
           />
         ))}

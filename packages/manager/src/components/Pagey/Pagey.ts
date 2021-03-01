@@ -75,7 +75,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       pageSize: storage.pageSize.get() || 25,
       error: undefined,
       orderBy: options.orderBy,
-      order: options.order ?? 'asc' as Order,
+      order: options.order ?? ('asc' as Order),
       filter: {},
       searching: false,
     };
@@ -129,7 +129,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
         { page: this.state.page, page_size: this.state.pageSize },
         filters
       )
-        .then(response => {
+        .then((response) => {
           if (options.cb) {
             options.cb(this.props, response);
           }
@@ -147,7 +147,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
             });
           }
         })
-        .catch(response => {
+        .catch((response) => {
           this.setState({ loading: false, error: response });
         });
     };

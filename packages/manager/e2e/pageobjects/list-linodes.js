@@ -130,14 +130,14 @@ export class ListLinodes extends Page {
   getLinodeTags(linode) {
     return $(this.getLinodeSelector(linode))
       .$$(this.tag.selector)
-      .map(tag => tag.getText());
+      .map((tag) => tag.getText());
   }
 
   getLinodesInTagsGroup(tag) {
     const attribute = this.linodeElem.selector.substr(1).slice(0, -1);
     return this.tagHeader(tag)
       .$$(this.linodeElem.selector)
-      .map(linode => linode.getAttribute(attribute));
+      .map((linode) => linode.getAttribute(attribute));
   }
 
   navigateToDetail(linode) {
@@ -153,7 +153,7 @@ export class ListLinodes extends Page {
 
   gridElemsDisplay() {
     const header = this.subheader;
-    this.linode.forEach(l => {
+    this.linode.forEach((l) => {
       expect(l.isDisplayed()).toBe(true);
       expect(l.$(this.linodeLabel.selector).isDisplayed())
         .withContext(
@@ -212,41 +212,41 @@ export class ListLinodes extends Page {
   }
 
   listElemsDisplay() {
-    const linodeDisplays = this.linode.map(l => l.isDisplayed());
-    const labelDisplays = this.linode.map(l =>
+    const linodeDisplays = this.linode.map((l) => l.isDisplayed());
+    const labelDisplays = this.linode.map((l) =>
       l.$(this.linodeLabel.selector).isDisplayed()
     );
-    const ipDisplays = this.linode.map(l =>
+    const ipDisplays = this.linode.map((l) =>
       l.$(this.ip.selector).isDisplayed()
     );
-    const regionDisplays = this.linode.map(l =>
+    const regionDisplays = this.linode.map((l) =>
       l.$(this.region.selector).isDisplayed()
     );
-    const actionMenu = this.linode.map(l =>
+    const actionMenu = this.linode.map((l) =>
       l.$(this.linodeActionMenu.selector).isDisplayed()
     );
 
-    linodeDisplays.forEach(l =>
+    linodeDisplays.forEach((l) =>
       expect(l)
         .withContext(`"${l}" selector ${assertLog.displayed}`)
         .toBe(true)
     );
-    labelDisplays.forEach(l =>
+    labelDisplays.forEach((l) =>
       expect(l)
         .withContext(`"${l}" selector ${assertLog.displayed}`)
         .toBe(true)
     );
-    ipDisplays.forEach(i =>
+    ipDisplays.forEach((i) =>
       expect(i)
         .withContext(`"${i}" selector ${assertLog.displayed}`)
         .toBe(true)
     );
-    regionDisplays.forEach(r =>
+    regionDisplays.forEach((r) =>
       expect(r)
         .withContext(`"${r}" selector ${assertLog.displayed}`)
         .toBe(true)
     );
-    actionMenu.forEach(a =>
+    actionMenu.forEach((a) =>
       expect(a)
         .withContext(`"${a}" selector ${assertLog.displayed}`)
         .toBe(true)

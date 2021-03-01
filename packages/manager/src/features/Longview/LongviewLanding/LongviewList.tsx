@@ -50,7 +50,7 @@ interface Props {
 
 type CombinedProps = Props & LongviewProps;
 
-const LongviewList: React.FC<CombinedProps> = props => {
+const LongviewList: React.FC<CombinedProps> = (props) => {
   const {
     createLongviewClient,
     loading,

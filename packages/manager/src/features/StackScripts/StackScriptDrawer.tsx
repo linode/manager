@@ -38,7 +38,7 @@ export class StackScriptDrawer extends React.Component<CombinedProps, State> {
     if (stackScriptId && !prevProps.open && this.props.open) {
       this.setState({ loading: true, stackScript: undefined });
       getStackScript(stackScriptId)
-        .then(stackScript => {
+        .then((stackScript) => {
           this.setState({ stackScript, loading: false, error: false });
         })
         .catch(() => {

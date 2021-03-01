@@ -74,7 +74,7 @@ export class PageNumbers extends React.PureComponent<CombinedProps> {
             )}
           </React.Fragment>
         )}
-        {pageNumbers.map(eachPage => (
+        {pageNumbers.map((eachPage) => (
           <PageNumber
             key={eachPage}
             number={eachPage}

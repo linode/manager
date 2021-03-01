@@ -16,7 +16,7 @@ import {
 } from './linodeType.actions';
 
 type RequestTypesThunk = ThunkActionCreator<Promise<LinodeType[]>>;
-export const requestTypes: RequestTypesThunk = () => dispatch => {
+export const requestTypes: RequestTypesThunk = () => (dispatch) => {
   /**
    * This is a semi-static endpoint, so use cached data
    * if it's available.
@@ -46,11 +46,11 @@ export const requestTypes: RequestTypesThunk = () => dispatch => {
       ...types,
       ...legacyTypes,
     ])
-    .then(allTypes => {
+    .then((allTypes) => {
       dispatch(getLinodeTypesActions.done({ result: allTypes }));
       return allTypes;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(getLinodeTypesActions.failed({ error }));
       return error;
     });

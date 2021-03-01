@@ -25,7 +25,7 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state: State = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, requestAccountActions.started)) {
       draft.loading = true;
     }

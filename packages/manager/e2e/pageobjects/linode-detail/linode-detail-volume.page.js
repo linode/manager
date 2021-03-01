@@ -212,7 +212,9 @@ export class VolumeDetail extends Page {
       .$('..')
       .click();
     this.selectOption.waitForDisplayed(constants.wait.normal);
-    this.selectOptions.find(option => option.getText() === volumeLabel).click();
+    this.selectOptions
+      .find((option) => option.getText() === volumeLabel)
+      .click();
     this.selectOption.waitForDisplayed(constants.wait.normal, true);
     this.submit.click();
     this.drawerBase.waitForDisplayed(constants.wait.normal, true);
@@ -243,14 +245,14 @@ export class VolumeDetail extends Page {
 
   getVolumeId(label) {
     const volumesWithLabel = this.volumeCell.filter(
-      v => v.$(this.volumeCellLabel.selector).getText() === label
+      (v) => v.$(this.volumeCellLabel.selector).getText() === label
     );
 
     if (volumesWithLabel.length === 1) {
       return volumesWithLabel[0].getAttribute('data-qa-volume-cell');
     }
 
-    return volumesWithLabel.map(v => v.getAttribute('data-qa-volume-cell'));
+    return volumesWithLabel.map((v) => v.getAttribute('data-qa-volume-cell'));
   }
 
   createVolume(volume, createMethod) {
@@ -337,7 +339,7 @@ export class VolumeDetail extends Page {
     this.submit.click();
     this.drawerBase.waitForDisplayed(constants.wait.normal, true);
     browser.waitUntil(() => {
-      return $$(this.volumeCellLabel.selector).find(label =>
+      return $$(this.volumeCellLabel.selector).find((label) =>
         label.getText().includes(newLabel)
       );
     }, constants.wait.normal);
@@ -510,7 +512,7 @@ export class VolumeDetail extends Page {
     const vSize = this.volumeCellSize;
     const vFsPath = this.volumeFsPath;
 
-    const volumesDisplayed = volumes.map(v => {
+    const volumesDisplayed = volumes.map((v) => {
       return [v.$(vLabel.selector).getText(), v.$(vSize.selector).getText()];
     });
     expect(volumesDisplayed).toContain([volume.label, volume.size]);
@@ -529,7 +531,7 @@ export class VolumeDetail extends Page {
           'Delete',
         ];
     const actionMenuItem = this.actionMenuItem.selector.replace(']', '');
-    menuItems.forEach(item =>
+    menuItems.forEach((item) =>
       expect($(`${actionMenuItem}="${item}"`).isDisplayed())
         .withContext(`${item} menu item ${assertLog.displayed}`)
         .toBe(true)
@@ -557,7 +559,7 @@ export class VolumeDetail extends Page {
       )
       .toBe(4);
 
-    this.configHelpMessages.forEach(msg => {
+    this.configHelpMessages.forEach((msg) => {
       expect(msg.getText())
         .withContext(`${assertLog.incorrectRegExVal} for ${msg}`)
         .toMatch(/\w/gi);
@@ -618,7 +620,7 @@ export class VolumeDetail extends Page {
     const attribute = this.volumeCellLabel.selector.slice(1, -1);
     return this.tagHeader(tag)
       .$$(this.volumeCellLabel.selector)
-      .map(volume => volume.getAttribute(attribute));
+      .map((volume) => volume.getAttribute(attribute));
   }
 
   hoverVolumeTags(label) {

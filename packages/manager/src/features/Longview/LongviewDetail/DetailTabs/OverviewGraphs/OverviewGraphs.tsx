@@ -45,7 +45,7 @@ interface Props {
 }
 export type CombinedProps = Props;
 
-export const OverviewGraphs: React.FC<CombinedProps> = props => {
+export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 

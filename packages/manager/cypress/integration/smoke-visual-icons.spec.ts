@@ -10,7 +10,7 @@ describe.skip('Checking icons render correctly', () => {
         name: 'linode-offline',
       },
     ];
-    linodeIconStatus.forEach(s => {
+    linodeIconStatus.forEach((s) => {
       return it(`${s.name}`, () => {
         // not creating any linode, simply mocking them
         cy.server();
@@ -48,7 +48,7 @@ describe.skip('Checking icons render correctly', () => {
         },
       },
     ];
-    linodeLandingIcons.forEach(i => {
+    linodeLandingIcons.forEach((i) => {
       return it(`${i.name}`, () => {
         // here we mock to avoid being on No linode list
         cy.server();

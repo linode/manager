@@ -21,7 +21,7 @@ export const usePreferences = () => {
   );
 
   const updatePreferences = (newPreferences: UserPreferences) =>
-    dispatch(getUserPreferences()).then(currentPreferences => {
+    dispatch(getUserPreferences()).then((currentPreferences) => {
       dispatch(
         updateUserPreferences({ ...currentPreferences, ...newPreferences })
       );

@@ -42,7 +42,7 @@ const renderActions = (
   );
 };
 
-export const ResizeDialog: React.FC<Props> = props => {
+export const ResizeDialog: React.FC<Props> = (props) => {
   const {
     isOpen,
     error,

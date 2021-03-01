@@ -95,7 +95,7 @@ export const paypalScriptSrc = () => {
   return `https://www.paypal.com/sdk/js?client-id=${client[PAYPAL_CLIENT_ENV]}${paypalSrcQueryParams}`;
 };
 
-export const PayPalDisplay: React.FC<CombinedProps> = props => {
+export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
   const { isScriptLoaded, usd, setSuccess } = props;
   const classes = useStyles();
 
@@ -163,7 +163,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       payer_id: payerID,
       payment_id: paymentID,
     })
-      .then(response => {
+      .then((response) => {
         setExecuting(false);
         setDialogOpen(false);
         setSuccess(
@@ -172,7 +172,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
           response.warnings
         );
       })
-      .catch(_ => {
+      .catch((_) => {
         setExecuting(false);
         setPaymentFailed(true);
       });
@@ -218,12 +218,12 @@ export const PayPalDisplay: React.FC<CombinedProps> = props => {
       redirect_url: 'https://www.paypal.com/checkoutnow/error',
       usd: (+usd).toFixed(2),
     })
-      .then(response => {
+      .then((response) => {
         setStaging(false);
         setPaymentID(response.payment_id);
         return response.checkout_token;
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         /** For sentry purposes only */
         const cleanedError = getAPIErrorOrDefault(
           errorResponse,

@@ -77,7 +77,7 @@ const defaultDialogState = {
   error: undefined,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = props => {
+export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
   const { imagesData, imagesLoading, imagesError, deleteImage } = props;
@@ -142,12 +142,12 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
 
   const handleRemoveImage = () => {
     if (!dialog.imageID) {
-      setDialogState(dialog => ({
+      setDialogState((dialog) => ({
         ...dialog,
         error: 'Image is not available.',
       }));
     }
-    setDialogState(dialog => ({
+    setDialogState((dialog) => ({
       ...dialog,
       submitting: true,
       error: undefined,
@@ -170,12 +170,12 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
           variant: 'info',
         });
       })
-      .catch(err => {
+      .catch((err) => {
         const _error = getErrorStringOrDefault(
           err,
           'There was an error deleting the image.'
         );
-        setDialogState(dialog => ({
+        setDialogState((dialog) => ({
           ...dialog,
           submitting: false,
           error: _error,
@@ -223,7 +223,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   };
 
   const changeSelectedLinode = (linodeId: number | null) => {
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       selectedDisk: null,
       selectedLinode: linodeId ?? undefined,
@@ -231,7 +231,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   };
 
   const changeSelectedDisk = (disk: string | null) => {
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       selectedDisk: disk,
     }));
@@ -240,7 +240,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   const setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       label: value,
     }));
@@ -248,7 +248,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
 
   const setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       description: value,
     }));
@@ -274,7 +274,7 @@ export const ImagesLanding: React.FC<CombinedProps> = props => {
   };
 
   const closeImageDrawer = () => {
-    setDrawer(prevDrawerState => ({
+    setDrawer((prevDrawerState) => ({
       ...prevDrawerState,
       open: false,
     }));
@@ -424,11 +424,11 @@ const withPrivateImages = connect(
     const events = imageEvents(state.events);
     const privateImagesWithEvents = Object.values(itemsById).reduce(
       (accum, thisImage) =>
-        produce(accum, draft => {
+        produce(accum, (draft) => {
           if (!thisImage.is_public) {
             // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
             const matchingEvent = events.find(
-              thisEvent =>
+              (thisEvent) =>
                 thisEvent.secondary_entity &&
                 `private/${thisEvent.secondary_entity.id}` === thisImage.id
             );

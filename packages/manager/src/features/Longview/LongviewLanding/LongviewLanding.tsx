@@ -38,13 +38,15 @@ type CombinedProps = LongviewProps &
   SettingsProps &
   GrantsProps;
 
-export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => {
+export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
-    () => getActiveLongviewPlan().then(response => response),
+    () => getActiveLongviewPlan().then((response) => response),
     {}
   );
   const subscriptionsRequestHook = useAPIRequest<LongviewSubscription[]>(
-    () => getLongviewSubscriptions().then(response => response.data),
+    () => getLongviewSubscriptions().then((response) => response.data),
     []
   );
 
@@ -82,13 +84,13 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
   const handleAddClient = () => {
     setNewClientLoading(true);
     createLongviewClient()
-      .then(_ => {
+      .then((_) => {
         setNewClientLoading(false);
         if (props.history.location.pathname !== '/longview/clients') {
           props.history.push('/longview/clients');
         }
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         if (errorResponse[0].reason.match(/subscription/)) {
           // The user has reached their subscription limit.
           setSubscriptionDialogOpen(true);
@@ -137,7 +139,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
       />
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}

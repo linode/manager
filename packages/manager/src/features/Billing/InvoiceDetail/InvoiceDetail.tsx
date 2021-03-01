@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }> & StateProps;
 
-export const InvoiceDetail: React.FC<CombinedProps> = props => {
+export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { data } = props;
@@ -100,7 +100,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
         setInvoice(invoice);
         setItems(items);
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         setLoading(false);
         setErrors(
           getAPIErrorOrDefault(

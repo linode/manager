@@ -115,7 +115,7 @@ export const reducer: EventsReducer = (state, action) => {
             /*
               Pop new events from Redux on the top of the event stream, with some conditions
             */
-            ...nextReduxEvents.filter(eachEvent => {
+            ...nextReduxEvents.filter((eachEvent) => {
               return (
                 /** all events from Redux will have this flag as a boolean value */
                 !eachEvent._initial &&
@@ -136,7 +136,7 @@ export const reducer: EventsReducer = (state, action) => {
             flag doesn't exist
             */
             ...nextReactEvents.filter(
-              eachEvent => typeof eachEvent._initial === 'undefined'
+              (eachEvent) => typeof eachEvent._initial === 'undefined'
             ),
           ]),
         };
@@ -161,7 +161,7 @@ export const reducer: EventsReducer = (state, action) => {
   }
 };
 
-export const EventsLanding: React.FC<CombinedProps> = props => {
+export const EventsLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [loading, setLoading] = React.useState<boolean>(false);

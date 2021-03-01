@@ -19,7 +19,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const FirewallActionMenu: React.FC<CombinedProps> = props => {
+const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -59,7 +59,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

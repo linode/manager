@@ -28,8 +28,8 @@ xdescribe('StackScript - detail page and drawer suite', () => {
       ListStackScripts.stackScriptCompatibleDistributions.selector
     )[0]
       .$$('div')
-      .map(distro => distro.getText())
-      .filter(d => !d.includes(`\n+`));
+      .map((distro) => distro.getText())
+      .filter((d) => !d.includes(`\n+`));
     const getTitleAndAuthor = titleAndAuthor.split('/');
     const stackScriptDetails = {
       author: getTitleAndAuthor[0].trim(),
@@ -193,7 +193,7 @@ xdescribe('StackScript - detail page and drawer suite', () => {
 
     it('Can dismiss selected StackScript', () => {
       const chooseFromOthers = $$('button span').find(
-        it => it.getText() === 'Choose another StackScript'
+        (it) => it.getText() === 'Choose another StackScript'
       );
       expect(chooseFromOthers.isDisplayed()).toBe(true);
       chooseFromOthers.click();

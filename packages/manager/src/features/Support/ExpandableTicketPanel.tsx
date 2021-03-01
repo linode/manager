@@ -111,7 +111,7 @@ interface Data {
   updated: string;
 }
 
-export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
+export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 

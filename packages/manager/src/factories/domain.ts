@@ -2,8 +2,8 @@ import * as Factory from 'factory.ts';
 import { Domain, DomainRecord } from '@linode/api-v4/lib/domains/types';
 
 export const domainFactory = Factory.Sync.makeFactory<Domain>({
-  domain: Factory.each(id => `domain-${id}`),
-  id: Factory.each(id => id),
+  domain: Factory.each((id) => `domain-${id}`),
+  id: Factory.each((id) => id),
   soa_email: 'admin@example.com',
   description: 'a domain',
   axfr_ips: [],
@@ -20,7 +20,7 @@ export const domainFactory = Factory.Sync.makeFactory<Domain>({
 });
 
 export const domainRecordFactory = Factory.Sync.makeFactory<DomainRecord>({
-  id: Factory.each(id => id),
+  id: Factory.each((id) => id),
   type: 'A',
   name: 'www',
   target: '172.104.27.30',

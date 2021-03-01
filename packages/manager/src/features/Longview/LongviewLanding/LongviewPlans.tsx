@@ -163,7 +163,7 @@ export const managedText = (
   </span>
 );
 
-export const LongviewPlans: React.FC<CombinedProps> = props => {
+export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   const {
     accountSettings,
     subscriptionRequestHook: subscriptions,
@@ -200,7 +200,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
         setCurrentSubscription(activeID);
         setSelectedSub(activeID);
       })
-      .catch(_ => {
+      .catch((_) => {
         if (!mounted.current) {
           return;
         }
@@ -227,12 +227,12 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
         : { longview_subscription: selectedSub };
 
     updateActiveLongviewPlan(payload)
-      .then(_ => {
+      .then((_) => {
         setUpdateLoading(false);
         setUpdateSuccessMsg('Plan updated successfully.');
         setCurrentSubscription(selectedSub);
       })
-      .catch(err => {
+      .catch((err) => {
         const normalizedError = getAPIErrorOrDefault(
           err,
           'There was an error updating your Longview Plan.'
@@ -329,7 +329,7 @@ interface ReduxStateProps {
   mayUserModifyLVSubscription: boolean;
 }
 
-const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = (state) => ({
   mayUserViewAccountSettings:
     !isRestrictedUser(state) ||
     hasGrant(state, 'account_access') === 'read_only' ||
@@ -365,7 +365,7 @@ interface LongviewPlansTableBodyProps {
 }
 
 export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
-  props => {
+  (props) => {
     const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
     if (loading) {
@@ -393,7 +393,7 @@ export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = Rea
         />
         {/* We use data from /longview/subscriptions to generate the remaining
       rows. */}
-        {subscriptions.map(sub => (
+        {subscriptions.map((sub) => (
           <LongviewSubscriptionRow
             key={sub.id}
             id={sub.id}
@@ -429,7 +429,7 @@ interface LongviewSubscriptionRowProps {
 }
 
 export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
-  props => {
+  (props) => {
     const {
       id,
       plan,

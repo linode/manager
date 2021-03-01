@@ -61,7 +61,9 @@ describe('linode backups', () => {
       if (!cy.contains('Linode busy.').should('not.exist')) {
         getClick('[data-qa-confirm="true"]');
       }
-      cy.wait('@enableBackups').its('response.statusCode').should('eq', 200);
+      cy.wait('@enableBackups')
+        .its('response.statusCode')
+        .should('eq', 200);
       assertToast('A snapshot is being taken');
       deleteLinodeById(linode.id);
     });

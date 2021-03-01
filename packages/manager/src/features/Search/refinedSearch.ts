@@ -86,7 +86,7 @@ export const recursivelyTestItem = (
     (queryJSON.type === 'and' || queryJSON.type === 'or')
   ) {
     // Build an array of conditions for each value
-    const parsedValues = queryJSON.values.map(val =>
+    const parsedValues = queryJSON.values.map((val) =>
       recursivelyTestItem(val, item)
     );
 
@@ -117,7 +117,7 @@ export const testItem = (item: SearchableItem, query: string) => {
 
   const { fieldName, searchTerms, isNegated } = getQueryInfo(parsedQuery);
 
-  const matchedSearchTerms = searchTerms.map(searchTerm => {
+  const matchedSearchTerms = searchTerms.map((searchTerm) => {
     const isMatch = doesSearchTermMatchItemField(searchTerm, item, fieldName);
     return isNegated ? !isMatch : isMatch;
   });

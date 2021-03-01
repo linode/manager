@@ -61,13 +61,13 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
     (dispatch: ThunkDispatch) => ({
       getFirewalls: (params, filter) =>
         dispatch(_getFirewalls({ params, filter })),
-      createFirewall: payload => dispatch(_create(payload)),
+      createFirewall: (payload) => dispatch(_create(payload)),
       deleteFirewall: (firewallID: number) => dispatch(_delete({ firewallID })),
       disableFirewall: (firewallID: number) =>
         dispatch(_disable({ firewallID })),
       enableFirewall: (firewallID: number) => dispatch(_enable({ firewallID })),
-      updateFirewall: payload => dispatch(_update(payload)),
-      updateFirewallRules: payload => dispatch(_updateFirewallRules(payload)),
+      updateFirewall: (payload) => dispatch(_update(payload)),
+      updateFirewallRules: (payload) => dispatch(_updateFirewallRules(payload)),
     })
   );
 

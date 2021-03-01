@@ -39,14 +39,14 @@ class Volumes extends Page {
 
   getVolumeId(label) {
     const volumesWithLabel = this.volumeCell.filter(
-      v => v.$(this.volumeCellLabel.selector).getText() === label
+      (v) => v.$(this.volumeCellLabel.selector).getText() === label
     );
 
     if (volumesWithLabel.length === 1) {
       return volumesWithLabel[0].getAttribute('data-qa-volume-cell');
     }
 
-    return volumesWithLabel.map(v => v.getAttribute('data-qa-volume-cell'));
+    return volumesWithLabel.map((v) => v.getAttribute('data-qa-volume-cell'));
   }
 
   removeVolume(volumeElement) {

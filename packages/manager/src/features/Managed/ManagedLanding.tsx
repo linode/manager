@@ -15,7 +15,9 @@ const docs: Linode.Doc[] = [
   },
 ];
 
-export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
+export const ManagedLanding: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />

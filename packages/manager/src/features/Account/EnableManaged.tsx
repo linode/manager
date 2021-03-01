@@ -30,7 +30,7 @@ interface ContentProps {
   isManaged: boolean;
   openConfirmationModal: () => void;
 }
-export const ManagedContent: React.FC<ContentProps> = props => {
+export const ManagedContent: React.FC<ContentProps> = (props) => {
   const { isManaged, openConfirmationModal } = props;
 
   if (isManaged) {
@@ -66,7 +66,7 @@ export const ManagedContent: React.FC<ContentProps> = props => {
   );
 };
 
-export const EnableManaged: React.FC<CombinedProps> = props => {
+export const EnableManaged: React.FC<CombinedProps> = (props) => {
   const { isManaged, linodeCount, update } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();

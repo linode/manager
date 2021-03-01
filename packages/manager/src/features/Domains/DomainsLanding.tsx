@@ -250,7 +250,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           this.closeRemoveDialog();
           this.setState({ removeDialogLoading: false });
         })
-        .catch(e => {
+        .catch((e) => {
           this.setState({
             removeDialogLoading: false,
             removeDialogError: getAPIErrorOrDefault(
@@ -278,7 +278,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           domainId,
           status: 'active',
         })
-        .catch(e => {
+        .catch((e) => {
           return this.props.enqueueSnackbar(
             getAPIErrorOrDefault(
               e,
@@ -513,7 +513,7 @@ const RenderError: React.FC<{}> = () => {
 const RenderEmpty: React.FC<{
   onCreateDomain: () => void;
   onImportZone: () => void;
-}> = props => {
+}> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
@@ -571,11 +571,9 @@ interface StateProps {
   domainsByID: Record<string, Domain>;
 }
 
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  {},
-  ApplicationState
-> = state => ({
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
+  state
+) => ({
   howManyLinodesOnAccount: state.__resources.linodes.results,
   linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources),
   isRestrictedUser: pathOr(

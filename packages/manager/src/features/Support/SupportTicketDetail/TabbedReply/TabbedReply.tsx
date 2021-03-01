@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = Props & ReplyProps & WithStyles<ClassNames>;
 
-const TabbedReply: React.FC<CombinedProps> = props => {
+const TabbedReply: React.FC<CombinedProps> = (props) => {
   const { innerClass, rootClass, classes, value, error, ...rest } = props;
 
   const title = props.isReply ? 'Reply' : 'Description';

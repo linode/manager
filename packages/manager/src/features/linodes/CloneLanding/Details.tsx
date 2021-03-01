@@ -91,7 +91,7 @@ interface Props {
   clearAll: () => void;
 }
 
-export const Configs: React.FC<Props> = props => {
+export const Configs: React.FC<Props> = (props) => {
   const {
     currentLinodeId,
     selectedConfigs,
@@ -185,7 +185,7 @@ export const Configs: React.FC<Props> = props => {
       )}
 
       <List>
-        {selectedConfigs.map(eachConfig => {
+        {selectedConfigs.map((eachConfig) => {
           return (
             <ListItem
               key={eachConfig.id}
@@ -204,7 +204,7 @@ export const Configs: React.FC<Props> = props => {
                 </button>
               </div>
               <List className={classes.nestedList}>
-                {eachConfig.associatedDisks.map(eachDisk => {
+                {eachConfig.associatedDisks.map((eachDisk) => {
                   return (
                     <ListItem key={eachDisk.label} disableGutters dense>
                       <Typography>{eachDisk.label}</Typography>
@@ -217,7 +217,7 @@ export const Configs: React.FC<Props> = props => {
         })}
       </List>
       <List>
-        {selectedDisks.map(eachDisk => {
+        {selectedDisks.map((eachDisk) => {
           return (
             <ListItem
               key={eachDisk.id}
@@ -254,7 +254,7 @@ export const Configs: React.FC<Props> = props => {
       <LinodeSelect
         label="Destination"
         selectedLinode={selectedLinodeId}
-        handleChange={linode => handleSelectLinode(linode.id)}
+        handleChange={(linode) => handleSelectLinode(linode.id)}
         filterCondition={
           shouldExcludeCurrentLinode
             ? (linode: Linode) => linode.id !== currentLinodeId

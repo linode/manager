@@ -184,11 +184,11 @@ class ConfigureLinode extends Page {
     const cloneSLA =
       'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.';
     const cloneFromHeader = 'Select Linode to Clone From';
-    const selectLinodePanelText = $$('[data-qa-select-linode-header]').map(h =>
-      h.getText()
-    );
+    const selectLinodePanelText = $$(
+      '[data-qa-select-linode-header]'
+    ).map((h) => h.getText());
 
-    expect(notices.map(n => n.getText()))
+    expect(notices.map((n) => n.getText()))
       .withContext(`text should contain: ${cloneSLA}`)
       .toContain(cloneSLA);
     expect($$('[data-qa-select-linode-header]').length)
@@ -280,7 +280,7 @@ class ConfigureLinode extends Page {
   }
 
   stackScriptMetadataDisplay() {
-    this.stackScriptRows.forEach(r => {
+    this.stackScriptRows.forEach((r) => {
       expect(r.$(this.stackScriptTitle.selector).getText())
         .withContext(``)
         .toMatch(/./g);
@@ -312,12 +312,12 @@ class ConfigureLinode extends Page {
     expect(this.selectImageHeader.isDisplayed())
       .withContext(`Choose a Distribution header ${assertLog.displayed}`)
       .toBe(true);
-    this.imageTabs.forEach(tab =>
+    this.imageTabs.forEach((tab) =>
       expect(tab.isDisplayed())
         .withContext(`${tabDisplayed}`)
         .toBe(true)
     );
-    this.images.forEach(i =>
+    this.images.forEach((i) =>
       expect(i.isDisplayed())
         .withContext(`distro image ${assertLog.displayed}`)
         .toBe(true)
@@ -328,12 +328,12 @@ class ConfigureLinode extends Page {
     expect(this.planHeader.isDisplayed())
       .withContext(`Linode plan header ${assertLog.displayed}`)
       .toBe(true);
-    this.planRows.forEach(row =>
+    this.planRows.forEach((row) =>
       expect(row.isDisplayed())
         .withContext(`plan ${tabDisplayed}`)
         .toBe(true)
     );
-    this.plans.forEach(p =>
+    this.plans.forEach((p) =>
       expect(p.isDisplayed())
         .withContext(`plan options ${assertLog.displayed}`)
         .toBe(true)
@@ -353,7 +353,7 @@ class ConfigureLinode extends Page {
       .toBe(true);
 
     expect(this.addonsHeader.isDisplayed()).toBe(true);
-    this.addons.forEach(a =>
+    this.addons.forEach((a) =>
       expect(a.isDisplayed())
         .withContext(`add-on ${assertLog.displayed}`)
         .toBe(true)
@@ -431,7 +431,7 @@ class ConfigureLinode extends Page {
     if (linodeLabel) {
       linodes = sourceSection[0]
         .$$('[data-qa-plan-row]')
-        .filter(l => l.$('[data-qa-plan-name]').getText() === linodeLabel);
+        .filter((l) => l.$('[data-qa-plan-name]').getText() === linodeLabel);
       sourceLinode = linodes[0];
       sourceLabel = sourceLinode.$('[data-qa-plan-name]').getText();
 
@@ -442,13 +442,13 @@ class ConfigureLinode extends Page {
   cloneSelectTarget(linodeLabel) {
     if (linodeLabel) {
       const targetSection = $$('[data-qa-select-linode-panel]').filter(
-        s =>
+        (s) =>
           s.$('[data-qa-select-linode-header]').getText() ===
           'Select Target Linode'
       );
       const linodes = targetSection[0]
         .$$('[data-qa-plan-row]')
-        .filter(l => l.$('[data-qa-plan-name]').getText() === linodeLabel);
+        .filter((l) => l.$('[data-qa-plan-name]').getText() === linodeLabel);
       linodes[0].click();
     } else {
       const cloneToNewCard = $('[data-qa-plan-name="New Linode"]');

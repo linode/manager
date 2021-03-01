@@ -16,7 +16,7 @@ interface Props {
 type CombinedProps = Props;
 
 const disksToOptions = (disks: Disk[]): Item<string>[] => {
-  return disks.map(disk => ({ label: disk.label, value: String(disk.id) }));
+  return disks.map((disk) => ({ label: disk.label, value: String(disk.id) }));
 };
 
 const diskFromValue = (
@@ -26,11 +26,11 @@ const diskFromValue = (
   if (!diskId) {
     return null;
   }
-  const thisDisk = disks.find(disk => disk.value === diskId);
+  const thisDisk = disks.find((disk) => disk.value === diskId);
   return thisDisk ? thisDisk : null;
 };
 
-const DiskSelect: React.FC<CombinedProps> = props => {
+const DiskSelect: React.FC<CombinedProps> = (props) => {
   const {
     disabled,
     disks,

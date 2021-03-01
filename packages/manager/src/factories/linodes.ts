@@ -122,8 +122,8 @@ export const linodeTransferFactory = Factory.Sync.makeFactory<
 });
 
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
-  id: Factory.each(i => i),
-  label: Factory.each(i => `linode-${i}`),
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `linode-${i}`),
   type: 'g6-standard-1',
   region: 'us-east',
   created: '2020-01-01',

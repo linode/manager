@@ -167,7 +167,7 @@ export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel: React.FC<Props> = props => {
+export const BillingActivityPanel: React.FC<Props> = (props) => {
   const {
     mostRecentInvoiceId,
     setMostRecentInvoiceId,
@@ -211,7 +211,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
             setMostRecentInvoiceId(invoices.data[0].id);
           }
         })
-        .catch(_error => {
+        .catch((_error) => {
           setError(
             getAPIErrorOrDefault(
               _error,
@@ -234,7 +234,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
       const invoice = invoices.find(
-        thisInvoice => thisInvoice.id === invoiceId
+        (thisInvoice) => thisInvoice.id === invoiceId
       );
 
       const id = `invoice-${invoiceId}`;
@@ -249,7 +249,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
       pdfLoading.add(id);
 
       getAllInvoiceItems([invoiceId])
-        .then(response => {
+        .then((response) => {
           pdfLoading.delete(id);
 
           const invoiceItems = response.data;
@@ -275,7 +275,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
   const downloadPaymentPDF = React.useCallback(
     (paymentId: number) => {
       const payment = payments.find(
-        thisPayment => thisPayment.id === paymentId
+        (thisPayment) => thisPayment.id === paymentId
       );
 
       const id = `payment-${paymentId}`;
@@ -351,7 +351,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
 
   // Filter on transaction type and transaction date.
   const filteredData = React.useMemo(() => {
-    return combinedData.filter(thisBillingItem => {
+    return combinedData.filter((thisBillingItem) => {
       const matchesType =
         selectedTransactionType !== 'all'
           ? thisBillingItem.type === selectedTransactionType
@@ -386,7 +386,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               onChange={handleTransactionTypeChange}
               value={
                 transactionTypeOptions.find(
-                  thisOption => thisOption.value === selectedTransactionType
+                  (thisOption) => thisOption.value === selectedTransactionType
                 ) || null
               }
               isClearable={false}
@@ -402,7 +402,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
               onChange={handleTransactionDateChange}
               value={
                 transactionDateOptions.find(
-                  thisOption => thisOption.value === selectedTransactionDate
+                  (thisOption) => thisOption.value === selectedTransactionDate
                 ) || null
               }
               isClearable={false}
@@ -450,7 +450,7 @@ export const BillingActivityPanel: React.FC<Props> = props => {
                           loading={loading}
                           error={error}
                         >
-                          {paginatedAndOrderedData.map(thisItem => {
+                          {paginatedAndOrderedData.map((thisItem) => {
                             return (
                               <ActivityFeedItem
                                 key={`${thisItem.type}-${thisItem.id}`}
@@ -513,7 +513,7 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
 }
 
 export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
-  props => {
+  (props) => {
     const classes = useStyles();
 
     const {

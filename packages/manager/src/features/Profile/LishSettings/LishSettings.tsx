@@ -149,7 +149,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       },
     ];
 
-    const defaultMode = modeOptions.find(eachMode => {
+    const defaultMode = modeOptions.find((eachMode) => {
       if (authType !== 'password') {
         return (eachMode.value as any) === 'keys_only';
       } else {
@@ -255,7 +255,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { authorizedKeys, lishAuthMethod } = this.state;
     const { updateProfile } = this.props;
-    const keys = authorizedKeys.filter(v => v !== '');
+    const keys = authorizedKeys.filter((v) => v !== '');
 
     this.setState({ errors: undefined, submitting: true });
 
@@ -263,7 +263,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       lish_auth_method: lishAuthMethod as any,
       authorized_keys: keys,
     })
-      .then(profileData => {
+      .then((profileData) => {
         this.setState({
           submitting: false,
           success: 'LISH authentication settings have been updated.',
@@ -273,7 +273,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
             : 1,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           {
             submitting: false,
@@ -313,7 +313,7 @@ interface StateProps {
   authType: TPAProvider;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const { profile } = state.__resources;
   return {
     loading: profile.loading,
@@ -327,7 +327,9 @@ interface DispatchProps {
   updateProfile: (v: Partial<Profile>) => Promise<Profile>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
   updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any),
 });
 

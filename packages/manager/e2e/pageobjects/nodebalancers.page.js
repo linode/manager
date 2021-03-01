@@ -427,7 +427,7 @@ class NodeBalancers extends Page {
 
   configRemoveNode(nodeLabel) {
     const node = $$(this.backendIpLabel.selector).find(
-      l => l.getValue() === nodeLabel
+      (l) => l.getValue() === nodeLabel
     );
     $(this.removeNode.selector).click();
     node.waitForDisplayed(constants.wait.normal, true);
@@ -489,7 +489,9 @@ class NodeBalancers extends Page {
     browser.keys('\uE007');
 
     /** set the value of the IP Address field */
-    const privateIP = linodeConfig.ipv4.find(eachIP => eachIP.match(/192.168/));
+    const privateIP = linodeConfig.ipv4.find((eachIP) =>
+      eachIP.match(/192.168/)
+    );
     this.backendIpAddress.setValue(privateIP);
 
     /** wait for the dropdown options to appear */

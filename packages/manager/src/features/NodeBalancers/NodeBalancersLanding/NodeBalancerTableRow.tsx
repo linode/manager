@@ -59,7 +59,7 @@ interface Props {
 
 type CombinedProps = NodeBalancerWithConfigs & Props;
 
-const NodeBalancerTableRow: React.FC<CombinedProps> = props => {
+const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { id, label, configs, transfer, ipv4, region, toggleDialog } = props;
 

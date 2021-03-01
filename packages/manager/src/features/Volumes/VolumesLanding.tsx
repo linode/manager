@@ -146,7 +146,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const VolumesLanding: React.FC<CombinedProps> = props => {
+export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -188,14 +188,14 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['volumes', 'linodes']);
 
   const handleCloseAttachDrawer = () => {
-    setAttachmentDrawer(attachmentDrawer => ({
+    setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
       open: false,
     }));
   };
 
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
-    setAttachmentDrawer(attachmentDrawer => ({
+    setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
       open: true,
       volumeId,
@@ -210,7 +210,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
     linodeLabel: string,
     poweredOff: boolean
   ) => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
       mode: 'detach',
@@ -223,7 +223,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
   };
 
   const handleDelete = (volumeId: number, volumeLabel: string) => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
       mode: 'delete',
@@ -235,7 +235,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
   };
 
   const closeDestructiveDialog = () => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: false,
     }));
@@ -249,7 +249,7 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
     }
 
     detachVolume({ volumeId })
-      .then(_ => {
+      .then((_) => {
         /* @todo: show a progress bar for volume detachment */
         props.enqueueSnackbar('Volume detachment started', {
           variant: 'info',
@@ -257,8 +257,8 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
         closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(error => {
-        setDestructiveDialog(destructiveDialog => ({
+      .catch((error) => {
+        setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
           error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
             .reason,
@@ -279,8 +279,8 @@ export const VolumesLanding: React.FC<CombinedProps> = props => {
         closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(error => {
-        setDestructiveDialog(destructiveDialog => ({
+      .catch((error) => {
+        setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
           error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
             .reason,
@@ -419,7 +419,9 @@ const addAttachedLinodeInfoToVolume = (
   if (!volume.linode_id) {
     return volume;
   }
-  const attachedLinode = linodes.find(linode => linode.id === volume.linode_id);
+  const attachedLinode = linodes.find(
+    (linode) => linode.id === volume.linode_id
+  );
   if (attachedLinode) {
     return {
       ...volume,
@@ -434,7 +436,7 @@ const addAttachedLinodeInfoToVolume = (
 const addRecentEventToVolume = (volume: Volume, events: Event[]) => {
   // We're filtering out events without entities in the reducer, so we can assume these
   // all have an entity attached.
-  const recentEvent = events.find(event => event.entity!.id === volume.id);
+  const recentEvent = events.find((event) => event.entity!.id === volume.id);
   if (recentEvent) {
     return { ...volume, recentEvent };
   } else {
@@ -465,7 +467,7 @@ export default compose<CombinedProps, Props>(
       volumesResults,
       volumesError
     ) => {
-      const mappedVolumesDataWithLinodes = volumesData.map(volume => {
+      const mappedVolumesDataWithLinodes = volumesData.map((volume) => {
         const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
           volume,
           ownProps.linodesData

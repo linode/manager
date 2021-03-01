@@ -23,7 +23,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = props => {
+const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
   const {
     onClose,
     onSubmit,
@@ -41,7 +41,7 @@ const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = props => {
     >
       {props.error && <Notice error>{props.error[0].reason}</Notice>}
       <Grid container spacing={1} style={{ marginTop: 16 }}>
-        {linodeConfigs.map(config => (
+        {linodeConfigs.map((config) => (
           <SelectionCard
             key={config.id}
             heading={config.label}

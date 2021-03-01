@@ -201,7 +201,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   // return whether all scopes selected in the create token flow are the same
   allScopesIdentical = () => {
     const { scopes, selectAllSelectedScope } = this.state;
-    return scopes.every(scope => scope[1] === selectAllSelectedScope);
+    return scopes.every((scope) => scope[1] === selectAllSelectedScope);
   };
 
   renderPermsTable() {
@@ -291,7 +291,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               </TableCell>
             </TableRow>
           )}
-          {scopes.map(scopeTup => {
+          {scopes.map((scopeTup) => {
             if (!permNameMap[scopeTup[0]]) {
               return null;
             }
@@ -377,7 +377,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       return { label: expiryTup[0], value: expiryTup[1] };
     });
 
-    const defaultExpiry = expiryList.find(eachOption => {
+    const defaultExpiry = expiryList.find((eachOption) => {
       return eachOption.value === expiry;
     });
 

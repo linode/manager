@@ -121,7 +121,7 @@ export const buildLinodeCloneTransitionText = (
 export const linodesInTransition = (events: Event[]) => {
   const set = new Set<number>();
 
-  events.forEach(thisEvent => {
+  events.forEach((thisEvent) => {
     const { entity, secondary_entity } = thisEvent;
     if (isInProgressEvent(thisEvent)) {
       if (entity?.type === 'linode') {

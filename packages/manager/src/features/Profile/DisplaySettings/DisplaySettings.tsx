@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DisplaySettings: React.FC<WithNotifications> = props => {
+export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   const classes = useStyles();
 
   const { updateProfile, requestProfile } = useProfile();
@@ -99,7 +99,8 @@ export const DisplaySettings: React.FC<WithNotifications> = props => {
             // the user has just updated their email, re-request notifications to
             // potentially clear the email bounce notification.
             const hasUserEmailBounceNotification = props.notifications.find(
-              thisNotification => thisNotification.type === 'user_email_bounce'
+              (thisNotification) =>
+                thisNotification.type === 'user_email_bounce'
             );
             if (hasUserEmailBounceNotification) {
               props.requestNotifications();

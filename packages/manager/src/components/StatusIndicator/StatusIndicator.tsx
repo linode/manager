@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const StatusIndicator: React.FC<Props> = props => {
+const StatusIndicator: React.FC<Props> = (props) => {
   const { status } = props;
 
   const classes = useStyles();

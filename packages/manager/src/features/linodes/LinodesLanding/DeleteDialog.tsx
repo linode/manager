@@ -17,7 +17,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeleteLinodeDialog: React.FC<CombinedProps> = props => {
+const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
@@ -43,7 +43,7 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = props => {
       .then(() => {
         props.onClose();
       })
-      .catch(e => {
+      .catch((e) => {
         setErrors(e);
         setDeleting(false);
       });
@@ -77,7 +77,7 @@ interface ActionsProps {
   loading: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

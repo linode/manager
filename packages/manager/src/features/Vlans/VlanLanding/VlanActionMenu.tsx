@@ -29,7 +29,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const VlanActionMenu: React.FC<CombinedProps> = props => {
+const VlanActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -48,7 +48,7 @@ const VlanActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.root}>
       {!matchesSmDown &&
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

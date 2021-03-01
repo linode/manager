@@ -125,10 +125,10 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
     // Since we've validated test fields, we can assume domain and
     // remote_nameserver won't be undefined
     importZone(domain!, remote_nameserver!)
-      .then(data => {
+      .then((data) => {
         this.props.onSuccess(data);
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           submitting: false,
           errors: getAPIErrorOrDefault(error),

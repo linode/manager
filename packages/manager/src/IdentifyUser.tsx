@@ -23,7 +23,7 @@ interface Props {
  * and this is a good side-effect usage of useEffect().
  */
 
-export const IdentifyUser: React.FC<Props> = props => {
+export const IdentifyUser: React.FC<Props> = (props) => {
   const {
     userID,
     accountCountry,

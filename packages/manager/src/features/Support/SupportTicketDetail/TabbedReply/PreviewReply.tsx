@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = WithStyles<ClassNames> & Props;
 
-const PreviewReply: React.FC<CombinedProps> = props => {
+const PreviewReply: React.FC<CombinedProps> = (props) => {
   const { classes, value, error } = props;
 
   return (

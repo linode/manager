@@ -222,7 +222,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   ) => this.openForEditing('CAA', f);
 
   confirmDeletion = (recordId: number) =>
-    this.updateConfirmDialog(confirmDialog => ({
+    this.updateConfirmDialog((confirmDialog) => ({
       ...confirmDialog,
       open: true,
       recordId,
@@ -239,7 +239,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       return;
     }
 
-    this.updateConfirmDialog(c => ({
+    this.updateConfirmDialog((c) => ({
       ...c,
       submitting: true,
       errors: undefined,
@@ -249,22 +249,22 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       .then(() => {
         this.props.updateRecords();
 
-        this.updateConfirmDialog(_ => ({
+        this.updateConfirmDialog((_) => ({
           open: false,
           submitting: false,
           errors: undefined,
           recordId: undefined,
         }));
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
-        this.updateConfirmDialog(c => ({
+        this.updateConfirmDialog((c) => ({
           ...c,
           submitting: false,
           errors,
         }));
       });
-    this.updateConfirmDialog(c => ({ ...c, submitting: true }));
+    this.updateConfirmDialog((c) => ({ ...c, submitting: true }));
   };
 
   handleOpenSOADrawer = (d: Domain) => {
@@ -426,7 +426,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       orderBy: 'name',
       order: 'asc',
       data: this.props.domainRecords.filter(
-        r => typeEq('AAAA', r) || typeEq('A', r)
+        (r) => typeEq('AAAA', r) || typeEq('A', r)
       ),
       columns: [
         {

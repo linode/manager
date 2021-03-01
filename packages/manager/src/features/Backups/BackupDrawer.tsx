@@ -226,7 +226,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
  * price and label information in BackupsTable.tsx.
  */
 export const addTypeInfo = (types: LinodeType[], linodes: Linode[]) =>
-  linodes.map(linode => {
+  linodes.map((linode) => {
     const typeInfo = getTypeInfo(linode.type, types || []);
     return {
       ...linode,
@@ -241,7 +241,7 @@ export const addErrors = (
 ) =>
   linodes.map((linode: LinodeWithTypeInfo) => {
     const linodeError = errors.find(
-      error => Number(error.linodeId) === Number(linode.id)
+      (error) => Number(error.linodeId) === Number(linode.id)
     );
     return {
       ...linode,

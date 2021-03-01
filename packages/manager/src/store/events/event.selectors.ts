@@ -2,7 +2,9 @@ import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { State } from './event.reducer';
 
 export const eventsForLinode = (state: State, linodeId: number) => {
-  return state.events.filter(event => isEventRelevantToLinode(event, linodeId));
+  return state.events.filter((event) =>
+    isEventRelevantToLinode(event, linodeId)
+  );
 };
 
 export const isEventRelevantToLinode = (event: Event, linodeId: number) =>

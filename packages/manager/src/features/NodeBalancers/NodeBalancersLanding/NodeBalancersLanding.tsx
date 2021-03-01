@@ -172,7 +172,7 @@ export class NodeBalancersLanding extends React.Component<
     });
 
     deleteNodeBalancer({ nodeBalancerId: selectedNodeBalancerId })
-      .then(_ => {
+      .then((_) => {
         this.setState({
           deleteConfirmDialog: {
             open: false,
@@ -180,7 +180,7 @@ export class NodeBalancersLanding extends React.Component<
           },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         return this.setState(
           {
             deleteConfirmDialog: {
@@ -274,7 +274,7 @@ export class NodeBalancersLanding extends React.Component<
           onClose={this.closeConfirmationDialog}
           title={`Delete ${this.state.selectedNodeBalancerLabel}?`}
           error={(this.state.deleteConfirmDialog.errors || [])
-            .map(e => e.reason)
+            .map((e) => e.reason)
             .join(',')}
           actions={this.renderConfirmationDialogActions}
           open={deleteConfirmAlertOpen}

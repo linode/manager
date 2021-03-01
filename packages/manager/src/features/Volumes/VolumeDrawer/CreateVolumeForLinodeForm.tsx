@@ -73,7 +73,7 @@ type CombinedProps = Props &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const CreateVolumeForm: React.FC<CombinedProps> = props => {
+const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const {
     onClose,
     onSuccess,
@@ -105,7 +105,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
           config_id:
             // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
             config_id === -1 ? undefined : maybeCastToNumber(config_id),
-          tags: tags.map(v => v.value),
+          tags: tags.map((v) => v.value),
         })
           .then(({ label: newLabel, filesystem_path }) => {
             resetEventsPolling();
@@ -117,7 +117,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             // GA Event
             sendCreateVolumeEvent(`${label}: ${size}GiB`, origin);
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -238,7 +238,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
               }
               name="tags"
               label="Tags"
-              onChange={selected => setFieldValue('tags', selected)}
+              onChange={(selected) => setFieldValue('tags', selected)}
               value={values.tags}
               disabled={disabled}
             />
@@ -307,7 +307,7 @@ interface StateProps {
   origin?: VolumeDrawerOrigin;
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   // disabled if the profile is restricted and doesn't have add_volumes grant
   disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
   origin: state.volumeDrawer.origin,

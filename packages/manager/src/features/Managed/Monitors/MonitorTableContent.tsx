@@ -19,7 +19,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const MonitorTableContent: React.FC<CombinedProps> = props => {
+export const MonitorTableContent: React.FC<CombinedProps> = (props) => {
   const {
     error,
     issues,
@@ -54,7 +54,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
         <MonitorRow
           key={`service-monitor-row-${idx}`}
           monitor={monitor}
-          issues={issues.filter(i => i.services.includes(monitor.id))}
+          issues={issues.filter((i) => i.services.includes(monitor.id))}
           openDialog={openDialog}
           openMonitorDrawer={openMonitorDrawer}
           openHistoryDrawer={openHistoryDrawer}

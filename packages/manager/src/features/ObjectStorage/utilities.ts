@@ -134,13 +134,13 @@ export const confirmObjectStorage = <T extends {}>(
   // a confirmation modal before letting them create their first bucket.
   if (object_storage === 'disabled') {
     // But first, manually validate the form.
-    formikProps.validateForm().then(validationErrors => {
+    formikProps.validateForm().then((validationErrors) => {
       if (Object.keys(validationErrors).length > 0) {
         // Set `touched` and `error` for each field with an error.
         // Setting `touched` is necessary because we only display errors
         // on fields that have been touched (handleSubmit() does this
         // implicitly).
-        Object.keys(validationErrors).forEach(key => {
+        Object.keys(validationErrors).forEach((key) => {
           formikProps.setFieldTouched(key, validationErrors[key]);
           formikProps.setFieldError(key, validationErrors[key]);
         });

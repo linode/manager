@@ -196,7 +196,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       return { label, value: ipChoice };
     });
 
-    const defaultIP = ipList.find(eachIP => {
+    const defaultIP = ipList.find((eachIP) => {
       return eachIP.value === ip;
     });
 
@@ -261,7 +261,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
       successMessage: undefined,
     });
     shareAddresses({ linode_id: this.props.linodeID, ips: finalIPs })
-      .then(_ => {
+      .then((_) => {
         this.props.refreshIPs();
         if (!this.mounted) {
           return;
@@ -272,7 +272,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           successMessage: 'IP Sharing updated successfully',
         });
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(
           errorResponse,
           'Unable to complete request at this time.'

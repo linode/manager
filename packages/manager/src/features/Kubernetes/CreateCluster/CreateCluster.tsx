@@ -120,7 +120,7 @@ const regionHelperText = (
   </React.Fragment>
 );
 
-export const CreateCluster: React.FC<CombinedProps> = props => {
+export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     regionsData,
@@ -136,7 +136,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
   // Only include regions that have LKE capability
   const filteredRegions = React.useMemo(() => {
     return regionsData
-      ? regionsData.filter(thisRegion =>
+      ? regionsData.filter((thisRegion) =>
           thisRegion.capabilities.includes('Kubernetes')
         )
       : [];
@@ -152,7 +152,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     data: versionData,
     isError: versionLoadError,
   } = useKubernetesVersionQuery();
-  const versions = (versionData ?? []).map(thisVersion => ({
+  const versions = (versionData ?? []).map((thisVersion) => ({
     value: thisVersion.id,
     label: thisVersion.id,
   }));
@@ -188,8 +188,8 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
     };
 
     createKubernetesCluster(payload)
-      .then(cluster => push(`/kubernetes/clusters/${cluster.id}`))
-      .catch(err => {
+      .then((cluster) => push(`/kubernetes/clusters/${cluster.id}`))
+      .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
         setSubmitting(false);
         scrollErrorIntoView();
@@ -368,7 +368,7 @@ export const CreateCluster: React.FC<CombinedProps> = props => {
 };
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })), // @todo DRY this up
+  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })), // @todo DRY this up
   regionsLoading: loading,
   regionsError: error,
 }));

@@ -21,7 +21,7 @@ interface Props {
 
 export type CombinedProps = Props & ActionProps;
 
-export const FirewallDeviceRow: React.FC<CombinedProps> = props => {
+export const FirewallDeviceRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { deviceLabel, deviceID, entityID } = props;
 

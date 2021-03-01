@@ -16,7 +16,7 @@ export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
   return storageInBytes ? storageInBytes.total - storageInBytes.free : 0;
 };
 
-const StorageGauge: React.FC<CombinedProps> = props => {
+const StorageGauge: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
@@ -57,7 +57,7 @@ const StorageGauge: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withClientStats<Props>(props => props.clientID)(
+export default withClientStats<Props>((props) => props.clientID)(
   withTheme(StorageGauge)
 );
 

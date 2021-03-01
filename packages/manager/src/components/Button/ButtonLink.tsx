@@ -13,7 +13,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const ButtonLink: React.FC<CombinedProps> = props => {
+const ButtonLink: React.FC<CombinedProps> = (props) => {
   const { to, linkText, secondary, className } = props;
 
   return (

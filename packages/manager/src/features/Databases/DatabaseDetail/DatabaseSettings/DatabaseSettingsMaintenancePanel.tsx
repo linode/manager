@@ -39,7 +39,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props => {
+export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = (
+  props
+) => {
   const classes = useStyles();
   const timezone = useTimezone();
   const { updateDatabase } = useDatabases();
@@ -87,12 +89,12 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     'Thursday',
     'Friday',
     'Saturday',
-  ].map(thisDay => ({
+  ].map((thisDay) => ({
     label: thisDay,
     value: thisDay,
   }));
 
-  const defaultDaySelection = daySelection.find(eachOption => {
+  const defaultDaySelection = daySelection.find((eachOption) => {
     return eachOption.value === maintenanceDay;
   });
 
@@ -112,7 +114,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
     maintenanceWindowSelectOptions
   );
 
-  const defaultTimeSelection = windowSelection.find(eachOption => {
+  const defaultTimeSelection = windowSelection.find((eachOption) => {
     return eachOption.value === maintenanceTime;
   });
 
@@ -141,7 +143,7 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = props =
         setSubmitting(false);
         setSuccess('Maintenance window changed successfully.');
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setErrors(
           getAPIErrorOrDefault(

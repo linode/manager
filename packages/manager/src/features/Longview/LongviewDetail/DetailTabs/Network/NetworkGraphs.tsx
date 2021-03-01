@@ -29,7 +29,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const NetworkGraphs: React.FC<CombinedProps> = props => {
+export const NetworkGraphs: React.FC<CombinedProps> = (props) => {
   const {
     end,
     error,

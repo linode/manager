@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = Props;
 
-const Modals: React.FC<CombinedProps> = props => {
+const Modals: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { modalErrors, label, resetClient, isResetting, closeDialogs } = props;
 

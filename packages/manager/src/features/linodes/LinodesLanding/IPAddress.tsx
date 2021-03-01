@@ -163,7 +163,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes, ips, copyRight, showMore, showAll } = this.props;
 
     const formattedIPS = ips
-      .map(ip => ip.replace('/64', ''))
+      .map((ip) => ip.replace('/64', ''))
       .sort(sortIPAddress);
 
     return (

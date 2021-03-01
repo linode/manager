@@ -101,7 +101,7 @@ export class RestoreToLinodeDrawer extends React.Component<
         this.reset();
         onSubmit();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         if (!this.mounted) {
           return;
         }
@@ -142,7 +142,7 @@ export class RestoreToLinodeDrawer extends React.Component<
     const selectError = Boolean(linodeError) || readOnly;
 
     const linodeOptions = this.props.linodesData
-      .filter(linode => linode.region === this.props.linodeRegion)
+      .filter((linode) => linode.region === this.props.linodeRegion)
       .map(({ label, id }) => {
         return { label, value: id };
       });

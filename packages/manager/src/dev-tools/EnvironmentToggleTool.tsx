@@ -60,9 +60,9 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
       </Grid>
       <Grid item xs={12}>
         <select
-          onBlur={e => {
+          onBlur={(e) => {
             const selectedIndex = options.findIndex(
-              o => o.label === e.target.value
+              (o) => o.label === e.target.value
             );
             setSelectedOption(Math.max(selectedIndex, 0));
           }}
@@ -72,7 +72,7 @@ const EnvironmentToggleTool: React.FC<{}> = () => {
           <option value="" disabled>
             Select an environment
           </option>
-          {options.map(thisOption => {
+          {options.map((thisOption) => {
             const { label } = thisOption;
             return (
               <option key={label} value={label}>

@@ -6,7 +6,7 @@ interface Props extends OptionProps<any> {
   attrs?: Record<string, string | boolean>;
 }
 
-const Option: React.FC<Props> = props => {
+const Option: React.FC<Props> = (props) => {
   return (
     <div data-qa-option={String(props.value)} {...props.attrs}>
       <components.Option {...props} />

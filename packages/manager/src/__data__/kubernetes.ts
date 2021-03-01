@@ -24,7 +24,7 @@ export const clusters: KubernetesCluster[] = [
   },
 ];
 
-export const extendedClusters = clusters.map(cluster => {
+export const extendedClusters = clusters.map((cluster) => {
   return {
     ...cluster,
     node_pools: [pool1],

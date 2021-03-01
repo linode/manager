@@ -38,7 +38,7 @@ interface Props {
   open?: boolean;
 }
 
-const TicketDetailText: React.FC<Props> = props => {
+const TicketDetailText: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);

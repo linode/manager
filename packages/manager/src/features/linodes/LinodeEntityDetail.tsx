@@ -75,7 +75,7 @@ interface LinodeEntityDetailProps {
 
 export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
 
-const LinodeEntityDetail: React.FC<CombinedProps> = props => {
+const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const {
     variant,
     linode,
@@ -103,7 +103,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = props => {
       : null;
 
   const linodeType = Boolean(linode.type)
-    ? types.entities.find(thisType => thisType.id === linode.type) ?? null
+    ? types.entities.find((thisType) => thisType.id === linode.type) ?? null
     : null;
 
   const linodePlan = linodeType?.label ?? null;
@@ -283,7 +283,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps> = props => {
+const Header: React.FC<HeaderProps> = (props) => {
   const classes = useHeaderStyles();
 
   const {
@@ -494,7 +494,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Body: React.FC<BodyProps> = React.memo(props => {
+export const Body: React.FC<BodyProps> = React.memo((props) => {
   const classes = useBodyStyles();
   const {
     numCPUs,
@@ -694,7 +694,7 @@ interface AccessTableProps {
   footer?: JSX.Element;
 }
 
-export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
+export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
   const classes = useAccessTableStyles();
   return (
     <Grid container item md={6} direction="column" {...props.gridProps}>
@@ -704,7 +704,7 @@ export const AccessTable: React.FC<AccessTableProps> = React.memo(props => {
       <Grid item className={classes.accessTableContent}>
         <Table className={classes.accessTable}>
           <TableBody>
-            {props.rows.map(thisRow => {
+            {props.rows.map((thisRow) => {
               return thisRow.text ? (
                 <TableRow key={thisRow.text}>
                   {thisRow.heading ? (
@@ -813,7 +813,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Footer: React.FC<FooterProps> = React.memo(props => {
+export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const classes = useFooterStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -833,7 +833,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   const addTag = React.useCallback(
     (tag: string) => {
       const newTags = [...linodeTags, tag];
-      updateLinode({ linodeId, tags: newTags }).catch(e =>
+      updateLinode({ linodeId, tags: newTags }).catch((e) =>
         enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
           variant: 'error',
         })
@@ -844,8 +844,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const deleteTag = React.useCallback(
     (tag: string) => {
-      const newTags = linodeTags.filter(thisTag => thisTag !== tag);
-      updateLinode({ linodeId, tags: newTags }).catch(e =>
+      const newTags = linodeTags.filter((thisTag) => thisTag !== tag);
+      updateLinode({ linodeId, tags: newTags }).catch((e) =>
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
           {

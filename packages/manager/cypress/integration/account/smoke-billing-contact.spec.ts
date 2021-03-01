@@ -48,7 +48,7 @@ const newAccountData = {
   zip: '19108',
 };
 
-const checkAccountContactDisplay = data => {
+const checkAccountContactDisplay = (data) => {
   fbtVisible('Billing Contact');
   fbtVisible(data['company']);
   getVisible('[data-qa-contact-name]');
@@ -74,7 +74,7 @@ describe('Billing Contact', () => {
     // intercept create account request and stub response
     cy.intercept('PUT', '*/account', newAccountData).as('createAccount');
     cy.visitWithLogin('/account/billing');
-    cy.get('[data-qa-contact-summary]').within(_contact => {
+    cy.get('[data-qa-contact-summary]').within((_contact) => {
       fbtClick('Edit');
     });
     // checking drawer is visible
@@ -135,7 +135,7 @@ describe('Billing Contact', () => {
       .clear()
       .type(newAccountData['tax_id']);
     fbtClick('Save').then(() => {
-      cy.wait('@createAccount').then(xhr => {
+      cy.wait('@createAccount').then((xhr) => {
         expect(xhr.request.body).to.eql(newAccountData);
       });
     });

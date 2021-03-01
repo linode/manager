@@ -31,14 +31,14 @@ export const useGraphs = (
       start,
       end,
     })
-      .then(response => {
+      .then((response) => {
         if (mounted.current) {
           setLoading(false);
           setError(undefined);
           setData(response.DATA);
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (mounted.current) {
           setLoading(false);
           setError(e.NOTIFICATIONS?.[0]?.TEXT ?? 'Unable to retrieve data.');

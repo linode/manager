@@ -20,7 +20,7 @@ interface Props extends _DividerProps {
   type?: 'landingHeader' | 'other';
 }
 
-const _Divider: React.FC<Props> = props => {
+const _Divider: React.FC<Props> = (props) => {
   const classes = useStyles();
   return (
     <Divider

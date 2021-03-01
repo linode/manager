@@ -37,7 +37,7 @@ interface Props {
 
 export type CombinedProps = Props & PaginationProps<ObjectStorageKey>;
 
-export const AccessKeyTable: React.FC<CombinedProps> = props => {
+export const AccessKeyTable: React.FC<CombinedProps> = (props) => {
   const {
     data,
     loading,

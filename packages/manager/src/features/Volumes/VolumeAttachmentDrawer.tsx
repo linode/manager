@@ -63,8 +63,8 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
   updateConfigs(linodeID: number) {
     getLinodeConfigs(linodeID)
-      .then(response => {
-        const configChoices = response.data.map(config => {
+      .then((response) => {
+        const configChoices = response.data.map((config) => {
           return [`${config.id}`, config.label];
         });
         this.setState({ configs: configChoices });
@@ -126,11 +126,11 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       linode_id: Number(selectedLinode),
       config_id: Number(selectedConfig) || undefined,
     })
-      .then(_ => {
+      .then((_) => {
         resetEventsPolling();
         this.handleClose();
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ errors: getAPIErrorOrDefault(error) }, () => {
           scrollErrorIntoView();
         });
@@ -160,7 +160,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
     const configList =
       configs &&
-      configs.map(el => {
+      configs.map((el) => {
         return {
           label: el[1],
           value: el[0],
@@ -184,7 +184,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         <LinodeSelect
           selectedLinode={selectedLinode}
           region={linodeRegion}
-          handleChange={linode => this.changeSelectedLinode(linode.id)}
+          handleChange={(linode) => this.changeSelectedLinode(linode.id)}
           linodeError={linodeError}
           disabled={disabled || readOnly}
         />

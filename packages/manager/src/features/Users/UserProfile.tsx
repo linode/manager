@@ -312,7 +312,7 @@ interface StateProps {
   profileUsername?: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 

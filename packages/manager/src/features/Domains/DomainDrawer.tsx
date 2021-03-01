@@ -206,7 +206,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         soa_email,
       } = this.props.domainProps;
       this.setState({
-        tags: tags.map(tag => ({ label: tag, value: tag })),
+        tags: tags.map((tag) => ({ label: tag, value: tag })),
         type,
         domain,
         master_ips: getInitialIPs(master_ips),
@@ -420,7 +420,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true });
     cloneDomain(id, cloneName)
-      .then(data => {
+      .then((data) => {
         if (!this.mounted) {
           return;
         }
@@ -428,7 +428,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         this.redirect(data.id || '');
         this.closeDrawer();
       })
-      .catch(err => {
+      .catch((err) => {
         if (!this.mounted) {
           return;
         }
@@ -447,7 +447,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   update = () => {
     const { axfr_ips, domain, type, soaEmail, master_ips } = this.state;
     const { domainActions, id } = this.props;
-    const tags = this.state.tags.map(tag => tag.value);
+    const tags = this.state.tags.map((tag) => tag.value);
 
     if (!id) {
       // Weird case if the id was not passed
@@ -455,8 +455,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
-    const primaryIPs = master_ips.filter(v => v !== '');
-    const finalTransferIPs = axfr_ips.filter(v => v !== '');
+    const primaryIPs = master_ips.filter((v) => v !== '');
+    const finalTransferIPs = axfr_ips.filter((v) => v !== '');
 
     if (type === 'slave' && primaryIPs.length === 0) {
       this.setState({
@@ -488,13 +488,13 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
     domainActions
       .updateDomain(data)
-      .then(_ => {
+      .then((_) => {
         if (!this.mounted) {
           return;
         }
         this.closeDrawer();
       })
-      .catch(err => {
+      .catch((err) => {
         if (!this.mounted) {
           return;
         }

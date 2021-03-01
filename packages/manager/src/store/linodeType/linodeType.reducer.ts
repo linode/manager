@@ -43,7 +43,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       loading: false,
       lastUpdated: Date.now(),
       entities: extendedTypes,
-      results: extendedTypes.map(t => t.id),
+      results: extendedTypes.map((t) => t.id),
     };
   }
 

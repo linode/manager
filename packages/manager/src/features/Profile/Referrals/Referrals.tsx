@@ -107,7 +107,7 @@ interface StateProps {
   credit?: number;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const { profile } = state.__resources;
 
   return {

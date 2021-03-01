@@ -169,7 +169,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { tags } = this.props;
     getTags()
-      .then(response => {
+      .then((response) => {
         /*
          * The end goal is to display to the user a list of auto-suggestions
          * when they start typing in a new tag, but we don't want to display
@@ -192,7 +192,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         });
         this.setState({ tagsToSuggest: reshapedTags });
       })
-      .catch(e => e);
+      .catch((e) => e);
   }
 
   toggleTagInput = () => {
@@ -238,13 +238,13 @@ class TagsPanel extends React.Component<CombinedProps, State> {
                 ...cloneTagSuggestions,
               ],
               listDeletingTags: this.state.listDeletingTags.filter(
-                eachTag => eachTag !== label
+                (eachTag) => eachTag !== label
               ),
               loading: false,
               tagError: '',
             });
           })
-          .catch(e => {
+          .catch((e) => {
             this.props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
               variant: 'error',
             });
@@ -253,7 +253,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
              */
             this.setState({
               listDeletingTags: this.state.listDeletingTags.filter(
-                eachTag => eachTag !== label
+                (eachTag) => eachTag !== label
               ),
               loading: false,
             });
@@ -280,7 +280,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     }
 
     const tagExists = (tag: string) => {
-      return tags.some(el => {
+      return tags.some((el) => {
         return el === tag;
       });
     };
@@ -316,7 +316,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             loading: false,
           });
         })
-        .catch(e => {
+        .catch((e) => {
           const tagError = getErrorStringOrDefault(
             e,
             'Error while creating tag'
@@ -359,7 +359,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               [classes.loading]: loading,
             })}
           >
-            {tags.map(eachTag => {
+            {tags.map((eachTag) => {
               return (
                 <TagsPanelItem
                   key={eachTag}
@@ -367,7 +367,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
                   tagLabel={eachTag}
                   onDelete={disabled ? undefined : this.handleDeleteTag}
                   className={classes.tag}
-                  loading={listDeletingTags.some(inProgressTag => {
+                  loading={listDeletingTags.some((inProgressTag) => {
                     /*
                      * The tag is getting deleted if it appears in the state
                      * which holds the list of tags queued for deletion

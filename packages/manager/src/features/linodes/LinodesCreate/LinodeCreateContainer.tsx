@@ -145,7 +145,9 @@ const defaultState: State = {
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
-  const selectedRegion = regions.find(thisRegion => thisRegion.id === regionID);
+  const selectedRegion = regions.find(
+    (thisRegion) => thisRegion.id === regionID
+  );
   /** This approach is fine for just GPUs, which is all we have capability info for at this time.
    *  Refactor to a switch or .map() if additional support is needed.
    */
@@ -165,7 +167,7 @@ const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
 
 const isNonDefaultImageType = (prevType: string, type: string) => {
   return nonImageCreateTypes.some(
-    thisEntry => prevType !== thisEntry && type === thisEntry
+    (thisEntry) => prevType !== thisEntry && type === thisEntry
   );
 };
 
@@ -211,24 +213,24 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     getOneClickApps()
       // Don't display One-Click Helpers to the user
       // Filter out any apps that we don't have info for
-      .then(response =>
-        response.data.filter(script => {
+      .then((response) =>
+        response.data.filter((script) => {
           return (
             !script.label.match(/helpers/i) &&
             allowedApps.includes(String(script.id))
           );
         })
       )
-      .then(response =>
-        response.map(stackscript => trimOneClickFromLabel(stackscript))
+      .then((response) =>
+        response.map((stackscript) => trimOneClickFromLabel(stackscript))
       )
-      .then(response => {
+      .then((response) => {
         this.setState({
           appInstancesLoading: false,
           appInstances: response,
         });
       })
-      .catch(_ => {
+      .catch((_) => {
         this.setState({
           appInstancesLoading: false,
           appInstancesError: 'There was an error loading Marketplace Apps.',
@@ -393,7 +395,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * null checking happens in CALinodeCreate
        */
       const selectedRegion = regionsData!.find(
-        region => region.id === selectedRegionID
+        (region) => region.id === selectedRegionID
       );
 
       arg2 = selectedRegion ? selectedRegion.id : '';
@@ -542,7 +544,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         /** send the user to the Linode detail page */
         this.props.history.push(`/linodes/${response.id}`);
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           () => ({
             errors: getAPIErrorOrDefault(error),
@@ -566,7 +568,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * null checking happens in CALinodeCreate
      */
     return this.reshapeTypeInfo(
-      this.props.typesData!.find(type => type.id === selectedTypeID)
+      this.props.typesData!.find((type) => type.id === selectedTypeID)
     );
   };
 
@@ -592,7 +594,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * null checking happens in CALinodeCreate
      */
     const selectedRegion = this.props.regionsData!.find(
-      region => region.id === selectedRegionID
+      (region) => region.id === selectedRegionID
     );
 
     return (
@@ -637,12 +639,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     // If the selected type is a GPU plan, only display region
     // options that support GPUs.
     const selectedType = this.props.typesData?.find(
-      thisType => thisType.id === this.state.selectedTypeID
+      (thisType) => thisType.id === this.state.selectedTypeID
     );
 
     const filteredRegions =
       selectedType?.class === 'gpu'
-        ? regionsData?.filter(thisRegion => {
+        ? regionsData?.filter((thisRegion) => {
             return thisRegion.capabilities.includes('GPU Linodes');
           })
         : regionsData;
@@ -702,10 +704,9 @@ interface CreateType {
   createType: CreateTypes;
 }
 
-const mapStateToProps: MapState<
-  ReduxStateProps & CreateType,
-  CombinedProps
-> = state => ({
+const mapStateToProps: MapState<ReduxStateProps & CreateType, CombinedProps> = (
+  state
+) => ({
   accountBackupsEnabled: pathOr(
     false,
     ['__resources', 'accountSettings', 'data', 'backups_enabled'],
@@ -727,7 +728,7 @@ interface DispatchProps {
 const connected = connect(mapStateToProps, { upsertLinode });
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),
+  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
   regionsLoading: loading,
   regionsError: error,
 }));

@@ -33,7 +33,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AccessKeyDisplayDialog: React.FC<CombinedProps> = props => {
+export const AccessKeyDisplayDialog: React.FC<CombinedProps> = (props) => {
   const { classes, objectStorageKey, isOpen, close } = props;
 
   // This should never happen, but just in case.

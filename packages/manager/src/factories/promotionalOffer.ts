@@ -4,7 +4,7 @@ import { PromotionalOffer } from 'src/featureFlags';
 export const promotionalOfferFactory = Factory.Sync.makeFactory<
   PromotionalOffer
 >({
-  name: Factory.each(i => `offer-${i}`),
+  name: Factory.each((i) => `offer-${i}`),
   features: ['Object Storage'],
   body:
     'Sample promotional body. This offer is valid until January 1st. Try it out now.',

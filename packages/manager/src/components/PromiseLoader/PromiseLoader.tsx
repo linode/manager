@@ -32,7 +32,7 @@ export default function preload<P>(requests: RequestMap<P>) {
           return;
         }
 
-        this.setState(prevState => ({ ...prevState, loading: false }));
+        this.setState((prevState) => ({ ...prevState, loading: false }));
       };
 
       componentWillUnmount() {
@@ -43,22 +43,22 @@ export default function preload<P>(requests: RequestMap<P>) {
         this.mounted = true;
         const promises = Object.entries(requests).map(([name, request]) =>
           request(this.props)
-            .then(response => {
+            .then((response) => {
               if (!this.mounted) {
                 return;
               }
 
-              this.setState(prevState => ({
+              this.setState((prevState) => ({
                 ...prevState,
                 [name]: { response },
               }));
             })
-            .catch(response => {
+            .catch((response) => {
               if (!this.mounted) {
                 return;
               }
 
-              this.setState(prevState => ({
+              this.setState((prevState) => ({
                 ...prevState,
                 [name]: { error: true, response },
               }));

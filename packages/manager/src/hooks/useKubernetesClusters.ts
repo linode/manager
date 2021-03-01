@@ -23,7 +23,7 @@ export const useKubernetesClusters = (): KubernetesProps => {
     (state: ApplicationState) => state.__resources.kubernetes
   );
   const requestKubernetesClusters = () =>
-    dispatch(_request()).then(response => response.data);
+    dispatch(_request()).then((response) => response.data);
 
   const updateKubernetesCluster = (
     clusterID: number,

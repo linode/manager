@@ -37,7 +37,7 @@ class Example extends React.PureComponent<WithSnackbarProps, {}> {
 
     return (
       <React.Fragment>
-        {variants.map(eachVariant => {
+        {variants.map((eachVariant) => {
           // map over each variant and show a button for each
           return (
             <MyButton

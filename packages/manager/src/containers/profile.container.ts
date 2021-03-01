@@ -68,7 +68,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getProfile: () => dispatch(requestProfile()),
-      updateProfile: profile => dispatch(updateProfile(profile)),
+      updateProfile: (profile) => dispatch(updateProfile(profile)),
     })
   );
 

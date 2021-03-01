@@ -93,7 +93,7 @@ export interface Props extends PromotionalOffer {
 
 type CombinedProps = Props;
 
-export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
+export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { fullWidth, ...promotionalOfferAttributes } = props;
@@ -140,7 +140,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = props => {
           <div className={classes.buttonSection}>
             {/* Only display the first two buttons. Any offer containing more
             than two buttons is a mistake. */}
-            {offer.buttons.slice(0, 2).map(button => (
+            {offer.buttons.slice(0, 2).map((button) => (
               <Button
                 key={button.text}
                 className={classnames({

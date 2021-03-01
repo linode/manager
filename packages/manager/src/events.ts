@@ -42,7 +42,7 @@ export const requestEvents = () => {
       });
       inProgress = false;
     })
-    .catch(e => e);
+    .catch((e) => e);
 };
 
 export const startEventsInterval = () =>

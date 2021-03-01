@@ -76,7 +76,7 @@ export const scopeStringToPermTuples = (
   perms: string[]
 ): Permission[] => {
   if (scopes === '*') {
-    return perms.map(perm => [perm, 2] as Permission);
+    return perms.map((perm) => [perm, 2] as Permission);
   }
 
   const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {

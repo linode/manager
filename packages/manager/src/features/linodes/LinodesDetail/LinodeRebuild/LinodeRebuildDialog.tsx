@@ -58,7 +58,7 @@ const options = [
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
+const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
   const { linodeId, open, onClose } = props;
   const linode = useExtendedLinode(linodeId);
   const linodeLabel = linode?.label;
@@ -109,7 +109,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = props => {
         </Typography>
         <EnhancedSelect
           options={options}
-          defaultValue={options.find(option => option.value === mode)}
+          defaultValue={options.find((option) => option.value === mode)}
           onChange={(selected: Item<MODES>) => {
             setMode(selected.value);
             setRebuildError('');

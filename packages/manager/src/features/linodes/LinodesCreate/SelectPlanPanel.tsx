@@ -117,19 +117,19 @@ interface Props {
 }
 
 const getNanodes = (types: ExtendedType[]) =>
-  types.filter(t => /nanode/.test(t.class));
+  types.filter((t) => /nanode/.test(t.class));
 
 const getStandard = (types: ExtendedType[]) =>
-  types.filter(t => /standard/.test(t.class));
+  types.filter((t) => /standard/.test(t.class));
 
 const getHighMem = (types: ExtendedType[]) =>
-  types.filter(t => /highmem/.test(t.class));
+  types.filter((t) => /highmem/.test(t.class));
 
 const getDedicated = (types: ExtendedType[]) =>
-  types.filter(t => /dedicated/.test(t.class));
+  types.filter((t) => /dedicated/.test(t.class));
 
 const getGPU = (types: ExtendedType[]) =>
-  types.filter(t => /gpu/.test(t.class));
+  types.filter((t) => /gpu/.test(t.class));
 
 type CombinedProps = Props & WithStyles<ClassNames> & RegionsProps;
 
@@ -144,8 +144,8 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   getRegionsWithGPU = () => {
     const regions = this.props.regionsData ?? [];
     const withGPU = regions
-      .filter(thisRegion => thisRegion.capabilities.includes('GPU Linodes'))
-      .map(thisRegion => dcDisplayNames[thisRegion.id]);
+      .filter((thisRegion) => thisRegion.capabilities.includes('GPU Linodes'))
+      .map((thisRegion) => dcDisplayNames[thisRegion.id]);
     return arrayToList(withGPU);
   };
 
@@ -440,7 +440,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       'standard', // Use `standard` by default
       ['class'],
       types.find(
-        type => type.id === selectedID || type.heading === currentPlanHeading
+        (type) => type.id === selectedID || type.heading === currentPlanHeading
       )
     );
 

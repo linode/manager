@@ -26,7 +26,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   } = getState().events;
 
   // Regardless of date created, we request events that are still in-progress.
-  const inIds = Object.keys(inProgressEvents).map(thisId => +thisId);
+  const inIds = Object.keys(inProgressEvents).map((thisId) => +thisId);
 
   // Generate a list of event IDs for the "+neq" filter. We want to request events created
   // on or after the most recent created date, minus any events we've already requested.
@@ -34,7 +34,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   // right moment such that we receive some events with a specific created date, but not all.
   const neqIds: number[] = [];
   if (_events.length > 0) {
-    _events.forEach(thisEvent => {
+    _events.forEach((thisEvent) => {
       const thisEventCreated = parseAPIDate(thisEvent.created).valueOf();
 
       if (
@@ -56,23 +56,23 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
 
   return (
     _getEvents({ page_size: 25 }, filters)
-      .then(response => response.data)
+      .then((response) => response.data)
       /**
        * There is where we set _initial on the events. In the default state of events the
        * mostRecentEventTime is set to epoch. On the completion of the first successful events
        * update the mostRecentEventTime is updated, meaning it's impossible for subsequent events
        * to be incorrectly marked as _initial. This addresses our reappearing toast issue.
        */
-      .then(events =>
-        events.map(e => ({ ...e, _initial: mostRecentEventTime === epoch }))
+      .then((events) =>
+        events.map((e) => ({ ...e, _initial: mostRecentEventTime === epoch }))
       )
-      .then(events => {
+      .then((events) => {
         if (events.length > 0) {
           dispatch(addEvents(events));
         }
         return events;
       })
-      .catch(e => [])
+      .catch((e) => [])
   );
 };
 

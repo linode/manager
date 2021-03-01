@@ -29,7 +29,7 @@ export const timestamp = () => {
   return `A${new Date().getTime()}`;
 };
 
-export const createGenericLinode = label => {
+export const createGenericLinode = (label) => {
   Create.menuButton.click();
   Create.linode();
   ConfigureLinode.baseDisplay();
@@ -38,7 +38,7 @@ export const createGenericLinode = label => {
   waitForLinodeStatus(label, 'running');
 };
 
-export const deleteLinode = label => {
+export const deleteLinode = (label) => {
   browser.url(constants.routes.linodes);
   browser.waitClick(`[data-qa-linode="${label}"] [data-qa-label]`);
   LinodeDetail.landingElemsDisplay();
@@ -88,11 +88,11 @@ export const apiCreateLinode = (
   return linode;
 };
 
-export const apiCreateMultipleLinodes = arrayOfLinodeCreateObj => {
+export const apiCreateMultipleLinodes = (arrayOfLinodeCreateObj) => {
   let linodes = [];
   const token = readToken(browser.options.testUser);
 
-  arrayOfLinodeCreateObj.forEach(linodeObj => {
+  arrayOfLinodeCreateObj.forEach((linodeObj) => {
     const newLinodePass = crypto.randomBytes(20).toString('hex');
     const linode = browser.createLinode(
       token,
@@ -174,13 +174,13 @@ export const apiDeleteAllVolumes = () => {
 export const apiDeleteAllDomains = () => {
   const token = readToken(browser.options.testUser);
   const domains = browser.getDomains(token);
-  domains.data.forEach(domain => browser.removeDomain(token, domain.id));
+  domains.data.forEach((domain) => browser.removeDomain(token, domain.id));
 };
 
 export const apiDeleteMyStackScripts = () => {
   const token = readToken(browser.options.testUser);
   const stackScripts = browser.getMyStackScripts(token);
-  stackScripts.data.forEach(script =>
+  stackScripts.data.forEach((script) =>
     browser.removeStackScript(token, script.id)
   );
 };
@@ -194,27 +194,27 @@ export const createNodeBalancer = () => {
   NodeBalancerDetail.baseElemsDisplay();
 };
 
-export const removeNodeBalancers = doNotDeleteLinodes => {
+export const removeNodeBalancers = (doNotDeleteLinodes) => {
   const token = readToken(browser.options.testUser);
   if (!doNotDeleteLinodes) {
     apiDeleteAllLinodes();
   }
   const availableNodeBalancers = browser.getNodeBalancers(token);
-  availableNodeBalancers.data.forEach(nb =>
+  availableNodeBalancers.data.forEach((nb) =>
     browser.removeNodeBalancer(token, nb.id)
   );
 };
 
-export const apiDeletePrivateImages = token => {
+export const apiDeletePrivateImages = (token) => {
   const privateImages = getPrivateImages(token).data;
-  privateImages.forEach(i => removeImage(token, i.id));
+  privateImages.forEach((i) => removeImage(token, i.id));
 };
 
 export const apiRemoveSshKeys = () => {
   const token = readToken(browser.options.testUser);
   const userKeys = getPublicKeys(token).data;
 
-  userKeys.forEach(key => removePublicKey(token, key.id));
+  userKeys.forEach((key) => removePublicKey(token, key.id));
 };
 
 export const getProfile = () => {
@@ -223,13 +223,13 @@ export const getProfile = () => {
   return profile;
 };
 
-export const updateProfile = profileDate => {
+export const updateProfile = (profileDate) => {
   const token = readToken(browser.options.testUser);
   const profile = browser.updateUserProfile(token, profileDate);
   return profile;
 };
 
-export const updateGlobalSettings = settingsData => {
+export const updateGlobalSettings = (settingsData) => {
   const token = readToken(browser.options.testUser);
   const settings = browser.updateGlobalSettings(token, settingsData);
   return settings;
@@ -258,7 +258,7 @@ export const createVolumes = (volumeObjArray, waitForToast) => {
   let volumes = [];
   const token = readToken(browser.options.testUser);
 
-  volumeObjArray.forEach(volumeObj => {
+  volumeObjArray.forEach((volumeObj) => {
     const volume = browser.createVolume(
       token,
       volumeObj.label,
@@ -272,7 +272,7 @@ export const createVolumes = (volumeObjArray, waitForToast) => {
   browser.url(constants.routes.volumes);
   $('[data-qa-add-new-menu-button]').waitForDisplayed(constants.wait.normal);
   $('[data-qa-volume-loading]').waitForDisplayed(constants.wait.long, true);
-  volumeObjArray.forEach(volumeObj => {
+  volumeObjArray.forEach((volumeObj) => {
     $(`[data-qa-volume-cell-label="${volumeObj.label}"]`).waitForDisplayed(
       constants.wait.normal
     );
@@ -295,10 +295,10 @@ export const switchTab = () => {
   browser.switchToFrame(newTab);
 };
 
-export const getDistributionLabel = distributionTags => {
+export const getDistributionLabel = (distributionTags) => {
   const token = readToken(browser.options.testUser);
   let distributionLabel = [];
-  distributionTags.forEach(distro => {
+  distributionTags.forEach((distro) => {
     const distroDetails = browser.getLinodeImage(token, distro.trim());
     distributionLabel.push(distroDetails.label);
   });
@@ -306,16 +306,16 @@ export const getDistributionLabel = distributionTags => {
 };
 //TODO figure out why this is not working
 //follows
-export const getLocalStorageValue = key => {
+export const getLocalStorageValue = (key) => {
   //This is not working for some reason
   //https://webdriver.io/docs/api/jsonwp.html#getlocalstorage
   return browser.getLocalStorageItem(key).value;
 };
 
-export const apiCreateDomains = domainObjArray => {
+export const apiCreateDomains = (domainObjArray) => {
   const token = readToken(browser.options.testUser);
   let domains = [];
-  domainObjArray.forEach(domain => {
+  domainObjArray.forEach((domain) => {
     const newDomain = browser.createDomain(
       token,
       domain.type,
@@ -326,7 +326,7 @@ export const apiCreateDomains = domainObjArray => {
     domains.push(newDomain);
   });
   browser.url(constants.routes.domains);
-  domainObjArray.forEach(domain =>
+  domainObjArray.forEach((domain) =>
     $(`[data-qa-domain-cell="${domain.domain}"]`).waitForDisplayed(
       constants.wait.normal
     )
@@ -334,10 +334,10 @@ export const apiCreateDomains = domainObjArray => {
   return domains;
 };
 
-export const apiCreateNodeBalancers = nodebalancerObjArray => {
+export const apiCreateNodeBalancers = (nodebalancerObjArray) => {
   const token = readToken(browser.options.testUser);
   let nodebalancers = [];
-  nodebalancerObjArray.forEach(nodebalancer => {
+  nodebalancerObjArray.forEach((nodebalancer) => {
     const newNodebalancer = browser.createNodeBalancer(
       token,
       nodebalancer.label,
@@ -347,7 +347,7 @@ export const apiCreateNodeBalancers = nodebalancerObjArray => {
     nodebalancers.push(newNodebalancer);
   });
   browser.url(constants.routes.nodeBalancers);
-  nodebalancerObjArray.forEach(nodebalancer =>
+  nodebalancerObjArray.forEach((nodebalancer) =>
     $(`[data-qa-nodebalancer-cell="${nodebalancer.label}"]`).waitForDisplayed(
       constants.wait.normal
     )

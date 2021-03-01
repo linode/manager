@@ -76,9 +76,11 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = props => {
+export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const { classes, stackscriptID, open, onClose } = props;
-  const app = oneClickApps.find(eachApp => {
+  const app = oneClickApps.find((eachApp) => {
     const cleanedAppName = eachApp.name.replace(
       /[-\/\\^$*+?.()|[\]{}]/g,
       '\\$&'

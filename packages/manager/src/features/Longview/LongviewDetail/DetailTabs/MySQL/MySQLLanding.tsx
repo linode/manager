@@ -33,7 +33,7 @@ interface Props {
   timezone: string;
 }
 
-export const MySQLLanding: React.FC<Props> = props => {
+export const MySQLLanding: React.FC<Props> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
   const flags = useFlags();

@@ -122,7 +122,7 @@ type PassThroughProps = Props & TextFieldProps;
 
 type FinalProps = PassThroughProps;
 
-const EditableText: React.FC<FinalProps> = props => {
+const EditableText: React.FC<FinalProps> = (props) => {
   const classes = useStyles();
 
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
@@ -167,7 +167,7 @@ const EditableText: React.FC<FinalProps> = props => {
         .then(() => {
           setIsEditing(false);
         })
-        .catch(e => e);
+        .catch((e) => e);
     } else {
       /** otherwise, we've just submitted the form with no value change */
       setIsEditing(false);

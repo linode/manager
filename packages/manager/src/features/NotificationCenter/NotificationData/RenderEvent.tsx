@@ -44,7 +44,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const RenderEvent: React.FC<Props> = props => {
+export const RenderEvent: React.FC<Props> = (props) => {
   const { event, onClose } = props;
   const classes = useStyles();
 

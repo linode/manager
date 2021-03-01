@@ -22,7 +22,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const OAuthClientActionMenu: React.FC<CombinedProps> = props => {
+export const OAuthClientActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -58,7 +58,7 @@ export const OAuthClientActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for OAuth Client ${props.label}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

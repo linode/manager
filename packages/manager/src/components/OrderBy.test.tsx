@@ -134,7 +134,7 @@ describe('OrderBy', () => {
             {({ data, handleOrderChange }) => {
               return (
                 <>
-                  {data.map(d => (
+                  {data.map((d) => (
                     <div key={d.name} data-qa-name>
                       {d.name}
                     </div>

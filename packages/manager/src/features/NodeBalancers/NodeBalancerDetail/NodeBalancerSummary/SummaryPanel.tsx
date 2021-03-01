@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props & StyleProps & WithStyles<ClassNames>;
 
-const SummaryPanel: React.FC<CombinedProps> = props => {
+const SummaryPanel: React.FC<CombinedProps> = (props) => {
   const { nodeBalancer, classes } = props;
 
   return (

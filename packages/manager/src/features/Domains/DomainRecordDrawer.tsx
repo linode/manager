@@ -287,7 +287,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       { label: '4 weeks', value: 2419200 },
     ];
 
-    const defaultRate = rateOptions.find(eachRate => {
+    const defaultRate = rateOptions.find((eachRate) => {
       return (
         eachRate.value ===
         defaultTo(
@@ -338,7 +338,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       { label: '4 weeks', value: 2419200 },
     ];
 
-    const defaultOption = MSSelectOptions.find(eachOption => {
+    const defaultOption = MSSelectOptions.find((eachOption) => {
       return (
         eachOption.value ===
         defaultTo(
@@ -373,7 +373,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       { label: 'smtp', value: 'smtp' },
     ];
 
-    const defaultProtocol = protocolOptions.find(eachProtocol => {
+    const defaultProtocol = protocolOptions.find((eachProtocol) => {
       return (
         eachProtocol.value ===
         defaultTo(
@@ -406,7 +406,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       { label: 'iodef', value: 'iodef' },
     ];
 
-    const defaultTag = tagOptions.find(eachTag => {
+    const defaultTag = tagOptions.find((eachTag) => {
       return (
         eachTag.value ===
         defaultTo(
@@ -476,8 +476,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
        * will submit ' 192.0.2.1', which is an invalid value.
        */
       data.axfr_ips = data.axfr_ips
-        .filter(ip => ip !== '')
-        .map(ip => ip.trim());
+        .filter((ip) => ip !== '')
+        .map((ip) => ip.trim());
     }
 
     domainActions
@@ -773,7 +773,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const isCreating = mode === 'create';
     const isDomain = type === 'master' || type === 'slave';
 
-    const hasARecords = records.find(thisRecord =>
+    const hasARecords = records.find((thisRecord) =>
       ['A', 'AAAA'].includes(thisRecord.type)
     ); // If there are no A/AAAA records and a user tries to add an NS record, they'll see a warning message asking them to add an A/AAAA record.
 
@@ -883,8 +883,8 @@ export const castFormValuesToNumeric = (
   data: Record<string, any>,
   fieldNames: string[] = numericFields
 ) => {
-  return produce(data, draft => {
-    fieldNames.forEach(thisField => {
+  return produce(data, (draft) => {
+    fieldNames.forEach((thisField) => {
       draft[thisField] = maybeCastToNumber(draft[thisField]);
     });
   });

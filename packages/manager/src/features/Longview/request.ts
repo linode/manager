@@ -120,7 +120,7 @@ export const get: Get = (
   if (fields) {
     data.set(
       'keys',
-      JSON.stringify(fields.map(thisField => fieldNames[thisField]))
+      JSON.stringify(fields.map((thisField) => fieldNames[thisField]))
     );
   }
   if (start) {

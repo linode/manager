@@ -12,7 +12,7 @@ const VolumeCreate = React.lazy(() => import('./VolumeCreate/VolumeCreate'));
 
 type Props = RouteComponentProps<{}>;
 
-const Volumes: React.FC<Props> = props => {
+const Volumes: React.FC<Props> = (props) => {
   const {
     match: { path },
   } = props;
@@ -20,7 +20,7 @@ const Volumes: React.FC<Props> = props => {
   return (
     <Switch>
       <Route
-        render={routeProps => (
+        render={(routeProps) => (
           <VolumesLanding isVolumesLanding removeBreadCrumb {...routeProps} />
         )}
         path={path}

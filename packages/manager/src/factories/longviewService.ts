@@ -6,14 +6,14 @@ import {
 } from 'src/features/Longview/request.types';
 
 export const longviewPortFactory = Factory.Sync.makeFactory<LongviewPort>({
-  count: Factory.each(i => i),
-  user: Factory.each(i => `test-user-${i}`),
-  name: Factory.each(i => `test-name-${i}`),
+  count: Factory.each((i) => i),
+  user: Factory.each((i) => `test-user-${i}`),
+  name: Factory.each((i) => `test-name-${i}`),
 });
 
 export const longviewServiceFactory = Factory.Sync.makeFactory<LongviewService>(
   {
-    user: Factory.each(i => `test-user-${i}`),
+    user: Factory.each((i) => `test-user-${i}`),
     ip: '0.0.0.0',
     port: 22,
     type: 'tcp',

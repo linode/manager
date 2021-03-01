@@ -55,7 +55,7 @@ export default (Component: React.ComponentType<any>) => {
       if (isRestricted) {
         const isCurrentUserSelected = this.isUserSelected(username, oldKeys);
         getAllSSHKeys()
-          .then(response => {
+          .then((response) => {
             const keys = response.data;
             if (!this.mounted || !keys || keys.length === 0) {
               return;
@@ -66,7 +66,7 @@ export default (Component: React.ComponentType<any>) => {
                 this.createUserObject(
                   username,
                   userEmailAddress,
-                  keys.map(k => k.label),
+                  keys.map((k) => k.label),
                   isCurrentUserSelected
                 ),
               ],
@@ -77,7 +77,7 @@ export default (Component: React.ComponentType<any>) => {
           });
       } else {
         getUsers()
-          .then(response => {
+          .then((response) => {
             const users = response.data;
             if (!this.mounted || !users || users.length === 0) {
               return;
@@ -138,9 +138,9 @@ export default (Component: React.ComponentType<any>) => {
     }
 
     toggleSSHUserKeys = (username: string, result: boolean) =>
-      this.setState(state => ({
+      this.setState((state) => ({
         ...state,
-        userSSHKeys: state.userSSHKeys.map(user =>
+        userSSHKeys: state.userSSHKeys.map((user) =>
           username === user.username ? { ...user, selected: result } : user
         ),
       }));
@@ -179,7 +179,7 @@ export default (Component: React.ComponentType<any>) => {
        * we manage SSH key state. @todo #TDT replace this HOC.
        */
       const currentUserKeys = keys.find(
-        thisKey => thisKey.username === username
+        (thisKey) => thisKey.username === username
       );
       return currentUserKeys
         ? currentUserKeys.selected || !equals(currentUserKeys.keys, newKeys)
@@ -196,7 +196,7 @@ interface StateProps {
   isRestricted: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   username: path<string>(['data', 'username'], state.__resources.profile),
   userEmailAddress: path<string>(['data', 'email'], state.__resources.profile),
   isRestricted: pathOr(false, ['restricted'], state.__resources.profile.data),

@@ -37,7 +37,7 @@ type CombinedProps<T = PreferenceValue> = Props<T> &
   PreferenceProps &
   PreferencesActionsProps;
 
-const PreferenceToggle: React.FC<CombinedProps> = props => {
+const PreferenceToggle: React.FC<CombinedProps> = (props) => {
   const {
     value,
     preferenceError,
@@ -170,7 +170,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
 
           props
             .getUserPreferences()
-            .then(response => {
+            .then((response) => {
               props
                 .updateUserPreferences({
                   ...response,

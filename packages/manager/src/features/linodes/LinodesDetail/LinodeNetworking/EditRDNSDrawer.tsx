@@ -42,7 +42,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
+export const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
   const { open, onClose, rdns, range, address, ips, updateIPs } = props;
 
   const [currentRDNS, setRDNS] = React.useState<string | null | undefined>(
@@ -117,7 +117,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
       ipToUpdate,
       !currentRDNS || currentRDNS === '' ? null : currentRDNS
     )
-      .then(ip => {
+      .then((ip) => {
         if (!mounted) {
           return;
         }
@@ -133,7 +133,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
 
         onClose();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         if (!mounted) {
           return;
         }
@@ -214,7 +214,7 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = props => {
             <Typography variant="h3" className={classes.header}>
               Existing Records
             </Typography>
-            {ips.map(ip => (
+            {ips.map((ip) => (
               <div key={ip.address} className={classes.rdnsRecord}>
                 <Typography>{ip.address}</Typography>
                 <Typography>{ip.rdns || ''}</Typography>

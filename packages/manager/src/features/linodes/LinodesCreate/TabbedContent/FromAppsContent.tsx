@@ -102,7 +102,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
      * that aren't compatible with our selected StackScript
      */
     const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+      if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
         acc.push(imagesData[eachKey]);
       }
 
@@ -246,7 +246,7 @@ const mapStateToProps: MapStateToProps<
   StateProps,
   CombinedProps,
   ApplicationState
-> = state => ({
+> = (state) => ({
   documentation: state.documentation,
 });
 
@@ -255,7 +255,7 @@ const connected = connect(mapStateToProps);
 const generateDocs = (ownProps: InnerProps & StateProps) => {
   const { selectedStackScriptLabel } = ownProps;
   if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter(eachDoc => {
+    const foundDocs = AppsDocs.filter((eachDoc) => {
       return eachDoc.title
         .toLowerCase()
         .includes(

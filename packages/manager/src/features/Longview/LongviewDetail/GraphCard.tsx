@@ -21,7 +21,7 @@ interface Props {
   helperText?: string;
 }
 
-export const GraphCard: React.FC<Props> = props => {
+export const GraphCard: React.FC<Props> = (props) => {
   const { helperText, title } = props;
   const classes = useStyles();
 

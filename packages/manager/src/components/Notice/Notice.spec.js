@@ -16,7 +16,7 @@ describe('Notice Suite', () => {
   });
 
   it('should display an error notice', () => {
-    const errorNotices = notices.filter(n => {
+    const errorNotices = notices.filter((n) => {
       const errorMsg = 'This is an error notice';
       return (
         n.getAttribute('class').includes('error') &&
@@ -30,7 +30,7 @@ describe('Notice Suite', () => {
   });
 
   it('should display a warning notice', () => {
-    const warningNotices = notices.filter(n => {
+    const warningNotices = notices.filter((n) => {
       const warningMsg = 'This is a warning notice';
       return (
         n.getAttribute('class').includes('warning') &&
@@ -44,7 +44,7 @@ describe('Notice Suite', () => {
   });
 
   it('should display a success notice', () => {
-    const successNotices = notices.filter(n => {
+    const successNotices = notices.filter((n) => {
       const successMsg = 'This is a success notice';
       return (
         n.getAttribute('class').includes('success') &&
@@ -58,7 +58,7 @@ describe('Notice Suite', () => {
   });
 
   it('should display an important error notice', () => {
-    const errorNotices = notices.filter(n => {
+    const errorNotices = notices.filter((n) => {
       const errorMsg = 'This is an important error notice';
       return (
         n.getAttribute('class').includes('error') &&
@@ -75,7 +75,7 @@ describe('Notice Suite', () => {
   });
 
   it('should display an important warning notice', () => {
-    const warningNotices = notices.filter(n => {
+    const warningNotices = notices.filter((n) => {
       const warningMsg = 'This is an important warning notice';
       return (
         n.getAttribute('class').includes('warning') &&
@@ -92,7 +92,7 @@ describe('Notice Suite', () => {
   });
 
   it('should display an important success notice', () => {
-    const successNotices = notices.filter(n => {
+    const successNotices = notices.filter((n) => {
       const successMsg = 'This is an important success notice';
       return (
         n.getAttribute('class').includes('success') &&

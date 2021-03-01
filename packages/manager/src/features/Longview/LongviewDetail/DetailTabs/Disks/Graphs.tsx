@@ -51,7 +51,7 @@ export interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-const Graphs: React.FC<CombinedProps> = props => {
+const Graphs: React.FC<CombinedProps> = (props) => {
   const {
     isSwap,
     childOf,

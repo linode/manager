@@ -7,7 +7,7 @@ describe('username', () => {
     cy.intercept('GET', '*/profile/logins').as('getLogin');
     cy.intercept('GET', '*/object-storage/clusters').as('getClusters');
     // cy.visitWithLogin(`/dashboard`);
-    getProfile().then(profile => {
+    getProfile().then((profile) => {
       const username = profile.body.username;
       cy.visitWithLogin(`account/users/${username}`);
       fbtVisible('Username');

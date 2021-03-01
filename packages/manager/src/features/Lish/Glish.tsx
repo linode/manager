@@ -130,7 +130,7 @@ class Glish extends React.Component<CombinedProps, State> {
             this.refreshMonitor(region, this.props.token);
             this.renewVncToken();
           })
-          .catch(e => e);
+          .catch((e) => e);
       }, 3000);
     }
   }
@@ -217,7 +217,7 @@ class Glish extends React.Component<CombinedProps, State> {
 
     const url = `${getLishSchemeAndHostname(region)}:8080/${token}/monitor`;
     this.monitor = new WebSocket(url);
-    this.monitor.addEventListener('message', ev => {
+    this.monitor.addEventListener('message', (ev) => {
       const data = JSON.parse(ev.data);
 
       if (data.poweredStatus === 'Running') {

@@ -21,7 +21,7 @@ export const defaultState: State = {
 
 const reducer = reducerWithInitialState(defaultState)
   /** START GET ACTIONS */
-  .case(getLongviewClients.started, state => ({
+  .case(getLongviewClients.started, (state) => ({
     ...state,
     loading: true,
     error: {
@@ -50,7 +50,7 @@ const reducer = reducerWithInitialState(defaultState)
     loading: false,
   }))
   /** START CREATE ACTIONS */
-  .case(createLongviewClient.started, state => ({
+  .case(createLongviewClient.started, (state) => ({
     ...state,
     error: {
       ...state.error,
@@ -80,7 +80,7 @@ const reducer = reducerWithInitialState(defaultState)
     })
   )
   /** START DELETE ACTIONS */
-  .case(deleteLongviewClient.started, state => ({
+  .case(deleteLongviewClient.started, (state) => ({
     ...state,
     error: {
       ...state.error,
@@ -113,7 +113,7 @@ const reducer = reducerWithInitialState(defaultState)
     })
   )
   /** START UPDATE ACTIONS */
-  .case(updateLongviewClient.started, state => ({
+  .case(updateLongviewClient.started, (state) => ({
     ...state,
     error: {
       ...state.error,
@@ -144,6 +144,6 @@ const reducer = reducerWithInitialState(defaultState)
       },
     })
   )
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

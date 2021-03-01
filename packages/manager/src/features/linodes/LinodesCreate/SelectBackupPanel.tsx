@@ -101,7 +101,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       <SelectionCard
         key={backup.id}
         checked={backup.id === Number(selectedBackupID)}
-        onClick={e => {
+        onClick={(e) => {
           const backupInfo = {
             title: backupInfo_.infoName,
             details: backupInfo_.subheading,
@@ -142,7 +142,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
                 {aggregatedBackups.length !== 0 ? (
                   <Typography component="div" className={classes.panelBody}>
                     <Grid container>
-                      {aggregatedBackups.map(backup => {
+                      {aggregatedBackups.map((backup) => {
                         return this.renderCard(backup);
                       })}
                     </Grid>

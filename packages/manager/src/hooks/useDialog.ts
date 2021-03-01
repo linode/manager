@@ -69,7 +69,7 @@ export const useDialog = <T extends string | number | undefined>(
     setErrors(undefined);
     setLoading(true);
     return request(params)
-      .then(response => {
+      .then((response) => {
         if (!mountedRef.current) {
           return;
         }

@@ -55,7 +55,7 @@ const typeOptions: Item<ServiceType>[] = [
 const getCredentialOptions = (
   credentials: ManagedCredential[]
 ): Item<number>[] => {
-  return credentials.map(thisCredential => {
+  return credentials.map((thisCredential) => {
     return {
       value: thisCredential.id,
       label: thisCredential.label,
@@ -64,7 +64,7 @@ const getCredentialOptions = (
 };
 
 const getGroupsOptions = (groups: string[]): Item<string>[] => {
-  return groups.map(thisGroup => ({
+  return groups.map((thisGroup) => ({
     value: thisGroup,
     label: thisGroup,
   }));
@@ -80,11 +80,11 @@ const helperText = {
 };
 
 const getValueFromItem = (value: string, options: Item<any>[]) => {
-  return options.find(thisOption => thisOption.value === value);
+  return options.find((thisOption) => thisOption.value === value);
 };
 
 const getMultiValuesFromItems = (values: number[], options: Item<any>[]) => {
-  return options.filter(thisOption => values.includes(thisOption.value));
+  return options.filter((thisOption) => values.includes(thisOption.value));
 };
 
 const emptyInitialValues = {
@@ -98,7 +98,7 @@ const emptyInitialValues = {
   notes: '',
 } as ManagedServicePayload;
 
-const MonitorDrawer: React.FC<CombinedProps> = props => {
+const MonitorDrawer: React.FC<CombinedProps> = (props) => {
   const { credentials, groups, mode, monitor, open, onClose, onSubmit } = props;
 
   const credentialOptions = getCredentialOptions(credentials);
@@ -275,7 +275,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 onChange={(items: Item<number>[]) => {
                   setFieldValue(
                     'credentials',
-                    items.map(thisItem => thisItem.value)
+                    items.map((thisItem) => thisItem.value)
                   );
                 }}
                 onBlur={handleBlur}

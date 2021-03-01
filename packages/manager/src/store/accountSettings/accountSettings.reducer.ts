@@ -21,7 +21,7 @@ export const defaultState: State = {
 
 // REDUCER
 export const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, updateSettingsInStore)) {
       const settings = action.payload;
       draft.data = { ...state.data!, ...settings };

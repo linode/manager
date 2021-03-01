@@ -99,7 +99,7 @@ export class StackScriptSelectionRow extends React.Component<
     return (
       <TableRow
         data-qa-table-row={label}
-        rowLink={onSelect ? e => onSelect(e, !checked) : undefined}
+        rowLink={onSelect ? (e) => onSelect(e, !checked) : undefined}
         ariaLabel={label}
       >
         <TableCell>
@@ -121,10 +121,9 @@ export class StackScriptSelectionRow extends React.Component<
   }
 }
 
-const mapDispatchToProps: MapDispatchToProps<
-  DispatchProps,
-  Props
-> = dispatch => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch
+) => {
   return {
     openStackScriptDrawer: (stackScriptId: number) =>
       dispatch(openStackScriptDrawerAction(stackScriptId)),

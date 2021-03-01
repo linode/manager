@@ -14,7 +14,7 @@ interface Props {
 
 export type CombinedProps = Props & StateProps & DispatchProps;
 
-export const BucketDrawer: React.FC<CombinedProps> = props => {
+export const BucketDrawer: React.FC<CombinedProps> = (props) => {
   const { isOpen, isRestrictedUser, closeBucketDrawer } = props;
 
   const { replace } = useHistory();

@@ -15,7 +15,7 @@ xdescribe('Group by Tag - Volumes', () => {
   let volumes = [];
 
   const generateTagGroups = () => {
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const vol = {
         label: `a${tag[0]}${timestamp()}.org`,
         tags: [tag],
@@ -42,7 +42,7 @@ xdescribe('Group by Tag - Volumes', () => {
     const postSort = VolumeDetail.sortVolumesByLabel.getAttribute(
       sortAttribute
     );
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const tagGroup = VolumeDetail.getVolumesInTagGroup(tag);
       postSort === 'asc'
         ? expect(tagGroup).toEqual(tagGroup.sort().reverse())
@@ -69,11 +69,11 @@ xdescribe('Group by Tag - Volumes', () => {
   });
 
   it('Volumes are grouped properly by tag', () => {
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const displayedInGroup = VolumeDetail.getVolumesInTagGroup(tag);
       const expectedInGroup = volumes
-        .filter(volume => volume.tags[0] === tag)
-        .map(volume => volume.label);
+        .filter((volume) => volume.tags[0] === tag)
+        .map((volume) => volume.label);
       expect(displayedInGroup.sort()).toEqual(expectedInGroup.sort());
     });
   });
@@ -84,7 +84,7 @@ xdescribe('Group by Tag - Volumes', () => {
 
   it('Volumes are sortable within tag groups', () => {
     //Check ascending descending
-    [1, 2].forEach(it => checkSortOrder());
+    [1, 2].forEach((it) => checkSortOrder());
   });
 
   it('Volumes can be ungrouped', () => {

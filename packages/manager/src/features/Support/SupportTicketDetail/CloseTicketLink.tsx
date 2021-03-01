@@ -87,7 +87,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
         }
         closeTicketSuccess();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const apiError = getErrorStringOrDefault(
           errorResponse,
           'Ticket could not be closed.'

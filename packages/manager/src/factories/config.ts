@@ -2,8 +2,8 @@ import * as Factory from 'factory.ts';
 import { Config } from '@linode/api-v4/lib/linodes/types';
 
 export const configFactory = Factory.Sync.makeFactory<Config>({
-  id: Factory.each(id => id),
-  label: Factory.each(id => `disk-${id}`),
+  id: Factory.each((id) => id),
+  label: Factory.each((id) => `disk-${id}`),
   created: '2020-01-01',
   updated: '2020-01-01',
   comments: '',

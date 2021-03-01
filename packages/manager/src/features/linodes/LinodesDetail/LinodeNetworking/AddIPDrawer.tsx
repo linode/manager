@@ -64,7 +64,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AddIPDrawer: React.FC<CombinedProps> = props => {
+const AddIPDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [selected, setSelected] = React.useState<IPType | null>(null);
@@ -95,12 +95,12 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
       type: 'ipv4',
       public: selected === 'v4Public',
     })
-      .then(_ => {
+      .then((_) => {
         setSubmitting(false);
         onSuccess();
         onClose();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         setSubmitting(false);
         setErrorMessage(getErrorStringOrDefault(errResponse));
       });
@@ -137,7 +137,7 @@ const AddIPDrawer: React.FC<CombinedProps> = props => {
           name={'IPv4 type'}
           label="IPv4 type"
           placeholder="Select an IPv4 type"
-          value={ipOptions.find(thisOption => thisOption.value === selected)}
+          value={ipOptions.find((thisOption) => thisOption.value === selected)}
           options={ipOptions}
           onChange={(_selected: Item<IPType>) => setSelected(_selected.value)}
           isClearable={false}

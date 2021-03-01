@@ -33,7 +33,7 @@ interface Props extends ActionHandlers {
   userCanModifyClient: boolean;
 }
 
-export const LongviewClientInstructions: React.FC<Props> = props => {
+export const LongviewClientInstructions: React.FC<Props> = (props) => {
   const {
     clientID,
     clientLabel,
@@ -50,10 +50,10 @@ export const LongviewClientInstructions: React.FC<Props> = props => {
   const handleUpdateLabel = (newLabel: string) => {
     setUpdating(true);
     return updateLongviewClient(clientID, newLabel)
-      .then(_ => {
+      .then((_) => {
         setUpdating(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setUpdating(false);
         return Promise.reject(
           getAPIErrorOrDefault(error, 'Error updating label')[0].reason

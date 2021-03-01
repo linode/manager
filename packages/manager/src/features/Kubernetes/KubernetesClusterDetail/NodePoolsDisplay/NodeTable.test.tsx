@@ -20,7 +20,7 @@ beforeAll(() => linodeFactory.resetSequenceNumber());
 describe('NodeTable', () => {
   it('includes label, status, and IP columns', () => {
     const { findByText } = renderWithTheme(<NodeTable {...props} />);
-    mockLinodes.forEach(async thisLinode => {
+    mockLinodes.forEach(async (thisLinode) => {
       await findByText(thisLinode.label);
       await findByText(thisLinode.ipv4[0]);
       await findByText('Ready');

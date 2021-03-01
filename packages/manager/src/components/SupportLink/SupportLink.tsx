@@ -9,7 +9,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const SupportLink: React.FunctionComponent<CombinedProps> = props => {
+const SupportLink: React.FunctionComponent<CombinedProps> = (props) => {
   const { description, text, title } = props;
   return (
     <Link

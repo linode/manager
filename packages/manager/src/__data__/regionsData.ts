@@ -90,7 +90,7 @@ export const regions: Region[] = [
   },
 ];
 
-export const extendedRegions = regions.map(thisRegion => ({
+export const extendedRegions = regions.map((thisRegion) => ({
   ...thisRegion,
   display: thisRegion.id,
 }));

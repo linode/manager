@@ -14,7 +14,7 @@ export const extendLinodes = (
   imagesData: Record<string, Image> = {},
   typesData: ExtendedType[] = []
 ): ExtendedLinode[] => {
-  return linodes.map(linode => {
+  return linodes.map((linode) => {
     /** get image data based on the Linode's image key */
     const linodeImageMetaData = imagesData[linode.image || ''];
 
@@ -43,7 +43,7 @@ export const getRegionIDFromLinodeID = (
   linodes: Linode[],
   id: number
 ): string | undefined => {
-  const thisLinode = linodes.find(linode => linode.id === id);
+  const thisLinode = linodes.find((linode) => linode.id === id);
   return thisLinode ? thisLinode.region : undefined;
 };
 

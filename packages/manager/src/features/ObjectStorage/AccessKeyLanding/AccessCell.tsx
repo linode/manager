@@ -29,7 +29,7 @@ interface AccessCellProps {
   onChange: (e: React.SyntheticEvent<RadioButton>) => void;
 }
 
-export const AccessCell: React.FC<AccessCellProps> = props => {
+export const AccessCell: React.FC<AccessCellProps> = (props) => {
   const { active, disabled, onChange, scope, scopeDisplay, viewOnly } = props;
   const classes = useStyles();
 

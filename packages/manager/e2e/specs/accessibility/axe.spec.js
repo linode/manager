@@ -15,7 +15,7 @@ describe('Example Accessibility Test', () => {
 
     const routesArray = removeDuplicateRoutes(
       flatten(
-        Object.values(constants.routes).map(el => {
+        Object.values(constants.routes).map((el) => {
           if (typeof el === 'object') {
             return Object.values(el);
           }
@@ -28,17 +28,17 @@ describe('Example Accessibility Test', () => {
 
     let results = [];
 
-    routesArray.forEach(route => {
+    routesArray.forEach((route) => {
       browser.url(route);
 
       const testResults = axeTest();
-      testResults.forEach(res => (res['manager-route'] = route));
+      testResults.forEach((res) => (res['manager-route'] = route));
       results = results.concat(testResults);
     });
 
     results = sortBy(
-      sortBy(results, o => o.impact),
-      o => o.impact !== 'critical'
+      sortBy(results, (o) => o.impact),
+      (o) => o.impact !== 'critical'
     );
 
     if (!existsSync(resultsPath)) {

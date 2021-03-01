@@ -52,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const PaymentInformation: React.FC<CombinedProps> = props => {
+const PaymentInformation: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { lastFour, expiry } = props;

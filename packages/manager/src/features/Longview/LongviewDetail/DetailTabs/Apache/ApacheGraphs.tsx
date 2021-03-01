@@ -48,7 +48,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const ApacheGraphs: React.FC<CombinedProps> = props => {
+export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
   const {
     data,
     error,

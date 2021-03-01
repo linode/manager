@@ -7,7 +7,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const LoadGraph: React.FC<CombinedProps> = props => {
+export const LoadGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
     lastUpdated,

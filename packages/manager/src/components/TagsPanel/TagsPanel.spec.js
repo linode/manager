@@ -14,7 +14,7 @@ describe('Tags Panel Suite', () => {
   const addTagParagraph = '[data-qa-tag-p]';
   const options = '[data-qa-option]';
 
-  const addNewTag = tagname => {
+  const addNewTag = (tagname) => {
     $(addTag).click();
     $(tagsSelect).waitForDisplayed(constants.wait.normal);
     const startTags = $$(tag).length;
@@ -33,7 +33,7 @@ describe('Tags Panel Suite', () => {
     }, constants.wait.normal);
   };
 
-  const verifyTagName = tagname => {
+  const verifyTagName = (tagname) => {
     expect($(`[data-qa-tag="${tagname}"]`).isExisting())
       .withContext(`incorrect tag name`)
       .toBe(true);
@@ -42,7 +42,7 @@ describe('Tags Panel Suite', () => {
       .toBe(tagname);
   };
 
-  const deleteTagName = tagname => {
+  const deleteTagName = (tagname) => {
     const tags = $$(tag).length;
     $(`[data-qa-tag="${tagname}"] [data-qa-delete-tag]`).click();
     browser.waitUntil(() => {

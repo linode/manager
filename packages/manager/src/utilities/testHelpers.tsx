@@ -16,7 +16,7 @@ import { queryClient } from 'src/queries/base';
 import store, { ApplicationState, defaultState } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
-  window.matchMedia = jest.fn().mockImplementation(query => {
+  window.matchMedia = jest.fn().mockImplementation((query) => {
     return {
       matches,
       media: query,
@@ -155,7 +155,7 @@ export const withMarkup = (query: Query) => (text: string): HTMLElement =>
   query((content: string, node: HTMLElement) => {
     const hasText = (node: HTMLElement) => node.textContent === text;
     const childrenDontHaveText = Array.from(node.children).every(
-      child => !hasText(child as HTMLElement)
+      (child) => !hasText(child as HTMLElement)
     );
     return hasText(node) && childrenDontHaveText;
   });
@@ -176,7 +176,7 @@ export const assertOrder = (
   expectedOrder: string[]
 ) => {
   const elements = container.querySelectorAll(selectorAttribute);
-  expect(Array.from(elements).map(el => el.textContent)).toMatchObject(
+  expect(Array.from(elements).map((el) => el.textContent)).toMatchObject(
     expectedOrder
   );
 };

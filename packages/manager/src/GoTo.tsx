@@ -58,7 +58,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const GoTo: React.FC<CombinedProps> = props => {
+const GoTo: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const flags = useFlags();
@@ -155,8 +155,8 @@ const GoTo: React.FC<CombinedProps> = props => {
   const options: Item[] = React.useMemo(
     () =>
       links
-        .filter(thisLink => !thisLink.hide)
-        .map(thisLink => ({
+        .filter((thisLink) => !thisLink.hide)
+        .map((thisLink) => ({
           label: thisLink.display,
           value: thisLink.href,
         })),

@@ -36,7 +36,7 @@ interface DisplayProps {
   ticketUrl?: string;
 }
 
-const DayDisplay: React.FC<DisplayProps> = props => {
+const DayDisplay: React.FC<DisplayProps> = (props) => {
   const { day, icon, ticketUrl } = props;
   const classes = useStyles();
 
@@ -77,10 +77,10 @@ const iconStyles = {
   height: 30,
 };
 
-export const IssueDay: React.FC<Props> = props => {
+export const IssueDay: React.FC<Props> = (props) => {
   const { day, issues } = props;
 
-  const issueLinks = issues.map(thisIssue => thisIssue.entity.id);
+  const issueLinks = issues.map((thisIssue) => thisIssue.entity.id);
 
   if (issues.length === 0) {
     // No issues for today

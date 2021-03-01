@@ -15,8 +15,8 @@ export const deleteTicketById = (ticketId: number) => {
 };
 
 export const deleteAllTestTickets = () => {
-  getTickets().then(resp => {
-    resp.body.data.forEach(ticket => {
+  getTickets().then((resp) => {
+    resp.body.data.forEach((ticket) => {
       if (isTestEntity(ticket) && ticket.closable) {
         deleteTicketById(ticket.id);
       }

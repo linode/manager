@@ -47,7 +47,7 @@ const initialValues: CreateFirewallPayload = {
   },
 };
 
-const AddFirewallDrawer: React.FC<CombinedProps> = props => {
+const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
   const { onClose, onSubmit, ...restOfDrawerProps } = props;
 
   /**
@@ -59,10 +59,10 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   const regions = useRegionsQuery().data ?? [];
 
   const regionsWithFirewalls = regions
-    .filter(thisRegion =>
+    .filter((thisRegion) =>
       thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
     )
-    .map(thisRegion => thisRegion.id);
+    .map((thisRegion) => thisRegion.id);
 
   const submitForm = (
     values: CreateFirewallPayload,
@@ -96,7 +96,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         onClose();
       })
-      .catch(err => {
+      .catch((err) => {
         const mapErrorToStatus = (generalError: string) =>
           setStatus({ generalError });
 
@@ -172,7 +172,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
                 helperText={`Assign one or more Linodes to this firewall. You can add
                  Linodes later if you want to customize your rules first. Only Linodes in
                  regions that support Firewalls (${arrayToList(
-                   regionsWithFirewalls.map(thisId => dcDisplayNames[thisId])
+                   regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId])
                  )}) will be displayed as options.`}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>

@@ -106,7 +106,7 @@ describe('Debounced Search Suite', () => {
 
     it('should display unfiltered list of options', () => {
       displayedListItems = $$(listItemSelector);
-      displayedListItems.forEach(i => {
+      displayedListItems.forEach((i) => {
         expect(i.isDisplayed())
           .withContext(`Unfiltered options should be displayed`)
           .toBe(true);
@@ -139,7 +139,7 @@ describe('Debounced Search Suite', () => {
     });
 
     it('should display all list options on clear', () => {
-      validQuery.split('').forEach(i => {
+      validQuery.split('').forEach((i) => {
         $(debouncedSearchSelector)
           .$('input')
           .addValue('\uE003');
@@ -150,7 +150,7 @@ describe('Debounced Search Suite', () => {
         return displayedListItems.length === initialOptions.length;
       }, constants.wait.normal);
 
-      const currentOptions = $$(listItemSelector).map(i => i.getText());
+      const currentOptions = $$(listItemSelector).map((i) => i.getText());
 
       expect(currentOptions).toEqual(initialOptions);
     });

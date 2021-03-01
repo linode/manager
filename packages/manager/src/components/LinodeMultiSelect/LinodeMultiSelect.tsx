@@ -16,7 +16,7 @@ export interface Props extends Partial<BaseSelectProps> {
 
 export type CombinedProps = Props & LinodeProps;
 
-export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
+export const LinodeMultiSelect: React.FC<CombinedProps> = (props) => {
   const {
     allowedRegions,
     errorText,
@@ -36,7 +36,7 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
   const filteredLinodesData = React.useMemo(
     () =>
       linodesData.filter(
-        thisLinode =>
+        (thisLinode) =>
           !_filteredLinodes.includes(thisLinode.id) &&
           // If allowedRegions wasn't passed, don't use region as a filter.
           (!allowedRegions || allowedRegions.includes(thisLinode.region))
@@ -70,15 +70,15 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = props => {
       !!showAllOption && userSelectedAllLinodes(selectedLinodes);
     toggleSelectAll(hasSelectedAll);
     const newSelectedLinodes = hasSelectedAll
-      ? filteredLinodesData.map(eachLinode => eachLinode.id)
-      : selectedLinodes.map(eachValue => eachValue.value);
+      ? filteredLinodesData.map((eachLinode) => eachLinode.id)
+      : selectedLinodes.map((eachValue) => eachValue.value);
     handleChange(newSelectedLinodes);
   };
 
   const value = selectedLinodes
-    ? selectedLinodes.map(thisLinodeID => {
+    ? selectedLinodes.map((thisLinodeID) => {
         const thisLinode = linodesData.find(
-          eachLinode => eachLinode.id === thisLinodeID
+          (eachLinode) => eachLinode.id === thisLinodeID
         );
         return {
           value: thisLinodeID,
@@ -134,7 +134,7 @@ export const generateOptions = (
     return [];
   }
 
-  const items = linodesData.map(eachLinode => ({
+  const items = linodesData.map((eachLinode) => ({
     value: eachLinode.id,
     label: eachLinode.label,
   }));
@@ -161,7 +161,7 @@ export const generateOptions = (
 };
 
 export const userSelectedAllLinodes = (values: Item<string | number>[]) =>
-  values.some(eachValue => eachValue.value === 'ALL');
+  values.some((eachValue) => eachValue.value === 'ALL');
 
 const enhanced = compose<CombinedProps, Props>(React.memo, withLinodes());
 

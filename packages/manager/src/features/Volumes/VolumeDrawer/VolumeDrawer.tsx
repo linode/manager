@@ -53,7 +53,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
               volumeId={volumeId}
               volumeLabel={volumeLabel}
               onClose={actions.closeDrawer}
-              volumeTags={volumeTags.map(v => ({ label: v, value: v }))}
+              volumeTags={volumeTags.map((v) => ({ label: v, value: v }))}
               readOnly={readOnly}
             />
           )}
@@ -141,7 +141,9 @@ interface DispatchProps {
   };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
   actions: {
     closeDrawer: () => dispatch(close()),
     openForConfig: (
@@ -172,7 +174,7 @@ interface StateProps {
   regions: Region[];
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const {
     linodeId,
     linodeLabel,

@@ -75,7 +75,7 @@ const _getMetrics = (data: NetworkStats) => {
   };
 };
 
-export const NetworkGraph: React.FC<CombinedProps> = props => {
+export const NetworkGraph: React.FC<CombinedProps> = (props) => {
   const { rangeSelection, stats, theme, ...rest } = props;
 
   const classes = useStyles();
@@ -191,7 +191,7 @@ interface GraphProps {
   metrics: NetworkMetrics;
 }
 
-const Graph: React.FC<GraphProps> = props => {
+const Graph: React.FC<GraphProps> = (props) => {
   const classes = useStyles();
   const {
     chartHeight,

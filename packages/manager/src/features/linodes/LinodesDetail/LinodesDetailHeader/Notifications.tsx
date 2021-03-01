@@ -16,7 +16,7 @@ type CombinedProps = ProfileProps &
     requestNotifications: () => void;
   };
 
-const Notifications: React.FC<CombinedProps> = props => {
+const Notifications: React.FC<CombinedProps> = (props) => {
   const {
     requestNotifications,
     linodeNotifications,

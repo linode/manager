@@ -205,7 +205,8 @@ export const aggregateBackups = (
       ? backups?.snapshot.in_progress
       : backups?.snapshot.current;
   return (
-    backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b))
+    backups &&
+    [...backups.automatic!, manualSnapshot!].filter((b) => Boolean(b))
   );
 };
 
@@ -243,7 +244,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.eventSubscription = events$
-      .filter(e =>
+      .filter((e) =>
         [
           'linode_snapshot',
           'backups_enable',
@@ -251,10 +252,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           'backups_restore',
         ].includes(e.action)
       )
-      .filter(e => !e._initial && e.status === 'finished')
-      .subscribe(_ => {
+      .filter((e) => !e._initial && e.status === 'finished')
+      .subscribe((_) => {
         getLinodeBackups(this.props.linodeID)
-          .then(data => {
+          .then((data) => {
             this.setState({ backups: data });
           })
           .catch(() => {
@@ -301,7 +302,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         // GA Event
         sendBackupsDisabledEvent();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         getAPIErrorOrDefault(
           errorResponse,
           'There was an error disabling backups'
@@ -335,7 +336,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         });
         resetEventsPolling();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         this.setState({
           snapshotForm: {
             ...this.state.snapshotForm,
@@ -369,7 +370,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     } = this.props;
     const { settingsForm } = this.state;
 
-    this.setState(state => ({
+    this.setState((state) => ({
       settingsForm: { ...state.settingsForm, loading: true, errors: undefined },
     }));
 
@@ -384,7 +385,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       },
     })
       .then(() => {
-        this.setState(state => ({
+        this.setState((state) => ({
           settingsForm: { ...state.settingsForm, loading: false },
         }));
 
@@ -392,9 +393,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           variant: 'success',
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState(
-          state => ({
+          (state) => ({
             settingsForm: {
               ...state.settingsForm,
               loading: false,
@@ -628,11 +629,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       return { label, value: day[1] };
     });
 
-    const defaultTimeSelection = timeSelection.find(eachOption => {
+    const defaultTimeSelection = timeSelection.find((eachOption) => {
       return eachOption.value === settingsForm.window;
     });
 
-    const defaultDaySelection = daySelection.find(eachOption => {
+    const defaultDaySelection = daySelection.find((eachOption) => {
       return eachOption.value === settingsForm.day;
     });
 
@@ -840,7 +841,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 }
 
 const preloaded = PromiseLoader<ContextProps>({
-  backups: props => getLinodeBackups(props.linodeID),
+  backups: (props) => getLinodeBackups(props.linodeID),
   type: ({ linodeType }) => {
     if (!linodeType) {
       return Promise.resolve(undefined);
@@ -856,7 +857,7 @@ interface StateProps {
   timezone: string;
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
 });
 

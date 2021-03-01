@@ -31,11 +31,11 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
   const profileEmailRef = React.useRef(profile.data?.email);
 
   const billingEmailBounceNotification = notifications.find(
-    thisNotification => thisNotification.type === 'billing_email_bounce'
+    (thisNotification) => thisNotification.type === 'billing_email_bounce'
   );
 
   const userEmailBounceNotification = notifications.find(
-    thisNotification => thisNotification.type === 'user_email_bounce'
+    (thisNotification) => thisNotification.type === 'user_email_bounce'
   );
 
   const confirmAccountEmail = () =>
@@ -108,7 +108,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const EmailBounceNotification: React.FC<CombinedProps> = React.memo(props => {
+const EmailBounceNotification: React.FC<CombinedProps> = React.memo((props) => {
   const { text, confirmEmail, changeEmail } = props;
 
   const classes = useEmailBounceNotificationStyles();

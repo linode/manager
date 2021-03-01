@@ -244,7 +244,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         io: valueUnlessOff(this.state.diskio),
       },
     })
-      .then(_ => {
+      .then((_) => {
         this.setState(
           compose(
             set(
@@ -255,7 +255,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           )
         );
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           {
             submitting: false,

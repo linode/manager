@@ -133,8 +133,8 @@ type CombinedProps = Props &
   FeatureFlagConsumerProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
-  return getNodeBalancerConfigs(nodeBalancerId).then(configs => {
-    return Promise.map(configs.data, config => {
+  return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
+    return Promise.map(configs.data, (config) => {
       return getNodeBalancerConfigNodes(nodeBalancerId, config.id).then(
         ({ data: nodes }) => {
           return {
@@ -143,7 +143,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
           };
         }
       );
-    }).catch(_ => []);
+    }).catch((_) => []);
   });
 };
 
@@ -315,7 +315,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       nodeBalancerConfigId: config.id,
       ...configPayload,
     })
-      .then(nodeBalancerConfig => {
+      .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
@@ -339,7 +339,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         /* Return true as a Promise for the sake of aggregating results */
         return true;
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         // update errors
         const errors = getAPIErrorOrDefault(errorResponse);
         const newErrors = clone(this.state.configErrors);
@@ -368,12 +368,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       if (node.modifyStatus === 'update') {
         return this.updateNode(idx, nodeIdx);
       }
-      return new Promise(resolve => resolve(undefined));
+      return new Promise((resolve) => resolve(undefined));
     });
 
     /* Set the success message if all of the requests succeed */
     Promise.all([nodeBalUpdate, ...nodeUpdates] as any)
-      .then(responseVals => {
+      .then((responseVals) => {
         const [nodeBalSuccess, ...nodeResults] = responseVals;
         if (nodeBalSuccess) {
           // replace Config success message with a new one
@@ -383,7 +383,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             panelMessages: newMessages,
           });
         }
-        const filteredNodeResults = nodeResults.filter(el => el !== undefined);
+        const filteredNodeResults = nodeResults.filter(
+          (el) => el !== undefined
+        );
         if (filteredNodeResults.length) {
           const nodeSuccess = filteredNodeResults.reduce(
             (acc: boolean, val: boolean) => {
@@ -402,7 +404,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         }
         this.resetSubmitting(idx);
       })
-      .catch(_ => {
+      .catch((_) => {
         this.resetSubmitting(idx);
       });
   };
@@ -433,7 +435,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       nodeBalancerId: Number(nodeBalancerId),
       ...configPayload,
     })
-      .then(nodeBalancerConfig => {
+      .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
@@ -470,12 +472,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                 /* All of the Nodes are new since the config was just created */
                 return this.createNode(idx, nodeIdx);
               }
-              return new Promise(resolve => resolve(true));
+              return new Promise((resolve) => resolve(true));
             });
 
             /* Set the success message if all of the requests succeed */
             Promise.all([...nodeUpdates] as any)
-              .then(responseVals => {
+              .then((responseVals) => {
                 const success = responseVals.reduce(
                   (acc: boolean, val: boolean) => {
                     return acc && val;
@@ -492,13 +494,13 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                 }
                 this.resetSubmitting(idx);
               })
-              .catch(_ => {
+              .catch((_) => {
                 this.resetSubmitting(idx);
               });
           }
         );
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         // update errors
         const errors = getAPIErrorOrDefault(errorResponse);
         const newErrors = clone(this.state.configErrors);
@@ -603,7 +605,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       nodeBalancerId: Number(nodeBalancerId),
       nodeBalancerConfigId: config.id,
     })
-      .then(_ => {
+      .then((_) => {
         // update config data
         const newConfigs = clone(this.state.configs);
         newConfigs.splice(idxToDelete, 1);
@@ -614,7 +616,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           ),
         });
       })
-      .catch(err => {
+      .catch((err) => {
         return this.setState(
           {
             deleteConfigConfirmDialog: {
@@ -656,7 +658,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     } else {
       /* If the node doesn't have an ID, remove it from state immediately */
       this.setState(
-        over(lensPath(['configs', configIdx, 'nodes']), nodes =>
+        over(lensPath(['configs', configIdx, 'nodes']), (nodes) =>
           nodes.filter((n: any, idx: number) => idx !== nodeIdx)
         )
       );
@@ -695,14 +697,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     )
       .then(() => {
         this.setState(
-          over(lensPath(['configs', configIdx!, 'nodes']), nodes =>
+          over(lensPath(['configs', configIdx!, 'nodes']), (nodes) =>
             nodes.filter((n: any, idx: number) => idx !== nodeIdx!)
           )
         );
         /* Return true as a Promise for the sake of aggregating results */
         return true;
       })
-      .catch(_ => {
+      .catch((_) => {
         /* Return false as a Promise for the sake of aggregating results */
         return false;
         /* @todo:
@@ -774,10 +776,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       config.id,
       nodeData
     )
-      .then(responseNode =>
+      .then((responseNode) =>
         this.handleNodeSuccess(responseNode, configIdx, nodeIdx)
       )
-      .catch(errResponse =>
+      .catch((errResponse) =>
         this.handleNodeFailure(errResponse, configIdx, nodeIdx)
       );
   };
@@ -828,10 +830,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       node.id,
       nodeData
     )
-      .then(responseNode =>
+      .then((responseNode) =>
         this.handleNodeSuccess(responseNode, configIdx, nodeIdx)
       )
-      .catch(errResponse =>
+      .catch((errResponse) =>
         this.handleNodeFailure(errResponse, configIdx, nodeIdx)
       );
   };
@@ -910,7 +912,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || [])
-      .map(e => e.reason)
+      .map((e) => e.reason)
       .join(',');
 
   updateState = (
@@ -1157,7 +1159,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 const preloaded = PromiseLoader<CombinedProps>({
-  configs: props => {
+  configs: (props) => {
     const {
       match: {
         params: { nodeBalancerId },

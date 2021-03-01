@@ -92,7 +92,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const TabbedPanel: React.FC<CombinedProps> = props => {
+export const TabbedPanel: React.FC<CombinedProps> = (props) => {
   const {
     header,
     error,

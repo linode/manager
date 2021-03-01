@@ -74,7 +74,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ReplyContainer: React.FC<CombinedProps> = props => {
+const ReplyContainer: React.FC<CombinedProps> = (props) => {
   const { classes, onSuccess, reloadAttachments, ...rest } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
@@ -91,7 +91,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
       since we're sanitizing again at render time.
     */
     createReply({ description: value, ticket_id: props.ticketId })
-      .then(response => {
+      .then((response) => {
         /** onSuccess callback */
         onSuccess(response);
 
@@ -126,7 +126,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
              * Note! We want the first few uploads to succeed even if the last few
              * fail! Don't try to aggregate errors!
              */
-            .catch(fileErrors => {
+            .catch((fileErrors) => {
               setFiles(set(lensPath([idx, 'uploading']), false));
 
               const newErrors = getAPIErrorOrDefault(
@@ -138,7 +138,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
             });
         });
       })
-      .catch(fetchErrors => {
+      .catch((fetchErrors) => {
         setErrors(
           getAPIErrorOrDefault(
             fetchErrors,

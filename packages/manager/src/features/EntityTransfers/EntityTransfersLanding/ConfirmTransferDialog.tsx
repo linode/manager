@@ -56,7 +56,7 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferDialog: React.FC<Props> = props => {
+export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   const { onClose, open, token } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -111,7 +111,7 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
           variant: 'success',
         });
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmissionErrors(
           getAPIErrorOrDefault(e, 'An unexpected error occurred.')
         );
@@ -149,7 +149,7 @@ export const ConfirmTransferDialog: React.FC<Props> = props => {
         entities={data?.entities ?? { linodes: [] }}
         expiry={data?.expiry}
         hasConfirmed={hasConfirmed}
-        handleToggleConfirm={() => setHasConfirmed(confirmed => !confirmed)}
+        handleToggleConfirm={() => setHasConfirmed((confirmed) => !confirmed)}
         submissionErrors={submissionErrors}
         onClose={onClose}
         onSubmit={handleAcceptTransfer}
@@ -171,7 +171,7 @@ interface ContentProps {
   onSubmit: () => void;
 }
 
-export const DialogContent: React.FC<ContentProps> = React.memo(props => {
+export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
   const {
     entities,
     errors,
@@ -226,7 +226,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo(props => {
           This transfer contains:
         </Typography>
         <ul className={classes.list}>
-          {Object.keys(entities).map(thisEntityType => {
+          {Object.keys(entities).map((thisEntityType) => {
             // According to spec, all entity names are plural and lowercase
             // (NB: This may cause problems for NodeBalancers if/when they are added to the payload)
             const entityName = capitalize(thisEntityType).slice(0, -1);

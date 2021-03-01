@@ -18,7 +18,7 @@ interface Props {
   linodes: number[];
 }
 
-export const AttachVLANDrawer: React.FC<Props> = props => {
+export const AttachVLANDrawer: React.FC<Props> = (props) => {
   const { isOpen, linodes, onClose, region, vlanID } = props;
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
   const [isSubmitting, setSubmitting] = React.useState(false);
@@ -44,7 +44,7 @@ export const AttachVLANDrawer: React.FC<Props> = props => {
         setSubmitting(false);
         onClose();
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setError(getAPIErrorOrDefault(error, 'Error attaching Linode to VLAN'));
       });

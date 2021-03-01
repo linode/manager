@@ -32,7 +32,7 @@ describe('IssueCalendar methods', () => {
   describe('generateCalendar', () => {
     it('should generate a calendar for the last 10 days', () => {
       const calendar = generateCalendar('GMT', recentIssues);
-      new Array(10).forEach(index => {
+      new Array(10).forEach((index) => {
         expect(calendar[index - 1].issues).toHaveLength(1);
         expect(calendar[index - 1].day).toBe(
           DateTime.local().minus({ days: index - 1 }).day

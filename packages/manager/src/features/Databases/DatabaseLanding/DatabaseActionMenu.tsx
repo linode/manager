@@ -30,7 +30,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const DatabaseActionMenu: React.FC<CombinedProps> = props => {
+const DatabaseActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -57,7 +57,7 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.root}>
       {!matchesSmDown &&
-        actions.map(thisAction => {
+        actions.map((thisAction) => {
           return (
             <InlineAction
               key={thisAction.title}

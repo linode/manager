@@ -78,7 +78,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DocumentationResults: React.FC<CombinedProps> = props => {
+const DocumentationResults: React.FC<CombinedProps> = (props) => {
   const { classes, results, sectionTitle, target } = props;
   const renderResults = () => {
     return results.map((result: SearchResult, idx: number) => (

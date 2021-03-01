@@ -28,7 +28,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const UpgradeKubernetesVersionBanner: React.FC<Props> = props => {
+export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
   const { clusterID, clusterLabel, currentVersion } = props;
   const classes = useStyles();
   const { data: versions } = useKubernetesVersionQuery();

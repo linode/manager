@@ -66,20 +66,20 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const SelectDBPlanPanel: React.FC<CombinedProps> = props => {
+export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
   const { databasePlans, onPlanSelect, selectedPlanId, errorText } = props;
   const selectPlan = (id: string) => () => onPlanSelect(id);
 
-  const databasePlansExtended = databasePlans.map(databasePlan =>
+  const databasePlansExtended = databasePlans.map((databasePlan) =>
     extendType(databasePlan)
   );
 
   const classes = useStyles();
 
   const getStandardAvails = (types: DatabaseType[]) =>
-    types.filter(type => /standard/.test(type.availability));
+    types.filter((type) => /standard/.test(type.availability));
   const getHighAvails = (types: DatabaseType[]) =>
-    types.filter(type => /high/.test(type.availability));
+    types.filter((type) => /high/.test(type.availability));
 
   const createTabs = (): [Tab[], DatabaseAvailability[]] => {
     const tabs: Tab[] = [];

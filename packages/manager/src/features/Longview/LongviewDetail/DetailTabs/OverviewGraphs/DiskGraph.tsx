@@ -10,7 +10,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const DiskGraph: React.FC<CombinedProps> = props => {
+export const DiskGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
     end,
@@ -130,7 +130,7 @@ export const processDiskData = (
     return emptyState;
   }
   // For some special cases, disk data is not available and we want to show an error.
-  if (disks.some(thisDisk => thisDisk.childof !== 0)) {
+  if (disks.some((thisDisk) => thisDisk.childof !== 0)) {
     return {
       ...emptyState,
       error: 'Disk I/O is not applicable for this type of device.',

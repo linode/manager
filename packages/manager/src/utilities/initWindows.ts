@@ -3,7 +3,7 @@ import { sortBy } from 'ramda';
 import { evenizeNumber } from './evenizeNumber';
 
 export const initWindows = (timezone: string, unshift?: boolean) => {
-  let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
+  let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
     const start = DateTime.fromObject({ hour, zone: 'utc' }).setZone(timezone);
     const finish = start.plus({ hours: 2 });
     return [
@@ -12,7 +12,7 @@ export const initWindows = (timezone: string, unshift?: boolean) => {
     ];
   });
 
-  windows = sortBy<string[]>(window => window[0], windows);
+  windows = sortBy<string[]>((window) => window[0], windows);
 
   if (unshift) {
     windows.unshift(['Choose a time', 'Scheduling']);

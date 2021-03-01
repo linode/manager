@@ -35,7 +35,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const displayPrice = (v: number) => `$${v.toFixed(2)}`;
 
-export const DisplayPrice: React.FC<CombinedProps> = props => {
+export const DisplayPrice: React.FC<CombinedProps> = (props) => {
   const { classes, fontSize, interval, price } = props;
   return (
     <React.Fragment>

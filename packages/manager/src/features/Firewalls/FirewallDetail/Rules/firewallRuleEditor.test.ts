@@ -125,7 +125,7 @@ describe('Rule Editor', () => {
           type: 'RESET',
           rules,
         });
-        finalState.forEach(revisionList => {
+        finalState.forEach((revisionList) => {
           expect(revisionList).toHaveLength(1);
         });
       });
@@ -148,7 +148,7 @@ describe('Rule Editor', () => {
 
       const rulesWithoutStatus = editorStateToRules(newState);
       expect(rulesWithoutStatus.length).toBe(baseState.length);
-      rulesWithoutStatus.forEach(thisRule => {
+      rulesWithoutStatus.forEach((thisRule) => {
         expect(thisRule).toBeDefined();
       });
     });

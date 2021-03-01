@@ -21,7 +21,7 @@ describe('help & support', () => {
     cy.intercept('GET', '*/profile').as('getProfile');
 
     cy.visitWithLogin('/support/tickets');
-    cy.wait('@getProfile').then(xhr => {
+    cy.wait('@getProfile').then((xhr) => {
       const user = xhr.response?.body['username'];
       const mockTicketData = {
         attachments: [image],
@@ -46,9 +46,13 @@ describe('help & support', () => {
         'getTicket'
       );
       // intercept create support ticket request, stub response with 200
-      cy.intercept('POST', `*/support/tickets/${ticketId}/attachments`, req => {
-        req.reply(200);
-      }).as('attachmentPost');
+      cy.intercept(
+        'POST',
+        `*/support/tickets/${ticketId}/attachments`,
+        (req) => {
+          req.reply(200);
+        }
+      ).as('attachmentPost');
       // stub incoming response
       cy.intercept(`*/support/tickets/${ticketId}/replies`, {
         data: [],

@@ -54,7 +54,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const BackupStatus: React.FC<CombinedProps> = props => {
+const BackupStatus: React.FC<CombinedProps> = (props) => {
   const { classes, mostRecentBackup, linodeId, backupsEnabled } = props;
 
   if (mostRecentBackup) {

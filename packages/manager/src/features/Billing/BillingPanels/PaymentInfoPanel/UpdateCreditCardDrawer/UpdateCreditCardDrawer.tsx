@@ -51,7 +51,7 @@ export interface Props {
 
 type CombinedProps = Props & AccountContainerProps;
 
-export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
+export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { onClose, open } = props;
@@ -129,7 +129,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         onClose();
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setErrors(getAPIErrorOrDefault(error, 'Unable to update credit card.'));
       });
@@ -247,7 +247,7 @@ const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
     <NumberFormat
       {...other}
       getInputRef={inputRef}
-      onValueChange={values => {
+      onValueChange={(values) => {
         onChange({
           target: {
             value: values.value,

@@ -46,7 +46,7 @@ interface ProfileProps {
 
 type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
 
-const StackScriptActionMenu: React.FC<CombinedProps> = props => {
+const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -125,7 +125,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.stackScriptActionsWrapper}>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

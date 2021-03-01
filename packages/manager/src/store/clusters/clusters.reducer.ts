@@ -36,7 +36,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       loading: false,
       lastUpdated: Date.now(),
       entities: result,
-      results: result.map(r => r.id),
+      results: result.map((r) => r.id),
       error: undefined,
     };
   }

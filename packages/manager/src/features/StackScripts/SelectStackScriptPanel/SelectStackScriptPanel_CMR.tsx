@@ -131,7 +131,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     if (!isNaN(selected) && selected !== 0) {
       this.setState({ stackScriptLoading: true });
       getStackScript(selected)
-        .then(stackScript => {
+        .then((stackScript) => {
           this.setState({ stackScript, stackScriptLoading: false });
           this.props.onSelect(
             stackScript.id,
@@ -141,7 +141,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
             stackScript.user_defined_fields
           );
         })
-        .catch(_ => {
+        .catch((_) => {
           this.setState({ stackScriptLoading: false, stackScriptError: true });
         });
     }
@@ -239,7 +239,7 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   username: pathOr('', ['data', 'username'], state.__resources.profile),
 });
 

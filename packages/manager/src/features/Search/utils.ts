@@ -23,7 +23,7 @@ export const separateResultsByEntity = (
     buckets: [],
   };
 
-  searchResults.forEach(result => {
+  searchResults.forEach((result) => {
     // EntityTypes are singular; we'd like the resulting keys to be plural
     const pluralizedEntityType = result.entityType + 's';
     separatedResults[pluralizedEntityType].push(result);

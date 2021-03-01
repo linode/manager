@@ -113,19 +113,19 @@ interface Props {
 }
 
 const getNanodes = (types: ExtendedType[]) =>
-  types.filter(t => /nanode/.test(t.class));
+  types.filter((t) => /nanode/.test(t.class));
 
 const getStandard = (types: ExtendedType[]) =>
-  types.filter(t => /standard/.test(t.class));
+  types.filter((t) => /standard/.test(t.class));
 
 const getHighMem = (types: ExtendedType[]) =>
-  types.filter(t => /highmem/.test(t.class));
+  types.filter((t) => /highmem/.test(t.class));
 
 const getDedicated = (types: ExtendedType[]) =>
-  types.filter(t => /dedicated/.test(t.class));
+  types.filter((t) => /dedicated/.test(t.class));
 
 const getGPU = (types: ExtendedType[]) =>
-  types.filter(t => /gpu/.test(t.class));
+  types.filter((t) => /gpu/.test(t.class));
 
 export class SelectPlanPanel extends React.Component<
   Props & WithStyles<ClassNames>
@@ -392,7 +392,7 @@ export class SelectPlanPanel extends React.Component<
       'standard', // Use `standard` by default
       ['class'],
       types.find(
-        type => type.id === selectedID || type.heading === currentPlanHeading
+        (type) => type.id === selectedID || type.heading === currentPlanHeading
       )
     );
 

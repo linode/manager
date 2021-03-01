@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = WithStyles<ClassNames> & Props;
 
-const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
+const ConfigNodeIPSelect: React.FC<CombinedProps> = (props) => {
   const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
     null
   );
@@ -42,7 +42,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
 
   const handleChange = (linode: Linode) => {
     setSelectedLinode(linode.id);
-    const thisLinodesPrivateIP = linode.ipv4.find(ipv4 =>
+    const thisLinodesPrivateIP = linode.ipv4.find((ipv4) =>
       ipv4.match(privateIPRegex)
     );
     /**
@@ -74,27 +74,27 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
       disabled={props.disabled}
       small
       placeholder="Enter IP Address"
-      valueOverride={linode => {
-        return linode.ipv4.find(eachIP => eachIP.match(privateIPRegex));
+      valueOverride={(linode) => {
+        return linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex));
       }}
-      labelOverride={linode => {
+      labelOverride={(linode) => {
         return (
           <div>
             <strong>
-              {linode.ipv4.find(eachIP => eachIP.match(privateIPRegex))}
+              {linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex))}
             </strong>
             <div className={classes.labelOuter}>{` ${linode.label}`}</div>
           </div>
         );
       }}
-      filterCondition={linode => {
+      filterCondition={(linode) => {
         /**
          * if the Linode doesn't have an private IP OR if the Linode
          * is in a different region that the NodeBalancer, don't show it
          * in the select dropdown
          */
         return (
-          !!linode.ipv4.find(eachIP => eachIP.match(privateIPRegex)) &&
+          !!linode.ipv4.find((eachIP) => eachIP.match(privateIPRegex)) &&
           linode.region === props.selectedRegion
         );
       }}

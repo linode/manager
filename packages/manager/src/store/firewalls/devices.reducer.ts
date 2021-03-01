@@ -25,7 +25,7 @@ export const defaultState: State = {};
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, getAllFirewallDevicesActions.started)) {
       const { firewallID } = action.payload;
       draft = ensureInitializedNestedState(draft, firewallID, { results: 0 });

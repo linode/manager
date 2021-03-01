@@ -72,7 +72,7 @@ const searchDeps: ReduxEntity[] = [
   'kubernetes',
 ];
 
-export const SearchBar: React.FC<CombinedProps> = props => {
+export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
@@ -104,12 +104,12 @@ export const SearchBar: React.FC<CombinedProps> = props => {
     debounce(500, false, (_searchText: string) => {
       setAPILoading(true);
       searchAPI(_searchText)
-        .then(searchResults => {
+        .then((searchResults) => {
           setAPIResults(searchResults.combinedResults);
           setAPILoading(false);
           setAPIError(null);
         })
-        .catch(error => {
+        .catch((error) => {
           setAPIError(
             getAPIErrorOrDefault(error, 'Error loading search results')[0]
               .reason

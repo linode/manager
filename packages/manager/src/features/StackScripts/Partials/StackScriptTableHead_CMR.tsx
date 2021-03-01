@@ -101,7 +101,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const StackScriptTableHead: React.FC<CombinedProps> = props => {
+export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     currentFilterType,

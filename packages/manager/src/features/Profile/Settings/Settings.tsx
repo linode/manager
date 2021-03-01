@@ -145,7 +145,9 @@ interface DispatchProps {
   updateProfile: (p: Partial<Profile>) => Promise<Profile>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
   updateProfile: (p: Profile) => dispatch(handleUpdateProfile(p) as any),
 });
 
@@ -153,7 +155,7 @@ interface StateProps {
   status?: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   status: path(['data', 'email_notifications'], state.__resources.profile),
 });
 

@@ -14,7 +14,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const UsersActionMenu: React.FC<CombinedProps> = props => {
+const UsersActionMenu: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -58,7 +58,7 @@ const UsersActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for user ${profileUsername}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

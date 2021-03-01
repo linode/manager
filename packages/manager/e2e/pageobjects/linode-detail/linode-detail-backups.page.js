@@ -201,14 +201,16 @@ class Backups extends Page {
     this.linearProgress.waitForDisplayed(constants.wait.minute * 5, true);
 
     browser.waitUntil(() => {
-      return $$(this.label.selector).find(backup => backup.getText() === label);
+      return $$(this.label.selector).find(
+        (backup) => backup.getText() === label
+      );
     }, constants.wait.normal);
   }
 
   assertSnapshot(label) {
     $('[data-qa-backup]').waitForDisplayed(constants.wait.veryLong);
 
-    const backupInstance = this.backupInstances.map(i => {
+    const backupInstance = this.backupInstances.map((i) => {
       return i.$(this.label.selector).getText();
     });
     expect(backupInstance)

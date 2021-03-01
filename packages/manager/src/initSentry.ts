@@ -77,7 +77,7 @@ const beforeSend: BrowserOptions['beforeSend'] = (sentryEvent, hint) => {
   const normalizedErrorMessage = normalizeErrorMessage(sentryEvent.message);
 
   if (
-    errorsToIgnore.some(eachRegex =>
+    errorsToIgnore.some((eachRegex) =>
       Boolean(normalizedErrorMessage?.match(eachRegex))
     )
   ) {

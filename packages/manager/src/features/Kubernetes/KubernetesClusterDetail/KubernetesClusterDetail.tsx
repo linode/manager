@@ -63,7 +63,9 @@ const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
   getKubernetesClusterEndpoints
 );
 
-export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = props => {
+export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const classes = useStyles();
 
   const {
@@ -96,7 +98,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
 
   const getEndpointToDisplay = (endpoints: string[]) => {
     // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
-    return endpoints.find(thisResponse =>
+    return endpoints.find((thisResponse) =>
       thisResponse.match(/linodelke\.net:443$/i)
     );
   };
@@ -120,7 +122,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       .then(() => {
         kubeconfigAvailableEndInterval();
       })
-      .catch(error => {
+      .catch((error) => {
         if (startInterval) {
           setKubeconfigAvailability(false);
 
@@ -149,27 +151,27 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
       // A function to check if the endpoint is available.
       const endpointAvailabilityCheck = () => {
         getAllEndpoints([clusterID])
-          .then(response => {
+          .then((response) => {
             successfulClusterEndpointResponse(
-              response.data.map(thisEndpoint => thisEndpoint.endpoint)
+              response.data.map((thisEndpoint) => thisEndpoint.endpoint)
             );
           })
-          .catch(_error => {
+          .catch((_error) => {
             // Do nothing since endpoint is null by default, and in the instances where this function is called, endpointAvailabilityInterval has been set in motion already.
           });
       };
 
-      props.requestClusterForStore(clusterID).catch(_ => null); // Handle in Redux
+      props.requestClusterForStore(clusterID).catch((_) => null); // Handle in Redux
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
       setEndpointLoading(true);
       getAllEndpoints([clusterID])
-        .then(response => {
+        .then((response) => {
           successfulClusterEndpointResponse(
-            response.data.map(thisEndpoint => thisEndpoint.endpoint)
+            response.data.map((thisEndpoint) => thisEndpoint.endpoint)
           );
         })
-        .catch(error => {
+        .catch((error) => {
           setEndpointLoading(false);
 
           // If the error is that the endpoint is not yet available, set endpointAvailabilityInterval equal to function that continues polling the endpoint every 5 seconds to grab it when it is.
@@ -219,7 +221,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
 
     return props
       .updateCluster({ clusterID: cluster.id, label: newLabel })
-      .catch(e => {
+      .catch((e) => {
         setUpdateError(e[0].reason);
         return Promise.reject(e);
       });
@@ -231,7 +233,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = p
   };
 
   const handleRecycleAllPoolNodes = (nodePoolID: number) => {
-    return recycleAllNodes(cluster.id, nodePoolID).then(response => {
+    return recycleAllNodes(cluster.id, nodePoolID).then((response) => {
       // Recycling nodes is an asynchronous process, and it probably won't make a difference to
       // request Node Pools here (it could be several seconds before statuses change). I thought
       // it was a good idea anyway, though.
@@ -348,7 +350,7 @@ const withCluster = KubeContainer<
     nodePoolsLoading
   ) => {
     const cluster =
-      clustersData.find(c => +c.id === +ownProps.match.params.clusterID) ||
+      clustersData.find((c) => +c.id === +ownProps.match.params.clusterID) ||
       null;
     return {
       ...ownProps,

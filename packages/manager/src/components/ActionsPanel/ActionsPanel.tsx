@@ -33,7 +33,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ActionPanel: React.FC<CombinedProps> = props => {
+const ActionPanel: React.FC<CombinedProps> = (props) => {
   const { classes, className, style } = props;
 
   return (

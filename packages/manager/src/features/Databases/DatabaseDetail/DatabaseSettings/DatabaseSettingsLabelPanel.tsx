@@ -17,7 +17,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
+export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = (props) => {
   const { databaseID, databaseLabel } = props;
 
   const { updateDatabase } = useDatabases();
@@ -48,7 +48,7 @@ export const DatabaseSettingsLabelPanel: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         setSuccess('Database label changed successfully.');
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setErrors(
           getAPIErrorOrDefault(

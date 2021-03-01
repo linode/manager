@@ -21,7 +21,7 @@ interface Props {
 
 type CombinedProps = Props & ManagedProps & DispatchProps & IssuesDispatchProps;
 
-export const Monitors: React.FC<CombinedProps> = props => {
+export const Monitors: React.FC<CombinedProps> = (props) => {
   const {
     credentials,
     groups,

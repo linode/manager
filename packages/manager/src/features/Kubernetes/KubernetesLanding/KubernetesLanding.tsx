@@ -14,7 +14,9 @@ import KubernetesLandingEmptyState from './KubernetesLandingEmptyState';
 
 type CombinedProps = DispatchProps & KubernetesProps;
 
-export const KubernetesLanding: React.FunctionComponent<CombinedProps> = props => {
+export const KubernetesLanding: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const {
     clusters,
     clustersError,

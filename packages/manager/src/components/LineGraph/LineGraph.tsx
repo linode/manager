@@ -118,7 +118,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
 
   const handleLegendClick = (datasetIndex: number) => {
     if (hiddenDatasets.includes(datasetIndex)) {
-      setHiddenDatasets(hiddenDatasets.filter(e => e !== datasetIndex));
+      setHiddenDatasets(hiddenDatasets.filter((e) => e !== datasetIndex));
     } else {
       setHiddenDatasets([...hiddenDatasets, datasetIndex]);
     }
@@ -271,7 +271,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
             <TableHead className={classes.tableHead}>
               {/* Remove "Toggle Graph" label and repeat legend for each data set for mobile */}
               {matchesSmDown ? (
-                data.map(section => (
+                data.map((section) => (
                   <TableRow key={section.label}>
                     {finalRowHeaders.map((section, i) => (
                       <TableCell

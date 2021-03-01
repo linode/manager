@@ -26,7 +26,7 @@ export type Labels =
 
 type CombinedProps = Props & PreferencesProps;
 
-const TimeRangeSelect: React.FC<CombinedProps> = props => {
+const TimeRangeSelect: React.FC<CombinedProps> = (props) => {
   const {
     defaultValue,
     handleStatsChange,
@@ -40,10 +40,10 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     getActiveLongviewPlan()
-      .then(response => {
+      .then((response) => {
         setLongviewPro(!isEmpty(response));
       })
-      .catch(_ => null); // Swallow errors, default to free tier time select options.
+      .catch((_) => null); // Swallow errors, default to free tier time select options.
   }, []);
 
   /*
@@ -100,13 +100,13 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
     setTimeRange(item.value);
 
     getUserPreferences()
-      .then(response => {
+      .then((response) => {
         updateUserPreferences({
           ...response,
           longviewTimeRange: item.value,
         });
       })
-      .catch(_ => null); // swallow the error, it's nbd if the choice isn't saved
+      .catch((_) => null); // swallow the error, it's nbd if the choice isn't saved
 
     if (!!handleStatsChange) {
       handleStatsChange(
@@ -125,7 +125,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = props => {
       onChange={handleChange}
       isClearable={false}
       isSearchable={false}
-      value={options.find(o => o.label === selectedTimeRange) || options[0]}
+      value={options.find((o) => o.label === selectedTimeRange) || options[0]}
       options={options}
     />
   );

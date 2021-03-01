@@ -34,7 +34,7 @@ export default <TInner extends {}, TOuter extends {}>(
       };
     },
     (dispatch: ThunkDispatch) => ({
-      clearErrors: params => dispatch(clearErrors(params)),
-      setErrors: params => dispatch(setErrors(params)),
+      clearErrors: (params) => dispatch(clearErrors(params)),
+      setErrors: (params) => dispatch(setErrors(params)),
     })
   );

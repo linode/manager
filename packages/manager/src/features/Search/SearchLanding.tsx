@@ -109,7 +109,7 @@ const splitWord = (word: any) => {
   return word;
 };
 
-export const SearchLanding: React.FC<CombinedProps> = props => {
+export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
@@ -140,12 +140,12 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
     debounce(500, false, (_searchText: string) => {
       setAPILoading(true);
       searchAPI(_searchText)
-        .then(searchResults => {
+        .then((searchResults) => {
           setAPIResults(searchResults.searchResultsByEntity);
           setAPILoading(false);
           setAPIError(null);
         })
-        .catch(error => {
+        .catch((error) => {
           setAPIError(
             getAPIErrorOrDefault(error, 'Error loading search results')[0]
               .reason

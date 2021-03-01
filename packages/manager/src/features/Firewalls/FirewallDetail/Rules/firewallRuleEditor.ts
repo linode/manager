@@ -165,7 +165,7 @@ const ruleEditorReducer = (
 
     case 'DISCARD_CHANGES':
       const original: RuleEditorState = [];
-      draft.forEach(revisionList => {
+      draft.forEach((revisionList) => {
         const head = revisionList[0];
         if (head.status === 'NOT_MODIFIED') {
           original.push([head]);
@@ -181,12 +181,12 @@ const ruleEditorReducer = (
 export const initRuleEditorState = (
   rules: FirewallRuleType[]
 ): RuleEditorState =>
-  rules.map(thisRule => [{ ...thisRule, status: 'NOT_MODIFIED' }]) ?? [];
+  rules.map((thisRule) => [{ ...thisRule, status: 'NOT_MODIFIED' }]) ?? [];
 
 export const editorStateToRules = (
   state: RuleEditorState
 ): ExtendedFirewallRule[] =>
-  state.map(revisionList => revisionList[revisionList.length - 1]);
+  state.map((revisionList) => revisionList[revisionList.length - 1]);
 
 // Remove fields we use internally.
 export const stripExtendedFields = (
@@ -196,7 +196,7 @@ export const stripExtendedFields = (
 // The API will return an error if a `ports` attribute is present on a payload for an ICMP rule,
 // so we do a bit of trickery here and delete it if necessary.
 export const removeICMPPort = (rules: ExtendedFirewallRule[]) =>
-  rules.map(thisRule => {
+  rules.map((thisRule) => {
     if (thisRule.protocol === 'ICMP' && thisRule.ports === '') {
       delete thisRule.ports;
     }
@@ -204,7 +204,7 @@ export const removeICMPPort = (rules: ExtendedFirewallRule[]) =>
   });
 
 export const filterRulesPendingDeletion = (rules: ExtendedFirewallRule[]) =>
-  rules.filter(thisRule => thisRule.status !== 'PENDING_DELETION');
+  rules.filter((thisRule) => thisRule.status !== 'PENDING_DELETION');
 
 export const appendIndex = (rules: ExtendedFirewallRule[]) =>
   rules.map((thisRule, index) => ({ ...thisRule, index }));
@@ -218,7 +218,7 @@ export const prepareRules = compose(
 
 export const hasModified = (editorState: RuleEditorState) => {
   const rules = editorStateToRules(editorState);
-  return rules.find(thisRule => thisRule.status !== 'NOT_MODIFIED');
+  return rules.find((thisRule) => thisRule.status !== 'NOT_MODIFIED');
 };
 
 export default produce(ruleEditorReducer);

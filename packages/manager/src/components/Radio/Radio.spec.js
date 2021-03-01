@@ -16,7 +16,7 @@ describe('Radio Suite', () => {
     expect(radios.length)
       .withContext(`Should be 4 buttons`)
       .toEqual(4);
-    radios.forEach(r =>
+    radios.forEach((r) =>
       expect(r.isDisplayed())
         .withContext(`Radio button should be displayed`)
         .toBe(true)
@@ -25,9 +25,9 @@ describe('Radio Suite', () => {
 
   it('should check enabled buttons on click', () => {
     const enabledRadios = $$(radio).filter(
-      r => !r.getAttribute('class').includes('Mui-disabled')
+      (r) => !r.getAttribute('class').includes('Mui-disabled')
     );
-    enabledRadios.forEach(r => {
+    enabledRadios.forEach((r) => {
       r.click();
 
       $('.Mui-checked circle#a').waitForExist(undefined);
@@ -38,10 +38,10 @@ describe('Radio Suite', () => {
   });
 
   it('should not check disabled buttons on click', () => {
-    const disabledRadios = $$(radio).filter(r =>
+    const disabledRadios = $$(radio).filter((r) =>
       r.getAttribute('class').includes('Mui-disabled')
     );
-    disabledRadios.forEach(r => {
+    disabledRadios.forEach((r) => {
       r.$('..').click();
       expect(r.getAttribute('class').includes('Mui-disabled'))
         .withContext(`Radio button should not be enabled`)
@@ -50,7 +50,7 @@ describe('Radio Suite', () => {
   });
 
   it('should have a label as a parent', () => {
-    radios.forEach(r => {
+    radios.forEach((r) => {
       expect(r.$('..').getTagName())
         .withContext(`Missing parent label`)
         .toBe('label');

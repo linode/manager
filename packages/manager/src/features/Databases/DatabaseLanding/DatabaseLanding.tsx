@@ -113,7 +113,7 @@ interface CombinedHandlers extends DatabaseHandlers {
   openTagDrawer: OpenTagDrawer;
 }
 
-const DatabaseLanding: React.FC<{}> = _ => {
+const DatabaseLanding: React.FC<{}> = (_) => {
   const classes = useStyles();
   const { databases, deleteDatabase, updateDatabase } = useDatabases();
   const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
@@ -148,14 +148,14 @@ const DatabaseLanding: React.FC<{}> = _ => {
 
   const addTag = (databaseID: number, newTag: string) => {
     const _tags = [...tagDrawer.tags, newTag];
-    return updateDatabase(databaseID, { tags: _tags }).then(_ => {
+    return updateDatabase(databaseID, { tags: _tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };
 
   const deleteTag = (databaseID: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter(thisTag => thisTag !== tagToDelete);
-    return updateDatabase(databaseID, { tags: _tags }).then(_ => {
+    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
+    return updateDatabase(databaseID, { tags: _tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };

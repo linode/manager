@@ -87,7 +87,7 @@ export const transformConfigsForRequest = (
   return configs.map((config: NodeBalancerConfigFields) => {
     return filter(
       /* remove the (key: value) pairs that we set to undefined */
-      el => el !== undefined,
+      (el) => el !== undefined,
       {
         protocol:
           /*

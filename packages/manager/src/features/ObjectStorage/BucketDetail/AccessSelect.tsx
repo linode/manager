@@ -34,7 +34,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const AccessSelect: React.FC<CombinedProps> = props => {
+const AccessSelect: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { getAccess, updateAccess, name, variant } = props;
@@ -80,7 +80,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
           setSelectedCORSOption(cors_enabled);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         setAccessLoading(false);
         setAccessError(getErrorStringOrDefault(err));
       });
@@ -105,7 +105,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
         setCORSData(selectedCORSOption);
         setUpdateAccessLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         setUpdateAccessLoading(false);
         setUpdateAccessError(getErrorStringOrDefault(err));
       });
@@ -126,8 +126,9 @@ const AccessSelect: React.FC<CombinedProps> = props => {
       ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
       : aclOptions;
 
-  const aclLabel = _options.find(thisOption => thisOption.value === selectedACL)
-    ?.label;
+  const aclLabel = _options.find(
+    (thisOption) => thisOption.value === selectedACL
+  )?.label;
 
   const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
 
@@ -162,7 +163,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
           }
         }}
         value={_options.find(
-          thisOption => thisOption.value === selectedACL ?? 'private'
+          (thisOption) => thisOption.value === selectedACL ?? 'private'
         )}
         data-testid="acl-select"
       />
@@ -181,7 +182,7 @@ const AccessSelect: React.FC<CombinedProps> = props => {
           control={
             <Toggle
               disabled={accessLoading}
-              onChange={() => setSelectedCORSOption(prev => !prev)}
+              onChange={() => setSelectedCORSOption((prev) => !prev)}
               checked={selectedCORSOption}
             />
           }

@@ -71,7 +71,7 @@ interface OptionProps {
 
 type CombinedProps = Props;
 
-const SSelect: React.FC<CombinedProps> = props => {
+const SSelect: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     label,

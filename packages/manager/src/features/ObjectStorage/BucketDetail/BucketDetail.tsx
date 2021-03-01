@@ -133,14 +133,14 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     });
 
     getObjectList(clusterId, bucketName, { delimiter, prefix, page_size })
-      .then(response => {
+      .then((response) => {
         // If there are less results than the page size we requested, we know
         // we've reached the end of the bucket (or folder).
         const allObjectsFetched = !response.is_truncated;
 
         // @todo @tdt: Extract this data-manipulation logic out of this
         // component and test.
-        const extendedData = response.data.map(object =>
+        const extendedData = response.data.map((object) =>
           extendObject(object, prefix)
         );
 
@@ -151,7 +151,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           nextMarker: response.next_marker,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
           generalError: err,
@@ -198,12 +198,12 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       marker: nextMarker,
       page_size,
     })
-      .then(response => {
+      .then((response) => {
         const allObjectsFetched = !response.is_truncated;
 
         // @todo @tdt: Extract this data-manipulation logic out of this
         // component and test.
-        const extendedData = response.data.map(object =>
+        const extendedData = response.data.map((object) =>
           extendObject(object, prefix)
         );
         const sortedData = sortBy(prop('name'))(extendedData);
@@ -215,7 +215,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           nextMarker: response.next_marker,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
           nextPageError: err,
@@ -284,7 +284,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       this.props
         .getBucket({ cluster: clusterId, label: bucketName })
         // It's OK to swallow the error here, since this request is for a silent UI update.
-        .catch(_ => null);
+        .catch((_) => null);
 
       this.setState({
         deleteObjectLoading: false,
@@ -303,7 +303,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
 
   removeOne = (objectName: string) => {
     const updatedData = [...this.state.data];
-    const idx = updatedData.findIndex(object => object.name === objectName);
+    const idx = updatedData.findIndex((object) => object.name === objectName);
     if (idx > -1) {
       updatedData.splice(idx, 1);
       this.setState({
@@ -342,7 +342,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     // If the file already exists in `data` (i.e. if the file is being
     // overwritten), move it from its current location to the front.
     const idx = updatedFiles.findIndex(
-      file => file.name === prefix + objectName
+      (file) => file.name === prefix + objectName
     );
     if (idx > -1) {
       updatedFiles.splice(idx, 1);
@@ -369,7 +369,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     const extendedFolder = extendObject(folder, prefix, true);
 
     const idx = this.state.data.findIndex(
-      object => object.name === prefix + objectName + '/'
+      (object) => object.name === prefix + objectName + '/'
     );
     // If the folder isn't already in `data`, add it to the front.
     if (idx === -1) {
@@ -407,7 +407,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
     const numOfDisplayedObjects = this.state.data.filter(
-      object => object._shouldDisplayObject
+      (object) => object._shouldDisplayObject
     ).length;
 
     return (

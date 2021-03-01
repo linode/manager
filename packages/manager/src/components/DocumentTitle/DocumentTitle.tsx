@@ -74,7 +74,7 @@ export function withDocumentTitleProvider<P>(
       },
 
       removeSegment: (segment: string) => {
-        const targetIdx = this.titleSegments.findIndex(el => el === segment);
+        const targetIdx = this.titleSegments.findIndex((el) => el === segment);
         this.titleSegments.splice(targetIdx, 1);
         this.updateDocumentTitle();
       },

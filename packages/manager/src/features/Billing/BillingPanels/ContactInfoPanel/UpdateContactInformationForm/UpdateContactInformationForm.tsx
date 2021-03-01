@@ -391,7 +391,7 @@ class UpdateContactInformationForm extends React.Component<
             label="State / Province"
             placeholder="Enter a State or Province"
             errorText={errorMap.state}
-            onChange={e =>
+            onChange={(e) =>
               this.updateState({
                 label: e.target.value,
                 value: e.target.value,
@@ -588,12 +588,12 @@ class UpdateContactInformationForm extends React.Component<
 
     this.props
       .updateAccount(this.state.fields)
-      .then(_ => {
+      .then((_) => {
         // If there's a "billing_email_bounce" notification on the account, and
         // the user has just updated their email, re-request notifications to
         // potentially clear the email bounce notification.
         const hasBillingEmailBounceNotification = this.props.notifications.find(
-          thisNotification => thisNotification.type === 'billing_email_bounce'
+          (thisNotification) => thisNotification.type === 'billing_email_bounce'
         );
         if (this.state.fields.email && hasBillingEmailBounceNotification) {
           this.props.requestNotifications();
@@ -606,7 +606,7 @@ class UpdateContactInformationForm extends React.Component<
         });
         this.props.onClose();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         this.setState({
           submitting: false,
           success: undefined,

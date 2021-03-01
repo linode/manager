@@ -38,7 +38,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SelectStackScriptsSection: React.FC<CombinedProps> = props => {
+const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
   const { onSelect, selectedId, data, isSorting, classes, disabled } = props;
 
   const selectStackScript = (s: StackScript) => (

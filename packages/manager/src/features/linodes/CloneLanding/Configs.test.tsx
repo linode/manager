@@ -15,14 +15,14 @@ const props: Props = {
 describe('Configs', () => {
   it('renders a row for each config', () => {
     const { getByText } = render(wrapWithTheme(<Configs {...props} />));
-    linodeConfigs.forEach(eachConfig => {
+    linodeConfigs.forEach((eachConfig) => {
       expect(getByText(eachConfig.label)).toBeDefined();
     });
   });
 
   it('fires the handle event when clicked', () => {
     const { getByTestId } = render(wrapWithTheme(<Configs {...props} />));
-    linodeConfigs.forEach(eachConfig => {
+    linodeConfigs.forEach((eachConfig) => {
       const checkbox = getByTestId(`checkbox-${eachConfig.id}`).parentNode;
       fireEvent.click(checkbox as any);
       expect(mockHandleSelect).toHaveBeenCalledWith(eachConfig.id);

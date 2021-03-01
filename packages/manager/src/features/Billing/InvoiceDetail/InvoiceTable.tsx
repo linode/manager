@@ -21,7 +21,7 @@ interface Props {
   items?: InvoiceItem[];
 }
 
-const InvoiceTable: React.FC<Props> = props => {
+const InvoiceTable: React.FC<Props> = (props) => {
   const { loading, errors, items } = props;
 
   return (
@@ -56,7 +56,7 @@ const renderQuantity = (v: null | number) => (v ? v : null);
 
 const RenderData: React.FC<{
   items: InvoiceItem[];
-}> = props => {
+}> = (props) => {
   const { items } = props;
 
   const MIN_PAGE_SIZE = 25;
@@ -133,7 +133,7 @@ const RenderLoading: React.FC<{}> = () => {
 
 const RenderErrors: React.FC<{
   errors: APIError[];
-}> = props => {
+}> = (props) => {
   return (
     <TableRowError colSpan={8} message="Unable to retrieve invoice items." />
   );
@@ -147,7 +147,7 @@ const MaybeRenderContent: React.FC<{
   loading: boolean;
   errors?: APIError[];
   items?: any[];
-}> = props => {
+}> = (props) => {
   const { loading, errors, items } = props;
 
   if (loading) {

@@ -43,7 +43,7 @@ export const search = (
 };
 
 export default () => (Component: React.ComponentType<any>) => {
-  const WrappedComponent: React.FC<SearchProps> = props => {
+  const WrappedComponent: React.FC<SearchProps> = (props) => {
     return React.createElement(Component, {
       ...props,
     });

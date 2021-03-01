@@ -65,8 +65,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       requestAccount: () => dispatch(requestAccount()),
-      updateAccount: data => dispatch(updateAccount(data)),
-      saveCreditCard: data => dispatch(saveCreditCard(data)),
+      updateAccount: (data) => dispatch(updateAccount(data)),
+      saveCreditCard: (data) => dispatch(saveCreditCard(data)),
     })
   );
 

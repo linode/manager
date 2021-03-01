@@ -57,7 +57,7 @@ export const getMinimumPayment = (balance: number | false) => {
 
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
-export const PaymentDrawer: React.FC<CombinedProps> = props => {
+export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
 
@@ -176,7 +176,7 @@ interface WarningProps {
   warning: APIWarning;
 }
 
-const Warning: React.FC<WarningProps> = props => {
+const Warning: React.FC<WarningProps> = (props) => {
   const { warning } = props;
   /** The most common API warning includes "please open a Support ticket",
    * which we'd like to be a link.

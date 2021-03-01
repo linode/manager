@@ -11,7 +11,7 @@ export const interceptErrors = (
   errors: APIError[],
   interceptors: Intercept[]
 ) => {
-  return errors.map(thisError => {
+  return errors.map((thisError) => {
     return interceptors.reduce((acc, eachInterceptor) => {
       if (eachInterceptor.condition(thisError)) {
         acc = {

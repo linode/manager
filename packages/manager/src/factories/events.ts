@@ -3,14 +3,14 @@ import { Entity, Event } from '@linode/api-v4/lib/account/types';
 import { DateTime } from 'luxon';
 
 export const entityFactory = Factory.Sync.makeFactory<Entity>({
-  id: Factory.each(id => id),
-  label: Factory.each(i => `event-entity-${i}`),
+  id: Factory.each((id) => id),
+  label: Factory.each((i) => `event-entity-${i}`),
   type: 'linode',
   url: 'https://www.example.com',
 });
 
 export const eventFactory = Factory.Sync.makeFactory<Event>({
-  id: Factory.each(id => id),
+  id: Factory.each((id) => id),
   created: DateTime.local().toISO(),
   entity: null,
   secondary_entity: null,

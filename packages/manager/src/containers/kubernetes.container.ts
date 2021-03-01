@@ -59,7 +59,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
   requestKubernetesClusters: () =>
-    dispatch(_requestKubernetesClusters()).then(response => response.data),
+    dispatch(_requestKubernetesClusters()).then((response) => response.data),
   requestClusterForStore: (clusterID: number) =>
     dispatch(_requestClusterForStore(clusterID)),
   updateCluster: (params: UpdateClusterParams) =>
@@ -111,7 +111,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     // Add node pool and pricing data to clusters
     const nodePools = state.__resources.nodePools.entities;
     const types = state.__resources.types.entities;
-    const clusters = _clusters.map(thisCluster =>
+    const clusters = _clusters.map((thisCluster) =>
       extendCluster(thisCluster, nodePools, types)
     );
 

@@ -42,7 +42,7 @@ export interface Props extends LineGraphProps {
 
 type CombinedProps = Props;
 
-const LongviewLineGraph: React.FC<CombinedProps> = props => {
+const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { error, loading, title, subtitle, ...rest } = props;
@@ -82,10 +82,10 @@ const LongviewLineGraph: React.FC<CombinedProps> = props => {
 
 export const isDataEmpty = (data: DataSet[]) => {
   return data.every(
-    thisSeries =>
+    (thisSeries) =>
       thisSeries.data.length === 0 ||
       // If we've padded the data, every y value will be null
-      thisSeries.data.every(thisPoint => thisPoint[1] === null)
+      thisSeries.data.every((thisPoint) => thisPoint[1] === null)
   );
 };
 

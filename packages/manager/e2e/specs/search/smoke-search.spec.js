@@ -40,7 +40,7 @@ describe('Header - Search Suite', () => {
         constants.routes.support.tickets,
       ];
 
-      routes.forEach(r => {
+      routes.forEach((r) => {
         console.log(`checking for search on ${r} page`);
         browser.url(r);
         SearchBar.assertSearchDisplays();

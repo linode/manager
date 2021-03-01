@@ -31,7 +31,7 @@ export type State = RelationalMappedEntityState<
 export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, getAllNodeBalancerConfigsActions.started)) {
       const { nodeBalancerId } = action.payload;
       draft = ensureInitializedNestedState(draft, nodeBalancerId);

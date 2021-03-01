@@ -30,7 +30,7 @@ interface Props {
   className?: string;
 }
 
-export const FirewallBanner: React.FC<Props> = props => {
+export const FirewallBanner: React.FC<Props> = (props) => {
   const { className, message, preferenceKey } = props;
   const { preferences, updatePreferences } = usePreferences();
   const classes = useStyles();

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = WithImages & RouteComponentProps<{}>;
 
-export const StackScriptsLanding: React.FC<CombinedProps> = props => {
+export const StackScriptsLanding: React.FC<CombinedProps> = (props) => {
   const { history, imagesData, location } = props;
   const classes = useStyles();
 

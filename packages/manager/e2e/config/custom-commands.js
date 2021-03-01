@@ -36,26 +36,26 @@ const { getToken } = require('../utils/config-utils');
 exports.browserCommands = () => {
   browser.addCommand('loadProxyImposter', function async(proxyConfig) {
     return loadProxyImposter(proxyConfig)
-      .then(res => res)
-      .catch(error => console.error(error));
+      .then((res) => res)
+      .catch((error) => console.error(error));
   });
 
   browser.addCommand('getImposters', function async(removeProxies, file) {
     return getImposters(removeProxies, file)
-      .then(res => res)
-      .catch(error => console.error(error));
+      .then((res) => res)
+      .catch((error) => console.error(error));
   });
 
   browser.addCommand('loadImposter', function async(imposter) {
     return loadImposter(imposter)
-      .then(res => res)
-      .catch(error => console.error(error));
+      .then((res) => res)
+      .catch((error) => console.error(error));
   });
 
   browser.addCommand('deleteImposters', function async() {
     return deleteImposters()
-      .then(res => res)
-      .catch(error => console.error(error));
+      .then((res) => res)
+      .catch((error) => console.error(error));
   });
 
   browser.addCommand('readToken', function(username) {
@@ -85,59 +85,59 @@ exports.browserCommands = () => {
       image,
       privateIP
     )
-      .then(res => res)
-      .catch(err => err);
+      .then((res) => res)
+      .catch((err) => err);
   });
 
   browser.addCommand('createLongviewClient', function async(token) {
-    return createLongviewClient(token).then(res => res);
+    return createLongviewClient(token).then((res) => res);
   });
 
   browser.addCommand('getLVClients', function async(token) {
-    return getLVClients(token).then(res => res);
+    return getLVClients(token).then((res) => res);
   });
 
   browser.addCommand('deleteLongviewClient', function async(token, lvClientId) {
-    return deleteLongviewClient(token, lvClientId).then(res => res);
+    return deleteLongviewClient(token, lvClientId).then((res) => res);
   });
 
   browser.addCommand('removeAllLinodes', function async(token) {
-    return removeAllLinodes(token).then(res => res.length > 0);
+    return removeAllLinodes(token).then((res) => res.length > 0);
   });
 
   browser.addCommand('removeAllVolumes', function async(token) {
-    return removeAllVolumes(token).then(res => res);
+    return removeAllVolumes(token).then((res) => res);
   });
 
   browser.addCommand('getDomains', function async(token) {
-    return getDomains(token).then(res => res);
+    return getDomains(token).then((res) => res);
   });
 
   browser.addCommand('removeDomain', function async(token, domainId) {
-    return removeDomain(token, domainId).then(res => res);
+    return removeDomain(token, domainId).then((res) => res);
   });
 
   browser.addCommand('allocatePrivateIp', function async(token, linodeId) {
-    return allocatePrivateIp(token, linodeId).then(res => res);
+    return allocatePrivateIp(token, linodeId).then((res) => res);
   });
 
   browser.addCommand('getNodeBalancers', function async(token) {
-    return getNodebalancers(token).then(res => res);
+    return getNodebalancers(token).then((res) => res);
   });
 
   browser.addCommand('removeNodeBalancer', function async(
     token,
     nodeBalancerId
   ) {
-    return removeNodebalancer(token, nodeBalancerId).then(res => res);
+    return removeNodebalancer(token, nodeBalancerId).then((res) => res);
   });
 
   browser.addCommand('getMyStackScripts', function async(token) {
-    return getMyStackScripts(token).then(res => res);
+    return getMyStackScripts(token).then((res) => res);
   });
 
   browser.addCommand('removeStackScript', function async(token, id) {
-    return removeStackScript(token, id).then(res => res);
+    return removeStackScript(token, id).then((res) => res);
   });
 
   /*
@@ -160,7 +160,7 @@ exports.browserCommands = () => {
   browser.addCommand('jsClickAll', function(elementsToClick) {
     browser.execute(function(elementsToClick) {
       var els = document.querySelectorAll(elementsToClick);
-      els.forEach(e => e.click());
+      els.forEach((e) => e.click());
     }, elementsToClick);
   });
 
@@ -276,22 +276,22 @@ exports.browserCommands = () => {
   });
 
   browser.addCommand('getUserProfile', function async(token) {
-    return getUserProfile(token).then(res => res);
+    return getUserProfile(token).then((res) => res);
   });
 
   browser.addCommand('updateUserProfile', function async(token, profileData) {
-    return updateUserProfile(token, profileData).then(res => res);
+    return updateUserProfile(token, profileData).then((res) => res);
   });
 
   browser.addCommand('updateGlobalSettings', function async(
     token,
     settingsData
   ) {
-    return putGlobalSetting(token, settingsData).then(res => res);
+    return putGlobalSetting(token, settingsData).then((res) => res);
   });
 
   browser.addCommand('getGlobalSettings', function async(token) {
-    return getGlobalSettings(token).then(res => res);
+    return getGlobalSettings(token).then((res) => res);
   });
 
   browser.addCommand('createVolume', function async(
@@ -303,12 +303,12 @@ exports.browserCommands = () => {
     linode_id
   ) {
     return createVolume(token, label, region, size, tags, linode_id).then(
-      res => res
+      (res) => res
     );
   });
 
   browser.addCommand('getLinodeImage', function async(token, imageId) {
-    return getLinodeImage(token, imageId).then(res => res);
+    return getLinodeImage(token, imageId).then((res) => res);
   });
 
   browser.addCommand('createDomain', function async(
@@ -318,7 +318,7 @@ exports.browserCommands = () => {
     tags,
     group
   ) {
-    return createDomain(token, type, domain, tags, group).then(res => res);
+    return createDomain(token, type, domain, tags, group).then((res) => res);
   });
 
   browser.addCommand('createNodeBalancer', function async(
@@ -327,6 +327,6 @@ exports.browserCommands = () => {
     region,
     tags
   ) {
-    return createNodeBalancer(token, label, region, tags).then(res => res);
+    return createNodeBalancer(token, label, region, tags).then((res) => res);
   });
 };

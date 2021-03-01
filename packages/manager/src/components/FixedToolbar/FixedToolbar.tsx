@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const FixedToolBar: React.FC<{}> = props => {
+const FixedToolBar: React.FC<{}> = (props) => {
   const classes = useStyles();
 
   return (

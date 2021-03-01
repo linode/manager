@@ -292,12 +292,12 @@ export class LinodeCreate extends React.PureComponent<
         type: this.props.selectedTypeID,
         label: this.props.label,
         tags: this.props.tags
-          ? this.props.tags.map(eachTag => eachTag.label)
+          ? this.props.tags.map((eachTag) => eachTag.label)
           : [],
         root_pass: this.props.password,
         authorized_users: this.props.userSSHKeys
-          .filter(u => u.selected)
-          .map(u => u.username),
+          .filter((u) => u.selected)
+          .map((u) => u.username),
         booted: true,
         backups_enabled: this.props.backupsEnabled,
         backup_id: this.props.selectedBackupID,
@@ -640,11 +640,10 @@ interface DispatchProps {
   setTab: (value: CreateTypes) => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<
-  DispatchProps,
-  CombinedProps
-> = dispatch => ({
-  setTab: value => dispatch(handleChangeCreateType(value)),
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
+  dispatch
+) => ({
+  setTab: (value) => dispatch(handleChangeCreateType(value)),
 });
 
 interface StateProps {
@@ -655,14 +654,14 @@ const mapStateToProps: MapStateToProps<
   StateProps,
   CombinedProps,
   ApplicationState
-> = state => ({
+> = (state) => ({
   documentation: state.documentation,
 });
 
 const generateDocs = (ownProps: InnerProps & StateProps) => {
   const { selectedStackScriptLabel } = ownProps;
   if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter(eachDoc => {
+    const foundDocs = AppsDocs.filter((eachDoc) => {
       return eachDoc.title
         .toLowerCase()
         .includes(

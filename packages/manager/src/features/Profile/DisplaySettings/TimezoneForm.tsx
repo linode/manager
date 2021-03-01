@@ -83,7 +83,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   };
 
   getTimezone = (timezoneValue: string) => {
-    const idx = timezoneList.findIndex(el => {
+    const idx = timezoneList.findIndex((el) => {
       return el.value === timezoneValue;
     });
     return timezoneList[idx];
@@ -114,7 +114,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
           errors: undefined,
         });
       })
-      .catch(e => {
+      .catch((e) => {
         this.setState(
           {
             submitting: false,
@@ -146,7 +146,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
     const timezoneError = hasErrorFor('timezone');
 
-    const defaultTimeZone = timezoneList.find(eachZone => {
+    const defaultTimeZone = timezoneList.find((eachZone) => {
       return eachZone.label === timezoneDisplay;
     });
 

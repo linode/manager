@@ -16,7 +16,7 @@ xdescribe('Domain Tag Management Suite', () => {
   let domains = [];
 
   const generateDomainGroups = () => {
-    groupsAsTags.forEach(group => {
+    groupsAsTags.forEach((group) => {
       for (let i = 0; i < 3; i++) {
         const domain = {
           domain: `test${group}${i}.com`,
@@ -27,15 +27,15 @@ xdescribe('Domain Tag Management Suite', () => {
     });
   };
 
-  const domainsInGroup = group => {
+  const domainsInGroup = (group) => {
     return domains
-      .filter(domain => domain.group === group)
-      .map(domain => domain.domain);
+      .filter((domain) => domain.group === group)
+      .map((domain) => domain.domain);
   };
 
   const checkSortOrder = () => {
     const order = ListDomains.sortTableByHeader('Domain');
-    groupsAsTags.forEach(tag => {
+    groupsAsTags.forEach((tag) => {
       const expectedDomainsInGroup = domainsInGroup(tag);
       const expectedOrder =
         order === 'asc'
@@ -60,8 +60,8 @@ xdescribe('Domain Tag Management Suite', () => {
     it('Import domain groups as tags', () => {
       Dashboard.openImportDrawerButton.click();
       ImportGroupsAsTagsDrawer.drawerDisplays();
-      const groupsToImport = ImportGroupsAsTagsDrawer.domainGroups.map(group =>
-        group.getText().replace('- ', '')
+      const groupsToImport = ImportGroupsAsTagsDrawer.domainGroups.map(
+        (group) => group.getText().replace('- ', '')
       );
       expect(groupsToImport.sort()).toEqual(groupsAsTags.sort());
       ImportGroupsAsTagsDrawer.submitButton.click();
@@ -94,7 +94,7 @@ xdescribe('Domain Tag Management Suite', () => {
     });
 
     it('Domains are properly grouped', () => {
-      groupsAsTags.forEach(tag => {
+      groupsAsTags.forEach((tag) => {
         const expectedDomainsInGroup = domainsInGroup(tag);
         expect(ListDomains.getDomainsInTagGroup(tag).sort()).toEqual(
           expectedDomainsInGroup.sort()
@@ -107,7 +107,7 @@ xdescribe('Domain Tag Management Suite', () => {
     });
 
     it('Domains are sortable within tag groups', () => {
-      [1, 2].forEach(i => checkSortOrder());
+      [1, 2].forEach((i) => checkSortOrder());
     });
 
     it('Domains can be ungrouped by tags', () => {

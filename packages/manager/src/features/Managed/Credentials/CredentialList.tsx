@@ -80,7 +80,7 @@ type CombinedProps = Props & WithSnackbarProps;
 
 export type FormikProps = FormikBag<Props, CredentialPayload>;
 
-export const CredentialList: React.FC<CombinedProps> = props => {
+export const CredentialList: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { credentials, enqueueSnackbar, error, loading, update } = props;
   // Creation drawer
@@ -99,7 +99,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
   } = useDialog<number>(deleteCredential);
 
   const selectedCredential = credentials.find(
-    thisCredential => thisCredential.id === editID
+    (thisCredential) => thisCredential.id === editID
   );
 
   const handleDelete = () => {
@@ -110,7 +110,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
         });
         update();
       })
-      .catch(e =>
+      .catch((e) =>
         handleError(
           getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].reason
         )
@@ -143,7 +143,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         update();
       })
-      .catch(e => {
+      .catch((e) => {
         _handleError(
           e,
           setSubmitting,
@@ -173,7 +173,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
         setFieldValue('username', '');
         update();
       })
-      .catch(err =>
+      .catch((err) =>
         _handleError(
           err,
           setSubmitting,
@@ -198,7 +198,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
         setStatus({ success: 'Label updated successfully.' });
         update();
       })
-      .catch(err =>
+      .catch((err) =>
         _handleError(
           err,
           setSubmitting,

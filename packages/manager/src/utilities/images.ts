@@ -64,7 +64,7 @@ groupImages = groupBy(
     [isRecentlyDeleted, always('deleted')],
     [isRecommended, always('recommended')],
     [isOlderImage, always('older')],
-    [_ => true, always('images')],
+    [(_) => true, always('images')],
   ])
 );
 

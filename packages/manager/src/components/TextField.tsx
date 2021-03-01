@@ -192,7 +192,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
      */
     const cleanedValue =
       minAndMaxExist &&
-      numberTypes.some(eachType => eachType === type) &&
+      numberTypes.some((eachType) => eachType === type) &&
       e.target.value !== ''
         ? clamp(min, max, +e.target.value)
         : e.target.value;

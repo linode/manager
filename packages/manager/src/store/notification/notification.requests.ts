@@ -12,14 +12,14 @@ const getAllNotifications = getAll(getNotifications);
 export const requestNotifications: ThunkActionCreator<
   Promise<GetAllData<Notification>>,
   void
-> = () => dispatch => {
+> = () => (dispatch) => {
   dispatch(startRequest());
   return getAllNotifications()
     .then(({ data }) => {
       dispatch(handleSuccess(data));
       return data;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(handleError);
       return error;
     });

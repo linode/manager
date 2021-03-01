@@ -106,12 +106,12 @@ const getCompatibleImages = (
   allImages: Image[],
   stackScriptImages: string[]
 ) => {
-  return allImages.filter(image => stackScriptImages.includes(image.id));
+  return allImages.filter((image) => stackScriptImages.includes(image.id));
 };
 
 const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
   const defaultUDFData = {};
-  userDefinedFields.forEach(eachField => {
+  userDefinedFields.forEach((eachField) => {
     if (!!eachField.default) {
       defaultUDFData[eachField.name] = eachField.default;
     }

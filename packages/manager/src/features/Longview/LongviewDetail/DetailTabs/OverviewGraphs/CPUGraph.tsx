@@ -11,7 +11,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const CPUGraph: React.FC<CombinedProps> = props => {
+export const CPUGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
     end,

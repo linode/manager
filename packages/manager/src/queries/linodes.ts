@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { listToItemsByID, queryPresets } from './base';
 
 const getLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
-  getLinodes(passedParams, passedFilter).then(data => ({
+  getLinodes(passedParams, passedFilter).then((data) => ({
     linodes: listToItemsByID(data.data),
     results: data.results,
   }));

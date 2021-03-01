@@ -22,7 +22,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const BillingContactDrawer: React.FC<CombinedProps> = props => {
+export const BillingContactDrawer: React.FC<CombinedProps> = (props) => {
   const { open, onClose, focusEmail } = props;
 
   const classes = useStyles();

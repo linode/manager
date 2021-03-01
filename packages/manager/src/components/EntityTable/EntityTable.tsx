@@ -25,7 +25,7 @@ interface Props {
 
 export type CombinedProps = Props & PageyIntegrationProps;
 
-export const LandingTable: React.FC<CombinedProps> = props => {
+export const LandingTable: React.FC<CombinedProps> = (props) => {
   const { entity, headers, groupByTag, row, initialOrder } = props;
 
   if (row.request) {

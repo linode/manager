@@ -69,7 +69,7 @@ describe('LongviewPlans', () => {
       'FREE'
     );
 
-    mockLongviewSubscriptions.forEach(sub => {
+    mockLongviewSubscriptions.forEach((sub) => {
       testRow(
         sub.id,
         sub.label,

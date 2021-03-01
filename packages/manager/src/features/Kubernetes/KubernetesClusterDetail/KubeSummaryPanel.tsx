@@ -142,7 +142,9 @@ const renderEndpoint = (
   }
 };
 
-export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props => {
+export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const {
     classes,
     cluster,
@@ -162,7 +164,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
   const fetchKubeConfig = () => {
-    return getKubeConfig(cluster.id).then(response => {
+    return getKubeConfig(cluster.id).then((response) => {
       // Convert to utf-8 from base64
       try {
         return window.atob(response.kubeconfig);
@@ -180,7 +182,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
 
   const downloadKubeConfig = () => {
     fetchKubeConfig()
-      .then(decodedFile => {
+      .then((decodedFile) => {
         if (decodedFile) {
           downloadFile(`${cluster.label}-kubeconfig.yaml`, decodedFile);
         } else {
@@ -188,7 +190,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
           return;
         }
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const error = getAPIErrorOrDefault(
           errorResponse,
           'Unable to download your kubeconfig'
@@ -202,7 +204,7 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = props =>
     setDrawerLoading(true);
     setDrawerOpen(true);
     fetchKubeConfig()
-      .then(decodedFile => {
+      .then((decodedFile) => {
         setDrawerLoading(false);
         if (decodedFile) {
           setKubeConfig(decodedFile);

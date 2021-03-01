@@ -71,7 +71,7 @@ export interface Props {
   children: JSX.Element;
 }
 
-export const TransferTable: React.FC<Props> = props => {
+export const TransferTable: React.FC<Props> = (props) => {
   const {
     count,
     hasSelectedAll,
@@ -117,7 +117,7 @@ export const TransferTable: React.FC<Props> = props => {
                 }}
               />
             </TableCell>
-            {headers.map(thisHeader => (
+            {headers.map((thisHeader) => (
               <TableCell key={`entity-table-header-${thisHeader}`}>
                 {thisHeader}
               </TableCell>

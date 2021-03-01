@@ -142,7 +142,7 @@ type PassThroughProps = Props & TextFieldProps;
 
 type FinalProps = PassThroughProps;
 
-export const EditableInput: React.FC<FinalProps> = props => {
+export const EditableInput: React.FC<FinalProps> = (props) => {
   const {
     errorText,
     editable,

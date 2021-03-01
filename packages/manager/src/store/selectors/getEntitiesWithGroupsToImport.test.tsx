@@ -24,14 +24,14 @@ describe('Entities that have groups to import', () => {
     });
 
     it('each element in "linodes" array has group', () => {
-      entities.linodes.forEach(linode => {
+      entities.linodes.forEach((linode) => {
         expect(linode.group).toBeDefined();
         expect(linode.group).not.toEqual('');
       });
     });
 
     it('each element in "linodes" array has group that is NOT a tag', () => {
-      entities.linodes.forEach(linode => {
+      entities.linodes.forEach((linode) => {
         expect(linode.tags.indexOf(linode.group!)).toBe(-1);
       });
     });
@@ -44,14 +44,14 @@ describe('Entities that have groups to import', () => {
     });
 
     it('each element in "domains" array has group', () => {
-      entities.domains.forEach(domain => {
+      entities.domains.forEach((domain) => {
         expect(domain.group).toBeDefined();
         expect(domain.group).not.toEqual('');
       });
     });
 
     it('each element in "domains" array has group that is NOT a tag', () => {
-      entities.domains.forEach(domain => {
+      entities.domains.forEach((domain) => {
         expect(domain.tags.indexOf(domain.group!)).toBe(-1);
       });
     });

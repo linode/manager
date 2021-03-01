@@ -34,7 +34,7 @@ class SearchResults extends Page {
     $(this.resultTagsSelector(entityName)).waitForDisplayed(
       constants.wait.normal
     );
-    return $$(this.resultTagsSelector(entityName)).map(tag => tag.getText());
+    return $$(this.resultTagsSelector(entityName)).map((tag) => tag.getText());
   }
 }
 

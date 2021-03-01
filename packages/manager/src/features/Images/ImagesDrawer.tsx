@@ -132,19 +132,19 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       this.props.selectedLinode !== prevProps.selectedLinode
     ) {
       getLinodeDisks(this.props.selectedLinode)
-        .then(response => {
+        .then((response) => {
           if (!this.mounted) {
             return;
           }
 
           const filteredDisks = response.data.filter(
-            disk => disk.filesystem !== 'swap'
+            (disk) => disk.filesystem !== 'swap'
           );
           if (!equals(this.state.disks, filteredDisks)) {
             this.setState({ disks: filteredDisks });
           }
         })
-        .catch(_ => {
+        .catch((_) => {
           if (!this.mounted) {
             return;
           }
@@ -217,7 +217,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
             this.close();
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             if (!this.mounted) {
               return;
             }
@@ -239,7 +239,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           label,
           description: safeDescription,
         })
-          .then(_ => {
+          .then((_) => {
             if (!this.mounted) {
               return;
             }
@@ -256,7 +256,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               variant: 'info',
             });
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             if (!this.mounted) {
               return;
             }
@@ -363,8 +363,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             selectedLinode={selectedLinode}
             linodeError={linodeError}
             disabled={!canCreateImage}
-            handleChange={linode => this.handleLinodeChange(linode.id)}
-            filterCondition={linode =>
+            handleChange={(linode) => this.handleLinodeChange(linode.id)}
+            filterCondition={(linode) =>
               availableImages ? availableImages.includes(linode.id) : true
             }
             updateFor={[
@@ -475,8 +475,8 @@ export default compose<CombinedProps, Props>(
     // (in addition to the global add_images grant).
     availableImages: profile?.restricted
       ? profile?.grants?.linode
-          .filter(thisGrant => thisGrant.permissions === 'read_write')
-          .map(thisGrant => thisGrant.id) ?? []
+          .filter((thisGrant) => thisGrant.permissions === 'read_write')
+          .map((thisGrant) => thisGrant.id) ?? []
       : null,
   }))
 )(ImageDrawer);

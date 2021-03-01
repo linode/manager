@@ -69,7 +69,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           });
         }
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         const errors = getAPIErrorOrDefault(
           errResponse,
           'Error creating user.'

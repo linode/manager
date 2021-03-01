@@ -15,7 +15,7 @@ import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & LVDataProps & WithTheme;
 
-const NetworkGauge: React.FC<CombinedProps> = props => {
+const NetworkGauge: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
@@ -101,7 +101,7 @@ const NetworkGauge: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withClientStats<Props>(ownProps => ownProps.clientID),
+  withClientStats<Props>((ownProps) => ownProps.clientID),
   withTheme
 )(NetworkGauge);
 

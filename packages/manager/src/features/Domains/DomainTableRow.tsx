@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = Domain & Handlers;
 
-const DomainTableRow: React.FC<CombinedProps> = props => {
+const DomainTableRow: React.FC<CombinedProps> = (props) => {
   const {
     domain,
     id,

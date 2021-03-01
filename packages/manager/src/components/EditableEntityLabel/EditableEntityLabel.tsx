@@ -30,7 +30,7 @@ interface Props {
   status?: string;
 }
 
-export const EditableEntityLabel: React.FC<Props> = props => {
+export const EditableEntityLabel: React.FC<Props> = (props) => {
   const { iconVariant, loading, status, subText, text, onEdit } = props;
   const [isEditing, toggleEditing] = React.useState<boolean>(false);
   const [inputText, setInputText] = React.useState<string>(text);
@@ -42,7 +42,7 @@ export const EditableEntityLabel: React.FC<Props> = props => {
     if (inputText !== text) {
       onEdit(inputText)
         .then(() => toggleEditing(false))
-        .catch(e => setError(e)); // @todo have to make sure this is passed as a string
+        .catch((e) => setError(e)); // @todo have to make sure this is passed as a string
     } else {
       toggleEditing(false);
     }

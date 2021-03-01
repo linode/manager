@@ -27,7 +27,7 @@ interface Props {
 type CombinedProps = Props & WithNodeBalancersProps;
 
 const nodeBalancersToItems = (nodeBalancers: NodeBalancer[]): Item<number>[] =>
-  nodeBalancers.map(thisNodeBalancer => ({
+  nodeBalancers.map((thisNodeBalancer) => ({
     value: thisNodeBalancer.id,
     label: thisNodeBalancer.label,
     data: thisNodeBalancer,
@@ -41,11 +41,11 @@ const nodeBalancerFromItems = (
     return;
   }
   return nodeBalancers.find(
-    thisNodeBalancer => thisNodeBalancer.value === nodeBalancerId
+    (thisNodeBalancer) => thisNodeBalancer.value === nodeBalancerId
   );
 };
 
-const NodeBalancerSelect: React.FC<CombinedProps> = props => {
+const NodeBalancerSelect: React.FC<CombinedProps> = (props) => {
   const {
     disabled,
     generalError,
@@ -60,7 +60,7 @@ const NodeBalancerSelect: React.FC<CombinedProps> = props => {
 
   const nodeBalancer = region
     ? nodeBalancersData.filter(
-        thisNodeBalancer => thisNodeBalancer.region === region
+        (thisNodeBalancer) => thisNodeBalancer.region === region
       )
     : nodeBalancersData;
   const options = nodeBalancersToItems(nodeBalancer);

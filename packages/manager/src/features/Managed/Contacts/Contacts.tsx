@@ -63,7 +63,7 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps;
 
-const Contacts: React.FC<CombinedProps> = props => {
+const Contacts: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -77,8 +77,8 @@ const Contacts: React.FC<CombinedProps> = props => {
   } = props;
 
   const updateOrAdd = (contact: ManagedContact) => {
-    transformData(draft => {
-      const idx = draft.findIndex(l => l.id === contact.id);
+    transformData((draft) => {
+      const idx = draft.findIndex((l) => l.id === contact.id);
       // Add the contact if we don't already have it.
       if (idx === -1) {
         draft.push(contact);
@@ -113,7 +113,7 @@ const Contacts: React.FC<CombinedProps> = props => {
           variant: 'success',
         });
       })
-      .catch(e =>
+      .catch((e) =>
         handleError(
           getAPIErrorOrDefault(e, 'Error deleting this contact.')[0].reason
         )
@@ -237,7 +237,7 @@ const Contacts: React.FC<CombinedProps> = props => {
                               }}
                               openDialog={(contactId: number) => {
                                 const selectedContact = contacts.find(
-                                  thisContact => thisContact.id === contactId
+                                  (thisContact) => thisContact.id === contactId
                                 );
                                 const label = selectedContact
                                   ? selectedContact.name
@@ -279,7 +279,7 @@ const Contacts: React.FC<CombinedProps> = props => {
         isOpen={contactDrawer.isOpen}
         closeDrawer={contactDrawer.close}
         updateOrAdd={updateOrAdd}
-        contact={contacts.find(contact => contact.id === selectedContactId)}
+        contact={contacts.find((contact) => contact.id === selectedContactId)}
         groups={groups}
       />
     </>
@@ -299,14 +299,14 @@ export const generateGroupsFromContacts = (
 ): ManagedContactGroup[] => {
   const groups: ManagedContactGroup[] = [];
 
-  contacts.forEach(contact => {
+  contacts.forEach((contact) => {
     // If the contact doesn't have a group, don't do anything. Otherwise we'd have `null` groups.
     if (typeof contact.group !== 'string') {
       return;
     }
 
     // Have we tracked this group yet?
-    const idx = groups.findIndex(group => group.groupName === contact.group);
+    const idx = groups.findIndex((group) => group.groupName === contact.group);
 
     // If not, add a new group.
     if (idx === -1) {

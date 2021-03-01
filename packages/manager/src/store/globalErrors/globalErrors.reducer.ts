@@ -26,6 +26,6 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
         }
       : {};
   })
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

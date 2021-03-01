@@ -24,7 +24,7 @@ describe('dashboard', () => {
     cy.server();
     cy.route({
       // Here we handle all requests passing through Cypress' server
-      onRequest: req => {
+      onRequest: (req) => {
         xhrData.push(req);
       },
     });

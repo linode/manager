@@ -23,7 +23,7 @@ describe('Selection Card Suite', () => {
 
   const assertCardsChecked = () => {
     const selectionCardElems = $$(selectionCard);
-    selectionCardElems.forEach(e => {
+    selectionCardElems.forEach((e) => {
       expect(e.getAttribute('class').includes('checked'))
         .withContext(`Missing checked attribute`)
         .toBe(true);
@@ -35,7 +35,7 @@ describe('Selection Card Suite', () => {
 
   const assertPlainSvgsDisplay = () => {
     const plainSvgs = $$(`${selectionCard} svg g`);
-    plainSvgs.forEach(svg =>
+    plainSvgs.forEach((svg) =>
       expect(svg.isDisplayed())
         .withContext(`Svg should be displayed`)
         .toBe(true)
@@ -44,7 +44,7 @@ describe('Selection Card Suite', () => {
 
   const assertSvgIconsDisplay = () => {
     const svgElems = $$(`${selectionCard} svg`);
-    svgElems.forEach(svg =>
+    svgElems.forEach((svg) =>
       expect(svg.isDisplayed())
         .withContext(`Svg icon should be displayed`)
         .toBe(true)
@@ -53,11 +53,11 @@ describe('Selection Card Suite', () => {
 
   const assertFontIconsDisplay = () => {
     const selectionCardElems = $$(selectionCard);
-    const fontIcons = $$(`${selectionCard} span`).filter(e =>
+    const fontIcons = $$(`${selectionCard} span`).filter((e) =>
       e.getAttribute('class').includes('fl-')
     );
 
-    fontIcons.forEach(icon =>
+    fontIcons.forEach((icon) =>
       expect(icon.isDisplayed())
         .withContext(`Font icons should be displayed`)
         .toBe(true)
@@ -67,8 +67,8 @@ describe('Selection Card Suite', () => {
       .toEqual(selectionCardElems.length);
   };
 
-  const assertNoIcons = checked => {
-    const fontIcons = $$(`${selectionCard} span`).filter(e =>
+  const assertNoIcons = (checked) => {
+    const fontIcons = $$(`${selectionCard} span`).filter((e) =>
       e.getAttribute('class').includes('fl-')
     );
 
@@ -93,7 +93,7 @@ describe('Selection Card Suite', () => {
     executeInAllStories(component, childStories, () => {
       const selectionCardElems = $$(selectionCard);
 
-      selectionCardElems.forEach(card =>
+      selectionCardElems.forEach((card) =>
         expect(card.isDisplayed())
           .withContext(`Selection Card should be displayed`)
           .toBe(true)
@@ -107,7 +107,7 @@ describe('Selection Card Suite', () => {
   it('should display headings on all selection cards', () => {
     executeInAllStories(component, childStories, () => {
       const headingElems = $$(heading);
-      headingElems.forEach(e =>
+      headingElems.forEach((e) =>
         expect(e.isDisplayed())
           .withContext(`Heading should be displayed`)
           .toBe(true)
@@ -124,7 +124,7 @@ describe('Selection Card Suite', () => {
       $(selectionCard).click();
 
       const selectionCardElements = $$(selectionCard);
-      const disabledCards = selectionCardElements.filter(e =>
+      const disabledCards = selectionCardElements.filter((e) =>
         e.getAttribute('class').includes('disabled')
       );
 
@@ -138,9 +138,9 @@ describe('Selection Card Suite', () => {
 
     it('should check enabled cards', () => {
       const enabledCards = $$(selectionCard).filter(
-        e => !e.getAttribute('class').includes('disabled')
+        (e) => !e.getAttribute('class').includes('disabled')
       );
-      enabledCards.forEach(card => {
+      enabledCards.forEach((card) => {
         card.click();
         const classes = card.getAttribute('class');
         expect(classes.includes('checked'))
@@ -154,7 +154,7 @@ describe('Selection Card Suite', () => {
 
     it('should display subheadings for all selection cards', () => {
       const subheadingElems = $$(subheading);
-      subheadingElems.forEach(e =>
+      subheadingElems.forEach((e) =>
         expect(e.isDisplayed())
           .withContext(`Missing subheadings`)
           .toBe(true)
@@ -211,7 +211,7 @@ describe('Selection Card Suite', () => {
 
     it('should display svg icons for all selection cards', () => {
       const selectionCardElems = $$(`${selectionCard} svg`);
-      selectionCardElems.forEach(e => expect(e.isDisplayed()).toBe(true));
+      selectionCardElems.forEach((e) => expect(e.isDisplayed()).toBe(true));
     });
   });
 

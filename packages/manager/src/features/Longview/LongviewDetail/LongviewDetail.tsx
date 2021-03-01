@@ -65,7 +65,7 @@ export type CombinedProps = RouteComponentProps<{ id: string }> &
   ProfileProps &
   DispatchProps;
 
-export const LongviewDetail: React.FC<CombinedProps> = props => {
+export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   const {
     client,
     longviewClientsLastUpdated,
@@ -88,8 +88,8 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   const { lastUpdated, lastUpdatedError, notifications } = useClientLastUpdated(
     clientAPIKey,
     clientAPIKey
-      ? _lastUpdated =>
-          props.getClientStats(clientAPIKey, _lastUpdated).catch(_ => null)
+      ? (_lastUpdated) =>
+          props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
       : undefined
   );
 
@@ -100,7 +100,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
     // when it is retrieved.
     clientAPIKey && lastUpdated
       ? () =>
-          get(clientAPIKey, 'getTopProcesses').then(response => response.DATA)
+          get(clientAPIKey, 'getTopProcesses').then((response) => response.DATA)
       : null,
     topProcessesEmptyDataSet,
     [clientAPIKey, lastUpdated]
@@ -111,7 +111,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
       ? () =>
           get(clientAPIKey, 'getValues', {
             fields: ['listeningServices', 'activeConnections'],
-          }).then(response => response.DATA)
+          }).then((response) => response.DATA)
       : null,
     { Ports: { listening: [], active: [] } },
     [clientAPIKey, lastUpdated]
@@ -161,7 +161,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   ];
 
   // Filtering out conditional tabs if they don't exist on client
-  const tabs = tabOptions.filter(tab => tab.display === true);
+  const tabs = tabOptions.filter((tab) => tab.display === true);
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
@@ -201,7 +201,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
   }
 
   // Determining true tab count for indexing based on tab display
-  const displayedTabs = tabs.filter(tab => tab.display === true);
+  const displayedTabs = tabs.filter((tab) => tab.display === true);
 
   return (
     <React.Fragment>
@@ -236,7 +236,7 @@ export const LongviewDetail: React.FC<CombinedProps> = props => {
       ))}
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
@@ -347,7 +347,7 @@ interface ProfileProps {
 
 export default compose<CombinedProps, {}>(
   React.memo,
-  withClientStats<RouteComponentProps<{ id: string }>>(ownProps => {
+  withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
     return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
   }),
   withProfile<ProfileProps, {}>((own, { profileData }) => ({

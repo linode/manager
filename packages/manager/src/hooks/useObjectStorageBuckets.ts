@@ -80,10 +80,10 @@ export const useObjectStorage = (predicate?: boolean) => {
     // Once the OBJ Clusters have been loaded, request Buckets from each Cluster.
     if (clustersLoaded && !bucketsLoadingOrLoaded) {
       const clusterIds = objectStorageClusters.entities.map(
-        thisCluster => thisCluster.id
+        (thisCluster) => thisCluster.id
       );
 
-      dispatch(getAllBucketsFromClusters(clusterIds)).catch(_ => null);
+      dispatch(getAllBucketsFromClusters(clusterIds)).catch((_) => null);
     }
   }, [
     _isRestrictedUser,

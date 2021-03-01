@@ -60,7 +60,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ResultRow: React.FC<CombinedProps> = props => {
+export const ResultRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { result } = props;

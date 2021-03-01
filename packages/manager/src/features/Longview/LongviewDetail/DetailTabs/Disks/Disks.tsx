@@ -38,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Disks: React.FC<CombinedProps> = props => {
+const Disks: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 
@@ -102,7 +102,7 @@ const Disks: React.FC<CombinedProps> = props => {
       );
     }
 
-    return sortedKeys.map(eachKey => (
+    return sortedKeys.map((eachKey) => (
       <DiskGraph
         loading={loading}
         diskLabel={eachKey}

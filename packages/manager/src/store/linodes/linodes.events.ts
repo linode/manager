@@ -23,7 +23,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   }
 
   const eventFromStore = getState().events.events.find(
-    thisEvent => thisEvent.id === eventID
+    (thisEvent) => thisEvent.id === eventID
   );
 
   const prevStatus = eventFromStore?.status;

@@ -135,7 +135,7 @@ export const getInitialValue = (
   return fromProps ?? fromStorage ?? '';
 };
 
-export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
+export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const { open, prefilledDescription, prefilledTitle } = props;
 
   const valuesFromStorage = storage.supportText.get();
@@ -190,11 +190,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
       setErrors(undefined);
       _entity
         .request()
-        .then(response => {
+        .then((response) => {
           setLoading(false);
           setData(entitiesToItems(_entityType, response));
         })
-        .catch(_ => setLoading(false)); // Errors through Redux
+        .catch((_) => setLoading(false)); // Errors through Redux
     } else {
       setData(entitiesToItems(_entityType, _entity.data));
     }
@@ -328,12 +328,12 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
         );
         return accumulator;
       })
-      .catch(attachmentErrors => {
+      .catch((attachmentErrors) => {
         /*
          * Note! We want the first few uploads to succeed even if the last few
          * fail! Don't try to aggregate errors!
          */
-        setFiles(oldFiles =>
+        setFiles((oldFiles) =>
           update(idx, { ...oldFiles[idx], uploading: false }, oldFiles)
         );
         const newError = getErrorStringOrDefault(
@@ -353,9 +353,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
   /* Called after the ticket is successfully completed. */
   const attachFiles = (ticketId: number) => {
     const filesWithTarget: AttachmentWithTarget[] = files
-      .filter(file => !file.uploaded)
+      .filter((file) => !file.uploaded)
       .map((file, idx) => {
-        setFiles(oldFiles =>
+        setFiles((oldFiles) =>
           update(idx, { ...oldFiles[idx], uploading: true }, oldFiles)
         );
         const formData = new FormData();
@@ -391,13 +391,13 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
       summary,
       [entityType]: Number(entityID),
     })
-      .then(response => {
+      .then((response) => {
         setErrors(undefined);
         setSubmitting(false);
         resetTicket();
         return response;
       })
-      .then(response => {
+      .then((response) => {
         attachFiles(response!.id).then(
           ({ success, errors: _errors }: Accumulator) => {
             if (!props.keepOpenOnSuccess) {
@@ -408,7 +408,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
           }
         );
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         /* This block will only handle errors in creating the actual ticket; attachment
          * errors are handled above. */
         setErrors(getAPIErrorOrDefault(errResponse));
@@ -442,12 +442,12 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = props => {
     ...renderEntityTypes(),
   ];
 
-  const selectedTopic = topicOptions.find(eachTopic => {
+  const selectedTopic = topicOptions.find((eachTopic) => {
     return eachTopic.value === entityType;
   });
 
   const selectedEntity =
-    data.find(thisEntity => String(thisEntity.value) === entityID) || null;
+    data.find((thisEntity) => String(thisEntity.value) === entityID) || null;
 
   return (
     <Dialog

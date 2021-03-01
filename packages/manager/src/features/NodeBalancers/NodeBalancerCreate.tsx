@@ -158,7 +158,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState(
       over(
         lensPath(['nodeBalancerFields', 'configs', configIdx, 'nodes']),
-        nodes => nodes.filter((n: any, idx: number) => idx !== nodeIdx)
+        (nodes) => nodes.filter((n: any, idx: number) => idx !== nodeIdx)
       )
     );
 
@@ -311,14 +311,14 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true, errors: undefined });
 
     createNodeBalancer(nodeBalancerRequestData)
-      .then(nodeBalancer => {
+      .then((nodeBalancer) => {
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event
         sendCreateNodeBalancerEvent(
           `${nodeBalancer.label}: ${nodeBalancer.region}`
         );
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
         this.setNodeErrors(
           errors.map((e: APIError) => ({
@@ -396,7 +396,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState(
       set(
         lensPath(['nodeBalancerFields', 'tags']),
-        tags.map(tag => tag.value)
+        tags.map((tag) => tag.value)
       )
     );
   };
@@ -410,7 +410,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         {
           ...thisConfig,
           nodes: [
-            ...thisConfig.nodes.map(thisNode => {
+            ...thisConfig.nodes.map((thisNode) => {
               return { ...thisNode, address: '' };
             }),
           ],
@@ -447,7 +447,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   confirmationConfigError = () =>
     (this.state.deleteConfigConfirmDialog.errors || [])
-      .map(e => e.reason)
+      .map((e) => e.reason)
       .join(',');
 
   renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
@@ -481,7 +481,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const { region } = this.state.nodeBalancerFields;
     let displaySections;
     if (region) {
-      const foundRegion = (regionsData || []).find(r => r.id === region);
+      const foundRegion = (regionsData || []).find((r) => r.id === region);
       if (foundRegion) {
         displaySections = [
           {
@@ -533,7 +533,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               }}
               tagsInputProps={{
                 value: nodeBalancerFields.tags
-                  ? nodeBalancerFields.tags.map(tag => ({
+                  ? nodeBalancerFields.tags.map((tag) => ({
                       label: tag,
                       value: tag,
                     }))
@@ -809,7 +809,7 @@ interface StateProps {
   disabled: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   disabled: isRestrictedUser(state) && !hasGrant(state, 'add_nodebalancers'),
 });
 
@@ -817,8 +817,8 @@ const connected = connect(mapStateToProps);
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsData: data
-    .filter(region => region.id !== 'ap-northeast-1a') // Don't show Tokyo1 as an option
-    .map(r => ({ ...r, display: dcDisplayNames[r.id] })),
+    .filter((region) => region.id !== 'ap-northeast-1a') // Don't show Tokyo1 as an option
+    .map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
   regionsLoading: loading,
   regionsError: error,
 }));

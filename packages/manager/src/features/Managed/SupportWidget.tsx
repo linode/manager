@@ -20,7 +20,7 @@ const styles = (theme: Theme) =>
 
 export type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-export const SupportWidget: React.FC<CombinedProps> = props => {
+export const SupportWidget: React.FC<CombinedProps> = (props) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const { classes, history } = props;
   const onTicketCreated = (

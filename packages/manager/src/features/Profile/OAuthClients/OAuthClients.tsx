@@ -224,7 +224,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       redirect_uri: this.state.redirectUri,
       public: this.state.isPublic,
     })
-      .then(data => {
+      .then((data) => {
         if (!this.mounted) {
           return;
         }
@@ -234,14 +234,14 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           secret: data.secret,
         });
       })
-      .then(_ => {
+      .then((_) => {
         if (!this.mounted) {
           return;
         }
 
         this.props.request();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         if (!this.mounted) {
           return;
         }
@@ -277,13 +277,13 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       label: clientLabel,
       redirect_uri: redirectUri,
     })
-      .then(_ => {
+      .then((_) => {
         this.setState({ ...this.defaultState });
       })
-      .then(_ => {
+      .then((_) => {
         this.props.request();
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         this.setState(
           {
             drawerErrors: getAPIErrorOrDefault(
@@ -480,7 +480,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) =>
-  getOAuthClients(params, filters).then(response => response);
+  getOAuthClients(params, filters).then((response) => response);
 
 const paginated = paginate(updatedRequest);
 

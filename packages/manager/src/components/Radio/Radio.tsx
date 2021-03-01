@@ -72,7 +72,7 @@ interface Props extends RadioProps {
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const LinodeRadioControl: React.FC<FinalProps> = props => {
+const LinodeRadioControl: React.FC<FinalProps> = (props) => {
   const { classes, ...rest } = props;
 
   const classnames = classNames({

@@ -9,7 +9,7 @@ export const useSet = <T>(initial?: Iterable<T>) => {
   const [set, setSet] = React.useState(new Set(initial));
 
   const add = (element: T) => {
-    setSet(prevSet => {
+    setSet((prevSet) => {
       // A new Set must be created, otherwise React won't know to re-render the DOM.
       const newSet = new Set(prevSet);
       newSet.add(element);
@@ -18,7 +18,7 @@ export const useSet = <T>(initial?: Iterable<T>) => {
   };
 
   const _delete = (element: T) => {
-    setSet(prevSet => {
+    setSet((prevSet) => {
       // A new Set must be created, otherwise React won't know to re-render the DOM.
       const newSet = new Set(prevSet);
       newSet.delete(element);

@@ -56,7 +56,7 @@ export const tagImportDrawer: Reducer<State> = (
   state = defaultState,
   action
 ) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, importTagsActions.started)) {
       draft.loading = true;
       draft.success = false;
@@ -129,7 +129,7 @@ const createAccumulator = <T extends Linode | Domain>(
       ...accumulator,
       success: [...accumulator.success, updatedEntity],
     }))
-    .catch(error => {
+    .catch((error) => {
       const reason = getErrorStringOrDefault(error, 'Error adding tag.');
       return {
         ...accumulator,

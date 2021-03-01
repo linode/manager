@@ -107,7 +107,7 @@ type CombinedProps = WithSnackbarProps &
   PaginationProps<User> &
   RouteComponentProps<{}>;
 
-const UsersLanding: React.FC<CombinedProps> = props => {
+const UsersLanding: React.FC<CombinedProps> = (props) => {
   const {
     request,
     onDelete,
@@ -240,7 +240,7 @@ const UsersLanding: React.FC<CombinedProps> = props => {
       return <TableRowEmptyState colSpan={4} />;
     }
 
-    return data.map(user => renderUserRow(user));
+    return data.map((user) => renderUserRow(user));
   };
 
   return (
@@ -323,12 +323,12 @@ const memoizedGetGravatarURL = memoize(getGravatarUrl);
 
 const paginated = Pagey((ownProps, params, filters) =>
   getUsers(params, filters).then(({ data, page, pages, results }) =>
-    mapPromise(data, user =>
+    mapPromise(data, (user) =>
       memoizedGetGravatarURL(user.email).then((gravatarUrl: string) => ({
         ...user,
         gravatarUrl,
       }))
-    ).then(updatedUsers => ({ page, pages, results, data: updatedUsers }))
+    ).then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))
   )
 );
 

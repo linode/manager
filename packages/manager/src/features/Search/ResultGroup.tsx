@@ -44,7 +44,7 @@ interface HandlerProps {
 
 type CombinedProps = Props & HandlerProps;
 
-export const ResultGroup: React.FC<CombinedProps> = props => {
+export const ResultGroup: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { entity, groupSize, results, toggle, showMore } = props;

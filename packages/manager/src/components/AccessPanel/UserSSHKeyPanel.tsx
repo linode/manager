@@ -74,7 +74,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const UserSSHKeyPanel: React.FC<CombinedProps> = props => {
+const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   /**
    * Success state can be handled here, which makes it hard to clear on e.g. form errors,
@@ -99,7 +99,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = props => {
   };
 
   const usersWithKeys = users
-    ? users.filter(thisUser => thisUser.keys.length > 0)
+    ? users.filter((thisUser) => thisUser.keys.length > 0)
     : [];
 
   return (

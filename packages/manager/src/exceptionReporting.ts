@@ -28,15 +28,15 @@ export const reportException = (
 
   // Create a local scope so we can add `extra` and `tags` to this specific
   // Sentry event.
-  withScope(scope => {
+  withScope((scope) => {
     if (extra) {
-      Object.keys(extra).forEach(extraKey => {
+      Object.keys(extra).forEach((extraKey) => {
         scope.setExtra(extraKey, extra[extraKey]);
       });
     }
 
     if (tags) {
-      Object.keys(tags).forEach(tagKey => {
+      Object.keys(tags).forEach((tagKey) => {
         scope.setTag(tagKey, tags[tagKey]);
       });
     }
@@ -57,7 +57,7 @@ export const configureErrorReportingUser = (
   userId: string,
   username: string
 ) => {
-  configureScope(scope => {
+  configureScope((scope) => {
     scope.setUser({
       user_id: userId,
       username,

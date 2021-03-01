@@ -11,7 +11,7 @@ type Props = RouteComponentProps<{}>;
 
 type CombinedProps = Props;
 
-const Database: React.FC<CombinedProps> = props => {
+const Database: React.FC<CombinedProps> = (props) => {
   const {
     match: { path },
   } = props;

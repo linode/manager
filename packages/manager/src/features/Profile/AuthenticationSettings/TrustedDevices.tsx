@@ -38,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props & PaginationProps<TrustedDevice>;
 
-export const TrustedDevices: React.FC<CombinedProps> = props => {
+export const TrustedDevices: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const refreshList = () => {
     props.onDelete();
@@ -114,7 +114,7 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
 };
 
 const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
-  getTrustedDevices(params, filter).then(response => response)
+  getTrustedDevices(params, filter).then((response) => response)
 );
 
 export default compose<CombinedProps, Props>(paginated)(TrustedDevices);

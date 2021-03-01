@@ -75,7 +75,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
+export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;

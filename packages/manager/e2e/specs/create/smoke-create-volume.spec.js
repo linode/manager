@@ -33,8 +33,12 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   const getLinodeOptions = () => {
     VolumeDetail.selectLinodeOrVolume.click();
     VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal);
-    const linodes = VolumeDetail.selectOptions.map(option => option.getText());
-    const justLinodes = linodes.filter(options => options != 'Select a Linode');
+    const linodes = VolumeDetail.selectOptions.map((option) =>
+      option.getText()
+    );
+    const justLinodes = linodes.filter(
+      (options) => options != 'Select a Linode'
+    );
     $('body').click();
     VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal, true);
     return justLinodes;
@@ -83,7 +87,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
   });
 
   it('should display volume price dynamically based on size', () => {
-    [200, 333, 450].forEach(price => {
+    [200, 333, 450].forEach((price) => {
       browser.trySetValue(`${VolumeDetail.size.selector} #size`, price);
       const volumePrice = price * 0.1;
       expect(VolumeDetail.volumePrice.getText()).toEqual(
@@ -257,7 +261,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     VolumeDetail.cloneVolume(cloneLabel, testVolume.size);
     const clonedVolume = $$(
       VolumeDetail.volumeCellLabel.selector
-    ).find(volume => volume.getText().includes(cloneLabel));
+    ).find((volume) => volume.getText().includes(cloneLabel));
     expect(clonedVolume).toBeTruthy();
   });
 

@@ -21,7 +21,7 @@ interface Props {
   openDrawer: (linodeId: number) => void;
 }
 
-export const SSHAccessRow: React.FunctionComponent<Props> = props => {
+export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
   const { linodeSetting, updateOne, openDrawer } = props;

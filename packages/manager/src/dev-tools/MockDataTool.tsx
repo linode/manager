@@ -24,7 +24,7 @@ const MockDataTool: React.FC<{}> = () => {
 
   React.useEffect(() => {
     // Subscribe to mockData changes so this components local copy can be updated.
-    const token = mockDataController.subscribe(newMockData => {
+    const token = mockDataController.subscribe((newMockData) => {
       setLocalMockData(newMockData);
     });
     return () => mockDataController.unsubscribe(token);
@@ -39,14 +39,14 @@ const MockDataTool: React.FC<{}> = () => {
         <h4 style={{ marginBottom: 8 }}>Mock Data</h4>
       </Grid>
       <Grid item xs={12}>
-        {options.map(thisOption => {
+        {options.map((thisOption) => {
           return (
             <div key={thisOption.key} style={{ marginTop: 4 }}>
               <label style={{ marginRight: 4 }}>{thisOption.label}: </label>
               <input
                 type="number"
                 min="0"
-                onChange={e =>
+                onChange={(e) =>
                   handleInputChange(thisOption.key, Number(e.target.value))
                 }
                 value={localMockData[thisOption.key]?.quantity ?? 0}

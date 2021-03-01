@@ -40,18 +40,18 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
     setLoadingAndClearErrors();
 
     return removeIPAddress(data)
-      .then(response => {
+      .then((response) => {
         clearLoadingAndErrors();
         if (ipRemoveSuccess) {
           const linodeWithRemovedIP = {
             ...linode,
-            ipv4: linode.ipv4.filter(eachIP => eachIP !== data.IPAddress),
+            ipv4: linode.ipv4.filter((eachIP) => eachIP !== data.IPAddress),
           };
           ipRemoveSuccess(linodeWithRemovedIP);
           handleClose();
         }
       })
-      .catch(e => {
+      .catch((e) => {
         const errorText = getAPIErrorOrDefault(
           e,
           'There was an error removing this IP. Please try again later.'

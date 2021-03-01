@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = props => {
+export const HeaderBreadCrumb: React.FC<BreadCrumbProps> = (props) => {
   const classes = useStyles();
 
   const { title, headerOnly } = props;

@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NetworkHelper: React.FC<CombinedProps> = props => {
+const NetworkHelper: React.FC<CombinedProps> = (props) => {
   const { classes, onChange, networkHelperEnabled } = props;
 
   return (

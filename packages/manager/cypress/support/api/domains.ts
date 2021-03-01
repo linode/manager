@@ -16,13 +16,13 @@ export const makeDomainLabel = () => makeTestLabel() + '.net';
 
 export const getDomains = () => getAll(relativeApiPath);
 
-export const deleteDomainById = id => deleteById(relativeApiPath, id);
+export const deleteDomainById = (id) => deleteById(relativeApiPath, id);
 
-export const isTestDomain = label => label.startsWith(testNamePrefix);
+export const isTestDomain = (label) => label.startsWith(testNamePrefix);
 
 export const deleteAllTestDomains = () => {
-  getDomains().then(resp => {
-    resp.body.data.forEach(domain => {
+  getDomains().then((resp) => {
+    resp.body.data.forEach((domain) => {
       if (isTestDomain(domain.domain)) {
         deleteDomainById(domain.id);
       }
@@ -30,7 +30,7 @@ export const deleteAllTestDomains = () => {
   });
 };
 
-const makeDomainCreateReq = domain => {
+const makeDomainCreateReq = (domain) => {
   const domainData = domain
     ? domain
     : {
@@ -55,7 +55,7 @@ const makeDomainCreateReq = domain => {
  * @returns domain object
  */
 export const createDomain = (domain = undefined) => {
-  return makeDomainCreateReq(domain).then(resp => {
+  return makeDomainCreateReq(domain).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Domain ${resp.body.label} successfully`, resp);
     return resp.body;

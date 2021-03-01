@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const request = () =>
-  getAll<ManagedLinodeSetting>(getLinodeSettings)().then(res => res.data);
+  getAll<ManagedLinodeSetting>(getLinodeSettings)().then((res) => res.data);
 
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
@@ -43,8 +43,8 @@ const SSHAccessTable: React.FC<{}> = () => {
   >(request, []);
 
   const updateOne = (linodeSetting: ManagedLinodeSetting) => {
-    transformData(draft => {
-      const idx = draft.findIndex(l => l.id === linodeSetting.id);
+    transformData((draft) => {
+      const idx = draft.findIndex((l) => l.id === linodeSetting.id);
       draft[idx] = linodeSetting;
     });
   };
@@ -58,7 +58,7 @@ const SSHAccessTable: React.FC<{}> = () => {
   // For all intents and purposes, the default `user` is "root", and the default `port` is 22.
   // Surprisingly, these are returned as `null` from the API. We want to display the defaults
   // to the user, though, so we normalize the data here by exchanging `null` for the defaults.
-  const normalizedData: ManagedLinodeSetting[] = produce(data, draft => {
+  const normalizedData: ManagedLinodeSetting[] = produce(data, (draft) => {
     data.forEach((linodeSetting, idx) => {
       if (linodeSetting.ssh.user === null) {
         draft[idx].ssh.user = DEFAULTS.user;
@@ -173,7 +173,7 @@ const SSHAccessTable: React.FC<{}> = () => {
       <EditSSHAccessDrawer
         isOpen={drawer.isOpen}
         closeDrawer={drawer.close}
-        linodeSetting={normalizedData.find(l => l.id === selectedLinodeId)}
+        linodeSetting={normalizedData.find((l) => l.id === selectedLinodeId)}
         updateOne={updateOne}
       />
     </>

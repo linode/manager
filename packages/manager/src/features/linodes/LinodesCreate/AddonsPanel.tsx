@@ -87,7 +87,7 @@ interface Props {
 }
 
 type CombinedProps = Props;
-const AddonsPanel: React.FC<CombinedProps> = props => {
+const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const {
     accountBackups,
     changeBackups,

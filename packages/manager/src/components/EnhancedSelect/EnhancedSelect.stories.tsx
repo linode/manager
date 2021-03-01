@@ -92,13 +92,13 @@ class Example extends React.Component<{}, State> {
   };
 
   filterFruit = (value: string) => {
-    return fruit.filter(f =>
+    return fruit.filter((f) =>
       f.label.toLowerCase().includes(value.toLowerCase())
     );
   };
 
   loadOptions = (inputValue?: string): Promise<Item[]> => {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       setTimeout(() => resolve(this.filterFruit(inputValue || '')), 2000);
     });
   };

@@ -69,7 +69,7 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVDataProps;
 
-export const LongviewClientHeader: React.FC<CombinedProps> = props => {
+export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
   const {
     clientID,
     clientLabel,
@@ -87,10 +87,10 @@ export const LongviewClientHeader: React.FC<CombinedProps> = props => {
   const handleUpdateLabel = (newLabel: string) => {
     setUpdating(true);
     return updateLongviewClient(clientID, newLabel)
-      .then(_ => {
+      .then((_) => {
         setUpdating(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setUpdating(false);
         return Promise.reject(
           getAPIErrorOrDefault(error, 'Error updating label')[0].reason

@@ -12,10 +12,10 @@ export const defaultState: State = {
 };
 
 const reducer = reducerWithInitialState(defaultState)
-  .case(handleLoadingDone, state => ({
+  .case(handleLoadingDone, (state) => ({
     ...state,
     appIsLoading: false,
   }))
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

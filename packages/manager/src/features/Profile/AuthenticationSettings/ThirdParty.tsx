@@ -32,11 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ThirdParty: React.FC<CombinedProps> = props => {
+export const ThirdParty: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const displayName =
-    providers.find(thisProvider => thisProvider.name === props.authType)
+    providers.find((thisProvider) => thisProvider.name === props.authType)
       ?.displayName || '';
 
   return (

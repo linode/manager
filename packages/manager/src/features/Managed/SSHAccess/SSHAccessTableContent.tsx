@@ -18,7 +18,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
+export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
   const {
     linodeSettings,
     loading,

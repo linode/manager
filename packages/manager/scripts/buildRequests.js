@@ -13,7 +13,7 @@ const DATA_DIR = 'src/cachedData/';
 // Always use prod API rather than the variable in /src/constants
 const API_ROOT = 'https://api.linode.com/v4/';
 
-const handleError = err => {
+const handleError = (err) => {
   if (err) {
     console.error(err);
     return 1;
@@ -24,7 +24,7 @@ const handleError = err => {
 const handleRequest = async (endpoint, filename) => {
   return axios
     .get(API_ROOT + endpoint + '?page_size=500')
-    .then(response => {
+    .then((response) => {
       /**
        * If this starts beeping, we need to update our
        * request logic to retrieve all available pages.
@@ -37,7 +37,7 @@ const handleRequest = async (endpoint, filename) => {
       }
       return response;
     })
-    .then(response => {
+    .then((response) => {
       fs.writeFile(
         `${DATA_DIR}${filename}`,
         JSON.stringify(response.data),
@@ -69,11 +69,11 @@ const cachedRequests = [
 ];
 
 const buildRequests = async () => {
-  const results = await bluebird.map(cachedRequests, thisRequest =>
+  const results = await bluebird.map(cachedRequests, (thisRequest) =>
     handleRequest(thisRequest.endpoint, thisRequest.filename)
   );
   // Return 0 if everything succeeded, otherwise 1.
-  return results.filter(result => result === 1).length > 0 ? 1 : 0;
+  return results.filter((result) => result === 1).length > 0 ? 1 : 0;
 };
 
 module.exports = buildRequests;

@@ -50,7 +50,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const InlineMenuAction: React.FC<CombinedProps> = props => {
+const InlineMenuAction: React.FC<CombinedProps> = (props) => {
   const {
     actionText,
     className,

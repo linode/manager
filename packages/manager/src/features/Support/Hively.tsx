@@ -61,7 +61,7 @@ export const shouldRenderHively = (
   }
 };
 
-export const Hively: React.FC<Props> = props => {
+export const Hively: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { linodeUsername, ticketId, replyId } = props;
   const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;

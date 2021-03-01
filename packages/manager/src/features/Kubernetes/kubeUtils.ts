@@ -117,9 +117,9 @@ export const getNextVersion = (
   currentVersion: string,
   versions: KubernetesVersion[]
 ) => {
-  const versionStrings = versions.map(v => v.id).sort();
+  const versionStrings = versions.map((v) => v.id).sort();
   const currentIdx = versionStrings.findIndex(
-    thisVersion => currentVersion === thisVersion
+    (thisVersion) => currentVersion === thisVersion
   );
   if (currentIdx < 0) {
     // For now, assume that if nothing matches the user is on an obsolete version.

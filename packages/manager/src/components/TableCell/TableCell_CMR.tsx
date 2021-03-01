@@ -55,7 +55,7 @@ export interface Props extends TableCellProps {
 
 type CombinedProps = Props;
 
-export const WrappedTableCell: React.FC<CombinedProps> = props => {
+export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { className, parentColumn, noWrap, sortable, compact, ...rest } = props;

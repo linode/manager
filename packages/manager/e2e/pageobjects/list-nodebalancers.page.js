@@ -57,7 +57,7 @@ class ListNodeBalancers extends Page {
       )
       .toBe(true);
 
-    this.nodeBalancers.forEach(nb => {
+    this.nodeBalancers.forEach((nb) => {
       expect(nb.$(this.label.selector).isDisplayed())
         .withContext(
           `${this.addNodeBalancer.selector}" selector ${assertLog.displayed}`
@@ -138,7 +138,7 @@ class ListNodeBalancers extends Page {
     const attribute = this.nodeBalancerElem.selector.slice(1, -1);
     return this.tagHeader(tag)
       .$$(this.nodeBalancerElem.selector)
-      .map(nodebalancer => nodebalancer.getAttribute(attribute));
+      .map((nodebalancer) => nodebalancer.getAttribute(attribute));
   }
 }
 

@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVClientData;
 
-export const LongviewPackageDrawer: React.FC<CombinedProps> = props => {
+export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
   const { isOpen, clientLabel, longviewClientData, onClose } = props;
 
   const classes = useStyles();
@@ -87,6 +87,6 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, Props>(
-  withLongviewStats<Props>(own => own.clientID)
+  withLongviewStats<Props>((own) => own.clientID)
 );
 export default enhanced(LongviewPackageDrawer);

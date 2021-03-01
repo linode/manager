@@ -6,12 +6,16 @@ import {
 
 describe('Utility Functions', () => {
   it('should return limited options if not longview pro', () => {
-    const optionLabels = generateSelectOptions(false, '2019').map(o => o.label);
+    const optionLabels = generateSelectOptions(false, '2019').map(
+      (o) => o.label
+    );
     expect(optionLabels).toEqual(['Past 30 Minutes', 'Past 12 Hours']);
   });
 
   it('should return all options if longview pro', () => {
-    const optionLabels = generateSelectOptions(true, '2019').map(o => o.label);
+    const optionLabels = generateSelectOptions(true, '2019').map(
+      (o) => o.label
+    );
     expect(optionLabels).toEqual([
       'Past 30 Minutes',
       'Past 12 Hours',

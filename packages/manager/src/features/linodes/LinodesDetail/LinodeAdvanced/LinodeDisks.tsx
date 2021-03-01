@@ -285,7 +285,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       return <TableRowEmptyState colSpan={4} />;
     }
 
-    return disks.map(disk => (
+    return disks.map((disk) => (
       <LinodeDiskRow
         key={disk.id}
         disk={disk}
@@ -439,7 +439,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       <LinodeDiskDrawer
         mode={mode}
         open={open}
-        disk={disks.find(thisDisk => thisDisk.id === diskId)}
+        disk={disks.find((thisDisk) => thisDisk.id === diskId)}
         maximumSize={maximumSize}
         onClose={this.closeDrawer}
         onSubmit={this.onDrawerSubmit}
@@ -468,7 +468,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       return Promise.reject({ reason: 'Invalid disk or Linode' });
     }
 
-    return resizeLinodeDisk(diskId, size).then(_ => {
+    return resizeLinodeDisk(diskId, size).then((_) => {
       this.props.enqueueSnackbar(`Disk queued for resizing.`, {
         variant: 'info',
       });
@@ -491,9 +491,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       image: Boolean(image) ? image : undefined,
       root_pass: Boolean(root_pass) ? root_pass : undefined,
       authorized_users: userSSHKeys
-        ? userSSHKeys.filter(u => u.selected).map(u => u.username)
+        ? userSSHKeys.filter((u) => u.selected).map((u) => u.username)
         : undefined,
-    }).then(_ => resetEventsPolling());
+    }).then((_) => resetEventsPolling());
   };
 
   renameDisk = (label: string) => {
@@ -519,7 +519,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       .then(() => {
         this.setConfirmDelete({ open: false, errors: undefined });
       })
-      .catch(error => {
+      .catch((error) => {
         // This error only fires if the request fails;
         // if the deletion hostjob fails, it must be handled through events/Redux.
         const errors = getAPIErrorOrDefault(

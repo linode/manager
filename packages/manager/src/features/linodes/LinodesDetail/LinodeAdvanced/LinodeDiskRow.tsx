@@ -44,7 +44,7 @@ interface Props {
   onDelete: () => void;
 }
 
-export const LinodeDiskRow: React.FC<Props> = props => {
+export const LinodeDiskRow: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { inProgressEvents } = useEvents();
   const {
@@ -59,7 +59,7 @@ export const LinodeDiskRow: React.FC<Props> = props => {
   } = props;
 
   const resizeEvent = inProgressEvents.find(
-    thisEvent =>
+    (thisEvent) =>
       thisEvent.secondary_entity?.id === disk.id &&
       ['disk_create', 'disk_resize'].includes(thisEvent.action)
   );

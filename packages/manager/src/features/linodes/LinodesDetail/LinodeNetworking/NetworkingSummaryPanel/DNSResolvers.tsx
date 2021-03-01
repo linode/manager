@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DNSResolvers: React.FC<Props> = props => {
+export const DNSResolvers: React.FC<Props> = (props) => {
   const { region } = props;
   const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];
 
-  const linodeRegion = regions.find(thisRegion => thisRegion.id === region);
+  const linodeRegion = regions.find((thisRegion) => thisRegion.id === region);
 
   const v4Resolvers = linodeRegion?.resolvers?.ipv4.split(',') ?? [];
   const v6Resolvers = linodeRegion?.resolvers?.ipv6.split(',') ?? [];
@@ -55,7 +55,7 @@ export const DNSResolvers: React.FC<Props> = props => {
         className={classes.wrapper}
       >
         <Grid item>
-          {v4Resolvers.map(thisAddress => (
+          {v4Resolvers.map((thisAddress) => (
             <Typography
               key={`ip-resolver-item-${thisAddress}`}
               className={classes.ipAddress}
@@ -65,7 +65,7 @@ export const DNSResolvers: React.FC<Props> = props => {
           ))}
         </Grid>
         <Grid item style={{ paddingRight: 0 }}>
-          {v6Resolvers.map(thisAddress => (
+          {v6Resolvers.map((thisAddress) => (
             <Typography
               key={`ip-resolver-item-${thisAddress}`}
               className={classes.ipAddress}

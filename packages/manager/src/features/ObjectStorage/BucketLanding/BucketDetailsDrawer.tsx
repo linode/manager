@@ -45,7 +45,7 @@ export interface Props {
   objectsNumber?: number;
 }
 
-const BucketDetailsDrawer: React.FC<Props> = props => {
+const BucketDetailsDrawer: React.FC<Props> = (props) => {
   const {
     open,
     onClose,

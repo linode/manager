@@ -46,7 +46,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AccessKeyMenu: React.FC<CombinedProps> = props => {
+const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { openRevokeDialog, objectStorageKey, openDrawer } = props;
 
@@ -74,7 +74,7 @@ const AccessKeyMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
-        {actions.map(thisAction => (
+        {actions.map((thisAction) => (
           <InlineAction
             key={thisAction.title}
             actionText={thisAction.title}

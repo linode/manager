@@ -22,32 +22,32 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
 
   const entities = ['Linodes', 'Volumes', 'NodeBalancers', 'Domains'];
 
-  const expectedDataDisplays = entity => {
+  const expectedDataDisplays = (entity) => {
     browser.pause(500);
     switch (entity) {
       case 'Linodes':
-        linodes.forEach(linode => {
+        linodes.forEach((linode) => {
           $(ListLinodes.getLinodeSelector(linode.label)).waitForDisplayed(
             constants.wait.normal
           );
         });
         break;
       case 'Volumes':
-        volumes.forEach(volume => {
+        volumes.forEach((volume) => {
           VolumeDetail.volumeRow(volume.label).waitForDisplayed(
             constants.wait.normal
           );
         });
         break;
       case 'NodeBalancers':
-        nodebalancers.forEach(nodebalancer => {
+        nodebalancers.forEach((nodebalancer) => {
           ListNodeBalancers.nodeBlanacerRow(
             nodebalancer.label
           ).waitForDisplayed(constants.wait.normal);
         });
         break;
       case 'Domains':
-        domains.forEach(domain => {
+        domains.forEach((domain) => {
           ListDomains.domainRow(domain.domain).waitForDisplayed(
             constants.wait.normal
           );
@@ -107,7 +107,7 @@ xdescribe('View All Links on Dashboard Entity Tables', () => {
     removeNodeBalancers('do not remove linodes');
   });
 
-  entities.forEach(entity => {
+  entities.forEach((entity) => {
     it(`View all links display on the dashboard ${entity} table`, () => {
       Dashboard.viewAllLink(entity).waitForDisplayed(constants.wait.minute);
       expect(Dashboard.entityCount(entity)).toBe('6');

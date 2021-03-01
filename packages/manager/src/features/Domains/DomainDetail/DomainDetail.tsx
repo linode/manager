@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = RouteProps & StyleProps;
 
-const DomainDetail: React.FC<CombinedProps> = props => {
+const DomainDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -63,7 +63,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   const handleLabelChange = (label: string) => {
     setUpdateError(undefined);
 
-    return updateDomain({ domainId: domain.id, domain: label }).catch(e => {
+    return updateDomain({ domainId: domain.id, domain: label }).catch((e) => {
       setUpdateError(e[0].reason);
       return Promise.reject(e);
     });

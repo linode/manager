@@ -47,7 +47,7 @@ describe('AccessKeyDrawer', () => {
       });
       const unsortedBuckets = [usaBucket, germanBucket, asiaBucket];
       expect(
-        getDefaultScopes(unsortedBuckets).map(scope => scope.cluster)
+        getDefaultScopes(unsortedBuckets).map((scope) => scope.cluster)
       ).toEqual(['ap-south-1', 'eu-central-1', 'us-east-1']);
     });
   });

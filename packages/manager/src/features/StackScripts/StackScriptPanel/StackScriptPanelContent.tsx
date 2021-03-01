@@ -54,7 +54,7 @@ const defaultDialogState = {
   stackScriptLabel: '',
 };
 
-export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
+export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const { currentFilter } = props;
 
   const [mounted, setMounted] = React.useState<boolean>(false);
@@ -116,14 +116,14 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
       },
     });
     deleteStackScript(dialog.stackScriptID!)
-      .then(_ => {
+      .then((_) => {
         if (!mounted) {
           return;
         }
         handleCloseDialog();
         props.getDataAtPage(1, props.currentFilter, true);
       })
-      .catch(e => {
+      .catch((e) => {
         if (!mounted) {
           return;
         }
@@ -144,14 +144,14 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = props => {
 
   const handleMakePublic = () => {
     updateStackScript(dialog.stackScriptID!, { is_public: true })
-      .then(_ => {
+      .then((_) => {
         if (!mounted) {
           return;
         }
         handleCloseDialog();
         props.getDataAtPage(1, currentFilter, true);
       })
-      .catch(_ => {
+      .catch((_) => {
         if (!mounted) {
           return;
         }

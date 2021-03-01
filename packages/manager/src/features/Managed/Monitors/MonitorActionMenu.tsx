@@ -25,7 +25,7 @@ interface Props {
 
 export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
 
-export const MonitorActionMenu: React.FC<CombinedProps> = props => {
+export const MonitorActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -64,12 +64,12 @@ export const MonitorActionMenu: React.FC<CombinedProps> = props => {
           title: 'Enable',
           onClick: () => {
             enableServiceMonitor(monitorID)
-              .then(_ => {
+              .then((_) => {
                 enqueueSnackbar('Monitor enabled successfully.', {
                   variant: 'success',
                 });
               })
-              .catch(e => {
+              .catch((e) => {
                 handleError('Error enabling this Service Monitor.', e);
               });
           },
@@ -78,12 +78,12 @@ export const MonitorActionMenu: React.FC<CombinedProps> = props => {
           title: 'Disable',
           onClick: () => {
             disableServiceMonitor(monitorID)
-              .then(_ => {
+              .then((_) => {
                 enqueueSnackbar('Monitor disabled successfully.', {
                   variant: 'success',
                 });
               })
-              .catch(e => {
+              .catch((e) => {
                 handleError('Error disabling this Service Monitor.', e);
               });
           },
@@ -102,7 +102,7 @@ export const MonitorActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

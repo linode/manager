@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CreateDatabaseDialog: React.FC<{}> = _ => {
+export const CreateDatabaseDialog: React.FC<{}> = (_) => {
   const context = React.useContext(dbaasContext);
   const classes = useStyles();
   const history = useHistory();
@@ -83,7 +83,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     return (
       regions
         //   .filter(thisRegion => thisRegion.capabilities.includes('Databases')) // temporarily commented out until Capabilities is squared away
-        .map(r => ({ ...r, display: dcDisplayNames[r.id] }))
+        .map((r) => ({ ...r, display: dcDisplayNames[r.id] }))
     );
   }, [regions]);
 
@@ -146,7 +146,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
-    onSubmit: values => submitForm(values),
+    onSubmit: (values) => submitForm(values),
   });
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +161,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
   );
 
   const handleTagChange = (selected: Item[]) => {
-    const tagStrings = selected.map(selectedItem => selectedItem.value);
+    const tagStrings = selected.map((selectedItem) => selectedItem.value);
     setFieldValue('tags', tagStrings);
   };
 
@@ -198,12 +198,12 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
     }
 
     createDatabase(payload)
-      .then(_ => {
+      .then((_) => {
         formik.setSubmitting(false);
         context.close();
         history.push('/databases');
       })
-      .catch(err => {
+      .catch((err) => {
         const mapErrorToStatus = (generalError: string) =>
           formik.setStatus({ generalError });
 
@@ -292,7 +292,8 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                 <Select
                   options={daySelection}
                   value={daySelection.find(
-                    day => day.value === formik.values.maintenance_schedule.day
+                    (day) =>
+                      day.value === formik.values.maintenance_schedule.day
                   )}
                   onChange={handleDaySelection}
                   name="maintenanceDay"
@@ -310,7 +311,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
                 <Select
                   options={windowSelection}
                   value={windowSelection.find(
-                    window =>
+                    (window) =>
                       window.value === formik.values.maintenance_schedule.window
                   )}
                   onChange={handleWindowSelection}
@@ -345,7 +346,7 @@ export const CreateDatabaseDialog: React.FC<{}> = _ => {
             name="tags"
             label="Add Tags"
             onChange={handleTagChange}
-            value={formik.values.tags.map(tagString => ({
+            value={formik.values.tags.map((tagString) => ({
               label: tagString,
               value: tagString,
             }))}
@@ -374,7 +375,7 @@ const daySelection = [
   'Thursday',
   'Friday',
   'Saturday',
-].map(thisDay => ({
+].map((thisDay) => ({
   label: thisDay,
   value: thisDay,
 }));

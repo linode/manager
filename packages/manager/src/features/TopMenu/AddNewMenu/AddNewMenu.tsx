@@ -161,7 +161,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
 
     return (
       <dbaasContext.Consumer>
-        {dbaas => (
+        {(dbaas) => (
           <div className={classes.wrapper}>
             <Menu>
               <MenuButton
@@ -284,7 +284,7 @@ interface StateProps {
   accountCapabilities: AccountCapability[];
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => {
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => {
   return {
     accountCapabilities: state?.__resources?.account?.data?.capabilities ?? [],
   };

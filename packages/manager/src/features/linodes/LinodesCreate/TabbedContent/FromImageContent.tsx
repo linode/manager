@@ -33,7 +33,7 @@ export type CombinedProps = Props &
   ReduxStateProps &
   WithTypesRegionsAndImages;
 
-export const FromImageContent: React.FC<CombinedProps> = props => {
+export const FromImageContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -66,7 +66,7 @@ export const FromImageContent: React.FC<CombinedProps> = props => {
     <Grid item className={`${classes.main} mlMain py0`}>
       <ImageSelect
         title={imagePanelTitle || 'Choose an Image'}
-        images={Object.keys(imagesData).map(eachKey => imagesData[eachKey])}
+        images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}
         handleSelectImage={props.updateImageID}
         selectedImageID={props.selectedImageID}
         error={error}

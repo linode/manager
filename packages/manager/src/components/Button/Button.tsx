@@ -85,7 +85,7 @@ const getColor = cond([
 // Add invariant warning if loading destructive cancel
 // Add invariant warning if destructive cancel
 
-const WrappedButton: React.FC<CombinedProps> = props => {
+const WrappedButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {

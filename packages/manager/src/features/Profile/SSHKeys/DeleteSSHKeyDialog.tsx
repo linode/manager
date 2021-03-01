@@ -86,7 +86,7 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
       .then(() => {
         this.setState({ submitting: false }, () => this.props.onSuccess());
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ submitting: false, error });
       });
   };

@@ -62,7 +62,7 @@ module.exports = {
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
-    devtoolModuleFilenameTemplate: info => {
+    devtoolModuleFilenameTemplate: (info) => {
       return path
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/');
@@ -70,7 +70,7 @@ module.exports = {
     // Our CSS loader chain results in duplicates for some files. It's unclear
     // to me why this is happening, but we use this fallback template function
     // to correct the sourcemaps for these files.
-    devtoolFallbackModuleFilenameTemplate: info => {
+    devtoolFallbackModuleFilenameTemplate: (info) => {
       const filePath = path
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/');

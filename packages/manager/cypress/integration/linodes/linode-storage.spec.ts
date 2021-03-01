@@ -9,10 +9,10 @@ import {
 } from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';
 
-const deleteDisk = diskName => {
+const deleteDisk = (diskName) => {
   cy.get(`[aria-label="Action menu for Disk ${diskName}"]`)
     .invoke('attr', 'aria-controls')
-    .then($id => {
+    .then(($id) => {
       if ($id) {
         getClick(`[aria-label="Action menu for Disk ${diskName}"]`);
         if (
@@ -49,7 +49,7 @@ const addDisk = (linodeId, diskName) => {
 describe('linode storage tab', () => {
   it('try to delete in use disk', () => {
     const diskName = 'Debian 10 Disk';
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
@@ -73,7 +73,7 @@ describe('linode storage tab', () => {
   // create with empty disk then delete disk
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode({ image: null }).then(linode => {
+    createLinode({ image: null }).then((linode) => {
       cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
@@ -100,7 +100,7 @@ describe('linode storage tab', () => {
   // create with empty disk then add disk
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode({ image: null }).then(linode => {
+    createLinode({ image: null }).then((linode) => {
       cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );
@@ -117,7 +117,7 @@ describe('linode storage tab', () => {
   // resize disk
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
-    createLinode({ image: null }).then(linode => {
+    createLinode({ image: null }).then((linode) => {
       cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );

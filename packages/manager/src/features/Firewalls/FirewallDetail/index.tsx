@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const FirewallDetail: React.FC<CombinedProps> = props => {
+export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   // Source the Firewall's ID from the /:id path param.
@@ -126,7 +126,7 @@ export const FirewallDetail: React.FC<CombinedProps> = props => {
       </Box>
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}

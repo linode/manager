@@ -47,7 +47,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
+const EditSSHAccessDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { isOpen, closeDrawer, linodeSetting, updateOne } = props;
@@ -77,12 +77,12 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
     updateLinodeSettings(linodeSetting.id, {
       ssh: { ...values.ssh, user, port },
     })
-      .then(updatedLinodeSetting => {
+      .then((updatedLinodeSetting) => {
         setSubmitting(false);
         updateOne(updatedLinodeSetting);
         closeDrawer();
       })
-      .catch(err => {
+      .catch((err) => {
         setSubmitting(false);
         const defaultMessage = `Unable to update SSH Access for this Linode. Please try again later.`;
         const mapErrorToStatus = (generalError: string) =>
@@ -175,7 +175,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                             label: ip === 'any' ? 'Any' : ip,
                             value: ip,
                           }}
-                          customizeOptions={options => [
+                          customizeOptions={(options) => [
                             // The first option should always be "Any".
                             {
                               label: 'Any',
@@ -184,10 +184,10 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                             ...options
                               // Remove Private IPs
                               .filter(
-                                option => !privateIPRegex.test(option.value)
+                                (option) => !privateIPRegex.test(option.value)
                               )
                               // Remove the prefix length from each option.
-                              .map(option => ({
+                              .map((option) => ({
                                 label: removePrefixLength(option.value),
                                 value: removePrefixLength(option.value),
                               })),

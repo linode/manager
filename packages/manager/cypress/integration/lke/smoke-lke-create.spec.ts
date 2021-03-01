@@ -19,7 +19,7 @@ const multipleClick = (
 
 const addNodes = (plan: string, nb: number) => {
   const extraNb = Math.ceil(Math.random() * 5);
-  cy.get(`[data-qa-plan-row="${plan}"`).within(_card => {
+  cy.get(`[data-qa-plan-row="${plan}"`).within((_card) => {
     multipleClick(cy.get('[data-testid="increment-button"]'), extraNb + nb);
     multipleClick(cy.get('[data-testid="decrement-button"]'), extraNb);
 
@@ -57,10 +57,10 @@ describe('LKE Create Cluster', () => {
     // wait for change to reflect on Checkout bar
 
     fbtVisible('Linode 2GB Plan');
-    cy.get('[data-testid="kube-checkout-bar"]').within(_bar => {
+    cy.get('[data-testid="kube-checkout-bar"]').within((_bar) => {
       fbtVisible('Linode 2GB Plan');
       getVisible('[data-testid="remove-pool-button"]');
-      cy.get('[data-qa-notice="true"]').within(_notice => {
+      cy.get('[data-qa-notice="true"]').within((_notice) => {
         fbtVisible(
           'We recommend at least 3 nodes in each pool. Fewer nodes may affect availability.'
         );

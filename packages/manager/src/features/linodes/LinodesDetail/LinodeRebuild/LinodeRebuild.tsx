@@ -52,7 +52,7 @@ const options = [
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuild: React.FC<CombinedProps> = props => {
+const LinodeRebuild: React.FC<CombinedProps> = (props) => {
   const { classes, linodeLabel, linodeStatus, permissions } = props;
   const hostMaintenance = linodeStatus === 'stopped';
   const unauthorized = permissions === 'read_only';

@@ -10,7 +10,7 @@ exports.constants = {
       process.env.DOCKER || process.env.BROWSERSTACK_USERNAME ? 40000 : 30000,
     minute:
       process.env.DOCKER || process.env.BROWSERSTACK_USERNAME ? 75000 : 60000,
-    custom: milliseconds => milliseconds,
+    custom: (milliseconds) => milliseconds,
   },
   routes: {
     storybook: '/',

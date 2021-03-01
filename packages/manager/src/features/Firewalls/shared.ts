@@ -210,13 +210,13 @@ export const generateAddressesLabel = (
 
   // Now we can look at the rest of the rules:
   if (!allowedAllIPv4) {
-    addresses?.ipv4?.forEach(thisIP => {
+    addresses?.ipv4?.forEach((thisIP) => {
       strBuilder.push(thisIP);
     });
   }
 
   if (!allowedAllIPv6) {
-    addresses?.ipv6?.forEach(thisIP => {
+    addresses?.ipv6?.forEach((thisIP) => {
       strBuilder.push(thisIP);
     });
   }

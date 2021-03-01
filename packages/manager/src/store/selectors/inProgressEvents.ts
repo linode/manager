@@ -5,9 +5,9 @@ import { isInProgressEvent } from 'src/store/events/event.helpers';
 
 export default (type: string) =>
   createSelector<ApplicationState, Event[], Event[]>(
-    state => state.events.events,
-    events =>
+    (state) => state.events.events,
+    (events) =>
       events.filter(
-        e => isInProgressEvent(e) && e.entity && e.entity.type === type
+        (e) => isInProgressEvent(e) && e.entity && e.entity.type === type
       )
   );

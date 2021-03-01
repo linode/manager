@@ -48,7 +48,7 @@ interface BucketTableRowProps extends ObjectStorageBucket {
 
 export type CombinedProps = BucketTableRowProps;
 
-export const BucketTableRow: React.FC<CombinedProps> = props => {
+export const BucketTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {

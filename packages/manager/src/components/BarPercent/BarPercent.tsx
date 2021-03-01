@@ -56,7 +56,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const BarPercent: React.FC<CombinedProps> = props => {
+export const BarPercent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const {

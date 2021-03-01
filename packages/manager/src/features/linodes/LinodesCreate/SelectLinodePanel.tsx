@@ -64,7 +64,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
     return (
       <SelectionCard
         key={`selection-card-${linode.id}`}
-        onClick={e => {
+        onClick={(e) => {
           handleSelection(linode.id, linode.specs.disk);
         }}
         checked={linode.id === Number(selectedLinodeID)}
@@ -110,7 +110,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
                     </Typography>
                     <Typography component="div" className={classes.panelBody}>
                       <Grid container>
-                        {linodesData.map(linode => {
+                        {linodesData.map((linode) => {
                           return this.renderCard(linode);
                         })}
                       </Grid>

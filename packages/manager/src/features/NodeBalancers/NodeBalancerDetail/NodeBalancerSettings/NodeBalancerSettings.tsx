@@ -123,7 +123,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
           success: 'NodeBalancer settings updated successfully',
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           { isSubmitting: false, errors: getAPIErrorOrDefault(error) },
           () => {

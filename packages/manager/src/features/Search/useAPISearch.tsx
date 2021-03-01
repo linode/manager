@@ -45,7 +45,7 @@ export const useAPISearch = (): Search => {
         types.entities,
         images.itemsById,
         _isRestrictedUser
-      ).then(results => {
+      ).then((results) => {
         const combinedResults = refinedSearch(searchText, results);
         return {
           combinedResults,
@@ -81,11 +81,11 @@ const requestEntities = (
   isRestricted: boolean = false
 ) => {
   return Promise.all([
-    getDomains(params, generateFilter(searchText, 'domain')).then(results =>
+    getDomains(params, generateFilter(searchText, 'domain')).then((results) =>
       results.data.map(domainToSearchableItem)
     ),
-    getLinodes(params, generateFilter(searchText)).then(results =>
-      results.data.map(thisResult => formatLinode(thisResult, types, images))
+    getLinodes(params, generateFilter(searchText)).then((results) =>
+      results.data.map((thisResult) => formatLinode(thisResult, types, images))
     ),
     getImages(
       params,
@@ -94,16 +94,16 @@ const requestEntities = (
       {
         '+and': [{ label: { '+contains': searchText } }, { is_public: false }],
       }
-    ).then(results => results.data.map(imageToSearchableItem)),
-    getVolumes(params, generateFilter(searchText)).then(results =>
+    ).then((results) => results.data.map(imageToSearchableItem)),
+    getVolumes(params, generateFilter(searchText)).then((results) =>
       results.data.map(volumeToSearchableItem)
     ),
-    getNodeBalancers(params, generateFilter(searchText)).then(results =>
+    getNodeBalancers(params, generateFilter(searchText)).then((results) =>
       results.data.map(nodeBalToSearchableItem)
     ),
     // Restricted users always get a 403 when requesting clusters
     !isRestricted
-      ? getKubernetesClusters().then(results =>
+      ? getKubernetesClusters().then((results) =>
           // Can't filter LKE by label (or anything maybe?)
           // But no one has more than 500, so this is fine for the short term.
           // @todo replace with generateFilter() when LKE-1889 is complete
@@ -111,7 +111,7 @@ const requestEntities = (
         )
       : Promise.resolve([]),
     // API filtering on Object Storage buckets does not work.
-  ]).then(results => (flatten(results) as unknown) as SearchableItem[]);
+  ]).then((results) => (flatten(results) as unknown) as SearchableItem[]);
 };
 
 export default useAPISearch;

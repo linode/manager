@@ -230,7 +230,7 @@ export const gatherResponsesAndErrors = (
         { ...linode, backups: { ...linode.backups, enabled: true } },
       ],
     }))
-    .catch(error => {
+    .catch((error) => {
       const reason = getErrorStringOrDefault(
         error,
         'Backups could not be enabled for this Linode.'
@@ -261,7 +261,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
     success: [],
     errors: [],
   })
-    .then(response => {
+    .then((response) => {
       if (response.errors && !isEmpty(response.errors)) {
         dispatch(handleEnableError(response));
       } else {
@@ -310,11 +310,11 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
 
   dispatch(handleAutoEnroll());
   dispatch(updateAccountSettings({ backups_enabled: shouldEnableBackups }))
-    .then(_ => {
+    .then((_) => {
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());
     })
-    .catch(errors => {
+    .catch((errors) => {
       const finalError = getErrorStringOrDefault(
         errors,
         'Your account settings could not be updated. Please try again.'

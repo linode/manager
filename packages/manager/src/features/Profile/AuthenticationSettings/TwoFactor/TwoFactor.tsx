@@ -59,7 +59,7 @@ interface Props {
 
 type CombinedProps = Props & StateProps & DispatchProps;
 
-export const TwoFactor: React.FC<CombinedProps> = props => {
+export const TwoFactor: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { clearState, disabled, twoFactor, username } = props;
@@ -130,12 +130,12 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
   const getToken = () => {
     setLoading(true);
     return getTFAToken()
-      .then(response => {
+      .then((response) => {
         setSecret(response.secret);
         setLoading(false);
         setErrors(undefined);
       })
-      .catch(error => {
+      .catch((error) => {
         setErrors(
           getAPIErrorOrDefault(
             error,
@@ -152,8 +152,8 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
   const toggleHidden = () => {
     if (!showQRCode) {
       return getToken()
-        .then(_ => setShowQRCode(!showQRCode))
-        .catch(err => err);
+        .then((_) => setShowQRCode(!showQRCode))
+        .catch((err) => err);
     }
     return setShowQRCode(!showQRCode);
   };
@@ -165,12 +165,12 @@ export const TwoFactor: React.FC<CombinedProps> = props => {
     /* If we're turning TFA on, ask the API for a TFA secret */
     if (toggleEnabled) {
       return getToken()
-        .then(_ => {
+        .then((_) => {
           setTwoFactorEnabled(true);
           setLoading(false);
           setShowQRCode(true);
         })
-        .catch(err => err);
+        .catch((err) => err);
     }
     setTwoFactorEnabled(false);
     return undefined;
@@ -268,7 +268,7 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   twoFactor: path(['data', 'two_factor_auth'], state.__resources.profile),
   username: path(['data', 'username'], state.__resources.profile),
 });
@@ -277,10 +277,9 @@ interface DispatchProps {
   refreshProfile: () => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<
-  DispatchProps,
-  Props
-> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch
+) => ({
   refreshProfile: () => dispatch(requestProfile() as any),
 });
 
@@ -296,7 +295,7 @@ interface ToggleProps {
   disabled?: boolean;
 }
 
-const TwoFactorToggle: React.FC<ToggleProps> = props => {
+const TwoFactorToggle: React.FC<ToggleProps> = (props) => {
   const { disabled, twoFactorEnabled } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

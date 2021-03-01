@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = StateProps & DispatchProps;
 
-const BackupsCTA: React.FC<CombinedProps> = props => {
+const BackupsCTA: React.FC<CombinedProps> = (props) => {
   const {
     linodesWithoutBackups,
     managed,
@@ -104,12 +104,14 @@ interface DispatchProps {
   };
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
   managed: state?.__resources?.accountSettings?.data?.managed ?? false,
 });
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => {
   return {
     actions: {
       openBackupsDrawer: () => dispatch(handleOpen()),

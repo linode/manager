@@ -179,7 +179,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     return (
       getTicketReplies(ticketId)
         // This is a paginated method but here we only need the list of replies
-        .then(response => response.data)
+        .then((response) => response.data)
     );
   };
 
@@ -211,7 +211,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
     /** Send a request for the gravatar for each unique ID. */
     return Bluebird.reduce(uniqueGravatarIDs, requestAndMapGravatar, {}).then(
-      gravatarMap => {
+      (gravatarMap) => {
         /** We now have the gravatar map from the reducer above, and the replies from further up,
          * so we can merge them together.
          */
@@ -234,7 +234,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.loadTicket(),
       this.loadReplies(),
       this.handleJoinedPromise
-    ).catch(err => {
+    ).catch((err) => {
       this.setState({
         loading: false,
         errors: getAPIErrorOrDefault(err, 'Ticket not found.'),
@@ -244,7 +244,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
   onCreateReplySuccess = (newReply: SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
-    getGravatarUrlFromHash(newReply.gravatar_id).then(url => {
+    getGravatarUrlFromHash(newReply.gravatar_id).then((url) => {
       const replyWithGravatar: ExtendedReply = {
         ...newReply,
         gravatarUrl: url,
@@ -312,7 +312,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   renderReplies = (replies: ExtendedReply[]) => {
     const { ticket } = this.state;
     return replies
-      .filter(reply => reply.description.trim() !== '')
+      .filter((reply) => reply.description.trim() !== '')
       .map((reply: ExtendedReply, idx: number) => {
         return (
           <ExpandableTicketPanel
@@ -467,7 +467,7 @@ const requestAndMapGravatar = (acc: any, id: string) => {
   return (
     getGravatarUrlFromHash(id)
       /* Map the response to a dict of { id: url }*/
-      .then(result => ({ ...acc, [id]: result }))
+      .then((result) => ({ ...acc, [id]: result }))
   );
 };
 
@@ -476,7 +476,7 @@ const styled = withStyles(styles);
 interface StateProps {
   profileUsername?: string;
 }
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 

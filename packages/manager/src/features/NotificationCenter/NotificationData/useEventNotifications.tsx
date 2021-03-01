@@ -23,21 +23,21 @@ export const useEventNotifications = () => {
   const context = React.useContext(notificationContext);
 
   const _events = events.filter(
-    thisEvent => !unwantedEvents.includes(thisEvent.action)
+    (thisEvent) => !unwantedEvents.includes(thisEvent.action)
   );
 
   const [inProgress, completed] = partition<Event>(isInProgressEvent, _events);
 
   const allEvents = [
-    ...inProgress.map(thisEvent =>
+    ...inProgress.map((thisEvent) =>
       formatProgressEventForDisplay(thisEvent, context.closeDrawer)
     ),
-    ...completed.map(thisEvent =>
+    ...completed.map((thisEvent) =>
       formatEventForDisplay(thisEvent, context.closeDrawer)
     ),
   ];
 
-  return allEvents.filter(thisAction =>
+  return allEvents.filter((thisAction) =>
     Boolean(thisAction.body)
   ) as NotificationItem[];
 };

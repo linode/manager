@@ -48,7 +48,7 @@ const renderEntityLink = (ticket: SupportTicket) => {
   null;
 };
 
-const TicketRow: React.FC<CombinedProps> = props => {
+const TicketRow: React.FC<CombinedProps> = (props) => {
   const { ticket, classes } = props;
   return (
     <TableRow

@@ -38,7 +38,7 @@ class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
         closeDialog();
         this.props.onSuccess();
       })
-      .catch(e => {
+      .catch((e) => {
         const errorString = getErrorStringOrDefault(
           e,
           'There was an error disabling TFA.'

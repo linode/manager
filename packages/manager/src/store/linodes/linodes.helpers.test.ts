@@ -2,9 +2,9 @@ import { Notification } from '@linode/api-v4/lib/account';
 import { linode1 } from 'src/__data__/linodes';
 import { addNotificationsToLinodes } from './linodes.helpers';
 
-const maintenanceNotification: (
-  linodeID: number
-) => Notification[] = linodeID => [
+const maintenanceNotification: (linodeID: number) => Notification[] = (
+  linodeID
+) => [
   {
     label: 'reboot',
     message: 'This Linode is in Danger! Ahhhhh',

@@ -27,7 +27,7 @@ export interface Props {
   handleSelectVLAN: (vlanIDs: number[]) => void;
 }
 
-export const SelectVLAN: React.FC<Props> = props => {
+export const SelectVLAN: React.FC<Props> = (props) => {
   const { error, selectedRegionID, selectedVlanIDs, handleSelectVLAN } = props;
   useReduxLoad(['vlans']);
   const classes = useStyles();
@@ -52,20 +52,20 @@ export const SelectVLAN: React.FC<Props> = props => {
 
   const options = React.useMemo(() => {
     return Object.values(vlans.itemsById)
-      .filter(thisVlan => thisVlan.region === selectedRegionID)
-      .map(thisVlan => ({
+      .filter((thisVlan) => thisVlan.region === selectedRegionID)
+      .map((thisVlan) => ({
         label: thisVlan.description || thisVlan.id,
         value: thisVlan.id,
       }));
   }, [selectedRegionID, vlans]);
 
-  const selected = selectedVlanIDs.map(thisID => ({
+  const selected = selectedVlanIDs.map((thisID) => ({
     label: vlans.itemsById[thisID].description,
     value: thisID,
   }));
 
   const onChange = (selected: Item<number>[]) => {
-    const ids = selected.map(i => i.value);
+    const ids = selected.map((i) => i.value);
     handleSelectVLAN(ids);
   };
 

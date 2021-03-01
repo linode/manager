@@ -77,7 +77,7 @@ const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-export const ToggleBox: React.FC<CombinedProps> = props => {
+export const ToggleBox: React.FC<CombinedProps> = (props) => {
   const { classes, handleClick, status } = props;
 
   return (

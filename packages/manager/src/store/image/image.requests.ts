@@ -22,7 +22,7 @@ import {
 const getAllImages = getAll<Image>(getImages, 100);
 
 export const requestImages = createRequestThunk(requestImagesActions, () =>
-  getAllImages().then(response => response.data)
+  getAllImages().then((response) => response.data)
 );
 
 export const createImage = createRequestThunk(
@@ -32,7 +32,7 @@ export const createImage = createRequestThunk(
 
 export const requestImageForStore = createRequestThunk(
   requestImageForStoreActions,
-  imageID => getImage(imageID)
+  (imageID) => getImage(imageID)
 );
 
 export const updateImage = createRequestThunk(

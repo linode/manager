@@ -62,7 +62,7 @@ type CombinedProps = StateProps &
   WithSnackbarProps &
   RouteComponentProps<{}>;
 
-const GlobalSettings: React.FC<CombinedProps> = props => {
+const GlobalSettings: React.FC<CombinedProps> = (props) => {
   const {
     actions: { openBackupsDrawer, openImportDrawer, updateAccount },
     backups_enabled,
@@ -144,7 +144,7 @@ const GlobalSettings: React.FC<CombinedProps> = props => {
     </div>
   );
 };
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   loading: pathOr(false, ['__resources', 'accountSettings', 'loading'], state),
 
   backups_enabled: pathOr(

@@ -19,7 +19,7 @@ interface Props {
 
 export type CombinedProps = Props & WithSnackbarProps & DomainActionsProps;
 
-export const DeleteDomain: React.FC<CombinedProps> = props => {
+export const DeleteDomain: React.FC<CombinedProps> = (props) => {
   const {
     dialog,
     openDialog,
@@ -40,7 +40,7 @@ export const DeleteDomain: React.FC<CombinedProps> = props => {
           props.onSuccess();
         }
       })
-      .catch(e =>
+      .catch((e) =>
         handleError(getAPIErrorOrDefault(e, 'Error deleting domain.')[0].reason)
       );
   };

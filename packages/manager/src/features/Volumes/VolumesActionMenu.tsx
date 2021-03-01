@@ -52,7 +52,7 @@ interface Props extends ActionHandlers {
 
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const VolumesActionMenu: React.FC<CombinedProps> = props => {
+export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   const { attached, poweredOff, isVolumesLanding } = props;
 
   const theme = useTheme<Theme>();
@@ -151,7 +151,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

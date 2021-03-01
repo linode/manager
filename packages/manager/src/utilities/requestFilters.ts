@@ -6,14 +6,14 @@
  *   and reads as "where `id` is 1, 22, 333, or 4444."
  */
 export const generateInFilter = (keyName: string, arr: (string | number)[]) => {
-  return arr.map(el => ({ [keyName]: el }));
+  return arr.map((el) => ({ [keyName]: el }));
 };
 
 export const generateNeqFilter = (
   keyName: string,
   arr: (string | number)[]
 ) => {
-  return arr.map(el => ({ [keyName]: { '+neq': el } }));
+  return arr.map((el) => ({ [keyName]: { '+neq': el } }));
 };
 
 /**

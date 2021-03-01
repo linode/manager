@@ -51,7 +51,7 @@ interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
+export const KubeConfigDrawer: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     clusterLabel,

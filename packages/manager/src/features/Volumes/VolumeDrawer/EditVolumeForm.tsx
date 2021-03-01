@@ -34,7 +34,7 @@ interface FormState {
   tags: Tag[];
 }
 
-const RenameVolumeForm: React.FC<CombinedProps> = props => {
+const RenameVolumeForm: React.FC<CombinedProps> = (props) => {
   const {
     volumeId,
     volumeLabel,
@@ -59,14 +59,14 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
         updateVolume({
           volumeId,
           label,
-          tags: tags.map(v => v.value),
+          tags: tags.map((v) => v.value),
         })
-          .then(_ => {
+          .then((_) => {
             resetForm();
             updateVolumes$.next(true);
             onClose();
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to edit this Volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -129,7 +129,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = props => {
               }
               name="tags"
               label="Tags"
-              onChange={selected => setFieldValue('tags', selected)}
+              onChange={(selected) => setFieldValue('tags', selected)}
               value={values.tags}
               disabled={readOnly}
             />

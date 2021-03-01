@@ -64,7 +64,7 @@ export class SecuritySettings extends React.Component<CombinedProps, {}> {
       .then(() => {
         onSuccess();
       })
-      .catch(e => {
+      .catch((e) => {
         /** rely on redux update error */
         scrollErrorIntoView();
       });

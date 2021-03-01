@@ -17,7 +17,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const APITokenMenu: React.FC<CombinedProps> = props => {
+export const APITokenMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -62,7 +62,7 @@ export const APITokenMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for API Token ${props.token.label}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

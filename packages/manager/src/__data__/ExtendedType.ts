@@ -1,7 +1,7 @@
 import { types } from './types';
 
 const extendTypes = () => {
-  return types.map(type => {
+  return types.map((type) => {
     return {
       ...type,
       heading: 'test',

@@ -31,7 +31,7 @@ interface Props {
   lastUpdatedError?: APIError[];
 }
 
-const GaugesSection: React.FC<Props> = props => {
+const GaugesSection: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (

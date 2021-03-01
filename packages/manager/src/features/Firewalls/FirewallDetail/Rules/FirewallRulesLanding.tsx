@@ -66,7 +66,7 @@ interface Drawer {
 
 type CombinedProps = Props & DispatchProps & RouteComponentProps;
 
-const FirewallRulesLanding: React.FC<CombinedProps> = props => {
+const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { firewallID, rules } = props;
 
@@ -172,13 +172,13 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
     };
 
     updateFirewallRules(firewallID, finalRules)
-      .then(_rules => {
+      .then((_rules) => {
         setSubmitting(false);
         // Reset editor state.
         inboundDispatch({ type: 'RESET', rules: _rules.inbound ?? [] });
         outboundDispatch({ type: 'RESET', rules: _rules.outbound ?? [] });
       })
-      .catch(err => {
+      .catch((err) => {
         setSubmitting(false);
 
         const _err = getAPIErrorOrDefault(err);
@@ -189,7 +189,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           // If we are unable to parse this error as a FirewallRuleError,
           // consider it a general error.
           if (parsedError === null) {
-            setGeneralErrors(prevGeneralErrors => [
+            setGeneralErrors((prevGeneralErrors) => [
               ...(prevGeneralErrors ?? []),
               thisError,
             ]);
@@ -297,8 +297,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           triggerOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('inbound', 'edit', idx)
           }
-          triggerDeleteFirewallRule={idx => handleDeleteRule('inbound', idx)}
-          triggerUndo={idx => handleUndo('inbound', idx)}
+          triggerDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
+          triggerUndo={(idx) => handleUndo('inbound', idx)}
         />
       </div>
       <div className={classes.table}>
@@ -312,8 +312,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = props => {
           triggerOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('outbound', 'edit', idx)
           }
-          triggerDeleteFirewallRule={idx => handleDeleteRule('outbound', idx)}
-          triggerUndo={idx => handleUndo('outbound', idx)}
+          triggerDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
+          triggerUndo={(idx) => handleUndo('outbound', idx)}
         />
       </div>
       <FirewallRuleDrawer
@@ -367,7 +367,7 @@ interface DiscardChangesDialogProps {
 }
 
 export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.memo(
-  props => {
+  (props) => {
     const { isOpen, handleClose, handleDiscard } = props;
 
     const actions = React.useCallback(

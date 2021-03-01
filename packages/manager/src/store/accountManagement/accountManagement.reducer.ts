@@ -21,6 +21,6 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
       isLargeAccount: action.payload,
     };
   })
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

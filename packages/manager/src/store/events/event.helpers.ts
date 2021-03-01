@@ -52,7 +52,7 @@ export const isRelevantDeletionEvent = (
 export const findInEvents = (
   events: Pick<ExtendedEvent, 'entity'>[],
   entity: null | Partial<Entity> = {}
-) => findIndex(e => equals(e.entity, entity), events);
+) => findIndex((e) => equals(e.entity, entity), events);
 
 export const setDeletedEvents = (events: Event[]) => {
   /** Create a list of deletion events. */
@@ -85,7 +85,7 @@ export const setDeletedEvents = (events: Event[]) => {
   }
 
   /** Map events to either deleted or not. */
-  return events.map(e => {
+  return events.map((e) => {
     const indexOfFoundEvent = findInEvents(deletions, e.entity);
 
     return indexOfFoundEvent > -1

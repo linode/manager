@@ -23,7 +23,7 @@ interface Props {
 
 export type CombinedProps = Props & WithSnackbarProps;
 
-export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
+export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -48,13 +48,13 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
             updateLinodeSettings(linodeId, {
               ssh: { access: false },
             })
-              .then(updatedLinodeSetting => {
+              .then((updatedLinodeSetting) => {
                 updateOne(updatedLinodeSetting);
                 enqueueSnackbar('SSH Access disabled successfully.', {
                   variant: 'success',
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 handleError('Error disabling SSH Access for this Linode.', err);
               });
           },
@@ -65,13 +65,13 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
             updateLinodeSettings(linodeId, {
               ssh: { access: true },
             })
-              .then(updatedLinodeSetting => {
+              .then((updatedLinodeSetting) => {
                 updateOne(updatedLinodeSetting);
                 enqueueSnackbar('SSH Access enabled successfully.', {
                   variant: 'success',
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 handleError('Error enabling SSH Access for this Linode.', err);
               });
           },
@@ -87,7 +87,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
           ariaLabel={`Action menu for SSH Access key for Linode ${props.linodeLabel}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

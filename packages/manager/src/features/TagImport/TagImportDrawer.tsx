@@ -61,7 +61,7 @@ export const getGroupImportList = (entities: GroupImportProps[]) => {
   return importList;
 };
 
-export const TagImportDrawer: React.FC<CombinedProps> = props => {
+export const TagImportDrawer: React.FC<CombinedProps> = (props) => {
   const {
     actions: { close, update },
     entitiesWithGroupsToImport: { linodes, domains },

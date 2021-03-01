@@ -40,7 +40,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const ProcessGraphs: React.FC<CombinedProps> = props => {
+export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data, error, loading, isToday, timezone, start, end, theme } = props;
 

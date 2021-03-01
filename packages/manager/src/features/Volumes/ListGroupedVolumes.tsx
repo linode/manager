@@ -73,7 +73,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListGroupedVolumes: React.FC<CombinedProps> = props => {
+const ListGroupedVolumes: React.FC<CombinedProps> = (props) => {
   const {
     data,
     order,

@@ -38,7 +38,9 @@ export interface HighlightedMarkdownProps {
   language?: SupportedLanguage;
 }
 
-export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = props => {
+export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
+  props
+) => {
   const classes = useStyles();
   const { language, textOrMarkdown } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);

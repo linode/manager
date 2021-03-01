@@ -78,7 +78,7 @@ export interface Props {
   recycleNode: (nodeID: string) => Promise<{}>;
 }
 
-export const NodePoolsDisplay: React.FC<Props> = props => {
+export const NodePoolsDisplay: React.FC<Props> = (props) => {
   const {
     clusterLabel,
     pools,
@@ -124,7 +124,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   };
 
   const handleOpenResizeDrawer = (poolID: number) => {
-    setPoolForEdit(pools.find(thisPool => thisPool.id === poolID));
+    setPoolForEdit(pools.find((thisPool) => thisPool.id === poolID));
     setResizeDrawerOpen(true);
     setDrawerError(undefined);
   };
@@ -133,11 +133,11 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     setDrawerSubmitting(true);
     setDrawerError(undefined);
     return addNodePool({ type, count })
-      .then(_ => {
+      .then((_) => {
         setDrawerSubmitting(false);
         setAddDrawerOpen(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setDrawerSubmitting(false);
         setDrawerError(
           getAPIErrorOrDefault(error, 'Error adding Node Pool')[0].reason
@@ -153,11 +153,11 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     setDrawerSubmitting(true);
     setDrawerError(undefined);
     updatePool(poolForEdit.id, { ...poolForEdit, count: updatedCount })
-      .then(_ => {
+      .then((_) => {
         setDrawerSubmitting(false);
         setResizeDrawerOpen(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setDrawerSubmitting(false);
         setDrawerError(
           getAPIErrorOrDefault(error, 'Error resizing Node Pool')[0].reason
@@ -170,7 +170,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     if (!dialog.entityID) {
       return;
     }
-    submitDialog(dialog.entityID).catch(err => {
+    submitDialog(dialog.entityID).catch((err) => {
       handleError(
         getAPIErrorOrDefault(err, 'Error deleting this Node Pool.')[0].reason
       );
@@ -183,10 +183,10 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
       return;
     }
     submitDialog(dialog.entityID)
-      .then(_ => {
+      .then((_) => {
         enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
       })
-      .catch(err => {
+      .catch((err) => {
         handleError(
           getAPIErrorOrDefault(err, 'Error recycling this node.')[0].reason
         );
@@ -198,7 +198,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
     if (!dialog.entityID) {
       return;
     }
-    return submitDialog(dialog.entityID).catch(err => {
+    return submitDialog(dialog.entityID).catch((err) => {
       handleError(getAPIErrorOrDefault(err, 'Error recycling nodes')[0].reason);
     });
   };
@@ -206,7 +206,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
   const handleRecycleAllClusterNodes = () => {
     recycleAllClusterNodesDialog
       .submitDialog(undefined)
-      .then(_ =>
+      .then((_) =>
         enqueueSnackbar('Nodes queued for recycling', { variant: 'success' })
       );
   };
@@ -271,11 +271,11 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
         ) : (
           <Grid container direction="column">
             <Grid item xs={12} className={classes.displayTable}>
-              {_pools.map(thisPool => {
+              {_pools.map((thisPool) => {
                 const { id, nodes } = thisPool;
 
                 const thisPoolType = types.find(
-                  thisType => thisType.id === thisPool.type
+                  (thisType) => thisType.id === thisPool.type
                 );
 
                 const typeLabel = thisPoolType?.label ?? 'Unknown type';
@@ -322,7 +322,7 @@ export const NodePoolsDisplay: React.FC<Props> = props => {
             <NodePoolDialog
               nodeCount={
                 pools.find(
-                  thisPool => thisPool.id === deletePoolDialog.dialog.entityID
+                  (thisPool) => thisPool.id === deletePoolDialog.dialog.entityID
                 )?.count ?? 0
               }
               onDelete={handleDeletePool}

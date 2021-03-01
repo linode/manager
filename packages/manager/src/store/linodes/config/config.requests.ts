@@ -38,7 +38,7 @@ export const createLinodeConfig = createRequestThunk(
 export const getLinodeConfigs = createRequestThunk(
   getLinodeConfigsPageActions,
   ({ linodeId }) =>
-    _getLinodeConfigs(linodeId).then(response => ({
+    _getLinodeConfigs(linodeId).then((response) => ({
       data: response.data.map(addLinodeIdToConfig(linodeId)),
       results: response.results,
     }))
@@ -66,7 +66,7 @@ export const deleteLinodeConfig = createRequestThunk(
 export const getAllLinodeConfigs: ThunkActionCreator<
   Promise<Entity[]>,
   GetAllLinodeConfigsParams
-> = params => async dispatch => {
+> = (params) => async (dispatch) => {
   const { linodeId } = params;
   const { started, done, failed } = getAllLinodeConfigsActions;
   dispatch(started(params));

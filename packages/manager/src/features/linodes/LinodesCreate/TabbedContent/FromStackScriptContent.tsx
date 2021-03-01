@@ -95,7 +95,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
      * that aren't compatible with our selected StackScript
      */
     const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+      if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
         acc.push(imagesData[eachKey]);
       }
 

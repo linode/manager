@@ -17,7 +17,7 @@ describe('Tags list', () => {
           errorText: 'Your label is rude!',
         }}
         tagsInputProps={{
-          value: ['a', 'b'].map(tag => ({ label: tag, value: tag })),
+          value: ['a', 'b'].map((tag) => ({ label: tag, value: tag })),
           onChange: onTagsChange,
           tagError: 'Tag names are too short!',
         }}

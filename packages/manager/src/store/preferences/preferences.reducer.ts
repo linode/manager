@@ -17,7 +17,7 @@ export const defaultState: State = {
 };
 
 const reducer: Reducer<State> = reducerWithInitialState(defaultState)
-  .case(handleGetPreferences.started, state => {
+  .case(handleGetPreferences.started, (state) => {
     return {
       ...state,
       loading: true,
@@ -47,7 +47,7 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
       },
     };
   })
-  .case(handleUpdatePreferences.started, state => {
+  .case(handleUpdatePreferences.started, (state) => {
     return {
       ...state,
       /**
@@ -75,6 +75,6 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
       lastUpdated: Date.now(),
     };
   })
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

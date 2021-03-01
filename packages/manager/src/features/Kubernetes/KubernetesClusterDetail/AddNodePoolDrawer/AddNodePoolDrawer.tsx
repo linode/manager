@@ -76,7 +76,7 @@ export interface Props {
 
 type CombinedProps = Props & WithTypesProps;
 
-export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
+export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
   const {
     clusterLabel,
     error,
@@ -98,7 +98,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     addCountToTypes(typesData || [])
   );
 
-  const _selectedType = _types.find(thisType => thisType.id === selectedType);
+  const _selectedType = _types.find((thisType) => thisType.id === selectedType);
   const currentCount = _selectedType?.count ?? 0;
   const pricePerNode = _selectedType?.price?.monthly ?? 0;
 
@@ -115,7 +115,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   }, [error]);
 
   const resetDrawer = () => {
-    const newTypes = _types.map(thisType => {
+    const newTypes = _types.map((thisType) => {
       return {
         ...thisType,
         count: 0,
@@ -134,7 +134,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
     });
     setNewType(newTypes);
     // If everything's empty, we need to reset the selected type.
-    if (newTypes.every(thisType => thisType.count === 0)) {
+    if (newTypes.every((thisType) => thisType.count === 0)) {
       setSelectedType(undefined);
     } else {
       setSelectedType(planId);
@@ -142,7 +142,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
   };
 
   const handleAdd = () => {
-    const type = _types.find(thisType => thisType.id === selectedType);
+    const type = _types.find((thisType) => thisType.id === selectedType);
     if (!type || !selectedType) {
       return;
     }
@@ -160,7 +160,9 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = props => {
       <form className={classes.plans}>
         <SelectPlanQuantityPanel
           // No nanodes or GPUs in clusters
-          types={_types.filter(t => t.class !== 'nanode' && t.class !== 'gpu')}
+          types={_types.filter(
+            (t) => t.class !== 'nanode' && t.class !== 'gpu'
+          )}
           selectedID={selectedType}
           onSelect={(newType: string) => setSelectedType(newType)}
           updatePlanCount={updatePlanCount}

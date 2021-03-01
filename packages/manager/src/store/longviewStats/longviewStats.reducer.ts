@@ -63,6 +63,6 @@ const reducer = reducerWithInitialState(defaultState)
           };
     }
   )
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

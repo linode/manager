@@ -57,7 +57,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     browser.waitUntil(function() {
       const tagsAdded = $$(ConfigureLinode.multiOption.selector).length === 2;
       const tagsIncludeExisting = $$(ConfigureLinode.multiOption.selector)
-        .map(t => t.getText())
+        .map((t) => t.getText())
         .includes(existingTag);
       return tagsAdded && tagsIncludeExisting;
     }, constants.wait.normal);
@@ -83,7 +83,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
   });
 
   xit('should display the tagged linode created from a stackscript on list linodes', () => {
-    const tagsDisplayed = ListLinodes.tags.map(t => t.getText());
+    const tagsDisplayed = ListLinodes.tags.map((t) => t.getText());
 
     expect(tagsDisplayed).toContain(existingTag);
     expect(tagsDisplayed).toContain(newTag);

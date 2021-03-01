@@ -28,7 +28,7 @@ type CombinedProps = Omit<OrderByProps, 'data'> &
   WithStyles<ClassNames> &
   Props;
 
-const DomainsTableWrapper: React.FC<CombinedProps> = props => {
+const DomainsTableWrapper: React.FC<CombinedProps> = (props) => {
   const { order, orderBy, handleOrderChange, classes, dataLength } = props;
 
   return (

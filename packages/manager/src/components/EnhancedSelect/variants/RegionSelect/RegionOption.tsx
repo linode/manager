@@ -31,7 +31,7 @@ interface RegionOptionProps extends OptionProps<any> {
 
 type CombinedProps = RegionOptionProps;
 
-export const RegionOption: React.FC<CombinedProps> = props => {
+export const RegionOption: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data, label } = props;
   const isDisabled = Boolean(data.disabledMessage);

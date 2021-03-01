@@ -30,7 +30,7 @@ interface ImageOptionProps extends OptionProps<any> {
 
 type CombinedProps = ImageOptionProps;
 
-export const ImageOption: React.FC<CombinedProps> = props => {
+export const ImageOption: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data, label } = props;
 

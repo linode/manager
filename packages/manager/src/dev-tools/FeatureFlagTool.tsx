@@ -30,7 +30,7 @@ const FeatureFlagTool: React.FC<{}> = () => {
       </Grid>
       <Grid item xs={12}>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {options.map(thisOption => {
+          {options.map((thisOption) => {
             return (
               <div
                 key={thisOption.flag}
@@ -45,7 +45,7 @@ const FeatureFlagTool: React.FC<{}> = () => {
                 <input
                   type="checkbox"
                   checked={Boolean(flags[thisOption.flag])}
-                  onChange={e => handleCheck(e, thisOption.flag)}
+                  onChange={(e) => handleCheck(e, thisOption.flag)}
                 />
               </div>
             );

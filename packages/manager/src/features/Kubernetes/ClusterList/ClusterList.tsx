@@ -71,7 +71,7 @@ const defaultUpgradeDialogState = {
   nextVersion: null,
 };
 
-export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
+export const ClusterList: React.FunctionComponent<CombinedProps> = (props) => {
   const { clearErrors, clusters, deleteCluster, error, history } = props;
   const { data: versionData } = useKubernetesVersionQuery();
   const versions = versionData ?? [];
@@ -85,7 +85,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   >(defaultUpgradeDialogState);
 
   const clustersWithNextVersion: ClusterWithVersion[] = React.useMemo(() => {
-    return clusters.map(thisCluster => ({
+    return clusters.map((thisCluster) => ({
       ...thisCluster,
       nextVersion: getNextVersion(thisCluster.k8s_version, versions),
     }));

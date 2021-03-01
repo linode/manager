@@ -80,7 +80,7 @@ export const styles = (theme: Theme) =>
     },
   });
 
-const createTag: (images: string) => JSX.Element = v => {
+const createTag: (images: string) => JSX.Element = (v) => {
   const randomId = Math.floor(Math.random() * 1000);
   return (
     <Chip
@@ -94,7 +94,7 @@ const createTag: (images: string) => JSX.Element = v => {
 
 const createTags: (images: string[]) => JSX.Element[] = map(createTag);
 
-const createShowMore: (images: string[]) => JSX.Element = images => (
+const createShowMore: (images: string[]) => JSX.Element = (images) => (
   <ShowMore key={0} items={images} render={createTags} ariaItemType="images" />
 );
 

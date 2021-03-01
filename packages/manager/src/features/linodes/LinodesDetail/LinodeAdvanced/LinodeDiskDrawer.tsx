@@ -104,7 +104,7 @@ const getTitle = (v: DrawerMode) => {
   }
 };
 
-export const DiskDrawer: React.FC<CombinedProps> = props => {
+export const DiskDrawer: React.FC<CombinedProps> = (props) => {
   const {
     disk,
     open,
@@ -145,7 +145,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
     },
     validationSchema: getSchema(mode, selectedMode),
     validateOnChange: true,
-    onSubmit: values => submitForm(values),
+    onSubmit: (values) => submitForm(values),
   });
 
   React.useEffect(() => {
@@ -165,7 +165,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
         formik.setSubmitting(false);
         onClose();
       })
-      .catch(err => {
+      .catch((err) => {
         const mapErrorToStatus = (generalError: string) =>
           formik.setStatus({ generalError });
 
@@ -187,7 +187,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
             <ModeSelect
               modes={modeList}
               selected={selectedMode}
-              onChange={e => setSelectedMode(e.target.value as diskMode)}
+              onChange={(e) => setSelectedMode(e.target.value as diskMode)}
             />
           </Grid>
         )}
@@ -234,7 +234,7 @@ export const DiskDrawer: React.FC<CombinedProps> = props => {
                 <MenuItem value="_none_">
                   <em>Select a Filesystem</em>
                 </MenuItem>
-                {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs => (
+                {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map((fs) => (
                   <MenuItem value={fs} key={fs}>
                     {fs}
                   </MenuItem>

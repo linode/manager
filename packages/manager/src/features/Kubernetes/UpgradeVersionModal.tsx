@@ -15,7 +15,7 @@ interface DialogProps {
   onClose: () => void;
 }
 
-export const UpgradeDialog: React.FC<DialogProps> = props => {
+export const UpgradeDialog: React.FC<DialogProps> = (props) => {
   const {
     clusterID,
     clusterLabel,
@@ -53,11 +53,11 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
     updateKubernetesCluster(clusterID, {
       k8s_version: nextVersion,
     })
-      .then(_ => {
+      .then((_) => {
         setHasUpdatedSuccessfully(true);
         setSubmitting(false);
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmitting(false);
         setError(e[0].reason);
       });
@@ -67,13 +67,13 @@ export const UpgradeDialog: React.FC<DialogProps> = props => {
     setSubmitting(true);
     setError(undefined);
     recycleClusterNodes(clusterID)
-      .then(_ => {
+      .then((_) => {
         enqueueSnackbar('Recycle started successfully.', {
           variant: 'success',
         });
         onClose();
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmitting(false);
         setError(e[0].reason);
       });

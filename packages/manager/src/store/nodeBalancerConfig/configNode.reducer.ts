@@ -33,7 +33,7 @@ export const defaultState: State = {};
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, requestNodeBalancerConfigNodesActions.started)) {
       const { configId } = action.payload;
       draft = ensureInitializedNestedState(draft, configId, { results: 0 });

@@ -83,8 +83,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       requestAccountSettings: () => dispatch(requestAccountSettings()),
-      updateAccountSettings: data => dispatch(updateAccountSettings(data)),
-      updateAccountSettingsInStore: data =>
+      updateAccountSettings: (data) => dispatch(updateAccountSettings(data)),
+      updateAccountSettingsInStore: (data) =>
         dispatch(updateSettingsInStore(data)),
     })
   );

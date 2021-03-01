@@ -43,13 +43,13 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
     });
 
     updateLinode({ label: this.state.updatedValue })
-      .then(linode => {
+      .then((linode) => {
         this.setState({
           success: 'Linode label changed successfully.',
           submitting: false,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           {
             submitting: false,

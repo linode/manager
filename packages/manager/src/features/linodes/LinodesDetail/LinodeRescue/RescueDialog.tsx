@@ -75,7 +75,7 @@ interface DeviceMap {
 export const getDefaultDeviceMapAndCounter = (
   disks: ExtendedDisk[]
 ): [DeviceMap, number] => {
-  const defaultDisks = disks.map(thisDisk => thisDisk._id);
+  const defaultDisks = disks.map((thisDisk) => thisDisk._id);
   const counter = defaultDisks.reduce(
     (c, thisDisk) => (!!thisDisk ? c + 1 : c),
     0
@@ -102,7 +102,7 @@ export const getDefaultDeviceMapAndCounter = (
   return [deviceMap, counter];
 };
 
-const LinodeRescue: React.FC<CombinedProps> = props => {
+const LinodeRescue: React.FC<CombinedProps> = (props) => {
   const {
     diskError,
     volumesData,
@@ -117,13 +117,13 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
   const linode = useExtendedLinode(linodeId);
   const linodeRegion = linode?.region;
   const linodeLabel = linode?.label;
-  const linodeDisks = linode?._disks.map(disk =>
+  const linodeDisks = linode?._disks.map((disk) =>
     assoc('_id', `disk-${disk.id}`, disk)
   );
 
   const filteredVolumes = React.useMemo(() => {
     return volumesData
-      ? volumesData.filter(volume => {
+      ? volumesData.filter((volume) => {
           // whether volume is not attached to any Linode
           const volumeIsUnattached = volume.linode_id === null;
           // whether volume is attached to the current Linode we're viewing
@@ -171,7 +171,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
     const { enqueueSnackbar } = props;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
-      .then(_ => {
+      .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
           variant: 'info',
         });
@@ -189,7 +189,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
 
   /** string format is type-id */
   const onChange = (slot: string, _id: string) =>
-    setRescueDevices(rescueDevices => ({
+    setRescueDevices((rescueDevices) => ({
       ...rescueDevices,
       [slot]: _id,
     }));
@@ -229,7 +229,7 @@ const LinodeRescue: React.FC<CombinedProps> = props => {
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
               devices={devices}
               onChange={onChange}
-              getSelected={slot => pathOr('', [slot], rescueDevices)}
+              getSelected={(slot) => pathOr('', [slot], rescueDevices)}
               counter={counter}
               rescue
               disabled={disabled}
@@ -279,7 +279,7 @@ export default compose<CombinedProps, Props>(
       volumesResults,
       volumesError
     ) => {
-      const mappedData = volumesData.map(volume => ({
+      const mappedData = volumesData.map((volume) => ({
         ...volume,
         _id: `volume-${volume.id}`,
       }));

@@ -87,7 +87,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: '',
 };
 
-export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
+export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
   const {
     imagesData,
     userSSHKeys,
@@ -120,7 +120,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     handleChangeUDF,
     resetStackScript,
   ] = useStackScript(
-    Object.keys(imagesData).map(eachKey => imagesData[eachKey])
+    Object.keys(imagesData).map((eachKey) => imagesData[eachKey])
   );
 
   // In this component, most errors are handled by Formik. This is not
@@ -146,10 +146,10 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
       root_pass,
       image,
       authorized_users: userSSHKeys
-        .filter(u => u.selected)
-        .map(u => u.username),
+        .filter((u) => u.selected)
+        .map((u) => u.username),
     })
-      .then(_ => {
+      .then((_) => {
         // Reset events polling since an in-progress event (rebuild) is happening.
         resetEventsPolling();
 
@@ -160,7 +160,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         });
         onClose();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const APIErrors = getAPIErrorOrDefault(errorResponse);
         setUdfErrors(getUDFErrors(APIErrors));
 
@@ -170,7 +170,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
 
         setSubmitting(false);
 
-        const modifiedErrors = APIErrors.map(thisError => {
+        const modifiedErrors = APIErrors.map((thisError) => {
           /**
            * Errors returned for attempting to rebuild from an invalid
            * StackScript will have a field of 'script' (and an unhelpful
@@ -204,7 +204,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
     const maybeErrors: APIError[] = [];
 
     // Walk through the defined UDFs
-    ss.user_defined_fields.forEach(eachUdf => {
+    ss.user_defined_fields.forEach((eachUdf) => {
       // Is it required? Do we have a value?
       if (isUDFRequired(eachUdf) && !ss.udf_data[eachUdf.name]) {
         // If not, we've got an error.
@@ -236,7 +236,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
         // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {
           // Validate stackscript_id, image, & root_pass
-          validateForm().then(maybeErrors => {
+          validateForm().then((maybeErrors) => {
             // UDFs are not part of Formik - validate separately.
             const maybeUDFErrors = validateUdfs();
             setUdfErrors(maybeUDFErrors);
@@ -316,7 +316,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                   variant="public"
                   title="Choose Image"
                   images={ss.images}
-                  handleSelectImage={selected =>
+                  handleSelectImage={(selected) =>
                     setFieldValue('image', selected)
                   }
                   selectedImageID={values.image}
@@ -340,7 +340,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
               )}
               <AccessPanel
                 password={values.root_pass}
-                handleChange={value => setFieldValue('root_pass', value)}
+                handleChange={(value) => setFieldValue('root_pass', value)}
                 updateFor={[values.root_pass, errors, userSSHKeys, ss.id]}
                 error={errors.root_pass}
                 users={userSSHKeys}
@@ -358,7 +358,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = props => {
                 <TextField
                   label="Linode Label"
                   hideLabel
-                  onChange={e => setConfirmationText(e.target.value)}
+                  onChange={(e) => setConfirmationText(e.target.value)}
                   style={{ marginBottom: 16 }}
                 />
                 <Button
@@ -398,9 +398,9 @@ const getUDFErrors = (errors: APIError[] | undefined) => {
   const fixedErrorFields = ['stackscript_id', 'root_pass', 'image', 'none'];
 
   return errors
-    ? errors.filter(error => {
+    ? errors.filter((error) => {
         // ensure the error isn't a root_pass, image, or none
-        const isNotUDFError = fixedErrorFields.some(errorKey => {
+        const isNotUDFError = fixedErrorFields.some((errorKey) => {
           return errorKey === error.field;
         });
         // if the 'field' prop exists and isn't any other error

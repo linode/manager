@@ -17,7 +17,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
+export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = (
+  props
+) => {
   const { databaseID } = props;
 
   const { resetPassword } = useDatabases();
@@ -49,7 +51,7 @@ export const DatabaseSettingsPasswordPanel: React.FC<CombinedProps> = props => {
         setSubmitting(false);
         setSuccess('Database password changed successfully.');
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setErrors(error);
       });

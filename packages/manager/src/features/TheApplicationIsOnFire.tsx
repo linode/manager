@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TheApplicationIsOnFire: React.FC<{}> = props => {
+const TheApplicationIsOnFire: React.FC<{}> = (props) => {
   return (
     <Dialog
       open

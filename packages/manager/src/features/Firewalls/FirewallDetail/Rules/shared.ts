@@ -88,7 +88,7 @@ export const sortPortString = (portString: string) => {
     const ports = portString.split(',');
     return ports
       .sort(sortString)
-      .map(port => port.trim())
+      .map((port) => port.trim())
       .join(', ');
   } catch {
     // API responses should always work with this logic,

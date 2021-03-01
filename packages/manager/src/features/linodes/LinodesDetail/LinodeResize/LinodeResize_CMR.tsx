@@ -155,7 +155,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
      * is larger than the target plan).
      */
     resizeLinode(linodeId, selectedId, this.state.autoDiskResize && !isSmaller)
-      .then(_ => {
+      .then((_) => {
         this.setState({
           selectedId: '',
           submitting: false,
@@ -173,7 +173,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
         this.props.onClose();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         let error: string | JSX.Element = '';
         const reason = errorResponse[0]?.reason ?? '';
         /**
@@ -234,7 +234,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       this.props.linodeDisks?.length === 0
     ) {
       // @todo: Error?
-      this.props.getLinodeDisks(this.props.linodeId).catch(_ => null);
+      this.props.getLinodeDisks(this.props.linodeId).catch((_) => null);
     }
 
     if (
@@ -262,7 +262,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeLabel,
     } = this.props;
     const { confirmationText, submissionError } = this.state;
-    const type = typesData.find(t => t.id === linodeType);
+    const type = typesData.find((t) => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized = permissions === 'read_only';
@@ -325,7 +325,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
             types={typesData.filter(
-              thisType => !thisType.isDeprecated && !thisType.isShadowPlan
+              (thisType) => !thisType.isDeprecated && !thisType.isShadowPlan
             )}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
@@ -390,7 +390,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <TextField
             label="Linode Label"
             hideLabel
-            onChange={e => this.setState({ confirmationText: e.target.value })}
+            onChange={(e) =>
+              this.setState({ confirmationText: e.target.value })
+            }
             style={{ marginBottom: 16 }}
           />
           <Button
@@ -472,7 +474,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export const getLinodeType = (types: LinodeType[], selectedTypeID: string) => {
-  return types.find(thisType => thisType.id === selectedTypeID);
+  return types.find((thisType) => thisType.id === selectedTypeID);
 };
 
 /**
@@ -515,8 +517,8 @@ export const isSmallerThanCurrentPlan = (
   currentPlanID: string,
   types: ExtendedType[]
 ) => {
-  const currentType = types.find(thisType => thisType.id === currentPlanID);
-  const nextType = types.find(thisType => thisType.id === selectedPlanID);
+  const currentType = types.find((thisType) => thisType.id === currentPlanID);
+  const nextType = types.find((thisType) => thisType.id === selectedPlanID);
 
   if (!(currentType && nextType)) {
     return false;

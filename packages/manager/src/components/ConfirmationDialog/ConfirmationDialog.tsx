@@ -34,7 +34,7 @@ interface Props extends DialogProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ConfirmationDialog: React.FC<CombinedProps> = props => {
+const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
   const { title, classes, children, actions, error, ...dialogProps } = props;
 
   return (

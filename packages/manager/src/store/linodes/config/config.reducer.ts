@@ -27,7 +27,7 @@ export type State = RelationalMappedEntityState<Entity, EntityError>;
 export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) =>
-  produce(state, draft => {
+  produce(state, (draft) => {
     // getLinodeConfigActions
     // getAllLinodeConfigActions
     if (

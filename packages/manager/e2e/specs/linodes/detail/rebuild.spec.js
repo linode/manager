@@ -38,7 +38,7 @@ describe('Linode Detail - Rebuild Suite', () => {
   it('should display the option to rebuild from image or stackscript', () => {
     Rebuild.rebuildSelect.click();
     browser.pause(500);
-    const rebuildOptions = Rebuild.selectOptions.map(options =>
+    const rebuildOptions = Rebuild.selectOptions.map((options) =>
       options.getText()
     );
     expect(rebuildOptions.sort()).toEqual([

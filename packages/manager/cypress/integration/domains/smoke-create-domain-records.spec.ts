@@ -94,24 +94,24 @@ const createRecords = () => [
 
 describe('Creates Domains record with Form', () => {
   before(deleteAllTestDomains);
-  createRecords().forEach(rec => {
+  createRecords().forEach((rec) => {
     return it(rec.name, () => {
-      createDomain().then(domain => {
+      createDomain().then((domain) => {
         // intercept create api record request
         cy.intercept('POST', '/v4/domains/*/record*').as('apiCreateRecord');
         const url = `/domains/${domain.id}`;
         cy.visitWithLogin(`/domains/${domain.id}`);
         cy.url().should('contain', url);
         fbtClick(rec.name);
-        rec.fields.forEach(f => {
+        rec.fields.forEach((f) => {
           getClick(f.name).type(f.value);
         });
         fbtClick('Save');
         cy.wait('@apiCreateRecord')
           .its('response.statusCode')
           .should('eq', 200);
-        cy.get(`[aria-label="${rec.tableAriaLabel}"]`).within(_table => {
-          rec.fields.forEach(f => {
+        cy.get(`[aria-label="${rec.tableAriaLabel}"]`).within((_table) => {
+          rec.fields.forEach((f) => {
             if (f.skipCheck) {
               return;
             }

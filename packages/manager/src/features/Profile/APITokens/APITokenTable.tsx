@@ -379,7 +379,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             this.openTokenDialog(token);
           })
           .then(() => this.props.request())
-          .catch(errResponse => {
+          .catch((errResponse) => {
             if (!this.mounted) {
               return;
             }
@@ -434,7 +434,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         this.closeDrawer();
       })
       .then(() => this.props.request())
-      .catch(errResponse => {
+      .catch((errResponse) => {
         if (!this.mounted) {
           return;
         }
@@ -640,7 +640,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         <ConfirmationDialog
           title={`Revoking ${dialog.label}`}
           open={dialog.open}
-          error={(this.state.dialog.errors || []).map(e => e.reason).join(',')}
+          error={(this.state.dialog.errors || [])
+            .map((e) => e.reason)
+            .join(',')}
           actions={this.renderRevokeConfirmationActions}
           onClose={this.closeRevokeDialog}
         >
@@ -651,7 +653,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           title="Personal Access Token"
-          error={(this.state.dialog.errors || []).map(e => e.reason).join(',')}
+          error={(this.state.dialog.errors || [])
+            .map((e) => e.reason)
+            .join(',')}
           actions={this.renderPersonalAccessTokenDisplayActions}
           open={Boolean(this.state.token && this.state.token.open)}
           onClose={this.closeTokenDialog}

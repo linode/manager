@@ -127,7 +127,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   changeViewInstant = (style: 'grid' | 'list') => {
     const { history, location } = this.props;
 
-    const updatedParams = updateParams<Params>(location.search, params => ({
+    const updatedParams = updateParams<Params>(location.search, (params) => ({
       ...params,
       view: style,
     }));
@@ -301,7 +301,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           linodeId={this.state.selectedLinodeID}
           linodeLabel={
             this.props.linodesData.find(
-              thisLinode => thisLinode.id === this.state.selectedLinodeID
+              (thisLinode) => thisLinode.id === this.state.selectedLinodeID
             )?.label ?? undefined
           }
         />
@@ -398,7 +398,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                           <Grid item xs={12}>
                             <OrderBy
                               preferenceKey={'linodes-landing'}
-                              data={extendedLinodes.map(linode => {
+                              data={extendedLinodes.map((linode) => {
                                 // Determine the priority of this Linode's status.
                                 // We have to check for "Maintenance" and "Busy" since these are
                                 // not actual Linode statuses (we derive them client-side).
@@ -480,7 +480,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               >
                                 <Grid item className={classes.CSVlinkContainer}>
                                   <CSVLink
-                                    data={linodesData.map(e => {
+                                    data={linodesData.map((e) => {
                                       const maintenance = e.maintenance?.when
                                         ? {
                                             ...e.maintenance,
@@ -601,7 +601,7 @@ interface StateProps {
   linodesInTransition: Set<number>;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const linodes = Object.values(state.__resources.linodes.itemsById);
   const linodeTypesMap = state.__resources.types.entities.reduce(
     (accumulator, thisType) => ({
@@ -611,7 +611,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     {}
   );
 
-  const linodesDataWithPlan = linodes.map(thisLinode => {
+  const linodesDataWithPlan = linodes.map((thisLinode) => {
     return {
       ...thisLinode,
       plan: linodeTypesMap[thisLinode.type ?? '']?.label ?? 'Unknown',
@@ -631,7 +631,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     linodesData: linodesWithMaintenance,
     someLinodesHaveScheduledMaintenance: linodesWithMaintenance
       ? linodesWithMaintenance.some(
-          eachLinode =>
+          (eachLinode) =>
             !!eachLinode.maintenance && !!eachLinode.maintenance.when
         )
       : false,

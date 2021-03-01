@@ -30,7 +30,7 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
+const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const {
     linodeLabel,
     match: { url },
@@ -73,7 +73,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = props => {
 
   const getIndex = () => {
     return Math.max(
-      tabs.findIndex(tab => matches(tab.routeName)),
+      tabs.findIndex((tab) => matches(tab.routeName)),
       0
     );
   };

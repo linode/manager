@@ -87,7 +87,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const SStackScript: React.FC<CombinedProps> = props => {
+export const SStackScript: React.FC<CombinedProps> = (props) => {
   const {
     data: {
       username,
@@ -236,7 +236,7 @@ const usernameIsTiedToAccount = (
   accountUsers: User[] = [],
   stackscriptUsername: string
 ) => {
-  return accountUsers.some(user => user.username === stackscriptUsername);
+  return accountUsers.some((user) => user.username === stackscriptUsername);
 };
 
 export default React.memo(SStackScript);

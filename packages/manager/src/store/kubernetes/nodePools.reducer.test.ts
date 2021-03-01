@@ -68,7 +68,7 @@ describe('NodePools reducer', () => {
       const oldState = {
         ...defaultState,
         entities: extendedPools,
-        results: extendedPools.map(p => p.id),
+        results: extendedPools.map((p) => p.id),
       };
       const newState = reducer(
         oldState,

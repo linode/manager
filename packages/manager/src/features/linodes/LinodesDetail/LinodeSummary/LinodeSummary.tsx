@@ -171,7 +171,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         day: 1,
       });
     } while (testDate >= creationFirstOfMonth);
-    this.rangeSelectOptions = options.map(option => {
+    this.rangeSelectOptions = options.map((option) => {
       return { label: option[1], value: option[0] };
     });
   }
@@ -216,7 +216,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       req = getLinodeStatsByDate(linodeId, year, month);
     }
     req
-      .then(response => {
+      .then((response) => {
         if (!this.mounted) {
           return;
         }
@@ -229,7 +229,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           dataIsLoading: false,
         });
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         if (!this.mounted) {
           return;
         }

@@ -125,7 +125,7 @@ xdescribe('Profile - OAuth Clients Suite', () => {
 
       $('[data-qa-action-menu-item]').waitForDisplayed(constants.wait.normal);
 
-      const actionMenuItems = $$('[data-qa-action-menu-item]').map(item =>
+      const actionMenuItems = $$('[data-qa-action-menu-item]').map((item) =>
         item.getAttribute('data-qa-action-menu-item')
       );
 

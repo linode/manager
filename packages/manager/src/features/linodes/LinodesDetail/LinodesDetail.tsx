@@ -30,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 
-const LinodeDetail: React.FC<CombinedProps> = props => {
+const LinodeDetail: React.FC<CombinedProps> = (props) => {
   const {
     linodeId,
     match: { path, url },

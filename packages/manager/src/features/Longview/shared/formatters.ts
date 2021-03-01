@@ -83,7 +83,7 @@ export const pathMaybeAddDataInThePast = <T extends {}>(
   */
   let _data = clone(data);
 
-  pathsToAddDataPointTo.forEach(eachPath => {
+  pathsToAddDataPointTo.forEach((eachPath) => {
     const arrayOfStats = pathOr<Stat[]>([], eachPath, data);
     const updatedData = maybeAddPastData(
       arrayOfStats,
@@ -127,7 +127,7 @@ export const convertData = (
     ] as [number, number | null][];
   }
   return maybeAddPastData(d, startTime).map(
-    thisPoint =>
+    (thisPoint) =>
       [
         thisPoint.x * 1000,
         formatter ? formatter(thisPoint.y) : thisPoint.y,

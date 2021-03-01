@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props & PaginationProps;
 
-export const ListView: React.FC<CombinedProps> = props => {
+export const ListView: React.FC<CombinedProps> = (props) => {
   const { data, openDialog, openPowerActionDialog } = props;
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -60,14 +60,14 @@ export const ListView: React.FC<CombinedProps> = props => {
 
   const addTag = (linodeID: number, newTag: string) => {
     const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId: linodeID, tags: _tags }).then(_ => {
+    return updateLinode({ linodeId: linodeID, tags: _tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };
 
   const deleteTag = (linodeId: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter(thisTag => thisTag !== tagToDelete);
-    return updateLinode({ linodeId, tags: _tags }).then(_ => {
+    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
+    return updateLinode({ linodeId, tags: _tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };

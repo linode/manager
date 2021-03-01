@@ -19,7 +19,7 @@ interface SortableVolumesTableHeaderProps {
 type CombinedProps = SortableVolumesTableHeaderProps &
   Omit<OrderByProps, 'data'>;
 
-const SortableTableHeader: React.FC<CombinedProps> = props => {
+const SortableTableHeader: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { order, orderBy, handleOrderChange, isVolumesLanding } = props;
 

@@ -56,7 +56,7 @@ export const getTotalLinodes = (pools: PoolNodeWithPrice[]) => {
   }, 0);
 };
 
-const KubernetesDialog: React.FC<CombinedProps> = props => {
+const KubernetesDialog: React.FC<CombinedProps> = (props) => {
   const {
     clusterLabel,
     clusterPools,

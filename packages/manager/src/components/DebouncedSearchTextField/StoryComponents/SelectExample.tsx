@@ -35,8 +35,8 @@ class Example extends React.Component<Props, State> {
     action('searching')(value);
     setTimeout(() => {
       const filteredList = this.props.list
-        .filter(eachVal => eachVal.includes(value.toLowerCase()))
-        .map(eachItem => {
+        .filter((eachVal) => eachVal.includes(value.toLowerCase()))
+        .map((eachItem) => {
           return {
             value: eachItem,
             label: eachItem,

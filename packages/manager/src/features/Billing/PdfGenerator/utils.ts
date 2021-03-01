@@ -81,7 +81,7 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
         'Total',
       ],
     ],
-    body: items.map(item => {
+    body: items.map((item) => {
       const [toDate, toTime] = formatDateForTable(item.to || '');
       const [fromDate, fromTime] = formatDateForTable(item.from || '');
       return [

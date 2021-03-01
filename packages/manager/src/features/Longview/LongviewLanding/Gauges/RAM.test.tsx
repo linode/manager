@@ -46,7 +46,7 @@ describe('Longview RAM Gauge UI', () => {
     expect(getByText(/Loading/)).toBeInTheDocument();
   });
 
-  it('should render error UI if an error comes back from Redux State', async done => {
+  it('should render error UI if an error comes back from Redux State', async (done) => {
     const { getByText } = renderWithTheme(<RAM clientID={123} />, {
       customStore: errorStore,
     });
@@ -57,7 +57,7 @@ describe('Longview RAM Gauge UI', () => {
     done();
   });
 
-  it('should render a data state UI if data comes back from Redux State', async done => {
+  it('should render a data state UI if data comes back from Redux State', async (done) => {
     const { getByTestId } = renderWithTheme(<RAM clientID={123} />, {
       customStore: dataStore,
     });

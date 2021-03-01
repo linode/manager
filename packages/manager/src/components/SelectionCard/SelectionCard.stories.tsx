@@ -40,7 +40,7 @@ class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
   };
 
   handleClick = (id: number) => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         cards: prevState.cards.map((e, idx) => {
           e.checked = id === idx;

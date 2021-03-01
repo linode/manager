@@ -30,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeviceSelection: React.FC<CombinedProps> = props => {
+const DeviceSelection: React.FC<CombinedProps> = (props) => {
   const { devices, onChange, getSelected, slots, rescue, disabled } = props;
 
   const counter = defaultTo(0, props.counter) as number;

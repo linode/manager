@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const EntityTransfersCreate: React.FC<{}> = _ => {
+export const EntityTransfersCreate: React.FC<{}> = (_) => {
   const { push } = useHistory();
   const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
   const classes = useStyles();
@@ -88,7 +88,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
 
   const handleCreateTransfer = (payload: CreateTransferPayload) => {
     createTransfer(payload, {
-      onSuccess: transfer => {
+      onSuccess: (transfer) => {
         // @analytics
         const entityCount = countByEntity(transfer.entities);
         sendEntityTransferCreateEvent(entityCount);
@@ -96,7 +96,7 @@ export const EntityTransfersCreate: React.FC<{}> = _ => {
         queryClient.invalidateQueries(queryKey);
         push({ pathname: '/account/entity-transfers', state: { transfer } });
       },
-    }).catch(_ => null);
+    }).catch((_) => null);
   };
 
   return (

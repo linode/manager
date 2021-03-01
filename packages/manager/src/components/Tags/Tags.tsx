@@ -30,7 +30,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class Tags extends React.Component<CombinedProps, {}> {
   renderTags = (tags: string[]) => {
     const { classes, clickable } = this.props;
-    return tags.map(eachTag => {
+    return tags.map((eachTag) => {
       return (
         <Tag
           className={classes.tag}

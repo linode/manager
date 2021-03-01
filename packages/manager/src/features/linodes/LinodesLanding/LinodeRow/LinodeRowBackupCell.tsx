@@ -20,7 +20,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LinodeRowBackupCell: React.FC<CombinedProps> = props => {
+const LinodeRowBackupCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { linodeId, backupsEnabled, mostRecentBackup } = props;

@@ -17,7 +17,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const LongviewActionMenu: React.FC<CombinedProps> = props => {
+const LongviewActionMenu: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientID,
     longviewClientLabel,

@@ -34,7 +34,7 @@ const createTypeRecord = (value?: string): null | DiskRecord | VolumeRecord => {
 };
 
 let createDevicesFromStrings: (v: DevicesAsStrings) => Devices;
-createDevicesFromStrings = devices => ({
+createDevicesFromStrings = (devices) => ({
   sda: createTypeRecord(devices.sda),
   sdb: createTypeRecord(devices.sdb),
   sdc: createTypeRecord(devices.sdc),

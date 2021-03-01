@@ -16,7 +16,7 @@ const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
 type CombinedProps = RouteComponentProps<{ domainId?: string }>;
 
-const DomainsRoutes: React.FC<CombinedProps> = props => {
+const DomainsRoutes: React.FC<CombinedProps> = (props) => {
   const {
     match: { path },
   } = props;

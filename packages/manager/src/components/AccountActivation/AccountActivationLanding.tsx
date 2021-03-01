@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = WithTheme & RouteComponentProps;
 
-const AccountActivationLanding: React.FC<CombinedProps> = props => {
+const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(

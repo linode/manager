@@ -57,7 +57,7 @@ interface Props {
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
-const CardView: React.FC<CombinedProps> = props => {
+const CardView: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const notificationContext = React.useContext(_notificationContext);
 
@@ -87,14 +87,14 @@ const CardView: React.FC<CombinedProps> = props => {
 
   const addTag = (linodeId: number, newTag: string) => {
     const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId, tags: _tags }).then(_ => {
+    return updateLinode({ linodeId, tags: _tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };
 
   const deleteTag = (linodeId: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter(thisTag => thisTag !== tagToDelete);
-    return updateLinode({ linodeId, tags: _tags }).then(_ => {
+    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
+    return updateLinode({ linodeId, tags: _tags }).then((_) => {
       setTagDrawer({ ...tagDrawer, tags: _tags });
     });
   };

@@ -69,7 +69,7 @@ const errorResources = {
 };
 
 const filterLinodesWithBackups = (linodes: Linode[]) =>
-  linodes.filter(linode => linode.backups.enabled);
+  linodes.filter((linode) => linode.backups.enabled);
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
@@ -96,9 +96,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     });
 
     getLinodeBackups(linodeId)
-      .then(backups => {
+      .then((backups) => {
         const selectedLinode = linodesData.find(
-          thisLinode => thisLinode.id === linodeId
+          (thisLinode) => thisLinode.id === linodeId
         );
 
         if (!selectedLinode) {
@@ -113,7 +113,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         this.setState({ selectedLinodeWithBackups, isGettingBackups: false });
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           isGettingBackups: false,
           backupsError: 'Error retrieving backups for this Linode.',
@@ -177,7 +177,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     const userHasBackups = linodesData.some(
-      thisLinode => thisLinode.backups.enabled
+      (thisLinode) => thisLinode.backups.enabled
     );
 
     return (

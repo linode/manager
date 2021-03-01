@@ -27,7 +27,7 @@ class FSCredStore extends CredStore {
 
   _writeCredsFile(credCollection) {
     return new Promise((resolve, reject) => {
-      writeFile(this.credsFile, JSON.stringify(credCollection), err => {
+      writeFile(this.credsFile, JSON.stringify(credCollection), (err) => {
         if (err) {
           reject(err);
         } else {
@@ -47,8 +47,10 @@ class FSCredStore extends CredStore {
   storeToken(username) {
     // this needs to be fixed.  won't actually update anything given current impl
     // because it's not updating the token in credCollection.
-    return this._readCredsFile().then(credCollection => {
-      let currentUser = credCollection.find(cred => cred.username === username);
+    return this._readCredsFile().then((credCollection) => {
+      let currentUser = credCollection.find(
+        (cred) => cred.username === username
+      );
 
       if (!currentUser.isPresetToken) {
         currentUser.token = this.getTokenFromLocalStorage();
@@ -59,9 +61,9 @@ class FSCredStore extends CredStore {
   }
 
   readToken(username) {
-    return this._readCredsFile().then(credCollection => {
+    return this._readCredsFile().then((credCollection) => {
       const currentUserCreds = credCollection.find(
-        cred => cred.username === username
+        (cred) => cred.username === username
       );
       return currentUserCreds['token'];
     });
@@ -69,7 +71,7 @@ class FSCredStore extends CredStore {
 
   checkoutCreds(specFile) {
     console.log('checkoutCreds: ' + specFile);
-    return this._readCredsFile().then(credCollection => {
+    return this._readCredsFile().then((credCollection) => {
       const creds = credCollection.find((cred, i) => {
         if (!cred.inUse) {
           credCollection[i].inUse = true;
@@ -86,7 +88,7 @@ class FSCredStore extends CredStore {
   checkinCreds(specFile) {
     console.log('checkinCreds: ' + specFile);
 
-    return this._readCredsFile().then(credCollection => {
+    return this._readCredsFile().then((credCollection) => {
       const creds = credCollection.find((cred, i) => {
         if (cred.spec === specFile) {
           credCollection[i].inUse = false;
@@ -136,10 +138,10 @@ class FSCredStore extends CredStore {
   cleanupAccounts() {
     return super
       .cleanupAccounts()
-      .catch(err => console.log(err))
+      .catch((err) => console.log(err))
       .then(() => {
         return new Promise((resolve, reject) => {
-          unlink(this.credsFile, err => {
+          unlink(this.credsFile, (err) => {
             if (err) {
               reject(err);
             } else {
@@ -217,29 +219,29 @@ if (process.argv[2] == 'test-fs') {
   // assumes env var config for 2 test users, see .env or .env.example
   credStore
     .generateCreds(mockTestConfig, 2)
-    .then(r => {
+    .then((r) => {
       console.log('checking out creds');
       return credStore.checkoutCreds('spec1');
     })
-    .then(creds => {
+    .then((creds) => {
       console.log('checked out creds are:');
       console.log(creds);
       return credStore.checkinCreds('spec1');
     })
-    .then(creds => {
+    .then((creds) => {
       console.log('checked in creds are:');
       console.log(creds);
       return credStore.readToken(creds.username);
     })
-    .then(token => {
+    .then((token) => {
       return credStore.getAllCreds();
     })
-    .then(allCreds => {
+    .then((allCreds) => {
       console.log('got all creds:');
       console.log(allCreds);
       return credStore.cleanupAccounts();
     })
-    .catch(err => {
+    .catch((err) => {
       console.log('fs cred store test failed somewhere');
       console.log(err);
     });

@@ -29,7 +29,7 @@ interface Props {
   handleToggleCheck: () => void;
 }
 
-export const SelectableTableRow: React.FC<Props> = props => {
+export const SelectableTableRow: React.FC<Props> = (props) => {
   const { isChecked, handleToggleCheck } = props;
   const classes = useStyles();
   return (

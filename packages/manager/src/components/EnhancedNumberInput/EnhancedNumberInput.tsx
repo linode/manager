@@ -80,7 +80,7 @@ interface Props {
 
 type FinalProps = Props;
 
-export const EnhancedNumberInput: React.FC<FinalProps> = props => {
+export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
   const { inputLabel, small, setValue, disabled } = props;
 
   const max = props.max ?? 100;

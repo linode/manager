@@ -62,7 +62,7 @@ interface Props {
   clusterId: string;
 }
 
-export const BucketSSL: React.FC<Props> = props => {
+export const BucketSSL: React.FC<Props> = (props) => {
   const { bucketName, clusterId } = props;
   const classes = useStyles();
 
@@ -92,11 +92,11 @@ interface BodyProps {
   clusterId: string;
 }
 
-export const SSLBody: React.FC<BodyProps> = props => {
+export const SSLBody: React.FC<BodyProps> = (props) => {
   const { bucketName, clusterId } = props;
 
   const request = useAPIRequest(
-    () => getSSLCert(clusterId, bucketName).then(response => response.ssl),
+    () => getSSLCert(clusterId, bucketName).then((response) => response.ssl),
     false
   );
 
@@ -121,7 +121,7 @@ export interface FormProps extends BodyProps {
   update: () => void;
 }
 
-export const AddCertForm: React.FC<FormProps> = props => {
+export const AddCertForm: React.FC<FormProps> = (props) => {
   const { bucketName, clusterId, update } = props;
   const [certificate, setCertificate] = React.useState('');
   const [sslKey, setSSLKey] = React.useState('');
@@ -136,13 +136,13 @@ export const AddCertForm: React.FC<FormProps> = props => {
     setSubmitting(true);
     setError(undefined);
     uploadSSLCert(clusterId, bucketName, { certificate, private_key: sslKey })
-      .then(_ => {
+      .then((_) => {
         setSubmitting(false);
         update();
         setCertificate('');
         setSSLKey('');
       })
-      .catch(error => {
+      .catch((error) => {
         setSubmitting(false);
         setError(error);
       });
@@ -202,7 +202,7 @@ export const AddCertForm: React.FC<FormProps> = props => {
   );
 };
 
-export const RemoveCertForm: React.FC<FormProps> = props => {
+export const RemoveCertForm: React.FC<FormProps> = (props) => {
   const { bucketName, clusterId, update } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -219,7 +219,7 @@ export const RemoveCertForm: React.FC<FormProps> = props => {
         setSubmittingDialog(false);
         update();
       })
-      .catch(error => {
+      .catch((error) => {
         setDialogError(error[0].reason);
         setSubmittingDialog(false);
       });

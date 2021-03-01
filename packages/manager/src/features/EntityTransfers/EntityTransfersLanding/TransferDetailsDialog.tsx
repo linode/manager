@@ -24,7 +24,7 @@ export interface Props {
   entities?: TransferEntities;
 }
 
-export const TransferDetailsDialog: React.FC<Props> = props => {
+export const TransferDetailsDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { isOpen, onClose, token, entities } = props;
 

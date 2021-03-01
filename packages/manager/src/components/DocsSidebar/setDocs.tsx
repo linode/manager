@@ -48,10 +48,9 @@ const setDocsHOC = (
     }
   }
 
-  const mapDispatchToProps: MapDispatchToProps<
-    DispatchProps,
-    OriginalProps
-  > = dispatch => ({
+  const mapDispatchToProps: MapDispatchToProps<DispatchProps, OriginalProps> = (
+    dispatch
+  ) => ({
     setDocs: (d: Linode.Doc[]) => dispatch(_setDocs(d)),
     clearDocs: () => dispatch(_clearDocs()),
   });

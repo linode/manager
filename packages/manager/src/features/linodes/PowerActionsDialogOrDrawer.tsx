@@ -65,7 +65,7 @@ type CombinedProps = Props;
 export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
-const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
+const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
   const { linodeConfigs } = props;
   const classes = useStyles();
   const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
@@ -112,7 +112,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
         resetEventsPolling();
         props.close();
       })
-      .catch(e => {
+      .catch((e) => {
         setTakingAction(false);
         setErrors(e);
       });
@@ -191,7 +191,7 @@ interface ActionsProps {
   action: Action;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

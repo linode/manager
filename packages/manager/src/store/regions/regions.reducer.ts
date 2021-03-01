@@ -18,7 +18,7 @@ export type State = EntityState<Region>;
  * use that as our default.
  */
 export const defaultState: State = {
-  results: isProdAPI ? regions?.data?.map(r => r.id) ?? [] : [],
+  results: isProdAPI ? regions?.data?.map((r) => r.id) ?? [] : [],
   entities: isProdAPI ? (regions?.data as Region[]) ?? [] : [],
   loading: true,
   lastUpdated: 0,
@@ -48,7 +48,7 @@ const fakeAtlanta = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, regionsRequestActions.started)) {
       draft.loading = true;
     }
@@ -65,11 +65,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
        * confused by the sudden, temporary disappearance of a region.
        */
       draft.entities = result.some(
-        thisRegion => thisRegion.id === 'us-southeast'
+        (thisRegion) => thisRegion.id === 'us-southeast'
       )
         ? result
         : [...result, fakeAtlanta];
-      draft.results = result.map(r => r.id);
+      draft.results = result.map((r) => r.id);
     }
 
     if (isType(action, regionsRequestActions.failed)) {

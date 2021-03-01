@@ -20,7 +20,7 @@ const LINODE_DEFAULT_DATA = {
   status: 'failed',
   duration: 0,
 };
-const makeEventData = event => {
+const makeEventData = (event) => {
   return { data: [event], page: 1, pages: 1, results: 1 };
 };
 

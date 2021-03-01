@@ -79,7 +79,7 @@ export type CombinedProps = Props &
   ManagedIssuesProps &
   WithSnackbarProps;
 
-export const MonitorTable: React.FC<CombinedProps> = props => {
+export const MonitorTable: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -139,12 +139,12 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       return;
     }
     submitDialog(dialog.entityID)
-      .then(_ => {
+      .then((_) => {
         enqueueSnackbar('Successfully deleted Service Monitor', {
           variant: 'success',
         });
       })
-      .catch(err => {
+      .catch((err) => {
         handleError(
           getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')[0]
             .reason
@@ -299,7 +299,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         onClose={handleDrawerClose}
         onSubmit={submitMonitorForm}
         mode={drawerMode}
-        monitor={monitors.find(m => m.id === editID)}
+        monitor={monitors.find((m) => m.id === editID)}
         groups={groups}
         credentials={credentials}
       />
@@ -307,7 +307,9 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         open={historyDrawerOpen}
         onClose={() => setHistoryDrawerOpen(false)}
         monitorLabel={editLabel}
-        issues={issues.filter(thisIssue => thisIssue.services.includes(editID))}
+        issues={issues.filter((thisIssue) =>
+          thisIssue.services.includes(editID)
+        )}
         loading={issuesLoading && issuesLastUpdated === 0}
         error={issuesError.read}
       />

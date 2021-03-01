@@ -5,10 +5,10 @@ export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
   updated_by: 'test-account',
   closed: null,
   attachments: [],
-  summary: Factory.each(i => `TEST Support Ticket ${i}`),
+  summary: Factory.each((i) => `TEST Support Ticket ${i}`),
   gravatar_id: '0',
   closable: false,
-  id: Factory.each(i => i),
+  id: Factory.each((i) => i),
   status: 'new',
   description: 'TEST support ticket body',
   opened_by: 'test-account',
@@ -18,7 +18,7 @@ export const supportTicketFactory = Factory.Sync.makeFactory<SupportTicket>({
 });
 
 export const supportReplyFactory = Factory.Sync.makeFactory<SupportReply>({
-  id: Factory.each(i => i),
+  id: Factory.each((i) => i),
   description: "Support reporting in - here's a reply :)",
   created_by: 'support-staff',
   created: '2019-04-02T12:37:47',

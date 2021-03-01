@@ -96,7 +96,7 @@ interface Props {
 
 type CombinedProps = Props & WithDisplayType & Pick<WithImages, 'imagesData'>;
 
-const LinodeRowHeadCell: React.FC<CombinedProps> = props => {
+const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {

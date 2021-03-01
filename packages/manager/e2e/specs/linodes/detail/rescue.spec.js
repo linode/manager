@@ -19,7 +19,7 @@ xdescribe('Rescue Linode Suite', () => {
   const diskFromImage = `ImageDisk${timestamp()}`;
   const linodeLabel = `AutoLinode${timestamp()}`;
 
-  const generateVolumeArray = linode_id => {
+  const generateVolumeArray = (linode_id) => {
     let volumes = [];
     for (let i = 0; i < 3; i++) {
       const label = `AutoVolume${i}${timestamp()}`;
@@ -34,7 +34,7 @@ xdescribe('Rescue Linode Suite', () => {
     return volumes;
   };
 
-  const dropDownOptionDisplayed = selection => {
+  const dropDownOptionDisplayed = (selection) => {
     const select = Rescue.selectOption.selector.replace(']', '');
     expect($(`${select}="${selection}"]`).isDisplayed()).toBe(true);
   };
@@ -46,9 +46,9 @@ xdescribe('Rescue Linode Suite', () => {
   };
 
   const rescueAndWaitForLinodeNotBusy = () => {
-    const checkIfToastIsPresent = message => {
+    const checkIfToastIsPresent = (message) => {
       return $$(Rescue.toast.selector).find(
-        toast => toast.getText() === message
+        (toast) => toast.getText() === message
       );
     };
     let i = 0;
@@ -83,11 +83,11 @@ xdescribe('Rescue Linode Suite', () => {
 
   it('Default image and swap disks should display in rescue dropdown', () => {
     Rescue.openRescueDiskSelect('sda');
-    intialDisks.forEach(disk => dropDownOptionDisplayed(disk));
+    intialDisks.forEach((disk) => dropDownOptionDisplayed(disk));
   });
 
   it('Attached volumes should display in rescue dropdown', () => {
-    volumeLabels.forEach(volume => dropDownOptionDisplayed(volume));
+    volumeLabels.forEach((volume) => dropDownOptionDisplayed(volume));
     $('body').click();
   });
 
@@ -100,7 +100,7 @@ xdescribe('Rescue Linode Suite', () => {
       Resize.landingElemsDisplay();
       Resize.planCards
         .find(
-          plan =>
+          (plan) =>
             plan.$(`[${cardHeader}]`).getAttribute(cardHeader) === 'Linode 4GB'
         )
         .click();
@@ -118,7 +118,7 @@ xdescribe('Rescue Linode Suite', () => {
         constants.wait.normal
       );
       Settings.addIcon('Add a Disk').waitForDisplayed(constants.wait.normal);
-      intialDisks.forEach(disk =>
+      intialDisks.forEach((disk) =>
         Settings.diskRow(disk).waitForDisplayed(constants.wait.normal)
       );
       browser.pause(500);
@@ -139,7 +139,9 @@ xdescribe('Rescue Linode Suite', () => {
       browser.pause(500);
       Rescue.rescueDetailDisplays();
       Rescue.openRescueDiskSelect('sda');
-      [emptyDisk, diskFromImage].forEach(disk => dropDownOptionDisplayed(disk));
+      [emptyDisk, diskFromImage].forEach((disk) =>
+        dropDownOptionDisplayed(disk)
+      );
       $('body').click();
       browser.pause(500);
     });

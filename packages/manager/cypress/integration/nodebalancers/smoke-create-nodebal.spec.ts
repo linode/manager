@@ -21,7 +21,7 @@ const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
   cy.get('[data-qa-deploy-linode]').click();
 };
-const createNodeBalancerWithUI = nodeBal => {
+const createNodeBalancerWithUI = (nodeBal) => {
   cy.visitWithLogin('/nodebalancers/create');
   fbtVisible('NodeBalancer Settings');
   getVisible('[id="nodebalancer-label"]')
@@ -41,7 +41,7 @@ const createNodeBalancerWithUI = nodeBal => {
 describe('create NodeBalancer', () => {
   it('creates a nodebal - positive', () => {
     // create a linode in NW where the NB will be created
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       const nodeBal = {
         label: makeNodeBalLabel(),
         linodePrivateIp: linode.ipv4[1],
@@ -58,7 +58,7 @@ describe('create NodeBalancer', () => {
     });
   });
   it('API error Handling', () => {
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // catch request
       cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
       createNodeBalancerWithUI({

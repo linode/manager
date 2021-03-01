@@ -1,5 +1,5 @@
 // Command
-const checkIsInsideViewport = elem => {
+const checkIsInsideViewport = (elem) => {
   const height = Cypress.$(cy.state('window')).height();
   const width = Cypress.$(cy.state('window')).width();
   const rect = elem[0].getBoundingClientRect();
@@ -31,7 +31,7 @@ Cypress.Commands.add(
 
     cy.window()
       .its('devicePixelRatio')
-      .then(dpi => {
+      .then((dpi) => {
         const visualRegMode =
           Cypress.env('visualRegMode') === 'record' ? 'record' : 'actual';
         if (dpi != 1) {
@@ -44,7 +44,7 @@ Cypress.Commands.add(
         const recordScreenShotName = `record-${nameAndSize}`;
         const actualScreenShotName = `actual-${nameAndSize}`;
         const diffScreenShotName = `diff-${nameAndSize}`;
-        const toFilename = name =>
+        const toFilename = (name) =>
           `${Cypress.config('screenshotsFolder')}/${
             Cypress.spec.name
           }/${name}.png`;
@@ -75,7 +75,7 @@ Cypress.Commands.add(
             diffImage: toFilename(diffScreenShotName),
             expectedImage: toFilename(recordScreenShotName),
           };
-          cy.task('compareSnapshotsPlugin', options).then(res => {
+          cy.task('compareSnapshotsPlugin', options).then((res) => {
             if (res.error) {
               throw res.error;
             }

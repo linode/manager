@@ -34,11 +34,11 @@ interface LinodeDetailContextProps {
 
 type CombinedProps = LinodeDetailContextProps & WithStyles<ClassNames>;
 
-const LinodeBusyStatus: React.FC<CombinedProps> = props => {
+const LinodeBusyStatus: React.FC<CombinedProps> = (props) => {
   const { classes, status, linodeEvents, linodeId } = props;
 
   const firstEventWithProgress = (linodeEvents || []).find(
-    eachEvent => typeof eachEvent.percent_complete === 'number'
+    (eachEvent) => typeof eachEvent.percent_complete === 'number'
   );
 
   const value = firstEventWithProgress

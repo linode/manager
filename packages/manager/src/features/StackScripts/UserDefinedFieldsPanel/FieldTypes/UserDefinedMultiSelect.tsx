@@ -49,7 +49,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
      * UDF, just pass undefined as the value, so the form is reset
      */
     const value = !!propValue
-      ? propValue.split(',').map(eachValue => ({
+      ? propValue.split(',').map((eachValue) => ({
           label: eachValue,
           value: eachValue,
         }))

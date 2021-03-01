@@ -53,7 +53,7 @@ export interface Props extends TableCellProps {
 
 type CombinedProps = Props;
 
-export const TableSortCell: React.FC<CombinedProps> = props => {
+export const TableSortCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {

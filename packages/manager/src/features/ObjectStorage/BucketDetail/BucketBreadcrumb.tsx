@@ -77,7 +77,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const BucketBreadcrumb: React.FC<CombinedProps> = props => {
+const BucketBreadcrumb: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [copied, setCopied] = React.useState<boolean>(false);
@@ -98,7 +98,7 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
 
   // Split the prefix into discrete sections for displaying in the component.
   // 'my/path/to/objects/` > ['my', 'path', 'to', 'objects]
-  const prefixArray = prefix.split('/').filter(section => section !== '');
+  const prefixArray = prefix.split('/').filter((section) => section !== '');
 
   // This is not a very elegant way to truncate the prefix. In the future we
   // could take into account both the length of the prefix string AND the prefix

@@ -52,7 +52,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const RenderProgressEvent: React.FC<Props> = props => {
+export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { event, onClose } = props;
   const classes = useStyles();
 
@@ -123,7 +123,7 @@ export const formatTimeRemaining = (time: string | null) => {
     const [hours, minutes, seconds] = time.split(':').map(Number);
     if (
       [hours, minutes, seconds].some(
-        thisNumber => typeof thisNumber === 'undefined'
+        (thisNumber) => typeof thisNumber === 'undefined'
       ) ||
       [hours, minutes, seconds].some(isNaN)
     ) {

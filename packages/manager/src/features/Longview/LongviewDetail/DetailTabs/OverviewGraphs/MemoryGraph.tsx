@@ -14,7 +14,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const MemoryGraph: React.FC<CombinedProps> = props => {
+export const MemoryGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
     end,

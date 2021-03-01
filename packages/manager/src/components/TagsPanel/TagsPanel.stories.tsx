@@ -21,7 +21,7 @@ class TagsPanelDemo extends React.Component<Props, {}> {
   };
 
   updateTags = (tags: string[]) => {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       setTimeout(() => {
         this.setState({
           tags,
@@ -50,11 +50,11 @@ class TagsPanelDemo extends React.Component<Props, {}> {
 }
 
 storiesOf('Tags Panel', module)
-  .addDecorator(story => {
+  .addDecorator((story) => {
     const mock = new MockAdapter(baseRequest);
 
     mock.onGet('/tags').reply(200, {
-      data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({ label: tag })),
+      data: ['tag1', 'tag2', 'tag3', 'tag4'].map((tag) => ({ label: tag })),
     });
     return <div>{story()}</div>;
   })

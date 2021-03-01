@@ -47,7 +47,7 @@ export interface Props {
   clientID: number;
 }
 
-export const TopProcesses: React.FC<Props> = props => {
+export const TopProcesses: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {
     topProcessesData,
@@ -180,29 +180,31 @@ interface TopProcessRowProps {
   cmrFlag?: boolean;
 }
 
-export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(props => {
-  const { name, cpu, mem, cmrFlag } = props;
+export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(
+  (props) => {
+    const { name, cpu, mem, cmrFlag } = props;
 
-  const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;
-  const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
+    const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;
+    const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
 
-  // Memory is given from the API in KB.
-  const memInBytes = mem * 1024;
+    // Memory is given from the API in KB.
+    const memInBytes = mem * 1024;
 
-  return (
-    <TableRow ariaLabel={name} data-testid="longview-top-process-row">
-      <TableCell parentColumn="Process" data-qa-top-process-process>
-        {name}
-      </TableCell>
-      <TableCell parentColumn="CPU" data-qa-top-process-cpu>
-        {formatCPU(cpu)}
-      </TableCell>
-      <TableCell parentColumn="Memory" data-qa-top-process-memory>
-        {readableBytes(memInBytes, { round: 0 }).formatted}
-      </TableCell>
-    </TableRow>
-  );
-});
+    return (
+      <TableRow ariaLabel={name} data-testid="longview-top-process-row">
+        <TableCell parentColumn="Process" data-qa-top-process-process>
+          {name}
+        </TableCell>
+        <TableCell parentColumn="CPU" data-qa-top-process-cpu>
+          {formatCPU(cpu)}
+        </TableCell>
+        <TableCell parentColumn="Memory" data-qa-top-process-memory>
+          {readableBytes(memInBytes, { round: 0 }).formatted}
+        </TableCell>
+      </TableRow>
+    );
+  }
+);
 
 export default React.memo(TopProcesses);
 
@@ -220,12 +222,14 @@ export const extendTopProcesses = (
     return [];
   }
   const topProcessDisplay: ExtendedTopProcessStat[] = [];
-  Object.keys(topProcesses.Processes).forEach(processName => {
+  Object.keys(topProcesses.Processes).forEach((processName) => {
     // For some reason the TS compiler doesn't recognize the early return above,
     // hence the non-null assertion operator on topProcesses.Processes.
-    Object.values(topProcesses.Processes![processName]).forEach(userProcess => {
-      topProcessDisplay.push({ ...userProcess, name: processName });
-    });
+    Object.values(topProcesses.Processes![processName]).forEach(
+      (userProcess) => {
+        topProcessDisplay.push({ ...userProcess, name: processName });
+      }
+    );
   });
   return topProcessDisplay;
 };

@@ -40,7 +40,7 @@ export const createVolume = createRequestThunk<
   CreateVolumeRequest,
   Volume,
   APIError[]
->(createVolumeActions, data => _createVolume(data));
+>(createVolumeActions, (data) => _createVolume(data));
 
 /*
  * Update Volume

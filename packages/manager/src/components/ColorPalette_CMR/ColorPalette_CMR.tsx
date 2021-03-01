@@ -37,7 +37,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ColorPalette: React.FC<CombinedProps> = props => {
+export const ColorPalette: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
 

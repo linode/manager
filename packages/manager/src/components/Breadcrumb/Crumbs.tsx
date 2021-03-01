@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Crumbs: React.FC<CombinedProps> = props => {
+const Crumbs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -79,7 +79,7 @@ const Crumbs: React.FC<CombinedProps> = props => {
         const link =
           '/' + pathMap.slice(0, -(pathMap.length - (key + 1))).join('/');
         const override =
-          crumbOverrides && crumbOverrides.find(e => e.position === key + 1);
+          crumbOverrides && crumbOverrides.find((e) => e.position === key + 1);
 
         return (
           <div key={key} className={classes.crumbsWrapper}>

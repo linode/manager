@@ -6,7 +6,7 @@ export const removeBlocklistedEvents = (
   blocklist: string[] = []
 ) => {
   const _blocklist = [...blockListedEvents, ...blocklist];
-  return events.filter(eachEvent => !_blocklist.includes(eachEvent.action));
+  return events.filter((eachEvent) => !_blocklist.includes(eachEvent.action));
 };
 
 // We don't want to display these events because they precede similar events.

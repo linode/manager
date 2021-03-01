@@ -41,7 +41,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getBucketActions.done)) {
     const { result } = action.payload;
     const idx = state.data.findIndex(
-      thisBucket =>
+      (thisBucket) =>
         thisBucket.label === result.label &&
         thisBucket.cluster === result.cluster
     );
@@ -114,7 +114,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       data: state.data.filter(
-        bucket =>
+        (bucket) =>
           // Buckets don't have IDs, so we look at the cluster and label to
           // remove the deleted bucket from state
           !(bucket.label === params.label && bucket.cluster === params.cluster)

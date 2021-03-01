@@ -70,7 +70,7 @@ export interface StatusProps {
   status: Status;
 }
 
-export const StatusIcon: React.FC<StatusProps> = props => {
+export const StatusIcon: React.FC<StatusProps> = (props) => {
   const { status } = props;
 
   const classes = useStyles();

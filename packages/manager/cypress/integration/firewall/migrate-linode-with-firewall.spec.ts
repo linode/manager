@@ -43,8 +43,8 @@ describe('Migrate Linode With Firewall', () => {
     const fakeFirewallId = 6666;
 
     // modify incoming response
-    cy.intercept('*/networking/firewalls*', req => {
-      req.reply(res => {
+    cy.intercept('*/networking/firewalls*', (req) => {
+      req.reply((res) => {
         res.send({
           data: [
             {
@@ -117,8 +117,8 @@ describe('Migrate Linode With Firewall', () => {
     };
 
     // modify incoming response
-    cy.intercept('*/regions', req => {
-      req.reply(res => {
+    cy.intercept('*/regions', (req) => {
+      req.reply((res) => {
         res.send(fakeRegionsData);
       });
     }).as('getRegions');
@@ -129,8 +129,8 @@ describe('Migrate Linode With Firewall', () => {
     }).as('migrateReq');
 
     // modify incoming response
-    cy.intercept('*/linode/instances/*', req => {
-      req.reply(res => {
+    cy.intercept('*/linode/instances/*', (req) => {
+      req.reply((res) => {
         res.send({
           data: [fakeLinodeData],
           page: 1,
@@ -141,8 +141,8 @@ describe('Migrate Linode With Firewall', () => {
     }).as('getLinodes');
 
     // modify incoming response
-    cy.intercept(`*/linode/instances/${fakeLinodeId}/migrate`, req => {
-      req.reply(res => {
+    cy.intercept(`*/linode/instances/${fakeLinodeId}/migrate`, (req) => {
+      req.reply((res) => {
         res.send(fakeLinodeData);
       });
     }).as('getLinode');
@@ -184,7 +184,7 @@ describe('Migrate Linode With Firewall', () => {
 
     cy.visitWithLogin('/firewalls');
 
-    createLinode({ region: 'ap-southeast' }).then(linode => {
+    createLinode({ region: 'ap-southeast' }).then((linode) => {
       // intercept migrate linode request
       cy.intercept('POST', `*/linode/instances/${linode.id}/migrate`).as(
         'migrateLinode'
@@ -254,7 +254,7 @@ describe('Migrate Linode With Firewall', () => {
     // modify incoming response
     cy.intercept('*/networking/firewalls*').as('getFirewall');
     cy.visitWithLogin('/firewalls');
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // intercept migrate linode request
       cy.intercept('POST', `*/linode/instances/${linode.id}/migrate`).as(
         'migrateLinode'

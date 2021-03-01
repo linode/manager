@@ -51,7 +51,7 @@ describe('Linode Select', () => {
     const regionItems = options
       .filter((option: Item) => option.data)
       .map((option: Item) => option.data.region);
-    linodes.forEach(linode => {
+    linodes.forEach((linode) => {
       expect(regionItems.includes(linode.data.region)).toBe(true);
     });
   });

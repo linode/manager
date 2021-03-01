@@ -296,17 +296,17 @@ class ListDomains extends Page {
     this.domainRow(domain).waitForDisplayed(constants.wait.normal);
     return this.domainRow(domain)
       .$$(this.tag.selector)
-      .map(tag => tag.getText());
+      .map((tag) => tag.getText());
   }
 
   getDomainsInTagGroup(tag) {
     return this.tagHeader(tag)
       .$$(this.domainElem.selector)
-      .map(domain => domain.getAttribute(this.domainAttribute));
+      .map((domain) => domain.getAttribute(this.domainAttribute));
   }
 
   getListedDomains() {
-    return $$(this.domainElem.selector).map(domain =>
+    return $$(this.domainElem.selector).map((domain) =>
       domain.getAttribute(this.domainAttribute)
     );
   }

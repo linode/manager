@@ -3,7 +3,7 @@ import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { BucketActionMenu } from './BucketActionMenu';
 
-window.matchMedia = jest.fn().mockImplementation(query => {
+window.matchMedia = jest.fn().mockImplementation((query) => {
   return {
     matches: true,
     media: query,

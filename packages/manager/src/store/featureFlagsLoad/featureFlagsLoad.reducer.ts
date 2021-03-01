@@ -13,6 +13,6 @@ const reducer = reducerWithInitialState(defaultState)
   .case(setFeatureFlagsLoaded, () => ({
     featureFlagsLoading: false,
   }))
-  .default(state => state);
+  .default((state) => state);
 
 export default reducer;

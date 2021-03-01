@@ -19,7 +19,7 @@ interface Props {
 }
 
 type CombinedProps = Props & StateProps;
-export const ClusterSelect: React.FC<CombinedProps> = props => {
+export const ClusterSelect: React.FC<CombinedProps> = (props) => {
   const {
     selectedCluster,
     error,
@@ -52,7 +52,7 @@ export const ClusterSelect: React.FC<CombinedProps> = props => {
       regions={regions}
       selectedID={selectedCluster}
       placeholder="Select a Region"
-      handleSelection={id => onChange(id)}
+      handleSelection={(id) => onChange(id)}
       onBlur={onBlur}
       isSearchable={false}
       isClearable={false}
@@ -76,7 +76,7 @@ export const objectStorageClusterToExtendedRegion = (
 ): ExtendedRegion[] => {
   return clusters.reduce<ExtendedRegion[]>((acc, thisCluster) => {
     const region = regions.find(
-      thisRegion => thisRegion.id === thisCluster.region
+      (thisRegion) => thisRegion.id === thisCluster.region
     );
     if (region) {
       acc.push({

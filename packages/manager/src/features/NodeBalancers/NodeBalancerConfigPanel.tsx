@@ -281,7 +281,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       },
     ];
 
-    const defaultType = typeOptions.find(eachType => {
+    const defaultType = typeOptions.find((eachType) => {
       return eachType.value === healthCheckType;
     });
 
@@ -541,7 +541,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     // We don't want to end up with nodes[3].ip_address as errorMap.none
     const filteredErrors = errors
       ? errors.filter(
-          thisError =>
+          (thisError) =>
             !thisError.field || !thisError.field.match(/nodes\[[0-9+]\]/)
         )
       : [];
@@ -581,12 +581,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       { label: 'v2', value: 'v2' },
     ];
 
-    const defaultProtocol = protocolOptions.find(eachProtocol => {
+    const defaultProtocol = protocolOptions.find((eachProtocol) => {
       return eachProtocol.value === protocol;
     });
 
     const selectedProxyProtocol = proxyProtocolOptions.find(
-      eachProxyProtocol => {
+      (eachProxyProtocol) => {
         return eachProxyProtocol.value === proxyProtocol;
       }
     );
@@ -597,7 +597,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       { label: 'Source', value: 'source' },
     ];
 
-    const defaultAlg = algOptions.find(eachAlg => {
+    const defaultAlg = algOptions.find((eachAlg) => {
       return eachAlg.value === algorithm;
     });
 
@@ -607,7 +607,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       { label: 'HTTP Cookie', value: 'http_cookie' },
     ];
 
-    const defaultSession = sessionOptions.find(eachSession => {
+    const defaultSession = sessionOptions.find((eachSession) => {
       return eachSession.value === sessionStickiness;
     });
 

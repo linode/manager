@@ -13,7 +13,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const DateTimeDisplay: React.FC<CombinedProps> = props => {
+export const DateTimeDisplay: React.FC<CombinedProps> = (props) => {
   const { format, humanizeCutoff, displayTime, value, className } = props;
   return (
     <Typography style={props.styles} component="span" className={className}>

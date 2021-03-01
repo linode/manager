@@ -72,7 +72,7 @@ export const useAPIRequest = <T>(
     setLoading(true);
     setError(undefined);
     request()
-      .then(responseData => {
+      .then((responseData) => {
         if (!mounted) {
           return;
         }
@@ -80,7 +80,7 @@ export const useAPIRequest = <T>(
         setLastUpdated(Date.now());
         setData(responseData);
       })
-      .catch(err => {
+      .catch((err) => {
         if (!mounted) {
           return;
         }

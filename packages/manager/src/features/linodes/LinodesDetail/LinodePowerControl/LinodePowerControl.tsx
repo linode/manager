@@ -176,7 +176,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     const hasNoConfigs = linodeConfigs.length === 0;
 
     const firstEventWithPercent = (linodeEvents || []).find(
-      eachEvent => typeof eachEvent.percent_complete === 'number'
+      (eachEvent) => typeof eachEvent.percent_complete === 'number'
     );
 
     const isBusy = linodeInTransition(status, firstEventWithPercent);

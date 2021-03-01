@@ -26,7 +26,7 @@ interface Props {
 
 type CombinedProps = Omit<OrderByProps, 'data'> & Props;
 
-const TableWrapper: React.FC<CombinedProps> = props => {
+const TableWrapper: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {

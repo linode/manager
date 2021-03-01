@@ -47,7 +47,7 @@ interface Props {
 
 type PropsWithStyles = Props;
 
-const TopMenu: React.FC<PropsWithStyles> = props => {
+const TopMenu: React.FC<PropsWithStyles> = (props) => {
   const {
     isSideMenuOpen,
     openSideMenu,

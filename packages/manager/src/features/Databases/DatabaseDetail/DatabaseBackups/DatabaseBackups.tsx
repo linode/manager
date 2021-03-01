@@ -26,13 +26,13 @@ interface Props {
   databaseID: number;
 }
 
-export const DatabaseBackups: React.FC<Props> = props => {
+export const DatabaseBackups: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { databaseID } = props;
 
   const backups = useAPIRequest<DatabaseBackup[]>(
-    () => getDatabaseBackups(Number(databaseID)).then(res => res.data),
+    () => getDatabaseBackups(Number(databaseID)).then((res) => res.data),
     []
   );
 

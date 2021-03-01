@@ -30,7 +30,7 @@ class CredStore {
   cleanupAccounts() {
     if (this.shouldCleanupUsingAPI) {
       //console.log('cleaning up user resources via API');
-      return this.getAllCreds().then(credCollection => {
+      return this.getAllCreds().then((credCollection) => {
         //console.log(credCollection);
         return resetAccounts(credCollection);
       });

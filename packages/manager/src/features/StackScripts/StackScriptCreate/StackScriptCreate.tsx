@@ -125,7 +125,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       // should request the stackscript.
       this.setState({ isLoadingStackScript: true });
       getStackScript(+stackScriptID)
-        .then(response => {
+        .then((response) => {
           if (response.id === valuesFromStorage.id) {
             this.setState({
               label: valuesFromStorage.label ?? '',
@@ -148,7 +148,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ errors: error, isLoadingStackScript: false });
         });
     } else if (valuesFromStorage.id === euuid) {
@@ -215,7 +215,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   handleChooseImage = (images: Item<string>[]) => {
-    const imageList = images.map(image => image.value);
+    const imageList = images.map((image) => image.value);
     this.setState(
       {
         images: imageList,
@@ -434,7 +434,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
     const availableImages = Object.values(imagesData).filter(
-      thisImage => !this.state.images.includes(thisImage.id)
+      (thisImage) => !this.state.images.includes(thisImage.id)
     );
 
     const shouldDisable =

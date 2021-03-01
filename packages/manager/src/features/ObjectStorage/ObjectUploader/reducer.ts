@@ -48,9 +48,9 @@ const cloneLandingReducer = (
     // Add files to the queue
     case 'ENQUEUE':
       const newFiles: File[] = [];
-      action.files.forEach(file => {
+      action.files.forEach((file) => {
         // See if we're already tracking the file.
-        const foundFileIdx = draft.files.findIndex(fileUpload => {
+        const foundFileIdx = draft.files.findIndex((fileUpload) => {
           return pathOrFileName(fileUpload.file) === pathOrFileName(file);
         });
 
@@ -78,7 +78,7 @@ const cloneLandingReducer = (
         }
       });
 
-      const extendedFiles: ExtendedFile[] = newFiles.map(file => ({
+      const extendedFiles: ExtendedFile[] = newFiles.map((file) => ({
         status: 'QUEUED',
         percentComplete: 0,
         file,
@@ -91,13 +91,13 @@ const cloneLandingReducer = (
 
     // Update files given a list of filenames and attributes to update.
     case 'UPDATE_FILES':
-      action.filesToUpdate.forEach(filename => {
-        const existingFile = draft.files.find(fileUpload => {
+      action.filesToUpdate.forEach((filename) => {
+        const existingFile = draft.files.find((fileUpload) => {
           return pathOrFileName(fileUpload.file) === filename;
         });
 
         if (existingFile) {
-          Object.keys(action.data).forEach(key => {
+          Object.keys(action.data).forEach((key) => {
             existingFile[key] = action.data[key];
           });
 
@@ -111,7 +111,7 @@ const cloneLandingReducer = (
 
     case 'NOTIFY_FILE_EXISTS':
       let foundFile = draft.files.find(
-        fileUpload => pathOrFileName(fileUpload.file) === action.fileName
+        (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
       );
       if (foundFile) {
         foundFile.status = 'OVERWRITE_NOTICE';
@@ -122,7 +122,7 @@ const cloneLandingReducer = (
 
     case 'RESUME_UPLOAD':
       foundFile = draft.files.find(
-        fileUpload => pathOrFileName(fileUpload.file) === action.fileName
+        (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
       );
       if (foundFile) {
         foundFile.status = 'QUEUED';
@@ -132,7 +132,7 @@ const cloneLandingReducer = (
 
     case 'CANCEL_OVERWRITE':
       const idx = draft.files.findIndex(
-        fileUpload => pathOrFileName(fileUpload.file) === action.fileName
+        (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
       );
       if (idx > -1) {
         draft.files.splice(idx, 1);
@@ -160,7 +160,7 @@ const updateCount = (draft: ObjectUploaderState) => {
   let numCancelled = 0;
   let numErrors = 0;
 
-  draft.files.forEach(file => {
+  draft.files.forEach((file) => {
     if (file.status === 'QUEUED') {
       numQueued++;
     } else if (file.status === 'IN_PROGRESS') {

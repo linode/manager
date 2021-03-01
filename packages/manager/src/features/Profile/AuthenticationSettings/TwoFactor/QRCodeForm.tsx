@@ -39,7 +39,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const QRCodeForm: React.FC<CombinedProps> = props => {
+const QRCodeForm: React.FC<CombinedProps> = (props) => {
   const { classes, secret, secretLink } = props;
   return (
     <React.Fragment>

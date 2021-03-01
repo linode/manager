@@ -185,7 +185,7 @@ const getError = (field: UserDefinedField, errors?: APIError[]) => {
   if (!errors) {
     return;
   }
-  const error = errors.find(thisError => thisError.field === field.name);
+  const error = errors.find((thisError) => thisError.field === field.name);
   return error ? error.reason.replace('the UDF', '') : undefined;
 };
 

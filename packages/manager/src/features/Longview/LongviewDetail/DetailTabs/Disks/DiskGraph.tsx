@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DiskGraph: React.FC<CombinedProps> = props => {
+const DiskGraph: React.FC<CombinedProps> = (props) => {
   const {
     diskLabel,
     loading,

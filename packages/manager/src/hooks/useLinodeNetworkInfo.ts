@@ -41,7 +41,7 @@ export const useLinodeNetworkInfo = (
         setStatsData(stats);
         setTransferData(transfer);
       })
-      .catch(_ => {
+      .catch((_) => {
         setLoading(false);
         setErrorMessage(
           'There was an error retrieving network information for this Linode.'

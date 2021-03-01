@@ -23,7 +23,9 @@ interface RevokeKeysDialogProps {
   errors?: APIError[];
 }
 
-export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = props => {
+export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = (
+  props
+) => {
   const {
     label,
     isOpen,
@@ -58,7 +60,7 @@ export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = props => {
       onClose={handleClose}
       title={`Revoking ${label}`}
       actions={actions}
-      error={(errors || []).map(e => e.reason).join(',')}
+      error={(errors || []).map((e) => e.reason).join(',')}
     >
       <Typography>Are you sure you want to revoke this Access Key?</Typography>
       {/* If the user is attempting to revoke their last Access Key, remind them

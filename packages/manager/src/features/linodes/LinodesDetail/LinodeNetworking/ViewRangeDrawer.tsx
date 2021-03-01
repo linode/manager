@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ViewRangeDrawer: React.FC<CombinedProps> = props => {
+const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
   const { classes, range } = props;
   const region = (range && range.region) || '';
 

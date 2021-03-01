@@ -14,7 +14,7 @@ export interface Props extends Handlers {
   objectName: string;
 }
 
-export const ObjectActionMenu: React.FC<Props> = props => {
+export const ObjectActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -45,7 +45,7 @@ export const ObjectActionMenu: React.FC<Props> = props => {
           ariaLabel={`Action menu for Object ${objectName}`}
         />
       ) : (
-        actions.map(action => {
+        actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

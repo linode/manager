@@ -192,8 +192,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
            * basically, if the result set after filtering out StackScripts with
            * deprecated distros is 0, request the next page with the same filter.
            */
-          const newDataWithoutDeprecatedDistros = newData.filter(stackScript =>
-            this.hasNonDeprecatedImages(stackScript.images)
+          const newDataWithoutDeprecatedDistros = newData.filter(
+            (stackScript) => this.hasNonDeprecatedImages(stackScript.images)
           );
 
           // we have to make sure both the original data set
@@ -638,7 +638,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     }
   }
 
-  const mapStateToProps: MapState<StoreProps, CombinedProps> = state => ({
+  const mapStateToProps: MapState<StoreProps, CombinedProps> = (state) => ({
     stackScriptGrants: isRestrictedUser(state)
       ? pathOr(
           undefined,

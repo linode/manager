@@ -52,7 +52,7 @@ const renderApp = (props: RouteComponentProps) => (
   <QueryClientProvider client={queryClient}>
     <SplashScreen />
     <LinodeThemeWrapper>
-      {toggle => (
+      {(toggle) => (
         <SnackBar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           maxSnack={3}

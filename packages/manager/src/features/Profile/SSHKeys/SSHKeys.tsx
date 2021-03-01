@@ -215,7 +215,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
   renderData = (keys: ExtendedSSHKey[]) => {
     const { classes } = this.props;
-    return keys.map(key => (
+    return keys.map((key) => (
       <TableRow data-qa-content-row={key.label} key={key.id}>
         <TableCell>{key.label}</TableCell>
         <TableCell data-qa-public-key>
@@ -245,14 +245,14 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   };
 
   handleCancelDeletion = () => {
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       confirmDelete: { ...prevState.confirmDelete, open: false },
     }));
   };
 
   handleSuccessfulDeletion = () => {
     this.setState(
-      prevState => ({
+      (prevState) => ({
         confirmDelete: { ...prevState.confirmDelete, open: false },
       }),
       () => this.props.request()
@@ -274,7 +274,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 }
 
 const updateResponseData = (keys: SSHKey[]) =>
-  keys.map(key => ({
+  keys.map((key) => ({
     ...key,
     fingerprint: fingerprint(key.ssh_key),
     created: parseAPIDate(key.created).toRelative(),
@@ -283,7 +283,7 @@ const updateResponseData = (keys: SSHKey[]) =>
 const documented = setDocs(SSHKeys.docs);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) =>
-  getSSHKeys(params, filters).then(response => ({
+  getSSHKeys(params, filters).then((response) => ({
     ...response,
     data: updateResponseData(response.data),
   }));

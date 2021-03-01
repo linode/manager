@@ -26,7 +26,7 @@ describe('Enhanced Select -', () => {
     });
 
     it('should display options on click', () => {
-      const basicSelectInputs = basicSelects.map(s => s.$('div'));
+      const basicSelectInputs = basicSelects.map((s) => s.$('div'));
       basicSelectInputs[0].click();
       $('[data-qa-option]', constants.wait.normal).waitForDisplayed();
 
@@ -93,7 +93,9 @@ describe('Enhanced Select -', () => {
     it('should remove the chip from the select options', () => {
       $('[data-qa-multi-option]').click();
       $('[data-qa-option]', constants.wait.normal).waitForDisplayed();
-      const remainingOptions = $$('[data-qa-option]').map(opt => opt.getText());
+      const remainingOptions = $$('[data-qa-option]').map((opt) =>
+        opt.getText()
+      );
 
       expect(remainingOptions.length)
         .withContext(`Menu options should be reduced to 4`)

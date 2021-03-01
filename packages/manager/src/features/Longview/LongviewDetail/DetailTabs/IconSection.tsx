@@ -69,7 +69,7 @@ interface Props {
   openPackageDrawer: () => void;
 }
 
-const IconSection: React.FC<Props> = props => {
+const IconSection: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const hostname = pathOr(

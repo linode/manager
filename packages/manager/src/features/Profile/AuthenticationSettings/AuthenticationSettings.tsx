@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
 
 export type CombinedProps = StateProps & DispatchProps;
 
-export const AuthenticationSettings: React.FC<CombinedProps> = props => {
+export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     loading,
@@ -113,7 +113,7 @@ interface StateProps {
   profileUpdateError?: APIError[];
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const { profile } = state.__resources;
 
   return {
@@ -130,7 +130,9 @@ interface DispatchProps {
   updateProfile: (v: Partial<Profile>) => Promise<Profile>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
   updateProfile: (v: Partial<Profile>) => dispatch(_updateProfile(v) as any),
 });
 

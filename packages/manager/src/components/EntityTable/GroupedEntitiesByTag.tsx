@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export type CombinedProps = ListProps;
 
-export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
+export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
   const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
@@ -112,7 +112,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
                               </Typography>
                             </TableCell>
                           </TableRow>
-                          {paginatedData.map(thisEntity => (
+                          {paginatedData.map((thisEntity) => (
                             <RowComponent
                               key={thisEntity.id}
                               {...thisEntity}

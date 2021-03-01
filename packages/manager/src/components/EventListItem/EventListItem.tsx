@@ -50,7 +50,7 @@ interface Props extends MenuItemProps {
 
 type FinalProps = Props & WithStyles<ClassNames>;
 
-const EventListItem: React.FC<FinalProps> = props => {
+const EventListItem: React.FC<FinalProps> = (props) => {
   const {
     classes,
     title,

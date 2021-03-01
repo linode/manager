@@ -44,7 +44,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['submitting']), true));
 
     deleteLinode({ linodeId: this.props.linodeId })
-      .then(response => {
+      .then((response) => {
         resetEventsPolling();
         this.props.history.push('/linodes');
       })

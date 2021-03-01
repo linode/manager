@@ -113,7 +113,7 @@ interface Title {
 const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFontSize(12);
   doc.setFontStyle('bold');
-  textStrings.forEach(eachString => {
+  textStrings.forEach((eachString) => {
     doc.text(eachString.text, eachString.leftMargin || leftMargin, y, {
       charSpace: 0.75,
       maxWidth: 100,

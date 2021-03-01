@@ -6,7 +6,7 @@ interface CurrencyFormatterProps {
   wrapInParentheses?: boolean;
 }
 
-export const Currency: React.FC<CurrencyFormatterProps> = props => {
+export const Currency: React.FC<CurrencyFormatterProps> = (props) => {
   const { quantity, wrapInParentheses } = props;
 
   const formatter = new Intl.NumberFormat('en-US', {

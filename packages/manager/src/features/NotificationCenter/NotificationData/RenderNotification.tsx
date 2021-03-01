@@ -60,7 +60,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const RenderNotification: React.FC<Props> = props => {
+export const RenderNotification: React.FC<Props> = (props) => {
   const { notification, onClose } = props;
   const classes = useStyles();
 

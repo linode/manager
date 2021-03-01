@@ -20,11 +20,11 @@ const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
 export const requestKubernetesClusters: ThunkActionCreator<Promise<
   GetAllData<KubernetesCluster>
->> = () => dispatch => {
+>> = () => (dispatch) => {
   dispatch(requestClustersActions.started());
 
   return getAllClusters()
-    .then(response => {
+    .then((response) => {
       let i = 0;
       for (; i < response.data.length; i++) {
         dispatch(
@@ -38,7 +38,7 @@ export const requestKubernetesClusters: ThunkActionCreator<Promise<
       );
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(requestClustersActions.failed({ error }));
       return error;
     });
@@ -48,17 +48,19 @@ type RequestClusterForStoreThunk = ThunkActionCreator<
   Promise<KubernetesCluster>,
   number
 >;
-export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
+export const requestClusterForStore: RequestClusterForStoreThunk = (
+  clusterID
+) => (dispatch) => {
   dispatch(requestClusterActions.started({ clusterID }));
   return getKubernetesCluster(clusterID)
-    .then(cluster => {
+    .then((cluster) => {
       dispatch(requestNodePoolsForCluster({ clusterID }));
       dispatch(
         requestClusterActions.done({ result: cluster, params: { clusterID } })
       );
       return cluster;
     })
-    .catch(err => {
+    .catch((err) => {
       dispatch(
         requestClusterActions.failed({ error: err, params: { clusterID } })
       );

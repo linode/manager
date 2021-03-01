@@ -49,7 +49,9 @@ interface DispatchProps {
   };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
   actions: {
     openForConfig: (
       volumeLabel: string,
@@ -63,7 +65,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
 
 type CombinedProps = StateProps & RouteComponentProps<{}> & DispatchProps;
 
-const VolumeCreate: React.FC<CombinedProps> = props => {
+const VolumeCreate: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { actions, regions, history } = props;
 
@@ -88,7 +90,7 @@ const VolumeCreate: React.FC<CombinedProps> = props => {
   );
 };
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const {
     linodeId,
     linodeLabel,

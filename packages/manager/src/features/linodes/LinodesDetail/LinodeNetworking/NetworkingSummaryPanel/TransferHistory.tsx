@@ -49,7 +49,7 @@ interface TransferHistoryProps {
   linodeCreated: string;
 }
 
-export const TransferHistory: React.FC<TransferHistoryProps> = props => {
+export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
   const classes = useStyles();
 
   // Needed to see the user's timezone.
@@ -112,10 +112,10 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
   const minMonthOffset = 0;
 
   const decrementOffset = () =>
-    setMonthOffset(prevOffset => Math.max(prevOffset - 1, maxMonthOffset));
+    setMonthOffset((prevOffset) => Math.max(prevOffset - 1, maxMonthOffset));
 
   const incrementOffset = () =>
-    setMonthOffset(prevOffset => Math.min(prevOffset + 1, minMonthOffset));
+    setMonthOffset((prevOffset) => Math.min(prevOffset + 1, minMonthOffset));
 
   const displayLoading = loading && !stats && !transfer;
 

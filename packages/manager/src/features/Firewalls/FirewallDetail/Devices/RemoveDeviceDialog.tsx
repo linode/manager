@@ -15,7 +15,7 @@ export interface Props {
   onRemove: () => void;
 }
 
-export const RemoveDeviceDialog: React.FC<Props> = props => {
+export const RemoveDeviceDialog: React.FC<Props> = (props) => {
   const {
     deviceLabel,
     error,

@@ -24,7 +24,7 @@ describe('Domain listing page', () => {
 
   it('Domains are listed in alphabetical order by default', () => {
     expect(ListDomains.getListedDomains()).toEqual(
-      domains.map(it => it.domain).sort()
+      domains.map((it) => it.domain).sort()
     );
   });
 });

@@ -64,7 +64,7 @@ export const readableBytes = (
 
   // If we've been given custom unit labels, make the substitution here.
   if (options.unitLabels) {
-    Object.keys(options.unitLabels).forEach(originalLabel => {
+    Object.keys(options.unitLabels).forEach((originalLabel) => {
       const idx = storageUnits.indexOf(originalLabel as StorageSymbol);
       if (idx > -1) {
         // The TS compiler wasn't aware of the null check above, so I added

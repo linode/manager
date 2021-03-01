@@ -25,7 +25,7 @@ xdescribe('Linode - Details - Backup - Snapshot Suite', () => {
     // Arrow down on the select element to keep the select options in the View
     $(`${Backups.restoreToLinodeSelect.selector} input`).setValue('\uE015');
     $('[data-qa-option]').waitForDisplayed(constants.wait.normal);
-    return Backups.restoreToLinodesOptions.map(linode => linode.getText());
+    return Backups.restoreToLinodesOptions.map((linode) => linode.getText());
   };
 
   const closeLinodesSelect = () => {

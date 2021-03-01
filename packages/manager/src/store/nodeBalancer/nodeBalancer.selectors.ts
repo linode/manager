@@ -9,7 +9,7 @@ export const nodeBalancersWithConfigs = createSelector(
       resources.nodeBalancerConfigs,
   ],
   (nodeBalancers, nodeBalancerConfigs) => {
-    return Object.values(nodeBalancers).map(nodeBalancer => ({
+    return Object.values(nodeBalancers).map((nodeBalancer) => ({
       ...nodeBalancer,
       configs: Object.values(
         nodeBalancerConfigs[nodeBalancer.id]?.itemsById ?? {}

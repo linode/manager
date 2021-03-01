@@ -10,14 +10,14 @@ export const getGravatarUrlFromHash = (hash: string): Promise<string> => {
   const instance = Axios.create({ timeout: 1000 });
   return instance
     .get(url)
-    .then(response => {
+    .then((response) => {
       if (response.config.url) {
         return response.config.url;
       } else {
         throw new Error('not found');
       }
     })
-    .catch(_ => {
+    .catch((_) => {
       return Promise.resolve('not found');
     });
 };

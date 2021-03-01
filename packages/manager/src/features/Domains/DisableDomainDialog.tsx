@@ -21,7 +21,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DisableDomainDialog: React.FC<CombinedProps> = props => {
+const DisableDomainDialog: React.FC<CombinedProps> = (props) => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
@@ -52,7 +52,7 @@ const DisableDomainDialog: React.FC<CombinedProps> = props => {
         sendDomainStatusChangeEvent('Disable');
         props.closeDialog();
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmitting(false);
         setErrors(e);
       });
@@ -82,7 +82,7 @@ interface ActionsProps {
   isSubmitting: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionPanel>
       <Button onClick={props.onClose} buttonType="cancel">

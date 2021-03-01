@@ -17,7 +17,7 @@ interface Props {
   openAddDatabaseDrawer?: () => void;
 }
 
-const FirewallEmptyState: React.FC<Props> = props => {
+const FirewallEmptyState: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { openAddDatabaseDrawer } = props;

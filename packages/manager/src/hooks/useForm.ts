@@ -10,7 +10,7 @@ export const useForm = <T extends {}>(
   const [form, setValues] = React.useState<T>(initialForm);
 
   const updateField = (field: keyof T, value: any) => {
-    setValues(prevForm => ({
+    setValues((prevForm) => ({
       ...prevForm,
       [field]: value,
     }));

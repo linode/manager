@@ -24,7 +24,7 @@ describe('Password Input Suite', () => {
   describe('should update the strength when complexity of password increases', () => {
     const testPasswords = ['weak', 'stronger1233', 'Stronger123#!'];
 
-    testPasswords.forEach(pass => {
+    testPasswords.forEach((pass) => {
       const expectedStrength = zxcvbn(pass).score;
       it(`check strength Indicator ${pass}, strength ${expectedStrength}`, () => {
         $(passwordInput).setValue(pass);

@@ -88,7 +88,7 @@ type CombinedProps = RouteComponentProps<{}> &
   WithLinodesProps &
   DispatchProps;
 
-export const CloneLanding: React.FC<CombinedProps> = props => {
+export const CloneLanding: React.FC<CombinedProps> = (props) => {
   const {
     configs,
     disks,
@@ -139,8 +139,8 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
    * (benchmarks: https://jsperf.com/json-stringify-vs-ramda-equals/1) or to
    * simply check the length of disks and configs, which could lead to edge-case bugs.
    */
-  const stringifiedConfigIds = JSON.stringify(configs.map(c => c.id));
-  const stringifiedDiskIds = JSON.stringify(disks.map(d => d.id));
+  const stringifiedConfigIds = JSON.stringify(configs.map((c) => c.id));
+  const stringifiedDiskIds = JSON.stringify(disks.map((d) => d.id));
 
   // Update configs and disks if they change
   React.useEffect(() => {
@@ -199,26 +199,26 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   const clearAll = () => dispatch({ type: 'clearAll' });
 
   // The configs we know about in our configSelection state.
-  const configsInState = configs.filter(eachConfig =>
+  const configsInState = configs.filter((eachConfig) =>
     state.configSelection.hasOwnProperty(eachConfig.id)
   );
   // The configs that are selected.
   const selectedConfigs = configsInState.filter(
-    eachConfig => state.configSelection[eachConfig.id].isSelected
+    (eachConfig) => state.configSelection[eachConfig.id].isSelected
   );
   // IDs of selected configs.
-  const selectedConfigIds = selectedConfigs.map(eachConfig => eachConfig.id);
+  const selectedConfigIds = selectedConfigs.map((eachConfig) => eachConfig.id);
 
   // The disks we know about in our diskSelection state.
-  const disksInState = disks.filter(eachDisk =>
+  const disksInState = disks.filter((eachDisk) =>
     state.diskSelection.hasOwnProperty(eachDisk.id)
   );
   // The disks that are selected.
   const selectedDisks = disksInState.filter(
-    eachDisk => state.diskSelection[eachDisk.id].isSelected
+    (eachDisk) => state.diskSelection[eachDisk.id].isSelected
   );
   // IDs of selected disks.
-  const selectedDiskIds = selectedDisks.map(eachDisk => eachDisk.id);
+  const selectedDiskIds = selectedDisks.map((eachDisk) => eachDisk.id);
 
   const handleClone = () => {
     // The "Clone" button should be disabled if there's no Linode selected,
@@ -275,7 +275,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         requestDisks(linodeId);
         history.push(`/linodes/${linodeId}/configurations`);
       })
-      .catch(errors => {
+      .catch((errors) => {
         setSubmitting(false);
         setErrors(errors);
       });
@@ -284,7 +284,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   const errorMap = getErrorMap(['disk_size'], state.errors);
 
   const selectedLinode = linodesData.find(
-    eachLinode => eachLinode.id === state.selectedLinodeId
+    (eachLinode) => eachLinode.id === state.selectedLinodeId
   );
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
   return (
@@ -312,7 +312,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
             <Tabs
               index={Math.max(
-                tabs.findIndex(tab => matches(tab.routeName)),
+                tabs.findIndex((tab) => matches(tab.routeName)),
                 0
               )}
               onChange={navToURL}
@@ -361,7 +361,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             // If a selected disk is associated with a selected config, we
             // don't want it to appear in the Details component, since
             // cloning the config takes precedence.
-            selectedDisks={disksInState.filter(disk => {
+            selectedDisks={disksInState.filter((disk) => {
               return (
                 // This disk has been individually selected ...
                 state.diskSelection[disk.id].isSelected &&

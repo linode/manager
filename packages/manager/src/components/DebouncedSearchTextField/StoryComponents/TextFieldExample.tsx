@@ -23,12 +23,12 @@ class Example extends React.Component<Props, State> {
     this.setState({ isSearching: true });
     const { list } = this.state;
     action('searching')(value);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         if (!value.trim()) {
           return resolve(this.props.list);
         }
-        const filteredList = list.filter(eachVal =>
+        const filteredList = list.filter((eachVal) =>
           eachVal.includes(value.toLowerCase())
         );
         return resolve(filteredList);

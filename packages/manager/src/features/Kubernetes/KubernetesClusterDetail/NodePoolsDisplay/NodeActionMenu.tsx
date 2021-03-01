@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const NodeActionMenu: React.FC<Props> = props => {
+export const NodeActionMenu: React.FC<Props> = (props) => {
   const { nodeId, instanceLabel, openRecycleNodeDialog } = props;
   const theme = useTheme<Theme>();
   const classes = useStyles();
@@ -44,7 +44,7 @@ export const NodeActionMenu: React.FC<Props> = props => {
   return (
     <div className={classes.root}>
       {!matchesSmDown ? (
-        actions.map(action => (
+        actions.map((action) => (
           <InlineMenuAction
             key={action.title}
             actionText={action.title}

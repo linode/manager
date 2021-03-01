@@ -49,7 +49,7 @@ interface Props {
 
 export type combinedProps = SkeletonProps & Props;
 
-const _Skeleton: React.FC<combinedProps> = props => {
+const _Skeleton: React.FC<combinedProps> = (props) => {
   const classes = useStyles();
   const {
     table,

@@ -14,7 +14,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const NetworkGraph: React.FC<CombinedProps> = props => {
+export const NetworkGraph: React.FC<CombinedProps> = (props) => {
   const {
     clientAPIKey,
     end,

@@ -40,15 +40,18 @@ interface Props {
   onClose: () => void;
 }
 
-export const CreateTransferSuccessDialog: React.FC<Props> = props => {
+export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
   const { isOpen, onClose, transfer } = props;
   const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
   const classes = useStyles();
 
   const handleCopy = (idx: number, text: string) => {
     copy(text);
-    setTooltipOpen(state => update(idx, true, state));
-    setTimeout(() => setTooltipOpen(state => update(idx, false, state)), 1000);
+    setTooltipOpen((state) => update(idx, true, state));
+    setTimeout(
+      () => setTooltipOpen((state) => update(idx, false, state)),
+      1000
+    );
   };
 
   if (!transfer) {

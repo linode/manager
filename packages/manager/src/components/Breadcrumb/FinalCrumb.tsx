@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const FinalCrumb: React.FC<CombinedProps> = props => {
+const FinalCrumb: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { crumb, labelOptions, onEditHandlers } = props;
 

@@ -104,7 +104,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-const TableEditor: React.FC<CombinedProps> = props => {
+const TableEditor: React.FC<CombinedProps> = (props) => {
   const { options, ariaLabel, optionsTitle, buttonIcon } = props;
   const classes = useStyles();
 
@@ -172,7 +172,7 @@ const TableEditor: React.FC<CombinedProps> = props => {
             >
               <Typography variant="body1">{optionsTitle}</Typography>
             </legend>
-            {options.map(option => {
+            {options.map((option) => {
               return (
                 <div
                   draggable={true}

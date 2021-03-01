@@ -39,7 +39,7 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
         closeDialog();
         this.props.refreshListOfDevices();
       })
-      .catch(e => {
+      .catch((e) => {
         const errorString = getErrorStringOrDefault(
           e,
           'There was an issue removing this device.'

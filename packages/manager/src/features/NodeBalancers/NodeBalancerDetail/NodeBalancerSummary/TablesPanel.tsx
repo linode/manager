@@ -194,7 +194,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           statsError: undefined,
         });
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         if (!this.mounted) {
           return;
         }

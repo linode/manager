@@ -38,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DatabaseBackupActionMenu: React.FC<CombinedProps> = props => {
+const DatabaseBackupActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   // @todo add actions functionality when API work is finalized
@@ -54,7 +54,7 @@ const DatabaseBackupActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.inlineActions}>
       <Hidden smDown>
-        {actions.map(thisAction => (
+        {actions.map((thisAction) => (
           <InlineAction
             key={thisAction.title}
             actionText={thisAction.title}

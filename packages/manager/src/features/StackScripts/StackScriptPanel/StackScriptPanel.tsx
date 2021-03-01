@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
 
-const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
+const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
   const { publicImages, username } = props;
 
   const tabs: NavTab[] = [
@@ -71,7 +71,7 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   username: state.__resources.profile?.data?.username ?? '',
 });
 

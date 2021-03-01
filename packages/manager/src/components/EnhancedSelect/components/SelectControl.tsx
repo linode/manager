@@ -14,7 +14,7 @@ const inputComponent: React.FC<SelectProps> = ({ inputRef, ...props }) => {
 
 interface Props extends ControlProps<any> {}
 
-const SelectControl: React.FC<Props> = props => {
+const SelectControl: React.FC<Props> = (props) => {
   return (
     <TextField
       data-qa-enhanced-select={

@@ -25,7 +25,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const ImagesActionMenu: React.FC<CombinedProps> = props => {
+export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -72,7 +72,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

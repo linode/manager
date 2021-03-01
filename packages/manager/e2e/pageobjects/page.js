@@ -266,7 +266,7 @@ export default class Page {
       'Number of expected panels failed to display'
     );
 
-    this.panels.forEach(panel => {
+    this.panels.forEach((panel) => {
       panel.click();
       // throttle expanding panels with a pause
       browser.pause(500);
@@ -296,7 +296,7 @@ export default class Page {
       function() {
         const noticeRegex = new RegExp(noticeMsg, 'ig');
         const noticeMsgDisplays = $$('[data-qa-notice]').filter(
-          n => !!n.getText().match(noticeRegex)
+          (n) => !!n.getText().match(noticeRegex)
         );
 
         if (opposite) {
@@ -325,7 +325,7 @@ export default class Page {
       browser.waitUntil(
         () => {
           toastMessage = $$(this.toast.selector).find(
-            toast => toast.getText() === expectedMessage
+            (toast) => toast.getText() === expectedMessage
           );
           return toastMessage;
         },
@@ -383,7 +383,7 @@ export default class Page {
 
   actionMenuOptionExists(actionMenuRow, options) {
     this.openActionMenu(actionMenuRow);
-    options.forEach(option => {
+    options.forEach((option) => {
       expect($(`[data-qa-action-menu-item="${option}"]`).isDisplayed())
         .withContext(
           `"${this.protocolSelect.selector}" selector ${assertLog.displayed}`
@@ -419,11 +419,11 @@ export default class Page {
   }
 
   removeTag(label) {
-    const matchingTags = this.tags.filter(t =>
+    const matchingTags = this.tags.filter((t) =>
       t.getAttribute('data-qa-tag').includes(label)
     );
 
-    matchingTags.forEach(t => {
+    matchingTags.forEach((t) => {
       const tagName = t.getText();
       t.$(this.deleteTag.selector).click();
       $(`[data-qa-tag="${tagName}"]`).waitForDisplayed(
@@ -468,8 +468,8 @@ export default class Page {
     browser.waitUntil(() => {
       return this.tags.length > 0;
     }, constants.wait.normal);
-    const appliedTags = this.tags.map(tag => tag.getText());
-    expectedTags.forEach(tag => {
+    const appliedTags = this.tags.map((tag) => tag.getText());
+    expectedTags.forEach((tag) => {
       expect(appliedTags.includes(tag))
         .withContext(`${assertLog.incorrectTag} "${tag}"`)
         .toBe(true);
@@ -492,7 +492,7 @@ export default class Page {
   }
 
   tagGroupsInAlphabeticalOrder(tags) {
-    const tagHeaders = this.tagHeaders.map(header =>
+    const tagHeaders = this.tagHeaders.map((header) =>
       header.getAttribute(this.tagHeaderSelector)
     );
     expect(tagHeaders)

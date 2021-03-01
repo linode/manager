@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps;
 
-export const DiskActionMenu: React.FC<CombinedProps> = props => {
+export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
@@ -102,7 +102,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = props => {
   return (
     <div className={classes.root}>
       {!matchesSmDown &&
-        inlineActions!.map(action => {
+        inlineActions!.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

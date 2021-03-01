@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ActivityRow: React.FC<CombinedProps> = props => {
+export const ActivityRow: React.FC<CombinedProps> = (props) => {
   const { classes, event } = props;
 
   const message = eventMessageGenerator(event);

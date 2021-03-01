@@ -42,7 +42,7 @@ interface Props {
 
 type CombinedProps = RouteComponentProps & Props & LinodesProps;
 
-const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
+const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
   const { firewallID, firewallLabel } = props;
   const classes = useStyles();
   const {
@@ -88,13 +88,13 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   const handleAddDevice = (selectedLinodes: number[]) => {
     setDeviceSubmitting(true);
     setDeviceError(undefined);
-    return Promise.map(selectedLinodes, thisLinode => {
+    return Promise.map(selectedLinodes, (thisLinode) => {
       return addDevice({ type: 'linode', id: thisLinode });
     })
-      .then(_ => {
+      .then((_) => {
         handleClose();
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         /**
          * API errors here identify the invalid Linode
          * by its ID rather than label, which isn't helpful
@@ -108,7 +108,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
               /with ID ([0-9]+)/,
               (match: string, group: string) => {
                 const linode = props.linodesData.find(
-                  thisLinode => thisLinode.id === +group
+                  (thisLinode) => thisLinode.id === +group
                 );
                 return linode ? linode.label : match;
               }
@@ -127,7 +127,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
   };
 
   const handleRemoveDevice = () => {
-    _submitDialog(dialog.entityID).catch(e =>
+    _submitDialog(dialog.entityID).catch((e) =>
       handleError(getAPIErrorOrDefault(e, 'Error removing Device')[0].reason)
     );
   };
@@ -167,7 +167,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = props => {
         onClose={handleClose}
         addDevice={handleAddDevice}
         isSubmitting={deviceSubmitting}
-        currentDevices={deviceList.map(thisDevice => thisDevice.entity.id)}
+        currentDevices={deviceList.map((thisDevice) => thisDevice.entity.id)}
         firewallLabel={firewallLabel}
       />
       <RemoveDeviceDialog

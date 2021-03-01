@@ -38,7 +38,7 @@ export const createLinodeDisk = createRequestThunk(
 export const getLinodeDisks = createRequestThunk(
   getLinodeDisksActions,
   ({ linodeId }) =>
-    _getLinodeDisks(linodeId).then(result => ({
+    _getLinodeDisks(linodeId).then((result) => ({
       results: result.results,
       data: result.data.map(addLinodeIdToDisk(linodeId)),
     }))
@@ -49,7 +49,7 @@ export const getAllLinodeDisks = createRequestThunk(
   ({ linodeId }) =>
     getAll<Entity>((diskParams: any, filter: any) =>
       _getLinodeDisks(linodeId, diskParams, filter)
-    )().then(result => ({
+    )().then((result) => ({
       results: result.results,
       data: result.data.map(addLinodeIdToDisk(linodeId)),
     }))

@@ -38,7 +38,7 @@ describe('Top Processes', () => {
       const { getByText } = render(
         wrapWithTheme(<TopProcesses {...props} topProcessesData={data} />)
       );
-      Object.keys(data.Processes || {}).forEach(processName => {
+      Object.keys(data.Processes || {}).forEach((processName) => {
         getByText(processName);
       });
     });
@@ -80,8 +80,10 @@ describe('Top Processes', () => {
     });
 
     it('returns each process name', () => {
-      Object.keys(extendedData.Processes || {}).forEach(processName => {
-        expect(normalizedData.find(p => p.name === processName)).toBeDefined();
+      Object.keys(extendedData.Processes || {}).forEach((processName) => {
+        expect(
+          normalizedData.find((p) => p.name === processName)
+        ).toBeDefined();
       });
     });
 

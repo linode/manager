@@ -25,7 +25,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TableRowEmptyState: React.FC<CombinedProps> = props => {
+const TableRowEmptyState: React.FC<CombinedProps> = (props) => {
   const { classes } = props;
   return (
     <TableRow data-testid={'table-row-empty'}>

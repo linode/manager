@@ -82,7 +82,7 @@ export type CombinedProps = Props &
   WithNotifications &
   StyleProps;
 
-export const LinodeRow: React.FC<CombinedProps> = props => {
+export const LinodeRow: React.FC<CombinedProps> = (props) => {
   const {
     // linode props
     backups,
@@ -287,7 +287,7 @@ export const RenderFlag: React.FC<{
   mutationAvailable: boolean;
   linodeNotifications: Notification[];
   classes: any;
-}> = props => {
+}> = (props) => {
   /*
    * Render either a flag for if the Linode has a notification
    * or if it has a pending mutation available. Mutations take
@@ -323,7 +323,7 @@ export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
   text: string;
-}> = props => {
+}> = (props) => {
   const { progress, text, className } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 

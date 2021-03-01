@@ -43,7 +43,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const MaintenanceBanner: React.FC<CombinedProps> = props => {
+const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
   const {
     type,
     maintenanceEnd,

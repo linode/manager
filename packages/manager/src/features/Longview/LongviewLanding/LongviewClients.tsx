@@ -94,7 +94,7 @@ export type CombinedProps = Props &
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
-export const LongviewClients: React.FC<CombinedProps> = props => {
+export const LongviewClients: React.FC<CombinedProps> = (props) => {
   const { getLongviewClients } = props;
 
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
@@ -258,7 +258,9 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
             small
             isClearable={false}
             options={sortOptions}
-            value={sortOptions.find(thisOption => thisOption.value === sortKey)}
+            value={sortOptions.find(
+              (thisOption) => thisOption.value === sortKey
+            )}
             onChange={handleSortKeyChange}
             label="Sort by"
             hideLabel
@@ -481,7 +483,7 @@ export const filterLongviewClientsByQuery = (
   const cleanedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const queryRegex = new RegExp(`${cleanedQuery}`, 'gmi');
 
-  return clientList.filter(thisClient => {
+  return clientList.filter((thisClient) => {
     if (thisClient.label.match(queryRegex)) {
       return true;
     }

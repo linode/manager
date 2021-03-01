@@ -50,7 +50,7 @@ interface StateProps {
   mockFlags: MockFeatureFlagState;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   mockFlags: state.mockFeatureFlags,
 });
 

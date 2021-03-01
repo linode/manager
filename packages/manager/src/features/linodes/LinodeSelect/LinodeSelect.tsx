@@ -49,7 +49,7 @@ interface Props {
 
 type CombinedProps = Props & WithLinodesProps;
 
-const LinodeSelect: React.FC<CombinedProps> = props => {
+const LinodeSelect: React.FC<CombinedProps> = (props) => {
   const {
     disabled,
     generalError,
@@ -74,7 +74,7 @@ const LinodeSelect: React.FC<CombinedProps> = props => {
   const { _loading } = useReduxLoad(['linodes']);
 
   const linodes = region
-    ? linodesData.filter(thisLinode => thisLinode.region === region)
+    ? linodesData.filter((thisLinode) => thisLinode.region === region)
     : linodesData;
 
   const options = groupByRegion
@@ -150,7 +150,7 @@ export const linodesToItems = (
     ? linodes.filter(filterCondition)
     : linodes;
 
-  return maybeFilteredLinodes.map(thisLinode => ({
+  return maybeFilteredLinodes.map((thisLinode) => ({
     value:
       typeof valueOverride === 'function'
         ? valueOverride(thisLinode)
@@ -176,7 +176,7 @@ export const linodeFromItems = (
   }
 
   return (
-    linodes.find(thisLinode => {
+    linodes.find((thisLinode) => {
       return (thisLinode.data as Linode).id === linodeId;
     }) || null
   );
@@ -199,7 +199,7 @@ export const linodesToGroupedItems = (
     maybeFilteredLinodes
   );
 
-  return Object.keys(groupedByRegion).map(region => {
+  return Object.keys(groupedByRegion).map((region) => {
     return {
       label: formatRegion(region),
       options: linodesToItems(
@@ -217,7 +217,7 @@ export const linodeFromGroupedItems = (
 ) => {
   // I wanted to use Ramda's `flatten()` but the typing is not good.
   const flattenedOptions: Item<number>[] = [];
-  groupedOptions.forEach(eachGroup => {
+  groupedOptions.forEach((eachGroup) => {
     flattenedOptions.push(...eachGroup.options);
   });
   return linodeFromItems(flattenedOptions, linodeId);

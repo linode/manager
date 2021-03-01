@@ -43,7 +43,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const TipSection: React.FunctionComponent<CombinedProps> = props => {
+export const TipSection: React.FunctionComponent<CombinedProps> = (props) => {
   const { classes, icon, tips, title } = props;
   const Icon = icon;
 

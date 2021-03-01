@@ -9,11 +9,9 @@ export interface StateProps {
   bucketErrors?: BucketError[];
 }
 
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  {},
-  ApplicationState
-> = state => ({
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
+  state
+) => ({
   bucketsData: state.__resources.buckets.data,
   bucketsLoading: state.__resources.buckets.loading,
   bucketErrors: state.__resources.buckets.bucketErrors,

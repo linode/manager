@@ -23,7 +23,7 @@ export const stripInvalidPromos = (data: Account) => {
    */
   const { active_promotions } = data;
   const filteredPromotions = active_promotions.filter(
-    thisPromotion => thisPromotion.expire_dt !== null
+    (thisPromotion) => thisPromotion.expire_dt !== null
   );
   return {
     ...data,

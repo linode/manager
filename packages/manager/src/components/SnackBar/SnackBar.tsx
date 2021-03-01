@@ -37,7 +37,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = SnackbarProviderProps & WithStyles<ClassNames>;
 
-const SnackBar: React.FC<CombinedProps> = props => {
+const SnackBar: React.FC<CombinedProps> = (props) => {
   /**
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
@@ -60,7 +60,7 @@ const SnackBar: React.FC<CombinedProps> = props => {
         variantWarning: classes.warning,
         variantInfo: classes.info,
       }}
-      action={key => (
+      action={(key) => (
         <CloseSnackbar
           onClick={onClickDismiss(key)}
           text="Dismiss Notification"

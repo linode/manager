@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = LinodeContextProps & WithTypesAndImages & RegionProps;
 
-const MigrateLanding: React.FC<CombinedProps> = props => {
+const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const history = useHistory();
@@ -136,7 +136,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
   };
 
   const firstEventWithProgress = (linodeEvents || []).find(
-    eachEvent => typeof eachEvent.percent_complete === 'number'
+    (eachEvent) => typeof eachEvent.percent_complete === 'number'
   );
 
   const newLabel = getLinodeDescription(
@@ -276,7 +276,7 @@ const mapStateToProps: MapStateToProps<
   WithTypesAndImages,
   {},
   ApplicationState
-> = state => ({
+> = (state) => ({
   types: state.__resources.types.entities,
   images: state.__resources.images.itemsById,
   notifications: state.__resources.notifications.data || [],

@@ -27,7 +27,7 @@ export interface PrimaryLink {
 
 type CombinedProps = Props;
 
-const NavItem: React.SFC<CombinedProps> = props => {
+const NavItem: React.SFC<CombinedProps> = (props) => {
   const {
     href,
     onClick,
@@ -75,7 +75,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
       ) : (
         <Tooltip title={isDisabled ? isDisabled() : ''} placement="left-end">
           <ListItem
-            onClick={e => {
+            onClick={(e) => {
               props.closeMenu();
               /* disregarding undefined is fine here because of the error handling thrown above */
               onClick!();

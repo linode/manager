@@ -18,7 +18,7 @@ export interface Props {
  * menu that makes more sense.
  */
 
-export const KernelSelect: React.FC<Props> = props => {
+export const KernelSelect: React.FC<Props> = (props) => {
   const { selectedKernel, kernels, onChange, readOnly, errorText } = props;
 
   const options = kernelsToGroupedItems(kernels);
@@ -48,7 +48,7 @@ export const getSelectedKernelId = (
     (accum, thisGroup) => [...accum, ...thisGroup.options],
     []
   );
-  return kernels.find(thisKernel => kernelID === thisKernel.value);
+  return kernels.find((thisKernel) => kernelID === thisKernel.value);
 };
 
 export const groupKernels = (kernel: Kernel) => {
@@ -87,7 +87,7 @@ export const kernelsToGroupedItems = (kernels: Kernel[]) => {
         ...accum,
         {
           label: thisGroup,
-          options: groupedKernels[thisGroup].map(thisKernel => ({
+          options: groupedKernels[thisGroup].map((thisKernel) => ({
             label: thisKernel.label,
             value: thisKernel.id,
           })),
@@ -127,11 +127,11 @@ const sortKernelGroups = (a: GroupType, b: GroupType) => {
  */
 export const sortCurrentKernels = (kernels: Kernel[] = []) => {
   return [
-    kernels.find(thisKernel => thisKernel.label.match(/64 bit/i)),
-    kernels.find(thisKernel => thisKernel.label.match(/32 bit/i)),
-    kernels.find(thisKernel => thisKernel.label.match(/direct disk/i)),
-    kernels.find(thisKernel => thisKernel.label.match(/grub 2/i)),
-    kernels.find(thisKernel => thisKernel.label.match(/grub \(legacy\)/i)),
+    kernels.find((thisKernel) => thisKernel.label.match(/64 bit/i)),
+    kernels.find((thisKernel) => thisKernel.label.match(/32 bit/i)),
+    kernels.find((thisKernel) => thisKernel.label.match(/direct disk/i)),
+    kernels.find((thisKernel) => thisKernel.label.match(/grub 2/i)),
+    kernels.find((thisKernel) => thisKernel.label.match(/grub \(legacy\)/i)),
   ].filter(Boolean) as Kernel[];
 };
 

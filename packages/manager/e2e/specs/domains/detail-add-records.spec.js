@@ -20,7 +20,7 @@ describe('Domains - Detail - Add Records Suite', () => {
   ];
 
   const expectedTagsDisplay = () => {
-    const displayedTags = DomainDetail.tags.map(tag => tag.getText());
+    const displayedTags = DomainDetail.tags.map((tag) => tag.getText());
     expect(displayedTags).toEqual(domainTags);
   };
 
@@ -71,7 +71,7 @@ describe('Domains - Detail - Add Records Suite', () => {
   };
 
   const checkNsRecords = () => {
-    [1, 2, 3, 4, 5].forEach(index => {
+    [1, 2, 3, 4, 5].forEach((index) => {
       const rowIndex = index - 1;
       const nameServerElement = DomainDetail.domainTableCellValue(
         'NS Record',

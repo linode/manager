@@ -52,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-const ProcessesGraphs: React.FC<CombinedProps> = props => {
+const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 

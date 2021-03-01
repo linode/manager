@@ -50,7 +50,7 @@ describe('CPUMetrics', () => {
   });
 
   it('renders Max, Avg, and Last table headers', () => {
-    ['Max', 'Avg', 'Last'].forEach(section => {
+    ['Max', 'Avg', 'Last'].forEach((section) => {
       expect(
         wrapper.containsMatchingElement(<Typography>{section}</Typography>)
       ).toBeTruthy();
@@ -71,7 +71,7 @@ describe('CPUMetrics', () => {
   });
 
   it('renders formatted Max, Avg, and Last values in the table body', () => {
-    ['10.00%', '5.50%', '7.75%'].forEach(section => {
+    ['10.00%', '5.50%', '7.75%'].forEach((section) => {
       expect(
         wrapper.containsMatchingElement(<Typography>{section}</Typography>)
       ).toBeTruthy();

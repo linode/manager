@@ -45,7 +45,7 @@ const progressFromEvent = (e?: Event) => {
   return undefined;
 };
 
-export const VolumeTableRow: React.FC<CombinedProps> = props => {
+export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     isUpdating,

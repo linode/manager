@@ -289,7 +289,7 @@ export const UserMenu: React.FC<{}> = () => {
   React.useEffect(() => {
     if (userEmail) {
       setGravatarLoading(true);
-      getGravatarUrl(userEmail).then(url => {
+      getGravatarUrl(userEmail).then((url) => {
         setGravatarLoading(false);
         setGravatarURL(url);
       });
@@ -377,7 +377,7 @@ export const UserMenu: React.FC<{}> = () => {
                 <div className={classes.menuHeader}>Account</div>
                 <Grid container>
                   <Grid item className={classes.accountColumn}>
-                    {accountLinks.map(menuLink =>
+                    {accountLinks.map((menuLink) =>
                       menuLink.hide ? null : (
                         <MenuLink
                           key={menuLink.display}

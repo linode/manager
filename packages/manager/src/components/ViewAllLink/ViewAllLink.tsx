@@ -38,7 +38,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-const ViewAllLink: React.FC<CombinedProps> = props => {
+const ViewAllLink: React.FC<CombinedProps> = (props) => {
   const { classes, count, text, link, external, className } = props;
   return (
     <>

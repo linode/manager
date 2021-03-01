@@ -87,8 +87,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     (dispatch: ThunkDispatch) => ({
       getLongviewClients: (params, filter) =>
         dispatch(getAllLongviewClients({ params, filter })),
-      createLongviewClient: label => dispatch(create({ label })),
-      deleteLongviewClient: id => dispatch(_delete({ id })),
+      createLongviewClient: (label) => dispatch(create({ label })),
+      deleteLongviewClient: (id) => dispatch(_delete({ id })),
       updateLongviewClient: (id, label) => dispatch(update({ id, label })),
     })
   );

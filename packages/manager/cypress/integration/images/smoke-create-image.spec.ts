@@ -18,10 +18,10 @@ describe('create image', () => {
       page: 1,
       pages: 1,
     }).as('getImages');
-    cy.intercept('POST', '*/images', req => {
+    cy.intercept('POST', '*/images', (req) => {
       req.reply(200);
     }).as('postImages');
-    createLinode().then(linode => {
+    createLinode().then((linode) => {
       // stub incoming disks response
       cy.intercept(`*/linode/instances/${linode.id}/disks*`, {
         results: 2,

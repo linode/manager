@@ -164,7 +164,7 @@ export const generateDefaultDomainRecords = (
   );
 };
 
-export const CreateDomain: React.FC<CombinedProps> = props => {
+export const CreateDomain: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { disabled, domainActions, origin } = props;
@@ -195,7 +195,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
     validationSchema: createDomainSchema,
     validateOnChange: true,
     validateOnMount: true,
-    onSubmit: values => create(values),
+    onSubmit: (values) => create(values),
   });
 
   React.useEffect(() => {
@@ -340,7 +340,7 @@ export const CreateDomain: React.FC<CombinedProps> = props => {
         }
         return redirectToLandingOrDetail(type, domainData.id);
       })
-      .catch(err => {
+      .catch((err) => {
         if (!mounted) {
           return;
         }

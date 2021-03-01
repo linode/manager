@@ -14,7 +14,7 @@ describe('Icon Text Link Suite', () => {
     $(iconTextLinkTitle).waitForDisplayed();
 
     const iconTextLinks = $$(iconTextLinkTitle);
-    iconTextLinks.forEach(e =>
+    iconTextLinks.forEach((e) =>
       expect(e.isDisplayed())
         .withContext(`Icon titles should be displayed`)
         .toBe(true)
@@ -24,12 +24,12 @@ describe('Icon Text Link Suite', () => {
   it('should display IconTextLink with link text', () => {
     const iconTextLinks = $$(iconTextLinkTitle);
 
-    iconTextLinks.forEach(e =>
+    iconTextLinks.forEach((e) =>
       expect(e.getTagName())
         .withContext(`Incorrect tag name`)
         .toBe('button')
     );
-    iconTextLinks.forEach(e =>
+    iconTextLinks.forEach((e) =>
       expect(e.getText())
         .withContext(`should be any text`)
         .toMatch(/([A-Z])/gi)
@@ -38,7 +38,7 @@ describe('Icon Text Link Suite', () => {
 
   it('should contain an svg icon', () => {
     const iconTextLinks = $$(iconTextLinkTitle);
-    iconTextLinks.forEach(e => {
+    iconTextLinks.forEach((e) => {
       expect(e.$('svg').isDisplayed())
         .withContext(`Icon image should be displayed`)
         .toBe(true);
@@ -75,7 +75,7 @@ describe('Icon Text Link Suite', () => {
     $(iconTextLinkTitle).waitForDisplayed();
 
     const iconTextLinks = $$(iconTextLinkTitle);
-    const disabledLinks = iconTextLinks.map(e =>
+    const disabledLinks = iconTextLinks.map((e) =>
       e.getAttribute('class').includes('disabled')
     );
 

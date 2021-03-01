@@ -38,7 +38,7 @@ interface DatabaseEntityDetailProps {
   database: Database;
 }
 
-const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = props => {
+const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = (props) => {
   const { database } = props;
 
   const { deleteDatabase } = useDatabases();
@@ -161,7 +161,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps> = props => {
+const Header: React.FC<HeaderProps> = (props) => {
   const { label, status, handleClickDelete } = props;
 
   const classes = useHeaderStyles();
@@ -327,7 +327,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Body: React.FC<BodyProps> = props => {
+const Body: React.FC<BodyProps> = (props) => {
   const {
     numCPUs,
     gbRAM,
@@ -457,7 +457,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Footer: React.FC<FooterProps> = React.memo(props => {
+export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const classes = useFooterStyles();
 
   const { updateDatabase } = useDatabases();
@@ -469,7 +469,7 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
   const addTag = React.useCallback(
     (tag: string) => {
       const newTags = [...tags, tag];
-      return updateDatabase(id, { tags: newTags }).catch(e =>
+      return updateDatabase(id, { tags: newTags }).catch((e) =>
         enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
           variant: 'error',
         })
@@ -480,8 +480,8 @@ export const Footer: React.FC<FooterProps> = React.memo(props => {
 
   const deleteTag = React.useCallback(
     (tag: string) => {
-      const newTags = tags.filter(thisTag => thisTag !== tag);
-      return updateDatabase(id, { tags: newTags }).catch(e =>
+      const newTags = tags.filter((thisTag) => thisTag !== tag);
+      return updateDatabase(id, { tags: newTags }).catch((e) =>
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
           {

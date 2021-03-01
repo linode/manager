@@ -9,14 +9,14 @@ const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
 export const DomainDetailRouting: React.FC<RouteComponentProps<{
   domainId: string;
-}>> = props => {
+}>> = (props) => {
   const domainId = Number(props.match.params.domainId);
   const { domains, requestDomain } = useDomains();
   const request = useAPIRequest(() => requestDomain(domainId), undefined);
 
   // The Domain from the store that matches this ID.
   const foundDomain = Object.values(domains.itemsById).find(
-    thisDomain => thisDomain.id === domainId
+    (thisDomain) => thisDomain.id === domainId
   );
 
   if (!foundDomain) {

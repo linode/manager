@@ -115,25 +115,25 @@ export const linodeDetailContextFactory = (
       dispatch(_updateLinode({ linodeId, ...data })),
 
     /** Linode Config actions */
-    getLinodeConfig: configId =>
+    getLinodeConfig: (configId) =>
       dispatch(_getLinodeConfig({ linodeId, configId })),
     getLinodeConfigs: () =>
       dispatch(_getLinodeConfigs({ linodeId })).then(({ data }) => data),
     updateLinodeConfig: (configId, data) =>
       dispatch(_updateLinodeConfig({ linodeId, configId, ...data })),
-    createLinodeConfig: data =>
+    createLinodeConfig: (data) =>
       dispatch(_createLinodeConfig({ linodeId, ...data })),
-    deleteLinodeConfig: configId =>
+    deleteLinodeConfig: (configId) =>
       dispatch(_deleteLinodeConfig({ linodeId, configId })),
 
     /** Linode Disk actions */
-    getLinodeDisk: diskId => dispatch(_getLinodeDisk({ linodeId, diskId })),
+    getLinodeDisk: (diskId) => dispatch(_getLinodeDisk({ linodeId, diskId })),
     getLinodeDisks: () => dispatch(_getLinodeDisks({ linodeId })),
     updateLinodeDisk: (diskId, data) =>
       dispatch(_updateLinodeDisk({ linodeId, diskId, ...data })),
-    createLinodeDisk: data =>
+    createLinodeDisk: (data) =>
       dispatch(_createLinodeDisk({ linodeId, ...data })),
-    deleteLinodeDisk: diskId =>
+    deleteLinodeDisk: (diskId) =>
       dispatch(_deleteLinodeDisk({ linodeId, diskId })),
     resizeLinodeDisk: (diskId, size) =>
       dispatch(_resizeLinodeDisk({ linodeId, diskId, size })),

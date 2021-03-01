@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = Props;
 
-const DeletionDialog: React.FC<CombinedProps> = props => {
+const DeletionDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     entity,

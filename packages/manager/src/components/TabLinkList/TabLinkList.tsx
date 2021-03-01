@@ -57,7 +57,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const TabLinkList: React.FC<CombinedProps> = props => {
+export const TabLinkList: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { tabs } = props;
 

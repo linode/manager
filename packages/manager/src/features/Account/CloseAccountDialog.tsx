@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CloseAccountDialog: React.FC<CombinedProps> = props => {
+const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
     false
   );
@@ -65,7 +65,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
   }, [inputtedUsername]);
 
   const inputRef = React.useCallback(
-    node => {
+    (node) => {
       /**
        * focus on first textfield when modal is opened
        */
@@ -85,7 +85,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
        */
       comments,
     })
-      .then(response => {
+      .then((response) => {
         setIsClosingAccount(false);
         /** shoot the user off to survey monkey to answer some questions */
         history.push('/cancel', { survey_link: response.survey_link });
@@ -125,7 +125,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
         placeholder="Username"
         aria-label="username field"
         value={inputtedUsername}
-        onChange={e => setUsername(e.target.value)}
+        onChange={(e) => setUsername(e.target.value)}
         inputRef={inputRef}
       />
       <Typography className={classes.dontgo}>
@@ -141,7 +141,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = props => {
         rows={2}
         label="Comments (optional)"
         placeholder="Provide Feedback"
-        onChange={e => setComments(e.target.value)}
+        onChange={(e) => setComments(e.target.value)}
       />
     </Dialog>
   );
@@ -154,7 +154,7 @@ interface ActionsProps {
   disabled: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

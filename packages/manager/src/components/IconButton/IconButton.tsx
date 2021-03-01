@@ -37,7 +37,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const IconButtonWrapper: React.FC<CombinedProps> = props => {
+const IconButtonWrapper: React.FC<CombinedProps> = (props) => {
   const { classes, destructive, style, className, ...rest } = props;
 
   return (

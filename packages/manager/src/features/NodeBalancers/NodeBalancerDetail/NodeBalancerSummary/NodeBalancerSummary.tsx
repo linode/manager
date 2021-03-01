@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancerSummary: React.FC<CombinedProps> = props => {
+const NodeBalancerSummary: React.FC<CombinedProps> = (props) => {
   const { nodeBalancer, errorResponses, classes } = props;
   return (
     <div>

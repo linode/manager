@@ -27,7 +27,7 @@ export interface NavTabsProps {
 
 type CombinedProps = NavTabsProps;
 
-const NavTabs: React.FC<CombinedProps> = props => {
+const NavTabs: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const reactRouterLocation = useLocation();
 

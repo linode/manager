@@ -44,7 +44,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const InstallationInstructions: React.FC<CombinedProps> = props => {
+const InstallationInstructions: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;

@@ -36,7 +36,7 @@ interface Props {
   manuallyCreated: boolean;
 }
 
-const FolderTableRow: React.FC<Props> = props => {
+const FolderTableRow: React.FC<Props> = (props) => {
   const { folderName, displayName, manuallyCreated } = props;
 
   const history = useHistory();

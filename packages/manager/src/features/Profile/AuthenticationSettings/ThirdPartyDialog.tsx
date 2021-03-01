@@ -33,12 +33,12 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ThirdPartyDialog: React.FC<CombinedProps> = props => {
+const ThirdPartyDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { open, error, loading, provider, onClose } = props;
 
   const displayName =
-    providers.find(thisProvider => thisProvider.name === provider)
+    providers.find((thisProvider) => thisProvider.name === provider)
       ?.displayName || '';
 
   return (

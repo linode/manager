@@ -30,7 +30,7 @@ export const createBucket = (
   cluster: string,
   bucket = undefined
 ) => {
-  return makeBucketCreateReq(label, cluster, bucket).then(resp => {
+  return makeBucketCreateReq(label, cluster, bucket).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Bucket ${resp.body.label} successfully`, resp);
     return resp.body;
@@ -48,8 +48,8 @@ export const deleteBucketByLabel = (cluster, bucket) => {
 };
 
 export const deleteAllTestBuckets = () => {
-  getBuckets().then(resp => {
-    resp.body.data.forEach(bucket => {
+  getBuckets().then((resp) => {
+    resp.body.data.forEach((bucket) => {
       if (isTestEntity(bucket)) {
         deleteBucketByLabel(bucket['cluster'], bucket.label);
       }
@@ -61,8 +61,8 @@ export const deleteAccessKeyById = (keyId: number) =>
   deleteById(`object-storage/keys/`, keyId);
 
 export const deleteAllTestAccessKeys = () => {
-  getAccessKeys().then(resp => {
-    resp.body.data.forEach(key => {
+  getAccessKeys().then((resp) => {
+    resp.body.data.forEach((key) => {
       if (isTestEntity(key)) {
         deleteAccessKeyById(key.id);
       }

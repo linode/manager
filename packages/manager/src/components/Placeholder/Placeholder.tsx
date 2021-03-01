@@ -105,7 +105,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Placeholder: React.FC<CombinedProps> = props => {
+const Placeholder: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     isEntity,

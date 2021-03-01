@@ -38,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = props => {
+export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   {

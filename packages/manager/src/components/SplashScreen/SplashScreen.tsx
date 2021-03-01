@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 
 type CombinedProps = StateProps;
 
-const SplashScreen: React.FC<CombinedProps> = props => {
+const SplashScreen: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -67,7 +67,7 @@ interface StateProps {
   appIsLoading: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   appIsLoading: state.initialLoad.appIsLoading,
 });
 

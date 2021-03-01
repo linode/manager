@@ -43,7 +43,7 @@ export interface ImageWithEvent extends Image {
 
 type CombinedProps = Handlers & ImageWithEvent;
 
-const ImageRow: React.FC<CombinedProps> = props => {
+const ImageRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -112,7 +112,7 @@ const ProgressDisplay: React.FC<{
   className: string;
   progress: undefined | number;
   text: string;
-}> = props => {
+}> = (props) => {
   const { progress, text, className } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 

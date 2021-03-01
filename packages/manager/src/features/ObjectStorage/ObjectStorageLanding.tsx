@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
+export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { replace } = props.history;
   const [mode, setMode] = React.useState<MODE>('creating');
@@ -111,7 +111,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
     // Once the OBJ Clusters have been loaded, request Buckets from each Cluster.
     if (clustersLoaded && !bucketsLoadingOrLoaded) {
       const clusterIds = objectStorageClusters.entities.map(
-        thisCluster => thisCluster.id
+        (thisCluster) => thisCluster.id
       );
 
       requestObjectStorageBuckets(clusterIds).catch(() => {
@@ -143,7 +143,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
 
   const objPromotionalOffers = (
     flags.promotionalOffers ?? []
-  ).filter(promotionalOffer =>
+  ).filter((promotionalOffer) =>
     promotionalOffer.features.includes('Object Storage')
   );
 
@@ -192,14 +192,14 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = props => {
       />
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
       >
         <TabLinkList tabs={tabs} />
 
-        {objPromotionalOffers.map(promotionalOffer => (
+        {objPromotionalOffers.map((promotionalOffer) => (
           <PromotionalOfferCard
             key={promotionalOffer.name}
             {...promotionalOffer}

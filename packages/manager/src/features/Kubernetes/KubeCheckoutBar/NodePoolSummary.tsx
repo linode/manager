@@ -34,7 +34,7 @@ export interface Props {
   onRemove: () => void;
 }
 
-export const NodePoolSummary: React.FC<Props> = props => {
+export const NodePoolSummary: React.FC<Props> = (props) => {
   const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
 
   const classes = useStyles();

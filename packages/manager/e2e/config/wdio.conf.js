@@ -42,7 +42,7 @@ const specs = specsToRun();
 const selectedReporters = argv.log ? ['spec', 'junit'] : ['spec'];
 
 const getRunnerCount = () => {
-  const userCount = keysIn(process.env).filter(users =>
+  const userCount = keysIn(process.env).filter((users) =>
     users.includes('MANAGER_USER')
   ).length;
   const specsCount = specs.length;
@@ -258,7 +258,7 @@ exports.config = {
     // }
 
     // Generate temporary test credentials and store for use across tests
-    credStore.generateCreds(config, parallelRunners).catch(e => {
+    credStore.generateCreds(config, parallelRunners).catch((e) => {
       // if we got here, most likely mongo isn't running locally
       if (CRED_STORE_MODE === 'mongolocal') {
         console.error(
@@ -324,10 +324,10 @@ exports.config = {
     browser.call(() => {
       return credStore
         .checkoutCreds(specs[0])
-        .then(testCreds => {
+        .then((testCreds) => {
           creds = testCreds;
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     });
     credStore.login(creds.username, creds.password, false);
   },
@@ -400,7 +400,7 @@ exports.config = {
     }
 
     // Set "inUse:false" on the account under test in the credentials file
-    browser.call(() => credStore.checkinCreds(specs[0]).then(creds => creds));
+    browser.call(() => credStore.checkinCreds(specs[0]).then((creds) => creds));
   },
   /**
    * Gets executed right after terminating the webdriver session.

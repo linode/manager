@@ -20,7 +20,7 @@ export const useLinodeActions = (): LinodesProps => {
   const dispatch: Dispatch = useDispatch();
 
   const requestLinodes = () =>
-    dispatch(_requestLinodes({})).then(response => response.data);
+    dispatch(_requestLinodes({})).then((response) => response.data);
 
   const getLinode = (linodeId: number) => dispatch(_getLinode({ linodeId }));
 

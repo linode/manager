@@ -70,7 +70,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DDrawer: React.FC<CombinedProps> = props => {
+const DDrawer: React.FC<CombinedProps> = (props) => {
   const { title, classes, children, wide, ...rest } = props;
 
   const titleID = convertForAria(title);

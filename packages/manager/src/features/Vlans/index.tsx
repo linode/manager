@@ -10,7 +10,7 @@ type Props = RouteComponentProps<{}>;
 
 type CombinedProps = Props;
 
-const VLan: React.FC<CombinedProps> = props => {
+const VLan: React.FC<CombinedProps> = (props) => {
   const {
     match: { path },
   } = props;

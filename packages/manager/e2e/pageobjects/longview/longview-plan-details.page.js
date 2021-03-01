@@ -82,7 +82,7 @@ class LongviewPlanDetails extends Page {
     expect(browser.getUrl())
       .withContext(`wrong url path`)
       .toContain('/longview/plan-details');
-    planOptions.forEach(plan => {
+    planOptions.forEach((plan) => {
       expect(plan.isDisplayed())
         .withContext(`Longview plan ${assertLog.displayed}`)
         .toBe(true);

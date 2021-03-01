@@ -22,7 +22,7 @@ describe('Search - Tags Suite', () => {
     SearchBar.assertSuggestions();
 
     const suggestionTitle = SearchBar.suggestionTitle.getText();
-    const tagTitle = SearchBar.tags.map(tag => tag.getText());
+    const tagTitle = SearchBar.tags.map((tag) => tag.getText());
     console.log(tagTitle);
 
     expect(tagTitle.includes(tags[0])).toBe(true);

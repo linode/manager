@@ -25,7 +25,7 @@ describe('Action Menu Suite', () => {
       expect($$(actionMenuItem).length)
         .withContext(`Missing menu items`)
         .toBeGreaterThan(1);
-      $$(actionMenuItem).forEach(i => expect(i.getTagName()).toBe('li'));
+      $$(actionMenuItem).forEach((i) => expect(i.getTagName()).toBe('li'));
     });
   });
 

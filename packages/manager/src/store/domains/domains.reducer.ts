@@ -73,7 +73,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, upsertMultipleDomains)) {
     const { payload } = action;
     let updated = state.itemsById;
-    payload.forEach(thisDomain => {
+    payload.forEach((thisDomain) => {
       updated = addEntityRecord(updated, thisDomain);
     });
 

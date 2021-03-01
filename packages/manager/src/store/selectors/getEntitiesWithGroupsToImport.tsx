@@ -25,7 +25,7 @@ export const uniqueGroup = (entity: GroupedEntity) => {
   }
 
   const lowercaseGroup = entity.group.toLowerCase();
-  const lowercaseTags = entity.tags.map(tag => tag.toLowerCase());
+  const lowercaseTags = entity.tags.map((tag) => tag.toLowerCase());
 
   return !lowercaseTags.includes(lowercaseGroup);
 };

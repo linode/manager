@@ -9,7 +9,7 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   updated: '2018-06-26T16:04:28',
   comments: '',
   virt_mode: 'paravirt',
-  id: Factory.each(i => i),
+  id: Factory.each((i) => i),
   run_level: 'default',
   helpers: {
     distro: true,

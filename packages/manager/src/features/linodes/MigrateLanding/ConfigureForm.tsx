@@ -57,13 +57,13 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ConfigureForm: React.FC<CombinedProps> = props => {
+const ConfigureForm: React.FC<CombinedProps> = (props) => {
   const { allRegions, currentRegion } = props;
   const classes = useStyles();
   const { cmr } = useFlags();
 
   const country =
-    allRegions.find(thisRegion => thisRegion.id == currentRegion)?.country ??
+    allRegions.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
 
   return (
@@ -79,8 +79,8 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
       <RegionSelect
         className={classes.select}
         regions={props.allRegions
-          .filter(eachRegion => eachRegion.id !== props.currentRegion)
-          .map(eachRegion => ({
+          .filter((eachRegion) => eachRegion.id !== props.currentRegion)
+          .map((eachRegion) => ({
             ...eachRegion,
             display: dcDisplayNames[eachRegion.id],
           }))}

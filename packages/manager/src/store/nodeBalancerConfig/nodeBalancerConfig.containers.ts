@@ -31,7 +31,7 @@ export interface WithNodeBalancerConfigActions {
   };
 }
 
-export const withNodeBalancerConfigActions = connect(undefined, dispatch => ({
+export const withNodeBalancerConfigActions = connect(undefined, (dispatch) => ({
   nodeBalancerConfigActions: bindActionCreators(
     {
       getAllNodeBalancerConfigs,

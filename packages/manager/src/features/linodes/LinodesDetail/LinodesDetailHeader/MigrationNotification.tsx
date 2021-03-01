@@ -19,7 +19,7 @@ interface Props {
   notificationMessage: string;
 }
 
-const MigrationNotification: React.FC<Props> = props => {
+const MigrationNotification: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -33,7 +33,7 @@ const MigrationNotification: React.FC<Props> = props => {
   /** Migrate */
   const migrate = () => {
     scheduleOrQueueMigration(linodeID)
-      .then(_ => {
+      .then((_) => {
         // A 200 response indicates that the operation was successful.
         const successMessage =
           notificationType === 'migration_scheduled'
@@ -42,7 +42,7 @@ const MigrationNotification: React.FC<Props> = props => {
         enqueueSnackbar(successMessage, { variant: 'success' });
         requestNotifications();
       })
-      .catch(_ => {
+      .catch((_) => {
         const errorMessage =
           notificationType === 'migration_scheduled'
             ? 'An error occurred entering the migration queue.'

@@ -10,7 +10,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const RenderIPs: React.FC<CombinedProps> = props => {
+export const RenderIPs: React.FC<CombinedProps> = (props) => {
   const { ipv4, ipv6, linodeId } = props;
 
   const ipv4ShouldTruncate = ipv4.length > 4;
@@ -18,7 +18,7 @@ export const RenderIPs: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {ipv4Slice.map(thisIP => {
+      {ipv4Slice.map((thisIP) => {
         return (
           <Grid item key={thisIP} data-testid="ipv4-list-item">
             {thisIP}

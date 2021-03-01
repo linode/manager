@@ -68,7 +68,7 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const CreateBucketForm: React.FC<CombinedProps> = props => {
+export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
   const {
     isRestrictedUser,
     onClose,
@@ -123,7 +123,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
             // @analytics
             sendCreateBucketEvent(cluster);
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             // We also need to refresh account settings on failure, since, depending
             // on the error, Object Storage service might have actually been enabled.
             if (props.object_storage === 'disabled') {
@@ -144,7 +144,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
           });
       }}
     >
-      {formikProps => {
+      {(formikProps) => {
         const beforeSubmit = () => {
           confirmObjectStorage<FormState>(
             props.object_storage,
@@ -196,7 +196,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
                 data-qa-cluster-select
                 error={touched.cluster ? errors.cluster : undefined}
                 onBlur={handleBlur}
-                onChange={value => setFieldValue('cluster', value)}
+                onChange={(value) => setFieldValue('cluster', value)}
                 selectedCluster={values.cluster}
                 disabled={isRestrictedUser}
               />
@@ -273,7 +273,7 @@ export const isDuplicateBucket = (
 ) => {
   return (
     bucketsData.findIndex(
-      bucket => bucket.cluster === cluster && bucket.label === label
+      (bucket) => bucket.cluster === cluster && bucket.label === label
     ) > -1
   );
 };

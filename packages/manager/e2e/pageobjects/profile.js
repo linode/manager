@@ -200,7 +200,7 @@ export class TokenCreateDrawer extends Page {
 
   labelTimestamp(time) {
     this.label.setValue(time);
-    this.accessColumn.forEach(col =>
+    this.accessColumn.forEach((col) =>
       expect(col.isDisplayed())
         .withContext(`"${this.col}" selector ${assertLog.displayed}`)
         .toBe(true)
@@ -373,6 +373,6 @@ export class Profile extends Page {
   }
 
   profileTab(tabText) {
-    return $$('[data-qa-tabs] a').find(tab => tab.getText() === tabText);
+    return $$('[data-qa-tabs] a').find((tab) => tab.getText() === tabText);
   }
 }

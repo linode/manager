@@ -81,7 +81,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const NotificationSection: React.FC<Props> = props => {
+export const NotificationSection: React.FC<Props> = (props) => {
   const {
     content,
     count,
@@ -166,7 +166,7 @@ interface BodyProps {
   emptyMessage?: string;
 }
 
-const ContentBody: React.FC<BodyProps> = React.memo(props => {
+const ContentBody: React.FC<BodyProps> = React.memo((props) => {
   const { content, count, emptyMessage, header, loading } = props;
   const classes = useStyles();
   const [showAll, setShowAll] = React.useState(false);
@@ -184,7 +184,7 @@ const ContentBody: React.FC<BodyProps> = React.memo(props => {
   return _content.length > 0 ? (
     // eslint-disable-next-line
     <>
-      {_content.map(thisItem => (
+      {_content.map((thisItem) => (
         <div
           className={classes.notificationItem}
           key={`notification-row-${thisItem.id}`}

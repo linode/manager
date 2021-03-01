@@ -84,7 +84,7 @@ describe('View - Personal Access Tokens', () => {
 
     it('should display tokens', () => {
       const labels = profile.tokenLabel;
-      labels.forEach(l => expect(l.isDisplayed()).toBe(true));
+      labels.forEach((l) => expect(l.isDisplayed()).toBe(true));
     });
 
     it('should display token scopes drawer', () => {

@@ -58,7 +58,7 @@ type CombinedProps = ManagedProps &
   ManagedIssuesProps &
   IssueDispatch;
 
-export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
+export const ManagedDashboardCard: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { requestManagedServices, requestManagedIssues } = props;
   const {
@@ -68,14 +68,14 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     lastUpdated,
     update,
   } = useAPIRequest<ManagedStatsData | null>(
-    () => getManagedStats().then(response => response.data),
+    () => getManagedStats().then((response) => response.data),
     null
   );
 
   usePolling(
     [
-      () => requestManagedServices().catch(_ => null),
-      () => requestManagedIssues().catch(_ => null),
+      () => requestManagedServices().catch((_) => null),
+      () => requestManagedIssues().catch((_) => null),
       update,
     ],
     10000
@@ -84,8 +84,8 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     // @todo rely on interval for initial requests
     // Rely on Redux error handling.
-    requestManagedServices().catch(_ => null);
-    requestManagedIssues().catch(_ => null);
+    requestManagedServices().catch((_) => null);
+    requestManagedIssues().catch((_) => null);
   }, []);
 
   const statsError =
@@ -117,7 +117,7 @@ interface ContentProps extends CombinedProps {
   statsError?: string;
 }
 
-const LoadingErrorOrContent: React.FC<ContentProps> = props => {
+const LoadingErrorOrContent: React.FC<ContentProps> = (props) => {
   const {
     data,
     issues,

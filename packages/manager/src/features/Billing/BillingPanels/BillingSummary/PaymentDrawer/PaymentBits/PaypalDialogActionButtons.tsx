@@ -14,7 +14,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const PaypalDialogActionButtons: React.SFC<CombinedProps> = props => {
+const PaypalDialogActionButtons: React.SFC<CombinedProps> = (props) => {
   const {
     isStagingPaypalPayment,
     paypalPaymentFailed,

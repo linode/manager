@@ -90,7 +90,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
             of the activity stream. Make sure they're events after the ones
             we got from page load and ones that match the Linode ID
           */
-          ...this.props.eventsFromRedux.filter(eachEvent => {
+          ...this.props.eventsFromRedux.filter((eachEvent) => {
             return (
               /** all events from Redux will have this flag as a boolean value */
               !eachEvent._initial &&
@@ -106,7 +106,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
             flag doesn't exist
           */
           ...this.state.events.filter(
-            eachEvent => typeof eachEvent._initial === 'undefined'
+            (eachEvent) => typeof eachEvent._initial === 'undefined'
           ),
         ]),
       });
@@ -115,13 +115,13 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     getEventsForEntity({}, 'linode', this.props.linodeId)
-      .then(response => {
+      .then((response) => {
         this.setState({
           events: response.data,
           loading: false,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           error: getErrorStringOrDefault(
             err,

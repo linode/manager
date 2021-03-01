@@ -19,7 +19,7 @@ export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
   return normalizeValue(usedCPU, numberOfCores);
 };
 
-const CPUGauge: React.FC<CombinedProps> = props => {
+const CPUGauge: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,
@@ -64,16 +64,16 @@ const CPUGauge: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withClientStats<Props>(ownProps => ownProps.clientID)(
+export default withClientStats<Props>((ownProps) => ownProps.clientID)(
   withTheme(CPUGauge)
 );
 
 // UTILITIES
 export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {
   let sum = 0;
-  Object.keys(CPUData).forEach(key => {
+  Object.keys(CPUData).forEach((key) => {
     const cpu = CPUData[key];
-    Object.keys(cpu).forEach(entry => {
+    Object.keys(cpu).forEach((entry) => {
       const val = pathOr(0, [entry, 0, 'y'], cpu);
       sum += val;
     });

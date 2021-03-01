@@ -94,7 +94,9 @@ interface DispatchProps {
   ) => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => {
   return {
     dispatchStartSession: (token, tokenType, expires) =>
       dispatch(

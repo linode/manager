@@ -139,7 +139,7 @@ interface Props extends GridProps {
 
 type CombinedProps = Props & WithTheme;
 
-const Notice: React.FC<CombinedProps> = props => {
+const Notice: React.FC<CombinedProps> = (props) => {
   const {
     className,
     important,

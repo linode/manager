@@ -35,7 +35,7 @@ describe('TicketList', () => {
 
   it('contains a row for each Support Ticket', () => {
     renderWithTheme(<TicketList {...props} />);
-    supportTickets.forEach(thisTicket => {
+    supportTickets.forEach((thisTicket) => {
       screen.getByText(thisTicket.summary);
     });
   });

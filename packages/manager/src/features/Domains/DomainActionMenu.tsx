@@ -26,7 +26,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props;
 
-export const DomainActionMenu: React.FC<CombinedProps> = props => {
+export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
   const {
     domain,
     id,
@@ -91,7 +91,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = props => {
   return (
     <>
       {!matchesSmDown &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

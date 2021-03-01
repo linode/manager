@@ -69,7 +69,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
     });
 
     updateLinode({ linodeId: this.props.linodeId, watchdog_enabled: value })
-      .then(response => {
+      .then((response) => {
         this.setState(
           compose(
             setSubmitting(false),

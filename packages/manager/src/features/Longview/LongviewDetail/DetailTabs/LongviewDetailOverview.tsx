@@ -50,7 +50,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const LongviewDetailOverview: React.FC<CombinedProps> = props => {
+export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     client,

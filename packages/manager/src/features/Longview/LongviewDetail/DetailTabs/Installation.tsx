@@ -19,7 +19,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Installation: React.FC<CombinedProps> = props => {
+const Installation: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   return (

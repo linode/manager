@@ -40,7 +40,7 @@ interface Props {
   helperText?: string;
 }
 
-const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
+const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
   const {
     classes,
     copy,

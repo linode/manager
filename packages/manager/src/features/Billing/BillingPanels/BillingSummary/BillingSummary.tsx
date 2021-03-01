@@ -136,7 +136,7 @@ interface Props {
   mostRecentInvoiceId?: number;
 }
 
-export const BillingSummary: React.FC<Props> = props => {
+export const BillingSummary: React.FC<Props> = (props) => {
   const { promotion, balanceUninvoiced, balance, mostRecentInvoiceId } = props;
 
   // On-the-fly route matching so this component can open the drawer itself.

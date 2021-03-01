@@ -36,7 +36,7 @@ export const getClientStats = createRequestThunk(
     }
     return get(api_key, 'getLatestValue', {
       fields: ['cpu', 'disk', 'load', 'memory', 'network', 'sysinfo', 'uptime'],
-    }).then(response => ({
+    }).then((response) => ({
       ...response.DATA,
       Packages: [...packages],
     }));

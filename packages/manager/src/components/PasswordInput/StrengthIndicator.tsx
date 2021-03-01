@@ -59,7 +59,7 @@ const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const StrengthIndicator: React.FC<CombinedProps> = props => {
+const StrengthIndicator: React.FC<CombinedProps> = (props) => {
   const { classes, strength, hideStrengthLabel } = props;
 
   return (
@@ -70,7 +70,7 @@ const StrengthIndicator: React.FC<CombinedProps> = props => {
       className={classes.root}
       data-qa-strength={strength}
     >
-      {Array.from(Array(3), (v, idx) => idx + 1).map(idx => (
+      {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
         <Grid item key={idx} xs={3} className={classes.blockOuter}>
           <div
             className={classNames({

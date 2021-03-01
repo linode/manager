@@ -58,7 +58,7 @@ const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
   if (isType(action, updateEventsAsSeen)) {
     return {
       ...state,
-      events: state.events.map(event => ({ ...event, seen: true })),
+      events: state.events.map((event) => ({ ...event, seen: true })),
       countUnseenEvents: 0,
     };
   }

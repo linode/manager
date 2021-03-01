@@ -56,7 +56,7 @@ type CombinedProps = Props &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const MutationNotification: React.FC<CombinedProps> = props => {
+const MutationNotification: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     typesData,
@@ -100,11 +100,11 @@ const MutationNotification: React.FC<CombinedProps> = props => {
        */
       if (linodeType.successor) {
         getType(linodeType.successor)
-          .then(requestedType => {
+          .then((requestedType) => {
             setSuccessorMetaData(requestedType);
           })
           /** just silently fail if we couldn't get the data */
-          .catch(e => e);
+          .catch((e) => e);
       }
     }
   }, [typesData, linodeType]);
@@ -126,7 +126,7 @@ const MutationNotification: React.FC<CombinedProps> = props => {
           variant: 'info',
         });
       })
-      .catch(errors => {
+      .catch((errors) => {
         const e = getErrorStringOrDefault(
           errors,
           'Mutation could not be initiated.'
@@ -161,7 +161,7 @@ const MutationNotification: React.FC<CombinedProps> = props => {
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             if (e.key === 'Enter') {
               openMutationDrawer();
             }

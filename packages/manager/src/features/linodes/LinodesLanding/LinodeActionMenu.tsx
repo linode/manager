@@ -92,19 +92,19 @@ export const buildQueryStringForLinodeClone = (
   };
 
   // If the type of this Linode is a valid (current) type, use it in the QS
-  if (types && types.some(typeEntity => typeEntity.id === linodeType)) {
+  if (types && types.some((typeEntity) => typeEntity.id === linodeType)) {
     params.typeID = linodeType!;
   }
 
   // If the region of this Linode is a valid region, use it in the QS
-  if (regions && regions.some(region => region.id === linodeRegion)) {
+  if (regions && regions.some((region) => region.id === linodeRegion)) {
     params.regionID = linodeRegion;
   }
 
   return stringify(params);
 };
 
-export const LinodeActionMenu: React.FC<CombinedProps> = props => {
+export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
   const { linodeRegion, linodeType } = props;
   const classes = useStyles();
   const theme = useTheme<Theme>();
@@ -125,12 +125,12 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
 
   const toggleOpenActionMenu = () => {
     getLinodeConfigs(props.linodeId)
-      .then(configs => {
+      .then((configs) => {
         setConfigs(configs.data);
         setConfigsError(undefined);
         setHasMadeConfigsRequest(true);
       })
-      .catch(err => {
+      .catch((err) => {
         setConfigsError(err);
         setHasMadeConfigsRequest(true);
       });
@@ -293,7 +293,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = props => {
     <>
       {!matchesMdDown &&
         inTableContext &&
-        inlineActions.map(action => {
+        inlineActions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

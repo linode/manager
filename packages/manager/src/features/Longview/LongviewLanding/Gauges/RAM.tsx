@@ -17,7 +17,7 @@ import withClientData, {
 
 type commbinedProps = Props & WithTheme & LVDataProps;
 
-const RAMGauge: React.FC<commbinedProps> = props => {
+const RAMGauge: React.FC<commbinedProps> = (props) => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,
@@ -119,6 +119,6 @@ const RAMGauge: React.FC<commbinedProps> = props => {
   );
 };
 
-export default withClientData<Props>(ownProps => ownProps.clientID)(
+export default withClientData<Props>((ownProps) => ownProps.clientID)(
   withTheme(RAMGauge)
 );

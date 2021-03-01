@@ -31,7 +31,7 @@ export const displayType = (
     return 'No Plan';
   }
 
-  const foundType = types.find(t => t.id === linodeTypeId);
+  const foundType = types.find((t) => t.id === linodeTypeId);
   if (foundType && foundType.label) {
     return foundType.label;
   }

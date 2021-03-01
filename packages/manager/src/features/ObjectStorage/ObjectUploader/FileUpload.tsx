@@ -112,7 +112,7 @@ interface Props {
   url?: string;
 }
 
-const FileUpload: React.FC<Props> = props => {
+const FileUpload: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const resumeUpload = () =>

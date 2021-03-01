@@ -38,18 +38,18 @@ export const updateNodeBalancerConfig = createRequestThunk(
 export const deleteNodeBalancerConfig: ThunkActionCreator<
   Promise<{}>,
   { nodeBalancerConfigId: number; nodeBalancerId: number }
-> = params => dispatch => {
+> = (params) => (dispatch) => {
   const { nodeBalancerConfigId, nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerConfigActions;
 
   dispatch(started(params));
 
   return _deleteNodeBalancerConfig(nodeBalancerId, nodeBalancerConfigId)
-    .then(response => {
+    .then((response) => {
       dispatch(done({ params, result: response }));
       return response;
     })
-    .catch(error => {
+    .catch((error) => {
       dispatch(failed({ params, error }));
       return Promise.reject(error);
     });

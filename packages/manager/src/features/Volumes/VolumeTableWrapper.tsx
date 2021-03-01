@@ -30,7 +30,7 @@ type CombinedProps = Omit<OrderByProps, 'data'> &
   VolumeTableWrapperProps &
   WithStyles<ClassNames>;
 
-const DomainsTableWrapper: React.FC<CombinedProps> = props => {
+const DomainsTableWrapper: React.FC<CombinedProps> = (props) => {
   const {
     order,
     orderBy,

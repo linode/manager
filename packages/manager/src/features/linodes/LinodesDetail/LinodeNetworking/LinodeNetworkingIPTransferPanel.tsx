@@ -176,7 +176,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         /** When switching back to none, reset the ipState. */
         when(
           () => isNone(mode),
-          updateIPState(ip, ipState =>
+          updateIPState(ip, (ipState) =>
             LinodeNetworkingIPTransferPanel.defaultState(
               ipState.sourceIP,
               ipState.sourceIPsLinodeID
@@ -223,7 +223,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             /** We need to find and return the newly selected Linode's IPs. */
             updateSelectedLinodesIPs(ip, () => {
               const linode = this.props.linodes.find(
-                l => l.id === Number(e.value)
+                (l) => l.id === Number(e.value)
               );
               if (linode) {
                 return linode.ips;
@@ -234,7 +234,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             /** We need to find the selected Linode's IPs and return the first. */
             updateSelectedIP(ip, () => {
               const linode = this.props.linodes.find(
-                l => l.id === Number(e.value)
+                (l) => l.id === Number(e.value)
               );
               if (linode) {
                 return linode.ips[0];
@@ -283,7 +283,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
               state.mode === 'none'
                 ? null
                 : actionsList.find(
-                    eachAction => eachAction.value === state.mode
+                    (eachAction) => eachAction.value === state.mode
                   )
             }
             options={actionsList}
@@ -310,11 +310,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   linodeSelect = ({ sourceIP, selectedLinodeID }: Move) => {
     const { classes, readOnly } = this.props;
 
-    const linodeList = this.props.linodes.map(l => {
+    const linodeList = this.props.linodes.map((l) => {
       return { label: l.label, value: l.id };
     });
 
-    const defaultLinode = linodeList.find(eachLinode => {
+    const defaultLinode = linodeList.find((eachLinode) => {
       return eachLinode.value === selectedLinodeID;
     });
 
@@ -342,11 +342,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
     const { classes, readOnly } = this.props;
 
-    const IPList = selectedLinodesIPs.map(ip => {
+    const IPList = selectedLinodesIPs.map((ip) => {
       return { label: ip, value: ip };
     });
 
-    const defaultIP = IPList.find(eachIP => {
+    const defaultIP = IPList.find((eachIP) => {
       return eachIP.value === selectedIP;
     });
 
@@ -426,7 +426,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
               successMessage: 'IP transferred successfully.',
             });
           })
-          .catch(err => {
+          .catch((err) => {
             this.setState({
               error: getAPIErrorOrDefault(
                 err,
@@ -435,7 +435,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             });
           });
       })
-      .catch(err => {
+      .catch((err) => {
         const apiErrors = getAPIErrorOrDefault(
           err,
           'Unable to transfer IP addresses at this time. Please try again later.'
@@ -647,8 +647,8 @@ const enhanced = recompose<CombinedProps, Props>(
   withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
     const { linodeID, linodeRegion } = ownProps;
     const linodes = linodesData
-      .filter(l => l.id !== linodeID && l.region === linodeRegion)
-      .map(linode => ({
+      .filter((l) => l.id !== linodeID && l.region === linodeRegion)
+      .map((linode) => ({
         id: linode.id,
         ips: linode.ipv4,
         label: linode.label,

@@ -29,7 +29,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const NodeBalancerCreationError: React.FC<CombinedProps> = props => {
+const NodeBalancerCreationError: React.FC<CombinedProps> = (props) => {
   const { errors } = props;
 
   return !errors || errors.length === 0 ? null : (
@@ -59,7 +59,7 @@ const maybeListReason = (errors?: APIError[]) => {
 
   return (
     <List dense>
-      {errors.map(e => (
+      {errors.map((e) => (
         <ListItem key={e.reason}>
           <ListItemText disableTypography primary={e.reason} />
         </ListItem>

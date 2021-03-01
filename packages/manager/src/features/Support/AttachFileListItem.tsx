@@ -67,7 +67,7 @@ interface Props {
 
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
-export const AttachFileListItem: React.FC<CombinedProps> = props => {
+export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
   const { classes, file, inlineDisplay, onClick } = props;
   if (file.uploaded) {
     return null;

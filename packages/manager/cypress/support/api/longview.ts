@@ -14,8 +14,8 @@ export const deleteClientById = (clientId: number) =>
   deleteById('longview/clients', clientId);
 
 export const deleteAllTestClients = () => {
-  getClients().then(resp => {
-    resp.body.data.forEach(client => {
+  getClients().then((resp) => {
+    resp.body.data.forEach((client) => {
       if (isTestEntity(client)) {
         deleteClientById(client.id);
       }
@@ -41,7 +41,7 @@ const makeClientCreateReq = (client, label) => {
 };
 
 export const createClient = (client = undefined, label) => {
-  return makeClientCreateReq(client, label).then(resp => {
+  return makeClientCreateReq(client, label).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Client ${resp.body.label} successfully`, resp);
     return resp.body;

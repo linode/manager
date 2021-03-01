@@ -33,7 +33,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 let ada: any;
 
-const AdaLink: React.FC<CombinedProps> = props => {
+const AdaLink: React.FC<CombinedProps> = (props) => {
   const [adaError, setAdaError] = React.useState<string>('');
 
   React.useEffect(() => {

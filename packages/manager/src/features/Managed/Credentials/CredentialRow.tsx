@@ -35,7 +35,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
+export const CredentialRow: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const { credential, openDialog, openForEdit } = props;
   const classes = useStyles();
 

@@ -179,7 +179,7 @@ const AccountActivationLanding = React.lazy(() =>
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const MainContent: React.FC<CombinedProps> = props => {
+const MainContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
   const { preferences } = usePreferences();
@@ -369,7 +369,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                             />
                             <Route
                               path="/profile"
-                              render={routeProps => (
+                              render={(routeProps) => (
                                 <Profile
                                   {...routeProps}
                                   toggleTheme={props.toggleTheme}

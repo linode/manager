@@ -56,7 +56,7 @@ interface Props {
   linodeLabel: string;
 }
 
-export const NetworkTransfer: React.FC<Props> = props => {
+export const NetworkTransfer: React.FC<Props> = (props) => {
   const { linodeID, linodeLabel } = props;
   const classes = useStyles();
 
@@ -113,7 +113,7 @@ interface ContentProps {
   error: boolean;
 }
 
-const TransferContent: React.FC<ContentProps> = props => {
+const TransferContent: React.FC<ContentProps> = (props) => {
   const {
     error,
     linodeLabel,

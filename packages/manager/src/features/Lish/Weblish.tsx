@@ -101,7 +101,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
         this.props
           .refreshToken()!
           .then(() => this.connect())
-          .catch(e => e);
+          .catch((e) => e);
       }, 3000);
     }
   }
@@ -140,7 +140,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
     this.terminal.writeln('\x1b[32mLinode Lish Console\x1b[m');
 
-    this.socket.addEventListener('message', evt => {
+    this.socket.addEventListener('message', (evt) => {
       let data;
 
       /*

@@ -23,7 +23,7 @@ xdescribe('StackScript - Edit Existing', () => {
   };
 
   function assertOriginalDisplays() {
-    const compatibleImages = ConfigureStackScripts.imageTags.filter(t =>
+    const compatibleImages = ConfigureStackScripts.imageTags.filter((t) =>
       t.getText().includes(stackConfig.images[0])
     );
     const description = ConfigureStackScripts.description

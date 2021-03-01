@@ -43,7 +43,7 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
     expect(ImportGroupsAsTagsDrawer.importMessage.getText()).toEqual(
       importMessage
     );
-    const groupsToImport = ImportGroupsAsTagsDrawer.linodeGroups.map(group =>
+    const groupsToImport = ImportGroupsAsTagsDrawer.linodeGroups.map((group) =>
       group.getText().replace('- ', '')
     );
     expect(groupsToImport.sort()).toEqual([linode.group, linode1.group].sort());
@@ -82,7 +82,7 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
   //labeling style has changed
   xit('Verify groups are imported as tags', () => {
     browser.url(constants.routes.linodes);
-    [linode, linode1].forEach(linode => {
+    [linode, linode1].forEach((linode) => {
       $(ListLinodes.getLinodeSelector(linode.linodeLabel)).waitForDisplayed(
         constants.wait.normal
       );

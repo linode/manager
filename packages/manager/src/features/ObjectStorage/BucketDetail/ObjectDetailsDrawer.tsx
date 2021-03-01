@@ -46,7 +46,7 @@ export interface Props {
   clusterId: string;
 }
 
-const ObjectDetailsDrawer: React.FC<Props> = props => {
+const ObjectDetailsDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {

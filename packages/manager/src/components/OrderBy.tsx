@@ -95,7 +95,7 @@ export const sortData = (orderBy: string, order: Order) => {
     let orderByProp;
     if (orderBy.includes('[')) {
       orderByProp = splitAt(orderBy.indexOf('['), orderBy) // will end up like ['ipv4', '[0]']
-        .map(eachValue =>
+        .map((eachValue) =>
           eachValue.includes('[')
             ? /** if the element has square brackets, remove them and convert to a number */
               +eachValue.replace(/[\[\]']+/g, '')
@@ -136,7 +136,7 @@ export const sortData = (orderBy: string, order: Order) => {
   });
 };
 
-export const OrderBy: React.FC<CombinedProps> = props => {
+export const OrderBy: React.FC<CombinedProps> = (props) => {
   const { preferences, updatePreferences } = usePreferences();
   const location = useLocation();
   const history = useHistory();

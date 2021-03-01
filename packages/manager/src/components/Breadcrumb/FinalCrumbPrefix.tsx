@@ -20,7 +20,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const FinalCrumbPrefix: React.FC<CombinedProps> = props => {
+const FinalCrumbPrefix: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { prefixComponent, prefixStyle } = props;

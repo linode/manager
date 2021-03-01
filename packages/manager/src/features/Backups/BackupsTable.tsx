@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const BackupsTable: React.FC<CombinedProps> = props => {
+export const BackupsTable: React.FC<CombinedProps> = (props) => {
   const { classes, linodes, loading } = props;
 
   return (

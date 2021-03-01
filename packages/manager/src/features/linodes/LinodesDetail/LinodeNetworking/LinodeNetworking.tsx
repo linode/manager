@@ -152,7 +152,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.setState({ IPRequestError: undefined });
 
     return getLinodeIPs(this.props.linode.id)
-      .then(ips => {
+      .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 
         const shouldSetIPv6Loading = this.state.initialLoading;
@@ -168,13 +168,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             this.setState({ ipv6Loading: true });
           }
           getAllIPs({}, { region: this.props.linode.region })
-            .then(response => {
+            .then((response) => {
               this.setState({
                 ipv6Loading: false,
                 allIPs: response.data,
               });
             })
-            .catch(errorResponse => {
+            .catch((errorResponse) => {
               const errors = getAPIErrorOrDefault(
                 errorResponse,
                 'There was an error retrieving your IPv6 network information.'
@@ -186,7 +186,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             });
         }
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(
           errorResponse,
           'There was an error retrieving your network information.'
@@ -393,7 +393,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     // Look for this IP address in state.
     const foundIPIndex = this.state.allIPs.findIndex(
-      eachIP => eachIP.address === ip.address
+      (eachIP) => eachIP.address === ip.address
     );
 
     // If this address is not yet in state, append it.
@@ -684,7 +684,7 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: any
 ) => ({
-  upsertLinode: linode => dispatch(_upsertLinode(linode)),
+  upsertLinode: (linode) => dispatch(_upsertLinode(linode)),
 });
 
 const connected = connect(undefined, mapDispatchToProps);
@@ -709,7 +709,7 @@ export const listIPv6InRange = (
   prefix: number,
   ips: IPAddress[] = []
 ) => {
-  return ips.filter(thisIP => {
+  return ips.filter((thisIP) => {
     // Only keep addresses that:
     // 1. are part of an IPv6 range or pool
     // 2. have RDNS set
@@ -775,7 +775,7 @@ export const ipResponseToDisplayRows = (
   // Routed ranges are a special case.
   if (ipv6?.global) {
     ipDisplay.push(
-      ...ipv6.global.map(thisIP => {
+      ...ipv6.global.map((thisIP) => {
         let address = thisIP.range;
         if (thisIP.prefix) {
           address += ` / ${thisIP.prefix}`;
@@ -805,7 +805,7 @@ type ipKey =
   | 'Link Local';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
-  return ips.map(ip => ipToDisplay(ip, key));
+  return ips.map((ip) => ipToDisplay(ip, key));
 };
 
 const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {

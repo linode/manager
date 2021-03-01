@@ -53,7 +53,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ThirdPartyContent: React.FC<CombinedProps> = props => {
+export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -64,7 +64,7 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
   const thirdPartyEnabled = props.authType !== 'password';
 
   const displayName =
-    providers.find(thisProvider => thisProvider.name === props.authType)
+    providers.find((thisProvider) => thisProvider.name === props.authType)
       ?.displayName || '';
 
   return (
@@ -80,7 +80,7 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
         may only use one provider at a time.
       </Typography>
       <div className={classes.providers}>
-        {providers.map(thisProvider => {
+        {providers.map((thisProvider) => {
           return (
             <Button
               className={thirdPartyEnabled ? classes.enabled : ''}

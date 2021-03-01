@@ -22,7 +22,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ContactsTableContent: React.FC<CombinedProps> = props => {
+export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
   const {
     contacts,
     loading,

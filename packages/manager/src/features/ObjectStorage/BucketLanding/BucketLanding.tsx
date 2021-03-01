@@ -52,7 +52,7 @@ interface Props {
 
 export type CombinedProps = Props & DispatchProps;
 
-export const BucketLanding: React.FC<CombinedProps> = props => {
+export const BucketLanding: React.FC<CombinedProps> = (props) => {
   const { isRestrictedUser, openBucketDrawer } = props;
 
   const classes = useStyles();
@@ -112,7 +112,7 @@ export const BucketLanding: React.FC<CombinedProps> = props => {
         // @analytics
         sendDeleteBucketEvent(cluster);
       })
-      .catch(e => {
+      .catch((e) => {
         // @analytics
         sendDeleteBucketFailedEvent(cluster);
 
@@ -298,7 +298,7 @@ const RenderError: React.FC<{}> = () => {
 
 const RenderEmpty: React.FC<{
   onClick: () => void;
-}> = props => {
+}> = (props) => {
   const classes = useStyles();
 
   return (
@@ -351,7 +351,7 @@ const BucketErrorDisplay: React.FC<BucketErrorDisplayProps> = React.memo(
     return (
       <Banner
         regionsAffected={bucketErrors.map(
-          thisError =>
+          (thisError) =>
             objectStorageClusterDisplay[thisError.clusterId] ??
             thisError.clusterId
         )}
@@ -375,7 +375,7 @@ const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
         : `${regionsAffected[0]}.`}
       <ul>
         {moreThanOneRegionAffected &&
-          regionsAffected.map(thisRegion => (
+          regionsAffected.map((thisRegion) => (
             <li key={thisRegion}>{thisRegion}</li>
           ))}
       </ul>

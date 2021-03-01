@@ -28,7 +28,7 @@ export const createDomain = createRequestThunk<
   CreateDomainPayload,
   Domain,
   APIError[]
->(createDomainActions, payload => _createDomain(payload));
+>(createDomainActions, (payload) => _createDomain(payload));
 
 export const deleteDomain = createRequestThunk<DomainId, {}, APIError[]>(
   deleteDomainActions,
@@ -49,11 +49,11 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
   dispatch(getDomainsActions.started());
 
   return getAll<Domain>(getDomains, undefined)({}, {})
-    .then(domains => {
+    .then((domains) => {
       dispatch(getDomainsActions.done({ result: domains }));
       return domains.data;
     })
-    .catch(err => {
+    .catch((err) => {
       const errors = getAPIErrorOrDefault(
         err,
         'There was an error retrieving your Domains.'
@@ -64,8 +64,10 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
 };
 
 type RequestDomainForStoreThunk = ThunkActionCreator<Promise<void>, number>;
-export const requestDomainForStore: RequestDomainForStoreThunk = id => dispatch => {
-  return getDomain(id).then(domain => {
+export const requestDomainForStore: RequestDomainForStoreThunk = (id) => (
+  dispatch
+) => {
+  return getDomain(id).then((domain) => {
     dispatch(upsertDomain(domain));
   });
 };

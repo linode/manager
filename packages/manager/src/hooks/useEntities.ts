@@ -51,7 +51,7 @@ export const useEntities = () => {
   const domains = Object.values(_domains.itemsById);
   const linodes = Object.values(_linodes.itemsById);
   const images = (Object.values(_images.itemsById) ?? []).filter(
-    thisImage => !thisImage.is_public
+    (thisImage) => !thisImage.is_public
   );
   const volumes = Object.values(_volumes.itemsById);
   const kubernetesClusters = Object.values(_kubernetesClusters.itemsById);
@@ -84,13 +84,13 @@ export const useEntities = () => {
     },
     nodeBalancers: {
       data: nodeBalancers,
-      request: () => requestNodeBalancers().then(response => response.data),
+      request: () => requestNodeBalancers().then((response) => response.data),
       lastUpdated: _nodeBalancers.lastUpdated,
       error: _nodeBalancers.error?.read,
     },
     volumes: {
       data: volumes,
-      request: () => requestVolumes().then(response => response.data),
+      request: () => requestVolumes().then((response) => response.data),
       lastUpdated: _volumes.lastUpdated,
       error: _volumes.error?.read,
     },

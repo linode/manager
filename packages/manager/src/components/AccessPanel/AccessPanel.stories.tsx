@@ -79,9 +79,9 @@ class PasswordAndSSHAccess extends React.Component<
   };
 
   toggleSSHUserKeys = (username: string, result: boolean) =>
-    this.setState(state => ({
+    this.setState((state) => ({
       ...state,
-      users: state.users.map(user =>
+      users: state.users.map((user) =>
         username === user.username ? { ...user, selected: result } : user
       ),
     }));

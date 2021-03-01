@@ -57,7 +57,7 @@ describe('Domains - List Suite', () => {
 
     ListDomains.actionMenuItem.waitForDisplayed(constants.wait.normal);
     const actionMenuItems = $$(ListDomains.actionMenuItem.selector);
-    actionMenuItems.forEach(i =>
+    actionMenuItems.forEach((i) =>
       expect(expectedMenuItems).toContain(i.getText())
     );
 

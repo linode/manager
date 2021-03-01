@@ -117,7 +117,7 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps & BucketsRequests;
 
-const ObjectUploader: React.FC<CombinedProps> = props => {
+const ObjectUploader: React.FC<CombinedProps> = (props) => {
   const { clusterId, bucketName, prefix } = props;
 
   const classes = useStyles();
@@ -171,7 +171,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     }
 
     const queuedUploads = state.files.filter(
-      upload => upload.status === 'QUEUED'
+      (upload) => upload.status === 'QUEUED'
     );
 
     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
@@ -182,7 +182,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       props
         .getBucket({ cluster: props.clusterId, label: props.bucketName })
         // It's OK to swallow the error here, since this request is for a silent UI update.
-        .catch(_ => null)
+        .catch((_) => null)
     )
   ).current;
 
@@ -195,13 +195,13 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     // Set status as "IN_PROGRESS" for each file.
     dispatch({
       type: 'UPDATE_FILES',
-      filesToUpdate: nextBatch.map(fileUpload =>
+      filesToUpdate: nextBatch.map((fileUpload) =>
         pathOrFileName(fileUpload.file)
       ),
       data: { status: 'IN_PROGRESS' },
     });
 
-    nextBatch.forEach(fileUpload => {
+    nextBatch.forEach((fileUpload) => {
       const { file } = fileUpload;
 
       const path = pathOrFileName(fileUpload.file);
@@ -253,8 +253,8 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       // be overwritten) we can go ahead and upload it.
       if (fileUpload.url) {
         uploadObject(fileUpload.url, file, onUploadProgress)
-          .then(_ => handleSuccess())
-          .catch(_ => handleError());
+          .then((_) => handleSuccess())
+          .catch((_) => handleError());
       } else {
         // Otherwise, we need to make an API request to get the URL.
         getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
@@ -271,10 +271,10 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
             }
 
             return uploadObject(url, file, onUploadProgress)
-              .then(_ => handleSuccess())
-              .catch(_ => handleError());
+              .then((_) => handleSuccess())
+              .catch((_) => handleError());
           })
-          .catch(_ => handleError());
+          .catch((_) => handleError());
       }
     });
   }, [nextBatch]);

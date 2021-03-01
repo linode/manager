@@ -115,7 +115,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           <HighmemG6ToG7 />
         ) : (
           <ul className="nonMUI-list">
-            {Object.keys(extendedUpgradeInfo).map(newSpec => {
+            {Object.keys(extendedUpgradeInfo).map((newSpec) => {
               const {
                 label,
                 currentAmount,

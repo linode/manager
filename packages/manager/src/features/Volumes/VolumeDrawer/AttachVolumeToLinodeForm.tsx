@@ -46,7 +46,7 @@ const validationScheme = object({
 
 const initialValues = { volume_id: -1, config_id: -1 };
 
-const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
+const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
   const {
     actions,
     onClose,
@@ -68,11 +68,11 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
           linode_id: linodeId,
           config_id: values.config_id,
         })
-          .then(_ => {
+          .then((_) => {
             onClose();
             resetEventsPolling();
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to attach this volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -128,7 +128,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
               name="volumd_id"
               value={values.volume_id}
               onBlur={handleBlur}
-              onChange={v => setFieldValue('volume_id', v)}
+              onChange={(v) => setFieldValue('volume_id', v)}
               region={linodeRegion}
               disabled={disabled}
             />
@@ -138,7 +138,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
               linodeId={linodeId}
               name="config_id"
               onBlur={handleBlur}
-              onChange={id => setFieldValue('config_id', id)}
+              onChange={(id) => setFieldValue('config_id', id)}
               value={values.config_id}
               disabled={disabled}
             />
@@ -185,7 +185,7 @@ interface StateProps {
   linodeGrants: Grant[];
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   linodeGrants: pathOr(
     [],
     ['__resources', 'profile', 'data', 'grants', 'linode'],

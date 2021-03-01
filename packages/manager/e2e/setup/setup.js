@@ -37,21 +37,25 @@ exports.deleteAll = (token, user) => {
     const getEndpoint = (endpoint, user) => {
       return getAxiosInstance(token)
         .get(`${API_ROOT}${endpoint}`)
-        .then(res => {
+        .then((res) => {
           if (endpoint.includes('images')) {
-            privateImages = res.data.data.filter(i => i['is_public'] === false);
+            privateImages = res.data.data.filter(
+              (i) => i['is_public'] === false
+            );
             res.data['data'] = privateImages;
             return res.data;
           }
 
           if (endpoint.includes('users')) {
-            const nonRootUsers = res.data.data.filter(u => u.username !== user);
+            const nonRootUsers = res.data.data.filter(
+              (u) => u.username !== user
+            );
             res.data['data'] = nonRootUsers;
             return res.data;
           }
           return res.data;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error', error);
           return error;
         });
@@ -60,43 +64,43 @@ exports.deleteAll = (token, user) => {
     const removeInstance = (res, endpoint) => {
       return getAxiosInstance(token)
         .delete(`${endpoint}/${res.id ? res.id : res.username}`)
-        .then(res => res)
-        .catch(error => {
+        .then((res) => res)
+        .catch((error) => {
           console.error(error);
         });
     };
 
     const iterateEndpointsAndRemove = () => {
-      return endpoints.map(ep => {
+      return endpoints.map((ep) => {
         return getEndpoint(ep, user)
-          .then(res => {
+          .then((res) => {
             if (res.results > 0) {
-              res.data.forEach(i => {
-                removeInstance(i, ep).then(res => res);
+              res.data.forEach((i) => {
+                removeInstance(i, ep).then((res) => res);
               });
             }
           })
-          .catch(error => error);
+          .catch((error) => error);
       });
     };
 
     // Remove linodes, then remove all instances
     return Promise.all(iterateEndpointsAndRemove())
-      .then(values => resolve(values))
-      .catch(error => {
+      .then((values) => resolve(values))
+      .catch((error) => {
         console.error('Error', reject(error));
       });
   });
 };
 
-exports.removeAllLinodes = token => {
+exports.removeAllLinodes = (token) => {
   return new Promise((resolve, reject) => {
     const linodesEndpoint = '/linode/instances';
     const removeInstance = (res, endpoint) => {
       return getAxiosInstance(token)
         .delete(`${endpoint}/${res.id}`)
-        .then(res => res)
-        .catch(error => {
+        .then((res) => res)
+        .catch((error) => {
           console.error('Error', error);
           reject('Error', error);
         });
@@ -104,8 +108,8 @@ exports.removeAllLinodes = token => {
 
     return getAxiosInstance(token)
       .get(linodesEndpoint)
-      .then(res => {
-        const promiseArray = res.data.data.map(l =>
+      .then((res) => {
+        const promiseArray = res.data.data.map((l) =>
           removeInstance(l, linodesEndpoint)
         );
 
@@ -113,7 +117,7 @@ exports.removeAllLinodes = token => {
           .then(function(res) {
             resolve(res);
           })
-          .catch(error => {
+          .catch((error) => {
             console.error(error);
             reject('Error', error);
           });
@@ -166,10 +170,10 @@ exports.createLinode = (
 
     return getAxiosInstance(token)
       .post(linodesEndpoint, linodeConfig)
-      .then(response => {
+      .then((response) => {
         resolve(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -196,10 +200,10 @@ exports.createVolume = (token, label, region, size, tags, linode_id) => {
 
     return getAxiosInstance(token)
       .post(volumesEndpoint, volumesConfig)
-      .then(response => {
+      .then((response) => {
         resolve(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -216,22 +220,22 @@ exports.allocatePrivateIp = (token, linodeId) => {
 
     return getAxiosInstance(token)
       .post(ipsEndpoint, requestPrivate)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
   });
 };
 
-exports.getNodebalancers = token => {
+exports.getNodebalancers = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/nodebalancers';
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -244,8 +248,8 @@ exports.removeNodebalancer = (token, nodeBalancerId) => {
 
     return getAxiosInstance(token)
       .delete(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -268,23 +272,23 @@ exports.createNodeBalancer = (token, label, region, tags) => {
 
     return getAxiosInstance(token)
       .post(endpoint, data)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error(error.data);
         reject(error);
       });
   });
 };
 
-exports.removeAllVolumes = token => {
+exports.removeAllVolumes = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/volumes';
 
     const removeVolume = (res, endpoint) => {
       return getAxiosInstance(token)
         .delete(`${endpoint}/${res.id}`)
-        .then(response => response.status)
-        .catch(error => {
+        .then((response) => response.status)
+        .catch((error) => {
           reject(
             `Removing Volume ${res.id} failed due to ${JSON.stringify(
               error.response.data
@@ -295,8 +299,8 @@ exports.removeAllVolumes = token => {
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(res => {
-        const removeVolumesArray = res.data.data.map(v =>
+      .then((res) => {
+        const removeVolumesArray = res.data.data.map((v) =>
           removeVolume(v, endpoint)
         );
 
@@ -304,7 +308,7 @@ exports.removeAllVolumes = token => {
           .then(function(res) {
             resolve(res);
           })
-          .catch(error => {
+          .catch((error) => {
             console.error(error.data);
             return error;
           });
@@ -331,22 +335,22 @@ exports.createDomain = (token, type, domain, tags, group) => {
 
     return getAxiosInstance(token)
       .post(endpoint, domainConfig)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
   });
 };
 
-exports.getDomains = token => {
+exports.getDomains = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/domains';
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -359,15 +363,15 @@ exports.removeDomain = (token, domainId) => {
 
     getAxiosInstance(token)
       .delete(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error(error);
         reject(error);
       });
   });
 };
 
-exports.getMyStackScripts = token => {
+exports.getMyStackScripts = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/linode/stackscripts';
     getAxiosInstance(token)
@@ -378,8 +382,8 @@ exports.getMyStackScripts = token => {
           'User-Agent': 'WebdriverIO',
         },
       })
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -391,15 +395,15 @@ exports.removeStackScript = (token, id) => {
     const endpoint = `/linode/stackscripts/${id}`;
     getAxiosInstance(token)
       .delete(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
   });
 };
 
-exports.getPrivateImages = token => {
+exports.getPrivateImages = (token) => {
   return browser.call(function() {
     return new Promise((resolve, reject) => {
       const endpoint = '/images?page=1';
@@ -412,8 +416,8 @@ exports.getPrivateImages = token => {
             'User-Agent': 'WebdriverIO',
           },
         })
-        .then(response => resolve(response.data))
-        .catch(error => {
+        .then((response) => resolve(response.data))
+        .catch((error) => {
           console.error('Error', error);
           reject(error);
         });
@@ -428,8 +432,8 @@ exports.removeImage = (token, id) => {
 
       return getAxiosInstance(token)
         .delete(endpoint)
-        .then(response => resolve(response.data))
-        .catch(error => {
+        .then((response) => resolve(response.data))
+        .catch((error) => {
           console.error('Error', error);
           reject(error);
         });
@@ -437,15 +441,15 @@ exports.removeImage = (token, id) => {
   });
 };
 
-exports.getPublicKeys = token => {
+exports.getPublicKeys = (token) => {
   return browser.call(function() {
     return new Promise((resolve, reject) => {
       const endpoint = '/profile/sshkeys';
 
       return getAxiosInstance(token)
         .get(endpoint)
-        .then(response => resolve(response.data))
-        .catch(error => {
+        .then((response) => resolve(response.data))
+        .catch((error) => {
           console.error('Error', error);
           reject(error);
         });
@@ -460,8 +464,8 @@ exports.removePublicKey = (token, id) => {
 
       return getAxiosInstance(token)
         .delete(endpoint)
-        .then(response => resolve(response.data))
-        .catch(error => {
+        .then((response) => resolve(response.data))
+        .catch((error) => {
           console.error('Error', error);
           reject(error);
         });
@@ -469,14 +473,14 @@ exports.removePublicKey = (token, id) => {
   });
 };
 
-exports.getUsers = token => {
+exports.getUsers = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/account/users';
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -489,22 +493,22 @@ exports.deleteUser = (token, username) => {
 
     return getAxiosInstance(token)
       .delete(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
   });
 };
 
-exports.createLongviewClient = token => {
+exports.createLongviewClient = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/longview/clients';
 
     return getAxiosInstance(token)
       .post(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -517,36 +521,36 @@ exports.deleteLongviewClient = (token, lvClientId) => {
 
     return getAxiosInstance(token)
       .delete(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
   });
 };
 
-exports.getLVClients = token => {
+exports.getLVClients = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/longview/clients';
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(response => resolve(response.data.data))
-      .catch(error => {
+      .then((response) => resolve(response.data.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
   });
 };
 
-exports.getUserProfile = token => {
+exports.getUserProfile = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/profile';
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -559,8 +563,8 @@ exports.updateUserProfile = (token, profileData) => {
 
     return getAxiosInstance(token)
       .put(endpoint, profileData)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -573,22 +577,22 @@ exports.putGlobalSetting = (token, settingsData) => {
 
     return getAxiosInstance(token)
       .put(endpoint, settingsData)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
   });
 };
 
-exports.getGlobalSettings = token => {
+exports.getGlobalSettings = (token) => {
   return new Promise((resolve, reject) => {
     const endpoint = '/account/settings';
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });
@@ -601,8 +605,8 @@ exports.getLinodeImage = (token, imageId) => {
 
     return getAxiosInstance(token)
       .get(endpoint)
-      .then(response => resolve(response.data))
-      .catch(error => {
+      .then((response) => resolve(response.data))
+      .catch((error) => {
         console.error('Error', error);
         reject(error);
       });

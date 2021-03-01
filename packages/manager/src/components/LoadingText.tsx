@@ -25,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LoadingText: React.FC<CombinedProps> = props => {
+const LoadingText: React.FC<CombinedProps> = (props) => {
   const { height, width } = props;
   const style = {
     width: `${width || 100}px`,

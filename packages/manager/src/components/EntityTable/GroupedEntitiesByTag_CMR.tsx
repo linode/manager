@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export type CombinedProps = ListProps;
 
-export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
+export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
   const {
     data,
     entity,
@@ -122,7 +122,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = props => {
                               </Typography>
                             </TableCell>
                           </TableRow>
-                          {paginatedData.map(thisEntity => (
+                          {paginatedData.map((thisEntity) => (
                             <RowComponent
                               key={thisEntity.id}
                               {...thisEntity}

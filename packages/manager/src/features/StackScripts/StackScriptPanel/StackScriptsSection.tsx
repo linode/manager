@@ -47,7 +47,7 @@ export interface Props {
 
 type CombinedProps = Props & StateProps;
 
-const StackScriptsSection: React.FC<CombinedProps> = props => {
+const StackScriptsSection: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
     data,
@@ -104,7 +104,7 @@ interface StateProps {
   userCannotAddLinodes: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   isRestrictedUser: _isRestrictedUser(state),
   stackScriptGrants: pathOr(
     [],

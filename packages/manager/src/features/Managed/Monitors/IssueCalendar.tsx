@@ -44,7 +44,7 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
     /**
      * Iterate through the past 10 days
      */
-    const relevantIssues = issues.filter(thisIssue =>
+    const relevantIssues = issues.filter((thisIssue) =>
       createdOnTargetDay(timezone, thisIssue, day)
     );
     days.push({
@@ -56,7 +56,7 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
   return days;
 };
 
-export const IssueCalendar: React.FC<Props> = props => {
+export const IssueCalendar: React.FC<Props> = (props) => {
   const { issues } = props;
   const timezone = useTimezone();
 

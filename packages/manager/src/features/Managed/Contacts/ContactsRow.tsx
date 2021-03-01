@@ -22,7 +22,7 @@ interface Props {
   openDialog: (contactId: number) => void;
 }
 
-export const ContactsRow: React.FunctionComponent<Props> = props => {
+export const ContactsRow: React.FunctionComponent<Props> = (props) => {
   const classes = useStyles();
 
   const { contact, updateOrAdd, openDrawer, openDialog } = props;

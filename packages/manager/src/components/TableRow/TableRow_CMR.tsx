@@ -132,7 +132,7 @@ export interface Props {
 
 export type CombinedProps = Props & _TableRowProps & RouteComponentProps<{}>;
 
-export const TableRow: React.FC<CombinedProps> = props => {
+export const TableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {

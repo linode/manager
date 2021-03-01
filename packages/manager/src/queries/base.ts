@@ -65,7 +65,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
   return {
     onSuccess: (updatedEntity, variables) => {
       // Update the query data to include the newly updated Entity.
-      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
         [variables[indexer]]: updatedEntity,
       }));
@@ -78,9 +78,9 @@ export const creationHandlers = <T, V, E = APIError[]>(
   indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
-    onSuccess: updatedEntity => {
+    onSuccess: (updatedEntity) => {
       // Add the new Entity to the existing data.
-      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => ({
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
         [updatedEntity[indexer]]: updatedEntity,
       }));
@@ -95,7 +95,7 @@ export const deletionHandlers = <T, V, E = APIError[]>(
   return {
     onSuccess: (_, variables) => {
       // Remove the Entity from the existing data.
-      queryClient.setQueryData<ItemsByID<T>>(queryKey, oldData => {
+      queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => {
         const oldDataCopy = { ...oldData };
         delete oldDataCopy[variables[indexer]];
         return oldDataCopy;

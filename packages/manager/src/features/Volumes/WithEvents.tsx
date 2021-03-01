@@ -27,7 +27,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
       this.mounted = true;
       this.eventsSub = events$
         .filter(
-          event =>
+          (event) =>
             !event._initial &&
             [
               'volume_create',
@@ -111,7 +111,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
              * Linode info in the table row
              */
             if (!!volume.linode_id) {
-              return getLinode(volume.linode_id).then(response => {
+              return getLinode(volume.linode_id).then((response) => {
                 const linode = response;
 
                 /*

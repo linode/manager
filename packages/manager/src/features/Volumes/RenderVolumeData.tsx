@@ -34,7 +34,7 @@ export interface RenderVolumeDataProps {
 
 const RenderData: React.FC<{
   data: ExtendedVolume[];
-} & RenderVolumeDataProps> = props => {
+} & RenderVolumeDataProps> = (props) => {
   const {
     data,
     isVolumesLanding,

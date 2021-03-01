@@ -26,7 +26,7 @@ export interface Props {
   handleSelect: (id: number) => void;
 }
 
-export const Configs: React.FC<Props> = props => {
+export const Configs: React.FC<Props> = (props) => {
   const { configs, handleSelect, configSelection } = props;
 
   const classes = useStyles();

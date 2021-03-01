@@ -22,7 +22,7 @@ export default withStateHandlers<State, Handlers, { linodeLabel: string }>(
       editableLabelError: '',
     }),
 
-    setEditableLabelError: (state, ownProp) => errorText => ({
+    setEditableLabelError: (state, ownProp) => (errorText) => ({
       ...state,
       editableLabelError: errorText,
     }),

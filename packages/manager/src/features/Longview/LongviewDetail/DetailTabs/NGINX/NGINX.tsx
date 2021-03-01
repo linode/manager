@@ -33,7 +33,7 @@ interface Props {
   timezone: string;
 }
 
-export const NGINX: React.FC<Props> = props => {
+export const NGINX: React.FC<Props> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
   const flags = useFlags();

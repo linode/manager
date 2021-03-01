@@ -37,7 +37,7 @@ export interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
-export const StackScriptRow: React.FC<CombinedProps> = props => {
+export const StackScriptRow: React.FC<CombinedProps> = (props) => {
   const {
     classes,
     label,

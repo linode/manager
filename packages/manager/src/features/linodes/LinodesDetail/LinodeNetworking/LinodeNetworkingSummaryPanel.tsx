@@ -46,7 +46,7 @@ interface SummaryProps {
   title: string;
   renderValue: (args: any) => JSX.Element;
 }
-const SummarySection: React.FC<SummaryProps> = props => {
+const SummarySection: React.FC<SummaryProps> = (props) => {
   const { title, renderValue, ...rest } = props;
   const classes = useStyles();
   return (
@@ -69,13 +69,13 @@ const SummarySection: React.FC<SummaryProps> = props => {
 
 const StyledSummarySection = SummarySection;
 
-const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = props => {
+const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
   const { sshIPAddress, username, linodeRegion, linodeLabel, zoneName } = props;
   const classes = useStyles();
 
   const regions = useRegionsQuery().data ?? [];
   const currentRegion = regions.find(
-    thisRegion => thisRegion.id === linodeRegion
+    (thisRegion) => thisRegion.id === linodeRegion
   );
 
   const v4Resolvers = currentRegion?.resolvers?.ipv4.split(',') ?? [];
@@ -138,7 +138,7 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   username: state.__resources?.profile?.data?.username,
 });
 

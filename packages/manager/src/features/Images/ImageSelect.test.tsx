@@ -60,7 +60,7 @@ describe('ImageSelect', () => {
         deletedImage1,
       ]);
       expect(items).toHaveLength(3);
-      const deleted = items.find(item => item.label === groupNameMap.deleted);
+      const deleted = items.find((item) => item.label === groupNameMap.deleted);
       expect(deleted!.options).toHaveLength(1);
     });
     it('should properly format GroupType options as RS Item type', () => {

@@ -57,14 +57,14 @@ export const sortByCluster = (a: Scope, b: Scope) => {
 
 export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
   buckets
-    .map(thisBucket => ({
+    .map((thisBucket) => ({
       cluster: thisBucket.cluster,
       bucket_name: thisBucket.label,
       permissions: 'none' as AccessType,
     }))
     .sort(sortByCluster);
 
-export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
+export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
   const {
     isRestrictedUser,
     open,
@@ -114,7 +114,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
       ? {
           ...values,
           bucket_access: access.filter(
-            thisAccess => thisAccess.permissions !== 'none'
+            (thisAccess) => thisAccess.permissions !== 'none'
           ),
         }
       : { ...values, bucket_access: null };
@@ -139,7 +139,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
           validateOnBlur={true}
           onSubmit={handleSubmit}
         >
-          {formikProps => {
+          {(formikProps) => {
             const {
               values,
               errors,
@@ -162,7 +162,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
             };
 
             const handleToggleAccess = () => {
-              setLimitedAccessChecked(checked => !checked);
+              setLimitedAccessChecked((checked) => !checked);
               // Reset scopes
               setFieldValue('bucket_access', getDefaultScopes(buckets.data));
             };

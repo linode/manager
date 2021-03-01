@@ -27,7 +27,7 @@ const useInlineTextLoaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const InlineTextLoader: React.FC<InlineTextLoaderProps> = props => {
+const InlineTextLoader: React.FC<InlineTextLoaderProps> = (props) => {
   const classes = useInlineTextLoaderStyles();
 
   if (props.loading) {

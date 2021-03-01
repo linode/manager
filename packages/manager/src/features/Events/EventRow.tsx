@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const EventRow: React.FC<CombinedProps> = props => {
+export const EventRow: React.FC<CombinedProps> = (props) => {
   const { event, entityId } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
@@ -76,7 +76,7 @@ export interface RowProps {
   duration: Event['duration'];
 }
 
-export const Row: React.FC<RowProps> = props => {
+export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
   const {

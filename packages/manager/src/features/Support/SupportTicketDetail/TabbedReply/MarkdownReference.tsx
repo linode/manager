@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const MarkdownReference: React.FC<CombinedProps> = props => {
+const MarkdownReference: React.FC<CombinedProps> = (props) => {
   const { classes } = props;
   return (
     <div className={props.rootClass}>

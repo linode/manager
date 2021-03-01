@@ -70,7 +70,7 @@ export interface Props {
 
 export type CombinedProps = Props;
 
-export const ProcessesTable: React.FC<CombinedProps> = props => {
+export const ProcessesTable: React.FC<CombinedProps> = (props) => {
   const {
     processesData,
     processesLoading,
@@ -223,7 +223,7 @@ export interface ProcessTableRowProps extends ExtendedProcess {
 }
 
 export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
-  props => {
+  (props) => {
     const {
       name,
       user,

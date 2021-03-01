@@ -9,7 +9,7 @@ export interface Props {
   hideBorder?: boolean;
 }
 
-export const DisplaySection: React.FC<Props> = props => {
+export const DisplaySection: React.FC<Props> = (props) => {
   const { title, details, hideBorder } = props;
   const classes = useStyles();
   return (

@@ -26,7 +26,7 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
+export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
   const { onClose, open, token } = props;
 
   const classes = useStyles();
@@ -66,7 +66,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = props => {
           variant: 'success',
         });
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmissionErrors(
           getAPIErrorOrDefault(e, 'An unexpected error occurred.')
         );

@@ -14,7 +14,7 @@ const generateEntity = (
 
 export const notificationFactory = Factory.Sync.makeFactory<Notification>({
   type: 'maintenance',
-  entity: Factory.each(i => generateEntity(i)),
+  entity: Factory.each((i) => generateEntity(i)),
   when: DateTime.local()
     .plus({ days: 7 })
     .toISODate(),
@@ -28,7 +28,7 @@ export const notificationFactory = Factory.Sync.makeFactory<Notification>({
 
 export const abuseTicketNotificationFactory = notificationFactory.extend({
   type: 'ticket_abuse',
-  entity: Factory.each(i => generateEntity(i, 'support/tickets')),
+  entity: Factory.each((i) => generateEntity(i, 'support/tickets')),
   when: null,
   message: 'You have an open abuse ticket!',
   label: 'You have an open abuse ticket!',

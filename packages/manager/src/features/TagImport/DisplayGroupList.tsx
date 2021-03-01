@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const DisplayGroupList: React.FC<CombinedProps> = props => {
+export const DisplayGroupList: React.FC<CombinedProps> = (props) => {
   const { classes, entity, groups } = props;
 
   if (isEmpty(groups)) {

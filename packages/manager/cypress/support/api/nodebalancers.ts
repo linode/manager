@@ -8,7 +8,7 @@ import {
 export const testNodeBalTag = testTag;
 export const makeNodeBalLabel = makeTestLabel;
 
-export const makeNodeBalCreateReq = nodeBal => {
+export const makeNodeBalCreateReq = (nodeBal) => {
   const nodeBalData = nodeBal
     ? nodeBal
     : {
@@ -31,21 +31,21 @@ export const makeNodeBalCreateReq = nodeBal => {
 
 export const getNodeBalancers = () => getAll('nodebalancers');
 
-export const deleteNodeBalancerById = nodeBalId =>
+export const deleteNodeBalancerById = (nodeBalId) =>
   deleteById('nodebalancers', nodeBalId);
 
 export const deleteNodeBalancerByLabel = (label: string = '') => {
-  getNodeBalancers().then(resp => {
+  getNodeBalancers().then((resp) => {
     cy.log('get all nb', resp.body.data);
-    const nodeBalToDelete = resp.body.data.find(nb => nb.label === label);
+    const nodeBalToDelete = resp.body.data.find((nb) => nb.label === label);
     cy.log('to delete', nodeBalToDelete);
     deleteNodeBalancerById(nodeBalToDelete.id);
   });
 };
 
 export const deleteAllTestNodeBalancers = () => {
-  getNodeBalancers().then(resp => {
-    resp.body.data.forEach(nodeBal => {
+  getNodeBalancers().then((resp) => {
+    resp.body.data.forEach((nodeBal) => {
       if (isTestEntity(nodeBal)) {
         deleteNodeBalancerById(nodeBal.id);
       }

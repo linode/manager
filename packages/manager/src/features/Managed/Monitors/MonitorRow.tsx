@@ -54,7 +54,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const MonitorRow: React.FunctionComponent<CombinedProps> = props => {
+export const MonitorRow: React.FunctionComponent<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -68,7 +68,7 @@ export const MonitorRow: React.FunctionComponent<CombinedProps> = props => {
   const Icon = statusIconMap[monitor.status];
 
   // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
-  const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
+  const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
 
   return (
     <TableRow

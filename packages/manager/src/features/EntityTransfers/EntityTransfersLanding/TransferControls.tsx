@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const TransferControls: React.FC<{}> = _ => {
+export const TransferControls: React.FC<{}> = (_) => {
   const [token, setToken] = React.useState('');
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
 

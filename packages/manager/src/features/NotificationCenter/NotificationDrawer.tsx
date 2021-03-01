@@ -39,7 +39,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const NotificationDrawer: React.FC<Props> = props => {
+export const NotificationDrawer: React.FC<Props> = (props) => {
   const { data, open, onClose } = props;
   const classes = useStyles();
   const dispatch = useDispatch<ThunkDispatch>();

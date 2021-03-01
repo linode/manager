@@ -73,7 +73,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     const { handleClick, appInstances } = this.props;
     const appIDFromURL = getParamFromUrl(location.search, 'appID');
     const matchedApp = appInstances
-      ? appInstances.find(eachApp => eachApp.id === +appIDFromURL)
+      ? appInstances.find((eachApp) => eachApp.id === +appIDFromURL)
       : undefined;
 
     if (appIDFromURL && matchedApp) {
@@ -146,7 +146,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     return (
       <Panel className={classes.panel} error={error} title="Select App">
         <Grid className={classes.flatImagePanelSelections} container>
-          {appInstances.map(eachApp => (
+          {appInstances.map((eachApp) => (
             <SelectionCardWrapper
               key={eachApp.id}
               checked={eachApp.id === selectedStackScriptID}

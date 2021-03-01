@@ -127,8 +127,8 @@ export const getMineAndAccountStackScripts = (
      * meta data about each StackScript
      */
     return Promise.all(
-      stackScriptGrants.map(grant => getStackScript(grant.id))
-    ).then(response => {
+      stackScriptGrants.map((grant) => getStackScript(grant.id))
+    ).then((response) => {
       return {
         ...emptyResult,
         data: response,
@@ -141,7 +141,7 @@ export const getMineAndAccountStackScripts = (
      * users on the account and make a GET /stackscripts call with the list
      * of users as a filter
      */
-    return getUsers().then(response => {
+    return getUsers().then((response) => {
       return getStackScripts(params, {
         ...filter,
         '+and': [
@@ -183,7 +183,7 @@ export const getCommunityStackscripts = (
       ],
     });
   } else {
-    return getUsers().then(response => {
+    return getUsers().then((response) => {
       return getStackScripts(params, {
         ...filter,
         '+and': response.data.reduce(

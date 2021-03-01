@@ -128,7 +128,7 @@ describe('Linode Detail - Volumes Suite', () => {
     });
 
     it('should display volume price dynamically based on size', () => {
-      [200, 333, 450].forEach(price => {
+      [200, 333, 450].forEach((price) => {
         browser.numberEntry(`${VolumeDetail.size.selector} input`, price);
         const volumePrice = price * 0.1;
         expect(VolumeDetail.volumePrice.getText()).toEqual(
@@ -197,7 +197,7 @@ describe('Linode Detail - Volumes Suite', () => {
         .$('..')
         .click();
       VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal);
-      const volumes = VolumeDetail.selectOptions.map(option =>
+      const volumes = VolumeDetail.selectOptions.map((option) =>
         option.getText()
       );
       expect(volumes.includes(volumeEast.label)).toBe(true);

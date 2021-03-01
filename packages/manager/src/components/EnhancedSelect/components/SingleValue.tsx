@@ -21,7 +21,7 @@ interface Props extends SingleValueProps<any> {}
 
 type CombinedProps = Props;
 
-const _SingleValue: React.FC<CombinedProps> = props => {
+const _SingleValue: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   return (
     <>

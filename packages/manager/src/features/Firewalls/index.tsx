@@ -12,7 +12,7 @@ type Props = RouteComponentProps<{}>;
 
 type CombinedProps = Props;
 
-const Firewall: React.FC<CombinedProps> = props => {
+const Firewall: React.FC<CombinedProps> = (props) => {
   const {
     match: { path },
   } = props;

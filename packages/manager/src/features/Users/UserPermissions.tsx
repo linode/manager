@@ -190,7 +190,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { username } = this.props;
     if (username) {
       getGrants(username)
-        .then(grants => {
+        .then((grants) => {
           if (grants.global) {
             this.setState({
               grants,
@@ -208,7 +208,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             });
           }
         })
-        .catch(errResponse => {
+        .catch((errResponse) => {
           this.setState({
             errors: getAPIErrorOrDefault(
               errResponse,
@@ -254,7 +254,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         )
       );
       updateGrants(username, { global: grants.global } as Partial<Grants>)
-        .then(grantsResponse => {
+        .then((grantsResponse) => {
           this.setState(
             compose(
               set(lensPath(['grants', 'global']), grantsResponse.global),
@@ -270,7 +270,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             )
           );
         })
-        .catch(errResponse => {
+        .catch((errResponse) => {
           this.setState({
             errors: getAPIErrorOrDefault(
               errResponse,
@@ -308,9 +308,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     );
     const requestPayload = omit(['global'], grants);
     updateGrants(username, requestPayload as Partial<Grants>)
-      .then(grantsResponse => {
+      .then((grantsResponse) => {
         /* build array of update fns */
-        let updateFns = this.entityPerms.map(entity => {
+        let updateFns = this.entityPerms.map((entity) => {
           const lens = lensPath(['grants', entity]);
           const lensOrig = lensPath(['originalGrants', entity]);
           return [
@@ -333,7 +333,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           )
         );
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         this.setState({
           errors: getAPIErrorOrDefault(
             errResponse,
@@ -358,7 +358,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     if (type === 'entity') {
       /* build array of update fns */
-      const updateFns = this.entityPerms.map(entity => {
+      const updateFns = this.entityPerms.map((entity) => {
         const lens = lensPath(['grants', entity]);
         return set(lens, originalGrants[entity]);
       });
@@ -378,7 +378,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     });
     if (username) {
       updateUser(username, { restricted: !this.state.restricted })
-        .then(user => {
+        .then((user) => {
           this.setState({
             restricted: user.restricted,
             success: undefined,
@@ -388,7 +388,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           /* unconditionally sets this.state.loadingGrants to false */
           this.getUserGrants();
         })
-        .catch(errResponse => {
+        .catch((errResponse) => {
           this.setState({
             errors: getAPIErrorOrDefault(
               errResponse,
@@ -542,8 +542,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                * this permission in Cloud or APIv4. Either the user is unrestricted
                * and can cancel the account or is restricted and cannot cancel.
                */
-              .filter(eachPerm => eachPerm !== 'cancel_account')
-              .map(perm =>
+              .filter((eachPerm) => eachPerm !== 'cancel_account')
+              .map((perm) =>
                 this.renderGlobalPerm(perm, grants.global[perm] as boolean)
               )}
         </Grid>
@@ -735,7 +735,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       { label: 'Read Write', value: 'read_write' },
     ];
 
-    const defaultPerm = permOptions.find(eachPerm => {
+    const defaultPerm = permOptions.find((eachPerm) => {
       return eachPerm.value === setAllPerm;
     });
 

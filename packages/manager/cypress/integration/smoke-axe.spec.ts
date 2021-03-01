@@ -1,7 +1,7 @@
 import { pages } from '../support/ui/constants';
 
 describe.skip('smoke - axe', () => {
-  pages.forEach(page => {
+  pages.forEach((page) => {
     (page.first ? it.only : page.skip ? it.skip : it)(`${page.name}`, () => {
       cy.visitWithLogin(page.url);
       page.assertIsLoaded();

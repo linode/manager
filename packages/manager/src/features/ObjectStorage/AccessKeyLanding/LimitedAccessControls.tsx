@@ -49,7 +49,7 @@ export const getUpdatedScopes = (
 ): Scope[] => {
   // Cluster and bucket together form a primary key
   const scopeToUpdate = oldScopes.findIndex(
-    thisScope =>
+    (thisScope) =>
       thisScope.bucket_name === newScope.bucket_name &&
       thisScope.cluster === newScope.cluster
   );
@@ -65,7 +65,7 @@ export const SCOPES: Record<string, AccessType> = {
   write: 'read_write',
 };
 
-export const LimitedAccessControls: React.FC<Props> = props => {
+export const LimitedAccessControls: React.FC<Props> = (props) => {
   const { checked, handleToggle, ...rest } = props;
 
   return (
@@ -100,7 +100,7 @@ interface TableProps {
   updateScopes: (newScopes: Scope[]) => void;
 }
 
-export const AccessTable: React.FC<TableProps> = React.memo(props => {
+export const AccessTable: React.FC<TableProps> = React.memo((props) => {
   const { checked, mode, bucket_access, updateScopes } = props;
 
   const classes = useStyles();
@@ -115,7 +115,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
   };
 
   const updateAllScopes = (accessType: AccessType) => {
-    const newScopes = bucket_access.map(thisScope => ({
+    const newScopes = bucket_access.map((thisScope) => ({
       ...thisScope,
       permissions: accessType,
     }));
@@ -124,7 +124,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
 
   const allScopesEqual = (accessType: AccessType) => {
     return bucket_access.every(
-      thisScope => thisScope.permissions === accessType
+      (thisScope) => thisScope.permissions === accessType
     );
   };
 
@@ -198,7 +198,7 @@ export const AccessTable: React.FC<TableProps> = React.memo(props => {
             </TableCell>
           </TableRow>
         )}
-        {bucket_access.map(thisScope => {
+        {bucket_access.map((thisScope) => {
           const scopeName = `${thisScope.cluster}-${thisScope.bucket_name}`;
           return (
             <TableRow

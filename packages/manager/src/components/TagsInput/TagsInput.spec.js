@@ -10,7 +10,7 @@ describe('Tags Input Suite - ', () => {
   const selectedTags = '[data-qa-multi-option]';
   const inputError = '[data-qa-textfield-error-text]';
 
-  const inputValidation = tagText => {
+  const inputValidation = (tagText) => {
     $(tagInput).setValue(tagText);
     $(tagOptions).waitForDisplayed(constants.wait.normal);
     $$(tagOptions)[0].click();
@@ -28,7 +28,7 @@ describe('Tags Input Suite - ', () => {
     $(selectBox).waitForDisplayed(constants.wait.normal);
     $(selectBox).click();
     $(tagOptions).waitForDisplayed(constants.wait.normal);
-    const tags = $$(tagOptions).map(tag => tag.getText());
+    const tags = $$(tagOptions).map((tag) => tag.getText());
     expect(tags)
       .withContext(`Incorrect tag names found`)
       .toEqual(['tag1', 'tag2', 'tag3', 'tag4']);

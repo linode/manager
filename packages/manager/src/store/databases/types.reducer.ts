@@ -18,7 +18,7 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, getDatabaseTypesActions.started)) {
       draft.loading = true;
       draft.error.read = undefined;

@@ -217,7 +217,7 @@ describe('Paginator 2: Pagement Day', () => {
       });
 
       it('should apply the map function to the response.result', async () => {
-        const fn = (numbers: number[]) => numbers.map(n => n + 1);
+        const fn = (numbers: number[]) => numbers.map((n) => n + 1);
         await wrapper.prop('request')(fn);
         wrapper.update();
         expect(wrapper.prop('data')).toEqual([2, 3, 4, 5]);

@@ -14,7 +14,7 @@ interface Props extends OptionProps<any> {
   searchText: string;
 }
 
-const SearchItem: React.FC<Props> = props => {
+const SearchItem: React.FC<Props> = (props) => {
   const getLabel = () => {
     if (isFinal) {
       return props.label ? `Search for "${props.label}"` : 'Search';

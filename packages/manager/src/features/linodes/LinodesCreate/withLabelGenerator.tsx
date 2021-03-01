@@ -73,7 +73,7 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
 // Connect to Redux state, so that we have access to existing Linode Labels (we may need to dedupe).
 const connected = connect((state: ApplicationState) => ({
   linodeLabels: Object.values(state.__resources.linodes.itemsById).map(
-    l => l.label
+    (l) => l.label
   ),
 }));
 
@@ -100,9 +100,9 @@ export const dedupeLabel = (
   let dedupedLabel = label;
   let i = 1;
 
-  const matchingLabels = existingLabels.filter(l => l.startsWith(label));
+  const matchingLabels = existingLabels.filter((l) => l.startsWith(label));
 
-  while (matchingLabels.find(l => l === dedupedLabel)) {
+  while (matchingLabels.find((l) => l === dedupedLabel)) {
     dedupedLabel = label + '-' + i.toString().padStart(ZERO_PAD_WIDTH, '0');
     i++;
 

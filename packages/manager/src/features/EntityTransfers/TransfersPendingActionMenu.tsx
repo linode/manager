@@ -17,7 +17,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const TransfersPendingActionMenu: React.FC<CombinedProps> = props => {
+const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { onCancelClick } = props;
@@ -35,7 +35,7 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = props => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       <div className={classes.root}>
-        {actions.map(action => {
+        {actions.map((action) => {
           return (
             <InlineMenuAction
               key={action.title}

@@ -93,7 +93,7 @@ export interface Props {
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const IconTextLink: React.FC<FinalProps> = props => {
+const IconTextLink: React.FC<FinalProps> = (props) => {
   const {
     SideIcon,
     classes,
@@ -111,7 +111,7 @@ const IconTextLink: React.FC<FinalProps> = props => {
   return (
     <ConditionalWrapper
       condition={to !== undefined && !disabled}
-      wrapper={children => (
+      wrapper={(children) => (
         <Link className={classes.linkWrapper} to={to as string}>
           {children}
         </Link>

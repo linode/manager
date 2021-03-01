@@ -10,7 +10,7 @@ const _getAllIssues = getAll<ManagedIssue>(getManagedIssues);
 const getAllIssues = () =>
   _getAllIssues()
     .then(({ data }) => extendIssues(data))
-    .then(data => ({ data, results: data.length }));
+    .then((data) => ({ data, results: data.length }));
 
 export const extendIssues = async (issues: ManagedIssue[]) => {
   /**
@@ -22,17 +22,17 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
    * every case will be enough. Did it this way to be safe.
    */
   const recentIssues = issues.filter(
-    thisIssue =>
+    (thisIssue) =>
       parseAPIDate(thisIssue.created).diff(DateTime.local()).days < 30
   );
-  return await Bluebird.map(recentIssues, thisIssue => {
+  return await Bluebird.map(recentIssues, (thisIssue) => {
     /**
      * Get the associated ticket for each issue, since the API response
      * does not include the status or date closed.
      */
     return (
       getTicket(thisIssue.id)
-        .then(ticket => {
+        .then((ticket) => {
           return {
             ...thisIssue,
             status: ticket.status,
@@ -40,7 +40,7 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
           } as ExtendedIssue;
         })
         // If this fails, we'll just use a normal issue
-        .catch(_ => thisIssue as ExtendedIssue)
+        .catch((_) => thisIssue as ExtendedIssue)
     );
   });
 };

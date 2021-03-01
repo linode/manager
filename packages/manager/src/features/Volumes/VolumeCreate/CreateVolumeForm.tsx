@@ -86,7 +86,7 @@ interface Props {
 
 type CombinedProps = Props & VolumesRequests & StateProps;
 
-const CreateVolumeForm: React.FC<CombinedProps> = props => {
+const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { onSuccess, createVolume, disabled, origin, history, regions } = props;
 
@@ -102,8 +102,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
     : undefined;
 
   const regionsWithBlockStorage = regions
-    .filter(thisRegion => thisRegion.capabilities.includes('Block Storage'))
-    .map(thisRegion => thisRegion.id);
+    .filter((thisRegion) => thisRegion.capabilities.includes('Block Storage'))
+    .map((thisRegion) => thisRegion.id);
 
   return (
     <Formik
@@ -133,7 +133,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             config_id === initialValueDefaultId
               ? undefined
               : maybeCastToNumber(config_id),
-          tags: tags.map(v => v.value),
+          tags: tags.map((v) => v.value),
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
             resetForm({ values: initialValues });
@@ -148,7 +148,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
             // GA Event
             sendCreateVolumeEvent(`${label}: ${size}GiB`, origin);
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -188,12 +188,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
         if (region) {
           displaySections.push({
             title: props.regions
-              .filter(c => c.id === region)
-              .map(eachRegion => eachRegion.country.toUpperCase())
+              .filter((c) => c.id === region)
+              .map((eachRegion) => eachRegion.country.toUpperCase())
               .join(),
             details: props.regions
-              .filter(c => c.id === region)
-              .map(eachRegion => dcDisplayNames[eachRegion.id])
+              .filter((c) => c.id === region)
+              .map((eachRegion) => dcDisplayNames[eachRegion.id])
               .join(),
           });
         }
@@ -263,19 +263,19 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     isClearable
                     errorText={touched.region ? errors.region : undefined}
                     regions={props.regions
-                      .filter(eachRegion =>
-                        eachRegion.capabilities.some(eachCape =>
+                      .filter((eachRegion) =>
+                        eachRegion.capabilities.some((eachCape) =>
                           eachCape.match(/block/i)
                         )
                       )
-                      .map(eachRegion => ({
+                      .map((eachRegion) => ({
                         ...eachRegion,
                         display: dcDisplayNames[eachRegion.id],
                       }))}
                     name="region"
                     onBlur={handleBlur}
                     selectedID={values.region}
-                    handleSelection={value => {
+                    handleSelection={(value) => {
                       setFieldValue('region', value);
                       setFieldValue('linode_id', initialValueDefaultId);
                     }}
@@ -331,7 +331,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     name="tags"
                     label="Tags"
                     disabled={disabled}
-                    onChange={selected => setFieldValue('tags', selected)}
+                    onChange={(selected) => setFieldValue('tags', selected)}
                     value={values.tags}
                     menuPlacement="top"
                   />
@@ -379,7 +379,7 @@ interface StateProps {
   origin?: VolumeDrawerOrigin;
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
   origin: state.volumeDrawer.origin,
 });

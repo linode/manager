@@ -22,7 +22,7 @@ export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
   state: S,
   results: number,
-  update: (e: E) => E = i => i
+  update: (e: E) => E = (i) => i
 ): S =>
   Object.assign({}, state, {
     loading: false,
@@ -139,7 +139,7 @@ export const createRequestThunk = <Req extends any, Res extends any, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<any>
 ): ThunkActionCreator<Promise<Res>, Req> => {
-  return (params: Req) => async dispatch => {
+  return (params: Req) => async (dispatch) => {
     const { started, done, failed } = actions;
 
     dispatch(started(params));

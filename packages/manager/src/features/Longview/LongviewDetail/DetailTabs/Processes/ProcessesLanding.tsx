@@ -53,13 +53,13 @@ export const filterResults = (
   const escapedInputText = escapeRegExp(inputText);
 
   return results.filter(
-    thisResult =>
+    (thisResult) =>
       thisResult.user.match(RegExp(escapedInputText, 'i')) ||
       thisResult.name.match(RegExp(escapedInputText, 'i'))
   );
 };
 
-const ProcessesLanding: React.FC<Props> = props => {
+const ProcessesLanding: React.FC<Props> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
 
@@ -194,13 +194,13 @@ export const extendData = (
   }
 
   const extendedData: ExtendedProcess[] = [];
-  Object.keys(processesData.Processes).forEach(processName => {
+  Object.keys(processesData.Processes).forEach((processName) => {
     // Each process is an object where the keys are usernames and the values are
     // stats for that process/user. Additionally there's a key called "longname"
     // with a string as the value. Here, we separate these keys.
     const { longname, ...users } = processesData.Processes![processName];
 
-    Object.keys(users).forEach(user => {
+    Object.keys(users).forEach((user) => {
       const userProcess = processesData.Processes![processName][user];
 
       extendedData.push({

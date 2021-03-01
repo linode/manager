@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ActivitySummaryContent: React.FC<CombinedProps> = props => {
+export const ActivitySummaryContent: React.FC<CombinedProps> = (props) => {
   const { classes, error, loading, events } = props;
   if (error) {
     return <ErrorState data-qa-activity-error errorText={error} />;

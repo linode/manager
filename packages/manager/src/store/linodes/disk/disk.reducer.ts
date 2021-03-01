@@ -30,7 +30,7 @@ export type State = Record<number, MappedEntityState<Entity, EntityError>>;
 export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) =>
-  produce(state, draft => {
+  produce(state, (draft) => {
     // getLinodeDiskActions
     // getAllLinodeDiskActions
     if (

@@ -124,7 +124,7 @@ class Users extends Page {
         function() {
           return (
             $$('[data-qa-user-row]').filter(
-              u => u.$('[data-qa-username]').getText() === userConfig.username
+              (u) => u.$('[data-qa-username]').getText() === userConfig.username
             ).length > 0
           );
         },
@@ -176,7 +176,7 @@ class Users extends Page {
     let indexOfRow;
     if (index === undefined && tableKey !== undefined) {
       browser.waitUntil(() => {
-        indexOfRow = this.userRows.findIndex(row =>
+        indexOfRow = this.userRows.findIndex((row) =>
           row.getText().includes(tableKey)
         );
         return indexOfRow >= 0;

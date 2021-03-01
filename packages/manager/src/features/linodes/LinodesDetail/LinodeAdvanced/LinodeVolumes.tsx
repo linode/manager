@@ -133,7 +133,7 @@ const volumeHeaders = [
   },
 ];
 
-export const LinodeVolumes: React.FC<CombinedProps> = props => {
+export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
   const {
     volumesLoading,
     volumesLastUpdated,
@@ -180,14 +180,14 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
   });
 
   const handleCloseAttachDrawer = () => {
-    setAttachmentDrawer(attachmentDrawer => ({
+    setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
       open: false,
     }));
   };
 
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
-    setAttachmentDrawer(attachmentDrawer => ({
+    setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
       open: true,
       volumeId,
@@ -202,7 +202,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     linodeLabel: string,
     poweredOff: boolean
   ) => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
       mode: 'detach',
@@ -215,7 +215,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
   };
 
   const handleDelete = (volumeId: number, volumeLabel: string) => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
       mode: 'delete',
@@ -227,7 +227,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
   };
 
   const closeDestructiveDialog = () => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: false,
     }));
@@ -241,7 +241,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     }
 
     detachVolume({ volumeId })
-      .then(_ => {
+      .then((_) => {
         /* @todo: show a progress bar for volume detachment */
         enqueueSnackbar('Volume detachment started', {
           variant: 'info',
@@ -249,8 +249,8 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
         closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(error => {
-        setDestructiveDialog(destructiveDialog => ({
+      .catch((error) => {
+        setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
           error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
             .reason,
@@ -271,8 +271,8 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
         closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(error => {
-        setDestructiveDialog(destructiveDialog => ({
+      .catch((error) => {
+        setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
           error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
             .reason,
@@ -293,7 +293,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
   };
 
   const currentRegion = regions.find(
-    thisRegion => thisRegion.id === linodeRegion
+    (thisRegion) => thisRegion.id === linodeRegion
   );
 
   if (!currentRegion || !currentRegion.capabilities.includes('Block Storage')) {

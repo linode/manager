@@ -215,7 +215,7 @@ export default createSelector<
     buckets
   ) => {
     const arrOfImages = Object.values(images);
-    const searchableLinodes = linodes.map(linode =>
+    const searchableLinodes = linodes.map((linode) =>
       formatLinode(linode, types, images)
     );
     const searchableVolumes = volumes.map(volumeToSearchableItem);
@@ -223,9 +223,9 @@ export default createSelector<
     const searchableDomains = domains.map(domainToSearchableItem);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
     const searchableKubernetesClusters = kubernetesClusters
-      .map(thisCluster => {
+      .map((thisCluster) => {
         const pools = nodePools.filter(
-          thisPool => thisPool.clusterID === thisCluster.id
+          (thisPool) => thisPool.clusterID === thisCluster.id
         );
         return extendCluster(thisCluster, pools, types);
       })

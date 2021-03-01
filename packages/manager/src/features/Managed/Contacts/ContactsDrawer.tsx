@@ -42,7 +42,7 @@ const emptyContactPayload: ContactPayload = {
   group: '',
 };
 
-const ContactsDrawer: React.FC<CombinedProps> = props => {
+const ContactsDrawer: React.FC<CombinedProps> = (props) => {
   const { isOpen, closeDrawer, mode, contact, updateOrAdd, groups } = props;
 
   const isEditing = mode === 'edit' && contact;
@@ -77,12 +77,12 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
     }
 
     createOrUpdate()
-      .then(updatedContact => {
+      .then((updatedContact) => {
         setSubmitting(false);
         updateOrAdd(updatedContact);
         closeDrawer();
       })
-      .catch(err => {
+      .catch((err) => {
         setSubmitting(false);
         const defaultMessage = `Unable to ${
           isEditing ? 'edit' : 'create'
@@ -189,7 +189,7 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
                         }
                       : ''
                   }
-                  options={groups.map(group => ({
+                  options={groups.map((group) => ({
                     label: group.groupName,
                     value: group.groupName,
                   }))}

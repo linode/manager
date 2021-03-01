@@ -9,8 +9,8 @@ describe('Create a Domain', () => {
 
   it('Creates first Domain', () => {
     // modify incoming response
-    cy.intercept('GET', 'v4/domains*', req => {
-      req.reply(res => {
+    cy.intercept('GET', 'v4/domains*', (req) => {
+      req.reply((res) => {
         res.send({
           results: 0,
           page: 1,

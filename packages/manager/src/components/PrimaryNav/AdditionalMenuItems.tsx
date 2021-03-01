@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AdditionalMenuItems: React.FC<CombinedProps> = props => {
+const AdditionalMenuItems: React.FC<CombinedProps> = (props) => {
   const { isCollapsed } = props;
   const links: PrimaryLink[] = [
     {
@@ -28,7 +28,7 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      {links.map(eachLink => {
+      {links.map((eachLink) => {
         return (
           <NavItem
             {...eachLink}

@@ -99,7 +99,7 @@ describe('utilities', () => {
         configs: linodeConfigs,
         disks: [],
       });
-      linodeConfigs.forEach(eachConfig => {
+      linodeConfigs.forEach((eachConfig) => {
         expect(newState.configSelection).toHaveProperty(String(eachConfig.id));
       });
     });
@@ -111,7 +111,7 @@ describe('utilities', () => {
         configs: [],
         disks,
       });
-      disks.forEach(eachDisk => {
+      disks.forEach((eachDisk) => {
         expect(newState.diskSelection).toHaveProperty(String(eachDisk.id));
       });
     });
@@ -181,11 +181,11 @@ describe('utilities', () => {
   describe('createConfigDiskSelection', () => {
     it('defaults isSelected to false for each config and disk', () => {
       const state = createConfigDiskSelection(linodeConfigs, disks);
-      linodeConfigs.forEach(eachConfig => {
+      linodeConfigs.forEach((eachConfig) => {
         expect(state.configSelection[eachConfig.id].isSelected).toBe(false);
       });
 
-      disks.forEach(eachDisk => {
+      disks.forEach((eachDisk) => {
         expect(state.diskSelection[eachDisk.id].isSelected).toBe(false);
       });
     });
@@ -281,7 +281,7 @@ describe('utilities', () => {
     it('gets associated disks from configs', () => {
       const allDisks = getAllDisks([extendedConfig], disks);
       expect(allDisks).toHaveLength(2);
-      expect(allDisks.map(eachDisk => eachDisk.id)).toEqual([
+      expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
         19040623,
         19040624,
       ]);
@@ -290,7 +290,7 @@ describe('utilities', () => {
     it('removes duplicates', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDiskCopy]);
       expect(allDisks).toHaveLength(2);
-      expect(allDisks.map(eachDisk => eachDisk.id)).toEqual([
+      expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
         19040623,
         19040624,
       ]);
@@ -299,7 +299,7 @@ describe('utilities', () => {
     it('includes disks from second arg', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDisk2]);
       expect(allDisks).toHaveLength(3);
-      expect(allDisks.map(eachDisk => eachDisk.id)).toEqual([
+      expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
         19040623,
         19040624,
         19040625,

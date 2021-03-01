@@ -25,7 +25,7 @@ const toContinuousTense = (s: string) => {
   return s.replace(/e$/, 'ing');
 };
 
-const FirewallDialog: React.FC<CombinedProps> = props => {
+const FirewallDialog: React.FC<CombinedProps> = (props) => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
@@ -72,11 +72,11 @@ const FirewallDialog: React.FC<CombinedProps> = props => {
     const request = determineRequest();
 
     request(selectedFirewallID)
-      .then(_ => {
+      .then((_) => {
         setSubmitting(false);
         closeDialog();
       })
-      .catch(e => {
+      .catch((e) => {
         setSubmitting(false);
         setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
       });
@@ -111,7 +111,7 @@ interface ActionsProps {
   mode: Mode;
 }
 
-const Actions: React.FC<ActionsProps> = props => {
+const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
       <Button onClick={props.onClose} buttonType="cancel">

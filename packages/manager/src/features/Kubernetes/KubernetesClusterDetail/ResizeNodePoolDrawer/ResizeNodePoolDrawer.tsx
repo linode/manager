@@ -37,7 +37,7 @@ export interface Props {
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
-export const ResizeNodePoolDrawer: React.FC<Props> = props => {
+export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
   const { error, isSubmitting, nodePool, onClose, onSubmit, open } = props;
   const { types } = useTypes();
   const classes = useStyles();
@@ -64,7 +64,7 @@ export const ResizeNodePoolDrawer: React.FC<Props> = props => {
   };
 
   const planType = types.entities.find(
-    thisType => thisType.id === nodePool?.type
+    (thisType) => thisType.id === nodePool?.type
   );
 
   const pricePerNode = planType?.price.monthly ?? 0;
