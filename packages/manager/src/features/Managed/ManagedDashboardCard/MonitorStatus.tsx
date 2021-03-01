@@ -80,17 +80,16 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
             {failedMonitors.length === 0 ? (
               <MonitorOK width={iconSize} height={iconSize} />
             ) : (
-              <MonitorFailed width={iconSize} height={iconSize} />
-            )}
+                <MonitorFailed width={iconSize} height={iconSize} />
+              )}
           </Grid>
         </Grid>
         <Grid item>
           <Typography variant="h2">
             {failedMonitors.length === 0
               ? 'All monitored services are up'
-              : `${failedMonitors.length} monitored ${
-                  failedMonitors.length === 1 ? 'service is' : 'services are'
-                } down`}
+              : `${failedMonitors.length} monitored ${failedMonitors.length === 1 ? 'service is' : 'services are'
+              } down`}
           </Typography>
         </Grid>
         {failedMonitors.length > 0 && (
