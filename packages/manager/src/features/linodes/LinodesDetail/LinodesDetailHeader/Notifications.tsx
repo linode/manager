@@ -63,8 +63,14 @@ const Notifications: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    // eslint-disable-next-line
     <>
+      {linodeNotifications.map((n, idx) => {
+        return (
+          <React.Fragment key={idx}>
+            {generateNotificationBody(n)}
+          </React.Fragment>
+        );
+      })}
       {maintenanceForThisLinode ? (
         <MaintenanceBanner
           userTimezone={userTimezone}
@@ -74,13 +80,6 @@ const Notifications: React.FC<CombinedProps> = (props) => {
           type={maintenanceForThisLinode.type}
         />
       ) : null}
-      {linodeNotifications.map((n, idx) => {
-        return (
-          <React.Fragment key={idx}>
-            {generateNotificationBody(n)}
-          </React.Fragment>
-        );
-      })}
     </>
   );
 };
