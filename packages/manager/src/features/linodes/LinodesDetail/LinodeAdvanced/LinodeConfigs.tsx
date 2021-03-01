@@ -49,7 +49,6 @@ import {
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { MapState } from 'src/store/types';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll, GetAllData } from 'src/utilities/getAll';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDialog';
@@ -206,20 +205,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     }
   };
 
-  vlansEnabled = () => {
-    return isFeatureEnabled(
-      'Vlans',
-      Boolean(this.props.flags.vlans),
-      this.props.accountData?.capabilities ?? []
-    );
-  };
-
   componentDidMount() {
     this.requestKernels(this.props.linodeHypervisor);
-
-    if (this.vlansEnabled()) {
-      this.maybeRequestVlans();
-    }
+    this.maybeRequestVlans();
   }
 
   configsPanel = React.createRef();
@@ -527,13 +515,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         >
                           Disks
                         </TableCell>
-                        {this.vlansEnabled() ? (
-                          <TableCell
-                            className={`${classes.tableCell} ${classes.interfacesColumn}`}
-                          >
-                            Network Interfaces
-                          </TableCell>
-                        ) : null}
+                        <TableCell
+                          className={`${classes.tableCell} ${classes.interfacesColumn}`}
+                        >
+                          Network Interfaces
+                        </TableCell>
                         <TableCell className={classes.actionsColumn} />
                       </TableRow>
                     </TableHead>
@@ -574,7 +560,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               linodeInterfaces={this.state.interfaces}
                               linodeVolumes={this.props.linodeVolumes}
                               vlans={this.props.vlansData}
-                              vlansEnabled={this.vlansEnabled()}
                             />
                           );
                         })}

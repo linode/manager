@@ -4,7 +4,6 @@ import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
-import { Link } from 'src/components/Link';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { privateIPRegex } from 'src/utilities/ipUtils';
@@ -41,7 +40,6 @@ interface Props {
   linodeInterfaces: LinodeInterface[];
   linodeIPs: string[];
   vlans: Record<string, VLAN>;
-  vlansEnabled: boolean;
 }
 
 interface Handlers {
@@ -66,7 +64,6 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
     readOnly,
     linodeInterfaces,
     vlans,
-    vlansEnabled,
   } = props;
 
   const classes = useStyles();
@@ -157,11 +154,9 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
       </TableCell>
       <TableCell>{linodeKernel}</TableCell>
       <TableCell>{deviceLabels}</TableCell>
-      {vlansEnabled ? (
-        <TableCell>
-          {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
-        </TableCell>
-      ) : null}
+      <TableCell>
+        {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
+      </TableCell>
       <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
           config={config}
@@ -196,5 +191,9 @@ export const getInterfaceLabel = (
     return linodeInterface.description;
   }
 
-  return <Link to={`/vlans/${vlan.id}`}>{vlan.label}</Link>;
+  const hasIPAM = isEmpty(linodeInterface.ipam_address);
+
+  return `VLAN: ${vlan.label} ${
+    hasIPAM ? `(${linodeInterface.ipam_address})` : null
+  }`;
 };

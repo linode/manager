@@ -1,6 +1,12 @@
-import { Config } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
-import { LinodeConfigInterfaceFactory } from 'src/factories/linodeConfigInterfaceFactory';
+import { Config, LinodeInterface } from '@linode/api-v4/lib/linodes/types';
+
+// @TODO: Remove this custom interface once the VLAN API changes are rolled out.
+interface LinodeInterfaceTemp extends LinodeInterface {
+  label: string;
+  ipam_address: string | null;
+  purpose: 'public' | 'vlan' | 'internal' | 'multivlan';
+}
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
 
