@@ -1,26 +1,8 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { AccountMaintenance, Notification } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 
-/**
- * _when_ is not guaranteed to exist if this is a maintenance notification
- *
- * _when_ could be in the past
- *
- * In the case of maintenance, _until_ is always going to be _null_,
- * so we cannot tell the user when their maintenance window will end. :(
- */
-
+// @todo: Delete this type and function after release and merge to develop.
 type Type = 'reboot-scheduled' | 'migration-pending';
-
-export interface Maintenance {
-  type: Type;
-  when: string | null;
-  until: string | null;
-}
-
-export interface LinodeWithMaintenance extends Linode {
-  maintenance?: Maintenance | null;
-}
 
 export const addNotificationsToLinodes = (
   notifications: Notification[],
@@ -55,5 +37,36 @@ export const addNotificationsToLinodes = (
           ...eachLinode,
           maintenance: null,
         };
+  });
+};
+
+export interface Maintenance {
+  when: string | null;
+}
+
+export interface LinodeWithMaintenance extends Linode {
+  maintenance?: Maintenance | null;
+}
+
+export const addMaintenanceToLinodes = (
+  accountMaintenance: AccountMaintenance[],
+  linodes: Linode[]
+): LinodeWithMaintenance[] => {
+  return linodes.map((thisLinode) => {
+    const foundMaintenance = accountMaintenance.find((thisMaintenance) => {
+      return (
+        thisMaintenance.entity.type === 'linode' &&
+        thisMaintenance.entity.id === thisLinode.id
+      );
+    });
+
+    return foundMaintenance
+      ? {
+          ...thisLinode,
+          maintenance: {
+            when: foundMaintenance.when,
+          },
+        }
+      : { ...thisLinode, maintenance: null };
   });
 };

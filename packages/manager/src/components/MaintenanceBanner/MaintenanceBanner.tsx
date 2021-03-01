@@ -1,3 +1,4 @@
+import { AccountMaintenance } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -38,7 +39,7 @@ interface Props {
   userTimezone?: string;
   userProfileLoading: boolean;
   userProfileError?: APIError[];
-  type?: 'migration' | 'reboot';
+  type?: AccountMaintenance['type'];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -115,7 +116,7 @@ export default compose<CombinedProps, Props>(
 )(MaintenanceBanner);
 
 const generateIntroText = (
-  type?: 'migration' | 'reboot',
+  type?: AccountMaintenance['type'],
   start?: string | null,
   end?: string | null
 ) => {
@@ -128,13 +129,8 @@ const generateIntroText = (
     if (maintenanceInProgress) {
       return (
         <React.Fragment>
-          This Linode&apos;s physical host is currently undergoing maintenance.
-          During the maintenance, your Linode will be shut down
-          {type === 'migration'
-            ? ', cold migrated to a new host, '
-            : ' and remain offline, '}
-          then returned to its last state (running or powered off). Please refer
-          to
+          This Linode&apos;s physical host is currently undergoing maintenance.{' '}
+          {maintenanceActionTextMap[type]} Please refer to
           <Link to="/support/tickets"> your Support tickets </Link> for more
           information.
         </React.Fragment>
@@ -154,11 +150,7 @@ const generateIntroText = (
           This Linode&apos;s physical host will be undergoing maintenance at{' '}
           {rawDate}
           {'. '}
-          During this time, your Linode will be shut down
-          {type === 'migration'
-            ? ', cold migrated to a new host, '
-            : ' and remain offline, '}{' '}
-          then returned to its last state (running or powered off).
+          {maintenanceActionTextMap[type]}
         </React.Fragment>
       );
     } else {
@@ -186,4 +178,16 @@ const generateIntroText = (
       .
     </React.Fragment>
   );
+};
+
+export const maintenanceActionTextMap: Record<
+  AccountMaintenance['type'],
+  string
+> = {
+  cold_migration:
+    'During this time, your Linode will be shut down, cold migrated to a new host, then returned to its last state (running or powered off).',
+  live_migration:
+    'During this time, your Linode will be live migrated to a new host, then returned to its last state (running or powered off).',
+  reboot:
+    'During this time, your Linode will be shut down and remain offline, then returned to its last state (running or powered off).',
 };

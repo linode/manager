@@ -1,5 +1,4 @@
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import CreditCard from 'src/assets/icons/credit-card.svg';
@@ -182,7 +181,7 @@ export const BillingSummary: React.FC<Props> = (props) => {
     Boolean(promotion) && promoThisMonthCreditRemaining !== undefined;
 
   const determinePaymentDisplay = (pastDueAmount: number) => {
-    if (pastDueAmount > 0 && dayOfMonth >= 3) {
+    if (pastDueAmount > 0) {
       return (
         <div>
           <Typography className={classes.header} variant="h2">
@@ -351,7 +350,5 @@ export const BillingSummary: React.FC<Props> = (props) => {
     </>
   );
 };
-
-const dayOfMonth = DateTime.local().day;
 
 export default React.memo(BillingSummary);
