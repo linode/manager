@@ -71,18 +71,10 @@ describe('help & support', () => {
       getVisible('[value="test_screenshot.png"]');
       getClick('[data-qa-submit="true"]');
 
-      cy.wait('@createTicket')
-        .its('response.statusCode')
-        .should('eq', 200);
-      cy.wait('@attachmentPost')
-        .its('response.statusCode')
-        .should('eq', 200);
-      cy.wait('@getReplies')
-        .its('response.statusCode')
-        .should('eq', 200);
-      cy.wait('@getTicket')
-        .its('response.statusCode')
-        .should('eq', 200);
+      cy.wait('@createTicket').its('response.statusCode').should('eq', 200);
+      cy.wait('@attachmentPost').its('response.statusCode').should('eq', 200);
+      cy.wait('@getReplies').its('response.statusCode').should('eq', 200);
+      cy.wait('@getTicket').its('response.statusCode').should('eq', 200);
 
       containsVisible(`#${ticketId}: ${ticketLabel}`);
       containsVisible(ticketDescription);

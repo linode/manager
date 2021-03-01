@@ -39,9 +39,7 @@ const addDisk = (linodeId, diskName) => {
     containsVisible('OFFLINE');
     getClick('button[title="Add a Disk"]');
     getVisible('[data-testid="textfield-input"][id="label"]').type(diskName);
-    getClick('[value="81920"]')
-      .clear()
-      .type('1');
+    getClick('[value="81920"]').clear().type('1');
     getClick('[data-testid="submit-disk-form"]');
   }
 };
@@ -83,14 +81,10 @@ describe('linode storage tab', () => {
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(linode.id, diskName);
       fbtVisible(diskName);
-      cy.wait('@addDisk')
-        .its('response.statusCode')
-        .should('eq', 200);
+      cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
       containsVisible('Resizing');
       deleteDisk(diskName);
-      cy.wait('@deleteDisk')
-        .its('response.statusCode')
-        .should('eq', 200);
+      cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.get('button[title="Add a Disk"]').should('be.enabled');
       cy.contains(diskName).should('not.exist');
     });
@@ -107,9 +101,7 @@ describe('linode storage tab', () => {
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(linode.id, diskName);
       fbtVisible(diskName);
-      cy.wait('@addDisk')
-        .its('response.statusCode')
-        .should('eq', 200);
+      cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
     });
     deleteAllTestLinodes();
   });
@@ -127,9 +119,7 @@ describe('linode storage tab', () => {
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(linode.id, diskName);
       fbtVisible(diskName);
-      cy.wait('@addDisk')
-        .its('response.statusCode')
-        .should('eq', 200);
+      cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
       containsVisible('Resizing');
       if (
         cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
@@ -139,13 +129,9 @@ describe('linode storage tab', () => {
         cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
           fbtClick('Resize');
         });
-        getClick('[value="1"]')
-          .clear()
-          .type('2');
+        getClick('[value="1"]').clear().type('2');
         getClick('[data-testid="submit-disk-form"]');
-        cy.wait('@resizeDisk')
-          .its('response.statusCode')
-          .should('eq', 200);
+        cy.wait('@resizeDisk').its('response.statusCode').should('eq', 200);
       }
     });
     deleteAllTestLinodes();

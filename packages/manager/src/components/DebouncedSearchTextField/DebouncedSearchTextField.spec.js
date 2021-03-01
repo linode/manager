@@ -110,9 +110,7 @@ describe('Debounced Search Suite', () => {
         expect(i.isDisplayed())
           .withContext(`Unfiltered options should be displayed`)
           .toBe(true);
-        expect(i.getText())
-          .withContext(`Incorrect text match`)
-          .toMatch(/\w/gi);
+        expect(i.getText()).withContext(`Incorrect text match`).toMatch(/\w/gi);
         initialOptions.push(i.getText());
       });
     });
@@ -140,9 +138,7 @@ describe('Debounced Search Suite', () => {
 
     it('should display all list options on clear', () => {
       validQuery.split('').forEach((i) => {
-        $(debouncedSearchSelector)
-          .$('input')
-          .addValue('\uE003');
+        $(debouncedSearchSelector).$('input').addValue('\uE003');
       });
 
       browser.waitUntil(() => {

@@ -33,9 +33,7 @@ describe('dashboard', () => {
     cy.visitWithLogin('/');
     cy.window({ timeout: 5000 });
 
-    cy.get('@xhrData')
-      .its('length')
-      .should('be.lte', MAX_GET_REQ_TO_API);
+    cy.get('@xhrData').its('length').should('be.lte', MAX_GET_REQ_TO_API);
   });
 
   it.skip('Verify correct error message when unable to get linodes', () => {

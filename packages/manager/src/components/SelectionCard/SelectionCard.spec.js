@@ -74,14 +74,10 @@ describe('Selection Card Suite', () => {
 
     if (checked) {
       const svgs = $$(`${selectionCard} svg`);
-      expect(svgs.length)
-        .withContext(`Incorrect number of icons`)
-        .toBe(3);
+      expect(svgs.length).withContext(`Incorrect number of icons`).toBe(3);
     } else {
       const svgs = $(`${selectionCard} svg`).isExisting();
-      expect(svgs)
-        .withContext(`Svg icons should not exist`)
-        .toBe(false);
+      expect(svgs).withContext(`Svg icons should not exist`).toBe(false);
     }
 
     expect(fontIcons.length)
@@ -155,9 +151,7 @@ describe('Selection Card Suite', () => {
     it('should display subheadings for all selection cards', () => {
       const subheadingElems = $$(subheading);
       subheadingElems.forEach((e) =>
-        expect(e.isDisplayed())
-          .withContext(`Missing subheadings`)
-          .toBe(true)
+        expect(e.isDisplayed()).withContext(`Missing subheadings`).toBe(true)
       );
     });
   });

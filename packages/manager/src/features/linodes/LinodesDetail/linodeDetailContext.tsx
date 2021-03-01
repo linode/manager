@@ -149,6 +149,7 @@ export const LinodeDetailContextProvider = linodeContext.Provider;
 
 export const LinodeDetailContextConsumer = linodeContext.Consumer;
 
-export const withLinodeDetailContext = createHOCForConsumer<
-  LinodeDetailContext
->(linodeContext.Consumer, 'withLinodeDetailContext');
+export const withLinodeDetailContext = createHOCForConsumer<LinodeDetailContext>(
+  linodeContext.Consumer,
+  'withLinodeDetailContext'
+);

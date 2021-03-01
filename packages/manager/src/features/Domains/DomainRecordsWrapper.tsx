@@ -95,8 +95,9 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
           </div>
         </Paper>
         <div
-          className={`${hookClasses.tagPanel} ${flags.cmr &&
-            hookClasses.cmrSpacing}`}
+          className={`${hookClasses.tagPanel} ${
+            flags.cmr && hookClasses.cmrSpacing
+          }`}
         >
           <DeleteDomain
             domainId={domain.id}

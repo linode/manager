@@ -221,7 +221,7 @@ exports.config = {
     // The Jasmine framework allows interception of each assertion in order to log the state of the application
     // or website depending on the result. For example, it is pretty handy to take a screenshot every time
     // an assertion fails.
-    expectationResultHandler: function(passed, assertion) {
+    expectationResultHandler: function (passed, assertion) {
       // do something
     },
     stopOnSpecFailure: true,
@@ -252,7 +252,7 @@ exports.config = {
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  onPrepare: function(config, capabilities, user) {
+  onPrepare: function (config, capabilities, user) {
     // if ((parallelRunners > 1) && (CRED_STORE_MODE === 'fs')) {
     // throw new Error("***** Can't use filesystem cred store when parallelRunners > 1.\n***** Set CRED_STORE_MODE=mongolocal in .env and launch mongodb by running: docker run -d -p 27017:27017 mongo");
     // }
@@ -286,7 +286,7 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that are to be run
    */
-  before: function(capabilities, specs) {
+  before: function (capabilities, specs) {
     // Load up our custom commands
     require('@babel/register');
 
@@ -366,12 +366,12 @@ exports.config = {
    * Function to be executed after a test (in Mocha/Jasmine) or a step (in Cucumber) ends.
    * @param {Object} test test details
    */
-  afterTest: function(test) {},
+  afterTest: function (test) {},
   /**
    * Hook that gets executed after the suite has ended
    * @param {Object} suite suite details
    */
-  afterSuite: function(suite) {},
+  afterSuite: function (suite) {},
 
   /**
    * Runs after a WebdriverIO command gets executed
@@ -380,7 +380,7 @@ exports.config = {
    * @param {Number} result 0 - command success, 1 - command error
    * @param {Object} error error object if any
    */
-  afterCommand: function(commandName, args, result, error) {},
+  afterCommand: function (commandName, args, result, error) {},
   /**
    * Gets executed after all tests are done. You still have access to all global variables from
    * the test.
@@ -388,7 +388,7 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  after: function(result, capabilities, specs) {
+  after: function (result, capabilities, specs) {
     if (argv.record) {
       const recordingFile = specs[0].replace('.js', '-stub.json');
       browser.getImposters(true, recordingFile);
@@ -408,14 +408,14 @@ exports.config = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {Array.<String>} specs List of spec file paths that ran
    */
-  afterSession: function(config, capabilities, specs) {},
+  afterSession: function (config, capabilities, specs) {},
   /**
    * Gets executed after all workers got shut down and the process is about to exit.
    * @param {Object} exitCode 0 - success, 1 - fail
    * @param {Object} config wdio configuration object
    * @param {Array.<Object>} capabilities list of capabilities details
    */
-  onComplete: function(exitCode, config, capabilities) {
+  onComplete: function (exitCode, config, capabilities) {
     /* delete all data created during the test and remove test credentials
            from the underlying store */
     return credStore.cleanupAccounts();

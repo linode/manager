@@ -144,9 +144,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-export default connected(LinodeNetworkingSummaryPanel) as React.ComponentType<
-  Props
->;
+export default connected(
+  LinodeNetworkingSummaryPanel
+) as React.ComponentType<Props>;
 
 const renderDNSResolvers = (ips: string[]) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>

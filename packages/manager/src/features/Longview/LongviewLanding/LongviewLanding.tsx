@@ -55,9 +55,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
   );
-  const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    subscriptionDialogOpen,
+    setSubscriptionDialogOpen,
+  ] = React.useState<boolean>(false);
 
   const isManaged = pathOr(false, ['managed'], accountSettings);
 

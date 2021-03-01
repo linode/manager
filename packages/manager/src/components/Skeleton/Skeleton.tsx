@@ -76,9 +76,10 @@ const _Skeleton: React.FC<combinedProps> = (props) => {
         item
         style={{
           flexBasis: widths ? 'auto' : `${100 / totalColumns}%`,
-          width: `${widths &&
-            (widths[columnIdx] ||
-              totalWidth / (totalColumns - widths.length))}%`,
+          width: `${
+            widths &&
+            (widths[columnIdx] || totalWidth / (totalColumns - widths.length))
+          }%`,
         }}
         key={`ske-${columnIdx}`}
         data-testid={'skeletonCol'}

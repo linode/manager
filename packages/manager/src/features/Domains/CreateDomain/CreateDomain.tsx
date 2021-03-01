@@ -174,9 +174,10 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
-    DefaultRecordsType
-  >('none');
+  const [
+    defaultRecordsSetting,
+    setDefaultRecordsSetting,
+  ] = React.useState<DefaultRecordsType>('none');
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
   >(undefined);

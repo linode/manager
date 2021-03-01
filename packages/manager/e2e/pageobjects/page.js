@@ -213,7 +213,7 @@ export default class Page {
     this.globalCreate.waitForDisplayed(constants.wait.normal, true);
 
     browser.waitUntil(
-      function() {
+      function () {
         return browser.getUrl().includes('/login');
       },
       constants.wait.normal,
@@ -247,7 +247,7 @@ export default class Page {
     $(`[data-qa-panel-summary="${title}"]`).click();
 
     browser.waitUntil(
-      function() {
+      function () {
         return $(`[data-qa-panel-summary="${title}"]`)
           .getAttribute('aria-expanded')
           .includes('true');
@@ -259,7 +259,7 @@ export default class Page {
 
   expandPanels(numberOfPanels) {
     browser.waitUntil(
-      function() {
+      function () {
         return $$('[data-qa-panel-summary]').length === numberOfPanels;
       },
       constants.wait.normal,
@@ -293,7 +293,7 @@ export default class Page {
 
   waitForNotice(noticeMsg, timeout = 10000, opposite = false) {
     return browser.waitUntil(
-      function() {
+      function () {
         const noticeRegex = new RegExp(noticeMsg, 'ig');
         const noticeMsgDisplays = $$('[data-qa-notice]').filter(
           (n) => !!n.getText().match(noticeRegex)
@@ -403,7 +403,7 @@ export default class Page {
     $(tabElementSelector).waitForDisplayed(constants.wait.normal);
     browser.jsClick(tabElementSelector);
     browser.waitUntil(
-      function() {
+      function () {
         return $(`[data-qa-tab="${tab}"]`)
           .getAttribute('aria-selected')
           .includes('true');
@@ -434,10 +434,7 @@ export default class Page {
   }
 
   addTagToTagInput(tagName) {
-    this.tagsMultiSelect
-      .$('..')
-      .$('input')
-      .setValue(tagName);
+    this.tagsMultiSelect.$('..').$('input').setValue(tagName);
     this.selectOptions[0].waitForDisplayed(constants.wait.normal);
     this.selectOptions[0].click();
     this.multiOption.waitForDisplayed(constants.wait.normal);

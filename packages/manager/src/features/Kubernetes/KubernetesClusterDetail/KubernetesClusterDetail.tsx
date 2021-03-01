@@ -84,9 +84,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
 
-  const [kubeconfigAvailable, setKubeconfigAvailability] = React.useState<
-    boolean
-  >(false);
+  const [
+    kubeconfigAvailable,
+    setKubeconfigAvailability,
+  ] = React.useState<boolean>(false);
   const [kubeconfigError, setKubeconfigError] = React.useState<
     string | undefined
   >(undefined);

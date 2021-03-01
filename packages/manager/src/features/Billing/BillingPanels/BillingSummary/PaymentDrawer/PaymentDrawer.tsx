@@ -69,9 +69,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
-  const [isPaypalScriptLoaded, setIsPaypalScriptLoaded] = React.useState<
-    boolean
-  >(false);
+  const [
+    isPaypalScriptLoaded,
+    setIsPaypalScriptLoaded,
+  ] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));

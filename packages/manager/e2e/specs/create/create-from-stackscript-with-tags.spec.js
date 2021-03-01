@@ -37,10 +37,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     newTag = timestamp();
 
     // Terrible Selector, but it seems to work for now:
-    ConfigureLinode.tagsMultiSelect
-      .$('..')
-      .$('input')
-      .setValue(newTag);
+    ConfigureLinode.tagsMultiSelect.$('..').$('input').setValue(newTag);
     ConfigureLinode.selectOption.waitForDisplayed(constants.wait.normal);
     ConfigureLinode.selectOption.click();
     ConfigureLinode.selectOption.waitForDisplayed(constants.wait.normal, true);
@@ -54,7 +51,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     existingTag = ConfigureLinode.selectOptions[0].getText();
     ConfigureLinode.selectOptions[0].click();
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       const tagsAdded = $$(ConfigureLinode.multiOption.selector).length === 2;
       const tagsIncludeExisting = $$(ConfigureLinode.multiOption.selector)
         .map((t) => t.getText())

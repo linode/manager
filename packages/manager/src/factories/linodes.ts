@@ -113,13 +113,13 @@ export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   last_successful: '2020-01-01',
 });
 
-export const linodeTransferFactory = Factory.Sync.makeFactory<
-  NetworkUtilization
->({
-  used: 13956637,
-  quota: 1950,
-  billable: 0,
-});
+export const linodeTransferFactory = Factory.Sync.makeFactory<NetworkUtilization>(
+  {
+    used: 13956637,
+    quota: 1950,
+    billable: 0,
+  }
+);
 
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   id: Factory.each((i) => i),

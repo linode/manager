@@ -88,7 +88,7 @@ class Volumes extends Page {
     // Confirm remove
     dialogConfirm.click();
 
-    browser.waitUntil(function(volumeElement) {
+    browser.waitUntil(function (volumeElement) {
       return $$('[data-qa-volume-cell]').length === numberOfVolumes - 1;
     }, constants.wait.long);
   }

@@ -211,16 +211,18 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
 
   return (
     <>
-      {// There could be multiple errors here that are relevant.
-      submissionErrors
-        ? submissionErrors.map((thisError, idx) => (
-            <Notice
-              key={`form-submit-error-${idx}`}
-              error
-              text={thisError.reason}
-            />
-          ))
-        : null}
+      {
+        // There could be multiple errors here that are relevant.
+        submissionErrors
+          ? submissionErrors.map((thisError, idx) => (
+              <Notice
+                key={`form-submit-error-${idx}`}
+                error
+                text={thisError.reason}
+              />
+            ))
+          : null
+      }
       <div className={classes.transferSummary}>
         <Typography className={classes.summary}>
           This transfer contains:
@@ -266,9 +268,7 @@ export const getTimeRemaining = (time?: string) => {
   }
 
   const minutesRemaining = Math.floor(
-    parseAPIDate(time)
-      .diffNow('minutes')
-      .toObject().minutes ?? 0
+    parseAPIDate(time).diffNow('minutes').toObject().minutes ?? 0
   );
 
   if (minutesRemaining < 1) {

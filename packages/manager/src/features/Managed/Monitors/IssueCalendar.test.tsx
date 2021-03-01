@@ -4,9 +4,7 @@ import { createdOnTargetDay, generateCalendar } from './IssueCalendar';
 
 const recentIssues = managedIssues.map((thisIssue, idx) => ({
   ...thisIssue,
-  created: DateTime.local()
-    .minus({ days: idx })
-    .toISO(),
+  created: DateTime.local().minus({ days: idx }).toISO(),
 }));
 
 describe('IssueCalendar methods', () => {

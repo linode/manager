@@ -55,16 +55,10 @@ describe('Password Input Suite', () => {
     expect(isHidden())
       .withContext(`Password should be displayed`)
       .toBe('false');
-    expect(getType())
-      .withContext(`Incorrect type`)
-      .toBe('text');
+    expect(getType()).withContext(`Incorrect type`).toBe('text');
     // hide it again
     $('[data-qa-hide] svg').click();
-    expect(isHidden())
-      .withContext(`Password should be hidden`)
-      .toBe('true');
-    expect(getType())
-      .withContext(`Incorrect type`)
-      .toBe('password');
+    expect(isHidden()).withContext(`Password should be hidden`).toBe('true');
+    expect(getType()).withContext(`Incorrect type`).toBe('password');
   });
 });

@@ -53,8 +53,8 @@ interface Props {
   longviewClientsError: LVProps['longviewClientsError'];
 }
 
-const Overview = React.lazy(() =>
-  import('./DetailTabs/LongviewDetailOverview')
+const Overview = React.lazy(
+  () => import('./DetailTabs/LongviewDetailOverview')
 );
 const Installation = React.lazy(() => import('./DetailTabs/Installation'));
 const Disks = React.lazy(() => import('./DetailTabs/Disks'));

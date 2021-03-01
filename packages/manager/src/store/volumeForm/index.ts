@@ -93,9 +93,10 @@ interface ViewResizeInstructionsPayload {
   message?: string;
 }
 
-export const viewResizeInstructions = actionCreator<
-  ViewResizeInstructionsPayload
->(`VIEW_RESIZE_INSTRUCTIONS`, { mode: modes.VIEW_RESIZE_INSTRUCTIONS });
+export const viewResizeInstructions = actionCreator<ViewResizeInstructionsPayload>(
+  `VIEW_RESIZE_INSTRUCTIONS`,
+  { mode: modes.VIEW_RESIZE_INSTRUCTIONS }
+);
 
 interface Editing extends Action {
   type: typeof EDITING;

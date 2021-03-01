@@ -13,9 +13,7 @@ describe('Radio Suite', () => {
   it('should display radio buttons', () => {
     $(radio).waitForDisplayed();
     radios = $$(radio);
-    expect(radios.length)
-      .withContext(`Should be 4 buttons`)
-      .toEqual(4);
+    expect(radios.length).withContext(`Should be 4 buttons`).toEqual(4);
     radios.forEach((r) =>
       expect(r.isDisplayed())
         .withContext(`Radio button should be displayed`)

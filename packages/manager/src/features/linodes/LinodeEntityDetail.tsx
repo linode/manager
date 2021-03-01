@@ -566,9 +566,7 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
                   View all IP Addresses
                 </HashLink>
               </Typography>
-            ) : (
-              undefined
-            )
+            ) : undefined
           }
           gridProps={{ md: 5 }}
         />

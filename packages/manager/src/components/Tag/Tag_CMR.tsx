@@ -210,9 +210,7 @@ class Tag extends React.Component<CombinedProps, {}> {
               {/* @todo CMR: update icon */}
               <Close />
             </button>
-          ) : (
-            undefined
-          )
+          ) : undefined
         }
         classes={{ label: classes.label, deletable: classes[colorVariant!] }}
         onClick={this.handleClick}

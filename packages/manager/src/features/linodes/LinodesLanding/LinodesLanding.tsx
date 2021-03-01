@@ -527,8 +527,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     filename={`linodes-${formatDate(
                                       DateTime.local().toISO()
                                     )}.csv`}
-                                    className={`${classes.CSVlink} ${this.props
-                                      .flags.cmr && classes.cmrCSVlink}`}
+                                    className={`${classes.CSVlink} ${
+                                      this.props.flags.cmr && classes.cmrCSVlink
+                                    }`}
                                   >
                                     Download CSV
                                   </CSVLink>

@@ -53,9 +53,7 @@ xdescribe('Profile - OAuth Clients Suite', () => {
       $(dialogTitle).waitForDisplayed();
       profile.waitForNotice(/\w\d/);
 
-      const secret = $(dialogContent)
-        .$('[data-qa-notice]')
-        .getText();
+      const secret = $(dialogContent).$('[data-qa-notice]').getText();
       expect(secret).not.toBe(null);
 
       $(dialogClose).click();
@@ -157,11 +155,9 @@ xdescribe('Profile - OAuth Clients Suite', () => {
 
       profile.waitForNotice(/\w\d/, constants.wait.normal);
 
-      browser.waitUntil(function() {
+      browser.waitUntil(function () {
         const successMsg = /here is your client secret/gi;
-        return !!$(dialogContent)
-          .getText()
-          .match(successMsg);
+        return !!$(dialogContent).getText().match(successMsg);
       }, constants.wait.short);
     });
   });

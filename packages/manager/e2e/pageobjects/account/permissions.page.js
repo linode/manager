@@ -19,16 +19,10 @@ class Permissions extends Page {
     return $('[data-qa-restrict-access]');
   }
   get restrictAccessToggle() {
-    return this.restrictAccess
-      .$('..')
-      .$('..')
-      .$(this.toggleOption.selector);
+    return this.restrictAccess.$('..').$('..').$(this.toggleOption.selector);
   }
   get restrictAccessTooltip() {
-    return this.restrictAccess
-      .$('..')
-      .$('..')
-      .$(this.helpButton.selector);
+    return this.restrictAccess.$('..').$('..').$(this.helpButton.selector);
   }
   get globalSection() {
     return $('[data-qa-global-section]');

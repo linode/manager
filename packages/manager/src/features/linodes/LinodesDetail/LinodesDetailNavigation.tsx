@@ -10,19 +10,19 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
-const LinodeNetworking = React.lazy(() =>
-  import('./LinodeNetworking/LinodeNetworking')
+const LinodeNetworking = React.lazy(
+  () => import('./LinodeNetworking/LinodeNetworking')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
-const LinodeAdvanced = React.lazy(() =>
-  import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
+const LinodeAdvanced = React.lazy(
+  () => import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
 );
 const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
-const LinodeActivity = React.lazy(() =>
-  import('./LinodeActivity/LinodeActivity')
+const LinodeActivity = React.lazy(
+  () => import('./LinodeActivity/LinodeActivity')
 );
-const LinodeSettings = React.lazy(() =>
-  import('./LinodeSettings/LinodeSettings')
+const LinodeSettings = React.lazy(
+  () => import('./LinodeSettings/LinodeSettings')
 );
 
 type CombinedProps = ContextProps &

@@ -34,7 +34,7 @@ describe('Search - Tags Suite', () => {
     SearchBar.executeSearch(tags[1]);
     SearchBar.assertSuggestions();
     SearchBar.suggestions[0].click();
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl().includes(linodeConfig.id);
     }, constants.wait.normal);
   });

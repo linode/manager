@@ -18,21 +18,21 @@ const mockProcess = Factory.Sync.makeFactory<ProcessStats>({
   mem: mockStats,
 });
 
-export const longviewProcessFactory = Factory.Sync.makeFactory<
-  LongviewProcesses
->({
-  Processes: {
-    bash: {
-      longname: '/usr/sbin/cron',
-      root: mockProcess.build(),
-    } as any,
-    sshd: {
-      longname: '/usr/sbin/cron',
-      root: mockProcess.build(),
-    } as any,
-    systemd: {
-      longname: '/usr/sbin/cron',
-      root: mockProcess.build(),
-    } as any,
-  },
-});
+export const longviewProcessFactory = Factory.Sync.makeFactory<LongviewProcesses>(
+  {
+    Processes: {
+      bash: {
+        longname: '/usr/sbin/cron',
+        root: mockProcess.build(),
+      } as any,
+      sshd: {
+        longname: '/usr/sbin/cron',
+        root: mockProcess.build(),
+      } as any,
+      systemd: {
+        longname: '/usr/sbin/cron',
+        root: mockProcess.build(),
+      } as any,
+    },
+  }
+);

@@ -145,7 +145,7 @@ export class VolumeDetail extends Page {
     browser.waitUntil(() => {
       return this.volumeCell.length > 0;
     }, constants.wait.normal);
-    this.volumeCell.forEach(function(v) {
+    this.volumeCell.forEach(function (v) {
       pageObject.removeVolume(v);
     });
   }
@@ -207,10 +207,7 @@ export class VolumeDetail extends Page {
     this.attachExistingVolumeToLinodeDrawerDisplays();
     this.attachExistingVolume.click();
     this.attachExistingVolumeToLinodeDrawerDisplays();
-    this.selectLinodeOrVolume
-      .$('..')
-      .$('..')
-      .click();
+    this.selectLinodeOrVolume.$('..').$('..').click();
     this.selectOption.waitForDisplayed(constants.wait.normal);
     this.selectOptions
       .find((option) => option.getText() === volumeLabel)
@@ -322,11 +319,7 @@ export class VolumeDetail extends Page {
     if (tag) {
       if (this.multiOption.isDisplayed()) {
         const tags = $$(this.multiOption.selector).length;
-        this.multiOption
-          .$('..')
-          .$('..')
-          .$('input')
-          .setValue(tag);
+        this.multiOption.$('..').$('..').$('input').setValue(tag);
         this.selectOptions[0].waitForDisplayed(constants.wait.normal);
         this.selectOptions[0].click();
         browser.waitUntil(() => {
@@ -449,7 +442,7 @@ export class VolumeDetail extends Page {
       $('[data-qa-volume-loading]').waitForDisplayed(constants.wait.long, true);
 
       browser.waitUntil(
-        function() {
+        function () {
           return (
             browser.isExisting('[data-qa-volume-cell-attachment]') &&
             $('[data-qa-volume-cell-attachment]').getText() === '' &&
@@ -498,7 +491,7 @@ export class VolumeDetail extends Page {
     dialogConfirm.waitForDisplayed(constants.wait.normal, true);
 
     browser.waitUntil(
-      function(volumeElement) {
+      function (volumeElement) {
         return $$('[data-qa-volume-cell]').length === numberOfVolumes - 1;
       },
       constants.wait.minute,

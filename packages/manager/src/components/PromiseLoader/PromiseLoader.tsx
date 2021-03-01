@@ -18,14 +18,15 @@ export interface PromiseLoaderResponse<T> {
 
 /* tslint:disable */
 export default function preload<P>(requests: RequestMap<P>) {
-  return function(Component: React.ComponentType<P>) {
+  return function (Component: React.ComponentType<P>) {
     /* tslint:enable */
     return class LoadedComponent extends React.Component<P, State> {
       mounted: boolean = false;
       state = { loading: true };
 
-      static displayName = `PromiseLoader(${Component.displayName ||
-        Component.name})`;
+      static displayName = `PromiseLoader(${
+        Component.displayName || Component.name
+      })`;
 
       handleDone = () => {
         if (!this.mounted) {
@@ -65,9 +66,7 @@ export default function preload<P>(requests: RequestMap<P>) {
             })
         );
 
-        Promise.all(promises)
-          .then(this.handleDone)
-          .catch(this.handleDone);
+        Promise.all(promises).then(this.handleDone).catch(this.handleDone);
       }
 
       render() {

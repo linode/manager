@@ -16,7 +16,7 @@ export default function reloadableWithRouter<P, R>(
   reloadIf: ReloadIf<R>,
   alreadyHasRouter: boolean = false
 ) {
-  return function(Component: React.ComponentType<P & RouteComponentProps<R>>) {
+  return function (Component: React.ComponentType<P & RouteComponentProps<R>>) {
     /* tslint:enable */
     class ReloadableComponent extends React.Component<
       P & RouteComponentProps<R>,

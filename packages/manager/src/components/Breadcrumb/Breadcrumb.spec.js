@@ -40,12 +40,7 @@ xdescribe('Breadcrumb Suite', () => {
       expect($(editButton).isDisplayed())
         .withContext(`${editBtnMessage}`)
         .toBe(false);
-      expect(
-        $(staticText)
-          .$('..')
-          .$('..')
-          .getAttribute('href')
-      )
+      expect($(staticText).$('..').$('..').getAttribute('href'))
         .withContext(`href link should be blank`)
         .toBeNull();
     });
@@ -68,11 +63,7 @@ xdescribe('Breadcrumb Suite', () => {
       expect($(editButton).isDisplayed())
         .withContext(`edit button should be visible`)
         .toBe(true);
-      expect(
-        $(editableText)
-          .$('..')
-          .getAttribute('href')
-      )
+      expect($(editableText).$('..').getAttribute('href'))
         .withContext(`href link should be blank`)
         .toBeNull();
     });

@@ -32,11 +32,11 @@ exports.config = merge(wdioMaster.config, {
   services: servicesToStart,
   seleniumInstallArgs: seleniumSettings,
   seleniumArgs: seleniumSettings,
-  onPrepare: function(config, capabilities, user) {},
-  before: function(capabilities, specs) {
+  onPrepare: function (config, capabilities, user) {},
+  before: function (capabilities, specs) {
     browserCommands();
   },
-  beforeSuite: function(suite) {},
-  after: function(result, capabilities, specs) {},
-  onComplete: function(exitCode, config, capabilities) {},
+  beforeSuite: function (suite) {},
+  after: function (result, capabilities, specs) {},
+  onComplete: function (exitCode, config, capabilities) {},
 });

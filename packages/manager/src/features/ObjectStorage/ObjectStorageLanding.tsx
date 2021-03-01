@@ -32,8 +32,8 @@ import { MODE } from './AccessKeyLanding/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
 
 const BucketLanding = React.lazy(() => import('./BucketLanding/BucketLanding'));
-const AccessKeyLanding = React.lazy(() =>
-  import('./AccessKeyLanding/AccessKeyLanding')
+const AccessKeyLanding = React.lazy(
+  () => import('./AccessKeyLanding/AccessKeyLanding')
 );
 
 const useStyles = makeStyles((theme: Theme) => ({

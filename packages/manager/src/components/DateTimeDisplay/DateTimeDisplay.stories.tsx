@@ -41,9 +41,7 @@ class Example extends React.Component<{}, State> {
         <p>
           {'You last checked Slack: '}
           <DateTimeDisplay
-            value={DateTime.local()
-              .minus({ minutes: 5 })
-              .toISO()}
+            value={DateTime.local().minus({ minutes: 5 }).toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -70,9 +68,7 @@ class Example extends React.Component<{}, State> {
         <p>
           {'You were so young '}
           <DateTimeDisplay
-            value={DateTime.local()
-              .minus({ months: 11 })
-              .toISO()}
+            value={DateTime.local().minus({ months: 11 }).toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>

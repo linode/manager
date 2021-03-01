@@ -33,17 +33,19 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const { mutateAsync: _deleteFirewall } = useDeleteFirewall();
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
-  const [addFirewallDrawerOpen, toggleAddFirewallDrawer] = React.useState<
-    boolean
-  >(false);
+  const [
+    addFirewallDrawerOpen,
+    toggleAddFirewallDrawer,
+  ] = React.useState<boolean>(false);
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
   const [selectedFirewallID, setSelectedFirewallID] = React.useState<
     number | undefined
   >(undefined);
-  const [selectedFirewallLabel, setSelectedFirewallLabel] = React.useState<
-    string
-  >('');
+  const [
+    selectedFirewallLabel,
+    setSelectedFirewallLabel,
+  ] = React.useState<string>('');
 
   const enableFirewall = (id: number) => {
     return updateFirewall({ id, payload: { status: 'enabled' } });

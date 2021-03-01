@@ -25,9 +25,7 @@ describe('Icon Text Link Suite', () => {
     const iconTextLinks = $$(iconTextLinkTitle);
 
     iconTextLinks.forEach((e) =>
-      expect(e.getTagName())
-        .withContext(`Incorrect tag name`)
-        .toBe('button')
+      expect(e.getTagName()).withContext(`Incorrect tag name`).toBe('button')
     );
     iconTextLinks.forEach((e) =>
       expect(e.getText())
@@ -66,9 +64,7 @@ describe('Icon Text Link Suite', () => {
     } catch (err) {
       alertDisplays = false;
     }
-    expect(alertDisplays)
-      .withContext(`Alert should be dismissed`)
-      .toBe(false);
+    expect(alertDisplays).withContext(`Alert should be dismissed`).toBe(false);
   });
 
   it('should show a disabled IconTextLink', () => {

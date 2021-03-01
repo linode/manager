@@ -13,8 +13,8 @@ import {
   getMineAndAccountStackScripts,
 } from '../stackScriptUtils';
 
-const StackScriptPanelContent = React.lazy(() =>
-  import('./StackScriptPanelContent')
+const StackScriptPanelContent = React.lazy(
+  () => import('./StackScriptPanelContent')
 );
 
 export interface ExtendedLinode extends Linode {

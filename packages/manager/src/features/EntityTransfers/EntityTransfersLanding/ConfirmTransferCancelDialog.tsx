@@ -97,16 +97,18 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
       open={open}
       actions={actions}
     >
-      {// There could be multiple errors here that are relevant.
-      submissionErrors
-        ? submissionErrors.map((thisError, idx) => (
-            <Notice
-              key={`form-submit-error-${idx}`}
-              error
-              text={thisError.reason}
-            />
-          ))
-        : null}
+      {
+        // There could be multiple errors here that are relevant.
+        submissionErrors
+          ? submissionErrors.map((thisError, idx) => (
+              <Notice
+                key={`form-submit-error-${idx}`}
+                error
+                text={thisError.reason}
+              />
+            ))
+          : null
+      }
       <Typography>
         Upon confirmation, the token generated for this transfer will no longer
         be valid. To transfer ownership of these Linodes, you will need to

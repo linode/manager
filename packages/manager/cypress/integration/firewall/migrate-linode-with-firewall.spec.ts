@@ -156,9 +156,7 @@ describe('Migrate Linode With Firewall', () => {
     containsClick(selectRegionString);
     fbtClick('Singapore, SG');
     fbtClick('Enter Migration Queue');
-    cy.wait('@migrateReq')
-      .its('response.statusCode')
-      .should('eq', 200);
+    cy.wait('@migrateReq').its('response.statusCode').should('eq', 200);
   });
 
   // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
@@ -167,9 +165,7 @@ describe('Migrate Linode With Firewall', () => {
       getVisible('[type="button"]').within(() => {
         containsClick('Enter Migration Queue');
       });
-      cy.wait('@migrateLinode')
-        .its('response.statusCode')
-        .should('eq', 400);
+      cy.wait('@migrateLinode').its('response.statusCode').should('eq', 400);
       cy.findByText(
         'Target region for this Linode does not support Cloud Firewalls at this time. Please choose a different region or remove your firewall before migrating.',
         { timeout: 180000 }

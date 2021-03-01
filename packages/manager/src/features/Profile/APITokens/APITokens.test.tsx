@@ -9,9 +9,7 @@ describe('APITokens', () => {
     const pats = [
       {
         created: '2018-04-09T20:00:00',
-        expiry: DateTime.local()
-          .minus({ days: 1 })
-          .toISO(),
+        expiry: DateTime.local().minus({ days: 1 }).toISO(),
         id: 1,
         token: 'aa588915b6368b80',
         scopes: 'account:read_write',

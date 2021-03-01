@@ -254,64 +254,74 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
    */
   lassie_reboot: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} is scheduled to be rebooted by the Lassie watchdog service.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } is scheduled to be rebooted by the Lassie watchdog service.`,
     started: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} is being booted by the Lassie watchdog service.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } is being booted by the Lassie watchdog service.`,
     failed: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} could not be booted by the Lassie watchdog service.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } could not be booted by the Lassie watchdog service.`,
     finished: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} has been booted by the Lassie watchdog service.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } has been booted by the Lassie watchdog service.`,
   },
   host_reboot: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} is scheduled to reboot (Host initiated restart).`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } is scheduled to reboot (Host initiated restart).`,
     started: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} is being booted (Host initiated restart).`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } is being booted (Host initiated restart).`,
     failed: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} could not be booted (Host initiated restart).`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } could not be booted (Host initiated restart).`,
     finished: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} has been booted (Host initiated restart).`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } has been booted (Host initiated restart).`,
   },
   ipaddress_update: {
     notification: (e) => `An IP address has been updated on your account.`,
   },
   lish_boot: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} is scheduled to boot (Lish initiated boot).`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } is scheduled to boot (Lish initiated boot).`,
     started: (e) =>
       `Linode ${e.entity?.label ?? ''} is being booted (Lish initiated boot).`,
     failed: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} could not be booted (Lish initiated boot).`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } could not be booted (Lish initiated boot).`,
     finished: (e) =>
       `Linode ${e.entity?.label ?? ''} has been booted (Lish initiated boot).`,
   },
   linode_clone: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} is scheduled to be cloned${safeSecondaryEntityLabel(
-        e,
-        ' to',
-        ''
-      )}.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } is scheduled to be cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     started: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} is being cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } is being cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     failed: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} could not be cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } could not be cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     finished: (e) =>
-      `Linode ${e.entity?.label ??
-        ''} has been cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
+      `Linode ${
+        e.entity?.label ?? ''
+      } has been cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     notification: (e) =>
       `Linode ${e.entity?.label ?? ''} is scheduled to be cloned.`,
   },

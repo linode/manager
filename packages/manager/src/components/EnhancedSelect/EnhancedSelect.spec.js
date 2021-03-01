@@ -76,9 +76,7 @@ describe('Enhanced Select -', () => {
       multiSelect.click();
 
       options = $$('[data-qa-option');
-      expect(options.length)
-        .withContext(`Menu options should be 5`)
-        .toBe(5);
+      expect(options.length).withContext(`Menu options should be 5`).toBe(5);
     });
 
     it('should add a chip to the select on selection of an option', () => {
@@ -140,10 +138,7 @@ describe('Enhanced Select -', () => {
 
     it('should display the create menu option', () => {
       newOption = 'foo';
-      creatableSelect
-        .$('..')
-        .$('input')
-        .setValue(newOption);
+      creatableSelect.$('..').$('input').setValue(newOption);
       expect($(`[data-qa-option="${newOption}"]`).isDisplayed())
         .withContext(`Select option of ${newOption} should be displayed`)
         .toBe(true);
@@ -173,10 +168,7 @@ describe('Enhanced Select -', () => {
     });
 
     it('should remove the created option on click of remove icon', () => {
-      $(`[data-qa-multi-option="${newOption}"]`)
-        .$('..')
-        .$('svg')
-        .click();
+      $(`[data-qa-multi-option="${newOption}"]`).$('..').$('svg').click();
       expect(
         $(`[data-qa-multi-option="${newOption}"]`).waitForDisplayed(
           constants.wait.normal,

@@ -210,7 +210,7 @@ class ListDomains extends Page {
       constants.wait.normal
     );
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl().includes('/domains/');
     }, constants.wait.normal);
     console.log(`domain "${name}" created`);
@@ -226,7 +226,7 @@ class ListDomains extends Page {
 
   editDnsRecord(domain) {
     this.selectActionMenuItem(domain, 'Edit DNS Records');
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl().includes('/records');
     }, constants.wait.normal);
     $(this.breadcrumbStaticText.selector).waitForDisplayed();

@@ -222,9 +222,7 @@ class ConfigureStackScript extends Page {
     this.imageTags
       .filter((i) => i.getText().includes(imageName))
       .forEach((i) => {
-        i.$('..')
-          .$('svg')
-          .click();
+        i.$('..').$('svg').click();
         i.waitForDisplayed(constants.wait.normal, true);
       });
   }

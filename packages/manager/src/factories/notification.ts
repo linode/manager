@@ -15,9 +15,7 @@ const generateEntity = (
 export const notificationFactory = Factory.Sync.makeFactory<Notification>({
   type: 'maintenance',
   entity: Factory.each((i) => generateEntity(i)),
-  when: DateTime.local()
-    .plus({ days: 7 })
-    .toISODate(),
+  when: DateTime.local().plus({ days: 7 }).toISODate(),
   message: 'This Linode will be affected by critical maintenance!',
   label: 'maintenance',
   severity: 'critical',

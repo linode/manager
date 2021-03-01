@@ -85,8 +85,9 @@ class SideMenu extends React.Component<CombinedProps> {
             variant="permanent"
             open
             classes={{
-              paper: `${classes.menuPaper} ${desktopOpen &&
-                classes.collapsedDesktopMenu}`,
+              paper: `${classes.menuPaper} ${
+                desktopOpen && classes.collapsedDesktopMenu
+              }`,
               docked: classes.menuDocked,
             }}
             className={classes.desktopMenu}

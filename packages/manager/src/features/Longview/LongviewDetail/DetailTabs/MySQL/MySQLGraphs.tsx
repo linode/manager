@@ -18,8 +18,9 @@ import ProcessGraphs from '../ProcessGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) +
-      2}px ${theme.spacing(5) + 4}px`,
+    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) + 2}px ${
+      theme.spacing(5) + 4
+    }px`,
   },
   smallGraph: {
     [theme.breakpoints.down('sm')]: {

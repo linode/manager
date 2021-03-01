@@ -48,9 +48,7 @@ class CopyableTextField extends React.Component<CombinedProps> {
         className={`${className} ${'copy'}`}
         data-qa-copy-tooltip
         InputProps={{
-          endAdornment: hideIcon ? (
-            undefined
-          ) : (
+          endAdornment: hideIcon ? undefined : (
             <CopyTooltip text={`${value}`} className={classes.copyIcon} />
           ),
         }}

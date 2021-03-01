@@ -20,9 +20,7 @@ describe('longview', () => {
         const clientLabel = client.label;
         cy.visit('/longview');
         containsVisible(clientLabel);
-        cy.contains('Waiting for data...')
-          .first()
-          .should('be.visible');
+        cy.contains('Waiting for data...').first().should('be.visible');
         cy.get('code')
           .first()
           .then(($code) => {

@@ -24,14 +24,10 @@ describe('create linode', () => {
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     containsClick(selectRegionString).type('new {enter}');
     getClick('[id="g6-nanode-1"]');
-    getClick('#linode-label')
-      .clear()
-      .type(linodeLabel);
+    getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);
     getClick('[data-qa-deploy-linode]');
-    cy.wait('@linodeCreated')
-      .its('response.statusCode')
-      .should('eq', 200);
+    cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     assertToast(`Your Linode ${linodeLabel} is being created.`);
     containsVisible('PROVISIONING');
     deleteAllTestLinodes();

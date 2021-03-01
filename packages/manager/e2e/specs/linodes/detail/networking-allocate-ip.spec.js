@@ -40,7 +40,7 @@ describe('Linode Detail - Networking - Allocate IP Suite', () => {
       Networking.allocate.click();
       Networking.drawerTitle.waitForExist(constants.wait.normal, true);
 
-      browser.waitUntil(function() {
+      browser.waitUntil(function () {
         const ips = Networking.ips.filter(
           (ip) => !!ip.getAttribute('data-qa-ip').match(privateIPRegex)
         );

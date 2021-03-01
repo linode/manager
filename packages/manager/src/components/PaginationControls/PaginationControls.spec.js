@@ -33,11 +33,7 @@ describe('Pagination Controls Suite', () => {
     expect($(previous).getAttribute('aria-label'))
       .withContext(`Incorrect aria label value`)
       .toEqual('Previous Page');
-    expect(
-      $(previous)
-        .getAttribute('class')
-        .includes('disabled')
-    )
+    expect($(previous).getAttribute('class').includes('disabled'))
       .withContext('Disabled class missing')
       .toBe(true);
     expect($(`${previous} svg`).isDisplayed())
@@ -65,9 +61,7 @@ describe('Pagination Controls Suite', () => {
       let currentPage = 1;
 
       const canPage = (nextOrPrevious) => {
-        return !$(nextOrPrevious)
-          .getAttribute('class')
-          .includes('disabled');
+        return !$(nextOrPrevious).getAttribute('class').includes('disabled');
       };
 
       while (canPage(next)) {
@@ -93,9 +87,7 @@ describe('Pagination Controls Suite', () => {
       let currentPage = 10;
 
       const canPage = (nextOrPrevious) => {
-        return !$(nextOrPrevious)
-          .getAttribute('class')
-          .includes('disabled');
+        return !$(nextOrPrevious).getAttribute('class').includes('disabled');
       };
 
       while (canPage(previous)) {
@@ -127,9 +119,7 @@ describe('Pagination Controls Suite', () => {
 
       $(next).click();
 
-      previousDisabled = $(previous)
-        .getAttribute('class')
-        .includes('disabled');
+      previousDisabled = $(previous).getAttribute('class').includes('disabled');
       expect(previousDisabled)
         .withContext(`Previous button should be enabled`)
         .toBe(false);

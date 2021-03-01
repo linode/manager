@@ -50,14 +50,14 @@ export const warningFactory = Factory.Sync.makeFactory<APIWarning>({
     'Object Storage could not be reactivated, please open a support ticket.',
 });
 
-export const creditPaymentResponseFactory = Factory.Sync.makeFactory<
-  PaymentResponse
->({
-  id: Factory.each((i) => i),
-  usd: 10,
-  date: '2020-01-01T12:00:00',
-  warnings: warningFactory.buildList(1),
-});
+export const creditPaymentResponseFactory = Factory.Sync.makeFactory<PaymentResponse>(
+  {
+    id: Factory.each((i) => i),
+    usd: 10,
+    date: '2020-01-01T12:00:00',
+    warnings: warningFactory.buildList(1),
+  }
+);
 
 export const paypalResponseFactory = Factory.Sync.makeFactory<PaypalResponse>({
   warnings: warningFactory.buildList(1),

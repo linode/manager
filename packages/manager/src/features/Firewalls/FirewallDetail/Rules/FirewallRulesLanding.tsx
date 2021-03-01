@@ -83,9 +83,10 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   const [generalErrors, setGeneralErrors] = React.useState<
     APIError[] | undefined
   >();
-  const [discardChangesModalOpen, setDiscardChangesModalOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    discardChangesModalOpen,
+    setDiscardChangesModalOpen,
+  ] = React.useState<boolean>(false);
 
   const openRuleDrawer = (category: Category, mode: Mode, idx?: number) =>
     setRuleDrawer({

@@ -100,9 +100,7 @@ class Backups extends Page {
   baseElemsDisplay(backupsNotEnabled) {
     if (backupsNotEnabled) {
       this.placeholderText.waitForDisplayed(constants.wait.normal);
-      expect(this.enableButton.isDisplayed())
-        .withContext(``)
-        .toBe(true);
+      expect(this.enableButton.isDisplayed()).withContext(``).toBe(true);
       return;
     }
 

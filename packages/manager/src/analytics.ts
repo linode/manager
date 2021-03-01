@@ -6,7 +6,7 @@ const gaInit = (i: any, s: any, o: any, g: any, r: any, a: any, m: any) => {
   i['GoogleAnalyticsObject'] = r;
   (i[r] =
     i[r] ||
-    function() {
+    function () {
       (i[r].q = i[r].q || []).push(arguments);
     }),
     (i[r].l = 1 * currdate);

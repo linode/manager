@@ -34,7 +34,7 @@ export class OauthCreateDrawer extends Page {
   updateLabel(updateMsg) {
     const labelField = this.label;
     // Hack needed to edit a label
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       try {
         labelField.clearElement();
         labelField.setValue(updateMsg);

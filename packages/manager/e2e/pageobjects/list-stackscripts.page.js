@@ -88,9 +88,7 @@ class ListStackScripts extends Page {
 
   stackScriptDetailPage(title) {
     if (title) {
-      this.stackScriptRowByTitle(title)
-        .$('a')
-        .click();
+      this.stackScriptRowByTitle(title).$('a').click();
     } else {
       this.stackScriptRow.$('a').click();
     }

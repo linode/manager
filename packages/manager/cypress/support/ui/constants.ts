@@ -48,9 +48,7 @@ export const pages = [
         name: 'Tab',
         go: () => {
           loadAppNoLogin(routes.createLinode);
-          cy.get('[data-reach-tab]')
-            .contains('Marketplace')
-            .click();
+          cy.get('[data-reach-tab]').contains('Marketplace').click();
         },
       },
       {
@@ -109,9 +107,7 @@ export const pages = [
           loadAppNoLogin(url);
           cy.findByText('Password Reset').should('be.visible');
           waitDoubleRerender();
-          cy.contains('Display')
-            .should('be.visible')
-            .click();
+          cy.contains('Display').should('be.visible').click();
         },
       },
       {
@@ -250,9 +246,7 @@ export const pages = [
           loadAppNoLogin(`${routes.account}/users`);
           cy.findByText('Username');
           waitDoubleRerender();
-          cy.findByText('Billing Info')
-            .should('be.visible')
-            .click();
+          cy.findByText('Billing Info').should('be.visible').click();
         },
       },
     ],
@@ -268,9 +262,7 @@ export const pages = [
           loadAppNoLogin(routes.account);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
-          cy.get('[data-reach-tab]')
-            .contains('Users')
-            .click();
+          cy.get('[data-reach-tab]').contains('Users').click();
         },
       },
     ],

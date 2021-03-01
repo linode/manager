@@ -48,8 +48,8 @@ import {
 
 const Configs = React.lazy(() => import('./Configs'));
 const Disks = React.lazy(() => import('./Disks'));
-const LinodesDetailHeader = React.lazy(() =>
-  import('../LinodesDetail/LinodesDetailHeader')
+const LinodesDetailHeader = React.lazy(
+  () => import('../LinodesDetail/LinodesDetailHeader')
 );
 
 const useStyles = makeStyles((theme: Theme) => ({

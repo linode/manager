@@ -60,9 +60,7 @@ describe('Tags Panel Suite', () => {
 
   it('there should be a tag panel, and icons to add and delete tags', () => {
     $(tag).waitForDisplayed(constants.wait.normal);
-    expect($$(tag).length)
-      .withContext(`should be 3 tags`)
-      .toBe(3);
+    expect($$(tag).length).withContext(`should be 3 tags`).toBe(3);
     expect($$(deleteTag).length)
       .withContext(`should be 3 delete tag icons`)
       .toBe(3);

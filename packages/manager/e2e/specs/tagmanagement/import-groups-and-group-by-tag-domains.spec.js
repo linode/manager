@@ -56,7 +56,7 @@ xdescribe('Domain Tag Management Suite', () => {
     apiDeleteAllDomains();
   });
 
-  describe('Import Domain Groups as Tags', function() {
+  describe('Import Domain Groups as Tags', function () {
     it('Import domain groups as tags', () => {
       Dashboard.openImportDrawerButton.click();
       ImportGroupsAsTagsDrawer.drawerDisplays();

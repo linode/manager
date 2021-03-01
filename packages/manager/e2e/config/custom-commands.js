@@ -58,36 +58,39 @@ exports.browserCommands = () => {
       .catch((error) => console.error(error));
   });
 
-  browser.addCommand('readToken', function(username) {
+  browser.addCommand('readToken', function (username) {
     const token = getToken(username);
     return token;
   });
 
-  browser.addCommand('createLinode', function async(
-    token,
-    password,
-    linodeLabel = false,
-    tags = [],
-    type,
-    region,
-    group,
-    image,
-    privateIP
-  ) {
-    return createLinode(
+  browser.addCommand(
+    'createLinode',
+    function async(
       token,
       password,
-      linodeLabel,
-      tags,
+      linodeLabel = false,
+      tags = [],
       type,
       region,
       group,
       image,
       privateIP
-    )
-      .then((res) => res)
-      .catch((err) => err);
-  });
+    ) {
+      return createLinode(
+        token,
+        password,
+        linodeLabel,
+        tags,
+        type,
+        region,
+        group,
+        image,
+        privateIP
+      )
+        .then((res) => res)
+        .catch((err) => err);
+    }
+  );
 
   browser.addCommand('createLongviewClient', function async(token) {
     return createLongviewClient(token).then((res) => res);
@@ -125,12 +128,12 @@ exports.browserCommands = () => {
     return getNodebalancers(token).then((res) => res);
   });
 
-  browser.addCommand('removeNodeBalancer', function async(
-    token,
-    nodeBalancerId
-  ) {
-    return removeNodebalancer(token, nodeBalancerId).then((res) => res);
-  });
+  browser.addCommand(
+    'removeNodeBalancer',
+    function async(token, nodeBalancerId) {
+      return removeNodebalancer(token, nodeBalancerId).then((res) => res);
+    }
+  );
 
   browser.addCommand('getMyStackScripts', function async(token) {
     return getMyStackScripts(token).then((res) => res);
@@ -146,8 +149,8 @@ exports.browserCommands = () => {
    * @param { String } elementToClick Selector to execute click event on
    * @returns { undefined } Returns nothing
    */
-  browser.addCommand('jsClick', function(elementToClick) {
-    browser.execute(function(elementToClick) {
+  browser.addCommand('jsClick', function (elementToClick) {
+    browser.execute(function (elementToClick) {
       document.querySelector(elementToClick).click();
     }, elementToClick);
   });
@@ -157,8 +160,8 @@ exports.browserCommands = () => {
    * Useful when the element is not clickable via browser.click()
    * @param { String } elementsToClick Selector displayed multiple times to click on
    */
-  browser.addCommand('jsClickAll', function(elementsToClick) {
-    browser.execute(function(elementsToClick) {
+  browser.addCommand('jsClickAll', function (elementsToClick) {
+    browser.execute(function (elementsToClick) {
       var els = document.querySelectorAll(elementsToClick);
       els.forEach((e) => e.click());
     }, elementsToClick);
@@ -169,17 +172,17 @@ exports.browserCommands = () => {
    * @param { String } selector to wait for/click
    * @returns { null } Returns nothing
    */
-  browser.addCommand('waitClick', function(elementToClick, timeout = 10000) {
-    browser.waitUntil(function() {
+  browser.addCommand('waitClick', function (elementToClick, timeout = 10000) {
+    browser.waitUntil(function () {
       $(elementToClick).waitForDisplayed();
       return $(elementToClick).click().state === 'success';
     }, timeout);
   });
 
-  browser.addCommand('tryClick', function(elementToClick, timeout = 5000) {
+  browser.addCommand('tryClick', function (elementToClick, timeout = 5000) {
     let errorObject;
     browser.waitUntil(
-      function() {
+      function () {
         try {
           $(elementToClick).click();
           return true;
@@ -201,38 +204,41 @@ exports.browserCommands = () => {
    * @param { String } value to set input of
    * @param { Number } timeout
    */
-  browser.addCommand('trySetValue', function(selector, value, timeout = 10000) {
-    fieldLength = $(selector).getValue().length;
+  browser.addCommand(
+    'trySetValue',
+    function (selector, value, timeout = 10000) {
+      fieldLength = $(selector).getValue().length;
 
-    if (fieldLength != 0) {
-      console.log(
-        `clearing out ${fieldLength} characters for "${selector}" selector`
-      );
-      $(selector).click();
+      if (fieldLength != 0) {
+        console.log(
+          `clearing out ${fieldLength} characters for "${selector}" selector`
+        );
+        $(selector).click();
 
-      for (i = 0; i < fieldLength; i++) {
-        $(selector).setValue('\uE003');
+        for (i = 0; i < fieldLength; i++) {
+          $(selector).setValue('\uE003');
+        }
       }
-    }
 
-    $(selector).setValue(value);
-    const newValue = $(selector).getValue();
-    console.log(`new set value: ${newValue}, has been entered`);
-  });
+      $(selector).setValue(value);
+      const newValue = $(selector).getValue();
+      console.log(`new set value: ${newValue}, has been entered`);
+    }
+  );
 
   /* This is for handling the odd cases of numeric multi select inputs
    * that will not cooperate with wdio e.g. MX preference
    * @param { String } selector to target
    * @param { String } value to enter/change
    */
-  browser.addCommand('numberEntry', function(selector, valueToChange) {
+  browser.addCommand('numberEntry', function (selector, valueToChange) {
     $(selector).click();
     browser.keys(['Shift', 'Home']);
     $(selector).addValue(valueToChange);
   });
 
   //This has been added as there are react issues with the element.setValue and element.clearValue
-  browser.addCommand('setNewValue', function(selector, value) {
+  browser.addCommand('setNewValue', function (selector, value) {
     let elValue;
 
     do {
@@ -283,50 +289,41 @@ exports.browserCommands = () => {
     return updateUserProfile(token, profileData).then((res) => res);
   });
 
-  browser.addCommand('updateGlobalSettings', function async(
-    token,
-    settingsData
-  ) {
-    return putGlobalSetting(token, settingsData).then((res) => res);
-  });
+  browser.addCommand(
+    'updateGlobalSettings',
+    function async(token, settingsData) {
+      return putGlobalSetting(token, settingsData).then((res) => res);
+    }
+  );
 
   browser.addCommand('getGlobalSettings', function async(token) {
     return getGlobalSettings(token).then((res) => res);
   });
 
-  browser.addCommand('createVolume', function async(
-    token,
-    label,
-    region,
-    size,
-    tags,
-    linode_id
-  ) {
-    return createVolume(token, label, region, size, tags, linode_id).then(
-      (res) => res
-    );
-  });
+  browser.addCommand(
+    'createVolume',
+    function async(token, label, region, size, tags, linode_id) {
+      return createVolume(token, label, region, size, tags, linode_id).then(
+        (res) => res
+      );
+    }
+  );
 
   browser.addCommand('getLinodeImage', function async(token, imageId) {
     return getLinodeImage(token, imageId).then((res) => res);
   });
 
-  browser.addCommand('createDomain', function async(
-    token,
-    type,
-    domain,
-    tags,
-    group
-  ) {
-    return createDomain(token, type, domain, tags, group).then((res) => res);
-  });
+  browser.addCommand(
+    'createDomain',
+    function async(token, type, domain, tags, group) {
+      return createDomain(token, type, domain, tags, group).then((res) => res);
+    }
+  );
 
-  browser.addCommand('createNodeBalancer', function async(
-    token,
-    label,
-    region,
-    tags
-  ) {
-    return createNodeBalancer(token, label, region, tags).then((res) => res);
-  });
+  browser.addCommand(
+    'createNodeBalancer',
+    function async(token, label, region, tags) {
+      return createNodeBalancer(token, label, region, tags).then((res) => res);
+    }
+  );
 };

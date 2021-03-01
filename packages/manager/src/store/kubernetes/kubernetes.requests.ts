@@ -18,9 +18,9 @@ import { requestNodePoolsForCluster } from './nodePools.requests';
 
 const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
-export const requestKubernetesClusters: ThunkActionCreator<Promise<
-  GetAllData<KubernetesCluster>
->> = () => (dispatch) => {
+export const requestKubernetesClusters: ThunkActionCreator<
+  Promise<GetAllData<KubernetesCluster>>
+> = () => (dispatch) => {
   dispatch(requestClustersActions.started());
 
   return getAllClusters()

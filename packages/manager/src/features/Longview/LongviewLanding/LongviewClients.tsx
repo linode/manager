@@ -144,9 +144,10 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
    * available LV clients)
    */
 
-  const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    subscriptionDialogOpen,
+    setSubscriptionDialogOpen,
+  ] = React.useState<boolean>(false);
 
   const classes = useStyles();
   const flags = useFlags();
@@ -238,8 +239,9 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment segment="Clients" />
       <Grid
         container
-        className={`${classes.headingWrapper} ${flags.cmr &&
-          classes.cmrSpacing}`}
+        className={`${classes.headingWrapper} ${
+          flags.cmr && classes.cmrSpacing
+        }`}
         alignItems="center"
       >
         <Grid item className={classes.searchbar}>

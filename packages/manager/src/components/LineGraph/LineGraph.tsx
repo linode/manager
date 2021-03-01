@@ -328,8 +328,9 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                         className={classes.toggleButton}
                       >
                         <div
-                          className={`${classes.legendIcon} ${hidden &&
-                            classes.crossedOut}`}
+                          className={`${classes.legendIcon} ${
+                            hidden && classes.crossedOut
+                          }`}
                           style={{
                             background: bgColor,
                             borderColor: bgColor,

@@ -7,9 +7,11 @@ import useDomains from 'src/hooks/useDomains';
 const DomainsLanding = React.lazy(() => import('../DomainsLanding'));
 const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
-export const DomainDetailRouting: React.FC<RouteComponentProps<{
-  domainId: string;
-}>> = (props) => {
+export const DomainDetailRouting: React.FC<
+  RouteComponentProps<{
+    domainId: string;
+  }>
+> = (props) => {
   const domainId = Number(props.match.params.domainId);
   const { domains, requestDomain } = useDomains();
   const request = useAPIRequest(() => requestDomain(domainId), undefined);

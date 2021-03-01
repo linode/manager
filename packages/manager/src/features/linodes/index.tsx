@@ -9,8 +9,8 @@ import {
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
-const LinodesCreate = React.lazy(() =>
-  import('./LinodesCreate/LinodeCreateContainer')
+const LinodesCreate = React.lazy(
+  () => import('./LinodesCreate/LinodeCreateContainer')
 );
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 

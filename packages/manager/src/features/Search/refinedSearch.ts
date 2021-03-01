@@ -55,10 +55,7 @@ export const refinedSearch = (
 };
 
 export const formatQuery = (query: string) => {
-  return query
-    .trim()
-    .replace(' && ', ' AND ')
-    .replace(' || ', ' OR ');
+  return query.trim().replace(' && ', ' AND ').replace(' || ', ' OR ');
 };
 
 // QueryJSON can contain either:

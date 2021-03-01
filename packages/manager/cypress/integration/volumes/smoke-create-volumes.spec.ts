@@ -108,9 +108,7 @@ describe('volumes', () => {
           `Are you sure you want to detach this Volume from ${linodeLabel}?`
         );
         getClick('[data-qa-confirm="true"]');
-        cy.wait('@volumeDetached')
-          .its('response.statusCode')
-          .should('eq', 200);
+        cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
         assertToast('Volume detachment started', 2);
         deleteLinodeById(linodeId);
         deleteVolumeById(volumeId);

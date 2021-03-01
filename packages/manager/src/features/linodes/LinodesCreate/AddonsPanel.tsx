@@ -171,32 +171,34 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             </Typography>
           </Grid>
         </Grid>
-        {/** /v4/linodes/instances/clone does *not* support the private IP flag */
-        props.hidePrivateIP ? null : (
-          <React.Fragment>
-            <Grid container className={classes.divider}>
-              <Grid item xs={12}>
-                <Divider />
+        {
+          /** /v4/linodes/instances/clone does *not* support the private IP flag */
+          props.hidePrivateIP ? null : (
+            <React.Fragment>
+              <Grid container className={classes.divider}>
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
               </Grid>
-            </Grid>
-            <Grid container>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  className={classes.label}
-                  control={
-                    <CheckBox
-                      checked={props.privateIP}
-                      onChange={() => changePrivateIP()}
-                      data-qa-check-private-ip
-                      disabled={disabled}
-                    />
-                  }
-                  label="Private IP"
-                />
+              <Grid container>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    className={classes.label}
+                    control={
+                      <CheckBox
+                        checked={props.privateIP}
+                        onChange={() => changePrivateIP()}
+                        data-qa-check-private-ip
+                        disabled={disabled}
+                      />
+                    }
+                    label="Private IP"
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-          </React.Fragment>
-        )}
+            </React.Fragment>
+          )
+        }
         {flags.cmr && showVlans ? (
           <Grid container className={classes.lastItem}>
             <Grid item xs={12}>

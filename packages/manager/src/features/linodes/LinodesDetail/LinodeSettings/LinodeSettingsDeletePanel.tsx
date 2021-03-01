@@ -138,6 +138,6 @@ const enhanced = compose<CombinedProps, Props>(
   withLinodeActions
 );
 
-export default enhanced(LinodeSettingsDeletePanel) as React.ComponentType<
-  Props
->;
+export default enhanced(
+  LinodeSettingsDeletePanel
+) as React.ComponentType<Props>;

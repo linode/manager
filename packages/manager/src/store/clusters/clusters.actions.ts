@@ -14,9 +14,9 @@ export const clustersRequestActions = actionCreator.async<
   APIError[]
 >(`request`);
 
-export const requestClusters: ThunkActionCreator<Promise<
-  ObjectStorageCluster[]
->> = () => (dispatch) => {
+export const requestClusters: ThunkActionCreator<
+  Promise<ObjectStorageCluster[]>
+> = () => (dispatch) => {
   dispatch(clustersRequestActions.started());
 
   return getClusters()

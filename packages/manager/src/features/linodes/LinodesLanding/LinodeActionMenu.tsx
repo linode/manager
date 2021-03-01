@@ -119,9 +119,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
   const [configsError, setConfigsError] = React.useState<
     APIError[] | undefined
   >(undefined);
-  const [hasMadeConfigsRequest, setHasMadeConfigsRequest] = React.useState<
-    boolean
-  >(false);
+  const [
+    hasMadeConfigsRequest,
+    setHasMadeConfigsRequest,
+  ] = React.useState<boolean>(false);
 
   const toggleOpenActionMenu = () => {
     getLinodeConfigs(props.linodeId)

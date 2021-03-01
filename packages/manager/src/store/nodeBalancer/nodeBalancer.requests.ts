@@ -86,9 +86,9 @@ export const updateNodeBalancer = createRequestThunk(
   ({ nodeBalancerId, ...data }) => _updateNodeBalancer(nodeBalancerId, data)
 );
 
-export const getAllNodeBalancersWithConfigs: ThunkActionCreator<Promise<
-  void
->> = () => async (dispatch) => {
+export const getAllNodeBalancersWithConfigs: ThunkActionCreator<
+  Promise<void>
+> = () => async (dispatch) => {
   const { started, done, failed } = getAllNodeBalancersActions;
   dispatch(started());
 

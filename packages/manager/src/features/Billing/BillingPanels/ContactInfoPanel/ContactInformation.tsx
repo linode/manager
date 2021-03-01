@@ -96,9 +96,10 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
 
   const history = useHistory();
 
-  const [editContactDrawerOpen, setEditContactDrawerOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    editContactDrawerOpen,
+    setEditContactDrawerOpen,
+  ] = React.useState<boolean>(false);
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 

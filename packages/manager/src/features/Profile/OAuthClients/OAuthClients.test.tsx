@@ -75,30 +75,18 @@ describe('OAuth Clients', () => {
 
   it('should display label, access, id, and callback URL for a given client', () => {
     const testRow = wrapper.find('[data-qa-table-row="test1"]');
-    expect(
-      testRow
-        .find('[data-qa-oauth-label]')
-        .children()
-        .text()
-    ).toEqual('test1');
-    expect(
-      testRow
-        .find('[data-qa-oauth-access]')
-        .children()
-        .text()
-    ).toEqual('Private');
-    expect(
-      testRow
-        .find('[data-qa-oauth-id]')
-        .children()
-        .text()
-    ).toEqual('test1');
-    expect(
-      testRow
-        .find('[data-qa-oauth-callback]')
-        .children()
-        .text()
-    ).toEqual('http://localhost:3000');
+    expect(testRow.find('[data-qa-oauth-label]').children().text()).toEqual(
+      'test1'
+    );
+    expect(testRow.find('[data-qa-oauth-access]').children().text()).toEqual(
+      'Private'
+    );
+    expect(testRow.find('[data-qa-oauth-id]').children().text()).toEqual(
+      'test1'
+    );
+    expect(testRow.find('[data-qa-oauth-callback]').children().text()).toEqual(
+      'http://localhost:3000'
+    );
   });
 
   it('should display TableRowError if error if state.error is set.', () => {

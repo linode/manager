@@ -19,8 +19,8 @@ import {
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 
 const LinodesDetailHeader = React.lazy(() => import('./LinodesDetailHeader'));
-const LinodesDetailNavigation = React.lazy(() =>
-  import('./LinodesDetailNavigation')
+const LinodesDetailNavigation = React.lazy(
+  () => import('./LinodesDetailNavigation')
 );
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 

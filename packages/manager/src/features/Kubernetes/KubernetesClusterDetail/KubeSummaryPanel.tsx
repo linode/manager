@@ -52,8 +52,9 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginBottom: theme.spacing(3),
-      padding: `${theme.spacing(2) + 4}px ${theme.spacing(2) +
-        4}px ${theme.spacing(3)}px`,
+      padding: `${theme.spacing(2) + 4}px ${
+        theme.spacing(2) + 4
+      }px ${theme.spacing(3)}px`,
     },
     mainGridContainer: {
       [theme.breakpoints.up('lg')]: {

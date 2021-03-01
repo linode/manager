@@ -3,9 +3,9 @@ const axios = require('axios');
 const API_ROOT = process.env.REACT_APP_API_ROOT;
 const { isEmpty } = require('lodash');
 
-const getAxiosInstance = (function(token) {
+const getAxiosInstance = (function (token) {
   let axiosInstance;
-  return function(token) {
+  return function (token) {
     if (token && axiosInstance === undefined) {
       axiosInstance = axios.create({
         httpsAgent: new https.Agent({
@@ -114,7 +114,7 @@ exports.removeAllLinodes = (token) => {
         );
 
         Promise.all(promiseArray)
-          .then(function(res) {
+          .then(function (res) {
             resolve(res);
           })
           .catch((error) => {
@@ -305,7 +305,7 @@ exports.removeAllVolumes = (token) => {
         );
 
         Promise.all(removeVolumesArray)
-          .then(function(res) {
+          .then(function (res) {
             resolve(res);
           })
           .catch((error) => {
@@ -404,7 +404,7 @@ exports.removeStackScript = (token, id) => {
 };
 
 exports.getPrivateImages = (token) => {
-  return browser.call(function() {
+  return browser.call(function () {
     return new Promise((resolve, reject) => {
       const endpoint = '/images?page=1';
 
@@ -426,7 +426,7 @@ exports.getPrivateImages = (token) => {
 };
 
 exports.removeImage = (token, id) => {
-  return browser.call(function() {
+  return browser.call(function () {
     return new Promise((resolve, reject) => {
       const endpoint = `/images/${id}`;
 
@@ -442,7 +442,7 @@ exports.removeImage = (token, id) => {
 };
 
 exports.getPublicKeys = (token) => {
-  return browser.call(function() {
+  return browser.call(function () {
     return new Promise((resolve, reject) => {
       const endpoint = '/profile/sshkeys';
 
@@ -458,7 +458,7 @@ exports.getPublicKeys = (token) => {
 };
 
 exports.removePublicKey = (token, id) => {
-  return browser.call(function() {
+  return browser.call(function () {
     return new Promise((resolve, reject) => {
       const endpoint = `/profile/sshkeys/${id}`;
 

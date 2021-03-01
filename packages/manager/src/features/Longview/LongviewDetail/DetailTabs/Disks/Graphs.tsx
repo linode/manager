@@ -124,52 +124,54 @@ const Graphs: React.FC<CombinedProps> = (props) => {
             />
           </div>
         )}
-        {/*
+        {
+          /*
               only show inodes and space if the
               disk is mounted and is not a swap partition
               because longview doesn't track those stats
             */
-        !isSwap && isMounted && (
-          <React.Fragment>
-            <div data-testid="space-graph">
-              <LongviewLineGraph
-                data={[
-                  {
-                    data: convertData(_free, startTime, endTime),
-                    label: 'Space',
-                    borderColor: 'transparent',
-                    backgroundColor: theme.graphs.space,
-                  },
-                ]}
-                showToday={isToday}
-                title="Space"
-                subtitle="GB"
-                timezone={timezone}
-                nativeLegend
-                // @todo replace with byte-to-target converter after rebase
-                suggestedMax={total[0]?.y / 1024 / 1024 / 1024}
-              />
-            </div>
-            <div data-testid="inodes-graph">
-              <LongviewLineGraph
-                data={[
-                  {
-                    data: convertData(_inodes, startTime, endTime),
-                    label: 'Inodes',
-                    borderColor: 'transparent',
-                    backgroundColor: theme.graphs.inodes,
-                  },
-                ]}
-                showToday={isToday}
-                title="Inodes"
-                timezone={timezone}
-                nativeLegend
-                // @todo replace with byte-to-target converter after rebase
-                suggestedMax={iTotal[0]?.y}
-              />
-            </div>
-          </React.Fragment>
-        )}
+          !isSwap && isMounted && (
+            <React.Fragment>
+              <div data-testid="space-graph">
+                <LongviewLineGraph
+                  data={[
+                    {
+                      data: convertData(_free, startTime, endTime),
+                      label: 'Space',
+                      borderColor: 'transparent',
+                      backgroundColor: theme.graphs.space,
+                    },
+                  ]}
+                  showToday={isToday}
+                  title="Space"
+                  subtitle="GB"
+                  timezone={timezone}
+                  nativeLegend
+                  // @todo replace with byte-to-target converter after rebase
+                  suggestedMax={total[0]?.y / 1024 / 1024 / 1024}
+                />
+              </div>
+              <div data-testid="inodes-graph">
+                <LongviewLineGraph
+                  data={[
+                    {
+                      data: convertData(_inodes, startTime, endTime),
+                      label: 'Inodes',
+                      borderColor: 'transparent',
+                      backgroundColor: theme.graphs.inodes,
+                    },
+                  ]}
+                  showToday={isToday}
+                  title="Inodes"
+                  timezone={timezone}
+                  nativeLegend
+                  // @todo replace with byte-to-target converter after rebase
+                  suggestedMax={iTotal[0]?.y}
+                />
+              </div>
+            </React.Fragment>
+          )
+        }
       </div>
     </GraphCard>
   );

@@ -699,8 +699,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item className={`mlSidebar ${classes.sidebar}`}>
             <CheckoutBar
-              heading={`${this.state.nodeBalancerFields.label ||
-                'NodeBalancer'} Summary`}
+              heading={`${
+                this.state.nodeBalancerFields.label || 'NodeBalancer'
+              } Summary`}
               onDeploy={this.createNodeBalancer}
               calculatedPrice={10}
               disabled={this.state.submitting || disabled}

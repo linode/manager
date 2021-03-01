@@ -21,8 +21,9 @@ import KubeConfigDrawer from './KubeConfigDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
-      1}px ${theme.spacing(2) - 3}px`,
+    padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) + 1}px ${
+      theme.spacing(2) - 3
+    }px`,
     [theme.breakpoints.up('md')]: {
       marginTop: 66,
     },

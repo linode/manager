@@ -140,7 +140,7 @@ class CredStore {
         we can rework token handling in a followup feature branch.
      */
   getTokenFromLocalStorage() {
-    const browserLocalStorage = browser.execute(function() {
+    const browserLocalStorage = browser.execute(function () {
       return JSON.stringify(localStorage); // where does localStorage come from?
     });
     const parsedLocalStorage = JSON.parse(browserLocalStorage.value);

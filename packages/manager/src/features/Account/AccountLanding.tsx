@@ -17,8 +17,8 @@ import useFlags from 'src/hooks/useFlags';
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const Billing = React.lazy(() => import('src/features/Billing'));
-const EntityTransfersLanding = React.lazy(() =>
-  import('src/features/EntityTransfers/EntityTransfersLanding')
+const EntityTransfersLanding = React.lazy(
+  () => import('src/features/EntityTransfers/EntityTransfersLanding')
 );
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));

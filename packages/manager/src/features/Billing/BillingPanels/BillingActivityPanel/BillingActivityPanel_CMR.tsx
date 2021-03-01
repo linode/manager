@@ -184,13 +184,15 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
-  const [selectedTransactionType, setSelectedTransactionType] = React.useState<
-    TransactionTypes
-  >('all');
+  const [
+    selectedTransactionType,
+    setSelectedTransactionType,
+  ] = React.useState<TransactionTypes>('all');
 
-  const [selectedTransactionDate, setSelectedTransactionDate] = React.useState<
-    DateRange
-  >(defaultDateRange);
+  const [
+    selectedTransactionDate,
+    setSelectedTransactionDate,
+  ] = React.useState<DateRange>(defaultDateRange);
 
   const requestAllInvoicesAndPayments = React.useCallback(
     (endDate?: string) => {

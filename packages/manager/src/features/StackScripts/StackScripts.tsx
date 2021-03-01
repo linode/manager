@@ -10,8 +10,8 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
-const StackScriptsLanding_CMR = React.lazy(() =>
-  import('./StackScriptsLanding_CMR')
+const StackScriptsLanding_CMR = React.lazy(
+  () => import('./StackScriptsLanding_CMR')
 );
 const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
 

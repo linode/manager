@@ -11,8 +11,8 @@ const Referrals = React.lazy(() => import('./Referrals'));
 const OAuthClients = React.lazy(() => import('./OAuthClients'));
 const LishSettings = React.lazy(() => import('./LishSettings'));
 const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
-const AuthenticationSettings = React.lazy(() =>
-  import('./AuthenticationSettings')
+const AuthenticationSettings = React.lazy(
+  () => import('./AuthenticationSettings')
 );
 const APITokens = React.lazy(() => import('./APITokens'));
 

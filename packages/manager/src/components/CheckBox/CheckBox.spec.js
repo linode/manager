@@ -49,12 +49,8 @@ describe('Checkbox Component Suite', () => {
 
     const variants = checkboxes.map((e) => e.getAttribute('variant'));
 
-    expect(variants)
-      .withContext(`Incorrect variant`)
-      .toContain('warning');
-    expect(variants)
-      .withContext(`Incorrect variant`)
-      .toContain('error');
+    expect(variants).withContext(`Incorrect variant`).toContain('warning');
+    expect(variants).withContext(`Incorrect variant`).toContain('error');
   });
 
   it('should not update values of disabled checked boxes', () => {

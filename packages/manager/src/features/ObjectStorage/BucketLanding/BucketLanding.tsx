@@ -72,9 +72,10 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
-  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    bucketDetailDrawerOpen,
+    setBucketDetailDrawerOpen,
+  ] = React.useState<boolean>(false);
   const [bucketForDetails, setBucketForDetails] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);

@@ -53,8 +53,9 @@ export const EntityDetail: React.FC<EntityDetailProps> = (props) => {
       <Grid
         item
         xs={12}
-        className={`${classes.footer} ${body === undefined &&
-          classes.footerBorder}`}
+        className={`${classes.footer} ${
+          body === undefined && classes.footerBorder
+        }`}
       >
         {footer}
       </Grid>

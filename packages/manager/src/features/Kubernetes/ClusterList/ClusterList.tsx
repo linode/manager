@@ -80,9 +80,10 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = (props) => {
     defaultDialogState
   );
 
-  const [upgradeDialog, setUpgradeDialogState] = React.useState<
-    UpgradeDialogState
-  >(defaultUpgradeDialogState);
+  const [
+    upgradeDialog,
+    setUpgradeDialogState,
+  ] = React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
   const clustersWithNextVersion: ClusterWithVersion[] = React.useMemo(() => {
     return clusters.map((thisCluster) => ({

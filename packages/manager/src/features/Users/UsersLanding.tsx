@@ -120,9 +120,10 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
   const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
     false
   );
-  const [deleteConfirmDialogOpen, setDeleteConfirmDialogOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    deleteConfirmDialogOpen,
+    setDeleteConfirmDialogOpen,
+  ] = React.useState<boolean>(false);
   const [newUsername, setNewUsername] = React.useState<string | undefined>(
     undefined
   );

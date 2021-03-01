@@ -313,9 +313,7 @@ class ConfigureLinode extends Page {
       .withContext(`Choose a Distribution header ${assertLog.displayed}`)
       .toBe(true);
     this.imageTabs.forEach((tab) =>
-      expect(tab.isDisplayed())
-        .withContext(`${tabDisplayed}`)
-        .toBe(true)
+      expect(tab.isDisplayed()).withContext(`${tabDisplayed}`).toBe(true)
     );
     this.images.forEach((i) =>
       expect(i.isDisplayed())
@@ -329,9 +327,7 @@ class ConfigureLinode extends Page {
       .withContext(`Linode plan header ${assertLog.displayed}`)
       .toBe(true);
     this.planRows.forEach((row) =>
-      expect(row.isDisplayed())
-        .withContext(`plan ${tabDisplayed}`)
-        .toBe(true)
+      expect(row.isDisplayed()).withContext(`plan ${tabDisplayed}`).toBe(true)
     );
     this.plans.forEach((p) =>
       expect(p.isDisplayed())
@@ -392,7 +388,7 @@ class ConfigureLinode extends Page {
 
     this.planHeader.$(`[data-qa-tab="${planType}"]`).click();
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return (
         $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]').length !==
         initialPlans
@@ -404,7 +400,7 @@ class ConfigureLinode extends Page {
     const planElement = this.plans[planIndex];
     planElement.click();
     browser.waitUntil(
-      function() {
+      function () {
         return planElement
           .$('[data-qa-checked]')
           .getAttribute('data-qa-checked')
@@ -464,10 +460,8 @@ class ConfigureLinode extends Page {
     $(sourceSelector).waitForDisplayed(constants.wait.normal);
     $(sourceSelector).click();
     browser.waitUntil(
-      function() {
-        return $(sourceSelector)
-          .getAttribute('aria-selected')
-          .includes('true');
+      function () {
+        return $(sourceSelector).getAttribute('aria-selected').includes('true');
       },
       constants.wait.normal,
       'Failed to change tab of linode create source'

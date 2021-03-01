@@ -24,10 +24,7 @@ const deployNodeBalancer = () => {
 const createNodeBalancerWithUI = (nodeBal) => {
   cy.visitWithLogin('/nodebalancers/create');
   fbtVisible('NodeBalancer Settings');
-  getVisible('[id="nodebalancer-label"]')
-    .click()
-    .clear()
-    .type(nodeBal.label);
+  getVisible('[id="nodebalancer-label"]').click().clear().type(nodeBal.label);
   containsClick('create a tag').type(testNodeBalTag);
   // this will create the NB in newark, where the default Linode was created
   containsClick(selectRegionString).type('new {enter}');

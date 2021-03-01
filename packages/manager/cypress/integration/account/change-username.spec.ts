@@ -13,9 +13,7 @@ describe('username', () => {
       fbtVisible('Username');
       fbtVisible('Email');
       fbtVisible('Delete User');
-      getVisible('[id="username"]')
-        .clear()
-        .type(testText);
+      getVisible('[id="username"]').clear().type(testText);
       getVisible('[id="username"]').should('have.value', testText);
     });
   });

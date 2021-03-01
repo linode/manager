@@ -95,10 +95,7 @@ class MongoCredStore extends CredStore {
     return this._connect()
       .then((mongoClient) => {
         mongo = mongoClient;
-        return mongo
-          .db(this.dbName)
-          .collection(this.collectionName)
-          .find({});
+        return mongo.db(this.dbName).collection(this.collectionName).find({});
       })
       .then((allCreds) => {
         let credsCollection = allCreds.toArray();
@@ -198,10 +195,7 @@ class MongoCredStore extends CredStore {
           .then((mongoClient) => {
             console.log('dropping mongo creds collection');
             mongo = mongoClient;
-            return mongo
-              .db(this.dbName)
-              .collection(this.collectionName)
-              .drop();
+            return mongo.db(this.dbName).collection(this.collectionName).drop();
           })
           .then((result) => {
             console.log('closing mongo client for cleanup');

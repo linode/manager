@@ -394,8 +394,9 @@ interface PrefetchPrimaryLinkProps {
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<PrimaryLinkProps &
-  PrefetchPrimaryLinkProps> = React.memo((props) => {
+export const PrefetchPrimaryLink: React.FC<
+  PrimaryLinkProps & PrefetchPrimaryLinkProps
+> = React.memo((props) => {
   const { makeRequest, cancelRequest } = usePrefetch(
     props.prefetchRequestFn,
     props.prefetchRequestCondition

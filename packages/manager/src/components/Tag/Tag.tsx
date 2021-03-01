@@ -157,9 +157,7 @@ class Tag extends React.Component<CombinedProps, {}> {
             >
               <Close />
             </Button>
-          ) : (
-            undefined
-          )
+          ) : undefined
         }
         classes={{ label: classes.label, deletable: classes[colorVariant!] }}
         onClick={this.handleClick}
