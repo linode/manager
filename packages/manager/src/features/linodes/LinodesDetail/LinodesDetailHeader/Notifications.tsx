@@ -38,6 +38,11 @@ const Notifications: React.FC<CombinedProps> = (props) => {
 
   const generateNotificationBody = (notification: Notification) => {
     switch (notification.type) {
+      // Maintenance notifications are handled separately, based on data from
+      // the `/maintenance` endpoint. We return `null` for maintenance
+      // notifications to avoid duplicate messaging.
+      case 'maintenance':
+        return null;
       case 'migration_pending':
       case 'migration_scheduled':
         /** don't show any banner if the migration is in progress */
