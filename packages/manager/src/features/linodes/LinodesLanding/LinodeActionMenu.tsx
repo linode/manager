@@ -306,17 +306,15 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
             />
           );
         })}
-      {matchesMdDown && (
-        <ActionMenu
-          className={classes.action}
-          toggleOpenCallback={toggleOpenActionMenu}
-          // if inTableContext is false we're most likely in the detail header
-          // where we need all of the available actions
-          actionsList={inTableContext ? menuActions : actions}
-          ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
-          inlineLabel={inlineLabel}
-        />
-      )}
+      <ActionMenu
+        className={classes.action}
+        toggleOpenCallback={toggleOpenActionMenu}
+        // if inTableContext is false we're most likely in the detail header
+        // where we need all of the available actions
+        actionsList={inTableContext ? menuActions : actions}
+        ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+        inlineLabel={inlineLabel}
+      />
     </>
   );
 };
