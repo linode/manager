@@ -1,7 +1,7 @@
 import {
   Account,
   AccountSettings,
-  ActivePromotion
+  ActivePromotion,
 } from '@linode/api-v4/lib/account';
 
 export const activePromotions: ActivePromotion[] = [
@@ -12,8 +12,8 @@ export const activePromotions: ActivePromotion[] = [
     this_month_credit_remaining: '10.00',
     summary: '$50 off each month for 5 months',
     credit_monthly_cap: '50',
-    image_url: 'https://my-image.com/image'
-  }
+    image_url: 'https://my-image.com/image',
+  },
 ];
 
 export const account: Account = {
@@ -24,7 +24,7 @@ export const account: Account = {
   tax_id: '',
   credit_card: {
     expiry: '07/2018',
-    last_four: '1111'
+    last_four: '1111',
   },
   state: 'PA',
   zip: '19020',
@@ -38,7 +38,7 @@ export const account: Account = {
   company: 'mmckenna',
   active_promotions: activePromotions,
   capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
-  euuid: '827923A3-566B-4C83-9B84-6BF656628206'
+  euuid: '827923A3-566B-4C83-9B84-6BF656628206',
 };
 
 export const accountSettings: AccountSettings = {
@@ -46,5 +46,5 @@ export const accountSettings: AccountSettings = {
   managed: false,
   longview_subscription: null,
   network_helper: false,
-  object_storage: 'active'
+  object_storage: 'active',
 };

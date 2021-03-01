@@ -2,7 +2,7 @@ import {
   getObjectList,
   getObjectURL,
   ObjectStorageClusterID,
-  ObjectStorageObject
+  ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -20,7 +20,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -30,7 +30,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import bucketRequestsContainer, {
-  BucketsRequests
+  BucketsRequests,
 } from 'src/containers/bucketRequests.container';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -42,7 +42,7 @@ import {
   ExtendedObject,
   extendObject,
   generateObjectUrl,
-  tableUpdateAction
+  tableUpdateAction,
 } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectDetailDrawer from './ObjectDetailsDrawer';
@@ -62,25 +62,25 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     objectTable: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     nameColumn: {
-      width: '50%'
+      width: '50%',
     },
     sizeColumn: {
-      width: '10%'
+      width: '10%',
     },
     footer: {
       marginTop: theme.spacing(3),
       textAlign: 'center',
-      color: theme.color.headline
+      color: theme.color.headline,
     },
     tryAgainText: {
       ...theme.applyLinkStyles,
       color: theme.palette.primary.main,
       textDecoration: 'underline',
-      cursor: 'pointer'
-    }
+      cursor: 'pointer',
+    },
   });
 
 interface MatchProps {
@@ -118,7 +118,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     deleteObjectLoading: false,
     generalError: undefined,
     nextPageError: undefined,
-    objectDetailDrawerOpen: false
+    objectDetailDrawerOpen: false,
   };
 
   fetchData() {
@@ -129,18 +129,18 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       loading: true,
       generalError: undefined,
       nextPageError: undefined,
-      data: []
+      data: [],
     });
 
     getObjectList(clusterId, bucketName, { delimiter, prefix, page_size })
-      .then(response => {
+      .then((response) => {
         // If there are less results than the page size we requested, we know
         // we've reached the end of the bucket (or folder).
         const allObjectsFetched = !response.is_truncated;
 
         // @todo @tdt: Extract this data-manipulation logic out of this
         // component and test.
-        const extendedData = response.data.map(object =>
+        const extendedData = response.data.map((object) =>
           extendObject(object, prefix)
         );
 
@@ -148,13 +148,13 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           loading: false,
           data: extendedData,
           allObjectsFetched,
-          nextMarker: response.next_marker
+          nextMarker: response.next_marker,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
-          generalError: err
+          generalError: err,
         });
       });
   }
@@ -183,7 +183,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
 
     this.setState({
       loading: true,
-      nextPageError: undefined
+      nextPageError: undefined,
     });
 
     const { clusterId, bucketName } = this.props.match.params;
@@ -196,14 +196,14 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       // the last file of the current set. Specifying a marker will get you
       // the next page of objects after the marker.
       marker: nextMarker,
-      page_size
+      page_size,
     })
-      .then(response => {
+      .then((response) => {
         const allObjectsFetched = !response.is_truncated;
 
         // @todo @tdt: Extract this data-manipulation logic out of this
         // component and test.
-        const extendedData = response.data.map(object =>
+        const extendedData = response.data.map((object) =>
           extendObject(object, prefix)
         );
         const sortedData = sortBy(prop('name'))(extendedData);
@@ -212,13 +212,13 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           loading: false,
           data: [...this.state.data, ...sortedData],
           allObjectsFetched,
-          nextMarker: response.next_marker
+          nextMarker: response.next_marker,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         this.setState({
           loading: false,
-          nextPageError: err
+          nextPageError: err,
         });
       });
   };
@@ -241,7 +241,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       window.location.assign(url);
     } catch (err) {
       this.props.enqueueSnackbar('Error downloading Object', {
-        variant: 'error'
+        variant: 'error',
       });
     }
   };
@@ -250,14 +250,14 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     this.setState({
       objectToDelete: objectName,
       deleteObjectError: undefined,
-      deleteObjectDialogOpen: true
+      deleteObjectDialogOpen: true,
     });
   };
 
   handleClickDetails = (selectedObject: ExtendedObject) => {
     this.setState({
       selectedObject,
-      objectDetailDrawerOpen: true
+      objectDetailDrawerOpen: true,
     });
   };
 
@@ -284,11 +284,11 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       this.props
         .getBucket({ cluster: clusterId, label: bucketName })
         // It's OK to swallow the error here, since this request is for a silent UI update.
-        .catch(_ => null);
+        .catch((_) => null);
 
       this.setState({
         deleteObjectLoading: false,
-        deleteObjectDialogOpen: false
+        deleteObjectDialogOpen: false,
       });
       this.removeOne(objectToDelete);
     } catch (err) {
@@ -296,18 +296,18 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
         deleteObjectLoading: false,
         // We are unlikely to get back a helpful error message, so we create a
         // generic one here.
-        deleteObjectError: 'Unable to delete object.'
+        deleteObjectError: 'Unable to delete object.',
       });
     }
   };
 
   removeOne = (objectName: string) => {
     const updatedData = [...this.state.data];
-    const idx = updatedData.findIndex(object => object.name === objectName);
+    const idx = updatedData.findIndex((object) => object.name === objectName);
     if (idx > -1) {
       updatedData.splice(idx, 1);
       this.setState({
-        data: updatedData
+        data: updatedData,
       });
     }
   };
@@ -332,7 +332,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       etag: '',
       owner: '',
       last_modified: new Date().toISOString(),
-      size: sizeInBytes
+      size: sizeInBytes,
     };
 
     const extendedObject = extendObject(object, prefix, true);
@@ -342,7 +342,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
     // If the file already exists in `data` (i.e. if the file is being
     // overwritten), move it from its current location to the front.
     const idx = updatedFiles.findIndex(
-      file => file.name === prefix + objectName
+      (file) => file.name === prefix + objectName
     );
     if (idx > -1) {
       updatedFiles.splice(idx, 1);
@@ -350,7 +350,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       this.setState({ data: updatedFiles });
     } else {
       this.setState({
-        data: [extendedObject, ...this.state.data]
+        data: [extendedObject, ...this.state.data],
       });
     }
   };
@@ -363,13 +363,13 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       etag: null,
       owner: null,
       last_modified: null,
-      size: null
+      size: null,
     };
 
     const extendedFolder = extendObject(folder, prefix, true);
 
     const idx = this.state.data.findIndex(
-      object => object.name === prefix + objectName + '/'
+      (object) => object.name === prefix + objectName + '/'
     );
     // If the folder isn't already in `data`, add it to the front.
     if (idx === -1) {
@@ -379,7 +379,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
 
   closeDeleteObjectDialog = () => {
     this.setState({
-      deleteObjectDialogOpen: false
+      deleteObjectDialogOpen: false,
     });
   };
 
@@ -400,14 +400,14 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
       deleteObjectError,
       deleteObjectDialogOpen,
       selectedObject,
-      objectDetailDrawerOpen
+      objectDetailDrawerOpen,
     } = this.state;
 
     const { bucketName, clusterId } = this.props.match.params;
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
     const numOfDisplayedObjects = this.state.data.filter(
-      object => object._shouldDisplayObject
+      (object) => object._shouldDisplayObject
     ).length;
 
     return (

@@ -8,7 +8,7 @@ require('@testing-library/jest-dom/extend-expect');
 Enzyme.configure({ adapter: new Adapter() });
 
 /** LocalStorage mocks */
-const localStorageMock = (function() {
+const localStorageMock = (function () {
   // eslint-disable-line wrap-iife
   let store = {};
   return {
@@ -23,7 +23,7 @@ const localStorageMock = (function() {
     },
     setItem(key, value) {
       store[key] = value.toString();
-    }
+    },
   };
 })();
 
@@ -48,22 +48,22 @@ jest.mock('chart.js', () => ({
   Chart: jest.fn(),
   _adapters: {
     _date: {
-      override: jest.fn()
-    }
+      override: jest.fn(),
+    },
   },
   defaults: {
     global: {
       defaultFontFamily: '',
       defaultFontSize: '',
-      defaultFontStyle: ''
-    }
-  }
+      defaultFontStyle: '',
+    },
+  },
 }));
 
 jest.mock('highlight.js/lib/highlight', () => ({
   default: {
     configure: jest.fn(),
     registerLanguage: jest.fn(),
-    highlightBlock: jest.fn()
-  }
+    highlightBlock: jest.fn(),
+  },
 }));

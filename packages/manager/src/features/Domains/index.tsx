@@ -4,7 +4,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import { compose } from 'recompose';
 
@@ -16,9 +16,9 @@ const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
 type CombinedProps = RouteComponentProps<{ domainId?: string }>;
 
-const DomainsRoutes: React.FC<CombinedProps> = props => {
+const DomainsRoutes: React.FC<CombinedProps> = (props) => {
   const {
-    match: { path }
+    match: { path },
   } = props;
 
   return (

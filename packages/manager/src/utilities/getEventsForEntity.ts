@@ -9,5 +9,5 @@ export const getEventsForEntity = (
 ) =>
   getEvents(params, {
     'entity.type': entityType,
-    'entity.id': entityId
+    'entity.id': entityId,
   });

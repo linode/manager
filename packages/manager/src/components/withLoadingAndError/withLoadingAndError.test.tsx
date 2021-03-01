@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import withLoadingAndError from './withLoadingAndError';
 
-const MyComponent: React.SFC<{}> = props => {
+const MyComponent: React.SFC<{}> = (props) => {
   return <div />;
 };
 

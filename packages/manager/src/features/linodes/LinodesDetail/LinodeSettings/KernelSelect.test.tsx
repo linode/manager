@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import KernelSelect, {
   kernelsToGroupedItems,
   Props,
-  sortCurrentKernels
+  sortCurrentKernels,
 } from './KernelSelect';
 
 const cachedKernelRequest = require('src/cachedData/kernels.json');
@@ -16,7 +16,7 @@ const kernels = cachedKernelRequest.data.filter(
 
 const props: Props = {
   kernels,
-  onChange: jest.fn()
+  onChange: jest.fn(),
 };
 
 jest.mock('src/components/EnhancedSelect/Select');
@@ -35,7 +35,7 @@ describe('Kernel Select component', () => {
       'linode/latest-32bit',
       'linode/direct-disk',
       'linode/grub2',
-      'linode/grub-legacy'
+      'linode/grub-legacy',
     ]);
   });
 

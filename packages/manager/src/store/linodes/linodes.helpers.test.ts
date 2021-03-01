@@ -2,9 +2,9 @@ import { Notification } from '@linode/api-v4/lib/account';
 import { linode1 } from 'src/__data__/linodes';
 import { addNotificationsToLinodes } from './linodes.helpers';
 
-const maintenanceNotification: (
-  linodeID: number
-) => Notification[] = linodeID => [
+const maintenanceNotification: (linodeID: number) => Notification[] = (
+  linodeID
+) => [
   {
     label: 'reboot',
     message: 'This Linode is in Danger! Ahhhhh',
@@ -14,12 +14,12 @@ const maintenanceNotification: (
       id: linodeID,
       label: 'linode1234',
       type: 'linode',
-      url: 'https://hello.world'
+      url: 'https://hello.world',
     },
     when: 'rightnow',
     until: 'later',
-    body: null
-  }
+    body: null,
+  },
 ];
 
 describe('Linode Redux Helpers', () => {
@@ -32,9 +32,9 @@ describe('Linode Redux Helpers', () => {
         maintenance: {
           when: 'rightnow',
           until: 'later',
-          type: 'reboot'
-        }
-      }
+          type: 'reboot',
+        },
+      },
     ]);
   });
 
@@ -43,7 +43,7 @@ describe('Linode Redux Helpers', () => {
   ).toEqual([
     {
       ...linode1,
-      maintenance: null
-    }
+      maintenance: null,
+    },
   ]);
 });

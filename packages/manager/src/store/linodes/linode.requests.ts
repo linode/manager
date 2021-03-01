@@ -5,7 +5,7 @@ import {
   getLinodes,
   Linode,
   linodeReboot as _rebootLinode,
-  updateLinode as _updateLinode
+  updateLinode as _updateLinode,
 } from '@linode/api-v4/lib/linodes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -18,7 +18,7 @@ import {
   getLinodesPageActions,
   rebootLinodeActions,
   updateLinodeActions,
-  upsertLinode
+  upsertLinode,
 } from './linodes.actions';
 
 export const getLinode = createRequestThunk(getLinodeActions, ({ linodeId }) =>
@@ -30,7 +30,7 @@ export const updateLinode = createRequestThunk(
   ({ linodeId, ...data }) => _updateLinode(linodeId, data)
 );
 
-export const createLinode = createRequestThunk(createLinodeActions, data =>
+export const createLinode = createRequestThunk(createLinodeActions, (data) =>
   _createLinode(data)
 );
 
@@ -74,10 +74,10 @@ export const requestLinodeForStore: RequestLinodeForStoreThunk = (
     Boolean(state.__resources.linodes.itemsById[id])
   ) {
     return _getLinode(id)
-      .then(linode => {
+      .then((linode) => {
         return dispatch(upsertLinode(linode));
       })
-      .catch(_ => {
+      .catch((_) => {
         /**
          * Usually this will fire when we're requesting events for a deleted Linode.
          * Should be safe to ignore, the only cost would be a stale value in the store

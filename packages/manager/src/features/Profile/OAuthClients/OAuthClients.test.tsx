@@ -16,7 +16,7 @@ describe('OAuth Clients', () => {
       redirect_uri: 'http://localhost:3000',
       thumbnail_url: 'http://localhost:3000',
       label: 'test1',
-      status: 'active'
+      status: 'active',
     },
     {
       public: true,
@@ -24,7 +24,7 @@ describe('OAuth Clients', () => {
       redirect_uri: 'http://localhost:3000',
       thumbnail_url: 'http://localhost:3000',
       label: 'test2',
-      status: 'active'
+      status: 'active',
     },
     {
       public: false,
@@ -32,8 +32,8 @@ describe('OAuth Clients', () => {
       redirect_uri: 'http://localhost:3000',
       thumbnail_url: 'http://localhost:3000',
       label: 'test3',
-      status: 'active'
-    }
+      status: 'active',
+    },
   ];
 
   let wrapper: ShallowWrapper;
@@ -75,30 +75,18 @@ describe('OAuth Clients', () => {
 
   it('should display label, access, id, and callback URL for a given client', () => {
     const testRow = wrapper.find('[data-qa-table-row="test1"]');
-    expect(
-      testRow
-        .find('[data-qa-oauth-label]')
-        .children()
-        .text()
-    ).toEqual('test1');
-    expect(
-      testRow
-        .find('[data-qa-oauth-access]')
-        .children()
-        .text()
-    ).toEqual('Private');
-    expect(
-      testRow
-        .find('[data-qa-oauth-id]')
-        .children()
-        .text()
-    ).toEqual('test1');
-    expect(
-      testRow
-        .find('[data-qa-oauth-callback]')
-        .children()
-        .text()
-    ).toEqual('http://localhost:3000');
+    expect(testRow.find('[data-qa-oauth-label]').children().text()).toEqual(
+      'test1'
+    );
+    expect(testRow.find('[data-qa-oauth-access]').children().text()).toEqual(
+      'Private'
+    );
+    expect(testRow.find('[data-qa-oauth-id]').children().text()).toEqual(
+      'test1'
+    );
+    expect(testRow.find('[data-qa-oauth-callback]').children().text()).toEqual(
+      'http://localhost:3000'
+    );
   });
 
   it('should display TableRowError if error if state.error is set.', () => {

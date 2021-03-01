@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type CSSClasses =
@@ -21,13 +21,13 @@ const styles = (theme: Theme) =>
     container: {
       maxWidth: '100%',
       overflow: 'auto',
-      border: `1px solid ${theme.color.grey2}`
+      border: `1px solid ${theme.color.grey2}`,
     },
     table: {
       width: '100%',
       backgroundColor: theme.color.white,
       borderCollapse: 'collapse',
-      tableLayout: 'fixed'
+      tableLayout: 'fixed',
     },
     row: {},
     numberCell: {
@@ -40,19 +40,19 @@ const styles = (theme: Theme) =>
       textAlign: 'center',
       color: theme.color.headline,
       userSelect: 'none',
-      width: 35
+      width: 35,
     },
     codeCell: {
       paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
+      paddingRight: theme.spacing(1),
     },
     code: {
       fontSize: '1em',
       margin: 0,
       color: theme.color.headline,
       whiteSpace: 'pre-wrap',
-      width: '100%'
-    }
+      width: '100%',
+    },
   });
 
 export interface Props {

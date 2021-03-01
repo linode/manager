@@ -15,14 +15,14 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ReplyActions: React.FC<CombinedProps> = props => {
+const ReplyActions: React.FC<CombinedProps> = (props) => {
   const {
     isSubmitting,
     submitForm,
     closeTicketSuccess,
     closable,
     value,
-    ticketId
+    ticketId,
   } = props;
 
   const handleSubmitForm = () => {

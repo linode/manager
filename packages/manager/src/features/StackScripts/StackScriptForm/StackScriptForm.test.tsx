@@ -6,24 +6,24 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 const props = {
   images: {
     available: [],
-    selected: []
+    selected: [],
   },
   currentUser: 'mmckenna',
   label: {
     value: '',
-    handler: jest.fn()
+    handler: jest.fn(),
   },
   description: {
     value: '',
-    handler: jest.fn()
+    handler: jest.fn(),
   },
   revision: {
     value: '',
-    handler: jest.fn()
+    handler: jest.fn(),
   },
   script: {
     value: '',
-    handler: jest.fn()
+    handler: jest.fn(),
   },
   onSelectChange: jest.fn(),
   errors: [],
@@ -31,7 +31,7 @@ const props = {
   onCancel: jest.fn(),
   isSubmitting: false,
   mode: 'create' as any,
-  disableSubmit: false
+  disableSubmit: false,
 };
 
 describe('StackScriptCreate', () => {

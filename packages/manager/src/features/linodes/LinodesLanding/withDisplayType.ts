@@ -19,7 +19,7 @@ const mapStateToProps: MapState<WithDisplayType, { type: string }> = (
         ? 'No Plan'
         : type === undefined
         ? 'Unknown Plan'
-        : type.label
+        : type.label,
   };
 };
 

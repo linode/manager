@@ -5,19 +5,19 @@ import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import {
   CreateNodeBalancerParams,
-  DeleteNodeBalancerParams
+  DeleteNodeBalancerParams,
 } from 'src/store/nodeBalancer/nodeBalancer.actions';
 import {
   getAllNodeBalancers,
   getAllNodeBalancersWithConfigs,
   getNodeBalancersPage,
-  getNodeBalancerWithConfigs
+  getNodeBalancerWithConfigs,
 } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { UpdateNodeBalancerParams } from './nodeBalancer.actions';
 import {
   createNodeBalancer,
   deleteNodeBalancer,
-  updateNodeBalancer
+  updateNodeBalancer,
 } from './nodeBalancer.requests';
 
 export interface WithNodeBalancerActions {
@@ -46,14 +46,14 @@ export const withNodeBalancerActions = connect(
           getAllNodeBalancers,
           createNodeBalancer,
           deleteNodeBalancer,
-          updateNodeBalancer
+          updateNodeBalancer,
         },
         dispatch
       ),
       getNodeBalancerPage: (params: any = {}, filters: any = {}) =>
         dispatch(getNodeBalancersPage({ params, filters })),
       getNodeBalancerWithConfigs: (nodeBalancerId: number) =>
-        dispatch(getNodeBalancerWithConfigs({ nodeBalancerId }))
-    }
+        dispatch(getNodeBalancerWithConfigs({ nodeBalancerId })),
+    },
   })
 );

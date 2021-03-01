@@ -39,7 +39,7 @@ export const useImages = (filter: Filter = 'all') => {
   const images = {
     ..._images,
     itemsById: filteredImages,
-    results: Object.keys(filteredImages).length
+    results: Object.keys(filteredImages).length,
   };
 
   return { images, requestImages };

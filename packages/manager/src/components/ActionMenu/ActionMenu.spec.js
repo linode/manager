@@ -1,13 +1,13 @@
 const {
   navigateToStory,
-  executeInAllStories
+  executeInAllStories,
 } = require('../../../e2e/utils/storybook');
 
 describe('Action Menu Suite', () => {
   const component = 'Action Menu';
   const menuStories = [
     'Action Menu',
-    'Action Menu with disabled menu item %26 tooltip'
+    'Action Menu with disabled menu item %26 tooltip',
   ];
   const actionMenu = '[data-qa-action-menu]';
   const actionMenuItem = '[data-qa-action-menu-item]';
@@ -25,7 +25,7 @@ describe('Action Menu Suite', () => {
       expect($$(actionMenuItem).length)
         .withContext(`Missing menu items`)
         .toBeGreaterThan(1);
-      $$(actionMenuItem).forEach(i => expect(i.getTagName()).toBe('li'));
+      $$(actionMenuItem).forEach((i) => expect(i.getTagName()).toBe('li'));
     });
   });
 

@@ -1,7 +1,7 @@
 import {
   getLinodeIPs,
   Linode,
-  LinodeIPsResponse
+  LinodeIPsResponse,
 } from '@linode/api-v4/lib/linodes';
 import { getIPs, IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
@@ -18,7 +18,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -32,7 +32,7 @@ import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import withAccount, { StateProps } from 'src/containers/account.container';
 import withFeatureFlags, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -61,20 +61,20 @@ const styles = (theme: Theme) =>
       justifyContent: 'flex-end',
       padding: 0,
       '& a': {
-        marginRight: theme.spacing(1)
+        marginRight: theme.spacing(1),
       },
-      paddingRight: `0px !important`
+      paddingRight: `0px !important`,
     },
 
     multipleRDNSButton: {
-      ...theme.applyLinkStyles
+      ...theme.applyLinkStyles,
     },
     multipleRDNSText: {
       color: theme.palette.primary.main,
       '&:hover': {
-        color: theme.palette.primary.light
-      }
-    }
+        color: theme.palette.primary.light,
+      },
+    },
   });
 
 interface State {
@@ -121,7 +121,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     initialLoading: true,
     ipv6Loading: false,
     transferDialogOpen: false,
-    sharingDialogOpen: false
+    sharingDialogOpen: false,
   };
 
   componentDidMount() {
@@ -137,14 +137,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   openRemoveIPDialog = (IPToRemove: IPAddress) => {
     this.setState({
       removeIPDialogOpen: !this.state.removeIPDialogOpen,
-      currentlySelectedIP: IPToRemove
+      currentlySelectedIP: IPToRemove,
     });
   };
 
   closeRemoveIPDialog = () => {
     this.setState({
       removeIPDialogOpen: false,
-      currentlySelectedIP: undefined
+      currentlySelectedIP: undefined,
     });
   };
 
@@ -152,7 +152,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.setState({ IPRequestError: undefined });
 
     return getLinodeIPs(this.props.linode.id)
-      .then(ips => {
+      .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 
         const shouldSetIPv6Loading = this.state.initialLoading;
@@ -168,32 +168,32 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             this.setState({ ipv6Loading: true });
           }
           getAllIPs({}, { region: this.props.linode.region })
-            .then(response => {
+            .then((response) => {
               this.setState({
                 ipv6Loading: false,
-                allIPs: response.data
+                allIPs: response.data,
               });
             })
-            .catch(errorResponse => {
+            .catch((errorResponse) => {
               const errors = getAPIErrorOrDefault(
                 errorResponse,
                 'There was an error retrieving your IPv6 network information.'
               );
               this.setState({
                 ipv6Error: errors[0].reason,
-                ipv6Loading: false
+                ipv6Loading: false,
               });
             });
         }
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(
           errorResponse,
           'There was an error retrieving your network information.'
         );
         this.setState({
           IPRequestError: errors[0].reason,
-          initialLoading: false
+          initialLoading: false,
         });
       });
   };
@@ -207,28 +207,28 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   displayRangeDrawer = (range: IPRange) => () => {
     this.setState({
       viewRangeDrawerOpen: true,
-      currentlySelectedIPRange: range
+      currentlySelectedIPRange: range,
     });
   };
 
   displayIPDrawer = (ip: IPAddress) => () => {
     this.setState({
       viewIPDrawerOpen: true,
-      currentlySelectedIP: ip
+      currentlySelectedIP: ip,
     });
   };
 
   handleOpenEditRDNS = (ip: IPAddress) => {
     this.setState({
       editRDNSDrawerOpen: true,
-      currentlySelectedIP: ip
+      currentlySelectedIP: ip,
     });
   };
 
   handleOpenEditRDNSForRange = (range: IPRange) => {
     this.setState({
       editRDNSDrawerOpen: true,
-      currentlySelectedIPRange: range
+      currentlySelectedIPRange: range,
     });
   };
 
@@ -266,7 +266,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         onClick={() =>
           this.setState({
             viewRDNSDrawerOpen: true,
-            currentlySelectedIPRange: ipRange
+            currentlySelectedIPRange: ipRange,
           })
         }
         aria-label={`View the ${ipsWithRDNS.length} RDNS Addresses`}
@@ -324,14 +324,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   closeViewRangeDrawer = () =>
     this.setState({
       viewRangeDrawerOpen: false,
-      currentlySelectedIPRange: undefined
+      currentlySelectedIPRange: undefined,
     });
 
   closeEditRDNSDrawer = () => {
     this.setState({
       editRDNSDrawerOpen: false,
       currentlySelectedIP: undefined,
-      currentlySelectedIPRange: undefined
+      currentlySelectedIPRange: undefined,
     });
     this.refreshIPs();
   };
@@ -339,7 +339,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   closeViewRDNSDrawer = () => {
     this.setState({
       viewRDNSDrawerOpen: false,
-      currentlySelectedIPRange: undefined
+      currentlySelectedIPRange: undefined,
     });
   };
 
@@ -393,7 +393,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     // Look for this IP address in state.
     const foundIPIndex = this.state.allIPs.findIndex(
-      eachIP => eachIP.address === ip.address
+      (eachIP) => eachIP.address === ip.address
     );
 
     // If this address is not yet in state, append it.
@@ -414,14 +414,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         id: linodeID,
         label: linodeLabel,
         region: linodeRegion,
-        created: linodeCreated
-      }
+        created: linodeCreated,
+      },
     } = this.props;
     const {
       linodeIPs,
       initialLoading,
       IPRequestError,
-      currentlySelectedIPRange
+      currentlySelectedIPRange,
     } = this.state;
 
     /* Loading state */
@@ -547,7 +547,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             linodeID,
             linodeRegion,
             this.props.classes,
-            this.state.sharingDialogOpen
+            this.state.sharingDialogOpen,
           ]}
           readOnly={readOnly}
         />
@@ -674,7 +674,7 @@ interface ContextProps {
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   /** actually needs the whole linode for the purposes */
   linode,
-  readOnly: linode._permissions === 'read_only'
+  readOnly: linode._permissions === 'read_only',
 }));
 
 interface DispatchProps {
@@ -684,7 +684,7 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: any
 ) => ({
-  upsertLinode: linode => dispatch(_upsertLinode(linode))
+  upsertLinode: (linode) => dispatch(_upsertLinode(linode)),
 });
 
 const connected = connect(undefined, mapDispatchToProps);
@@ -709,7 +709,7 @@ export const listIPv6InRange = (
   prefix: number,
   ips: IPAddress[] = []
 ) => {
-  return ips.filter(thisIP => {
+  return ips.filter((thisIP) => {
     // Only keep addresses that:
     // 1. are part of an IPv6 range or pool
     // 2. have RDNS set
@@ -761,7 +761,7 @@ export const ipResponseToDisplayRows = (
     ...mapIPv4Display(ipv4.public, 'Public'),
     ...mapIPv4Display(ipv4.private, 'Private'),
     ...mapIPv4Display(ipv4.reserved, 'Reserved'),
-    ...mapIPv4Display(ipv4.shared, 'Shared')
+    ...mapIPv4Display(ipv4.shared, 'Shared'),
   ];
 
   if (ipv6?.slaac) {
@@ -775,7 +775,7 @@ export const ipResponseToDisplayRows = (
   // Routed ranges are a special case.
   if (ipv6?.global) {
     ipDisplay.push(
-      ...ipv6.global.map(thisIP => {
+      ...ipv6.global.map((thisIP) => {
         let address = thisIP.range;
         if (thisIP.prefix) {
           address += ` / ${thisIP.prefix}`;
@@ -787,7 +787,7 @@ export const ipResponseToDisplayRows = (
           gateway: '',
           subnetMask: '',
           rdns: '',
-          _range: thisIP
+          _range: thisIP,
         };
       })
     );
@@ -805,7 +805,7 @@ type ipKey =
   | 'Link Local';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
-  return ips.map(ip => ipToDisplay(ip, key));
+  return ips.map((ip) => ipToDisplay(ip, key));
 };
 
 const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
@@ -815,7 +815,7 @@ const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
     subnetMask: ip.subnet_mask ?? '',
     rdns: ip.rdns ?? '',
     type: createType(ip, key) as IPTypes,
-    _ip: ip
+    _ip: ip,
   };
 };
 

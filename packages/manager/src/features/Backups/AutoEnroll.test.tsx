@@ -14,8 +14,8 @@ const props = {
     header: '',
     icon: '',
     toggleLabel: '',
-    toggleLabelText: ''
-  }
+    toggleLabelText: '',
+  },
 };
 
 const component = shallow(<AutoEnroll {...props} />);

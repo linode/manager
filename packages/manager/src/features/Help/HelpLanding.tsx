@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OtherWays from './Panels/OtherWays';
@@ -16,9 +16,9 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.up('lg')]: {
-        padding: `${theme.spacing(2)}px ${theme.spacing(14)}px`
-      }
-    }
+        padding: `${theme.spacing(2)}px ${theme.spacing(14)}px`,
+      },
+    },
   });
 
 type CombinedProps = WithStyles<ClassNames>;

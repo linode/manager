@@ -7,7 +7,7 @@ export interface State {
 }
 
 export const defaultState: State = {
-  isOpen: false
+  isOpen: false,
 };
 
 export const reducer: Reducer<State> = (state = defaultState, action) => {
@@ -15,7 +15,7 @@ export const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, openBucketDrawer)) {
     return {
       ...state,
-      isOpen: true
+      isOpen: true,
     };
   }
 
@@ -23,7 +23,7 @@ export const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, closeBucketDrawer)) {
     return {
       ...state,
-      isOpen: false
+      isOpen: false,
     };
   }
 

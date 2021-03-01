@@ -8,7 +8,7 @@ import {
   isInProgressEvent,
   mostRecentCreated,
   setDeletedEvents,
-  updateInProgressEvents
+  updateInProgressEvents,
 } from './event.helpers';
 import { ExtendedEvent } from './event.types';
 
@@ -18,7 +18,7 @@ describe('event.helpers', () => {
       id: 1,
       label: 'something',
       type: 'whatever',
-      url: 'whoecares'
+      url: 'whoecares',
     };
 
     const event: Pick<Event, 'entity'> = { entity };
@@ -42,7 +42,7 @@ describe('event.helpers', () => {
         { seen: false },
         { seen: true },
         { seen: false },
-        { seen: true }
+        { seen: true },
       ];
       const result = getNumUnseenEvents(events);
       expect(result).toBe(3);
@@ -81,14 +81,14 @@ describe('event.helpers', () => {
     it('should return the most recent event time', () => {
       expect(
         mostRecentCreated(new Date(`1970-01-01T00:00:00`).getTime(), {
-          created: `2018-12-03T22:37:20`
+          created: `2018-12-03T22:37:20`,
         })
       ).toBe(
         DateTime.fromISO(`2018-12-03T22:37:20`, { zone: 'UTC' }).valueOf()
       );
 
       const recentTime = DateTime.fromISO(`2018-12-03T23:37:20`, {
-        zone: 'UTC'
+        zone: 'UTC',
       }).valueOf();
       expect(
         mostRecentCreated(recentTime, { created: `2018-12-03T22:37:20` })
@@ -114,11 +114,11 @@ describe('event.helpers', () => {
             id: 11440645,
             label: 'linode11440645',
             type: 'linode',
-            url: '/v4/linode/instances/11440645'
+            url: '/v4/linode/instances/11440645',
           },
           status: 'finished',
           duration: 0,
-          message: null
+          message: null,
         },
         {
           id: 17957108,
@@ -135,12 +135,12 @@ describe('event.helpers', () => {
             id: 11440645,
             label: 'linode11440645',
             type: 'linode',
-            url: '/v4/linode/instances/11440645'
+            url: '/v4/linode/instances/11440645',
           },
           status: 'finished',
           duration: 0,
-          message: null
-        }
+          message: null,
+        },
       ];
 
       const expected: ExtendedEvent[] = [
@@ -159,12 +159,12 @@ describe('event.helpers', () => {
             id: 11440645,
             label: 'linode11440645',
             type: 'linode',
-            url: '/v4/linode/instances/11440645'
+            url: '/v4/linode/instances/11440645',
           },
           status: 'finished',
           _deleted: '2018-12-02T23:15:45',
           duration: 0,
-          message: null
+          message: null,
         },
         {
           id: 17957108,
@@ -181,13 +181,13 @@ describe('event.helpers', () => {
             id: 11440645,
             label: 'linode11440645',
             type: 'linode',
-            url: '/v4/linode/instances/11440645'
+            url: '/v4/linode/instances/11440645',
           },
           status: 'finished',
           _deleted: '2018-12-02T23:15:45',
           duration: 0,
-          message: null
-        }
+          message: null,
+        },
       ];
 
       const result = setDeletedEvents(events);
@@ -212,7 +212,7 @@ describe('event.helpers', () => {
           entity: null,
           status: 'finished',
           duration: 0,
-          message: null
+          message: null,
         },
         {
           id: 17957718,
@@ -228,7 +228,7 @@ describe('event.helpers', () => {
           entity: null,
           status: 'started',
           duration: 0,
-          message: null
+          message: null,
         },
         {
           id: 17957108,
@@ -244,8 +244,8 @@ describe('event.helpers', () => {
           entity: null,
           status: 'finished',
           duration: 0,
-          message: null
-        }
+          message: null,
+        },
       ];
       const events: Event[] = [
         {
@@ -262,8 +262,8 @@ describe('event.helpers', () => {
           entity: null,
           status: 'started',
           duration: 0,
-          message: null
-        }
+          message: null,
+        },
       ];
       const result = addToEvents(prevEvents, events);
 
@@ -282,7 +282,7 @@ describe('event.helpers', () => {
           entity: null,
           status: 'finished',
           duration: 0,
-          message: null
+          message: null,
         },
         {
           id: 17957718,
@@ -298,7 +298,7 @@ describe('event.helpers', () => {
           entity: null,
           status: 'started',
           duration: 0,
-          message: null
+          message: null,
         },
         {
           id: 17957108,
@@ -314,8 +314,8 @@ describe('event.helpers', () => {
           entity: null,
           status: 'finished',
           duration: 0,
-          message: null
-        }
+          message: null,
+        },
       ]);
     });
   });
@@ -333,16 +333,16 @@ describe('event.helpers', () => {
       const events = [
         {
           id: 1,
-          percent_complete: 100
+          percent_complete: 100,
         },
         {
           id: 2,
-          percent_complete: 100
+          percent_complete: 100,
         },
         {
           id: 3,
-          percent_complete: 100
-        }
+          percent_complete: 100,
+        },
       ];
       const result = updateInProgressEvents(inProgressEvents, events);
       expect(result).toEqual({ '999': 23 });
@@ -353,16 +353,16 @@ describe('event.helpers', () => {
       const events = [
         {
           id: 1,
-          percent_complete: 100
+          percent_complete: 100,
         },
         {
           id: 2,
-          percent_complete: 60
+          percent_complete: 60,
         },
         {
           id: 3,
-          percent_complete: 100
-        }
+          percent_complete: 100,
+        },
       ];
       const result = updateInProgressEvents(inProgressEvents, events);
 

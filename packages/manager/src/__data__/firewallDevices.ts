@@ -8,8 +8,8 @@ export const device: FirewallDevice = {
     id: 16621754,
     url: 'v4/linode/instances/16621754',
     type: 'linode' as any,
-    label: 'Some Linode'
-  }
+    label: 'Some Linode',
+  },
 };
 
 export const device2: FirewallDevice = {
@@ -20,8 +20,8 @@ export const device2: FirewallDevice = {
     id: 15922741,
     url: 'v4/linode/instances/15922741',
     type: 'linode' as any,
-    label: 'Other Linode'
-  }
+    label: 'Other Linode',
+  },
 };
 
 export const devices = [device, device2];

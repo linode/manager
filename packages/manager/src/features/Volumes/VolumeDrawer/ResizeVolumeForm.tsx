@@ -5,12 +5,12 @@ import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import Notice from 'src/components/Notice';
 import withVolumesRequests, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props & VolumesRequests;
 
-const ResizeVolumeForm: React.FC<CombinedProps> = props => {
+const ResizeVolumeForm: React.FC<CombinedProps> = (props) => {
   const {
     volumeId,
     volumeSize,
@@ -36,7 +36,7 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
     volumeLabel,
     onSuccess,
     resizeVolume,
-    readOnly
+    readOnly,
   } = props;
   const initialValues = { size: volumeSize };
   const validationSchema = ResizeVolumeSchema(volumeSize);
@@ -52,13 +52,13 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
         setSubmitting(true);
 
         resizeVolume({ volumeId, size: Number(values.size) })
-          .then(_ => {
+          .then((_) => {
             resetForm({ values: initialValues });
             setSubmitting(false);
             resetEventsPolling();
             onSuccess(volumeLabel, `Volume scheduled to be resized.`);
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             const defaultMessage = `Unable to resize this volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -81,7 +81,7 @@ const ResizeVolumeForm: React.FC<CombinedProps> = props => {
         isSubmitting,
         resetForm,
         status,
-        values
+        values,
       }) => {
         return (
           <Form>

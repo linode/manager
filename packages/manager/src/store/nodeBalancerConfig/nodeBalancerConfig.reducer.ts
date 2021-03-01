@@ -12,7 +12,7 @@ import {
   onError,
   onGetAllSuccess,
   onStart,
-  removeMany
+  removeMany,
 } from '../store.helpers.tmp';
 import {
   addNodeBalancerConfigs,
@@ -20,7 +20,7 @@ import {
   deleteNodeBalancerConfigActions,
   getAllNodeBalancerConfigsActions,
   removeNodeBalancerConfigs,
-  updateNodeBalancerConfigActions
+  updateNodeBalancerConfigActions,
 } from './nodeBalancerConfig.actions';
 
 export type State = RelationalMappedEntityState<
@@ -31,7 +31,7 @@ export type State = RelationalMappedEntityState<
 export const defaultState: State = {};
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  return produce(state, draft => {
+  return produce(state, (draft) => {
     if (isType(action, getAllNodeBalancerConfigsActions.started)) {
       const { nodeBalancerId } = action.payload;
       draft = ensureInitializedNestedState(draft, nodeBalancerId);
@@ -96,7 +96,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { result } = action.payload;
       const { nodeBalancerId } = action.payload.params;
       draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
+        results: 0,
       });
       draft[nodeBalancerId] = onCreateOrUpdate(result, draft[nodeBalancerId]);
     }
@@ -130,7 +130,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { nodeBalancerId } = action.payload.params;
 
       draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
+        results: 0,
       });
       draft[nodeBalancerId].error.delete = error;
     }
@@ -138,7 +138,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (isType(action, removeNodeBalancerConfigs)) {
       const { configIDs, nodeBalancerId } = action.payload;
       draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
+        results: 0,
       });
       draft[nodeBalancerId] = removeMany(
         configIDs.map(String),
@@ -150,7 +150,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { configs, nodeBalancerId } = action.payload;
 
       draft = ensureInitializedNestedState(draft, nodeBalancerId, {
-        results: 0
+        results: 0,
       });
       draft[nodeBalancerId] = addMany(configs, draft[nodeBalancerId]);
     }
@@ -158,7 +158,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     /** When a NodeBalancer is deleted, we need to remove all of its configs. */
     if (isType(action, deleteNodeBalancerActions.done)) {
       const {
-        params: { nodeBalancerId }
+        params: { nodeBalancerId },
       } = action.payload;
       delete draft[nodeBalancerId];
     }

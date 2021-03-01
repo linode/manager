@@ -12,7 +12,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -45,40 +45,40 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3),
-      paddingBottom: theme.spacing(3)
+      paddingBottom: theme.spacing(3),
     },
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     intro: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     modeControl: {
-      display: 'flex'
+      display: 'flex',
     },
     image: {
       display: 'flex',
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
     },
     addNew: {
       ...theme.applyLinkStyles,
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     sshWrap: {
-      margin: `${theme.spacing(1)}px 0`
+      margin: `${theme.spacing(1)}px 0`,
     },
     keyTextarea: {
       [theme.breakpoints.up('md')]: {
-        minWidth: 415
-      }
+        minWidth: 415,
+      },
     },
     remove: {
-      ...theme.applyLinkStyles
+      ...theme.applyLinkStyles,
     },
     button: {
       margin: 0,
-      padding: 0
-    }
+      padding: 0,
+    },
   });
 
 interface State {
@@ -103,7 +103,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       ? this.props.authorizedKeys.length
       : 1,
     authType: this.props.authType,
-    provider: providers[0].name
+    provider: providers[0].name,
   };
 
   render() {
@@ -114,7 +114,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       authorizedKeysCount,
       success,
       errors,
-      authType
+      authType,
     } = this.state;
 
     const thirdPartyEnabled = this.props.authType !== 'password';
@@ -125,7 +125,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorFor(
       {
         lish_auth_method: 'authentication method',
-        authorized_keys: 'ssh public keys'
+        authorized_keys: 'ssh public keys',
       },
       errors
     );
@@ -137,19 +137,19 @@ class LishSettings extends React.Component<CombinedProps, State> {
       {
         label: 'Allow both password and key authentication',
         value: 'password_keys',
-        isDisabled: authType !== 'password'
+        isDisabled: authType !== 'password',
       },
       {
         label: 'Allow key authentication only',
-        value: 'keys_only'
+        value: 'keys_only',
       },
       {
         label: 'Disable Lish',
-        value: 'disabled'
-      }
+        value: 'disabled',
+      },
     ];
 
-    const defaultMode = modeOptions.find(eachMode => {
+    const defaultMode = modeOptions.find((eachMode) => {
       if (authType !== 'password') {
         return (eachMode.value as any) === 'keys_only';
       } else {
@@ -177,9 +177,9 @@ class LishSettings extends React.Component<CombinedProps, State> {
                 <Select
                   textFieldProps={{
                     dataAttrs: {
-                      'data-qa-mode-select': true
+                      'data-qa-mode-select': true,
                     },
-                    tooltipText
+                    tooltipText,
                   }}
                   options={modeOptions}
                   name="mode-select"
@@ -255,30 +255,30 @@ class LishSettings extends React.Component<CombinedProps, State> {
   onSubmit = () => {
     const { authorizedKeys, lishAuthMethod } = this.state;
     const { updateProfile } = this.props;
-    const keys = authorizedKeys.filter(v => v !== '');
+    const keys = authorizedKeys.filter((v) => v !== '');
 
     this.setState({ errors: undefined, submitting: true });
 
     updateProfile({
       lish_auth_method: lishAuthMethod as any,
-      authorized_keys: keys
+      authorized_keys: keys,
     })
-      .then(profileData => {
+      .then((profileData) => {
         this.setState({
           submitting: false,
           success: 'LISH authentication settings have been updated.',
           authorizedKeys: profileData.authorized_keys || [],
           authorizedKeysCount: profileData.authorized_keys
             ? profileData.authorized_keys.length
-            : 1
+            : 1,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState(
           {
             submitting: false,
             errors: getAPIErrorOrDefault(error),
-            success: undefined
+            success: undefined,
           },
           () => {
             scrollErrorIntoView();
@@ -299,7 +299,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
   onPublicKeyRemove = (idx: number) => () => {
     this.setState({
       authorizedKeys: remove(idx, 1, this.state.authorizedKeys),
-      authorizedKeysCount: dec(this.state.authorizedKeysCount)
+      authorizedKeysCount: dec(this.state.authorizedKeysCount),
     });
   };
 }
@@ -313,13 +313,13 @@ interface StateProps {
   authType: TPAProvider;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const { profile } = state.__resources;
   return {
     loading: profile.loading,
     lishAuthMethod: path(['data', 'lish_auth_method'], profile),
     authorizedKeys: path(['data', 'authorized_keys'], profile),
-    authType: profile?.data?.authentication_type ?? 'password'
+    authType: profile?.data?.authentication_type ?? 'password',
   };
 };
 
@@ -327,8 +327,10 @@ interface DispatchProps {
   updateProfile: (v: Partial<Profile>) => Promise<Profile>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any)
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
+  updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

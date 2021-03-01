@@ -6,17 +6,17 @@ import { ClusterRow, Props } from './ClusterRow';
 
 const cluster = {
   ...extendedClusters[0],
-  node_pools: extendedClusters[0].node_pools.map(pool => ({
+  node_pools: extendedClusters[0].node_pools.map((pool) => ({
     ...pool,
-    totalMonthlyPrice: 10
-  }))
+    totalMonthlyPrice: 10,
+  })),
 };
 
 const props: Props = {
   cluster,
   hasUpgrade: false,
   openUpgradeDialog: jest.fn(),
-  openDeleteDialog: jest.fn()
+  openDeleteDialog: jest.fn(),
 };
 
 describe('ClusterRow component', () => {

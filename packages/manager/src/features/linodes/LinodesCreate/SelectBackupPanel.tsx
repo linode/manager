@@ -1,7 +1,7 @@
 import {
   Linode,
   LinodeBackup,
-  LinodeBackupsResponse
+  LinodeBackupsResponse,
 } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -11,7 +11,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -33,19 +33,19 @@ const styles = (theme: Theme) =>
       flexGrow: 1,
       width: '100%',
       backgroundColor: theme.color.white,
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
     },
     inner: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     panelBody: {
       width: '100%',
-      padding: `${theme.spacing(2)}px 0 0`
+      padding: `${theme.spacing(2)}px 0 0`,
     },
     wrapper: {
       padding: theme.spacing(1),
-      minHeight: 120
-    }
+      minHeight: 120,
+    },
   });
 
 interface BackupInfo {
@@ -73,7 +73,7 @@ type CombinedProps = StyledProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    backups: []
+    backups: [],
   };
 
   getBackupInfo(backup: LinodeBackup) {
@@ -90,7 +90,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     return {
       heading,
       subheading,
-      infoName
+      infoName,
     };
   }
 
@@ -101,10 +101,10 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       <SelectionCard
         key={backup.id}
         checked={backup.id === Number(selectedBackupID)}
-        onClick={e => {
+        onClick={(e) => {
           const backupInfo = {
             title: backupInfo_.infoName,
-            details: backupInfo_.subheading
+            details: backupInfo_.subheading,
           };
           this.props.handleChangeBackup(backup.id);
           this.props.handleChangeBackupInfo(backupInfo);
@@ -122,7 +122,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       classes,
       selectedLinodeID,
       loading,
-      selectedLinodeWithBackups
+      selectedLinodeWithBackups,
     } = this.props;
 
     const aggregatedBackups = selectedLinodeWithBackups
@@ -142,7 +142,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
                 {aggregatedBackups.length !== 0 ? (
                   <Typography component="div" className={classes.panelBody}>
                     <Grid container>
-                      {aggregatedBackups.map(backup => {
+                      {aggregatedBackups.map((backup) => {
                         return this.renderCard(backup);
                       })}
                     </Grid>

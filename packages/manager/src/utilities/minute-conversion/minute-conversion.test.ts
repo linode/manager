@@ -1,7 +1,7 @@
 import {
   convertMinutesTo,
   formatEventSeconds,
-  generateMigrationTimeString
+  generateMigrationTimeString,
 } from './minute-conversion';
 
 describe('Minute Conversion Utils', () => {

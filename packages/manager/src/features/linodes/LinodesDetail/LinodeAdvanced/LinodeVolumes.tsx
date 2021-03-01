@@ -16,7 +16,7 @@ import { PaginationProps } from 'src/components/Pagey';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import { StateProps as WithVolumesProps } from 'src/containers/volumes.container';
 import withVolumesRequests, {
-  VolumesRequests
+  VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -34,7 +34,7 @@ import {
   openForCreating,
   openForEdit,
   openForResize,
-  Origin as VolumeDrawerOrigin
+  Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -42,26 +42,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.color.white,
     margin: 0,
-    width: '100%'
+    width: '100%',
   },
   headline: {
     marginTop: 8,
     marginBottom: 8,
     marginLeft: 15,
-    lineHeight: '1.5rem'
+    lineHeight: '1.5rem',
   },
   addNewWrapper: {
     [theme.breakpoints.down('xs')]: {
       marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      marginTop: -theme.spacing(1)
+      marginTop: -theme.spacing(1),
     },
     '&.MuiGrid-item': {
-      padding: 5
-    }
+      padding: 5,
+    },
   },
   volumesPanel: {
-    marginTop: '20px'
-  }
+    marginTop: '20px',
+  },
 }));
 
 interface DispatchProps {
@@ -104,36 +104,36 @@ const volumeHeaders = [
     label: 'Label',
     dataColumn: 'label',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 25,
   },
   {
     label: 'Region',
     dataColumn: 'region',
     sortable: true,
-    widthPercent: 20
+    widthPercent: 20,
   },
   {
     label: 'Size',
     dataColumn: 'size',
     sortable: true,
-    widthPercent: 5
+    widthPercent: 5,
   },
   {
     label: 'File System Path',
     dataColumn: 'File System Path',
     sortable: false,
-    widthPercent: 25
+    widthPercent: 25,
   },
   {
     label: 'Action Menu',
     visuallyHidden: true,
     dataColumn: '',
     sortable: false,
-    widthPercent: 25
-  }
+    widthPercent: 25,
+  },
 ];
 
-export const LinodeVolumes: React.FC<CombinedProps> = props => {
+export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
   const {
     volumesLoading,
     volumesLastUpdated,
@@ -146,7 +146,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     openForCreating,
     linodeId,
     linodeLabel,
-    linodeRegion
+    linodeRegion,
   } = props;
 
   const classes = useStyles();
@@ -158,7 +158,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     open: false,
     volumeId: 0,
     volumeLabel: '',
-    linodeRegion: ''
+    linodeRegion: '',
   });
 
   const [destructiveDialog, setDestructiveDialog] = React.useState<{
@@ -176,23 +176,23 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     volumeLabel: '',
     linodeLabel: '',
     error: '',
-    poweredOff: false
+    poweredOff: false,
   });
 
   const handleCloseAttachDrawer = () => {
-    setAttachmentDrawer(attachmentDrawer => ({
+    setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
-      open: false
+      open: false,
     }));
   };
 
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
-    setAttachmentDrawer(attachmentDrawer => ({
+    setAttachmentDrawer((attachmentDrawer) => ({
       ...attachmentDrawer,
       open: true,
       volumeId,
       volumeLabel: label,
-      linodeRegion: regionID
+      linodeRegion: regionID,
     }));
   };
 
@@ -202,7 +202,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     linodeLabel: string,
     poweredOff: boolean
   ) => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
       mode: 'detach',
@@ -210,26 +210,26 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
       volumeLabel,
       linodeLabel,
       poweredOff,
-      error: ''
+      error: '',
     }));
   };
 
   const handleDelete = (volumeId: number, volumeLabel: string) => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
       mode: 'delete',
       volumeId,
       volumeLabel,
       linodeLabel: '',
-      error: ''
+      error: '',
     }));
   };
 
   const closeDestructiveDialog = () => {
-    setDestructiveDialog(destructiveDialog => ({
+    setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
-      open: false
+      open: false,
     }));
   };
 
@@ -241,19 +241,19 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     }
 
     detachVolume({ volumeId })
-      .then(_ => {
+      .then((_) => {
         /* @todo: show a progress bar for volume detachment */
         enqueueSnackbar('Volume detachment started', {
-          variant: 'info'
+          variant: 'info',
         });
         closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(error => {
-        setDestructiveDialog(destructiveDialog => ({
+      .catch((error) => {
+        setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
           error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
-            .reason
+            .reason,
         }));
       });
   };
@@ -271,11 +271,11 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
         closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(error => {
-        setDestructiveDialog(destructiveDialog => ({
+      .catch((error) => {
+        setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
           error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
-            .reason
+            .reason,
         }));
       });
   };
@@ -287,13 +287,13 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
       return openForCreating('Created from Linode Details', {
         linodeId,
         linodeLabel,
-        linodeRegion
+        linodeRegion,
       });
     }
   };
 
   const currentRegion = regions.find(
-    thisRegion => thisRegion.id === linodeRegion
+    (thisRegion) => thisRegion.id === linodeRegion
   );
 
   if (!currentRegion || !currentRegion.capabilities.includes('Block Storage')) {
@@ -307,7 +307,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     openForClone,
     handleAttach,
     handleDetach,
-    handleDelete
+    handleDelete,
   };
 
   const volumeRow = {
@@ -316,7 +316,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = props => {
     data: linodeVolumes ?? [],
     loading: volumesLoading,
     lastUpdated: volumesLastUpdated,
-    error: volumesError?.read
+    error: volumesError?.read,
   };
 
   if (volumesLoading) {
@@ -379,7 +379,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
       openForResize,
       openForClone,
       openForCreating,
-      openForConfig
+      openForConfig,
     },
     dispatch
   );
@@ -399,7 +399,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeLabel: linode.label,
   linodeRegion: linode.region,
   readOnly: linode._permissions === 'read_only',
-  linodeVolumes: linode._volumes
+  linodeVolumes: linode._volumes,
 }));
 
 const connected = connect(undefined, mapDispatchToProps);
@@ -416,6 +416,6 @@ export default compose<CombinedProps, {}>(
   withVolumesRequests,
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,
-    eventsData: eventsData.filter(filterVolumeEvents)
+    eventsData: eventsData.filter(filterVolumeEvents),
   }))
 )(LinodeVolumes);

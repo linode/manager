@@ -10,7 +10,7 @@ import ThirdPartyDialog from './ThirdPartyDialog';
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     lineHeight: 1.43,
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   providers: {
     marginBottom: theme.spacing(6),
@@ -20,31 +20,31 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.bg.offWhite,
       minHeight: '70px',
       minWidth: '344px',
-      paddingLeft: theme.spacing(3) - 4
+      paddingLeft: theme.spacing(3) - 4,
     },
     '& button:hover': {
-      backgroundColor: theme.bg.offWhite
+      backgroundColor: theme.bg.offWhite,
     },
     '& .MuiButton-label': {
       color: theme.color.headline,
-      justifyContent: 'flex-start'
-    }
+      justifyContent: 'flex-start',
+    },
   },
   providerIcon: {
     color: '#939598',
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   enabled: {
     border: `2px solid ${theme.color.blue} !important`,
 
     '& svg': {
-      color: theme.color.blue
-    }
+      color: theme.color.blue,
+    },
   },
   enabledText: {
     fontFamily: theme.font.normal,
-    marginLeft: theme.spacing() - 4
-  }
+    marginLeft: theme.spacing() - 4,
+  },
 }));
 
 interface Props {
@@ -53,7 +53,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ThirdPartyContent: React.FC<CombinedProps> = props => {
+export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -64,7 +64,7 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
   const thirdPartyEnabled = props.authType !== 'password';
 
   const displayName =
-    providers.find(thisProvider => thisProvider.name === props.authType)
+    providers.find((thisProvider) => thisProvider.name === props.authType)
       ?.displayName || '';
 
   return (
@@ -80,7 +80,7 @@ export const ThirdPartyContent: React.FC<CombinedProps> = props => {
         may only use one provider at a time.
       </Typography>
       <div className={classes.providers}>
-        {providers.map(thisProvider => {
+        {providers.map((thisProvider) => {
           return (
             <Button
               className={thirdPartyEnabled ? classes.enabled : ''}

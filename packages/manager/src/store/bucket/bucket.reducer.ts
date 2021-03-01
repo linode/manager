@@ -6,7 +6,7 @@ import {
   createBucketActions,
   deleteBucketActions,
   getAllBucketsForAllClustersActions,
-  getBucketActions
+  getBucketActions,
 } from './bucket.actions';
 import { BucketError } from './types';
 
@@ -28,7 +28,7 @@ export const defaultState: State = {
   data: [],
   loading: false,
   lastUpdated: 0,
-  bucketErrors: undefined
+  bucketErrors: undefined,
 };
 
 /**
@@ -41,7 +41,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getBucketActions.done)) {
     const { result } = action.payload;
     const idx = state.data.findIndex(
-      thisBucket =>
+      (thisBucket) =>
         thisBucket.label === result.label &&
         thisBucket.cluster === result.cluster
     );
@@ -51,13 +51,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       updatedData[idx] = result;
       return {
         ...state,
-        data: updatedData
+        data: updatedData,
       };
     }
 
     return {
       ...state,
-      data: [...state.data, result]
+      data: [...state.data, result],
     };
   }
 
@@ -70,7 +70,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { result } = action.payload;
     return {
       ...state,
-      data: [...state.data, result]
+      data: [...state.data, result],
     };
   }
 
@@ -90,7 +90,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       data: result,
       lastUpdated: Date.now(),
-      loading: false
+      loading: false,
     };
   }
 
@@ -100,7 +100,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       loading: false,
-      bucketErrors: error
+      bucketErrors: error,
     };
   }
 
@@ -114,11 +114,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       data: state.data.filter(
-        bucket =>
+        (bucket) =>
           // Buckets don't have IDs, so we look at the cluster and label to
           // remove the deleted bucket from state
           !(bucket.label === params.label && bucket.cluster === params.cluster)
-      )
+      ),
     };
   }
 

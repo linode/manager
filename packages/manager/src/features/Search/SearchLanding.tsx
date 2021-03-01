@@ -28,21 +28,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: 0,
     '&.MuiGrid-container': {
-      width: 'calc(100% + 16px)'
-    }
+      width: 'calc(100% + 16px)',
+    },
   },
   headline: {
     marginBottom: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
-      marginLeft: theme.spacing()
-    }
+      marginLeft: theme.spacing(),
+    },
   },
   emptyResultWrapper: {
     padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   emptyResult: {
     padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
@@ -51,15 +51,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(4)
-    }
+      padding: theme.spacing(4),
+    },
   },
   errorIcon: {
     width: 60,
     height: 60,
     color: theme.palette.text.primary,
-    marginBottom: theme.spacing(4)
-  }
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 const displayMap = {
@@ -69,7 +69,7 @@ const displayMap = {
   nodebalancers: 'NodeBalancers',
   images: 'Images',
   kubernetesClusters: 'Kubernetes',
-  buckets: 'Buckets'
+  buckets: 'Buckets',
 };
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
@@ -109,7 +109,7 @@ const splitWord = (word: any) => {
   return word;
 };
 
-export const SearchLanding: React.FC<CombinedProps> = props => {
+export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();
@@ -140,12 +140,12 @@ export const SearchLanding: React.FC<CombinedProps> = props => {
     debounce(500, false, (_searchText: string) => {
       setAPILoading(true);
       searchAPI(_searchText)
-        .then(searchResults => {
+        .then((searchResults) => {
           setAPIResults(searchResults.searchResultsByEntity);
           setAPILoading(false);
           setAPIError(null);
         })
-        .catch(error => {
+        .catch((error) => {
           setAPIError(
             getAPIErrorOrDefault(error, 'Error loading search results')[0]
               .reason

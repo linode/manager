@@ -15,14 +15,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
     display: 'flex',
     justifyContent: 'flex-end',
-    backgroundColor: theme.cmrBGColors.bgTableHeader
+    backgroundColor: theme.cmrBGColors.bgTableHeader,
   },
   toggleButton: {
     color: '#d2d3d4',
     padding: '0 10px',
     '&:focus': {
-      outline: '1px dotted #999'
-    }
+      outline: '1px dotted #999',
+    },
   },
   // There's nothing very scientific about the widths across the breakpoints
   // here, just a lot of trial and error based on maximum expected column sizes.
@@ -30,56 +30,56 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyTableHeaderStyles,
     width: '24%',
     [theme.breakpoints.down('md')]: {
-      width: '20%'
-    }
+      width: '20%',
+    },
   },
   statusCell: {
     ...theme.applyTableHeaderStyles,
     width: '20%',
     [theme.breakpoints.only('md')]: {
-      width: '27%'
+      width: '27%',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '25%'
-    }
+      width: '25%',
+    },
   },
   planCell: {
     ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.only('sm')]: {
-      width: '15%'
-    }
+      width: '15%',
+    },
   },
   ipAddressCell: {
     ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.only('sm')]: {
-      width: '22%'
-    }
+      width: '22%',
+    },
   },
   regionCell: {
     ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.down('xs')]: {
-      width: '18%'
-    }
+      width: '18%',
+    },
   },
   lastBackupCell: {
     ...theme.applyTableHeaderStyles,
     width: '14%',
     [theme.breakpoints.down('xs')]: {
-      width: '18%'
-    }
+      width: '18%',
+    },
   },
   actionCell: {
     width: '16%',
     [theme.breakpoints.only('md')]: {
-      width: '10%'
+      width: '10%',
     },
     [theme.breakpoints.down('sm')]: {
-      width: '12%'
-    }
-  }
+      width: '12%',
+    },
+  },
 }));
 
 interface Props {
@@ -92,7 +92,7 @@ interface Props {
 
 type CombinedProps = Props & Omit<OrderByProps, 'data'>;
 
-const SortableTableHead: React.FC<CombinedProps> = props => {
+const SortableTableHead: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -103,7 +103,7 @@ const SortableTableHead: React.FC<CombinedProps> = props => {
     linodeViewPreference,
     toggleGroupLinodes,
     linodesAreGrouped,
-    isVLAN
+    isVLAN,
   } = props;
 
   const isActive = (label: string) =>

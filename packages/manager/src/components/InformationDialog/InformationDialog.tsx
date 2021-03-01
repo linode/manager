@@ -8,7 +8,7 @@ interface Props extends DialogProps {
   onClose: () => void;
 }
 
-export const InformationDialog: React.FC<Props> = props => {
+export const InformationDialog: React.FC<Props> = (props) => {
   const { title, children, ...dialogProps } = props;
   return (
     <Dialog

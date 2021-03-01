@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -24,7 +24,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.up('md')]: {
-        marginTop: theme.spacing(3)
+        marginTop: theme.spacing(3),
       },
       [theme.breakpoints.down('sm')]: {
         position: 'fixed !important' as 'fixed',
@@ -33,11 +33,11 @@ const styles = (theme: Theme) =>
         bottom: 24,
         display: 'flex',
         flexWrap: 'nowrap',
-        justifyContent: 'flex-end'
-      }
+        justifyContent: 'flex-end',
+      },
     },
     title: {
-      fontSize: '1.2rem'
+      fontSize: '1.2rem',
     },
     gridItem: {
       [theme.breakpoints.down('sm')]: {
@@ -46,17 +46,17 @@ const styles = (theme: Theme) =>
         backgroundColor: theme.bg.white,
         boxShadow: `0 0 5px ${theme.color.boxShadow}`,
         display: 'none',
-        width: '100%'
-      }
+        width: '100%',
+      },
     },
     mobileActive: {
-      display: 'block'
+      display: 'block',
     },
     toggleButton: {
       position: 'absolute',
       bottom: 0,
-      right: 10
-    }
+      right: 10,
+    },
   });
 
 interface Props {
@@ -64,7 +64,7 @@ interface Props {
 }
 
 interface State {
-  open: Boolean;
+  open: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -73,12 +73,12 @@ const styled = withStyles(styles);
 
 class DocsSidebar extends React.Component<CombinedProps, State> {
   state = {
-    open: false
+    open: false,
   };
 
   toggleHelp = () => {
     this.setState({
-      open: !this.state.open
+      open: !this.state.open,
     });
   };
 
@@ -95,14 +95,14 @@ class DocsSidebar extends React.Component<CombinedProps, State> {
         container
         item
         className={classNames({
-          [classes.root]: true
+          [classes.root]: true,
         })}
       >
         <Grid
           item
           className={classNames({
             [classes.gridItem]: true,
-            [classes.mobileActive]: open
+            [classes.mobileActive]: open,
           })}
         >
           <Typography

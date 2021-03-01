@@ -17,7 +17,7 @@ import {
   getPollingInterval,
   getRequestDeadline,
   setPollingInterval,
-  setRequestDeadline
+  setRequestDeadline,
 } from 'src/eventsPolling';
 import store from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
@@ -42,7 +42,7 @@ export const requestEvents = () => {
       });
       inProgress = false;
     })
-    .catch(e => e);
+    .catch((e) => e);
 };
 
 export const startEventsInterval = () =>

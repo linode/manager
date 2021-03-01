@@ -12,7 +12,7 @@ import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import AccountContainer, {
-  DispatchProps as AccountDispatchProps
+  DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
 import { v4 } from 'uuid';
 import CreditCard from './CreditCardPayment';
@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   currentBalance: {
     fontSize: '1.1rem',
-    marginBottom: theme.spacing(4)
-  }
+    marginBottom: theme.spacing(4),
+  },
 }));
 
 interface Props {
@@ -57,7 +57,7 @@ export const getMinimumPayment = (balance: number | false) => {
 
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
-export const PaymentDrawer: React.FC<CombinedProps> = props => {
+export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
 
@@ -69,9 +69,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = props => {
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
-  const [isPaypalScriptLoaded, setIsPaypalScriptLoaded] = React.useState<
-    boolean
-  >(false);
+  const [
+    isPaypalScriptLoaded,
+    setIsPaypalScriptLoaded,
+  ] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
@@ -176,7 +177,7 @@ interface WarningProps {
   warning: APIWarning;
 }
 
-const Warning: React.FC<WarningProps> = props => {
+const Warning: React.FC<WarningProps> = (props) => {
   const { warning } = props;
   /** The most common API warning includes "please open a Support ticket",
    * which we'd like to be a link.
@@ -206,7 +207,7 @@ const withAccount = AccountContainer(
     accountLoading,
     balance: accountData?.balance ?? false,
     lastFour: accountData?.credit_card.last_four ?? '0000',
-    expiry: accountData?.credit_card.expiry ?? ''
+    expiry: accountData?.credit_card.expiry ?? '',
   })
 );
 

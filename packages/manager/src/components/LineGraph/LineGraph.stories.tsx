@@ -10,8 +10,8 @@ const mockData = [
     data: [
       [1537979728, 1000],
       [1637979728, 2000],
-      [1737979728, 5000]
-    ] as [number, number][]
+      [1737979728, 5000],
+    ] as [number, number][],
   },
   {
     label: 'Volumes',
@@ -19,9 +19,9 @@ const mockData = [
     data: [
       [1537979728, 100],
       [1637979728, 200],
-      [1737979728, 500]
-    ] as [number, number][]
-  }
+      [1737979728, 500],
+    ] as [number, number][],
+  },
 ];
 
 storiesOf('Line Graph', module)

@@ -4,13 +4,13 @@ import {
   createNodeBalancerConfigNodeActions,
   deleteNodeBalancerConfigNodeActions,
   requestNodeBalancerConfigNodesActions,
-  updateNodeBalancerConfigNodeActions
+  updateNodeBalancerConfigNodeActions,
 } from './configNode.actions';
 import reducer, { defaultState } from './configNode.reducer';
 
 const mockParams = {
   configId: nodes[0].config_id || 0,
-  nodeBalancerId: nodes[0].nodebalancer_id || 0
+  nodeBalancerId: nodes[0].nodebalancer_id || 0,
 };
 const mockError = [{ reason: 'an error' }];
 
@@ -19,7 +19,7 @@ const addEntities = () =>
     defaultState,
     requestNodeBalancerConfigNodesActions.done({
       result: { data: nodes, results: nodes.length },
-      params: mockParams
+      params: mockParams,
     })
   );
 
@@ -29,7 +29,7 @@ describe('NB Config Node reducer', () => {
       defaultState,
       requestNodeBalancerConfigNodesActions.done({
         result: { data: nodes, results: nodes.length },
-        params: mockParams
+        params: mockParams,
       })
     )[mockParams.configId];
     expect(Object.values(newState.itemsById)).toEqual(nodes);
@@ -43,7 +43,7 @@ describe('NB Config Node reducer', () => {
       defaultState,
       requestNodeBalancerConfigNodesActions.failed({
         params: mockParams,
-        error: mockError
+        error: mockError,
       })
     )[mockParams.configId];
     expect(newState.error).toHaveProperty('read', mockError);
@@ -63,7 +63,7 @@ describe('NB Config Node reducer', () => {
       defaultState,
       createNodeBalancerConfigNodeActions.done({
         result: nodes[0],
-        params: { ...mockParams, address: '', label: '' }
+        params: { ...mockParams, address: '', label: '' },
       })
     )[mockParams.configId];
     expect(Object.values(newState.itemsById)).toContain(nodes[0]);
@@ -75,7 +75,7 @@ describe('NB Config Node reducer', () => {
       defaultState,
       createNodeBalancerConfigNodeActions.failed({
         error: mockError,
-        params: { ...mockParams, address: '', label: '' }
+        params: { ...mockParams, address: '', label: '' },
       })
     );
     expect(newState[mockParams.configId].error!.create).toEqual(mockError);
@@ -87,7 +87,7 @@ describe('NB Config Node reducer', () => {
       withEntities,
       deleteNodeBalancerConfigNodeActions.done({
         result: {},
-        params: { ...mockParams, nodeId: nodes[0].id }
+        params: { ...mockParams, nodeId: nodes[0].id },
       })
     )[mockParams.configId];
     expect(newState.results).toBe(
@@ -100,7 +100,7 @@ describe('NB Config Node reducer', () => {
       defaultState,
       deleteNodeBalancerConfigNodeActions.failed({
         params: { ...mockParams, nodeId: 111 },
-        error: mockError
+        error: mockError,
       })
     );
     expect(newState[mockParams.configId].error!.delete).toEqual(mockError);
@@ -113,7 +113,7 @@ describe('NB Config Node reducer', () => {
       withEntities,
       updateNodeBalancerConfigNodeActions.done({
         result: updatedNode,
-        params: { ...mockParams, nodeId: nodes[1].id }
+        params: { ...mockParams, nodeId: nodes[1].id },
       })
     )[mockParams.configId];
     expect(Object.values(newState.itemsById)).toHaveLength(
@@ -127,7 +127,7 @@ describe('NB Config Node reducer', () => {
       defaultState,
       updateNodeBalancerConfigNodeActions.failed({
         error: mockError,
-        params: { ...mockParams, nodeId: 123 }
+        params: { ...mockParams, nodeId: 123 },
       })
     );
     expect(newState[mockParams.configId].error!.update).toEqual(mockError);

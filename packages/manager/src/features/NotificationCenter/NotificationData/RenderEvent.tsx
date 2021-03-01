@@ -13,28 +13,28 @@ import useEventInfo from './useEventInfo';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingTop: 2,
-    paddingBottom: 2
+    paddingBottom: 2,
   },
   divider: {
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
   },
   icon: {
     '& svg': {
       height: 20,
-      width: 20
-    }
+      width: 20,
+    },
   },
   eventMessage: {
     '&:hover': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   timeStamp: {
-    textAlign: 'right'
+    textAlign: 'right',
   },
   unseenEvent: {
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 }));
 
 interface Props {
@@ -44,7 +44,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const RenderEvent: React.FC<Props> = props => {
+export const RenderEvent: React.FC<Props> = (props) => {
   const { event, onClose } = props;
   const classes = useStyles();
 
@@ -57,7 +57,7 @@ export const RenderEvent: React.FC<Props> = props => {
     <Typography
       className={classNames({
         [classes.unseenEvent]: !event.seen,
-        [classes.eventMessage]: !!linkTarget
+        [classes.eventMessage]: !!linkTarget,
       })}
     >
       {message}

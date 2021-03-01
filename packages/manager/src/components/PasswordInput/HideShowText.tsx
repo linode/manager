@@ -16,7 +16,7 @@ type Props = TextFieldProps & {
 
 class HideShowText extends React.Component<Props, State> {
   state = {
-    hidden: true
+    hidden: true,
   };
 
   toggleHidden = () => {
@@ -31,7 +31,7 @@ class HideShowText extends React.Component<Props, State> {
       <TextField
         {...this.props}
         dataAttrs={{
-          'data-qa-hide': hidden
+          'data-qa-hide': hidden,
         }}
         label={label}
         type={hidden ? 'password' : 'text'}
@@ -46,7 +46,7 @@ class HideShowText extends React.Component<Props, State> {
               onClick={this.toggleHidden}
               style={{ marginLeft: 14 }}
             />
-          )
+          ),
         }}
         autoComplete="off"
       />

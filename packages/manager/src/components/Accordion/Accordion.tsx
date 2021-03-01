@@ -2,16 +2,16 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as React from 'react';
 import Accordion, { AccordionProps } from 'src/components/core/Accordion';
 import AccordionDetails, {
-  AccordionDetailsProps
+  AccordionDetailsProps,
 } from 'src/components/core/AccordionDetails';
 import AccordionSummary, {
-  AccordionSummaryProps
+  AccordionSummaryProps,
 } from 'src/components/core/AccordionSummary';
 import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -22,57 +22,57 @@ type ClassNames = 'root' | 'success' | 'warning' | 'error';
 
 const styles = (theme: Theme) => {
   const {
-    palette: { status }
+    palette: { status },
   } = theme;
   return createStyles({
     root: {
       backgroundColor: theme.cmrBGColors.bgPaper,
       '& .MuiAccordionSummary-root': {
-        backgroundColor: theme.cmrBGColors.bgPaper
+        backgroundColor: theme.cmrBGColors.bgPaper,
       },
       '& .MuiAccordionDetails-root': {
-        backgroundColor: theme.cmrBGColors.bgPaper
+        backgroundColor: theme.cmrBGColors.bgPaper,
       },
       '& .MuiButton-root': {
-        marginLeft: 0
-      }
+        marginLeft: 0,
+      },
     },
     success: {
       backgroundColor: status.success,
       '&:hover, &:focus': {
         backgroundColor: status.successDark,
         '& h3, & svg': {
-          color: theme.color.white
-        }
+          color: theme.color.white,
+        },
       },
       '& svg': {
-        color: theme.palette.text.primary
-      }
+        color: theme.palette.text.primary,
+      },
     },
     warning: {
       backgroundColor: status.warning,
       '&:hover, &:focus': {
         backgroundColor: status.warningDark,
         '& h3': {
-          color: theme.color.headline
-        }
+          color: theme.color.headline,
+        },
       },
       '& svg': {
-        color: theme.palette.text.primary
-      }
+        color: theme.palette.text.primary,
+      },
     },
     error: {
       backgroundColor: status.error,
       '&:hover, &:focus': {
         backgroundColor: status.errorDark,
         '& h3, & svg': {
-          color: 'white'
-        }
+          color: 'white',
+        },
       },
       '& svg': {
-        color: theme.palette.text.primary
-      }
-    }
+        color: theme.palette.text.primary,
+      },
+    },
   });
 };
 

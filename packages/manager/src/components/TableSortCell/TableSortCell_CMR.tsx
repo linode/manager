@@ -11,35 +11,35 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
       marginLeft: 4,
-      width: 20
+      width: 20,
     },
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       cursor: 'pointer',
       '& span': {
-        color: '#ffffff !important'
+        color: '#ffffff !important',
       },
       '& .MuiTableSortLabel-icon': {
-        color: '#ffffff !important'
+        color: '#ffffff !important',
       },
       '& svg g': {
-        fill: '#ffffff'
-      }
-    }
+        fill: '#ffffff',
+      },
+    },
   },
   label: {
     color: theme.cmrTextColors.tableHeader,
     fontSize: '.875rem',
     minHeight: 20,
-    transition: 'none'
+    transition: 'none',
   },
   initialIcon: {
     margin: 0,
-    marginLeft: 4
+    marginLeft: 4,
   },
   noWrap: {
-    whiteSpace: 'nowrap'
-  }
+    whiteSpace: 'nowrap',
+  },
 }));
 
 export interface Props extends TableCellProps {
@@ -53,7 +53,7 @@ export interface Props extends TableCellProps {
 
 type CombinedProps = Props;
 
-export const TableSortCell: React.FC<CombinedProps> = props => {
+export const TableSortCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -78,7 +78,7 @@ export const TableSortCell: React.FC<CombinedProps> = props => {
     <TableCell
       className={classNames(props.className, {
         [classes.root]: true,
-        [classes.noWrap]: noWrap
+        [classes.noWrap]: noWrap,
       })}
       {...rest}
       sortDirection={direction}

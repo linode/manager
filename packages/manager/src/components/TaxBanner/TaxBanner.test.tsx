@@ -35,13 +35,13 @@ describe('Utility Functions', () => {
               account: {
                 link: '/account/billing',
                 text_to_replace: 'your account',
-                type: 'internal'
+                type: 'internal',
               },
               docs: {
                 link: 'https://linode.com',
                 text_to_replace: 'this location',
-                type: 'external'
-              }
+                type: 'external',
+              },
             }
           )}
         </div>

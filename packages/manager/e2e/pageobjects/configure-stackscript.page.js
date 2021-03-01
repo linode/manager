@@ -8,14 +8,14 @@ const stackConfig = {
   label: `${new Date().getTime()}-MyStackScript`,
   description: 'test stackscript example',
   revisionNote: new Date().getTime(),
-  script: '#!bin/bash'
+  script: '#!bin/bash',
 };
 
 const stackConfigWithRequiredUDFs = {
   label: `${new Date().getTime()}-MyStackScript`,
   description: 'test stackscript example',
   revisionNote: new Date().getTime(),
-  script: `#!bin/bash<br># <UDF name="DB_PASSWORD" Label="MySQL root Password" />`
+  script: `#!bin/bash<br># <UDF name="DB_PASSWORD" Label="MySQL root Password" />`,
 };
 
 class ConfigureStackScript extends Page {
@@ -103,7 +103,7 @@ class ConfigureStackScript extends Page {
         `"${this.targetImagesSelect.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
-    this.imageTags.forEach(tag =>
+    this.imageTags.forEach((tag) =>
       expect(tag.isDisplayed())
         .withContext(`"${this.tag.selector}" selector ${assertLog.displayed}`)
         .toBe(true)
@@ -141,7 +141,7 @@ class ConfigureStackScript extends Page {
     const selectedImage = this.multiOption.selector.replace(']', '');
 
     if (config.images) {
-      config.images.forEach(i => {
+      config.images.forEach((i) => {
         this.targetImagesSelect.click();
         const imageElement = $(`[data-qa-option="linode/${i}"]`);
         browser.pause(500);
@@ -171,7 +171,7 @@ class ConfigureStackScript extends Page {
   create(config, update = false) {
     this.save();
 
-    const myStackscript = ListStackScripts.stackScriptRows.filter(t =>
+    const myStackscript = ListStackScripts.stackScriptRows.filter((t) =>
       t
         .$(ListStackScripts.stackScriptTitle.selector)
         .getText()
@@ -185,18 +185,14 @@ class ConfigureStackScript extends Page {
         .getText()
     )
       .withContext(
-        `${assertLog.incorrectText} for ${
-          ListStackScripts.stackScriptDescription.selector
-        } selector`
+        `${assertLog.incorrectText} for ${ListStackScripts.stackScriptDescription.selector} selector`
       )
       .toContain(config.description);
     expect(
       myStackscript[0].$(ListStackScripts.stackScriptDeploys.selector).getText()
     )
       .withContext(
-        `${assertLog.incorrectText} for ${
-          ListStackScripts.stackScriptDescription.selector
-        } selector`
+        `${assertLog.incorrectText} for ${ListStackScripts.stackScriptDescription.selector} selector`
       )
       .toBe('0');
     expect(
@@ -205,9 +201,7 @@ class ConfigureStackScript extends Page {
         .isDisplayed()
     )
       .withContext(
-        `"${ListStackScripts.stackScriptRevision.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${ListStackScripts.stackScriptRevision.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
     expect(
@@ -216,9 +210,7 @@ class ConfigureStackScript extends Page {
         .isDisplayed()
     )
       .withContext(
-        `"${ListStackScripts.stackScriptActionMenu.selector}" selector ${
-          assertLog.displayed
-        }`
+        `"${ListStackScripts.stackScriptActionMenu.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
     ListStackScripts.waitForNotice(
@@ -228,11 +220,9 @@ class ConfigureStackScript extends Page {
 
   removeImage(imageName) {
     this.imageTags
-      .filter(i => i.getText().includes(imageName))
-      .forEach(i => {
-        i.$('..')
-          .$('svg')
-          .click();
+      .filter((i) => i.getText().includes(imageName))
+      .forEach((i) => {
+        i.$('..').$('svg').click();
         i.waitForDisplayed(constants.wait.normal, true);
       });
   }

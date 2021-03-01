@@ -1,7 +1,7 @@
 import {
   Account,
   ActivePromotion,
-  NetworkUtilization
+  NetworkUtilization,
 } from '@linode/api-v4/lib/account/types';
 import * as Factory from 'factory.ts';
 
@@ -12,7 +12,7 @@ export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   expire_dt: '2025-05-01T03:59:59',
   credit_monthly_cap: '20.00',
   credit_remaining: '20.00',
-  this_month_credit_remaining: '20.00'
+  this_month_credit_remaining: '20.00',
 });
 
 export const accountFactory = Factory.Sync.makeFactory<Account>({
@@ -31,7 +31,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   tax_id: '111111111',
   credit_card: {
     last_four: '1111',
-    expiry: '01/2018'
+    expiry: '01/2018',
   },
   balance_uninvoiced: 0.0,
   active_since: '2018-07-03T12:15:25',
@@ -40,7 +40,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'NodeBalancers',
     'Block Storage',
     'Object Storage',
-    'Kubernetes'
+    'Kubernetes',
   ],
   active_promotions: [
     {
@@ -50,7 +50,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
       expire_dt: '2025-05-01T03:59:59',
       credit_monthly_cap: '20.00',
       credit_remaining: '20.00',
-      this_month_credit_remaining: '20.00'
+      this_month_credit_remaining: '20.00',
     },
     {
       image_url: '',
@@ -60,16 +60,16 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
       expire_dt: null,
       credit_monthly_cap: '20.00',
       credit_remaining: '20.00',
-      this_month_credit_remaining: '20.00'
-    }
+      this_month_credit_remaining: '20.00',
+    },
   ],
-  euuid: '278EC57D-7424-4B3A-B35C3CE395787567'
+  euuid: '278EC57D-7424-4B3A-B35C3CE395787567',
 });
 
-export const accountTransferFactory = Factory.Sync.makeFactory<
-  NetworkUtilization
->({
-  used: 50,
-  quota: 11347,
-  billable: 0
-});
+export const accountTransferFactory = Factory.Sync.makeFactory<NetworkUtilization>(
+  {
+    used: 50,
+    quota: 11347,
+    billable: 0,
+  }
+);

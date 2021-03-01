@@ -6,7 +6,6 @@ import '../public/fonts/fonts.css';
 import '../src/index.css';
 import ThemeDecorator from '../src/utilities/storybookDecorators';
 
-
 /** Global decorators */
 addDecorator(ThemeDecorator);
 addDecorator(withKnobs);

@@ -2,17 +2,17 @@ import { imageFactory } from 'src/factories/images';
 import { groupImages } from './images';
 
 const [privateImage1, privateImage2] = imageFactory.buildList(2, {
-  is_public: false
+  is_public: false,
 });
 
 const [deprecatedImage1, deprecatedImage2] = imageFactory.buildList(2, {
   deprecated: true,
-  created_by: 'linode'
+  created_by: 'linode',
 });
 
 const [recommendedImage1, recommendedImage2] = imageFactory.buildList(2, {
   id: 'linode/image',
-  created_by: 'linode'
+  created_by: 'linode',
 });
 
 const [deletedImage1, deletedImage2] = imageFactory.buildList(2, {
@@ -25,7 +25,7 @@ const [deletedImage1, deletedImage2] = imageFactory.buildList(2, {
   label: '',
   is_public: false,
   created: '',
-  expiry: '2019-05-09T04:13:37'
+  expiry: '2019-05-09T04:13:37',
 });
 
 describe('groupImages method', () => {
@@ -33,7 +33,7 @@ describe('groupImages method', () => {
     const result = groupImages([privateImage1, privateImage2]);
 
     const expected = {
-      images: [privateImage1, privateImage2]
+      images: [privateImage1, privateImage2],
     };
 
     expect(result).toEqual(expected);
@@ -43,7 +43,7 @@ describe('groupImages method', () => {
     const result = groupImages([deprecatedImage1, deprecatedImage2]);
 
     const expected = {
-      older: [deprecatedImage1, deprecatedImage2]
+      older: [deprecatedImage1, deprecatedImage2],
     };
 
     expect(result).toEqual(expected);
@@ -54,7 +54,7 @@ describe('groupImages method', () => {
     const result = groupImages(_images);
 
     const expected = {
-      recommended: _images
+      recommended: _images,
     };
 
     expect(result).toEqual(expected);
@@ -64,7 +64,7 @@ describe('groupImages method', () => {
     const result = groupImages([deletedImage1, deletedImage2]);
 
     const expected = {
-      deleted: [deletedImage1, deletedImage2]
+      deleted: [deletedImage1, deletedImage2],
     };
 
     expect(result).toEqual(expected);

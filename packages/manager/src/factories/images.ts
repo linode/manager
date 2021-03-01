@@ -2,8 +2,8 @@ import * as Factory from 'factory.ts';
 import { Image } from '@linode/api-v4/lib/images/types';
 
 export const imageFactory = Factory.Sync.makeFactory<Image>({
-  id: Factory.each(id => `private/${id}`),
-  label: Factory.each(i => `image-${i}`),
+  id: Factory.each((id) => `private/${id}`),
+  label: Factory.each((i) => `image-${i}`),
   description: 'An image',
   deprecated: false,
   created: new Date().toISOString(),
@@ -13,5 +13,5 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   size: 1500,
   type: 'image',
   vendor: null,
-  expiry: null
+  expiry: null,
 });

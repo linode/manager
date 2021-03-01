@@ -4,7 +4,7 @@ import {
   getInvoice,
   getInvoiceItems,
   Invoice,
-  InvoiceItem
+  InvoiceItem,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -32,35 +32,35 @@ import InvoiceTable from './InvoiceTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
   },
   totals: {
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'right',
     '& h2': {
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   },
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   backButton: {
     margin: '5px 0 0 -16px',
     '& svg': {
       width: 34,
-      height: 34
-    }
+      height: 34,
+    },
   },
   m2: {
-    margin: theme.spacing()
-  }
+    margin: theme.spacing(),
+  },
 }));
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }> & StateProps;
 
-export const InvoiceDetail: React.FC<CombinedProps> = props => {
+export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { data } = props;
@@ -80,9 +80,9 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
   const requestData = () => {
     const {
       match: {
-        params: { invoiceId }
+        params: { invoiceId },
       },
-      data
+      data,
     } = props;
     setLoading(true);
 
@@ -100,7 +100,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = props => {
         setInvoice(invoice);
         setItems(items);
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         setLoading(false);
         setErrors(
           getAPIErrorOrDefault(
@@ -224,7 +224,7 @@ interface StateProps extends S {
 const connected = connect(
   (state: ApplicationState): S => state.__resources.account,
   (dispatch: ThunkDispatch): { requestAccount: () => void } => ({
-    requestAccount: () => dispatch(requestAccount())
+    requestAccount: () => dispatch(requestAccount()),
   })
 );
 

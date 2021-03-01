@@ -5,7 +5,7 @@ import { flatten } from 'ramda';
 import {
   apiCreateMultipleLinodes,
   apiDeleteAllLinodes,
-  timestamp
+  timestamp,
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
@@ -15,10 +15,10 @@ describe('List Linodes Suite', () => {
   const linode = {
     linodeLabel: `AutoLinode${timestamp()}`,
     privateIp: false,
-    tags: [`AutoTag${timestamp()}`]
+    tags: [`AutoTag${timestamp()}`],
   };
 
-  const assertActionMenuItems = linode => {
+  const assertActionMenuItems = (linode) => {
     const expectedOptions = [
       'Reboot',
       'Power Off',
@@ -27,7 +27,7 @@ describe('List Linodes Suite', () => {
       'Resize',
       'View Backups',
       'Enable Backups',
-      'Delete'
+      'Delete',
     ];
     ListLinodes.actionMenuOptionExists(
       $(ListLinodes.getLinodeSelector(linode)),
@@ -132,7 +132,7 @@ describe('List Linodes Suite', () => {
 
     it('should display copy to clipboard elements', () => {
       copyButtons = flatten(
-        ListLinodes.linode.map(l => l.$$(ListLinodes.copyIp.selector))
+        ListLinodes.linode.map((l) => l.$$(ListLinodes.copyIp.selector))
       );
       const linodesLength = ListLinodes.linode.length;
       const expectedCopyButtons = linodesLength;
@@ -149,8 +149,8 @@ describe('List Linodes Suite', () => {
 
     it('should display the status', () => {
       linodes = ListLinodes.linode;
-      const statuses = linodes.map(l => l.$(ListLinodes.status.selector));
-      statuses.forEach(s =>
+      const statuses = linodes.map((l) => l.$(ListLinodes.status.selector));
+      statuses.forEach((s) =>
         expect(['offline', 'running']).toContain(
           s.getAttribute('data-qa-entity-status')
         )

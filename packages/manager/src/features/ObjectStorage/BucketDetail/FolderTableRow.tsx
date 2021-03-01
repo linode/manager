@@ -17,17 +17,17 @@ import Hidden from 'src/components/core/Hidden';
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
-      backgroundColor: theme.bg.lightBlue
-    }
+      backgroundColor: theme.bg.lightBlue,
+    },
   },
   folderNameWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   iconWrapper: {
-    margin: '2px 0'
-  }
+    margin: '2px 0',
+  },
 }));
 
 interface Props {
@@ -36,7 +36,7 @@ interface Props {
   manuallyCreated: boolean;
 }
 
-const FolderTableRow: React.FC<Props> = props => {
+const FolderTableRow: React.FC<Props> = (props) => {
   const { folderName, displayName, manuallyCreated } = props;
 
   const history = useHistory();

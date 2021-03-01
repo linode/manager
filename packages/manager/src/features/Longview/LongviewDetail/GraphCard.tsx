@@ -10,10 +10,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& > h6': {
       color: theme.color.grey1,
       '& > strong': {
-        color: theme.color.headline
-      }
-    }
-  }
+        color: theme.color.headline,
+      },
+    },
+  },
 }));
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
   helperText?: string;
 }
 
-export const GraphCard: React.FC<Props> = props => {
+export const GraphCard: React.FC<Props> = (props) => {
   const { helperText, title } = props;
   const classes = useStyles();
 

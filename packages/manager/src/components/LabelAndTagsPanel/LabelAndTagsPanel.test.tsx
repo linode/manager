@@ -14,17 +14,17 @@ describe('Tags list', () => {
           label: 'Linode Label',
           value: '',
           onChange: onLabelChange,
-          errorText: 'Your label is rude!'
+          errorText: 'Your label is rude!',
         }}
         tagsInputProps={{
-          value: ['a', 'b'].map(tag => ({ label: tag, value: tag })),
+          value: ['a', 'b'].map((tag) => ({ label: tag, value: tag })),
           onChange: onTagsChange,
-          tagError: 'Tag names are too short!'
+          tagError: 'Tag names are too short!',
         }}
         classes={{
           root: '',
           inner: '',
-          expPanelButton: ''
+          expPanelButton: '',
         }}
       />
     );
@@ -38,12 +38,12 @@ describe('Tags list', () => {
           label: 'Linode Label',
           value: '',
           onChange: onLabelChange,
-          errorText: 'Your label is rude!'
+          errorText: 'Your label is rude!',
         }}
         classes={{
           root: '',
           inner: '',
-          expPanelButton: ''
+          expPanelButton: '',
         }}
       />
     );

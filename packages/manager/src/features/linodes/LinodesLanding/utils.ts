@@ -12,7 +12,7 @@ export const parseMaintenanceStartTime = (startTime?: string | null) => {
   if (startTime.match(/valid/i)) {
     reportException('Error parsing maintenance start time', {
       rawDate: startTime,
-      convertedDate: startTime
+      convertedDate: startTime,
     });
     return 'Maintenance Window Unknown';
   }

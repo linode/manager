@@ -6,7 +6,7 @@ import Permissions from '../../pageobjects/account/permissions.page';
 describe('Account - Users Suite', () => {
   const userConfig = {
     username: `test-user${new Date().getTime()}`,
-    email: `pthiel@linode.com`
+    email: `pthiel@linode.com`,
   };
 
   beforeAll(() => {

@@ -6,5 +6,5 @@ export const tagsToItems = (tags: string[]): Item<string>[] =>
   }, []);
 
 export const getTagsAsStrings = (tagItems: Item<string>[]): string[] => {
-  return tagItems.map(thisTag => thisTag.label);
+  return tagItems.map((thisTag) => thisTag.label);
 };

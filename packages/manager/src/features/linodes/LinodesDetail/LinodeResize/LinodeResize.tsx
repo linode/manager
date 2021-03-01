@@ -3,7 +3,7 @@ import {
   Disk,
   LinodeStatus,
   LinodeType,
-  resizeLinode
+  resizeLinode,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -21,7 +21,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -59,47 +59,47 @@ const styles = (theme: Theme) =>
       paddingBottom: theme.spacing(2),
       '& .tabbedPanel': {
         '& > div': {
-          padding: 0
-        }
-      }
+          padding: 0,
+        },
+      },
     },
     checkbox: {
       marginTop: theme.spacing(3),
       '& .MuiButtonBase-root': {
-        marginLeft: 3
-      }
+        marginLeft: 3,
+      },
     },
     toolTip: {
-      paddingTop: theme.spacing(1)
+      paddingTop: theme.spacing(1),
     },
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     resizeTitle: {
       display: 'flex',
       alignItems: 'center',
-      minHeight: '44px'
+      minHeight: '44px',
     },
     subTitle: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     currentPlanContainer: {
       '& input[type=radio]': {
-        cursor: 'not-allowed'
-      }
+        cursor: 'not-allowed',
+      },
     },
     currentHeaderEmptyCell: {
-      width: '13%'
+      width: '13%',
     },
     actions: {
       paddingBottom: theme.spacing(2),
-      paddingLeft: theme.spacing(3)
+      paddingLeft: theme.spacing(3),
     },
     errorLink: {
       color: '#c44742',
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   });
 
 interface LinodeContextProps {
@@ -141,8 +141,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       isOpen: false,
       submitting: false,
       currentPlan: '',
-      targetPlan: ''
-    }
+      targetPlan: '',
+    },
   };
 
   openConfirmationModal = () => {
@@ -158,8 +158,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         isOpen: true,
         error: undefined,
         currentPlan,
-        targetPlan
-      }
+        targetPlan,
+      },
     });
   };
 
@@ -167,8 +167,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     this.setState({
       confirmationDialog: {
         ...this.state.confirmationDialog,
-        isOpen: false
-      }
+        isOpen: false,
+      },
     });
   };
 
@@ -180,7 +180,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       enqueueSnackbar,
       history,
       updateLinode,
-      typesData
+      typesData,
     } = this.props;
     const { selectedId } = this.state;
 
@@ -195,7 +195,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     );
 
     this.setState({
-      confirmationDialog: { ...this.state.confirmationDialog, submitting: true }
+      confirmationDialog: {
+        ...this.state.confirmationDialog,
+        submitting: true,
+      },
     });
 
     /**
@@ -205,18 +208,18 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
      * is larger than the target plan).
      */
     resizeLinode(linodeId, selectedId, this.state.autoDiskResize && !isSmaller)
-      .then(_ => {
+      .then((_) => {
         this.setState({
           selectedId: '',
           confirmationDialog: {
             ...this.state.confirmationDialog,
             submitting: false,
-            isOpen: false
-          }
+            isOpen: false,
+          },
         });
         resetEventsPolling();
         enqueueSnackbar('Linode queued for resize.', {
-          variant: 'info'
+          variant: 'info',
         });
 
         // Update the Linode so we display the new plan information.
@@ -227,7 +230,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
         history.push(`/linodes/${linodeId}/summary`);
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         let error: string | JSX.Element = '';
         const reason = errorResponse[0]?.reason ?? '';
         if (
@@ -259,8 +262,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           confirmationDialog: {
             ...this.state.confirmationDialog,
             error,
-            submitting: false
-          }
+            submitting: false,
+          },
         });
       });
   };
@@ -281,9 +284,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       permissions,
       classes,
       linodeDisks,
-      linodeStatus
+      linodeStatus,
     } = this.props;
-    const type = typesData.find(t => t.id === linodeType);
+    const type = typesData.find((t) => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized = permissions === 'read_only';
@@ -298,7 +301,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
     const [
       diskToResize,
-      _shouldEnableAutoResizeDiskOption
+      _shouldEnableAutoResizeDiskOption,
     ] = shouldEnableAutoResizeDiskOption(linodeDisks);
 
     const isSmaller = isSmallerThanCurrentPlan(
@@ -337,7 +340,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
             types={typesData.filter(
-              thisType => !thisType.isDeprecated && !thisType.isShadowPlan
+              (thisType) => !thisType.isDeprecated && !thisType.isShadowPlan
             )}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
@@ -419,13 +422,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    updateLinode: (id: number) => dispatch(requestLinodeForStore(id))
+    updateLinode: (id: number) => dispatch(requestLinodeForStore(id)),
   };
 };
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const linodeContext = withLinodeDetailContext(state => {
+const linodeContext = withLinodeDetailContext((state) => {
   const { linode } = state;
   return {
     linodeId: linode.id,
@@ -433,12 +436,12 @@ const linodeContext = withLinodeDetailContext(state => {
     linodeStatus: linode.status,
     linodeLabel: linode.label,
     permissions: linode._permissions,
-    linodeDisks: linode._disks
+    linodeDisks: linode._disks,
   };
 });
 
 export const getLinodeType = (types: LinodeType[], selectedTypeID: string) => {
-  return types.find(thisType => thisType.id === selectedTypeID);
+  return types.find((thisType) => thisType.id === selectedTypeID);
 };
 
 /**
@@ -481,8 +484,8 @@ export const isSmallerThanCurrentPlan = (
   currentPlanID: string,
   types: ExtendedType[]
 ) => {
-  const currentType = types.find(thisType => thisType.id === currentPlanID);
-  const nextType = types.find(thisType => thisType.id === selectedPlanID);
+  const currentType = types.find((thisType) => thisType.id === currentPlanID);
+  const nextType = types.find((thisType) => thisType.id === selectedPlanID);
 
   if (!(currentType && nextType)) {
     return false;

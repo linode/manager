@@ -7,14 +7,14 @@ import { VolumeTableRow, CombinedProps } from './VolumeTableRow';
 
 const volumeWithLinodeLabel = {
   ...volumes[2],
-  linodeLabel: 'thisLinode'
+  linodeLabel: 'thisLinode',
 };
 
 const unattachedVolume = {
   ...volumes[0],
   linodeLabel: '',
   linode_id: null,
-  linodeStatus: 'active'
+  linodeStatus: 'active',
 };
 
 const props: CombinedProps = {
@@ -36,7 +36,7 @@ const props: CombinedProps = {
   openForConfig: jest.fn(),
   handleAttach: jest.fn(),
   handleDetach: jest.fn(),
-  handleDelete: jest.fn()
+  handleDelete: jest.fn(),
 };
 
 describe('Volume table row', () => {

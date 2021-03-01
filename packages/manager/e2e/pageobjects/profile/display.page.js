@@ -21,9 +21,7 @@ export class Display extends Page {
   }
   get timeZoneSelect() {
     return $(
-      `[data-qa-enhanced-select="Choose a timezone."] ${
-        this.multiSelect.selector
-      }`
+      `[data-qa-enhanced-select="Choose a timezone."] ${this.multiSelect.selector}`
     );
   }
 

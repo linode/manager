@@ -34,7 +34,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     email: '',
     restricted: false,
     errors: [],
-    submitting: false
+    submitting: false,
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -44,7 +44,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         email: '',
         restricted: false,
         errors: [],
-        submitting: false
+        submitting: false,
       });
     }
   }
@@ -53,7 +53,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     const {
       addUser,
       onClose,
-      history: { push }
+      history: { push },
     } = this.props;
     const { username, email, restricted } = this.state;
     this.setState({ errors: [], submitting: true });
@@ -65,11 +65,11 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           addUser(user);
         } else {
           push(`/account/users/${username}/permissions`, {
-            newUsername: user.username
+            newUsername: user.username,
           });
         }
       })
-      .catch(errResponse => {
+      .catch((errResponse) => {
         const errors = getAPIErrorOrDefault(
           errResponse,
           'Error creating user.'
@@ -80,19 +80,19 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
 
   onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      username: e.target.value
+      username: e.target.value,
     });
   };
 
   onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      email: e.target.value
+      email: e.target.value,
     });
   };
 
   onChangeRestricted = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      restricted: !this.state.restricted
+      restricted: !this.state.restricted,
     });
   };
 

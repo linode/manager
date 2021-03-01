@@ -10,7 +10,7 @@ describe('Tags list', () => {
         tags={['tag1', 'tag2', 'tag3', 'tag4', 'tag5']}
         classes={{
           root: '',
-          tag: ''
+          tag: '',
         }}
       />
     );
@@ -24,7 +24,7 @@ describe('Tags list', () => {
         tags={['tag1', 'tag2', 'tag3']}
         classes={{
           root: '',
-          tag: ''
+          tag: '',
         }}
       />
     );

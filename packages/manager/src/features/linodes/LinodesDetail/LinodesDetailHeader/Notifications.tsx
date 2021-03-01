@@ -16,7 +16,7 @@ type CombinedProps = ProfileProps &
     requestNotifications: () => void;
   };
 
-const Notifications: React.FC<CombinedProps> = props => {
+const Notifications: React.FC<CombinedProps> = (props) => {
   const {
     requestNotifications,
     linodeNotifications,
@@ -24,7 +24,7 @@ const Notifications: React.FC<CombinedProps> = props => {
     userProfileError,
     userProfileLoading,
     linodeId,
-    linodeStatus
+    linodeStatus,
   } = props;
 
   const generateNotificationBody = (notification: Notification) => {
@@ -98,17 +98,17 @@ const enhanced = compose<CombinedProps, {}>(
     linodeNotifications: linode._notifications,
     linodeId: linode.id,
     linodeStatus: linode.status,
-    maintenance: linode.maintenance
+    maintenance: linode.maintenance,
   })),
   withNotifications(undefined, ({ requestNotifications }) => ({
-    requestNotifications
+    requestNotifications,
   })),
   withProfile<ProfileProps, {}>(
     (undefined, { profileData: profile, profileLoading, profileError }) => {
       return {
         userTimezone: profile?.timezone,
         userProfileError: profileError?.read,
-        userProfileLoading: profileLoading
+        userProfileLoading: profileLoading,
       };
     }
   )

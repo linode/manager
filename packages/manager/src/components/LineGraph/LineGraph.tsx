@@ -6,7 +6,7 @@ import {
   Chart,
   ChartXAxe,
   ChartTooltipItem,
-  ChartData
+  ChartData,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
 
@@ -16,7 +16,7 @@ import {
   makeStyles,
   Theme,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -58,7 +58,7 @@ export interface Props {
 type CombinedProps = Props;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  ...MetricDisplayStyles(theme)
+  ...MetricDisplayStyles(theme),
 }));
 
 const lineOptions: ChartDataSets = {
@@ -66,7 +66,7 @@ const lineOptions: ChartDataSets = {
   borderJoinStyle: 'miter',
   lineTension: 0,
   pointRadius: 0,
-  pointHitRadius: 10
+  pointHitRadius: 10,
 };
 
 const humanizeLargeData = (value: number) => {
@@ -100,7 +100,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     rowHeaders,
     legendRows,
     nativeLegend,
-    unit
+    unit,
   } = props;
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
@@ -112,13 +112,13 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         if (!legendRendered) {
           setLegendRendered(true);
         }
-      }
-    }
+      },
+    },
   ];
 
   const handleLegendClick = (datasetIndex: number) => {
     if (hiddenDatasets.includes(datasetIndex)) {
-      setHiddenDatasets(hiddenDatasets.filter(e => e !== datasetIndex));
+      setHiddenDatasets(hiddenDatasets.filter((e) => e !== datasetIndex));
     } else {
       setHiddenDatasets([...hiddenDatasets, datasetIndex]);
     }
@@ -135,7 +135,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       animation: { duration: 0 },
       legend: {
         display: _nativeLegend,
-        position: _nativeLegend ? 'bottom' : undefined
+        position: _nativeLegend ? 'bottom' : undefined,
       },
       scales: {
         yAxes: [
@@ -143,43 +143,43 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
             gridLines: {
               borderDash: [3, 6],
               zeroLineWidth: 1,
-              zeroLineBorderDashOffset: 2
+              zeroLineBorderDashOffset: 2,
             },
             ticks: {
               suggestedMax: _suggestedMax ?? undefined,
               beginAtZero: true,
               callback(value: number, _index: number) {
                 return humanizeLargeData(value);
-              }
-            }
-          }
+              },
+            },
+          },
         ],
         xAxes: [
           {
             type: 'time',
             gridLines: {
-              display: false
+              display: false,
             },
             time: {
               stepSize: showToday ? 3 : 5,
               displayFormats: showToday
                 ? {
                     hour: 'HH:00',
-                    minute: 'HH:mm'
+                    minute: 'HH:mm',
                   }
                 : {
                     hour: 'LLL dd',
-                    minute: 'LLL dd'
-                  }
+                    minute: 'LLL dd',
+                  },
             },
             adapters: {
               date: {
-                zone: timezone
-              }
-            }
+                zone: timezone,
+              },
+            },
             // This cast is because the type definition does not include adapters
-          } as ChartXAxe
-        ]
+          } as ChartXAxe,
+        ],
       },
       tooltips: {
         cornerRadius: 0,
@@ -194,11 +194,11 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         caretPadding: 10,
         position: 'nearest',
         callbacks: {
-          label: _formatTooltip(data, formatTooltip, _tooltipUnit)
+          label: _formatTooltip(data, formatTooltip, _tooltipUnit),
         },
         intersect: false,
-        mode: 'index'
-      }
+        mode: 'index',
+      },
     };
 
     /**
@@ -225,7 +225,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({
           t: point[0],
-          y: formatData ? formatData(point[1]) : point[1]
+          y: formatData ? formatData(point[1]) : point[1],
         });
         return acc;
       }, []);
@@ -236,7 +236,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         data: timeData,
         fill: dataSet.fill,
         hidden: hiddenDatasets.includes(idx),
-        ...lineOptions
+        ...lineOptions,
       };
     });
   };
@@ -253,10 +253,10 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       chartInstance.current = new Chart(inputEl.current.getContext('2d'), {
         type: 'line',
         data: {
-          datasets: _formatData()
+          datasets: _formatData(),
         },
         plugins,
-        options: getChartOptions(suggestedMax, nativeLegend, unit)
+        options: getChartOptions(suggestedMax, nativeLegend, unit),
       });
     }
   });
@@ -271,7 +271,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
             <TableHead className={classes.tableHead}>
               {/* Remove "Toggle Graph" label and repeat legend for each data set for mobile */}
               {matchesSmDown ? (
-                data.map(section => (
+                data.map((section) => (
                   <TableRow key={section.label}>
                     {finalRowHeaders.map((section, i) => (
                       <TableCell
@@ -328,11 +328,12 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                         className={classes.toggleButton}
                       >
                         <div
-                          className={`${classes.legendIcon} ${hidden &&
-                            classes.crossedOut}`}
+                          className={`${classes.legendIcon} ${
+                            hidden && classes.crossedOut
+                          }`}
                           style={{
                             background: bgColor,
-                            borderColor: bgColor
+                            borderColor: bgColor,
                           }}
                         />
                         <span className={hidden ? classes.crossedOut : ''}>
@@ -375,7 +376,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
 export const metricsBySection = (data: Metrics): number[] => [
   data.max,
   data.average,
-  data.last
+  data.last,
 ];
 
 export const _formatTooltip = curry(

@@ -4,7 +4,7 @@ import { ApplicationState } from 'src/store';
 import { State } from 'src/store/account/account.reducer';
 import {
   requestAccount as _request,
-  updateAccount as _update
+  updateAccount as _update,
 } from 'src/store/account/account.requests';
 import { Dispatch } from './types';
 

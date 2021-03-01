@@ -13,7 +13,7 @@ export type CombinedProps = ListProps &
   PaginationProps<Entity> &
   PageyIntegrationProps;
 
-export const APIPaginatedTable: React.FC<CombinedProps> = props => {
+export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
   const {
     count,
     data,
@@ -29,7 +29,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
     handlers,
     headers,
     initialOrder,
-    RowComponent
+    RowComponent,
   } = props;
 
   const _data = data ?? [];
@@ -63,7 +63,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = props => {
               error={error}
               lastUpdated={100}
             >
-              {normalizedData.map(thisEntity => (
+              {normalizedData.map((thisEntity) => (
                 <RowComponent
                   key={thisEntity.id}
                   {...thisEntity}
@@ -92,7 +92,7 @@ const enhanced = compose<CombinedProps, any>(
       if (ownProps.persistData) {
         ownProps.persistData(response.data);
       }
-    }
+    },
   })
 );
 

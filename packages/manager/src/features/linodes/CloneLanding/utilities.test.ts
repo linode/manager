@@ -8,7 +8,7 @@ import {
   ExtendedConfig,
   getAllDisks,
   getAssociatedDisks,
-  getEstimatedCloneTime
+  getEstimatedCloneTime,
 } from './utilities';
 
 describe('utilities', () => {
@@ -17,23 +17,23 @@ describe('utilities', () => {
       configSelection: {
         1000: {
           isSelected: true,
-          associatedDiskIds: []
-        }
+          associatedDiskIds: [],
+        },
       },
       diskSelection: {
         2000: {
           isSelected: false,
-          associatedConfigIds: []
-        }
+          associatedConfigIds: [],
+        },
       },
       isSubmitting: false,
-      selectedLinodeId: null
+      selectedLinodeId: null,
     };
 
     it('toggles given config', () => {
       const newState = reducer(baseState, {
         type: 'toggleConfig',
-        id: 1000
+        id: 1000,
       });
       expect(newState.configSelection[1000].isSelected).toBe(false);
     });
@@ -41,7 +41,7 @@ describe('utilities', () => {
     it('toggles given disk', () => {
       const newState = reducer(baseState, {
         type: 'toggleDisk',
-        id: 2000
+        id: 2000,
       });
       expect(newState.diskSelection[2000].isSelected).toBe(true);
     });
@@ -49,7 +49,7 @@ describe('utilities', () => {
     it('sets the selectedLinodeId', () => {
       const newState = reducer(baseState, {
         type: 'setSelectedLinodeId',
-        id: 3000
+        id: 3000,
       });
       expect(newState.selectedLinodeId).toBe(3000);
     });
@@ -57,7 +57,7 @@ describe('utilities', () => {
     it('sets submitting', () => {
       const newState = reducer(baseState, {
         type: 'setSubmitting',
-        value: true
+        value: true,
       });
       expect(newState.isSubmitting).toBe(true);
     });
@@ -65,7 +65,7 @@ describe('utilities', () => {
     it('sets errors', () => {
       const newState = reducer(baseState, {
         type: 'setErrors',
-        errors: [{ reason: 'ERROR' }]
+        errors: [{ reason: 'ERROR' }],
       });
       expect(newState.errors).toEqual([{ reason: 'ERROR' }]);
     });
@@ -76,15 +76,15 @@ describe('utilities', () => {
         diskSelection: {
           2000: {
             isSelected: true,
-            associatedConfigIds: []
-          }
+            associatedConfigIds: [],
+          },
         },
         selectedLinodeId: 3000,
-        errors: [{ reason: 'ERROR' }]
+        errors: [{ reason: 'ERROR' }],
       };
 
       const newState = reducer(state, {
-        type: 'clearAll'
+        type: 'clearAll',
       });
       expect(newState.configSelection[1000].isSelected).toBe(false);
       expect(newState.diskSelection[2000].isSelected).toBe(false);
@@ -97,9 +97,9 @@ describe('utilities', () => {
       const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: linodeConfigs,
-        disks: []
+        disks: [],
       });
-      linodeConfigs.forEach(eachConfig => {
+      linodeConfigs.forEach((eachConfig) => {
         expect(newState.configSelection).toHaveProperty(String(eachConfig.id));
       });
     });
@@ -109,9 +109,9 @@ describe('utilities', () => {
       const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: [],
-        disks
+        disks,
       });
-      disks.forEach(eachDisk => {
+      disks.forEach((eachDisk) => {
         expect(newState.diskSelection).toHaveProperty(String(eachDisk.id));
       });
     });
@@ -122,14 +122,14 @@ describe('utilities', () => {
         configSelection: {
           1234: {
             isSelected: true,
-            associatedDiskIds: []
-          }
-        }
+            associatedDiskIds: [],
+          },
+        },
       };
       const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: [...linodeConfigs, linodeConfig2],
-        disks: []
+        disks: [],
       });
       expect(newState.configSelection['1234']).toHaveProperty(
         'isSelected',
@@ -143,14 +143,14 @@ describe('utilities', () => {
         diskSelection: {
           19040623: {
             isSelected: true,
-            associatedConfigIds: []
-          }
-        }
+            associatedConfigIds: [],
+          },
+        },
       };
       const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: [],
-        disks
+        disks,
       });
       expect(newState.diskSelection['19040623']).toHaveProperty(
         'isSelected',
@@ -161,7 +161,7 @@ describe('utilities', () => {
     it('clears errors after each type of input change', () => {
       const state: CloneLandingState = {
         ...baseState,
-        errors: [{ reason: 'ERROR' }]
+        errors: [{ reason: 'ERROR' }],
       };
       expect(reducer(state, { type: 'toggleConfig', id: 1000 }).errors).toBe(
         undefined
@@ -172,7 +172,7 @@ describe('utilities', () => {
       expect(
         reducer(state, {
           type: 'setSelectedLinodeId',
-          id: 3000
+          id: 3000,
         }).errors
       ).toBe(undefined);
     });
@@ -181,11 +181,11 @@ describe('utilities', () => {
   describe('createConfigDiskSelection', () => {
     it('defaults isSelected to false for each config and disk', () => {
       const state = createConfigDiskSelection(linodeConfigs, disks);
-      linodeConfigs.forEach(eachConfig => {
+      linodeConfigs.forEach((eachConfig) => {
         expect(state.configSelection[eachConfig.id].isSelected).toBe(false);
       });
 
-      disks.forEach(eachDisk => {
+      disks.forEach((eachDisk) => {
         expect(state.diskSelection[eachDisk.id].isSelected).toBe(false);
       });
     });
@@ -227,13 +227,13 @@ describe('utilities', () => {
   describe('getAssociatedDisks', () => {
     const extendedConfig: ExtendedConfig = {
       ...linodeConfigs[0],
-      associatedDisks: disks
+      associatedDisks: disks,
     };
 
     it('returns an array of disks associated with the config', () => {
       const associatedDisks = getAssociatedDisks(extendedConfig, [
         ...disks,
-        extDisk3
+        extDisk3,
       ]);
       expect(associatedDisks).toHaveLength(1);
       expect(associatedDisks[0]).toEqual(extDisk3);
@@ -255,7 +255,7 @@ describe('utilities', () => {
     it('attaches disks to their associated configs', () => {
       const extendedConfigs = attachAssociatedDisksToConfigs(linodeConfigs, [
         ...disks,
-        extDisk3
+        extDisk3,
       ]);
       expect(extendedConfigs[0]).toHaveProperty('associatedDisks');
       expect(extendedConfigs[0].associatedDisks).toHaveLength(1);
@@ -275,34 +275,34 @@ describe('utilities', () => {
   describe('getAllDisks', () => {
     const extendedConfig: ExtendedConfig = {
       ...linodeConfigs[0],
-      associatedDisks: disks
+      associatedDisks: disks,
     };
 
     it('gets associated disks from configs', () => {
       const allDisks = getAllDisks([extendedConfig], disks);
       expect(allDisks).toHaveLength(2);
-      expect(allDisks.map(eachDisk => eachDisk.id)).toEqual([
+      expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
         19040623,
-        19040624
+        19040624,
       ]);
     });
 
     it('removes duplicates', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDiskCopy]);
       expect(allDisks).toHaveLength(2);
-      expect(allDisks.map(eachDisk => eachDisk.id)).toEqual([
+      expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
         19040623,
-        19040624
+        19040624,
       ]);
     });
 
     it('includes disks from second arg', () => {
       const allDisks = getAllDisks([extendedConfig], [...disks, extDisk2]);
       expect(allDisks).toHaveLength(3);
-      expect(allDisks.map(eachDisk => eachDisk.id)).toEqual([
+      expect(allDisks.map((eachDisk) => eachDisk.id)).toEqual([
         19040623,
         19040624,
-        19040625
+        19040625,
       ]);
     });
   });

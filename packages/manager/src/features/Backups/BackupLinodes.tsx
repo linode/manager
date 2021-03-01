@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
@@ -20,8 +20,8 @@ const styles = (theme: Theme) =>
     root: {},
     error: {
       color: theme.color.red,
-      fontSize: 13
-    }
+      fontSize: 13,
+    },
   });
 
 interface Props {
@@ -42,7 +42,7 @@ const getLabel = (type?: LinodeType) => pathOr('Unknown', ['label'], type);
 const getPrice = (type?: LinodeType) =>
   pathOr('Unavailable', ['addons', 'backups', 'price', 'monthly'], type);
 
-export const BackupLinodes: React.FC<CombinedProps> = props => {
+export const BackupLinodes: React.FC<CombinedProps> = (props) => {
   const { classes, linodes } = props;
   return (
     <React.Fragment>

@@ -13,7 +13,7 @@ const linode1: ExtendedLinode = { ...linodes.linode1, typeInfo: type };
 const linode2: ExtendedLinode = {
   ...linodes.linode2,
   typeInfo: type,
-  linodeError: { linodeId: linodes.linode2.id, reason: 'Error occurred' }
+  linodeError: { linodeId: linodes.linode2.id, reason: 'Error occurred' },
 };
 
 import { BackupLinodes, displayPrice } from './BackupLinodes';

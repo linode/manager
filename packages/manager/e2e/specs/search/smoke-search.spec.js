@@ -37,10 +37,10 @@ describe('Header - Search Suite', () => {
         constants.routes.profile.view,
         constants.routes.profile.tokens,
         constants.routes.profile.oauth,
-        constants.routes.support.tickets
+        constants.routes.support.tickets,
       ];
 
-      routes.forEach(r => {
+      routes.forEach((r) => {
         console.log(`checking for search on ${r} page`);
         browser.url(r);
         SearchBar.assertSearchDisplays();
@@ -73,7 +73,7 @@ describe('Header - Search Suite', () => {
     }
 
     browser.keys('\uE007');
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl().includes('search?query=');
     }, constants.wait.normal);
   });
@@ -87,7 +87,7 @@ describe('Header - Search Suite', () => {
     browser.pause(2000);
     SearchBar.suggestions[0].click();
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return browser.getUrl() !== currentUrl;
     }, constants.wait.normal);
   });

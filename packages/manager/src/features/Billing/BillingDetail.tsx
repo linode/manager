@@ -21,18 +21,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   main: {
     [theme.breakpoints.up('md')]: {
-      order: 1
-    }
+      order: 1,
+    },
   },
   heading: {
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
-export const BillingDetail: React.FC<CombinedProps> = props => {
+export const BillingDetail: React.FC<CombinedProps> = (props) => {
   const { account, requestAccount } = useAccount();
 
   const classes = useStyles();

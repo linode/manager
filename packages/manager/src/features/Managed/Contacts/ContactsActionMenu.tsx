@@ -13,7 +13,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ContactsActionMenu: React.FC<CombinedProps> = props => {
+export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
   const { contactId, openDrawer, openDialog } = props;
 
   const actions: Action[] = [
@@ -21,20 +21,20 @@ export const ContactsActionMenu: React.FC<CombinedProps> = props => {
       title: 'Edit',
       onClick: () => {
         openDrawer(contactId);
-      }
+      },
     },
     {
       title: 'Delete',
       onClick: () => {
         openDialog(contactId);
-      }
-    }
+      },
+    },
   ];
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {actions.map(action => {
+      {actions.map((action) => {
         return (
           <InlineMenuAction
             key={action.title}

@@ -8,7 +8,7 @@ import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
 import {
   extendCluster,
-  getDescriptionForCluster
+  getDescriptionForCluster,
 } from 'src/features/Kubernetes/kubeUtils';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
@@ -64,8 +64,8 @@ export const formatLinode = (
     created: linode.created,
     region: linode.region,
     status: linode.status,
-    ips: getLinodeIps(linode)
-  }
+    ips: getLinodeIps(linode),
+  },
 });
 
 export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
@@ -78,8 +78,8 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
     icon: 'volume',
     path: `/volumes/${volume.id}`,
     created: volume.created,
-    region: volume.region
-  }
+    region: volume.region,
+  },
 });
 
 const imageReducer = (accumulator: SearchableItem[], image: Image) =>
@@ -98,8 +98,8 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
     icon: 'volume',
     /* TODO: Choose a real location for this to link to */
     path: `/images`,
-    created: image.created
-  }
+    created: image.created,
+  },
 });
 
 export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
@@ -112,8 +112,8 @@ export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
     status: domain.status,
     icon: 'domain',
     path: `/domains/${domain.id}`,
-    ips: getDomainIps(domain)
-  }
+    ips: getDomainIps(domain),
+  },
 });
 
 export const nodeBalToSearchableItem = (
@@ -128,8 +128,8 @@ export const nodeBalToSearchableItem = (
     icon: 'nodebalancer',
     path: `/nodebalancers/${nodebal.id}`,
     created: nodebal.created,
-    ips: getNodebalIps(nodebal)
-  }
+    ips: getNodebalIps(nodebal),
+  },
 });
 
 export const kubernetesClusterToSearchableItem = (
@@ -148,8 +148,8 @@ export const kubernetesClusterToSearchableItem = (
     region: kubernetesCluster.region,
     k8s_version: kubernetesCluster.k8s_version,
     tags: kubernetesCluster.tags,
-    description: getDescriptionForCluster(kubernetesCluster)
-  }
+    description: getDescriptionForCluster(kubernetesCluster),
+  },
 });
 
 export const bucketToSearchableItem = (
@@ -164,8 +164,8 @@ export const bucketToSearchableItem = (
     created: bucket.created,
     label: bucket.label,
     region: objectStorageClusterDisplay[bucket.cluster],
-    description: readableBytes(bucket.size).formatted
-  }
+    description: readableBytes(bucket.size).formatted,
+  },
 });
 
 const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
@@ -215,7 +215,7 @@ export default createSelector<
     buckets
   ) => {
     const arrOfImages = Object.values(images);
-    const searchableLinodes = linodes.map(linode =>
+    const searchableLinodes = linodes.map((linode) =>
       formatLinode(linode, types, images)
     );
     const searchableVolumes = volumes.map(volumeToSearchableItem);
@@ -223,9 +223,9 @@ export default createSelector<
     const searchableDomains = domains.map(domainToSearchableItem);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
     const searchableKubernetesClusters = kubernetesClusters
-      .map(thisCluster => {
+      .map((thisCluster) => {
         const pools = nodePools.filter(
-          thisPool => thisPool.clusterID === thisCluster.id
+          (thisPool) => thisPool.clusterID === thisCluster.id
         );
         return extendCluster(thisCluster, pools, types);
       })
@@ -239,7 +239,7 @@ export default createSelector<
       ...searchableDomains,
       ...searchableNodebalancers,
       ...searchableKubernetesClusters,
-      ...searchableObjectStorageBuckets
+      ...searchableObjectStorageBuckets,
     ];
   }
 );

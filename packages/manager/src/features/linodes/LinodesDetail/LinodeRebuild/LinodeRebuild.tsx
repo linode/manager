@@ -7,7 +7,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -23,14 +23,14 @@ type ClassNames = 'root' | 'title' | 'helperText';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     helperText: {
-      paddingBottom: theme.spacing(2)
-    }
+      paddingBottom: theme.spacing(2),
+    },
   });
 
 interface ContextProps {
@@ -47,12 +47,12 @@ type MODES =
 const options = [
   { value: 'fromImage', label: 'From Image' },
   { value: 'fromCommunityStackScript', label: 'From Community StackScript' },
-  { value: 'fromAccountStackScript', label: 'From Account StackScript' }
+  { value: 'fromAccountStackScript', label: 'From Account StackScript' },
 ];
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuild: React.FC<CombinedProps> = props => {
+const LinodeRebuild: React.FC<CombinedProps> = (props) => {
   const { classes, linodeLabel, linodeStatus, permissions } = props;
   const hostMaintenance = linodeStatus === 'stopped';
   const unauthorized = permissions === 'read_only';
@@ -122,7 +122,7 @@ const LinodeRebuild: React.FC<CombinedProps> = props => {
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeLabel: linode.label,
   linodeStatus: linode.status,
-  permissions: linode._permissions
+  permissions: linode._permissions,
 }));
 
 const styled = withStyles(styles);

@@ -10,14 +10,14 @@ const deleteAllData = (token, user, dev) => {
 
   const axiosInstance = axios.create({
     httpsAgent: new https.Agent({
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
     }),
     baseURL: api,
     timeout: 10000,
     headers: {
       Authorization: `Bearer ${token}`,
-      'User-Agent': 'WebdriverIO'
-    }
+      'User-Agent': 'WebdriverIO',
+    },
   });
 
   const endpoints = [
@@ -26,30 +26,30 @@ const deleteAllData = (token, user, dev) => {
     '/domains',
     '/nodebalancers',
     '/account/users',
-    '/images'
+    '/images',
   ];
 
-  endpoints.forEach(entityEndpoint => {
+  endpoints.forEach((entityEndpoint) => {
     axiosInstance
       .get(entityEndpoint)
-      .then(response => {
+      .then((response) => {
         const data = entityEndpoint.includes('images')
-          ? response.data.data.filter(image => !image.is_public)
+          ? response.data.data.filter((image) => !image.is_public)
           : response.data.data;
         if (data.length > 0) {
-          data.forEach(entityInstance => {
+          data.forEach((entityInstance) => {
             const deleteId = entityEndpoint.includes('users')
               ? entityInstance.username
               : entityInstance.id;
             if (deleteId !== user) {
               axiosInstance
                 .delete(`${entityEndpoint}/${deleteId}`)
-                .catch(e => console.log(e));
+                .catch((e) => console.log(e));
             }
           });
         }
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   });
 
   const stackScriptEndPoint = '/linode/stackscripts';
@@ -58,19 +58,19 @@ const deleteAllData = (token, user, dev) => {
       headers: {
         Authorization: `Bearer ${token}`,
         'X-Filter': `{"username":"${user}","+order_by":"deployments_total","+order":"desc"}`,
-        'User-Agent': 'WebdriverIO'
-      }
+        'User-Agent': 'WebdriverIO',
+      },
     })
-    .then(response => {
+    .then((response) => {
       if (response.data.data.length > 0) {
-        response.data.data.forEach(myStackScript => {
+        response.data.data.forEach((myStackScript) => {
           axiosInstance
             .delete(`${stackScriptEndPoint}/${myStackScript.id}`)
-            .catch(e => console.log(e));
+            .catch((e) => console.log(e));
         });
       }
     })
-    .catch(e => console.log(e));
+    .catch((e) => console.log(e));
 };
 
 deleteAllData(argv.token, argv.username, argv.env);

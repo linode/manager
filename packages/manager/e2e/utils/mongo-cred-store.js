@@ -24,7 +24,7 @@ class MongoCredStore extends CredStore {
   // return MongoClient for use in chained promises
   _connect() {
     return MongoClient.connect(this.dbUrl, { useNewUrlParser: true }).catch(
-      err => {
+      (err) => {
         console.log('error connecting to mongo');
         console.log(err);
       }
@@ -36,7 +36,7 @@ class MongoCredStore extends CredStore {
     let mongo = null;
 
     return this._connect()
-      .then(mongoClient => {
+      .then((mongoClient) => {
         console.log('populating creds');
         mongo = mongoClient;
 
@@ -44,10 +44,10 @@ class MongoCredStore extends CredStore {
           .db(this.dbName)
           .collection(this.collectionName);
         return collection.createIndexes([
-          { key: { inUse: 1, username: 1, spec: 1 } }
+          { key: { inUse: 1, username: 1, spec: 1 } },
         ]);
       })
-      .then(result => {
+      .then((result) => {
         console.log('initiailized users index');
 
         const setCredCollection = (userKey, userIndex) => {
@@ -61,7 +61,7 @@ class MongoCredStore extends CredStore {
             inUse: false,
             token: token,
             spec: '',
-            isPresetToken: tokenFlag
+            isPresetToken: tokenFlag,
           };
 
           const collection = mongo
@@ -79,9 +79,9 @@ class MongoCredStore extends CredStore {
         }
         return Promise.all(users);
       })
-      .then(users => {
+      .then((users) => {
         console.log('adding ' + users.length + ' users:');
-        users.forEach(user => {
+        users.forEach((user) => {
           console.log(user);
         });
         console.log('closing mongo client for populating creds');
@@ -93,16 +93,13 @@ class MongoCredStore extends CredStore {
   getAllCreds() {
     let mongo = null;
     return this._connect()
-      .then(mongoClient => {
+      .then((mongoClient) => {
         mongo = mongoClient;
-        return mongo
-          .db(this.dbName)
-          .collection(this.collectionName)
-          .find({});
+        return mongo.db(this.dbName).collection(this.collectionName).find({});
       })
-      .then(allCreds => {
+      .then((allCreds) => {
         let credsCollection = allCreds.toArray();
-        return mongo.close().then(r => {
+        return mongo.close().then((r) => {
           return credsCollection;
         });
       });
@@ -111,7 +108,7 @@ class MongoCredStore extends CredStore {
   checkoutCreds(specToRun) {
     let mongo = null;
     return this._connect()
-      .then(mongoClient => {
+      .then((mongoClient) => {
         mongo = mongoClient;
         return mongo
           .db(this.dbName)
@@ -122,17 +119,17 @@ class MongoCredStore extends CredStore {
             { returnOriginal: false }
           );
       })
-      .then(result => {
+      .then((result) => {
         console.log('checked out creds');
         const creds = result.value;
 
         this.browser.options.testUser = creds.username;
 
-        return mongo.close().then(r => {
+        return mongo.close().then((r) => {
           return creds;
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('error checking out creds for spec: ' + specToRun);
         console.log(err);
       });
@@ -143,7 +140,7 @@ class MongoCredStore extends CredStore {
     // then mark it as not in use (and available for the next spec)
     let mongo = null;
     return this._connect()
-      .then(mongoClient => {
+      .then((mongoClient) => {
         mongo = mongoClient;
 
         return mongo
@@ -155,14 +152,14 @@ class MongoCredStore extends CredStore {
             { returnOriginal: false }
           );
       })
-      .then(result => {
+      .then((result) => {
         console.log('checked in creds');
         const creds = result.value;
-        return mongo.close().then(r => {
+        return mongo.close().then((r) => {
           return creds;
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('error checking in creds for spec: ' + specThatRan);
         console.log(err);
       });
@@ -171,16 +168,16 @@ class MongoCredStore extends CredStore {
   readToken(username) {
     let mongo = null;
     return this._connect()
-      .then(mongoClient => {
+      .then((mongoClient) => {
         mongo = mongoClient;
         return mongo
           .db(this.dbName)
           .collection(this.collectionName)
           .findOne({ username: username });
       })
-      .then(creds => {
+      .then((creds) => {
         console.log('read token for user: ' + username);
-        return mongo.close().then(r => creds.token);
+        return mongo.close().then((r) => creds.token);
       });
   }
 
@@ -191,24 +188,21 @@ class MongoCredStore extends CredStore {
   cleanupAccounts() {
     return super
       .cleanupAccounts()
-      .catch(err => console.log(err))
-      .then(users => {
+      .catch((err) => console.log(err))
+      .then((users) => {
         let mongo = null;
         return this._connect()
-          .then(mongoClient => {
+          .then((mongoClient) => {
             console.log('dropping mongo creds collection');
             mongo = mongoClient;
-            return mongo
-              .db(this.dbName)
-              .collection(this.collectionName)
-              .drop();
+            return mongo.db(this.dbName).collection(this.collectionName).drop();
           })
-          .then(result => {
+          .then((result) => {
             console.log('closing mongo client for cleanup');
             return mongo.close();
           });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 }
 
@@ -274,41 +268,41 @@ if (process.argv[2] == 'test-mongo') {
         imposterProtocol: 'https',
         imposterName: 'Linode-API',
         proxyHost: 'https://api.linode.com/v4',
-        mutualAuth: true
-      }
+        mutualAuth: true,
+      },
     },
     testUser: '',
-    watch: false
+    watch: false,
   };
   let mongoCredStore = new MongoCredStore('localhost', false);
 
   // assumes env var config for 2 test users, see .env or .env.example
   mongoCredStore
     .generateCreds(mockTestConfig, 2)
-    .then(r => {
+    .then((r) => {
       console.log('checking out creds');
       return mongoCredStore.checkoutCreds('spec1');
     })
-    .then(creds => {
+    .then((creds) => {
       console.log('checked out creds are:');
       console.log(creds);
       return mongoCredStore.checkinCreds('spec1');
     })
-    .then(creds => {
+    .then((creds) => {
       console.log('checked in creds are:');
       console.log(creds);
       return mongoCredStore.readToken(creds.username);
     })
-    .then(token => {
+    .then((token) => {
       console.log('token for username is: ' + token);
       return mongoCredStore.getAllCreds();
     })
-    .then(allCreds => {
+    .then((allCreds) => {
       console.log('got all creds:');
       console.log(allCreds);
       return mongoCredStore.cleanupAccounts();
     })
-    .catch(err => {
+    .catch((err) => {
       console.log('mongo cred store test failed somewhere');
       console.log(err);
     });

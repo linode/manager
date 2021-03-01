@@ -14,13 +14,13 @@ const props: Props = {
   onClose: jest.fn(),
   onSubmit: jest.fn(),
   nodePool: pool,
-  isSubmitting: false
+  isSubmitting: false,
 };
 
 const useTypes = jest.fn().mockReturnValue({ types: { entities: _types } });
 
 jest.mock('src/hooks/useTypes', () => ({
-  useTypes: () => useTypes()
+  useTypes: () => useTypes(),
 }));
 
 describe('ResizeNodePoolDrawer', () => {

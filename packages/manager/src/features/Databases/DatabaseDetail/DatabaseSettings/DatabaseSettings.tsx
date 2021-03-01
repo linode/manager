@@ -8,7 +8,7 @@ interface Props {
   databaseID: number;
 }
 
-export const DatabaseSettings: React.FC<Props> = props => {
+export const DatabaseSettings: React.FC<Props> = (props) => {
   const databases = useDatabases();
 
   const { databaseID } = props;

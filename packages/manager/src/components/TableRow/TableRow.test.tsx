@@ -16,14 +16,14 @@ const props: CombinedProps = {
     selectedOuter: '',
     withForcedIndex: '',
     highlight: '',
-    disabled: ''
+    disabled: '',
   },
   ...reactRouterProps,
   history: {
     ...reactRouterProps.history,
-    push: mockHistoryPush
+    push: mockHistoryPush,
   },
-  staticContext: undefined
+  staticContext: undefined,
 };
 
 describe('TableRow component', () => {

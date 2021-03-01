@@ -15,8 +15,8 @@ if (!isProductionBuild) {
   worker = setupWorker(...handlers);
 
   // Subscribe to changes from the mockDataController, which is updated by local dev tools.
-  mockDataController.subscribe(mockData => {
-    const mockHandlers = Object.keys(mockData).map(thisKey => {
+  mockDataController.subscribe((mockData) => {
+    const mockHandlers = Object.keys(mockData).map((thisKey) => {
       const handlerGenerator = mockDataHandlers[thisKey];
       return handlerGenerator(mockData[thisKey].quantity);
     });

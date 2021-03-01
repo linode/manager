@@ -12,14 +12,14 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   poolUsageProgress: {
-    marginBottom: theme.spacing(1) / 2
+    marginBottom: theme.spacing(1) / 2,
   },
   overLimit: {
     color: theme.palette.status.warningDark,
-    fontFamily: theme.font.bold
+    fontFamily: theme.font.bold,
   },
   legendItem: {
     marginTop: 10,
@@ -31,24 +31,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
       height: 20,
 
-      marginRight: 10
-    }
+      marginRight: 10,
+    },
   },
   darkGreen: {
     '&:before': {
-      backgroundColor: '#5ad865'
-    }
+      backgroundColor: '#5ad865',
+    },
   },
   lightGreen: {
     '&:before': {
-      backgroundColor: '#99ec79'
-    }
+      backgroundColor: '#99ec79',
+    },
   },
   grey: {
     '&:before': {
-      backgroundColor: theme.color.grey2
-    }
-  }
+      backgroundColor: theme.color.grey2,
+    },
+  },
 }));
 
 interface Props {
@@ -56,7 +56,7 @@ interface Props {
   linodeLabel: string;
 }
 
-export const NetworkTransfer: React.FC<Props> = props => {
+export const NetworkTransfer: React.FC<Props> = (props) => {
   const { linodeID, linodeLabel } = props;
   const classes = useStyles();
 
@@ -73,7 +73,7 @@ export const NetworkTransfer: React.FC<Props> = props => {
   );
 
   const linodeUsedInGB = readableBytes(linodeTransfer.data.used, {
-    unit: 'GB'
+    unit: 'GB',
   }).value;
   const totalUsedInGB = accountTransfer.data.used;
   const accountQuotaInGB = accountTransfer.data.quota;
@@ -113,14 +113,14 @@ interface ContentProps {
   error: boolean;
 }
 
-const TransferContent: React.FC<ContentProps> = props => {
+const TransferContent: React.FC<ContentProps> = (props) => {
   const {
     error,
     linodeLabel,
     loading,
     linodeUsedInGB,
     totalUsedInGB,
-    accountQuotaInGB
+    accountQuotaInGB,
     // accountBillableInGB
   } = props;
   const classes = useStyles();

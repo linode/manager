@@ -63,7 +63,7 @@ export const getAll: <T>(
       if (page === pages) {
         return {
           data: firstPageData,
-          results
+          results,
         };
       }
 
@@ -77,9 +77,9 @@ export const getAll: <T>(
       const remainingPages = range(page + 1, pages + 1);
 
       const promises: Promise<any>[] = [];
-      remainingPages.forEach(thisPage => {
+      remainingPages.forEach((thisPage) => {
         const promise = getter({ ...pagination, page: thisPage }, filter).then(
-          response => response.data
+          (response) => response.data
         );
         promises.push(promise);
       });
@@ -87,13 +87,13 @@ export const getAll: <T>(
       return (
         Promise.all(promises)
           /** We're given data[][], so we flatten that, and append the first page response. */
-          .then(resultPages => {
+          .then((resultPages) => {
             const combinedData = resultPages.reduce((result, nextPage) => {
               return [...result, ...nextPage];
             }, firstPageData);
             return {
               data: combinedData,
-              results
+              results,
             };
           })
       );
@@ -116,19 +116,19 @@ export const getAllWithArguments: <T>(
       if (page === pages) {
         return {
           data: firstPageData,
-          results
+          results,
         };
       }
 
       // Create an iterable list of the remaining pages.
       const remainingPages = range(page + 1, pages + 1);
       const promises: Promise<any>[] = [];
-      remainingPages.forEach(thisPage => {
+      remainingPages.forEach((thisPage) => {
         const promise = getter(
           ...args,
           { ...pagination, page: thisPage },
           filter
-        ).then(response => response.data);
+        ).then((response) => response.data);
         promises.push(promise);
       });
 
@@ -136,13 +136,13 @@ export const getAllWithArguments: <T>(
       return (
         Promise.all(promises)
           // eslint-disable-next-line
-          .then(resultPages => {
+          .then((resultPages) => {
             const combinedData = resultPages.reduce((result, nextPage) => {
               return [...result, ...nextPage];
             }, firstPageData);
             return {
               data: combinedData,
-              results
+              results,
             };
           })
       );

@@ -2,7 +2,7 @@ import { Formik } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
 import {
   CreateBucketSchema,
-  ObjectStorageBucket
+  ObjectStorageBucket,
 } from '@linode/api-v4/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -15,15 +15,15 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import bucketContainer, {
-  StateProps as BucketContainerProps
+  StateProps as BucketContainerProps,
 } from 'src/containers/bucket.container';
 import bucketRequestsContainer, {
-  BucketsRequests
+  BucketsRequests,
 } from 'src/containers/bucketRequests.container';
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
@@ -31,7 +31,7 @@ import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import {
   handleFieldErrors,
-  handleGeneralErrors
+  handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateBucketEvent } from 'src/utilities/ga';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
@@ -43,8 +43,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     textWrapper: {
-      marginBottom: theme.spacing(1) + 2
-    }
+      marginBottom: theme.spacing(1) + 2,
+    },
   });
 
 interface Props {
@@ -68,13 +68,13 @@ type CombinedProps = Props &
   ReduxStateProps &
   DispatchProps;
 
-export const CreateBucketForm: React.FC<CombinedProps> = props => {
+export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
   const {
     isRestrictedUser,
     onClose,
     onSuccess,
     createBucket,
-    bucketsData
+    bucketsData,
   } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -91,7 +91,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
 
         if (isDuplicateBucket(bucketsData, label, cluster)) {
           setErrors({
-            label: `You already have a bucket named ${label} in this region.`
+            label: `You already have a bucket named ${label} in this region.`,
           });
           setSubmitting(false);
           return;
@@ -104,7 +104,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
 
         createBucket({
           label,
-          cluster
+          cluster,
         })
           .then(({ label: bucketLabel }) => {
             resetForm({ values: initialValues });
@@ -123,7 +123,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
             // @analytics
             sendCreateBucketEvent(cluster);
           })
-          .catch(errorResponse => {
+          .catch((errorResponse) => {
             // We also need to refresh account settings on failure, since, depending
             // on the error, Object Storage service might have actually been enabled.
             if (props.object_storage === 'disabled') {
@@ -144,7 +144,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
           });
       }}
     >
-      {formikProps => {
+      {(formikProps) => {
         const beforeSubmit = () => {
           confirmObjectStorage<FormState>(
             props.object_storage,
@@ -163,7 +163,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
           setFieldValue,
           status,
           touched,
-          values
+          values,
         } = formikProps;
 
         return (
@@ -196,7 +196,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = props => {
                 data-qa-cluster-select
                 error={touched.cluster ? errors.cluster : undefined}
                 onBlur={handleBlur}
-                onChange={value => setFieldValue('cluster', value)}
+                onChange={(value) => setFieldValue('cluster', value)}
                 selectedCluster={values.cluster}
                 disabled={isRestrictedUser}
               />
@@ -230,7 +230,7 @@ interface FormState {
 
 const initialValues: FormState = {
   label: '',
-  cluster: ''
+  cluster: '',
 };
 
 const mapStateToProps = (state: ApplicationState) => {
@@ -239,7 +239,7 @@ const mapStateToProps = (state: ApplicationState) => {
       'disabled',
       ['data', 'object_storage'],
       state.__resources.accountSettings
-    )
+    ),
   };
 };
 
@@ -247,7 +247,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {
-    requestSettings: () => dispatch(requestAccountSettings())
+    requestSettings: () => dispatch(requestAccountSettings()),
   };
 };
 
@@ -273,7 +273,7 @@ export const isDuplicateBucket = (
 ) => {
   return (
     bucketsData.findIndex(
-      bucket => bucket.cluster === cluster && bucket.label === label
+      (bucket) => bucket.cluster === cluster && bucket.label === label
     ) > -1
   );
 };

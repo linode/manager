@@ -4,23 +4,23 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
-const StackScriptsLanding_CMR = React.lazy(() =>
-  import('./StackScriptsLanding_CMR')
+const StackScriptsLanding_CMR = React.lazy(
+  () => import('./StackScriptsLanding_CMR')
 );
 const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
 
 type Props = RouteComponentProps<{}>;
 
-export const StackScripts: React.FC<Props> = props => {
+export const StackScripts: React.FC<Props> = (props) => {
   const {
     match: { path },
-    location: { search }
+    location: { search },
   } = props;
 
   // Redirects to prevent breaking old stackscripts?type=whatever bookmarks

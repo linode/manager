@@ -33,8 +33,6 @@ describe('Tile Suite', () => {
     const link = 'http://cloud.manager.com/';
     const tileLink = $('[data-qa-external-link]').getAttribute('href');
 
-    expect(tileLink)
-      .withContext(`incorrect title external link`)
-      .toBe(link);
+    expect(tileLink).withContext(`incorrect title external link`).toBe(link);
   });
 });

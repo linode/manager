@@ -12,29 +12,29 @@ import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
   },
   header: {
-    fontSize: '1.1rem'
+    fontSize: '1.1rem',
   },
   cvvField: {
-    width: 100
+    width: 100,
   },
   cardSection: {
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    flexFlow: 'column nowrap'
+    flexFlow: 'column nowrap',
   },
   cardText: {
     padding: '1px',
-    lineHeight: '1.5rem'
+    lineHeight: '1.5rem',
   },
   cvvFieldWrapper: {
     '& label': {
-      fontSize: 12
-    }
-  }
+      fontSize: 12,
+    },
+  },
 }));
 
 export interface Props {
@@ -45,7 +45,7 @@ export interface Props {
   setSuccess: SetSuccess;
 }
 
-export const CreditCard: React.FC<Props> = props => {
+export const CreditCard: React.FC<Props> = (props) => {
   const { expiry, lastFour, minimumPayment, setSuccess, usd } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -75,9 +75,9 @@ export const CreditCard: React.FC<Props> = props => {
 
     makePayment({
       usd: (+usd).toFixed(2),
-      cvv
+      cvv,
     })
-      .then(response => {
+      .then((response) => {
         setSubmitting(false);
         setDialogOpen(false);
         setSuccess(
@@ -86,7 +86,7 @@ export const CreditCard: React.FC<Props> = props => {
           response.warnings
         );
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         setSubmitting(false);
         setErrorMessage(
           getAPIErrorOrDefault(

@@ -10,14 +10,14 @@ describe('Storage Gauge', () => {
           total: [{ x: 0, y: 2 }],
           ifree: [],
           itotal: [],
-          path: '/'
+          path: '/',
         },
         isswap: 0,
         childof: 0,
         children: 0,
         dm: 0,
-        mounted: 1
-      }
+        mounted: 1,
+      },
     };
     it('returns `free` and `total` for one disk', () => {
       expect(sumStorage(storageData).free).toBe(1);
@@ -32,14 +32,14 @@ describe('Storage Gauge', () => {
             total: [{ x: 0, y: 200 }],
             ifree: [],
             itotal: [],
-            path: '/'
+            path: '/',
           },
           isswap: 0,
           childof: 0,
           children: 0,
           dm: 0,
-          mounted: 1
-        }
+          mounted: 1,
+        },
       };
       expect(sumStorage(data).free).toBe(101);
       expect(sumStorage(data).total).toBe(202);

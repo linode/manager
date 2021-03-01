@@ -4,13 +4,13 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
-const LinodesCreate = React.lazy(() =>
-  import('./LinodesCreate/LinodeCreateContainer')
+const LinodesCreate = React.lazy(
+  () => import('./LinodesCreate/LinodeCreateContainer')
 );
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 
@@ -19,7 +19,7 @@ type Props = RouteComponentProps<{}>;
 class LinodesRoutes extends React.Component<Props> {
   render() {
     const {
-      match: { path }
+      match: { path },
     } = this.props;
 
     return (

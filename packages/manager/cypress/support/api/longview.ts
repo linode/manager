@@ -3,7 +3,7 @@ import {
   deleteById,
   getAll,
   isTestEntity,
-  makeTestLabel
+  makeTestLabel,
 } from './common';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 
@@ -14,8 +14,8 @@ export const deleteClientById = (clientId: number) =>
   deleteById('longview/clients', clientId);
 
 export const deleteAllTestClients = () => {
-  getClients().then(resp => {
-    resp.body.data.forEach(client => {
+  getClients().then((resp) => {
+    resp.body.data.forEach((client) => {
       if (isTestEntity(client)) {
         deleteClientById(client.id);
       }
@@ -27,7 +27,7 @@ const makeClientCreateReq = (client, label) => {
   const linodeData = client
     ? client
     : {
-        label
+        label,
       };
 
   return cy.request({
@@ -35,13 +35,13 @@ const makeClientCreateReq = (client, label) => {
     url: Cypress.env('REACT_APP_API_ROOT') + '/longview/clients',
     body: linodeData,
     auth: {
-      bearer: oauthtoken
-    }
+      bearer: oauthtoken,
+    },
   });
 };
 
 export const createClient = (client = undefined, label) => {
-  return makeClientCreateReq(client, label).then(resp => {
+  return makeClientCreateReq(client, label).then((resp) => {
     apiCheckErrors(resp);
     console.log(`Created Client ${resp.body.label} successfully`, resp);
     return resp.body;

@@ -6,7 +6,7 @@ import {
   requestImageForStoreActions,
   requestImagesActions,
   updateImageActions,
-  upsertImage
+  upsertImage,
 } from './image.actions';
 import reducer, { defaultState } from './image.reducer';
 
@@ -50,7 +50,7 @@ describe('Images reducer', () => {
       const withEntities = addEntities();
       const newImage = imageFactory.build({
         id: 'private/9999',
-        label: 'new-image'
+        label: 'new-image',
       });
       const newState = reducer(withEntities, upsertImage(newImage));
       expect(newState.results).toEqual(mockImages.length + 1);
@@ -62,7 +62,7 @@ describe('Images reducer', () => {
       expect(withEntities.results).toEqual(mockImages.length);
       const updatedImage = {
         ...mockImages[1],
-        label: 'updated-image-label'
+        label: 'updated-image-label',
       };
       const newState = reducer(withEntities, upsertImage(updatedImage));
       // Length should be unchanged
@@ -140,7 +140,7 @@ describe('Images reducer', () => {
         withEntities,
         updateImageActions.done({
           params: { imageID: updatedImage.id },
-          result: updatedImage
+          result: updatedImage,
         })
       );
       expect(newState.itemsById[updatedImage.id]).toEqual(updatedImage);
@@ -151,7 +151,7 @@ describe('Images reducer', () => {
         defaultState,
         updateImageActions.failed({
           params: { imageID: 'private/1234' },
-          error: mockError
+          error: mockError,
         })
       );
       expect(newState.error.update).toEqual(mockError);
@@ -166,7 +166,7 @@ describe('Images reducer', () => {
         withEntities,
         requestImageForStoreActions.done({
           result: updatedImage,
-          params: 'private/1234'
+          params: 'private/1234',
         })
       );
       expect(newState.itemsById[mockImages[3].id]).toEqual(updatedImage);

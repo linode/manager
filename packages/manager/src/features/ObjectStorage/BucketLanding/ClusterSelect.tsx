@@ -6,7 +6,7 @@ import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionSelect';
 import { dcDisplayNames } from 'src/constants';
 import clustersContainer, {
-  StateProps
+  StateProps,
 } from 'src/containers/clusters.container';
 import { useRegionsQuery } from 'src/queries/regions';
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 type CombinedProps = Props & StateProps;
-export const ClusterSelect: React.FC<CombinedProps> = props => {
+export const ClusterSelect: React.FC<CombinedProps> = (props) => {
   const {
     selectedCluster,
     error,
@@ -27,7 +27,7 @@ export const ClusterSelect: React.FC<CombinedProps> = props => {
     onBlur,
     clustersData,
     clustersError,
-    disabled
+    disabled,
   } = props;
 
   const _regions = useRegionsQuery().data ?? [];
@@ -52,7 +52,7 @@ export const ClusterSelect: React.FC<CombinedProps> = props => {
       regions={regions}
       selectedID={selectedCluster}
       placeholder="Select a Region"
-      handleSelection={id => onChange(id)}
+      handleSelection={(id) => onChange(id)}
       onBlur={onBlur}
       isSearchable={false}
       isClearable={false}
@@ -76,13 +76,13 @@ export const objectStorageClusterToExtendedRegion = (
 ): ExtendedRegion[] => {
   return clusters.reduce<ExtendedRegion[]>((acc, thisCluster) => {
     const region = regions.find(
-      thisRegion => thisRegion.id === thisCluster.region
+      (thisRegion) => thisRegion.id === thisCluster.region
     );
     if (region) {
       acc.push({
         ...region,
         id: thisCluster.id,
-        display: dcDisplayNames[region.id]
+        display: dcDisplayNames[region.id],
       });
     }
     return acc;

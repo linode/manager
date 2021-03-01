@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -19,8 +19,8 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes dash': {
       to: {
-        'stroke-dashoffset': 0
-      }
+        'stroke-dashoffset': 0,
+      },
     },
     root: {
       paddingLeft: theme.spacing(),
@@ -33,44 +33,44 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       transition: 'background-color .2s ease-in-out',
       '& .circle': {
-        fill: theme.bg.offWhiteDT
+        fill: theme.bg.offWhiteDT,
       },
       '& .outerCircle': {
-        stroke: theme.bg.main
+        stroke: theme.bg.main,
       },
       '&:hover, &:focus': {
         ...theme.addCircleHoverEffect,
         backgroundColor: theme.bg.main,
-        color: theme.palette.text.primary
-      }
+        color: theme.palette.text.primary,
+      },
     },
     iconWrapper: {
       width: 48,
       height: 48,
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     content: {
       display: 'flex',
       flexDirection: 'column',
       paddingLeft: theme.spacing(),
       paddingRight: theme.spacing(2),
-      width: '100%'
+      width: '100%',
     },
     titleLink: {
       textDecoration: 'none',
       color: theme.color.black,
-      fontSize: '1.18rem'
+      fontSize: '1.18rem',
     },
     body: {
       marginTop: 3,
       fontSize: '.9rem',
-      lineHeight: '1.1rem'
+      lineHeight: '1.1rem',
     },
     link: {
-      display: 'flex'
-    }
+      display: 'flex',
+    },
   });
 
 interface Props {

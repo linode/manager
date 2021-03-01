@@ -7,7 +7,7 @@ describe('groupByTags', () => {
     const values = [
       { id: 1, tags: [] },
       { id: 2, tags: [] },
-      { id: 3, tags: [] }
+      { id: 3, tags: [] },
     ];
     const expected = [[NONE, values]];
     const result = groupByTags(values);
@@ -22,7 +22,11 @@ describe('groupByTags', () => {
 
     const values = [a, b, c];
     const result = groupByTags(values);
-    const expected = [['ccc', [a]], ['aaa', [b]], ['bbb', [c]]];
+    const expected = [
+      ['ccc', [a]],
+      ['aaa', [b]],
+      ['bbb', [c]],
+    ];
     expect(result).toEqual(expected);
   });
 
@@ -32,7 +36,10 @@ describe('groupByTags', () => {
     const c = { id: 3, tags: ['bbb'] };
     const values = [a, b, c];
     const result = groupByTags(values);
-    const expected = [['aaa', [a]], ['bbb', [b, c]]];
+    const expected = [
+      ['aaa', [a]],
+      ['bbb', [b, c]],
+    ];
     expect(result).toEqual(expected);
   });
 
@@ -42,7 +49,10 @@ describe('groupByTags', () => {
     const c = { id: 3, tags: ['bbb'] };
     const values = [a, b, c];
     const result = groupByTags(values);
-    const expected = [['aaa', [a, b]], ['bbb', [b, c]]];
+    const expected = [
+      ['aaa', [a, b]],
+      ['bbb', [b, c]],
+    ];
     expect(result).toEqual(expected);
   });
 });
