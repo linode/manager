@@ -1,39 +1,21 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { AccountMaintenance, Notification } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 
-/**
- * _when_ is not guaranteed to exist if this is a maintenance notification
- *
- * _when_ could be in the past
- *
- * In the case of maintenance, _until_ is always going to be _null_,
- * so we cannot tell the user when their maintenance window will end. :(
- */
-
+// @todo: Delete this type and function after release and merge to develop.
 type Type = 'reboot-scheduled' | 'migration-pending';
-
-export interface Maintenance {
-  type: Type;
-  when: string | null;
-  until: string | null;
-}
-
-export interface LinodeWithMaintenance extends Linode {
-  maintenance?: Maintenance | null;
-}
 
 export const addNotificationsToLinodes = (
   notifications: Notification[],
   linodes: Linode[]
 ): LinodeWithMaintenance[] => {
-  const maintenanceNotifications = notifications.filter(eachNotification => {
+  const maintenanceNotifications = notifications.filter((eachNotification) => {
     return eachNotification.type === 'maintenance';
   });
 
   /** add the "maintenance" key to the Linode if we have one */
-  return linodes.map(eachLinode => {
+  return linodes.map((eachLinode) => {
     const foundNotification = maintenanceNotifications.find(
-      eachNotification => {
+      (eachNotification) => {
         return eachNotification.entity!.id === eachLinode.id;
       }
     );
@@ -48,12 +30,43 @@ export const addNotificationsToLinodes = (
              */
             when: foundNotification.when,
             until: foundNotification.until,
-            type: foundNotification.label as Type
-          }
+            type: foundNotification.label as Type,
+          },
         }
       : {
           ...eachLinode,
-          maintenance: null
+          maintenance: null,
         };
+  });
+};
+
+export interface Maintenance {
+  when: string | null;
+}
+
+export interface LinodeWithMaintenance extends Linode {
+  maintenance?: Maintenance | null;
+}
+
+export const addMaintenanceToLinodes = (
+  accountMaintenance: AccountMaintenance[],
+  linodes: Linode[]
+): LinodeWithMaintenance[] => {
+  return linodes.map((thisLinode) => {
+    const foundMaintenance = accountMaintenance.find((thisMaintenance) => {
+      return (
+        thisMaintenance.entity.type === 'linode' &&
+        thisMaintenance.entity.id === thisLinode.id
+      );
+    });
+
+    return foundMaintenance
+      ? {
+          ...thisLinode,
+          maintenance: {
+            when: foundMaintenance.when,
+          },
+        }
+      : { ...thisLinode, maintenance: null };
   });
 };

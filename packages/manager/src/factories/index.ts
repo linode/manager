@@ -1,5 +1,6 @@
 export * from './account';
 export * from './accountSettings';
+export * from './accountMaintenance';
 export * from './billing';
 export * from './config';
 export * from './databases';

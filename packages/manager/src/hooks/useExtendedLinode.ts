@@ -3,7 +3,7 @@ import {
   Config,
   Disk,
   LinodeInterface,
-  LinodeType
+  LinodeType,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
@@ -40,7 +40,7 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
       linodeConfigs,
       linodeDisks,
       interfaces,
-      profile
+      profile,
     } = __resources;
     const linode = state.__resources.linodes.itemsById[linodeId];
     if (!linode) {
@@ -59,7 +59,7 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
       _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
       _disks: getLinodeDisksForLinode(linodeDisks, linodeId),
       _interfaces: Object.values(interfaces[linodeId]?.itemsById ?? {}),
-      _permissions: getPermissionsForLinode(profile.data ?? null, linodeId)
+      _permissions: getPermissionsForLinode(profile.data ?? null, linodeId),
     };
   });
 };
