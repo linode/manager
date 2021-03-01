@@ -292,7 +292,7 @@ const darkThemeOptions = {
         },
         '&$disabled': {
           backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.borderTabs,
+          color: cmrBorderColors.borderTabs
         },
         '&.loading': {
           backgroundColor: primaryColors.text,
