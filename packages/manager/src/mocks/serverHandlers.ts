@@ -47,6 +47,7 @@ import {
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
+import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
 
 export const makeResourcePage = (
   e: any[],
@@ -337,6 +338,10 @@ export const handlers = [
     const invoices = invoiceFactory.buildList(10);
     return res(ctx.json(makeResourcePage(invoices)));
   }),
+  rest.get('*/account/maintenance', (req, res, ctx) => {
+    const accountMaintenance = accountMaintenanceFactory.buildList(2);
+    return res(ctx.json(makeResourcePage(accountMaintenance)));
+  }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
       action: 'lke_node_create',
@@ -485,6 +490,12 @@ export const handlers = [
       severity: 'minor',
     });
 
+    const balanceNotification = notificationFactory.build({
+      type: 'payment_due',
+      message: 'You have an overdue balance!',
+      severity: 'major',
+    });
+
     return res(
       ctx.json(
         makeResourcePage([
@@ -496,6 +507,7 @@ export const handlers = [
           abuseTicket,
           emailBounce,
           migrationTicket,
+          balanceNotification,
         ])
       )
     );

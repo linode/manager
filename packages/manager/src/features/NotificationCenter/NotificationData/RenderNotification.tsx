@@ -68,6 +68,8 @@ export const RenderNotification: React.FC<Props> = (props) => {
     notification.type
   );
 
+  const severity = notification.severity;
+
   const linkTarget =
     // payment_due notifications do not have an entity property, so in that case, link directly to /account/billing
     notification?.type === 'payment_due'
@@ -77,9 +79,7 @@ export const RenderNotification: React.FC<Props> = (props) => {
   const message = (
     <Typography
       className={classNames({
-        [classes.severeAlert]:
-          notification.severity === 'critical' &&
-          notification.type === 'payment_due',
+        [classes.severeAlert]: severity === 'critical',
         [classes.itemsWithoutIcon]: notification.severity === 'minor',
       })}
       dangerouslySetInnerHTML={{ __html: sanitizeHTML(notification.message) }}
@@ -96,10 +96,10 @@ export const RenderNotification: React.FC<Props> = (props) => {
       >
         <Grid item>
           <div className={classes.notificationIcon}>
-            {notification.severity === 'critical' ? (
+            {severity === 'critical' ? (
               <ErrorIcon className={classes.criticalIcon} />
             ) : null}
-            {notification.severity === 'major' ? (
+            {severity === 'major' ? (
               <WarningIcon className={classes.majorIcon} />
             ) : null}
           </div>
@@ -116,8 +116,8 @@ export const RenderNotification: React.FC<Props> = (props) => {
             <Link
               to={linkTarget}
               className={classNames({
-                [classes.redLink]: notification.type === 'payment_due',
-                [classes.greyLink]: notification.type !== 'payment_due',
+                [classes.redLink]: severity === 'critical',
+                [classes.greyLink]: severity !== 'critical',
               })}
               onClick={onClose}
             >
