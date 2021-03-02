@@ -20,7 +20,6 @@ import {
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
-  linodeInterfacesFactory,
   linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
@@ -195,17 +194,6 @@ export const handlers = [
   rest.get('*/instances/*/ips', async (req, res, ctx) => {
     const ips = linodeIPFactory.build();
     return res(ctx.json(ips));
-  }),
-  rest.get('*/instances/*/interfaces', async (req, res, ctx) => {
-    const defaultInterface = linodeInterfacesFactory.build({
-      id: 3,
-      type: 'default',
-    });
-    const additionalInterface = linodeInterfacesFactory.build({
-      id: 4,
-    });
-    const interfaces = [defaultInterface, additionalInterface];
-    return res(ctx.json(makeResourcePage(interfaces)));
   }),
   rest.post('*/instances', async (req, res, ctx) => {
     const payload = req.body as any;

@@ -1,9 +1,8 @@
-import * as Factory from 'factory.ts';
 import { Config } from '@linode/api-v4/lib/linodes/types';
-import { DateTime } from 'luxon';
+import * as Factory from 'factory.ts';
+import { LinodeConfigInterfaceFactory } from 'src/factories/linodeConfigInterfaceFactory';
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
-const createDate = DateTime.local().toString();
 
 export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   created: '2018-06-26T16:04:28',
@@ -43,22 +42,11 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
     sde: null,
   },
   kernel: 'linode/grub2',
-  interfaces: {
-    eth0: {
-      id: 3,
-      devum: 1,
-      label: 'Test eth0',
+  interfaces: [
+    LinodeConfigInterfaceFactory.build(),
+    LinodeConfigInterfaceFactory.build({
       purpose: 'public',
-      ipam_address: '',
-      create_dt: createDate,
-    },
-    eth1: {
-      id: 4,
-      devum: 2,
-      label: 'Test eth1',
-      purpose: 'vlan',
-      ipam_address: '10.0.0.1/24',
-      create_dt: createDate,
-    },
-  },
+      ipam_address: null
+    })
+  ],
 });

@@ -146,16 +146,13 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
-export type InterfaceSlot = Record<string, InterfaceBody>; // e.g. { "eth0": { "id": 111 }}
-export type InterfacePurpose = 'public' | 'vlan' | 'internal' | 'multivlan';
+export type ConfigInterfaces = InterfaceBody[]; // e.g. [ { label: "Test", purpose: "vlan", ipam_address: "10.0.0.1/24" }, ... ]
+export type InterfacePurpose = 'public' | 'vlan';
 
 export interface InterfaceBody {
-  id: number;
-  devum: number;
   label: string;
   purpose: InterfacePurpose;
   ipam_address: string | null;
-  create_dt: string;
 }
 export interface Config {
   id: number;
@@ -171,7 +168,7 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
-  interfaces: InterfaceSlot;
+  interfaces: ConfigInterfaces;
 }
 
 export interface DiskDevice {
@@ -264,7 +261,7 @@ export interface LinodeConfigCreationData {
     devtmpfs_automount: boolean;
   };
   root_device: string;
-  interfaces?: InterfaceSlot;
+  interfaces?: ConfigInterfaces;
 }
 
 export interface PriceObject {
