@@ -430,7 +430,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           label="Action"
           name="action"
           isClearable={false}
-          placeholder="Select a protocol..."
+          placeholder="Select an action..."
           aria-label="Select an action."
           value={
             values.action
