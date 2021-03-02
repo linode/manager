@@ -19,16 +19,10 @@ class Permissions extends Page {
     return $('[data-qa-restrict-access]');
   }
   get restrictAccessToggle() {
-    return this.restrictAccess
-      .$('..')
-      .$('..')
-      .$(this.toggleOption.selector);
+    return this.restrictAccess.$('..').$('..').$(this.toggleOption.selector);
   }
   get restrictAccessTooltip() {
-    return this.restrictAccess
-      .$('..')
-      .$('..')
-      .$(this.helpButton.selector);
+    return this.restrictAccess.$('..').$('..').$(this.helpButton.selector);
   }
   get globalSection() {
     return $('[data-qa-global-section]');
@@ -106,51 +100,37 @@ class Permissions extends Page {
     if (restricted) {
       expect(this.globalPermissionsHeader.isDisplayed())
         .withContext(
-          `"${this.globalPermissionsHeader.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.globalPermissionsHeader.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       expect(this.billingAccessHeader.isDisplayed())
         .withContext(
-          `"${this.billingAccessHeader.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.billingAccessHeader.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       expect(this.specificPermissionsHeader.isDisplayed())
         .withContext(
-          `"${this.specificPermissionsHeader.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.specificPermissionsHeader.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       expect(this.globalPermissions.length)
         .withContext(
-          `${assertLog.incorrectNum} for "${
-            this.specificPermissionsHeader.selector
-          }" selector`
+          `${assertLog.incorrectNum} for "${this.specificPermissionsHeader.selector}" selector`
         )
         .toBeGreaterThan(1);
       expect(this.billingPermissionNone.isDisplayed())
         .withContext(
-          `"${this.billingPermissionNone.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.billingPermissionNone.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       expect(this.billingPermissionRead.isDisplayed())
         .withContext(
-          `"${this.billingPermissionRead.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.billingPermissionRead.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       expect(this.billingPermissionWrite.isDisplayed())
         .withContext(
-          `"${this.billingPermissionWrite.selector}" selector ${
-            assertLog.displayed
-          }`
+          `"${this.billingPermissionWrite.selector}" selector ${assertLog.displayed}`
         )
         .toBe(true);
       expect(this.restrictAccess.isDisplayed())
@@ -160,16 +140,12 @@ class Permissions extends Page {
         .toBe(true);
       expect($$(this.submitButton.selector).length)
         .withContext(
-          `${assertLog.incorrectNum} for "${
-            this.submitButton.selector
-          }" selector`
+          `${assertLog.incorrectNum} for "${this.submitButton.selector}" selector`
         )
         .toBe(2);
       expect($$(this.cancelButton.selector).length)
         .withContext(
-          `${assertLog.incorrectNum} for "${
-            this.cancelButton.selector
-          }" selector`
+          `${assertLog.incorrectNum} for "${this.cancelButton.selector}" selector`
         )
         .toBe(2);
       expect(this.restrictAccess.getAttribute('data-qa-restrict-access'))

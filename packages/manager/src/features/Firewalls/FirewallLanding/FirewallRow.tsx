@@ -21,35 +21,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
+      textDecoration: 'underline',
+    },
   },
   labelWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   actionCell: {
     display: 'flex',
     justifyContent: 'flex-end',
     padding: 0,
     '&.MuiTableCell-root': {
-      paddingRight: 0
-    }
-  }
+      paddingRight: 0,
+    },
+  },
 }));
 
 export type CombinedProps = Firewall & ActionHandlers;
 
-export const FirewallRow: React.FC<CombinedProps> = props => {
+export const FirewallRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { id, label, status, rules, ...actionHandlers } = props;
 
   const {
     devices: { itemsById, error, loading, lastUpdated },
-    requestDevices
+    requestDevices,
   } = useFirewallDevices(id);
   const devices = Object.values(itemsById);
 

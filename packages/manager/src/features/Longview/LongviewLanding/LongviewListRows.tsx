@@ -15,17 +15,17 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LongviewListRows: React.FC<CombinedProps> = props => {
+const LongviewListRows: React.FC<CombinedProps> = (props) => {
   const {
     longviewClientsData,
     openPackageDrawer,
-    triggerDeleteLongviewClient
+    triggerDeleteLongviewClient,
   } = props;
 
   return (
     // eslint-disable-next-line
     <React.Fragment>
-      {longviewClientsData.map(eachClient => {
+      {longviewClientsData.map((eachClient) => {
         return (
           <ClientRow
             key={`longview-client-${eachClient.label}`}

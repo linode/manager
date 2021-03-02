@@ -36,7 +36,7 @@ const SizeField: React.FC<CombinedProps> = ({
         errorText={error}
         helperText={helperText}
         InputProps={{
-          endAdornment: <InputAdornment position="end"> GiB </InputAdornment>
+          endAdornment: <InputAdornment position="end"> GiB </InputAdornment>,
         }}
         label="Size"
         name={name}

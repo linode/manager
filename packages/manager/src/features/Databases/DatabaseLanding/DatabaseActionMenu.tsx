@@ -4,7 +4,7 @@ import {
   makeStyles,
   Theme,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from 'src/components/core/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 
@@ -13,8 +13,8 @@ const useStyles = makeStyles(() => ({
     padding: '0px !important',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 }));
 
 export interface ActionHandlers {
@@ -30,7 +30,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const DatabaseActionMenu: React.FC<CombinedProps> = props => {
+const DatabaseActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -42,7 +42,7 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
       title: 'Resize',
       onClick: () => {
         alert('Resize not yet implemented');
-      }
+      },
     },
     {
       title: 'Delete',
@@ -50,14 +50,14 @@ const DatabaseActionMenu: React.FC<CombinedProps> = props => {
         if (triggerDeleteDatabase !== undefined) {
           triggerDeleteDatabase(databaseID, databaseLabel);
         }
-      }
-    }
+      },
+    },
   ];
 
   return (
     <div className={classes.root}>
       {!matchesSmDown &&
-        actions.map(thisAction => {
+        actions.map((thisAction) => {
           return (
             <InlineAction
               key={thisAction.title}

@@ -14,7 +14,7 @@ export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
 
 type CombinedProps = Props;
 
-const AddNewLink: React.FC<CombinedProps> = props => {
+const AddNewLink: React.FC<CombinedProps> = (props) => {
   const {
     onClick,
     label,
@@ -33,7 +33,7 @@ const AddNewLink: React.FC<CombinedProps> = props => {
     text: label,
     disabled,
     left,
-    className
+    className,
   };
 
   if (!!disabled && !!disabledReason) {

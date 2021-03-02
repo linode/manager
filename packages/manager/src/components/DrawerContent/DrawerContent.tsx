@@ -9,7 +9,7 @@ export interface Props {
   errorMessage?: string;
 }
 
-export const DrawerContent: React.FC<Props> = props => {
+export const DrawerContent: React.FC<Props> = (props) => {
   const { title, loading, error, errorMessage, children } = props;
   if (loading) {
     return <CircleProgress />;

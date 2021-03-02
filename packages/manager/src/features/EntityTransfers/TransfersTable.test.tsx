@@ -1,20 +1,20 @@
 import { entityTransferFactory } from 'src/factories/entityTransfers';
-import { formatEntitiesCell } from './TransfersTable';
+import { formatEntitiesCell } from './RenderTransferRow';
 
 const entityTransfer1 = entityTransferFactory.build();
 const entityTransfer1Entities = Object.entries(entityTransfer1.entities)[0];
 
 const entityTransfer2 = entityTransferFactory.build({
   entities: {
-    linodes: [95]
-  }
+    linodes: [95],
+  },
 });
 const entityTransfer2Entities = Object.entries(entityTransfer2.entities)[0];
 
 const entityTransfer3 = entityTransferFactory.build({
   entities: {
-    linodes: [20, 25, 30, 35, 40, 45, 50, 55, 60, 65]
-  }
+    linodes: [20, 25, 30, 35, 40, 45, 50, 55, 60, 65],
+  },
 });
 const entityTransfer3Entities = Object.entries(entityTransfer3.entities)[0];
 

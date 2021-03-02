@@ -4,7 +4,7 @@ import reducer, {
   CREATING,
   defaultState,
   openForCloning,
-  openForCreating
+  openForCreating,
 } from './index';
 
 describe('domainDrawer reducer', () => {

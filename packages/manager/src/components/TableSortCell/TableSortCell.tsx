@@ -4,7 +4,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
@@ -18,14 +18,14 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       color: theme.palette.text.primary,
-      minHeight: 20
+      minHeight: 20,
     },
     initialIcon: {
-      margin: '2px 4px 0 5px'
+      margin: '2px 4px 0 5px',
     },
     noWrap: {
-      whiteSpace: 'nowrap'
-    }
+      whiteSpace: 'nowrap',
+    },
   });
 
 export interface Props extends TableCellProps {

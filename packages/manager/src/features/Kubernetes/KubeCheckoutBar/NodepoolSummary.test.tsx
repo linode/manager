@@ -10,7 +10,7 @@ const props: Props = {
   poolType: extendedTypes[0],
   price: 1000,
   onRemove: jest.fn(),
-  updateNodeCount: jest.fn()
+  updateNodeCount: jest.fn(),
 };
 
 describe('Node Pool Summary', () => {

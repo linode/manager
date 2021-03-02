@@ -3,7 +3,7 @@ import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   getSelectedTabFromQueryString,
-  SupportTicketsLanding
+  SupportTicketsLanding,
 } from './SupportTicketsLanding';
 
 describe('Support Tickets Landing', () => {
@@ -17,7 +17,7 @@ describe('Support Tickets Landing', () => {
         openTicketButton: '',
         tabsWrapper: '',
         tabList: '',
-        tab: ''
+        tab: '',
       }}
       {...reactRouterProps}
     />

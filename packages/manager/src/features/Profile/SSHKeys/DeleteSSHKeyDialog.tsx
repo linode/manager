@@ -23,7 +23,7 @@ type CombinedProps = Props;
 
 class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   state: State = {
-    submitting: false
+    submitting: false,
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -86,7 +86,7 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
       .then(() => {
         this.setState({ submitting: false }, () => this.props.onSuccess());
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ submitting: false, error });
       });
   };

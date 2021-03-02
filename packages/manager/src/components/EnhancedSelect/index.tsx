@@ -1,7 +1,7 @@
 import EnhancedSelect, {
   BaseSelectProps as _BaseSelectProps,
   GroupType as _GroupType,
-  Item as _Item
+  Item as _Item,
 } from './Select';
 /* tslint:disable */
 export interface Item<T> extends _Item<T> {}

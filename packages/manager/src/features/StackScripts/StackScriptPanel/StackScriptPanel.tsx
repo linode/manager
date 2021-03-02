@@ -10,11 +10,11 @@ import RenderGuard from 'src/components/RenderGuard';
 import { MapState } from 'src/store/types';
 import {
   getCommunityStackscripts,
-  getMineAndAccountStackScripts
+  getMineAndAccountStackScripts,
 } from '../stackScriptUtils';
 
-const StackScriptPanelContent = React.lazy(() =>
-  import('./StackScriptPanelContent')
+const StackScriptPanelContent = React.lazy(
+  () => import('./StackScriptPanelContent')
 );
 
 export interface ExtendedLinode extends Linode {
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & StateProps & RouteComponentProps<{}>;
 
-const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
+const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
   const { publicImages, username } = props;
 
   const tabs: NavTab[] = [
@@ -47,7 +47,7 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
           currentUser={username}
           request={getMineAndAccountStackScripts}
         />
-      )
+      ),
     },
     {
       title: 'Community StackScripts',
@@ -60,8 +60,8 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = props => {
           currentUser={username}
           request={getCommunityStackscripts}
         />
-      )
-    }
+      ),
+    },
   ];
 
   return <NavTabs tabs={tabs} />;
@@ -71,8 +71,8 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
-  username: state.__resources.profile?.data?.username ?? ''
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
+  username: state.__resources.profile?.data?.username ?? '',
 });
 
 const connected = connect(mapStateToProps);

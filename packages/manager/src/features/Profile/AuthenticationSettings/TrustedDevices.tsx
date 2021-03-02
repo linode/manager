@@ -17,19 +17,19 @@ import TrustedDevicesTable from './TrustedDevicesTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
-    marginBottom: theme.spacing(2)
+    marginBottom: theme.spacing(2),
   },
   usedCell: {
-    minWidth: 125
+    minWidth: 125,
   },
   expireCell: {
-    minWidth: 95
+    minWidth: 95,
   },
   disabled: {
     '& *': {
-      color: theme.color.disabledText
-    }
-  }
+      color: theme.color.disabledText,
+    },
+  },
 }));
 
 interface Props {
@@ -38,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props & PaginationProps<TrustedDevice>;
 
-export const TrustedDevices: React.FC<CombinedProps> = props => {
+export const TrustedDevices: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const refreshList = () => {
     props.onDelete();
@@ -57,7 +57,7 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
     pageSize,
     handlePageChange,
     handlePageSizeChange,
-    disabled
+    disabled,
   } = props;
 
   const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(0);
@@ -114,7 +114,7 @@ export const TrustedDevices: React.FC<CombinedProps> = props => {
 };
 
 const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
-  getTrustedDevices(params, filter).then(response => response)
+  getTrustedDevices(params, filter).then((response) => response)
 );
 
 export default compose<CombinedProps, Props>(paginated)(TrustedDevices);

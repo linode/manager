@@ -11,7 +11,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -50,44 +50,44 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(3),
-      width: '100%'
+      width: '100%',
     },
     copy: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     disabledRow: {
       backgroundColor: theme.bg.tableHeader,
-      cursor: 'not-allowed'
+      cursor: 'not-allowed',
     },
     headingCellContainer: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     chip: {
       backgroundColor: theme.color.green,
       color: '#fff',
       textTransform: 'uppercase',
-      marginLeft: theme.spacing(2)
+      marginLeft: theme.spacing(2),
     },
     currentPlanChipCell: {
-      width: '13%'
+      width: '13%',
     },
     radioCell: {
       width: '5%',
-      height: 55
+      height: 55,
     },
     enhancedInputOuter: {
       display: 'flex',
       justifyContent: 'flex-end',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     enhancedInputButton: {
       marginLeft: 10,
       minWidth: 85,
       paddingTop: 7,
-      paddingBottom: 7
-    }
+      paddingBottom: 7,
+    },
   });
 
 export interface ExtendedTypeWithCount extends ExtendedType {
@@ -113,19 +113,19 @@ interface Props {
 }
 
 const getNanodes = (types: ExtendedType[]) =>
-  types.filter(t => /nanode/.test(t.class));
+  types.filter((t) => /nanode/.test(t.class));
 
 const getStandard = (types: ExtendedType[]) =>
-  types.filter(t => /standard/.test(t.class));
+  types.filter((t) => /standard/.test(t.class));
 
 const getHighMem = (types: ExtendedType[]) =>
-  types.filter(t => /highmem/.test(t.class));
+  types.filter((t) => /highmem/.test(t.class));
 
 const getDedicated = (types: ExtendedType[]) =>
-  types.filter(t => /dedicated/.test(t.class));
+  types.filter((t) => /dedicated/.test(t.class));
 
 const getGPU = (types: ExtendedType[]) =>
-  types.filter(t => /gpu/.test(t.class));
+  types.filter((t) => /gpu/.test(t.class));
 
 export class SelectPlanPanel extends React.Component<
   Props & WithStyles<ClassNames>
@@ -139,7 +139,7 @@ export class SelectPlanPanel extends React.Component<
       classes,
       submitForm,
       isOnCreate,
-      updatePlanCount
+      updatePlanCount,
     } = this.props;
 
     return (
@@ -150,7 +150,7 @@ export class SelectPlanPanel extends React.Component<
             data-qa-plan-row={type.label}
             key={type.id}
             className={classnames({
-              [classes.disabledRow]: disabled
+              [classes.disabledRow]: disabled,
             })}
           >
             <TableCell className={'visually-hidden'}>
@@ -300,7 +300,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'Shared CPU'
+        title: 'Shared CPU',
       });
       tabOrder.push('standard');
     }
@@ -320,7 +320,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'Dedicated CPU'
+        title: 'Dedicated CPU',
       });
       tabOrder.push('dedicated');
     }
@@ -341,7 +341,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'High Memory'
+        title: 'High Memory',
       });
       tabOrder.push('highmem');
     }
@@ -364,7 +364,7 @@ export class SelectPlanPanel extends React.Component<
             </>
           );
         },
-        title: 'GPU'
+        title: 'GPU',
       });
       tabOrder.push('gpu');
     }
@@ -381,7 +381,7 @@ export class SelectPlanPanel extends React.Component<
       types,
       resetValues,
       currentPlanHeading,
-      selectedID
+      selectedID,
     } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
@@ -392,7 +392,7 @@ export class SelectPlanPanel extends React.Component<
       'standard', // Use `standard` by default
       ['class'],
       types.find(
-        type => type.id === selectedID || type.heading === currentPlanHeading
+        (type) => type.id === selectedID || type.heading === currentPlanHeading
       )
     );
 

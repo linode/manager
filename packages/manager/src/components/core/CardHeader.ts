@@ -1,5 +1,5 @@
 import CardHeader, {
-  CardHeaderProps as _CardHeaderProps
+  CardHeaderProps as _CardHeaderProps,
 } from '@material-ui/core/CardHeader';
 
 /* tslint:disable-next-line:no-empty-interface */

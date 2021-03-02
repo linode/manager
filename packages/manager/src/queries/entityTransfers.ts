@@ -3,24 +3,32 @@ import {
   CreateTransferPayload,
   EntityTransfer,
   getEntityTransfer,
-  getEntityTransfers
+  getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
-import { getAll } from 'src/utilities/getAll';
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
 
 export const queryKey = 'entity-transfers';
 
-const getAllEntityTransfersRequest = () =>
-  getAll<EntityTransfer>((passedParams, passedFilter) =>
-    getEntityTransfers(passedParams, passedFilter)
-  )().then(data => listToItemsByID(data.data, 'token'));
+interface EntityTransfersData {
+  results: number;
+  entityTransfers: Record<string, EntityTransfer>;
+}
 
-export const useEntityTransfersQuery = () => {
-  return useQuery<Record<string, EntityTransfer>, APIError[]>(
-    queryKey,
-    getAllEntityTransfersRequest,
+const getAllEntityTransfersRequest = (
+  passedParams: any = {},
+  passedFilter: any = {}
+) =>
+  getEntityTransfers(passedParams, passedFilter).then((data) => ({
+    entityTransfers: listToItemsByID(data.data, 'token'),
+    results: data.results,
+  }));
+
+export const useEntityTransfersQuery = (params: any = {}, filter: any = {}) => {
+  return useQuery<EntityTransfersData, APIError[]>(
+    [queryKey, params, filter],
+    () => getAllEntityTransfersRequest(params, filter),
     queryPresets.longLived
   );
 };
@@ -35,7 +43,7 @@ export const useTransferQuery = (token: string, enabled: boolean = true) => {
 
 export const useCreateTransfer = () => {
   return useMutation<EntityTransfer, APIError[], CreateTransferPayload>(
-    createData => {
+    (createData) => {
       return createEntityTransfer(createData);
     },
     creationHandlers(queryKey, 'token')

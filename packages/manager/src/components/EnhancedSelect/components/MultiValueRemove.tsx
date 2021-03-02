@@ -7,7 +7,7 @@ interface Props extends MultiValueProps<any> {}
 
 type CombinedProps = Props;
 
-const MultiValueRemove: React.FC<CombinedProps> = props => {
+const MultiValueRemove: React.FC<CombinedProps> = (props) => {
   return (
     <reactSelectComponents.MultiValueRemove {...props}>
       <Close data-qa-select-remove />

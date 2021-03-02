@@ -8,9 +8,9 @@ const useStyles = makeStyles({
       position: 'relative',
       marginRight: 8,
       marginLeft: 4,
-      top: -2
-    }
-  }
+      top: -2,
+    },
+  },
 });
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const FinalCrumbPrefix: React.FC<CombinedProps> = props => {
+const FinalCrumbPrefix: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { prefixComponent, prefixStyle } = props;

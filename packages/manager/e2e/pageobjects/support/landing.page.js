@@ -57,9 +57,7 @@ export class SupportLanding extends Page {
       .toBe(true);
     expect(this.communityPosts.length)
       .withContext(
-        `${assertLog.incorrectNum} for "${
-          this.communityPosts.selector
-        }" selector`
+        `${assertLog.incorrectNum} for "${this.communityPosts.selector}" selector`
       )
       .toBe(3);
     expect(this.docLinks.length)

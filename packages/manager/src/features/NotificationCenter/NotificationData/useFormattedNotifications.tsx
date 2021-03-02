@@ -2,7 +2,6 @@ import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
-import useAccount from 'src/hooks/useAccount';
 import useNotifications from 'src/hooks/useNotifications';
 import { notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
@@ -13,49 +12,42 @@ export const useFormattedNotifications = () => {
   const context = React.useContext(notificationContext);
 
   const notifications = useNotifications();
-  const { account } = useAccount();
 
-  const balance = account?.data?.balance ?? 0;
   const dayOfMonth = DateTime.local().day;
 
-  // Filter out the late payment notification from the API (since we are using a custom one), and any bounced email notifications and abuse tickets because users are alerted to those by global notification banners already.
+  // Filter out any bounced email notifications and abuse tickets because users are alerted to those by global notification banners already.
   const combinedNotifications = [...notifications].filter(
-    notification =>
-      ![
-        'payment_due',
-        'billing_email_bounce',
-        'user_email_bounce',
-        'ticket_abuse'
-      ].includes(notification.type)
+    (notification) =>
+      !['billing_email_bounce', 'user_email_bounce', 'ticket_abuse'].includes(
+        notification.type
+      )
   );
 
-  if (balance > 0 && dayOfMonth >= 3) {
-    combinedNotifications.unshift({
-      entity: null,
-      label: '',
-      message: `You have a past due balance of $${balance}. Please make a payment immediately to avoid service disruption.`,
-      type: 'payment_due',
-      severity: 'critical',
-      when: null,
-      until: null,
-      body: null
-    });
-  }
-
-  return combinedNotifications.map((notification, idx) =>
-    formatNotificationForDisplay(
-      interceptNotification(notification),
-      idx,
-      context.closeDrawer
-    )
-  );
+  return combinedNotifications
+    .filter((thisNotification) => {
+      /**
+       * Don't show balance overdue notifications at the beginning of the month
+       * to avoid causing anxiety if an automatic payment takes time to process.
+       * This is a temporary hack; customers can have their payment grace period extended
+       * to more than 3 days, and using this method also means that if you're more than
+       * a month overdue the notification will disappear for three days.
+       */
+      return !(thisNotification.type === 'payment_due' && dayOfMonth <= 3);
+    })
+    .map((notification, idx) =>
+      formatNotificationForDisplay(
+        interceptNotification(notification),
+        idx,
+        context.closeDrawer
+      )
+    );
 };
 
 const interceptNotification = (notification: Notification): Notification => {
   if (notification.type === 'ticket_abuse') {
     return {
       ...notification,
-      message: notification.message.replace('!', '.')
+      message: notification.message.replace('!', '.'),
     };
   }
 
@@ -80,7 +72,7 @@ const interceptNotification = (notification: Notification): Notification => {
               linodeAttachedToNotification
             )
           : notification.body
-        : notification.message
+        : notification.message,
     };
   }
 
@@ -94,13 +86,13 @@ const formatNotificationForDisplay = (
 ): NotificationItem => ({
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
-  countInTotal: true
+  countInTotal: true,
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
 export const adjustSeverity = ({
   severity,
-  type
+  type,
 }: Notification): NotificationSeverity => {
   if (checkIfMaintenanceNotification(type)) {
     return 'major';

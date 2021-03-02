@@ -4,7 +4,7 @@ import * as React from 'react';
 import {
   attachment1,
   attachment2,
-  attachment3
+  attachment3,
 } from 'src/__data__/fileAttachments';
 
 import { AttachFileListItem } from './AttachFileListItem';
@@ -20,8 +20,8 @@ const props = {
     attachmentField: '',
     attachmentsContainer: '',
     closeIcon: '',
-    uploadProgress: ''
-  }
+    uploadProgress: '',
+  },
 };
 
 const component = shallow(<AttachFileListItem {...props} />);

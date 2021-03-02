@@ -95,12 +95,12 @@ export const getErrorMap = <T extends string = string>(
           ...accum,
           // We generally want the first error that matches the field,
           // so don't override it if it's already there
-          [thisError.field]: accum[thisError.field] || thisError.reason
+          [thisError.field]: accum[thisError.field] || thisError.reason,
         };
       } else {
         return {
           ...accum,
-          none: thisError.reason
+          none: thisError.reason,
         };
       }
     },

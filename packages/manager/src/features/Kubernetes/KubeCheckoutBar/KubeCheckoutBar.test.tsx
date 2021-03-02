@@ -13,7 +13,7 @@ const props: Props = {
   updatePool: jest.fn(),
   removePool: jest.fn(),
   createCluster: jest.fn(),
-  typesData: types.data
+  typesData: types.data,
 };
 
 const renderComponent = (_props: Props) =>
@@ -34,7 +34,7 @@ describe('KubeCheckoutBar', () => {
     const poolsWithSmallNode = [...pools, nodePoolFactory.build({ count: 2 })];
     const { getByText } = renderComponent({
       ...props,
-      pools: poolsWithSmallNode
+      pools: poolsWithSmallNode,
     });
     getByText(/at least 3 nodes/i);
   });

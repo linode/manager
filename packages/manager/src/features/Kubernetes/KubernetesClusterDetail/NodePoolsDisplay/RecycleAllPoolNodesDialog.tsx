@@ -42,7 +42,7 @@ const renderActions = (
   );
 };
 
-const RecycleAllPoolNodesDialog: React.FC<Props> = props => {
+const RecycleAllPoolNodesDialog: React.FC<Props> = (props) => {
   const { error, loading, open, onClose, onSubmit } = props;
 
   return (

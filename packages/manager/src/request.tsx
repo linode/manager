@@ -12,9 +12,9 @@ import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
-const handleSuccess: <T extends AxiosResponse<any>>(
-  response: T
-) => T | T = response => {
+const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
+  response
+) => {
   if (!!response.headers['x-maintenance-mode']) {
     store.dispatch(handleLogout());
     Promise.reject(response);
@@ -38,7 +38,7 @@ export const handleError = (error: AxiosError) => {
   const url = config.url ?? '';
   const status: number = error.response?.status ?? 0;
   const errors: APIError[] = error.response?.data?.errors ?? [
-    { reason: DEFAULT_ERROR_MESSAGE }
+    { reason: DEFAULT_ERROR_MESSAGE },
   ];
 
   /** AxiosError contains the original POST data as stringified JSON */
@@ -61,7 +61,7 @@ export const handleError = (error: AxiosError) => {
           }
         />
       ),
-      condition: e => !!e.reason.match(/verification is required/i)
+      condition: (e) => !!e.reason.match(/verification is required/i),
     },
     {
       /**
@@ -76,34 +76,34 @@ export const handleError = (error: AxiosError) => {
        * 2. Fix the Landing page components to display the actual error being passed.
        */
       replacementText: <AccountActivationError errors={errors} />,
-      condition: e =>
+      condition: (e) =>
         !!e.reason.match(/account must be activated/i) && status === 403,
       callback: () => {
         if (store && !store.getState().globalErrors.account_unactivated) {
           store.dispatch(
             setErrors({
-              account_unactivated: true
+              account_unactivated: true,
             })
           );
         }
-      }
+      },
     },
     {
       replacementText: <MigrateError />,
-      condition: e => {
+      condition: (e) => {
         return (
           !!e.reason.match(/migrations are currently disabled/i) &&
           !!url.match(/migrate/i)
         );
-      }
-    }
+      },
+    },
   ]);
 
   // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
   return Promise.reject(interceptedErrors);
 };
 
-baseRequest.interceptors.request.use(config => {
+baseRequest.interceptors.request.use((config) => {
   const state = store.getState();
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
   const token = ACCESS_TOKEN || (state.authentication?.token ?? '');
@@ -115,8 +115,8 @@ baseRequest.interceptors.request.use(config => {
     url,
     headers: {
       ...config.headers,
-      ...(token && { Authorization: `${token}` })
-    }
+      ...(token && { Authorization: `${token}` }),
+    },
   };
 });
 
@@ -156,12 +156,12 @@ export const injectEuuidToProfile = (
     if (xCustomerUuidHeader) {
       const profileWithEuuid = {
         ...response.data,
-        _euuidFromHttpHeader: xCustomerUuidHeader
+        _euuidFromHttpHeader: xCustomerUuidHeader,
       };
 
       return {
         ...response,
-        data: profileWithEuuid
+        data: profileWithEuuid,
       };
     }
   }

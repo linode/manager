@@ -6,7 +6,7 @@ import {
   SvgIconProps,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -24,23 +24,23 @@ type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(10)
+      padding: theme.spacing(10),
     },
     compact: {
-      padding: theme.spacing(5)
+      padding: theme.spacing(5),
     },
     cozy: {
-      padding: theme.spacing(1)
+      padding: theme.spacing(1),
     },
     iconContainer: {
-      textAlign: 'center'
+      textAlign: 'center',
     },
     icon: {
       marginBottom: theme.spacing(2),
       color: theme.color.red,
       width: 50,
-      height: 50
-    }
+      height: 50,
+    },
   });
 
 const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
@@ -51,7 +51,7 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
       className={classNames({
         [props.classes.root]: true,
         [props.classes.compact]: props.compact,
-        [props.classes.cozy]: !!props.cozy
+        [props.classes.cozy]: !!props.cozy,
       })}
       justify="center"
       alignItems="center"

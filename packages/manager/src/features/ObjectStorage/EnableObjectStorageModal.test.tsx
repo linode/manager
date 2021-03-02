@@ -10,7 +10,7 @@ const onClose = jest.fn();
 const props: Props = {
   handleSubmit,
   onClose,
-  open: true
+  open: true,
 };
 
 describe('EnableObjectStorageModal', () => {

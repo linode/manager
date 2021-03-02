@@ -4,7 +4,7 @@ import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 
@@ -16,8 +16,8 @@ const styles = () =>
       border: '1px solid #ccc',
       height: 320,
       padding: `9px 12px 9px 12px`,
-      overflowY: 'auto'
-    }
+      overflowY: 'auto',
+    },
   });
 
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = WithStyles<ClassNames> & Props;
 
-const PreviewReply: React.FC<CombinedProps> = props => {
+const PreviewReply: React.FC<CombinedProps> = (props) => {
   const { classes, value, error } = props;
 
   return (

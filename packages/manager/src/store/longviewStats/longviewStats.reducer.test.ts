@@ -13,8 +13,8 @@ describe('Longview Client Stats Reducer', () => {
       )
     ).toEqual({
       123: {
-        loading: true
-      }
+        loading: true,
+      },
     });
   });
 
@@ -24,9 +24,9 @@ describe('Longview Client Stats Reducer', () => {
       requestClientStats.failed({
         params: {
           api_key: '1234',
-          clientID: 123
+          clientID: 123,
         },
-        error: mockError
+        error: mockError,
       })
     );
 
@@ -35,27 +35,27 @@ describe('Longview Client Stats Reducer', () => {
       requestClientStats.failed({
         params: {
           api_key: '999999aaaaa',
-          clientID: 999
+          clientID: 999,
         },
-        error: mockError
+        error: mockError,
       })
     );
 
     expect(state1).toEqual({
       123: {
         loading: false,
-        error: mockError
-      }
+        error: mockError,
+      },
     });
 
     expect(state2).toEqual({
       123: {
-        data: {}
+        data: {},
       },
       999: {
         loading: false,
-        error: mockError
-      }
+        error: mockError,
+      },
     });
   });
 
@@ -65,18 +65,18 @@ describe('Longview Client Stats Reducer', () => {
       requestClientStats.done({
         params: {
           clientID: 999,
-          api_key: '9999aaaabbbb'
+          api_key: '9999aaaabbbb',
         },
         result: {
           ...systemInfo,
           ...memory,
-          ...longviewLoad
-        }
+          ...longviewLoad,
+        },
       })
     );
 
     expect(newState[123]).toEqual({
-      data: {}
+      data: {},
     });
     expect(newState[999]).toHaveProperty('loading', false);
     expect(newState[999]).toHaveProperty('error', undefined);

@@ -1,5 +1,5 @@
 import TableCell, {
-  TableCellProps as _TableCellProps
+  TableCellProps as _TableCellProps,
 } from '@material-ui/core/TableCell';
 
 /* tslint:disable-next-line:no-empty-interface */

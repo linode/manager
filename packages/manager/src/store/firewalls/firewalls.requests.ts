@@ -6,7 +6,7 @@ import {
   Firewall,
   getFirewalls,
   updateFirewall as _update,
-  updateFirewallRules as _updateRules
+  updateFirewallRules as _updateRules,
 } from '@linode/api-v4/lib/firewalls';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -15,7 +15,7 @@ import {
   deleteFirewallActions,
   getFirewalls as _getFirewallsAction,
   updateFirewallActions,
-  updateFirewallRulesActions
+  updateFirewallRulesActions,
 } from './firewalls.actions';
 
 export const getAllFirewallsRequest = (payload: {

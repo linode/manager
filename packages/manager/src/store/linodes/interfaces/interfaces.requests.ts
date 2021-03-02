@@ -3,7 +3,7 @@ import {
   createInterface as _createInterface,
   deleteInterface as _deleteInterface,
   getInterface as _getInterface,
-  getInterfaces as _getInterfaces
+  getInterfaces as _getInterfaces,
 } from '@linode/api-v4/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { getAllWithArguments } from 'src/utilities/getAll';
@@ -11,7 +11,7 @@ import {
   getAllLinodeInterfacesActions,
   getLinodeInterfaceActions,
   createLinodeInterfaceActions,
-  deleteLinodeInterfaceActions
+  deleteLinodeInterfaceActions,
 } from './interfaces.actions';
 
 export const createLinodeInterface = createRequestThunk(

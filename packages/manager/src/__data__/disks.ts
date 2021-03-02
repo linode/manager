@@ -7,7 +7,7 @@ export const extDisk: Disk = {
   filesystem: 'ext4',
   status: 'ready',
   size: 25088,
-  id: 19040623
+  id: 19040623,
 };
 
 export const swapDisk: Disk = {
@@ -17,7 +17,7 @@ export const swapDisk: Disk = {
   filesystem: 'swap',
   status: 'ready',
   size: 512,
-  id: 19040624
+  id: 19040624,
 };
 
 export const extDiskCopy: Disk = {
@@ -27,7 +27,7 @@ export const extDiskCopy: Disk = {
   filesystem: 'ext4',
   status: 'ready',
   size: 25088,
-  id: 19040623
+  id: 19040623,
 };
 
 export const extDisk2: Disk = {
@@ -37,7 +37,7 @@ export const extDisk2: Disk = {
   filesystem: 'ext4',
   status: 'ready',
   size: 10000,
-  id: 19040625
+  id: 19040625,
 };
 
 export const extDisk3: Disk = {
@@ -47,7 +47,7 @@ export const extDisk3: Disk = {
   filesystem: 'ext4',
   status: 'ready',
   size: 10000,
-  id: 18795181
+  id: 18795181,
 };
 
 export const disks = [extDisk, swapDisk];

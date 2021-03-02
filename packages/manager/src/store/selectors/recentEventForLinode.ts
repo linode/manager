@@ -20,8 +20,8 @@ export const useRecentEventForLinode = (linodeId: number) => {
 
 export default (linodeId: number) =>
   createSelector<ApplicationState, Event[], undefined | Event>(
-    state => state.events.events,
-    events => {
+    (state) => state.events.events,
+    (events) => {
       let idx = 0;
       const len = events.length;
       for (; idx < len; idx += 1) {

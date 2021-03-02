@@ -12,7 +12,7 @@ import LineGraph from 'src/components/LineGraph';
 import {
   convertNetworkToUnit,
   formatNetworkTooltip,
-  generateNetworkUnits
+  generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useLinodeNetworkInfo } from 'src/hooks/useLinodeNetworkInfo';
 import useProfile from 'src/hooks/useProfile';
@@ -21,27 +21,27 @@ import { readableBytes } from 'src/utilities/unitConversions';
 const useStyles = makeStyles((theme: Theme) => ({
   arrowIconOuter: {
     ...theme.applyLinkStyles,
-    display: 'flex'
+    display: 'flex',
   },
   arrowIconInner: {
-    fontSize: '1rem'
+    fontSize: '1rem',
   },
   arrowIconForward: {
-    transform: 'rotate(180deg)'
+    transform: 'rotate(180deg)',
   },
   arrowIconDisabled: {
     fill: theme.color.grey1,
-    cursor: 'not-allowed'
+    cursor: 'not-allowed',
   },
   loading: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 100
+    height: 100,
   },
   graphHeaderContainer: {
-    borderBottom: `1px solid ${theme.color.grey6}`
-  }
+    borderBottom: `1px solid ${theme.color.grey6}`,
+  },
 }));
 
 interface TransferHistoryProps {
@@ -49,7 +49,7 @@ interface TransferHistoryProps {
   linodeCreated: string;
 }
 
-export const TransferHistory: React.FC<TransferHistoryProps> = props => {
+export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
   const classes = useStyles();
 
   // Needed to see the user's timezone.
@@ -68,7 +68,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
     {
       year,
       month,
-      requestTransfer: monthOffset < 0
+      requestTransfer: monthOffset < 0,
     }
   );
 
@@ -112,10 +112,10 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
   const minMonthOffset = 0;
 
   const decrementOffset = () =>
-    setMonthOffset(prevOffset => Math.max(prevOffset - 1, maxMonthOffset));
+    setMonthOffset((prevOffset) => Math.max(prevOffset - 1, maxMonthOffset));
 
   const incrementOffset = () =>
-    setMonthOffset(prevOffset => Math.min(prevOffset + 1, minMonthOffset));
+    setMonthOffset((prevOffset) => Math.min(prevOffset + 1, minMonthOffset));
 
   const displayLoading = loading && !stats && !transfer;
 
@@ -158,7 +158,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
             <ArrowBackIosIcon
               className={classnames({
                 [classes.arrowIconInner]: true,
-                [classes.arrowIconDisabled]: monthOffset === maxMonthOffset
+                [classes.arrowIconDisabled]: monthOffset === maxMonthOffset,
               })}
             />
           </button>
@@ -172,7 +172,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
               className={classnames({
                 [classes.arrowIconInner]: true,
                 [classes.arrowIconForward]: true,
-                [classes.arrowIconDisabled]: monthOffset === minMonthOffset
+                [classes.arrowIconDisabled]: monthOffset === minMonthOffset,
               })}
             />
           </button>
@@ -197,8 +197,8 @@ export const TransferHistory: React.FC<TransferHistoryProps> = props => {
               borderColor: 'transparent',
               backgroundColor: '#5ad865',
               data: combinedData,
-              label: 'Public Outbound Traffic'
-            }
+              label: 'Public Outbound Traffic',
+            },
           ]}
         />
       )}

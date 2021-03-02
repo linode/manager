@@ -21,7 +21,7 @@ class Example extends React.Component<Props, State> {
 
     this.state = {
       value: 0,
-      error: false
+      error: false,
     };
   }
 
@@ -29,7 +29,7 @@ class Example extends React.Component<Props, State> {
     const fieldValue = Number(e.target.value);
     this.setState({
       value: fieldValue,
-      error: fieldValue === 4
+      error: fieldValue === 4,
     });
   };
 
@@ -42,7 +42,7 @@ class Example extends React.Component<Props, State> {
       { label: 'U2' },
       { label: 'Nickelback' },
       { label: 'Limp Bizkit' },
-      { label: "They're all crappy" }
+      { label: "They're all crappy" },
     ];
 
     return (

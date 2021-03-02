@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -20,8 +20,8 @@ const styles = (theme: Theme) =>
     section: {
       marginBottom: theme.spacing(2),
       paddingBottom: theme.spacing(2),
-      borderBottom: `1px solid ${theme.palette.divider}`
-    }
+      borderBottom: `1px solid ${theme.palette.divider}`,
+    },
   });
 
 interface Props {
@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ViewRangeDrawer: React.FC<CombinedProps> = props => {
+const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
   const { classes, range } = props;
   const region = (range && range.region) || '';
 

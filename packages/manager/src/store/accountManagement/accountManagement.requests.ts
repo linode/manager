@@ -15,18 +15,18 @@ export const checkAccountSize: ThunkActionCreator<Promise<null>> = () => async (
    */
   return Promise.all([
     dispatch(getDomainsPage({ params: { page_size: 100 } })),
-    dispatch(getLinodesPage({ params: { page_size: 100 } }))
+    dispatch(getLinodesPage({ params: { page_size: 100 } })),
   ])
-    .then(combinedResults => {
+    .then((combinedResults) => {
       dispatch(
         setLargeAccount(
           combinedResults.some(
-            thisResult => thisResult.results > LARGE_ACCOUNT_THRESHOLD
+            (thisResult) => thisResult.results > LARGE_ACCOUNT_THRESHOLD
           )
         )
       );
 
       return null;
     })
-    .catch(_ => null);
+    .catch((_) => null);
 };

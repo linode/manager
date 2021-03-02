@@ -6,9 +6,9 @@ export const managedIssues = [
       type: 'ticket',
       id: 123456,
       url: '/support/tickets/12597521',
-      label: 'Managed Monitoring Issue - failingmonitor'
+      label: 'Managed Monitoring Issue - failingmonitor',
     },
-    services: [8750]
+    services: [8750],
   },
   {
     created: '2019-09-12T20:00:00',
@@ -17,9 +17,9 @@ export const managedIssues = [
       type: 'ticket',
       id: 123456,
       url: '/support/tickets/12597521',
-      label: 'Managed Monitoring Issue - failingmonitor'
+      label: 'Managed Monitoring Issue - failingmonitor',
     },
-    services: [8750]
+    services: [8750],
   },
   {
     created: '2019-09-13T20:00:00',
@@ -28,8 +28,8 @@ export const managedIssues = [
       type: 'ticket',
       id: 123456,
       url: '/support/tickets/12597521',
-      label: 'Managed Monitoring Issue - failingmonitor'
+      label: 'Managed Monitoring Issue - failingmonitor',
     },
-    services: [8750]
-  }
+    services: [8750],
+  },
 ];

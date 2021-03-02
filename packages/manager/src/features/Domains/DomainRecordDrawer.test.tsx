@@ -2,7 +2,7 @@ import {
   castFormValuesToNumeric,
   resolve,
   resolveAlias,
-  shouldResolve
+  shouldResolve,
 } from './DomainRecordDrawer';
 
 const exampleDomain = 'example.com';
@@ -46,7 +46,7 @@ describe('Domain record helper methods', () => {
     it('should resolve aliases where shouldResolve is true', () => {
       const payload = {
         name: 'my-name-@',
-        target: 'my-target-@'
+        target: 'my-target-@',
       };
       const result = resolveAlias(payload, exampleDomain, 'CNAME');
       expect(result).toHaveProperty('name', payload.name);
@@ -64,7 +64,7 @@ describe('Domain record helper methods', () => {
       expect(result).toEqual({
         apple: 1,
         bear: 2,
-        cat: '3'
+        cat: '3',
       });
     });
 
@@ -72,7 +72,7 @@ describe('Domain record helper methods', () => {
       const formValues = { apple: '' };
       const result = castFormValuesToNumeric(formValues, ['apple']);
       expect(result).toEqual({
-        apple: undefined
+        apple: undefined,
       });
     });
   });

@@ -14,27 +14,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     width: '30%',
     [theme.breakpoints.down('sm')]: {
-      width: '45%'
+      width: '45%',
     },
     [theme.breakpoints.down('xs')]: {
-      width: '65%'
-    }
+      width: '65%',
+    },
   },
   size: {
     [theme.breakpoints.down('sm')]: {
-      width: '15%'
+      width: '15%',
     },
     [theme.breakpoints.down('xs')]: {
-      width: '20%'
-    }
+      width: '20%',
+    },
   },
   loadingStatus: {
-    marginBottom: theme.spacing() / 2
+    marginBottom: theme.spacing() / 2,
   },
   actionMenu: {
     display: 'flex',
-    justifyContent: 'flex-end'
-  }
+    justifyContent: 'flex-end',
+  },
 }));
 
 export interface ImageWithEvent extends Image {
@@ -43,7 +43,7 @@ export interface ImageWithEvent extends Image {
 
 type CombinedProps = Handlers & ImageWithEvent;
 
-const ImageRow: React.FC<CombinedProps> = props => {
+const ImageRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -112,7 +112,7 @@ const ProgressDisplay: React.FC<{
   className: string;
   progress: undefined | number;
   text: string;
-}> = props => {
+}> = (props) => {
   const { progress, text, className } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 

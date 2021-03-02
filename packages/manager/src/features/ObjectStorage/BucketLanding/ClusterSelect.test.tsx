@@ -8,7 +8,7 @@ describe('objectStorageClusterToExtendedRegion', () => {
     const clusters = objectStorageClusterFactory.buildList(2);
     const result = objectStorageClusterToExtendedRegion(clusters, regions.data);
     expect(result.length).toBe(clusters.length);
-    result.forEach(thisExtendedRegion => {
+    result.forEach((thisExtendedRegion) => {
       expect(thisExtendedRegion).toHaveProperty('country');
       expect(thisExtendedRegion).toHaveProperty('display');
     });

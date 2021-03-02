@@ -7,16 +7,16 @@ describe('extendData utility function', () => {
   const extendedData = extendData(mockData);
 
   it('includes process name on each entry', () => {
-    Object.keys(mockData.Processes!).forEach(processName => {
-      expect(extendedData.find(p => p.name === processName)).toBeDefined();
+    Object.keys(mockData.Processes!).forEach((processName) => {
+      expect(extendedData.find((p) => p.name === processName)).toBeDefined();
     });
   });
 
   it('includes username on each entry', () => {
-    Object.values(mockData.Processes!).forEach(process => {
+    Object.values(mockData.Processes!).forEach((process) => {
       const { longname, ...users } = process;
-      Object.keys(users).forEach(user => {
-        expect(extendedData.find(p => p.user === user)).toBeDefined();
+      Object.keys(users).forEach((user) => {
+        expect(extendedData.find((p) => p.user === user)).toBeDefined();
       });
     });
   });
@@ -42,7 +42,7 @@ describe('extendData utility function', () => {
     expect(extendData({ Processes: {} })).toEqual([]);
     expect(extendData({ Processes: { bash: {} } as any })).toEqual([]);
     const extendedMalformedData = extendData({
-      Processes: { bash: { root: {} } } as any
+      Processes: { bash: { root: {} } } as any,
     });
     expect(extendedMalformedData[0].name).toEqual('bash');
     expect(extendedMalformedData[0].user).toEqual('root');

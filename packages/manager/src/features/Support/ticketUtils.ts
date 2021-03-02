@@ -12,7 +12,7 @@ export const reshapeFiles = (files: FileList) => {
       /* Used to keep track of initial upload status */
       uploading: false,
       /* Used to ensure that the file doesn't get uploaded again */
-      uploaded: false
+      uploaded: false,
     });
   }
 

@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
@@ -23,8 +23,8 @@ const styles = (theme: Theme) =>
   createStyles({
     '@keyframes dash': {
       to: {
-        'stroke-dashoffset': 0
-      }
+        'stroke-dashoffset': 0,
+      },
     },
     root: {},
     card: {
@@ -34,7 +34,7 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.color.white,
       padding: theme.spacing(4),
       border: `1px solid ${theme.color.grey2}`,
-      height: '100%'
+      height: '100%',
     },
     clickableTile: {
       position: 'relative',
@@ -42,16 +42,16 @@ const styles = (theme: Theme) =>
       cursor: 'pointer',
       '&:hover': {
         '& $icon': {
-          ...theme.animateCircleIcon
+          ...theme.animateCircleIcon,
         },
         '& svg .outerCircle': {
           fill: theme.palette.primary.main,
-          transition: 'fill .2s ease-in-out .2s'
+          transition: 'fill .2s ease-in-out .2s',
         },
         '& $buttonTitle': {
           color: theme.color.black,
-          textDecoration: 'underline'
-        }
+          textDecoration: 'underline',
+        },
       },
       '& .tile-link::after': {
         content: "''",
@@ -59,32 +59,32 @@ const styles = (theme: Theme) =>
         width: '100%',
         height: '100%',
         left: 0,
-        top: 0
-      }
+        top: 0,
+      },
     },
     tileTitle: {
       fontSize: '1.2rem',
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
-      textAlign: 'center'
+      textAlign: 'center',
     },
     icon: {
       margin: '0 auto 16px',
       display: 'block',
       '& .outerCircle': {
         fill: theme.bg.offWhiteDT,
-        stroke: theme.bg.main
+        stroke: theme.bg.main,
       },
       '& .insidePath': {
         fill: 'none',
         stroke: '#3683DC',
         strokeWidth: 1.25,
-        strokeLinejoin: 'round'
+        strokeLinejoin: 'round',
       },
       '& svg': {
         width: 70,
-        height: 70
-      }
+        height: 70,
+      },
     },
     buttonTitle: {
       padding: 0,
@@ -93,9 +93,9 @@ const styles = (theme: Theme) =>
       color: theme.color.black,
       '&:hover': {
         color: theme.color.black,
-        textDecoration: 'underline'
-      }
-    }
+        textDecoration: 'underline',
+      },
+    },
   });
 
 type onClickFn = (
@@ -122,7 +122,7 @@ class Tile extends React.Component<CombinedProps> {
         <Button
           onClick={link}
           className={classNames({
-            [classes.buttonTitle]: true
+            [classes.buttonTitle]: true,
           })}
         >
           {title}
@@ -147,7 +147,7 @@ class Tile extends React.Component<CombinedProps> {
       description,
       link,
       icon,
-      errorText
+      errorText,
     } = this.props;
 
     return (
@@ -155,7 +155,7 @@ class Tile extends React.Component<CombinedProps> {
         className={classNames(
           {
             [classes.card]: true,
-            [classes.clickableTile]: link !== undefined
+            [classes.clickableTile]: link !== undefined,
           },
           className
         )}

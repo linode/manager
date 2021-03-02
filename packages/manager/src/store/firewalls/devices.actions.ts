@@ -1,6 +1,6 @@
 import {
   FirewallDevice,
-  FirewallDevicePayload
+  FirewallDevicePayload,
 } from '@linode/api-v4/lib/firewalls';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 

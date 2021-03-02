@@ -40,7 +40,7 @@ const _getEntityByIDFromStore = (
     kubernetes,
     nodeBalancers,
     images,
-    volumes
+    volumes,
   } = _store.__resources;
   switch (entityType) {
     case 'linode':

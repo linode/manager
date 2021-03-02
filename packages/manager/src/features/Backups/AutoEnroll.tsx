@@ -5,7 +5,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -19,21 +19,21 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       backgroundColor: theme.bg.offWhite,
-      padding: theme.spacing(1)
+      padding: theme.spacing(1),
     },
     header: {
       marginBottom: theme.spacing(1),
-      fontSize: 17
+      fontSize: 17,
     },
     toggleLabel: {
       display: 'flex',
       alignItems: 'flex-start',
       marginLeft: 0,
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     toggleLabelText: {
-      marginTop: theme.spacing(1) + theme.spacing(1) / 2
-    }
+      marginTop: theme.spacing(1) + theme.spacing(1) / 2,
+    },
   });
 
 interface Props {
@@ -44,7 +44,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AutoEnroll: React.FC<CombinedProps> = props => {
+export const AutoEnroll: React.FC<CombinedProps> = (props) => {
   const { classes, enabled, error, toggle } = props;
   return (
     <Paper className={classes.root}>

@@ -17,20 +17,20 @@ export const handleLogout: ThunkActionCreator<
     client_id: string;
     token: string;
   }
-> = ({ client_id, token }) => dispatch => {
+> = ({ client_id, token }) => (dispatch) => {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
   const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 
   return revokeToken(client_id, token)
-    .then(response => {
+    .then((response) => {
       dispatch(_handleLogout());
 
       /** send the user back to login */
       window.location.assign(`${loginURL}/logout`);
       return response;
     })
-    .catch(err => {
+    .catch((err) => {
       dispatch(_handleLogout());
       /** send the user back to login */
       window.location.assign(`${loginURL}/logout`);

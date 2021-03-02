@@ -7,7 +7,7 @@ import {
   attachVlan as _attach,
   detachVlan as _detach,
   deleteVlan as _delete,
-  createVlan as _create
+  createVlan as _create,
 } from 'src/store/vlans/vlans.requests';
 import { Dispatch } from './types';
 
@@ -38,7 +38,7 @@ export const useVlans = () => {
     attachVlan,
     detachVlan,
     createVlan,
-    deleteVlan
+    deleteVlan,
   };
 };
 

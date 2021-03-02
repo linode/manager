@@ -5,7 +5,7 @@ import {
   ObjectStorageBucket,
   ObjectStorageKey,
   ObjectStorageKeyRequest,
-  Scope
+  Scope,
 } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
@@ -57,21 +57,21 @@ export const sortByCluster = (a: Scope, b: Scope) => {
 
 export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
   buckets
-    .map(thisBucket => ({
+    .map((thisBucket) => ({
       cluster: thisBucket.cluster,
       bucket_name: thisBucket.label,
-      permissions: 'none' as AccessType
+      permissions: 'none' as AccessType,
     }))
     .sort(sortByCluster);
 
-export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
+export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
   const {
     isRestrictedUser,
     open,
     onClose,
     onSubmit,
     mode,
-    objectStorageKey
+    objectStorageKey,
   } = props;
 
   const object_storage = useSelector(
@@ -101,7 +101,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
 
   const initialValues: FormState = {
     label: initialLabelValue,
-    bucket_access: getDefaultScopes(buckets.data)
+    bucket_access: getDefaultScopes(buckets.data),
   };
 
   const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
@@ -114,8 +114,8 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
       ? {
           ...values,
           bucket_access: access.filter(
-            thisAccess => thisAccess.permissions !== 'none'
-          )
+            (thisAccess) => thisAccess.permissions !== 'none'
+          ),
         }
       : { ...values, bucket_access: null };
 
@@ -139,7 +139,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
           validateOnBlur={true}
           onSubmit={handleSubmit}
         >
-          {formikProps => {
+          {(formikProps) => {
             const {
               values,
               errors,
@@ -148,7 +148,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
               handleSubmit,
               setFieldValue,
               isSubmitting,
-              status
+              status,
             } = formikProps;
 
             const beforeSubmit = () => {
@@ -162,7 +162,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = props => {
             };
 
             const handleToggleAccess = () => {
-              setLimitedAccessChecked(checked => !checked);
+              setLimitedAccessChecked((checked) => !checked);
               // Reset scopes
               setFieldValue('bucket_access', getDefaultScopes(buckets.data));
             };

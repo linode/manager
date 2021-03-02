@@ -9,10 +9,10 @@ import { ResultGroup } from './ResultGroup';
 
 jest.mock('src/components/core/styles', () => ({
   ...(jest.requireActual('src/components/core/styles') as any),
-  makeStyles: jest.fn(() => () => ({}))
+  makeStyles: jest.fn(() => () => ({})),
 }));
 jest.mock('src/hooks/useFlags', () => ({
-  default: jest.fn().mockReturnValue({})
+  default: jest.fn().mockReturnValue({}),
 }));
 
 const props = {
@@ -23,12 +23,12 @@ const props = {
     searchbarResult1,
     searchbarResult2,
     searchbarResult1,
-    searchbarResult2
+    searchbarResult2,
   ],
   loading: false,
   groupSize: 5,
   showMore: false,
-  toggle: jest.fn()
+  toggle: jest.fn(),
 };
 
 const emptyProps = {
@@ -36,7 +36,7 @@ const emptyProps = {
   results: [],
   groupSize: 5,
   showMore: false,
-  toggle: jest.fn()
+  toggle: jest.fn(),
 };
 
 const component = shallow(<ResultGroup {...props} />);

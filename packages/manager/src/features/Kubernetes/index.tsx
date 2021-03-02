@@ -4,7 +4,7 @@ import {
   Route,
   RouteComponentProps,
   Switch,
-  withRouter
+  withRouter,
 } from 'react-router-dom';
 
 const KubernetesLanding = React.lazy(() => import('./KubernetesLanding'));
@@ -18,7 +18,7 @@ type Props = RouteComponentProps<{}>;
 class Kubernetes extends React.Component<Props> {
   render() {
     const {
-      match: { path }
+      match: { path },
     } = this.props;
 
     return (
@@ -31,7 +31,7 @@ class Kubernetes extends React.Component<Props> {
         />
         <Route
           path={`${path}/clusters/:clusterID`}
-          render={props => (
+          render={(props) => (
             <Redirect
               to={`${path}/clusters/${props.match.params.clusterID}/summary`}
             />

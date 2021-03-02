@@ -2,7 +2,7 @@ import {
   NodeBalancer,
   NodeBalancerConfigPort,
   NodeBalancerConfigNodeMode,
-  NodeBalancerProxyProtocol
+  NodeBalancerProxyProtocol,
 } from '@linode/api-v4/lib/nodebalancers/types';
 import { APIError } from '@linode/api-v4/lib/types';
 

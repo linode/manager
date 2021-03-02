@@ -12,7 +12,7 @@ const props = {
   clusterLabel: 'this-cluster',
   clusterPools: [node1],
   onClose: jest.fn(),
-  onDelete: jest.fn()
+  onDelete: jest.fn(),
 };
 
 describe('Kubernetes deletion dialog', () => {

@@ -16,7 +16,7 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
   state = {
     linkTo: '/linodes',
     linkText: 'Linodes',
-    text: 'Editable text!'
+    text: 'Editable text!',
   };
 
   onEdit = (value: string) => {
@@ -33,12 +33,12 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
       <Breadcrumb
         pathname={customCrumbs}
         labelOptions={{
-          linkTo: this.props.labelLink
+          linkTo: this.props.labelLink,
         }}
         onEditHandlers={{
           editableTextTitle: this.state.text,
           onEdit: this.onEdit,
-          onCancel: this.onCancel
+          onCancel: this.onCancel,
         }}
       />
     );
@@ -72,7 +72,7 @@ storiesOf('Breadcrumb', module)
             pathname={customCrumbs}
             labelTitle="Last crumb with subtitle"
             labelOptions={{
-              subtitle: 'A label subtitle'
+              subtitle: 'A label subtitle',
             }}
           />
         </div>
@@ -107,8 +107,8 @@ storiesOf('Breadcrumb', module)
               {
                 position: 2,
                 label: 'Link changed here',
-                linkTo: { pathname: `/new-location` }
-              }
+                linkTo: { pathname: `/new-location` },
+              },
             ]}
           />
         </div>
@@ -131,10 +131,10 @@ storiesOf('Breadcrumb', module)
                     borderRadius: '50%',
                     width: 32,
                     height: 32,
-                    animation: '$fadeIn 150ms linear forwards'
+                    animation: '$fadeIn 150ms linear forwards',
                   }}
                 />
-              )
+              ),
             }}
           />
         </div>

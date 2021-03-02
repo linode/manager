@@ -10,14 +10,14 @@ import {
   Theme,
   withStyles,
   WithStyles,
-  withTheme
+  withTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import withFeatureFlags, {
-  FeatureFlagConsumerProps
+  FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
@@ -31,14 +31,14 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3),
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     title: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     label: {
-      marginLeft: theme.spacing(1)
-    }
+      marginLeft: theme.spacing(1),
+    },
   });
 
 interface State {
@@ -59,7 +59,7 @@ type CombinedProps = Props &
 class ProfileSettings extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
-    preferenceEditorOpen: false
+    preferenceEditorOpen: false,
   };
 
   componentDidMount() {
@@ -145,16 +145,18 @@ interface DispatchProps {
   updateProfile: (p: Partial<Profile>) => Promise<Profile>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  updateProfile: (p: Profile) => dispatch(handleUpdateProfile(p) as any)
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch
+) => ({
+  updateProfile: (p: Profile) => dispatch(handleUpdateProfile(p) as any),
 });
 
 interface StateProps {
   status?: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
-  status: path(['data', 'email_notifications'], state.__resources.profile)
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
+  status: path(['data', 'email_notifications'], state.__resources.profile),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

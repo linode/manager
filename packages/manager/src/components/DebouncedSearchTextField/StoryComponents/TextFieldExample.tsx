@@ -16,19 +16,19 @@ interface State {
 class Example extends React.Component<Props, State> {
   state: State = {
     list: this.props.list,
-    isSearching: false
+    isSearching: false,
   };
 
   handleSearch = (value: string) => {
     this.setState({ isSearching: true });
     const { list } = this.state;
     action('searching')(value);
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         if (!value.trim()) {
           return resolve(this.props.list);
         }
-        const filteredList = list.filter(eachVal =>
+        const filteredList = list.filter((eachVal) =>
           eachVal.includes(value.toLowerCase())
         );
         return resolve(filteredList);
@@ -37,7 +37,7 @@ class Example extends React.Component<Props, State> {
       action('result')(res);
       this.setState({
         list: res,
-        isSearching: false
+        isSearching: false,
       });
     });
   };

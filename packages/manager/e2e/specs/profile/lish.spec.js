@@ -29,7 +29,7 @@ describe('Profile - Lish SSH Key Suite', () => {
   it('should display an additional ssh key field ', () => {
     Lish.addSshKey.click();
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return $$(Lish.sshKey.selector).length === 2;
     }, constants.wait.normal);
   });
@@ -37,7 +37,7 @@ describe('Profile - Lish SSH Key Suite', () => {
   it('should remove the additional ssh key field', () => {
     $$(Lish.removeButton.selector)[1].click();
 
-    browser.waitUntil(function() {
+    browser.waitUntil(function () {
       return $$(Lish.sshKey.selector).length === 1;
     }, constants.wait.normal);
   });

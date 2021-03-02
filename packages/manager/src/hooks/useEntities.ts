@@ -32,11 +32,11 @@ export const useEntities = () => {
   const { volumes: _volumes, requestVolumes } = useVolumes();
   const {
     nodeBalancers: _nodeBalancers,
-    requestNodeBalancers
+    requestNodeBalancers,
   } = useNodeBalancers();
   const {
     kubernetesClusters: _kubernetesClusters,
-    requestKubernetesClusters
+    requestKubernetesClusters,
   } = useKubernetesClusters();
 
   /** Our Redux store is currently inconsistent about
@@ -51,7 +51,7 @@ export const useEntities = () => {
   const domains = Object.values(_domains.itemsById);
   const linodes = Object.values(_linodes.itemsById);
   const images = (Object.values(_images.itemsById) ?? []).filter(
-    thisImage => !thisImage.is_public
+    (thisImage) => !thisImage.is_public
   );
   const volumes = Object.values(_volumes.itemsById);
   const kubernetesClusters = Object.values(_kubernetesClusters.itemsById);
@@ -62,38 +62,38 @@ export const useEntities = () => {
       data: domains,
       request: requestDomains,
       lastUpdated: _domains.lastUpdated,
-      error: _domains.error.read
+      error: _domains.error.read,
     },
     images: {
       data: images,
       request: requestImages,
       lastUpdated: _images.lastUpdated,
-      error: _images.error.read
+      error: _images.error.read,
     },
     kubernetesClusters: {
       data: kubernetesClusters,
       request: () => requestKubernetesClusters(),
       lastUpdated: _kubernetesClusters.lastUpdated,
-      error: _kubernetesClusters.error?.read
+      error: _kubernetesClusters.error?.read,
     },
     linodes: {
       data: linodes,
       request: requestLinodes,
       lastUpdated: _linodes.lastUpdated,
-      error: _linodes.error?.read
+      error: _linodes.error?.read,
     },
     nodeBalancers: {
       data: nodeBalancers,
-      request: () => requestNodeBalancers().then(response => response.data),
+      request: () => requestNodeBalancers().then((response) => response.data),
       lastUpdated: _nodeBalancers.lastUpdated,
-      error: _nodeBalancers.error?.read
+      error: _nodeBalancers.error?.read,
     },
     volumes: {
       data: volumes,
-      request: () => requestVolumes().then(response => response.data),
+      request: () => requestVolumes().then((response) => response.data),
       lastUpdated: _volumes.lastUpdated,
-      error: _volumes.error?.read
-    }
+      error: _volumes.error?.read,
+    },
   };
 };
 

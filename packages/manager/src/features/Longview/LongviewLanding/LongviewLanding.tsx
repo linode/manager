@@ -1,10 +1,10 @@
 import {
   getActiveLongviewPlan,
-  getLongviewSubscriptions
+  getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
 import {
   ActiveLongviewPlan,
-  LongviewSubscription
+  LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
@@ -18,10 +18,10 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import withSettings, {
-  Props as SettingsProps
+  Props as SettingsProps,
 } from 'src/containers/accountSettings.container';
 import withLongviewClients, {
-  Props as LongviewProps
+  Props as LongviewProps,
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
@@ -38,13 +38,15 @@ type CombinedProps = LongviewProps &
   SettingsProps &
   GrantsProps;
 
-export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => {
+export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
+  props
+) => {
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
-    () => getActiveLongviewPlan().then(response => response),
+    () => getActiveLongviewPlan().then((response) => response),
     {}
   );
   const subscriptionsRequestHook = useAPIRequest<LongviewSubscription[]>(
-    () => getLongviewSubscriptions().then(response => response.data),
+    () => getLongviewSubscriptions().then((response) => response.data),
     []
   );
 
@@ -53,9 +55,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
   );
-  const [subscriptionDialogOpen, setSubscriptionDialogOpen] = React.useState<
-    boolean
-  >(false);
+  const [
+    subscriptionDialogOpen,
+    setSubscriptionDialogOpen,
+  ] = React.useState<boolean>(false);
 
   const isManaged = pathOr(false, ['managed'], accountSettings);
 
@@ -63,12 +66,12 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Clients',
-      routeName: `${props.match.url}/clients`
+      routeName: `${props.match.url}/clients`,
     },
     {
       title: 'Plan Details',
-      routeName: `${props.match.url}/plan-details`
-    }
+      routeName: `${props.match.url}/plan-details`,
+    },
   ];
 
   const matches = (p: string) => {
@@ -82,13 +85,13 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
   const handleAddClient = () => {
     setNewClientLoading(true);
     createLongviewClient()
-      .then(_ => {
+      .then((_) => {
         setNewClientLoading(false);
         if (props.history.location.pathname !== '/longview/clients') {
           props.history.push('/longview/clients');
         }
       })
-      .catch(errorResponse => {
+      .catch((errorResponse) => {
         if (errorResponse[0].reason.match(/subscription/)) {
           // The user has reached their subscription limit.
           setSubscriptionDialogOpen(true);
@@ -108,7 +111,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
 
   const handleSubmit = () => {
     const {
-      history: { push }
+      history: { push },
     } = props;
 
     if (isManaged) {
@@ -116,8 +119,8 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
         pathname: '/support/tickets',
         state: {
           open: true,
-          title: 'Request for additional Longview clients'
-        }
+          title: 'Request for additional Longview clients',
+        },
       });
       return;
     }
@@ -137,7 +140,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = props => 
       />
       <Tabs
         index={Math.max(
-          tabs.findIndex(tab => matches(tab.routeName)),
+          tabs.findIndex((tab) => matches(tab.routeName)),
           0
         )}
         onChange={navToURL}
@@ -195,7 +198,7 @@ export default compose<CombinedProps, {} & RouteComponentProps>(
     );
     return {
       userCanCreateClient:
-        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser)
+        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser),
     };
   }),
   withSettings(),

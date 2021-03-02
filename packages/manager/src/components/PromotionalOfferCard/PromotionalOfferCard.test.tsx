@@ -3,7 +3,7 @@ import { promotionalOfferFactory } from 'src/factories/promotionalOffer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
   checkStringOrDefault,
-  PromotionalOfferCard
+  PromotionalOfferCard,
 } from './PromotionalOfferCard';
 
 const promo = promotionalOfferFactory.build();
@@ -19,7 +19,7 @@ describe('PromotionalOfferCard', () => {
     const { getByText, queryByText } = renderWithTheme(
       <PromotionalOfferCard {...promo} />
     );
-    promo.buttons.forEach(button => {
+    promo.buttons.forEach((button) => {
       getByText(button.text);
       const anchor = queryByText(button.text)?.closest('a');
       expect(anchor).toHaveAttribute('href', button.href);
@@ -31,7 +31,7 @@ describe('PromotionalOfferCard', () => {
       <PromotionalOfferCard
         {...promo}
         buttons={[
-          { text: 'Button Text', href: 'javascript:alert(1)', type: 'primary' }
+          { text: 'Button Text', href: 'javascript:alert(1)', type: 'primary' },
         ]}
       />
     );
@@ -44,7 +44,7 @@ describe('PromotionalOfferCard', () => {
     const { queryByText } = renderWithTheme(
       <PromotionalOfferCard {...promo} fullWidth={true} />
     );
-    promo.buttons?.forEach(button => {
+    promo.buttons?.forEach((button) => {
       expect(queryByText(button.text)).toBeNull();
     });
   });

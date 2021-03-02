@@ -1,7 +1,7 @@
 import {
   getActiveLongviewPlan,
   LongviewSubscription,
-  updateActiveLongviewPlan
+  updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
@@ -24,15 +24,14 @@ import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import accountSettingsContainer, {
-  Props as AccountSettingsProps
+  Props as AccountSettingsProps,
 } from 'src/containers/accountSettings.container';
 import {
   hasGrant,
-  isRestrictedUser
+  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { MapState } from 'src/store/types';
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -47,10 +46,10 @@ const useStyles = makeStyles((theme: Theme) => {
       justifyContent: 'space-between',
       // These values represent the table size with 5 elements in compact
       // and normal mode. It's brittle, I know, but I'm not sure of another way.
-      minHeight: theme.spacing() === COMPACT_SPACING_UNIT ? 311 : 419
+      minHeight: 419,
     },
     collapsedTable: {
-      minHeight: 0
+      minHeight: 0,
     },
     table: {
       borderTop: border,
@@ -58,22 +57,22 @@ const useStyles = makeStyles((theme: Theme) => {
       borderLeft: border,
       '& td': {
         whiteSpace: 'nowrap',
-        borderBottom: border
+        borderBottom: border,
       },
       '& tbody tr': {
-        cursor: 'pointer'
+        cursor: 'pointer',
       },
       '& th, thead > tr:first-child:before': {
-        borderBottom: border
+        borderBottom: border,
       },
       '& tr:before': {
-        borderBottom: border
-      }
+        borderBottom: border,
+      },
     },
     radio: {
       marginLeft: -(theme.spacing(1) / 2),
       marginRight: theme.spacing(2) - 1,
-      padding: 2
+      padding: 2,
     },
     currentSubscriptionLabel: {
       display: 'flex',
@@ -81,8 +80,8 @@ const useStyles = makeStyles((theme: Theme) => {
       marginLeft: 2,
       paddingRight: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
-        paddingRight: 0
-      }
+        paddingRight: 0,
+      },
     },
     chip: {
       backgroundColor: theme.color.green,
@@ -93,49 +92,49 @@ const useStyles = makeStyles((theme: Theme) => {
       paddingRight: theme.spacing(0.5),
       marginTop: 0,
       marginBottom: 0,
-      marginLeft: theme.spacing(2)
+      marginLeft: theme.spacing(2),
     },
     planCell: {
       [theme.breakpoints.up('md')]: {
-        width: '40%'
-      }
+        width: '40%',
+      },
     },
     clientCell: {
       [theme.breakpoints.up('md')]: {
-        width: '10%'
-      }
+        width: '10%',
+      },
     },
     dataRetentionCell: {
       [theme.breakpoints.up('md')]: {
-        width: '15%'
-      }
+        width: '15%',
+      },
     },
     dataResolutionCell: {
       [theme.breakpoints.up('md')]: {
-        width: '15%'
-      }
+        width: '15%',
+      },
     },
     priceCell: {
       [theme.breakpoints.up('md')]: {
-        width: '15%'
-      }
+        width: '15%',
+      },
     },
     submitButton: {
       alignSelf: 'flex-start',
       marginTop: theme.spacing(4) - 2,
-      marginBottom: theme.spacing(4) - 2
+      marginBottom: theme.spacing(4) - 2,
     },
     disabledTableRow: {
-      cursor: 'not-allowed !important'
+      cursor: 'not-allowed !important',
     },
     link: {
       '& a': {
-        color: theme.cmrTextColors.linkActiveLight
+        color: theme.cmrTextColors.linkActiveLight,
       },
       '& a:hover': {
-        color: theme.palette.primary.main
-      }
-    }
+        color: theme.palette.primary.main,
+      },
+    },
   };
 });
 
@@ -164,11 +163,11 @@ export const managedText = (
   </span>
 );
 
-export const LongviewPlans: React.FC<CombinedProps> = props => {
+export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   const {
     accountSettings,
     subscriptionRequestHook: subscriptions,
-    mayUserModifyLVSubscription
+    mayUserModifyLVSubscription,
   } = props;
   const styles = useStyles();
   const mounted = React.useRef<boolean>(false);
@@ -201,7 +200,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
         setCurrentSubscription(activeID);
         setSelectedSub(activeID);
       })
-      .catch(_ => {
+      .catch((_) => {
         if (!mounted.current) {
           return;
         }
@@ -228,12 +227,12 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
         : { longview_subscription: selectedSub };
 
     updateActiveLongviewPlan(payload)
-      .then(_ => {
+      .then((_) => {
         setUpdateLoading(false);
         setUpdateSuccessMsg('Plan updated successfully.');
         setCurrentSubscription(selectedSub);
       })
-      .catch(err => {
+      .catch((err) => {
         const normalizedError = getAPIErrorOrDefault(
           err,
           'There was an error updating your Longview Plan.'
@@ -262,7 +261,7 @@ export const LongviewPlans: React.FC<CombinedProps> = props => {
       <Paper
         className={classnames({
           [styles.root]: true,
-          [styles.collapsedTable]: isManaged
+          [styles.collapsedTable]: isManaged,
         })}
       >
         {updateErrorMsg && <Notice error text={updateErrorMsg} />}
@@ -330,7 +329,7 @@ interface ReduxStateProps {
   mayUserModifyLVSubscription: boolean;
 }
 
-const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
+const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = (state) => ({
   mayUserViewAccountSettings:
     !isRestrictedUser(state) ||
     hasGrant(state, 'account_access') === 'read_only' ||
@@ -338,7 +337,7 @@ const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
   mayUserModifyLVSubscription:
     !isRestrictedUser(state) ||
     (hasGrant(state, 'longview_subscription') &&
-      hasGrant(state, 'account_access') === 'read_write')
+      hasGrant(state, 'account_access') === 'read_write'),
 });
 
 const connected = connect(mapStateToProps);
@@ -366,7 +365,7 @@ interface LongviewPlansTableBodyProps {
 }
 
 export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
-  props => {
+  (props) => {
     const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
     if (loading) {
@@ -394,7 +393,7 @@ export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = Rea
         />
         {/* We use data from /longview/subscriptions to generate the remaining
       rows. */}
-        {subscriptions.map(sub => (
+        {subscriptions.map((sub) => (
           <LongviewSubscriptionRow
             key={sub.id}
             id={sub.id}
@@ -430,7 +429,7 @@ interface LongviewSubscriptionRowProps {
 }
 
 export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
-  props => {
+  (props) => {
     const {
       id,
       plan,
@@ -442,7 +441,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
       onRadioSelect,
       currentSubscriptionOnAccount,
       isSelected,
-      disabled
+      disabled,
     } = props;
 
     const styles = useStyles();
@@ -460,7 +459,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
         onClick={handleClick}
         rowLink={disabled ? undefined : handleClick}
         className={classnames({
-          [styles.disabledTableRow]: disabled
+          [styles.disabledTableRow]: disabled,
         })}
         data-testid={`lv-sub-table-row-${id}`}
         ariaLabel={plan}

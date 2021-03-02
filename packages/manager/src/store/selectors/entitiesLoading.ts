@@ -8,7 +8,7 @@ import { ApplicationState } from 'src/store';
 import {
   EntityError,
   MappedEntityState2 as MappedEntityState,
-  RequestableDataWithEntityError
+  RequestableDataWithEntityError,
 } from 'src/store/types';
 
 import { State as ImageState } from 'src/store/image/image.reducer';
@@ -27,7 +27,7 @@ const emptyResource = {
   results: [],
   entities: [],
   loading: false,
-  lastUpdated: 0
+  lastUpdated: 0,
 };
 
 export const linodesSelector = (state: State) => state.linodes;

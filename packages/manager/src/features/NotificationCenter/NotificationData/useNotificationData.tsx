@@ -21,7 +21,7 @@ export const useNotificationData = (): NotificationData => {
 
   return {
     formattedNotifications,
-    eventNotifications
+    eventNotifications,
   };
 };
 

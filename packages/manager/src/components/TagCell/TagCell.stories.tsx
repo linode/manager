@@ -15,16 +15,16 @@ const tags = [
   'tag3',
   'tagtagtagtagtagtag',
   'tag4',
-  'tagggg'
+  'tagggg',
 ];
 
-const TagTableCellStory: React.FC<{ tags: string[] }> = props => {
+const TagTableCellStory: React.FC<{ tags: string[] }> = (props) => {
   const [_tags, setTags] = React.useState<string[]>(props.tags);
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   const deleteTag = (thisTag: string) => {
     setTags((currentTags: string[]) => {
-      return currentTags.filter(currentTag => currentTag !== thisTag);
+      return currentTags.filter((currentTag) => currentTag !== thisTag);
     });
     return Promise.resolve();
   };

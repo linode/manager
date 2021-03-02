@@ -5,7 +5,7 @@ import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
-  StateProps
+  StateProps,
 } from '../StackScriptBase/StackScriptBase';
 import SelectStackScriptsSection from './SelectStackScriptsSection';
 
@@ -42,7 +42,7 @@ class SelectStackScriptPanelContent extends React.Component<
   State
 > {
   state: State = {
-    selected: undefined
+    selected: undefined,
   };
 
   handleSelectStackScript = (stackscript: StackScript) => {

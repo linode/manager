@@ -74,9 +74,7 @@ export class Auth extends Page {
     this.dialogTitle.waitForDisplayed(constants.wait.normal);
     expect(this.dialogContent.getText())
       .withContext(
-        `${assertLog.incorrectText} for "${
-          this.dialogContent.selector
-        }" selector`
+        `${assertLog.incorrectText} for "${this.dialogContent.selector}" selector`
       )
       .toContain('disable two-factor');
     expect(this.cancelToken.isDisplayed())

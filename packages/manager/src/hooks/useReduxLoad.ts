@@ -78,7 +78,7 @@ const requestMap: RequestMap = {
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
   vlans: () => getAllVlans({}),
-  databaseTypes: () => getAllMySQLTypes({})
+  databaseTypes: () => getAllMySQLTypes({}),
 };
 
 export const useReduxLoad = (
@@ -100,7 +100,7 @@ export const useReduxLoad = (
     if (!_isRestrictedUser) {
       return deps;
     }
-    return deps.filter(thisDep => thisDep !== 'kubernetes');
+    return deps.filter((thisDep) => thisDep !== 'kubernetes');
   }, [deps, _isRestrictedUser]);
 
   const mountedRef = useRef<boolean>(true);
@@ -137,7 +137,7 @@ export const requestDeps = (
   dispatch: Dispatch<any>,
   deps: ReduxEntity[],
   refreshInterval: number = 60000,
-  loadingCb: (l: boolean) => void = _ => null
+  loadingCb: (l: boolean) => void = (_) => null
 ) => {
   let i = 0;
   let needsToLoad = false;
@@ -172,9 +172,9 @@ export const requestDeps = (
     loadingCb(true);
   }
 
-  return Promise.all(requests.map(thisRequest => dispatch(thisRequest())))
-    .then(_ => loadingCb(false))
-    .catch(_ => loadingCb(false));
+  return Promise.all(requests.map((thisRequest) => dispatch(thisRequest())))
+    .then((_) => loadingCb(false))
+    .catch((_) => loadingCb(false));
 };
 
 export default useReduxLoad;

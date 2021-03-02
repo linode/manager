@@ -6,7 +6,7 @@ export const removeBlocklistedEvents = (
   blocklist: string[] = []
 ) => {
   const _blocklist = [...blockListedEvents, ...blocklist];
-  return events.filter(eachEvent => !_blocklist.includes(eachEvent.action));
+  return events.filter((eachEvent) => !_blocklist.includes(eachEvent.action));
 };
 
 // We don't want to display these events because they precede similar events.
@@ -17,5 +17,5 @@ export const removeBlocklistedEvents = (
 const blockListedEvents: EventAction[] = [
   'linode_mutate_create', // This event occurs when an upgrade is first initiated.
   'linode_resize_create', // This event occurs when a resize is first initiated.
-  'linode_migrate_datacenter_create' // This event occurs when a cross DC migration is first initiated.
+  'linode_migrate_datacenter_create', // This event occurs when a cross DC migration is first initiated.
 ];

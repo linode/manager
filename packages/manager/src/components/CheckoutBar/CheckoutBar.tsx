@@ -18,7 +18,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const CheckoutBar: React.FC<CombinedProps> = props => {
+const CheckoutBar: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
@@ -29,7 +29,7 @@ const CheckoutBar: React.FC<CombinedProps> = props => {
     isMakingRequest,
     priceHelperText,
     submitText,
-    footer
+    footer,
   } = props;
 
   const price = calculatedPrice ?? 0;

@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 
 type CSSClasses = 'root' | 'caret';
@@ -26,9 +26,9 @@ const styles = (theme: Theme) =>
       '&:hover': {
         color: theme.palette.primary.main,
         '& $caret': {
-          color: theme.palette.primary.light
-        }
-      }
+          color: theme.palette.primary.light,
+        },
+      },
     },
     caret: {
       color: theme.palette.primary.main,
@@ -37,9 +37,9 @@ const styles = (theme: Theme) =>
       transition: 'transform .1s ease-in-out',
       '&.rotate': {
         transition: 'transform .3s ease-in-out',
-        transform: 'rotate(90deg)'
-      }
-    }
+        transform: 'rotate(90deg)',
+      },
+    },
   });
 
 interface Props {
@@ -58,7 +58,7 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
 
   handleNameClick = () => {
     this.setState({
-      open: !this.state.open
+      open: !this.state.open,
     });
   };
 

@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.green,
     fontSize: '1.25rem',
     lineHeight: '1.5rem',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   button: {
     visibility: 'hidden',
@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'inherit',
     color: '#979797',
     [theme.breakpoints.down('sm')]: {
-      visibility: 'visible'
-    }
+      visibility: 'visible',
+    },
   },
   close: {
-    '& svg': { height: 11, width: 11 }
+    '& svg': { height: 11, width: 11 },
   },
   row: {
     display: 'flex',
@@ -35,29 +35,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `5px 0px`,
     borderBottom: `solid 1px ${theme.color.border2}`,
     '&:first-of-type': {
-      borderTop: `solid 1px ${theme.color.border2}`
+      borderTop: `solid 1px ${theme.color.border2}`,
     },
     '&:hover > button': {
-      visibility: 'visible'
-    }
+      visibility: 'visible',
+    },
   },
   rowBox: {
     maxHeight: '75vh',
     overflowY: 'auto',
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   submitButton: {
     marginTop: theme.spacing(3),
     width: '100%',
     marginRight: 0,
-    marginLeft: 0
+    marginLeft: 0,
   },
   entitySummaryText: {
     marginTop: theme.spacing(3),
     color: theme.color.green,
     fontSize: '1rem',
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 }));
 
 interface Props {
@@ -74,7 +74,7 @@ export const generatePayload = (
     (acc, entityType) => {
       return {
         ...acc,
-        [entityType]: Object.keys(selectedEntities[entityType]).map(Number)
+        [entityType]: Object.keys(selectedEntities[entityType]).map(Number),
       };
     },
     { linodes: [] }
@@ -85,7 +85,7 @@ export const generatePayload = (
 export const TransferRow: React.FC<{
   label: string;
   onClick: () => void;
-}> = React.memo(props => {
+}> = React.memo((props) => {
   const { label, onClick } = props;
   const classes = useStyles();
   return (
@@ -100,7 +100,7 @@ export const TransferRow: React.FC<{
   );
 });
 
-export const TransferCheckoutBar: React.FC<Props> = props => {
+export const TransferCheckoutBar: React.FC<Props> = (props) => {
   const { handleSubmit, isCreating, selectedEntities, removeEntities } = props;
   const classes = useStyles();
   const onSubmit = () => {

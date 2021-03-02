@@ -13,11 +13,11 @@ import TextField from '../TextField';
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0
+      opacity: 0,
     },
     to: {
-      opacity: 1
-    }
+      opacity: 1,
+    },
   },
   root: {
     display: 'inline-block',
@@ -28,33 +28,33 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '5px 8px',
     textDecoration: 'inherit',
     transition: theme.transitions.create(['opacity']),
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
   },
   container: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
     maxHeight: 48,
-    position: 'relative'
+    position: 'relative',
   },
   initial: {
     border: '1px solid transparent',
     '&:hover, &:focus': {
       '& $editIcon': {
-        opacity: 1
+        opacity: 1,
       },
       '& $icon': {
         color: theme.color.grey1,
         '&:hover': {
-          color: theme.color.black
-        }
-      }
-    }
+          color: theme.color.black,
+        },
+      },
+    },
   },
   textField: {
     opacity: 0,
     animation: '$fadeIn .3s ease-in-out forwards',
-    margin: 0
+    margin: 0,
   },
   inputRoot: {
     backgroundColor: 'transparent',
@@ -63,14 +63,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 170,
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
-      width: '100%'
-    }
+      width: '100%',
+    },
   },
   input: {
     fontFamily: theme.font.bold,
     fontSize: '1.125rem',
     padding: 0,
-    paddingLeft: 2
+    paddingLeft: 2,
   },
   button: {
     background: 'transparent !important',
@@ -78,35 +78,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 6,
     marginRight: 6,
     minWidth: 'auto',
-    padding: 0
+    padding: 0,
   },
   icon: {
     color: theme.palette.text.primary,
     fontSize: '1.25rem',
     minHeight: 34,
     '&:hover, &:focus': {
-      color: theme.palette.primary.light
-    }
+      color: theme.palette.primary.light,
+    },
   },
   editIcon: {
     [theme.breakpoints.up('sm')]: {
       opacity: 0,
       '&:focus': {
-        opacity: 1
-      }
-    }
+        opacity: 1,
+      },
+    },
   },
   saveIcon: {
-    marginLeft: theme.spacing()
+    marginLeft: theme.spacing(),
   },
   headline: {
-    ...theme.typography.h1
+    ...theme.typography.h1,
   },
   underlineOnHover: {
     '&:hover, &:focus': {
-      textDecoration: 'underline !important'
-    }
-  }
+      textDecoration: 'underline !important',
+    },
+  },
 }));
 
 interface Props {
@@ -122,7 +122,7 @@ type PassThroughProps = Props & TextFieldProps;
 
 type FinalProps = PassThroughProps;
 
-const EditableText: React.FC<FinalProps> = props => {
+const EditableText: React.FC<FinalProps> = (props) => {
   const classes = useStyles();
 
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
@@ -167,7 +167,7 @@ const EditableText: React.FC<FinalProps> = props => {
         .then(() => {
           setIsEditing(false);
         })
-        .catch(e => e);
+        .catch((e) => e);
     } else {
       /** otherwise, we've just submitted the form with no value change */
       setIsEditing(false);
@@ -230,7 +230,7 @@ const EditableText: React.FC<FinalProps> = props => {
           errorText={props.errorText}
           InputProps={{ className: classes.inputRoot }}
           inputProps={{
-            className: classes.input
+            className: classes.input,
           }}
           // eslint-disable-next-line
           autoFocus={true}

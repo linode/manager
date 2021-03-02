@@ -12,7 +12,7 @@ export const ipResponse: LinodeIPsResponse = {
         rdns: null,
         region: 'us-central',
         subnet_mask: '255.255.128.0',
-        type: 'ipv4'
+        type: 'ipv4',
       },
       {
         address: '192.168.0.1',
@@ -23,8 +23,8 @@ export const ipResponse: LinodeIPsResponse = {
         rdns: null,
         region: 'us-central',
         subnet_mask: '255.255.128.0',
-        type: 'ipv4'
-      }
+        type: 'ipv4',
+      },
     ],
     public: [
       {
@@ -36,7 +36,7 @@ export const ipResponse: LinodeIPsResponse = {
         rdns: 'li1612-253.members.linode.com',
         region: 'ap-south',
         subnet_mask: '255.255.255.0',
-        type: 'ipv4'
+        type: 'ipv4',
       },
       {
         address: '198.51.100.5',
@@ -47,8 +47,8 @@ export const ipResponse: LinodeIPsResponse = {
         rdns: 'li1612-253.members.linode.com',
         region: 'ap-south',
         subnet_mask: '255.255.255.0',
-        type: 'ipv4'
-      }
+        type: 'ipv4',
+      },
     ],
     reserved: [],
     shared: [
@@ -61,7 +61,7 @@ export const ipResponse: LinodeIPsResponse = {
         rdns: null,
         region: 'us-central',
         subnet_mask: '255.255.128.0',
-        type: 'ipv4'
+        type: 'ipv4',
       },
       {
         address: '192.168.0.1',
@@ -72,7 +72,7 @@ export const ipResponse: LinodeIPsResponse = {
         rdns: null,
         region: 'ap-south',
         subnet_mask: '255.255.128.0',
-        type: 'ipv4'
+        type: 'ipv4',
       },
       {
         address: '192.168.0.2',
@@ -83,9 +83,9 @@ export const ipResponse: LinodeIPsResponse = {
         rdns: null,
         region: 'eu-central',
         subnet_mask: '255.255.128.0',
-        type: 'ipv4'
-      }
-    ]
+        type: 'ipv4',
+      },
+    ],
   },
   ipv6: {
     global: [],
@@ -98,7 +98,7 @@ export const ipResponse: LinodeIPsResponse = {
       rdns: null,
       region: 'ap-south',
       subnet_mask: 'ffff:ffff:ffff:ffff::',
-      type: 'ipv6'
+      type: 'ipv6',
     },
     slaac: {
       address: '2401:8931::f04c:92ff:fc7e:c6ba',
@@ -109,7 +109,7 @@ export const ipResponse: LinodeIPsResponse = {
       rdns: null,
       region: 'ap-south',
       subnet_mask: 'ffff:ffff:ffff:ffff::',
-      type: 'ipv6'
-    }
-  }
+      type: 'ipv6',
+    },
+  },
 };

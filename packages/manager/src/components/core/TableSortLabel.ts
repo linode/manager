@@ -1,5 +1,5 @@
 import TableSortLabel, {
-  TableSortLabelProps as _TableSortLabelProps
+  TableSortLabelProps as _TableSortLabelProps,
 } from '@material-ui/core/TableSortLabel';
 
 /* tslint:disable-next-line:no-empty-interface */

@@ -13,7 +13,7 @@ const CookieWarning: React.FC<{}> = () => {
   return (
     <div
       style={{
-        margin: '1em'
+        margin: '1em',
       }}
     >
       You do not have cookies enabled for this site. In order to interact with
@@ -28,7 +28,7 @@ const CookieWarning: React.FC<{}> = () => {
           position: 'absolute',
           bottom: 0,
           right: 0,
-          margin: '1em'
+          margin: '1em',
         }}
       >
         :)

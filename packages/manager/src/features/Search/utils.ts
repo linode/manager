@@ -7,7 +7,7 @@ export const emptyResults: SearchResultsByEntity = {
   images: [],
   nodebalancers: [],
   kubernetesClusters: [],
-  buckets: []
+  buckets: [],
 };
 
 export const separateResultsByEntity = (
@@ -20,10 +20,10 @@ export const separateResultsByEntity = (
     images: [],
     nodebalancers: [],
     kubernetesClusters: [],
-    buckets: []
+    buckets: [],
   };
 
-  searchResults.forEach(result => {
+  searchResults.forEach((result) => {
     // EntityTypes are singular; we'd like the resulting keys to be plural
     const pluralizedEntityType = result.entityType + 's';
     separatedResults[pluralizedEntityType].push(result);

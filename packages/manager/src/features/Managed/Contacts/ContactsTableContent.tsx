@@ -22,7 +22,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ContactsTableContent: React.FC<CombinedProps> = props => {
+export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
   const {
     contacts,
     loading,
@@ -30,7 +30,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
     updateOrAdd,
     openDrawer,
     openDialog,
-    error
+    error,
   } = props;
 
   if (loading && lastUpdated === 0) {

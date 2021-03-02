@@ -31,7 +31,7 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
   state: State = {
     submitting: false,
     label: '',
-    sshKey: ''
+    sshKey: '',
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -41,7 +41,7 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
         submitting: false,
         errors: undefined,
         label: '',
-        sshKey: ''
+        sshKey: '',
       });
     }
   }
@@ -51,7 +51,7 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
     const hasErrorFor = getAPIErrorFor(
       {
         label: 'Label',
-        ssh_key: 'Public key'
+        ssh_key: 'Public key',
       },
       errors
     );
@@ -124,17 +124,17 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
     this.setState({ submitting: true });
 
     createSSHKey({ label, ssh_key: sshKey })
-      .then(_ => {
+      .then((_) => {
         this.setState({ submitting: false });
         this.props.onSuccess();
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           errors: getAPIErrorOrDefault(
             error,
             'Unable to save SSH key. Please try again.'
           ),
-          submitting: false
+          submitting: false,
         });
       });
   };

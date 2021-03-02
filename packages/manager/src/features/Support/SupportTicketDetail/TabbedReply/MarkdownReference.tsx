@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
@@ -14,14 +14,14 @@ const styles = (theme: Theme) =>
     root: {},
     header: {
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     example: {
       backgroundColor: theme.bg.white,
       margin: `${theme.spacing(2)}px 0`,
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
       // border: `1px solid ${theme.color.border2}`
-    }
+    },
   });
 
 interface Props {
@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const MarkdownReference: React.FC<CombinedProps> = props => {
+const MarkdownReference: React.FC<CombinedProps> = (props) => {
   const { classes } = props;
   return (
     <div className={props.rootClass}>
@@ -56,7 +56,7 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
         <br />
         <Typography
           dangerouslySetInnerHTML={{
-            __html: '<a>I am a link</a>'
+            __html: '<a>I am a link</a>',
           }}
         />
       </div>
@@ -70,7 +70,7 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
         </Typography>
         <Typography
           dangerouslySetInnerHTML={{
-            __html: `<pre style="white-space: pre-wrap;">const someCode = "hello world"</pre>`
+            __html: `<pre style="white-space: pre-wrap;">const someCode = "hello world"</pre>`,
           }}
         />
       </div>

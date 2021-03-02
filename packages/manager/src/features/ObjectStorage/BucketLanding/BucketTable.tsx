@@ -23,14 +23,14 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const BucketTable: React.FC<CombinedProps> = props => {
+export const BucketTable: React.FC<CombinedProps> = (props) => {
   const {
     data,
     orderBy,
     order,
     handleOrderChange,
     handleClickRemove,
-    handleClickDetails
+    handleClickDetails,
   } = props;
 
   return (
@@ -41,7 +41,7 @@ export const BucketTable: React.FC<CombinedProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => (
         <React.Fragment>
           <Table aria-label="List of your Buckets">
@@ -132,13 +132,13 @@ interface RenderDataProps {
   onDetails: (bucket: ObjectStorageBucket) => void;
 }
 
-const RenderData: React.FC<RenderDataProps> = props => {
+const RenderData: React.FC<RenderDataProps> = (props) => {
   const { data, onRemove, onDetails } = props;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {data.map(bucket => (
+      {data.map((bucket) => (
         <BucketTableRow
           {...bucket}
           key={`${bucket.label}-${bucket.cluster}`}

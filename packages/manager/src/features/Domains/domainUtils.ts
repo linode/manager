@@ -14,12 +14,12 @@ export const isValidDomainRecord = (
 
 export const isUniqueHostname = (hostname: string, records: DomainRecord[]) => {
   return !records.some(
-    record => record.type === 'CNAME' && record.name === hostname
+    (record) => record.type === 'CNAME' && record.name === hostname
   );
 };
 
 export const isValidCNAME = (cname: string, records: DomainRecord[]) => {
-  return !records.some(thisRecord => thisRecord.name === cname);
+  return !records.some((thisRecord) => thisRecord.name === cname);
 };
 
 export const transferHelperText = `IP addresses that may perform a zone transfer for this Domain. This is

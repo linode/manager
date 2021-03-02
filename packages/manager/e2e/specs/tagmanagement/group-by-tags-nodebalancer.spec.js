@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 const {
   apiCreateNodeBalancers,
   removeNodeBalancers,
-  timestamp
+  timestamp,
 } = require('../../utils/common');
 import ListNodeBalancers from '../../pageobjects/list-nodebalancers.page';
 
@@ -11,14 +11,14 @@ describe('Group by Tags - NodeBalancers', () => {
   let nodebalancers = [];
 
   const generateTagGroups = () => {
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const nb = {
         label: `a${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       const nb1 = {
         label: `b${tag}${timestamp()}`,
-        tags: [tag]
+        tags: [tag],
       };
       nodebalancers.push(nb);
       nodebalancers.push(nb1);
@@ -45,7 +45,7 @@ describe('Group by Tags - NodeBalancers', () => {
     const postSort = ListNodeBalancers.sortNodeBalancersByLabel.getAttribute(
       sortAttribute
     );
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const tagGroup = ListNodeBalancers.getNodeBalancersInTagGroup(tag);
       postSort === 'asc'
         ? expect(tagGroup).toEqual(tagGroup.sort().reverse())
@@ -72,13 +72,13 @@ describe('Group by Tags - NodeBalancers', () => {
   });
 
   it('NodeBalancers are grouped properly by tag', () => {
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const displayedInGroup = ListNodeBalancers.getNodeBalancersInTagGroup(
         tag
       );
       const expectedInGroup = nodebalancers
-        .filter(nodebalancer => nodebalancer.tags[0] === tag)
-        .map(nodebalancer => nodebalancer.label);
+        .filter((nodebalancer) => nodebalancer.tags[0] === tag)
+        .map((nodebalancer) => nodebalancer.label);
       expect(displayedInGroup.sort()).toEqual(expectedInGroup.sort());
     });
   });
@@ -89,7 +89,7 @@ describe('Group by Tags - NodeBalancers', () => {
 
   it('NodeBalancers are sortable within tag groups', () => {
     //Check ascending descending
-    [1, 2].forEach(it => checkSortOrder());
+    [1, 2].forEach((it) => checkSortOrder());
   });
 
   it('NodeBalancers can be ungrouped', () => {

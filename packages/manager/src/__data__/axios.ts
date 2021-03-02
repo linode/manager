@@ -1,7 +1,7 @@
 export const mockAxiosError = {
   config: {},
   name: 'hello world',
-  message: 'error'
+  message: 'error',
 };
 
 export const mockAxiosErrorWithAPIErrorContent = {
@@ -14,7 +14,7 @@ export const mockAxiosErrorWithAPIErrorContent = {
     headers: null,
     config: {},
     data: {
-      errors: [{ field: 'Error', reason: 'A reason' }]
-    }
-  }
+      errors: [{ field: 'Error', reason: 'A reason' }],
+    },
+  },
 };

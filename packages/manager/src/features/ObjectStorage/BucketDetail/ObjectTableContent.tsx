@@ -19,7 +19,7 @@ interface Props {
   handleClickDetails: (object: ExtendedObject) => void;
 }
 
-const ObjectTableContent: React.FC<Props> = props => {
+const ObjectTableContent: React.FC<Props> = (props) => {
   const {
     data,
     loading,
@@ -27,7 +27,7 @@ const ObjectTableContent: React.FC<Props> = props => {
     prefix,
     handleClickDownload,
     handleClickDelete,
-    handleClickDetails
+    handleClickDetails,
   } = props;
 
   const { width } = useWindowDimensions();
@@ -54,7 +54,7 @@ const ObjectTableContent: React.FC<Props> = props => {
 
   // A folder is considered "empty" if `_shouldDisplayObject` is `false` for
   // every object in the folder.
-  const isFolderEmpty = data.every(object => !object._shouldDisplayObject);
+  const isFolderEmpty = data.every((object) => !object._shouldDisplayObject);
 
   if (isFolderEmpty) {
     return (
@@ -67,7 +67,7 @@ const ObjectTableContent: React.FC<Props> = props => {
 
   return (
     <>
-      {data.map(object => {
+      {data.map((object) => {
         if (!object._shouldDisplayObject) {
           return null;
         }

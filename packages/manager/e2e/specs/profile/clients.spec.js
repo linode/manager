@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   Profile,
   OauthCreateDrawer,
-  dialogMap
+  dialogMap,
 } from '../../pageobjects/profile';
 
 const profile = new Profile();
@@ -13,12 +13,12 @@ xdescribe('Profile - OAuth Clients Suite', () => {
   const client = {
     label: `${timestamp} Test Client`,
     callback: 'https://test.com:3000',
-    access: 'Public'
+    access: 'Public',
   };
   const editedClient = {
     label: `${timestamp} Test Client Edit`,
     callback: 'https://test-edit.com:3000',
-    access: 'Public'
+    access: 'Public',
   };
   const editedRow = `[data-qa-table-row="${editedClient.label}"]`;
   const dialogTitle = dialogMap.title;
@@ -53,9 +53,7 @@ xdescribe('Profile - OAuth Clients Suite', () => {
       $(dialogTitle).waitForDisplayed();
       profile.waitForNotice(/\w\d/);
 
-      const secret = $(dialogContent)
-        .$('[data-qa-notice]')
-        .getText();
+      const secret = $(dialogContent).$('[data-qa-notice]').getText();
       expect(secret).not.toBe(null);
 
       $(dialogClose).click();
@@ -125,7 +123,7 @@ xdescribe('Profile - OAuth Clients Suite', () => {
 
       $('[data-qa-action-menu-item]').waitForDisplayed(constants.wait.normal);
 
-      const actionMenuItems = $$('[data-qa-action-menu-item]').map(item =>
+      const actionMenuItems = $$('[data-qa-action-menu-item]').map((item) =>
         item.getAttribute('data-qa-action-menu-item')
       );
 
@@ -157,11 +155,9 @@ xdescribe('Profile - OAuth Clients Suite', () => {
 
       profile.waitForNotice(/\w\d/, constants.wait.normal);
 
-      browser.waitUntil(function() {
+      browser.waitUntil(function () {
         const successMsg = /here is your client secret/gi;
-        return !!$(dialogContent)
-          .getText()
-          .match(successMsg);
+        return !!$(dialogContent).getText().match(successMsg);
       }, constants.wait.short);
     });
   });

@@ -3,7 +3,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -20,19 +20,19 @@ type CSSClasses = 'root' | 'title' | 'titleLink' | 'body';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     title: {},
     titleLink: {
       color: theme.color.headline,
       textDecoration: 'underline',
       '&:hover': {
-        color: theme.color.black
-      }
+        color: theme.color.black,
+      },
     },
     body: {
-      marginTop: theme.spacing(1)
-    }
+      marginTop: theme.spacing(1),
+    },
   });
 
 type PropsWithStyles = Doc & WithStyles<CSSClasses>;

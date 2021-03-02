@@ -17,7 +17,7 @@ const props: CombinedProps = {
   orderBy: '',
   data: supportTickets,
   handlePageChange: mockPageChange,
-  request: mockRequest
+  request: mockRequest,
 };
 
 describe('TicketList', () => {
@@ -35,7 +35,7 @@ describe('TicketList', () => {
 
   it('contains a row for each Support Ticket', () => {
     renderWithTheme(<TicketList {...props} />);
-    supportTickets.forEach(thisTicket => {
+    supportTickets.forEach((thisTicket) => {
       screen.getByText(thisTicket.summary);
     });
   });

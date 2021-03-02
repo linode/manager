@@ -3,7 +3,7 @@ import { firewallRuleFactory } from 'src/factories/firewalls';
 import reducer, {
   editorStateToRules,
   initRuleEditorState,
-  prepareRules
+  prepareRules,
 } from './firewallRuleEditor';
 
 const INITIAL_RULE_LENGTH = 2;
@@ -19,7 +19,7 @@ describe('Rule Editor', () => {
         // original rule, plus a status of "NOT_MODIFIED".
         expect(revisionList[0]).toEqual({
           ...rules[i],
-          status: 'NOT_MODIFIED'
+          status: 'NOT_MODIFIED',
         });
       });
     });
@@ -28,7 +28,7 @@ describe('Rule Editor', () => {
       it('adds a new rule', () => {
         const newState = reducer(baseState, {
           type: 'NEW_RULE',
-          rule: firewallRuleFactory.build()
+          rule: firewallRuleFactory.build(),
         });
         expect(newState).toHaveLength(INITIAL_RULE_LENGTH + 1);
         const lastRevisionList = last(newState);
@@ -41,7 +41,7 @@ describe('Rule Editor', () => {
 
         const newState = reducer(baseState, {
           type: 'DELETE_RULE',
-          idx: idxToDelete
+          idx: idxToDelete,
         });
 
         const revisionList = newState[idxToDelete];
@@ -56,8 +56,8 @@ describe('Rule Editor', () => {
           type: 'MODIFY_RULE',
           idx: idxToModify,
           modifiedRule: {
-            ports: '999'
-          }
+            ports: '999',
+          },
         });
 
         const revisionList = newState[idxToModify];
@@ -72,13 +72,13 @@ describe('Rule Editor', () => {
         const idx = 1;
         let newState = reducer(baseState, {
           type: 'DELETE_RULE',
-          idx
+          idx,
         });
 
         // Next, undo the deletion.
         newState = reducer(newState, {
           type: 'UNDO',
-          idx
+          idx,
         });
 
         expect(newState[idx]).toHaveLength(1);
@@ -91,16 +91,16 @@ describe('Rule Editor', () => {
           type: 'MODIFY_RULE',
           idx: 0,
           modifiedRule: {
-            ports: '999'
-          }
+            ports: '999',
+          },
         });
         newState = reducer(newState, {
           type: 'NEW_RULE',
-          rule: firewallRuleFactory.build()
+          rule: firewallRuleFactory.build(),
         });
 
         const finalState = reducer(newState, {
-          type: 'DISCARD_CHANGES'
+          type: 'DISCARD_CHANGES',
         });
         expect(finalState).toHaveLength(baseState.length);
         expect(finalState[0]).toHaveLength(1);
@@ -113,19 +113,19 @@ describe('Rule Editor', () => {
           type: 'MODIFY_RULE',
           idx: 0,
           modifiedRule: {
-            ports: '999'
-          }
+            ports: '999',
+          },
         });
         newState = reducer(newState, {
           type: 'NEW_RULE',
-          rule: firewallRuleFactory.build()
+          rule: firewallRuleFactory.build(),
         });
 
         const finalState = reducer(newState, {
           type: 'RESET',
-          rules
+          rules,
         });
-        finalState.forEach(revisionList => {
+        finalState.forEach((revisionList) => {
           expect(revisionList).toHaveLength(1);
         });
       });
@@ -137,18 +137,18 @@ describe('Rule Editor', () => {
       // First. add a rule.
       let newState = reducer(baseState, {
         type: 'NEW_RULE',
-        rule: firewallRuleFactory.build()
+        rule: firewallRuleFactory.build(),
       });
 
       // Next, undo the addition.
       newState = reducer(newState, {
         type: 'UNDO',
-        idx: newState.length - 1
+        idx: newState.length - 1,
       });
 
       const rulesWithoutStatus = editorStateToRules(newState);
       expect(rulesWithoutStatus.length).toBe(baseState.length);
-      rulesWithoutStatus.forEach(thisRule => {
+      rulesWithoutStatus.forEach((thisRule) => {
         expect(thisRule).toBeDefined();
       });
     });
@@ -159,7 +159,7 @@ describe('Rule Editor', () => {
       const rules = [
         firewallRuleFactory.build({ protocol: 'ICMP', ports: '1234' }),
         firewallRuleFactory.build({ protocol: 'ICMP', ports: '' }),
-        firewallRuleFactory.build({ protocol: 'TCP', ports: '' })
+        firewallRuleFactory.build({ protocol: 'TCP', ports: '' }),
       ];
       const editorState = initRuleEditorState(rules);
       const result = prepareRules(editorState);

@@ -12,18 +12,18 @@ import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   summarySectionHeight: {
     flex: '0 1 auto',
-    width: '100%'
+    width: '100%',
   },
   container: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   billingGroup: {
-    marginBottom: theme.spacing(3)
+    marginBottom: theme.spacing(3),
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -37,9 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       backgroundColor: 'transparent',
       color: theme.palette.primary.main,
-      textDecoration: 'underline'
-    }
-  }
+      textDecoration: 'underline',
+    },
+  },
 }));
 
 interface Props {
@@ -52,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const PaymentInformation: React.FC<CombinedProps> = props => {
+const PaymentInformation: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { lastFour, expiry } = props;

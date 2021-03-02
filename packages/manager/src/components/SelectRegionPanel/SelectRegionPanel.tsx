@@ -5,13 +5,13 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
 import RegionSelect, {
-  ExtendedRegion
+  ExtendedRegion,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
 
 type ClassNames = 'root';
@@ -24,10 +24,10 @@ const styles = (theme: Theme) =>
       '& svg': {
         '& g': {
           // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
-          clipPath: 'none !important' as 'none'
-        }
-      }
-    }
+          clipPath: 'none !important' as 'none',
+        },
+      },
+    },
   });
 
 interface Props {
@@ -40,7 +40,7 @@ interface Props {
   helperText?: string;
 }
 
-const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
+const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
   const {
     classes,
     copy,
@@ -49,7 +49,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
     handleSelection,
     helperText,
     regions,
-    selectedID
+    selectedID,
   } = props;
 
   if (props.regions.length === 0) {

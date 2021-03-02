@@ -19,7 +19,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const HistoryDrawer: React.FC<Props> = props => {
+export const HistoryDrawer: React.FC<Props> = (props) => {
   const { error, issues, loading, monitorLabel, onClose, open } = props;
   return (
     <Drawer

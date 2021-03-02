@@ -1,5 +1,5 @@
 import TableFooter, {
-  TableFooterProps as _TableFooterProps
+  TableFooterProps as _TableFooterProps,
 } from '@material-ui/core/TableFooter';
 
 /* tslint:disable-next-line:no-empty-interface */

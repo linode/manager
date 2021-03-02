@@ -10,7 +10,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const TableRowError: React.FC<CombinedProps> = props => {
+const TableRowError: React.FC<CombinedProps> = (props) => {
   return (
     <TableRow data-testid="table-row-error">
       <TableCell colSpan={props.colSpan}>

@@ -2,16 +2,16 @@ import * as React from 'react';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import Accordion, { AccordionProps } from 'src/components/core/Accordion';
 import AccordionDetails, {
-  AccordionDetailsProps
+  AccordionDetailsProps,
 } from 'src/components/core/AccordionDetails';
 import AccordionSummary, {
-  AccordionSummaryProps
+  AccordionSummaryProps,
 } from 'src/components/core/AccordionSummary';
 import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -27,16 +27,16 @@ const styles = (theme: Theme) => {
       flexBasis: '100%',
       width: '100%',
       '&:before': {
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
       },
       '&.Mui-expanded': {
         margin: 0,
         '& .caret': {
-          transform: 'rotate(180deg)'
-        }
+          transform: 'rotate(180deg)',
+        },
       },
       '& .MuiAccordionDetails-root': {
-        padding: '0 18px 15px'
+        padding: '0 18px 15px',
       },
       '& .MuiAccordionSummary-root': {
         justifyContent: 'space-between',
@@ -44,29 +44,29 @@ const styles = (theme: Theme) => {
         padding: '0 9px 0 18px',
         borderTop: '1px solid #f4f5f6',
         '& h3': {
-          color: theme.palette.text.primary
+          color: theme.palette.text.primary,
         },
         '&:hover': {
           '& h3': {
-            color: theme.palette.text.primary
+            color: theme.palette.text.primary,
           },
           '& svg': {
             fill: '#2575d0',
-            stroke: '#2575d0'
-          }
-        }
+            stroke: '#2575d0',
+          },
+        },
       },
       '& .MuiAccordionSummary-content': {
         order: 1,
-        alignItems: 'center'
+        alignItems: 'center',
       },
       '& .MuiAccordionSummary-expandIcon': {
         order: 2,
         '& svg': {
           fill: '#2575d0',
-          stroke: '#2575d0'
-        }
-      }
+          stroke: '#2575d0',
+        },
+      },
     },
     itemCount: {
       position: 'absolute',
@@ -81,8 +81,8 @@ const styles = (theme: Theme) => {
       fontWeight: 'bold',
       lineHeight: 0,
       color: 'white',
-      backgroundColor: '#2575d0'
-    }
+      backgroundColor: '#2575d0',
+    },
   });
 };
 

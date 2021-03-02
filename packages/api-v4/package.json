@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.44.0",
+  "version": "0.45.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -62,7 +62,7 @@
     "jest": "~26.4.2",
     "lint-staged": "^9.4.2",
     "npm-dts-webpack-plugin": "^1.2.1",
-    "prettier": "^1.18.2",
+    "prettier": "~2.2.1",
     "ts-jest": "^24.1.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",

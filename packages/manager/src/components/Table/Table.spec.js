@@ -21,7 +21,7 @@ describe('Table Suite', () => {
   });
 
   it('should display the column titles', () => {
-    const headings = $$('[data-qa-column-heading]').map(h => h.getText());
+    const headings = $$('[data-qa-column-heading]').map((h) => h.getText());
     const expectedHeadings = ['Head-1-1', 'Head-1-2', 'Head-1-3'];
     expect(headings)
       .withContext(`Incorrect heading value(s)`)

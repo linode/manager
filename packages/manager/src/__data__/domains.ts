@@ -15,7 +15,7 @@ export const domain1: Domain = {
   soa_email: 'user@host.com',
   status: 'active',
   ttl_sec: 0,
-  updated: '2020-05-03 00:00:00'
+  updated: '2020-05-03 00:00:00',
 };
 
 export const domain2: Domain = {
@@ -33,7 +33,7 @@ export const domain2: Domain = {
   soa_email: 'user@host.com',
   status: 'active',
   ttl_sec: 0,
-  updated: '2020-05-02 00:00:00'
+  updated: '2020-05-02 00:00:00',
 };
 
 export const domain3: Domain = {
@@ -51,7 +51,7 @@ export const domain3: Domain = {
   soa_email: 'user@host.com',
   status: 'active',
   ttl_sec: 0,
-  updated: '2020-05-01 00:00:00'
+  updated: '2020-05-01 00:00:00',
 };
 
 export const domains = [domain1, domain2, domain3];
@@ -69,7 +69,7 @@ export const domainRecord1: DomainRecord = {
   type: 'CNAME',
   weight: 0,
   updated: '2020-05-03 00:00:00',
-  created: '2020-05-03 00:00:00'
+  created: '2020-05-03 00:00:00',
 };
 
 export const domainRecord2: DomainRecord = {
@@ -85,7 +85,7 @@ export const domainRecord2: DomainRecord = {
   type: 'CNAME',
   weight: 0,
   updated: '2020-05-03 00:00:00',
-  created: '2020-05-03 00:00:00'
+  created: '2020-05-03 00:00:00',
 };
 
 export const domainRecord3: DomainRecord = {
@@ -101,7 +101,7 @@ export const domainRecord3: DomainRecord = {
   type: 'AAAA',
   weight: 0,
   updated: '2020-05-03 00:00:00',
-  created: '2020-05-03 00:00:00'
+  created: '2020-05-03 00:00:00',
 };
 
 export const domainRecords = [domainRecord1, domainRecord2, domainRecord3];

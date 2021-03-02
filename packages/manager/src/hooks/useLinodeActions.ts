@@ -4,7 +4,7 @@ import {
   deleteLinode as _deleteLinode,
   getLinode as _getLinode,
   requestLinodes as _requestLinodes,
-  updateLinode as _updateLinode
+  updateLinode as _updateLinode,
 } from 'src/store/linodes/linode.requests';
 import { UpdateLinodeParams } from 'src/store/linodes/linodes.actions';
 import { Dispatch } from './types';
@@ -20,7 +20,7 @@ export const useLinodeActions = (): LinodesProps => {
   const dispatch: Dispatch = useDispatch();
 
   const requestLinodes = () =>
-    dispatch(_requestLinodes({})).then(response => response.data);
+    dispatch(_requestLinodes({})).then((response) => response.data);
 
   const getLinode = (linodeId: number) => dispatch(_getLinode({ linodeId }));
 
@@ -34,7 +34,7 @@ export const useLinodeActions = (): LinodesProps => {
     requestLinodes,
     getLinode,
     deleteLinode,
-    updateLinode
+    updateLinode,
   };
 };
 

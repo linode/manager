@@ -7,7 +7,7 @@ describe('Help Landing', () => {
   const component = shallow(
     <HelpLanding
       classes={{
-        root: ''
+        root: '',
       }}
     />
   );

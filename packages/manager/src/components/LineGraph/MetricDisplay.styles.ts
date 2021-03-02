@@ -3,7 +3,7 @@ import {
   Theme,
   withStyles,
   WithStyles,
-  WithTheme
+  WithTheme,
 } from 'src/components/core/styles';
 
 export type ClassNames =
@@ -29,88 +29,88 @@ const styles = (theme: Theme) =>
       '& *': {
         height: 'auto',
         border: 'none',
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
       },
       '& td:first-child': {
-        backgroundColor: 'transparent !important'
+        backgroundColor: 'transparent !important',
       },
       '& .data': {
-        minWidth: 100
+        minWidth: 100,
       },
       [theme.breakpoints.down('lg')]: {
         '& th, & td': {
-          padding: '4px !important'
-        }
+          padding: '4px !important',
+        },
       },
       [theme.breakpoints.down('sm')]: {
         maxWidth: '100%',
         '& td': {
           justifyContent: 'normal',
-          minHeight: 'auto'
-        }
+          minHeight: 'auto',
+        },
       },
       [theme.breakpoints.only('xs')]: {
         '& tr:not(:first-child) td': {
           '&:first-child': {
-            marginTop: theme.spacing(2)
-          }
-        }
+            marginTop: theme.spacing(2),
+          },
+        },
       },
       [theme.breakpoints.only('sm')]: {
         '& tr:not(:nth-last-child(n+3)) td:first-child': {
-          marginTop: theme.spacing(2)
+          marginTop: theme.spacing(2),
         },
         '& tbody': {
           display: 'flex',
           flexWrap: 'wrap',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
         },
         '& tr': {
-          flexBasis: '45%'
-        }
-      }
+          flexBasis: '45%',
+        },
+      },
     },
     tableHeadInner: {
-      paddingBottom: 4
+      paddingBottom: 4,
     },
     red: {
       '&:before': {
-        backgroundColor: theme.graphs.red
-      }
+        backgroundColor: theme.graphs.red,
+      },
     },
     purple: {
       '&:before': {
-        backgroundColor: theme.graphs.purple
-      }
+        backgroundColor: theme.graphs.purple,
+      },
     },
     yellow: {
       '&:before': {
-        backgroundColor: theme.graphs.yellow
-      }
+        backgroundColor: theme.graphs.yellow,
+      },
     },
     blue: {
       '&:before': {
-        backgroundColor: theme.graphs.blue
-      }
+        backgroundColor: theme.graphs.blue,
+      },
     },
     green: {
       '&:before': {
-        backgroundColor: theme.graphs.green
-      }
+        backgroundColor: theme.graphs.green,
+      },
     },
     lightGreen: {
       '&:before': {
-        backgroundColor: theme.graphs.network.outbound
-      }
+        backgroundColor: theme.graphs.network.outbound,
+      },
     },
     darkGreen: {
       '&:before': {
-        backgroundColor: theme.graphs.network.inbound
-      }
+        backgroundColor: theme.graphs.network.inbound,
+      },
     },
     legend: {
       [theme.breakpoints.up('md')]: {
-        width: '38%'
+        width: '38%',
       },
       '& > div': {
         display: 'flex',
@@ -120,21 +120,21 @@ const styles = (theme: Theme) =>
           display: 'inline-block',
           width: 20,
           height: 20,
-          marginRight: theme.spacing(1)
-        }
-      }
+          marginRight: theme.spacing(1),
+        },
+      },
     },
     text: {
-      color: theme.color.black
+      color: theme.color.black,
     },
     simpleLegendRoot: {
       maxWidth: 'initial',
-      display: 'flex'
+      display: 'flex',
     },
     simpleLegend: {
       width: 'auto',
-      marginTop: theme.spacing(2)
-    }
+      marginTop: theme.spacing(2),
+    },
   });
 
 export default withStyles(styles, { withTheme: true });

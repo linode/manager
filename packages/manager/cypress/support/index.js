@@ -26,9 +26,10 @@ import { deleteAllTestNodeBalancers } from './api/nodebalancers';
 import { deleteAllTestVolumes } from './api/volumes';
 import { deleteAllTestImages } from './api/images';
 import { deleteAllTestClients } from './api/longview';
+import { deleteAllTestStackscripts } from './api/stackscripts';
 import {
   deleteAllTestAccessKeys,
-  deleteAllTestBuckets
+  deleteAllTestBuckets,
 } from './api/objectStorage';
 import { deleteAllTestFirewalls } from './api/firewalls';
 it('Delete All Test Entities before anything happens', () => {
@@ -40,4 +41,5 @@ it('Delete All Test Entities before anything happens', () => {
   deleteAllTestAccessKeys();
   deleteAllTestBuckets();
   deleteAllTestFirewalls();
+  deleteAllTestStackscripts();
 });

@@ -33,7 +33,7 @@ const getDisplayStatus = (status: DatabaseStatus) => {
   }
 };
 
-export const DatabaseRow: React.FC<Props> = props => {
+export const DatabaseRow: React.FC<Props> = (props) => {
   const { id, label, status, tags, openTagDrawer, ...actionHandlers } = props;
   const _tags = tags ?? [];
 
@@ -45,9 +45,9 @@ export const DatabaseRow: React.FC<Props> = props => {
   const addTag = React.useCallback(
     (tag: string) => {
       const newTags = [..._tags, tag];
-      updateDatabase(id, { tags: newTags }).catch(e =>
+      updateDatabase(id, { tags: newTags }).catch((e) =>
         enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error'
+          variant: 'error',
         })
       );
     },
@@ -56,12 +56,12 @@ export const DatabaseRow: React.FC<Props> = props => {
 
   const deleteTag = React.useCallback(
     (tag: string) => {
-      const newTags = _tags.filter(thisTag => thisTag !== tag);
-      updateDatabase(id, { tags: newTags }).catch(e =>
+      const newTags = _tags.filter((thisTag) => thisTag !== tag);
+      updateDatabase(id, { tags: newTags }).catch((e) =>
         enqueueSnackbar(
           getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
           {
-            variant: 'error'
+            variant: 'error',
           }
         )
       );

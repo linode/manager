@@ -13,7 +13,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
@@ -29,7 +29,7 @@ import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import domainsContainer, {
-  Props as DomainProps
+  Props as DomainProps,
 } from 'src/containers/domains.container';
 import { Domains } from 'src/documentation';
 import { ApplicationState } from 'src/store';
@@ -37,7 +37,7 @@ import {
   openForCloning,
   openForCreating,
   openForEditing as _openForEditing,
-  Origin as DomainDrawerOrigin
+  Origin as DomainDrawerOrigin,
 } from 'src/store/domainDrawer';
 import { upsertMultipleDomains } from 'src/store/domains/domains.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -67,44 +67,44 @@ const styles = (theme: Theme) =>
       // Adds spacing when the docs button wraps to make it look a little less awkward
       [theme.breakpoints.down(380)]: {
         '& .docsButton': {
-          paddingBottom: theme.spacing(2)
-        }
-      }
+          paddingBottom: theme.spacing(2),
+        },
+      },
     },
     titleWrapper: {
-      flex: 1
+      flex: 1,
     },
     title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2,
     },
     breadcrumbs: {
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(1),
     },
     domain: {
-      width: '60%'
+      width: '60%',
     },
     dnsWarning: {
       '& h3:first-child': {
-        marginBottom: theme.spacing(1)
-      }
+        marginBottom: theme.spacing(1),
+      },
     },
     tagWrapper: {
       marginTop: theme.spacing(1) / 2,
       '& [class*="MuiChip"]': {
-        cursor: 'pointer'
-      }
+        cursor: 'pointer',
+      },
     },
     tagGroup: {
       flexDirection: 'row-reverse',
-      marginBottom: theme.spacing(2) - 8
+      marginBottom: theme.spacing(2) - 8,
     },
     importButton: {
       marginLeft: -theme.spacing(),
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
     },
     banner: {
-      marginBottom: theme.spacing()
-    }
+      marginBottom: theme.spacing(),
+    },
   });
 
 interface State {
@@ -148,28 +148,28 @@ const headers: HeaderCell[] = [
     label: 'Domain',
     dataColumn: 'domain',
     sortable: true,
-    widthPercent: 25
+    widthPercent: 25,
   },
   {
     label: 'Status',
     dataColumn: 'status',
     sortable: true,
-    widthPercent: 10
+    widthPercent: 10,
   },
   {
     label: 'Type',
     dataColumn: 'type',
     sortable: true,
     widthPercent: 10,
-    hideOnMobile: true
+    hideOnMobile: true,
   },
   {
     label: 'Last Modified',
     dataColumn: 'updated',
     sortable: true,
     widthPercent: 20,
-    hideOnMobile: true
-  }
+    hideOnMobile: true,
+  },
 ];
 
 export class DomainsLanding extends React.Component<CombinedProps, State> {
@@ -183,7 +183,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     removeDialogOpen: false,
     removeDialogLoading: false,
     selectedDomainLabel: '',
-    disableDialogOpen: false
+    disableDialogOpen: false,
   };
 
   static docs: Linode.Doc[] = [Domains];
@@ -194,7 +194,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       domainsLastUpdated,
       isLargeAccount,
       openForEditing,
-      getAllDomains
+      getAllDomains,
     } = this.props;
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
@@ -221,8 +221,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
   };
 
-  cancelRequest: Function;
-
   openImportZoneDrawer = () => this.setState({ importDrawerOpen: true });
 
   closeImportZoneDrawer = () =>
@@ -231,7 +229,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       importDrawerSubmitting: false,
       remote_nameserver: '',
       selectedDomainLabel: '',
-      importDrawerErrors: undefined
+      importDrawerErrors: undefined,
     });
 
   handleSuccess = (domain: Domain) => {
@@ -252,19 +250,19 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           this.closeRemoveDialog();
           this.setState({ removeDialogLoading: false });
         })
-        .catch(e => {
+        .catch((e) => {
           this.setState({
             removeDialogLoading: false,
             removeDialogError: getAPIErrorOrDefault(
               e,
               'Error deleting Domain.'
-            )[0].reason
+            )[0].reason,
           });
         });
     } else {
       this.setState({
         removeDialogLoading: false,
-        removeDialogError: 'Error deleting Domain.'
+        removeDialogError: 'Error deleting Domain.',
       });
     }
   };
@@ -278,16 +276,16 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return this.props
         .updateDomain({
           domainId,
-          status: 'active'
+          status: 'active',
         })
-        .catch(e => {
+        .catch((e) => {
           return this.props.enqueueSnackbar(
             getAPIErrorOrDefault(
               e,
               'There was an issue enabling your domain'
             )[0].reason,
             {
-              variant: 'error'
+              variant: 'error',
             }
           );
         });
@@ -295,7 +293,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return this.setState({
         disableDialogOpen: true,
         selectedDomainID: domainId,
-        selectedDomainLabel: domain
+        selectedDomainLabel: domain,
       });
     }
   };
@@ -305,13 +303,13 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       removeDialogOpen: true,
       removeDialogError: undefined,
       selectedDomainLabel: domain,
-      selectedDomainID: domainId
+      selectedDomainID: domainId,
     });
   };
 
   closeRemoveDialog = () => {
     this.setState({
-      removeDialogOpen: false
+      removeDialogOpen: false,
     });
   };
 
@@ -333,14 +331,14 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       howManyLinodesOnAccount,
       isLargeAccount,
       isRestrictedUser,
-      linodesLoading
+      linodesLoading,
     } = this.props;
 
     const handlers: DomainHandlers = {
       onClone: this.props.openForCloning,
       onEdit: this.props.openForEditing,
       onRemove: this.openRemoveDialog,
-      onDisableOrEnable: this.handleClickEnableOrDisableDomain
+      onDisableOrEnable: this.handleClickEnableOrDisableDomain,
     };
 
     const domainRow: EntityTableRow<Domain> = {
@@ -350,7 +348,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       handlers,
       loading: domainsLoading,
       error: domainsError.read,
-      lastUpdated: domainsLastUpdated
+      lastUpdated: domainsLastUpdated,
     };
 
     if (domainsLoading) {
@@ -433,7 +431,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
         >
           {({
             preference: domainsAreGrouped,
-            togglePreference: toggleGroupDomains
+            togglePreference: toggleGroupDomains,
           }: ToggleProps<boolean>) => {
             return (
               <div className={classes.root}>
@@ -515,7 +513,7 @@ const RenderError: React.FC<{}> = () => {
 const RenderEmpty: React.FC<{
   onCreateDomain: () => void;
   onImportZone: () => void;
-}> = props => {
+}> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
@@ -526,12 +524,12 @@ const RenderEmpty: React.FC<{
         buttonProps={[
           {
             onClick: props.onCreateDomain,
-            children: 'Add a Domain'
+            children: 'Add a Domain',
           },
           {
             onClick: props.onImportZone,
-            children: 'Import a Zone'
-          }
+            children: 'Import a Zone',
+          },
         ]}
       >
         <Typography variant="subtitle1">
@@ -573,11 +571,9 @@ interface StateProps {
   domainsByID: Record<string, Domain>;
 }
 
-const mapStateToProps: MapStateToProps<
-  StateProps,
-  {},
-  ApplicationState
-> = state => ({
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
+  state
+) => ({
   howManyLinodesOnAccount: state.__resources.linodes.results,
   linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources),
   isRestrictedUser: pathOr(
@@ -586,14 +582,14 @@ const mapStateToProps: MapStateToProps<
     state
   ),
   isLargeAccount: state.__resources.accountManagement.isLargeAccount,
-  domainsByID: state.__resources.domains.itemsById
+  domainsByID: state.__resources.domains.itemsById,
 });
 
 export const connected = connect(mapStateToProps, {
   openForCreating,
   openForCloning,
   openForEditing: _openForEditing,
-  upsertMultipleDomains
+  upsertMultipleDomains,
 });
 
 export default compose<CombinedProps, Props>(

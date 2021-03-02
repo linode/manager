@@ -4,7 +4,7 @@ import {
   timestamp,
   checkEnvironment,
   updateGlobalSettings,
-  apiDeleteAllLinodes
+  apiDeleteAllLinodes,
 } from '../../../utils/common';
 import Backups from '../../../pageobjects/linode-detail/linode-detail-backups.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
@@ -25,7 +25,7 @@ xdescribe('Linode - Details - Backup - Snapshot Suite', () => {
     // Arrow down on the select element to keep the select options in the View
     $(`${Backups.restoreToLinodeSelect.selector} input`).setValue('\uE015');
     $('[data-qa-option]').waitForDisplayed(constants.wait.normal);
-    return Backups.restoreToLinodesOptions.map(linode => linode.getText());
+    return Backups.restoreToLinodesOptions.map((linode) => linode.getText());
   };
 
   const closeLinodesSelect = () => {
@@ -37,14 +37,14 @@ xdescribe('Linode - Details - Backup - Snapshot Suite', () => {
     checkEnvironment();
     updateGlobalSettings(disableAutoEnrollment);
     const linode1 = {
-      linodeLabel: linodeLabel
+      linodeLabel: linodeLabel,
     };
     const linode2 = {
       linodeLabel: otherDataCenterLinode,
       privateIp: false,
       tags: [],
       type: undefined,
-      region: 'us-central'
+      region: 'us-central',
     };
     apiCreateMultipleLinodes([linode1, linode2]);
     ListLinodes.navigateToDetail(linodeLabel);
