@@ -204,7 +204,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                               triggerOpenRuleDrawerForEditing
                             }
                             triggerUndo={triggerUndo}
-                            triggerReorder={triggerReorder}
                             innerRef={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
@@ -230,7 +229,10 @@ export default React.memo(FirewallRuleTable);
 // <FirewallRuleTableRow />
 // =============================================================================
 type FirewallRuleTableRowProps = RuleRow &
-  RowActionHandlers & { innerRef: any; isDragging: boolean };
+  Omit<RowActionHandlers, 'triggerReorder'> & {
+    innerRef: any;
+    isDragging: boolean;
+  };
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
   (props) => {
