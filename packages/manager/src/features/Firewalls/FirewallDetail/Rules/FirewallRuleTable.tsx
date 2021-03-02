@@ -8,12 +8,16 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import OrderBy from 'src/components/OrderBy';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
 import {
   generateAddressesLabel,
   generateRuleLabel,
@@ -71,6 +75,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   addLabelButton: {
     ...theme.applyLinkStyles,
   },
+  dragging: {
+    display: 'table',
+  },
 }));
 
 interface RuleRow {
@@ -94,6 +101,7 @@ interface RowActionHandlers {
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
   triggerUndo: (idx: number) => void;
+  triggerReorder: (startIdx: number, endIdx: number) => void;
 }
 interface Props extends RowActionHandlers {
   category: Category;
@@ -112,6 +120,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
     triggerUndo,
+    triggerReorder,
   } = props;
 
   const classes = useStyles();
@@ -128,6 +137,12 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
   const zeroOutboundRulesMessage =
     'No outbound rules have been added. When no outbound rules are present, all outbound traffic is allowed.';
 
+  const onDragEnd = (result: DropResult) => {
+    if (result.destination) {
+      triggerReorder(result.source.index, result.destination?.index);
+    }
+  };
+
   return (
     <>
       <div className={classes.header}>
@@ -141,77 +156,69 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           Add an {capitalize(category)} Rule
         </Button>
       </div>
-      <OrderBy data={rowData} orderBy={'type'} order={'asc'}>
-        {({ data: sortedRows, handleOrderChange, order, orderBy }) => {
-          return (
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableSortCell
-                    active={orderBy === 'type'}
-                    label="label"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                  >
-                    Label
-                  </TableSortCell>
-                  <Hidden mdDown>
-                    <TableCell>Description</TableCell>
-                  </Hidden>
-                  <Hidden xsDown>
-                    <TableSortCell
-                      active={orderBy === 'protocol'}
-                      label="protocol"
-                      direction={order}
-                      handleClick={handleOrderChange}
-                    >
-                      Protocol
-                    </TableSortCell>
-                    <TableSortCell
-                      active={orderBy === 'ports'}
-                      label="ports"
-                      direction={order}
-                      handleClick={handleOrderChange}
-                    >
-                      Port Range
-                    </TableSortCell>
-                  </Hidden>
-                  <TableSortCell
-                    active={orderBy === 'addresses'}
-                    label="addresses"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                  >
-                    {capitalize(addressColumnLabel)}
-                  </TableSortCell>
-                  <TableCell className={classes.actionHeader} />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {sortedRows.length === 0 ? (
+      <Table style={{ tableLayout: 'auto' }}>
+        <TableHead>
+          <TableRow>
+            <TableCell>Label</TableCell>
+            <Hidden mdDown>
+              <TableCell>Description</TableCell>
+            </Hidden>
+            <Hidden xsDown>
+              <TableCell>Protocol</TableCell>
+              <TableCell>Port Range</TableCell>
+            </Hidden>
+            <TableCell>{capitalize(addressColumnLabel)}</TableCell>
+            <TableCell className={classes.actionHeader} />
+          </TableRow>
+        </TableHead>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <TableBody
+                {...provided.droppableProps}
+                innerRef={provided.innerRef}
+              >
+                {rowData.length === 0 ? (
                   <TableRowEmptyState
                     colSpan={6}
                     message={zeroOutboundRulesMessage}
                   />
                 ) : (
-                  sortedRows.map((thisRuleRow: RuleRow) => (
-                    <FirewallRuleTableRow
+                  rowData.map((thisRuleRow: RuleRow, index) => (
+                    <Draggable
                       key={thisRuleRow.id}
-                      {...thisRuleRow}
-                      triggerCloneFirewallRule={triggerCloneFirewallRule}
-                      triggerDeleteFirewallRule={triggerDeleteFirewallRule}
-                      triggerOpenRuleDrawerForEditing={
-                        triggerOpenRuleDrawerForEditing
-                      }
-                      triggerUndo={triggerUndo}
-                    />
+                      draggableId={String(thisRuleRow.id)}
+                      index={index}
+                    >
+                      {(provided, snapshot) => {
+                        return (
+                          <FirewallRuleTableRow
+                            isDragging={snapshot.isDragging}
+                            key={thisRuleRow.id}
+                            {...thisRuleRow}
+                            triggerCloneFirewallRule={triggerCloneFirewallRule}
+                            triggerDeleteFirewallRule={
+                              triggerDeleteFirewallRule
+                            }
+                            triggerOpenRuleDrawerForEditing={
+                              triggerOpenRuleDrawerForEditing
+                            }
+                            triggerUndo={triggerUndo}
+                            innerRef={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          />
+                        );
+                      }}
+                    </Draggable>
                   ))
                 )}
+                {provided.placeholder}
               </TableBody>
-            </Table>
-          );
-        }}
-      </OrderBy>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </Table>
     </>
   );
 };
@@ -221,7 +228,11 @@ export default React.memo(FirewallRuleTable);
 // =============================================================================
 // <FirewallRuleTableRow />
 // =============================================================================
-type FirewallRuleTableRowProps = RuleRow & RowActionHandlers;
+type FirewallRuleTableRowProps = RuleRow &
+  Omit<RowActionHandlers, 'triggerReorder'> & {
+    innerRef: any;
+    isDragging: boolean;
+  };
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
   (props) => {
@@ -240,6 +251,9 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
       errors,
+      innerRef,
+      isDragging,
+      ...rest
     } = props;
 
     const actionMenuProps = {
@@ -254,8 +268,11 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         key={id}
         highlight={status === 'MODIFIED' || status === 'NEW'}
         disabled={status === 'PENDING_DELETION'}
+        domRef={innerRef}
+        className={isDragging ? classes.dragging : ''}
+        {...rest}
       >
-        <TableCell>
+        <TableCell style={{ width: '15%' }}>
           {label || (
             <button
               className={classes.addLabelButton}
@@ -266,19 +283,19 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           )}
         </TableCell>
         <Hidden mdDown>
-          <TableCell>{description}</TableCell>
+          <TableCell style={{ width: '25%' }}>{description}</TableCell>
         </Hidden>
         <Hidden xsDown>
-          <TableCell>
+          <TableCell style={{ width: '10%' }}>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
-          <TableCell>
+          <TableCell style={{ width: '15%' }}>
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
         </Hidden>
-        <TableCell>
+        <TableCell style={{ width: '15%' }}>
           {addresses} <ConditionalError errors={errors} formField="addresses" />
         </TableCell>
         <TableCell className={classes.actionCell}>

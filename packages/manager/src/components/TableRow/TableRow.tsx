@@ -141,6 +141,7 @@ export interface Props {
   highlight?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
+  domRef?: any;
 }
 
 export type CombinedProps = Props &
@@ -193,6 +194,7 @@ export class TableRow extends React.Component<CombinedProps> {
       highlight,
       disabled,
       ariaLabel,
+      domRef,
       ...rest
     } = this.props;
 
@@ -224,6 +226,7 @@ export class TableRow extends React.Component<CombinedProps> {
           [classes.highlight]: highlight,
           [classes.disabled]: disabled,
         })}
+        innerRef={domRef}
         {...rest}
         tabIndex={rowLink || forceIndex ? 0 : -1}
       >
