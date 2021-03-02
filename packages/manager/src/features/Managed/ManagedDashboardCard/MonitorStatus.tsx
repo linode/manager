@@ -66,58 +66,55 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
   const iconSize = 50;
 
   return (
-    <>
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justify="center"
-        className={classes.root}
-        item
-      >
-        <Grid item>
-          <Grid item className={classes.icon}>
-            {failedMonitors.length === 0 ? (
-              <MonitorOK width={iconSize} height={iconSize} />
-            ) : (
-                <MonitorFailed width={iconSize} height={iconSize} />
-              )}
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Typography variant="h2">
-            {failedMonitors.length === 0
-              ? 'All monitored services are up'
-              : `${failedMonitors.length} monitored ${failedMonitors.length === 1 ? 'service is' : 'services are'
-              } down`}
-          </Typography>
-        </Grid>
-        {failedMonitors.length > 0 && (
-          <Grid item>
-            {failedMonitors.map((thisMonitor, idx) => (
-              <Typography
-                key={`failed-monitor-list-${idx}`}
-                className={classes.error}
-                variant="body1"
-              >
-                {thisMonitor}
-              </Typography>
-            ))}
-          </Grid>
-        )}
-        <Grid item>
-          <Typography className={classes.text}>
-            <Link to="/managed/monitors">
-              View your list of service monitors
-            </Link>
-            {` `}
-            {failedMonitors.length === 0
-              ? 'to see details or to update your monitors.'
-              : 'for details.'}
-          </Typography>
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justify="center"
+      className={classes.root}
+      item
+    >
+      <Grid item>
+        <Grid item className={classes.icon}>
+          {failedMonitors.length === 0 ? (
+            <MonitorOK width={iconSize} height={iconSize} />
+          ) : (
+            <MonitorFailed width={iconSize} height={iconSize} />
+          )}
         </Grid>
       </Grid>
-    </>
+      <Grid item>
+        <Typography variant="h2">
+          {failedMonitors.length === 0
+            ? 'All monitored services are up'
+            : `${failedMonitors.length} monitored ${
+                failedMonitors.length === 1 ? 'service is' : 'services are'
+              } down`}
+        </Typography>
+      </Grid>
+      {failedMonitors.length > 0 && (
+        <Grid item>
+          {failedMonitors.map((thisMonitor, idx) => (
+            <Typography
+              key={`failed-monitor-list-${idx}`}
+              className={classes.error}
+              variant="body1"
+            >
+              {thisMonitor}
+            </Typography>
+          ))}
+        </Grid>
+      )}
+      <Grid item>
+        <Typography className={classes.text}>
+          <Link to="/managed/monitors">View your list of service monitors</Link>
+          {` `}
+          {failedMonitors.length === 0
+            ? 'to see details or to update your monitors.'
+            : 'for details.'}
+        </Typography>
+      </Grid>
+    </Grid>
   );
 };
 

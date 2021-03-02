@@ -467,7 +467,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 is set to 0, this config is going to use 100% of the
                 Linode's RAM. Otherwise, it only uses the limit
                 explicitly set by the user.
-                
+
                 So to make this more clear to the user, we're going to
                 hide the option to change the RAM limit unless the
                 user explicity selects the option to change the
@@ -568,18 +568,18 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     isClearable={false}
                   />
                 ) : (
-                    <TextField
-                      label="Custom"
-                      name="root_device"
-                      value={values.root_device}
-                      onChange={formik.handleChange}
-                      inputProps={{ name: 'root_device', id: 'root_device' }}
-                      fullWidth
-                      errorText={formik.errors.root_device}
-                      errorGroup="linode-config-dialog"
-                      disabled={readOnly}
-                    />
-                  )}
+                  <TextField
+                    label="Custom"
+                    name="root_device"
+                    value={values.root_device}
+                    onChange={formik.handleChange}
+                    inputProps={{ name: 'root_device', id: 'root_device' }}
+                    fullWidth
+                    errorText={formik.errors.root_device}
+                    errorGroup="linode-config-dialog"
+                    disabled={readOnly}
+                  />
+                )}
               </FormControl>
             </Grid>
 
