@@ -235,6 +235,7 @@ export const handlers = [
   }),
   rest.get('*/firewalls/', (req, res, ctx) => {
     const firewalls = firewallFactory.buildList(10);
+    firewallFactory.resetSequenceNumber();
     return res(ctx.json(makeResourcePage(firewalls)));
   }),
   rest.get('*/firewalls/*/devices', (req, res, ctx) => {
