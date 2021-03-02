@@ -1,6 +1,7 @@
 import { Formik, FormikProps } from 'formik';
 import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import {
+  FirewallPolicyType,
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
@@ -17,6 +18,7 @@ import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
+  actionOptions,
   addressOptions,
   allIPs,
   allIPv4,
@@ -58,6 +60,7 @@ interface Props {
 }
 
 interface Form {
+  action: FirewallPolicyType;
   type: string;
   ports?: string;
   addresses: string;
@@ -134,7 +137,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
       ports,
       protocol,
       addresses,
-      action: 'ACCEPT',
+      action: values.action,
     };
 
     if (values.label) {
@@ -333,6 +336,21 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
       [formTouched, setFieldValue, setFormTouched, setIPs]
     );
 
+    const handleActionChange = React.useCallback(
+      (item: Item<string>) => {
+        if (!item) {
+          // Select is not clearable so this is only a safety check.
+          return;
+        }
+        if (!formTouched) {
+          setFormTouched(true);
+        }
+
+        setFieldValue('action', item.value);
+      },
+      [formTouched, setFieldValue, setFormTouched]
+    );
+
     const handleIPChange = React.useCallback(
       (_ips: ExtendedIP[]) => {
         if (!formTouched) {
@@ -406,6 +424,24 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           value={values.description}
           errorText={errors.description}
           onChange={handleTextFieldChange}
+          onBlur={handleBlur}
+        />
+        <Select
+          label="Action"
+          name="action"
+          isClearable={false}
+          placeholder="Select a protocol..."
+          aria-label="Select an action."
+          value={
+            values.action
+              ? actionOptions.find(
+                  (thisOption) => thisOption.value === values.action
+                )
+              : actionOptions[0]
+          }
+          errorText={errors.action}
+          options={actionOptions}
+          onChange={handleActionChange}
           onBlur={handleBlur}
         />
         <Select
@@ -602,6 +638,7 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
 };
 
 const initialValues: Form = {
+  action: 'ACCEPT',
   type: '',
   ports: '',
   addresses: '',
@@ -616,6 +653,7 @@ const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
   }
 
   return {
+    action: ruleToModify.action,
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),
