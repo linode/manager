@@ -280,7 +280,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <TableCell>{description}</TableCell>
         </Hidden>
         <Hidden xsDown>
-          <TableCell>{action}</TableCell>
+          <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
           <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
