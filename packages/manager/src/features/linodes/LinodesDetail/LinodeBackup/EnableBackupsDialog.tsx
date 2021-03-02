@@ -71,7 +71,7 @@ export const EnableBackupsDialog: React.FC<Props> = (props) => {
           Close
         </Button>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           loading={submitting}
           onClick={handleEnableBackups}
           data-qa-confirm-enable-backups

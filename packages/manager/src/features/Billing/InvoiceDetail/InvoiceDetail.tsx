@@ -190,7 +190,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
             <Grid container justify="flex-end">
               <Grid item className={classes.totals}>
                 <Typography variant="h2">
-                  Subotal:{' '}
+                  Subtotal:{' '}
                   <Currency
                     wrapInParentheses={invoice.subtotal < 0}
                     quantity={invoice.subtotal}

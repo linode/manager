@@ -97,8 +97,9 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
         <ToolTip open={tooltipOpen[0]} title="copied!">
           <div className={classes.copyButton}>
             <Button
-              buttonType="primary"
+              buttonType="secondary"
               onClick={() => handleCopy(0, transfer.token)}
+              outline
             >
               Copy Transfer Token
             </Button>
