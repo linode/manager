@@ -161,14 +161,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                   </Hidden>
                   <Hidden xsDown>
                     <TableSortCell
-                      active={orderBy === 'action'}
-                      label="action"
-                      direction={order}
-                      handleClick={handleOrderChange}
-                    >
-                      Action
-                    </TableSortCell>
-                    <TableSortCell
                       active={orderBy === 'protocol'}
                       label="protocol"
                       direction={order}
@@ -193,7 +185,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                   >
                     {capitalize(addressColumnLabel)}
                   </TableSortCell>
-
+                  <TableCell>Action</TableCell>
                   <TableCell className={classes.actionHeader} />
                 </TableRow>
               </TableHead>
@@ -280,7 +272,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <TableCell>{description}</TableCell>
         </Hidden>
         <Hidden xsDown>
-          <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
           <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
@@ -293,7 +284,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <TableCell>
           {addresses} <ConditionalError errors={errors} formField="addresses" />
         </TableCell>
-
+        <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
         <TableCell className={classes.actionCell}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
