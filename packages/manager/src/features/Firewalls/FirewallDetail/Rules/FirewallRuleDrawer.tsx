@@ -196,6 +196,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipSelect: {
     marginTop: theme.spacing(2),
   },
+  actionSection: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 interface FirewallRuleFormProps extends FormikProps<Form> {
@@ -489,16 +492,26 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             inputProps={{ autoFocus: true }}
           />
         )}
-        <RadioGroup
-          aria-label="action"
-          name="action"
-          value={values.action}
-          onChange={handleActionChange}
-          row
-        >
-          <FormControlLabel value="ACCEPT" label="Accept" control={<Radio />} />
-          <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
-        </RadioGroup>
+        <div className={classes.actionSection}>
+          <Typography>
+            <strong>Action</strong>
+          </Typography>
+          <RadioGroup
+            aria-label="action"
+            name="action"
+            value={values.action}
+            onChange={handleActionChange}
+            row
+          >
+            <FormControlLabel
+              value="ACCEPT"
+              label="Accept"
+              control={<Radio />}
+            />
+            <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
+          </RadioGroup>
+        </div>
+
         <ActionsPanel>
           <Button
             buttonType="primary"
