@@ -270,7 +270,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         key={id}
         highlight={
           // Highlight the row if it's been modified or reordered. ID is the
-          // current index, if if it doesn't match the original index we know
+          // current index, so if it doesn't match the original index we know
           // that the rule has been moved.
           status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
         }
