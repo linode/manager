@@ -16,6 +16,14 @@ interface EntityTransfersData {
   entityTransfers: Record<string, EntityTransfer>;
 }
 
+export const TRANSFER_FILTERS = {
+  received: {
+    '+and': [{ is_sender: false }, { status: { '+neq': 'pending' } }],
+  },
+  pending: { status: 'pending' },
+  sent: { '+and': [{ is_sender: true }, { status: { '+neq': 'pending' } }] },
+};
+
 const getAllEntityTransfersRequest = (
   passedParams: any = {},
   passedFilter: any = {}
