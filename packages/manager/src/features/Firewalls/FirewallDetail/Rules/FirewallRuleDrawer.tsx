@@ -496,6 +496,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           <Typography>
             <strong>Action</strong>
           </Typography>
+
           <RadioGroup
             aria-label="action"
             name="action"
@@ -509,6 +510,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
               control={<Radio />}
             />
             <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
+            <Typography style={{ paddingTop: 4 }}>
+              This will take precedence over the Firewall's {category} policy.
+            </Typography>
           </RadioGroup>
         </div>
 
