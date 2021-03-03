@@ -1,3 +1,4 @@
+import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
@@ -8,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow';
@@ -78,6 +80,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   dragging: {
     display: 'table',
   },
+  policySelect: {
+    paddingLeft: 4,
+    zIndex: 1000,
+  },
 }));
 
 interface RuleRow {
@@ -106,6 +112,11 @@ interface RowActionHandlers {
 }
 interface Props extends RowActionHandlers {
   category: Category;
+  policy: FirewallPolicyType;
+  handlePolicyChange: (
+    category: Category,
+    newPolicy: FirewallPolicyType
+  ) => void;
   openRuleDrawer: (category: Category, mode: Mode) => void;
   rulesWithStatus: ExtendedFirewallRule[];
 }
@@ -116,6 +127,8 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
   const {
     category,
     openRuleDrawer,
+    policy,
+    handlePolicyChange,
     rulesWithStatus,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
@@ -142,6 +155,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     if (result.destination) {
       triggerReorder(result.source.index, result.destination?.index);
     }
+  };
+
+  const onPolicyChange = (newPolicy: FirewallPolicyType) => {
+    handlePolicyChange(category, newPolicy);
   };
 
   return (
@@ -220,6 +237,11 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             )}
           </Droppable>
         </DragDropContext>
+        <PolicyRow
+          category={category}
+          policy={policy}
+          handlePolicyChange={onPolicyChange}
+        />
       </Table>
     </>
   );
@@ -328,6 +350,43 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     );
   }
 );
+
+interface PolicyRowProps {
+  category: Category;
+  policy: FirewallPolicyType;
+  handlePolicyChange: (newPolicy: FirewallPolicyType) => void;
+}
+
+const policyOptions: Item<FirewallPolicyType>[] = [
+  { label: 'Accept', value: 'ACCEPT' },
+  { label: 'Drop', value: 'DROP' },
+];
+
+export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
+  const { category, policy, handlePolicyChange } = props;
+  const classes = useStyles();
+  return (
+    <TableRow>
+      <TableCell colSpan={5}>Some helper text here</TableCell>
+      <TableCell colSpan={1} className={classes.policySelect}>
+        <Select
+          label={`${category} policy`}
+          menuPlacement="top"
+          hideLabel
+          isClearable={false}
+          value={policyOptions.find(
+            (thisOption) => thisOption.value === policy
+          )}
+          options={policyOptions}
+          onChange={(selected: Item<FirewallPolicyType>) =>
+            handlePolicyChange(selected.value)
+          }
+        />
+      </TableCell>
+      <TableCell /> {/* Leave empty space to match action cell */}
+    </TableRow>
+  );
+});
 
 interface ConditionalErrorProps {
   formField: string;

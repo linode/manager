@@ -71,6 +71,23 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   const { firewallID, rules } = props;
 
   /**
+   * inbound and outbound policy aren't part of any particular rule
+   * so they are managed separately rather than through the reducer.
+   */
+
+  const [policy, setPolicy] = React.useState({
+    inbound: rules.inbound_policy,
+    outbound: rules.outbound_policy,
+  });
+
+  const handlePolicyChange = (
+    category: Category,
+    newPolicy: FirewallPolicyType
+  ) => {
+    setPolicy((oldPolicy) => ({ ...oldPolicy, [category]: newPolicy }));
+  };
+
+  /**
    * Component state and handlers
    */
   const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>({
@@ -177,8 +194,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
     const finalRules = {
       inbound: preparedRules.inbound.map(stripExtendedFields),
       outbound: preparedRules.outbound.map(stripExtendedFields),
-      inbound_policy: 'DROP' as FirewallPolicyType, // @todo fix these defaults
-      outbound_policy: 'ACCEPT' as FirewallPolicyType, // @todo fix these defaults
+      inbound_policy: policy.inbound,
+      outbound_policy: policy.outbound,
     };
 
     updateFirewallRules(firewallID, finalRules)
@@ -299,6 +316,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
       <div className={classes.table}>
         <FirewallRuleTable
           category="inbound"
+          policy={policy.inbound}
+          handlePolicyChange={handlePolicyChange}
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('inbound', idx)
           }
@@ -317,6 +336,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
       <div className={classes.table}>
         <FirewallRuleTable
           category="outbound"
+          policy={policy.outbound}
+          handlePolicyChange={handlePolicyChange}
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('outbound', idx)
           }
