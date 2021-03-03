@@ -42,10 +42,7 @@ export interface ExtendedFirewallRule extends FirewallRuleType {
   originalIndex: number;
 }
 
-export interface RuleEditorState {
-  revisionLists: ExtendedFirewallRule[][];
-  hasModifiedOrder: boolean;
-}
+export type RuleEditorState = ExtendedFirewallRule[][];
 
 export type RuleEditorAction =
   | {
@@ -93,17 +90,17 @@ const ruleEditorReducer = (
 ) => {
   switch (action.type) {
     case 'NEW_RULE':
-      draft.revisionLists.push([
+      draft.push([
         {
           ...action.rule,
-          originalIndex: draft.revisionLists.length,
+          originalIndex: draft.length,
           status: 'NEW',
         },
       ]);
       return;
 
     case 'DELETE_RULE':
-      let lastRevision = last(draft.revisionLists[action.idx]);
+      let lastRevision = last(draft[action.idx]);
 
       if (!lastRevision) {
         return;
@@ -112,14 +109,14 @@ const ruleEditorReducer = (
       // Seems pointless to show errors on rules pending deletion.
       delete lastRevision.errors;
 
-      draft.revisionLists[action.idx].push({
+      draft[action.idx].push({
         ...lastRevision,
         status: 'PENDING_DELETION',
       });
       return;
 
     case 'MODIFY_RULE':
-      lastRevision = last(draft.revisionLists[action.idx]);
+      lastRevision = last(draft[action.idx]);
 
       if (!lastRevision) {
         return;
@@ -136,7 +133,7 @@ const ruleEditorReducer = (
         delete lastRevision.description;
       }
 
-      draft.revisionLists[action.idx].push({
+      draft[action.idx].push({
         ...lastRevision,
         ...action.modifiedRule,
         status: 'MODIFIED',
@@ -144,25 +141,25 @@ const ruleEditorReducer = (
       return;
 
     case 'CLONE_RULE':
-      const ruleToClone = last(draft.revisionLists[action.idx]);
+      const ruleToClone = last(draft[action.idx]);
       if (!ruleToClone) {
         return;
       }
       const { addresses, ports, protocol, action: _action } = ruleToClone;
-      draft.revisionLists.push([
+      draft.push([
         {
           action: _action,
           addresses,
           ports,
           protocol,
-          originalIndex: draft.revisionLists.length,
+          originalIndex: draft.length,
           status: 'NEW',
         },
       ]);
       return;
 
     case 'SET_ERROR':
-      lastRevision = last(draft.revisionLists[action.idx]);
+      lastRevision = last(draft[action.idx]);
 
       if (!lastRevision) {
         return;
@@ -176,55 +173,52 @@ const ruleEditorReducer = (
       return;
 
     case 'UNDO':
-      lastRevision = last(draft.revisionLists[action.idx]);
+      lastRevision = last(draft[action.idx]);
 
-      draft.revisionLists[action.idx].pop();
+      draft[action.idx].pop();
 
       // If there's nothing left on the stack, we need to actually remove this revisionList.
       // This will only happen if a user performing UNDO on a NEW rule.
-      if (draft.revisionLists[action.idx].length === 0) {
-        draft.revisionLists.splice(action.idx, 1);
+      if (draft[action.idx].length === 0) {
+        draft.splice(action.idx, 1);
       }
 
       return;
 
     case 'DISCARD_CHANGES':
-      const original: RuleEditorState['revisionLists'] = [];
-      draft.revisionLists.forEach((thisRevisionList) => {
+      const original: RuleEditorState = [];
+      draft.forEach((thisRevisionList) => {
         const head = thisRevisionList[0];
         if (head.status === 'NOT_MODIFIED') {
           original[head.originalIndex] = [head];
         }
       });
-      return { revisionLists: original, hasModifiedOrder: false };
+      return original;
 
     case 'RESET':
       return initRuleEditorState(action.rules);
 
     case 'REORDER':
-      const [removed] = draft.revisionLists.splice(action.startIdx, 1);
-      draft.revisionLists.splice(action.endIdx, 0, removed);
-      draft.hasModifiedOrder = true;
+      const [removed] = draft.splice(action.startIdx, 1);
+      draft.splice(action.endIdx, 0, removed);
       return;
   }
 };
 
 export const initRuleEditorState = (
   rules: FirewallRuleType[]
-): RuleEditorState => ({
-  revisionLists:
+): RuleEditorState => {
+  return (
     rules.map((thisRule, index) => [
       { ...thisRule, originalIndex: index, status: 'NOT_MODIFIED' },
-    ]) ?? [],
-  hasModifiedOrder: false,
-});
+    ]) ?? []
+  );
+};
 
 export const editorStateToRules = (
   state: RuleEditorState
 ): ExtendedFirewallRule[] =>
-  state.revisionLists.map(
-    (thisRevisionList) => thisRevisionList[thisRevisionList.length - 1]
-  );
+  state.map((revisionList) => revisionList[revisionList.length - 1]);
 
 // Remove fields we use internally.
 export const stripExtendedFields = (
@@ -255,11 +249,11 @@ export const prepareRules = compose(
 );
 
 export const hasModified = (editorState: RuleEditorState): boolean => {
-  if (editorState.hasModifiedOrder) {
-    return true;
-  }
   const rules = editorStateToRules(editorState);
-  return rules.some((thisRule) => thisRule.status !== 'NOT_MODIFIED');
+  return rules.some(
+    (thisRule, idx) =>
+      thisRule.status !== 'NOT_MODIFIED' || thisRule.originalIndex !== idx
+  );
 };
 
 export default produce(ruleEditorReducer);
