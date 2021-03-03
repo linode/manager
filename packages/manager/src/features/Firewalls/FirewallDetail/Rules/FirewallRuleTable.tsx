@@ -155,8 +155,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     openRuleDrawer(category, 'create');
   }, [openRuleDrawer, category]);
 
-  const zeroOutboundRulesMessage =
-    'No outbound rules have been added. When no outbound rules are present, all outbound traffic is allowed.';
+  const zeroOutboundRulesMessage = 'No outbound rules have been added.';
 
   const onDragEnd = (result: DropResult) => {
     if (result.destination) {
