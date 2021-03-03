@@ -107,6 +107,7 @@ describe('utilities', () => {
       protocol: 'TCP',
       status: 'NEW',
       action: 'ACCEPT',
+      originalIndex: 0,
       addresses: {
         ipv4: ['1.2.3.4'],
         ipv6: ['::0'],
