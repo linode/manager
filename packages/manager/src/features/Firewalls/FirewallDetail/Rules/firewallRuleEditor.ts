@@ -73,6 +73,11 @@ export type RuleEditorAction =
   | {
       type: 'RESET';
       rules: FirewallRuleType[];
+    }
+  | {
+      type: 'REORDER';
+      startIdx: number;
+      endIdx: number;
     };
 
 const ruleEditorReducer = (
@@ -175,6 +180,12 @@ const ruleEditorReducer = (
 
     case 'RESET':
       return initRuleEditorState(action.rules);
+
+    case 'REORDER':
+      const [removed] = draft.splice(action.startIdx, 1);
+      draft.splice(action.endIdx, 0, removed);
+
+      return;
   }
 };
 
