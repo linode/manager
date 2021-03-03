@@ -84,6 +84,7 @@ interface RuleRow {
   type: string;
   label?: string;
   description?: string;
+  action?: string;
   protocol: string;
   ports: string;
   addresses: string;
@@ -168,6 +169,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
               <TableCell>Port Range</TableCell>
             </Hidden>
             <TableCell>{capitalize(addressColumnLabel)}</TableCell>
+            <TableCell>Action</TableCell>
             <TableCell className={classes.actionHeader} />
           </TableRow>
         </TableHead>
@@ -240,6 +242,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
     const {
       id,
+      action,
       label,
       description,
       protocol,
@@ -298,6 +301,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <TableCell style={{ width: '15%' }}>
           {addresses} <ConditionalError errors={errors} formField="addresses" />
         </TableCell>
+        <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
         <TableCell className={classes.actionCell}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
