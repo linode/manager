@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
+import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
@@ -60,6 +61,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     margin: '8px 0px',
   },
+  dragIcon: {
+    color: theme.cmrIconColors.iGrey,
+    marginRight: theme.spacing(1.5),
+    position: 'relative',
+    top: 2,
+  },
+  labelCol: {
+    paddingLeft: 6,
+  },
   actionCell: {
     display: 'flex',
     alignItems: 'center',
@@ -72,11 +82,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     minWidth: 140,
   },
+  table: {
+    backgroundColor: theme.color.border3,
+  },
   addLabelButton: {
     ...theme.applyLinkStyles,
   },
   dragging: {
     display: 'table',
+    border: `solid 0.5px ${theme.cmrIconColors.iGrey}`,
+    boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
+    '& svg': {
+      color: theme.cmrTextColors.tableHeader,
+    },
   },
 }));
 
@@ -159,7 +177,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
       <Table style={{ tableLayout: 'auto' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Label</TableCell>
+            <TableCell style={{ paddingLeft: 27 }}>Label</TableCell>
             <Hidden mdDown>
               <TableCell>Description</TableCell>
             </Hidden>
@@ -176,6 +194,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             {(provided) => (
               <TableBody
                 {...provided.droppableProps}
+                className={classes.table}
                 innerRef={provided.innerRef}
               >
                 {rowData.length === 0 ? (
@@ -272,7 +291,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         className={isDragging ? classes.dragging : ''}
         {...rest}
       >
-        <TableCell style={{ width: '15%' }}>
+        <TableCell className={classes.labelCol} style={{ width: '15%' }}>
+          <DragIndicator className={classes.dragIcon} />
           {label || (
             <button
               className={classes.addLabelButton}
