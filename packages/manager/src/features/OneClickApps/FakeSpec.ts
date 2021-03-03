@@ -1009,6 +1009,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/minecraft_color.svg',
   },
   {
+    name: 'Valheim',
+    description: `In the relatively peaceful place called Valheim, traveling farther comes with a price: more enemies and greater challenges to stay alive. Experience a punishing combat system, intense boss battles, and a complex building system to construct Viking warships and more.`,
+    summary:
+      'Explore, build, and conquer in the popular open-world Viking survival game.',
+    related_guides: [
+      {
+        title: 'Deploy Valheim with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-Valheim-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.valheimgame.com/',
+        href: 'https://www.valheimgame.com/',
+      },
+    ],
+    logo_url: 'assets/valheim_color.svg',
+  },
+  {
     name: 'Virtualmin',
     description: `Streamline domain management, included as part of Webmin. Choose between the standard free version or upgrade to their premium service to access more features.`,
     summary: 'Domain hosting and website control panel',
