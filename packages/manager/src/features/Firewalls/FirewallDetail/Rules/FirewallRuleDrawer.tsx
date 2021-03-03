@@ -1,14 +1,16 @@
-import { Formik, FormikProps } from 'formik';
-import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import {
   FirewallPolicyType,
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import { Formik, FormikProps } from 'formik';
+import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import { uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -16,9 +18,9 @@ import Select from 'src/components/EnhancedSelect';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import {
-  actionOptions,
   addressOptions,
   allIPs,
   allIPv4,
@@ -337,16 +339,12 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     );
 
     const handleActionChange = React.useCallback(
-      (item: Item<string>) => {
-        if (!item) {
-          // Select is not clearable so this is only a safety check.
-          return;
-        }
+      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
         if (!formTouched) {
           setFormTouched(true);
         }
 
-        setFieldValue('action', item.value);
+        setFieldValue('action', value);
       },
       [formTouched, setFieldValue, setFormTouched]
     );
@@ -427,24 +425,6 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           onBlur={handleBlur}
         />
         <Select
-          label="Action"
-          name="action"
-          isClearable={false}
-          placeholder="Select an action..."
-          aria-label="Select an action."
-          value={
-            values.action
-              ? actionOptions.find(
-                  (thisOption) => thisOption.value === values.action
-                )
-              : actionOptions[0]
-          }
-          errorText={errors.action}
-          options={actionOptions}
-          onChange={handleActionChange}
-          onBlur={handleBlur}
-        />
-        <Select
           label="Protocol"
           name="protocol"
           placeholder="Select a protocol..."
@@ -509,6 +489,16 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             inputProps={{ autoFocus: true }}
           />
         )}
+        <RadioGroup
+          aria-label="action"
+          name="action"
+          value={values.action}
+          onChange={handleActionChange}
+          row
+        >
+          <FormControlLabel value="ACCEPT" label="Accept" control={<Radio />} />
+          <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
+        </RadioGroup>
         <ActionsPanel>
           <Button
             buttonType="primary"

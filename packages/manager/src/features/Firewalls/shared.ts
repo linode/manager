@@ -1,5 +1,4 @@
 import {
-  FirewallPolicyType,
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls/types';
@@ -53,17 +52,6 @@ export const firewallOptionItemsShort = [
   {
     label: 'DNS',
     value: 'dns',
-  },
-];
-
-export const actionOptions: Item<FirewallPolicyType>[] = [
-  {
-    label: 'Accept',
-    value: 'ACCEPT',
-  },
-  {
-    label: 'Drop',
-    value: 'DROP',
   },
 ];
 
