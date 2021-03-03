@@ -17,6 +17,9 @@
 //
 // To "undo" an action, we pop() the revisionList.
 //
+// The original index of each rule is captured and stored with each rule. This
+// way we can "Discard Changes" even after the ruleset has be reordered.
+//
 // The ruleEditorReducer is meant to manage state for one type of rule. In other
 // words, one instance of the reducer manages "inbound" rules, and another
 // instance manages "outbound" rules.
@@ -36,9 +39,13 @@ export interface ExtendedFirewallRule extends FirewallRuleType {
   status: RuleStatus;
   index?: number;
   errors?: FirewallRuleError[];
+  originalIndex: number;
 }
 
-export type RuleEditorState = ExtendedFirewallRule[][];
+export interface RuleEditorState {
+  revisionLists: ExtendedFirewallRule[][];
+  hasModifiedOrder: boolean;
+}
 
 export type RuleEditorAction =
   | {
@@ -86,11 +93,17 @@ const ruleEditorReducer = (
 ) => {
   switch (action.type) {
     case 'NEW_RULE':
-      draft.push([{ ...action.rule, status: 'NEW' }]);
+      draft.revisionLists.push([
+        {
+          ...action.rule,
+          originalIndex: draft.revisionLists.length,
+          status: 'NEW',
+        },
+      ]);
       return;
 
     case 'DELETE_RULE':
-      let lastRevision = last(draft[action.idx]);
+      let lastRevision = last(draft.revisionLists[action.idx]);
 
       if (!lastRevision) {
         return;
@@ -99,14 +112,14 @@ const ruleEditorReducer = (
       // Seems pointless to show errors on rules pending deletion.
       delete lastRevision.errors;
 
-      draft[action.idx].push({
+      draft.revisionLists[action.idx].push({
         ...lastRevision,
         status: 'PENDING_DELETION',
       });
       return;
 
     case 'MODIFY_RULE':
-      lastRevision = last(draft[action.idx]);
+      lastRevision = last(draft.revisionLists[action.idx]);
 
       if (!lastRevision) {
         return;
@@ -123,7 +136,7 @@ const ruleEditorReducer = (
         delete lastRevision.description;
       }
 
-      draft[action.idx].push({
+      draft.revisionLists[action.idx].push({
         ...lastRevision,
         ...action.modifiedRule,
         status: 'MODIFIED',
@@ -131,18 +144,25 @@ const ruleEditorReducer = (
       return;
 
     case 'CLONE_RULE':
-      const ruleToClone = last(draft[action.idx]);
+      const ruleToClone = last(draft.revisionLists[action.idx]);
       if (!ruleToClone) {
         return;
       }
       const { addresses, ports, protocol, action: _action } = ruleToClone;
-      draft.push([
-        { action: _action, addresses, ports, protocol, status: 'NEW' },
+      draft.revisionLists.push([
+        {
+          action: _action,
+          addresses,
+          ports,
+          protocol,
+          originalIndex: draft.revisionLists.length,
+          status: 'NEW',
+        },
       ]);
       return;
 
     case 'SET_ERROR':
-      lastRevision = last(draft[action.idx]);
+      lastRevision = last(draft.revisionLists[action.idx]);
 
       if (!lastRevision) {
         return;
@@ -156,57 +176,66 @@ const ruleEditorReducer = (
       return;
 
     case 'UNDO':
-      lastRevision = last(draft[action.idx]);
+      lastRevision = last(draft.revisionLists[action.idx]);
 
-      draft[action.idx].pop();
+      draft.revisionLists[action.idx].pop();
 
       // If there's nothing left on the stack, we need to actually remove this revisionList.
       // This will only happen if a user performing UNDO on a NEW rule.
-      if (draft[action.idx].length === 0) {
-        draft.splice(action.idx, 1);
+      if (draft.revisionLists[action.idx].length === 0) {
+        draft.revisionLists.splice(action.idx, 1);
       }
 
       return;
 
     case 'DISCARD_CHANGES':
-      const original: RuleEditorState = [];
-      draft.forEach((revisionList) => {
-        const head = revisionList[0];
+      const original: RuleEditorState['revisionLists'] = [];
+      draft.revisionLists.forEach((thisRevisionList) => {
+        const head = thisRevisionList[0];
         if (head.status === 'NOT_MODIFIED') {
-          original.push([head]);
+          original[head.originalIndex] = [head];
         }
       });
-      return original;
+      return { revisionLists: original, hasModifiedOrder: false };
 
     case 'RESET':
       return initRuleEditorState(action.rules);
 
     case 'REORDER':
-      const [removed] = draft.splice(action.startIdx, 1);
-      draft.splice(action.endIdx, 0, removed);
-
+      const [removed] = draft.revisionLists.splice(action.startIdx, 1);
+      draft.revisionLists.splice(action.endIdx, 0, removed);
+      draft.hasModifiedOrder = true;
       return;
   }
 };
 
 export const initRuleEditorState = (
   rules: FirewallRuleType[]
-): RuleEditorState =>
-  rules.map((thisRule) => [{ ...thisRule, status: 'NOT_MODIFIED' }]) ?? [];
+): RuleEditorState => ({
+  revisionLists:
+    rules.map((thisRule, index) => [
+      { ...thisRule, originalIndex: index, status: 'NOT_MODIFIED' },
+    ]) ?? [],
+  hasModifiedOrder: false,
+});
 
 export const editorStateToRules = (
   state: RuleEditorState
 ): ExtendedFirewallRule[] =>
-  state.map((revisionList) => revisionList[revisionList.length - 1]);
+  state.revisionLists.map(
+    (thisRevisionList) => thisRevisionList[thisRevisionList.length - 1]
+  );
 
 // Remove fields we use internally.
 export const stripExtendedFields = (
   rule: ExtendedFirewallRule
-): FirewallRuleType => omit(['errors', 'status', 'index'], rule);
+): FirewallRuleType => omit(['errors', 'status', 'originalIndex'], rule);
 
 // The API will return an error if a `ports` attribute is present on a payload for an ICMP rule,
 // so we do a bit of trickery here and delete it if necessary.
-export const removeICMPPort = (rules: ExtendedFirewallRule[]) =>
+export const removeICMPPort = (
+  rules: ExtendedFirewallRule[]
+): ExtendedFirewallRule[] =>
   rules.map((thisRule) => {
     if (thisRule.protocol === 'ICMP' && thisRule.ports === '') {
       delete thisRule.ports;
@@ -214,22 +243,23 @@ export const removeICMPPort = (rules: ExtendedFirewallRule[]) =>
     return thisRule;
   });
 
-export const filterRulesPendingDeletion = (rules: ExtendedFirewallRule[]) =>
+export const filterRulesPendingDeletion = (
+  rules: ExtendedFirewallRule[]
+): ExtendedFirewallRule[] =>
   rules.filter((thisRule) => thisRule.status !== 'PENDING_DELETION');
-
-export const appendIndex = (rules: ExtendedFirewallRule[]) =>
-  rules.map((thisRule, index) => ({ ...thisRule, index }));
 
 export const prepareRules = compose(
   removeICMPPort,
   filterRulesPendingDeletion,
-  appendIndex,
   editorStateToRules
 );
 
-export const hasModified = (editorState: RuleEditorState) => {
+export const hasModified = (editorState: RuleEditorState): boolean => {
+  if (editorState.hasModifiedOrder) {
+    return true;
+  }
   const rules = editorStateToRules(editorState);
-  return rules.find((thisRule) => thisRule.status !== 'NOT_MODIFIED');
+  return rules.some((thisRule) => thisRule.status !== 'NOT_MODIFIED');
 };
 
 export default produce(ruleEditorReducer);

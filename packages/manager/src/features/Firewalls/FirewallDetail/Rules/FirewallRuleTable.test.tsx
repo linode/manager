@@ -10,6 +10,7 @@ describe('Firewall rule table tests', () => {
         addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
         action: 'ACCEPT',
         status: 'NOT_MODIFIED',
+        originalIndex: 0,
       };
       expect(firewallRuleToRowData([rule])[0]).toHaveProperty('type', 'SSH');
       expect(firewallRuleToRowData([rule])[0]).toHaveProperty(

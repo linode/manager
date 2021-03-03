@@ -14,11 +14,12 @@ describe('Rule Editor', () => {
 
   describe('initRuleEditorState', () => {
     it('initializes a list of revisions for each rule', () => {
-      baseState.forEach((revisionList, i) => {
+      baseState.revisionLists.forEach((thisRevisionList, i) => {
         // The first element in each revisionList should be equal to the
         // original rule, plus a status of "NOT_MODIFIED".
-        expect(revisionList[0]).toEqual({
+        expect(thisRevisionList[0]).toEqual({
           ...rules[i],
+          originalIndex: i,
           status: 'NOT_MODIFIED',
         });
       });
@@ -30,8 +31,8 @@ describe('Rule Editor', () => {
           type: 'NEW_RULE',
           rule: firewallRuleFactory.build(),
         });
-        expect(newState).toHaveLength(INITIAL_RULE_LENGTH + 1);
-        const lastRevisionList = last(newState);
+        expect(newState.revisionLists).toHaveLength(INITIAL_RULE_LENGTH + 1);
+        const lastRevisionList = last(newState.revisionLists);
         const lastRevision = last(lastRevisionList!);
         expect(lastRevision).toHaveProperty('status', 'NEW');
       });
@@ -44,7 +45,7 @@ describe('Rule Editor', () => {
           idx: idxToDelete,
         });
 
-        const revisionList = newState[idxToDelete];
+        const revisionList = newState.revisionLists[idxToDelete];
 
         expect(last(revisionList)).toHaveProperty('status', 'PENDING_DELETION');
       });
@@ -60,7 +61,7 @@ describe('Rule Editor', () => {
           },
         });
 
-        const revisionList = newState[idxToModify];
+        const revisionList = newState.revisionLists[idxToModify];
 
         expect(revisionList).toHaveLength(2);
         expect(last(revisionList)).toHaveProperty('status', 'MODIFIED');
@@ -81,8 +82,11 @@ describe('Rule Editor', () => {
           idx,
         });
 
-        expect(newState[idx]).toHaveLength(1);
-        expect(last(newState[idx])).toHaveProperty('status', 'NOT_MODIFIED');
+        expect(newState.revisionLists[idx]).toHaveLength(1);
+        expect(last(newState.revisionLists[idx])).toHaveProperty(
+          'status',
+          'NOT_MODIFIED'
+        );
       });
 
       it('discards all changes', () => {
@@ -102,9 +106,13 @@ describe('Rule Editor', () => {
         const finalState = reducer(newState, {
           type: 'DISCARD_CHANGES',
         });
-        expect(finalState).toHaveLength(baseState.length);
-        expect(finalState[0]).toHaveLength(1);
-        expect(finalState[0][0]).toEqual(baseState[0][0]);
+        expect(finalState.revisionLists).toHaveLength(
+          baseState.revisionLists.length
+        );
+        expect(finalState.revisionLists[0]).toHaveLength(1);
+        expect(finalState.revisionLists[0][0]).toEqual(
+          baseState.revisionLists[0][0]
+        );
       });
 
       it('resets the reducer state', () => {
@@ -125,9 +133,19 @@ describe('Rule Editor', () => {
           type: 'RESET',
           rules,
         });
-        finalState.forEach((revisionList) => {
-          expect(revisionList).toHaveLength(1);
+        finalState.revisionLists.forEach((thisRevisionList) => {
+          expect(thisRevisionList).toHaveLength(1);
         });
+      });
+
+      it('reorders the revision lists', () => {
+        const newState = reducer(baseState, {
+          type: 'REORDER',
+          startIdx: 1,
+          endIdx: 0,
+        });
+        expect(newState.revisionLists[0][0]).toHaveProperty('originalIndex', 1);
+        expect(newState.revisionLists[1][0]).toHaveProperty('originalIndex', 0);
       });
     });
   });
@@ -143,11 +161,11 @@ describe('Rule Editor', () => {
       // Next, undo the addition.
       newState = reducer(newState, {
         type: 'UNDO',
-        idx: newState.length - 1,
+        idx: newState.revisionLists.length - 1,
       });
 
       const rulesWithoutStatus = editorStateToRules(newState);
-      expect(rulesWithoutStatus.length).toBe(baseState.length);
+      expect(rulesWithoutStatus.length).toBe(baseState.revisionLists.length);
       rulesWithoutStatus.forEach((thisRule) => {
         expect(thisRule).toBeDefined();
       });
