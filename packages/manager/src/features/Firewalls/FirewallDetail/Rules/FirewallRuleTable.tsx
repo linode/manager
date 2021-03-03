@@ -80,9 +80,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   dragging: {
     display: 'table',
   },
+  policyText: {
+    textAlign: 'right',
+  },
   policySelect: {
     paddingLeft: 4,
-    zIndex: 1000,
   },
 }));
 
@@ -367,7 +369,10 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   const classes = useStyles();
   return (
     <TableRow>
-      <TableCell colSpan={5}>Some helper text here</TableCell>
+      <TableCell colSpan={5} className={classes.policyText}>
+        Default {category} policy (applied to any traffic that does not match
+        any specific rule):
+      </TableCell>
       <TableCell colSpan={1} className={classes.policySelect}>
         <Select
           label={`${category} policy`}

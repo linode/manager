@@ -87,6 +87,10 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
     setPolicy((oldPolicy) => ({ ...oldPolicy, [category]: newPolicy }));
   };
 
+  const _hasModifiedPolicy = () =>
+    policy.inbound !== rules.inbound_policy ||
+    policy.outbound !== rules.outbound_policy;
+
   /**
    * Component state and handlers
    */
@@ -249,8 +253,13 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const hasUnsavedChanges = React.useMemo(
-    () => Boolean(_hasModified(inboundState) || _hasModified(outboundState)),
-    [inboundState, outboundState]
+    () =>
+      Boolean(
+        _hasModified(inboundState) ||
+          _hasModified(outboundState) ||
+          _hasModifiedPolicy()
+      ),
+    [inboundState, outboundState, policy, rules]
   );
 
   const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
@@ -384,6 +393,10 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
           setGeneralErrors(undefined);
+          setPolicy({
+            inbound: rules.inbound_policy,
+            outbound: rules.outbound_policy,
+          });
           inboundDispatch({ type: 'DISCARD_CHANGES' });
           outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}
