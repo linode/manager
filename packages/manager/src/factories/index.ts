@@ -11,7 +11,7 @@ export * from './firewalls';
 export * from './images';
 export * from './kubernetesCluster';
 export * from './linodeConfigs';
-export * from './linodeInterfaces';
+export * from './linodeConfigInterfaceFactory';
 export * from './linodes';
 export * from './longviewClient';
 export * from './longviewDisks';

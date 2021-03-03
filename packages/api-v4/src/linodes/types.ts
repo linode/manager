@@ -146,7 +146,7 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
-export type ConfigInterfaces = InterfaceBody[]; // e.g. [ { label: "Test", purpose: "vlan", ipam_address: "10.0.0.1/24" }, ... ]
+export type LinodeConfigInterfaces = InterfaceBody[]; // e.g. [ { label: "Test", purpose: "vlan", ipam_address: "10.0.0.1/24" }, ... ]
 export type InterfacePurpose = 'public' | 'vlan';
 
 export interface InterfaceBody {
@@ -168,7 +168,7 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
-  interfaces: ConfigInterfaces;
+  interfaces: LinodeConfigInterfaces;
 }
 
 export interface DiskDevice {
@@ -261,7 +261,7 @@ export interface LinodeConfigCreationData {
     devtmpfs_automount: boolean;
   };
   root_device: string;
-  interfaces?: ConfigInterfaces;
+  interfaces?: LinodeConfigInterfaces;
 }
 
 export interface PriceObject {
@@ -313,7 +313,7 @@ export interface CreateLinodeRequest {
   tags?: string[];
   private_ip?: boolean;
   authorized_users?: string[];
-  interfaces?: Record<string, LinodeInterfacePayload>;
+  interfaces?: LinodeConfigInterfaces;
 }
 
 export type RescueRequestObject = Pick<

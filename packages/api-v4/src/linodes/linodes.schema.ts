@@ -7,18 +7,24 @@ const stackscript_data = array()
   .nullable(true);
 
 /**
- * Interfaces are Record<string, InterfaceItem>
- *
- * {
- *  "eth0": { "id": 10 },
- *  "eth1": { "id": 12 }
- * }
- *
  * .default() and .lazy() below are required to
  * make this dynamic field naming work out
  */
 export const linodeInterfaceItemSchema = object({
-  id: number().required('Interface ID is required.')
+  label: string()
+    .min(1, 'Label must be between 1 and 64 characters.')
+    .max(64, 'Label must be between 1 and 64 characters.')
+    .matches(
+      /[a-z0-9-]+/,
+      'Interface labels cannot contain special characters.'
+    ),
+    purpose: mixed()
+      .oneOf([null, 'public', 'vlan'], 'Purpose must be null, public, or vlan.'),
+    ipam_address: string()
+      .matches(
+        /^\d{3}\.\d{3}\.\d{1,3}\.\d{1,3}$/,
+        'Must be a valid IPv4 address.'
+      )
 }).default(undefined);
 
 export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
