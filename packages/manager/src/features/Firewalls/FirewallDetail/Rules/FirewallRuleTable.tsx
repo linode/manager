@@ -104,6 +104,7 @@ interface RuleRow {
   id: number;
   status: RuleStatus;
   errors?: FirewallRuleError[];
+  originalIndex: number;
 }
 
 // =============================================================================
@@ -284,6 +285,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       errors,
       innerRef,
       isDragging,
+      originalIndex,
       ...rest
     } = props;
 
@@ -297,7 +299,12 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     return (
       <TableRow
         key={id}
-        highlight={status === 'MODIFIED' || status === 'NEW'}
+        highlight={
+          // Highlight the row if it's been modified or reordered. ID is the
+          // current index, so if it doesn't match the original index we know
+          // that the rule has been moved.
+          status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
+        }
         disabled={status === 'PENDING_DELETION'}
         domRef={innerRef}
         className={isDragging ? classes.dragging : ''}
