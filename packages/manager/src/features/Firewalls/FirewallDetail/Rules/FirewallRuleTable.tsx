@@ -5,7 +5,12 @@ import * as React from 'react';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme,
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -186,8 +191,8 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             <Hidden xsDown>
               <TableCell>Protocol</TableCell>
               <TableCell>Port Range</TableCell>
+              <TableCell>{capitalize(addressColumnLabel)}</TableCell>
             </Hidden>
-            <TableCell>{capitalize(addressColumnLabel)}</TableCell>
             <TableCell>Action</TableCell>
             <TableCell className={classes.actionHeader} />
           </TableRow>
@@ -321,11 +326,15 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
+          <TableCell style={{ width: '15%' }}>
+            {addresses}{' '}
+            <ConditionalError errors={errors} formField="addresses" />
+          </TableCell>
         </Hidden>
-        <TableCell style={{ width: '15%' }}>
-          {addresses} <ConditionalError errors={errors} formField="addresses" />
+
+        <TableCell style={{ width: '5%' }}>
+          {capitalize(action?.toLocaleLowerCase() ?? '')}
         </TableCell>
-        <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
         <TableCell className={classes.actionCell}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
@@ -367,11 +376,23 @@ const policyOptions: Item<FirewallPolicyType>[] = [
 export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   const { category, policy, handlePolicyChange } = props;
   const classes = useStyles();
+
+  // Calculate how many cells the text should span so that the Select lines up
+  // with the Action column
+  const theme: Theme = useTheme();
+  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const colSpan = xsDown ? 1 : mdDown ? 4 : 5;
+
+  const helperText = mdDown
+    ? `${capitalize(category)} policy:`
+    : `Default ${category} policy (applied to any traffic that does not match
+    any rules):`;
+
   return (
     <TableRow>
-      <TableCell colSpan={5} className={classes.policyText}>
-        Default {category} policy (applied to any traffic that does not match
-        any specific rule):
+      <TableCell colSpan={colSpan} className={classes.policyText}>
+        {helperText}
       </TableCell>
       <TableCell colSpan={1} className={classes.policySelect}>
         <Select
