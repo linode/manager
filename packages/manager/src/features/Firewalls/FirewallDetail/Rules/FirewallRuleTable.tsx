@@ -178,6 +178,8 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const theme: Theme = useTheme();
+  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
 
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
@@ -216,16 +218,19 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
       <Table style={{ tableLayout: 'auto' }}>
         <TableHead>
           <TableRow>
-            <TableCell style={{ paddingLeft: 27 }}>Label</TableCell>
-            <Hidden mdDown>
-              <TableCell>Description</TableCell>
-            </Hidden>
+            <TableCell
+              style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
+            >
+              Label
+            </TableCell>
             <Hidden xsDown>
-              <TableCell>Protocol</TableCell>
-              <TableCell>Port Range</TableCell>
-              <TableCell>{capitalize(addressColumnLabel)}</TableCell>
+              <TableCell style={{ width: '10%' }}>Protocol</TableCell>
+              <TableCell style={{ width: '10%' }}>Port Range</TableCell>
+              <TableCell style={{ width: '15%' }}>
+                {capitalize(addressColumnLabel)}
+              </TableCell>
             </Hidden>
-            <TableCell>Action</TableCell>
+            <TableCell style={{ width: '5%' }}>Action</TableCell>
             <TableCell className={classes.actionHeader} />
           </TableRow>
         </TableHead>
@@ -345,7 +350,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         className={isDragging ? classes.dragging : ''}
         {...rest}
       >
-        <TableCell className={classes.labelCol} style={{ width: '15%' }}>
+        <TableCell className={classes.labelCol}>
           <DragIndicator className={classes.dragIcon} />
           {label || (
             <button
@@ -356,27 +361,22 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             </button>
           )}
         </TableCell>
-        <Hidden mdDown>
-          <TableCell style={{ width: '25%' }}>{description}</TableCell>
-        </Hidden>
         <Hidden xsDown>
-          <TableCell style={{ width: '10%' }}>
+          <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
-          <TableCell style={{ width: '15%' }}>
+          <TableCell>
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
-          <TableCell style={{ width: '15%' }}>
+          <TableCell>
             {addresses}{' '}
             <ConditionalError errors={errors} formField="addresses" />
           </TableCell>
         </Hidden>
 
-        <TableCell style={{ width: '5%' }}>
-          {capitalize(action?.toLocaleLowerCase() ?? '')}
-        </TableCell>
+        <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
         <TableCell className={classes.actionCell}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
@@ -424,13 +424,13 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const colSpan = xsDown ? 1 : mdDown ? 4 : 5;
+  const colSpan = xsDown ? 1 : 4;
 
   const helperText = mdDown ? (
     <strong>{capitalize(category)} policy:</strong>
   ) : (
     <span>
-      <strong>Default {category} policy.</strong> This policy applies to any
+      <strong>Default {category} policy:</strong> This policy applies to any
       traffic not covered by the {category} rules listed above.
     </span>
   );

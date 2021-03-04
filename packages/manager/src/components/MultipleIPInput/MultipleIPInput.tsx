@@ -3,7 +3,6 @@ import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -16,6 +15,7 @@ import { ExtendedIP } from 'src/utilities/ipUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
     paddingLeft: 0,
+    paddingTop: theme.spacing(1.5),
     '& span:first-of-type': {
       justifyContent: 'flex-start',
     },
@@ -136,12 +136,14 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       ))}
-      <AddNewLink
+      <Button
+        buttonType="secondary"
+        superCompact
         onClick={addNewInput}
-        label="Add IP"
-        data-qa-add-domain-transfer-ip-field
         className={classes.addIP}
-      />
+      >
+        Add an IP
+      </Button>
     </div>
   );
 };

@@ -107,6 +107,7 @@ const styles = (theme: Theme) =>
       },
     },
     errorTextLong: {
+      width: '100%',
       [theme.breakpoints.down(480)]: {
         top: 36,
         width: 240,

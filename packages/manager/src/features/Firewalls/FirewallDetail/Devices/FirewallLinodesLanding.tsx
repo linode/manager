@@ -140,7 +140,8 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
           [classes.cmrSpacing]: flags.cmr,
         })}
       >
-        The following Linodes have been assigned to this Firewall.
+        The following Linodes have been assigned to this Firewall. A Linode can
+        only be assigned to a single Firewall.
       </Typography>
       <Box
         display="flex"

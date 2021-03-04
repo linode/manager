@@ -94,6 +94,7 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
     label: 'SSH',
     inbound: [
       {
+        label: `accept-inbound-SSH`,
         ports: portPresets.ssh,
         protocol: 'TCP',
         addresses: allIPs,
@@ -105,6 +106,7 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
     label: 'HTTP',
     inbound: [
       {
+        label: `accept-inbound-HTTP`,
         ports: portPresets.http,
         protocol: 'TCP',
         addresses: allIPs,
@@ -116,6 +118,7 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
     label: 'HTTPS',
     inbound: [
       {
+        label: `accept-inbound-HTTPS`,
         ports: portPresets.https,
         protocol: 'TCP',
         addresses: allIPs,
@@ -127,6 +130,7 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
     label: 'MySQL',
     inbound: [
       {
+        label: `accept-inbound-MYSQL`,
         ports: portPresets.mysql,
         protocol: 'TCP',
         addresses: allIPs,
@@ -138,6 +142,7 @@ export const predefinedFirewalls: Record<FirewallPreset, PredefinedFirewall> = {
     label: 'DNS',
     inbound: [
       {
+        label: `accept-inbound-DNS`,
         ports: portPresets.dns,
         protocol: 'TCP',
         addresses: allIPs,
