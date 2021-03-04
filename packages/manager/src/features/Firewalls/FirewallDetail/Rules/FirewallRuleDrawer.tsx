@@ -286,7 +286,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         }
 
         if (!touched.label) {
-          setFieldValue('label', `allow-${category}-${item?.label}`);
+          setFieldValue('label', `accept-${category}-${item?.label}`);
         }
 
         // Pre-populate other form values if selecting a pre-defined type.
