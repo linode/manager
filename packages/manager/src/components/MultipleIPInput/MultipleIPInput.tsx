@@ -12,6 +12,9 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
+import Tooltip from 'src/components/core/Tooltip';
+import Info from 'src/assets/icons/info.svg';
+import IconButton from 'src/components/core/IconButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
@@ -44,11 +47,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginBottom: theme.spacing(),
   },
+  ipNetmaskTooltipSection: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  infoIcon: {
+    paddingTop: 0,
+  },
+  tooltip: {},
 }));
 
 export interface Props {
   title: string;
   helperText?: string;
+  tooltip?: string;
   error?: string;
   ips: ExtendedIP[];
   onChange: (ips: ExtendedIP[]) => void;
@@ -58,7 +70,7 @@ export interface Props {
 }
 
 export const MultipleIPInput: React.FC<Props> = (props) => {
-  const { error, onChange, ips, title, helperText } = props;
+  const { error, onChange, ips, title, helperText, tooltip } = props;
   const classes = useStyles();
 
   const handleChange = (
@@ -92,7 +104,22 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
         [props.className ?? '']: Boolean(props.className),
       })}
     >
-      <InputLabel>{title}</InputLabel>
+      {tooltip ? (
+        <div className={classes.ipNetmaskTooltipSection}>
+          <InputLabel>{title}</InputLabel>
+          <Tooltip
+            title={tooltip}
+            placement="right"
+            className={classes.tooltip}
+          >
+            <IconButton className={classes.infoIcon}>
+              <Info />
+            </IconButton>
+          </Tooltip>
+        </div>
+      ) : (
+        <InputLabel>{title}</InputLabel>
+      )}
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
       )}

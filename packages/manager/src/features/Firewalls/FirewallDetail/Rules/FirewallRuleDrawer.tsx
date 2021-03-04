@@ -34,7 +34,11 @@ import {
   protocolOptions,
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
+import {
+  ExtendedIP,
+  stringToExtendedIP,
+  validIPv4MinimumLength,
+} from 'src/utilities/ipUtils';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import {
   Category,
@@ -357,7 +361,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         if (!formTouched) {
           setFormTouched(true);
         }
-        setIPs(_ips);
+
+        const _ipsWithMasks = enforceIPMasks(_ips);
+        setIPs(_ipsWithMasks);
       },
       [formTouched, setIPs]
     );
@@ -490,6 +496,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             ips={ips}
             onChange={handleIPChange}
             inputProps={{ autoFocus: true }}
+            tooltip={ipNetmaskTooltipText}
           />
         )}
         <div className={classes.actionSection}>
@@ -530,6 +537,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     );
   }
 );
+
+const ipNetmaskTooltipText =
+  'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';
 
 // =============================================================================
 // Utilities
@@ -831,4 +841,36 @@ export const validateForm = (
   }
 
   return errors;
+};
+
+export const enforceIPMasks = (ips: ExtendedIP[]) => {
+  // If the user typed the minimum number of characters for a valid IPv4 address, check if a mask was provided and if not, add the appropriate mask for IPv4 or IPv6 addresses, respectively.
+  const _ips = ips.map((extendedIP) => {
+    const ipAddress = extendedIP.address;
+
+    if (ipAddress.length >= validIPv4MinimumLength) {
+      // This logic requires more fleshing out (multiple slash issue, repeated appends, etc.)
+      const [base, mask] = ipAddress.split('/');
+      if (mask?.length > 1) {
+        // The user provided a mask already
+        return extendedIP;
+      }
+
+      try {
+        const parsed = parseIP(base);
+        const type = parsed.kind();
+
+        const appendedMask = type === 'ipv4' ? '/32' : '/128';
+        const ipWithMask = ipAddress + appendedMask;
+
+        return { ...extendedIP, address: ipWithMask };
+      } catch (err) {
+        return extendedIP;
+      }
+    }
+
+    return extendedIP;
+  });
+
+  return _ips;
 };

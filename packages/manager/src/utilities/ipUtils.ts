@@ -17,3 +17,5 @@ export interface ExtendedIP {
 
 export const stringToExtendedIP = (ip: string): ExtendedIP => ({ address: ip });
 export const extendedIPToString = (ip: ExtendedIP): string => ip.address;
+
+export const validIPv4MinimumLength = 7; // e.g., 1.2.3.4
