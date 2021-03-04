@@ -7,6 +7,25 @@ on:
   pull_request:
 
 jobs:
+  build-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.15.4'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn --frozen-lockfile
+      - run: yarn workspace @linode/validation run build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: validation
+          path: validation
   test-sdk:
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +57,10 @@ jobs:
             node_modules
             */*/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: validation
+          path: validation
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v2
