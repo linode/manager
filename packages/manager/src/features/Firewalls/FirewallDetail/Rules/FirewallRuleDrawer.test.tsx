@@ -1,3 +1,4 @@
+import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -106,6 +107,7 @@ describe('utilities', () => {
       protocol: 'TCP',
       status: 'NEW',
       action: 'ACCEPT',
+      originalIndex: 0,
       addresses: {
         ipv4: ['1.2.3.4'],
         ipv6: ['::0'],
@@ -172,6 +174,7 @@ describe('utilities', () => {
 
   describe('deriveTypeFromValuesAndIPs', () => {
     const formValues = {
+      action: 'DROP' as FirewallPolicyType,
       addresses: 'all',
       ports: '443',
       protocol: 'TCP',

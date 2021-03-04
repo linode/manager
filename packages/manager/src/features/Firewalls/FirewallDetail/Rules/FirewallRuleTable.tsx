@@ -102,12 +102,14 @@ interface RuleRow {
   type: string;
   label?: string;
   description?: string;
+  action?: string;
   protocol: string;
   ports: string;
   addresses: string;
   id: number;
   status: RuleStatus;
   errors?: FirewallRuleError[];
+  originalIndex: number;
 }
 
 // =============================================================================
@@ -186,6 +188,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
               <TableCell>Port Range</TableCell>
             </Hidden>
             <TableCell>{capitalize(addressColumnLabel)}</TableCell>
+            <TableCell>Action</TableCell>
             <TableCell className={classes.actionHeader} />
           </TableRow>
         </TableHead>
@@ -259,6 +262,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 
     const {
       id,
+      action,
       label,
       description,
       protocol,
@@ -272,6 +276,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       errors,
       innerRef,
       isDragging,
+      originalIndex,
       ...rest
     } = props;
 
@@ -285,7 +290,12 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     return (
       <TableRow
         key={id}
-        highlight={status === 'MODIFIED' || status === 'NEW'}
+        highlight={
+          // Highlight the row if it's been modified or reordered. ID is the
+          // current index, so if it doesn't match the original index we know
+          // that the rule has been moved.
+          status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
+        }
         disabled={status === 'PENDING_DELETION'}
         domRef={innerRef}
         className={isDragging ? classes.dragging : ''}
@@ -318,6 +328,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <TableCell style={{ width: '15%' }}>
           {addresses} <ConditionalError errors={errors} formField="addresses" />
         </TableCell>
+        <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
         <TableCell className={classes.actionCell}>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
