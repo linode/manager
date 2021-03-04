@@ -96,23 +96,14 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           {token}
         </button>
       </TableCell>
-      {transferTypeIsPending || transferTypeIsSent ? (
-        <Hidden smDown>
-          <TableCell
-            className={`${classes.cellContents} ${classes.createdCell}`}
-            noWrap
-          >
-            <DateTimeDisplay value={created} />
-          </TableCell>
-        </Hidden>
-      ) : (
+      <Hidden smDown={transferTypeIsPending || transferTypeIsSent}>
         <TableCell
           className={`${classes.cellContents} ${classes.createdCell}`}
           noWrap
         >
           <DateTimeDisplay value={created} />
         </TableCell>
-      )}
+      </Hidden>
       <Hidden xsDown={transferTypeIsPending}>
         <TableCell
           className={`${classes.cellContents} ${
