@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
   },
   infoIcon: {
-    paddingTop: 0,
+    marginTop: -13,
   },
 }));
 
