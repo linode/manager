@@ -286,7 +286,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         }
 
         if (!touched.label) {
-          setFieldValue('label', `allow-${category}-${item?.label}`);
+          setFieldValue(
+            'label',
+            `${values.action.toLocaleLowerCase()}-${category}-${item?.label}`
+          );
         }
 
         // Pre-populate other form values if selecting a pre-defined type.
@@ -299,7 +302,14 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           setPresetPorts([PORT_PRESETS[portPresets[selectedType]]]);
         }
       },
-      [formTouched, setFieldValue, touched, category, setPresetPorts]
+      [
+        formTouched,
+        setFieldValue,
+        touched,
+        category,
+        setPresetPorts,
+        values.action,
+      ]
     );
 
     const handleTextFieldChange = React.useCallback(
