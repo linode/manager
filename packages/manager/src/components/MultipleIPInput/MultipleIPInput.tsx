@@ -95,13 +95,12 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
     idx: number
   ) => {
-    const newIPs = [...ips];
-    newIPs[idx].address = e.target.value;
-
     if (!onBlur) {
       return;
     }
 
+    const newIPs = [...ips];
+    newIPs[idx].address = e.target.value;
     onBlur(newIPs);
   };
 
