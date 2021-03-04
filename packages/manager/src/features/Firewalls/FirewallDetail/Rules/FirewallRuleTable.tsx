@@ -1,13 +1,22 @@
+import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
+import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme,
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
+import TableFooter from 'src/components/core/TableFooter';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow';
@@ -60,6 +69,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     margin: '8px 0px',
   },
+  dragIcon: {
+    color: theme.cmrIconColors.iGrey,
+    marginRight: theme.spacing(1.5),
+    position: 'relative',
+    top: 2,
+  },
+  labelCol: {
+    paddingLeft: 6,
+  },
   actionCell: {
     display: 'flex',
     alignItems: 'center',
@@ -72,11 +90,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     minWidth: 140,
   },
+  table: {
+    backgroundColor: theme.color.border3,
+  },
   addLabelButton: {
     ...theme.applyLinkStyles,
   },
   dragging: {
     display: 'table',
+    border: `solid 0.5px ${theme.cmrIconColors.iGrey}`,
+    boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
+    '& svg': {
+      color: theme.cmrTextColors.tableHeader,
+    },
+  },
+  footer: {
+    '&:before': {
+      display: 'block',
+      content: '""',
+      height: theme.spacing(),
+    },
+  },
+  policyText: {
+    textAlign: 'right',
+  },
+  policySelect: {
+    paddingLeft: 4,
+  },
+  policySelectInner: {
+    width: 90,
+  },
+  policyRow: {
+    marginTop: '10px !important',
   },
 }));
 
@@ -107,6 +152,11 @@ interface RowActionHandlers {
 }
 interface Props extends RowActionHandlers {
   category: Category;
+  policy: FirewallPolicyType;
+  handlePolicyChange: (
+    category: Category,
+    newPolicy: FirewallPolicyType
+  ) => void;
   openRuleDrawer: (category: Category, mode: Mode) => void;
   rulesWithStatus: ExtendedFirewallRule[];
 }
@@ -117,6 +167,8 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
   const {
     category,
     openRuleDrawer,
+    policy,
+    handlePolicyChange,
     rulesWithStatus,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
@@ -126,6 +178,8 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const theme: Theme = useTheme();
+  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
 
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
@@ -136,13 +190,16 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     openRuleDrawer(category, 'create');
   }, [openRuleDrawer, category]);
 
-  const zeroOutboundRulesMessage =
-    'No outbound rules have been added. When no outbound rules are present, all outbound traffic is allowed.';
+  const zeroOutboundRulesMessage = 'No outbound rules have been added.';
 
   const onDragEnd = (result: DropResult) => {
     if (result.destination) {
       triggerReorder(result.source.index, result.destination?.index);
     }
+  };
+
+  const onPolicyChange = (newPolicy: FirewallPolicyType) => {
+    handlePolicyChange(category, newPolicy);
   };
 
   return (
@@ -161,16 +218,19 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
       <Table style={{ tableLayout: 'auto' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Label</TableCell>
-            <Hidden mdDown>
-              <TableCell>Description</TableCell>
-            </Hidden>
+            <TableCell
+              style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
+            >
+              Label
+            </TableCell>
             <Hidden xsDown>
-              <TableCell>Protocol</TableCell>
-              <TableCell>Port Range</TableCell>
+              <TableCell style={{ width: '10%' }}>Protocol</TableCell>
+              <TableCell style={{ width: '10%' }}>Port Range</TableCell>
+              <TableCell style={{ width: '15%' }}>
+                {capitalize(addressColumnLabel)}
+              </TableCell>
             </Hidden>
-            <TableCell>{capitalize(addressColumnLabel)}</TableCell>
-            <TableCell>Action</TableCell>
+            <TableCell style={{ width: '5%' }}>Action</TableCell>
             <TableCell className={classes.actionHeader} />
           </TableRow>
         </TableHead>
@@ -179,6 +239,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             {(provided) => (
               <TableBody
                 {...provided.droppableProps}
+                className={classes.table}
                 innerRef={provided.innerRef}
               >
                 {rowData.length === 0 ? (
@@ -221,6 +282,13 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             )}
           </Droppable>
         </DragDropContext>
+        <TableFooter className={classes.footer}>
+          <PolicyRow
+            category={category}
+            policy={policy}
+            handlePolicyChange={onPolicyChange}
+          />
+        </TableFooter>
       </Table>
     </>
   );
@@ -282,7 +350,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         className={isDragging ? classes.dragging : ''}
         {...rest}
       >
-        <TableCell style={{ width: '15%' }}>
+        <TableCell className={classes.labelCol}>
+          <DragIndicator className={classes.dragIcon} />
           {label || (
             <button
               className={classes.addLabelButton}
@@ -292,22 +361,21 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             </button>
           )}
         </TableCell>
-        <Hidden mdDown>
-          <TableCell style={{ width: '25%' }}>{description}</TableCell>
-        </Hidden>
         <Hidden xsDown>
-          <TableCell style={{ width: '10%' }}>
+          <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
-          <TableCell style={{ width: '15%' }}>
+          <TableCell>
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
+          <TableCell>
+            {addresses}{' '}
+            <ConditionalError errors={errors} formField="addresses" />
+          </TableCell>
         </Hidden>
-        <TableCell style={{ width: '15%' }}>
-          {addresses} <ConditionalError errors={errors} formField="addresses" />
-        </TableCell>
+
         <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
         <TableCell className={classes.actionCell}>
           {status !== 'NOT_MODIFIED' ? (
@@ -335,6 +403,63 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     );
   }
 );
+
+interface PolicyRowProps {
+  category: Category;
+  policy: FirewallPolicyType;
+  handlePolicyChange: (newPolicy: FirewallPolicyType) => void;
+}
+
+const policyOptions: Item<FirewallPolicyType>[] = [
+  { label: 'Accept', value: 'ACCEPT' },
+  { label: 'Drop', value: 'DROP' },
+];
+
+export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
+  const { category, policy, handlePolicyChange } = props;
+  const classes = useStyles();
+
+  // Calculate how many cells the text should span so that the Select lines up
+  // with the Action column
+  const theme: Theme = useTheme();
+  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const colSpan = xsDown ? 1 : 4;
+
+  const helperText = mdDown ? (
+    <strong>{capitalize(category)} policy:</strong>
+  ) : (
+    <span>
+      <strong>Default {category} policy:</strong> This policy applies to any
+      traffic not covered by the {category} rules listed above.
+    </span>
+  );
+
+  return (
+    <TableRow className={classes.policyRow}>
+      <TableCell colSpan={colSpan} className={classes.policyText}>
+        {helperText}
+      </TableCell>
+      <TableCell colSpan={1} className={classes.policySelect}>
+        <Select
+          className={classes.policySelectInner}
+          label={`${category} policy`}
+          menuPlacement="top"
+          hideLabel
+          isClearable={false}
+          value={policyOptions.find(
+            (thisOption) => thisOption.value === policy
+          )}
+          options={policyOptions}
+          onChange={(selected: Item<FirewallPolicyType>) =>
+            handlePolicyChange(selected.value)
+          }
+        />
+      </TableCell>
+      <TableCell />
+    </TableRow>
+  );
+});
 
 interface ConditionalErrorProps {
   formField: string;
