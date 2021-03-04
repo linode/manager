@@ -66,7 +66,7 @@ jobs:
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v2
         with:
-          name: linode-api-v4
+          name: api-v4
           path: packages/api-v4
 
   test-manager:
@@ -86,12 +86,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
-          name: linode-api-v4
-          path: packages/api-v4
-      - uses: actions/download-artifact@v2
-        with:
-          name: validation
-          path: packages/validation
+          path: packages
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
@@ -113,12 +108,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
-          name: linode-api-v4
-          path: packages/api-v4
-      - uses: actions/download-artifact@v2
-        with:
-          name: validation
-          path: packages/validation
+          path: packages
       - run: cp packages/manager/config/environments/beta packages/manager/.env
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
@@ -137,7 +127,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
-          name: linode-api-v4
+          name: api-v4
           path: packages/api-v4
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
