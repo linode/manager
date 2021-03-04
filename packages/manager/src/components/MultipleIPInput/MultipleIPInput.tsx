@@ -3,18 +3,18 @@ import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
 import * as classnames from 'classnames';
 import * as React from 'react';
+import Info from 'src/assets/icons/info.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import IconButton from 'src/components/core/IconButton';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
-import Tooltip from 'src/components/core/Tooltip';
-import Info from 'src/assets/icons/info.svg';
-import IconButton from 'src/components/core/IconButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addIP: {
@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   infoIcon: {
     paddingTop: 0,
   },
-  tooltip: {},
 }));
 
 export interface Props {
@@ -64,13 +63,13 @@ export interface Props {
   error?: string;
   ips: ExtendedIP[];
   onChange: (ips: ExtendedIP[]) => void;
-  onBlur?: () => void;
+  onBlur?: (ips: ExtendedIP[]) => void;
   inputProps?: InputBaseProps;
   className?: string;
 }
 
 export const MultipleIPInput: React.FC<Props> = (props) => {
-  const { error, onChange, ips, title, helperText, tooltip } = props;
+  const { error, onChange, onBlur, ips, title, helperText, tooltip } = props;
   const classes = useStyles();
 
   const handleChange = (
@@ -80,6 +79,17 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     const newIPs = [...ips];
     newIPs[idx].address = e.target.value;
     onChange(newIPs);
+  };
+
+  const handleBlur = (e: any, idx: number) => {
+    const newIPs = [...ips];
+    newIPs[idx].address = e.target.value;
+
+    if (onBlur) {
+      onBlur(newIPs);
+    } else {
+      return;
+    }
   };
 
   const addNewInput = () => {
@@ -107,11 +117,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
       {tooltip ? (
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
-          <Tooltip
-            title={tooltip}
-            placement="right"
-            className={classes.tooltip}
-          >
+          <Tooltip title={tooltip} placement="right">
             <IconButton className={classes.infoIcon}>
               <Info />
             </IconButton>
@@ -146,6 +152,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
               }
+              onBlur={(e) => handleBlur(e, idx)}
               errorText={thisIP.error}
               hideLabel
             />
