@@ -34,7 +34,11 @@ import {
   protocolOptions,
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
+import {
+  ExtendedIP,
+  stringToExtendedIP,
+  ipFieldPlaceholder,
+} from 'src/utilities/ipUtils';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import {
   Category,
@@ -497,6 +501,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             onBlur={handleIPBlur}
             inputProps={{ autoFocus: true }}
             tooltip={ipNetmaskTooltipText}
+            placeholder={ipFieldPlaceholder}
           />
         )}
         <div className={classes.actionSection}>
@@ -610,7 +615,7 @@ export const validateIPs = (
     if (!options?.allowEmptyAddress && !address) {
       return { address, error: 'Please enter an IP address.' };
     }
-    // We accept IP ranges (i.e., CIDR notation). By the time this function is ran,
+    // We accept IP ranges (i.e., CIDR notation). By the time this function is run,
     // IP masks will have been enforced by enforceIPMasks().
     try {
       parseCIDR(address);

@@ -60,6 +60,7 @@ export interface Props {
   title: string;
   helperText?: string;
   tooltip?: string;
+  placeholder?: string;
   error?: string;
   ips: ExtendedIP[];
   onChange: (ips: ExtendedIP[]) => void;
@@ -69,7 +70,16 @@ export interface Props {
 }
 
 export const MultipleIPInput: React.FC<Props> = (props) => {
-  const { error, onChange, onBlur, ips, title, helperText, tooltip } = props;
+  const {
+    error,
+    onChange,
+    onBlur,
+    ips,
+    title,
+    helperText,
+    tooltip,
+    placeholder,
+  } = props;
   const classes = useStyles();
 
   const handleChange = (
@@ -94,10 +104,6 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
 
     onBlur(newIPs);
   };
-
-  // We want the placeholder to show in the IP fields in FirewallRuleDrawer.
-  // Presently that is the only place that passes the onBlur prop to this component.
-  const ipFieldPlaceholder = onBlur ? '192.0.2.1/32' : '';
 
   const addNewInput = () => {
     onChange([...ips, { address: '' }]);
@@ -161,7 +167,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
               }
               onBlur={(e) => handleBlur(e, idx)}
               errorText={thisIP.error}
-              placeholder={ipFieldPlaceholder}
+              placeholder={placeholder}
               hideLabel
             />
           </Grid>
