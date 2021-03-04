@@ -86,6 +86,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   dragging: {
     display: 'table',
   },
+  footer: {
+    '&:before': {
+      display: 'block',
+      content: '',
+      height: theme.spacing(),
+    },
+  },
   policyText: {
     textAlign: 'right',
   },
@@ -251,7 +258,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             )}
           </Droppable>
         </DragDropContext>
-        <TableFooter>
+        <TableFooter className={classes.footer}>
           <PolicyRow
             category={category}
             policy={policy}
