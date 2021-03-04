@@ -583,11 +583,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} className={classes.section}>
+            {/* <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Network Interfaces</Typography>
             </Grid>
 
-            <Divider className={classes.divider} />
+            <Divider className={classes.divider} /> */}
 
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
