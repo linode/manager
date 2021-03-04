@@ -13,6 +13,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   cellContents: {
     paddingLeft: '1rem',
   },
+  tokenCell: {
+    width: '40%',
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
+    },
+  },
+  createdCell: {
+    width: '20%',
+    [theme.breakpoints.down('xs')]: {
+      width: '25%',
+    },
+  },
+  entitiesCell: {
+    width: '15%',
+    [theme.breakpoints.down('sm')]: {
+      width: '20%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '25%',
+    },
+  },
+  expiryCell: {
+    width: '20%',
+    [theme.breakpoints.down('xs')]: {
+      width: '25%',
+    },
+  },
   actionCell: {
     padding: 0,
     paddingRight: '0 !important',
@@ -53,11 +80,15 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   const entitiesAndTheirCounts = Object.entries(entities);
 
   const transferTypeIsPending = transferType === 'pending';
+  const transferTypeIsReceived = transferType === 'received';
   const transferTypeIsSent = transferType === 'sent';
 
   return (
     <TableRow>
-      <TableCell className={classes.cellContents} noWrap>
+      <TableCell
+        className={`${classes.cellContents} ${classes.tokenCell}`}
+        noWrap
+      >
         <button
           className={classes.link}
           onClick={() => handleTokenClick(token, entities)}
@@ -65,13 +96,30 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           {token}
         </button>
       </TableCell>
-      <Hidden smDown>
-        <TableCell className={classes.cellContents}>
+      {transferTypeIsPending || transferTypeIsSent ? (
+        <Hidden smDown>
+          <TableCell
+            className={`${classes.cellContents} ${classes.createdCell}`}
+            noWrap
+          >
+            <DateTimeDisplay value={created} />
+          </TableCell>
+        </Hidden>
+      ) : (
+        <TableCell
+          className={`${classes.cellContents} ${classes.createdCell}`}
+          noWrap
+        >
           <DateTimeDisplay value={created} />
         </TableCell>
-      </Hidden>
+      )}
       <Hidden xsDown={transferTypeIsPending}>
-        <TableCell className={classes.cellContents} noWrap>
+        <TableCell
+          className={`${classes.cellContents} ${
+            !transferTypeIsReceived && classes.entitiesCell
+          }`}
+          noWrap
+        >
           {entitiesAndTheirCounts.map((entry, idx) => {
             return (
               <span key={idx}>
@@ -84,7 +132,10 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
       </Hidden>
       {transferTypeIsPending ? (
         <>
-          <TableCell className={classes.cellContents} noWrap>
+          <TableCell
+            className={`${classes.cellContents} ${classes.expiryCell}`}
+            noWrap
+          >
             <DateTimeDisplay value={expiry ?? ''} />
           </TableCell>
           <TableCell className={classes.actionCell}>
