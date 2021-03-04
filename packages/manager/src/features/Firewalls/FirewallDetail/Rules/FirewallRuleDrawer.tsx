@@ -46,8 +46,7 @@ import {
 
 export type Mode = 'create' | 'edit';
 
-export const IP_ERROR_MESSAGE =
-  'Must be a valid IPv4 or IPv6 address or range.';
+export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 
 // =============================================================================
 // <FirewallRuleDrawer />
@@ -362,7 +361,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
       [formTouched, setIPs]
     );
 
-    const handleOnBlurIP = (_ips: ExtendedIP[]) => {
+    const handleIPBlur = (_ips: ExtendedIP[]) => {
       const _ipsWithMasks = enforceIPMasks(_ips);
 
       setIPs(_ipsWithMasks);
@@ -495,7 +494,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             className={classes.ipSelect}
             ips={ips}
             onChange={handleIPChange}
-            onBlur={handleOnBlurIP}
+            onBlur={handleIPBlur}
             inputProps={{ autoFocus: true }}
             tooltip={ipNetmaskTooltipText}
           />
@@ -611,15 +610,10 @@ export const validateIPs = (
     if (!options?.allowEmptyAddress && !address) {
       return { address, error: 'Please enter an IP address.' };
     }
-    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
-    // methods for each, so we check for a netmask to decide the method to use.
-    const [, mask] = address.split('/');
+    // We accept IP ranges (i.e., CIDR notation). By the time this function is ran,
+    // IP masks will have been enforced by enforceIPMasks().
     try {
-      if (mask) {
-        parseCIDR(address);
-      } else {
-        parseIP(address);
-      }
+      parseCIDR(address);
     } catch (err) {
       if (address) {
         return { address, error: IP_ERROR_MESSAGE };
@@ -844,7 +838,7 @@ export const validateForm = (
   return errors;
 };
 
-export const enforceIPMasks = (ips: ExtendedIP[]) => {
+export const enforceIPMasks = (ips: ExtendedIP[]): ExtendedIP[] => {
   // Check if a mask was provided and if not, add the appropriate mask for IPv4 or IPv6 addresses, respectively.
   return ips.map((extendedIP) => {
     const ipAddress = extendedIP.address;
@@ -860,7 +854,7 @@ export const enforceIPMasks = (ips: ExtendedIP[]) => {
       const type = parsed.kind();
 
       const appendedMask = type === 'ipv4' ? '/32' : '/128';
-      const ipWithMask = ipAddress + appendedMask;
+      const ipWithMask = base + appendedMask;
 
       return { ...extendedIP, address: ipWithMask };
     } catch (err) {

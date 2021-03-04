@@ -81,16 +81,23 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     onChange(newIPs);
   };
 
-  const handleBlur = (e: any, idx: number) => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    idx: number
+  ) => {
     const newIPs = [...ips];
     newIPs[idx].address = e.target.value;
 
-    if (onBlur) {
-      onBlur(newIPs);
-    } else {
+    if (!onBlur) {
       return;
     }
+
+    onBlur(newIPs);
   };
+
+  // We want the placeholder to show in the IP fields in FirewallRuleDrawer.
+  // Presently that is the only place that passes the onBlur prop to this component.
+  const ipFieldPlaceholder = onBlur ? '192.0.2.1/32' : '';
 
   const addNewInput = () => {
     onChange([...ips, { address: '' }]);
@@ -154,6 +161,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
               }
               onBlur={(e) => handleBlur(e, idx)}
               errorText={thisIP.error}
+              placeholder={ipFieldPlaceholder}
               hideLabel
             />
           </Grid>
