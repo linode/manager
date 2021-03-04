@@ -84,7 +84,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           helperText={`You can assign one or more Linodes to this Firewall. Only Linodes
           in regions that currently support Firewalls (${arrayToList(
             regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId])
-          )}) will be displayed as options.`}
+          )}) will be displayed as options. Each Linode can only have one Firewall assigned to it.`}
           filteredLinodes={currentDevices}
         />
         <ActionsPanel>
