@@ -12,6 +12,7 @@ import {
   useTheme,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
+import TableFooter from 'src/components/core/TableFooter';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -89,7 +90,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'right',
   },
   policySelect: {
-    paddingLeft: 4,
+    paddingLeft: 3,
+  },
+  policySelectInner: {
+    width: 90,
+  },
+  policyRow: {
+    marginTop: '10px !important',
   },
 }));
 
@@ -244,11 +251,13 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             )}
           </Droppable>
         </DragDropContext>
-        <PolicyRow
-          category={category}
-          policy={policy}
-          handlePolicyChange={onPolicyChange}
-        />
+        <TableFooter>
+          <PolicyRow
+            category={category}
+            policy={policy}
+            handlePolicyChange={onPolicyChange}
+          />
+        </TableFooter>
       </Table>
     </>
   );
@@ -390,18 +399,23 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
   const colSpan = xsDown ? 1 : mdDown ? 4 : 5;
 
-  const helperText = mdDown
-    ? `${capitalize(category)} policy:`
-    : `Default ${category} policy (applied to any traffic that does not match
-    any rules):`;
+  const helperText = mdDown ? (
+    <strong>{capitalize(category)} policy:</strong>
+  ) : (
+    <span>
+      <strong>Default {category} policy.</strong> This policy applies to any
+      traffic not covered by the inbound rules listed above.
+    </span>
+  );
 
   return (
-    <TableRow>
+    <TableRow className={classes.policyRow}>
       <TableCell colSpan={colSpan} className={classes.policyText}>
         {helperText}
       </TableCell>
       <TableCell colSpan={1} className={classes.policySelect}>
         <Select
+          className={classes.policySelectInner}
           label={`${category} policy`}
           menuPlacement="top"
           hideLabel
@@ -415,7 +429,7 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
           }
         />
       </TableCell>
-      <TableCell /> {/* Leave empty space to match action cell */}
+      <TableCell />
     </TableRow>
   );
 });
