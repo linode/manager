@@ -88,6 +88,10 @@ jobs:
         with:
           name: linode-api-v4
           path: packages/api-v4
+      - uses: actions/download-artifact@v2
+        with:
+          name: validation
+          path: packages/validation
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
@@ -111,6 +115,10 @@ jobs:
         with:
           name: linode-api-v4
           path: packages/api-v4
+      - uses: actions/download-artifact@v2
+        with:
+          name: validation
+          path: packages/validation
       - run: cp packages/manager/config/environments/beta packages/manager/.env
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
