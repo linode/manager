@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   footer: {
     '&:before': {
       display: 'block',
-      content: '',
+      content: '""',
       height: theme.spacing(),
     },
   },
@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'right',
   },
   policySelect: {
-    paddingLeft: 3,
+    paddingLeft: 4,
   },
   policySelectInner: {
     width: 90,
@@ -411,7 +411,7 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   ) : (
     <span>
       <strong>Default {category} policy.</strong> This policy applies to any
-      traffic not covered by the inbound rules listed above.
+      traffic not covered by the {category} rules listed above.
     </span>
   );
 
