@@ -112,10 +112,6 @@
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "selenium:install": "yarn run selenium-standalone install --config=./e2e/config/selenium-config.js",
     "selenium": "yarn selenium:install && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
-    "e2e": "npx wdio ./e2e/config/wdio.conf.js",
-    "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
-    "e2e:modified": "./scripts/e2e-modified.sh",
-    "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "release": "./scripts/release_changelog.sh",
     "typecheck": "tsc --noEmit"
   },
