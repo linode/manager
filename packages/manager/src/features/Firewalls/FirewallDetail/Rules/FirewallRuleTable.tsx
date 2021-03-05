@@ -19,7 +19,7 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import {
   DragDropContext,
