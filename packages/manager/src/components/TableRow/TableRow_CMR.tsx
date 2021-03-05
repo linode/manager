@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       boxShadow: `inset 3px 0 0 transparent`,
     },
+    '&:focus': {
+      backgroundColor: theme.cmrBGColors.bgSecondaryButton,
+    },
   },
   withForcedIndex: {
     '& td': {
@@ -128,6 +131,7 @@ export interface Props {
   highlight?: boolean;
   disabled?: boolean;
   ariaLabel?: string;
+  domRef?: any;
 }
 
 export type CombinedProps = Props & _TableRowProps & RouteComponentProps<{}>;
@@ -144,6 +148,7 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
     highlight,
     disabled,
     ariaLabel,
+    domRef,
     ...rest
   } = props;
 
@@ -157,6 +162,7 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
         [classes.highlight]: highlight,
         [classes.disabled]: disabled,
       })}
+      innerRef={domRef}
       {...rest}
     >
       {props.children}
