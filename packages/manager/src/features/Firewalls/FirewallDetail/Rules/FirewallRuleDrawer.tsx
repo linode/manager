@@ -1,13 +1,16 @@
-import { Formik, FormikProps } from 'formik';
-import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import {
+  FirewallPolicyType,
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import { Formik, FormikProps } from 'formik';
+import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import { uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -15,6 +18,7 @@ import Select from 'src/components/EnhancedSelect';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import {
   addressOptions,
@@ -58,6 +62,7 @@ interface Props {
 }
 
 interface Form {
+  action: FirewallPolicyType;
   type: string;
   ports?: string;
   addresses: string;
@@ -134,7 +139,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
       ports,
       protocol,
       addresses,
-      action: 'ACCEPT',
+      action: values.action,
     };
 
     if (values.label) {
@@ -189,6 +194,9 @@ export default React.memo(FirewallRuleDrawer);
 // =============================================================================
 const useStyles = makeStyles((theme: Theme) => ({
   ipSelect: {
+    marginTop: theme.spacing(2),
+  },
+  actionSection: {
     marginTop: theme.spacing(2),
   },
 }));
@@ -278,7 +286,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         }
 
         if (!touched.label) {
-          setFieldValue('label', `allow-${category}-${item?.label}`);
+          setFieldValue(
+            'label',
+            `${values.action.toLocaleLowerCase()}-${category}-${item?.label}`
+          );
         }
 
         // Pre-populate other form values if selecting a pre-defined type.
@@ -291,7 +302,14 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           setPresetPorts([PORT_PRESETS[portPresets[selectedType]]]);
         }
       },
-      [formTouched, setFieldValue, touched, category, setPresetPorts]
+      [
+        formTouched,
+        setFieldValue,
+        touched,
+        category,
+        setPresetPorts,
+        values.action,
+      ]
     );
 
     const handleTextFieldChange = React.useCallback(
@@ -331,6 +349,17 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         setIPs([{ address: '' }]);
       },
       [formTouched, setFieldValue, setFormTouched, setIPs]
+    );
+
+    const handleActionChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
+        if (!formTouched) {
+          setFormTouched(true);
+        }
+
+        setFieldValue('action', value);
+      },
+      [formTouched, setFieldValue, setFormTouched]
     );
 
     const handleIPChange = React.useCallback(
@@ -473,6 +502,30 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             inputProps={{ autoFocus: true }}
           />
         )}
+        <div className={classes.actionSection}>
+          <Typography>
+            <strong>Action</strong>
+          </Typography>
+
+          <RadioGroup
+            aria-label="action"
+            name="action"
+            value={values.action}
+            onChange={handleActionChange}
+            row
+          >
+            <FormControlLabel
+              value="ACCEPT"
+              label="Accept"
+              control={<Radio />}
+            />
+            <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
+            <Typography style={{ paddingTop: 4 }}>
+              This will take precedence over the Firewall's {category} policy.
+            </Typography>
+          </RadioGroup>
+        </div>
+
         <ActionsPanel>
           <Button
             buttonType="primary"
@@ -602,6 +655,7 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
 };
 
 const initialValues: Form = {
+  action: 'ACCEPT',
   type: '',
   ports: '',
   addresses: '',
@@ -616,6 +670,7 @@ const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
   }
 
   return {
+    action: ruleToModify.action,
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),

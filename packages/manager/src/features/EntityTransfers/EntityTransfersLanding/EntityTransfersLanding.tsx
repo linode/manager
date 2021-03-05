@@ -3,7 +3,10 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import usePagination from 'src/hooks/usePagination';
-import { useEntityTransfersQuery } from 'src/queries/entityTransfers';
+import {
+  TRANSFER_FILTERS,
+  useEntityTransfersQuery,
+} from 'src/queries/entityTransfers';
 import TransfersTable from '../TransfersTable';
 import CreateTransferSuccessDialog from './CreateTransferSuccessDialog';
 import TransferControls from './TransferControls';
@@ -60,10 +63,7 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
       page: paginationPendingTransfers.page,
       page_size: paginationPendingTransfers.pageSize,
     },
-    {
-      status: 'pending',
-      is_sender: true,
-    }
+    TRANSFER_FILTERS.pending
   );
   const pendingTransfers = Object.values(
     pendingTransfersData?.entityTransfers ?? {}
@@ -80,13 +80,12 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
       page: paginationReceivedTransfers.page,
       page_size: paginationReceivedTransfers.pageSize,
     },
-    {
-      status: 'received',
-    }
+    TRANSFER_FILTERS.received
   );
   const receivedTransfers = Object.values(
     receivedTransfersData?.entityTransfers ?? {}
   );
+
   const receivedTransfersResults = receivedTransfersData?.results ?? 0;
 
   // Fetch the Sent Transfers
@@ -99,10 +98,7 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
       page: paginationSentTransfers.page,
       page_size: paginationSentTransfers.pageSize,
     },
-    {
-      is_sender: true,
-      status: { '+neq': 'pending' },
-    }
+    TRANSFER_FILTERS.sent
   );
   const sentTransfers = Object.values(sentTransfersData?.entityTransfers ?? {});
   const sentTransfersResults = sentTransfersData?.results ?? 0;

@@ -71,6 +71,27 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   const { firewallID, rules } = props;
 
   /**
+   * inbound and outbound policy aren't part of any particular rule
+   * so they are managed separately rather than through the reducer.
+   */
+
+  const [policy, setPolicy] = React.useState({
+    inbound: rules.inbound_policy,
+    outbound: rules.outbound_policy,
+  });
+
+  const handlePolicyChange = (
+    category: Category,
+    newPolicy: FirewallPolicyType
+  ) => {
+    setPolicy((oldPolicy) => ({ ...oldPolicy, [category]: newPolicy }));
+  };
+
+  const _hasModifiedPolicy = () =>
+    policy.inbound !== rules.inbound_policy ||
+    policy.outbound !== rules.outbound_policy;
+
+  /**
    * Component state and handlers
    */
   const [ruleDrawer, setRuleDrawer] = React.useState<Drawer>({
@@ -126,6 +147,15 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
     dispatch({ type: 'CLONE_RULE', idx });
   };
 
+  const handleReorder = (
+    category: Category,
+    startIdx: number,
+    endIdx: number
+  ) => {
+    const dispatch = dispatchFromCategory(category);
+    dispatch({ type: 'REORDER', startIdx, endIdx });
+  };
+
   const handleEditRule = (
     category: Category,
     rule: Partial<FirewallRuleType>
@@ -168,8 +198,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
     const finalRules = {
       inbound: preparedRules.inbound.map(stripExtendedFields),
       outbound: preparedRules.outbound.map(stripExtendedFields),
-      inbound_policy: 'DROP' as FirewallPolicyType, // @todo fix these defaults
-      outbound_policy: 'ACCEPT' as FirewallPolicyType, // @todo fix these defaults
+      inbound_policy: policy.inbound,
+      outbound_policy: policy.outbound,
     };
 
     updateFirewallRules(firewallID, finalRules)
@@ -223,8 +253,13 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const hasUnsavedChanges = React.useMemo(
-    () => Boolean(_hasModified(inboundState) || _hasModified(outboundState)),
-    [inboundState, outboundState]
+    () =>
+      Boolean(
+        _hasModified(inboundState) ||
+          _hasModified(outboundState) ||
+          _hasModifiedPolicy()
+      ),
+    [inboundState, outboundState, policy, rules]
   );
 
   const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
@@ -274,15 +309,6 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
         }}
       </Prompt>
 
-      <Typography
-        variant="body1"
-        className={`${classes.copy} ${classes.mobileSpacing}`}
-      >
-        Firewall rules act as an allowlist, permitting only network traffic that
-        matches the rules&apos; parameters to pass through. If there are no
-        outbound rules set, all outbound traffic will be permitted.
-      </Typography>
-
       {generalErrors?.length === 1 && (
         <Notice spacingTop={8} error text={generalErrors[0].reason} />
       )}
@@ -290,6 +316,8 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
       <div className={classes.table}>
         <FirewallRuleTable
           category="inbound"
+          policy={policy.inbound}
+          handlePolicyChange={handlePolicyChange}
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('inbound', idx)
           }
@@ -300,11 +328,16 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
           }
           triggerDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
           triggerUndo={(idx) => handleUndo('inbound', idx)}
+          triggerReorder={(startIdx: number, endIdx: number) =>
+            handleReorder('inbound', startIdx, endIdx)
+          }
         />
       </div>
       <div className={classes.table}>
         <FirewallRuleTable
           category="outbound"
+          policy={policy.outbound}
+          handlePolicyChange={handlePolicyChange}
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('outbound', idx)
           }
@@ -315,6 +348,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
           }
           triggerDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
           triggerUndo={(idx) => handleUndo('outbound', idx)}
+          triggerReorder={(startIdx: number, endIdx: number) =>
+            handleReorder('outbound', startIdx, endIdx)
+          }
         />
       </div>
       <FirewallRuleDrawer
@@ -348,6 +384,10 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
           setGeneralErrors(undefined);
+          setPolicy({
+            inbound: rules.inbound_policy,
+            outbound: rules.outbound_policy,
+          });
           inboundDispatch({ type: 'DISCARD_CHANGES' });
           outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}
