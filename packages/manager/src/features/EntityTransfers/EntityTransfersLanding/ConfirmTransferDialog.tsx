@@ -273,7 +273,7 @@ export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
   );
 });
 
-export const getTimeRemaining = (time?: string) => {
+export const getTimeRemaining = (time?: string): string | undefined => {
   if (!time) {
     return;
   }
