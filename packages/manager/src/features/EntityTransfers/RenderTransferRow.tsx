@@ -30,7 +30,10 @@ interface Props {
   expiry?: string;
   status?: string;
   transferType?: 'pending' | 'received' | 'sent';
-  handleCancelPendingTransferClick: (token: string) => void;
+  handleCancelPendingTransferClick: (
+    token: string,
+    entities: TransferEntities
+  ) => void;
   handleTokenClick: (token: string, entities: TransferEntities) => void;
 }
 
@@ -89,7 +92,9 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           </TableCell>
           <TableCell className={classes.actionCell}>
             <ActionMenu
-              onCancelClick={() => handleCancelPendingTransferClick(token)}
+              onCancelClick={() =>
+                handleCancelPendingTransferClick(token, entities)
+              }
             />
           </TableCell>
         </>
@@ -103,7 +108,9 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export const formatEntitiesCell = (entityAndCount: [string, number[]]) => {
+export const formatEntitiesCell = (
+  entityAndCount: [string, number[]]
+): string => {
   const [entity, count] = entityAndCount;
   const pluralEntity = capitalize(entity);
   const singleEntity = capitalize(entity.slice(0, -1));

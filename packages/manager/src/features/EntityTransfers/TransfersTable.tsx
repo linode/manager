@@ -89,8 +89,12 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
 
-  const handleCancelPendingTransferClick = (token: string) => {
+  const handleCancelPendingTransferClick = (
+    token: string,
+    entities: TransferEntities
+  ) => {
     setTokenBeingCanceled(token);
+    setCurrentEntities(entities);
     setCancelPendingDialogOpen(true);
   };
 
@@ -197,6 +201,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
             open={cancelPendingDialogOpen}
             onClose={closeCancelPendingDialog}
             token={tokenBeingCanceled}
+            entities={currentEntities}
           />
         ) : null}
       </div>
