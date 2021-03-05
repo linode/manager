@@ -22,7 +22,7 @@
     "upgrade:sdk": "yarn workspace @linode/api-v4 version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade @linode/api-v4",
     "postinstall": "yarn workspaces run postinstall && patch-package",
     "build:sdk": "yarn workspace @linode/api-v4 build",
-    "build": "yarn build:sdk && yarn workspace linode-manager build",
+    "build": "yarn workspace @linode/validation run build && yarn build:sdk && yarn workspace linode-manager build",
     "build:analyze": "yarn build --bundle-analyze",
     "up": "yarn install:all && yarn build:sdk && yarn start:all",
     "start:all": "concurrently \"yarn workspace @linode/api-v4 start\" \"yarn workspace linode-manager start\"",
