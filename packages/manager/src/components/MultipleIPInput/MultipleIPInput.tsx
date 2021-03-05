@@ -6,6 +6,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import HelpIcon from 'src/components/HelpIcon';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -44,21 +45,40 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginBottom: theme.spacing(),
   },
+  ipNetmaskTooltipSection: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  infoIcon: {
+    marginTop: '-1.05rem',
+    color: '#888F91',
+  },
 }));
 
 export interface Props {
   title: string;
   helperText?: string;
+  tooltip?: string;
+  placeholder?: string;
   error?: string;
   ips: ExtendedIP[];
   onChange: (ips: ExtendedIP[]) => void;
-  onBlur?: () => void;
+  onBlur?: (ips: ExtendedIP[]) => void;
   inputProps?: InputBaseProps;
   className?: string;
 }
 
 export const MultipleIPInput: React.FC<Props> = (props) => {
-  const { error, onChange, ips, title, helperText } = props;
+  const {
+    error,
+    onChange,
+    onBlur,
+    ips,
+    title,
+    helperText,
+    tooltip,
+    placeholder,
+  } = props;
   const classes = useStyles();
 
   const handleChange = (
@@ -68,6 +88,19 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     const newIPs = [...ips];
     newIPs[idx].address = e.target.value;
     onChange(newIPs);
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    idx: number
+  ) => {
+    if (!onBlur) {
+      return;
+    }
+
+    const newIPs = [...ips];
+    newIPs[idx].address = e.target.value;
+    onBlur(newIPs);
   };
 
   const addNewInput = () => {
@@ -92,7 +125,18 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
         [props.className ?? '']: Boolean(props.className),
       })}
     >
-      <InputLabel>{title}</InputLabel>
+      {tooltip ? (
+        <div className={classes.ipNetmaskTooltipSection}>
+          <InputLabel>{title}</InputLabel>
+          <HelpIcon
+            className={classes.infoIcon}
+            text={tooltip}
+            tooltipPosition="right"
+          />
+        </div>
+      ) : (
+        <InputLabel>{title}</InputLabel>
+      )}
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
       )}
@@ -119,7 +163,9 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(e, idx)
               }
+              onBlur={(e) => handleBlur(e, idx)}
               errorText={thisIP.error}
+              placeholder={placeholder}
               hideLabel
             />
           </Grid>

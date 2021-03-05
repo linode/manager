@@ -74,9 +74,9 @@ describe('utilities', () => {
   describe('validateIPs', () => {
     it('adds errors to invalid IPs', () => {
       expect(
-        validateIPs(['1.1.1.1', 'invalid-IP'].map(stringToExtendedIP))
+        validateIPs(['1.1.1.1/32', 'invalid-IP'].map(stringToExtendedIP))
       ).toEqual([
-        { address: '1.1.1.1' },
+        { address: '1.1.1.1/32' },
         { address: 'invalid-IP', error: IP_ERROR_MESSAGE },
       ]);
     });
