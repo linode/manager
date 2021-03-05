@@ -111,7 +111,7 @@ export const TransferControls: React.FC<{}> = (_) => {
     setTimeout(() => setToken(''), 150);
   };
 
-  const handleCreateTransfer = () => push('/account/entity-transfers/create');
+  const handleCreateTransfer = () => push('/account/service-transfers/create');
   return (
     <>
       <Grid
@@ -129,7 +129,7 @@ export const TransferControls: React.FC<{}> = (_) => {
           wrap="nowrap"
         >
           <Typography className={classes.label}>
-            <strong>Receive a Transfer</strong>
+            <strong>Receive a Service Transfer</strong>
           </Typography>
           <Grid
             container
@@ -142,7 +142,7 @@ export const TransferControls: React.FC<{}> = (_) => {
               className={classes.transferInput}
               hideLabel
               value={token}
-              label="Receive a Transfer"
+              label="Receive a Service Transfer"
               placeholder="Enter a token"
               onChange={handleInputChange}
             />
@@ -157,7 +157,7 @@ export const TransferControls: React.FC<{}> = (_) => {
             <Hidden smDown>
               <HelpIcon
                 className={classes.helpIcon}
-                text="Enter a transfer token to review the details and accept the transfer."
+                text="Enter a service transfer token to review the details and accept the transfer."
               />
             </Hidden>
           </Grid>
@@ -168,7 +168,7 @@ export const TransferControls: React.FC<{}> = (_) => {
             className={classes.makeTransferButton}
             onClick={handleCreateTransfer}
           >
-            Make a Transfer
+            Make a Service Transfer
           </Button>
         </Grid>
       </Grid>

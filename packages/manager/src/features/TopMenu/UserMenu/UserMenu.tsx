@@ -270,7 +270,7 @@ export const UserMenu: React.FC<{}> = () => {
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Transfers',
-        href: '/account/entity-transfers',
+        href: '/account/service-transfers',
         hide: _isRestrictedUser || !flags.entityTransfers,
       },
       // Restricted users with read_write account access can view Settings.
