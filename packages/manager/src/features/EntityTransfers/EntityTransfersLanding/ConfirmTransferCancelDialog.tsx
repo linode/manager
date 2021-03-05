@@ -1,4 +1,7 @@
-import { cancelTransfer } from '@linode/api-v4/lib/entity-transfers';
+import {
+  cancelTransfer,
+  TransferEntities,
+} from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -24,10 +27,11 @@ export interface Props {
   onClose: () => void;
   open: boolean;
   token?: string;
+  entities?: TransferEntities;
 }
 
 export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
-  const { onClose, open, token } = props;
+  const { onClose, open, token, entities } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -90,6 +94,11 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
     </ActionsPanel>
   );
 
+  // TS safety hatch (not possible in practice).
+  if (!entities) {
+    return null;
+  }
+
   return (
     <ConfirmationDialog
       onClose={onClose}
@@ -110,9 +119,11 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
           : null
       }
       <Typography>
-        Upon confirmation, the token generated for this transfer will no longer
-        be valid. To transfer ownership of these Linodes, you will need to
-        create a new transfer and share the new token with the receiving party.
+        The token generated for this transfer will no longer be valid. To
+        transfer ownership of{' '}
+        {entities?.linodes.length > 1 ? 'these Linodes' : 'this Linode'}, you
+        will need to create a new transfer and share the new token with the
+        receiving party.
       </Typography>
     </ConfirmationDialog>
   );

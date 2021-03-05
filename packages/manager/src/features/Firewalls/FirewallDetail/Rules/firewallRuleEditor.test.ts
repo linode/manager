@@ -19,6 +19,7 @@ describe('Rule Editor', () => {
         // original rule, plus a status of "NOT_MODIFIED".
         expect(revisionList[0]).toEqual({
           ...rules[i],
+          originalIndex: i,
           status: 'NOT_MODIFIED',
         });
       });
@@ -128,6 +129,16 @@ describe('Rule Editor', () => {
         finalState.forEach((revisionList) => {
           expect(revisionList).toHaveLength(1);
         });
+      });
+
+      it('reorders the revision lists', () => {
+        const newState = reducer(baseState, {
+          type: 'REORDER',
+          startIdx: 1,
+          endIdx: 0,
+        });
+        expect(newState[0][0]).toHaveProperty('originalIndex', 1);
+        expect(newState[1][0]).toHaveProperty('originalIndex', 0);
       });
     });
   });

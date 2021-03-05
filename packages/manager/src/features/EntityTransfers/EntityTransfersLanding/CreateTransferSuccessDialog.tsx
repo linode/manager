@@ -59,30 +59,35 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
     return null;
   }
 
-  const draftEmail = `This token authorizes transfer of Linodes to you:\n
+  const pluralizedEntities = pluralize(
+    'Linode',
+    'Linodes',
+    transfer.entities.linodes.length
+  );
+
+  const draftEmail = `This token authorizes transfer of ${pluralizedEntities} to you:\n
   ${transfer.token}\n\t
-   1) Log in to your account on Linode Cloud Manager.\t
+   1) Log in to your account at cloud.linode.com.\t
    2) Navigate to the Transfers tab on your Account page.\t
    3) Copy and paste the token into the Enter Transfer Token field to view\n\tdetails and accept the transfer.\n
    If you do not have an account with Linode you will need to create one.
-   This token will expire at ${parseAPIDate(transfer.expiry).toLocaleString(
+   This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
      DateTime.DATETIME_FULL
    )}.`;
 
   return (
     <InformationDialog
-      title="Token for Transfer"
+      title="Transfer Token"
       open={isOpen}
       onClose={onClose}
       className={classes.root}
     >
       <Typography className={classes.text}>
-        This token authorizes the transfer of{' '}
-        {pluralize('Linode', 'Linodes', transfer.entities.linodes.length)}.
+        This token authorizes the transfer of {pluralizedEntities}.
       </Typography>
       <Typography>
         Copy and paste the transfer token or draft text into an email or other
-        secure delivery method. It make take up to an hour for the transfer to
+        secure delivery method. It may take up to an hour for the transfer to
         take effect once accepted by the recipient.
       </Typography>
       <div className={classes.inputSection}>
@@ -97,8 +102,9 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
         <ToolTip open={tooltipOpen[0]} title="copied!">
           <div className={classes.copyButton}>
             <Button
-              buttonType="primary"
+              buttonType="secondary"
               onClick={() => handleCopy(0, transfer.token)}
+              outline
             >
               Copy Transfer Token
             </Button>

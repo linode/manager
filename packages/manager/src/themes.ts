@@ -152,7 +152,7 @@ const darkThemeOptions = {
   },
   color: {
     headline: primaryColors.headline,
-    red: '#ca0813',
+    red: '#fb6d6d',
     green: '#00b159',
     orange: '#ffb31a',
     yellow: '#fecf2f',
@@ -285,7 +285,8 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#888',
+          backgroundColor: cmrBorderColors.borderTable,
+          color: cmrBorderColors.borderTabs
         },
         '&.loading': {
           backgroundColor: primaryColors.text,
@@ -438,7 +439,7 @@ const darkThemeOptions = {
         color: '#c9cacb',
         lineHeight: 1.25,
         '&$error': {
-          color: '#ca0813',
+          color: '#fb6d6d',
         },
       },
     },
@@ -462,6 +463,9 @@ const darkThemeOptions = {
         '&$focused': {
           borderColor: primaryColors.main,
           boxShadow: '0 0 2px 1px #222',
+        },
+        '&$error': {
+          borderColor: '#fb6d6d',
         },
         '& svg': {
           color: primaryColors.main,
