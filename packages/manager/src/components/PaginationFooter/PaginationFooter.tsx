@@ -32,6 +32,9 @@ const styles = (theme: Theme) =>
           boxShadow: 'none',
         },
       },
+      '& .MuiInput-input': {
+        paddingTop: 4,
+      },
       '& .react-select__value-container': {
         paddingLeft: 12,
       },
