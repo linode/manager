@@ -3,12 +3,10 @@ import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import Info from 'src/assets/icons/info.svg';
 import Button from 'src/components/Button';
-import IconButton from 'src/components/core/IconButton';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
+import HelpIcon from 'src/components/HelpIcon';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -52,7 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
   },
   infoIcon: {
-    marginTop: -13,
+    marginTop: '-1.05rem',
+    color: '#888F91',
   },
 }));
 
@@ -129,11 +128,11 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
       {tooltip ? (
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
-          <Tooltip title={tooltip} placement="right">
-            <IconButton className={classes.infoIcon}>
-              <Info />
-            </IconButton>
-          </Tooltip>
+          <HelpIcon
+            className={classes.infoIcon}
+            text={tooltip}
+            tooltipPosition="right"
+          />
         </div>
       ) : (
         <InputLabel>{title}</InputLabel>
