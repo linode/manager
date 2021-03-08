@@ -52,6 +52,8 @@ export const LinodeTransferTable: React.FC<Props> = (props) => {
 
   const handleSearch = (searchText: string) => {
     setSearchText(searchText);
+    // If you're on page 2+, need to go back to page 1 to see the actual results
+    pagination.handlePageChange(1);
   };
 
   const theme = useTheme<Theme>();
