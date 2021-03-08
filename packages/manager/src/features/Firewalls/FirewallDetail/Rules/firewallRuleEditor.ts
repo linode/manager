@@ -145,9 +145,18 @@ const ruleEditorReducer = (
       if (!ruleToClone) {
         return;
       }
-      const { addresses, ports, protocol, action: _action } = ruleToClone;
+      const {
+        addresses,
+        description,
+        label,
+        ports,
+        protocol,
+        action: _action,
+      } = ruleToClone;
       draft.push([
         {
+          label,
+          description,
           action: _action,
           addresses,
           ports,
