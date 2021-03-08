@@ -30,13 +30,13 @@ export const TransferDetailsDialog: React.FC<Props> = (props) => {
 
   return (
     <InformationDialog
-      title="Transfer Details"
+      title="Service Transfer Details"
       fullWidth
       open={isOpen}
       onClose={onClose}
     >
       <div className={classes.token}>
-        <Typography className={classes.label}>Transfer Token: </Typography>
+        <Typography className={classes.label}>Token: </Typography>
         {token}
       </div>
       <Typography className={classes.label}>Linode IDs:</Typography>

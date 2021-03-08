@@ -337,7 +337,7 @@ export const sendSearchBarUsedEvent = () => {
 export const sendEntityTransferCreateEvent = (label: string) => {
   sendEvent({
     // eslint-disable-next-line
-    category: 'Entity Transfer',
+    category: 'Service Transfer',
     action: 'Create',
     label,
   });
@@ -345,7 +345,7 @@ export const sendEntityTransferCreateEvent = (label: string) => {
 
 export const sendEntityTransferReceiveEvent = (label: string) => {
   sendEvent({
-    category: 'Entity Transfer',
+    category: 'Service Transfer',
     action: 'Receive',
     label,
   });
@@ -353,7 +353,7 @@ export const sendEntityTransferReceiveEvent = (label: string) => {
 
 export const sendEntityTransferCancelEvent = () => {
   sendEvent({
-    category: 'Entity Transfer',
+    category: 'Service Transfer',
     action: 'Cancel',
   });
 };

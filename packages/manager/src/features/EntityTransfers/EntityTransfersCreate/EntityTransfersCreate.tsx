@@ -94,23 +94,23 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
         sendEntityTransferCreateEvent(entityCount);
 
         queryClient.invalidateQueries(queryKey);
-        push({ pathname: '/account/entity-transfers', state: { transfer } });
+        push({ pathname: '/account/service-transfers', state: { transfer } });
       },
     }).catch((_) => null);
   };
 
   return (
     <>
-      <DocumentTitleSegment segment="Make a Transfer" />
+      <DocumentTitleSegment segment="Make a Service Transfer" />
       <Breadcrumb
         className={classes.crumb}
         pathname={location.pathname}
-        labelTitle="Make a Transfer"
+        labelTitle="Make a Service Transfer"
         labelOptions={{ noCap: true }}
         crumbOverrides={[
           {
             position: 2,
-            label: 'Transfers',
+            label: 'Service Transfers',
           },
         ]}
       />

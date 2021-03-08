@@ -68,8 +68,8 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
   const draftEmail = `This token authorizes transfer of ${pluralizedEntities} to you:\n
   ${transfer.token}\n\t
    1) Log in to your account at cloud.linode.com.\t
-   2) Navigate to the Transfers tab on your Account page.\t
-   3) Copy and paste the token into the Enter Transfer Token field to view\n\tdetails and accept the transfer.\n
+   2) Navigate to the Service Transfers tab on your Account page.\t
+   3) Copy and paste the token into the Receive a Service Transfer field to view\n\tdetails and accept the transfer.\n
    If you do not have an account with Linode you will need to create one.
    This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
      DateTime.DATETIME_FULL
@@ -77,7 +77,7 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
 
   return (
     <InformationDialog
-      title="Transfer Token"
+      title="Service Transfer Token"
       open={isOpen}
       onClose={onClose}
       className={classes.root}
@@ -86,15 +86,15 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
         This token authorizes the transfer of {pluralizedEntities}.
       </Typography>
       <Typography>
-        Copy and paste the transfer token or draft text into an email or other
-        secure delivery method. It may take up to an hour for the transfer to
+        Copy and paste the token or draft text into an email or other secure
+        delivery method. It may take up to an hour for the service transfer to
         take effect once accepted by the recipient.
       </Typography>
       <div className={classes.inputSection}>
         <CopyableTextField
           className={classes.tokenInput}
           value={transfer.token}
-          label="Transfer Token"
+          label="Token"
           hideIcon
           fullWidth
           aria-disabled
@@ -106,7 +106,7 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
               onClick={() => handleCopy(0, transfer.token)}
               outline
             >
-              Copy Transfer Token
+              Copy Token
             </Button>
           </div>
         </ToolTip>
