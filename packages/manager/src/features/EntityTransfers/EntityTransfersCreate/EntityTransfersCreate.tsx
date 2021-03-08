@@ -156,4 +156,4 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
   );
 };
 
-export default React.memo(EntityTransfersCreate);
+export default EntityTransfersCreate;
