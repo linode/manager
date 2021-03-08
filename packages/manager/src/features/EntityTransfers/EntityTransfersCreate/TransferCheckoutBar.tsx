@@ -126,7 +126,9 @@ export const TransferCheckoutBar: React.FC<Props> = (props) => {
           {pluralize('Linode', 'Linodes', totalSelectedLinodes)} to be
           transferred
         </Typography>
-      ) : null}
+      ) : (
+        <Typography>No Linodes selected</Typography>
+      )}
       <Button
         buttonType="primary"
         disabled={totalSelectedLinodes === 0}
