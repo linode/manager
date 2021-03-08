@@ -6,10 +6,6 @@ import withPreferences, {
   PreferencesActionsProps,
 } from 'src/containers/preferences.container';
 import { dark, light } from 'src/themes';
-import {
-  sendCurrentThemeSettingsEvent,
-  sendThemeToggleEvent,
-} from 'src/utilities/ga';
 
 export type ThemeChoice = 'light' | 'dark';
 
@@ -49,13 +45,6 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
       document.body.classList.remove('no-transition');
     }, 500);
     setActiveHighlightTheme(value);
-    /** send to GA */
-    sendThemeToggleEvent(value);
-  };
-
-  const setThemePrefsOnAppLoad = (value: ThemeChoice) => {
-    /** send to GA */
-    sendCurrentThemeSettingsEvent(value);
   };
 
   React.useEffect(() => {
@@ -85,7 +74,6 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
       toggleCallbackFnDebounced={toggleTheme}
       /** purely for unit test purposes */
       value={props.theme}
-      initialSetCallbackFn={setThemePrefsOnAppLoad}
       localStorageKey="themeChoice"
     >
       {({

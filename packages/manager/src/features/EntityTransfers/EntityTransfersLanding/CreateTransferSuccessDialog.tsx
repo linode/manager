@@ -10,7 +10,24 @@ import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import InformationDialog from 'src/components/InformationDialog';
 import { parseAPIDate } from 'src/utilities/date';
+import {
+  sendEntityTransferCopyDraftEmailEvent,
+  sendEntityTransferCopyTokenEvent,
+} from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
+import { debounce } from 'throttle-debounce';
+
+const debouncedSendEntityTransferCopyTokenEvent = debounce(
+  10 * 1000,
+  true,
+  sendEntityTransferCopyTokenEvent
+);
+
+const debouncedSendEntityTransferDraftEmailEvent = debounce(
+  10 * 1000,
+  true,
+  sendEntityTransferCopyDraftEmailEvent
+);
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -103,7 +120,11 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
           <div className={classes.copyButton}>
             <Button
               buttonType="secondary"
-              onClick={() => handleCopy(0, transfer.token)}
+              onClick={() => {
+                // @analytics
+                debouncedSendEntityTransferCopyTokenEvent();
+                handleCopy(0, transfer.token);
+              }}
               outline
             >
               Copy Token
@@ -125,7 +146,11 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
           <div className={classes.copyButton}>
             <Button
               buttonType="primary"
-              onClick={() => handleCopy(1, draftEmail)}
+              onClick={() => {
+                // @analytics
+                debouncedSendEntityTransferDraftEmailEvent();
+                handleCopy(1, draftEmail);
+              }}
             >
               Copy Draft Email
             </Button>
