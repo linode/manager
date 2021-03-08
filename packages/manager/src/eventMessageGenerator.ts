@@ -171,19 +171,19 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Domain ${e.entity?.label ?? ''} has been imported.`,
   },
   entity_transfer_accept: {
-    notification: (_) => `An entity transfer has been accepted.`,
+    notification: (_) => `A service transfer has been accepted.`,
   },
   entity_transfer_cancel: {
-    notification: (_) => `An entity transfer has been cancelled.`,
+    notification: (_) => `A service transfer has been cancelled.`,
   },
   entity_transfer_create: {
-    notification: (_) => `An entity transfer has been created.`,
+    notification: (_) => `A service transfer has been created.`,
   },
   entity_transfer_fail: {
-    notification: (_) => `Entity transfer failed.`,
+    notification: (_) => `Service transfer failed.`,
   },
   entity_transfer_stale: {
-    notification: (_) => `An entity transfer token has expired.`,
+    notification: (_) => `A service transfer token has expired.`,
   },
   firewall_enable: {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been enabled.`,
