@@ -269,7 +269,7 @@ export const UserMenu: React.FC<{}> = () => {
       },
       // Restricted users can't view the Transfers tab regardless of their grants
       {
-        display: 'Transfers',
+        display: 'Service Transfers',
         href: '/account/service-transfers',
         hide: _isRestrictedUser || !flags.entityTransfers,
       },
