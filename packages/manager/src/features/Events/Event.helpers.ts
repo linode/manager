@@ -79,12 +79,21 @@ export const maybeRemoveTrailingPeriod = (string: string) => {
   return string;
 };
 
+const ACTIONS_WITHOUT_USERNAMES = [
+  'entity_transfer_accept',
+  'entity_transfer_cancel',
+  'entity_transfer_create',
+  'entity_transfer_fail',
+  'entity_transfer_stale',
+  'lassie_reboot',
+];
+
 export const formatEventWithUsername = (
   action: EventAction,
   username: string | null,
   message: string
 ) => {
-  return username && action !== 'lassie_reboot'
+  return username && !ACTIONS_WITHOUT_USERNAMES.includes(action)
     ? /*
         The event message for Lassie events already includes "by the Lassie Watchdog service",
         so we don't want to add "by Linode" after that.
