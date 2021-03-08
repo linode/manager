@@ -14,18 +14,21 @@ const getIncidents = () => {
 };
 
 const getScheduledMaintenance = () => {
-  return Axios.get<MaintenanceResponse>(`${BASE_URL}/incidents/unresolved.json`)
+  return Axios.get<MaintenanceResponse>(
+    `${BASE_URL}/scheduled-maintenances/active.json`
+  )
     .then((response) => response.data)
     .catch((_) =>
       Promise.reject([{ reason: 'Error retrieving maintenance events.' }])
     );
 };
 
-const queryKey = 'statusPage';
+const incidentKey = 'status-page-incidents';
+const maintenanceKey = 'status-page-maintenance';
 
 export const useIncidentQuery = () => {
   return useQuery<IncidentResponse, APIError[]>(
-    queryKey,
+    incidentKey,
     getIncidents,
     queryPresets.longLived
   );
@@ -33,7 +36,7 @@ export const useIncidentQuery = () => {
 
 export const useMaintenanceQuery = () => {
   return useQuery<MaintenanceResponse, APIError[]>(
-    queryKey,
+    maintenanceKey,
     getScheduledMaintenance,
     queryPresets.longLived
   );
