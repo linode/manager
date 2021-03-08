@@ -149,7 +149,7 @@ export const ConfirmTransferDialog: React.FC<Props> = (props) => {
   return (
     <ConfirmationDialog
       onClose={onClose}
-      title="Receive a Transfer"
+      title="Receive a Service Transfer"
       open={open}
       actions={actions}
     >
