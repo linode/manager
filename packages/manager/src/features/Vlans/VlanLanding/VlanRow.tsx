@@ -1,5 +1,5 @@
-import { VLAN } from '@linode/api-v4/lib/vlans';
 import { APIError } from '@linode/api-v4/lib/types';
+import { VLAN } from '@linode/api-v4/lib/vlans';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -11,7 +11,6 @@ import ActionMenu, { ActionHandlers } from './VlanActionMenu';
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     display: 'block',
-    fontFamily: theme.font.bold,
     color: theme.cmrTextColors.linkActiveLight,
     fontSize: '.875rem',
     lineHeight: '1.14rem',

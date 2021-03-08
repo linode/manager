@@ -164,6 +164,7 @@ const darkThemeOptions = {
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
     grey6: '#606469',
+    grey7: cmrBGColors.bgPaper,
     grey9: primaryColors.divider,
     grey10: '#dbdde1',
     white: '#32363c',
@@ -286,7 +287,7 @@ const darkThemeOptions = {
         },
         '&$disabled': {
           backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.borderTabs
+          color: cmrBorderColors.borderTabs,
         },
         '&.loading': {
           backgroundColor: primaryColors.text,
@@ -300,7 +301,7 @@ const darkThemeOptions = {
       containedSecondary: {
         color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
-          color: primaryColors.main,
+          color: cmrTextColors.linkActiveLight,
         },
         '&:active': {
           color: primaryColors.dark,
