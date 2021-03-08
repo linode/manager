@@ -34,7 +34,11 @@ import {
   protocolOptions,
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
+import {
+  ExtendedIP,
+  stringToExtendedIP,
+  ipFieldPlaceholder,
+} from 'src/utilities/ipUtils';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import {
   Category,
@@ -46,8 +50,7 @@ import {
 
 export type Mode = 'create' | 'edit';
 
-export const IP_ERROR_MESSAGE =
-  'Must be a valid IPv4 or IPv6 address or range.';
+export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 
 // =============================================================================
 // <FirewallRuleDrawer />
@@ -372,6 +375,12 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
       [formTouched, setIPs]
     );
 
+    const handleIPBlur = (_ips: ExtendedIP[]) => {
+      const _ipsWithMasks = enforceIPMasks(_ips);
+
+      setIPs(_ipsWithMasks);
+    };
+
     const handlePortPresetChange = React.useCallback(
       (items: Item<string>[]) => {
         if (!formTouched) {
@@ -499,7 +508,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             className={classes.ipSelect}
             ips={ips}
             onChange={handleIPChange}
+            onBlur={handleIPBlur}
             inputProps={{ autoFocus: true }}
+            tooltip={ipNetmaskTooltipText}
+            placeholder={ipFieldPlaceholder}
           />
         )}
         <div className={classes.actionSection}>
@@ -540,6 +552,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     );
   }
 );
+
+const ipNetmaskTooltipText =
+  'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';
 
 // =============================================================================
 // Utilities
@@ -610,15 +625,10 @@ export const validateIPs = (
     if (!options?.allowEmptyAddress && !address) {
       return { address, error: 'Please enter an IP address.' };
     }
-    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
-    // methods for each, so we check for a netmask to decide the method to use.
-    const [, mask] = address.split('/');
+    // We accept IP ranges (i.e., CIDR notation). By the time this function is run,
+    // IP masks will have been enforced by enforceIPMasks().
     try {
-      if (mask) {
-        parseCIDR(address);
-      } else {
-        parseIP(address);
-      }
+      parseCIDR(address);
     } catch (err) {
       if (address) {
         return { address, error: IP_ERROR_MESSAGE };
@@ -841,4 +851,29 @@ export const validateForm = (
   }
 
   return errors;
+};
+
+export const enforceIPMasks = (ips: ExtendedIP[]): ExtendedIP[] => {
+  // Check if a mask was provided and if not, add the appropriate mask for IPv4 or IPv6 addresses, respectively.
+  return ips.map((extendedIP) => {
+    const ipAddress = extendedIP.address;
+
+    const [base, mask] = ipAddress.split('/');
+    if (mask) {
+      // The user provided a mask already
+      return extendedIP;
+    }
+
+    try {
+      const parsed = parseIP(base);
+      const type = parsed.kind();
+
+      const appendedMask = type === 'ipv4' ? '/32' : '/128';
+      const ipWithMask = base + appendedMask;
+
+      return { ...extendedIP, address: ipWithMask };
+    } catch (err) {
+      return extendedIP;
+    }
+  });
 };
