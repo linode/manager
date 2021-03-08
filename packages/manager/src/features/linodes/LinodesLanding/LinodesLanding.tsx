@@ -33,10 +33,7 @@ import { DialogType } from 'src/features/linodes/types';
 import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
-import {
-  addNotificationsToLinodes,
-  LinodeWithMaintenance,
-} from 'src/store/linodes/linodes.helpers';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { MapState } from 'src/store/types';
 import formatDate, { formatDateISO } from 'src/utilities/formatDate';
 import {
@@ -93,6 +90,10 @@ export interface Props {
   filterLinodesFn?: (linode: Linode) => boolean;
   extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
+  someLinodesHaveScheduledMaintenance: boolean;
+  linodesData: LinodeWithMaintenance[];
+  linodesRequestError?: APIError[];
+  linodesRequestLoading: boolean;
 }
 
 type CombinedProps = Props &
@@ -592,52 +593,16 @@ const sendGroupByAnalytic = (value: boolean) => {
 interface StateProps {
   managed: boolean;
   linodesCount: number;
-  linodesData: LinodeWithMaintenance[];
-  linodesRequestError?: APIError[];
-  linodesRequestLoading: boolean;
   userTimezone: string;
   userProfileLoading: boolean;
   userProfileError?: APIError[];
-  someLinodesHaveScheduledMaintenance: boolean;
   linodesInTransition: Set<number>;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state) => {
-  const linodes = Object.values(state.__resources.linodes.itemsById);
-  const linodeTypesMap = state.__resources.types.entities.reduce(
-    (accumulator, thisType) => ({
-      ...accumulator,
-      [thisType.id]: thisType,
-    }),
-    {}
-  );
-
-  const linodesDataWithPlan = linodes.map((thisLinode) => {
-    return {
-      ...thisLinode,
-      plan: linodeTypesMap[thisLinode.type ?? '']?.label ?? 'Unknown',
-    };
-  });
-
-  const notifications = state.__resources.notifications.data || [];
-
-  const linodesWithMaintenance = addNotificationsToLinodes(
-    notifications,
-    linodesDataWithPlan
-  );
-
+const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
     managed: state.__resources.accountSettings.data?.managed ?? false,
     linodesCount: state.__resources.linodes.results,
-    linodesData: linodesWithMaintenance,
-    someLinodesHaveScheduledMaintenance: linodesWithMaintenance
-      ? linodesWithMaintenance.some(
-          (eachLinode) =>
-            !!eachLinode.maintenance && !!eachLinode.maintenance.when
-        )
-      : false,
-    linodesRequestLoading: state.__resources.linodes.loading,
-    linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: getUserTimezone(state),
     userProfileLoading: state.__resources.profile.loading,
     userProfileError: path<APIError[]>(
@@ -649,10 +614,10 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
 };
 
 interface DispatchProps {
-  deleteLinode: (linodeId: number) => Promise<{}>;
+  deleteLinode: (linodeId: number) => Promise<Record<string, never>>;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
   deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId })),

@@ -68,6 +68,7 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
     filterCondition,
     value,
     inputId,
+    noOptionsMessage,
     ...rest
   } = props;
 
@@ -86,7 +87,7 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
       )
     : linodesToItems(linodes, valueOverride, labelOverride, filterCondition);
 
-  const noOptionsMessage =
+  const defaultNoOptionsMessage =
     !linodeError && !linodesLoading && options.length === 0
       ? 'You have no Linodes to choose from'
       : 'No Options';
@@ -121,7 +122,7 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
       )}
       isClearable={false}
       textFieldProps={props.textFieldProps}
-      noOptionsMessage={() => props.noOptionsMessage || noOptionsMessage}
+      noOptionsMessage={() => noOptionsMessage || defaultNoOptionsMessage}
       {...rest}
     />
   );

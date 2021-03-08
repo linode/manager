@@ -1,13 +1,16 @@
-import { Formik, FormikProps } from 'formik';
-import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import {
+  FirewallPolicyType,
   FirewallRuleProtocol,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
+import { Formik, FormikProps } from 'formik';
+import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import { uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -15,6 +18,7 @@ import Select from 'src/components/EnhancedSelect';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import {
   addressOptions,
@@ -30,7 +34,11 @@ import {
   protocolOptions,
 } from 'src/features/Firewalls/shared';
 import capitalize from 'src/utilities/capitalize';
-import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
+import {
+  ExtendedIP,
+  stringToExtendedIP,
+  ipFieldPlaceholder,
+} from 'src/utilities/ipUtils';
 import { ExtendedFirewallRule } from './firewallRuleEditor';
 import {
   Category,
@@ -42,8 +50,7 @@ import {
 
 export type Mode = 'create' | 'edit';
 
-export const IP_ERROR_MESSAGE =
-  'Must be a valid IPv4 or IPv6 address or range.';
+export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 
 // =============================================================================
 // <FirewallRuleDrawer />
@@ -58,6 +65,7 @@ interface Props {
 }
 
 interface Form {
+  action: FirewallPolicyType;
   type: string;
   ports?: string;
   addresses: string;
@@ -134,7 +142,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
       ports,
       protocol,
       addresses,
-      action: 'ACCEPT',
+      action: values.action,
     };
 
     if (values.label) {
@@ -189,6 +197,9 @@ export default React.memo(FirewallRuleDrawer);
 // =============================================================================
 const useStyles = makeStyles((theme: Theme) => ({
   ipSelect: {
+    marginTop: theme.spacing(2),
+  },
+  actionSection: {
     marginTop: theme.spacing(2),
   },
 }));
@@ -278,7 +289,10 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         }
 
         if (!touched.label) {
-          setFieldValue('label', `allow-${category}-${item?.label}`);
+          setFieldValue(
+            'label',
+            `${values.action.toLocaleLowerCase()}-${category}-${item?.label}`
+          );
         }
 
         // Pre-populate other form values if selecting a pre-defined type.
@@ -291,7 +305,14 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           setPresetPorts([PORT_PRESETS[portPresets[selectedType]]]);
         }
       },
-      [formTouched, setFieldValue, touched, category, setPresetPorts]
+      [
+        formTouched,
+        setFieldValue,
+        touched,
+        category,
+        setPresetPorts,
+        values.action,
+      ]
     );
 
     const handleTextFieldChange = React.useCallback(
@@ -333,6 +354,17 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
       [formTouched, setFieldValue, setFormTouched, setIPs]
     );
 
+    const handleActionChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>, value: 'ACCEPT' | 'DROP') => {
+        if (!formTouched) {
+          setFormTouched(true);
+        }
+
+        setFieldValue('action', value);
+      },
+      [formTouched, setFieldValue, setFormTouched]
+    );
+
     const handleIPChange = React.useCallback(
       (_ips: ExtendedIP[]) => {
         if (!formTouched) {
@@ -342,6 +374,12 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
       },
       [formTouched, setIPs]
     );
+
+    const handleIPBlur = (_ips: ExtendedIP[]) => {
+      const _ipsWithMasks = enforceIPMasks(_ips);
+
+      setIPs(_ipsWithMasks);
+    };
 
     const handlePortPresetChange = React.useCallback(
       (items: Item<string>[]) => {
@@ -470,9 +508,36 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             className={classes.ipSelect}
             ips={ips}
             onChange={handleIPChange}
+            onBlur={handleIPBlur}
             inputProps={{ autoFocus: true }}
+            tooltip={ipNetmaskTooltipText}
+            placeholder={ipFieldPlaceholder}
           />
         )}
+        <div className={classes.actionSection}>
+          <Typography>
+            <strong>Action</strong>
+          </Typography>
+
+          <RadioGroup
+            aria-label="action"
+            name="action"
+            value={values.action}
+            onChange={handleActionChange}
+            row
+          >
+            <FormControlLabel
+              value="ACCEPT"
+              label="Accept"
+              control={<Radio />}
+            />
+            <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
+            <Typography style={{ paddingTop: 4 }}>
+              This will take precedence over the Firewall's {category} policy.
+            </Typography>
+          </RadioGroup>
+        </div>
+
         <ActionsPanel>
           <Button
             buttonType="primary"
@@ -487,6 +552,9 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     );
   }
 );
+
+const ipNetmaskTooltipText =
+  'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';
 
 // =============================================================================
 // Utilities
@@ -557,15 +625,10 @@ export const validateIPs = (
     if (!options?.allowEmptyAddress && !address) {
       return { address, error: 'Please enter an IP address.' };
     }
-    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
-    // methods for each, so we check for a netmask to decide the method to use.
-    const [, mask] = address.split('/');
+    // We accept IP ranges (i.e., CIDR notation). By the time this function is run,
+    // IP masks will have been enforced by enforceIPMasks().
     try {
-      if (mask) {
-        parseCIDR(address);
-      } else {
-        parseIP(address);
-      }
+      parseCIDR(address);
     } catch (err) {
       if (address) {
         return { address, error: IP_ERROR_MESSAGE };
@@ -602,6 +665,7 @@ export const classifyIPs = (ips: ExtendedIP[]) => {
 };
 
 const initialValues: Form = {
+  action: 'ACCEPT',
   type: '',
   ports: '',
   addresses: '',
@@ -616,6 +680,7 @@ const getInitialFormValues = (ruleToModify?: ExtendedFirewallRule): Form => {
   }
 
   return {
+    action: ruleToModify.action,
     ports: portStringToItems(ruleToModify.ports)[1],
     protocol: ruleToModify.protocol,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),
@@ -786,4 +851,29 @@ export const validateForm = (
   }
 
   return errors;
+};
+
+export const enforceIPMasks = (ips: ExtendedIP[]): ExtendedIP[] => {
+  // Check if a mask was provided and if not, add the appropriate mask for IPv4 or IPv6 addresses, respectively.
+  return ips.map((extendedIP) => {
+    const ipAddress = extendedIP.address;
+
+    const [base, mask] = ipAddress.split('/');
+    if (mask) {
+      // The user provided a mask already
+      return extendedIP;
+    }
+
+    try {
+      const parsed = parseIP(base);
+      const type = parsed.kind();
+
+      const appendedMask = type === 'ipv4' ? '/32' : '/128';
+      const ipWithMask = base + appendedMask;
+
+      return { ...extendedIP, address: ipWithMask };
+    } catch (err) {
+      return extendedIP;
+    }
+  });
 };

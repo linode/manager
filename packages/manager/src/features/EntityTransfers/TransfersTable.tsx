@@ -89,8 +89,12 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
   const transferTypeIsPending = transferType === 'pending';
   const transferTypeIsSent = transferType === 'sent';
 
-  const handleCancelPendingTransferClick = (token: string) => {
+  const handleCancelPendingTransferClick = (
+    token: string,
+    entities: TransferEntities
+  ) => {
     setTokenBeingCanceled(token);
+    setCurrentEntities(entities);
     setCancelPendingDialogOpen(true);
   };
 
@@ -109,7 +113,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
     <>
       <div className={classes.root}>
         <Accordion
-          heading={`Transfers ${capitalize(transferType)}`}
+          heading={`${capitalize(transferType)} Service Transfers`}
           defaultExpanded={transfersCount > 0}
         >
           <Table className={classes.table}>
@@ -133,7 +137,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
                   <>
                     <Hidden xsDown>
                       <TableCell key="transfer-token-table-header-entities">
-                        Entities
+                        Services
                       </TableCell>
                     </Hidden>
                     <TableCell key="transfer-token-table-header-expiry">
@@ -145,7 +149,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
                 ) : transferTypeIsSent ? (
                   <>
                     <TableCell key="transfer-token-table-header-entities">
-                      Entities
+                      Services
                     </TableCell>
                     <TableCell key="transfer-token-table-header-status">
                       Status
@@ -153,7 +157,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
                   </>
                 ) : (
                   <TableCell key="transfer-token-table-header-entities">
-                    Entities
+                    Services
                   </TableCell>
                 )}
               </TableRow>
@@ -188,7 +192,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
             handleSizeChange={handlePageSizeChange}
             page={page}
             pageSize={pageSize}
-            eventCategory="Entity Transfer Table"
+            eventCategory="Service Transfer Table"
           />
         </Accordion>
         {transferTypeIsPending ? (
@@ -197,6 +201,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
             open={cancelPendingDialogOpen}
             onClose={closeCancelPendingDialog}
             token={tokenBeingCanceled}
+            entities={currentEntities}
           />
         ) : null}
       </div>

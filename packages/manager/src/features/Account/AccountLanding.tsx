@@ -39,8 +39,8 @@ const AccountLanding: React.FC<Props> = (props) => {
     },
     flags.entityTransfers
       ? {
-          title: 'Transfers',
-          routeName: `${props.match.url}/entity-transfers`,
+          title: 'Service Transfers',
+          routeName: `${props.match.url}/service-transfers`,
           hide: !flags.entityTransfers,
         }
       : null,

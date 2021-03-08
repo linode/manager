@@ -16,6 +16,23 @@ interface EntityTransfersData {
   entityTransfers: Record<string, EntityTransfer>;
 }
 
+const sortFilter = { '+order_by': 'created', '+order': 'desc' };
+
+export const TRANSFER_FILTERS = {
+  received: {
+    ...sortFilter,
+    '+and': [{ is_sender: false }, { status: { '+neq': 'pending' } }],
+  },
+  pending: {
+    ...sortFilter,
+    status: 'pending',
+  },
+  sent: {
+    ...sortFilter,
+    '+and': [{ is_sender: true }, { status: { '+neq': 'pending' } }],
+  },
+};
+
 const getAllEntityTransfersRequest = (
   passedParams: any = {},
   passedFilter: any = {}

@@ -31,7 +31,7 @@ class Account extends React.Component<Props> {
             component={InvoiceDetail}
           />
           <Route
-            path={`${path}/entity-transfers/create`}
+            path={`${path}/service-transfers/create`}
             component={EntityTransfersCreate}
           />
           <Route path={`${path}`} component={AccountLanding} />
