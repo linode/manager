@@ -357,11 +357,6 @@ export interface LinodeDiskCreationData {
 
 export type InterfaceType = 'default' | 'additional';
 
-export interface LinodeInterfacePayload {
-  type: InterfaceType;
-  vlan_id?: number;
-}
-
 export interface LinodeInterface {
   id: number;
   type: InterfaceType;

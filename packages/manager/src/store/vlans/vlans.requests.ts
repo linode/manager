@@ -1,14 +1,7 @@
-import {
-  VLAN,
-  getVlans,
-  attachVlan as _attach
-} from '@linode/api-v4/lib/vlans';
+import { VLAN, getVlans } from '@linode/api-v4/lib/vlans';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';
-import {
-  getVlansActions,
-  attachVlanActions
-} from './vlans.actions';
+import { getVlansActions } from './vlans.actions';
 
 const getAllVlansRequest = (payload?: { params?: any; filter?: any }) =>
   getAll<VLAN>((passedParams, passedFilter) =>
@@ -18,9 +11,4 @@ const getAllVlansRequest = (payload?: { params?: any; filter?: any }) =>
 export const getAllVlans = createRequestThunk(
   getVlansActions,
   getAllVlansRequest
-);
-
-export const attachVlan = createRequestThunk(
-  attachVlanActions,
-  ({ vlanID, linodes }) => _attach(vlanID, linodes)
 );
