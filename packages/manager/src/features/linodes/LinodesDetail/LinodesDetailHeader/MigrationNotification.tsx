@@ -2,9 +2,13 @@ import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { useDialog } from 'src/hooks/useDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -30,9 +34,18 @@ const MigrationNotification: React.FC<Props> = (props) => {
     notificationType,
   } = props;
 
-  /** Migrate */
-  const migrate = () => {
+  const {
+    dialog,
+    openDialog,
+    closeDialog,
+    submitDialog,
+    handleError,
+  } = useDialog<number>((linodeID: number) =>
     scheduleOrQueueMigration(linodeID)
+  );
+
+  const onSubmit = () => {
+    submitDialog(linodeID)
       .then((_) => {
         // A 200 response indicates that the operation was successful.
         const successMessage =
@@ -48,24 +61,54 @@ const MigrationNotification: React.FC<Props> = (props) => {
             ? 'An error occurred entering the migration queue.'
             : 'An error occurred scheduling your migration.';
 
-        enqueueSnackbar(errorMessage, {
-          variant: 'error',
-        });
+        handleError(errorMessage);
       });
   };
 
+  const actions = () => (
+    <ActionsPanel>
+      <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel>
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={onSubmit}
+        data-qa-submit-managed-enrollment
+        loading={dialog.isLoading}
+      >
+        Enter Migration Queue
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
-    <Notice important warning>
-      <Typography>
-        {notificationMessage}
-        {notificationType === 'migration_scheduled'
-          ? ' To enter the migration queue right now, please '
-          : ' To schedule your migration, please '}
-        <button className={classes.migrationLink} onClick={migrate}>
-          click here.
-        </button>
-      </Typography>
-    </Notice>
+    <>
+      <Notice important warning>
+        <Typography>
+          {notificationMessage}
+          {notificationType === 'migration_scheduled'
+            ? ' To enter the migration queue right now, please '
+            : ' To schedule your migration, please '}
+          <button
+            className={classes.migrationLink}
+            onClick={() => openDialog(linodeID)}
+          >
+            click here.
+          </button>
+        </Typography>
+      </Notice>
+      <ConfirmationDialog
+        open={dialog.isOpen}
+        error={dialog.error}
+        onClose={() => closeDialog()}
+        title="Enter migration queue?"
+        actions={actions}
+      >
+        <Typography variant="subtitle1">
+          Are you sure you want to enter the migration queue now?
+        </Typography>
+      </ConfirmationDialog>
+    </>
   );
 };
 
