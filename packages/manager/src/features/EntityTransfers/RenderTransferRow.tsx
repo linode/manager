@@ -1,5 +1,6 @@
 import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
 import * as React from 'react';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
@@ -8,7 +9,6 @@ import TableCell from 'src/components/TableCell';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 import ActionMenu from './TransfersPendingActionMenu';
-import CopyTooltip from 'src/components/CopyTooltip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   cellContents: {
@@ -33,10 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   hide: {
     [theme.breakpoints.up('md')]: {
       opacity: 0,
-    },
-    transition: theme.transitions.create(['opacity']),
-    '&:focus': {
-      opacity: 1,
     },
   },
   createdCell: {
@@ -98,6 +94,14 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
     handleTokenClick,
   } = props;
 
+  const [showCopyOnHover, setShowCopyOnHover] = React.useState<boolean>(false);
+  const handleRowOnMouseEnter = () => {
+    setShowCopyOnHover(true);
+  };
+  const handleRowOnMouseLeave = () => {
+    setShowCopyOnHover(false);
+  };
+
   const classes = useStyles();
 
   const entitiesAndTheirCounts = Object.entries(entities);
@@ -107,7 +111,10 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   const transferTypeIsSent = transferType === 'sent';
 
   return (
-    <TableRow>
+    <TableRow
+      onMouseEnter={handleRowOnMouseEnter}
+      onMouseLeave={handleRowOnMouseLeave}
+    >
       <TableCell
         className={`${classes.cellContents} ${classes.tokenCell}`}
         noWrap
@@ -121,7 +128,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           </button>
           <CopyTooltip
             text={token}
-            className={`${classes.icon} ${classes.hide}`}
+            className={`${classes.icon} ${showCopyOnHover ? '' : classes.hide}`}
           />
         </div>
       </TableCell>
