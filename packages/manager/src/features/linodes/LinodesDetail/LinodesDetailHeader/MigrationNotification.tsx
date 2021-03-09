@@ -2,13 +2,13 @@ import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useDialog } from 'src/hooks/useDialog';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -81,14 +81,17 @@ const MigrationNotification: React.FC<Props> = (props) => {
     </ActionsPanel>
   );
 
+  const migrationActionDescription =
+    notificationType === 'migration_scheduled'
+      ? 'enter the migration queue right now'
+      : 'schedule your migration';
+
   return (
     <>
       <Notice important warning>
         <Typography>
           {notificationMessage}
-          {notificationType === 'migration_scheduled'
-            ? ' To enter the migration queue right now, please '
-            : ' To schedule your migration, please '}
+          {` To ${migrationActionDescription}, please `}
           <button
             className={classes.migrationLink}
             onClick={() => openDialog(linodeID)}
@@ -101,11 +104,11 @@ const MigrationNotification: React.FC<Props> = (props) => {
         open={dialog.isOpen}
         error={dialog.error}
         onClose={() => closeDialog()}
-        title="Enter migration queue?"
+        title="Confirm Migration"
         actions={actions}
       >
         <Typography variant="subtitle1">
-          Are you sure you want to enter the migration queue now?
+          Are you sure you want to {migrationActionDescription}?
         </Typography>
       </ConfirmationDialog>
     </>
