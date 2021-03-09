@@ -1,6 +1,6 @@
 import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
-import { path } from 'ramda';
+import { partition, path } from 'ramda';
 import * as React from 'react';
 import useNotifications from 'src/hooks/useNotifications';
 import { notificationContext } from '../NotificationContext';
@@ -15,15 +15,15 @@ export const useFormattedNotifications = () => {
 
   const dayOfMonth = DateTime.local().day;
 
-  // Filter out any bounced email notifications and abuse tickets because users are alerted to those by global notification banners already.
-  const combinedNotifications = [...notifications].filter(
-    (notification) =>
-      !['billing_email_bounce', 'user_email_bounce', 'ticket_abuse'].includes(
-        notification.type
-      )
+  const [abuseNotifications, otherNotifications] = partition<Notification>(
+    (thisNotification) => thisNotification.type === 'ticket_abuse',
+    notifications
   );
 
-  return combinedNotifications
+  if (abuseNotifications.length > 0) {
+  }
+
+  return [...otherNotifications]
     .filter((thisNotification) => {
       /**
        * Don't show balance overdue notifications at the beginning of the month
@@ -86,7 +86,7 @@ const formatNotificationForDisplay = (
 ): NotificationItem => ({
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
-  countInTotal: true,
+  countInTotal: !['ticket_abuse'].includes(notification.type),
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.

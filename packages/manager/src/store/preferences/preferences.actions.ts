@@ -26,6 +26,7 @@ export interface UserPreferences {
   linode_news_banner_dismissed?: boolean;
   firewall_beta_notification?: boolean;
   backups_cta_dismissed?: boolean;
+  dismissed_notifications?: string[];
 }
 
 export const handleGetPreferences = actionCreator.async<
