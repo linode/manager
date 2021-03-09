@@ -1,4 +1,4 @@
-import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
+import createDatabaseSchema from '@linode/api-v4/lib/databases/databases.schema';
 import {
   CreateDatabasePayload,
   DatabaseMaintenanceSchedule,
