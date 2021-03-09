@@ -8,6 +8,7 @@ import TableCell from 'src/components/TableCell';
 import capitalize from 'src/utilities/capitalize';
 import { pluralize } from 'src/utilities/pluralize';
 import ActionMenu from './TransfersPendingActionMenu';
+import CopyTooltip from 'src/components/CopyTooltip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   cellContents: {
@@ -17,6 +18,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '40%',
     [theme.breakpoints.down('sm')]: {
       width: '50%',
+    },
+  },
+  tokenAndCopyIcon: {
+    display: 'flex',
+  },
+  icon: {
+    marginLeft: theme.spacing(1),
+    '& svg': {
+      width: 12,
+      height: 12,
+    },
+  },
+  hide: {
+    [theme.breakpoints.up('md')]: {
+      opacity: 0,
+    },
+    transition: theme.transitions.create(['opacity']),
+    '&:focus': {
+      opacity: 1,
     },
   },
   createdCell: {
@@ -92,12 +112,18 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
         className={`${classes.cellContents} ${classes.tokenCell}`}
         noWrap
       >
-        <button
-          className={classes.link}
-          onClick={() => handleTokenClick(token, entities)}
-        >
-          {token}
-        </button>
+        <div className={classes.tokenAndCopyIcon}>
+          <button
+            className={classes.link}
+            onClick={() => handleTokenClick(token, entities)}
+          >
+            {token}
+          </button>
+          <CopyTooltip
+            text={token}
+            className={`${classes.icon} ${classes.hide}`}
+          />
+        </div>
       </TableCell>
       <Hidden smDown={transferTypeIsPending || transferTypeIsSent}>
         <TableCell
