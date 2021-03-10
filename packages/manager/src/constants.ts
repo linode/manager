@@ -31,6 +31,7 @@ export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
+export const LINODE_STATUS_PAGE_ID = process.env.REACT_APP_STATUS_PAGE_ID || '';
 
 /** If it's hitting the prod API */
 export const isProdAPI = RegExp(
