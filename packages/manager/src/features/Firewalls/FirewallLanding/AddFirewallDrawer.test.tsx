@@ -30,14 +30,15 @@ describe('Add Firewall Drawer', () => {
 
   it('should add default rules for ssh and dns', async () => {
     renderWithTheme(<AddFirewallDrawer {...props} />);
+    const label = '123abc!@#';
+    userEvent.type(screen.getByLabelText('Label'), label);
     userEvent.click(screen.getByTestId('add-firewall-submit'));
-
     await waitFor(() =>
       expect(props.onSubmit).toHaveBeenCalledWith({
         devices: {
           linodes: [],
         },
-        label: undefined,
+        label,
         rules: {
           inbound_policy: 'DROP',
           outbound_policy: 'ACCEPT',
