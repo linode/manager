@@ -113,7 +113,7 @@ export const TransferTable: React.FC<Props> = (props) => {
                 checked={hasSelectedAll}
                 onChange={handleToggleAll}
                 inputProps={{
-                  'aria-label': `Select all entities on page`,
+                  'aria-label': `Select all services on page`,
                 }}
               />
             </TableCell>
@@ -133,7 +133,7 @@ export const TransferTable: React.FC<Props> = (props) => {
           handleSizeChange={() => null} // Transfer tables are going to be sticky at 25
           page={page}
           pageSize={pageSize}
-          eventCategory="Entity Transfer Table"
+          eventCategory="Service Transfer Table"
           fixedSize
         />
       ) : null}

@@ -12,13 +12,13 @@ interface AnalyticsEvent {
 /*
  * Will throw error unless analytics is initialized
  */
-export const sendEvent = (eventPayload: AnalyticsEvent) => {
+export const sendEvent = (eventPayload: AnalyticsEvent): void => {
   /** only send events if we have a GA ID */
   return !!GA_ID ? event(eventPayload) : undefined;
 };
 
 // LinodeActionMenu.tsx
-export const sendLinodeActionEvent = () => {
+export const sendLinodeActionEvent = (): void => {
   // AC 8/26/2020: disabling this event to reduce hits on GA as this seems to not be used
   // sendEvent({
   //   category: 'Linode Action Menu',
@@ -28,7 +28,7 @@ export const sendLinodeActionEvent = () => {
 
 // LinodeActionMenu.tsx
 // LinodeCard.tsx
-export const sendLinodeActionMenuItemEvent = (eventAction: string) => {
+export const sendLinodeActionMenuItemEvent = (eventAction: string): void => {
   sendEvent({
     category: 'Linode Action Menu Item',
     action: eventAction,
@@ -36,7 +36,7 @@ export const sendLinodeActionMenuItemEvent = (eventAction: string) => {
 };
 
 // AdaLink.tsx
-export const sendAdaEvent = () => {
+export const sendAdaEvent = (): void => {
   sendEvent({
     category: 'Support Bot',
     action: 'Open',
@@ -48,7 +48,7 @@ export const sendAdaEvent = () => {
 export const sendPaginationEvent = (
   eventCategory: string,
   eventLabel: string
-) => {
+): void => {
   sendEvent({
     category: eventCategory,
     action: 'pagination',
@@ -56,22 +56,12 @@ export const sendPaginationEvent = (
   });
 };
 
-// LinodeThemeWrapper.tsx
-export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
-  // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
-  // sendEvent({
-  //   category: 'Theme Choice',
-  //   action: eventAction,
-  //   label: location.pathname
-  // });
-};
-
 // CreateVolumeForm.tsx
 // CreateVolumeForLinodeForm.tsx
 export const sendCreateVolumeEvent = (
   eventLabel: string,
   eventAction?: string
-) => {
+): void => {
   sendEvent({
     category: 'Create Volume',
     action: eventAction || 'Create Volume',
@@ -83,7 +73,7 @@ export const sendCreateVolumeEvent = (
 export const sendCreateDomainEvent = (
   eventLabel: string,
   eventAction?: string
-) => {
+): void => {
   sendEvent({
     category: 'Create Domain',
     action: eventAction || 'Create Domain',
@@ -93,7 +83,7 @@ export const sendCreateDomainEvent = (
 
 // PanelContent.tsx
 // StackScriptBase.tsx
-export const sendStackscriptsSearchEvent = (eventLabel: string) => {
+export const sendStackscriptsSearchEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'stackscripts',
     action: 'search',
@@ -102,7 +92,10 @@ export const sendStackscriptsSearchEvent = (eventLabel: string) => {
 };
 
 // getAll.ts
-export const sendFetchAllEvent = (eventLabel: string, eventValue: number) => {
+export const sendFetchAllEvent = (
+  eventLabel: string,
+  eventValue: number
+): void => {
   sendEvent({
     category: 'Search',
     action: 'Data fetch all entities',
@@ -115,7 +108,7 @@ export const sendFetchAllEvent = (eventLabel: string, eventValue: number) => {
 export const sendImportDisplayGroupSubmitEvent = (
   eventLabel: string,
   eventValue: number
-) => {
+): void => {
   sendEvent({
     category: 'dashboard',
     action: 'import display groups',
@@ -125,7 +118,7 @@ export const sendImportDisplayGroupSubmitEvent = (
 };
 
 // LinodeThemeWrapper.tsx
-export const sendSpacingToggleEvent = (eventLabel: string) => {
+export const sendSpacingToggleEvent = (eventLabel: string): void => {
   // AC 8/24/2020: disabling this event to reduce hits on GA as this seems to not be used
   // sendEvent({
   //   category: 'Theme Choice',
@@ -135,7 +128,7 @@ export const sendSpacingToggleEvent = (eventLabel: string) => {
 };
 
 // LinodeThemeWrapper.tsx
-export const sendThemeToggleEvent = (eventLabel: string) => {
+export const sendThemeToggleEvent = (): void => {
   // AC 9/24/2020: disabling this event to reduce hits on GA as this seems to not be used
   // sendEvent({
   //   category: 'Theme Choice',
@@ -146,7 +139,7 @@ export const sendThemeToggleEvent = (eventLabel: string) => {
 
 // backupDrawer/index.ts
 // LinodeBackup.tsx
-export const sendBackupsEnabledEvent = (eventLabel: string) => {
+export const sendBackupsEnabledEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'Backups',
     action: 'Enable All Backups',
@@ -155,7 +148,7 @@ export const sendBackupsEnabledEvent = (eventLabel: string) => {
 };
 
 // LinodeBackup.tsx
-export const sendBackupsDisabledEvent = () => {
+export const sendBackupsDisabledEvent = (): void => {
   sendEvent({
     category: 'Backups',
     action: 'Disable Backups',
@@ -170,7 +163,7 @@ export const sendBackupsDisabledEvent = () => {
 export const sendGroupByTagEnabledEvent = (
   eventCategory: string,
   eventLabel: boolean
-) => {
+): void => {
   sendEvent({
     category: eventCategory,
     action: 'group by tag',
@@ -182,7 +175,7 @@ export const sendGroupByTagEnabledEvent = (
 export const sendLinodesViewEvent = (
   eventCategory: string,
   eventLabel: string
-) => {
+): void => {
   sendEvent({
     category: eventCategory,
     action: 'switch view',
@@ -191,7 +184,7 @@ export const sendLinodesViewEvent = (
 };
 
 // NodeBalancerCreate.tsx
-export const sendCreateNodeBalancerEvent = (eventLabel: string) => {
+export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'NodeBalancer',
     action: 'Create NodeBalancer',
@@ -203,7 +196,7 @@ export const sendCreateNodeBalancerEvent = (eventLabel: string) => {
 export const sendCreateLinodeEvent = (
   eventAction: string,
   eventLabel: string
-) => {
+): void => {
   sendEvent({
     category: 'Create Linode',
     action: eventAction,
@@ -212,7 +205,7 @@ export const sendCreateLinodeEvent = (
 };
 
 // CreateBucketForm.tsx
-export const sendCreateBucketEvent = (eventLabel: string) => {
+export const sendCreateBucketEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Create Bucket',
@@ -221,7 +214,7 @@ export const sendCreateBucketEvent = (eventLabel: string) => {
 };
 
 // BucketsLanding.tsx
-export const sendDeleteBucketEvent = (eventLabel: string) => {
+export const sendDeleteBucketEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Delete Bucket',
@@ -229,7 +222,7 @@ export const sendDeleteBucketEvent = (eventLabel: string) => {
   });
 };
 
-export const sendDeleteBucketFailedEvent = (eventLabel: string) => {
+export const sendDeleteBucketFailedEvent = (eventLabel: string): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Delete Bucket Failed',
@@ -238,7 +231,7 @@ export const sendDeleteBucketFailedEvent = (eventLabel: string) => {
 };
 
 // AccessKeyLanding.tsx
-export const sendCreateAccessKeyEvent = () => {
+export const sendCreateAccessKeyEvent = (): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Create Access Key',
@@ -246,7 +239,7 @@ export const sendCreateAccessKeyEvent = () => {
 };
 
 // AccessKeyLanding.tsx
-export const sendEditAccessKeyEvent = () => {
+export const sendEditAccessKeyEvent = (): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Edit Access Key',
@@ -254,7 +247,7 @@ export const sendEditAccessKeyEvent = () => {
 };
 
 // AccessKeyLanding.tsx
-export const sendRevokeAccessKeyEvent = () => {
+export const sendRevokeAccessKeyEvent = (): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Revoke Access Key',
@@ -264,7 +257,9 @@ export const sendRevokeAccessKeyEvent = () => {
 /**
  * meant to be sent to GA upon navigating to `/linodes/${linodeID}/migrate`
  */
-export const sendMigrationNavigationEvent = (pathNavigatedFrom: string) => {
+export const sendMigrationNavigationEvent = (
+  pathNavigatedFrom: string
+): void => {
   sendEvent({
     category: 'Migration Navigation',
     action: `From ${pathNavigatedFrom}`,
@@ -275,7 +270,7 @@ export const sendMigrationInitiatedEvent = (
   sourceRegion: string,
   destRegion: string,
   usersCurrentHour: number
-) => {
+): void => {
   const safeSourceRegion = pathOr(sourceRegion, [sourceRegion], dcDisplayNames);
   const safeDestRegion = pathOr(destRegion, [destRegion], dcDisplayNames);
 
@@ -286,7 +281,7 @@ export const sendMigrationInitiatedEvent = (
   });
 };
 
-export const generateTimeOfDay = (currentHour: number) => {
+export const generateTimeOfDay = (currentHour: number): string => {
   let currentTimeOfDay = 'Other';
 
   if (currentHour >= 0 && currentHour < 5) {
@@ -304,21 +299,23 @@ export const generateTimeOfDay = (currentHour: number) => {
   return currentTimeOfDay;
 };
 
-export const sendDomainStatusChangeEvent = (action: 'Enable' | 'Disable') => {
+export const sendDomainStatusChangeEvent = (
+  action: 'Enable' | 'Disable'
+): void => {
   return sendEvent({
     category: 'Domain Status Change',
     action,
   });
 };
 
-export const sendDownloadObjectEvent = () => {
+export const sendDownloadObjectEvent = (): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Download Object',
   });
 };
 
-export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
+export const sendObjectsQueuedForUploadEvent = (numObjects: number): void => {
   sendEvent({
     category: 'Object Storage',
     action: 'Objects queued for upload',
@@ -326,7 +323,7 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
   });
 };
 
-export const sendSearchBarUsedEvent = () => {
+export const sendSearchBarUsedEvent = (): void => {
   sendEvent({
     category: 'Search',
     action: 'Search Select',
@@ -334,26 +331,40 @@ export const sendSearchBarUsedEvent = () => {
   });
 };
 
-export const sendEntityTransferCreateEvent = (label: string) => {
+export const sendEntityTransferCreateEvent = (label: string): void => {
   sendEvent({
     // eslint-disable-next-line
-    category: 'Entity Transfer',
+    category: 'Service Transfer',
     action: 'Create',
     label,
   });
 };
 
-export const sendEntityTransferReceiveEvent = (label: string) => {
+export const sendEntityTransferReceiveEvent = (label: string): void => {
   sendEvent({
-    category: 'Entity Transfer',
+    category: 'Service Transfer',
     action: 'Receive',
     label,
   });
 };
 
-export const sendEntityTransferCancelEvent = () => {
+export const sendEntityTransferCancelEvent = (): void => {
+  sendEvent({
+    category: 'Service Transfer',
+    action: 'Cancel',
+  });
+};
+
+export const sendEntityTransferCopyTokenEvent = (): void => {
   sendEvent({
     category: 'Entity Transfer',
-    action: 'Cancel',
+    action: 'Copy Transfer Token',
+  });
+};
+
+export const sendEntityTransferCopyDraftEmailEvent = (): void => {
+  sendEvent({
+    category: 'Entity Transfer',
+    action: 'Copy Draft Email',
   });
 };
