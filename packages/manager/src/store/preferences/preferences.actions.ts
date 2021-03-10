@@ -11,6 +11,11 @@ export interface OrderSet {
   orderBy: string;
 }
 
+export interface DismissedNotification {
+  id: string;
+  created: string;
+}
+
 export interface UserPreferences {
   longviewTimeRange?: string;
   gst_banner_dismissed?: boolean;
@@ -26,7 +31,7 @@ export interface UserPreferences {
   linode_news_banner_dismissed?: boolean;
   firewall_beta_notification?: boolean;
   backups_cta_dismissed?: boolean;
-  dismissed_notifications?: string[];
+  dismissed_notifications?: Record<string, DismissedNotification>;
 }
 
 export const handleGetPreferences = actionCreator.async<
