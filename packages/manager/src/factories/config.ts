@@ -30,5 +30,5 @@ export const configFactory = Factory.Sync.makeFactory<Config>({
   root_device: 'sda',
   run_level: 'default',
   virt_mode: 'paravirt',
-  interfaces: {},
+  interfaces: [],
 });

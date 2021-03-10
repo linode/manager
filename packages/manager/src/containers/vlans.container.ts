@@ -1,11 +1,7 @@
-import { VLAN, CreateVLANPayload } from '@linode/api-v4/lib/vlans';
+import { VLAN } from '@linode/api-v4/lib/vlans';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import {
-  createVlan as _create,
-  deleteVlan as _delete,
-  getAllVlans as _getVLANs,
-} from 'src/store/vlans/vlans.requests';
+import { getAllVlans as _getVLANs } from 'src/store/vlans/vlans.requests';
 import { EntityError, ThunkDispatch } from 'src/store/types';
 
 export interface StateProps {
@@ -17,8 +13,6 @@ export interface StateProps {
 }
 
 export interface VlanActionsProps {
-  createVlan: (payload: CreateVLANPayload) => Promise<VLAN>;
-  deleteVlan: (vlanID: number) => Promise<{}>;
   getAllVlans: () => Promise<VLAN[]>;
 }
 
@@ -57,8 +51,6 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
       };
     },
     (dispatch: ThunkDispatch) => ({
-      createVlan: (payload: CreateVLANPayload) => dispatch(_create(payload)),
-      deleteVlan: (vlanID: number) => dispatch(_delete({ vlanID })),
       getAllVlans: () => dispatch(_getVLANs({})),
     })
   );
