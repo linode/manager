@@ -9,6 +9,12 @@ export type IncidentStatus =
   | 'identified'
   | 'investigating';
 
+export type MaintenanceStatus =
+  | 'scheduled'
+  | 'in_progress'
+  | 'verifying'
+  | 'completed';
+
 export type ComponentStatus =
   | 'operational'
   | 'degraded_performance'
@@ -42,8 +48,8 @@ export interface IncidentUpdate {
   display_at: string;
   affected_components: IncidentComponent[];
   deliver_notifications: boolean;
-  custom_tweet: string;
-  tweet_id: number;
+  custom_tweet: string | null;
+  tweet_id: number | null;
 }
 
 export interface Incident {
@@ -52,13 +58,17 @@ export interface Incident {
   status: IncidentStatus;
   created_at: string;
   updated_at: string;
-  monitoring_at: string;
-  resolved_at: string;
+  monitoring_at: string | null;
+  resolved_at: string | null;
   impact: IncidentImpact;
   shortlink: string;
   started_at: string;
   page_id: string;
-  incident_updates: any[];
+  incident_updates: IncidentUpdate[];
+}
+
+export interface Maintenance extends Omit<Incident, 'status'> {
+  status: MaintenanceStatus;
 }
 
 export interface IncidentResponse {
@@ -68,5 +78,5 @@ export interface IncidentResponse {
 
 export interface MaintenanceResponse {
   page: IncidentPage;
-  scheduled_maintenances: Incident[];
+  scheduled_maintenances: Maintenance[];
 }
