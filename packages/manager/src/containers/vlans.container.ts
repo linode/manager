@@ -1,9 +1,7 @@
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import {
-  getAllVlans as _getVLANs,
-} from 'src/store/vlans/vlans.requests';
+import { getAllVlans as _getVLANs } from 'src/store/vlans/vlans.requests';
 import { EntityError, ThunkDispatch } from 'src/store/types';
 
 export interface StateProps {
