@@ -46,7 +46,7 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
     LinodeConfigInterfaceFactory.build(),
     LinodeConfigInterfaceFactory.build({
       purpose: 'public',
-      ipam_address: null
-    })
+      ipam_address: null,
+    }),
   ],
 });

@@ -20,7 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 50,
       padding: '6px 16px',
       textDecoration: 'none',
+      '&:focus': {
+        backgroundColor: theme.color.grey7,
+      },
       '&:hover': {
+        backgroundColor: theme.color.grey7,
         color: theme.color.blue,
       },
     },

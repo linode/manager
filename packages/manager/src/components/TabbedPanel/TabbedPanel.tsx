@@ -44,9 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 50,
       padding: '6px 16px',
       textDecoration: 'none',
-      '&:hover': {
-        color: theme.color.blue,
-      },
     },
     '&[data-reach-tab][data-selected]': {
       borderBottom: `3px solid ${theme.cmrTextColors.linkActiveLight}`,
@@ -66,8 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  tabPanelOuter: {},
-  tabPanel: {},
 }));
 
 export interface Tab {
@@ -130,12 +125,9 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
             ))}
           </TabList>
 
-          <TabPanels className={classes.tabPanelOuter}>
+          <TabPanels>
             {tabs.map((tab, idx) => (
-              <TabPanel
-                className={classes.tabPanel}
-                key={`tabs-panel-${tab.title}-${idx}`}
-              >
+              <TabPanel key={`tabs-panel-${tab.title}-${idx}`}>
                 {tab.render(rest.children)}
               </TabPanel>
             ))}

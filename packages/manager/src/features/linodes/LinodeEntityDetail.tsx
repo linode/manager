@@ -267,8 +267,18 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     },
   },
   actionItem: {
+    borderRadius: 0,
+    fontFamily: theme.font.normal,
+    fontSize: '0.875rem',
+    height: theme.spacing(5),
+    minWidth: 'auto',
     '&:focus': {
       outline: '1px dotted #999',
+    },
+    '&:hover': {
+      backgroundColor: '#3683dc !important',
+      color: '#ffffff',
+      textDecoration: 'none',
     },
   },
   statusLink: {

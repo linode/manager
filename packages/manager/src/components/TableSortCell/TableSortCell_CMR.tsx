@@ -14,16 +14,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
     },
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
       cursor: 'pointer',
       '& span': {
-        color: '#ffffff !important',
+        color: theme.cmrTextColors.linkActiveLight,
       },
       '& .MuiTableSortLabel-icon': {
-        color: '#ffffff !important',
+        color: theme.cmrTextColors.linkActiveLight,
       },
       '& svg g': {
-        fill: '#ffffff',
+        fill: theme.cmrTextColors.linkActiveLight,
       },
     },
   },

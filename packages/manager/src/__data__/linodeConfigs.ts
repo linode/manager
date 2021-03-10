@@ -39,7 +39,7 @@ export const linodeConfigs: Config[] = [
       sde: null,
     },
     kernel: 'linode/grub2',
-    interfaces: []
+    interfaces: [],
   },
 ];
 export const linodeConfig2: Config = {
@@ -80,5 +80,5 @@ export const linodeConfig2: Config = {
     sde: null,
   },
   kernel: 'linode/grub2',
-  interfaces: []
+  interfaces: [],
 };

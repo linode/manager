@@ -48,18 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   labelHeader: {
+    ...theme.applyTableHeaderStyles,
     paddingLeft: `62px !important`,
-    // Adding a class to the header replaces the existing hover styles
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      cursor: 'pointer',
-      '& span': {
-        color: theme.color.white,
-      },
-      '& svg path': {
-        color: theme.color.white,
-      },
-    },
   },
 }));
 

@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     display: 'block',
-    fontFamily: theme.font.bold,
     color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
     '&:hover, &:focus': {

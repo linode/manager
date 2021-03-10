@@ -194,10 +194,9 @@ const genericStatusPillStyle = {
 
 const genericTableHeaderStyle = {
   '&:hover': {
-    backgroundColor: primaryColors.main,
     cursor: 'pointer',
     '& span': {
-      color: '#fff !important',
+      color: cmrTextColors.linkActiveLight,
     },
   },
 };
@@ -301,6 +300,7 @@ const themeDefaults: ThemeDefaults = () => {
       grey4: '#8C929D',
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
+      grey7: '#e9eaef',
       grey9: '#f4f5f6',
       grey10: '#dbdde1',
       white: '#fff',
@@ -551,7 +551,7 @@ const themeDefaults: ThemeDefaults = () => {
           position: 'relative',
           minHeight: 34,
           '&:hover, &:focus': {
-            backgroundColor: primaryColors.light,
+            backgroundColor: '#226dc3',
           },
           '&:active': {
             backgroundColor: primaryColors.dark,
@@ -573,8 +573,7 @@ const themeDefaults: ThemeDefaults = () => {
           color: cmrTextColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
-            borderColor: primaryColors.main,
-            color: primaryColors.main,
+            color: cmrTextColors.linkActiveLight,
           },
           '&:active': {
             backgroundColor: 'transparent',

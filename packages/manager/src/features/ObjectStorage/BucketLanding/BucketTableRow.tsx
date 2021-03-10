@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   bucketLabel: {
     color: theme.cmrTextColors.linkActiveLight,
-    fontFamily: theme.font.bold,
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },
