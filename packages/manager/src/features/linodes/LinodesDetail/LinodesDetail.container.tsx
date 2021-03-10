@@ -9,7 +9,6 @@ import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
-import { getAllLinodeInterfaces } from 'src/store/linodes/interfaces/interfaces.requests';
 import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
@@ -35,14 +34,11 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
   const linodeId = props.linodeId ? props.linodeId : params.linodeId;
 
   const { _loading } = useReduxLoad(['images', 'volumes']);
-  const { configs, disks, interfaces } = useSelector(
-    (state: ApplicationState) => {
-      const disks = state.__resources.linodeDisks[linodeId];
-      const configs = state.__resources.linodeConfigs[linodeId];
-      const interfaces = state.__resources.interfaces[linodeId];
-      return { disks, configs, interfaces };
-    }
-  );
+  const { configs, disks } = useSelector((state: ApplicationState) => {
+    const disks = state.__resources.linodeDisks[linodeId];
+    const configs = state.__resources.linodeConfigs[linodeId];
+    return { disks, configs };
+  });
 
   const vlansEnabled = isFeatureEnabled(
     'Vlans',
@@ -61,7 +57,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
       return;
     }
 
-    if (configs?.error.read || disks?.error.read || interfaces?.error.read) {
+    if (configs?.error.read || disks?.error.read) {
       // We don't want an infinite loop.
       return;
     }
@@ -74,11 +70,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
     if (shouldRequestEntity(disks)) {
       dispatch(getAllLinodeDisks({ linodeId: +linodeId }));
     }
-
-    if (vlansEnabled && shouldRequestEntity(interfaces)) {
-      dispatch(getAllLinodeInterfaces({ linodeId: +linodeId }));
-    }
-  }, [dispatch, configs, disks, vlansEnabled, interfaces, linodeId, linodes]);
+  }, [dispatch, configs, disks, vlansEnabled, linodeId, linodes]);
 
   if ((linodes.lastUpdated === 0 && linodes.loading) || _loading) {
     return <CircleProgress />;

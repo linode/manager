@@ -196,6 +196,5 @@ export const getInterfaceLabel = (
     return linodeInterface.description;
   }
 
-  // @todo: this should be vlan.label whenever that's available.
-  return <Link to={`/vlans/${vlan.id}`}>{vlan.description}</Link>;
+  return <Link to={`/vlans/${vlan.id}`}>{vlan.label}</Link>;
 };

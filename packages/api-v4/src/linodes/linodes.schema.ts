@@ -1,30 +1,48 @@
 import { array, boolean, lazy, mixed, number, object, string } from 'yup';
+import { parseCIDR } from 'ipaddr.js';
 // import zxcvbn from 'zxcvbn';
 // import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
 
-const stackscript_data = array()
-  .of(object())
-  .nullable(true);
+const validateIP = (ipAddress: string) => {
+  // We accept IP ranges (i.e., CIDR notation).
+  try {
+    parseCIDR(ipAddress);
+  } catch (err) {
+    return false;
+  }
+
+  return true;
+};
+
+const stackscript_data = array().of(object()).nullable(true);
 
 /**
- * Interfaces are Record<string, InterfaceItem>
- *
- * {
- *  "eth0": { "id": 10 },
- *  "eth1": { "id": 12 }
- * }
- *
  * .default() and .lazy() below are required to
  * make this dynamic field naming work out
  */
 export const linodeInterfaceItemSchema = object({
-  id: number().required('Interface ID is required.')
+  label: string()
+    .min(1, 'Label must be between 1 and 64 characters.')
+    .max(64, 'Label must be between 1 and 64 characters.')
+    .matches(
+      /[a-z0-9-]+/,
+      'Interface labels cannot contain special characters.'
+    ),
+  purpose: mixed().oneOf(
+    [null, 'public', 'vlan'],
+    'Purpose must be null, public, or vlan.'
+  ),
+  ipam_address: string().test({
+    name: 'validateIPAM',
+    message: 'Must be a valid IPv4 address.',
+    test: validateIP,
+  }),
 }).default(undefined);
 
 export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
   typeof obj === 'undefined'
     ? object().notRequired()
-    : object(Object.keys(obj).map(_ => linodeInterfaceItemSchema))
+    : object(Object.keys(obj).map((_) => linodeInterfaceItemSchema))
 );
 
 // const rootPasswordValidation = string().test(
@@ -35,54 +53,42 @@ export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
 // );
 
 export const ResizeLinodeDiskSchema = object({
-  size: number()
-    .required('Size is required.')
-    .min(1)
+  size: number().required('Size is required.').min(1),
 });
 
 export const UpdateLinodePasswordSchema = object({
-  password: string().required('Password is required.')
+  password: string().required('Password is required.'),
   // .concat(rootPasswordValidation)
 });
 
 export const CreateLinodeSchema = object({
-  type: string()
-    .ensure()
-    .required('Plan is required.'),
-  region: string()
-    .ensure()
-    .required('Region is required.'),
+  type: string().ensure().required('Plan is required.'),
+  region: string().ensure().required('Region is required.'),
   stackscript_id: number().notRequired(),
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
   image: string().notRequired(),
-  authorized_keys: array()
-    .of(string())
-    .notRequired(),
+  authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
   stackscript_data,
   booted: boolean().notRequired(),
   label: string()
-    .transform(v => (v === '' ? undefined : v))
+    .transform((v) => (v === '' ? undefined : v))
     .notRequired()
     .min(3, 'Label must contain between 3 and 32 characters.')
     .max(32, 'Label must contain between 3 and 32 characters.'),
-  tags: array()
-    .of(string())
-    .notRequired(),
+  tags: array().of(string()).notRequired(),
   private_ip: boolean().notRequired(),
-  authorized_users: array()
-    .of(string())
-    .notRequired(),
+  authorized_users: array().of(string()).notRequired(),
   root_pass: string().when('image', {
-    is: value => Boolean(value),
+    is: (value) => Boolean(value),
     then: string().required(
       'You must provide a root password when deploying from an image.'
     ),
     // .concat(rootPasswordValidation),
-    otherwise: string().notRequired()
+    otherwise: string().notRequired(),
   }),
-  interfaces: linodeInterfaceSchema
+  interfaces: linodeInterfaceSchema,
 });
 
 const alerts = object({
@@ -93,7 +99,7 @@ const alerts = object({
   network_in: number(),
   network_out: number(),
   transfer_quota: number(),
-  io: number()
+  io: number(),
 }).notRequired();
 
 const schedule = object({
@@ -105,7 +111,7 @@ const schedule = object({
       'Wednesday',
       'Thursday',
       'Friday',
-      'Saturday'
+      'Saturday',
     ],
     'Invalid day value.'
   ),
@@ -123,36 +129,34 @@ const schedule = object({
       'W18',
       'W20',
       'W22',
-      'W24'
+      'W24',
     ],
     'Invalid schedule value.'
-  )
+  ),
 });
 
 const backups = object({
   schedule,
-  enabled: boolean()
+  enabled: boolean(),
 });
 
 export const UpdateLinodeSchema = object({
   label: string()
-    .transform(v => (v === '' ? undefined : v))
+    .transform((v) => (v === '' ? undefined : v))
     .notRequired()
     .min(3, 'Label must contain between 3 and 32 characters.')
     .max(32, 'Label must contain between 3 and 32 characters.'),
-  tags: array()
-    .of(string())
-    .notRequired(),
+  tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
   alerts,
-  backups
+  backups,
 });
 
 const SSHKeySchema = object({
   id: number(),
   label: string(),
   ssh_key: string(),
-  created: string()
+  created: string(),
 });
 
 // Include `shape()` here so that the schema can be extended without TS complaining.
@@ -163,30 +167,30 @@ export const RebuildLinodeSchema = object().shape({
   authorized_users: array().of(string()),
   stackscript_id: number().notRequired(),
   stackscript_data,
-  booted: boolean().notRequired()
+  booted: boolean().notRequired(),
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({
-  stackscript_id: number().required('A StackScript is required.')
+  stackscript_id: number().required('A StackScript is required.'),
 });
 
 export const IPAllocationSchema = object({
   type: string()
     .required('IP address type (IPv4) is required.')
     .oneOf(['ipv4'], 'Only IPv4 addresses can be allocated.'),
-  public: boolean().required('Must specify public or private IP address.')
+  public: boolean().required('Must specify public or private IP address.'),
 });
 
 export const CreateSnapshotSchema = object({
   label: string()
     .required('A snapshot label is required.')
     .min(1, 'Label must be between 1 and 255 characters.')
-    .max(255, 'Label must be between 1 and 255 characters.')
+    .max(255, 'Label must be between 1 and 255 characters.'),
 });
 
 const device = object({
   disk_id: number().nullable(true),
-  volume_id: number().nullable(true)
+  volume_id: number().nullable(true),
 }).nullable(true);
 
 const devices = object({
@@ -197,7 +201,7 @@ const devices = object({
   sde: device,
   sdf: device,
   sdg: device,
-  sdh: device
+  sdh: device,
 });
 
 const helpers = object({
@@ -205,7 +209,7 @@ const helpers = object({
   distro: boolean(),
   modules_dep: boolean(),
   network: boolean(),
-  devtmpfs_automount: boolean()
+  devtmpfs_automount: boolean(),
 });
 
 export const CreateLinodeConfigSchema = object({
@@ -221,7 +225,7 @@ export const CreateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfaceSchema
+  interfaces: linodeInterfaceSchema,
 });
 
 export const UpdateLinodeConfigSchema = object({
@@ -236,7 +240,7 @@ export const UpdateLinodeConfigSchema = object({
   virt_mode: mixed().oneOf(['paravirt', 'fullvirt']),
   helpers,
   root_device: string(),
-  interfaces: linodeInterfaceSchema
+  interfaces: linodeInterfaceSchema,
 });
 
 export const CreateLinodeDiskSchema = object({
@@ -251,15 +255,15 @@ export const CreateLinodeDiskSchema = object({
   authorized_keys: array().of(string()),
   authorized_users: array().of(string()),
   root_pass: string().when('image', {
-    is: value => Boolean(value),
+    is: (value) => Boolean(value),
     then: string().required(
       'You must provide a root password when deploying from an image.'
     ),
     // .concat(rootPasswordValidation),
-    otherwise: string().notRequired()
+    otherwise: string().notRequired(),
   }),
   stackscript_id: number(),
-  stackscript_data
+  stackscript_data,
 });
 
 export const UpdateLinodeDiskSchema = object({
@@ -269,11 +273,11 @@ export const UpdateLinodeDiskSchema = object({
     .max(48, 'Label must be between 1 and 48 characters.'),
   filesystem: mixed()
     .notRequired()
-    .oneOf(['raw', 'swap', 'ext3', 'ext4', 'initrd'])
+    .oneOf(['raw', 'swap', 'ext3', 'ext4', 'initrd']),
 });
 
 export const CreateLinodeDiskFromImageSchema = CreateLinodeDiskSchema.clone().shape(
   {
-    image: string().required('An image is required.')
+    image: string().required('An image is required.'),
   }
 );

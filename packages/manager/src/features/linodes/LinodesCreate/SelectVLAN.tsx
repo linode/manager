@@ -54,13 +54,13 @@ export const SelectVLAN: React.FC<Props> = (props) => {
     return Object.values(vlans.itemsById)
       .filter((thisVlan) => thisVlan.region === selectedRegionID)
       .map((thisVlan) => ({
-        label: thisVlan.description || thisVlan.id,
+        label: thisVlan.label,
         value: thisVlan.id,
       }));
   }, [selectedRegionID, vlans]);
 
   const selected = selectedVlanIDs.map((thisID) => ({
-    label: vlans.itemsById[thisID].description,
+    label: vlans.itemsById[thisID].label,
     value: thisID,
   }));
 
