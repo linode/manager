@@ -1,7 +1,8 @@
 import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
-import { partition, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
 import { notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
@@ -10,20 +11,13 @@ import RenderNotification from './RenderNotification';
 
 export const useFormattedNotifications = () => {
   const context = React.useContext(notificationContext);
+  const { hasDismissedNotifications } = useDismissibleNotifications();
 
   const notifications = useNotifications();
 
   const dayOfMonth = DateTime.local().day;
 
-  const [abuseNotifications, otherNotifications] = partition<Notification>(
-    (thisNotification) => thisNotification.type === 'ticket_abuse',
-    notifications
-  );
-
-  if (abuseNotifications.length > 0) {
-  }
-
-  return [...otherNotifications]
+  return notifications
     .filter((thisNotification) => {
       /**
        * Don't show balance overdue notifications at the beginning of the month
@@ -38,7 +32,9 @@ export const useFormattedNotifications = () => {
       formatNotificationForDisplay(
         interceptNotification(notification),
         idx,
-        context.closeDrawer
+        context.closeDrawer,
+        (_notification: Notification) =>
+          !hasDismissedNotifications([_notification])
       )
     );
 };
@@ -82,11 +78,12 @@ const interceptNotification = (notification: Notification): Notification => {
 const formatNotificationForDisplay = (
   notification: Notification,
   idx: number,
-  onClose: () => void
+  onClose: () => void,
+  shouldIncludeInCount: (notification: Notification) => boolean = (_) => true
 ): NotificationItem => ({
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
-  countInTotal: !['ticket_abuse'].includes(notification.type),
+  countInTotal: shouldIncludeInCount(notification),
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
