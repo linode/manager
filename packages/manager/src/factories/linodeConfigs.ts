@@ -1,5 +1,6 @@
-import * as Factory from 'factory.ts';
 import { Config } from '@linode/api-v4/lib/linodes/types';
+import * as Factory from 'factory.ts';
+import { LinodeConfigInterfaceFactory } from 'src/factories/linodeConfigInterfaceFactory';
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
 
@@ -41,5 +42,11 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
     sde: null,
   },
   kernel: 'linode/grub2',
-  interfaces: {},
+  interfaces: [
+    LinodeConfigInterfaceFactory.build(),
+    LinodeConfigInterfaceFactory.build({
+      purpose: 'public',
+      ipam_address: null,
+    }),
+  ],
 });

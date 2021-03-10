@@ -33,7 +33,7 @@ const cmrTextColors = {
 
 const cmrBorderColors = {
   borderTypography: '#454b54',
-  borderTabs: '#5c6470',
+  borderTabs: cmrBGColors.bgPaper,
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
@@ -280,7 +280,7 @@ const darkThemeOptions = {
       // },
       containedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.light,
+          backgroundColor: '#226dc3',
         },
         '&:active': {
           backgroundColor: primaryColors.dark,
