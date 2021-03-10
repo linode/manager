@@ -31,7 +31,7 @@ export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
     if (dismissed) {
       return true;
     }
-    return _notifications.some((thisNotification) => {
+    return _notifications.every((thisNotification) => {
       const hashKey = getHashKey(thisNotification);
       return Boolean(dismissedNotifications[hashKey]);
     });
@@ -70,8 +70,9 @@ const updateDismissedNotifications = (
   });
   return Object.values(notifications).reduce((acc, thisNotification) => {
     const isStale =
-      DateTime.fromISO(thisNotification.created).diffNow('days').days > 60;
-    return isStale ? { ...acc, [thisNotification.id]: thisNotification } : acc;
+      DateTime.fromISO(thisNotification.created).diffNow('days').toObject()
+        .days ?? 0 > 60;
+    return isStale ? acc : { ...acc, [thisNotification.id]: thisNotification };
   }, newNotifications);
 };
 
