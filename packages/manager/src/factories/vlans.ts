@@ -3,8 +3,7 @@ import * as Factory from 'factory.ts';
 
 export const VLANFactory = Factory.Sync.makeFactory<VLAN>({
   label: 'Test_VLAN',
-  id: Factory.each(i => i),
-  description: Factory.each(i => `vlan-${i}`),
+  id: Factory.each((i) => i),
   region: 'us-east',
   linodes: [
     { id: 0, ipv4_address: '10.0.0.1', mac_address: 'a4:ac:39:b7:6e:42' },

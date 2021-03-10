@@ -37,10 +37,6 @@ export const linodeInterfaceItemSchema = object({
     message: 'Must be a valid IPv4 address.',
     test: validateIP,
   }),
-  // .matches(
-  //   /^\d{3}\.\d{3}\.\d{1,3}\.\d{1,3}$/,
-  //   'Must be a valid IPv4 address.'
-  // )
 }).default(undefined);
 
 export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
