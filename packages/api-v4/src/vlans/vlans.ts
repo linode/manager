@@ -1,6 +1,5 @@
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 import Request, {
-  setData,
   setMethod,
   setParams,
   setURL,
@@ -8,7 +7,7 @@ import Request, {
 } from 'src/request';
 import { ResourcePage as Page } from '../types';
 
-import { CreateVLANPayload, VLAN } from './types';
+import { VLAN } from './types';
 
 /**
  * getVlans
@@ -34,56 +33,4 @@ export const getVlan = (vlanID: number) =>
   Request<Page<VLAN>>(
     setURL(`${API_ROOT}/networking/vlans/${vlanID}`),
     setMethod('GET')
-  );
-
-/**
- * createVlan
- *
- * Create a Virtual LAN (VLAN) in the specified region.
- *
- */
-export const createVlan = (data: CreateVLANPayload) =>
-  Request<VLAN>(
-    setURL(`${API_ROOT}/networking/vlans`),
-    setMethod('POST'),
-    setData(data)
-  );
-
-/**
- * deleteVlan
- *
- * Delete a single VLAN
- */
-export const deleteVlan = (vlanID: number) =>
-  Request<{}>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}`),
-    setMethod('DELETE')
-  );
-
-/**
- * attachVlan
- *
- * Attach one or more Linodes from a VLAN. The VLAN
- * will be attached to an interface on every config
- * on each target Linode.
- */
-export const attachVlan = (vlanID: number, linodes: number[]) =>
-  Request<VLAN>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}/attach`),
-    setMethod('POST'),
-    setData({ linodes })
-  );
-
-/**
- * detachVlan
- *
- * Detach one or more Linodes from a VLAN. The VLAN
- * will be detached from every config
- * on each target Linode.
- */
-export const detachVlan = (vlanID: number, linodes: number[]) =>
-  Request<VLAN>(
-    setURL(`${API_ROOT}/networking/vlans/${vlanID}/detach`),
-    setMethod('POST'),
-    setData({ linodes })
   );

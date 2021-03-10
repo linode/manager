@@ -2,7 +2,6 @@ import { Account } from '@linode/api-v4/lib/account';
 import {
   Config,
   Disk,
-  getInterfaces,
   getLinodeKernels,
   Kernel,
   LinodeInterface,
@@ -201,27 +200,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       });
   };
 
-  requestInterfaces = () => {
-    this.setState({ interfacesLoading: true, interfacesError: null });
-
-    getInterfaces(this.props.linodeId)
-      .then(({ data: interfaces }) => {
-        this.setState({
-          interfaces,
-          interfacesLoading: false,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          interfacesLoading: false,
-          interfacesError: getAPIErrorOrDefault(
-            error,
-            'Unable to load Linode Interfaces.'
-          ),
-        });
-      });
-  };
-
   maybeRequestVlans = () => {
     if (this.props.vlansLastUpdated === 0 && !this.props.vlansLoading) {
       this.props.getAllVlans().catch(() => null); // Handle errors with Redux.
@@ -240,7 +218,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     this.requestKernels(this.props.linodeHypervisor);
 
     if (this.vlansEnabled()) {
-      this.requestInterfaces();
       this.maybeRequestVlans();
     }
   }
