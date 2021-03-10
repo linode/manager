@@ -11,6 +11,13 @@ import { pluralize } from 'src/utilities/pluralize';
 import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  row: {
+    '&:hover': {
+      '& [data-qa-copy-token]': {
+        opacity: 1,
+      },
+    },
+  },
   cellContents: {
     paddingLeft: '1rem',
   },
@@ -22,9 +29,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenAndCopyIcon: {
     display: 'flex',
+    '& [data-qa-copy-token]': {
+      opacity: 0,
+    },
   },
   icon: {
     marginLeft: theme.spacing(1),
+    marginTop: 2,
     '& svg': {
       width: 12,
       height: 12,
@@ -94,14 +105,6 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
     handleTokenClick,
   } = props;
 
-  const [showCopyOnHover, setShowCopyOnHover] = React.useState<boolean>(false);
-  const handleRowOnMouseEnter = () => {
-    setShowCopyOnHover(true);
-  };
-  const handleRowOnMouseLeave = () => {
-    setShowCopyOnHover(false);
-  };
-
   const classes = useStyles();
 
   const entitiesAndTheirCounts = Object.entries(entities);
@@ -111,10 +114,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   const transferTypeIsSent = transferType === 'sent';
 
   return (
-    <TableRow
-      onMouseEnter={handleRowOnMouseEnter}
-      onMouseLeave={handleRowOnMouseLeave}
-    >
+    <TableRow className={classes.row}>
       <TableCell
         className={`${classes.cellContents} ${classes.tokenCell}`}
         noWrap
@@ -126,10 +126,9 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           >
             {token}
           </button>
-          <CopyTooltip
-            text={token}
-            className={`${classes.icon} ${showCopyOnHover ? '' : classes.hide}`}
-          />
+          <div data-qa-copy-token>
+            <CopyTooltip text={token} className={`${classes.icon}`} />
+          </div>
         </div>
       </TableCell>
       <Hidden smDown={transferTypeIsPending || transferTypeIsSent}>
