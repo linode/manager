@@ -33,8 +33,7 @@ export const useFormattedNotifications = () => {
         interceptNotification(notification),
         idx,
         context.closeDrawer,
-        (_notification: Notification) =>
-          !hasDismissedNotifications([_notification])
+        !hasDismissedNotifications([notification])
       )
     );
 };
@@ -79,11 +78,11 @@ const formatNotificationForDisplay = (
   notification: Notification,
   idx: number,
   onClose: () => void,
-  shouldIncludeInCount: (notification: Notification) => boolean = (_) => true
+  shouldIncludeInCount: boolean = true
 ): NotificationItem => ({
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
-  countInTotal: shouldIncludeInCount(notification),
+  countInTotal: shouldIncludeInCount,
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
