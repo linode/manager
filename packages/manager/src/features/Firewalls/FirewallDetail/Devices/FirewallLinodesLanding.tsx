@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '16px',
   },
   link: {
-    margin: '8px 8px 8px 0px',
+    margin: '8px 8px 8px auto !important',
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
@@ -134,21 +134,23 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Typography
-        className={classnames({
-          [classes.message]: true,
-          [classes.cmrSpacing]: flags.cmr,
-        })}
-      >
-        The following Linodes have been assigned to this Firewall. A Linode can
-        only be assigned to a single Firewall.
-      </Typography>
       <Box
         display="flex"
         flexDirection="row"
-        alignItems="flex-end"
-        justifyContent="flex-end"
+        alignItems="center"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        marginTop="10px"
       >
+        <Typography
+          className={classnames({
+            [classes.message]: true,
+            [classes.cmrSpacing]: flags.cmr,
+          })}
+        >
+          The following Linodes have been assigned to this Firewall. A Linode
+          can only be assigned to a single Firewall.
+        </Typography>
         <Link
           onClick={() => setDeviceDrawerOpen(true)}
           label="Add Linodes to Firewall"
