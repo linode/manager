@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '16px',
   },
   link: {
-    margin: '8px 8px 8px auto !important',
+    margin: '8px 8px 8px auto',
   },
   cmrSpacing: {
     [theme.breakpoints.down('md')]: {
