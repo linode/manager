@@ -1,4 +1,8 @@
-import { createLinode } from '../../support/api/linodes';
+import {
+  createLinode,
+  deleteLinodeById,
+  deleteLinodeByLabel,
+} from '../../support/api/linodes';
 import {
   containsClick,
   containsVisible,
@@ -33,6 +37,8 @@ describe('clone linode', () => {
           assert.equal(xhr.response?.statusCode, 200);
           assertToast(`Your Linode ${newLinodeLabel} is being created.`);
           containsVisible(newLinodeLabel);
+          deleteLinodeById(linode.id);
+          deleteLinodeByLabel(newLinodeLabel);
         });
       }
     });
