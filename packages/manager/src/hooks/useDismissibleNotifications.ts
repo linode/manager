@@ -63,7 +63,7 @@ const updateDismissedNotifications = (
   const newNotifications = {};
   notificationsToDismiss.forEach((thisNotification) => {
     const hashKey = getHashKey(thisNotification);
-    notifications[hashKey] = {
+    newNotifications[hashKey] = {
       id: hashKey,
       created: DateTime.utc().toLocaleString(),
     };
