@@ -189,7 +189,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                   loading={isSubmitting}
                   disabled={_isRestrictedUser}
                 >
-                  Create
+                  Create Firewall
                 </Button>
                 <Button
                   onClick={onClose}

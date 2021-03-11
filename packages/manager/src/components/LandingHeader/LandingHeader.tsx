@@ -47,8 +47,6 @@ export const LandingHeader: React.FC<Props> = (props) => {
 
   const defaultCreateButtonWidth = 152;
 
-  const startsWithVowel = entity && /^[aeiou]/i.test(entity);
-
   const actions = React.useMemo(
     () => (
       <>
@@ -62,9 +60,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
             onClick={onAddNew}
             style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
           >
-            {createButtonText
-              ? createButtonText
-              : `Create ${startsWithVowel ? 'an' : 'a'} ${entity}`}
+            {createButtonText ? createButtonText : `Create ${entity}`}
           </Button>
         )}
       </>
@@ -76,7 +72,6 @@ export const LandingHeader: React.FC<Props> = (props) => {
       loading,
       createButtonWidth,
       createButtonText,
-      startsWithVowel,
       entity,
     ]
   );

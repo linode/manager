@@ -17,6 +17,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 
 import { resetEventsPolling } from 'src/eventsPolling';
+import { titlecase } from 'src/features/linodes/presentation';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
@@ -149,7 +150,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
     <Dialog
       className={classes.dialog}
       open={props.isOpen}
-      title={`Are you sure you want to ${props.action.toLowerCase()} ${
+      title={`${titlecase(props.action.toLowerCase())} Linode ${
         props.linodeLabel
       }?`}
       onClose={props.close}
@@ -202,7 +203,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
         loading={props.loading}
         buttonType="primary"
       >
-        {props.action}
+        {props.action} Linode
       </Button>
     </ActionsPanel>
   );

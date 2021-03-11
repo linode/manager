@@ -245,7 +245,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
-              label="Add a Configuration"
+              label="Add Configuration"
               disabled={readOnly}
             />
           </Grid>

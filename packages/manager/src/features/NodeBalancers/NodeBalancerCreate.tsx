@@ -705,6 +705,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               onDeploy={this.createNodeBalancer}
               calculatedPrice={10}
               disabled={this.state.submitting || disabled}
+              submitText="Create NodeBalancer"
             >
               <DisplaySectionList displaySections={displaySections} />
             </CheckoutBar>

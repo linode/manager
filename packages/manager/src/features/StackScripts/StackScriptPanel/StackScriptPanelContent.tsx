@@ -171,7 +171,7 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
           onClick={handleDeleteStackScript}
           loading={dialog.delete.submitting}
         >
-          Delete
+          Delete StackScript
         </Button>
       </ActionsPanel>
     );
@@ -193,7 +193,7 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderDeleteStackScriptDialog = () => {
     return (
       <ConfirmationDialog
-        title={`Delete ${dialog.stackScriptLabel}?`}
+        title={`Delete StackScript ${dialog.stackScriptLabel}?`}
         open={dialog.delete.open}
         actions={renderConfirmDeleteActions}
         onClose={handleCloseDialog}
