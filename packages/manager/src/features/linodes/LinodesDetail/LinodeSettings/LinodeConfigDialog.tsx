@@ -47,6 +47,7 @@ import {
   withLinodeDetailContext,
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
+import InterfaceSelect, { Slot } from './InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -583,11 +584,14 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               </FormControl>
             </Grid>
 
-            {/* <Grid item xs={12} className={classes.section}>
+            <Divider className={classes.divider} />
+
+            <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Network Interfaces</Typography>
+              <InterfaceSelect slotNumber={0} readOnly={false} />
             </Grid>
 
-            <Divider className={classes.divider} /> */}
+            <Divider className={classes.divider} />
 
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
