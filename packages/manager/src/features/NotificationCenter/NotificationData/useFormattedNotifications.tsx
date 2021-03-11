@@ -9,7 +9,7 @@ import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
 
-export const useFormattedNotifications = () => {
+export const useFormattedNotifications = (): NotificationItem[] => {
   const context = React.useContext(notificationContext);
   const {
     dismissNotifications,
