@@ -1,7 +1,3 @@
-/* eslint-disable no-unused-vars */
-import { Grant } from '@linode/api-v4/lib/account';
-import { ResourcePage } from '@linode/api-v4/lib/types';
-
 export interface StackScriptPayload {
   script: string;
   label: string;
@@ -38,10 +34,3 @@ export interface UserDefinedField {
   manyof?: string;
   default?: string;
 }
-
-export type StackScriptsRequest = (
-  username: string,
-  params?: unknown,
-  filter?: unknown,
-  stackScriptGrants?: Grant[]
-) => Promise<ResourcePage<StackScript>>;

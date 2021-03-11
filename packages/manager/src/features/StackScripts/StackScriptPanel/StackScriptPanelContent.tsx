@@ -1,9 +1,10 @@
 import { Image } from '@linode/api-v4/lib/images';
 import {
   deleteStackScript,
+  StackScript,
   updateStackScript,
-  StackScriptsRequest,
 } from '@linode/api-v4/lib/stackscripts';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -31,7 +32,11 @@ interface Props {
   category: string;
   currentUser: string;
   publicImages: Record<string, Image>;
-  request: StackScriptsRequest;
+  request: (
+    username: string,
+    params?: any,
+    filter?: any
+  ) => Promise<ResourcePage<StackScript>>;
 }
 
 type CombinedProps = Props & StateProps;
