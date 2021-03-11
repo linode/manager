@@ -1,12 +1,11 @@
-import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
   StateProps,
 } from '../StackScriptBase/StackScriptBase';
+import { StackScriptsRequest } from '../types';
 import SelectStackScriptsSection from './SelectStackScriptsSection';
 
 interface Props {
@@ -20,12 +19,7 @@ interface Props {
   resetStackScriptSelection: () => void;
   publicImages: Record<string, Image>;
   currentUser: string;
-  request: (
-    username: string,
-    params?: any,
-    filter?: any,
-    stackScriptGrants?: Grant[]
-  ) => Promise<ResourcePage<StackScript>>;
+  request: StackScriptsRequest;
   category: string;
   disabled?: boolean;
   isOnCreate?: boolean;

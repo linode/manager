@@ -5,6 +5,7 @@ import {
   StackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
+import { StackScriptsRequest } from './types';
 
 export type StackScriptCategory = 'account' | 'community';
 
@@ -90,7 +91,7 @@ const oneClickFilter = [
 export const getOneClickApps = (params?: any) =>
   getStackScripts(params, oneClickFilter);
 
-export const getStackScriptsByUser = (
+export const getStackScriptsByUser: StackScriptsRequest = (
   username: string,
   params?: any,
   filter?: any
@@ -100,7 +101,7 @@ export const getStackScriptsByUser = (
     username,
   });
 
-export const getMineAndAccountStackScripts = (
+export const getMineAndAccountStackScripts: StackScriptsRequest = (
   currentUser: string,
   params?: any,
   filter?: any,
@@ -165,7 +166,7 @@ export const getMineAndAccountStackScripts = (
  * Gets all StackScripts that don't belong to user "Linode"
  * and do not belong to any users on the current account
  */
-export const getCommunityStackscripts = (
+export const getCommunityStackscripts: StackScriptsRequest = (
   currentUser: string,
   params?: any,
   filter?: any,

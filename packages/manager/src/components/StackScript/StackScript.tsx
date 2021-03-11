@@ -21,7 +21,7 @@ import { useAccountUsers } from 'src/queries/accountUsers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.cmrBGColors,
     '.detailsWrapper &': {
       padding: theme.spacing(4),
     },

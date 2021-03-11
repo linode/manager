@@ -55,6 +55,8 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
     canAddLinodes,
   } = props;
 
+  const communityStackScript = category === 'community';
+
   const renderLabel = () => {
     return (
       <React.Fragment>
@@ -93,11 +95,13 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
           {displayTagsAndShowMore(images)}
         </TableCell>
       </Hidden>
-      <Hidden mdDown>
-        <TableCell data-qa-stackscript-status>
-          {isPublic ? 'Public' : 'Private'}
-        </TableCell>
-      </Hidden>
+      {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.
+        <Hidden mdDown>
+          <TableCell data-qa-stackscript-status>
+            {isPublic ? 'Public' : 'Private'}
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell>
         <StackScriptsActionMenu
           stackScriptID={stackScriptID}

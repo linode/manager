@@ -1,7 +1,5 @@
-import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
-import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -22,6 +20,7 @@ import withFeatureFlags, {
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import SelectStackScriptPanel_CMR from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel_CMR';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
+import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -51,12 +50,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  request: (
-    username: string,
-    params?: any,
-    filter?: any,
-    stackScriptGrants?: Grant[]
-  ) => Promise<ResourcePage<StackScript>>;
+  request: StackScriptsRequest;
   header: string;
   category: 'community' | 'account';
 }
