@@ -93,6 +93,7 @@ type SortOrder = 'asc' | 'desc';
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 interface Props {
+  category?: string;
   isSelecting?: boolean;
   handleClickTableHeader?: (value: string) => void;
   sortOrder?: SortOrder;
@@ -108,6 +109,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
     isSelecting,
     handleClickTableHeader,
     sortOrder,
+    category,
   } = props;
 
   const Cell: React.ComponentType<any> =
@@ -122,6 +124,8 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           handleClick: handleClickTableHeader,
         }
       : {};
+
+  const communityStackScripts = category === 'community';
 
   return (
     <TableHead className={classes.root}>
@@ -176,7 +180,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
             </TableCell>
           </Hidden>
         )}
-        {!isSelecting && (
+        {!isSelecting && !communityStackScripts ? (
           <Hidden mdDown>
             <TableCell
               className={`${classes.tableHead} ${classes.status} ${classes.noHover}`}
@@ -185,7 +189,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
               Status
             </TableCell>
           </Hidden>
-        )}
+        ) : null}
         {!isSelecting && (
           <TableCell
             className={`${classes.tableHead} ${classes.actionMenu} ${classes.noHover}`}

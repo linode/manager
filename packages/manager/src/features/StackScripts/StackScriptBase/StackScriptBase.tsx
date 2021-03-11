@@ -79,7 +79,12 @@ type CombinedProps = StyleProps &
     publicImages: Record<string, Image>;
     currentUser: string;
     category: string;
-    request: Function;
+    request: (
+      user: string,
+      pageArgs: { page: number; page_size: number },
+      filter: any,
+      grants?: Grant[]
+    ) => Promise<ResourcePage<StackScript>>;
   };
 
 interface HelperFunctions {
@@ -577,6 +582,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   sortOrder={sortOrder}
                   currentFilterType={currentFilterType}
                   isSelecting={isSelecting}
+                  category={this.props.category}
                 />
                 <Component
                   {...this.props}
