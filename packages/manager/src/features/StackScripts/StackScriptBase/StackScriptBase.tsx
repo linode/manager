@@ -35,6 +35,7 @@ import {
   generateCatchAllFilter,
   generateSpecificFilter,
 } from '../stackScriptUtils';
+import { StackScriptsRequest } from '../types';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -79,12 +80,7 @@ type CombinedProps = StyleProps &
     publicImages: Record<string, Image>;
     currentUser: string;
     category: string;
-    request: (
-      user: string,
-      pageArgs: { page: number; page_size: number },
-      filter: any,
-      grants?: Grant[]
-    ) => Promise<ResourcePage<StackScript>>;
+    request: StackScriptsRequest;
   };
 
 interface HelperFunctions {
