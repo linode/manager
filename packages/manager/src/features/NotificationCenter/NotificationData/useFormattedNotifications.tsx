@@ -11,11 +11,19 @@ import RenderNotification from './RenderNotification';
 
 export const useFormattedNotifications = () => {
   const context = React.useContext(notificationContext);
-  const { hasDismissedNotifications } = useDismissibleNotifications();
+  const {
+    dismissNotifications,
+    hasDismissedNotifications,
+  } = useDismissibleNotifications();
 
   const notifications = useNotifications();
 
   const dayOfMonth = DateTime.local().day;
+
+  const handleClose = () => {
+    dismissNotifications(notifications);
+    context.closeDrawer();
+  };
 
   return notifications
     .filter((thisNotification) => {
@@ -32,7 +40,7 @@ export const useFormattedNotifications = () => {
       formatNotificationForDisplay(
         interceptNotification(notification),
         idx,
-        context.closeDrawer,
+        handleClose,
         !hasDismissedNotifications([notification])
       )
     );

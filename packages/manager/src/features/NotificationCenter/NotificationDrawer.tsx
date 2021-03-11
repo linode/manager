@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import useNotifications from 'src/hooks/useNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
@@ -42,6 +44,8 @@ interface Props {
 export const NotificationDrawer: React.FC<Props> = (props) => {
   const { data, open, onClose } = props;
   const classes = useStyles();
+  const { dismissNotifications } = useDismissibleNotifications();
+  const notifications = useNotifications();
   const dispatch = useDispatch<ThunkDispatch>();
   const { eventNotifications, formattedNotifications } = data;
 
@@ -51,8 +55,9 @@ export const NotificationDrawer: React.FC<Props> = (props) => {
     if (wasOpen && !open) {
       // User has closed the drawer.
       dispatch(markAllSeen());
+      dismissNotifications(notifications);
     }
-  }, [dispatch, open, wasOpen]);
+  }, [dismissNotifications, notifications, dispatch, open, wasOpen]);
 
   return (
     <Drawer open={open} onClose={onClose} title="" className={classes.root}>
