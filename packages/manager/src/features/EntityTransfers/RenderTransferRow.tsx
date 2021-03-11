@@ -41,11 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 12,
     },
   },
-  hide: {
-    [theme.breakpoints.up('md')]: {
-      opacity: 0,
-    },
-  },
   createdCell: {
     width: '20%',
     [theme.breakpoints.down('xs')]: {
