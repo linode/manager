@@ -1,7 +1,8 @@
-import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
-import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  UserDefinedField,
+  StackScriptsRequest,
+} from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -51,12 +52,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  request: (
-    username: string,
-    params?: any,
-    filter?: any,
-    stackScriptGrants?: Grant[]
-  ) => Promise<ResourcePage<StackScript>>;
+  request: StackScriptsRequest;
   header: string;
   category: 'community' | 'account';
 }

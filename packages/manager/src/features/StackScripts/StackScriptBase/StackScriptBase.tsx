@@ -1,6 +1,9 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
-import { StackScript } from '@linode/api-v4/lib/stackscripts';
+import {
+  StackScript,
+  StackScriptsRequest,
+} from '@linode/api-v4/lib/stackscripts';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import classnames from 'classnames';
 import { stringify } from 'qs';
@@ -79,12 +82,7 @@ type CombinedProps = StyleProps &
     publicImages: Record<string, Image>;
     currentUser: string;
     category: string;
-    request: (
-      user: string,
-      pageArgs: { page: number; page_size: number },
-      filter: any,
-      grants?: Grant[]
-    ) => Promise<ResourcePage<StackScript>>;
+    request: StackScriptsRequest;
   };
 
 interface HelperFunctions {
