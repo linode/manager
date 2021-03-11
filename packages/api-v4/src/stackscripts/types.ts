@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Grant } from '../account';
-import { ResourcePage } from '../types';
+import { Grant } from '@linode/api-v4/lib/account';
+import { ResourcePage } from '@linode/api-v4/lib/types';
 
 export interface StackScriptPayload {
   script: string;
