@@ -73,7 +73,6 @@ const MigrationNotification: React.FC<Props> = (props) => {
       <Button
         buttonType="primary"
         onClick={onSubmit}
-        data-qa-submit-managed-enrollment
         loading={dialog.isLoading}
       >
         Enter Migration Queue
