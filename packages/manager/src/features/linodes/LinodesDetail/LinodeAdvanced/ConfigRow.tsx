@@ -1,4 +1,4 @@
-import { Config, Disk, LinodeInterface } from '@linode/api-v4/lib/linodes';
+import { Config, Disk, InterfaceBody } from '@linode/api-v4/lib/linodes';
 import { VLAN } from '@linode/api-v4/lib/vlans';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
@@ -37,7 +37,6 @@ interface Props {
   linodeDisks: Disk[];
   linodeVolumes: Volume[];
   linodeKernel: string;
-  linodeInterfaces: LinodeInterface[];
   linodeIPs: string[];
   vlans: Record<string, VLAN>;
 }
@@ -62,8 +61,6 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
     onEdit,
     onDelete,
     readOnly,
-    linodeInterfaces,
-    vlans,
   } = props;
 
   const classes = useStyles();
@@ -109,24 +106,16 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
   const InterfaceList = (
     <ul className={classes.interfaceList}>
-      {Object.keys(config.interfaces).map((interfaceName) => {
-        const linodeInterface = linodeInterfaces.find(
-          (thisInterface) =>
-            thisInterface.id === config.interfaces[interfaceName]?.id
-        );
-
-        // Just a failsafe.
-        if (!linodeInterface) {
-          return null;
-        }
+      {config.interfaces.map((interfaceEntry, idx) => {
+        // Establish interface name (eth0, eth1, eth2)
+        const interfaceName = 'eth';
 
         return (
           <li
-            key={config.id + interfaceName}
+            key={interfaceEntry.label + idx}
             className={classes.interfaceListItem}
           >
-            {interfaceName} –{' '}
-            {getInterfaceLabel(linodeInterface, vlans, hasPrivateIP)}
+            {interfaceName} – {getInterfaceLabel(interfaceEntry, hasPrivateIP)}
           </li>
         );
       })}
@@ -134,8 +123,8 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
   );
 
   const defaultInterfaceLabel = hasPrivateIP
-    ? 'eth0 – Public, Private'
-    : 'eth0 – Public';
+    ? 'eth0 – PUBLIC, PRIVATE'
+    : 'eth0 – PUBLIC';
 
   // This should determine alignment based on device count associated w/ a config
   const hasManyConfigs = validDevices.length > 3;
@@ -175,25 +164,16 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 export default React.memo(ConfigRow);
 
 export const getInterfaceLabel = (
-  linodeInterface: LinodeInterface,
-  vlans: Record<string, VLAN>,
+  configInterface: InterfaceBody,
   hasPrivateIP: boolean
-) => {
-  if (linodeInterface.type === 'default') {
-    // @todo: Use the linodeInterface.description if and when it accounts for Private IPs
-    return hasPrivateIP ? 'Public, Private' : 'Public';
+): string => {
+  if (configInterface.purpose === 'public') {
+    return hasPrivateIP ? 'PUBLIC, PRIVATE' : 'PUBLIC';
   }
 
-  const vlan = vlans[linodeInterface.vlan_id];
+  const interfaceLabel = configInterface.label;
+  const ipamAddress = configInterface.ipam_address;
+  const hasIPAM = !isEmpty(ipamAddress);
 
-  // I don't think this would ever happen, but here's a fallback anyway.
-  if (!vlan) {
-    return linodeInterface.description;
-  }
-
-  const hasIPAM = isEmpty(linodeInterface.ipam_address);
-
-  return `VLAN: ${vlan.label} ${
-    hasIPAM ? `(${linodeInterface.ipam_address})` : null
-  }`;
+  return `VLAN: ${interfaceLabel} ${hasIPAM ? `(${ipamAddress})` : ''}`;
 };

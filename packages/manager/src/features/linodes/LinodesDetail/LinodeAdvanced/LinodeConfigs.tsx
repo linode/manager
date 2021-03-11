@@ -4,7 +4,6 @@ import {
   Disk,
   getLinodeKernels,
   Kernel,
-  LinodeInterface,
   linodeReboot,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -129,9 +128,6 @@ interface State {
   kernels: Kernel[];
   kernelError: APIError[] | null;
   kernelsLoading: boolean;
-  interfaces: LinodeInterface[];
-  interfacesLoading: boolean;
-  interfacesError: APIError[] | null;
 }
 
 interface ConfigDrawerState {
@@ -176,9 +172,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     kernels: [],
     kernelError: null,
     kernelsLoading: false,
-    interfaces: [],
-    interfacesLoading: false,
-    interfacesError: null,
   };
 
   requestKernels = (linodeHypervisor: 'kvm' | 'xen') => {
@@ -528,16 +521,12 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                         loading={
                           (configsLoading && configsLastUpdated === 0) ||
                           this.state.kernelsLoading ||
-                          this.state.interfacesLoading ||
                           this.props.vlansLoading
                         }
                         lastUpdated={configsLastUpdated}
                         length={paginatedData.length}
                         error={
-                          configsError ??
-                          this.state.interfacesError ??
-                          this.props.vlansError ??
-                          undefined
+                          configsError ?? this.props.vlansError ?? undefined
                         }
                       >
                         {paginatedData.map((thisConfig) => {
@@ -557,7 +546,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
                               readOnly={readOnly}
-                              linodeInterfaces={this.state.interfaces}
                               linodeVolumes={this.props.linodeVolumes}
                               vlans={this.props.vlansData}
                             />
