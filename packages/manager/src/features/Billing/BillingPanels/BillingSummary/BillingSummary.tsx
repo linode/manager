@@ -1,27 +1,48 @@
 import { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import CreditCard from 'src/assets/icons/credit-card.svg';
-import Info from 'src/assets/icons/info.svg';
-import InvoiceIcon from 'src/assets/icons/invoice.svg';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
-import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import IconTextLink from 'src/components/IconTextLink';
-import { getNextCycleEstimatedBalance } from './billingUtilities';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import HelpIcon from 'src/components/HelpIcon';
 import PaymentDrawer from './PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    marginTop: 0,
     marginBottom: 20,
-    padding: theme.spacing(3) + 1,
-    border: `solid 1px ${theme.cmrBorderColors.borderBillingSummary}`,
-    borderRadius: 8,
-    backgroundColor: theme.cmrBGColors.bgBillingSummary,
+  },
+  paper: {
+    padding: `15px 20px`,
+  },
+  divider: {
+    marginTop: 8,
+    backgroundColor: '#d6d7d9',
+  },
+  helpIcon: {
+    padding: `0px 8px`,
+    color: '#888f91',
+  },
+  neutralBalance: {
+    color: theme.palette.text.primary,
+  },
+  positiveBalance: {
+    color: theme.cmrIconColors.iRed,
+  },
+  credit: {
+    color: '#02b159',
+  },
+  text: {
+    color: '#606469',
+  },
+  accruedCharges: {
+    color: theme.palette.text.primary,
   },
   header: {
     marginBottom: theme.spacing(2) - 1,
@@ -78,11 +99,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1) + 2,
     textAlign: 'right',
   },
-  text: {
-    lineHeight: 1.43,
-    letterSpacing: 0.1,
-    color: theme.color.billingText,
-  },
+  // text: {
+  //   lineHeight: 1.43,
+  //   letterSpacing: 0.1,
+  //   color: theme.color.billingText,
+  // },
   iconButtonOuter: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -129,14 +150,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  promotion?: ActivePromotion;
+  promotions?: ActivePromotion[];
   balanceUninvoiced: number;
   balance: number;
   mostRecentInvoiceId?: number;
 }
 
 export const BillingSummary: React.FC<Props> = (props) => {
-  const { promotion, balanceUninvoiced, balance, mostRecentInvoiceId } = props;
+  const { promotions, balanceUninvoiced, balance } = props;
 
   // On-the-fly route matching so this component can open the drawer itself.
   const makePaymentRouteMatch = Boolean(
@@ -167,188 +188,127 @@ export const BillingSummary: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const promoThisMonthCreditRemaining = promotion?.this_month_credit_remaining
-    ? Number(promotion?.this_month_credit_remaining)
-    : undefined;
+  let accountBalanceText = 'You have no balance at this time.';
+  if (balance > 0) {
+    accountBalanceText = 'Payment Overdue';
+  }
+  if (balance < 0) {
+    accountBalanceText = 'Credit';
+  }
 
-  const nextCycleEstimatedBalance = getNextCycleEstimatedBalance({
-    balance,
-    balanceUninvoiced,
-    promoThisMonthCreditRemaining,
-  });
-
-  const shouldDisplayPromotion =
-    Boolean(promotion) && promoThisMonthCreditRemaining !== undefined;
-
-  const determinePaymentDisplay = (pastDueAmount: number) => {
-    if (pastDueAmount > 0) {
-      return (
-        <div>
-          <Typography className={classes.header} variant="h2">
-            Past Due Amount
-          </Typography>
-          <Typography className={classes.unpaidBalance} component="h2">
-            <Currency quantity={pastDueAmount} />
-          </Typography>
-          <Typography className={classes.text}>
-            Please make a payment immediately to avoid service disruption.
-          </Typography>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <Typography className={classes.header} variant="h2">
-            No Payment Due
-          </Typography>
-          <Typography className={classes.text}>
-            Your account is paid in full and no payment is due at this time.
-          </Typography>
-        </div>
-      );
-    }
-  };
   return (
     <>
-      <Paper className={classes.root}>
-        <Grid container alignItems="stretch">
-          <Grid item xs={12} md={4} className={classes.gridItem}>
-            {/* If balance is > 0 and it is the 3rd day of the month or later, it is considered past due. */}
-            {determinePaymentDisplay(balance)}
-
-            <div className={classes.iconButtonOuter}>
-              <IconTextLink
-                SideIcon={CreditCard}
-                text="Make a payment"
-                title="Make a payment"
-                onClick={openPaymentDrawer}
-                className={classes.iconButton}
+      <Grid container spacing={3} className={classes.root}>
+        <Grid item xs={12} md={4}>
+          <Paper className={classes.paper}>
+            <Box display="flex" alignItems="center">
+              <Typography variant="h3">Account Balance</Typography>
+              <HelpIcon
+                className={classes.helpIcon}
+                text="Some helper text about account balance."
               />
-              <span className={classes.invoiceButton}>
-                <IconTextLink
-                  SideIcon={InvoiceIcon}
-                  text="View last invoice"
-                  title="View last invoice"
-                  to={`/account/billing/invoices/${mostRecentInvoiceId}`}
-                  disabled={!mostRecentInvoiceId}
-                />
-              </span>
-            </div>
-          </Grid>
-          <Grid item xs={12} md={4} className={classes.gridItem}>
-            <Typography className={classes.header} variant="h2">
-              Next Billing Cycle
-            </Typography>
-            <Typography className={classes.text}>
-              Your balance reflects charges accrued since your last invoice,
-              minus any promotions or credits applied to your account.
-            </Typography>
-            {/*
-          Commenting out as adding promo code is not possible yet
-
-          <div className={classes.iconButtonOuter}>
-            <IconTextLink
-              SideIcon={GiftBox}
-              text="Enter a promo code"
-              title="Enter a promo code"
-              onClick={openPromoDrawer}
-              className={classes.iconButton}
-            />
-          </div>
-          */}
-          </Grid>
-          <Grid item xs={12} md={4} className={classes.gridItem}>
-            <Grid item container justify="space-between">
-              <Grid item>
-                <Typography className={classes.label}>
-                  Uninvoiced Charges*
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.field}>
-                  <Currency quantity={balanceUninvoiced} />
-                </Typography>
-              </Grid>
-            </Grid>
-            {/*
-
-            */}
-            {shouldDisplayPromotion && (
-              <Grid item container justify="space-between" alignItems="center">
-                <Grid item xs={8}>
-                  <Typography className={classes.label}>
-                    Promotion {promotion!.summary}
-                    <Tooltip
-                      title={promotion!.description}
-                      enterTouchDelay={0}
-                      leaveTouchDelay={5000}
-                      placement={'bottom'}
-                    >
-                      <IconButton className={classes.infoIcon}>
-                        <Info />
-                      </IconButton>
-                    </Tooltip>
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Typography className={classes.field}>
-                    -
-                    <Currency
-                      quantity={promoThisMonthCreditRemaining!}
-                      wrapInParentheses
-                    />
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
-
-            <Grid item container justify="space-between">
-              <Grid item>
-                <Typography className={classes.label}>
-                  Payment &amp; Credits
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.field}>
-                  {/* Only display balance if less than 0, otherwise display 0. Balance, if a positive integer, is instead applied as past due. */}
-                  {balance < 0 ? (
-                    <Currency quantity={balance} wrapInParentheses />
-                  ) : (
-                    <Currency quantity={0} />
-                  )}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Grid
-              item
-              container
-              className={classes.balanceOuter}
-              justify="space-between"
+            </Box>
+            <Divider className={classes.divider} />
+            <Box
+              marginTop="12px"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <Grid item>
-                <Typography className={classes.label}>
-                  Next Cycle Estimated Balance*
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.field}>
-                  {/* If there is credit left over post-calculation, display as negative in parens */}
-                  <Currency
-                    quantity={nextCycleEstimatedBalance}
-                    wrapInParentheses={nextCycleEstimatedBalance < 0}
-                  />
-                </Typography>
-              </Grid>
-            </Grid>
-            <Typography className={classes.caption}>
-              * Based on estimated usage
-            </Typography>
-          </Grid>
+              <Typography
+                variant={balance === 0 ? 'body1' : 'h3'}
+                style={{ marginRight: 8 }}
+                className={classnames({
+                  [classes.neutralBalance]: balance === 0,
+                  [classes.positiveBalance]: balance > 0,
+                  [classes.credit]: balance < 0,
+                })}
+              >
+                {accountBalanceText}
+              </Typography>
+              <Typography
+                variant="h3"
+                className={classnames({
+                  [classes.neutralBalance]: balance === 0,
+                  [classes.positiveBalance]: balance > 0,
+                  [classes.credit]: balance < 0,
+                })}
+              >
+                <Currency quantity={Math.abs(balance)} />
+              </Typography>
+            </Box>
+          </Paper>
         </Grid>
-      </Paper>
+        <Grid item xs={12} md={4}>
+          <Paper className={classes.paper}>
+            <Box display="flex" alignItems="center">
+              <Typography variant="h3">Promotions</Typography>
+              <HelpIcon
+                className={classes.helpIcon}
+                text="Some helper text about promotions."
+              />
+            </Box>
+            <Divider className={classes.divider} />
+            {promotions?.map((thisPromo) => (
+              <PromoDisplay key={thisPromo.summary} {...thisPromo} />
+            ))}
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Paper className={classes.paper}>
+            <Box display="flex" alignItems="center">
+              <Typography variant="h3">Accrued Charges</Typography>
+              <HelpIcon
+                className={classes.helpIcon}
+                text="Some helper text about accrued charges."
+              />
+            </Box>
+            <Divider className={classes.divider} />
+            <Box
+              marginTop="12px"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography>Since last invoice</Typography>
+              <Typography variant="h3" className={classes.accruedCharges}>
+                <Currency quantity={balanceUninvoiced} />
+              </Typography>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
       <PaymentDrawer open={paymentDrawerOpen} onClose={closePaymentDrawer} />
     </>
   );
 };
 
 export default React.memo(BillingSummary);
+
+export type PromoDisplayProps = ActivePromotion;
+
+export const PromoDisplay: React.FC<PromoDisplayProps> = (props) => {
+  const classes = useStyles();
+
+  const { summary, description, credit_remaining, expire_dt } = props;
+  return (
+    <Box marginTop="12px">
+      <Box display="flex" justifyContent="space-between">
+        <Box display="flex" alignItems="center">
+          <Typography variant="h3" className={classes.text}>
+            {summary}
+          </Typography>
+          <HelpIcon className={classes.helpIcon} text={description} />
+        </Box>
+        <Typography variant="h3" className={classes.credit}>
+          <Currency quantity={Number.parseFloat(credit_remaining)} /> remaining
+        </Typography>
+      </Box>
+      {expire_dt ? (
+        <Typography>
+          Expires <DateTimeDisplay value={expire_dt} />
+        </Typography>
+      ) : null}
+    </Box>
+  );
+};
