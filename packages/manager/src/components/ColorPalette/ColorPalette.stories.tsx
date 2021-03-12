@@ -1,9 +1,10 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import ColorPalette from './ColorPalette';
 
-storiesOf('Color Palette', module).add('Default', () => <ColorPalette />);
+export default {
+  title: 'Color Palette',
+};
 
-storiesOf('Color Palette', module).add('Background', () => (
-  <ColorPalette displayBackgrounds />
-));
+export const Default = () => <ColorPalette />;
+
+export const Background = () => <ColorPalette displayBackgrounds />;

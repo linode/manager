@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import { baseRequest } from '@linode/api-v4/lib/request';
 import * as React from 'react';
 
@@ -49,22 +48,33 @@ class TagsPanelDemo extends React.Component<Props, {}> {
   }
 }
 
-storiesOf('Tags Panel', module)
-  .addDecorator((story) => {
-    const mock = new MockAdapter(baseRequest);
+export default {
+  title: 'Tags Panel',
 
-    mock.onGet('/tags').reply(200, {
-      data: ['tag1', 'tag2', 'tag3', 'tag4'].map((tag) => ({ label: tag })),
-    });
-    return <div>{story()}</div>;
-  })
-  .add('Tags panel with tags', () => {
-    return (
-      <TagsPanelDemo
-        tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']}
-      />
-    );
-  })
-  .add('Tags panel without tags', () => {
-    return <TagsPanelDemo tags={[]} />;
-  });
+  decorators: [
+    (story) => {
+      const mock = new MockAdapter(baseRequest);
+
+      mock.onGet('/tags').reply(200, {
+        data: ['tag1', 'tag2', 'tag3', 'tag4'].map((tag) => ({ label: tag })),
+      });
+      return <div>{story()}</div>;
+    },
+  ],
+};
+
+export const TagsPanelWithTags = () => {
+  return <TagsPanelDemo tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']} />;
+};
+
+TagsPanelWithTags.story = {
+  name: 'Tags panel with tags',
+};
+
+export const TagsPanelWithoutTags = () => {
+  return <TagsPanelDemo tags={[]} />;
+};
+
+TagsPanelWithoutTags.story = {
+  name: 'Tags panel without tags',
+};

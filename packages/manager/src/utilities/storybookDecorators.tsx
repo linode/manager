@@ -1,4 +1,4 @@
-import { select } from '@storybook/addon-knobs/react';
+import { select } from '@storybook/addon-knobs';
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import CssBaseline from 'src/components/core/CssBaseline';

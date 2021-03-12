@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Currency from './Currency';
 
@@ -32,4 +31,8 @@ class Example extends React.Component<{}, {}> {
   }
 }
 
-storiesOf('Currency', module).add('Example', () => <Example />);
+export default {
+  title: 'Currency',
+};
+
+export const _Example = () => <Example />;
