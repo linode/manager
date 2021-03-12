@@ -1,23 +1,9 @@
 import { Interface, InterfacePurpose } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import TextField from 'src/components/TextField';
 import Grid from 'src/components/Grid';
+import TextField from 'src/components/TextField';
 import useVlansQuery from 'src/queries/vlans';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  vlanInputs: {
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    alignItems: 'center',
-  },
-}));
 
 export interface Props {
   slotNumber: number;
@@ -59,13 +45,11 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     handleChange,
   } = props;
 
-  const classes = useStyles();
-
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
     vlans?.map((thisVlan) => ({
-      label: thisVlan.description,
-      value: thisVlan.description,
+      label: thisVlan['description'],
+      value: thisVlan['description'],
     })) ?? [];
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) =>
@@ -98,6 +82,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             <Grid item>
               <Select
                 options={vlanOptions}
+                isLoading={isLoading}
                 label="Label"
                 placeholder="Create or select a VLAN"
                 variant="creatable"
