@@ -163,8 +163,8 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   );
 
   const createButtonText = matchesAccessKeys
-    ? 'Create an Access Key'
-    : 'Create a Bucket';
+    ? 'Create Access Key'
+    : 'Create Bucket';
 
   const createButtonWidth = matchesAccessKeys ? 180 : 152;
 

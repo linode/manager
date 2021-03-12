@@ -338,7 +338,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           buttonProps={[
             {
               onClick: openForCreate,
-              children: 'Add an Image',
+              children: 'Create Image',
             },
           ]}
         >

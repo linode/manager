@@ -308,7 +308,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
           buttonProps={[
             {
               onClick: () => props.history.push('/volumes/create'),
-              children: 'Add a Volume',
+              children: 'Create Volume',
             },
           ]}
         >

@@ -7,17 +7,14 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Notice from 'src/components/Notice';
-
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-
+import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { titlecase } from 'src/features/linodes/presentation';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
@@ -150,9 +147,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
     <Dialog
       className={classes.dialog}
       open={props.isOpen}
-      title={`${titlecase(props.action.toLowerCase())} Linode ${
-        props.linodeLabel
-      }?`}
+      title={`${props.action} Linode ${props.linodeLabel}?`}
       onClose={props.close}
       error={errors ? errors[0].reason : ''}
       actions={

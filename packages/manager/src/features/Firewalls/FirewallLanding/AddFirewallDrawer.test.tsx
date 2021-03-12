@@ -8,14 +8,14 @@ import { predefinedFirewalls } from '../shared';
 const props: CombinedProps = {
   onClose: jest.fn(),
   onSubmit: jest.fn().mockResolvedValue({}),
-  title: 'Add a Firewall',
+  title: 'Create Firewall',
   open: true,
 };
 
 describe('Add Firewall Drawer', () => {
   it('should render a title', () => {
     renderWithTheme(<AddFirewallDrawer {...props} />);
-    expect(screen.getByText(/add a firewall/i)).toBeInTheDocument();
+    expect(screen.getByText(/create firewall/i)).toBeInTheDocument();
   });
 
   it('should validate the form on submit', async () => {
