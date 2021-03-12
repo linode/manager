@@ -602,11 +602,13 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Network Interfaces</Typography>
               {values.interfaces.map((thisInterface, idx, arr) =>
+                // Magic so that we show interfaces that have been filled plus one more
                 arr[idx - 1]?.purpose !== 'none' ? (
                   <InterfaceSelect
                     key={`eth${idx}-interface`}
                     slotNumber={idx}
-                    readOnly={false}
+                    readOnly={readOnly}
+                    error={formik.errors[`interfaces[${idx}]`]}
                     label={thisInterface.label}
                     purpose={thisInterface.purpose}
                     ipamAddress={thisInterface.ipam_address}

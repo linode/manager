@@ -11,6 +11,7 @@ export interface Props {
   label: string;
   ipamAddress: string | null;
   readOnly: boolean;
+  error?: string;
   handleChange: (updatedInterface: ExtendedInterface) => void;
 }
 
@@ -37,6 +38,7 @@ const purposeOptions: Item<ExtendedPurpose>[] = [
 
 export const InterfaceSelect: React.FC<Props> = (props) => {
   const {
+    error,
     readOnly,
     slotNumber,
     purpose,
@@ -81,6 +83,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
           <Grid container direction="column">
             <Grid item>
               <Select
+                errorText={error}
                 options={vlanOptions}
                 isLoading={isLoading}
                 label="Label"
