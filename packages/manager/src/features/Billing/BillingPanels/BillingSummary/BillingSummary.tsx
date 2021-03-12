@@ -306,7 +306,7 @@ export const PromoDisplay: React.FC<PromoDisplayProps> = (props) => {
       </Box>
       {expire_dt ? (
         <Typography>
-          Expires <DateTimeDisplay value={expire_dt} />
+          Expires <DateTimeDisplay value={expire_dt} displayTime={false} />
         </Typography>
       ) : null}
     </Box>
