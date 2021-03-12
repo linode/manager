@@ -47,7 +47,7 @@ import {
   withLinodeDetailContext,
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
-import InterfaceSelect, { ExtendedPurpose } from './InterfaceSelect';
+import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -73,10 +73,6 @@ interface Helpers {
   modules_dep: boolean;
   network: boolean;
   devtmpfs_automount: boolean;
-}
-
-interface ExtendedInterface extends Omit<Interface, 'purpose'> {
-  purpose: ExtendedPurpose;
 }
 
 type RunLevel = 'default' | 'single' | 'binbash';
@@ -211,45 +207,35 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const configData = convertStateToData(values);
 
+    const handleSuccess = () => {
+      formik.setSubmitting(false);
+      onClose();
+    };
+
+    const handleError = (error: APIError[]) => {
+      const mapErrorToStatus = (generalError: string) =>
+        formik.setStatus({ generalError });
+      formik.setSubmitting(false);
+      handleFieldErrors(formik.setErrors, error);
+      handleGeneralErrors(
+        mapErrorToStatus,
+        error,
+        'An unexpected error occurred.'
+      );
+      scrollErrorIntoView('linode-config-dialog');
+    };
+
     /** Editing */
     if (linodeConfigId) {
       return updateLinodeConfig(linodeConfigId, configData)
-        .then((_) => {
-          formik.setSubmitting(false);
-          onClose();
-        })
-        .catch((error) => {
-          const mapErrorToStatus = (generalError: string) =>
-            formik.setStatus({ generalError });
-          formik.setSubmitting(false);
-          handleFieldErrors(formik.setErrors, error);
-          handleGeneralErrors(
-            mapErrorToStatus,
-            error,
-            'An unexpected error occurred.'
-          );
-          scrollErrorIntoView('linode-config-dialog');
-        });
+        .then(handleSuccess)
+        .catch(handleError);
     }
 
     /** Creating */
     return createLinodeConfig(configData)
-      .then((_) => {
-        formik.setSubmitting(false);
-        onClose();
-      })
-      .catch((error) => {
-        const mapErrorToStatus = (generalError: string) =>
-          formik.setStatus({ generalError });
-        formik.setSubmitting(false);
-        handleFieldErrors(formik.setErrors, error);
-        handleGeneralErrors(
-          mapErrorToStatus,
-          error,
-          'An unexpected error occurred.'
-        );
-        scrollErrorIntoView('linode-config-dialog');
-      });
+      .then(handleSuccess)
+      .catch(handleError);
   };
 
   React.useEffect(() => {

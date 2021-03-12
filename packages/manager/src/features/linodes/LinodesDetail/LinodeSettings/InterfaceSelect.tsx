@@ -3,11 +3,17 @@ import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
+import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  vlanInputs: {
+    display: 'flex',
+    flexFlow: 'column nowrap',
     alignItems: 'center',
   },
 }));
@@ -18,11 +24,14 @@ export interface Props {
   label: string;
   ipamAddress: string | null;
   readOnly: boolean;
-  handleChange: (updatedInterface: Interface) => void;
+  handleChange: (updatedInterface: ExtendedInterface) => void;
 }
 
 // To allow for empty slots, which the API doesn't account for
 export type ExtendedPurpose = InterfacePurpose | 'none';
+export interface ExtendedInterface extends Omit<Interface, 'purpose'> {
+  purpose: ExtendedPurpose;
+}
 
 const purposeOptions: Item<ExtendedPurpose>[] = [
   {
@@ -63,37 +72,45 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     handleChange({ purpose, ipam_address: ipamAddress, label: selected.value });
 
   return (
-    <div className={classes.root}>
-      <Select
-        options={purposeOptions}
-        label={`eth${slotNumber}`}
-        defaultValue={purposeOptions.find(
-          (thisOption) => thisOption.value === purpose
-        )}
-        onChange={handlePurposeChange}
-        disabled={readOnly}
-        isClearable={false}
-      />
+    <Grid container>
+      <Grid item xs={6}>
+        <Select
+          options={purposeOptions}
+          label={`eth${slotNumber}`}
+          defaultValue={purposeOptions.find(
+            (thisOption) => thisOption.value === purpose
+          )}
+          onChange={handlePurposeChange}
+          disabled={readOnly}
+          isClearable={false}
+        />
+      </Grid>
       {purpose === 'vlan' ? (
-        <>
-          <Select
-            options={vlans}
-            label="Label"
-            placeholder="Create or select a VLAN"
-            defaultValue={vlans.find(
-              (thisVlan) => thisVlan.value === vlanLabel
-            )}
-            onChange={handleLabelChange}
-            isClearable={false}
-          />
-          <TextField
-            label="IPAM Address (optional)"
-            value={ipamAddress}
-            onChange={handleAddressChange}
-          />
-        </>
+        <Grid item xs={6}>
+          <Grid container direction="column">
+            <Grid item>
+              <Select
+                options={vlans}
+                label="Label"
+                placeholder="Create or select a VLAN"
+                defaultValue={vlans.find(
+                  (thisVlan) => thisVlan.value === vlanLabel
+                )}
+                onChange={handleLabelChange}
+                isClearable={false}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="IPAM Address (optional)"
+                value={ipamAddress}
+                onChange={handleAddressChange}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
       ) : null}
-    </div>
+    </Grid>
   );
 };
 
