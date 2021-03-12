@@ -4,6 +4,14 @@ import { LinodeConfigInterfaceFactory } from 'src/factories/linodeConfigInterfac
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);
 
+const publicInterface = LinodeConfigInterfaceFactory.build({
+  purpose: 'public',
+  ipam_address: null,
+});
+const [vlanInterface1, vlanInterface2] = LinodeConfigInterfaceFactory.buildList(
+  2
+);
+
 export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   created: '2018-06-26T16:04:28',
   memory_limit: 0,
@@ -43,10 +51,9 @@ export const linodeConfigFactory = Factory.Sync.makeFactory<Config>({
   },
   kernel: 'linode/grub2',
   interfaces: [
-    LinodeConfigInterfaceFactory.build(),
-    LinodeConfigInterfaceFactory.build({
-      purpose: 'public',
-      ipam_address: null,
-    }),
+    // The order of this array is significant. Index 0 (eth0) should be public.
+    publicInterface,
+    vlanInterface1,
+    vlanInterface2,
   ],
 });
