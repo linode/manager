@@ -1,5 +1,4 @@
 import { Config, Disk, InterfaceBody } from '@linode/api-v4/lib/linodes';
-import { VLAN } from '@linode/api-v4/lib/vlans';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -38,7 +37,6 @@ interface Props {
   linodeVolumes: Volume[];
   linodeKernel: string;
   linodeIPs: string[];
-  vlans: Record<string, VLAN>;
 }
 
 interface Handlers {
