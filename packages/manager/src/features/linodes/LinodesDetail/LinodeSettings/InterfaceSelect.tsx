@@ -4,6 +4,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 import Grid from 'src/components/Grid';
+import useVlansQuery from 'src/queries/vlans';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -57,10 +58,15 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     ipamAddress,
     handleChange,
   } = props;
+
   const classes = useStyles();
 
-  const [vlanLabel, setVlanLabel] = React.useState('');
-  const vlans: Item<string>[] = [];
+  const { data: vlans, isLoading } = useVlansQuery();
+  const vlanOptions =
+    vlans?.map((thisVlan) => ({
+      label: thisVlan.description,
+      value: thisVlan.description,
+    })) ?? [];
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) =>
     handleChange({ purpose: selected.value, label, ipam_address: ipamAddress });
@@ -81,6 +87,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             (thisOption) => thisOption.value === purpose
           )}
           onChange={handlePurposeChange}
+          onCreate
           disabled={readOnly}
           isClearable={false}
         />
@@ -90,11 +97,13 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
           <Grid container direction="column">
             <Grid item>
               <Select
-                options={vlans}
+                options={vlanOptions}
                 label="Label"
                 placeholder="Create or select a VLAN"
-                defaultValue={vlans.find(
-                  (thisVlan) => thisVlan.value === vlanLabel
+                variant="creatable"
+                createOptionPosition="first"
+                defaultValue={vlanOptions.find(
+                  (thisVlan) => thisVlan.value === label
                 )}
                 onChange={handleLabelChange}
                 isClearable={false}
