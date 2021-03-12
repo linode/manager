@@ -49,7 +49,7 @@
     "he": "^1.2.0",
     "highlight.js": "~10.4.1",
     "ipaddr.js": "^1.9.1",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "2.11.0",
     "logic-query-parser": "^0.0.5",
