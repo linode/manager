@@ -28,7 +28,7 @@ describe('clone linode', () => {
         containsClick('Select a Region');
         containsClick('Newark, NJ');
         getVisible('[data-qa-details]').within(() => {
-          containsVisible('us-east-clone');
+          containsVisible(linode.label);
         });
         getClick('[id="g6-nanode-1"]');
         getClick('[data-qa-deploy-linode="true"]');
