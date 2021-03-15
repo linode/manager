@@ -166,9 +166,7 @@ const SupportTicketDetail = React.lazy(
 const Longview = React.lazy(() => import('src/features/Longview'));
 const Managed = React.lazy(() => import('src/features/Managed'));
 const Help = React.lazy(() => import('src/features/Help'));
-const SupportSearchLanding = React.lazy(
-  () => import('src/features/Help/SupportSearchLanding')
-);
+
 const SearchLanding = React.lazy(() => import('src/features/Search'));
 const EventsLanding = React.lazy(
   () => import('src/features/Events/EventsLanding')
@@ -355,18 +353,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             />
                             <Route path="/kubernetes" component={Kubernetes} />
                             <Route path="/account" component={Account} />
-                            <Route
-                              exact
-                              strict
-                              path="/support/tickets"
-                              component={SupportTickets}
-                            />
-                            <Route
-                              path="/support/tickets/:ticketId"
-                              component={SupportTicketDetail}
-                              exact
-                              strict
-                            />
+
                             <Route
                               path="/profile"
                               render={(routeProps) => (
@@ -376,14 +363,8 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                                 />
                               )}
                             />
-                            <Route exact path="/support" component={Help} />
+                            <Route path="/support" component={Help} />
                             <Route path="/search" component={SearchLanding} />
-                            <Route
-                              exact
-                              strict
-                              path="/support/search/"
-                              component={SupportSearchLanding}
-                            />
                             <Route path="/events" component={EventsLanding} />
                             {showFirewalls && (
                               <Route path="/firewalls" component={Firewalls} />
