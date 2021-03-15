@@ -1,10 +1,8 @@
 import { Image } from '@linode/api-v4/lib/images';
 import {
   deleteStackScript,
-  StackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,6 +13,7 @@ import StackScriptBase, {
   StateProps,
 } from '../StackScriptBase/StackScriptBase';
 import StackScriptsSection from './StackScriptsSection';
+import { StackScriptsRequest } from 'src/features/StackScripts/types';
 
 interface DialogVariantProps {
   open: boolean;
@@ -32,11 +31,7 @@ interface Props {
   category: string;
   currentUser: string;
   publicImages: Record<string, Image>;
-  request: (
-    username: string,
-    params?: any,
-    filter?: any
-  ) => Promise<ResourcePage<StackScript>>;
+  request: StackScriptsRequest;
 }
 
 type CombinedProps = Props & StateProps;

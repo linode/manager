@@ -30,6 +30,7 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
     label,
     left,
     onClick,
+    className,
     ...remainingPropsAsTooltipProps
   } = props;
 
@@ -39,6 +40,7 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
     onClick,
     text: label,
     title: label,
+    className,
   };
 
   if (!!disabled && !!disabledReason) {
