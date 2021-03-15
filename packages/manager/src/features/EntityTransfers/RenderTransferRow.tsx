@@ -1,5 +1,6 @@
 import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
 import * as React from 'react';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
@@ -10,6 +11,13 @@ import { pluralize } from 'src/utilities/pluralize';
 import ActionMenu from './TransfersPendingActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  row: {
+    '&:hover': {
+      '& [data-qa-copy-token]': {
+        opacity: 1,
+      },
+    },
+  },
   cellContents: {
     paddingLeft: '1rem',
   },
@@ -17,6 +25,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '40%',
     [theme.breakpoints.down('sm')]: {
       width: '50%',
+    },
+  },
+  tokenAndCopyIcon: {
+    display: 'flex',
+    '& [data-qa-copy-token]': {
+      opacity: 0,
+    },
+  },
+  icon: {
+    marginLeft: theme.spacing(1),
+    marginTop: 2,
+    '& svg': {
+      width: 12,
+      height: 12,
     },
   },
   createdCell: {
@@ -87,17 +109,22 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
   const transferTypeIsSent = transferType === 'sent';
 
   return (
-    <TableRow>
+    <TableRow className={classes.row}>
       <TableCell
         className={`${classes.cellContents} ${classes.tokenCell}`}
         noWrap
       >
-        <button
-          className={classes.link}
-          onClick={() => handleTokenClick(token, entities)}
-        >
-          {token}
-        </button>
+        <div className={classes.tokenAndCopyIcon}>
+          <button
+            className={classes.link}
+            onClick={() => handleTokenClick(token, entities)}
+          >
+            {token}
+          </button>
+          <div data-qa-copy-token>
+            <CopyTooltip text={token} className={`${classes.icon}`} />
+          </div>
+        </div>
       </TableCell>
       <Hidden smDown={transferTypeIsPending || transferTypeIsSent}>
         <TableCell
