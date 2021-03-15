@@ -65,7 +65,6 @@ export const testNamePrefix = 'cy-test-';
 export const isTestEntity = (entity) =>
   entity.tags?.includes(testTag) ||
   entity.label?.startsWith(testNamePrefix) ||
-  entity.summary?.includes(testTag) ||
-  entity.label?.includes('clone');
+  entity.summary?.includes(testTag);
 
 export const makeTestLabel = () => testNamePrefix + strings.randomTitle(10);
