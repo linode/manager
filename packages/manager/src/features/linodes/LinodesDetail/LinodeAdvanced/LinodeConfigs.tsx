@@ -94,20 +94,13 @@ const styles = (theme: Theme) =>
     },
     labelColumn: {
       ...theme.applyTableHeaderStyles,
-      width: '18%',
-    },
-    vmColumn: {
-      ...theme.applyTableHeaderStyles,
-      width: '10%',
-    },
-    kernelColumn: {
-      width: '23%',
+      width: '35%',
     },
     interfacesColumn: {
-      width: '20%',
+      width: '30%',
     },
     deviceColumn: {
-      width: '20%',
+      width: '25%',
     },
     actionsColumn: {
       width: '10%',
@@ -504,24 +497,8 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                           data-qa-config-label-header
                           className={classes.labelColumn}
                         >
-                          <strong>Label</strong>
+                          <strong>Config</strong>
                         </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'virt_mode'}
-                          label={'virt_mode'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-virt-mode-header
-                          className={classes.vmColumn}
-                        >
-                          <strong>VM Mode</strong>
-                        </TableSortCell>
-                        <TableCell
-                          className={`${classes.tableCell} ${classes.kernelColumn}`}
-                        >
-                          Kernel
-                        </TableCell>
-
                         <TableCell
                           className={`${classes.tableCell} ${classes.deviceColumn}`}
                         >

@@ -149,13 +149,9 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
       key={config.id}
       data-qa-config={config.label}
     >
-      <TableCell>{config.label}</TableCell>
       <TableCell>
-        {config.virt_mode === 'fullvirt'
-          ? 'Full virtualization'
-          : 'Paravirtualization'}
+        {config.label} – {linodeKernel}
       </TableCell>
-      <TableCell>{linodeKernel}</TableCell>
       <TableCell>{deviceLabels}</TableCell>
       {vlansEnabled ? (
         <TableCell>
