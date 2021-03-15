@@ -54,6 +54,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
         loading={loading}
         disabled={typeToConfirm && confirmationText !== label}
         data-qa-confirm
+        data-testid="delete-btn"
       >
         Delete {titlecase(entity)}
       </Button>

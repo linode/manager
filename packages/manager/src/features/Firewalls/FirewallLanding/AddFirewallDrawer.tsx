@@ -185,7 +185,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                   buttonType="primary"
                   onClick={() => handleSubmit()}
                   data-qa-submit
-                  data-testid="add-firewall-submit"
+                  data-testid="create-firewall-submit"
                   loading={isSubmitting}
                   disabled={_isRestrictedUser}
                 >
