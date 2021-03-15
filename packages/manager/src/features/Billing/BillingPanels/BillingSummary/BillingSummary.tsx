@@ -127,8 +127,8 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
 
   return (
     <>
-      <Grid container spacing={3} className={classes.root}>
-        <Grid item {...gridDimensions}>
+      <Grid container spacing={2} className={classes.root}>
+        <Grid item {...gridDimensions} sm={6}>
           <Paper className={classes.paper}>
             <Box display="flex" alignItems="center">
               <Typography variant="h3">Account Balance</Typography>
@@ -169,7 +169,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
           </Paper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
-          <Grid item {...gridDimensions}>
+          <Grid item xs={12} sm={6} md={4}>
             <Paper className={classes.paper}>
               <Box display="flex" alignItems="center">
                 <Typography variant="h3">Promotions</Typography>
@@ -236,14 +236,27 @@ export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
 
   return (
     <Box marginTop="12px">
-      <Box display="flex" justifyContent="space-between">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="flex-start"
+        flexWrap="wrap"
+      >
         <Box display="flex" alignItems="center">
-          <Typography variant="h3" className={classes.text}>
+          <Typography
+            variant="h3"
+            className={classes.text}
+            style={{ wordBreak: 'break-word' }}
+          >
             {summary}
           </Typography>
           <HelpIcon className={classes.helpIcon} text={description} />
         </Box>
-        <Typography variant="h3" className={classes.credit}>
+        <Typography
+          variant="h3"
+          className={classes.credit}
+          style={{ marginBottom: '4px' }}
+        >
           <Currency quantity={Number.parseFloat(credit_remaining)} /> remaining
         </Typography>
       </Box>
