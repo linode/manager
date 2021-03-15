@@ -31,6 +31,7 @@ export * from './profile';
 export * from './promotionalOffer';
 export * from './regions';
 export * from './stackscripts';
+export * from './statusPage';
 export * from './support';
 export * from './tags';
 export * from './volume';

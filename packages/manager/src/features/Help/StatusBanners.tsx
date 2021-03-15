@@ -47,9 +47,10 @@ export const StatusBanners: React.FC<{}> = (_) => {
     (thisMaintenance) => thisMaintenance.status !== 'completed'
   );
 
-  if (incidents.length === 0) {
+  if (incidents.length === 0 && maintenance.length === 0) {
     return null;
   }
+
   return (
     // eslint-disable-next-line
     <>

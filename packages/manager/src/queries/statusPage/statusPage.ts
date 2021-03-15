@@ -17,7 +17,7 @@ const BASE_URL = `https://${LINODE_STATUS_PAGE_ID}.statuspage.io/api/v2`;
  * Return a list of incidents with a status of "unresolved."
  */
 const getIncidents = () => {
-  return Axios.get<IncidentResponse>(`${BASE_URL}/incidents.json`)
+  return Axios.get<IncidentResponse>(`${BASE_URL}/incidents/unresolved.json`)
     .then((response) => response.data)
     .catch((error) => {
       // Don't show any errors sent from the statuspage API to users, but report them to Sentry
