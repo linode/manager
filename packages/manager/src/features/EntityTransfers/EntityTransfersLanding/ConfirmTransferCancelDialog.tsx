@@ -66,7 +66,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
 
         onClose();
         setSubmitting(false);
-        enqueueSnackbar('Transfer canceled successfully.', {
+        enqueueSnackbar('Service transfer canceled successfully.', {
           variant: 'success',
         });
       })
@@ -81,7 +81,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
   const actions = (
     <ActionsPanel className={classes.actions}>
       <Button onClick={onClose} buttonType="cancel">
-        Keep Transfer
+        Keep Service Transfer
       </Button>
       <Button
         disabled={submitting}
@@ -89,7 +89,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
         loading={submitting}
         buttonType="primary"
       >
-        Cancel Transfer
+        Cancel Service Transfer
       </Button>
     </ActionsPanel>
   );
@@ -102,7 +102,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
   return (
     <ConfirmationDialog
       onClose={onClose}
-      title="Cancel this transfer?"
+      title="Cancel this Service Transfer?"
       open={open}
       actions={actions}
     >
@@ -119,11 +119,11 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
           : null
       }
       <Typography>
-        The token generated for this transfer will no longer be valid. To
-        transfer ownership of{' '}
+        The token generated for this service transfer will no longer be valid.
+        To transfer ownership of{' '}
         {entities?.linodes.length > 1 ? 'these Linodes' : 'this Linode'}, you
-        will need to create a new transfer and share the new token with the
-        receiving party.
+        will need to create a new service transfer and share the new token with
+        the receiving party.
       </Typography>
     </ConfirmationDialog>
   );

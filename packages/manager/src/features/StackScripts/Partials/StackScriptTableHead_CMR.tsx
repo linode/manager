@@ -3,8 +3,8 @@ import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
 // @todo: the CMR styles for TableSortCell aren't being applied and I can't
@@ -25,13 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         borderRight: 'none',
       },
       '&:hover': {
-        backgroundColor: '#3683dc',
-        '& span': {
-          color: '#ffffff',
-          '& svg': {
-            color: '#ffffff !important',
-          },
-        },
+        ...theme.applyTableHeaderStyles,
       },
     },
   },
@@ -93,6 +87,7 @@ type SortOrder = 'asc' | 'desc';
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 interface Props {
+  category?: string;
   isSelecting?: boolean;
   handleClickTableHeader?: (value: string) => void;
   sortOrder?: SortOrder;
@@ -108,6 +103,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
     isSelecting,
     handleClickTableHeader,
     sortOrder,
+    category,
   } = props;
 
   const Cell: React.ComponentType<any> =
@@ -122,6 +118,8 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           handleClick: handleClickTableHeader,
         }
       : {};
+
+  const communityStackScripts = category === 'community';
 
   return (
     <TableHead className={classes.root}>
@@ -176,7 +174,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
             </TableCell>
           </Hidden>
         )}
-        {!isSelecting && (
+        {!isSelecting && !communityStackScripts ? (
           <Hidden mdDown>
             <TableCell
               className={`${classes.tableHead} ${classes.status} ${classes.noHover}`}
@@ -185,7 +183,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
               Status
             </TableCell>
           </Hidden>
-        )}
+        ) : null}
         {!isSelecting && (
           <TableCell
             className={`${classes.tableHead} ${classes.actionMenu} ${classes.noHover}`}

@@ -33,7 +33,7 @@ const cmrTextColors = {
 
 const cmrBorderColors = {
   borderTypography: '#454b54',
-  borderTabs: '#5c6470',
+  borderTabs: cmrBGColors.bgPaper,
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
@@ -164,6 +164,7 @@ const darkThemeOptions = {
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
     grey6: '#606469',
+    grey7: cmrBGColors.bgPaper,
     grey9: primaryColors.divider,
     grey10: '#dbdde1',
     white: '#32363c',
@@ -279,14 +280,14 @@ const darkThemeOptions = {
       // },
       containedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.light,
+          backgroundColor: '#226dc3',
         },
         '&:active': {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
           backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.borderTabs
+          color: cmrBorderColors.borderTabs,
         },
         '&.loading': {
           backgroundColor: primaryColors.text,
@@ -300,7 +301,7 @@ const darkThemeOptions = {
       containedSecondary: {
         color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
-          color: primaryColors.main,
+          color: cmrTextColors.linkActiveLight,
         },
         '&:active': {
           color: primaryColors.dark,

@@ -111,7 +111,9 @@ export const TransferCheckoutBar: React.FC<Props> = (props) => {
   const totalSelectedLinodes = Object.keys(selectedEntities.linodes).length;
   return (
     <div className={classes.root}>
-      <Typography className={classes.header}>Transfer Summary</Typography>
+      <Typography className={classes.header}>
+        Service Transfer Summary
+      </Typography>
       <div className={classes.rowBox}>
         {Object.entries(selectedEntities.linodes).map(([id, label]) => (
           <TransferRow
@@ -126,7 +128,9 @@ export const TransferCheckoutBar: React.FC<Props> = (props) => {
           {pluralize('Linode', 'Linodes', totalSelectedLinodes)} to be
           transferred
         </Typography>
-      ) : null}
+      ) : (
+        <Typography>No Linodes selected</Typography>
+      )}
       <Button
         buttonType="primary"
         disabled={totalSelectedLinodes === 0}
@@ -134,7 +138,7 @@ export const TransferCheckoutBar: React.FC<Props> = (props) => {
         onClick={onSubmit}
         className={classes.submitButton}
       >
-        Generate Transfer Token
+        Generate Token
       </Button>
     </div>
   );

@@ -1017,7 +1017,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Valheim with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-Valheim-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploy-valheim-with-marketplace-apps',
       },
     ],
     related_info: [

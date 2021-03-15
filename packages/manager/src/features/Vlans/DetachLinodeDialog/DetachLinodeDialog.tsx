@@ -2,8 +2,6 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
-import useVlans from 'src/hooks/useVlans';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   open: boolean;
@@ -17,12 +15,10 @@ interface Props {
 type CombinedProps = Props;
 
 const DetachLinodeDialog: React.FC<CombinedProps> = (props) => {
-  const { detachVlan } = useVlans();
-
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
-  const { open, closeDialog, vlanID, vlanLabel, linodeID, linodeLabel } = props;
+  const { open, vlanID, vlanLabel, linodeLabel } = props;
 
   /** reset error on open */
   React.useEffect(() => {
@@ -39,16 +35,6 @@ const DetachLinodeDialog: React.FC<CombinedProps> = (props) => {
 
     setSubmitting(true);
     setError(undefined);
-
-    detachVlan(vlanID, [linodeID])
-      .then((_) => {
-        setSubmitting(false);
-        closeDialog();
-      })
-      .catch((e) => {
-        setSubmitting(false);
-        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
-      });
   };
 
   return (

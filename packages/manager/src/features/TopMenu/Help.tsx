@@ -6,6 +6,7 @@ import TopMenuIcon from './TopMenuIcon';
 
 export const Help: React.FC<{}> = (_) => {
   const classes = useStyles();
+
   return (
     <Link
       aria-label="Link to Linode Support"

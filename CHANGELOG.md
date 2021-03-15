@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-03-09] - v1.34.0
+
+### Added:
+
+- Valheim Marketplace app
+
+### Changed:
+
+#### Cloud Firewalls:
+
+- Allow Firewall Rules to be reordered
+- Enable keyboard shortcuts for reordering Firewall Rules
+- Inputs and table column for Firewall rule actions
+- Enforce masks for Firewall Rules IPs
+- Policy toggles for Firewall Rules tables
+- Add actions and policies to default Firewall rules and factories
+
+#### Service Transfers:
+
+- Filter transfers by descending created date
+- Improve responsiveness of Service Transfer tables
+- Display text on empty state in checkout bar
+- Transfer display tables are now paginated through the API
+
+#### Miscellaneous
+
+- Selecting a Linode auto-selects the region when creating a Volume
+- Update style for table pagination controls
+
+### Fixed:
+
+- Search/pagination bug in LinodeTransferTable
+
+## JS SDK
+
+### Changed:
+
+- Firewall rule type schema (add accept or drop policy field)
+
 ## [2021-03-01] - v1.33.1
 
 ### Fixed:

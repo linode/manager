@@ -27,12 +27,15 @@ import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
+    ...theme.applyTableHeaderStyles,
     width: '35%',
   },
   statusCell: {
+    ...theme.applyTableHeaderStyles,
     width: '15%',
   },
   ipCell: {
+    ...theme.applyTableHeaderStyles,
     width: '25%',
   },
   error: {
