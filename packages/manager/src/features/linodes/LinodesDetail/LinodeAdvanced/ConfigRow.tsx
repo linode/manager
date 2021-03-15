@@ -172,7 +172,7 @@ export const getInterfaceLabel = (
 
   const interfaceLabel = configInterface.label;
   const ipamAddress = configInterface.ipam_address;
-  const hasIPAM = !isEmpty(ipamAddress);
+  const hasIPAM = Boolean(ipamAddress);
 
   return `VLAN: ${interfaceLabel} ${hasIPAM ? `(${ipamAddress})` : ''}`;
 };
