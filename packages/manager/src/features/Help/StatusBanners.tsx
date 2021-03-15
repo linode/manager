@@ -7,8 +7,7 @@ import {
   IncidentImpact,
   IncidentStatus,
   useIncidentQuery,
-  useActiveMaintenanceQuery,
-  useScheduledMaintenanceQuery,
+  useMaintenanceQuery,
 } from 'src/queries/statusPage';
 import { capitalize } from 'src/utilities/capitalize';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
@@ -41,13 +40,12 @@ export const StatusBanners: React.FC<{}> = (_) => {
   const { data: incidentsData } = useIncidentQuery();
   const incidents = incidentsData?.incidents.slice(0, 2) ?? [];
 
-  const { data: maintenanceData } = useScheduledMaintenanceQuery();
-  const scheduledMaintenance = maintenanceData?.scheduled_maintenances ?? [];
-
-  const { data: activeMaintenanceData } = useActiveMaintenanceQuery();
-  const activeMaintenance = activeMaintenanceData?.scheduled_maintenances ?? [];
-
-  const maintenance = [...activeMaintenance, ...scheduledMaintenance];
+  const { data: maintenanceData } = useMaintenanceQuery();
+  // To get both upcoming and active maintenance events in one request, we
+  // use the endpoint that returns everything. We then filter out anything that's completed.
+  const maintenance = (maintenanceData?.scheduled_maintenances ?? []).filter(
+    (thisMaintenance) => thisMaintenance.status !== 'completed'
+  );
 
   if (incidents.length === 0) {
     return null;
