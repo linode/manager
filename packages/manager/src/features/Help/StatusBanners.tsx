@@ -7,6 +7,8 @@ import {
   IncidentImpact,
   IncidentStatus,
   useIncidentQuery,
+  useActiveMaintenanceQuery,
+  useScheduledMaintenanceQuery,
 } from 'src/queries/statusPage';
 import { capitalize } from 'src/utilities/capitalize';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
@@ -39,6 +41,14 @@ export const StatusBanners: React.FC<{}> = (_) => {
   const { data: incidentsData } = useIncidentQuery();
   const incidents = incidentsData?.incidents.slice(0, 2) ?? [];
 
+  const { data: maintenanceData } = useScheduledMaintenanceQuery();
+  const scheduledMaintenance = maintenanceData?.scheduled_maintenances ?? [];
+
+  const { data: activeMaintenanceData } = useActiveMaintenanceQuery();
+  const activeMaintenance = activeMaintenanceData?.scheduled_maintenances ?? [];
+
+  const maintenance = [...activeMaintenance, ...scheduledMaintenance];
+
   if (incidents.length === 0) {
     return null;
   }
@@ -58,6 +68,18 @@ export const StatusBanners: React.FC<{}> = (_) => {
           />
         );
       })}
+      {maintenance.map((thisMaintenance) => {
+        const mostRecentUpdate = thisMaintenance.incident_updates[0]; // Usually there's only one of these anyway
+        return (
+          <IncidentBanner
+            key={thisMaintenance.id}
+            title={thisMaintenance.name}
+            message={mostRecentUpdate.body}
+            impact={thisMaintenance.impact}
+            href={thisMaintenance.shortlink}
+          />
+        );
+      })}
     </>
   );
 };
@@ -65,13 +87,15 @@ export const StatusBanners: React.FC<{}> = (_) => {
 interface IncidentProps {
   message: string;
   title: string;
-  status: IncidentStatus;
+  // Maintenance events have statuses but we don't need to display them
+  status?: IncidentStatus;
   href: string;
   impact: IncidentImpact;
 }
 
 export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
-  const { message, status, title, impact, href } = props;
+  const { message, status: _status, title, impact, href } = props;
+  const status = _status ?? '';
   const classes = useStyles();
 
   const [hidden, setHidden] = React.useState(false);
@@ -88,7 +112,7 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
     <Notice
       important
       warning={
-        ['major', 'minor', 'none'].includes(impact) ||
+        ['maintenance', 'major', 'minor', 'none'].includes(impact) ||
         ['monitoring', 'resolved'].includes(status)
       }
       error={impact === 'critical'}
@@ -99,7 +123,8 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
       <Typography className={classes.header}>
         <Link to={href}>
           <strong>
-            {title}: {capitalize(status)}
+            {title}
+            {status ? `: ${capitalize(status)}` : ''}
           </strong>
         </Link>
       </Typography>

@@ -28,9 +28,23 @@ const getIncidents = () => {
 
 /**
  * There are several endpoints for maintenance events; this method will return
- * a list of currently active maintenance.
+ * a list of scheduled (future) maintenance.
  */
 const getScheduledMaintenance = () => {
+  return Axios.get<MaintenanceResponse>(
+    `${BASE_URL}/scheduled-maintenances/upcoming.json`
+  )
+    .then((response) => response.data)
+    .catch((error) => {
+      // Don't show any errors sent from the statuspage API to users, but report them to Sentry
+      reportException(error);
+      return Promise.reject([
+        { reason: 'Error retrieving maintenance events.' },
+      ]);
+    });
+};
+
+const getActiveMaintenance = () => {
   return Axios.get<MaintenanceResponse>(
     `${BASE_URL}/scheduled-maintenances/active.json`
   )
@@ -46,6 +60,7 @@ const getScheduledMaintenance = () => {
 
 const incidentKey = 'status-page-incidents';
 const maintenanceKey = 'status-page-maintenance';
+const activeMaintenanceKey = 'status-page-active-maintenance';
 
 export const useIncidentQuery = () => {
   return useQuery<IncidentResponse, APIError[]>(
@@ -55,10 +70,18 @@ export const useIncidentQuery = () => {
   );
 };
 
-export const useMaintenanceQuery = () => {
+export const useScheduledMaintenanceQuery = () => {
   return useQuery<MaintenanceResponse, APIError[]>(
     maintenanceKey,
     getScheduledMaintenance,
+    queryPresets.shortLived
+  );
+};
+
+export const useActiveMaintenanceQuery = () => {
+  return useQuery<MaintenanceResponse, APIError[]>(
+    activeMaintenanceKey,
+    getActiveMaintenance,
     queryPresets.shortLived
   );
 };
