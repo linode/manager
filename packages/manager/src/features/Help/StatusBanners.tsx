@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const StatusBanners: React.FC<{}> = (_) => {
   const { data: incidentsData } = useIncidentQuery();
-  const incidents = incidentsData?.incidents.slice(0, 2) ?? [];
+  const incidents = incidentsData?.incidents ?? [];
 
   const { data: maintenanceData } = useMaintenanceQuery();
   // To get both upcoming and active maintenance events in one request, we
