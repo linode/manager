@@ -148,11 +148,15 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
                 variant={balance === 0 ? 'body1' : 'h3'}
                 style={{ marginRight: 8 }}
                 className={accountBalanceClassnames}
+                data-testid="account-balance-text"
               >
                 {accountBalanceText}
               </Typography>
               <Typography variant="h3" className={accountBalanceClassnames}>
-                <Currency quantity={Math.abs(balance)} />
+                <Currency
+                  quantity={Math.abs(balance)}
+                  dataAttrs={{ 'data-testid': 'account-balance-value' }}
+                />
               </Typography>
             </Box>
             {balance > 0 ? (
@@ -203,7 +207,10 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
             >
               <Typography>Since last invoice</Typography>
               <Typography variant="h3" className={classes.accruedCharges}>
-                <Currency quantity={balanceUninvoiced} />
+                <Currency
+                  quantity={balanceUninvoiced}
+                  dataAttrs={{ 'data-testid': 'accrued-charges-value' }}
+                />
               </Typography>
             </Box>
           </Paper>
@@ -232,6 +239,7 @@ export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
     credit_monthly_cap,
   } = props;
 
+  const parsedCreditRemaining = Number.parseFloat(credit_remaining);
   const parsedCreditMonthlyCap = Number.parseFloat(credit_monthly_cap);
 
   return (
@@ -252,13 +260,15 @@ export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
           </Typography>
           <HelpIcon className={classes.helpIcon} text={description} />
         </Box>
-        <Typography
-          variant="h3"
-          className={classes.credit}
-          style={{ marginBottom: '4px' }}
-        >
-          <Currency quantity={Number.parseFloat(credit_remaining)} /> remaining
-        </Typography>
+        {!Number.isNaN(parsedCreditRemaining) ? (
+          <Typography
+            variant="h3"
+            className={classes.credit}
+            style={{ marginBottom: '4px' }}
+          >
+            <Currency quantity={parsedCreditRemaining} /> remaining
+          </Typography>
+        ) : null}
       </Box>
       {/* @todo: Add support for service_type ("Applies to: Linodes"). */}
       {expire_dt ? (
