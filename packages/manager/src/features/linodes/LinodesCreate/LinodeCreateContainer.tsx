@@ -348,6 +348,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
+      selectedLinodeID,
       selectedImageID,
       selectedRegionID,
       selectedStackScriptLabel,
@@ -383,7 +384,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
       if (createType === 'fromApp') {
         // All 1-clicks are Debian so this isn't useful information.
-        // Once an app is
         arg1 = '';
       }
     }
@@ -402,7 +402,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     if (createType === 'fromLinode') {
       // @todo handle any other custom label cases we'd like to have here
-      arg3 = 'clone';
+      arg1 =
+        this.props.linodesData?.find(
+          (thisLinode) => thisLinode.id === selectedLinodeID
+        )?.label ?? arg1; // Use the label of whatever we're cloning
+      arg2 = 'clone';
+      arg3 = '';
     }
 
     if (createType === 'fromBackup') {
