@@ -109,7 +109,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   let accountBalanceText = 'You have no balance at this time.';
   // @todo: In the future make this account for grace period, etc.
   if (balance > 0) {
-    accountBalanceText = 'Payment Overdue';
+    accountBalanceText = 'Payment Due';
   }
   if (balance < 0) {
     accountBalanceText = 'Credit';
@@ -183,9 +183,11 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
                 />
               </Box>
               <Divider className={classes.divider} />
-              {promotions?.map((thisPromo) => (
-                <PromoDisplay key={thisPromo.summary} {...thisPromo} />
-              ))}
+              <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+                {promotions?.map((thisPromo) => (
+                  <PromoDisplay key={thisPromo.summary} {...thisPromo} />
+                ))}
+              </div>
             </Paper>
           </Grid>
         ) : null}

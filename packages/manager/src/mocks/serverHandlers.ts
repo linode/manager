@@ -326,7 +326,7 @@ export const handlers = [
     const account = accountFactory.build({
       balance: 50,
       active_since: '2019-11-05',
-      active_promotions: promoFactory.buildList(1),
+      active_promotions: promoFactory.buildList(2),
     });
     return res(ctx.json(account));
   }),
