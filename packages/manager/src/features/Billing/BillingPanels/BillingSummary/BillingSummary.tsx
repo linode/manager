@@ -64,7 +64,6 @@ interface BillingSummaryProps {
   promotions?: ActivePromotion[];
   balanceUninvoiced: number;
   balance: number;
-  mostRecentInvoiceId?: number;
 }
 
 export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
