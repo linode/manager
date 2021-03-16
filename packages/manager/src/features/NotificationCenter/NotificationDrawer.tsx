@@ -55,7 +55,7 @@ export const NotificationDrawer: React.FC<Props> = (props) => {
     if (wasOpen && !open) {
       // User has closed the drawer.
       dispatch(markAllSeen());
-      dismissNotifications(notifications);
+      dismissNotifications(notifications, 'notificationDrawer');
     }
   }, [dismissNotifications, notifications, dispatch, open, wasOpen]);
 

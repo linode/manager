@@ -21,7 +21,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
   const dayOfMonth = DateTime.local().day;
 
   const handleClose = () => {
-    dismissNotifications(notifications);
+    dismissNotifications(notifications, 'notificationDrawer');
     context.closeDrawer();
   };
 
@@ -41,7 +41,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
         interceptNotification(notification),
         idx,
         handleClose,
-        !hasDismissedNotifications([notification])
+        !hasDismissedNotifications([notification], 'notificationDrawer')
       )
     );
 };
