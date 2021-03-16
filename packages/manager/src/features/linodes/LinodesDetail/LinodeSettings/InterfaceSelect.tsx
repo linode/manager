@@ -13,6 +13,7 @@ export interface Props {
   readOnly: boolean;
   error?: string;
   handleChange: (updatedInterface: ExtendedInterface) => void;
+  fromAddonsPanel?: boolean;
 }
 
 // To allow for empty slots, which the API doesn't account for
@@ -30,6 +31,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     label,
     ipamAddress,
     handleChange,
+    fromAddonsPanel,
   } = props;
 
   const purposeOptions: Item<ExtendedPurpose>[] = [
@@ -67,23 +69,25 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
 
   return (
     <Grid container>
-      <Grid item xs={6}>
-        <Select
-          options={purposeOptions}
-          label={`eth${slotNumber}`}
-          defaultValue={purposeOptions.find(
-            (thisOption) => thisOption.value === purpose
-          )}
-          onChange={handlePurposeChange}
-          onCreate
-          disabled={readOnly}
-          isClearable={false}
-        />
-      </Grid>
+      {fromAddonsPanel ? null : (
+        <Grid item xs={6}>
+          <Select
+            options={purposeOptions}
+            label={`eth${slotNumber}`}
+            defaultValue={purposeOptions.find(
+              (thisOption) => thisOption.value === purpose
+            )}
+            onChange={handlePurposeChange}
+            onCreate
+            disabled={readOnly}
+            isClearable={false}
+          />
+        </Grid>
+      )}
       {purpose === 'vlan' ? (
         <Grid item xs={6}>
-          <Grid container direction="column">
-            <Grid item>
+          <Grid container direction={fromAddonsPanel ? 'row' : 'column'}>
+            <Grid item xs={fromAddonsPanel ? 6 : undefined}>
               <Select
                 errorText={error}
                 options={vlanOptions}
@@ -99,9 +103,9 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 isClearable={false}
               />
             </Grid>
-            <Grid item>
+            <Grid item xs={fromAddonsPanel ? 6 : undefined}>
               <TextField
-                label="IPAM Address (optional)"
+                label="IPAM Address (Optional)"
                 value={ipamAddress}
                 onChange={handleAddressChange}
               />

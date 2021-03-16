@@ -1,4 +1,4 @@
-import { Config, Disk, InterfaceBody } from '@linode/api-v4/lib/linodes';
+import { Config, Disk, Interface } from '@linode/api-v4/lib/linodes';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -159,7 +159,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 export default React.memo(ConfigRow);
 
 export const getInterfaceLabel = (
-  configInterface: InterfaceBody,
+  configInterface: Interface,
   hasPrivateIP: boolean
 ): string => {
   if (configInterface.purpose === 'public') {
