@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-03-17] - v1.35.0
+
+### Added:
+- CopyTooltip next to tokens in Service Transfer tables
+- Confirmation dialog when entering the migration queue
+- Banners for open status.linode.com incidents displayed on all /support pages
+
+### Changed:
+- Billing Summary updates
+- Update hover states
+- "Status" column removed from Community StackScripts landing page
+
+### Fixed:
+- Fix UI collision on Firewall “Linodes” tab
+
+
+## JS Client
+
+### Fixed
+- Update Firewall schema to make “label” required
+- Update types for VLAN revamp
+
 ## [2021-03-09] - v1.34.0
 
 ### Added:
