@@ -1,7 +1,7 @@
 import * as Factory from 'factory.ts';
-import { InterfaceBody } from '@linode/api-v4/lib/linodes/types';
+import { Interface } from '@linode/api-v4/lib/linodes/types';
 
-export const LinodeConfigInterfaceFactory = Factory.Sync.makeFactory<InterfaceBody>(
+export const LinodeConfigInterfaceFactory = Factory.Sync.makeFactory<Interface>(
   {
     label: `interface-${Factory.each((i) => i)}`,
     purpose: 'vlan',
