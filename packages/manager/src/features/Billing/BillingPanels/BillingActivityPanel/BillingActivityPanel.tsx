@@ -10,22 +10,21 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import Link from 'src/components/Link';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableRow, { TableRowProps } from 'src/components/TableRow';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableContentWrapper from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import {
   printInvoice,
   printPayment,
@@ -39,15 +38,16 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll, getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   headerContainer: {
-    marginBottom: theme.spacing() - 2,
+    backgroundColor: theme.color.white,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
     },
@@ -57,15 +57,24 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('sm')]: {
+    padding: 5,
+    [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
+      marginLeft: 15,
+      paddingLeft: 0,
     },
   },
   flexContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  headline: {
+    marginTop: 8,
+    marginBottom: 8,
+    marginLeft: 15,
+    lineHeight: '1.5rem',
   },
   activeSince: {
     marginRight: theme.spacing() + 2,
@@ -85,23 +94,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   transactionType: {
-    marginRight: theme.spacing() + 2,
+    marginRight: theme.spacing(),
     width: 200,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 4,
-    },
   },
   transactionDate: {
     width: 130,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 4,
-    },
   },
   descriptionColumn: {
-    width: '17%',
+    width: '25%',
   },
   dateColumn: {
-    width: '10%',
+    width: '25%',
   },
   totalColumn: {
     [theme.breakpoints.up('md')]: {
@@ -111,14 +114,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   pdfDownloadColumn: {
     textAlign: 'right',
-  },
-  progress: {
-    '& circle': {
-      stroke: theme.color.blue,
+    '& > .loading': {
+      width: 115,
     },
-  },
-  pdfDownloadButton: {
-    ...theme.applyLinkStyles,
   },
   pdfError: {
     color: theme.color.red,
@@ -162,17 +160,11 @@ const defaultDateRange: DateRange = '6 Months';
 // <BillingActivityPanel />
 // =============================================================================
 export interface Props {
-  mostRecentInvoiceId?: number;
-  setMostRecentInvoiceId: (id: number) => void;
   accountActiveSince?: string;
 }
 
 export const BillingActivityPanel: React.FC<Props> = (props) => {
-  const {
-    mostRecentInvoiceId,
-    setMostRecentInvoiceId,
-    accountActiveSince,
-  } = props;
+  const { accountActiveSince } = props;
 
   const classes = useStyles();
   const flags = useFlags();
@@ -208,10 +200,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           setLoading(false);
           setInvoices(invoices.data);
           setPayments(payments.data);
-
-          if (!mostRecentInvoiceId && invoices.data.length > 0) {
-            setMostRecentInvoiceId(invoices.data[0].id);
-          }
         })
         .catch((_error) => {
           setError(
@@ -223,7 +211,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           setLoading(false);
         });
     },
-    [mostRecentInvoiceId, setMostRecentInvoiceId]
+    []
   );
 
   // Request all invoices and payments when component mounts.
@@ -369,7 +357,9 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   return (
     <>
       <div className={classes.headerContainer}>
-        <Typography variant="h2">Billing &amp; Payment History</Typography>
+        <Typography variant="h2" className={classes.headline}>
+          Billing &amp; Payment History
+        </Typography>
         <div className={classes.headerRight}>
           {accountActiveSince && (
             <div className={classes.flexContainer}>
@@ -430,51 +420,49 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                 pageSize,
               }) => (
                 <>
-                  <Paper>
-                    <Table aria-label="List of Invoices and Payments">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell className={classes.descriptionColumn}>
-                            Description
-                          </TableCell>
-                          <TableCell className={classes.dateColumn}>
-                            Date
-                          </TableCell>
-                          <TableCell className={classes.totalColumn}>
-                            Amount
-                          </TableCell>
-                          <TableCell className={classes.pdfDownloadColumn} />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableContentWrapper
-                          length={paginatedAndOrderedData.length}
-                          loading={loading}
-                          error={error}
-                        >
-                          {paginatedAndOrderedData.map((thisItem) => {
-                            return (
-                              <ActivityFeedItem
-                                key={`${thisItem.type}-${thisItem.id}`}
-                                downloadPDF={
-                                  thisItem.type === 'invoice'
-                                    ? downloadInvoicePDF
-                                    : downloadPaymentPDF
-                                }
-                                hasError={pdfErrors.has(
-                                  `${thisItem.type}-${thisItem.id}`
-                                )}
-                                isLoading={pdfLoading.has(
-                                  `${thisItem.type}-${thisItem.id}`
-                                )}
-                                {...thisItem}
-                              />
-                            );
-                          })}
-                        </TableContentWrapper>
-                      </TableBody>
-                    </Table>
-                  </Paper>
+                  <Table aria-label="List of Invoices and Payments">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell className={classes.descriptionColumn}>
+                          Description
+                        </TableCell>
+                        <TableCell className={classes.dateColumn}>
+                          Date
+                        </TableCell>
+                        <TableCell className={classes.totalColumn}>
+                          Amount
+                        </TableCell>
+                        <TableCell className={classes.pdfDownloadColumn} />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableContentWrapper
+                        length={paginatedAndOrderedData.length}
+                        loading={loading}
+                        error={error}
+                      >
+                        {paginatedAndOrderedData.map((thisItem) => {
+                          return (
+                            <ActivityFeedItem
+                              key={`${thisItem.type}-${thisItem.id}`}
+                              downloadPDF={
+                                thisItem.type === 'invoice'
+                                  ? downloadInvoicePDF
+                                  : downloadPaymentPDF
+                              }
+                              hasError={pdfErrors.has(
+                                `${thisItem.type}-${thisItem.id}`
+                              )}
+                              isLoading={pdfLoading.has(
+                                `${thisItem.type}-${thisItem.id}`
+                              )}
+                              {...thisItem}
+                            />
+                          );
+                        })}
+                      </TableContentWrapper>
+                    </TableBody>
+                  </Table>
                   <PaginationFooter
                     count={count}
                     handlePageChange={handlePageChange}
@@ -528,7 +516,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading,
     } = props;
-    const rowProps: TableRowProps = {};
+    const rowProps = { rowLink: '' };
     if (type === 'invoice' && !isLoading) {
       rowProps.rowLink = `/account/billing/invoices/${id}`;
     }
@@ -542,32 +530,34 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       [id, downloadPDF]
     );
 
+    const action = {
+      title: hasError ? 'Error. Click to try again.' : 'Download PDF',
+      className: hasError ? classes.pdfError : '',
+      onClick: handleClick,
+    };
+
     return (
       <TableRow {...rowProps} data-testid={`${type}-${id}`}>
-        <TableCell parentColumn="Description">{label}</TableCell>
-        <TableCell parentColumn="Date">
+        <TableCell>
+          {type === 'invoice' ? (
+            <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
+          ) : (
+            label
+          )}
+        </TableCell>
+        <TableCell>
           <DateTimeDisplay value={date} />
         </TableCell>
-        <TableCell parentColumn="Amount" className={classes.totalColumn}>
+        <TableCell className={classes.totalColumn}>
           <Currency quantity={total} wrapInParentheses={total < 0} />
         </TableCell>
         <TableCell className={classes.pdfDownloadColumn}>
-          {isLoading ? (
-            <span className={classes.progress}>
-              <CircleProgress mini tag />
-            </span>
-          ) : hasError ? (
-            <button
-              className={`${classes.pdfDownloadButton} ${classes.pdfError}`}
-              onClick={handleClick}
-            >
-              Error downloading PDF. Click to try again.
-            </button>
-          ) : (
-            <button className={classes.pdfDownloadButton} onClick={handleClick}>
-              Download PDF
-            </button>
-          )}
+          <InlineMenuAction
+            actionText={action.title}
+            className={action.className}
+            onClick={action.onClick}
+            loading={isLoading}
+          />
         </TableCell>
       </TableRow>
     );
@@ -617,7 +607,7 @@ export const paymentToActivityFeedItem = (
 export const getCutoffFromDateRange = (
   range: DateRange,
   currentDatetime?: string
-) => {
+): string => {
   const date = currentDatetime ? parseAPIDate(currentDatetime) : DateTime.utc();
 
   let outputDate: DateTime;
@@ -647,7 +637,7 @@ export const getCutoffFromDateRange = (
 /**
  * @param endDate in ISO format
  */
-export const makeFilter = (endDate?: string) => {
+export const makeFilter = (endDate?: string): any => {
   const filter: any = {
     '+order_by': 'date',
     '+order': 'desc',

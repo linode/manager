@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import LandingHeader from 'src/components/LandingHeader';
+import LandingHeader, {
+  LandingHeaderProps,
+} from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
@@ -26,6 +28,7 @@ const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 const AccountLanding: React.FC<Props> = (props) => {
   const { location } = props;
   const flags = useFlags();
+  const history = useHistory();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -60,11 +63,29 @@ const AccountLanding: React.FC<Props> = (props) => {
 
   let idx = 0;
 
+  const isBillingTabSelected = location.pathname.match(/billing/);
+
+  const landingHeaderProps: LandingHeaderProps = {
+    title: 'Account',
+    breadcrumbProps: {
+      pathname: '/account',
+    },
+  };
+
+  if (isBillingTabSelected) {
+    landingHeaderProps.docsLabel = 'How Linode Billing Works';
+    landingHeaderProps.docsLink =
+      'https://www.linode.com/docs/guides/how-linode-billing-works/';
+    landingHeaderProps.createButtonText = 'Make a Payment';
+    landingHeaderProps.onAddNew = () =>
+      history.replace('/account/billing/make-payment');
+  }
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
       <TaxBanner location={location} marginBottom={24} />
-      <LandingHeader title="Account" removeCrumbX={1} data-qa-profile-header />
+      <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
       <Tabs
         index={Math.max(

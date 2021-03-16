@@ -10,12 +10,10 @@ import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { useAccount } from 'src/hooks/useAccount';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import BillingActivityPanel_PreCMR from './BillingPanels/BillingActivityPanel';
-import BillingActivityPanel_CMR from './BillingPanels/BillingActivityPanel/BillingActivityPanel_CMR';
+import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
-import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -36,11 +34,6 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
   const { account, requestAccount } = useAccount();
 
   const classes = useStyles();
-  const flags = useFlags();
-
-  const [mostRecentInvoiceId, setMostRecentInvoiceId] = React.useState<
-    number | undefined
-  >();
 
   React.useEffect(() => {
     if (account.loading && account.lastUpdated === 0) {
@@ -66,10 +59,6 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
     return null;
   }
 
-  const BillingActivityPanel = flags.cmr
-    ? BillingActivityPanel_CMR
-    : BillingActivityPanel_PreCMR;
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Account & Billing`} />
@@ -78,9 +67,8 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary
               balance={account?.data?.balance ?? 0}
-              promotion={account?.data?.active_promotions?.[0]}
+              promotions={account?.data?.active_promotions}
               balanceUninvoiced={account?.data?.balance_uninvoiced ?? 0}
-              mostRecentInvoiceId={mostRecentInvoiceId}
             />
             <Grid container direction="row">
               <ContactInfo
@@ -109,8 +97,6 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
               />
             </Grid>
             <BillingActivityPanel
-              mostRecentInvoiceId={mostRecentInvoiceId}
-              setMostRecentInvoiceId={setMostRecentInvoiceId}
               accountActiveSince={account?.data?.active_since}
             />
           </Grid>

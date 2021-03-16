@@ -3,7 +3,6 @@ import * as React from 'react';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BillingActivityPanel, {
-  Props,
   invoiceToActivityFeedItem,
   paymentToActivityFeedItem,
   getCutoffFromDateRange,
@@ -44,13 +43,9 @@ jest.mock('@linode/api-v4/lib/account', () => {
 });
 jest.mock('src/components/EnhancedSelect/Select');
 
-const props: Props = {
-  setMostRecentInvoiceId: jest.fn(),
-};
-
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
+    const { getByText } = renderWithTheme(<BillingActivityPanel />);
     await waitFor(() => {
       getByText('Billing & Payment History');
       getByText('Description');
@@ -61,7 +56,7 @@ describe('BillingActivityPanel', () => {
 
   it('renders a row for each payment and invoice', async () => {
     const { getByText, getByTestId } = renderWithTheme(
-      <BillingActivityPanel {...props} />
+      <BillingActivityPanel />
     );
     await waitFor(() => {
       getByText('Invoice #0');
@@ -73,7 +68,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by item type', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel {...props} />
+      <BillingActivityPanel />
     );
 
     // Test selecting "Invoices"
@@ -97,7 +92,7 @@ describe('BillingActivityPanel', () => {
 
   it('should filter by transaction date', async () => {
     const { queryAllByTestId, queryByText, queryByTestId } = renderWithTheme(
-      <BillingActivityPanel {...props} />
+      <BillingActivityPanel />
     );
 
     await waitFor(() => {
@@ -111,7 +106,7 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display transaction selection components with defaults', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel {...props} />);
+    const { getByText } = renderWithTheme(<BillingActivityPanel />);
     await waitFor(() => {
       getByText('All Transaction Types');
       getByText('90 Days');
@@ -120,7 +115,7 @@ describe('BillingActivityPanel', () => {
 
   it('should display "Account active since"', async () => {
     const { getByText } = renderWithTheme(
-      <BillingActivityPanel {...props} accountActiveSince="2018-01-01" />
+      <BillingActivityPanel accountActiveSince="2018-01-01" />
     );
     await waitFor(() => {
       getByText('Account active since 2018-01-01');

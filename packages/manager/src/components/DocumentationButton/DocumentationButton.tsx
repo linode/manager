@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   href: string;
+  label?: string;
 }
 
 type CombinedProps = Props;
@@ -34,14 +35,14 @@ type CombinedProps = Props;
 export const DocumentationButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { href } = props;
+  const { href, label } = props;
 
   return (
     <IconTextLink
       className={`${classes.root} docsButton`}
       SideIcon={DocsIcon}
-      text="Docs"
-      title="Docs"
+      text={label ?? 'Docs'}
+      title={label ?? 'Docs'}
       onClick={() => window.open(href, '_blank', 'noopener')}
       aria-describedby="external-site"
     />

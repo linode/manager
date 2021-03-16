@@ -4,10 +4,11 @@ interface CurrencyFormatterProps {
   quantity: number;
   decimalPlaces?: number;
   wrapInParentheses?: boolean;
+  dataAttrs?: Record<string, any>;
 }
 
 export const Currency: React.FC<CurrencyFormatterProps> = (props) => {
-  const { quantity, wrapInParentheses } = props;
+  const { quantity, wrapInParentheses, dataAttrs } = props;
 
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -27,7 +28,11 @@ export const Currency: React.FC<CurrencyFormatterProps> = (props) => {
   }
 
   // eslint-disable-next-line
-  return <span className="notranslate">{output}</span>;
+  return (
+    <span className="notranslate" {...dataAttrs}>
+      {output}
+    </span>
+  );
 };
 
 export default React.memo(Currency);
