@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { APIWarning } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
@@ -24,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   currentBalance: {
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
+  },
+  credit: {
+    color: '#02b159',
   },
 }));
 
@@ -132,10 +136,12 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               <Typography variant="h3" className={classes.currentBalance}>
                 <strong>
                   Current balance:{' '}
-                  <Currency
-                    quantity={balance}
-                    wrapInParentheses={balance < 0}
-                  />
+                  <span
+                    className={classnames({ [classes.credit]: balance < 0 })}
+                  >
+                    <Currency quantity={Math.abs(balance)} />
+                    {balance < 0 ? ' Credit' : ''}
+                  </span>
                 </strong>
               </Typography>
             </Grid>
