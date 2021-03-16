@@ -52,8 +52,8 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
     vlans?.map((thisVlan) => ({
-      label: thisVlan['description'],
-      value: thisVlan['description'],
+      label: thisVlan.label,
+      value: thisVlan.label,
     })) ?? [];
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) =>
