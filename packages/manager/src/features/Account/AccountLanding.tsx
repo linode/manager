@@ -63,7 +63,7 @@ const AccountLanding: React.FC<Props> = (props) => {
 
   let idx = 0;
 
-  const isBillingTabSelected = matches(tabs[0].routeName);
+  const isBillingTabSelected = location.pathname.match(/billing/);
 
   const landingHeaderProps: LandingHeaderProps = {
     title: 'Account',

@@ -163,7 +163,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
               <Typography style={{ marginTop: 16 }}>
                 <button
                   className={classes.makeAPaymentButton}
-                  onClick={openPaymentDrawer}
+                  onClick={() => replace('/account/billing/make-payment')}
                 >
                   Make a payment immediately
                 </button>{' '}
