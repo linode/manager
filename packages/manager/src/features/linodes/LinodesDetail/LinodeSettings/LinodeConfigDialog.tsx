@@ -603,7 +603,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               <Typography variant="h3">Network Interfaces</Typography>
               {values.interfaces.map((thisInterface, idx, arr) =>
                 // Magic so that we show interfaces that have been filled plus one more
-                arr[idx - 1]?.purpose !== 'none' ? (
+                arr[idx - 1]?.purpose !== 'none' ||
+                thisInterface.purpose !== 'none' ? (
                   <InterfaceSelect
                     key={`eth${idx}-interface`}
                     slotNumber={idx}

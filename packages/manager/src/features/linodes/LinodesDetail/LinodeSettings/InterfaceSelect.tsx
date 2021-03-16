@@ -21,21 +21,6 @@ export interface ExtendedInterface extends Omit<Interface, 'purpose'> {
   purpose: ExtendedPurpose;
 }
 
-const purposeOptions: Item<ExtendedPurpose>[] = [
-  {
-    label: 'Public Internet',
-    value: 'public',
-  },
-  {
-    label: 'VLAN',
-    value: 'vlan',
-  },
-  {
-    label: 'None',
-    value: 'none',
-  },
-];
-
 export const InterfaceSelect: React.FC<Props> = (props) => {
   const {
     error,
@@ -46,6 +31,23 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     ipamAddress,
     handleChange,
   } = props;
+
+  const purposeOptions: Item<ExtendedPurpose>[] = [
+    slotNumber === 0
+      ? {
+          label: 'Public Internet',
+          value: 'public',
+        }
+      : null,
+    {
+      label: 'VLAN',
+      value: 'vlan',
+    },
+    {
+      label: 'None',
+      value: 'none',
+    },
+  ].filter(Boolean) as Item<ExtendedPurpose>[];
 
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
