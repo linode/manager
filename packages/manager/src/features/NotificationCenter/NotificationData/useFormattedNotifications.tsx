@@ -2,7 +2,6 @@ import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
 import { notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
@@ -11,17 +10,12 @@ import RenderNotification from './RenderNotification';
 
 export const useFormattedNotifications = (): NotificationItem[] => {
   const context = React.useContext(notificationContext);
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
 
   const notifications = useNotifications();
 
   const dayOfMonth = DateTime.local().day;
 
   const handleClose = () => {
-    dismissNotifications(notifications);
     context.closeDrawer();
   };
 
@@ -40,8 +34,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
       formatNotificationForDisplay(
         interceptNotification(notification),
         idx,
-        handleClose,
-        !hasDismissedNotifications([notification])
+        handleClose
       )
     );
 };
