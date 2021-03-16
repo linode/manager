@@ -7,7 +7,6 @@ import {
   IncidentImpact,
   IncidentStatus,
   useIncidentQuery,
-  useMaintenanceQuery,
 } from 'src/queries/statusPage';
 import { capitalize } from 'src/utilities/capitalize';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
@@ -27,11 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
   },
   text: {
-    fontSize: '1rem',
-    lineHeight: '1.3rem',
+    fontSize: '0.875rem',
+    lineHeight: '1rem',
   },
   header: {
-    fontSize: '1.1rem',
+    fontSize: '1rem',
     marginBottom: theme.spacing(),
   },
 }));
@@ -40,14 +39,7 @@ export const StatusBanners: React.FC<{}> = (_) => {
   const { data: incidentsData } = useIncidentQuery();
   const incidents = incidentsData?.incidents ?? [];
 
-  const { data: maintenanceData } = useMaintenanceQuery();
-  // To get both upcoming and active maintenance events in one request, we
-  // use the endpoint that returns everything. We then filter out anything that's completed.
-  const maintenance = (maintenanceData?.scheduled_maintenances ?? []).filter(
-    (thisMaintenance) => thisMaintenance.status !== 'completed'
-  );
-
-  if (incidents.length === 0 && maintenance.length === 0) {
+  if (incidents.length === 0) {
     return null;
   }
 
@@ -64,18 +56,6 @@ export const StatusBanners: React.FC<{}> = (_) => {
             status={thisIncident.status}
             impact={thisIncident.impact}
             href={thisIncident.shortlink}
-          />
-        );
-      })}
-      {maintenance.map((thisMaintenance) => {
-        const mostRecentUpdate = thisMaintenance.incident_updates[0]; // Usually there's only one of these anyway
-        return (
-          <IncidentBanner
-            key={thisMaintenance.id}
-            title={thisMaintenance.name}
-            message={mostRecentUpdate.body}
-            impact={thisMaintenance.impact}
-            href={thisMaintenance.shortlink}
           />
         );
       })}
@@ -111,7 +91,7 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
     <Notice
       important
       warning={
-        ['maintenance', 'major', 'minor', 'none'].includes(impact) ||
+        ['major', 'minor', 'none'].includes(impact) ||
         ['monitoring', 'resolved'].includes(status)
       }
       error={impact === 'critical'}
