@@ -212,7 +212,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
       <BillingContactDrawer
         open={editContactDrawerOpen}
         onClose={() => {
-          history.replace('/account', { contactDrawerOpen: false });
+          history.replace(location.pathname, { contactDrawerOpen: false });
           setEditContactDrawerOpen(false);
           setFocusEmail(false);
         }}
