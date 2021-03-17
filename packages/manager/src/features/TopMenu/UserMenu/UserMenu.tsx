@@ -97,6 +97,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     lineHeight: 1,
+    paddingRight: 10,
     [theme.breakpoints.up('sm')]: {
       paddingLeft: 12,
     },
