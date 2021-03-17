@@ -41,7 +41,7 @@ describe('rescue linode', () => {
       );
       const rescueUrl = `/linodes/${linode.id}/rescue`;
       cy.visit(rescueUrl);
-      fbtVisible(`Rescue ${linode.label}`);
+      fbtVisible(`Rescue Linode ${linode.label}`);
       rebootInRescueMode();
       // check response, verify bad request and UI response (toast)
       cy.wait('@postRebootInRescueMode')

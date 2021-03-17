@@ -3,6 +3,7 @@ import {
   containsClick,
   fbtClick,
   fbtVisible,
+  getClick,
   getVisible,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
@@ -66,7 +67,7 @@ describe('LKE Create Cluster', () => {
         );
       });
     });
-    fbtClick('Create Cluster');
+    getClick('[data-qa-deploy-linode="true"]');
     cy.wait('@createCluster');
     cy.url().should('endWith', `/kubernetes/clusters/${lkeId}/summary`);
   });
