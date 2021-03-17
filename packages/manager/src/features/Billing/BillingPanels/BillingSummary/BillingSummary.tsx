@@ -44,13 +44,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrIconColors.iRed,
   },
   credit: {
-    color: '#02b159',
+    color: theme.color.green,
   },
   makeAPaymentButton: {
     ...theme.applyLinkStyles,
   },
   text: {
-    color: '#606469',
+    color: theme.palette.text.primary,
   },
   accruedCharges: {
     color: theme.palette.text.primary,
