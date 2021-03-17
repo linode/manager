@@ -47,12 +47,14 @@ export const StatusBanners: React.FC<{}> = (_) => {
     // eslint-disable-next-line
     <>
       {incidents.map((thisIncident) => {
-        const mostRecentUpdate = thisIncident.incident_updates[0];
+        const mostRecentUpdate = thisIncident.incident_updates.filter(
+          (thisUpdate) => thisUpdate.status !== 'postmortem'
+        )[0];
         return (
           <IncidentBanner
             key={thisIncident.id}
             title={thisIncident.name}
-            message={mostRecentUpdate.body}
+            message={mostRecentUpdate?.body ?? ''}
             status={thisIncident.status}
             impact={thisIncident.impact}
             href={thisIncident.shortlink}
