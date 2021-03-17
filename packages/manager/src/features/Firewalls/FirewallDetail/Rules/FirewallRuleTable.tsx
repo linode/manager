@@ -190,7 +190,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     openRuleDrawer(category, 'create');
   }, [openRuleDrawer, category]);
 
-  const zeroOutboundRulesMessage = 'No outbound rules have been added.';
+  const zeroRulesMessage = `No ${category} rules have been added.`;
 
   const onDragEnd = (result: DropResult) => {
     if (result.destination) {
@@ -243,10 +243,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                 innerRef={provided.innerRef}
               >
                 {rowData.length === 0 ? (
-                  <TableRowEmptyState
-                    colSpan={6}
-                    message={zeroOutboundRulesMessage}
-                  />
+                  <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
                 ) : (
                   rowData.map((thisRuleRow: RuleRow, index) => (
                     <Draggable
