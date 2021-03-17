@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props extends Omit<HeaderProps, 'actions'> {
+export interface Props extends Omit<HeaderProps, 'actions'> {
   extraActions?: JSX.Element;
   body?: JSX.Element;
   docsLink?: string;
