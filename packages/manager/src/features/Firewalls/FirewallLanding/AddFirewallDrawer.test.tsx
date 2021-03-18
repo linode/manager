@@ -27,7 +27,7 @@ describe('Add Firewall Drawer', () => {
     expect(error).toBeInTheDocument();
   });
 
-  it('should add default inbound and outbound policy to ACCEPT', async () => {
+  it('should default inbound and outbound policy to ACCEPT', async () => {
     renderWithTheme(<AddFirewallDrawer {...props} />);
     const label = '123abc!@#';
     userEvent.type(screen.getByLabelText('Label'), label);
