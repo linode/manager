@@ -2,28 +2,30 @@ import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
 import { notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
 
-export const useFormattedNotifications = () => {
+export const useFormattedNotifications = (): NotificationItem[] => {
   const context = React.useContext(notificationContext);
+  const {
+    dismissNotifications,
+    hasDismissedNotifications,
+  } = useDismissibleNotifications();
 
   const notifications = useNotifications();
 
   const dayOfMonth = DateTime.local().day;
 
-  // Filter out any bounced email notifications and abuse tickets because users are alerted to those by global notification banners already.
-  const combinedNotifications = [...notifications].filter(
-    (notification) =>
-      !['billing_email_bounce', 'user_email_bounce', 'ticket_abuse'].includes(
-        notification.type
-      )
-  );
+  const handleClose = () => {
+    dismissNotifications(notifications, 'notificationDrawer');
+    context.closeDrawer();
+  };
 
-  return combinedNotifications
+  return notifications
     .filter((thisNotification) => {
       /**
        * Don't show balance overdue notifications at the beginning of the month
@@ -38,7 +40,8 @@ export const useFormattedNotifications = () => {
       formatNotificationForDisplay(
         interceptNotification(notification),
         idx,
-        context.closeDrawer
+        handleClose,
+        !hasDismissedNotifications([notification], 'notificationDrawer')
       )
     );
 };
@@ -82,11 +85,12 @@ const interceptNotification = (notification: Notification): Notification => {
 const formatNotificationForDisplay = (
   notification: Notification,
   idx: number,
-  onClose: () => void
+  onClose: () => void,
+  shouldIncludeInCount: boolean = true
 ): NotificationItem => ({
   id: `notification-${idx}`,
   body: <RenderNotification notification={notification} onClose={onClose} />,
-  countInTotal: true,
+  countInTotal: shouldIncludeInCount,
 });
 
 // For communicative purposes in the UI, in some cases we want to adjust the severity of certain notifications compared to what the API returns. If it is a maintenance notification of any sort, we display them as major instead of critical. Otherwise, we return the existing severity.
