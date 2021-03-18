@@ -34,11 +34,12 @@ describe('clone linode', () => {
         getClick('[data-qa-deploy-linode="true"]');
         cy.wait('@cloneLinode').then((xhr) => {
           const newLinodeLabel = xhr.response?.body?.label;
+          const newLinodeId = xhr.response?.body?.id;
           assert.equal(xhr.response?.statusCode, 200);
           assertToast(`Your Linode ${newLinodeLabel} is being created.`);
           containsVisible(newLinodeLabel);
           deleteLinodeById(linode.id);
-          deleteLinodeByLabel(newLinodeLabel);
+          deleteLinodeById(newLinodeId);
         });
       }
     });
