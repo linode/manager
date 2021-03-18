@@ -160,7 +160,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
 
-  const { values, setFieldValue, ...formik } = useFormik({
+  const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
     validateOnChange: true,
     validateOnMount: true,
@@ -250,7 +250,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         const devices = createStringsFromDevices(config.devices);
         const initialCounter = Object.keys(devices).length;
         setDeviceCounter(initialCounter);
-        formik.resetForm({
+        resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
             label: config.label,
@@ -269,10 +269,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         });
       } else {
         // Create mode; make sure loading/error states are cleared.
-        formik.resetForm();
+        resetForm({ values: defaultFieldsValues });
       }
     }
-  }, [open, config]);
+  }, [open, config, resetForm]);
 
   const isLoading = props.kernelsLoading;
 

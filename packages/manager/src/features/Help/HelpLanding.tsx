@@ -24,7 +24,7 @@ const styles = (theme: Theme) =>
 type CombinedProps = WithStyles<ClassNames>;
 
 export class HelpLanding extends React.Component<CombinedProps, {}> {
-  render() {
+  render(): JSX.Element {
     const { classes } = this.props;
 
     return (
