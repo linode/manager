@@ -132,7 +132,14 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(tokens)));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(ctx.json(cachedRegions));
+    return res(
+      ctx.json(
+        cachedRegions.data.map((thisRegion) => ({
+          ...thisRegion,
+          status: 'outage',
+        }))
+      )
+    );
   }),
   rest.get('*/linode/types', async (req, res, ctx) => {
     return res(ctx.json(cachedTypes));
@@ -492,6 +499,7 @@ export const handlers = [
       until: null,
       body: null,
     });
+
     const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationTicket = notificationFactory.build({
