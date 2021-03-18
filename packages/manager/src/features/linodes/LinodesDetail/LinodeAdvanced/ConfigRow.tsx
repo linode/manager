@@ -122,8 +122,8 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
   );
 
   const defaultInterfaceLabel = hasPrivateIP
-    ? 'eth0 – PUBLIC, PRIVATE'
-    : 'eth0 – PUBLIC';
+    ? 'eth0 – Public, Private'
+    : 'eth0 – Public';
 
   // This should determine alignment based on device count associated w/ a config
   const hasManyConfigs = validDevices.length > 3;
@@ -163,7 +163,7 @@ export const getInterfaceLabel = (
   hasPrivateIP: boolean
 ): string => {
   if (configInterface.purpose === 'public') {
-    return hasPrivateIP ? 'PUBLIC, PRIVATE' : 'PUBLIC';
+    return hasPrivateIP ? 'Public, Private' : 'Public';
   }
 
   const interfaceLabel = configInterface.label;
