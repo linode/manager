@@ -1,3 +1,4 @@
+import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';
@@ -75,17 +76,26 @@ interface Props {
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
-  changeSelectedVLAN: (vlanID: number[]) => void;
+  vlanLabel: string;
+  ipamAddress: string;
+  handleVLANChange: (updatedInterface: Interface) => void;
   disabled?: boolean;
   hidePrivateIP?: boolean;
-  selectedVlanIDs: number[];
   vlanError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
 }
 
 type CombinedProps = Props;
 const AddonsPanel: React.FC<CombinedProps> = (props) => {
-  const { accountBackups, changeBackups, changePrivateIP, disabled } = props;
+  const {
+    accountBackups,
+    changeBackups,
+    changePrivateIP,
+    disabled,
+    vlanLabel,
+    ipamAddress,
+    handleVLANChange,
+  } = props;
 
   const classes = useStyles();
 
@@ -105,7 +115,11 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   return (
     <Paper className={classes.root} data-qa-add-ons>
       <div className={classes.inner}>
-        <AttachVLAN />
+        <AttachVLAN
+          vlanLabel={vlanLabel}
+          ipamAddress={ipamAddress}
+          handleVLANChange={handleVLANChange}
+        />
         <Typography variant="h2" className={classes.title}>
           Optional Add-ons
         </Typography>

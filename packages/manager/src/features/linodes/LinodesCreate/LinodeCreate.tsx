@@ -1,4 +1,4 @@
-import { restoreBackup } from '@linode/api-v4/lib/linodes';
+import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -134,7 +134,9 @@ interface Props {
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
-  setVlanID: (ids: number[]) => void;
+  vlanLabel: string;
+  ipamAddress: string | null;
+  handleVLANChange: (updatedInterface: Interface) => void;
 }
 
 const errorMap = [
@@ -306,6 +308,15 @@ export class LinodeCreate extends React.PureComponent<
         // StackScripts
         stackscript_id: this.props.selectedStackScriptID,
         stackscript_data: this.props.selectedUDFs,
+
+        // VLANs
+        interfaces: [
+          {
+            purpose: 'vlan',
+            label: this.props.vlanLabel,
+            ipam_address: this.props.ipamAddress,
+          },
+        ],
       },
       this.props.selectedLinodeID
     );
@@ -604,8 +615,9 @@ export class LinodeCreate extends React.PureComponent<
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
             hidePrivateIP={this.props.createType === 'fromLinode'}
-            changeSelectedVLAN={this.props.setVlanID}
-            selectedVlanIDs={this.props.selectedVlanIDs}
+            vlanLabel={this.props.vlanLabel || ''}
+            ipamAddress={this.props.ipamAddress || ''}
+            handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
             vlanError={hasErrorFor.interfaces}
           />

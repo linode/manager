@@ -1,16 +1,8 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { useFormik } from 'formik';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -26,71 +18,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {}
+interface Props {
+  vlanLabel: string;
+  ipamAddress: string;
+  handleVLANChange: (updatedInterface: Interface) => void;
+}
 
 type CombinedProps = Props;
-
-const defaultInterface = {
-  purpose: 'vlan',
-  label: '',
-  ipam_address: '',
-};
-
-interface EditableFields {
-  label: string;
-  ipam_address?: string;
-}
 
 const AttachVLAN: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { values, setFieldValue, ...formik } = useFormik({
-    initialValues: defaultInterface,
-    validateOnChange: true,
-    validateOnMount: true,
-    onSubmit: (values) => onSubmit(values),
-  });
-
-  const handleInterfaceChange = React.useCallback(
-    (slot: number, updatedInterface: Interface) => {
-      setFieldValue(`interfaces[${slot}]`, updatedInterface);
-    },
-    [setFieldValue]
-  );
-
-  const onSubmit = (values: EditableFields) => {
-    // const { linodeConfigId, createLinodeConfig, updateLinodeConfig } = props;
-
-    formik.setSubmitting(true);
-
-    // const configData = convertStateToData(values);
-    const data = values;
-
-    alert(JSON.stringify(values));
-
-    const handleSuccess = () => {
-      formik.setSubmitting(false);
-      console.log('VLAN attached successfully');
-    };
-
-    const handleError = (error: APIError[]) => {
-      const mapErrorToStatus = (generalError: string) =>
-        formik.setStatus({ generalError });
-      formik.setSubmitting(false);
-      handleFieldErrors(formik.setErrors, error);
-      handleGeneralErrors(
-        mapErrorToStatus,
-        error,
-        'An unexpected error occurred.'
-      );
-      // scrollErrorIntoView('linode-config-dialog');
-    };
-
-    /** Creating */
-    // return createLinodeConfig(configData)
-    //   .then(handleSuccess)
-    //   .catch(handleError);
-  };
+  const { handleVLANChange } = props;
 
   return (
     <div className={classes.root}>
@@ -107,34 +46,17 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
           <InterfaceSelect
             slotNumber={1}
             readOnly={false}
-            error={formik.errors[`interfaces[1]`]}
-            label={values.label}
+            error={''}
+            label={props.vlanLabel}
             purpose="vlan"
-            ipamAddress={values.ipam_address}
+            ipamAddress={props.ipamAddress}
             handleChange={(newInterface: Interface) =>
-              handleInterfaceChange(1, newInterface)
+              handleVLANChange(newInterface)
             }
             fromAddonsPanel
           />
         </Grid>
       </Grid>
-      <ActionsPanel className={classes.actions}>
-        <Button
-          disabled={formik.isSubmitting}
-          onClick={() => console.log('Cancel Attach VLAN')}
-          loading={formik.isSubmitting}
-          buttonType="cancel"
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={formik.submitForm}
-          loading={formik.isSubmitting}
-          buttonType="primary"
-        >
-          Attach VLAN
-        </Button>
-      </ActionsPanel>
     </div>
   );
 };
