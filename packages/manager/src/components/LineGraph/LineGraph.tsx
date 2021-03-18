@@ -320,7 +320,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                 const { data: metricsData, format } = legendRows[idx];
                 return (
                   <TableRow key={idx}>
-                    <TableCell className={classes.legend}>
+                    <TableCell className={classes.legend} noWrap>
                       <Button
                         onClick={() => handleLegendClick(idx)}
                         data-qa-legend-title
