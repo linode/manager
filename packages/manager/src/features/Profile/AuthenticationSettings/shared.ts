@@ -1,5 +1,6 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
-import GitHubIcon from 'src/assets/icons/providers/git-hub-logo.svg';
+import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
+import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 
 export type ProviderOptions = Exclude<TPAProvider, 'password'>;
 
@@ -11,4 +12,5 @@ export interface Provider {
 
 export const providers: Provider[] = [
   { name: 'github', displayName: 'GitHub', Icon: GitHubIcon },
+  { name: 'google', displayName: 'Google', Icon: GoogleIcon },
 ];

@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       minHeight: '70px',
       minWidth: '344px',
       paddingLeft: theme.spacing(3) - 4,
+      '&:not(last-child)': {
+        marginRight: theme.spacing(2),
+      },
     },
     '& button:hover': {
       backgroundColor: theme.bg.offWhite,
@@ -32,14 +35,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   providerIcon: {
     color: '#939598',
+    height: 32,
+    width: 32,
     marginRight: theme.spacing(2),
   },
   enabled: {
-    border: `2px solid ${theme.color.blue} !important`,
-
-    '& svg': {
-      color: theme.color.blue,
-    },
+    border: `1px solid ${theme.color.blue} !important`,
   },
   enabledText: {
     fontFamily: theme.font.normal,
