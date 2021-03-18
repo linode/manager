@@ -41,11 +41,7 @@ export const AbuseTicketBanner: React.FC<{}> = (_) => {
     return null;
   }
 
-  /**
-   * The ticket list page doesn't indicate which tickets are abuse tickets
-   * so for now, the link can just take the user to the first ticket.
-   */
-  const href = abuseTickets[0].entity!.url;
+  const href = multiple ? '/support/tickets' : abuseTickets[0].entity.url;
   const isViewingTicket = location.pathname.match(href);
 
   return (
