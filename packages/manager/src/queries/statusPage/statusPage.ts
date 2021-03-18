@@ -28,11 +28,11 @@ const getIncidents = () => {
 
 /**
  * There are several endpoints for maintenance events; this method will return
- * a list of currently active maintenance.
+ * a list of the most recent 50 maintenance, inclusive of all statuses.
  */
-const getScheduledMaintenance = () => {
+const getAllMaintenance = () => {
   return Axios.get<MaintenanceResponse>(
-    `${BASE_URL}/scheduled-maintenances/active.json`
+    `${BASE_URL}/scheduled-maintenances.json`
   )
     .then((response) => response.data)
     .catch((error) => {
@@ -51,14 +51,14 @@ export const useIncidentQuery = () => {
   return useQuery<IncidentResponse, APIError[]>(
     incidentKey,
     getIncidents,
-    queryPresets.longLived
+    queryPresets.shortLived
   );
 };
 
 export const useMaintenanceQuery = () => {
   return useQuery<MaintenanceResponse, APIError[]>(
     maintenanceKey,
-    getScheduledMaintenance,
-    queryPresets.longLived
+    getAllMaintenance,
+    queryPresets.shortLived
   );
 };
