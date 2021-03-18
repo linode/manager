@@ -398,7 +398,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       .then((response) => {
         setErrors(undefined);
         setSubmitting(false);
-        resetTicket();
+        resetDrawer(true);
         return response;
       })
       .then((response) => {
