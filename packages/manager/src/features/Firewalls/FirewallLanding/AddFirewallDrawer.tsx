@@ -21,7 +21,6 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { predefinedFirewalls } from '../shared';
 
 export interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
@@ -35,12 +34,8 @@ export type CombinedProps = Props;
 const initialValues: CreateFirewallPayload = {
   label: '',
   rules: {
-    inbound_policy: 'DROP',
+    inbound_policy: 'ACCEPT',
     outbound_policy: 'ACCEPT',
-    inbound: [
-      ...predefinedFirewalls.ssh.inbound,
-      ...predefinedFirewalls.dns.inbound,
-    ],
   },
   devices: {
     linodes: [],
