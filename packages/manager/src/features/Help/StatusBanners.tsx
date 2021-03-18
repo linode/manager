@@ -10,6 +10,7 @@ import {
 } from 'src/queries/statusPage';
 import { capitalize } from 'src/utilities/capitalize';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { truncateEnd } from 'src/utilities/truncate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -110,7 +111,9 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
         </Link>
       </Typography>
       <Typography
-        dangerouslySetInnerHTML={{ __html: sanitizeHTML(message) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeHTML(truncateEnd(message, 500)),
+        }}
         className={classes.text}
       />
     </Notice>
