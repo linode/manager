@@ -175,7 +175,12 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
               </Link>
             </Notice>
           )}
-          <InvoiceTable loading={loading} items={items} errors={errors} />
+          <InvoiceTable
+            loading={loading}
+            items={items}
+            errors={errors}
+            invoiceDate={invoice?.date}
+          />
         </Grid>
         <Grid item xs={12}>
           {invoice && (
