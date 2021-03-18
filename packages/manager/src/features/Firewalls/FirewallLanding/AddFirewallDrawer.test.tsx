@@ -3,7 +3,6 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import AddFirewallDrawer, { CombinedProps } from './AddFirewallDrawer';
-import { predefinedFirewalls } from '../shared';
 
 const props: CombinedProps = {
   onClose: jest.fn(),
@@ -28,7 +27,7 @@ describe('Add Firewall Drawer', () => {
     expect(error).toBeInTheDocument();
   });
 
-  it('should add default rules for ssh and dns', async () => {
+  it('should add default inbound and outbound policy to ACCEPT', async () => {
     renderWithTheme(<AddFirewallDrawer {...props} />);
     const label = '123abc!@#';
     userEvent.type(screen.getByLabelText('Label'), label);
@@ -40,12 +39,8 @@ describe('Add Firewall Drawer', () => {
         },
         label,
         rules: {
-          inbound_policy: 'DROP',
+          inbound_policy: 'ACCEPT',
           outbound_policy: 'ACCEPT',
-          inbound: [
-            ...predefinedFirewalls.ssh.inbound,
-            ...predefinedFirewalls.dns.inbound,
-          ],
         },
       })
     );
