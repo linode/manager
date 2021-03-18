@@ -60,7 +60,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
             onClick={onAddNew}
             style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
           >
-            {createButtonText ? createButtonText : `Create ${entity}`}
+            {createButtonText ?? `Create ${entity}`}
           </Button>
         )}
       </>
