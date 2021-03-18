@@ -5,7 +5,6 @@ import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import { privateIPRegex } from 'src/utilities/ipUtils';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 
 const useStyles = makeStyles(() => ({
@@ -36,7 +35,6 @@ interface Props {
   linodeDisks: Disk[];
   linodeVolumes: Volume[];
   linodeKernel: string;
-  linodeIPs: string[];
 }
 
 interface Handlers {
@@ -53,7 +51,6 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
     linodeId,
     linodeDisks,
     linodeKernel,
-    linodeIPs,
     linodeVolumes,
     onBoot,
     onEdit,
@@ -100,8 +97,6 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
     [classes.interfaceList, validDevices]
   );
 
-  const hasPrivateIP = linodeIPs.some((thisIP) => privateIPRegex.test(thisIP));
-
   const InterfaceList = (
     <ul className={classes.interfaceList}>
       {config.interfaces.map((interfaceEntry, idx) => {
@@ -114,16 +109,14 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
             key={interfaceEntry.label + idx}
             className={classes.interfaceListItem}
           >
-            {interfaceName} – {getInterfaceLabel(interfaceEntry, hasPrivateIP)}
+            {interfaceName} – {getInterfaceLabel(interfaceEntry)}
           </li>
         );
       })}
     </ul>
   );
 
-  const defaultInterfaceLabel = hasPrivateIP
-    ? 'eth0 – Public Internet'
-    : 'eth0 – Public';
+  const defaultInterfaceLabel = 'eth0 – Public Internet';
 
   // This should determine alignment based on device count associated w/ a config
   const hasManyConfigs = validDevices.length > 3;
@@ -158,12 +151,9 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
 export default React.memo(ConfigRow);
 
-export const getInterfaceLabel = (
-  configInterface: Interface,
-  hasPrivateIP: boolean
-): string => {
+export const getInterfaceLabel = (configInterface: Interface): string => {
   if (configInterface.purpose === 'public') {
-    return hasPrivateIP ? 'Public Internet' : 'Public';
+    return 'Public Internet';
   }
 
   const interfaceLabel = configInterface.label;

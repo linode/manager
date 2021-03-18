@@ -504,7 +504,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               linodeMemory={this.props.linodeMemory}
                               linodeDisks={this.props.linodeDisks}
                               linodeKernel={kernel?.label ?? thisConfig.kernel}
-                              linodeIPs={this.props.linodeIPs}
                               onBoot={this.confirmBoot}
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
