@@ -9,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useDialog } from 'src/hooks/useDialog';
+import { capitalize } from 'src/utilities/capitalize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -90,13 +91,14 @@ const MigrationNotification: React.FC<Props> = (props) => {
       <Notice important warning>
         <Typography>
           {notificationMessage}
-          {` To ${migrationActionDescription}, please `}
+          {` `}
           <button
             className={classes.migrationLink}
             onClick={() => openDialog(linodeID)}
           >
-            click here.
+            {capitalize(migrationActionDescription)}
           </button>
+          .
         </Typography>
       </Notice>
       <ConfirmationDialog
