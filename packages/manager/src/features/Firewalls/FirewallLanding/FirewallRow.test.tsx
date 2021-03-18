@@ -33,6 +33,10 @@ describe('FirewallRow', () => {
       expect(getRuleString([1, 0])).toBe('1 Inbound');
       expect(getRuleString([0, 1])).toBe('1 Outbound');
     });
+
+    it('should return "No rules" when there are no rules', () => {
+      expect(getRuleString([0, 0])).toMatch(/no rules/gi);
+    });
   });
 
   describe('FirewallRow component', () => {

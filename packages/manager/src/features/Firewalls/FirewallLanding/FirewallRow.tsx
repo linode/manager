@@ -113,7 +113,7 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
  *
  * 3 Outbound
  */
-export const getRuleString = (count: [number, number]) => {
+export const getRuleString = (count: [number, number]): string => {
   const [inbound, outbound] = count;
 
   let string = '';
@@ -125,7 +125,7 @@ export const getRuleString = (count: [number, number]) => {
   } else if (outbound !== 0) {
     string += `${outbound} Outbound`;
   }
-  return string;
+  return string || 'No rules';
 };
 
 export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
