@@ -301,6 +301,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const close = () => {
     props.onClose();
+  };
+
+  const onCancel = () => {
+    props.onClose();
     resetDrawer(true);
   };
 
@@ -551,7 +555,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
               Open Ticket
             </Button>
             <Button
-              onClick={close}
+              onClick={onCancel}
               buttonType="secondary"
               className="cancel"
               data-qa-cancel
