@@ -14,6 +14,7 @@ import {
   firewallDeviceFactory,
   kubernetesAPIResponse,
   kubeEndpointFactory,
+  incidentResponseFactory,
   invoiceFactory,
   invoiceItemFactory,
   nodePoolFactory,
@@ -27,6 +28,7 @@ import {
   longviewClientFactory,
   longviewSubscriptionFactory,
   managedStatsFactory,
+  maintenanceResponseFactory,
   monitorFactory,
   nodeBalancerFactory,
   notificationFactory,
@@ -42,6 +44,7 @@ import {
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   VLANFactory,
+  promoFactory,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -61,6 +64,17 @@ export const makeResourcePage = (
   results: override.results ?? e.length,
   data: e,
 });
+
+const statusPage = [
+  rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
+    const response = incidentResponseFactory.build();
+    return res(ctx.json(response));
+  }),
+  rest.get('*statuspage.io/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+    const response = maintenanceResponseFactory.build();
+    return res(ctx.json(response));
+  }),
+];
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
@@ -118,7 +132,14 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(tokens)));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(ctx.json(cachedRegions));
+    return res(
+      ctx.json(
+        cachedRegions.data.map((thisRegion) => ({
+          ...thisRegion,
+          status: 'outage',
+        }))
+      )
+    );
   }),
   rest.get('*/linode/types', async (req, res, ctx) => {
     return res(ctx.json(cachedTypes));
@@ -325,6 +346,7 @@ export const handlers = [
     const account = accountFactory.build({
       balance: 50,
       active_since: '2019-11-05',
+      active_promotions: promoFactory.buildList(2),
     });
     return res(ctx.json(account));
   }),
@@ -477,6 +499,7 @@ export const handlers = [
       until: null,
       body: null,
     });
+
     const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationTicket = notificationFactory.build({
@@ -528,6 +551,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(databases)));
   }),
   ...entityTransfers,
+  ...statusPage,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.
