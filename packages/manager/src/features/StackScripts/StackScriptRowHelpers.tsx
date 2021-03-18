@@ -1,10 +1,7 @@
-import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
-import * as React from 'react';
-import Chip from 'src/components/core/Chip';
 import { createStyles, Theme } from 'src/components/core/styles';
-import ShowMore from 'src/components/ShowMore';
 
 export type ClassNames =
+  | 'row'
   | 'link'
   | 'libRadio'
   | 'libRadioLabel'
@@ -14,10 +11,13 @@ export type ClassNames =
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'detailsButton'
-  | 'chip';
+  | 'images';
 
 export const styles = (theme: Theme) =>
   createStyles({
+    row: {
+      height: 44,
+    },
     link: {
       color: theme.cmrTextColors.tableStatic,
     },
@@ -32,14 +32,15 @@ export const styles = (theme: Theme) =>
       cursor: 'pointer',
     },
     libTitle: {
+      fontSize: '0.875rem',
+      lineHeight: '1.125rem',
       [theme.breakpoints.down('sm')]: {
         wordBreak: 'break-all',
       },
     },
     libDescription: {
-      [theme.breakpoints.down('sm')]: {
-        fontSize: 12,
-      },
+      color: theme.cmrTextColors.tableHeader,
+      fontSize: '.75rem',
       [theme.breakpoints.between('sm', 'lg')]: {
         wordBreak: 'break-word',
       },
@@ -58,7 +59,7 @@ export const styles = (theme: Theme) =>
       width: '100%',
     },
     stackScriptUsername: {
-      color: theme.color.grey1,
+      color: theme.cmrTextColors.tableStatic,
     },
     detailsButton: {
       padding: 0,
@@ -73,38 +74,7 @@ export const styles = (theme: Theme) =>
         backgroundColor: 'transparent',
       },
     },
-    chip: {
-      '& .MuiChip-root:first-child': {
-        backgroundColor: theme.cmrBGColors.bgApp,
-      },
+    images: {
+      fontSize: '0.75rem',
     },
   });
-
-const createTag: (images: string) => JSX.Element = (v) => {
-  const randomId = Math.floor(Math.random() * 1000);
-  return (
-    <Chip
-      label={v}
-      key={`${v}-${randomId}`}
-      style={{ margin: '2px 2px', outline: 0 }}
-      role="term"
-    />
-  );
-};
-
-const createTags: (images: string[]) => JSX.Element[] = map(createTag);
-
-const createShowMore: (images: string[]) => JSX.Element = (images) => (
-  <ShowMore key={0} items={images} render={createTags} ariaItemType="images" />
-);
-
-export const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = compose<
-  string[],
-  string[][],
-  any,
-  JSX.Element[][]
->(
-  over(lensIndex(1), unless(isEmpty, createShowMore)),
-  over(lensIndex(0), createTags),
-  splitAt(1)
-);

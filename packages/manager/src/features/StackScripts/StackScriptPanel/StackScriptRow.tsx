@@ -9,11 +9,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
-import {
-  ClassNames,
-  displayTagsAndShowMore,
-  styles,
-} from '../StackScriptRowHelpers';
+import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
   label: string;
@@ -82,7 +78,12 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <TableRow data-qa-table-row={label} ariaLabel={label}>
+    <TableRow
+      data-qa-table-row={label}
+      ariaLabel={label}
+      className={classes.row}
+      // style={{ height: 44 }}
+    >
       <TableCell data-qa-stackscript-title>{renderLabel()}</TableCell>
       <TableCell>
         <Typography data-qa-stackscript-deploys>{deploymentsTotal}</Typography>
@@ -91,8 +92,18 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
         <TableCell>
           <Typography data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
-        <TableCell data-qa-stackscript-images className={classes.chip}>
-          {displayTagsAndShowMore(images)}
+        <TableCell data-qa-stackscript-images className={classes.images}>
+          {/* {displayTagsAndShowMore(images)} */}
+          {images.map((image, id) => {
+            return (
+              <span key={id}>
+                {image}
+                {id !== images.length - 1 && (
+                  <span style={{ paddingRight: 4 }}>,</span>
+                )}
+              </span>
+            );
+          })}
         </TableCell>
       </Hidden>
       {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.

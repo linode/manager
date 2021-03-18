@@ -53,13 +53,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'calc(100% - 65px)',
   },
   deploys: {
-    width: '13%',
+    width: '10%',
     [theme.breakpoints.down('sm')]: {
       width: '15%',
     },
   },
   revisions: {
-    width: '13%',
+    width: '15%',
   },
   tags: {
     width: '17%',
@@ -150,7 +150,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
             data-qa-stackscript-active-deploy-header
             {...maybeAddSortingProps('deploys')}
           >
-            Total Deploys
+            Deploys
           </Cell>
         )}
         {!isSelecting && (
