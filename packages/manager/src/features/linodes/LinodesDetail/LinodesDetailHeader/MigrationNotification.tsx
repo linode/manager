@@ -82,7 +82,7 @@ const MigrationNotification: React.FC<Props> = (props) => {
 
   const migrationActionDescription =
     notificationType === 'migration_scheduled'
-      ? 'enter the migration queue right now'
+      ? 'enter the migration queue now'
       : 'schedule your migration';
 
   return (
