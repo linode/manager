@@ -14,6 +14,7 @@ import {
   firewallDeviceFactory,
   kubernetesAPIResponse,
   kubeEndpointFactory,
+  incidentResponseFactory,
   invoiceFactory,
   invoiceItemFactory,
   nodePoolFactory,
@@ -27,6 +28,7 @@ import {
   longviewClientFactory,
   longviewSubscriptionFactory,
   managedStatsFactory,
+  maintenanceResponseFactory,
   monitorFactory,
   nodeBalancerFactory,
   notificationFactory,
@@ -62,6 +64,17 @@ export const makeResourcePage = (
   results: override.results ?? e.length,
   data: e,
 });
+
+const statusPage = [
+  rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
+    const response = incidentResponseFactory.build();
+    return res(ctx.json(response));
+  }),
+  rest.get('*statuspage.io/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+    const response = maintenanceResponseFactory.build();
+    return res(ctx.json(response));
+  }),
+];
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
@@ -530,6 +543,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(databases)));
   }),
   ...entityTransfers,
+  ...statusPage,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.
