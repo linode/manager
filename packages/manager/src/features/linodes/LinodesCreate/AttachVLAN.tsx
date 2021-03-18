@@ -39,9 +39,10 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="body1">
-            Helper text about VLANs.... eth0 is attached to the public Internet.
-            eth1 will be automatically assigned to it and editing can happen
-            from the Configurations tab
+            {/* Temporary helper text pending finalized text. */}
+            If you attach a VLAN to this Linode, it will be automatically
+            assigned to the eth1 interface. You may edit interfaces from the
+            Linode Configurations tab.
           </Typography>
           <InterfaceSelect
             slotNumber={1}
