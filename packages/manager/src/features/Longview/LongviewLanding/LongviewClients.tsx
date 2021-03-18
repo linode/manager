@@ -22,7 +22,6 @@ import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
-import useFlags from 'src/hooks/useFlags';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
@@ -37,17 +36,18 @@ import SubscriptionDialog from './SubscriptionDialog';
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
     marginBottom: theme.spacing(),
+    [theme.breakpoints.down('md')]: {
+      marginLeft: 0,
+      marginRight: 0,
+    },
   },
   searchbar: {
-    '&.MuiGrid-item': {
-      paddingLeft: 0,
-    },
     '& > div': {
       width: '300px',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.only('md')]: {
       '&.MuiGrid-item': {
-        paddingLeft: theme.spacing(),
+        paddingLeft: 0,
       },
     },
     [theme.breakpoints.down('xs')]: {
@@ -68,12 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectLabel: {
     minWidth: '65px',
-  },
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: 0,
-      marginRight: 0,
-    },
   },
 }));
 
@@ -150,7 +144,6 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   ] = React.useState<boolean>(false);
 
   const classes = useStyles();
-  const flags = useFlags();
 
   React.useEffect(() => {
     getLongviewClients();
@@ -237,13 +230,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clients" />
-      <Grid
-        container
-        className={`${classes.headingWrapper} ${
-          flags.cmr && classes.cmrSpacing
-        }`}
-        alignItems="center"
-      >
+      <Grid container className={classes.headingWrapper} alignItems="center">
         <Grid item className={classes.searchbar}>
           <Search
             placeholder="Filter by client label or hostname"
