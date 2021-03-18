@@ -41,7 +41,7 @@ export const AbuseTicketBanner: React.FC<{}> = (_) => {
     return null;
   }
 
-  const href = '/support/tickets';
+  const href = multiple ? '/support/tickets' : abuseTickets[0].entity.url;
   const isViewingTicket = location.pathname.match(href);
 
   return (
