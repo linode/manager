@@ -71,7 +71,7 @@ const styles = (theme: Theme) =>
     graphGrids: {
       flexWrap: 'nowrap',
       margin: 0,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap',
       },
     },
