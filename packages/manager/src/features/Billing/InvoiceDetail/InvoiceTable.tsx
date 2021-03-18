@@ -14,51 +14,21 @@ import TableRowLoading from 'src/components/TableRowLoading';
 
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import DownloadCSV from 'src/components/DownloadCSV';
+import TableFooter from 'src/components/core/TableFooter';
 
 interface Props {
   loading: boolean;
   errors?: APIError[];
   items?: InvoiceItem[];
+  invoiceDate?: string;
 }
-
-// Building the CSV from the Data two-dimensional array
-// Each column is separated by ";" and new line "\n" for next row
-const renderCsv = (items: any[])=>{
-  let csvContent = 'name, price\n';
-  items.forEach(i=>{
-    csvContent +=`${i.label}, ${i.unit_price !== 'None' && renderUnitPrice(i.unit_price)};\n`
-  })
-  return csvContent
-}
-// The download function takes a CSV string, the filename and mimeType as parameters
-// Scroll/look down at the bottom of this snippet to see how download is called
-const download = function(content: string, fileName: string, mimeType: string) {
-  var a = document.createElement('a');
-  mimeType = mimeType || 'application/octet-stream';
-
-  if (navigator.msSaveBlob) { // IE10
-    navigator.msSaveBlob(new Blob([content], {
-      type: mimeType
-    }), fileName);
-  } else if (URL && 'download' in a) { //html5 A[download]
-    a.href = URL.createObjectURL(new Blob([content], {
-      type: mimeType
-    }));
-    a.setAttribute('download', fileName);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  } else {
-    location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
-  }
-}
-
 
 const InvoiceTable: React.FC<Props> = (props) => {
-  const { loading, errors, items } = props;
+  const { loading, errors, items, invoiceDate } = props;
 
   return (
-    <Table border aria-label="Invoice Details">
+    <Table aria-label="Invoice Details">
       <TableHead>
         <TableRow>
           <TableCell data-qa-column="Description">Description</TableCell>
@@ -76,6 +46,19 @@ const InvoiceTable: React.FC<Props> = (props) => {
       <TableBody>
         <MaybeRenderContent loading={loading} errors={errors} items={items} />
       </TableBody>
+      <TableFooter>
+        {items && invoiceDate ? (
+          <div style={{ marginTop: 8 }}>
+            <DownloadCSV
+              filename={`invoice-${invoiceDate}.csv`}
+              headers={csvHeaders}
+              data={items}
+            >
+              Download CSV
+            </DownloadCSV>
+          </div>
+        ) : null}
+      </TableFooter>
     </Table>
   );
 };
@@ -86,6 +69,17 @@ const renderDate = (v: null | string) =>
 const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
 const renderQuantity = (v: null | number) => (v ? v : null);
+
+const csvHeaders = [
+  { label: 'Description', key: 'label' },
+  { label: 'From', key: 'from' },
+  { label: 'To', key: 'to' },
+  { label: 'Quantity', key: 'quantity' },
+  { label: 'Unit Price', key: 'unit_price' },
+  { label: 'Amount (USD)', key: 'amount' },
+  { label: 'Tax (USD)', key: 'tax' },
+  { label: 'Total (USD)', key: 'total' },
+];
 
 const RenderData: React.FC<{
   items: InvoiceItem[];
@@ -192,11 +186,7 @@ const MaybeRenderContent: React.FC<{
   }
 
   if (items && items.length > 0) {
-    const csvContent = renderCsv(items);
-    return <div>
-      <button onClick={(e: React.MouseEvent<HTMLElement>)=>download(csvContent, 'dowload.csv', 'text/csv;encoding:utf-8')}>CSV
-        </button><RenderData items={items} />
-      </div>;
+    return <RenderData items={items} />;
   }
 
   return <RenderEmpty />;
