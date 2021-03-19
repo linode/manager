@@ -94,19 +94,17 @@ describe('volumes', () => {
       const linodeLabel = linode.label;
       createVolume(linodeId).then((volume) => {
         const volumeId = volume.id;
+        const volumeLabel = volume.label;
         // catch detach volume post
         cy.intercept('POST', '*/volumes/' + volume.id + '/detach').as(
           'volumeDetached'
         );
-        const volumeLabel = volume.label;
         cy.reload();
         containsVisible(linodeLabel);
         containsVisible(volumeLabel);
         clickVolumeActionMenu(volume.label);
         clickDetach();
-        cy.findByText(
-          `Are you sure you want to detach this Volume from ${linodeLabel}?`
-        );
+        cy.contains(`Detach Volume ${volumeLabel}?`);
         getClick('[data-qa-confirm="true"]');
         cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
         assertToast('Volume detachment started', 2);

@@ -1,7 +1,7 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
-  abuseTicketNotificationFactory,
+  // abuseTicketNotificationFactory,
   accountFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
@@ -132,7 +132,14 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(tokens)));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(ctx.json(cachedRegions));
+    return res(
+      ctx.json(
+        cachedRegions.data.map((thisRegion) => ({
+          ...thisRegion,
+          status: 'outage',
+        }))
+      )
+    );
   }),
   rest.get('*/linode/types', async (req, res, ctx) => {
     return res(ctx.json(cachedTypes));
@@ -482,17 +489,18 @@ export const handlers = [
       body: null,
     };
 
-    const emailBounce = notificationFactory.build({
-      type: 'billing_email_bounce',
-      entity: null,
-      when: null,
-      message: 'We are unable to send emails to your billing email address!',
-      label: 'We are unable to send emails to your billing email address!',
-      severity: 'major',
-      until: null,
-      body: null,
-    });
-    const abuseTicket = abuseTicketNotificationFactory.build();
+    // const emailBounce = notificationFactory.build({
+    //   type: 'billing_email_bounce',
+    //   entity: null,
+    //   when: null,
+    //   message: 'We are unable to send emails to your billing email address!',
+    //   label: 'We are unable to send emails to your billing email address!',
+    //   severity: 'major',
+    //   until: null,
+    //   body: null,
+    // });
+
+    // const abuseTicket = abuseTicketNotificationFactory.build();
 
     const migrationTicket = notificationFactory.build({
       type: 'migration_pending',
@@ -520,8 +528,8 @@ export const handlers = [
           generalGlobalNotice,
           outageNotification,
           minorSeverityTicket,
-          abuseTicket,
-          emailBounce,
+          // abuseTicket,
+          // emailBounce,
           migrationTicket,
           balanceNotification,
         ])

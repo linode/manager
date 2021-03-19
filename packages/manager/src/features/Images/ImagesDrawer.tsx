@@ -81,18 +81,18 @@ export type DrawerMode = 'closed' | 'create' | 'imagize' | 'restore' | 'edit';
 
 const titleMap: Record<DrawerMode, string> = {
   closed: '',
-  create: 'Create an Image',
-  imagize: 'Create an Image',
-  edit: 'Edit an Image',
-  restore: 'Restore from an Image',
+  create: 'Create Image',
+  imagize: 'Create Image',
+  edit: 'Edit Image',
+  restore: 'Restore from Image',
 };
 
 const buttonTextMap: Record<DrawerMode, string> = {
   closed: '',
-  create: 'Create',
-  restore: 'Restore',
-  edit: 'Update',
-  imagize: 'Create',
+  create: 'Create Image',
+  restore: 'Restore Image',
+  edit: 'Save Changes',
+  imagize: 'Create Image',
 };
 
 class ImageDrawer extends React.Component<CombinedProps, State> {

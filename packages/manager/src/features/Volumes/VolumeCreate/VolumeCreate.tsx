@@ -71,7 +71,7 @@ const VolumeCreate: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Create a Volume" />
+      <DocumentTitleSegment segment="Create Volume" />
       <Grid item>
         <BreadCrumb
           pathname={props.location.pathname}

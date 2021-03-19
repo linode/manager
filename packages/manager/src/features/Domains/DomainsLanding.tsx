@@ -524,7 +524,7 @@ const RenderEmpty: React.FC<{
         buttonProps={[
           {
             onClick: props.onCreateDomain,
-            children: 'Add a Domain',
+            children: 'Create Domain',
           },
           {
             onClick: props.onImportZone,

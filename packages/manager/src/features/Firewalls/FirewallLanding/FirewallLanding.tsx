@@ -158,7 +158,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
           open={addFirewallDrawerOpen}
           onClose={() => toggleAddFirewallDrawer(false)}
           onSubmit={createFirewall}
-          title="Add a Firewall"
+          title="Create Firewall"
         />
       </>
     );
@@ -193,7 +193,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
         open={addFirewallDrawerOpen}
         onClose={closeDrawer}
         onSubmit={createFirewall}
-        title="Add a Firewall"
+        title="Create Firewall"
       />
       <FirewallDialog
         open={modalOpen}
