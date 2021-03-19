@@ -1,5 +1,5 @@
-import { Formik } from 'formik';
 import { CloneVolumeSchema } from '@linode/api-v4/lib/volumes';
+import { Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
@@ -78,7 +78,11 @@ const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
       }) => {
         return (
           <Form>
-            <Typography variant="body1">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
+            <Typography variant="body1">
+              The newly created volume will be an exact clone of{' '}
+              <b>{volumeLabel}</b>. It will have a size of {volumeSize} GiB and
+              be available in {volumeRegion}.
+            </Typography>
             {status && (
               <NoticePanel
                 success={status.success}
@@ -92,9 +96,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
               onChange={handleChange}
               value={values.label}
             />
-
             <PricePanel value={volumeSize} currentSize={volumeSize} />
-
             <VolumesActionsPanel
               onSubmit={handleSubmit}
               onCancel={() => {
@@ -102,6 +104,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
                 onClose();
               }}
               isSubmitting={isSubmitting}
+              submitText="Clone Volume"
             />
           </Form>
         );

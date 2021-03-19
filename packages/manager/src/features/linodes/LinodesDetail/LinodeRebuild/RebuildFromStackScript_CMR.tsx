@@ -369,7 +369,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                   data-qa-rebuild
                   data-testid="rebuild-button"
                 >
-                  Rebuild
+                  Rebuild Linode
                 </Button>
               </ActionsPanel>
             </form>

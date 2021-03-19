@@ -219,7 +219,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = (props) => {
                         onClick={() => handleSubmit()}
                         loading={isSubmitting}
                       >
-                        Save
+                        Save Changes
                       </Button>
                     </ActionsPanel>
                   </form>

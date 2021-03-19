@@ -58,7 +58,7 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
           onClick={method}
           data-qa-confirm
         >
-          {action}
+          {action} Volume
         </Button>
       </ActionsPanel>
     );
@@ -74,8 +74,8 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
       mode,
     } = this.props;
     const title = {
-      detach: `Detach ${label ? label : 'Volume'}?`,
-      delete: `Delete ${label ? label : 'Volume'}?`,
+      detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
+      delete: `Delete ${label ? `Volume ${label}` : 'Volume'}?`,
     }[this.props.mode];
 
     return (
@@ -96,11 +96,12 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
             mounted, detaching it could cause your Linode to restart.
           </Typography>
         )}
-
-        <Typography>
-          Are you sure you want to {mode} this Volume
-          {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
-        </Typography>
+        {mode === 'delete' && (
+          <Typography>
+            Are you sure you want to {mode} this Volume
+            {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
+          </Typography>
+        )}
       </ConfirmationDialog>
     );
   }

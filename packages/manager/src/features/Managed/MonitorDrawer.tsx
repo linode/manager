@@ -37,7 +37,7 @@ export const modes = {
 };
 
 const titleMap = {
-  [modes.CREATING]: 'Add a Monitor',
+  [modes.CREATING]: 'Add Monitor',
   [modes.EDITING]: 'Edit Monitor',
 };
 
@@ -287,7 +287,7 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  {mode === 'create' ? 'Add' : 'Update'}
+                  {mode === 'create' ? 'Add Monitor' : 'Save Changes'}
                 </Button>
                 <Button
                   onClick={onClose}

@@ -1,4 +1,4 @@
-import { Config, Disk, Kernel } from '@linode/api-v4/lib/linodes';
+import { Config, Disk, Interface, Kernel } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
@@ -47,6 +47,7 @@ import {
   withLinodeDetailContext,
 } from '../linodeDetailContext';
 import KernelSelect from './KernelSelect';
+import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -90,6 +91,7 @@ interface EditableFields {
   helpers: Helpers;
   root_device: string;
   setMemoryLimit: MemoryLimit;
+  interfaces: ExtendedInterface[];
 }
 
 interface Props {
@@ -106,6 +108,12 @@ interface Props {
 
 type CombinedProps = LinodeContextProps & Props & StateProps;
 
+const defaultInterfaces = [
+  { purpose: 'public', label: '', ipam_address: '' },
+  { purpose: 'none', label: '', ipam_address: '' },
+  { purpose: 'none', label: '', ipam_address: '' },
+] as ExtendedInterface[];
+
 const defaultFieldsValues = {
   comments: '',
   devices: {},
@@ -117,6 +125,7 @@ const defaultFieldsValues = {
     updatedb_disabled: true,
   },
   kernel: 'linode/latest-64bit',
+  interfaces: defaultInterfaces,
   label: '',
   memory_limit: 0,
   root_device: '/dev/sda',
@@ -149,9 +158,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
-  const [counter, setCounter] = React.useState(1);
+  const [deviceCounter, setDeviceCounter] = React.useState(1);
 
-  const { values, resetForm, ...formik } = useFormik({
+  const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
     validateOnChange: true,
     validateOnMount: true,
@@ -168,6 +177,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       run_level,
       virt_mode,
       setMemoryLimit,
+      interfaces,
       helpers,
       root_device,
     } = state;
@@ -181,6 +191,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
       run_level,
       virt_mode,
+      // Remove empty interfaces from the payload
+      interfaces: interfaces.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      ) as Interface[],
       helpers,
       root_device,
     };
@@ -193,45 +207,35 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const configData = convertStateToData(values);
 
+    const handleSuccess = () => {
+      formik.setSubmitting(false);
+      onClose();
+    };
+
+    const handleError = (error: APIError[]) => {
+      const mapErrorToStatus = (generalError: string) =>
+        formik.setStatus({ generalError });
+      formik.setSubmitting(false);
+      handleFieldErrors(formik.setErrors, error);
+      handleGeneralErrors(
+        mapErrorToStatus,
+        error,
+        'An unexpected error occurred.'
+      );
+      scrollErrorIntoView('linode-config-dialog');
+    };
+
     /** Editing */
     if (linodeConfigId) {
       return updateLinodeConfig(linodeConfigId, configData)
-        .then((_) => {
-          formik.setSubmitting(false);
-          onClose();
-        })
-        .catch((error) => {
-          const mapErrorToStatus = (generalError: string) =>
-            formik.setStatus({ generalError });
-          formik.setSubmitting(false);
-          handleFieldErrors(formik.setErrors, error);
-          handleGeneralErrors(
-            mapErrorToStatus,
-            error,
-            'An unexpected error occurred.'
-          );
-          scrollErrorIntoView('linode-config-dialog');
-        });
+        .then(handleSuccess)
+        .catch(handleError);
     }
 
     /** Creating */
     return createLinodeConfig(configData)
-      .then((_) => {
-        formik.setSubmitting(false);
-        onClose();
-      })
-      .catch((error) => {
-        const mapErrorToStatus = (generalError: string) =>
-          formik.setStatus({ generalError });
-        formik.setSubmitting(false);
-        handleFieldErrors(formik.setErrors, error);
-        handleGeneralErrors(
-          mapErrorToStatus,
-          error,
-          'An unexpected error occurred.'
-        );
-        scrollErrorIntoView('linode-config-dialog');
-      });
+      .then(handleSuccess)
+      .catch(handleError);
   };
 
   React.useEffect(() => {
@@ -243,7 +247,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       if (config) {
         const devices = createStringsFromDevices(config.devices);
         const initialCounter = Object.keys(devices).length;
-        setCounter(initialCounter);
+        setDeviceCounter(initialCounter);
         resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
@@ -256,6 +260,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
+            interfaces: config.interfaces,
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
@@ -283,21 +288,28 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const handleChangeKernel = React.useCallback(
     (selected: Item<string>) => {
-      formik.setFieldValue('kernel', selected?.value ?? '');
+      setFieldValue('kernel', selected?.value ?? '');
     },
-    [formik]
+    [setFieldValue]
   );
 
   const handleDevicesChanges = React.useCallback(
     (slot: string, value: string) => {
-      formik.setFieldValue(`devices[${slot}]`, value);
+      setFieldValue(`devices[${slot}]`, value);
     },
-    []
+    [setFieldValue]
+  );
+
+  const handleInterfaceChange = React.useCallback(
+    (slot: number, updatedInterface: Interface) => {
+      setFieldValue(`interfaces[${slot}]`, updatedInterface);
+    },
+    [setFieldValue]
   );
 
   return (
     <Dialog
-      title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`}
+      title={`${linodeConfigId ? 'Edit' : 'Add'} Configuration`}
       open={open}
       onClose={onClose}
       fullHeight
@@ -328,7 +340,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 classes,
               ]}
             >
-              <Typography variant="h3">Label and Comments</Typography>
               <TextField
                 label="Label"
                 name="label"
@@ -405,7 +416,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               xs={12}
               className={classes.section}
               updateFor={[
-                counter,
+                deviceCounter,
                 values.kernel,
                 values.setMemoryLimit,
                 kernels,
@@ -523,7 +534,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
-                counter={counter}
+                counter={deviceCounter}
                 slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
                 devices={availableDevices}
                 onChange={handleDevicesChanges}
@@ -534,8 +545,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 className={classes.button}
                 buttonType="secondary"
                 superCompact
-                onClick={() => setCounter((counter) => counter + 1)}
-                disabled={readOnly || counter >= 6}
+                onClick={() => setDeviceCounter((counter) => counter + 1)}
+                disabled={readOnly || deviceCounter >= 6}
               >
                 Add a Device
               </Button>
@@ -583,11 +594,31 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               </FormControl>
             </Grid>
 
-            {/* <Grid item xs={12} className={classes.section}>
+            <Divider className={classes.divider} />
+
+            <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Network Interfaces</Typography>
+              {values.interfaces.map((thisInterface, idx, arr) =>
+                // Magic so that we show interfaces that have been filled plus one more
+                arr[idx - 1]?.purpose !== 'none' ||
+                thisInterface.purpose !== 'none' ? (
+                  <InterfaceSelect
+                    key={`eth${idx}-interface`}
+                    slotNumber={idx}
+                    readOnly={readOnly}
+                    error={formik.errors[`interfaces[${idx}]`]}
+                    label={thisInterface.label}
+                    purpose={thisInterface.purpose}
+                    ipamAddress={thisInterface.ipam_address}
+                    handleChange={(newInterface: Interface) =>
+                      handleInterfaceChange(idx, newInterface)
+                    }
+                  />
+                ) : null
+              )}
             </Grid>
 
-            <Divider className={classes.divider} /> */}
+            <Divider className={classes.divider} />
 
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
@@ -692,7 +723,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   disabled={readOnly}
                   loading={formik.isSubmitting}
                 >
-                  Submit
+                  {linodeConfigId ? 'Edit' : 'Add'} Configuration
                 </Button>
                 <Button
                   buttonType="secondary"
