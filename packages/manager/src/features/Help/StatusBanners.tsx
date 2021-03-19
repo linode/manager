@@ -66,7 +66,7 @@ export const StatusBanners: React.FC<{}> = (_) => {
   );
 };
 
-interface IncidentProps {
+export interface IncidentProps {
   message: string;
   title: string;
   // Maintenance events have statuses but we don't need to display them
@@ -97,14 +97,16 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
         ['major', 'minor', 'none'].includes(impact) ||
         ['monitoring', 'resolved'].includes(status)
       }
-      error={impact === 'critical'}
+      error={
+        impact === 'critical' && !['monitoring', 'resolved'].includes(status)
+      }
       className={classes.root}
       dismissible
       onClose={handleDismiss}
     >
-      <Typography className={classes.header}>
+      <Typography data-testid="status-banner" className={classes.header}>
         <Link to={href}>
-          <strong>
+          <strong data-testid="incident-status">
             {title}
             {status ? `: ${capitalize(status)}` : ''}
           </strong>

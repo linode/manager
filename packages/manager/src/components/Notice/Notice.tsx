@@ -245,6 +245,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
               cursor: 'pointer',
             }}
             onClick={onClose}
+            data-testid="notice-dismiss"
           />
         </Grid>
       )}
