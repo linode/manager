@@ -2,12 +2,12 @@ import { Config, Disk, Interface } from '@linode/api-v4/lib/linodes';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   actionInner: {
     padding: '0 !important',
     '&.MuiTableCell-root': {
@@ -17,6 +17,8 @@ const useStyles = makeStyles(() => ({
   interfaceList: {
     listStyleType: 'none',
     margin: 0,
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
     paddingLeft: 0,
   },
   interfaceListItem: {

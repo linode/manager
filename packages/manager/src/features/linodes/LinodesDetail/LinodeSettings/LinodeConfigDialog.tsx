@@ -62,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControlToggle: {
     '& button': {
+      color: theme.cmrTextColors.tableHeader,
       order: 3,
     },
   },
@@ -617,8 +618,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 ) : null
               )}
             </Grid>
-
-            <Divider className={classes.divider} />
 
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
