@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import AddFirewallDrawer, { CombinedProps } from './AddFirewallDrawer';
@@ -7,20 +7,23 @@ import AddFirewallDrawer, { CombinedProps } from './AddFirewallDrawer';
 const props: CombinedProps = {
   onClose: jest.fn(),
   onSubmit: jest.fn().mockResolvedValue({}),
-  title: 'Add a Firewall',
+  title: 'Create Firewall',
   open: true,
 };
 
-describe('Add Firewall Drawer', () => {
+describe('Create Firewall Drawer', () => {
   it('should render a title', () => {
     renderWithTheme(<AddFirewallDrawer {...props} />);
-    expect(screen.getByText(/add a firewall/i)).toBeInTheDocument();
+    const title = within(screen.getByTestId('drawer-title')).getByText(
+      'Create Firewall'
+    );
+    expect(title).toBeVisible();
   });
 
   it('should validate the form on submit', async () => {
     renderWithTheme(<AddFirewallDrawer {...props} />);
     userEvent.type(screen.getByLabelText('Label'), 'a');
-    userEvent.click(screen.getByTestId('add-firewall-submit'));
+    userEvent.click(screen.getByTestId('create-firewall-submit'));
     const error = await screen.findByText(
       /Label must be between 3 and 32 characters./i
     );
@@ -31,7 +34,7 @@ describe('Add Firewall Drawer', () => {
     renderWithTheme(<AddFirewallDrawer {...props} />);
     const label = '123abc!@#';
     userEvent.type(screen.getByLabelText('Label'), label);
-    userEvent.click(screen.getByTestId('add-firewall-submit'));
+    userEvent.click(screen.getByTestId('create-firewall-submit'));
     await waitFor(() =>
       expect(props.onSubmit).toHaveBeenCalledWith({
         devices: {

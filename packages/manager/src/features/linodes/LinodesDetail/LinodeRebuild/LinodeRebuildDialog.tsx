@@ -86,7 +86,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`Rebuild ${linodeLabel ?? ''}`}
+      title={`Rebuild Linode ${linodeLabel ?? ''}`}
       open={open}
       onClose={onClose}
       fullWidth

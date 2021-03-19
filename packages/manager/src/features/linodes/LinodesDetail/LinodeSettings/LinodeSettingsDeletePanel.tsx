@@ -92,7 +92,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
           error={errors ? errors[0].reason : undefined}
         >
           <Typography>
-            Are you sure you want to delete your Linode? This will result in
+            Are you sure you want to delete this Linode? This will result in
             permanent data loss.
           </Typography>
         </ConfirmationDialog>

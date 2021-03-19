@@ -218,7 +218,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                   onClick={handleRebuildButtonClick}
                   data-testid="rebuild-button"
                 >
-                  Rebuild
+                  Rebuild Linode
                 </Button>
               </ActionsPanel>
             </form>

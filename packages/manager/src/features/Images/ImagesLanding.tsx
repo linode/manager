@@ -267,7 +267,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           onClick={handleRemoveImage}
           data-qa-submit
         >
-          Confirm
+          Delete Image
         </Button>
       </ActionsPanel>
     );
@@ -338,7 +338,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           buttonProps={[
             {
               onClick: openForCreate,
-              children: 'Add an Image',
+              children: 'Create Image',
             },
           ]}
         >
@@ -389,12 +389,12 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
       {renderImageDrawer()}
       <ConfirmationDialog
         open={dialog.open}
-        title={`Remove ${dialog.image}`}
+        title={`Delete Image ${dialog.image}`}
         onClose={closeDialog}
         actions={getActions}
       >
         {dialog.error && <Notice error text={dialog.error} />}
-        <Typography>Are you sure you want to remove this image?</Typography>
+        <Typography>Are you sure you want to delete this Image?</Typography>
       </ConfirmationDialog>
     </React.Fragment>
   );

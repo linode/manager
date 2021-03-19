@@ -7,15 +7,13 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Notice from 'src/components/Notice';
-
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-
+import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
@@ -149,9 +147,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
     <Dialog
       className={classes.dialog}
       open={props.isOpen}
-      title={`Are you sure you want to ${props.action.toLowerCase()} ${
-        props.linodeLabel
-      }?`}
+      title={`${props.action} Linode ${props.linodeLabel}?`}
       onClose={props.close}
       error={errors ? errors[0].reason : ''}
       actions={
@@ -202,7 +198,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
         loading={props.loading}
         buttonType="primary"
       >
-        {props.action}
+        {props.action} Linode
       </Button>
     </ActionsPanel>
   );
