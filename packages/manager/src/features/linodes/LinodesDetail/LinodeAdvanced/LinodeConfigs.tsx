@@ -504,7 +504,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               linodeMemory={this.props.linodeMemory}
                               linodeDisks={this.props.linodeDisks}
                               linodeKernel={kernel?.label ?? thisConfig.kernel}
-                              linodeIPs={this.props.linodeIPs}
                               onBoot={this.confirmBoot}
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
@@ -547,7 +546,6 @@ interface LinodeContext {
   linodeMemory: number;
   linodeRegion: string;
   linodeStatus: string;
-  linodeIPs: string[];
   linodeTotalDisk: number;
   deleteLinodeConfig: DeleteLinodeConfig;
   readOnly: boolean;
@@ -566,7 +564,6 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
     linodeRegion: linode.region,
     linodeStatus: linode.status,
     linodeTotalDisk: linode.specs.disk,
-    linodeIPs: linode.ipv4,
     readOnly: linode._permissions === 'read_only',
     deleteLinodeConfig,
     configs: linode._configs,
