@@ -207,8 +207,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const configData = convertStateToData(values);
 
-    alert(JSON.stringify(configData));
-
     const handleSuccess = () => {
       formik.setSubmitting(false);
       onClose();
