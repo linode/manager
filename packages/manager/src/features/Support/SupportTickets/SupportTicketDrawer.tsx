@@ -305,7 +305,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const onCancel = () => {
     props.onClose();
-    resetDrawer(true);
+    window.setTimeout(() => resetDrawer(true), 500);
   };
 
   const updateFiles = (newFiles: FileAttachment[]) => {
@@ -398,19 +398,17 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       .then((response) => {
         setErrors(undefined);
         setSubmitting(false);
-        resetDrawer(true);
+        window.setTimeout(() => resetDrawer(true), 500);
         return response;
       })
       .then((response) => {
-        attachFiles(response!.id).then(
-          ({ success, errors: _errors }: Accumulator) => {
-            if (!props.keepOpenOnSuccess) {
-              close();
-            }
-            /* Errors will be an array of errors, or empty if all attachments succeeded. */
-            onSuccess(response!.id, _errors);
+        attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
+          if (!props.keepOpenOnSuccess) {
+            close();
           }
-        );
+          /* Errors will be an array of errors, or empty if all attachments succeeded. */
+          onSuccess(response!.id, _errors);
+        });
       })
       .catch((errResponse) => {
         /* This block will only handle errors in creating the actual ticket; attachment
