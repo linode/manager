@@ -22,7 +22,7 @@ const formatDateForTable = (date: string): [string, string] => {
  * Creates the table header and rows for a payment PDF
  */
 export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     startY: 150,
     styles: {
       lineWidth: 1,
@@ -45,7 +45,7 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
  * Creates a payment totals table for the Payment PDF
  */
 export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     styles: {
       halign: 'right',
     },
@@ -62,7 +62,7 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
  * Creates the table header and rows for an Invoice PDF
  */
 export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     startY: 155,
     styles: {
       lineWidth: 1,
@@ -87,7 +87,7 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
       const [fromDate, fromTime] = formatDateForTable(item.from || '');
       return [
         {
-          styles: { fontSize: 8, cellWidth: 75, overflow: 'linebreak' },
+          styles: { fontSize: 8, cellWidth: 85, overflow: 'linebreak' },
           content: formatDescription(item.label),
         },
         {
