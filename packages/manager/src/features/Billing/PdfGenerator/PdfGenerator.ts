@@ -45,9 +45,9 @@ const addLeftHeader = (
     addLine(`${type} Date: ${date}`);
   }
 
-  doc.setFontStyle('bold');
+  doc.setFontType('bold');
   addLine('Remit to:');
-  doc.setFontStyle('normal');
+  doc.setFontType('normal');
 
   addLine(`Linode`);
   addLine('249 Arch St.');
@@ -86,9 +86,9 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
   doc.setFontSize(9);
   doc.setFont(baseFont);
 
-  doc.setFontStyle('bold');
+  doc.setFontType('bold');
   addLine('Invoice To:');
-  doc.setFontStyle('normal');
+  doc.setFontType('normal');
 
   addLine(`${first_name} ${last_name}`);
   addLine(`${company}`);
@@ -112,7 +112,7 @@ interface Title {
 // The `y` argument is the position (in pixels) in which the first text string should be added to the doc.
 const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFontSize(12);
-  doc.setFontStyle('bold');
+  doc.setFontType('bold');
   textStrings.forEach((eachString) => {
     doc.text(eachString.text, eachString.leftMargin || leftMargin, y, {
       charSpace: 0.75,
@@ -120,7 +120,7 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
     });
   });
   // reset text format
-  doc.setFontStyle('normal');
+  doc.setFontType('normal');
 };
 
 interface PdfResult {
@@ -226,11 +226,7 @@ export const printPayment = (
     const doc = new jsPDF({
       unit: 'px',
     });
-
     doc.setFontSize(10);
-
-    /** set the font style */
-    doc.setFontStyle('bold');
 
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
     const leftHeaderYPosition = addLeftHeader(
