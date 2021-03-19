@@ -1,4 +1,5 @@
 import JSPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
@@ -132,7 +133,7 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
  * Creates the totals table for Invoice PDF
  */
 export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     styles: {
       halign: 'right',
     },
@@ -143,16 +144,21 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       0: {
         cellPadding: {
           right: 12,
+          top: 5,
+          bottom: 5,
         },
       },
       1: {
-        cellWidth: 16,
+        cellWidth: 30,
         cellPadding: {
           right: 6,
+          top: 5,
+          bottom: 5,
         },
       },
     },
     pageBreak: 'avoid',
+    rowPageBreak: 'avoid',
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
       ['Tax (USD)', `$${Number(invoice.tax).toFixed(2)}`],

@@ -110,8 +110,8 @@ interface Title {
 }
 // The `y` argument is the position (in pixels) in which the first text string should be added to the doc.
 const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
-  doc.setFontSize(12);
   doc.setFont(baseFont, 'bold');
+  doc.setFontSize(12);
   textStrings.forEach((eachString) => {
     doc.text(eachString.text, eachString.leftMargin || leftMargin, y, {
       charSpace: 0.75,
