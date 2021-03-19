@@ -143,7 +143,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo((props) => {
   }
 
   return (
-    <Notice important error spacing={2}>
+    <Notice important warning spacing={2}>
       <Grid container alignItems="center">
         <Grid item xs={12} md={6} lg={8}>
           {text}
