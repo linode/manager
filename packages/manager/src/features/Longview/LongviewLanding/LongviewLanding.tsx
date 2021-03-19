@@ -132,7 +132,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
       <LandingHeader
         title="Longview"
         entity="Client"
-        createButtonText="Create a Client"
+        createButtonText="Add Client"
         docsLink="https://www.linode.com/docs/platform/longview/longview/"
         loading={newClientLoading}
         onAddNew={handleAddClient}

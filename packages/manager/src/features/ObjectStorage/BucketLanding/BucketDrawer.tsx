@@ -25,7 +25,7 @@ export const BucketDrawer: React.FC<CombinedProps> = (props) => {
   }, [closeBucketDrawer, replace]);
 
   return (
-    <Drawer onClose={closeDrawer} open={isOpen} title="Create a Bucket">
+    <Drawer onClose={closeDrawer} open={isOpen} title="Create Bucket">
       <CreateBucketForm
         isRestrictedUser={isRestrictedUser}
         onClose={closeDrawer}

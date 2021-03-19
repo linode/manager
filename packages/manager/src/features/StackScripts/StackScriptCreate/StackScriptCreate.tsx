@@ -451,8 +451,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    const pageTitle =
-      mode === 'create' ? 'Create New StackScript' : 'Edit StackScript';
+    const pageTitle = mode === 'create' ? 'Create' : 'Edit';
 
     return (
       <React.Fragment>

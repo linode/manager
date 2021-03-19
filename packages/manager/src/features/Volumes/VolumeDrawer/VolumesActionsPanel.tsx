@@ -7,6 +7,7 @@ interface Props {
   onSubmit?: () => void;
   onCancel?: () => void;
   disabled?: boolean;
+  submitText?: string;
 }
 
 type CombinedProps = Props;
@@ -16,6 +17,7 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
   isSubmitting,
   onCancel,
   disabled,
+  submitText,
 }) => {
   return (
     <ActionsPanel style={{ marginTop: 16 }}>
@@ -27,7 +29,7 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
           disabled={disabled}
           data-qa-submit
         >
-          Submit
+          {submitText ?? 'Submit'}
         </Button>
       )}
       {onCancel && (

@@ -292,9 +292,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
     return (
       <Dialog
-        title={
-          this.props.linodeLabel ? `Resize ${this.props.linodeLabel}` : 'Resize'
-        }
+        title={`Resize Linode ${this.props.linodeLabel ?? ''}`}
         open={this.props.open}
         onClose={this.props.onClose}
         fullWidth
@@ -407,7 +405,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             onClick={this.onSubmit}
             data-qa-resize
           >
-            Resize
+            Resize Linode
           </Button>
         </ActionsPanel>
       </Dialog>

@@ -98,7 +98,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
 
   return (
     <Drawer
-      title={`${isEditing ? 'Edit' : 'Create '} Contact`}
+      title={`${isEditing ? 'Edit' : 'Add'} Contact`}
       open={isOpen}
       onClose={closeDrawer}
     >
@@ -205,7 +205,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                     onClick={() => handleSubmit()}
                     loading={isSubmitting}
                   >
-                    Save
+                    {isEditing ? 'Save Changes' : 'Add Contact'}
                   </Button>
                 </ActionsPanel>
               </form>

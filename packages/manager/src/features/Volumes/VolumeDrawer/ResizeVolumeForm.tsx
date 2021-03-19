@@ -118,6 +118,7 @@ const ResizeVolumeForm: React.FC<CombinedProps> = (props) => {
                 resetForm();
                 onClose();
               }}
+              submitText="Resize Volume"
             />
           </Form>
         );

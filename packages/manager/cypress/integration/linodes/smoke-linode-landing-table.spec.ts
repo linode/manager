@@ -1,3 +1,4 @@
+import { contains } from 'cypress/types/jquery';
 import { createLinode } from '../../support/api/linodes';
 import { getClick, getVisible } from '../../support/helpers';
 
@@ -11,7 +12,7 @@ const deleteLinodeFromActionMenu = (linodeLabel) => {
 };
 
 describe('linode landing', () => {
-  it('deleting multiple linode with action menu', () => {
+  it('deleting multiple linodes with action menu', () => {
     // catch delete request
     cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
     createLinode().then((linodeA) => {
@@ -20,6 +21,9 @@ describe('linode landing', () => {
         getVisible('[data-qa-header="Linodes"]');
         cy.reload();
         getVisible('[data-qa-header="Linodes"]');
+        if (!cy.get('[data-qa-sort-label="asc"')) {
+          getClick('[aria-label="Sort by label"]');
+        }
         deleteLinodeFromActionMenu(linodeA.label);
         // Here we used to have a bug fixed in
         // https://github.com/linode/manager/pull/6627

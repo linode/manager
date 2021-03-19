@@ -24,7 +24,7 @@ describe('access keys', () => {
       getVisible('[data-qa-header]').within(() => {
         fbtVisible('Object Storage');
       });
-      fbtClick('Create an Access Key');
+      fbtClick('Create Access Key');
       containsVisible('Create an Access Key');
       getVisible('[data-testid="textfield-input"]').type(accessKeyLabel);
       getClick('[data-qa-toggle="false"]');

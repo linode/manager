@@ -196,7 +196,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`Rescue ${linodeLabel ?? ''}`}
+      title={`Rescue Linode ${linodeLabel ?? ''}`}
       open={open}
       onClose={() => {
         setAPIError('');

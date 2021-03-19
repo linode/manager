@@ -52,7 +52,7 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
   return (
     <Dialog
       open={props.open}
-      title={`Are you sure you want to delete ${props.linodeLabel}?`}
+      title={`Delete Linode ${props.linodeLabel}?`}
       onClose={props.onClose}
       error={errors ? errors[0].reason : ''}
       actions={
@@ -64,7 +64,7 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
       }
     >
       <Typography>
-        Are you sure you want to delete your Linode? This will result in
+        Are you sure you want to delete this Linode? This will result in
         permanent data loss.
       </Typography>
     </Dialog>
@@ -89,7 +89,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
         destructive
         buttonType="primary"
       >
-        Delete
+        Delete Linode
       </Button>
     </ActionsPanel>
   );

@@ -25,7 +25,7 @@ describe('stackscripts', () => {
     const ssLabel = makeTestLabel();
     cy.visitWithLogin('/stackscripts');
     cy.url().should('endWith', '/account');
-    fbtVisible('Create a StackScript').click();
+    fbtVisible('Create StackScript').click();
     getClick('[id="stackscript-label"]').type(ssLabel);
     getClick('[data-qa-multi-select="Select an Image"]').type(
       `${disk} {enter}`

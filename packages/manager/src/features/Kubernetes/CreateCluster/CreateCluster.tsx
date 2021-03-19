@@ -253,7 +253,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
         <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}
-            labelTitle="Create a Cluster"
+            labelTitle="Create Cluster"
             labelOptions={{ noCap: true }}
           />
         </Grid>

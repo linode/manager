@@ -27,13 +27,13 @@ describe('StackScriptCreate', () => {
       euuid="a-very-random-and-secure-id-string-123"
     />
   );
-  xit('should render a title that reads "Create New StackScript', () => {
+  xit('should render a title that reads "Create StackScript', () => {
     const titleText = component
       .find('WithStyles(Typography)')
       .first()
       .children()
       .text();
-    expect(titleText).toBe('Create New StackScript');
+    expect(titleText).toBe('Create StackScript');
   });
 
   xit(`should render a confirmation dialog with the

@@ -1,11 +1,9 @@
 import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-
 import ActionPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
-
 import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
 
 interface Props {
@@ -60,7 +58,7 @@ const DisableDomainDialog: React.FC<CombinedProps> = (props) => {
   return (
     <Dialog
       open={props.open}
-      title={`Disable ${props.selectedDomainLabel}?`}
+      title={`Disable Domain ${props.selectedDomainLabel}?`}
       onClose={props.closeDialog}
       error={errors ? errors[0].reason : ''}
       actions={
@@ -94,7 +92,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
         destructive
         buttonType="primary"
       >
-        Disable
+        Disable Domain
       </Button>
     </ActionPanel>
   );

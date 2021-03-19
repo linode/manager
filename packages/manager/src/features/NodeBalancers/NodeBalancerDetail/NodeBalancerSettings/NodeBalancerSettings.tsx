@@ -184,7 +184,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               disabled={isSubmitting}
               data-qa-label-save
             >
-              Save
+              Save Changes
             </Button>
           </ActionsPanel>
         </Paper>

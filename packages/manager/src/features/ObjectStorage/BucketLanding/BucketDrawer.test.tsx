@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { BucketDrawer, CombinedProps } from './BucketDrawer';
@@ -11,8 +11,12 @@ const props: CombinedProps = {
 };
 
 describe('BucketDrawer', () => {
-  it('should render a Drawer with the title "Create a Bucket"', async () => {
+  it('should render a Drawer with the title "Create Bucket"', async () => {
     renderWithTheme(<BucketDrawer {...props} />);
-    await screen.findByText('Create a Bucket');
+
+    const title = within(screen.getByTestId('drawer-title')).getByText(
+      'Create Bucket'
+    );
+    expect(title).toBeVisible();
   });
 });

@@ -153,7 +153,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           bucketToRemove ? confirmBucketName !== bucketToRemove.label : true
         }
       >
-        Delete
+        Delete Bucket
       </Button>
     </ActionsPanel>
   );
@@ -260,9 +260,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       <ConfirmationDialog
         open={removeBucketConfirmationDialog.isOpen}
         onClose={closeRemoveBucketConfirmationDialog}
-        title={
-          bucketToRemove ? `Delete ${bucketToRemove.label}` : 'Delete bucket'
-        }
+        title={`Delete Bucket ${bucketToRemove ? bucketToRemove.label : ''}`}
         actions={actions}
         error={error}
       >
@@ -314,7 +312,7 @@ const RenderEmpty: React.FC<{
         buttonProps={[
           {
             onClick: props.onClick,
-            children: 'Add a Bucket',
+            children: 'Create Bucket',
           },
         ]}
       >

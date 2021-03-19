@@ -97,7 +97,12 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
         updateFor={[title, classes]}
       >
         <Grid item>
-          <Typography variant="h2" id={titleID} data-qa-drawer-title={title}>
+          <Typography
+            variant="h2"
+            id={titleID}
+            data-qa-drawer-title={title}
+            data-testid="drawer-title"
+          >
             {title}
           </Typography>
         </Grid>

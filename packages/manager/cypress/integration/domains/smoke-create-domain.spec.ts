@@ -23,8 +23,7 @@ describe('Create a Domain', () => {
     cy.intercept('POST', '*/domains').as('createDomain');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
-    fbtClick('Add a Domain');
-    fbtVisible('Create a Domain');
+    fbtClick('Create Domain');
     const label = makeDomainLabel();
     fbtVisible('Domain (required)').type(label);
     fbtVisible('SOA Email Address (required)').type('devs@linode.com');

@@ -245,7 +245,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const generalError = errorMap.none;
     const primaryIPsError = errorMap.master_ips;
 
-    const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
+    const title = mode === EDITING ? 'Edit Domain' : 'Clone Domain';
 
     const isEditingPrimaryDomain = mode === EDITING && type === 'master';
     const isEditingSecondaryDomain = mode === EDITING && type === 'slave';
@@ -355,7 +355,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             loading={submitting}
             disabled={disabled}
           >
-            {mode === EDITING ? 'Update' : 'Create'}
+            {mode === EDITING ? 'Save Changes' : 'Create Domain'}
           </Button>
           <Button onClick={this.closeDrawer} buttonType="cancel" data-qa-cancel>
             Cancel

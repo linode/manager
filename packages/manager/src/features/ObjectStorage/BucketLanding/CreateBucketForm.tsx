@@ -210,6 +210,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                   onClose();
                 }}
                 disabled={isRestrictedUser}
+                submitText="Create Bucket"
               />
             </Form>
             <EnableObjectStorageModal

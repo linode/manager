@@ -253,6 +253,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 onClose();
               }}
               disabled={disabled}
+              submitText="Create Volume"
             />
           </Form>
         );

@@ -18,7 +18,7 @@ const FirewallEmptyState: React.FC<Props> = (props) => {
       buttonProps={[
         {
           onClick: openAddFirewallDrawer,
-          children: 'Add a Firewall',
+          children: 'Create Firewall',
         },
       ]}
     >

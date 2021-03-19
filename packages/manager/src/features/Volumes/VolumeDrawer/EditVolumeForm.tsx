@@ -142,6 +142,7 @@ const RenameVolumeForm: React.FC<CombinedProps> = (props) => {
                 resetForm();
                 onClose();
               }}
+              submitText="Save Changes"
             />
           </Form>
         );

@@ -101,7 +101,7 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  Add
+                  Add Credential
                 </Button>
                 <Button
                   onClick={onClose}

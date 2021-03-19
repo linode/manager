@@ -507,7 +507,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   title="StackScripts"
                   buttonProps={[
                     {
-                      children: 'Create New StackScript',
+                      children: 'Create StackScript',
                       onClick: () => this.goToCreateStackScript(),
                     },
                   ]}

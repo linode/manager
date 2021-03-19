@@ -198,7 +198,7 @@ describe('Migrate Linode With Firewall', () => {
         });
 
         if (length != undefined && length > 0) {
-          fbtClick('Create a Firewall');
+          fbtClick('Create Firewall');
         } else {
           fbtClick('Add a Firewall');
         }
@@ -227,7 +227,7 @@ describe('Migrate Linode With Firewall', () => {
       ) {
         clickLinodeActionMenu(linode.label);
         fbtClick('Migrate');
-        containsVisible(`Migrate ${linode.label}`);
+        containsVisible(`Migrate Linode ${linode.label}`);
         getClick('[data-qa-checked="false"]');
         fbtClick(selectRegionString);
         fbtClick('Dallas, TX');
@@ -262,7 +262,7 @@ describe('Migrate Linode With Firewall', () => {
         });
 
         if (length != undefined && length > 0) {
-          fbtClick('Create a Firewall');
+          fbtClick('Create Firewall');
         } else {
           fbtClick('Add a Firewall');
         }
