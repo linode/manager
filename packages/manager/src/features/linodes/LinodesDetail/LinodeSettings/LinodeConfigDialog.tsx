@@ -207,8 +207,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const configData = convertStateToData(values);
 
-    alert(JSON.stringify(configData));
-
     const handleSuccess = () => {
       formik.setSubmitting(false);
       onClose();
@@ -311,7 +309,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`}
+      title={`${linodeConfigId ? 'Edit' : 'Add'} Configuration`}
       open={open}
       onClose={onClose}
       fullHeight
@@ -342,7 +340,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 classes,
               ]}
             >
-              <Typography variant="h3">Label and Comments</Typography>
               <TextField
                 label="Label"
                 name="label"
@@ -726,7 +723,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   disabled={readOnly}
                   loading={formik.isSubmitting}
                 >
-                  Submit
+                  {linodeConfigId ? 'Edit' : 'Add'} Configuration
                 </Button>
                 <Button
                   buttonType="secondary"

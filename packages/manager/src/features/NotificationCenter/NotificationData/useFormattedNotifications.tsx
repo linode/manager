@@ -50,7 +50,9 @@ const interceptNotification = (notification: Notification): Notification => {
   if (notification.type === 'ticket_abuse') {
     return {
       ...notification,
-      message: notification.message.replace('!', '.'),
+      message: `${notification.message.replace('!', '')} (${
+        notification?.entity?.label
+      }): #${notification?.entity?.id}`,
     };
   }
 

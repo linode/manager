@@ -46,7 +46,7 @@ export const AbuseTicketBanner: React.FC<{}> = (_) => {
 
   return (
     <Grid item xs={12}>
-      <Notice important error dismissible onClose={onDismiss}>
+      <Notice important warning dismissible onClose={onDismiss}>
         <Typography>
           {message}
           {/** Don't link to /support/tickets if we're already on the landing page. */}

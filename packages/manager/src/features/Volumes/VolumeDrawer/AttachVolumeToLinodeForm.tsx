@@ -151,6 +151,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
               }}
               isSubmitting={isSubmitting}
               disabled={disabled}
+              submitText="Attach Volume"
             />
           </Form>
         );

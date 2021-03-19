@@ -243,7 +243,7 @@ export const CredentialList: React.FC<CombinedProps> = (props) => {
           </Grid>
           <Grid className={classes.addNewWrapper} item>
             <AddNewLink
-              label="Add a Credential"
+              label="Add Credential"
               onClick={() => setDrawerOpen(true)}
             />
           </Grid>

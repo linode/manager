@@ -7,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { capitalize } from 'src/utilities/capitalize';
+import { titlecase } from 'src/features/linodes/presentation';
 
 interface Props {
   open: boolean;
@@ -53,8 +54,9 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
         loading={loading}
         disabled={typeToConfirm && confirmationText !== label}
         data-qa-confirm
+        data-testid="delete-btn"
       >
-        Delete
+        Delete {titlecase(entity)}
       </Button>
     </ActionsPanel>
   );
@@ -69,7 +71,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
   return (
     <ConfirmationDialog
       open={open}
-      title={`Delete ${label}?`}
+      title={`Delete ${titlecase(entity)} ${label}?`}
       onClose={onClose}
       actions={renderActions}
     >

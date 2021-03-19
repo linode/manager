@@ -630,6 +630,7 @@ export class LinodeCreate extends React.PureComponent<
             isMakingRequest={this.props.formIsSubmitting}
             disabled={this.props.formIsSubmitting || userCannotCreateLinode}
             onDeploy={this.createLinode}
+            submitText="Create Linode"
             footer={
               <SMTPRestrictionText>
                 {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
