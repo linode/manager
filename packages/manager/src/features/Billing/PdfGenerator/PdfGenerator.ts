@@ -45,9 +45,9 @@ const addLeftHeader = (
     addLine(`${type} Date: ${date}`);
   }
 
-  doc.setFontType('bold');
+  doc.setFont(baseFont, 'bold');
   addLine('Remit to:');
-  doc.setFontType('normal');
+  doc.setFont(baseFont, 'normal');
 
   addLine(`Linode`);
   addLine('249 Arch St.');
@@ -84,11 +84,10 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
   let currentLine = 55;
 
   doc.setFontSize(9);
-  doc.setFont(baseFont);
+  doc.setFont(baseFont, 'bold');
 
-  doc.setFontType('bold');
   addLine('Invoice To:');
-  doc.setFontType('normal');
+  doc.setFont(baseFont, 'normal');
 
   addLine(`${first_name} ${last_name}`);
   addLine(`${company}`);
@@ -112,7 +111,7 @@ interface Title {
 // The `y` argument is the position (in pixels) in which the first text string should be added to the doc.
 const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFontSize(12);
-  doc.setFontType('bold');
+  doc.setFont(baseFont, 'bold');
   textStrings.forEach((eachString) => {
     doc.text(eachString.text, eachString.leftMargin || leftMargin, y, {
       charSpace: 0.75,
@@ -120,7 +119,7 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
     });
   });
   // reset text format
-  doc.setFontType('normal');
+  doc.setFont(baseFont, 'normal');
 };
 
 interface PdfResult {
