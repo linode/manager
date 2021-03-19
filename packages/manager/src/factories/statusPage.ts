@@ -64,7 +64,19 @@ export const maintenanceFactory = incidentFactory.extend({
 export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse>(
   {
     page: pageFactory.build(),
-    incidents: incidentFactory.buildList(5),
+    incidents: [
+      incidentFactory.build({
+        impact: 'major',
+        status: 'monitoring',
+        name: 'Connectivity Issue - AP-West (Mumbai)',
+        incident_updates: incidentUpdateFactory.buildList(4, {
+          body: `Our team is investigating a connectivity issue in our Mumbai data center. 
+          During this time, users may experience connection timeouts and errors for all services 
+          deployed in this data center. We will share additional updates as we have more information.`,
+        }),
+      }),
+      incidentFactory.build({ impact: 'critical' }),
+    ],
   }
 );
 
