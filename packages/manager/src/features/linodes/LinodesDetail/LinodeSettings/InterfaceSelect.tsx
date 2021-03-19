@@ -124,9 +124,11 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
               </Grid>
             </Grid>
           </Grid>
-          {slotNumber !== 2 && <Divider className={classes.divider} />}
+          {/* {slotNumber !== 2 && <Divider className={classes.divider} />} */}
         </>
       ) : null}
+
+      <Divider className={classes.divider} />
     </Grid>
   );
 };
