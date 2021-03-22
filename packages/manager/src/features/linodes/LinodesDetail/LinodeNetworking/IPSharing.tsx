@@ -1,7 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { shareAddresses } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
-import { clone, flatten, uniq } from 'ramda';
+import { clone, flatten, remove, uniq } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -133,7 +133,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     if (ipIdx === undefined) {
       return;
     }
-    setIpsToShare((currentIps) => currentIps.splice(+ipIdx, 1));
+    setIpsToShare((currentIps) => {
+      return remove(ipIdx, 1, currentIps);
+    });
   };
 
   const remainingChoices = (selectedIP: string) => {
