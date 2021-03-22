@@ -9,7 +9,7 @@ interface RequestConfig extends AxiosRequestConfig {
 type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url';
 
 export const baseRequest = Axios.create({
-  baseURL: 'https://api.linode.com/v4'
+  baseURL: 'https://api.linode.com/v4',
 });
 
 /**
@@ -21,13 +21,13 @@ export const baseRequest = Axios.create({
  * @param token
  */
 export const setToken = (token: string) => {
-  return baseRequest.interceptors.request.use(config => {
+  return baseRequest.interceptors.request.use((config) => {
     return {
       ...config,
       headers: {
         ...config.headers,
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     };
   });
 };
@@ -93,7 +93,7 @@ export const setData = <T extends {}>(
     return (object: any) => ({
       ...object,
       data: updatedData,
-      validationErrors: convertYupToLinodeErrors(error)
+      validationErrors: convertYupToLinodeErrors(error),
     });
   }
 };
@@ -121,10 +121,10 @@ const convertYupToLinodeErrors = (
 
 const mapYupToLinodeAPIError = ({
   message,
-  path
+  path,
 }: ValidationError): APIError => ({
   reason: message,
-  ...(path && { field: path })
+  ...(path && { field: path }),
 });
 
 /** X-Filter */
@@ -133,7 +133,7 @@ export const setXFilter = (xFilter: any) => {
     !isEmpty(xFilter)
       ? {
           ...object,
-          headers: { ...object.headers, 'X-Filter': JSON.stringify(xFilter) }
+          headers: { ...object.headers, 'X-Filter': JSON.stringify(xFilter) },
         }
       : object;
 };
@@ -154,7 +154,7 @@ export const setXFilter = (xFilter: any) => {
 const reduceRequestConfig = (...fns: Function[]): RequestConfig =>
   fns.reduceRight((result, fn) => fn(result), {
     url: 'https://api.linode.com/v4',
-    headers: {}
+    headers: {},
   });
 
 /** Generator */
@@ -165,7 +165,7 @@ export const requestGenerator = <T>(...fns: Function[]): Promise<T> => {
       config.validationErrors // All failed requests, client or server errors, should be APIError[]
     );
   }
-  return baseRequest(config).then(response => response.data);
+  return baseRequest(config).then((response) => response.data);
 
   /*
    * If in the future, we want to hook into every single
@@ -232,7 +232,7 @@ export const mockAPIError = (
             status,
             statusText,
             headers: {},
-            config: {}
+            config: {},
           })
         ),
       process.env.NODE_ENV === 'test' ? 0 : 250
@@ -245,7 +245,7 @@ const createError = (message: string, response: AxiosResponse) => {
   return error;
 };
 
-interface CancellableRequest<T> {
+export interface CancellableRequest<T> {
   request: () => Promise<T>;
   cancel: () => void;
 }
@@ -262,8 +262,8 @@ export const CancellableRequest = <T>(
       request: () =>
         Promise.reject({
           config: { ...config, validationErrors: undefined },
-          response: { data: { errors: config.validationErrors } }
-        })
+          response: { data: { errors: config.validationErrors } },
+        }),
     };
   }
 
@@ -271,8 +271,8 @@ export const CancellableRequest = <T>(
     cancel: source.cancel,
     request: () =>
       baseRequest({ ...config, cancelToken: source.token }).then(
-        response => response.data
-      )
+        (response) => response.data
+      ),
   };
 };
 
