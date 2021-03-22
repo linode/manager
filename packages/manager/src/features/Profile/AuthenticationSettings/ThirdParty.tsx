@@ -68,7 +68,7 @@ export const ThirdParty: React.FC<CombinedProps> = (props) => {
           window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
         }}
       >
-        Disable {displayName} Authentication
+        Disable Third-Party Authentication
       </Button>
     </Paper>
   );

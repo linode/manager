@@ -11,6 +11,6 @@ export interface Provider {
 }
 
 export const providers: Provider[] = [
-  { name: 'github', displayName: 'GitHub', Icon: GitHubIcon },
   { name: 'google', displayName: 'Google', Icon: GoogleIcon },
+  { name: 'github', displayName: 'GitHub', Icon: GitHubIcon },
 ];

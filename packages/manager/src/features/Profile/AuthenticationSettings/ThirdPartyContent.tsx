@@ -1,5 +1,6 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
+import EnabledIcon from 'src/assets/icons/checkmark_selected_option.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -13,13 +14,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
   },
   providers: {
-    marginBottom: theme.spacing(6),
+    marginBottom: theme.spacing(4),
 
     '& button': {
       border: `1px solid ${theme.palette.divider}`,
       backgroundColor: theme.bg.offWhite,
+      marginBottom: theme.spacing(2),
       minHeight: '70px',
       minWidth: '344px',
+      paddingRight: theme.spacing(3) - 4,
       paddingLeft: theme.spacing(3) - 4,
       '&:not(last-child)': {
         marginRight: theme.spacing(2),
@@ -31,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiButton-label': {
       color: theme.color.headline,
       justifyContent: 'flex-start',
+      '& > span': {
+        width: '100%',
+      },
     },
   },
   providerIcon: {
@@ -40,7 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2),
   },
   enabled: {
-    border: `1px solid ${theme.color.blue} !important`,
+    border: `1px solid ${theme.cmrBorderColors.borderTabs} !important`,
+  },
+  enabledWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   enabledText: {
     fontFamily: theme.font.normal,
@@ -64,10 +76,6 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
 
   const thirdPartyEnabled = props.authType !== 'password';
 
-  const displayName =
-    providers.find((thisProvider) => thisProvider.name === props.authType)
-      ?.displayName || '';
-
   return (
     <>
       <Typography className={classes.copy}>
@@ -84,7 +92,11 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
         {providers.map((thisProvider) => {
           return (
             <Button
-              className={thirdPartyEnabled ? classes.enabled : ''}
+              className={
+                thirdPartyEnabled && props.authType === thisProvider.name
+                  ? classes.enabled
+                  : ''
+              }
               key={thisProvider.displayName}
               onClick={() => {
                 setProvider(thisProvider.name);
@@ -92,11 +104,18 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
               }}
               disabled={thirdPartyEnabled}
             >
-              <thisProvider.Icon className={classes.providerIcon} />
-              {thisProvider.displayName}
-              {thirdPartyEnabled && (
-                <span className={classes.enabledText}>(Enabled)</span>
-              )}
+              <div>
+                <thisProvider.Icon className={classes.providerIcon} />
+              </div>
+              <div className={classes.enabledWrapper}>
+                {thisProvider.displayName}
+                {thirdPartyEnabled && props.authType === thisProvider.name && (
+                  <div className={classes.enabledWrapper}>
+                    <span className={classes.enabledText}>(Enabled)</span>
+                    <EnabledIcon />
+                  </div>
+                )}
+              </div>
             </Button>
           );
         })}
@@ -122,7 +141,7 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
               window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
             }}
           >
-            Disable {displayName} Authentication
+            Disable Third-Party Authentication
           </Button>
         </>
       )}
