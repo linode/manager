@@ -1,9 +1,18 @@
 import { Interface, InterfacePurpose } from '@linode/api-v4/lib/linodes/types';
 import * as React from 'react';
+import Divider from 'src/components/core/Divider';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import useVlansQuery from 'src/queries/vlans';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  divider: {
+    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+    width: `calc(100% - ${theme.spacing(2)}px)`,
+  },
+}));
 
 export interface Props {
   slotNumber: number;
@@ -23,6 +32,8 @@ export interface ExtendedInterface extends Omit<Interface, 'purpose'> {
 }
 
 export const InterfaceSelect: React.FC<Props> = (props) => {
+  const classes = useStyles();
+
   const {
     error,
     readOnly,
@@ -103,7 +114,12 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 isClearable={false}
               />
             </Grid>
-            <Grid item xs={fromAddonsPanel ? 6 : undefined}>
+            <Grid
+              item
+              xs={fromAddonsPanel ? 6 : undefined}
+              className="py0"
+              style={{ marginTop: -8, marginBottom: 8 }}
+            >
               <TextField
                 label="IPAM Address (Optional)"
                 value={ipamAddress}
@@ -113,6 +129,8 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       ) : null}
+
+      <Divider className={classes.divider} />
     </Grid>
   );
 };
