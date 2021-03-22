@@ -6,6 +6,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -15,6 +16,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import withLinodes, {
   DispatchProps,
 } from 'src/containers/withLinodes.container';
@@ -74,6 +76,8 @@ const selectIPText = 'Select an IP';
 
 const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  // We should fix this, but for now we're relying on having all Linodes in a given region
+  const { _loading } = useReduxLoad(['linodes']);
   const {
     linodeIPs,
     readOnly,
@@ -173,92 +177,110 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog title="IP Sharing" open={open} onClose={handleClose}>
-      {generalError && (
-        <Grid item xs={12}>
-          <Notice error text={generalError} />
-        </Grid>
-      )}
-      {successMessage && (
-        <Grid item xs={12}>
-          <Notice success text={successMessage} />
-        </Grid>
-      )}
-      <Grid container>
-        <Grid item sm={12} lg={8} xl={6}>
-          <Typography className={classes.networkActionText}>
-            IP Sharing allows a Linode to share an IP address assignment (one or
-            more additional IPv4 addresses). This can be used to allow one
-            Linode to begin serving requests should another become unresponsive.
-            Only IPs in the same datacenter are offered for sharing.
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
+      <DialogContent loading={_loading}>
+        <>
+          {generalError && (
+            <Grid item xs={12}>
+              <Notice error text={generalError} />
+            </Grid>
+          )}
+          {successMessage && (
+            <Grid item xs={12}>
+              <Notice success text={successMessage} />
+            </Grid>
+          )}
           <Grid container>
-            <Grid item className={classes.ipFieldLabel}>
-              <Typography>IP Addresses</Typography>
+            <Grid item sm={12} lg={8} xl={6}>
+              <Typography className={classes.networkActionText}>
+                IP Sharing allows a Linode to share an IP address assignment
+                (one or more additional IPv4 addresses). This can be used to
+                allow one Linode to begin serving requests should another become
+                unresponsive. Only IPs in the same datacenter are offered for
+                sharing.
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container>
+                <Grid item className={classes.ipFieldLabel}>
+                  <Typography>IP Addresses</Typography>
+                </Grid>
+              </Grid>
+              {ipChoices.length <= 1 ? (
+                <Typography className={classes.noIPsMessage}>
+                  You have no other Linodes in this Linode&apos;s datacenter
+                  with which to share IPs.
+                </Typography>
+              ) : (
+                <React.Fragment>
+                  {linodeIPs.map((ip: string) => (
+                    <IPRow key={ip} ip={ip} />
+                  ))}
+                  {ipsToShare.map((ip: string, idx: number) => (
+                    <IPSharingRow
+                      key={ip}
+                      ip={ip}
+                      idx={idx}
+                      readOnly={Boolean(readOnly)}
+                      handleDelete={onIPDelete}
+                      handleSelect={onIPSelect}
+                      labels={ipChoiceLabels}
+                      getRemainingChoices={remainingChoices}
+                    />
+                  ))}
+                  {/* the "1" that will always be there is the selectionText */}
+                  {remainingChoices('').length > 1 && (
+                    <div className={classes.addNewButton}>
+                      <Button
+                        superCompact
+                        disabled={readOnly}
+                        onClick={addIPToShare}
+                      >
+                        Add IP Address
+                      </Button>
+                    </div>
+                  )}
+                </React.Fragment>
+              )}
+            </Grid>
+            <Grid item>
+              <ActionsPanel>
+                <Button
+                  loading={submitting}
+                  disabled={readOnly || noChoices}
+                  onClick={onSubmit}
+                  buttonType="primary"
+                  data-qa-submit
+                >
+                  Save
+                </Button>
+                <Button
+                  disabled={submitting || noChoices}
+                  onClick={onReset}
+                  buttonType="secondary"
+                  data-qa-reset
+                >
+                  Reset Form
+                </Button>
+              </ActionsPanel>
             </Grid>
           </Grid>
-          {ipChoices.length <= 1 ? (
-            <Typography className={classes.noIPsMessage}>
-              You have no other Linodes in this Linode&apos;s datacenter with
-              which to share IPs.
-            </Typography>
-          ) : (
-            <React.Fragment>
-              {linodeIPs.map((ip: string) => (
-                <IPRow key={ip} ip={ip} />
-              ))}
-              {ipsToShare.map((ip: string, idx: number) => (
-                <IPSharingRow
-                  key={ip}
-                  ip={ip}
-                  idx={idx}
-                  readOnly={Boolean(readOnly)}
-                  handleDelete={onIPDelete}
-                  handleSelect={onIPSelect}
-                  labels={ipChoiceLabels}
-                  getRemainingChoices={remainingChoices}
-                />
-              ))}
-              {/* the "1" that will always be there is the selectionText */}
-              {remainingChoices('').length > 1 && (
-                <div className={classes.addNewButton}>
-                  <Button
-                    superCompact
-                    disabled={readOnly}
-                    onClick={addIPToShare}
-                  >
-                    Add IP Address
-                  </Button>
-                </div>
-              )}
-            </React.Fragment>
-          )}
-        </Grid>
-        <Grid item>
-          <ActionsPanel>
-            <Button
-              loading={submitting}
-              disabled={readOnly || noChoices}
-              onClick={onSubmit}
-              buttonType="primary"
-              data-qa-submit
-            >
-              Save
-            </Button>
-            <Button
-              disabled={submitting || noChoices}
-              onClick={onReset}
-              buttonType="secondary"
-              data-qa-reset
-            >
-              Reset Form
-            </Button>
-          </ActionsPanel>
-        </Grid>
-      </Grid>
+        </>
+      </DialogContent>
     </Dialog>
   );
+};
+
+interface WrapperProps {
+  loading: boolean;
+  children: JSX.Element;
+}
+
+// Content Wrapper
+const DialogContent: React.FC<WrapperProps> = (props) => {
+  if (props.loading) {
+    return <CircleProgress />;
+  }
+  return props.children;
 };
 
 // IP Row
