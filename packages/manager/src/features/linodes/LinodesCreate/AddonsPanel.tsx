@@ -9,6 +9,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
+import useAccount from 'src/hooks/useAccount';
+import useFlags from 'src/hooks/useFlags';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -98,6 +101,14 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
+  const { account } = useAccount();
+
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(flags.vlans),
+    account?.data?.capabilities ?? []
+  );
 
   const renderBackupsPrice = () => {
     const { backupsMonthly } = props;
@@ -115,11 +126,13 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   return (
     <Paper className={classes.root} data-qa-add-ons>
       <div className={classes.inner}>
-        <AttachVLAN
-          vlanLabel={vlanLabel}
-          ipamAddress={ipamAddress}
-          handleVLANChange={handleVLANChange}
-        />
+        {showVlans ? (
+          <AttachVLAN
+            vlanLabel={vlanLabel}
+            ipamAddress={ipamAddress}
+            handleVLANChange={handleVLANChange}
+          />
+        ) : null}
         <Typography variant="h2" className={classes.title}>
           Optional Add-ons
         </Typography>

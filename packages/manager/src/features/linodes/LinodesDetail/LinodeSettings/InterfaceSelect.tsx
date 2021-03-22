@@ -117,8 +117,8 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             <Grid
               item
               xs={fromAddonsPanel ? 6 : undefined}
-              className="py0"
-              style={{ marginTop: -8, marginBottom: 8 }}
+              className={fromAddonsPanel ? '' : 'py0'}
+              style={fromAddonsPanel ? {} : { marginTop: -8, marginBottom: 8 }}
             >
               <TextField
                 label="IPAM Address (Optional)"
