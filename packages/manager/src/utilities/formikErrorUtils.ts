@@ -3,14 +3,16 @@ import { getAPIErrorOrDefault } from './errorUtils';
 import isNilOrEmpty from './isNilOrEmpty';
 
 export const handleFieldErrors = (
-  callback: Function,
+  callback: (error: unknown) => void,
   fieldErrors: APIError[] = []
 ) => {
-  const mappedFieldErrors = fieldErrors.reduce(
-    (result, { field, reason }) =>
-      field ? { ...result, [field]: reason } : result,
-    {}
-  );
+  const mappedFieldErrors = fieldErrors
+    .reverse()
+    .reduce(
+      (result, { field, reason }) =>
+        field ? { ...result, [field]: reason } : result,
+      {}
+    );
 
   if (!isNilOrEmpty(mappedFieldErrors)) {
     return callback(mappedFieldErrors);
@@ -18,7 +20,7 @@ export const handleFieldErrors = (
 };
 
 export const handleGeneralErrors = (
-  callback: Function,
+  callback: (error: unknown) => void,
   apiErrors: APIError[],
   defaultMessage: string = 'An error has occurred.'
 ) => {
