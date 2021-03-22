@@ -287,15 +287,13 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   createLinode = () => {
-    let interfaces = [defaultPublicInterface]; // the purpose of defaultPublicInterface is to make sure the eth0 slot is not occupied by a VLAN.
+    const interfaces = [defaultPublicInterface]; // the purpose of defaultPublicInterface is to make sure the eth0 slot is not occupied by a VLAN.
     if (Boolean(this.props.vlanLabel)) {
       interfaces.push({
         purpose: 'vlan',
         label: this.props.vlanLabel,
         ipam_address: this.props.ipamAddress,
       });
-    } else {
-      interfaces = [];
     }
 
     this.props.handleSubmitForm(
