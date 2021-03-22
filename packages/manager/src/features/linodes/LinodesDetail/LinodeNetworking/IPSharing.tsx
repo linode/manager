@@ -5,7 +5,6 @@ import { clone, flatten, uniq } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import { Theme, makeStyles } from 'src/components/core/styles';
@@ -52,9 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  addNewIP: {
-    marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-  },
   remove: {
     [theme.breakpoints.down('xs')]: {
       margin: '-16px 0 0 -26px',
@@ -87,13 +83,22 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     open,
     onClose,
     ipChoiceLabels,
+    linodeSharedIPs,
   } = props;
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState<
     string | undefined
   >(undefined);
-  const [ipsToShare, setIpsToShare] = React.useState<string[]>([]);
+  const [ipsToShare, setIpsToShare] = React.useState<string[]>(linodeSharedIPs);
   const [submitting, setSubmitting] = React.useState(false);
+
+  React.useEffect(() => {
+    if (open) {
+      setIpsToShare(linodeSharedIPs);
+      setSuccessMessage(undefined);
+      setErrors(undefined);
+    }
+  }, [open, linodeSharedIPs]);
 
   const renderMyIPRow = (ip: string) => {
     return (
@@ -124,7 +129,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     setIpsToShare(newIPsToShare);
   };
 
-  const onIPDelete = (ipIdx: number) => (e: React.MouseEvent<HTMLElement>) => {
+  const onIPDelete = (ipIdx: number) => () => {
     if (ipIdx === undefined) {
       return;
     }
@@ -271,36 +276,39 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
               {/* the "1" that will always be there is the selectionText */}
               {remainingChoices('').length > 1 && (
                 <div className={classes.addNewButton}>
-                  <AddNewLink
-                    label="Add IP Address"
+                  <Button
+                    superCompact
                     disabled={readOnly}
                     onClick={addIPToShare}
-                    className={classes.addNewIP}
-                  />
+                  >
+                    Add IP Address
+                  </Button>
                 </div>
               )}
             </React.Fragment>
           )}
         </Grid>
-        <ActionsPanel>
-          <Button
-            loading={submitting}
-            disabled={readOnly || noChoices}
-            onClick={onSubmit}
-            buttonType="primary"
-            data-qa-submit
-          >
-            Save
-          </Button>
-          <Button
-            disabled={submitting || noChoices}
-            onClick={onReset}
-            buttonType="secondary"
-            data-qa-reset
-          >
-            Reset Form
-          </Button>
-        </ActionsPanel>
+        <Grid item>
+          <ActionsPanel>
+            <Button
+              loading={submitting}
+              disabled={readOnly || noChoices}
+              onClick={onSubmit}
+              buttonType="primary"
+              data-qa-submit
+            >
+              Save
+            </Button>
+            <Button
+              disabled={submitting || noChoices}
+              onClick={onReset}
+              buttonType="secondary"
+              data-qa-reset
+            >
+              Reset Form
+            </Button>
+          </ActionsPanel>
+        </Grid>
       </Grid>
     </Dialog>
   );
