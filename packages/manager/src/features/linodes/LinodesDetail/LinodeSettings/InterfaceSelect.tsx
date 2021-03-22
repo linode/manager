@@ -20,7 +20,8 @@ export interface Props {
   label: string;
   ipamAddress: string | null;
   readOnly: boolean;
-  error?: string;
+  labelError?: string;
+  ipamError?: string;
   handleChange: (updatedInterface: ExtendedInterface) => void;
 }
 
@@ -34,12 +35,13 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {
-    error,
     readOnly,
     slotNumber,
     purpose,
     label,
     ipamAddress,
+    ipamError,
+    labelError,
     handleChange,
   } = props;
 
@@ -74,7 +76,11 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     handleChange({ purpose, label, ipam_address: e.target.value });
 
   const handleLabelChange = (selected: Item<string>) =>
-    handleChange({ purpose, ipam_address: ipamAddress, label: selected.value });
+    handleChange({
+      purpose,
+      ipam_address: ipamAddress,
+      label: selected?.value ?? '',
+    });
 
   return (
     <Grid container>
@@ -97,7 +103,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             <Grid container direction="column">
               <Grid item>
                 <Select
-                  errorText={error}
+                  errorText={labelError}
                   options={vlanOptions}
                   isLoading={isLoading}
                   label="Label"
@@ -108,7 +114,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                     (thisVlan) => thisVlan.value === label
                   )}
                   onChange={handleLabelChange}
-                  isClearable={false}
+                  isClearable={true}
                 />
               </Grid>
               <Grid
@@ -119,6 +125,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 <TextField
                   label="IPAM Address (optional)"
                   value={ipamAddress}
+                  errorText={ipamError}
                   onChange={handleAddressChange}
                 />
               </Grid>

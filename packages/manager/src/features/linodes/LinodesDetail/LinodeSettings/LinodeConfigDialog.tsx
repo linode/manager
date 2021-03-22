@@ -607,7 +607,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     key={`eth${idx}-interface`}
                     slotNumber={idx}
                     readOnly={readOnly}
-                    error={formik.errors[`interfaces[${idx}]`]}
+                    labelError={formik.errors[`interfaces[${idx}].label`]}
+                    ipamError={formik.errors[`interfaces[${idx}].ipam_address`]}
                     label={thisInterface.label}
                     purpose={thisInterface.purpose}
                     ipamAddress={thisInterface.ipam_address}
