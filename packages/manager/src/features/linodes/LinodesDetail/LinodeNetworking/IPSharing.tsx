@@ -18,8 +18,7 @@ import TextField from 'src/components/TextField';
 import withLinodes, {
   DispatchProps,
 } from 'src/containers/withLinodes.container';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   addNewButton: {
@@ -71,7 +70,6 @@ interface Props {
 
 type CombinedProps = Props & WithLinodesProps & DispatchProps;
 
-const errorResources = {};
 const selectIPText = 'Select an IP';
 
 const IPSharingPanel: React.FC<CombinedProps> = (props) => {
@@ -95,7 +93,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     if (open) {
       setIpsToShare(linodeSharedIPs);
-      setSuccessMessage(undefined);
       setErrors(undefined);
     }
   }, [open, linodeSharedIPs]);
@@ -194,6 +191,11 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     );
   };
 
+  const handleClose = () => {
+    onClose();
+    window.setTimeout(() => setSuccessMessage(undefined), 500);
+  };
+
   const addIPToShare = () => {
     setIpsToShare((currentIPs) => [...currentIPs, selectIPText]);
   };
@@ -229,16 +231,16 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const onReset = () => {
     setErrors(undefined);
     setSuccessMessage(undefined);
-    setIpsToShare(props.linodeSharedIPs); // @todo
+    setIpsToShare(linodeSharedIPs);
   };
 
   const noChoices = props.ipChoices.length <= 1;
 
-  const errorFor = getAPIErrorsFor(errorResources, errors);
-  const generalError = errorFor('none');
+  const errorMap = getErrorMap([], errors);
+  const generalError = errorMap.none;
 
   return (
-    <Dialog title="IP Sharing" open={open} onClose={onClose}>
+    <Dialog title="IP Sharing" open={open} onClose={handleClose}>
       {generalError && (
         <Grid item xs={12}>
           <Notice error text={generalError} />
