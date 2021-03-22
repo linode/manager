@@ -311,6 +311,7 @@ export class LinodeCreate extends React.PureComponent<
 
         // VLANs
         interfaces: [
+          defaultPublicInterface, // to make sure the eth0 slot is not occupied by a VLAN
           {
             purpose: 'vlan',
             label: this.props.vlanLabel,
@@ -648,6 +649,12 @@ export class LinodeCreate extends React.PureComponent<
     );
   }
 }
+
+const defaultPublicInterface: Interface = {
+  purpose: 'public',
+  label: '',
+  ipam_address: '',
+};
 
 interface DispatchProps {
   setTab: (value: CreateTypes) => void;
