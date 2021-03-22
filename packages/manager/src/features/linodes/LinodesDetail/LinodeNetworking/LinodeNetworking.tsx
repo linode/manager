@@ -33,7 +33,7 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import withAccount, { StateProps } from 'src/containers/account.container';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
