@@ -17,8 +17,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            node_modules
-            */*/node_modules
+            **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
@@ -37,8 +36,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            node_modules
-            */*/node_modules
+            **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run test
@@ -55,8 +53,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            node_modules
-            */*/node_modules
+            **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
@@ -81,8 +78,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            node_modules
-            */*/node_modules
+            **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
@@ -103,8 +99,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            node_modules
-            */*/node_modules
+            **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
