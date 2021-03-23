@@ -61,6 +61,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const interfaces = config?.interfaces ?? [];
   const validDevices = React.useMemo(
     () =>
       Object.keys(config.devices)
@@ -101,7 +102,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
   const InterfaceList = (
     <ul className={classes.interfaceList}>
-      {config.interfaces.map((interfaceEntry, idx) => {
+      {interfaces.map((interfaceEntry, idx) => {
         // The order of the config.interfaces array as returned by the API is significant.
         // Index 0 is eth0, index 1 is eth1, index 2 is eth2.
         const interfaceName = `eth${idx}`;
@@ -134,7 +135,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
       </TableCell>
       <TableCell>{deviceLabels}</TableCell>
       <TableCell>
-        {!isEmpty(config.interfaces) ? InterfaceList : defaultInterfaceLabel}
+        {!isEmpty(interfaces) ? InterfaceList : defaultInterfaceLabel}
       </TableCell>
       <TableCell className={classes.actionInner}>
         <LinodeConfigActionMenu
