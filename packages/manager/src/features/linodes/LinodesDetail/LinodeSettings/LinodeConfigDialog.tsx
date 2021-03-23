@@ -166,7 +166,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
   const [useCustomRoot, setUseCustomRoot] = React.useState(
-    pathsOptions.some((thisOption) => thisOption.value === config?.root_device)
+    !pathsOptions.some((thisOption) => thisOption.value === config?.root_device)
   );
 
   const showVlans = isFeatureEnabled(
@@ -322,9 +322,16 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     [setFieldValue]
   );
 
-  const handleToggleCustomRoot = React.useCallback(() => {
-    setUseCustomRoot((currentValue) => !currentValue);
-  }, [setUseCustomRoot]);
+  const handleToggleCustomRoot = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setUseCustomRoot(e.target.checked);
+      if (!e.target.checked) {
+        // Toggling from custom to standard; reset any custom input
+        setFieldValue('root_device', pathsOptions[0].value);
+      }
+    },
+    [setUseCustomRoot, setFieldValue]
+  );
 
   const handleRootDeviceChange = React.useCallback(
     (selected: Item<string>) => {
