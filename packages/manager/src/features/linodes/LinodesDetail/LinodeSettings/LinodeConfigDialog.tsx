@@ -31,7 +31,10 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import useAccount from 'src/hooks/useAccount';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
@@ -46,8 +49,8 @@ import {
   UpdateLinodeConfig,
   withLinodeDetailContext,
 } from '../linodeDetailContext';
-import KernelSelect from './KernelSelect';
 import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
+import KernelSelect from './KernelSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -159,7 +162,15 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
+  const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
+
+  const showVlans = isFeatureEnabled(
+    'Vlans',
+    Boolean(flags.vlans),
+    account?.data?.capabilities ?? []
+  );
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
@@ -597,28 +608,32 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid item xs={12} className={classes.section}>
-              <Typography variant="h3">Network Interfaces</Typography>
-              {values.interfaces.map((thisInterface, idx, arr) =>
-                // Magic so that we show interfaces that have been filled plus one more
-                arr[idx - 1]?.purpose !== 'none' ||
-                thisInterface.purpose !== 'none' ? (
-                  <InterfaceSelect
-                    key={`eth${idx}-interface`}
-                    slotNumber={idx}
-                    readOnly={readOnly}
-                    labelError={formik.errors[`interfaces[${idx}].label`]}
-                    ipamError={formik.errors[`interfaces[${idx}].ipam_address`]}
-                    label={thisInterface.label}
-                    purpose={thisInterface.purpose}
-                    ipamAddress={thisInterface.ipam_address}
-                    handleChange={(newInterface: Interface) =>
-                      handleInterfaceChange(idx, newInterface)
-                    }
-                  />
-                ) : null
-              )}
-            </Grid>
+            {showVlans ? (
+              <Grid item xs={12} className={classes.section}>
+                <Typography variant="h3">Network Interfaces</Typography>
+                {values.interfaces.map((thisInterface, idx, arr) =>
+                  // Magic so that we show interfaces that have been filled plus one more
+                  arr[idx - 1]?.purpose !== 'none' ||
+                  thisInterface.purpose !== 'none' ? (
+                    <InterfaceSelect
+                      key={`eth${idx}-interface`}
+                      slotNumber={idx}
+                      readOnly={readOnly}
+                      labelError={formik.errors[`interfaces[${idx}].label`]}
+                      ipamError={
+                        formik.errors[`interfaces[${idx}].ipam_address`]
+                      }
+                      label={thisInterface.label}
+                      purpose={thisInterface.purpose}
+                      ipamAddress={thisInterface.ipam_address}
+                      handleChange={(newInterface: Interface) =>
+                        handleInterfaceChange(idx, newInterface)
+                      }
+                    />
+                  ) : null
+                )}
+              </Grid>
+            ) : null}
 
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
