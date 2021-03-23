@@ -84,7 +84,8 @@ interface Props {
   handleVLANChange: (updatedInterface: Interface) => void;
   disabled?: boolean;
   hidePrivateIP?: boolean;
-  vlanError?: string;
+  labelError?: string;
+  ipamError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
 }
 
@@ -96,7 +97,9 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     changePrivateIP,
     disabled,
     vlanLabel,
+    labelError,
     ipamAddress,
+    ipamError,
     handleVLANChange,
   } = props;
 
@@ -129,7 +132,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         {showVlans ? (
           <AttachVLAN
             vlanLabel={vlanLabel}
+            labelError={labelError}
             ipamAddress={ipamAddress}
+            ipamError={ipamError}
+            readOnly={disabled}
             handleVLANChange={handleVLANChange}
           />
         ) : null}

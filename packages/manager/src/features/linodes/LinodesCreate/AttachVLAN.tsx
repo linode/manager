@@ -20,7 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   vlanLabel: string;
+  labelError?: string;
   ipamAddress: string;
+  ipamError?: string;
+  readOnly?: boolean;
   handleVLANChange: (updatedInterface: Interface) => void;
 }
 
@@ -29,7 +32,14 @@ type CombinedProps = Props;
 const AttachVLAN: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { handleVLANChange } = props;
+  const {
+    handleVLANChange,
+    vlanLabel,
+    labelError,
+    ipamAddress,
+    ipamError,
+    readOnly,
+  } = props;
 
   return (
     <div className={classes.root}>
@@ -46,11 +56,12 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
           </Typography>
           <InterfaceSelect
             slotNumber={1}
-            readOnly={false}
-            error={''}
-            label={props.vlanLabel}
+            readOnly={readOnly || false}
+            label={vlanLabel}
+            labelError={labelError}
             purpose="vlan"
-            ipamAddress={props.ipamAddress}
+            ipamAddress={ipamAddress}
+            ipamError={ipamError}
             handleChange={(newInterface: Interface) =>
               handleVLANChange(newInterface)
             }

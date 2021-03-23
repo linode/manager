@@ -148,7 +148,8 @@ const errorMap = [
   'root_pass',
   'stackscript_id',
   'type',
-  'interfaces',
+  'interfaces[1].label',
+  'interfaces[1].ipam_address',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -622,7 +623,8 @@ export class LinodeCreate extends React.PureComponent<
             ipamAddress={this.props.ipamAddress || ''}
             handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
-            vlanError={hasErrorFor.interfaces}
+            labelError={hasErrorFor['interfaces[1].label']}
+            ipamError={hasErrorFor['interfaces[1].ipam_address']}
           />
         </Grid>
         <Grid item className="mlSidebar">
