@@ -30,6 +30,7 @@ import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import { parseQueryParams } from 'src/utilities/queryParams';
+import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   numVolumes: number;
@@ -66,6 +67,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   // is first rendered.
   const location = useLocation();
   const queryParams = parseQueryParams(location.search);
+  const flags = useFlags();
+
+  if (flags.bareMetal) {
+    console.log('Bare Metal flag is on');
+  }
 
   const match = useRouteMatch<{ linodeId: string; subpath: string }>({
     path: '/linodes/:linodeId/:subpath?',
