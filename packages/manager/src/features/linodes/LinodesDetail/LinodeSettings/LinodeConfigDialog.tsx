@@ -164,9 +164,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const flags = useFlags();
   const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
-  const [useCustomRoot, setUseCustomRoot] = React.useState(
-    pathsOptions.some((thisOption) => thisOption.value === config?.root_device)
-  );
+  const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
@@ -261,6 +259,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         const devices = createStringsFromDevices(config.devices);
         const initialCounter = Object.keys(devices).length;
         setDeviceCounter(initialCounter);
+        setUseCustomRoot(
+          !pathsOptions.some(
+            (thisOption) => thisOption.value === config?.root_device
+          )
+        );
         resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
@@ -281,6 +284,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       } else {
         // Create mode; make sure loading/error states are cleared.
         resetForm({ values: defaultFieldsValues });
+        setUseCustomRoot(false);
       }
     }
   }, [open, config, resetForm]);
