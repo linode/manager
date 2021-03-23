@@ -101,7 +101,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
   const InterfaceList = (
     <ul className={classes.interfaceList}>
-      {config.interfaces.map((interfaceEntry, idx) => {
+      {(config?.interfaces ?? []).map((interfaceEntry, idx) => {
         // The order of the config.interfaces array as returned by the API is significant.
         // Index 0 is eth0, index 1 is eth1, index 2 is eth2.
         const interfaceName = `eth${idx}`;
