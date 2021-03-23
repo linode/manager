@@ -121,11 +121,12 @@ const defaultInterface = {
  * interfaces will be removed from the payload before submission,
  * they are only used as placeholders presented to the user as empty selects.
  */
-const padInterfaceList = (
-  interfaces: ExtendedInterface[],
-  size: number = 3
-) => {
-  return [...interfaces, ...repeat(defaultInterface, size - interfaces.length)];
+export const padList = <T,>(list: T[], filler: T, size: number = 3): T[] => {
+  return [...list, ...repeat(filler, Math.max(0, size - list.length))];
+};
+
+const padInterfaceList = (interfaces: ExtendedInterface[]) => {
+  return padList<ExtendedInterface>(interfaces, defaultInterface, 3);
 };
 
 const defaultInterfaceList = padInterfaceList([
