@@ -34,7 +34,6 @@ import DeviceSelection, {
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
@@ -169,11 +168,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     pathsOptions.some((thisOption) => thisOption.value === config?.root_device)
   );
 
-  const showVlans = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
-  );
+  // Making this an && instead of the usual hasFeatureEnabled, which is || based.
+  // Doing this so that we can toggle our flag without enabling vlans for all customers.
+  const capabilities = account?.data?.capabilities ?? [];
+  const showVlans = capabilities.includes('Vlans') && flags.vlans;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
