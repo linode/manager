@@ -73,11 +73,8 @@ const styles = (theme: Theme) =>
           maxHeight: 34,
           minWidth: 100,
         },
-        '&:hover': {
-          backgroundColor: theme.palette.primary.light,
-        },
-        '&:focus': {
-          backgroundColor: theme.palette.primary.light,
+        '&:hover, &:focus': {
+          backgroundColor: '#226dc3',
         },
         '&[aria-expanded="true"]': {
           backgroundColor: theme.palette.primary.light,

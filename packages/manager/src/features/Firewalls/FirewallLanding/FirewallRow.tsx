@@ -16,7 +16,6 @@ import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     display: 'block',
-    fontFamily: theme.font.bold,
     color: theme.cmrTextColors.linkActiveLight,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
@@ -114,7 +113,7 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
  *
  * 3 Outbound
  */
-export const getRuleString = (count: [number, number]) => {
+export const getRuleString = (count: [number, number]): string => {
   const [inbound, outbound] = count;
 
   let string = '';
@@ -126,7 +125,7 @@ export const getRuleString = (count: [number, number]) => {
   } else if (outbound !== 0) {
     string += `${outbound} Outbound`;
   }
-  return string;
+  return string || 'No rules';
 };
 
 export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {

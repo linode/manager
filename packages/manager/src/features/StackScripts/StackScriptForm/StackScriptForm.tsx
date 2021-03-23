@@ -238,7 +238,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
           disabled={disabled || disableSubmit}
           data-qa-save
         >
-          {mode === 'edit' ? 'Save Changes' : 'Save'}
+          {mode === 'edit' ? 'Save Changes' : 'Create StackScript'}
         </Button>
         <Button
           onClick={onCancel}

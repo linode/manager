@@ -385,12 +385,12 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
 
   return (
     <Grid container>
-      <DocumentTitleSegment segment="Create a Domain" />
+      <DocumentTitleSegment segment="Create Domain" />
       <Grid container alignItems="center" justify="space-between">
         <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}
-            labelTitle="Create a Domain"
+            labelTitle="Create"
             labelOptions={{ noCap: true }}
           />
         </Grid>

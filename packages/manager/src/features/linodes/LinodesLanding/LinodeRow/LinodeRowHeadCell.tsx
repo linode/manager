@@ -1,6 +1,6 @@
-import * as classnames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account';
 import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -10,14 +10,12 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import withImages, { WithImages } from 'src/containers/withImages.container';
-import withDisplayType, { WithDisplayType } from '../withDisplayType';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     display: 'block',
-    fontFamily: theme.font.bold,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
     color: theme.cmrTextColors.linkActiveLight,

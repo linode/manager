@@ -3,7 +3,6 @@ import {
   cloneLinode,
   CreateLinodeRequest,
   Linode,
-  LinodeInterfacePayload,
   LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -349,6 +348,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
+      selectedLinodeID,
       selectedImageID,
       selectedRegionID,
       selectedStackScriptLabel,
@@ -384,7 +384,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
       if (createType === 'fromApp') {
         // All 1-clicks are Debian so this isn't useful information.
-        // Once an app is
         arg1 = '';
       }
     }
@@ -403,7 +402,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     if (createType === 'fromLinode') {
       // @todo handle any other custom label cases we'd like to have here
-      arg3 = 'clone';
+      arg1 =
+        this.props.linodesData?.find(
+          (thisLinode) => thisLinode.id === selectedLinodeID
+        )?.label ?? arg1; // Use the label of whatever we're cloning
+      arg2 = 'clone';
+      arg3 = '';
     }
 
     if (createType === 'fromBackup') {
@@ -426,10 +430,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * The downside of this approach is that only the password error
      * will be displayed, even if other required fields are missing.
      */
-
-    if (this.state.selectedVlanIDs.length > 0) {
-      payload.interfaces = getInterfacePayload(this.state.selectedVlanIDs);
-    }
 
     if (payload.root_pass) {
       const passwordError = validatePassword(payload.root_pass);
@@ -788,17 +788,3 @@ const handleAnalytics = (
 
   sendCreateLinodeEvent(eventAction, eventLabel);
 };
-
-export const getInterfacePayload = (
-  vlanIDs: number[]
-): Record<string, LinodeInterfacePayload> =>
-  vlanIDs.reduce(
-    (acc, thisVLAN, currentIdx) => {
-      const slot = `eth${currentIdx + 1}`;
-      return {
-        ...acc,
-        [slot]: { type: 'additional', vlan_id: thisVLAN },
-      };
-    },
-    { eth0: { type: 'default' } }
-  );

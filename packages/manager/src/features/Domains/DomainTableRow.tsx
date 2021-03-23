@@ -13,7 +13,6 @@ import { getDomainDisplayType } from './domainUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     display: 'block',
-    fontFamily: theme.font.bold,
     lineHeight: '1.125rem',
     color: theme.cmrTextColors.linkActiveLight,
     '&:hover, &:focus': {
@@ -24,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
     display: 'block',
-    fontFamily: theme.font.bold,
     color: theme.cmrTextColors.linkActiveLight,
     lineHeight: '1.125rem',
     '&:hover, &:focus': {

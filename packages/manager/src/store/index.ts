@@ -94,10 +94,6 @@ import linodeDisks, {
   defaultState as defaultLinodeDisksState,
   State as LinodeDisksState,
 } from 'src/store/linodes/disk/disk.reducer';
-import interfaces, {
-  defaultState as defaultInterfacesState,
-  State as InterfacesState,
-} from 'src/store/linodes/interfaces/interfaces.reducer';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
@@ -202,7 +198,6 @@ const __resourcesDefaultState = {
   databaseTypes: defaultDatabaseTypesState,
   domains: defaultDomainsState,
   images: defaultImagesState,
-  interfaces: defaultInterfacesState,
   kubernetes: defaultKubernetesState,
   managed: defaultManagedState,
   managedIssues: defaultManagedIssuesState,
@@ -230,7 +225,6 @@ export interface ResourcesState {
   databaseTypes: DatabaseTypesState;
   domains: DomainsState;
   images: ImagesState;
-  interfaces: InterfacesState;
   kubernetes: KubernetesState;
   managed: ManagedState;
   managedIssues: ManagedIssuesState;
@@ -307,7 +301,6 @@ const __resources = combineReducers({
   databaseTypes,
   domains,
   images,
-  interfaces,
   kubernetes,
   nodePools,
   linodes,

@@ -146,10 +146,12 @@ export type LinodeStatus =
   | 'restoring'
   | 'stopped';
 
-export type InterfaceSlot = Record<string, InterfaceBody>; // e.g. { "eth0": { "id": 111 }}
+export type InterfacePurpose = 'public' | 'vlan';
 
-export interface InterfaceBody {
-  id: number;
+export interface Interface {
+  label: string;
+  purpose: InterfacePurpose;
+  ipam_address: string | null;
 }
 export interface Config {
   id: number;
@@ -165,7 +167,7 @@ export interface Config {
   created: string;
   updated: string;
   initrd: string | null;
-  interfaces: InterfaceSlot;
+  interfaces: Interface[];
 }
 
 export interface DiskDevice {
@@ -258,7 +260,7 @@ export interface LinodeConfigCreationData {
     devtmpfs_automount: boolean;
   };
   root_device: string;
-  interfaces?: InterfaceSlot;
+  interfaces?: Interface[];
 }
 
 export interface PriceObject {
@@ -310,7 +312,7 @@ export interface CreateLinodeRequest {
   tags?: string[];
   private_ip?: boolean;
   authorized_users?: string[];
-  interfaces?: Record<string, LinodeInterfacePayload>;
+  interfaces?: Interface[];
 }
 
 export type RescueRequestObject = Pick<
@@ -352,16 +354,9 @@ export interface LinodeDiskCreationData {
   stackscript_data?: any;
 }
 
-export type InterfaceType = 'default' | 'additional';
-
-export interface LinodeInterfacePayload {
-  type: InterfaceType;
-  vlan_id?: number;
-}
-
 export interface LinodeInterface {
   id: number;
-  type: InterfaceType;
+  type: unknown;
   description: string;
   linode_id: number;
   vlan_id: number;

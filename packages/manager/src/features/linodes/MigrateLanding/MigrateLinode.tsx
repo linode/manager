@@ -15,14 +15,11 @@ import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
-import { useAccount } from 'src/hooks/useAccount';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import { useFlags } from 'src/hooks/useFlags';
 import { useImages } from 'src/hooks/useImages';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
@@ -60,13 +57,6 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
-  const { vlans } = useFlags();
-  const { account } = useAccount();
-  const vlansEnabled = isFeatureEnabled(
-    'Vlans',
-    Boolean(vlans),
-    account?.data?.capabilities ?? []
-  );
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -166,24 +156,9 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     addUsedDiskSpace(linode._disks) / MBpsInterDC / 60
   );
 
-  /**
-   * If this user has access to VLANs, the current Linode has a VLAN attached,
-   * the user has selected a region to migrate to, AND the target region does NOT
-   * support VLANs, we want to show a warning.
-   */
-  const shouldWarnAboutVlans =
-    vlansEnabled &&
-    selectedRegion !== null &&
-    linode._interfaces.some((thisInterface) =>
-      Boolean(thisInterface.vlan_id)
-    ) &&
-    !regions
-      .find((thisRegion) => thisRegion.id === selectedRegion)
-      ?.capabilities.includes('Vlans');
-
   return (
     <Dialog
-      title={`Migrate ${linode.label ?? ''}`}
+      title={`Migrate Linode ${linode.label ?? ''}`}
       open={open}
       onClose={onClose}
       fullWidth
@@ -215,11 +190,6 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
         allRegions={regions}
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
-        helperText={
-          shouldWarnAboutVlans
-            ? 'Note: This region does not support VLANs.'
-            : undefined
-        }
       />
       <div className={classes.actionWrapper}>
         <Button

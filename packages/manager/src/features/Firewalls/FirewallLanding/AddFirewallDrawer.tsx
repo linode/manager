@@ -21,7 +21,6 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { predefinedFirewalls } from '../shared';
 
 export interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
@@ -35,12 +34,8 @@ export type CombinedProps = Props;
 const initialValues: CreateFirewallPayload = {
   label: '',
   rules: {
-    inbound_policy: 'DROP',
+    inbound_policy: 'ACCEPT',
     outbound_policy: 'ACCEPT',
-    inbound: [
-      ...predefinedFirewalls.ssh.inbound,
-      ...predefinedFirewalls.dns.inbound,
-    ],
   },
   devices: {
     linodes: [],
@@ -185,11 +180,11 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                   buttonType="primary"
                   onClick={() => handleSubmit()}
                   data-qa-submit
-                  data-testid="add-firewall-submit"
+                  data-testid="create-firewall-submit"
                   loading={isSubmitting}
                   disabled={_isRestrictedUser}
                 >
-                  Create
+                  Create Firewall
                 </Button>
                 <Button
                   onClick={onClose}

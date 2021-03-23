@@ -35,6 +35,7 @@ import {
   generateCatchAllFilter,
   generateSpecificFilter,
 } from '../stackScriptUtils';
+import { StackScriptsRequest } from '../types';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
@@ -79,7 +80,7 @@ type CombinedProps = StyleProps &
     publicImages: Record<string, Image>;
     currentUser: string;
     category: string;
-    request: Function;
+    request: StackScriptsRequest;
   };
 
 interface HelperFunctions {
@@ -506,7 +507,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   title="StackScripts"
                   buttonProps={[
                     {
-                      children: 'Create New StackScript',
+                      children: 'Create StackScript',
                       onClick: () => this.goToCreateStackScript(),
                     },
                   ]}
@@ -577,6 +578,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   sortOrder={sortOrder}
                   currentFilterType={currentFilterType}
                   isSelecting={isSelecting}
+                  category={this.props.category}
                 />
                 <Component
                   {...this.props}

@@ -18,7 +18,7 @@ const NodeBalancerLandingEmptyState: React.FC<{}> = (_) => {
         buttonProps={[
           {
             onClick: () => history.push('/nodebalancers/create'),
-            children: 'Add a NodeBalancer',
+            children: 'Create NodeBalancer',
           },
         ]}
       >
