@@ -91,7 +91,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
           <Select
             options={purposeOptions}
             label={`eth${slotNumber}`}
-            defaultValue={purposeOptions.find(
+            value={purposeOptions.find(
               (thisOption) => thisOption.value === purpose
             )}
             onChange={handlePurposeChange}
@@ -113,11 +113,9 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 placeholder="Create or select a VLAN"
                 variant="creatable"
                 createOptionPosition="first"
-                defaultValue={vlanOptions.find(
-                  (thisVlan) => thisVlan.value === label
-                )}
+                value={vlanOptions.find((thisVlan) => thisVlan.value === label)}
                 onChange={handleLabelChange}
-                isClearable={false}
+                isClearable
                 disabled={readOnly}
               />
             </Grid>
