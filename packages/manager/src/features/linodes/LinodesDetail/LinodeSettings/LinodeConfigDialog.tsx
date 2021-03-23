@@ -2,7 +2,7 @@ import { Config, Disk, Interface, Kernel } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
-import { pathOr } from 'ramda';
+import { pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -109,11 +109,32 @@ interface Props {
 
 type CombinedProps = LinodeContextProps & Props & StateProps;
 
-const defaultInterfaces = [
-  { purpose: 'public', label: '', ipam_address: '' },
-  { purpose: 'none', label: '', ipam_address: '' },
-  { purpose: 'none', label: '', ipam_address: '' },
-] as ExtendedInterface[];
+const defaultInterface = {
+  purpose: 'none',
+  label: '',
+  ipam_address: '',
+} as ExtendedInterface;
+
+/**
+ * We want to pad the interface list in the UI with purpose.none
+ * interfaces up to the maximum (currently 3); any purpose.none
+ * interfaces will be removed from the payload before submission,
+ * they are only used as placeholders presented to the user as empty selects.
+ */
+const padInterfaceList = (
+  interfaces: ExtendedInterface[],
+  size: number = 3
+) => {
+  return [...interfaces, ...repeat(defaultInterface, size - interfaces.length)];
+};
+
+const defaultInterfaceList = padInterfaceList([
+  {
+    purpose: 'public',
+    label: '',
+    ipam_address: '',
+  },
+]);
 
 const defaultFieldsValues = {
   comments: '',
@@ -126,7 +147,7 @@ const defaultFieldsValues = {
     updatedb_disabled: true,
   },
   kernel: 'linode/latest-64bit',
-  interfaces: defaultInterfaces,
+  interfaces: defaultInterfaceList,
   label: '',
   memory_limit: 0,
   root_device: '/dev/sda',
@@ -154,6 +175,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     config,
     kernels,
     linodeConfigId,
+    linodeRegion,
     maxMemory,
     readOnly,
   } = props;
@@ -261,7 +283,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: config.interfaces,
+            interfaces: padInterfaceList(config.interfaces),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
@@ -605,6 +627,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 thisInterface.purpose !== 'none' ? (
                   <InterfaceSelect
                     key={`eth${idx}-interface`}
+                    region={linodeRegion}
                     slotNumber={idx}
                     readOnly={readOnly}
                     labelError={formik.errors[`interfaces[${idx}].label`]}
