@@ -165,6 +165,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const flags = useFlags();
   const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
+  const [useCustomRoot, setUseCustomRoot] = React.useState(
+    pathsOptions.some((thisOption) => thisOption.value === config?.root_device)
+  );
 
   const showVlans = isFeatureEnabled(
     'Vlans',
@@ -315,6 +318,17 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const handleInterfaceChange = React.useCallback(
     (slot: number, updatedInterface: Interface) => {
       setFieldValue(`interfaces[${slot}]`, updatedInterface);
+    },
+    [setFieldValue]
+  );
+
+  const handleToggleCustomRoot = React.useCallback(() => {
+    setUseCustomRoot((currentValue) => !currentValue);
+  }, [setUseCustomRoot]);
+
+  const handleRootDeviceChange = React.useCallback(
+    (selected: Item<string>) => {
+      setFieldValue('root_device', selected.value);
     },
     [setFieldValue]
   );
@@ -569,20 +583,20 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   name="useCustomRoot"
                   control={
                     <Toggle
-                      checked={values.useCustomRoot}
-                      onChange={formik.handleChange}
+                      checked={useCustomRoot}
+                      onChange={handleToggleCustomRoot}
                       disabled={readOnly}
                     />
                   }
                 />
-                {!values.useCustomRoot ? (
+                {!useCustomRoot ? (
                   <Select
                     options={pathsOptions}
                     label="Root Device"
-                    defaultValue={pathsOptions.find(
+                    value={pathsOptions.find(
                       (device) => device.value === values.root_device
                     )}
-                    onChange={formik.handleChange}
+                    onChange={handleRootDeviceChange}
                     name="root_device"
                     id="root_device"
                     errorText={formik.errors.root_device}
