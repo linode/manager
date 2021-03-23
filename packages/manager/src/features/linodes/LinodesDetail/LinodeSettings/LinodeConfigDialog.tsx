@@ -275,7 +275,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: config.interfaces ?? [],
+            interfaces: config.interfaces ?? defaultInterfaces,
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
