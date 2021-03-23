@@ -166,7 +166,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
   const [useCustomRoot, setUseCustomRoot] = React.useState(
-    !pathsOptions.some((thisOption) => thisOption.value === config?.root_device)
+    pathsOptions.some((thisOption) => thisOption.value === config?.root_device)
   );
 
   const showVlans = isFeatureEnabled(
