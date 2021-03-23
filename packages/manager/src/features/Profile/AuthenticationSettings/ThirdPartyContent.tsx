@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     '& button': {
       border: `1px solid ${theme.palette.divider}`,
+      borderRadius: 1,
       backgroundColor: theme.bg.offWhite,
       marginBottom: theme.spacing(2),
       minHeight: '70px',
@@ -48,15 +49,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   enabled: {
     border: `1px solid ${theme.cmrBorderColors.borderTabs} !important`,
   },
-  enabledWrapper: {
+  providerWrapper: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-  },
-  enabledText: {
-    fontFamily: theme.font.normal,
-    marginLeft: theme.spacing() - 4,
   },
 }));
 
@@ -107,13 +104,10 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
               <div>
                 <thisProvider.Icon className={classes.providerIcon} />
               </div>
-              <div className={classes.enabledWrapper}>
+              <div className={classes.providerWrapper}>
                 {thisProvider.displayName}
                 {thirdPartyEnabled && props.authType === thisProvider.name && (
-                  <div className={classes.enabledWrapper}>
-                    <span className={classes.enabledText}>(Enabled)</span>
-                    <EnabledIcon />
-                  </div>
+                  <EnabledIcon />
                 )}
               </div>
             </Button>
