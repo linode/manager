@@ -17,6 +17,7 @@ export interface Props extends Omit<HeaderProps, 'actions'> {
   extraActions?: JSX.Element;
   body?: JSX.Element;
   docsLink?: string;
+  docsCallback?: () => void;
   onAddNew?: () => void;
   entity?: string;
   createButtonWidth?: number;
@@ -36,6 +37,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
 
   const {
     docsLink,
+    docsCallback,
     onAddNew,
     entity,
     extraActions,
@@ -81,6 +83,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
       isLanding
       actions={extraActions || onAddNew ? actions : undefined}
       docsLink={docsLink}
+      docsCallback={docsCallback}
       breadcrumbProps={breadcrumbProps}
       {...props}
     >

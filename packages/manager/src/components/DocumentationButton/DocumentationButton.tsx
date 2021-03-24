@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   href: string;
   label?: string;
+  callback?: () => void;
 }
 
 type CombinedProps = Props;
@@ -35,7 +36,7 @@ type CombinedProps = Props;
 export const DocumentationButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { href, label } = props;
+  const { href, label, callback } = props;
 
   return (
     <IconTextLink
@@ -43,7 +44,12 @@ export const DocumentationButton: React.FC<CombinedProps> = (props) => {
       SideIcon={DocsIcon}
       text={label ?? 'Docs'}
       title={label ?? 'Docs'}
-      onClick={() => window.open(href, '_blank', 'noopener')}
+      onClick={() => {
+        if (callback) {
+          callback();
+        }
+        window.open(href, '_blank', 'noopener');
+      }}
       aria-describedby="external-site"
     />
   );
