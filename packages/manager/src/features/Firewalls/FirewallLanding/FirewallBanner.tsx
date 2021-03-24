@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { dcDisplayNames } from 'src/constants';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -15,11 +16,12 @@ export const FirewallBanner: React.FC<{}> = (_) => {
   );
 
   return (
-    <DismissibleBanner
-      preferenceKey="firewall-beta-notification"
-      message={`Cloud Firewalls are currently in beta. Firewalls can
-        only be used with Linodes in ${regionDisplayList}.`}
-    />
+    <DismissibleBanner preferenceKey="firewall-beta-notification">
+      <Typography>
+        Cloud Firewalls are currently in beta. Firewalls can only be used with
+        Linodes in {regionDisplayList}.
+      </Typography>
+    </DismissibleBanner>
   );
 };
 
