@@ -1,3 +1,9 @@
+## [2021-03-23] - v0.48.0
+
+### Changed:
+- Update types and schemas for Interface fields on Linode configurations
+
+
 ## [2021-02-24] - v0.44.0
 ### Added
 - Entity Transfer event actions, schema, types, and methods
