@@ -12,6 +12,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
+  vlanGrid: {
+    width: '415px',
+  },
+  vlanLabelField: {
+    width: 202,
+    height: 35,
+    marginRight: theme.spacing(),
+  },
+  ipamAddressLabel: {
+    '& label': {
+      whiteSpace: 'nowrap',
+    },
+    [theme.breakpoints.down(1280)]: {
+      width: 200,
+    },
+  },
 }));
 
 export interface Props {
@@ -103,9 +119,14 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
       )}
       {purpose === 'vlan' ? (
         <Grid item xs={6}>
-          <Grid container direction={fromAddonsPanel ? 'row' : 'column'}>
+          <Grid
+            container
+            direction={fromAddonsPanel ? 'row' : 'column'}
+            className={fromAddonsPanel ? classes.vlanGrid : ''}
+          >
             <Grid item xs={fromAddonsPanel ? 6 : undefined}>
               <Select
+                className={classes.vlanLabelField}
                 errorText={labelError}
                 options={vlanOptions}
                 isLoading={isLoading}
@@ -127,13 +148,15 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
               className={fromAddonsPanel ? '' : 'py0'}
               style={fromAddonsPanel ? {} : { marginTop: -8, marginBottom: 8 }}
             >
-              <TextField
-                label="IPAM Address (Optional)"
-                value={ipamAddress}
-                errorText={ipamError}
-                onChange={handleAddressChange}
-                disabled={readOnly}
-              />
+              <div className={classes.ipamAddressLabel}>
+                <TextField
+                  label="IPAM Address (Optional)"
+                  value={ipamAddress}
+                  errorText={ipamError}
+                  onChange={handleAddressChange}
+                  disabled={readOnly}
+                />
+              </div>
             </Grid>
           </Grid>
         </Grid>
