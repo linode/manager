@@ -1,4 +1,5 @@
 import JSPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
@@ -21,7 +22,7 @@ const formatDateForTable = (date: string): [string, string] => {
  * Creates the table header and rows for a payment PDF
  */
 export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     startY: 150,
     styles: {
       lineWidth: 1,
@@ -44,7 +45,7 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
  * Creates a payment totals table for the Payment PDF
  */
 export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     styles: {
       halign: 'right',
     },
@@ -61,7 +62,7 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
  * Creates the table header and rows for an Invoice PDF
  */
 export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     startY: 155,
     styles: {
       lineWidth: 1,
@@ -86,7 +87,7 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
       const [fromDate, fromTime] = formatDateForTable(item.from || '');
       return [
         {
-          styles: { fontSize: 8, cellWidth: 75, overflow: 'linebreak' },
+          styles: { fontSize: 8, cellWidth: 85, overflow: 'linebreak' },
           content: formatDescription(item.label),
         },
         {
@@ -132,7 +133,7 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
  * Creates the totals table for Invoice PDF
  */
 export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
-  (doc as any).autoTable({
+  autoTable(doc, {
     styles: {
       halign: 'right',
     },
@@ -143,16 +144,21 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       0: {
         cellPadding: {
           right: 12,
+          top: 5,
+          bottom: 5,
         },
       },
       1: {
-        cellWidth: 16,
+        cellWidth: 30,
         cellPadding: {
           right: 6,
+          top: 5,
+          bottom: 5,
         },
       },
     },
     pageBreak: 'avoid',
+    rowPageBreak: 'avoid',
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
       ['Tax (USD)', `$${Number(invoice.tax).toFixed(2)}`],

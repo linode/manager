@@ -92,6 +92,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     // react and jsx specific rules
     'react/display-name': 'off',
     // requires the definition of proptypes for react components
