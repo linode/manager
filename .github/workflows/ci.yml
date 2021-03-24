@@ -21,6 +21,8 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
+      - name: 'Tar files'
+        run: tar -cvf validation.tar packages/validation
       - uses: actions/upload-artifact@v2
         with:
           name: validation
@@ -59,6 +61,8 @@ jobs:
         with:
           name: validation
           path: packages/validation
+      - name: 'Extract tar files'
+        run: tar -xvf packages/validation/validation.tar
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v2
