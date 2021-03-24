@@ -26,7 +26,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: validation
-          path: packages/validation
+          path: packages/validation/validation.tar
   test-sdk:
     runs-on: ubuntu-latest
     needs: build-validation
@@ -60,7 +60,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: validation
-          path: packages/validation
+          path: packages/validation/validation.tar
       - name: 'Extract tar files'
         run: tar -xvf packages/validation/validation.tar
       - run: yarn --frozen-lockfile
