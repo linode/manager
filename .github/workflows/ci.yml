@@ -62,6 +62,8 @@ jobs:
           name: validation
       - name: 'Extract tar files'
         run: tar -xvf validation.tar -C packages/validation
+      - run: ls packages/validation
+      - run: ls .
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v2
