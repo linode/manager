@@ -22,7 +22,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
       - name: 'Tar files'
-        run: tar -cvf packages/validation/validation.tar packages/validation
+        run: tar -cvf validation.tar packages/validation
       - uses: actions/upload-artifact@v2
         with:
           name: validation
