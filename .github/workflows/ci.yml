@@ -14,11 +14,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.15.4'
-      - uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       **/node_modules
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
       - name: 'Tar files'
@@ -35,11 +35,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.15.4'
-      - uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       **/node_modules
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run test
 
@@ -52,16 +52,15 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.15.4'
-      - uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       **/node_modules
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: ls packages/validation
       - uses: actions/download-artifact@v2
         with:
           name: validation
-          path: validation.tar
       - name: 'Extract tar files'
         run: tar -xvf validation.tar -C packages/validation --overwrite-dir
       - run: ls packages/validation
@@ -82,11 +81,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.15.4'
-      - uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       **/node_modules
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
           path: packages
@@ -103,11 +102,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14.15.4'
-      - uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       **/node_modules
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
           path: packages
