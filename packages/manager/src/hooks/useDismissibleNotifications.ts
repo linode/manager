@@ -23,6 +23,8 @@ import { DismissedNotification } from 'src/store/preferences/preferences.actions
  *    on the next preferences() call as if stale (as described above).
  */
 
+export const STALE_DAYS = 60;
+
 export interface DismissibleNotificationOptions {
   prefix?: string;
   expiry?: string;
@@ -94,7 +96,7 @@ const getHashKey = (notification: unknown, prefix: string = '') =>
  *     We do this to prevent user preferences from turning into
  *     an ever-expanding blob of old notification hashes.
  */
-const updateDismissedNotifications = (
+export const updateDismissedNotifications = (
   notifications: Record<string, DismissedNotification>,
   notificationsToDismiss: unknown[],
   options: DismissibleNotificationOptions
@@ -117,14 +119,17 @@ const updateDismissedNotifications = (
   }, newNotifications);
 };
 
-const isStale = (timestamp?: string) => {
+export const isStale = (timestamp?: string) => {
   if (!timestamp) {
     return false;
   }
-  return DateTime.fromISO(timestamp).diffNow('days').toObject().days ?? 0 > 60;
+  return (
+    Math.abs(DateTime.fromISO(timestamp).diffNow('days').toObject().days ?? 0) >
+    STALE_DAYS
+  );
 };
 
-const isExpired = (timestamp?: string) => {
+export const isExpired = (timestamp?: string) => {
   if (!timestamp) {
     return false;
   }
