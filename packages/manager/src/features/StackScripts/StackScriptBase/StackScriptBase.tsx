@@ -29,7 +29,7 @@ import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
-import StackScriptTableHead from '../Partials/StackScriptTableHead_CMR';
+import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
   generateCatchAllFilter,

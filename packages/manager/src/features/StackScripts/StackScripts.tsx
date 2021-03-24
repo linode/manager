@@ -10,9 +10,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
 const StackScriptsDetail = React.lazy(() => import('./StackScriptsDetail'));
-const StackScriptsLanding_CMR = React.lazy(
-  () => import('./StackScriptsLanding_CMR')
-);
+const StackScriptsLanding = React.lazy(() => import('./StackScriptsLanding'));
 const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
 
 type Props = RouteComponentProps<{}>;
@@ -35,9 +33,9 @@ export const StackScripts: React.FC<Props> = (props) => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={StackScriptsLanding_CMR} path={`${path}/account`} />
-        <Route component={StackScriptsLanding_CMR} path={`${path}/community`} />
-        <Route component={StackScriptsLanding_CMR} path={path} exact />
+        <Route component={StackScriptsLanding} path={`${path}/account`} />
+        <Route component={StackScriptsLanding} path={`${path}/community`} />
+        <Route component={StackScriptsLanding} path={path} exact />
         <Route
           render={() => <StackScriptCreate mode="create" />}
           path={`${path}/create`}
