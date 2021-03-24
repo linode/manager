@@ -57,11 +57,12 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - run: ls packages/validation
       - uses: actions/download-artifact@v2
         with:
           name: validation
       - name: 'Extract tar files'
-        run: tar -xvf validation.tar -C packages/validation
+        run: tar -xvf validation.tar -C packages/validation --overwrite-dir
       - run: ls packages/validation
       - run: ls .
       - run: yarn --frozen-lockfile
