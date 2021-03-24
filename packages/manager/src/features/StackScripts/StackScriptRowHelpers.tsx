@@ -11,8 +11,10 @@ export type ClassNames =
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'detailsButton'
-  | 'images';
+  | 'images'
+  | 'image';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const styles = (theme: Theme) =>
   createStyles({
     row: {
@@ -24,16 +26,21 @@ export const styles = (theme: Theme) =>
     libRadio: {
       display: 'flex',
       flexWrap: 'wrap',
-      height: '100%',
       alignItems: 'center',
+      height: '100%',
       width: 70,
     },
     libRadioLabel: {
       cursor: 'pointer',
+      fontSize: '0.875rem',
+      lineHeight: '1.125rem',
     },
     libTitle: {
       fontSize: '0.875rem',
       lineHeight: '1.125rem',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
       [theme.breakpoints.down('sm')]: {
         wordBreak: 'break-all',
       },
@@ -41,40 +48,45 @@ export const styles = (theme: Theme) =>
     libDescription: {
       color: theme.cmrTextColors.tableHeader,
       fontSize: '.75rem',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
       [theme.breakpoints.between('sm', 'lg')]: {
         wordBreak: 'break-word',
       },
     },
     selectionGrid: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      [theme.breakpoints.up('sm')]: {
-        flexWrap: 'nowrap',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      },
+      flexDirection: 'row',
+      flexWrap: 'nowrap',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     stackScriptCell: {
+      padding: 0,
       width: '100%',
     },
     stackScriptUsername: {
       color: theme.cmrTextColors.tableStatic,
+      fontSize: '0.875rem',
+      lineHeight: '1.125rem',
     },
     detailsButton: {
-      padding: 0,
       fontSize: '0.875rem',
-      marginTop: -theme.spacing(1),
-      [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(1),
-        marginTop: 0,
-        width: 100,
-      },
+      marginTop: 0,
+      padding: theme.spacing(),
+      width: 100,
       '&:hover, &:focus': {
         backgroundColor: 'transparent',
       },
     },
     images: {
       fontSize: '0.75rem',
+      overflowWrap: 'break-word',
+    },
+    image: {
+      display: 'inline-block',
+      '& span': {
+        paddingRight: 4,
+      },
     },
   });

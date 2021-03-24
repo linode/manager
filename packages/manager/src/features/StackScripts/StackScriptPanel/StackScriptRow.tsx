@@ -55,7 +55,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
 
   const renderLabel = () => {
     return (
-      <React.Fragment>
+      <>
         <Link className={classes.link} to={`/stackscripts/${stackScriptID}`}>
           <Typography variant="h3" className={classes.libTitle}>
             {stackScriptUsername && (
@@ -73,7 +73,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
             {description}
           </Typography>
         )}
-      </React.Fragment>
+      </>
     );
   };
 
@@ -82,26 +82,26 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
       data-qa-table-row={label}
       ariaLabel={label}
       className={classes.row}
-      // style={{ height: 44 }}
     >
-      <TableCell data-qa-stackscript-title>{renderLabel()}</TableCell>
+      <TableCell className={classes.libTitle} data-qa-stackscript-title>
+        {renderLabel()}
+      </TableCell>
       <TableCell>
         <Typography data-qa-stackscript-deploys>{deploymentsTotal}</Typography>
       </TableCell>
-      <Hidden smDown>
+      <Hidden xsDown>
         <TableCell>
           <Typography data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
+      </Hidden>
+      <Hidden mdDown>
         <TableCell data-qa-stackscript-images className={classes.images}>
-          {/* {displayTagsAndShowMore(images)} */}
           {images.map((image, id) => {
             return (
-              <span key={id}>
+              <div key={id} className={classes.image}>
                 {image}
-                {id !== images.length - 1 && (
-                  <span style={{ paddingRight: 4 }}>,</span>
-                )}
-              </span>
+                {id !== images.length - 1 && <span>,</span>}
+              </div>
             );
           })}
         </TableCell>
