@@ -14,8 +14,13 @@ import { DismissedNotification } from 'src/store/preferences/preferences.actions
  * to generate a unique hash for the notification. In the case of actual Notifications, we use
  * the full notification object, which is usually (but not guaranteed to be in all cases) unique.
  *
- * The optional prefix prop allows you to specify a random string to be used as a prefix when generating
- * the hash. The purpose of this is to dismiss the same notification in different contexts independently.
+ * The options object allows you to specify the following options:
+ * - prefix: a string prefix to use when generating the hash.
+ *    The purpose of this is to dismiss the same notification in different contexts independently.
+ * - expiry: all dismissed notifications are stale after 60 days, and will be cleaned up the next time
+ *    dismissNotifications is called. However, if expiry is specified, a notification that has been dismissed
+ *    and is now past the expiry date will a) no longer be considered dismissed; and b) will be cleaned up
+ *    on the next preferences() call as if stale (as described above).
  */
 
 export interface DismissibleNotificationOptions {
