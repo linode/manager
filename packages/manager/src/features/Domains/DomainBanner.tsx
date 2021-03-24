@@ -20,8 +20,6 @@ interface Props {
   hidden: boolean;
 }
 
-export type CombinedProps = Props;
-
 export const DomainBanner: React.FC<Props> = (props) => {
   const { hidden } = props;
   const classes = useStyles();
@@ -47,7 +45,7 @@ export const DomainBanner: React.FC<Props> = (props) => {
       important
       className={classes.dnsWarning}
       dismissible
-      onClick={handleClose}
+      onClose={handleClose}
     >
       <div className={classes.banner}>
         <strong>Your DNS zones are not being served.</strong>

@@ -66,7 +66,7 @@ export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
       // if the notification is present in our preferences, and
       // is not expired, it is considered dismissed.
       const dismissedNotification = dismissedNotifications[hashKey];
-      return dismissedNotification && isExpired(dismissedNotification.expiry);
+      return dismissedNotification && !isExpired(dismissedNotification.expiry);
     });
   };
 
