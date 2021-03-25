@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -47,12 +48,14 @@ export const DomainBanner: React.FC<Props> = (props) => {
       dismissible
       onClose={handleClose}
     >
-      <div className={classes.banner}>
-        <strong>Your DNS zones are not being served.</strong>
-      </div>
-      Your domains will not be served by Linode&#39;s nameservers unless you
-      have at least one active Linode on your account.
-      <Link to="/linodes/create"> You can create one here.</Link>
+      <Typography>
+        <div className={classes.banner}>
+          <strong>Your DNS zones are not being served.</strong>
+        </div>
+        Your domains will not be served by Linode&#39;s nameservers unless you
+        have at least one active Linode on your account.{` `}
+        <Link to="/linodes/create">You can create one here.</Link>
+      </Typography>
     </Notice>
   );
 };
