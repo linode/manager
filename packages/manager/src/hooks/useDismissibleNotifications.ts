@@ -21,6 +21,8 @@ import { DismissedNotification } from 'src/store/preferences/preferences.actions
  *    dismissNotifications is called. However, if expiry is specified, a notification that has been dismissed
  *    and is now past the expiry date will a) no longer be considered dismissed; and b) will be cleaned up
  *    on the next preferences() call as if stale (as described above).
+ * - label: an optional label that doesn't affect anything but makes it easier to find notifications inside
+ *    the preferences object.
  */
 
 export const STALE_DAYS = 60;
@@ -28,6 +30,7 @@ export const STALE_DAYS = 60;
 export interface DismissibleNotificationOptions {
   prefix?: string;
   expiry?: string;
+  label?: string;
 }
 export interface DismissibleNotificationsHook {
   dismissedNotifications: Record<string, DismissedNotification>;
@@ -106,8 +109,9 @@ export const updateDismissedNotifications = (
     const hashKey = getHashKey(thisNotification, options.prefix);
     newNotifications[hashKey] = {
       id: hashKey,
-      created: DateTime.utc().toLocaleString(),
+      created: DateTime.utc().toISO(),
       expiry: options.expiry,
+      label: options.label || options.prefix || undefined,
     };
   });
   return Object.values(notifications).reduce((acc, thisNotification) => {

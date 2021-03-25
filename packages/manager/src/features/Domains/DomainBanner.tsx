@@ -21,6 +21,8 @@ interface Props {
   hidden: boolean;
 }
 
+const KEY = 'domain-banner';
+
 export const DomainBanner: React.FC<Props> = (props) => {
   const { hidden } = props;
   const classes = useStyles();
@@ -31,12 +33,13 @@ export const DomainBanner: React.FC<Props> = (props) => {
   } = useDismissibleNotifications();
 
   const handleClose = () => {
-    dismissNotifications(['domain-banner'], {
+    dismissNotifications([KEY], {
       expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+      label: KEY,
     });
   };
 
-  if (hidden || hasDismissedNotifications(['domain-banner'])) {
+  if (hidden || hasDismissedNotifications([KEY])) {
     return null;
   }
 
