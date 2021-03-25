@@ -11,7 +11,6 @@ import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -107,11 +106,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const flags = useFlags();
   const { account } = useAccount();
 
-  const showVlans = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
-  );
+  // Making this an && instead of the usual hasFeatureEnabled, which is || based.
+  // Doing this so that we can toggle our flag without enabling vlans for all customers.
+  const capabilities = account?.data?.capabilities ?? [];
+  const showVlans = capabilities.includes('Vlans') && flags.vlans;
 
   const renderBackupsPrice = () => {
     const { backupsMonthly } = props;
