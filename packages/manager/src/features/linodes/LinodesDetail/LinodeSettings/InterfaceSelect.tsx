@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& label': {
       whiteSpace: 'nowrap',
     },
-    [theme.breakpoints.down(1280)]: {
+    [theme.breakpoints.down('md')]: {
       width: 200,
     },
   },
