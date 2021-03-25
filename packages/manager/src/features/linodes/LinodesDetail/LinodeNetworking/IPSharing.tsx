@@ -102,17 +102,10 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   }, [open, linodeSharedIPs]);
 
   const onIPSelect = (ipIdx: number, e: Item<string>) => {
-    if (ipIdx === undefined) {
-      return;
-    }
-
     setIpsToShare((currentIps) => update(ipIdx, e.value, currentIps));
   };
 
   const onIPDelete = (ipIdx: number) => {
-    if (ipIdx === undefined) {
-      return;
-    }
     setIpsToShare((currentIps) => {
       return remove(ipIdx, 1, currentIps);
     });
