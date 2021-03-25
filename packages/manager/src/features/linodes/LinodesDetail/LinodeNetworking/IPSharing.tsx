@@ -1,7 +1,7 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { shareAddresses } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
-import { clone, flatten, remove, uniq } from 'ramda';
+import { flatten, remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -105,10 +105,8 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     if (ipIdx === undefined) {
       return;
     }
-    const newIPsToShare = clone(ipsToShare);
-    newIPsToShare[+ipIdx] = e.value;
 
-    setIpsToShare(newIPsToShare);
+    setIpsToShare((currentIps) => update(ipIdx, e.value, currentIps));
   };
 
   const onIPDelete = (ipIdx: number) => {
@@ -217,7 +215,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                   ))}
                   {ipsToShare.map((ip: string, idx: number) => (
                     <IPSharingRow
-                      key={ip}
+                      key={`${ip}-sharing-row-${idx}`}
                       ip={ip}
                       idx={idx}
                       readOnly={Boolean(readOnly)}
@@ -338,7 +336,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
     return { label, value: ipChoice };
   });
 
-  const defaultIP = ipList.find((eachIP) => {
+  const selectedIP = ipList.find((eachIP) => {
     return eachIP.value === ip;
   });
 
@@ -349,7 +347,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       </Grid>
       <Grid item xs={12} sm={10}>
         <Select
-          defaultValue={defaultIP}
+          value={selectedIP}
           options={ipList}
           onChange={(selected: Item<string>) => handleSelect(idx, selected)}
           className={classes.ipField}
