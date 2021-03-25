@@ -82,6 +82,7 @@ export const styles = (theme: Theme) =>
     images: {
       fontSize: '0.75rem',
       overflowWrap: 'break-word',
+      whiteSpace: 'pre-wrap',
     },
     image: {
       display: 'inline-block',
