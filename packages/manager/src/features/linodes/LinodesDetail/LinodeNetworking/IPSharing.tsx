@@ -72,8 +72,6 @@ interface Props {
 
 type CombinedProps = Props & WithLinodesProps & DispatchProps;
 
-const selectIPText = 'Select an IP';
-
 const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   // We should fix this, but for now we're relying on having all Linodes in a given region
@@ -91,7 +89,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const [successMessage, setSuccessMessage] = React.useState<
     string | undefined
   >(undefined);
-  const [ipsToShare, setIpsToShare] = React.useState<string[]>(linodeSharedIPs);
+  const [ipsToShare, setIpsToShare] = React.useState<(string | undefined)[]>(
+    linodeSharedIPs
+  );
   const [submitting, setSubmitting] = React.useState(false);
 
   React.useEffect(() => {
@@ -117,10 +117,12 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const addIPToShare = () => {
-    setIpsToShare((currentIPs) => [...currentIPs, selectIPText]);
+    setIpsToShare((currentIPs) => [...currentIPs, undefined]);
   };
 
-  const remainingChoices = (selectedIP: string) => {
+  const remainingChoices = (
+    selectedIP: string | undefined
+  ): (string | undefined)[] => {
     return props.ipChoices.filter((ip: string) => {
       const hasBeenSelected = ipsToShare.includes(ip);
       return ip === selectedIP || !hasBeenSelected;
@@ -128,9 +130,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const onSubmit = () => {
-    const finalIPs = uniq(
-      ipsToShare.filter((ip: string) => ip !== selectIPText)
-    );
+    const finalIPs = uniq(ipsToShare.filter(Boolean));
 
     setErrors(undefined);
     setSubmitting(true);
@@ -305,7 +305,7 @@ interface SharingRowProps extends RowProps {
   idx: number;
   readOnly: boolean;
   labels: Record<string, string>;
-  getRemainingChoices: (ip: string) => string[];
+  getRemainingChoices: (ip: string | undefined) => (string | undefined)[];
   handleSelect: (idx: number, selected: Item<string>) => void;
   handleDelete: (idx: number) => void;
 }
@@ -323,6 +323,9 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   const classes = useStyles();
 
   const ipList = getRemainingChoices(ip).map((ipChoice: string) => {
+    if (!ipChoice) {
+      return { label: 'Select an IP', value: 'new' };
+    }
     const label = `${ipChoice} ${
       labels[ipChoice] !== undefined ? labels[ipChoice] : ''
     }`;
@@ -372,7 +375,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
 });
 
 interface WithLinodesProps {
-  ipChoices: string[];
+  ipChoices: (string | undefined)[];
   ipChoiceLabels: {
     [key: string]: string;
   };
@@ -383,7 +386,7 @@ const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
   withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
     const { linodeRegion, linodeID } = ownProps;
     const choiceLabels = {};
-    const ipChoices = flatten<string>(
+    const ipChoices = flatten<string | undefined>(
       linodesData
         .filter((linode: Linode) => {
           // Filter out:
@@ -403,7 +406,7 @@ const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
      * NB: We were previously filtering private IP addresses out at this point,
      * but it seems that the API (or our infra) doesn't care about this.
      */
-    ipChoices.unshift(selectIPText);
+    ipChoices.unshift(undefined);
     return {
       ipChoices,
       ipChoiceLabels: choiceLabels,
