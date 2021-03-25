@@ -356,12 +356,15 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
       {handleDelete ? (
         <Grid item className={classes.removeCont}>
           <Button
-            buttonType="remove"
+            buttonType="secondary"
+            variant="outlined"
             onClick={() => handleDelete(idx)}
             className={classes.remove}
             data-qa-remove-shared-ip
             disabled={readOnly}
-          />
+          >
+            Remove
+          </Button>
         </Grid>
       ) : null}
     </Grid>
