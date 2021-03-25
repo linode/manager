@@ -1,4 +1,4 @@
-import { restoreBackup } from '@linode/api-v4/lib/linodes';
+import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -134,7 +134,9 @@ interface Props {
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
-  setVlanID: (ids: number[]) => void;
+  vlanLabel: string;
+  ipamAddress: string | null;
+  handleVLANChange: (updatedInterface: Interface) => void;
 }
 
 const errorMap = [
@@ -146,7 +148,8 @@ const errorMap = [
   'root_pass',
   'stackscript_id',
   'type',
-  'interfaces',
+  'interfaces[1].label',
+  'interfaces[1].ipam_address',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -285,6 +288,15 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   createLinode = () => {
+    const interfaces = [defaultPublicInterface]; // the purpose of defaultPublicInterface is to make sure the eth0 slot is not occupied by a VLAN.
+    if (Boolean(this.props.vlanLabel)) {
+      interfaces.push({
+        purpose: 'vlan',
+        label: this.props.vlanLabel,
+        ipam_address: this.props.ipamAddress,
+      });
+    }
+
     this.props.handleSubmitForm(
       {
         image: this.props.selectedImageID,
@@ -306,6 +318,9 @@ export class LinodeCreate extends React.PureComponent<
         // StackScripts
         stackscript_id: this.props.selectedStackScriptID,
         stackscript_data: this.props.selectedUDFs,
+
+        // VLAN
+        interfaces,
       },
       this.props.selectedLinodeID
     );
@@ -604,10 +619,12 @@ export class LinodeCreate extends React.PureComponent<
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
             hidePrivateIP={this.props.createType === 'fromLinode'}
-            changeSelectedVLAN={this.props.setVlanID}
-            selectedVlanIDs={this.props.selectedVlanIDs}
+            vlanLabel={this.props.vlanLabel || ''}
+            ipamAddress={this.props.ipamAddress || ''}
+            handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
-            vlanError={hasErrorFor.interfaces}
+            labelError={hasErrorFor['interfaces[1].label']}
+            ipamError={hasErrorFor['interfaces[1].ipam_address']}
           />
         </Grid>
         <Grid item className="mlSidebar">
@@ -636,6 +653,12 @@ export class LinodeCreate extends React.PureComponent<
     );
   }
 }
+
+const defaultPublicInterface: Interface = {
+  purpose: 'public',
+  label: '',
+  ipam_address: '',
+};
 
 interface DispatchProps {
   setTab: (value: CreateTypes) => void;
