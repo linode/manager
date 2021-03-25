@@ -12,7 +12,6 @@ export interface HeaderProps extends BreadCrumbProps {
   body?: JSX.Element;
   docsLink?: string;
   docsLabel?: string;
-  docsCallback?: () => void;
   title: string | JSX.Element;
   bodyClassName?: string;
   isLanding?: boolean;
@@ -111,7 +110,6 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
     body,
     docsLink,
     docsLabel,
-    docsCallback,
     parentLink,
     parentText,
     title,
@@ -150,11 +148,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
           >
             {props.children}
             {docsLink ? (
-              <DocumentationButton
-                href={docsLink}
-                label={docsLabel}
-                callback={docsCallback}
-              />
+              <DocumentationButton href={docsLink} label={docsLabel} />
             ) : null}
             <div className={classes.actions}>{actions}</div>
           </Grid>

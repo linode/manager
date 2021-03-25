@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { sendHelpButtonClickEvent } from 'src/utilities/ga';
 import IconTextLink from '../IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,7 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   href: string;
   label?: string;
-  callback?: () => void;
 }
 
 type CombinedProps = Props;
@@ -36,7 +36,7 @@ type CombinedProps = Props;
 export const DocumentationButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { href, label, callback } = props;
+  const { href, label } = props;
 
   return (
     <IconTextLink
@@ -45,9 +45,7 @@ export const DocumentationButton: React.FC<CombinedProps> = (props) => {
       text={label ?? 'Docs'}
       title={label ?? 'Docs'}
       onClick={() => {
-        if (callback) {
-          callback();
-        }
+        sendHelpButtonClickEvent(href);
         window.open(href, '_blank', 'noopener');
       }}
       aria-describedby="external-site"

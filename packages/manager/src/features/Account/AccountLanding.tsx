@@ -15,7 +15,6 @@ import withProfile, {
   Props as ProfileActionsProps,
 } from 'src/containers/profile.container';
 import useFlags from 'src/hooks/useFlags';
-import { sendHelpButtonClickEvent } from 'src/utilities/ga';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
@@ -77,8 +76,6 @@ const AccountLanding: React.FC<Props> = (props) => {
     landingHeaderProps.docsLabel = 'How Linode Billing Works';
     landingHeaderProps.docsLink =
       'https://www.linode.com/docs/guides/how-linode-billing-works/';
-    landingHeaderProps.docsCallback = () =>
-      sendHelpButtonClickEvent('How Linode Billing Works');
     landingHeaderProps.createButtonText = 'Make a Payment';
     landingHeaderProps.onAddNew = () =>
       history.replace('/account/billing/make-payment');
