@@ -89,9 +89,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const [successMessage, setSuccessMessage] = React.useState<
     string | undefined
   >(undefined);
-  const [ipsToShare, setIpsToShare] = React.useState<(string | undefined)[]>(
-    linodeSharedIPs
-  );
+  const [ipsToShare, setIpsToShare] = React.useState<string[]>(linodeSharedIPs);
   const [submitting, setSubmitting] = React.useState(false);
 
   React.useEffect(() => {
@@ -102,7 +100,11 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   }, [open, linodeSharedIPs]);
 
   const onIPSelect = (ipIdx: number, e: Item<string>) => {
-    setIpsToShare((currentIps) => update(ipIdx, e.value, currentIps));
+    setIpsToShare((currentIps) => {
+      return ipIdx >= currentIps.length
+        ? [...currentIps, e.value]
+        : update(ipIdx, e.value, currentIps);
+    });
   };
 
   const onIPDelete = (ipIdx: number) => {
@@ -116,13 +118,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     window.setTimeout(() => setSuccessMessage(undefined), 500);
   };
 
-  const addIPToShare = () => {
-    setIpsToShare((currentIPs) => [...currentIPs, undefined]);
-  };
-
-  const remainingChoices = (
-    selectedIP: string | undefined
-  ): (string | undefined)[] => {
+  const remainingChoices = (selectedIP: string): string[] => {
     return props.ipChoices.filter((ip: string) => {
       const hasBeenSelected = ipsToShare.includes(ip);
       return ip === selectedIP || !hasBeenSelected;
@@ -218,17 +214,16 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                       getRemainingChoices={remainingChoices}
                     />
                   ))}
-                  {/* the "1" that will always be there is the selectionText */}
                   {remainingChoices('').length > 1 && (
-                    <div className={classes.addNewButton}>
-                      <Button
-                        superCompact
-                        disabled={readOnly}
-                        onClick={addIPToShare}
-                      >
-                        Add IP Address
-                      </Button>
-                    </div>
+                    <IPSharingRow
+                      key={`empty-sharing-row`}
+                      ip={''}
+                      idx={ipsToShare.length}
+                      readOnly={Boolean(readOnly)}
+                      handleSelect={onIPSelect}
+                      labels={ipChoiceLabels}
+                      getRemainingChoices={remainingChoices}
+                    />
                   )}
                 </React.Fragment>
               )}
@@ -305,9 +300,9 @@ interface SharingRowProps extends RowProps {
   idx: number;
   readOnly: boolean;
   labels: Record<string, string>;
-  getRemainingChoices: (ip: string | undefined) => (string | undefined)[];
+  getRemainingChoices: (ip: string | undefined) => string[];
   handleSelect: (idx: number, selected: Item<string>) => void;
-  handleDelete: (idx: number) => void;
+  handleDelete?: (idx: number) => void;
 }
 
 export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
@@ -323,9 +318,6 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   const classes = useStyles();
 
   const ipList = getRemainingChoices(ip).map((ipChoice: string) => {
-    if (!ipChoice) {
-      return { label: 'Select an IP', value: 'new' };
-    }
     const label = `${ipChoice} ${
       labels[ipChoice] !== undefined ? labels[ipChoice] : ''
     }`;
@@ -361,21 +353,23 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
           overflowPortal
         />
       </Grid>
-      <Grid item className={classes.removeCont}>
-        <Button
-          buttonType="remove"
-          onClick={() => handleDelete(idx)}
-          className={classes.remove}
-          data-qa-remove-shared-ip
-          disabled={readOnly}
-        />
-      </Grid>
+      {handleDelete ? (
+        <Grid item className={classes.removeCont}>
+          <Button
+            buttonType="remove"
+            onClick={() => handleDelete(idx)}
+            className={classes.remove}
+            data-qa-remove-shared-ip
+            disabled={readOnly}
+          />
+        </Grid>
+      ) : null}
     </Grid>
   );
 });
 
 interface WithLinodesProps {
-  ipChoices: (string | undefined)[];
+  ipChoices: string[];
   ipChoiceLabels: {
     [key: string]: string;
   };
@@ -386,7 +380,7 @@ const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
   withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
     const { linodeRegion, linodeID } = ownProps;
     const choiceLabels = {};
-    const ipChoices = flatten<string | undefined>(
+    const ipChoices = flatten<string>(
       linodesData
         .filter((linode: Linode) => {
           // Filter out:
@@ -406,7 +400,6 @@ const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
      * NB: We were previously filtering private IP addresses out at this point,
      * but it seems that the API (or our infra) doesn't care about this.
      */
-    ipChoices.unshift(undefined);
     return {
       ipChoices,
       ipChoiceLabels: choiceLabels,
