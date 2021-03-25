@@ -53,18 +53,18 @@ describe('Dismissible notifications', () => {
     const dismissedNotifications = {
       normal: {
         created: DateTime.utc().plus({ minutes: 5 }).toISO(),
-        id: 'xxxx',
+        id: 'normal',
       },
       stale: {
         created: DateTime.utc()
           .minus({ days: STALE_DAYS + 1 })
           .toISO(),
-        id: 'xxxx',
+        id: 'stale',
       },
       expired: {
         created: DateTime.utc().plus({ minutes: 5 }).toISO(),
         expiry: DateTime.utc().minus({ minutes: 5 }).toISO(),
-        id: 'xxxx',
+        id: 'expired',
       },
     };
     it('should include existing dismissed notifications', () => {
