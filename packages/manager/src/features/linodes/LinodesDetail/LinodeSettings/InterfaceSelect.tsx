@@ -20,6 +20,7 @@ export interface Props {
   label: string;
   ipamAddress: string | null;
   readOnly: boolean;
+  region?: string;
   labelError?: string;
   ipamError?: string;
   handleChange: (updatedInterface: ExtendedInterface) => void;
@@ -42,6 +43,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     ipamAddress,
     ipamError,
     labelError,
+    region,
     handleChange,
   } = props;
 
@@ -64,10 +66,15 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
 
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
-    vlans?.map((thisVlan) => ({
-      label: thisVlan.label,
-      value: thisVlan.label,
-    })) ?? [];
+    vlans
+      ?.filter((thisVlan) => {
+        // If a region is provided, only show VLANs in the target region as options
+        return region ? thisVlan.region === region : true;
+      })
+      .map((thisVlan) => ({
+        label: thisVlan.label,
+        value: thisVlan.label,
+      })) ?? [];
 
   const handlePurposeChange = (selected: Item<InterfacePurpose>) =>
     handleChange({ purpose: selected.value, label, ipam_address: ipamAddress });
