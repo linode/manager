@@ -11,8 +11,7 @@ export type ClassNames =
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'detailsButton'
-  | 'images'
-  | 'image';
+  | 'images';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const styles = (theme: Theme) =>
@@ -83,11 +82,5 @@ export const styles = (theme: Theme) =>
       fontSize: '0.75rem',
       overflowWrap: 'break-word',
       whiteSpace: 'pre-wrap',
-    },
-    image: {
-      display: 'inline-block',
-      '& span': {
-        paddingRight: 4,
-      },
     },
   });
