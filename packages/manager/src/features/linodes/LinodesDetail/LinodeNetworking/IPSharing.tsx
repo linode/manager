@@ -354,7 +354,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
         />
       </Grid>
       {handleDelete ? (
-        <Grid item className={classes.removeCont}>
+        <Grid item sm={2} className={classes.removeCont}>
           <Button
             buttonType="secondary"
             variant="outlined"
