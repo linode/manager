@@ -214,7 +214,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                       getRemainingChoices={remainingChoices}
                     />
                   ))}
-                  {remainingChoices('').length > 1 && (
+                  {remainingChoices('').length > 0 && (
                     <IPSharingRow
                       key={`empty-sharing-row`}
                       ip={''}
