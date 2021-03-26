@@ -1,4 +1,10 @@
-import { Config, Disk, Interface, Kernel } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  Disk,
+  Interface,
+  Kernel,
+  LinodeConfigCreationData,
+} from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
@@ -247,7 +253,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     formik.setSubmitting(true);
 
-    const configData = convertStateToData(values);
+    const configData = convertStateToData(values) as LinodeConfigCreationData;
+
+    if (!regionHasVLANS) {
+      delete configData.interfaces;
+    }
 
     const handleSuccess = () => {
       formik.setSubmitting(false);
