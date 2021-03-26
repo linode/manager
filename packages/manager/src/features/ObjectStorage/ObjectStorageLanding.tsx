@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import {
@@ -22,6 +23,7 @@ import bucketDrawerContainer, {
   DispatchProps,
 } from 'src/containers/bucketDrawer.container';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useFlags from 'src/hooks/useFlags';
 import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
 import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
@@ -243,15 +245,33 @@ const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const NOTIFICATION_KEY = 'obj-billing-notification';
+
 export const BillingNotice: React.FC<{}> = React.memo(() => {
   const classes = useBillingNoticeStyles();
 
   const dispatch: Dispatch = useDispatch();
 
+  const {
+    dismissNotifications,
+    hasDismissedNotifications,
+  } = useDismissibleNotifications();
+
   const openDrawer = () => dispatch(openBucketDrawer());
 
+  const handleClose = () => {
+    dismissNotifications([NOTIFICATION_KEY], {
+      label: NOTIFICATION_KEY,
+      expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+    });
+  };
+
+  if (hasDismissedNotifications([NOTIFICATION_KEY])) {
+    return null;
+  }
+
   return (
-    <Notice warning important>
+    <Notice warning important dismissible onClose={handleClose}>
       You are being billed for Object Storage but do not have any Buckets. You
       can cancel Object Storage in your{' '}
       <Link to="/account/settings">Account Settings</Link>, or{' '}
