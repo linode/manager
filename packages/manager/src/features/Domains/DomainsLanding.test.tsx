@@ -38,7 +38,6 @@ const props: CombinedProps = {
   closeSnackbar: jest.fn(),
   classes: {
     domain: '',
-    dnsWarning: '',
     root: '',
     titleWrapper: '',
     tagWrapper: '',
@@ -46,7 +45,6 @@ const props: CombinedProps = {
     title: '',
     breadcrumbs: '',
     importButton: '',
-    banner: '',
   },
   domainsByID: {},
   upsertMultipleDomains: jest.fn(),
