@@ -14,6 +14,8 @@ export interface OrderSet {
 export interface DismissedNotification {
   id: string;
   created: string;
+  expiry?: string;
+  label?: string;
 }
 
 export interface UserPreferences {
