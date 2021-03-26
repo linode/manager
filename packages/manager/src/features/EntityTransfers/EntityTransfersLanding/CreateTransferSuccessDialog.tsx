@@ -116,7 +116,7 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
           fullWidth
           aria-disabled
         />
-        <ToolTip open={tooltipOpen[0]} title="copied!">
+        <ToolTip open={tooltipOpen[0]} title="Copied!">
           <div className={classes.copyButton}>
             <Button
               buttonType="secondary"
@@ -142,7 +142,7 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
           aria-disabled
           multiline
         />
-        <ToolTip open={tooltipOpen[1]} title="copied!">
+        <ToolTip open={tooltipOpen[1]} title="Copied!">
           <div className={classes.copyButton}>
             <Button
               buttonType="primary"
