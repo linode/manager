@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-03-23] - 1.36.0
+
+### Added:
+- Status banners on all /support pages showing open status.linode.com incidents
+
+### Changed:
+- VLANs can now be created through the Linode Config create/edit dialog
+- Update Configurations table in Linode Detail to show revised VLAN information
+- Remove Kernel and VM Mode columns from Configurations table
+- Make button and dialog naming conventions consistent
+- Remove default Firewall rules (new Firewalls are created empty, with policies set to Accept)
+- Make abuse ticket banners dismissible
+- Closing the notification drawer marks notifications as read
+
+### Fixed:
+- Don't clear support modal contents from local storage on close
+- Alignment on Longview Landing filter input
+- Clear Linode config form when opening the modal
+- Scrollbar overlaps with UserMenu dropdown
+- Prevent wrapping of Linode Detail graph legends
+
+
+## [2021-03-17] - v1.35.0
+
+### Added:
+- CopyTooltip next to tokens in Service Transfer tables
+- Confirmation dialog when entering the migration queue
+- Banners for open status.linode.com incidents displayed on all /support pages
+
+### Changed:
+- Billing Summary updates
+- Update hover states
+- "Status" column removed from Community StackScripts landing page
+
+### Fixed:
+- Fix UI collision on Firewall “Linodes” tab
+
+
+## JS Client
+
+### Fixed
+- Update Firewall schema to make “label” required
+- Update types for VLAN revamp
+
 ## [2021-03-09] - v1.34.0
 
 ### Added:

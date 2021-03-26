@@ -10,12 +10,13 @@ const options = {
   light,
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const ThemeDecorator = (story: Function) => {
   const key = select('theme', ['light', 'dark'], 'light');
   const content = story();
 
   return (
-    <ThemeProvider theme={options[key](8)}>
+    <ThemeProvider theme={options[key]}>
       <CssBaseline />
       {content}
     </ThemeProvider>

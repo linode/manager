@@ -13,7 +13,6 @@ import {
 } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
-import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -161,7 +160,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
 
   const innerText = text ? (
     <Typography
@@ -217,7 +215,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
         [classes.warningList]: warning && notificationList,
-        [classes.cmr]: Boolean(flags.cmr),
+        [classes.cmr]: true,
         notice: true,
         ...(className && { [className]: true }),
       })}
@@ -247,6 +245,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
               cursor: 'pointer',
             }}
             onClick={onClose}
+            data-testid="notice-dismiss"
           />
         </Grid>
       )}

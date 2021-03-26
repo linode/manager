@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { Notification, NotificationType } from '@linode/api-v4/lib/account';
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import * as classNames from 'classnames';
@@ -70,11 +70,11 @@ export const RenderNotification: React.FC<Props> = (props) => {
 
   const severity = notification.severity;
 
-  const linkTarget =
-    // payment_due notifications do not have an entity property, so in that case, link directly to /account/billing
-    notification?.type === 'payment_due'
-      ? '/account/billing'
-      : getEntityLinks(notification?.entity?.type, notification?.entity?.id);
+  const linkTarget = getEntityLinks(
+    notification?.type,
+    notification?.entity?.type,
+    notification?.entity?.id
+  );
 
   const message = (
     <Typography
@@ -133,14 +133,22 @@ export const RenderNotification: React.FC<Props> = (props) => {
   );
 };
 
-const getEntityLinks = (type?: string, id?: number) => {
-  if (!type) {
-    return;
-  } else if (type === 'linode') {
-    return `/linodes/${id}`;
-  } else {
-    return;
+const getEntityLinks = (
+  notificationType?: NotificationType,
+  entityType?: string,
+  id?: number
+) => {
+  // Handle specific notification types ()
+  switch (notificationType) {
+    case 'ticket_abuse':
+      return `/support/tickets/${id}`;
+    case 'payment_due':
+      return '/account/billing';
+    default:
+      break;
   }
+  // The only entity.type we currently expect and can handle for is "linode."
+  return entityType === 'linode' ? `/linodes/${id}` : null;
 };
 
 const linkifiedMaintenanceMessage = (

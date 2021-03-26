@@ -110,7 +110,7 @@ const BucketBreadcrumb: React.FC<CombinedProps> = (props) => {
     <div className={classes.root}>
       {copied && (
         <span className={classes.copied} data-qa-copied>
-          Path copied
+          Copied!
         </span>
       )}
       <FileCopy
