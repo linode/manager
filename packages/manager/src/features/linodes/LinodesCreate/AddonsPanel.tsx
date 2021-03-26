@@ -100,6 +100,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     ipamAddress,
     ipamError,
     handleVLANChange,
+    selectedRegionID,
   } = props;
 
   const classes = useStyles();
@@ -135,6 +136,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             ipamError={ipamError}
             readOnly={disabled}
             handleVLANChange={handleVLANChange}
+            region={selectedRegionID}
           />
         ) : null}
         <Typography variant="h2" className={classes.title}>
