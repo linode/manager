@@ -2,7 +2,7 @@ import { Config, Disk, Interface, Kernel } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
-import { pathOr } from 'ramda';
+import { pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -31,6 +31,8 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import useAccount from 'src/hooks/useAccount';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -46,8 +48,8 @@ import {
   UpdateLinodeConfig,
   withLinodeDetailContext,
 } from '../linodeDetailContext';
-import KernelSelect from './KernelSelect';
 import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
+import KernelSelect from './KernelSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -109,11 +111,33 @@ interface Props {
 
 type CombinedProps = LinodeContextProps & Props & StateProps;
 
-const defaultInterfaces = [
-  { purpose: 'public', label: '', ipam_address: '' },
-  { purpose: 'none', label: '', ipam_address: '' },
-  { purpose: 'none', label: '', ipam_address: '' },
-] as ExtendedInterface[];
+const defaultInterface = {
+  purpose: 'none',
+  label: '',
+  ipam_address: '',
+} as ExtendedInterface;
+
+/**
+ * We want to pad the interface list in the UI with purpose.none
+ * interfaces up to the maximum (currently 3); any purpose.none
+ * interfaces will be removed from the payload before submission,
+ * they are only used as placeholders presented to the user as empty selects.
+ */
+export const padList = <T,>(list: T[], filler: T, size: number = 3): T[] => {
+  return [...list, ...repeat(filler, Math.max(0, size - list.length))];
+};
+
+const padInterfaceList = (interfaces: ExtendedInterface[]) => {
+  return padList<ExtendedInterface>(interfaces, defaultInterface, 3);
+};
+
+const defaultInterfaceList = padInterfaceList([
+  {
+    purpose: 'public',
+    label: '',
+    ipam_address: '',
+  },
+]);
 
 const defaultFieldsValues = {
   comments: '',
@@ -126,7 +150,7 @@ const defaultFieldsValues = {
     updatedb_disabled: true,
   },
   kernel: 'linode/latest-64bit',
-  interfaces: defaultInterfaces,
+  interfaces: defaultInterfaceList,
   label: '',
   memory_limit: 0,
   root_device: '/dev/sda',
@@ -154,12 +178,21 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     config,
     kernels,
     linodeConfigId,
+    linodeRegion,
     maxMemory,
     readOnly,
   } = props;
 
   const classes = useStyles();
+  const flags = useFlags();
+  const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
+  const [useCustomRoot, setUseCustomRoot] = React.useState(false);
+
+  // Making this an && instead of the usual hasFeatureEnabled, which is || based.
+  // Doing this so that we can toggle our flag without enabling vlans for all customers.
+  const capabilities = account?.data?.capabilities ?? [];
+  const showVlans = capabilities.includes('Vlans') && flags.vlans;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
@@ -249,6 +282,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         const devices = createStringsFromDevices(config.devices);
         const initialCounter = Object.keys(devices).length;
         setDeviceCounter(initialCounter);
+        setUseCustomRoot(
+          !pathsOptions.some(
+            (thisOption) => thisOption.value === config?.root_device
+          )
+        );
         resetForm({
           values: {
             useCustomRoot: isUsingCustomRoot(config.root_device),
@@ -261,7 +299,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: config.interfaces,
+            interfaces: padInterfaceList(
+              config?.interfaces ?? defaultInterfaceList
+            ),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
@@ -269,6 +309,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       } else {
         // Create mode; make sure loading/error states are cleared.
         resetForm({ values: defaultFieldsValues });
+        setUseCustomRoot(false);
       }
     }
   }, [open, config, resetForm]);
@@ -304,6 +345,24 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const handleInterfaceChange = React.useCallback(
     (slot: number, updatedInterface: Interface) => {
       setFieldValue(`interfaces[${slot}]`, updatedInterface);
+    },
+    [setFieldValue]
+  );
+
+  const handleToggleCustomRoot = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setUseCustomRoot(e.target.checked);
+      if (!e.target.checked) {
+        // Toggling from custom to standard; reset any custom input
+        setFieldValue('root_device', pathsOptions[0].value);
+      }
+    },
+    [setUseCustomRoot, setFieldValue]
+  );
+
+  const handleRootDeviceChange = React.useCallback(
+    (selected: Item<string>) => {
+      setFieldValue('root_device', selected.value);
     },
     [setFieldValue]
   );
@@ -558,20 +617,20 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   name="useCustomRoot"
                   control={
                     <Toggle
-                      checked={values.useCustomRoot}
-                      onChange={formik.handleChange}
+                      checked={useCustomRoot}
+                      onChange={handleToggleCustomRoot}
                       disabled={readOnly}
                     />
                   }
                 />
-                {!values.useCustomRoot ? (
+                {!useCustomRoot ? (
                   <Select
                     options={pathsOptions}
                     label="Root Device"
-                    defaultValue={pathsOptions.find(
+                    value={pathsOptions.find(
                       (device) => device.value === values.root_device
                     )}
-                    onChange={formik.handleChange}
+                    onChange={handleRootDeviceChange}
                     name="root_device"
                     id="root_device"
                     errorText={formik.errors.root_device}
@@ -597,27 +656,33 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid item xs={12} className={classes.section}>
-              <Typography variant="h3">Network Interfaces</Typography>
-              {values.interfaces.map((thisInterface, idx, arr) =>
-                // Magic so that we show interfaces that have been filled plus one more
-                arr[idx - 1]?.purpose !== 'none' ||
-                thisInterface.purpose !== 'none' ? (
-                  <InterfaceSelect
-                    key={`eth${idx}-interface`}
-                    slotNumber={idx}
-                    readOnly={readOnly}
-                    error={formik.errors[`interfaces[${idx}]`]}
-                    label={thisInterface.label}
-                    purpose={thisInterface.purpose}
-                    ipamAddress={thisInterface.ipam_address}
-                    handleChange={(newInterface: Interface) =>
-                      handleInterfaceChange(idx, newInterface)
-                    }
-                  />
-                ) : null
-              )}
-            </Grid>
+            {showVlans ? (
+              <Grid item xs={12} className={classes.section}>
+                <Typography variant="h3">Network Interfaces</Typography>
+                {values.interfaces.map((thisInterface, idx, arr) =>
+                  // Magic so that we show interfaces that have been filled plus one more
+                  arr[idx - 1]?.purpose !== 'none' ||
+                  thisInterface.purpose !== 'none' ? (
+                    <InterfaceSelect
+                      key={`eth${idx}-interface`}
+                      slotNumber={idx}
+                      readOnly={readOnly}
+                      region={linodeRegion}
+                      labelError={formik.errors[`interfaces[${idx}].label`]}
+                      ipamError={
+                        formik.errors[`interfaces[${idx}].ipam_address`]
+                      }
+                      label={thisInterface.label}
+                      purpose={thisInterface.purpose}
+                      ipamAddress={thisInterface.ipam_address}
+                      handleChange={(newInterface: Interface) =>
+                        handleInterfaceChange(idx, newInterface)
+                      }
+                    />
+                  ) : null
+                )}
+              </Grid>
+            ) : null}
 
             <Grid item xs={12} className={classes.section}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>

@@ -30,6 +30,7 @@ export interface Flags {
   databases: boolean;
   firewallBetaNotification: boolean;
   entityTransfers: boolean;
+  bareMetal: boolean;
 }
 
 type PromotionalOfferFeature =

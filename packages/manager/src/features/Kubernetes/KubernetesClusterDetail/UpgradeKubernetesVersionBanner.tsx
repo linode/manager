@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { getNextVersion } from '../kubeUtils';
@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   upgradeMessage: {
     marginLeft: theme.spacing(),
+  },
+  upgradeButton: {
+    marginRight: theme.spacing(),
   },
 }));
 
@@ -39,7 +42,10 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
   return (
     <>
       {nextVersion ? (
-        <Paper className={classes.root}>
+        <DismissibleBanner
+          className={classes.root}
+          preferenceKey={`${clusterID}-${currentVersion}`}
+        >
           <Grid
             container
             direction="row"
@@ -51,13 +57,13 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
                 A new version of Kubernetes is available ({nextVersion}).
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid item className={classes.upgradeButton}>
               <Button onClick={() => setDialogOpen(true)} buttonType="primary">
                 Upgrade Version
               </Button>
             </Grid>
           </Grid>
-        </Paper>
+        </DismissibleBanner>
       ) : null}
       <UpgradeVersionModal
         clusterID={clusterID}
