@@ -131,9 +131,9 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             direction={fromAddonsPanel ? 'row' : 'column'}
             className={fromAddonsPanel ? classes.vlanGrid : ''}
           >
-            <Grid item xs={fromAddonsPanel ? 6 : undefined}>
+            <Grid item xs={fromAddonsPanel ? 6 : 12}>
               <Select
-                className={classes.vlanLabelField}
+                className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
                 options={vlanOptions}
                 isLoading={isLoading}
@@ -149,7 +149,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             </Grid>
             <Grid
               item
-              xs={fromAddonsPanel ? 6 : undefined}
+              xs={fromAddonsPanel ? 6 : 12}
               className={fromAddonsPanel ? '' : 'py0'}
               style={fromAddonsPanel ? {} : { marginTop: -8, marginBottom: 8 }}
             >

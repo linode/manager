@@ -1,4 +1,10 @@
-import { Config, Disk, Interface, Kernel } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  Disk,
+  Interface,
+  Kernel,
+  LinodeConfigCreationData,
+} from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
@@ -33,6 +39,7 @@ import DeviceSelection, {
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -185,6 +192,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const flags = useFlags();
+  const regions = useRegionsQuery().data ?? [];
   const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
@@ -192,7 +200,13 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.data?.capabilities ?? [];
-  const showVlans = capabilities.includes('Vlans') && flags.vlans;
+  const regionHasVLANS = regions.some(
+    (thisRegion) =>
+      thisRegion.id === linodeRegion &&
+      thisRegion.capabilities.includes('Vlans')
+  );
+  const showVlans =
+    capabilities.includes('Vlans') && flags.vlans && regionHasVLANS;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
@@ -239,7 +253,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     formik.setSubmitting(true);
 
-    const configData = convertStateToData(values);
+    const configData = convertStateToData(values) as LinodeConfigCreationData;
+
+    if (!regionHasVLANS) {
+      delete configData.interfaces;
+    }
 
     const handleSuccess = () => {
       formik.setSubmitting(false);

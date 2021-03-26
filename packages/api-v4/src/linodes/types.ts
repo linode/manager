@@ -353,13 +353,3 @@ export interface LinodeDiskCreationData {
   stackscript_id?: number;
   stackscript_data?: any;
 }
-
-export interface LinodeInterface {
-  id: number;
-  type: unknown;
-  description: string;
-  linode_id: number;
-  vlan_id: number;
-  mac_address: string;
-  ip_address: string;
-}
