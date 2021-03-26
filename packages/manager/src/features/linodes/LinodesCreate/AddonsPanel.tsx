@@ -11,6 +11,8 @@ import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions';
+import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -107,10 +109,15 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const flags = useFlags();
   const { account } = useAccount();
 
+  const regions = useRegionsQuery().data ?? [];
+  const selectedRegion = selectedRegionID || '';
+
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.data?.capabilities ?? [];
   const showVlans = capabilities.includes('Vlans') && flags.vlans;
+
+  const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
 
   const renderBackupsPrice = () => {
     const { backupsMonthly } = props;
@@ -128,7 +135,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   return (
     <Paper className={classes.root} data-qa-add-ons>
       <div className={classes.inner}>
-        {showVlans ? (
+        {showVlans && regionSupportsVLANs ? (
           <AttachVLAN
             vlanLabel={vlanLabel}
             labelError={labelError}
