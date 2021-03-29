@@ -11,9 +11,9 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    margin: `${theme.spacing(3)}px 0 ${theme.spacing(2)}px`,
+    margin: `${theme.spacing(2)}px 0`,
     width: '100%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       alignItems: 'flex-end',
     },
     [theme.breakpoints.down('xs')]: {
@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelWrapper: {
     margin: 0,
     width: '100%',
+    [theme.breakpoints.down('md')]: {
+      flexWrap: 'wrap',
+    },
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
@@ -56,10 +59,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   transferInput: {
     width: 360,
     [theme.breakpoints.down('md')]: {
-      width: 220,
+      width: 240,
     },
     [theme.breakpoints.down('sm')]: {
-      width: 240,
+      width: 200,
     },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
@@ -85,6 +88,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   makeTransferButton: {
     minWidth: 152,
     whiteSpace: 'nowrap',
+    [theme.breakpoints.down('md')]: {
+      marginBottom: theme.spacing(),
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+    },
     [theme.breakpoints.down('xs')]: {
       margin: 0,
       marginTop: theme.spacing(),
