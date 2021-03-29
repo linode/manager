@@ -148,7 +148,25 @@ const interceptNotification = (
     };
   }
 
-  // Migration interception
+  // Migration interceptions
+  if (notification.type === 'migration_scheduled') {
+    const jsx = (
+      <Typography>
+        You have a scheduled migration pending!{' '}
+        <Link to={`/linodes/${notification.entity?.id}`} onClick={onClose}>
+          {notification.entity?.label}
+        </Link>{' '}
+        will be automatically shut down, migrated, and returned to its last
+        state.
+      </Typography>
+    );
+
+    return {
+      ...notification,
+      jsx,
+    };
+  }
+
   if (notification.type === 'migration_pending') {
     const jsx = (
       <Typography>
