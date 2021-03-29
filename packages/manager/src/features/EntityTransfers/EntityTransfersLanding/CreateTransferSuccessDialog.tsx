@@ -83,14 +83,14 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
   );
 
   const draftEmail = `This token authorizes transfer of ${pluralizedEntities} to you:\n
-  ${transfer.token}\n\t
-   1) Log in to your account at cloud.linode.com.\t
-   2) Navigate to the Service Transfers tab on your Account page.\t
-   3) Copy and paste the token into the Receive a Service Transfer field to view\n\tdetails and accept the transfer.\n
-   If you do not have an account with Linode you will need to create one.
-   This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
-     DateTime.DATETIME_FULL
-   )}.`;
+${transfer.token}\n\t
+1) Log in to your account at cloud.linode.com.\t
+2) Navigate to the Service Transfers tab on your Account page.\t
+3) Copy and paste the token into the Receive a Service Transfer field to view\tdetails and accept the transfer.\n
+If you do not have an account with Linode you will need to create one.
+This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
+    DateTime.DATETIME_FULL
+  )}.`;
 
   return (
     <InformationDialog
