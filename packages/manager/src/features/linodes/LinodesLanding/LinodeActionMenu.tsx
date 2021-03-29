@@ -105,13 +105,27 @@ export const buildQueryStringForLinodeClone = (
 };
 
 export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
-  const { linodeRegion, linodeType } = props;
+  const {
+    linodeId,
+    linodeLabel,
+    linodeRegion,
+    linodeStatus,
+    linodeType,
+    openPowerActionDialog,
+    inlineLabel,
+    inTableContext,
+    openDialog,
+    readOnly,
+  } = props;
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { types } = useTypes();
+  const thisType = types.entities.find(
+    (thisType) => thisType.id === linodeType
+  );
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
 
@@ -150,17 +164,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  const {
-    linodeId,
-    linodeLabel,
-    linodeStatus,
-    openPowerActionDialog,
-    inlineLabel,
-    inTableContext,
-    openDialog,
-    readOnly,
-  } = props;
-
   const hasHostMaintenance = linodeStatus === 'stopped';
   const maintenanceProps = {
     disabled: hasHostMaintenance,
@@ -181,6 +184,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
 
   const inLandingListView = matchesMdDown && inTableContext;
   const inEntityView = matchesSmDown;
+  const isBareMetalInstance = thisType?.class === 'metal';
 
   const actions = [
     inLandingListView || inEntityView || inTableContext
@@ -223,32 +227,36 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
           ...readOnlyProps,
         }
       : null,
-    {
-      title: 'Clone',
-      onClick: () => {
-        sendLinodeActionMenuItemEvent('Clone');
-        history.push({
-          pathname: '/linodes/create',
-          search: buildQueryStringForLinodeClone(
-            linodeId,
-            linodeRegion,
-            linodeType,
-            types.entities,
-            regions
-          ),
-        });
-      },
-      ...maintenanceProps,
-      ...readOnlyProps,
-    },
-    {
-      title: 'Resize',
-      onClick: () => {
-        openDialog('resize', linodeId);
-      },
-      ...maintenanceProps,
-      ...readOnlyProps,
-    },
+    isBareMetalInstance
+      ? null
+      : {
+          title: 'Clone',
+          onClick: () => {
+            sendLinodeActionMenuItemEvent('Clone');
+            history.push({
+              pathname: '/linodes/create',
+              search: buildQueryStringForLinodeClone(
+                linodeId,
+                linodeRegion,
+                linodeType,
+                types.entities,
+                regions
+              ),
+            });
+          },
+          ...maintenanceProps,
+          ...readOnlyProps,
+        },
+    isBareMetalInstance
+      ? null
+      : {
+          title: 'Resize',
+          onClick: () => {
+            openDialog('resize', linodeId);
+          },
+          ...maintenanceProps,
+          ...readOnlyProps,
+        },
     {
       title: 'Rebuild',
       onClick: () => {
@@ -267,15 +275,17 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
       ...maintenanceProps,
       ...readOnlyProps,
     },
-    {
-      title: 'Migrate',
-      onClick: () => {
-        sendMigrationNavigationEvent('/linodes');
-        sendLinodeActionMenuItemEvent('Migrate');
-        openDialog('migrate', linodeId);
-      },
-      ...readOnlyProps,
-    },
+    isBareMetalInstance
+      ? null
+      : {
+          title: 'Migrate',
+          onClick: () => {
+            sendMigrationNavigationEvent('/linodes');
+            sendLinodeActionMenuItemEvent('Migrate');
+            openDialog('migrate', linodeId);
+          },
+          ...readOnlyProps,
+        },
     {
       title: 'Delete',
       onClick: () => {

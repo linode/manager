@@ -132,8 +132,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           backups={backups}
           linodeConfigs={linodeConfigs}
           isDetailLanding={isDetailLanding}
-          type={''}
-          image={''}
+          type={linodeType?.id ?? 'Unknown Plan'}
+          image={linode.image ?? 'Unknown Image'}
           openNotificationDrawer={openNotificationDrawer || (() => null)}
           progress={progress}
           transitionText={transitionText}
