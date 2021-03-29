@@ -19,9 +19,8 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
-import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
@@ -98,9 +97,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = RouteComponentProps<{}> &
-  WithRegionsProps &
-  WithTypesProps;
+type CombinedProps = RouteComponentProps<{}> & WithTypesProps;
 
 const regionHelperText = (
   <React.Fragment>
@@ -122,13 +119,13 @@ const regionHelperText = (
 
 export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const {
-    regionsData,
-    typesData: allTypes,
-    typesLoading,
-    typesError,
-    regionsError,
-  } = props;
+  const { typesData: allTypes, typesLoading, typesError } = props;
+
+  const { data, error: regionsError } = useRegionsQuery();
+  const regionsData = (data ?? []).map((r) => ({
+    ...r,
+    display: dcDisplayNames[r.id],
+  }));
 
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes);
@@ -367,12 +364,6 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })), // @todo DRY this up
-  regionsLoading: loading,
-  regionsError: error,
-}));
-
-const enhanced = compose<CombinedProps, {}>(withRouter, withRegions, withTypes);
+const enhanced = compose<CombinedProps, {}>(withRouter, withTypes);
 
 export default enhanced(CreateCluster);
