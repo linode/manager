@@ -36,7 +36,10 @@ describe('Linode Select', () => {
       onBlur={jest.fn()}
       region=""
       regionsLoading={false}
-      regionsData={regions}
+      regionsData={regions.map((thisRegion) => ({
+        ...thisRegion,
+        display: 'a region',
+      }))}
       regionsLastUpdated={0}
     />
   );

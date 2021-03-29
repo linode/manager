@@ -20,7 +20,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import { dcDisplayNames, REFRESH_INTERVAL } from 'src/constants';
-import regionsContainer from 'src/containers/regions.container';
+import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
@@ -587,11 +587,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (!selectedRegionID) {
       return;
     }
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
-    const selectedRegion = this.props.regionsData!.find(
+    const regions = this.props.regionsData.map((r) => ({
+      ...r,
+      display: dcDisplayNames[r.id],
+    }));
+    const selectedRegion = regions.find(
       (region) => region.id === selectedRegionID
     );
 
@@ -726,12 +726,6 @@ interface DispatchProps {
 }
 
 const connected = connect(mapStateToProps, { upsertLinode });
-
-const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
-  regionsLoading: loading,
-  regionsError: error,
-}));
 
 export default recompose<CombinedProps, {}>(
   deepCheckRouter(
