@@ -14,16 +14,34 @@ import { DismissedNotification } from 'src/store/preferences/preferences.actions
  * to generate a unique hash for the notification. In the case of actual Notifications, we use
  * the full notification object, which is usually (but not guaranteed to be in all cases) unique.
  *
- * The optional prefix prop allows you to specify a random string to be used as a prefix when generating
- * the hash. The purpose of this is to dismiss the same notification in different contexts independently.
+ * The options object allows you to specify the following options:
+ * - prefix: a string prefix to use when generating the hash.
+ *    The purpose of this is to dismiss the same notification in different contexts independently.
+ * - expiry: all dismissed notifications are stale after 60 days, and will be cleaned up the next time
+ *    dismissNotifications is called. However, if expiry is specified, a notification that has been dismissed
+ *    and is now past the expiry date will a) no longer be considered dismissed; and b) will be cleaned up
+ *    on the next preferences() call as if stale (as described above).
+ * - label: an optional label that doesn't affect anything but makes it easier to find notifications inside
+ *    the preferences object.
  */
+
+export const STALE_DAYS = 60;
+
+export interface DismissibleNotificationOptions {
+  prefix?: string;
+  expiry?: string;
+  label?: string;
+}
 export interface DismissibleNotificationsHook {
   dismissedNotifications: Record<string, DismissedNotification>;
   hasDismissedNotifications: (
     notifications: unknown[],
     prefix?: string
   ) => boolean;
-  dismissNotifications: (notifications: unknown[], prefix?: string) => void;
+  dismissNotifications: (
+    notifications: unknown[],
+    options?: DismissibleNotificationOptions
+  ) => void;
 }
 
 export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
@@ -32,13 +50,16 @@ export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
 
   const dismissedNotifications = preferences?.dismissed_notifications ?? {};
 
-  const dismissNotifications = (_notifications: unknown[], prefix?: string) => {
+  const dismissNotifications = (
+    _notifications: unknown[],
+    options: DismissibleNotificationOptions = {}
+  ) => {
     setDismissed(true);
     updatePreferences({
       dismissed_notifications: updateDismissedNotifications(
         dismissedNotifications,
         _notifications,
-        prefix
+        options
       ),
     });
   };
@@ -52,7 +73,10 @@ export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
     }
     return _notifications.every((thisNotification) => {
       const hashKey = getHashKey(thisNotification, prefix);
-      return Boolean(dismissedNotifications[hashKey]);
+      // if the notification is present in our preferences, and
+      // is not expired, it is considered dismissed.
+      const dismissedNotification = dismissedNotifications[hashKey];
+      return dismissedNotification && !isExpired(dismissedNotification.expiry);
     });
   };
 
@@ -75,25 +99,45 @@ const getHashKey = (notification: unknown, prefix: string = '') =>
  *     We do this to prevent user preferences from turning into
  *     an ever-expanding blob of old notification hashes.
  */
-const updateDismissedNotifications = (
+export const updateDismissedNotifications = (
   notifications: Record<string, DismissedNotification>,
   notificationsToDismiss: unknown[],
-  prefix?: string
+  options: DismissibleNotificationOptions
 ) => {
   const newNotifications = {};
   notificationsToDismiss.forEach((thisNotification) => {
-    const hashKey = getHashKey(thisNotification, prefix);
+    const hashKey = getHashKey(thisNotification, options.prefix);
     newNotifications[hashKey] = {
       id: hashKey,
-      created: DateTime.utc().toLocaleString(),
+      created: DateTime.utc().toISO(),
+      expiry: options.expiry,
+      label: options.label || options.prefix || undefined,
     };
   });
   return Object.values(notifications).reduce((acc, thisNotification) => {
-    const isStale =
-      DateTime.fromISO(thisNotification.created).diffNow('days').toObject()
-        .days ?? 0 > 60;
-    return isStale ? acc : { ...acc, [thisNotification.id]: thisNotification };
+    const stale = isStale(thisNotification.created);
+    const expired = isExpired(thisNotification.expiry);
+    return stale || expired
+      ? acc
+      : { ...acc, [thisNotification.id]: thisNotification };
   }, newNotifications);
+};
+
+export const isStale = (timestamp?: string) => {
+  if (!timestamp) {
+    return false;
+  }
+  return (
+    Math.abs(DateTime.fromISO(timestamp).diffNow('days').toObject().days ?? 0) >
+    STALE_DAYS
+  );
+};
+
+export const isExpired = (timestamp?: string) => {
+  if (!timestamp) {
+    return false;
+  }
+  return DateTime.fromISO(timestamp).diffNow().milliseconds < 0;
 };
 
 export default useDismissibleNotifications;
