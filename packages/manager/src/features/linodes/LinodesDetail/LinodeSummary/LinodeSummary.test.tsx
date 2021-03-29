@@ -15,6 +15,7 @@ describe('LinodeSummary', () => {
       linodeData={linodes[0]}
       timezone={'America/Los_Angeles'}
       classes={{
+        root: '',
         chart: '',
         graphControls: '',
         graphGrids: '',
