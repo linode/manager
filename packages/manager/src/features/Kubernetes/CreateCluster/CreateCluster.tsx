@@ -18,7 +18,6 @@ import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { dcDisplayNames } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { useRegionsQuery } from 'src/queries/regions';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
@@ -122,10 +121,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const { typesData: allTypes, typesLoading, typesError } = props;
 
   const { data, error: regionsError } = useRegionsQuery();
-  const regionsData = (data ?? []).map((r) => ({
-    ...r,
-    display: dcDisplayNames[r.id],
-  }));
+  const regionsData = data ?? [];
 
   // Only want to use current types here.
   const typesData = filterCurrentTypes(allTypes);
