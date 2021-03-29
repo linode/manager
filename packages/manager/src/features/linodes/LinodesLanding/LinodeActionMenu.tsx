@@ -27,7 +27,8 @@ import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegionsQuery } from 'src/queries/regions';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { MapState } from 'src/store/types';
 import {
   sendLinodeActionEvent,
@@ -57,7 +58,7 @@ export interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeRegion: string;
-  linodeType: string | null;
+  linodeType?: ExtendedType;
   linodeBackups: LinodeBackups;
   linodeStatus: string;
   openDialog: (
@@ -123,9 +124,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { types } = useTypes();
-  const thisType = types.entities.find(
-    (thisType) => thisType.id === linodeType
-  );
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
 
@@ -184,7 +182,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
 
   const inLandingListView = matchesMdDown && inTableContext;
   const inEntityView = matchesSmDown;
-  const isBareMetalInstance = thisType?.class === 'metal';
+  const isBareMetalInstance = linodeType?.class === 'metal';
 
   const actions = [
     inLandingListView || inEntityView || inTableContext
@@ -238,7 +236,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
               search: buildQueryStringForLinodeClone(
                 linodeId,
                 linodeRegion,
-                linodeType,
+                linodeType?.id ?? null,
                 types.entities,
                 regions
               ),

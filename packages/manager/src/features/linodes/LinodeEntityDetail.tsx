@@ -36,6 +36,7 @@ import useImages from 'src/hooks/useImages';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
@@ -132,7 +133,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           backups={backups}
           linodeConfigs={linodeConfigs}
           isDetailLanding={isDetailLanding}
-          type={linodeType?.id ?? 'Unknown Plan'}
+          type={linodeType}
           image={linode.image ?? 'Unknown Image'}
           openNotificationDrawer={openNotificationDrawer || (() => null)}
           progress={progress}
@@ -194,7 +195,7 @@ export interface HeaderProps {
   ) => void;
   linodeRegionDisplay: string;
   backups: LinodeBackups;
-  type: string;
+  type: ExtendedType | null;
   image: string;
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
@@ -442,7 +443,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               linodeId={linodeId}
               linodeLabel={linodeLabel}
               linodeRegion={linodeRegionDisplay}
-              linodeType={type}
+              linodeType={type ?? undefined}
               linodeStatus={linodeStatus}
               linodeBackups={backups}
               openDialog={openDialog}

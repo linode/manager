@@ -16,7 +16,7 @@ const props: Props = {
   linodeBackups: linodeBackupsFactory.build(),
   linodeLabel: 'test-linode',
   linodeStatus: 'running',
-  linodeType: 'g6-standard-1',
+  linodeType: extendedTypes[0],
   openDialog: jest.fn(),
   openPowerActionDialog: jest.fn(),
 };
