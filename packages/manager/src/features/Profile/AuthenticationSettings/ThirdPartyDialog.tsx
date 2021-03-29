@@ -2,24 +2,21 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
 import { ProviderOptions, providers } from './shared';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   dialog: {
     '& .dialog-content': {
       paddingTop: 0,
       paddingBottom: 0,
     },
-    '& p': {
-      lineHeight: '1.25rem',
-    },
-    '& p:first-child': {
-      marginBottom: theme.spacing(2),
-    },
+  },
+  copy: {
+    lineHeight: '1.25rem',
   },
 }));
 
@@ -45,23 +42,16 @@ const ThirdPartyDialog: React.FC<CombinedProps> = (props) => {
     <ConfirmationDialog
       className={classes.dialog}
       open={open}
-      title={`Enable ` + `${displayName}` + ` Authentication`}
+      title="Change Log-in Method?"
       onClose={onClose}
       actions={() => renderActions(loading, provider, displayName, onClose)}
     >
       {error && <Notice error text={error} />}
-      <Typography>
-        After you enable {displayName} authentication, your Linode account
-        password will be disabled and any trusted devices will be removed from
-        your account. If you&apos;ve enabled Two-Factor Authentication (TFA)
-        with your Linode account, that will also be disabled. LISH access will
-        be set to key authentication only. You should enable TFA via
-        {` `}
-        {displayName} for extra security.
-      </Typography>
-      <Typography>
-        Do you want to go to {displayName} and enable Third-Party
-        Authentication?
+      <Typography className={classes.copy} variant="body1">
+        You will disable your current log-in and be asked to reset your Linode
+        password. You can then use your Linode credentials or select another
+        provider. Whichever provider you select will manage all aspects of
+        logging in, such as passwords and Two-Factor Authentication (TFA).
       </Typography>
     </ConfirmationDialog>
   );
@@ -98,7 +88,7 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Go to {displayName}
+        Change Log-in
       </Button>
     </ActionsPanel>
   );

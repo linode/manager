@@ -1,9 +1,11 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
-import EnabledIcon from 'src/assets/icons/checkmark_selected_option.svg';
+import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
+import LinodeLogo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import { LOGIN_ROOT } from 'src/constants';
 import { ProviderOptions, providers } from './shared';
 import ThirdPartyDialog from './ThirdPartyDialog';
@@ -12,21 +14,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     lineHeight: 1.43,
     marginBottom: theme.spacing(3),
+    maxWidth: 970,
   },
   providers: {
-    marginBottom: theme.spacing(4),
-
+    maxWidth: 1150,
     '& button': {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: 1,
       backgroundColor: theme.bg.offWhite,
-      marginBottom: theme.spacing(2),
-      minHeight: '70px',
-      minWidth: '344px',
+      minHeight: 70,
       paddingRight: theme.spacing(3) - 4,
       paddingLeft: theme.spacing(3) - 4,
-      '&:not(last-child)': {
-        marginRight: theme.spacing(2),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 344,
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginLeft: 0,
       },
     },
     '& button:hover': {
@@ -47,13 +51,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(2),
   },
   enabled: {
-    border: `1px solid ${theme.cmrBorderColors.borderTabs} !important`,
+    border: `1px solid ${theme.palette.primary.main} !important`,
   },
   providerWrapper: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
+  },
+  enabledText: {
+    fontFamily: theme.font.normal,
+    marginLeft: theme.spacing() - 4,
   },
 }));
 
@@ -76,43 +84,74 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Typography className={classes.copy}>
-        Third-Party Authentication (TPA) allows you to log in to your Linode
-        account using another provider. All aspects of logging in, such as
-        passwords and Two-Factor Authentication (TFA), are managed through this
-        provider.
+        You can use your Linode credentials or another provider such as Google
+        or GitHub to log in to your Linode account. If you select a provider
+        below all aspects of logging in, such as passwords and Two-Factor
+        Authentication (TFA), are managed through this provider. You may use
+        only one provider at a time.
       </Typography>
-      <Typography className={classes.copy}>
-        Select a provider below to go to their web site and set up access. You
-        may only use one provider at a time.
-      </Typography>
-      <div className={classes.providers}>
+      <Grid container className={classes.providers}>
         {providers.map((thisProvider) => {
           return (
-            <Button
-              className={
-                thirdPartyEnabled && props.authType === thisProvider.name
-                  ? classes.enabled
-                  : ''
-              }
-              key={thisProvider.displayName}
-              onClick={() => {
-                setProvider(thisProvider.name);
-                setDialogOpen(true);
-              }}
-              disabled={thirdPartyEnabled}
-            >
-              <div>
-                <thisProvider.Icon className={classes.providerIcon} />
-              </div>
-              <div className={classes.providerWrapper}>
-                {thisProvider.displayName}
-                {thirdPartyEnabled && props.authType === thisProvider.name && (
-                  <EnabledIcon />
-                )}
-              </div>
-            </Button>
+            <Grid item xs={12} sm={6} md={4} key={thisProvider.displayName}>
+              <Button
+                className={
+                  thirdPartyEnabled && props.authType === thisProvider.name
+                    ? classes.enabled
+                    : ''
+                }
+                onClick={() => {
+                  setProvider(thisProvider.name);
+                  setDialogOpen(true);
+                }}
+                disabled={thirdPartyEnabled}
+              >
+                <div>
+                  <thisProvider.Icon className={classes.providerIcon} />
+                </div>
+                <div className={classes.providerWrapper}>
+                  <div>
+                    {thisProvider.displayName}
+                    {thirdPartyEnabled &&
+                      props.authType === thisProvider.name && (
+                        <span className={classes.enabledText}>(Enabled)</span>
+                      )}
+                  </div>
+                  {thirdPartyEnabled &&
+                    props.authType === thisProvider.name && <EnabledIcon />}
+                </div>
+              </Button>
+            </Grid>
           );
         })}
+        <Grid item xs={12} sm={6} md={4}>
+          <Button
+            className={
+              !thirdPartyEnabled && props.authType === 'password'
+                ? classes.enabled
+                : ''
+            }
+            onClick={() => {
+              window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
+            }}
+            disabled={!thirdPartyEnabled}
+          >
+            <div>
+              <LinodeLogo className={classes.providerIcon} />
+            </div>
+            <div className={classes.providerWrapper}>
+              <div>
+                Linode
+                {!thirdPartyEnabled && props.authType === 'password' && (
+                  <span className={classes.enabledText}>(Enabled)</span>
+                )}
+              </div>
+              {!thirdPartyEnabled && props.authType === 'password' && (
+                <EnabledIcon />
+              )}
+            </div>
+          </Button>
+        </Grid>
 
         <ThirdPartyDialog
           open={dialogOpen}
@@ -120,25 +159,7 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
           onClose={() => setDialogOpen(false)}
           provider={provider}
         />
-      </div>
-      {thirdPartyEnabled && (
-        <>
-          <Typography className={classes.copy}>
-            If you prefer to log in using your Linode credentials, you can
-            disable Third-Party Authentication. We’ll send you an e-mail to
-            reset your Linode password.
-          </Typography>
-          <Button
-            aria-describedby="external-site"
-            buttonType="primary"
-            onClick={() => {
-              window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
-            }}
-          >
-            Disable Third-Party Authentication
-          </Button>
-        </>
-      )}
+      </Grid>
     </>
   );
 };
