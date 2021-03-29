@@ -19,7 +19,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
-import { dcDisplayNames, REFRESH_INTERVAL } from 'src/constants';
+import { REFRESH_INTERVAL } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
@@ -587,11 +587,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (!selectedRegionID) {
       return;
     }
-    const regions = this.props.regionsData.map((r) => ({
-      ...r,
-      display: dcDisplayNames[r.id],
-    }));
-    const selectedRegion = regions.find(
+
+    const selectedRegion = this.props.regionsData.find(
       (region) => region.id === selectedRegionID
     );
 
