@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   vlanGrid: {
     width: '415px',
+    '& .react-select__menu': {
+      marginTop: 16,
+    },
   },
   vlanLabelField: {
     width: 202,
