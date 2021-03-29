@@ -7,6 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { LOGIN_ROOT } from 'src/constants';
+import useFlags from 'src/hooks/useFlags';
 import { ProviderOptions, providers } from './shared';
 import ThirdPartyDialog from './ThirdPartyDialog';
 
@@ -73,6 +74,7 @@ type CombinedProps = Props;
 
 export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<ProviderOptions>(
@@ -80,6 +82,14 @@ export const ThirdPartyContent: React.FC<CombinedProps> = (props) => {
   );
 
   const thirdPartyEnabled = props.authType !== 'password';
+
+  // If the flag is off, remove Google from the list of TPAProviders
+  if (!flags.tpaGoogle) {
+    const index = providers.findIndex((provider) => provider.name === 'google');
+    if (index > -1) {
+      providers.splice(index, 1);
+    }
+  }
 
   return (
     <>
