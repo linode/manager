@@ -45,6 +45,7 @@ import { ChartProps } from './types';
 setUpCharts();
 
 type ClassNames =
+  | 'root'
   | 'chart'
   | 'chartSelect'
   | 'graphControls'
@@ -54,6 +55,9 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {
+      width: '100%',
+    },
     chart: {
       position: 'relative',
       paddingTop: theme.spacing(2),
@@ -366,7 +370,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <Paper>
-        <Grid container className="m0">
+        <Grid container className={`${classes.root} m0`}>
           <Grid item xs={12}>
             <div className={classes.graphControls}>
               <Typography variant="h2" className={classes.labelRangeSelect}>
@@ -404,11 +408,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
 
-          <Grid container item xs={12}>
-            <Grid item xs={12}>
-              <NetworkGraph stats={this.state.stats} {...chartProps} />
-            </Grid>
-          </Grid>
+          <NetworkGraph stats={this.state.stats} {...chartProps} />
         </Grid>
       </Paper>
     );

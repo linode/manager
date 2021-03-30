@@ -1,8 +1,14 @@
-import { Config, Disk, Interface, Kernel } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  Disk,
+  Interface,
+  Kernel,
+  LinodeConfigCreationData,
+} from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
-import { pathOr } from 'ramda';
+import { pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -33,6 +39,7 @@ import DeviceSelection, {
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -111,11 +118,33 @@ interface Props {
 
 type CombinedProps = LinodeContextProps & Props & StateProps;
 
-const defaultInterfaces = [
-  { purpose: 'public', label: '', ipam_address: '' },
-  { purpose: 'none', label: '', ipam_address: '' },
-  { purpose: 'none', label: '', ipam_address: '' },
-] as ExtendedInterface[];
+const defaultInterface = {
+  purpose: 'none',
+  label: '',
+  ipam_address: '',
+} as ExtendedInterface;
+
+/**
+ * We want to pad the interface list in the UI with purpose.none
+ * interfaces up to the maximum (currently 3); any purpose.none
+ * interfaces will be removed from the payload before submission,
+ * they are only used as placeholders presented to the user as empty selects.
+ */
+export const padList = <T,>(list: T[], filler: T, size: number = 3): T[] => {
+  return [...list, ...repeat(filler, Math.max(0, size - list.length))];
+};
+
+const padInterfaceList = (interfaces: ExtendedInterface[]) => {
+  return padList<ExtendedInterface>(interfaces, defaultInterface, 3);
+};
+
+const defaultInterfaceList = padInterfaceList([
+  {
+    purpose: 'public',
+    label: '',
+    ipam_address: '',
+  },
+]);
 
 const defaultFieldsValues = {
   comments: '',
@@ -128,7 +157,7 @@ const defaultFieldsValues = {
     updatedb_disabled: true,
   },
   kernel: 'linode/latest-64bit',
-  interfaces: defaultInterfaces,
+  interfaces: defaultInterfaceList,
   label: '',
   memory_limit: 0,
   root_device: '/dev/sda',
@@ -156,12 +185,14 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     config,
     kernels,
     linodeConfigId,
+    linodeRegion,
     maxMemory,
     readOnly,
   } = props;
 
   const classes = useStyles();
   const flags = useFlags();
+  const regions = useRegionsQuery().data ?? [];
   const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
@@ -169,7 +200,13 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.data?.capabilities ?? [];
-  const showVlans = capabilities.includes('Vlans') && flags.vlans;
+  const regionHasVLANS = regions.some(
+    (thisRegion) =>
+      thisRegion.id === linodeRegion &&
+      thisRegion.capabilities.includes('Vlans')
+  );
+  const showVlans =
+    capabilities.includes('Vlans') && flags.vlans && regionHasVLANS;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
@@ -216,7 +253,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     formik.setSubmitting(true);
 
-    const configData = convertStateToData(values);
+    const configData = convertStateToData(values) as LinodeConfigCreationData;
+
+    if (!regionHasVLANS) {
+      delete configData.interfaces;
+    }
 
     const handleSuccess = () => {
       formik.setSubmitting(false);
@@ -276,7 +317,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: config.interfaces ?? defaultInterfaces,
+            interfaces: padInterfaceList(
+              config?.interfaces ?? defaultInterfaceList
+            ),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
@@ -642,6 +685,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                       key={`eth${idx}-interface`}
                       slotNumber={idx}
                       readOnly={readOnly}
+                      region={linodeRegion}
                       labelError={formik.errors[`interfaces[${idx}].label`]}
                       ipamError={
                         formik.errors[`interfaces[${idx}].ipam_address`]
