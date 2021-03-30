@@ -272,7 +272,7 @@ export class NodeBalancersLanding extends React.Component<
         <TransferDisplay spacingTop={18} />
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
-          title={`Delete ${this.state.selectedNodeBalancerLabel}?`}
+          title={`Delete NodeBalancer ${this.state.selectedNodeBalancerLabel}?`}
           error={(this.state.deleteConfirmDialog.errors || [])
             .map((e) => e.reason)
             .join(',')}
@@ -280,7 +280,7 @@ export class NodeBalancersLanding extends React.Component<
           open={deleteConfirmAlertOpen}
         >
           <Typography>
-            Are you sure you want to delete your NodeBalancer?
+            Are you sure you want to delete this NodeBalancer?
           </Typography>
         </ConfirmationDialog>
       </>
@@ -304,7 +304,7 @@ export class NodeBalancersLanding extends React.Component<
           destructive
           loading={this.state.deleteConfirmDialog.submitting}
         >
-          Delete
+          Delete NodeBalancer
         </Button>
       </ActionsPanel>
     );

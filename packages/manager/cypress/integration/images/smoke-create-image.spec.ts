@@ -57,7 +57,7 @@ describe('create image', () => {
         fbtVisible('Images');
       });
       cy.wait('@getImages');
-      fbtClick('Add an Image');
+      fbtClick('Create Image');
       fbtClick('Select a Linode').type(`${linode.label}{enter}`);
       cy.wait('@getDisks').then(() => {
         containsClick('Select a Disk').type(`${diskLabel}{enter}`);

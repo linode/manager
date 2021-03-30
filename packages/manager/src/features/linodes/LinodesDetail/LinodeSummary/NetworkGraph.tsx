@@ -30,17 +30,18 @@ const formatTotalTraffic = (value: number) =>
   readableBytes(value, { base10: true }).formatted;
 
 const useStyles = makeStyles((theme: Theme) => ({
+  graphGrids: {
+    flexWrap: 'nowrap',
+    margin: 0,
+    padding: theme.spacing(),
+    [theme.breakpoints.down('md')]: {
+      flexWrap: 'wrap',
+    },
+  },
   chart: {
     position: 'relative',
     paddingTop: theme.spacing(2),
     paddingLeft: theme.spacing(3),
-  },
-  graphGrids: {
-    flexWrap: 'nowrap',
-    paddingLeft: '8px',
-    [theme.breakpoints.down('sm')]: {
-      flexWrap: 'wrap',
-    },
   },
 }));
 
@@ -145,7 +146,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Grid container direction="row" className={classes.graphGrids}>
+    <Grid container className={classes.graphGrids}>
       <Grid item xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}

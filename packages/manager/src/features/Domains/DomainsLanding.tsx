@@ -42,6 +42,7 @@ import {
 import { upsertMultipleDomains } from 'src/store/domains/domains.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
+import DomainBanner from './DomainBanner';
 import DisableDomainDialog from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
 import DomainRow from './DomainTableRow';
@@ -55,11 +56,9 @@ type ClassNames =
   | 'title'
   | 'breadcrumbs'
   | 'domain'
-  | 'dnsWarning'
   | 'tagWrapper'
   | 'tagGroup'
-  | 'importButton'
-  | 'banner';
+  | 'importButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -83,11 +82,6 @@ const styles = (theme: Theme) =>
     domain: {
       width: '60%',
     },
-    dnsWarning: {
-      '& h3:first-child': {
-        marginBottom: theme.spacing(1),
-      },
-    },
     tagWrapper: {
       marginTop: theme.spacing(1) / 2,
       '& [class*="MuiChip"]': {
@@ -101,9 +95,6 @@ const styles = (theme: Theme) =>
     importButton: {
       marginLeft: -theme.spacing(),
       whiteSpace: 'nowrap',
-    },
-    banner: {
-      marginBottom: theme.spacing(),
     },
   });
 
@@ -408,16 +399,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Domains" />
-        {shouldShowBanner && (
-          <Notice warning important className={classes.dnsWarning}>
-            <div className={classes.banner}>
-              <strong>Your DNS zones are not being served.</strong>
-            </div>
-            Your domains will not be served by Linode&#39;s nameservers unless
-            you have at least one active Linode on your account.
-            <Link to="/linodes/create"> You can create one here.</Link>
-          </Notice>
-        )}
+        <DomainBanner hidden={!shouldShowBanner} />
         {this.props.location.state?.recordError && (
           <Notice error text={this.props.location.state.recordError} />
         )}
@@ -524,7 +506,7 @@ const RenderEmpty: React.FC<{
         buttonProps={[
           {
             onClick: props.onCreateDomain,
-            children: 'Add a Domain',
+            children: 'Create Domain',
           },
           {
             onClick: props.onImportZone,

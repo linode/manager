@@ -120,7 +120,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
       >
         {copied && (
           <span className={classes.copied} data-qa-copied>
-            copied
+            Copied!
           </span>
         )}
         <FileCopy />

@@ -21,6 +21,8 @@ const makeMockStore = (notifications: Notification[]) => {
   };
 };
 
+const TICKET_TESTID = 'abuse-ticket-link';
+
 describe('Abuse ticket banner', () => {
   it('should render a banner for an abuse ticket', () => {
     const { queryAllByText } = render(
@@ -40,21 +42,32 @@ describe('Abuse ticket banner', () => {
     expect(queryAllByText(/2 open abuse tickets/)).toHaveLength(1);
   });
 
-  it('should link to the ticket', () => {
+  it('should link to the ticket if there is a single abuse ticket', () => {
     const mockAbuseTicket = abuseTicketNotificationFactory.build();
     const { getByTestId } = render(
       wrapWithTheme(<AbuseTicketBanner />, {
         customStore: makeMockStore([mockAbuseTicket]),
       })
     );
-    const link = getByTestId('abuse-ticket-link');
+    const link = getByTestId(TICKET_TESTID);
     expect(link).toHaveAttribute('href', mockAbuseTicket.entity!.url);
+  });
+
+  it('should link to the ticket list view if there are multiple tickets', () => {
+    const mockAbuseTicket = abuseTicketNotificationFactory.buildList(2);
+    const { getByTestId } = render(
+      wrapWithTheme(<AbuseTicketBanner />, {
+        customStore: makeMockStore(mockAbuseTicket),
+      })
+    );
+    const link = getByTestId(TICKET_TESTID);
+    expect(link).toHaveAttribute('href', '/support/tickets');
   });
 
   it('should return null if there are no abuse tickets', () => {
     const { queryByTestId } = render(wrapWithTheme(<AbuseTicketBanner />));
 
-    expect(queryByTestId('abuse-ticket-link')).toBeNull();
+    expect(queryByTestId(TICKET_TESTID)).toBeNull();
   });
 
   describe('integration tests', () => {

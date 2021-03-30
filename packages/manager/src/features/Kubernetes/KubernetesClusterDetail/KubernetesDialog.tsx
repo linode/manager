@@ -44,7 +44,7 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Delete
+        Delete Cluster
       </Button>
     </ActionsPanel>
   );
@@ -74,7 +74,7 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
   return (
     <ConfirmationDialog
       open={open}
-      title={`Delete ${clusterLabel}`}
+      title={`Delete Cluster ${clusterLabel}`}
       onClose={onClose}
       actions={() => renderActions(disabled, loading, onClose, onDelete)}
     >
@@ -89,7 +89,7 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
           {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
         </strong>
         that will be deleted along with the cluster. Deleting a cluster is
-        permanent and can't be undone.
+        permanent and can&apos;t be undone.
       </Typography>
       <Typography style={{ marginTop: '10px' }}>
         To confirm deletion, type the name of the cluster (<b>{clusterLabel}</b>

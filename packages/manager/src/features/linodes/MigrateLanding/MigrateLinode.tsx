@@ -158,7 +158,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`Migrate ${linode.label ?? ''}`}
+      title={`Migrate Linode ${linode.label ?? ''}`}
       open={open}
       onClose={onClose}
       fullWidth

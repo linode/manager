@@ -87,7 +87,7 @@ const FirewallDialog: React.FC<CombinedProps> = (props) => {
   return (
     <Dialog
       open={open}
-      title={`${capitalize(mode)} ${_label}?`}
+      title={`${capitalize(mode)} Firewall ${_label}?`}
       onClose={props.closeDialog}
       error={error}
       actions={
@@ -99,7 +99,7 @@ const FirewallDialog: React.FC<CombinedProps> = (props) => {
         />
       }
     >
-      Are you sure you want to {mode} {label}?
+      Are you sure you want to {mode} this Firewall?
     </Dialog>
   );
 };
@@ -123,7 +123,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
         destructive={props.mode === 'delete'}
         buttonType="primary"
       >
-        {capitalize(props.mode)}
+        {capitalize(props.mode)} Firewall
       </Button>
     </ActionsPanel>
   );

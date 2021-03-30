@@ -1,9 +1,11 @@
-import { array, boolean, lazy, mixed, number, object, string } from 'yup';
+import { array, boolean, mixed, number, object, string } from 'yup';
 import { parseCIDR } from 'ipaddr.js';
-// import zxcvbn from 'zxcvbn';
-// import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
 
 const validateIP = (ipAddress: string) => {
+  if (ipAddress === '') {
+    // ipam_address is technically required, but empty strings are valid
+    return true;
+  }
   // We accept IP ranges (i.e., CIDR notation).
   try {
     parseCIDR(ipAddress);
@@ -16,33 +18,30 @@ const validateIP = (ipAddress: string) => {
 
 const stackscript_data = array().of(object()).nullable(true);
 
-/**
- * .default() and .lazy() below are required to
- * make this dynamic field naming work out
- */
-export const linodeInterfaceItemSchema = object({
-  label: string()
-    .min(1, 'Label must be between 1 and 64 characters.')
-    .max(64, 'Label must be between 1 and 64 characters.')
-    .matches(
-      /[a-z0-9-]+/,
-      'Interface labels cannot contain special characters.'
+export const linodeInterfaceSchema = array().of(
+  object({
+    purpose: mixed().oneOf(
+      [null, 'public', 'vlan'],
+      'Purpose must be null, public, or vlan.'
     ),
-  purpose: mixed().oneOf(
-    [null, 'public', 'vlan'],
-    'Purpose must be null, public, or vlan.'
-  ),
-  ipam_address: string().test({
-    name: 'validateIPAM',
-    message: 'Must be a valid IPv4 address.',
-    test: validateIP,
-  }),
-}).default(undefined);
-
-export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
-  typeof obj === 'undefined'
-    ? object().notRequired()
-    : object(Object.keys(obj).map((_) => linodeInterfaceItemSchema))
+    label: string().when('purpose', {
+      is: (value) => value === 'vlan',
+      then: string()
+        .required('Label is required.')
+        .min(1, 'Label must be between 1 and 64 characters.')
+        .max(64, 'Label must be between 1 and 64 characters.')
+        .matches(
+          /[a-z0-9-]+/,
+          'Interface labels cannot contain special characters.'
+        ),
+      otherwise: string().notRequired(),
+    }),
+    ipam_address: string().test({
+      name: 'validateIPAM',
+      message: 'Must be a valid IPv4 range',
+      test: validateIP,
+    }),
+  })
 );
 
 // const rootPasswordValidation = string().test(
