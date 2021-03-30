@@ -60,7 +60,7 @@ export class StackScriptSelectionRow extends React.Component<
       };
       return (
         <Grid container alignItems="center" className={classes.selectionGrid}>
-          <Grid item>
+          <Grid item className={classes.selectionGridDetails}>
             <Typography variant="h3">
               {stackScriptUsername && (
                 <label
@@ -83,7 +83,7 @@ export class StackScriptSelectionRow extends React.Component<
               </Typography>
             )}
           </Grid>
-          <Grid item>
+          <Grid item className={classes.selectionGridButton}>
             <Button
               compact
               buttonType="secondary"
@@ -98,28 +98,26 @@ export class StackScriptSelectionRow extends React.Component<
     };
 
     return (
-      <React.Fragment>
-        <TableRow
-          data-qa-table-row={label}
-          rowLink={onSelect ? (e) => onSelect(e, !checked) : undefined}
-          ariaLabel={label}
+      <TableRow
+        data-qa-table-row={label}
+        rowLink={onSelect ? (e) => onSelect(e, !checked) : undefined}
+        ariaLabel={label}
+      >
+        <TableCell>
+          <Radio
+            checked={!disabled && checked}
+            disabled={disabledCheckedSelect || disabled}
+            onChange={onSelect}
+            id={`${stackScriptID}`}
+          />
+        </TableCell>
+        <TableCell
+          className={classes.stackScriptCell}
+          data-qa-stackscript-title
         >
-          <TableCell>
-            <Radio
-              checked={!disabled && checked}
-              disabled={disabledCheckedSelect || disabled}
-              onChange={onSelect}
-              id={`${stackScriptID}`}
-            />
-          </TableCell>
-          <TableCell
-            className={classes.stackScriptCell}
-            data-qa-stackscript-title
-          >
-            {renderLabel()}
-          </TableCell>
-        </TableRow>
-      </React.Fragment>
+          {renderLabel()}
+        </TableCell>
+      </TableRow>
     );
   }
 }

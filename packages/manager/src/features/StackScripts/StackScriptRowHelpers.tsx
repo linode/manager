@@ -8,6 +8,8 @@ export type ClassNames =
   | 'libTitle'
   | 'libDescription'
   | 'selectionGrid'
+  | 'selectionGridDetails'
+  | 'selectionGridButton'
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'detailsButton'
@@ -31,8 +33,6 @@ export const styles = (theme: Theme) =>
     },
     libRadioLabel: {
       cursor: 'pointer',
-      fontSize: '0.875rem',
-      lineHeight: '1.125rem',
     },
     libTitle: {
       fontSize: '0.875rem',
@@ -55,10 +55,29 @@ export const styles = (theme: Theme) =>
       },
     },
     selectionGrid: {
-      flexDirection: 'row',
       flexWrap: 'nowrap',
       alignItems: 'center',
       justifyContent: 'space-between',
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+      },
+    },
+    selectionGridDetails: {
+      [theme.breakpoints.down('xs')]: {
+        '&.MuiGrid-item': {
+          marginTop: 4,
+          paddingBottom: 0,
+        },
+      },
+    },
+    selectionGridButton: {
+      [theme.breakpoints.down('xs')]: {
+        '&.MuiGrid-item': {
+          paddingTop: 0,
+          paddingLeft: 0,
+        },
+      },
     },
     stackScriptCell: {
       padding: 0,
@@ -76,6 +95,12 @@ export const styles = (theme: Theme) =>
       width: 100,
       '&:hover, &:focus': {
         backgroundColor: 'transparent',
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 4,
+        marginLeft: 0,
+        paddingTop: 4,
+        paddingBottom: 4,
       },
     },
     images: {
