@@ -1,3 +1,4 @@
+import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';
@@ -10,8 +11,8 @@ import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import SelectVLAN from './SelectVLAN';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -78,11 +79,13 @@ interface Props {
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
-  changeSelectedVLAN: (vlanID: number[]) => void;
+  vlanLabel: string;
+  ipamAddress: string;
+  handleVLANChange: (updatedInterface: Interface) => void;
   disabled?: boolean;
   hidePrivateIP?: boolean;
-  selectedVlanIDs: number[];
-  vlanError?: string;
+  labelError?: string;
+  ipamError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
 }
 
@@ -92,22 +95,17 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     accountBackups,
     changeBackups,
     changePrivateIP,
-    changeSelectedVLAN,
-    vlanError,
     disabled,
+    vlanLabel,
+    labelError,
+    ipamAddress,
+    ipamError,
+    handleVLANChange,
   } = props;
 
+  const classes = useStyles();
   const flags = useFlags();
   const { account } = useAccount();
-
-  const handleVlanChange = React.useCallback(
-    (vlans: number[]) => {
-      changeSelectedVLAN(vlans);
-    },
-    [changeSelectedVLAN]
-  );
-
-  const classes = useStyles();
 
   const showVlans = isFeatureEnabled(
     'Vlans',
@@ -131,6 +129,16 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   return (
     <Paper className={classes.root} data-qa-add-ons>
       <div className={classes.inner}>
+        {showVlans ? (
+          <AttachVLAN
+            vlanLabel={vlanLabel}
+            labelError={labelError}
+            ipamAddress={ipamAddress}
+            ipamError={ipamError}
+            readOnly={disabled}
+            handleVLANChange={handleVLANChange}
+          />
+        ) : null}
         <Typography variant="h2" className={classes.title}>
           Optional Add-ons
         </Typography>
@@ -199,21 +207,6 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             </React.Fragment>
           )
         }
-        {flags.cmr && showVlans ? (
-          <Grid container className={classes.lastItem}>
-            <Grid item xs={12}>
-              <Divider className={classes.divider} />
-            </Grid>
-            <div className={classes.vlanSelect}>
-              <SelectVLAN
-                selectedRegionID={props.selectedRegionID}
-                selectedVlanIDs={props.selectedVlanIDs}
-                handleSelectVLAN={handleVlanChange}
-                error={vlanError}
-              />
-            </div>
-          </Grid>
-        ) : null}
       </div>
     </Paper>
   );
