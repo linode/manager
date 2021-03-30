@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     color: theme.cmrTextColors.linkActiveLight,
+    fontSize: '0.875rem',
     marginTop: theme.spacing(),
   },
 }));

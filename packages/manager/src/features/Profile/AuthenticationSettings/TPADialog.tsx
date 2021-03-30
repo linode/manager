@@ -6,7 +6,8 @@ import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
-import { ProviderOptions, providers } from './shared';
+import { ProviderOptions } from 'src/featureFlags';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles(() => ({
   dialog: {
@@ -30,9 +31,13 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ThirdPartyDialog: React.FC<CombinedProps> = (props) => {
+const TPADialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
+
   const { open, error, loading, provider, onClose } = props;
+
+  const providers = flags.tpaProviders ?? [];
 
   const displayName =
     providers.find((thisProvider) => thisProvider.name === provider)
@@ -94,4 +99,4 @@ const renderActions = (
   );
 };
 
-export default React.memo(ThirdPartyDialog);
+export default React.memo(TPADialog);

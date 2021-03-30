@@ -3,6 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -14,8 +15,7 @@ import { updateProfile as _updateProfile } from 'src/store/profile/profile.reque
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
-import ThirdParty from './ThirdParty';
-import ThirdPartyContent from './ThirdPartyContent';
+import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
@@ -24,11 +24,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
     padding: theme.spacing(3),
   },
-  tpa: {
-    marginBottom: theme.spacing(),
-  },
   linode: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
+  },
+  divider: {
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -64,17 +64,15 @@ export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
       {!loading && (
         <>
           <Paper className={classes.root}>
-            <Typography className={classes.tpa} variant="h3">
-              Log-In Method
-            </Typography>
-            <ThirdPartyContent authType={authType} />
-            {thirdPartyEnabled && <ThirdParty authType={authType} />}
+            <TPAProviders authType={authType} />
           </Paper>
+
           {!thirdPartyEnabled && (
             <Paper className={classes.root}>
               <Typography className={classes.linode} variant="h3">
                 Linode Authentication
               </Typography>
+              <Divider className={classes.divider} />
               <ResetPassword username={username} />
               <TwoFactor
                 twoFactor={twoFactor}
