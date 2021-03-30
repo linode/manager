@@ -61,7 +61,7 @@ export const StackScriptsLanding: React.FC<CombinedProps> = (props) => {
             <Grid item className="pt0">
               <AddNewLink
                 onClick={goToCreateStackScript}
-                label="Create New StackScript"
+                label="Create StackScript"
                 data-qa-create-new-stackscript
               />
             </Grid>

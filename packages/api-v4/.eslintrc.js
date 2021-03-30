@@ -6,7 +6,7 @@ module.exports = {
     // BUT we decided not to use this feature due to a very important performance impact
     // project: 'tsconfig.json',
     ecmaVersion: 2020,
-    warnOnUnsupportedTypeScriptVersion: true
+    warnOnUnsupportedTypeScriptVersion: true,
   },
   plugins: ['@typescript-eslint', 'sonarjs', 'prettier'],
   extends: [
@@ -15,7 +15,7 @@ module.exports = {
     // like eslint:recommended, except it only turns on rules from our TypeScript-specific plugin.
     'plugin:@typescript-eslint/recommended',
     'plugin:sonarjs/recommended',
-    'plugin:prettier/recommended' // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
+    'plugin:prettier/recommended', // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
   ],
   rules: {
     // prepend `_` to an arg you accept to ignore
@@ -36,7 +36,7 @@ module.exports = {
       'error',
       'rxjs',
       '@material-ui/core',
-      '@material-ui/icons'
+      '@material-ui/icons',
     ],
     'no-console': 'error',
     // allowing to init vars to undefined
@@ -68,20 +68,41 @@ module.exports = {
     'no-multiple-empty-lines': 'error',
     curly: 'warn',
     'sort-keys': 'off',
-    'comma-dangle': 'warn',
+    'comma-dangle': 'off',
     'no-trailing-spaces': 'warn',
     'no-mixed-requires': 'warn',
     'spaced-comment': 'warn',
     'object-shorthand': 'warn',
     // make prettier issues warnings
-    'prettier/prettier': 'warn'
+    'prettier/prettier': 'warn',
   },
   overrides: [
     {
       files: ['webpack*.config.js'],
       rules: {
-        '@typescript-eslint/no-var-requires': 'off'
-      }
-    }
-  ]
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
+    {
+      files: ['*ts'],
+      rules: {
+        '@typescript-eslint/ban-types': [
+          'warn',
+          {
+            types: {
+              String: true,
+              Boolean: true,
+              Number: true,
+              Symbol: true,
+              '{}': false,
+              Object: false,
+              object: false,
+              Function: false,
+            },
+            extendDefaults: true,
+          },
+        ],
+      },
+    },
+  ],
 };

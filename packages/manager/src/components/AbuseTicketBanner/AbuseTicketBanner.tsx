@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 import { ApplicationState } from 'src/store';
 
@@ -12,6 +13,11 @@ export const AbuseTicketBanner: React.FC<{}> = (_) => {
     getAbuseTicket(state.__resources)
   );
   const location = useLocation();
+
+  const {
+    dismissNotifications,
+    hasDismissedNotifications,
+  } = useDismissibleNotifications();
 
   if (!abuseTickets || abuseTickets.length === 0) {
     return null;
@@ -27,16 +33,20 @@ export const AbuseTicketBanner: React.FC<{}> = (_) => {
     </>
   );
 
-  /**
-   * The ticket list page doesn't indicate which tickets are abuse tickets
-   * so for now, the link can just take the user to the first ticket.
-   */
-  const href = abuseTickets[0].entity!.url;
+  const onDismiss = () => {
+    dismissNotifications(abuseTickets);
+  };
+
+  if (hasDismissedNotifications(abuseTickets)) {
+    return null;
+  }
+
+  const href = multiple ? '/support/tickets' : abuseTickets[0].entity.url;
   const isViewingTicket = location.pathname.match(href);
 
   return (
     <Grid item xs={12}>
-      <Notice important error dismissible={false}>
+      <Notice important warning dismissible onClose={onDismiss}>
         <Typography>
           {message}
           {/** Don't link to /support/tickets if we're already on the landing page. */}

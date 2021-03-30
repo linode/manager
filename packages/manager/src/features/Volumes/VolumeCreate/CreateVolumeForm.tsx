@@ -344,6 +344,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   calculatedPrice={values.size / 10}
                   disabled={disabled}
                   isMakingRequest={isSubmitting}
+                  submitText="Create Volume"
                 >
                   <DisplaySectionList displaySections={displaySections} />
                 </CheckoutBar>

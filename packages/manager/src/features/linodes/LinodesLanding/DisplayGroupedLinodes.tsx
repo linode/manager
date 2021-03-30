@@ -1,15 +1,14 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import { compose } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import TableView from 'src/assets/icons/table-view.svg';
+import IconButton from 'src/components/core/IconButton';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
@@ -18,79 +17,58 @@ import PaginationFooter, {
   MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
+import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import { ExtendedLinode } from '../LinodesDetail/types';
 import TableWrapper from './TableWrapper';
-import IconButton from 'src/components/core/IconButton';
-import Tooltip from 'src/components/core/Tooltip';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
 
-type ClassNames =
-  | 'root'
-  | 'tagGridRow'
-  | 'tagHeaderRow'
-  | 'tagHeader'
-  | 'tagHeaderOuter'
-  | 'paginationCell'
-  | 'groupContainer'
-  | 'controlHeader'
-  | 'toggleButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    tagGridRow: {
-      marginBottom: 20,
+const useStyles = makeStyles((theme: Theme) => ({
+  tagGridRow: {
+    marginBottom: 20,
+  },
+  tagHeaderRow: {
+    backgroundColor: theme.bg.main,
+    height: 'auto',
+    '& td': {
+      // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
+      padding: `${theme.spacing(2) + 4}px 0 ${theme.spacing(1) + 2}px`,
+      borderBottom: 'none',
+      borderTop: 'none',
     },
-    tagHeaderRow: {
-      backgroundColor: theme.bg.main,
-      height: 'auto',
-      '& td': {
-        // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-        padding: `${theme.spacing(2) + 4}px 0 ${theme.spacing(1) + 2}px`,
-        borderBottom: 'none',
+  },
+  groupContainer: {
+    [theme.breakpoints.up('md')]: {
+      '& $tagHeaderRow > td': {
+        padding: '10px 0',
         borderTop: 'none',
       },
     },
-    groupContainer: {
-      [theme.breakpoints.up('md')]: {
-        '& $tagHeaderRow > td': {
-          padding: '10px 0',
-          borderTop: 'none',
-        },
-      },
+  },
+  tagHeader: {
+    marginBottom: 2,
+    marginLeft: theme.spacing(),
+  },
+  paginationCell: {
+    padding: 0,
+  },
+  controlHeader: {
+    marginBottom: 28,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    backgroundColor: theme.cmrBGColors.bgTableHeader,
+  },
+  toggleButton: {
+    color: '#d2d3d4',
+    padding: 10,
+    '&:focus': {
+      // Browser default until we get styling direction for focus states
+      outline: '1px dotted #999',
     },
-    tagHeader: {
-      marginBottom: 2,
-      marginLeft: theme.spacing(),
-    },
-    tagHeaderOuter: {},
-    paginationCell: {
-      paddingTop: 2,
-      '& div:first-child': {
-        marginTop: 0,
-      },
-    },
-    controlHeader: {
-      marginBottom: 28,
-      display: 'flex',
-      justifyContent: 'flex-end',
-      backgroundColor: theme.cmrBGColors.bgTableHeader,
-    },
-    toggleButton: {
-      color: '#d2d3d4',
-      padding: 10,
-      '&:focus': {
-        // Browser default until we get styling direction for focus states
-        outline: '1px dotted #999',
-      },
-    },
-  });
+  },
+}));
 
 interface Props {
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
@@ -111,9 +89,11 @@ interface Props {
   isVLAN?: boolean;
 }
 
-type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
+type CombinedProps = Props & OrderByProps;
 
 const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
     data,
     display,
@@ -121,7 +101,6 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
     order,
     orderBy,
     handleOrderChange,
-    classes,
     toggleLinodeView,
     toggleGroupLinodes,
     linodeViewPreference,
@@ -202,15 +181,13 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
             >
               <Grid container>
                 <Grid item xs={12}>
-                  <div className={classes.tagHeaderOuter}>
-                    <Typography
-                      variant="h2"
-                      component="h3"
-                      className={classes.tagHeader}
-                    >
-                      {tag}
-                    </Typography>
-                  </div>
+                  <Typography
+                    variant="h2"
+                    component="h3"
+                    className={classes.tagHeader}
+                  >
+                    {tag}
+                  </Typography>
                 </Grid>
               </Grid>
               <Paginate
@@ -362,6 +339,4 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
   return null;
 };
 
-const styled = withStyles(styles);
-
-export default styled(DisplayGroupedLinodes);
+export default DisplayGroupedLinodes;

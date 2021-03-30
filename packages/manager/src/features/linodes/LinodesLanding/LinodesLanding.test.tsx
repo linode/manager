@@ -57,6 +57,6 @@ describe('ListLinodes', () => {
       )
     );
 
-    expect(getByText('Add a Linode')).toBeInTheDocument();
+    expect(getByText('Create Linode')).toBeInTheDocument();
   });
 });

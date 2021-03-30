@@ -221,23 +221,23 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
 };
 
 const titleFromState = (state: ApplicationState['volumeDrawer']) => {
-  const { mode, volumeLabel, linodeLabel } = state;
+  const { mode, linodeLabel } = state;
 
   switch (mode) {
     case modes.CREATING_FOR_LINODE:
-      return `Create a volume for ${linodeLabel}`;
+      return `Create Volume for ${linodeLabel}`;
 
     case modes.RESIZING:
-      return `Resize volume ${volumeLabel}`;
+      return `Resize Volume`;
 
     case modes.CLONING:
-      return `Clone volume ${volumeLabel}`;
+      return `Clone Volume`;
 
     case modes.EDITING:
-      return `Edit volume ${volumeLabel}`;
+      return `Edit Volume`;
 
     case modes.ATTACHING:
-      return `Attach volume to ${linodeLabel}`;
+      return `Attach Volume to ${linodeLabel}`;
 
     case modes.VIEWING_CONFIG:
       return `Volume Configuration`;
