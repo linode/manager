@@ -262,7 +262,14 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const handleSuccess = () => {
       formik.setSubmitting(false);
-      queryClient.invalidateQueries('vlans');
+      // If there's any chance a VLAN changed here, make sure our query data is up to date
+      if (
+        configData.interfaces?.some(
+          (thisInterface) => thisInterface.purpose === 'vlan'
+        )
+      ) {
+        queryClient.invalidateQueries('vlans');
+      }
       onClose();
     };
 
