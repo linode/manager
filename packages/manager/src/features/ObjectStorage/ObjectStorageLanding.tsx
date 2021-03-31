@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import {
@@ -14,6 +15,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import Typography from 'src/components/core/Typography';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -22,6 +24,7 @@ import bucketDrawerContainer, {
   DispatchProps,
 } from 'src/containers/bucketDrawer.container';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useFlags from 'src/hooks/useFlags';
 import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
 import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
@@ -243,21 +246,41 @@ const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const NOTIFICATION_KEY = 'obj-billing-notification';
+
 export const BillingNotice: React.FC<{}> = React.memo(() => {
   const classes = useBillingNoticeStyles();
 
   const dispatch: Dispatch = useDispatch();
 
+  const {
+    dismissNotifications,
+    hasDismissedNotifications,
+  } = useDismissibleNotifications();
+
   const openDrawer = () => dispatch(openBucketDrawer());
 
+  const handleClose = () => {
+    dismissNotifications([NOTIFICATION_KEY], {
+      label: NOTIFICATION_KEY,
+      expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+    });
+  };
+
+  if (hasDismissedNotifications([NOTIFICATION_KEY])) {
+    return null;
+  }
+
   return (
-    <Notice warning important>
-      You are being billed for Object Storage but do not have any Buckets. You
-      can cancel Object Storage in your{' '}
-      <Link to="/account/settings">Account Settings</Link>, or{' '}
-      <button className={classes.button} onClick={openDrawer}>
-        create a Bucket.
-      </button>
+    <Notice warning important dismissible onClose={handleClose}>
+      <Typography>
+        You are being billed for Object Storage but do not have any Buckets. You
+        can cancel Object Storage in your{' '}
+        <Link to="/account/settings">Account Settings</Link>, or{' '}
+        <button className={classes.button} onClick={openDrawer}>
+          create a Bucket.
+        </button>
+      </Typography>
     </Notice>
   );
 });

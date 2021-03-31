@@ -1,110 +1,111 @@
-import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
-import * as React from 'react';
-import Chip from 'src/components/core/Chip';
 import { createStyles, Theme } from 'src/components/core/styles';
-import ShowMore from 'src/components/ShowMore';
 
 export type ClassNames =
+  | 'row'
   | 'link'
   | 'libRadio'
   | 'libRadioLabel'
   | 'libTitle'
   | 'libDescription'
   | 'selectionGrid'
+  | 'selectionGridDetails'
+  | 'selectionGridButton'
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'detailsButton'
-  | 'chip';
+  | 'images';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const styles = (theme: Theme) =>
   createStyles({
+    row: {
+      height: 44,
+    },
     link: {
       color: theme.cmrTextColors.tableStatic,
     },
     libRadio: {
       display: 'flex',
       flexWrap: 'wrap',
-      height: '100%',
       alignItems: 'center',
+      height: '100%',
       width: 70,
     },
     libRadioLabel: {
       cursor: 'pointer',
     },
     libTitle: {
+      fontSize: '0.875rem',
+      lineHeight: '1.125rem',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
       [theme.breakpoints.down('sm')]: {
         wordBreak: 'break-all',
       },
     },
     libDescription: {
-      [theme.breakpoints.down('sm')]: {
-        fontSize: 12,
-      },
+      color: theme.cmrTextColors.tableHeader,
+      fontSize: '.75rem',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
       [theme.breakpoints.between('sm', 'lg')]: {
         wordBreak: 'break-word',
       },
     },
     selectionGrid: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      [theme.breakpoints.up('sm')]: {
-        flexWrap: 'nowrap',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+      flexWrap: 'nowrap',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+      },
+    },
+    selectionGridDetails: {
+      [theme.breakpoints.down('xs')]: {
+        '&.MuiGrid-item': {
+          marginTop: 4,
+          paddingBottom: 0,
+        },
+      },
+    },
+    selectionGridButton: {
+      [theme.breakpoints.down('xs')]: {
+        '&.MuiGrid-item': {
+          paddingTop: 0,
+          paddingLeft: 0,
+        },
       },
     },
     stackScriptCell: {
+      padding: 0,
       width: '100%',
     },
     stackScriptUsername: {
-      color: theme.color.grey1,
+      color: theme.cmrTextColors.tableStatic,
+      fontSize: '0.875rem',
+      lineHeight: '1.125rem',
     },
     detailsButton: {
-      padding: 0,
       fontSize: '0.875rem',
-      marginTop: -theme.spacing(1),
-      [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(1),
-        marginTop: 0,
-        width: 100,
-      },
+      marginTop: 0,
+      padding: theme.spacing(),
+      width: 100,
       '&:hover, &:focus': {
         backgroundColor: 'transparent',
       },
-    },
-    chip: {
-      '& .MuiChip-root:first-child': {
-        backgroundColor: theme.cmrBGColors.bgApp,
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 4,
+        marginLeft: 0,
+        paddingTop: 4,
+        paddingBottom: 4,
       },
     },
+    images: {
+      fontSize: '0.75rem',
+      overflowWrap: 'break-word',
+      whiteSpace: 'pre-wrap',
+    },
   });
-
-const createTag: (images: string) => JSX.Element = (v) => {
-  const randomId = Math.floor(Math.random() * 1000);
-  return (
-    <Chip
-      label={v}
-      key={`${v}-${randomId}`}
-      style={{ margin: '2px 2px', outline: 0 }}
-      role="term"
-    />
-  );
-};
-
-const createTags: (images: string[]) => JSX.Element[] = map(createTag);
-
-const createShowMore: (images: string[]) => JSX.Element = (images) => (
-  <ShowMore key={0} items={images} render={createTags} ariaItemType="images" />
-);
-
-export const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = compose<
-  string[],
-  string[][],
-  any,
-  JSX.Element[][]
->(
-  over(lensIndex(1), unless(isEmpty, createShowMore)),
-  over(lensIndex(0), createTags),
-  splitAt(1)
-);
