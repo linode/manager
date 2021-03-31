@@ -15,6 +15,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import Typography from 'src/components/core/Typography';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -272,12 +273,14 @@ export const BillingNotice: React.FC<{}> = React.memo(() => {
 
   return (
     <Notice warning important dismissible onClose={handleClose}>
-      You are being billed for Object Storage but do not have any Buckets. You
-      can cancel Object Storage in your{' '}
-      <Link to="/account/settings">Account Settings</Link>, or{' '}
-      <button className={classes.button} onClick={openDrawer}>
-        create a Bucket.
-      </button>
+      <Typography>
+        You are being billed for Object Storage but do not have any Buckets. You
+        can cancel Object Storage in your{' '}
+        <Link to="/account/settings">Account Settings</Link>, or{' '}
+        <button className={classes.button} onClick={openDrawer}>
+          create a Bucket.
+        </button>
+      </Typography>
     </Notice>
   );
 });
