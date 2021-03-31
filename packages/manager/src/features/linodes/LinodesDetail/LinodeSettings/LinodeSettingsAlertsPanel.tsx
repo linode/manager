@@ -20,6 +20,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AlertSection from './AlertSection';
 
 interface Props {
+  isBareMetalInstance?: boolean;
   linodeId: number;
   linodeLabel: string;
   linodeAlerts: LinodeAlerts;
@@ -96,6 +97,8 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       this.state.errors
     );
 
+    const { isBareMetalInstance } = this.props;
+
     return [
       {
         title: 'CPU Usage',
@@ -117,6 +120,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         },
         error: hasErrorFor('alerts.cpu'),
         endAdornment: '%',
+        hidden: isBareMetalInstance,
       },
       {
         radioInputLabel: 'disk_io_state',
@@ -137,6 +141,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           ),
         error: hasErrorFor('alerts.io'),
         endAdornment: 'IOPS',
+        hidden: isBareMetalInstance,
       },
       {
         radioInputLabel: 'incoming_traffic_state',
@@ -198,7 +203,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         error: hasErrorFor('alerts.transfer_quota'),
         endAdornment: '%',
       },
-    ];
+    ].filter((thisAlert) => !thisAlert.hidden);
   };
 
   renderExpansionActions = () => {
@@ -229,6 +234,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   setLinodeAlertThresholds = () => {
     const {
       linodeActions: { updateLinode },
+      isBareMetalInstance,
     } = this.props;
     this.setState(set(lensPath(['errors']), undefined));
     this.setState(set(lensPath(['success']), undefined));
@@ -237,8 +243,12 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     updateLinode({
       linodeId: this.props.linodeId,
       alerts: {
-        cpu: valueUnlessOff(this.state.cpuusage),
-        network_in: valueUnlessOff(this.state.incoming),
+        cpu: isBareMetalInstance
+          ? undefined
+          : valueUnlessOff(this.state.cpuusage),
+        network_in: isBareMetalInstance
+          ? undefined
+          : valueUnlessOff(this.state.incoming),
         network_out: valueUnlessOff(this.state.outbound),
         transfer_quota: valueUnlessOff(this.state.transfer),
         io: valueUnlessOff(this.state.diskio),

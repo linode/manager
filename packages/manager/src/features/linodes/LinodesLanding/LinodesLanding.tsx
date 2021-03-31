@@ -30,7 +30,6 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
-import DetachLinodeDialog from 'src/features/Vlans/DetachLinodeDialog/DetachLinodeDialog';
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
@@ -72,7 +71,6 @@ interface State {
   groupByTag: boolean;
   linodeResizeOpen: boolean;
   linodeMigrateOpen: boolean;
-  detachLinodeFromVlanDialogOpen: boolean;
 }
 
 interface Params {
@@ -83,10 +81,6 @@ interface Params {
 type RouteProps = RouteComponentProps<Params>;
 
 export interface Props {
-  isDashboard?: boolean;
-  isVLAN?: boolean;
-  vlanID?: number;
-  vlanLabel?: string;
   filterLinodesFn?: (linode: Linode) => boolean;
   extendLinodesFn?: (linode: Linode) => any;
   LandingHeader?: React.ReactElement;
@@ -117,7 +111,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     groupByTag: false,
     linodeResizeOpen: false,
     linodeMigrateOpen: false,
-    detachLinodeFromVlanDialogOpen: false,
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
@@ -190,10 +183,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           enableBackupsDialogOpen: true,
         });
         break;
-      case 'detach_vlan':
-        this.setState({
-          detachLinodeFromVlanDialogOpen: true,
-        });
     }
     this.setState({
       selectedLinodeID: linodeID,
@@ -210,7 +199,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodeResizeOpen: false,
       linodeMigrateOpen: false,
       enableBackupsDialogOpen: false,
-      detachLinodeFromVlanDialogOpen: false,
     });
   };
 
@@ -231,8 +219,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
 
     // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
-    // This is used in the VLAN Details view to only show Linodes belonging to
-    // a given VLAN.
     const filteredLinodes = this.props.filterLinodesFn
       ? linodesData.filter(this.props.filterLinodesFn)
       : linodesData;
@@ -268,10 +254,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
       return (
         <React.Fragment>
-          {/** Don't override the document title if we're rendering this on the Dashboard */}
-          {!this.props.isDashboard && !this.props.isVLAN ? (
-            <DocumentTitleSegment segment="Linodes" />
-          ) : null}
+          <DocumentTitleSegment segment="Linodes" />
           <ErrorState errorText={errorText} />
         </React.Fragment>
       );
@@ -327,23 +310,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           linodeId={this.state.selectedLinodeID ?? -1}
         />
 
-        {!this.props.isVLAN &&
-          this.props.someLinodesHaveScheduledMaintenance && (
-            <MaintenanceBanner
-              userTimezone={this.props.userTimezone}
-              userProfileError={this.props.userProfileError}
-              userProfileLoading={this.props.userProfileLoading}
-            />
-          )}
+        {this.props.someLinodesHaveScheduledMaintenance && (
+          <MaintenanceBanner
+            userTimezone={this.props.userTimezone}
+            userProfileError={this.props.userProfileError}
+            userProfileLoading={this.props.userProfileLoading}
+          />
+        )}
         <Grid
           container
           className={this.props.flags.cmr ? classes.cmrSpacing : ''}
         >
           <Grid item xs={12}>
-            {/** Don't override the document title if we're rendering this on the Dashboard */}
-            {!this.props.isDashboard && !this.props.isVLAN ? (
-              <DocumentTitleSegment segment="Linodes" />
-            ) : null}
+            <DocumentTitleSegment segment="Linodes" />
             <PreferenceToggle<boolean>
               localStorageKey="GROUP_LINODES"
               preferenceOptions={[false, true]}
@@ -439,7 +418,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   handleOrderChange,
                                   order,
                                   orderBy,
-                                  isVLAN: this.props.isVLAN,
                                 };
 
                                 return linodesAreGrouped ? (
@@ -473,70 +451,69 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                 );
                               }}
                             </OrderBy>
-                            {this.props.isVLAN ? null : (
-                              <Grid
-                                container
-                                className={classes.CSVwrapper}
-                                justify="flex-end"
-                              >
-                                <Grid item className={classes.CSVlinkContainer}>
-                                  <CSVLink
-                                    data={linodesData.map((e) => {
-                                      const maintenance = e.maintenance?.when
-                                        ? {
-                                            ...e.maintenance,
-                                            when: formatDateISO(
-                                              e.maintenance?.when
-                                            ),
-                                          }
-                                        : { when: null };
 
-                                      const lastBackup =
-                                        e.backups.last_successful === null
-                                          ? e.backups.enabled
-                                            ? 'Scheduled'
-                                            : 'Never'
-                                          : e.backups.last_successful;
+                            <Grid
+                              container
+                              className={classes.CSVwrapper}
+                              justify="flex-end"
+                            >
+                              <Grid item className={classes.CSVlinkContainer}>
+                                <CSVLink
+                                  data={linodesData.map((e) => {
+                                    const maintenance = e.maintenance?.when
+                                      ? {
+                                          ...e.maintenance,
+                                          when: formatDateISO(
+                                            e.maintenance?.when
+                                          ),
+                                        }
+                                      : { when: null };
 
-                                      return {
-                                        ...e,
-                                        lastBackup,
-                                        maintenance,
-                                        linodeDescription: getLinodeDescription(
-                                          e.label,
-                                          e.specs.memory,
-                                          e.specs.disk,
-                                          e.specs.vcpus,
-                                          '',
-                                          {}
-                                        ),
-                                      };
-                                    })}
-                                    headers={
-                                      this.props
-                                        .someLinodesHaveScheduledMaintenance
-                                        ? [
-                                            ...headers,
-                                            /** only add maintenance window to CSV if one Linode has a window */
-                                            {
-                                              label: 'Maintenance Status',
-                                              key: 'maintenance.when',
-                                            },
-                                          ]
-                                        : headers
-                                    }
-                                    filename={`linodes-${formatDate(
-                                      DateTime.local().toISO()
-                                    )}.csv`}
-                                    className={`${classes.CSVlink} ${
-                                      this.props.flags.cmr && classes.cmrCSVlink
-                                    }`}
-                                  >
-                                    Download CSV
-                                  </CSVLink>
-                                </Grid>
+                                    const lastBackup =
+                                      e.backups.last_successful === null
+                                        ? e.backups.enabled
+                                          ? 'Scheduled'
+                                          : 'Never'
+                                        : e.backups.last_successful;
+
+                                    return {
+                                      ...e,
+                                      lastBackup,
+                                      maintenance,
+                                      linodeDescription: getLinodeDescription(
+                                        e.label,
+                                        e.specs.memory,
+                                        e.specs.disk,
+                                        e.specs.vcpus,
+                                        '',
+                                        {}
+                                      ),
+                                    };
+                                  })}
+                                  headers={
+                                    this.props
+                                      .someLinodesHaveScheduledMaintenance
+                                      ? [
+                                          ...headers,
+                                          /** only add maintenance window to CSV if one Linode has a window */
+                                          {
+                                            label: 'Maintenance Status',
+                                            key: 'maintenance.when',
+                                          },
+                                        ]
+                                      : headers
+                                  }
+                                  filename={`linodes-${formatDate(
+                                    DateTime.local().toISO()
+                                  )}.csv`}
+                                  className={`${classes.CSVlink} ${
+                                    this.props.flags.cmr && classes.cmrCSVlink
+                                  }`}
+                                >
+                                  Download CSV
+                                </CSVLink>
                               </Grid>
-                            )}
+                            </Grid>
                           </Grid>
                         </React.Fragment>
                       );
@@ -565,18 +542,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               linodeLabel={this.state.selectedLinodeLabel}
               handleDelete={this.props.deleteLinode}
             />
-            {this.props.isVLAN &&
-            !!this.props.vlanID &&
-            !!this.props.vlanLabel ? (
-              <DetachLinodeDialog
-                open={this.state.detachLinodeFromVlanDialogOpen}
-                closeDialog={this.closeDialogs}
-                vlanID={this.props.vlanID}
-                vlanLabel={this.props.vlanLabel}
-                linodeID={this.state.selectedLinodeID}
-                linodeLabel={this.state.selectedLinodeLabel}
-              />
-            ) : null}
           </React.Fragment>
         )}
       </React.Fragment>

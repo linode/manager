@@ -9,11 +9,12 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import formatDate from 'src/utilities/formatDate';
 import LinodeRow from './LinodeRow';
 
 interface Props {
-  data: LinodeWithMaintenanceAndDisplayStatus[];
+  data: ExtendedLinodeWithPlan[];
   images: Image[];
   showHead?: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
@@ -23,7 +24,11 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  isVLAN: boolean;
+}
+
+export interface ExtendedLinodeWithPlan
+  extends LinodeWithMaintenanceAndDisplayStatus {
+  _type?: ExtendedType;
 }
 
 type CombinedProps = Props & PaginationProps;
@@ -83,7 +88,7 @@ export const ListView: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line
     <>
       {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
-      {data.map((linode: any, idx: number) => (
+      {data.map((linode: ExtendedLinodeWithPlan, idx: number) => (
         <LinodeRow
           backups={linode.backups}
           id={linode.id}
@@ -101,16 +106,13 @@ export const ListView: React.FC<CombinedProps> = (props) => {
           disk={linode.specs.disk}
           vcpus={linode.specs.vcpus}
           memory={linode.specs.memory}
-          type={linode.type}
-          plan={linode.plan}
+          type={linode._type}
           image={linode.image}
-          vlanIP={linode._vlanIP}
           key={`linode-row-${idx}`}
           openTagDrawer={openTagDrawer}
           openDialog={openDialog}
           openNotificationDrawer={notificationContext.openDrawer}
           openPowerActionDialog={openPowerActionDialog}
-          isVLAN={props.isVLAN}
         />
       ))}
       <TagDrawer

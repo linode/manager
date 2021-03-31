@@ -37,18 +37,18 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
   const { linodes } = useLinodes();
   const { typesMap } = useTypes();
 
-  const linodesDataWithPlan = Object.values(linodes.itemsById).map(
+  const linodesDataWithFullType = Object.values(linodes.itemsById).map(
     (thisLinode) => {
       return {
         ...thisLinode,
-        plan: typesMap[thisLinode.type ?? '']?.label ?? 'Unknown',
+        _type: typesMap[thisLinode.type ?? ''],
       };
     }
   );
 
   const linodesWithMaintenance = addMaintenanceToLinodes(
     accountMaintenanceData ?? [],
-    linodesDataWithPlan
+    linodesDataWithFullType
   );
 
   const someLinodesHaveScheduledMaintenance = accountMaintenanceData?.some(

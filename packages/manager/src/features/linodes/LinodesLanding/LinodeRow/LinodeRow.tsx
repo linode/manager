@@ -23,6 +23,7 @@ import {
   transitionText,
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import hasMutationAvailable, {
   HasMutationAvailable,
@@ -51,12 +52,9 @@ interface Props {
   vcpus: number;
   status: LinodeStatus;
   displayStatus: string;
-  type: null | string;
-  plan: string;
+  type?: ExtendedType;
   tags: string[];
   mostRecentBackup: string | null;
-  vlanIP?: string;
-  isVLAN?: boolean;
   openTagDrawer: (
     linodeID: number,
     linodeLabel: string,
@@ -99,20 +97,16 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     vcpus,
     memory,
     type,
-    plan,
     tags,
     image,
-    vlanIP,
     // other props
     classes,
     linodeNotifications,
     openDialog,
     openPowerActionDialog,
     openNotificationDrawer,
-    // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable,
-    isVLAN,
   } = props;
 
   const loading = linodeInTransition(status, recentEvent);
@@ -145,7 +139,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
       recentEvent={recentEvent}
       backups={backups}
       id={id}
-      type={type}
       ipv4={ipv4}
       ipv6={ipv6}
       label={label}
@@ -159,7 +152,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
       memory={memory}
       image={image}
       maintenance={maintenanceStartTime}
-      isVLAN={isVLAN}
     />
   );
 
@@ -177,7 +169,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
         className={classNames({
           [classes.statusCell]: true,
           [classes.statusCellMaintenance]: maintenanceStartTime,
-          [classes.vlan_Status]: isVLAN,
         })}
         data-qa-status
       >
@@ -217,37 +208,29 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           </div>
         )}
       </TableCell>
-      {props.isVLAN ? (
-        <TableCell className={classes.ipCell} data-qa-ips>
-          <div className={classes.ipCellWrapper}>{vlanIP}</div>
+
+      <Hidden xsDown>
+        <TableCell className={classes.planCell} data-qa-ips>
+          <div className={classes.planCell}>{type?.label ?? 'Unknown'}</div>
         </TableCell>
-      ) : null}
-      {props.isVLAN ? null : (
-        <>
-          <Hidden xsDown>
-            <TableCell className={classes.planCell} data-qa-ips>
-              <div className={classes.planCell}>{plan}</div>
-            </TableCell>
-            <TableCell className={classes.ipCell} data-qa-ips>
-              <div className={classes.ipCellWrapper}>
-                <IPAddress ips={ipv4} copyRight />
-              </div>
-            </TableCell>
-            <Hidden mdDown>
-              <TableCell className={classes.regionCell} data-qa-region>
-                <RegionIndicator region={region} />
-              </TableCell>
-            </Hidden>
-          </Hidden>
-          <Hidden mdDown>
-            <LinodeRowBackupCell
-              linodeId={id}
-              backupsEnabled={backups.enabled || false}
-              mostRecentBackup={mostRecentBackup || ''}
-            />
-          </Hidden>
-        </>
-      )}
+        <TableCell className={classes.ipCell} data-qa-ips>
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={ipv4} copyRight />
+          </div>
+        </TableCell>
+        <Hidden mdDown>
+          <TableCell className={classes.regionCell} data-qa-region>
+            <RegionIndicator region={region} />
+          </TableCell>
+        </Hidden>
+      </Hidden>
+      <Hidden mdDown>
+        <LinodeRowBackupCell
+          linodeId={id}
+          backupsEnabled={backups.enabled || false}
+          mostRecentBackup={mostRecentBackup || ''}
+        />
+      </Hidden>
 
       <TableCell className={classes.actionCell} data-qa-notifications>
         <div className={classes.actionInner}>

@@ -27,7 +27,8 @@ import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useTypes } from 'src/hooks/useTypes';
 import { useRegionsQuery } from 'src/queries/regions';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { MapState } from 'src/store/types';
 import {
   sendLinodeActionEvent,
@@ -57,7 +58,7 @@ export interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeRegion: string;
-  linodeType: string | null;
+  linodeType?: ExtendedType;
   linodeBackups: LinodeBackups;
   linodeStatus: string;
   openDialog: (
@@ -105,7 +106,18 @@ export const buildQueryStringForLinodeClone = (
 };
 
 export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
-  const { linodeRegion, linodeType } = props;
+  const {
+    linodeId,
+    linodeLabel,
+    linodeRegion,
+    linodeStatus,
+    linodeType,
+    openPowerActionDialog,
+    inlineLabel,
+    inTableContext,
+    openDialog,
+    readOnly,
+  } = props;
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -150,17 +162,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  const {
-    linodeId,
-    linodeLabel,
-    linodeStatus,
-    openPowerActionDialog,
-    inlineLabel,
-    inTableContext,
-    openDialog,
-    readOnly,
-  } = props;
-
   const hasHostMaintenance = linodeStatus === 'stopped';
   const maintenanceProps = {
     disabled: hasHostMaintenance,
@@ -181,6 +182,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
 
   const inLandingListView = matchesMdDown && inTableContext;
   const inEntityView = matchesSmDown;
+  const isBareMetalInstance = linodeType?.class === 'metal';
 
   const actions = [
     inLandingListView || inEntityView || inTableContext
@@ -223,32 +225,36 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
           ...readOnlyProps,
         }
       : null,
-    {
-      title: 'Clone',
-      onClick: () => {
-        sendLinodeActionMenuItemEvent('Clone');
-        history.push({
-          pathname: '/linodes/create',
-          search: buildQueryStringForLinodeClone(
-            linodeId,
-            linodeRegion,
-            linodeType,
-            types.entities,
-            regions
-          ),
-        });
-      },
-      ...maintenanceProps,
-      ...readOnlyProps,
-    },
-    {
-      title: 'Resize',
-      onClick: () => {
-        openDialog('resize', linodeId);
-      },
-      ...maintenanceProps,
-      ...readOnlyProps,
-    },
+    isBareMetalInstance
+      ? null
+      : {
+          title: 'Clone',
+          onClick: () => {
+            sendLinodeActionMenuItemEvent('Clone');
+            history.push({
+              pathname: '/linodes/create',
+              search: buildQueryStringForLinodeClone(
+                linodeId,
+                linodeRegion,
+                linodeType?.id ?? null,
+                types.entities,
+                regions
+              ),
+            });
+          },
+          ...maintenanceProps,
+          ...readOnlyProps,
+        },
+    isBareMetalInstance
+      ? null
+      : {
+          title: 'Resize',
+          onClick: () => {
+            openDialog('resize', linodeId);
+          },
+          ...maintenanceProps,
+          ...readOnlyProps,
+        },
     {
       title: 'Rebuild',
       onClick: () => {
@@ -267,15 +273,17 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
       ...maintenanceProps,
       ...readOnlyProps,
     },
-    {
-      title: 'Migrate',
-      onClick: () => {
-        sendMigrationNavigationEvent('/linodes');
-        sendLinodeActionMenuItemEvent('Migrate');
-        openDialog('migrate', linodeId);
-      },
-      ...readOnlyProps,
-    },
+    isBareMetalInstance
+      ? null
+      : {
+          title: 'Migrate',
+          onClick: () => {
+            sendMigrationNavigationEvent('/linodes');
+            sendLinodeActionMenuItemEvent('Migrate');
+            openDialog('migrate', linodeId);
+          },
+          ...readOnlyProps,
+        },
     {
       title: 'Delete',
       onClick: () => {
