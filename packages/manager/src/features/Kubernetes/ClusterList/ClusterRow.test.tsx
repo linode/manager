@@ -32,6 +32,6 @@ describe('ClusterRow component', () => {
     const { getByText } = render(wrapWithTableBody(<ClusterRow {...props} />));
 
     getByText('cluster-1');
-    getByText('us-central');
+    getByText('Dallas, TX');
   });
 });

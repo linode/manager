@@ -36,8 +36,8 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
-import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
-import regionsContainer from 'src/containers/regions.container';
+import { dcDisplayCountry } from 'src/constants';
+import withRegions from 'src/containers/regions.container';
 import {
   hasGrant,
   isRestrictedUser,
@@ -481,7 +481,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const { region } = this.state.nodeBalancerFields;
     let displaySections;
     if (region) {
-      const foundRegion = (regionsData || []).find((r) => r.id === region);
+      const foundRegion = regionsData.find((r) => r.id === region);
       if (foundRegion) {
         displaySections = [
           {
@@ -544,7 +544,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               }}
             />
             <SelectRegionPanel
-              regions={regionsData || []}
+              regions={regionsData}
               error={hasErrorFor('region')}
               selectedID={nodeBalancerFields.region}
               handleSelection={this.regionChange}
@@ -816,14 +816,6 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
 });
 
 const connected = connect(mapStateToProps);
-
-const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data
-    .filter((region) => region.id !== 'ap-northeast-1a') // Don't show Tokyo1 as an option
-    .map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
-  regionsLoading: loading,
-  regionsError: error,
-}));
 
 export default recompose<CombinedProps, {}>(
   connected,

@@ -1,5 +1,4 @@
 import { Grant } from '@linode/api-v4/lib/account';
-import { Region } from '@linode/api-v4/lib/regions';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -9,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { useRegionsQuery } from 'src/queries/regions';
 import { MapState } from 'src/store/types';
 import { openForConfig, viewResizeInstructions } from 'src/store/volumeForm';
 import CreateVolumeForm from './CreateVolumeForm';
@@ -35,7 +35,6 @@ interface StateProps {
   linodeRegion?: string;
   message?: string;
   readOnly?: boolean;
-  regions: Region[];
 }
 
 interface DispatchProps {
@@ -67,7 +66,8 @@ type CombinedProps = StateProps & RouteComponentProps<{}> & DispatchProps;
 
 const VolumeCreate: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { actions, regions, history } = props;
+  const regions = useRegionsQuery().data ?? [];
+  const { actions, history } = props;
 
   return (
     <>
@@ -115,7 +115,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
   );
 
   return {
-    regions: state.__resources.regions.entities,
     linode_id: linodeId,
     linodeLabel,
     linodeRegion,

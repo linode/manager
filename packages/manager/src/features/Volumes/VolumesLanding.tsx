@@ -20,9 +20,6 @@ import Placeholder from 'src/components/Placeholder';
 import PreferenceToggle from 'src/components/PreferenceToggle';
 import { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
-import withRegions, {
-  DefaultProps as RegionProps,
-} from 'src/containers/regions.container';
 import withVolumes, {
   StateProps as WithVolumesProps,
 } from 'src/containers/volumes.container';
@@ -101,8 +98,7 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   WithSnackbarProps &
-  WithMappedVolumesProps &
-  RegionProps;
+  WithMappedVolumesProps;
 
 const volumeHeaders = [
   {
@@ -487,6 +483,5 @@ export default compose<CombinedProps, Props>(
       };
     }
   ),
-  withRegions(),
   withSnackbar
 )(VolumesLanding);

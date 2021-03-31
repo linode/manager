@@ -132,10 +132,6 @@ import profile, {
   defaultState as defaultProfileState,
   State as ProfileState,
 } from 'src/store/profile/profile.reducer';
-import regions, {
-  defaultState as defaultRegionsState,
-  State as RegionsState,
-} from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, {
   defaultState as stackScriptDrawerDefaultState,
   State as StackScriptDrawerState,
@@ -209,7 +205,6 @@ const __resourcesDefaultState = {
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   profile: defaultProfileState,
-  regions: defaultRegionsState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
@@ -236,7 +231,6 @@ export interface ResourcesState {
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
   profile: ProfileState;
-  regions: RegionsState;
   types: TypesState;
   volumes: VolumesState;
   buckets: BucketsState;
@@ -312,7 +306,6 @@ const __resources = combineReducers({
   nodeBalancerConfigs,
   notifications,
   profile,
-  regions,
   types,
   volumes,
   buckets,

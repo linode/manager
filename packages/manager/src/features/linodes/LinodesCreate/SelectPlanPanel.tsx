@@ -471,5 +471,5 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
   styled,
-  withRegions()
+  withRegions
 )(SelectPlanPanel);

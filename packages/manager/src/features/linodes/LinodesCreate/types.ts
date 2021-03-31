@@ -45,7 +45,7 @@ export interface WithLinodesProps {
 }
 
 export interface WithRegionsProps {
-  regionsData?: ExtendedRegion[];
+  regionsData: ExtendedRegion[];
   regionsLoading: boolean;
   regionsError?: APIError[];
 }

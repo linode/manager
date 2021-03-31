@@ -1,5 +1,4 @@
 import { Grant } from '@linode/api-v4/lib/account';
-import { Region } from '@linode/api-v4/lib/regions';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -171,7 +170,6 @@ interface StateProps {
   linodeRegion?: string;
   message?: string;
   readOnly?: boolean;
-  regions: Region[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => {
@@ -200,7 +198,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
 
   return {
     drawerTitle: titleFromState(state.volumeDrawer),
-    regions: state.__resources.regions.entities,
     isOpen: mode !== modes.CLOSED,
     linodeId,
     linodeLabel,

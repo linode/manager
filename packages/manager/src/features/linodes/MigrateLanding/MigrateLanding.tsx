@@ -13,7 +13,6 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -22,30 +21,23 @@ import Error from 'src/components/ErrorState';
 import HelpIcon from 'src/components/HelpIcon';
 import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
-
+import { MBpsInterDC } from 'src/constants';
+import { resetEventsPolling } from 'src/eventsPolling';
+import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
+import { displayType } from 'src/features/linodes/presentation';
+import { useRegionsQuery } from 'src/queries/regions';
+import { ApplicationState } from 'src/store';
+import { formatDate } from 'src/utilities/formatDate';
+import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
 import LinodeControls from '../LinodesDetail/LinodesDetailHeader/LinodeControls';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
 import LinodeBusyStatus from '../LinodesDetail/LinodeSummary/LinodeBusyStatus';
-
-import { resetEventsPolling } from 'src/eventsPolling';
-import { displayType } from 'src/features/linodes/presentation';
-import { ApplicationState } from 'src/store';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { linodeInTransition } from '../transitions';
-
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-
-import withRegions, {
-  DefaultProps as RegionProps,
-} from 'src/containers/regions.container';
-
-import { MBpsInterDC } from 'src/constants';
-import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
-import { formatDate } from 'src/utilities/formatDate';
-import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -56,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = LinodeContextProps & WithTypesAndImages & RegionProps;
+type CombinedProps = LinodeContextProps & WithTypesAndImages;
 
 const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -73,6 +65,14 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
   const {
+    data,
+    isLoading: regionsLoading,
+    error: regionsError,
+    dataUpdatedAt: regionsLastUpdated,
+  } = useRegionsQuery();
+  const regionsData = data ?? [];
+
+  const {
     label,
     linodeId,
     region,
@@ -83,10 +83,6 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     type,
     image,
     images,
-    regionsData,
-    regionsError,
-    regionsLoading,
-    regionsLastUpdated,
     notifications,
   } = props;
 
@@ -286,7 +282,6 @@ const withReduxState = connect(mapStateToProps);
 
 export default compose<CombinedProps, {}>(
   withReduxState,
-  withRegions(),
   linodeContext,
   React.memo
 )(MigrateLanding);

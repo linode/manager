@@ -94,13 +94,6 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     try {
       await Promise.all([
         this.props.requestTypes(),
-        /**
-         * We have cached Regions data that can be used
-         * until the real data comes in; the only
-         * likely difference will be the status of each
-         * Region.
-         */
-        this.props.requestRegions(),
         this.props.requestNotifications(),
       ]);
     } catch {
