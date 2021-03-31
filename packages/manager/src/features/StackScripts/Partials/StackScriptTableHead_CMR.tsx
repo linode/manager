@@ -7,15 +7,12 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
-// @todo: the CMR styles for TableSortCell aren't being applied and I can't
-// figure out why so I had to use '!important' to overwrite them
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& th': {
-      cursor: 'pointer',
-      fontFamily: theme.font.bold,
       backgroundColor: theme.cmrBGColors.bgTableHeader,
       border: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      fontFamily: theme.font.bold,
       height: 40,
       padding: '10px 15px',
       '&:first-of-type': {
@@ -29,49 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  noHover: {
-    width: 'calc(100% - 65px)',
-    '&:hover': {
-      backgroundColor: `${theme.cmrBGColors.bgTableHeader} !important`,
-      cursor: 'default',
-    },
-  },
-  stackscriptTitles: {
-    width: '40%',
-    '&:before': {
-      top: '0 !important',
-      left: '0 !important',
-      width: '0 !important',
-      height: '0 !important',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '50%',
-    },
-  },
-  selectingStackscriptTitles: {
-    paddingLeft: '10px !important',
-    width: 'calc(100% - 65px)',
-  },
-  deploys: {
-    width: '13%',
-    [theme.breakpoints.down('sm')]: {
-      width: '15%',
-    },
-  },
-  revisions: {
-    width: '13%',
-  },
-  tags: {
-    width: '17%',
-  },
-  status: {
-    width: '5%',
-  },
-  actionMenu: {
-    width: '10%',
-  },
   tr: {
-    height: 48,
+    height: 44,
   },
   tableHead: {
     color: theme.cmrTextColors.tableHeader,
@@ -79,6 +35,68 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& span': {
       color: theme.cmrTextColors.tableHeader,
     },
+  },
+  noHover: {
+    cursor: 'default !important',
+  },
+  stackscriptTitles: {
+    width: '36%',
+    [theme.breakpoints.down('md')]: {
+      width: '48%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '60%',
+    },
+  },
+  stackscriptTitlesAccount: {
+    width: '26%',
+    [theme.breakpoints.down('md')]: {
+      width: '38%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '60%',
+    },
+  },
+  selectingStackscriptTitles: {
+    paddingLeft: '20px !important',
+    width: 'calc(100% - 65px)',
+  },
+  deploys: {
+    width: '10%',
+    [theme.breakpoints.down('md')]: {
+      width: '15%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '17%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '28%',
+    },
+  },
+  revisions: {
+    whiteSpace: 'nowrap',
+    width: '13%',
+    [theme.breakpoints.down('md')]: {
+      width: '17%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '23%',
+    },
+  },
+  images: {
+    width: '26%',
+  },
+  imagesAccount: {
+    width: '20%',
+  },
+  status: {
+    width: '7%',
   },
 }));
 
@@ -124,9 +142,6 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
   return (
     <TableHead className={classes.root}>
       <TableRow className={classes.tr}>
-        {/* {!!isSelecting && (
-          <TableCell className={`${classes.tableHead} ${classes.noHover}`} />
-        )} */}
         {/* The column width jumps in the Linode Create flow when the user
             clicks on the table header. This is currently also happening in
             production and might be related to the difference in width between
@@ -136,6 +151,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           className={classNames({
             [classes.tableHead]: true,
             [classes.stackscriptTitles]: true,
+            [classes.stackscriptTitlesAccount]: category === 'account',
             [classes.selectingStackscriptTitles]: isSelecting,
           })}
           colSpan={isSelecting ? 2 : 1}
@@ -150,11 +166,11 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
             data-qa-stackscript-active-deploy-header
             {...maybeAddSortingProps('deploys')}
           >
-            Total Deploys
+            Deploys
           </Cell>
         )}
         {!isSelecting && (
-          <Hidden smDown>
+          <Hidden xsDown>
             <Cell
               className={`${classes.tableHead} ${classes.revisions}`}
               data-qa-stackscript-revision-header
@@ -165,9 +181,14 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           </Hidden>
         )}
         {!isSelecting && (
-          <Hidden smDown>
+          <Hidden mdDown>
             <TableCell
-              className={`${classes.tableHead} ${classes.tags} ${classes.noHover}`}
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.images]: true,
+                [classes.imagesAccount]: category === 'account',
+                [classes.noHover]: true,
+              })}
               data-qa-stackscript-compatible-images
             >
               Compatible Images
@@ -185,9 +206,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           </Hidden>
         ) : null}
         {!isSelecting && (
-          <TableCell
-            className={`${classes.tableHead} ${classes.actionMenu} ${classes.noHover}`}
-          />
+          <TableCell className={`${classes.tableHead} ${classes.noHover}`} />
         )}
       </TableRow>
     </TableHead>

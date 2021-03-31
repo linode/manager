@@ -571,6 +571,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                 colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
                 tableClass={classes.table}
+                style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
                 border
               >
                 <StackScriptTableHead
