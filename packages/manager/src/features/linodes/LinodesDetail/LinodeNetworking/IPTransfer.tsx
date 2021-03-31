@@ -22,9 +22,10 @@ import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import usePrevious from 'src/hooks/usePrevious';
 import { useLinodesQuery } from 'src/queries/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import usePrevious from 'src/hooks/usePrevious';
+import { debounce } from 'throttle-debounce';
 
 const useStyles = makeStyles((theme: Theme) => ({
   containerDivider: {
@@ -139,9 +140,18 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   const [submitting, setSubmitting] = React.useState(false);
   const [searchText, setSearchText] = React.useState('');
 
+  const handleInputChange = React.useRef(
+    debounce(500, false, (_searchText: string) => {
+      setSearchText(_searchText);
+    })
+  ).current;
+
   const { data, isLoading, error: linodesError } = useLinodesQuery(
     {},
-    { region: linodeRegion, label: searchText ? searchText : undefined },
+    {
+      region: linodeRegion,
+      label: { '+contains': searchText ? searchText : undefined },
+    },
     open // only run the query if the modal is open
   );
 
@@ -293,9 +303,6 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
       return eachLinode.value === selectedLinodeID;
     });
 
-    const handleInputChange = () => {
-      return;
-    };
     return (
       <Grid item xs={12} className={classes.autoGridsm}>
         <Select
@@ -306,7 +313,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             },
           }}
           disabled={readOnly || linodes.length === 1}
-          defaultValue={defaultLinode}
+          value={defaultLinode}
           onChange={onSelectedLinodeChange(sourceIP)}
           isClearable={false}
           noMarginTop
@@ -468,7 +475,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             <Typography>Actions</Typography>
           </Grid>
         </Grid>
-        {linodes.length === 0 ? (
+        {linodes.length === 0 && searchText === '' ? (
           <Typography className={classes.emptyStateText}>
             You have no other linodes in this Linode&#39;s datacenter with which
             to transfer IPs.
