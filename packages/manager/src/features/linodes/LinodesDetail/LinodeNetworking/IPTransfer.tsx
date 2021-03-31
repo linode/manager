@@ -170,7 +170,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         )
       )
     );
-    setIPs(newState);
+    setIPs((currentState) => newState(currentState));
   };
 
   const onSelectedLinodeChange = (ip: string) => (e: Item) => {
@@ -205,8 +205,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         )
       )
     );
-
-    setIPs(newState);
+    console.log(newState);
   };
 
   const onSelectedIPChange = (ip: string) => (e: Item<string>) => {
