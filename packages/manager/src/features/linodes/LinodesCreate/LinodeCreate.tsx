@@ -326,8 +326,9 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_data: this.props.selectedUDFs,
     };
 
-    if (regionSupportsVLANs) {
-      // Only submit interfaces in the payload if the region supports VLANs.
+    if (regionSupportsVLANs && this.props.selectedImageID) {
+      // Only submit interfaces in the payload if the region supports VLANs
+      // and an image has been selected
       payload['interfaces'] = interfaces;
     }
 
@@ -626,6 +627,11 @@ export class LinodeCreate extends React.PureComponent<
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
+            vlanDisabledReason={
+              !this.props.selectedImageID
+                ? 'You must select an image to attach a VLAN'
+                : undefined
+            }
             hidePrivateIP={this.props.createType === 'fromLinode'}
             vlanLabel={this.props.vlanLabel || ''}
             ipamAddress={this.props.ipamAddress || ''}

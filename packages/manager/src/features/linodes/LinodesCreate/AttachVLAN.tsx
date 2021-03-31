@@ -3,6 +3,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -11,6 +12,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     marginBottom: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
   },
   actions: {
     display: 'flex',
@@ -25,6 +28,7 @@ interface Props {
   ipamError?: string;
   readOnly?: boolean;
   region?: string;
+  helperText?: string;
   handleVLANChange: (updatedInterface: Interface) => void;
 }
 
@@ -35,6 +39,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
 
   const {
     handleVLANChange,
+    helperText,
     vlanLabel,
     labelError,
     ipamAddress,
@@ -46,7 +51,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   return (
     <div className={classes.root}>
       <Typography variant="h2" className={classes.title}>
-        Attach a VLAN
+        Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
       </Typography>
       <Grid container>
         <Grid item xs={12}>
