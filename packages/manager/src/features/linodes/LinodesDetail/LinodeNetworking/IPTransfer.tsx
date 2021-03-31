@@ -472,7 +472,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        {isLoading ? (
+        {isLoading && searchText === '' ? (
           <div className={classes.loading}>
             <CircleProgress mini />
           </div>
