@@ -39,6 +39,7 @@ import DeviceSelection, {
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
@@ -261,6 +262,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const handleSuccess = () => {
       formik.setSubmitting(false);
+      queryClient.invalidateQueries('vlans');
       onClose();
     };
 
