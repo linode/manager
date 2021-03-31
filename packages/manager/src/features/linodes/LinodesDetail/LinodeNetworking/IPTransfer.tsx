@@ -174,7 +174,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const onSelectedLinodeChange = (ip: string) => (e: Item) => {
-    const newState = compose<any, any, any, any, any>(
+    const newState = compose<any, any, any>(
       setSelectedLinodeID(ip, e.value),
       /**
        * When mode is swapping;
@@ -205,7 +205,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         )
       )
     );
-    console.log(newState);
+    setIPs((currentState) => newState(currentState));
   };
 
   const onSelectedIPChange = (ip: string) => (e: Item<string>) => {
@@ -474,14 +474,13 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
 };
 
 const L = {
-  ip: (ip: string) => lensPath(['ips', ip]),
-  mode: (ip: string) => lensPath(['ips', ip, 'mode']),
-  selectedIP: (ip: string) => lensPath(['ips', ip, 'selectedIP']),
-  selectedLinodeID: (ip: string) => lensPath(['ips', ip, 'selectedLinodeID']),
-  selectedLinodesIPs: (ip: string) =>
-    lensPath(['ips', ip, 'selectedLinodesIPs']),
-  sourceIP: (ip: string) => lensPath(['ips', ip, 'sourceIP']),
-  sourceIPsLinodeID: (ip: string) => lensPath(['ips', ip, 'sourceIPsLinodeID']),
+  ip: (ip: string) => lensPath([ip]),
+  mode: (ip: string) => lensPath([ip, 'mode']),
+  selectedIP: (ip: string) => lensPath([ip, 'selectedIP']),
+  selectedLinodeID: (ip: string) => lensPath([ip, 'selectedLinodeID']),
+  selectedLinodesIPs: (ip: string) => lensPath([ip, 'selectedLinodesIPs']),
+  sourceIP: (ip: string) => lensPath([ip, 'sourceIP']),
+  sourceIPsLinodeID: (ip: string) => lensPath([ip, 'sourceIPsLinodeID']),
 };
 
 const setMode = (ip: string, mode: Mode) => set(L.mode(ip), mode);
