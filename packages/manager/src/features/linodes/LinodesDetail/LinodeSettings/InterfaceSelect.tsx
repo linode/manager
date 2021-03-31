@@ -44,6 +44,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
+  configsWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      marginTop: -theme.spacing(2),
+    },
+  },
 }));
 
 export interface Props {
@@ -126,7 +131,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Select
             options={purposeOptions}
             label={`eth${slotNumber}`}
@@ -141,13 +146,18 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         </Grid>
       )}
       {purpose === 'vlan' ? (
-        <Grid item xs={fromAddonsPanel ? 12 : 6} sm={6}>
+        <Grid item xs={12} sm={6}>
           <Grid
             container
             direction={fromAddonsPanel ? 'row' : 'column'}
             className={fromAddonsPanel ? classes.vlanGrid : ''}
           >
-            <Grid item xs={12} sm={fromAddonsPanel ? 6 : 12}>
+            <Grid
+              item
+              className={!fromAddonsPanel ? classes.configsWrapper : ''}
+              xs={12}
+              sm={fromAddonsPanel ? 6 : 12}
+            >
               <Select
                 className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
