@@ -24,6 +24,7 @@ interface Props {
   ipamAddress: string;
   ipamError?: string;
   readOnly?: boolean;
+  region?: string;
   handleVLANChange: (updatedInterface: Interface) => void;
 }
 
@@ -39,6 +40,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
     ipamAddress,
     ipamError,
     readOnly,
+    region,
   } = props;
 
   return (
@@ -65,6 +67,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
             handleChange={(newInterface: Interface) =>
               handleVLANChange(newInterface)
             }
+            region={region}
             fromAddonsPanel
           />
         </Grid>

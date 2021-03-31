@@ -41,6 +41,7 @@ import {
   handleChangeCreateType,
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
+import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
@@ -288,6 +289,12 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   createLinode = () => {
+    const selectedRegion = this.props.selectedRegionID || '';
+    const regionSupportsVLANs = doesRegionSupportVLANs(
+      selectedRegion,
+      this.props.regionsData
+    );
+
     const interfaces = [defaultPublicInterface]; // the purpose of defaultPublicInterface is to make sure the eth0 slot is not occupied by a VLAN.
     if (Boolean(this.props.vlanLabel)) {
       interfaces.push({
@@ -297,33 +304,34 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    this.props.handleSubmitForm(
-      {
-        image: this.props.selectedImageID,
-        region: this.props.selectedRegionID,
-        type: this.props.selectedTypeID,
-        label: this.props.label,
-        tags: this.props.tags
-          ? this.props.tags.map((eachTag) => eachTag.label)
-          : [],
-        root_pass: this.props.password,
-        authorized_users: this.props.userSSHKeys
-          .filter((u) => u.selected)
-          .map((u) => u.username),
-        booted: true,
-        backups_enabled: this.props.backupsEnabled,
-        backup_id: this.props.selectedBackupID,
-        private_ip: this.props.privateIPEnabled,
+    const payload = {
+      image: this.props.selectedImageID,
+      region: this.props.selectedRegionID,
+      type: this.props.selectedTypeID,
+      label: this.props.label,
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      root_pass: this.props.password,
+      authorized_users: this.props.userSSHKeys
+        .filter((u) => u.selected)
+        .map((u) => u.username),
+      booted: true,
+      backups_enabled: this.props.backupsEnabled,
+      backup_id: this.props.selectedBackupID,
+      private_ip: this.props.privateIPEnabled,
 
-        // StackScripts
-        stackscript_id: this.props.selectedStackScriptID,
-        stackscript_data: this.props.selectedUDFs,
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+      stackscript_data: this.props.selectedUDFs,
+    };
 
-        // VLAN
-        interfaces,
-      },
-      this.props.selectedLinodeID
-    );
+    if (regionSupportsVLANs) {
+      // Only submit interfaces in the payload if the region supports VLANs.
+      payload['interfaces'] = interfaces;
+    }
+
+    this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
   };
 
   render() {
