@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   vlanGrid: {
     width: '415px',
+    '& .react-select__menu': {
+      marginTop: 20,
+    },
   },
   vlanLabelField: {
     width: 202,
@@ -136,7 +139,6 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
                 options={vlanOptions}
-                isLoading={isLoading}
                 label="Label"
                 placeholder="Create or select a VLAN"
                 variant="creatable"
@@ -145,6 +147,11 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 onChange={handleLabelChange}
                 isClearable
                 disabled={readOnly}
+                noOptionsMessage={() =>
+                  isLoading
+                    ? 'Loading...'
+                    : 'You have no VLANs in this region. Type to create one.'
+                }
               />
             </Grid>
             <Grid

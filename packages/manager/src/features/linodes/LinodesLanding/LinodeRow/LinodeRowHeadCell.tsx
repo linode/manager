@@ -11,7 +11,6 @@ import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -62,10 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
-  // The head cell in the VLAN Detail context.
-  vlanContext: {
-    width: '14%',
-  },
 }));
 
 interface Props {
@@ -81,7 +76,6 @@ interface Props {
   vcpus: number;
   status: LinodeStatus;
   displayStatus: string | null;
-  type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
   width?: number;
@@ -92,7 +86,7 @@ interface Props {
   isVLAN?: boolean;
 }
 
-type CombinedProps = Props & WithDisplayType & Pick<WithImages, 'imagesData'>;
+type CombinedProps = Props & Pick<WithImages, 'imagesData'>;
 
 const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -105,7 +99,6 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
     width,
     maintenance,
     isDashboard,
-    isVLAN,
   } = props;
 
   const style = width ? { width: `${width}%` } : {};
@@ -123,7 +116,6 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
     <TableCell
       className={classnames({
         [classes.root]: true,
-        [classes.vlanContext]: isVLAN,
       })}
       style={style}
     >
@@ -161,7 +153,6 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
 };
 
 const enhanced = compose<CombinedProps, Props>(
-  withDisplayType,
   withImages((ownProps, imagesData) => ({
     ...ownProps,
     imagesData: filterImagesByType(imagesData, 'public'),
