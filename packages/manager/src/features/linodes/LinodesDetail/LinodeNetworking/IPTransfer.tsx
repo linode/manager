@@ -15,6 +15,7 @@ import {
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -69,6 +70,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   emptyStateText: {
     marginTop: theme.spacing(2),
     color: theme.color.grey1,
+  },
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));
 
@@ -467,21 +472,33 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Grid container>
-          <Grid item className={classes.ipFieldLabel} data-qa-transfer-ip-label>
-            <Typography>IP Address</Typography>
-          </Grid>
-          <Grid item className={classes.actionsLabel}>
-            <Typography>Actions</Typography>
-          </Grid>
-        </Grid>
-        {linodes.length === 0 && searchText === '' ? (
-          <Typography className={classes.emptyStateText}>
-            You have no other linodes in this Linode&#39;s datacenter with which
-            to transfer IPs.
-          </Typography>
+        {isLoading ? (
+          <div className={classes.loading}>
+            <CircleProgress mini />
+          </div>
         ) : (
-          Object.values(ips).map(ipRow)
+          <>
+            <Grid container>
+              <Grid
+                item
+                className={classes.ipFieldLabel}
+                data-qa-transfer-ip-label
+              >
+                <Typography>IP Address</Typography>
+              </Grid>
+              <Grid item className={classes.actionsLabel}>
+                <Typography>Actions</Typography>
+              </Grid>
+            </Grid>
+            {linodes.length === 0 && searchText === '' ? (
+              <Typography className={classes.emptyStateText}>
+                You have no other linodes in this Linode&#39;s datacenter with
+                which to transfer IPs.
+              </Typography>
+            ) : (
+              Object.values(ips).map(ipRow)
+            )}
+          </>
         )}
       </Grid>
       <ActionsPanel style={{ paddingBottom: 0 }}>
