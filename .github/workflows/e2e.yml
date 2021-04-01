@@ -9,11 +9,11 @@ on:
   schedule:
     - cron: '0 13 * * 1-5'
   pull_request:
-    branches:
-      - master
     paths:
     - '**/cypress/**'
     - '**/e2e.yml'
+    branches:
+      - master
 
 jobs:
   run-cypress-e2e:
