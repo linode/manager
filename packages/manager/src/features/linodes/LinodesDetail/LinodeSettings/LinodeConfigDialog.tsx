@@ -708,6 +708,15 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     }
                   />
                 </Box>
+                <Typography>
+                  VLAN is currently in beta and is subject to the terms of the{' '}
+                  <ExternalLink
+                    text="Early Adopter Testing Agreement"
+                    link="https://www.linode.com/legal-eatp/"
+                    hideIcon
+                  />
+                  .
+                </Typography>
                 {values.interfaces.map((thisInterface, idx, arr) =>
                   // Magic so that we show interfaces that have been filled plus one more
                   arr[idx - 1]?.purpose !== 'none' ||

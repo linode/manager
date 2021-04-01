@@ -1,5 +1,7 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import Box from 'src/components/core/Box';
+import Chip from 'src/components/core/Chip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -16,6 +18,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
+  },
+  chip: {
+    fontSize: '0.625rem',
+    height: 15,
+    marginTop: 2,
+    marginLeft: theme.spacing(),
+    marginBottom: theme.spacing(2),
+    letterSpacing: '.25px',
+    textTransform: 'uppercase',
   },
 }));
 
@@ -46,13 +57,15 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h2" className={classes.title}>
-        Attach a VLAN
-      </Typography>
+      <Box display="flex" alignItems="center">
+        <Typography variant="h2" className={classes.title}>
+          Attach a VLAN
+        </Typography>
+        <Chip className={classes.chip} label="beta" component="span" />
+      </Box>
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="body1">
-            {/* Temporary helper text pending finalized text. */}
             VLANs are used to create a private L2 Virtual Local Area Network
             between Linodes. A VLAN created or attached in this section will be
             assigned to the eth1 interface, with eth0 being used for connections
@@ -61,6 +74,15 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
             <ExternalLink
               text="Configuration Profile"
               link="https://linode.com/docs/guides/disk-images-and-configuration-profiles/"
+              hideIcon
+            />
+            .
+          </Typography>
+          <Typography style={{ marginTop: 16 }}>
+            VLAN is currently in beta and is subject to the terms of the{' '}
+            <ExternalLink
+              text="Early Adopter Testing Agreement"
+              link="https://www.linode.com/legal-eatp/"
               hideIcon
             />
             .
