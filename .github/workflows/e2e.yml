@@ -8,7 +8,9 @@ env:
 on:
   schedule:
     - cron: '0 13 * * 1-5'
-  pull_request_target:
+  pull_request:
+    branches:
+      - master
     paths:
     - '**/cypress/**'
     - '**/e2e.yml'
@@ -54,12 +56,11 @@ jobs:
           echo "REACT_APP_LOGIN_ROOT=${{ secrets.REACT_APP_LOGIN_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
+          yarn up &
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
           working-directory: packages/manager
-          install-command: yarn install:all && yarn build:sdk
-          start: yarn up
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 10000
           browser: chrome
