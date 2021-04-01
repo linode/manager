@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { sendHelpButtonClickEvent } from 'src/utilities/ga';
 import IconTextLink from '../IconTextLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,7 +44,10 @@ export const DocumentationButton: React.FC<CombinedProps> = (props) => {
       SideIcon={DocsIcon}
       text={label ?? 'Docs'}
       title={label ?? 'Docs'}
-      onClick={() => window.open(href, '_blank', 'noopener')}
+      onClick={() => {
+        sendHelpButtonClickEvent(href);
+        window.open(href, '_blank', 'noopener');
+      }}
       aria-describedby="external-site"
     />
   );
