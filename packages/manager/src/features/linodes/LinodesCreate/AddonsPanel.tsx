@@ -84,7 +84,8 @@ interface Props {
   ipamAddress: string;
   handleVLANChange: (updatedInterface: Interface) => void;
   disabled?: boolean;
-  vlanDisabledReason?: string;
+  selectedImageID?: string;
+  selectedTypeID?: string;
   hidePrivateIP?: boolean;
   labelError?: string;
   ipamError?: string;
@@ -98,13 +99,14 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     changeBackups,
     changePrivateIP,
     disabled,
-    vlanDisabledReason,
     vlanLabel,
     labelError,
     ipamAddress,
     ipamError,
     handleVLANChange,
     selectedRegionID,
+    selectedImageID,
+    selectedTypeID,
   } = props;
 
   const classes = useStyles();
@@ -120,6 +122,11 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const showVlans = capabilities.includes('Vlans') && flags.vlans;
 
   const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
+
+  const vlanDisabledReason = getVlanDisabledReason(
+    selectedTypeID,
+    selectedImageID
+  );
 
   const renderBackupsPrice = () => {
     const { backupsMonthly } = props;
@@ -220,6 +227,18 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
       </div>
     </Paper>
   );
+};
+
+const getVlanDisabledReason = (
+  selectedType?: string,
+  selectedImage?: string
+) => {
+  if (selectedType && /metal/.test(selectedType)) {
+    return 'VLANs cannot be used with Bare Metal Linodes.';
+  } else if (!selectedImage) {
+    return 'You must select an Image to attach a VLAN.';
+  }
+  return undefined;
 };
 
 export default React.memo(AddonsPanel);

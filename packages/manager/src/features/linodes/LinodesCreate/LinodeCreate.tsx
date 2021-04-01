@@ -627,11 +627,8 @@ export class LinodeCreate extends React.PureComponent<
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
-            vlanDisabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to attach a VLAN'
-                : undefined
-            }
+            selectedImageID={this.props.selectedImageID}
+            selectedTypeID={this.props.selectedTypeID}
             hidePrivateIP={this.props.createType === 'fromLinode'}
             vlanLabel={this.props.vlanLabel || ''}
             ipamAddress={this.props.ipamAddress || ''}
