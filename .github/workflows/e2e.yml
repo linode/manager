@@ -62,7 +62,7 @@ jobs:
           working-directory: packages/manager
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 1000
-          install: false
+          install: true
           browser: chrome
           headless: true
           record: true
