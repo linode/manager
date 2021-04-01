@@ -2,6 +2,7 @@ import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
@@ -52,9 +53,17 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
         <Grid item xs={12}>
           <Typography variant="body1">
             {/* Temporary helper text pending finalized text. */}
-            If you attach a VLAN to this Linode, it will be automatically
-            assigned to the eth1 interface. You may edit interfaces from the
-            Linode Configurations tab.
+            VLANs are used to create a private L2 Virtual Local Area Network
+            between Linodes. A VLAN created or attached in this section will be
+            assigned to the eth1 interface, with eth0 being used for connections
+            to the public internet. VLAN configurations can be further edited in
+            the Linode&apos;s{' '}
+            <ExternalLink
+              text="Configuration Profile"
+              link="https://linode.com/docs/guides/disk-images-and-configuration-profiles/"
+              hideIcon
+            />
+            .
           </Typography>
           <InterfaceSelect
             slotNumber={1}
