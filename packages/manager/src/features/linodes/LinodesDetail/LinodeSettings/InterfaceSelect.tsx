@@ -13,15 +13,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
   vlanGrid: {
-    width: '415px',
+    minWidth: 450,
     '& .react-select__menu': {
       marginTop: 20,
+      '& p': {
+        paddingLeft: theme.spacing(),
+      },
+    },
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      minWidth: 'auto',
     },
   },
   vlanLabelField: {
     width: 202,
     height: 35,
     marginRight: theme.spacing(),
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   ipamAddressLabel: {
     '& label': {
@@ -29,6 +39,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.down('md')]: {
       width: 200,
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  configsWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      marginTop: -theme.spacing(2),
     },
   },
 }));
@@ -113,7 +131,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   return (
     <Grid container>
       {fromAddonsPanel ? null : (
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Select
             options={purposeOptions}
             label={`eth${slotNumber}`}
@@ -128,13 +146,18 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         </Grid>
       )}
       {purpose === 'vlan' ? (
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Grid
             container
             direction={fromAddonsPanel ? 'row' : 'column'}
             className={fromAddonsPanel ? classes.vlanGrid : ''}
           >
-            <Grid item xs={fromAddonsPanel ? 6 : 12}>
+            <Grid
+              item
+              className={!fromAddonsPanel ? classes.configsWrapper : ''}
+              xs={12}
+              sm={fromAddonsPanel ? 6 : 12}
+            >
               <Select
                 className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
@@ -156,11 +179,12 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             </Grid>
             <Grid
               item
-              xs={fromAddonsPanel ? 6 : 12}
+              xs={12}
+              sm={fromAddonsPanel ? 6 : 12}
               className={fromAddonsPanel ? '' : 'py0'}
               style={fromAddonsPanel ? {} : { marginTop: -8, marginBottom: 8 }}
             >
-              <div className={classes.ipamAddressLabel}>
+              <div className={fromAddonsPanel ? classes.ipamAddressLabel : ''}>
                 <TextField
                   label="IPAM Address (Optional)"
                   value={ipamAddress}
