@@ -245,11 +245,16 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState(defaultState);
   };
 
-  setImageID = (id: string) => {
-    /** allows for de-selecting an image */
-    if (id === this.state.selectedImageID) {
-      return this.setState({ selectedImageID: undefined });
+  setImageID = (id: string | undefined) => {
+    if (typeof id === 'undefined') {
+      /** In this case we also clear any VLAN input, since VLANs are incompatible with empty Linodes */
+      return this.setState({
+        selectedImageID: undefined,
+        attachedVLANLabel: '',
+        vlanIPAMAddress: '',
+      });
     }
+
     return this.setState({ selectedImageID: id });
   };
 
