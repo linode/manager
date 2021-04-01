@@ -85,11 +85,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end',
     padding: 0,
   },
-  actionHeader: {
-    [theme.breakpoints.down('sm')]: {
-      minWidth: 70,
-    },
-  },
   table: {
     backgroundColor: theme.color.border3,
   },
@@ -235,7 +230,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
               </TableCell>
             </Hidden>
             <TableCell style={{ width: '5%' }}>Action</TableCell>
-            <TableCell className={classes.actionHeader} />
+            <TableCell />
           </TableRow>
         </TableHead>
         <DragDropContext onDragEnd={onDragEnd}>
