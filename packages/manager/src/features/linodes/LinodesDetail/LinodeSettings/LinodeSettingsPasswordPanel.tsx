@@ -187,7 +187,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
   };
 
   handlePanelChange = (e: React.ChangeEvent<{}>, open: boolean) => {
-    if (open) {
+    if (open && !this.props.isBareMetalInstance) {
       this.searchDisks();
     }
   };
