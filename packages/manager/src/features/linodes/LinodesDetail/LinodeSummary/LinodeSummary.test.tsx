@@ -7,6 +7,7 @@ import { LinodeSummary } from './LinodeSummary';
 describe('LinodeSummary', () => {
   const wrapper = shallow(
     <LinodeSummary
+      isBareMetalInstance={false}
       mostRecentEventTime=""
       events={[]}
       inProgressEvents={[]}

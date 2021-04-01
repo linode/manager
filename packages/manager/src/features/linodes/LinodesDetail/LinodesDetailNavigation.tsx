@@ -103,7 +103,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeSummary />
+                <LinodeSummary isBareMetalInstance={isBareMetalInstance} />
               </SafeTabPanel>
 
               <SafeTabPanel index={idx++}>
