@@ -166,7 +166,10 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 placeholder="Create or select a VLAN"
                 variant="creatable"
                 createOptionPosition="first"
-                value={vlanOptions.find((thisVlan) => thisVlan.value === label)}
+                value={
+                  vlanOptions.find((thisVlan) => thisVlan.value === label) ??
+                  null
+                }
                 onChange={handleLabelChange}
                 isClearable
                 disabled={readOnly}
