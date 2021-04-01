@@ -23,8 +23,8 @@ import { debounce } from 'throttle-debounce';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
 interface Props {
+  isBareMetalInstance: boolean;
   linodeId: number;
-  linodeLabel: string;
   linodeStatus: string;
 }
 
@@ -58,13 +58,14 @@ class LinodeSettingsPasswordPanel extends React.Component<
     disks: [],
   };
 
-  changeDiskPassword = () => {
+  handleSubmit = () => {
     const { diskId, value } = this.state;
-    const { linodeId } = this.props;
+    const { linodeId, isBareMetalInstance } = this.props;
 
-    if (!diskId) {
+    if (!diskId && !isBareMetalInstance) {
       return;
     }
+
     this.setState(
       compose(
         set(lensPath(['submitting']), true),
@@ -73,27 +74,34 @@ class LinodeSettingsPasswordPanel extends React.Component<
       )
     );
 
-    changeLinodeDiskPassword(linodeId, diskId, value)
-      .then((linode) => {
-        this.setState(
-          compose(
-            set(lensPath(['success']), `Linode password changed successfully.`),
-            set(lensPath(['submitting']), false),
-            set(lensPath(['value']), '') as () => string
-          )
-        );
-      })
-      .catch((errors: APIError[]) => {
-        this.setState(
-          compose(
-            set(lensPath(['errors']), errors),
-            set(lensPath(['submitting']), false)
-          ),
-          () => {
-            scrollErrorIntoView('linode-settings-password');
-          }
-        );
-      });
+    const handleSuccess = () => {
+      this.setState(
+        compose(
+          set(lensPath(['success']), `Linode password changed successfully.`),
+          set(lensPath(['submitting']), false),
+          set(lensPath(['value']), '') as () => string
+        )
+      );
+    };
+
+    const handleError = (errors: APIError[]) => {
+      this.setState(
+        compose(
+          set(lensPath(['errors']), errors),
+          set(lensPath(['submitting']), false)
+        ),
+        () => {
+          scrollErrorIntoView('linode-settings-password');
+        }
+      );
+    };
+
+    if (isBareMetalInstance) {
+    } else {
+      changeLinodeDiskPassword(linodeId, diskId!, value)
+        .then(handleSuccess)
+        .catch(handleError);
+    }
   };
 
   handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +117,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
       <ActionsPanel>
         <Button
           buttonType="primary"
-          onClick={this.changeDiskPassword}
+          onClick={this.handleSubmit}
           loading={submitting}
           disabled={disabled || linodeStatus !== 'offline' || submitting}
           data-qa-password-save
@@ -196,7 +204,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
 
   render() {
     const { diskId, disks, disksError, disksLoading } = this.state;
-    const { permissions } = this.props;
+    const { permissions, isBareMetalInstance } = this.props;
     const selectedDisk = diskId ? this.getSelectedDisk(diskId) : null;
     const disabled = permissions === 'read_only';
 
@@ -214,19 +222,21 @@ class LinodeSettingsPasswordPanel extends React.Component<
       >
         <form>
           {generalError && <Notice text={generalError} error />}
-          <EnhancedSelect
-            label="Disk"
-            placeholder="Find a Disk"
-            isLoading={disksLoading}
-            errorText={disksError || diskIdError}
-            options={disks}
-            onChange={this.handleDiskSelection}
-            onInputChange={this.onInputChange}
-            value={selectedDisk}
-            data-qa-select-linode
-            disabled={disabled}
-            isClearable={false}
-          />
+          {!isBareMetalInstance ? (
+            <EnhancedSelect
+              label="Disk"
+              placeholder="Find a Disk"
+              isLoading={disksLoading}
+              errorText={disksError || diskIdError}
+              options={disks}
+              onChange={this.handleDiskSelection}
+              onInputChange={this.onInputChange}
+              value={selectedDisk}
+              data-qa-select-linode
+              disabled={disabled}
+              isClearable={false}
+            />
+          ) : null}
           <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               autoComplete="new-password"
