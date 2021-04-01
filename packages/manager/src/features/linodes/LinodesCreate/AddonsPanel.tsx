@@ -14,6 +14,7 @@ import useFlags from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
 import AttachVLAN from './AttachVLAN';
+import HelpIcon from 'src/components/HelpIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -123,10 +124,16 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 
   const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
 
+  const isBareMetal = /metal/.test(selectedTypeID ?? '');
+
   const vlanDisabledReason = getVlanDisabledReason(
-    selectedTypeID,
+    isBareMetal,
     selectedImageID
   );
+
+  const backupsDisabledReason = isBareMetal
+    ? 'Backups cannot be used with Bare Metal Linodes.'
+    : null;
 
   const renderBackupsPrice = () => {
     const { backupsMonthly } = props;
@@ -157,7 +164,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
           />
         ) : null}
         <Typography variant="h2" className={classes.title}>
-          Optional Add-ons
+          Optional Add-ons{' '}
+          {backupsDisabledReason ? (
+            <HelpIcon text={backupsDisabledReason} />
+          ) : null}
         </Typography>
         <Grid container>
           <Grid item xs={12}>
@@ -167,7 +177,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
                 <CheckBox
                   checked={accountBackups || props.backups}
                   onChange={changeBackups}
-                  disabled={accountBackups || disabled}
+                  disabled={accountBackups || disabled || isBareMetal}
                   data-qa-check-backups={
                     accountBackups
                       ? 'auto backup enabled'
@@ -230,10 +240,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 };
 
 const getVlanDisabledReason = (
-  selectedType?: string,
+  isBareMetal: boolean,
   selectedImage?: string
 ) => {
-  if (selectedType && /metal/.test(selectedType)) {
+  if (isBareMetal) {
     return 'VLANs cannot be used with Bare Metal Linodes.';
   } else if (!selectedImage) {
     return 'You must select an Image to attach a VLAN.';
