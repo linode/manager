@@ -15,6 +15,7 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -29,6 +30,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
@@ -75,6 +77,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.cmrTextColors.tableHeader,
       order: 3,
     },
+  },
+  helpIcon: {
+    color: theme.cmrTextColors.tableHeader,
+  },
+  tooltip: {
+    maxWidth: 350,
   },
 }));
 
@@ -700,7 +708,37 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             {showVlans ? (
               <Grid item xs={12} className={classes.section}>
-                <Typography variant="h3">Network Interfaces</Typography>
+                <Box display="flex" alignItems="center">
+                  <Typography variant="h3">Network Interfaces</Typography>
+                  <HelpIcon
+                    className={classes.helpIcon}
+                    classes={{ tooltip: classes.tooltip }}
+                    interactive
+                    text={
+                      <Typography>
+                        Configure the network that a selected interface will
+                        connect to (either &quot;Public Internet&quot; or a
+                        VLAN). Each Linode can have up to three Network
+                        Interfaces. For more information, see our{' '}
+                        <ExternalLink
+                          text="Network Interfaces guide"
+                          link="https://linode.com/docs/products/networking/vlans/guides/linode-network-interfaces/"
+                          hideIcon
+                        />
+                        .
+                      </Typography>
+                    }
+                  />
+                </Box>
+                <Typography>
+                  VLAN is currently in beta and is subject to the terms of the{' '}
+                  <ExternalLink
+                    text="Early Adopter Testing Agreement"
+                    link="https://www.linode.com/legal-eatp/"
+                    hideIcon
+                  />
+                  .
+                </Typography>
                 {values.interfaces.map((thisInterface, idx, arr) =>
                   // Magic so that we show interfaces that have been filled plus one more
                   arr[idx - 1]?.purpose !== 'none' ||
