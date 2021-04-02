@@ -58,10 +58,11 @@ jobs:
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
-          working-directory: packages/manager
+          install-command: yarn install:all && yarn build:sdk
+          start: yarn up
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 1000
-          install: true
+          install: false
           browser: chrome
           headless: true
           record: true
