@@ -160,15 +160,9 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     open // only run the query if the modal is open
   );
 
-  const linodes = Object.values(data?.linodes ?? [])
-    .filter((l) => l.id !== linodeID)
-    .map((linode) => {
-      return {
-        id: linode.id,
-        ips: linode.ipv4,
-        label: linode.label,
-      };
-    });
+  const linodes = Object.values(data?.linodes ?? []).filter(
+    (l) => l.id !== linodeID
+  );
 
   const onModeChange = (ip: string) => (e: Item) => {
     const mode = e.value as Mode;
@@ -201,8 +195,8 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
       when(
         () => isSwapping(mode),
         compose(
-          setSelectedIP(ip, firstLinode.ips[0]),
-          setSelectedLinodesIPs(ip, firstLinode.ips)
+          setSelectedIP(ip, firstLinode.ipv4[0]),
+          setSelectedLinodesIPs(ip, firstLinode.ipv4)
         )
       )
     );
@@ -225,7 +219,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           updateSelectedLinodesIPs(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
             if (linode) {
-              return linode.ips;
+              return linode.ipv4;
             }
             return [];
           }),
@@ -234,7 +228,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           updateSelectedIP(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
             if (linode) {
-              return linode.ips[0];
+              return linode.ipv4[0];
             }
             return undefined;
           })
