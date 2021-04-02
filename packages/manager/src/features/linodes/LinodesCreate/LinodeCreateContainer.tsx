@@ -245,11 +245,16 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState(defaultState);
   };
 
-  setImageID = (id: string) => {
-    /** allows for de-selecting an image */
-    if (id === this.state.selectedImageID) {
-      return this.setState({ selectedImageID: undefined });
+  setImageID = (id: string | undefined) => {
+    if (typeof id === 'undefined') {
+      /** In this case we also clear any VLAN input, since VLANs are incompatible with empty Linodes */
+      return this.setState({
+        selectedImageID: undefined,
+        attachedVLANLabel: '',
+        vlanIPAMAddress: '',
+      });
     }
+
     return this.setState({ selectedImageID: id });
   };
 
@@ -262,7 +267,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ selectedRegionID: id, disabledClasses });
   };
 
-  setTypeID = (id: string) => this.setState({ selectedTypeID: id });
+  setTypeID = (id: string) => {
+    if (/metal/.test(id)) {
+      // VLANs and backups don't work with bare metal;
+      // reset those values.
+      this.setState({
+        selectedTypeID: id,
+        vlanIPAMAddress: '',
+        attachedVLANLabel: '',
+        backupsEnabled: false,
+      });
+    } else {
+      this.setState({
+        selectedTypeID: id,
+      });
+    }
+  };
 
   setLinodeID = (id: number, diskSize?: number) => {
     if (id !== this.state.selectedLinodeID) {

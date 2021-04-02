@@ -6,6 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -14,6 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     marginBottom: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
   },
   actions: {
     display: 'flex',
@@ -37,6 +40,7 @@ interface Props {
   ipamError?: string;
   readOnly?: boolean;
   region?: string;
+  helperText?: string;
   handleVLANChange: (updatedInterface: Interface) => void;
 }
 
@@ -47,6 +51,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
 
   const {
     handleVLANChange,
+    helperText,
     vlanLabel,
     labelError,
     ipamAddress,
@@ -59,7 +64,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
     <div className={classes.root}>
       <Box display="flex" alignItems="center">
         <Typography variant="h2" className={classes.title}>
-          Attach a VLAN
+          Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
         </Typography>
         <Chip className={classes.chip} label="beta" component="span" />
       </Box>

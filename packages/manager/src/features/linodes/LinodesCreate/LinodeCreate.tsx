@@ -53,6 +53,7 @@ import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
+import { v4 } from 'uuid';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -176,6 +177,7 @@ type CombinedProps = Props &
 interface State {
   selectedTab: number;
   stackScriptSelectedTab: number;
+  planKey: string;
 }
 
 interface CreateTab extends Tab {
@@ -217,6 +219,7 @@ export class LinodeCreate extends React.PureComponent<
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
         preSelectedTab === 2 && location.search.search('Account') > -1 ? 1 : 0,
+      planKey: v4(),
     };
   }
 
@@ -233,9 +236,22 @@ export class LinodeCreate extends React.PureComponent<
     /** set the tab in redux state */
     this.props.setTab(this.tabs[index].type);
 
+    /** Reset the plan panel since types may have shifted */
+
     this.setState({
       selectedTab: index,
+      planKey: v4(),
     });
+  };
+
+  filterTypes = () => {
+    const { createType, typesData } = this.props;
+    const { selectedTab } = this.state;
+    const currentTypes = filterCurrentTypes(typesData ?? []);
+
+    return ['fromImage', 'fromBackup'].includes(createType) && selectedTab !== 0
+      ? currentTypes.filter((t) => t.class !== 'metal')
+      : currentTypes;
   };
 
   tabs: CreateTab[] = [
@@ -295,7 +311,7 @@ export class LinodeCreate extends React.PureComponent<
       this.props.regionsData
     );
 
-    const interfaces = [defaultPublicInterface]; // the purpose of defaultPublicInterface is to make sure the eth0 slot is not occupied by a VLAN.
+    const interfaces = [defaultPublicInterface];
     if (Boolean(this.props.vlanLabel)) {
       interfaces.push({
         purpose: 'vlan',
@@ -326,8 +342,9 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_data: this.props.selectedUDFs,
     };
 
-    if (regionSupportsVLANs) {
-      // Only submit interfaces in the payload if the region supports VLANs.
+    if (regionSupportsVLANs && this.props.selectedImageID) {
+      // Only submit interfaces in the payload if the region supports VLANs
+      // and an image has been selected
       payload['interfaces'] = interfaces;
     }
 
@@ -561,14 +578,16 @@ export class LinodeCreate extends React.PureComponent<
             />
           )}
           <SelectPlanPanel
+            key={this.state.planKey}
             data-qa-select-plan
             error={hasErrorFor.type}
-            types={filterCurrentTypes(typesData)!}
+            types={this.filterTypes()}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
             updateFor={[
               this.props.selectedTypeID,
               this.props.disabledClasses,
+              this.props.createType,
               errors,
             ]}
             disabled={userCannotCreateLinode}
@@ -626,6 +645,8 @@ export class LinodeCreate extends React.PureComponent<
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
+            selectedImageID={this.props.selectedImageID}
+            selectedTypeID={this.props.selectedTypeID}
             hidePrivateIP={this.props.createType === 'fromLinode'}
             vlanLabel={this.props.vlanLabel || ''}
             ipamAddress={this.props.ipamAddress || ''}
