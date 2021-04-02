@@ -9,12 +9,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
 import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
 import AttachVLAN from './AttachVLAN';
-import HelpIcon from 'src/components/HelpIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

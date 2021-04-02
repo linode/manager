@@ -92,6 +92,7 @@ const styles = (theme: Theme) =>
       paddingRight: theme.spacing(),
     },
     gpuGuideLink: {
+      fontSize: '0.9em',
       '& a': {
         color: theme.cmrTextColors.linkActiveLight,
       },
@@ -425,20 +426,26 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     }
 
     if (!isEmpty(metal)) {
-      // const programInfo = this.getDisabledClass('metal') ? (
-      //   <>
-      //     Bare Metal instances are not available in the selected region.
-      //     Currently these plans are only available in{' '}
-      //     {this.getRegionsWithCapability('Bare Metal')}.
-      //   </>
-      // ) : (
-      //   <Typography className={classes.gpuGuideLink}>Bare Metal Linodes have limited avail...etc</Typography>
-      // );
+      const programInfo = this.getDisabledClass('metal') ? (
+        // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass
+        // so this branch will never run.
+        <Typography>
+          Bare Metal instances are not available in the selected region.
+          Currently these plans are only available in{' '}
+          {this.getRegionsWithCapability('Bare Metal')}.
+        </Typography>
+      ) : (
+        <Typography className={classes.gpuGuideLink}>
+          Bare Metal Linodes have limited availability and may not be available
+          at the time of your request. Some additional verification may be
+          required to access these services.
+        </Typography>
+      );
       tabs.push({
         render: () => {
           return (
             <>
-              {/* <Notice warning>{programInfo}</Notice> */}
+              <Notice warning>{programInfo}</Notice>
               <Typography data-qa-gpu className={classes.copy}>
                 Bare Metal Linodes give you full, dedicated access to a single
                 physical machine. Some services, including backups, VLANs, and
