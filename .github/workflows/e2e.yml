@@ -38,16 +38,16 @@ jobs:
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
         # personal account
       - run: echo "MANAGER_OAUTH=$USER_1" >> ./packages/manager/.env
-        if: matrix['container'] == 'USER_1'
+        if: matrix['user'] == 'USER_1'
         # prod-test-001
       - run: echo "MANAGER_OAUTH=$USER_2" >> ./packages/manager/.env
-        if: matrix['container'] == 'USER_2'
+        if: matrix['user'] == 'USER_2'
         # prod-test-002
       - run: echo "MANAGER_OAUTH=$USER_3" >> ./packages/manager/.env
-        if: matrix['container'] == 'USER_3'
+        if: matrix['user'] == 'USER_3'
         # prod-test-008
       - run: echo "MANAGER_OAUTH=$USER_4" >> ./packages/manager/.env
-        if: matrix['container'] == 'USER_4'
+        if: matrix['user'] == 'USER_4'
       - run: |
           echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
