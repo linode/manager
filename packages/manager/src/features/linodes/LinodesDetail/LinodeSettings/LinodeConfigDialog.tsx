@@ -179,6 +179,13 @@ const pathsOptions = [
   { label: '/dev/sdh', value: '/dev/sdh' },
 ];
 
+const interfacesToState = (interfaces?: Interface[]) => {
+  if (!interfaces || interfaces.length === 0) {
+    return defaultInterfaceList;
+  }
+  return padInterfaceList(interfaces);
+};
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
@@ -231,7 +238,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       root_device,
     } = state;
 
-    return {
+    const data: LinodeConfigCreationData = {
       label,
       devices: createDevicesFromStrings(devices),
       kernel,
@@ -240,13 +247,20 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
       run_level,
       virt_mode,
-      // Remove empty interfaces from the payload
-      interfaces: interfaces.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
-      ) as Interface[],
       helpers,
       root_device,
     };
+
+    // If the config didn't have any VLANs, its interfaces array was likely empty.
+    // We shouldn't change that if the user hasn't added a VLAN.
+    if (interfaces.some((thisInterface) => thisInterface.purpose === 'vlan')) {
+      // Remove empty interfaces from the payload
+      data.interfaces = interfaces.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      ) as Interface[];
+    }
+
+    return data;
   };
 
   const onSubmit = (values: EditableFields) => {
@@ -326,9 +340,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: padInterfaceList(
-              config?.interfaces ?? defaultInterfaceList
-            ),
+            interfaces: interfacesToState(config.interfaces),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },

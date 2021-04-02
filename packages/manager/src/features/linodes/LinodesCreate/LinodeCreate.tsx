@@ -295,15 +295,6 @@ export class LinodeCreate extends React.PureComponent<
       this.props.regionsData
     );
 
-    const interfaces = [defaultPublicInterface];
-    if (Boolean(this.props.vlanLabel)) {
-      interfaces.push({
-        purpose: 'vlan',
-        label: this.props.vlanLabel,
-        ipam_address: this.props.ipamAddress,
-      });
-    }
-
     const payload = {
       image: this.props.selectedImageID,
       region: this.props.selectedRegionID,
@@ -326,9 +317,21 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_data: this.props.selectedUDFs,
     };
 
-    if (regionSupportsVLANs && this.props.selectedImageID) {
+    if (
+      regionSupportsVLANs &&
+      this.props.selectedImageID &&
+      this.props.vlanLabel
+    ) {
       // Only submit interfaces in the payload if the region supports VLANs
-      // and an image has been selected
+      // and an image and VLAN have been selected.
+      const interfaces = [defaultPublicInterface];
+      if (Boolean(this.props.vlanLabel)) {
+        interfaces.push({
+          purpose: 'vlan',
+          label: this.props.vlanLabel,
+          ipam_address: this.props.ipamAddress,
+        });
+      }
       payload['interfaces'] = interfaces;
     }
 
