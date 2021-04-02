@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.tableHeader,
   },
   tooltip: {
-    maxWidth: 300,
+    maxWidth: 350,
   },
 }));
 
@@ -701,10 +701,16 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     interactive
                     text={
                       <Typography>
-                        Describes the network that a selected interface will
+                        Configure the network that a selected interface will
                         connect to (either &quot;Public Internet&quot; or a
                         VLAN). Each Linode can have up to three Network
-                        Interfaces total.
+                        Interfaces. For more information, see our{' '}
+                        <ExternalLink
+                          text="Network Interfaces guide"
+                          link="https://linode.com/docs/products/networking/vlans/guides/linode-network-interfaces/"
+                          hideIcon
+                        />
+                        .
                       </Typography>
                     }
                   />
