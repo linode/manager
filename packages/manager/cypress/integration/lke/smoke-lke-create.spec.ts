@@ -46,7 +46,7 @@ describe('LKE Create Cluster', () => {
       .click()
       .type(makeTestLabel());
     containsClick(selectRegionString).type('Newar{enter}');
-    cy.get('[id="kubernetes-version"]').type('1{enter}');
+    cy.get('[id="kubernetes-version"]').type('{enter}');
 
     const kNb2Gb = 2;
     addNodes('Linode 2GB', kNb2Gb);
