@@ -186,6 +186,17 @@ const interfacesToState = (interfaces?: Interface[]) => {
   return padInterfaceList(interfaces);
 };
 
+const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
+  if (!interfaces || interfaces.length === 0) {
+    return [];
+  }
+  return interfaces.some((thisInterface) => thisInterface.purpose === 'vlan')
+    ? (interfaces.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      ) as Interface[])
+    : [];
+};
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
@@ -223,7 +234,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     onSubmit: (values) => onSubmit(values),
   });
 
-  const convertStateToData = (state: EditableFields) => {
+  const convertStateToData = (
+    state: EditableFields
+  ): LinodeConfigCreationData => {
     const {
       label,
       devices,
@@ -238,29 +251,19 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       root_device,
     } = state;
 
-    const data: LinodeConfigCreationData = {
+    return {
       label,
       devices: createDevicesFromStrings(devices),
       kernel,
       comments,
       /** if the user did not toggle the limit radio button, send a value of 0 */
       memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
+      interfaces: interfacesToPayload(interfaces),
       run_level,
       virt_mode,
       helpers,
       root_device,
     };
-
-    // If the config didn't have any VLANs, its interfaces array was likely empty.
-    // We shouldn't change that if the user hasn't added a VLAN.
-    if (interfaces.some((thisInterface) => thisInterface.purpose === 'vlan')) {
-      // Remove empty interfaces from the payload
-      data.interfaces = interfaces.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
-      ) as Interface[];
-    }
-
-    return data;
   };
 
   const onSubmit = (values: EditableFields) => {
