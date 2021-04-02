@@ -701,9 +701,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     interactive
                     text={
                       <Typography>
-                        Describes the network a selected interface will connect
-                        to (either &quot;Public Internet&quot; or a VLAN). Each
-                        Linode can have up to three Network Interfaces total.
+                        Describes the network that a selected interface will
+                        connect to (either &quot;Public Internet&quot; or a
+                        VLAN). Each Linode can have up to three Network
+                        Interfaces total.
                       </Typography>
                     }
                   />
