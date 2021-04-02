@@ -53,6 +53,7 @@ import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
+import { v4 } from 'uuid';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -176,6 +177,7 @@ type CombinedProps = Props &
 interface State {
   selectedTab: number;
   stackScriptSelectedTab: number;
+  planKey: string;
 }
 
 interface CreateTab extends Tab {
@@ -217,6 +219,7 @@ export class LinodeCreate extends React.PureComponent<
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
         preSelectedTab === 2 && location.search.search('Account') > -1 ? 1 : 0,
+      planKey: v4(),
     };
   }
 
@@ -233,9 +236,22 @@ export class LinodeCreate extends React.PureComponent<
     /** set the tab in redux state */
     this.props.setTab(this.tabs[index].type);
 
+    /** Reset the plan panel since types may have shifted */
+
     this.setState({
       selectedTab: index,
+      planKey: v4(),
     });
+  };
+
+  filterTypes = () => {
+    const { createType, typesData } = this.props;
+    const { selectedTab } = this.state;
+    const currentTypes = filterCurrentTypes(typesData ?? []);
+
+    return ['fromImage', 'fromBackup'].includes(createType) && selectedTab !== 0
+      ? currentTypes.filter((t) => t.class !== 'metal')
+      : currentTypes;
   };
 
   tabs: CreateTab[] = [
@@ -565,14 +581,16 @@ export class LinodeCreate extends React.PureComponent<
             />
           )}
           <SelectPlanPanel
+            key={this.state.planKey}
             data-qa-select-plan
             error={hasErrorFor.type}
-            types={filterCurrentTypes(typesData)!}
+            types={this.filterTypes()}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
             updateFor={[
               this.props.selectedTypeID,
               this.props.disabledClasses,
+              this.props.createType,
               errors,
             ]}
             disabled={userCannotCreateLinode}
@@ -630,11 +648,8 @@ export class LinodeCreate extends React.PureComponent<
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
-            vlanDisabledReason={
-              !this.props.selectedImageID
-                ? 'You must select an image to attach a VLAN'
-                : undefined
-            }
+            selectedImageID={this.props.selectedImageID}
+            selectedTypeID={this.props.selectedTypeID}
             hidePrivateIP={this.props.createType === 'fromLinode'}
             vlanLabel={this.props.vlanLabel || ''}
             ipamAddress={this.props.ipamAddress || ''}
