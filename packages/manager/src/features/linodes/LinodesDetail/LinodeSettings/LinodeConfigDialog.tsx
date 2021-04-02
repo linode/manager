@@ -179,6 +179,24 @@ const pathsOptions = [
   { label: '/dev/sdh', value: '/dev/sdh' },
 ];
 
+const interfacesToState = (interfaces?: Interface[]) => {
+  if (!interfaces || interfaces.length === 0) {
+    return defaultInterfaceList;
+  }
+  return padInterfaceList(interfaces);
+};
+
+const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
+  if (!interfaces || interfaces.length === 0) {
+    return [];
+  }
+  return interfaces.some((thisInterface) => thisInterface.purpose === 'vlan')
+    ? (interfaces.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      ) as Interface[])
+    : [];
+};
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
@@ -216,7 +234,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     onSubmit: (values) => onSubmit(values),
   });
 
-  const convertStateToData = (state: EditableFields) => {
+  const convertStateToData = (
+    state: EditableFields
+  ): LinodeConfigCreationData => {
     const {
       label,
       devices,
@@ -238,12 +258,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       comments,
       /** if the user did not toggle the limit radio button, send a value of 0 */
       memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
+      interfaces: interfacesToPayload(interfaces),
       run_level,
       virt_mode,
-      // Remove empty interfaces from the payload
-      interfaces: interfaces.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
-      ) as Interface[],
       helpers,
       root_device,
     };
@@ -326,9 +343,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: padInterfaceList(
-              config?.interfaces ?? defaultInterfaceList
-            ),
+            interfaces: interfacesToState(config.interfaces),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
