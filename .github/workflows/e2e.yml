@@ -54,12 +54,7 @@ jobs:
           echo "REACT_APP_LOGIN_ROOT=${{ secrets.REACT_APP_LOGIN_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
-      - name: Install dependencies
-        uses: cypress-io/github-action@v2
-        with:
-          install-command: yarn install:all && yarn build:sdk
-          start: yarn up
-          runTests: false
+          yarn up &
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
