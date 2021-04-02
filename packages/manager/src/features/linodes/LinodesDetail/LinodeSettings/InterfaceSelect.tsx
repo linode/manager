@@ -86,6 +86,8 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     fromAddonsPanel,
   } = props;
 
+  const [newVlan, setNewVlan] = React.useState('');
+
   const purposeOptions: Item<ExtendedPurpose>[] = [
     slotNumber === 0
       ? {
@@ -115,6 +117,10 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         value: thisVlan.label,
       })) ?? [];
 
+  if (Boolean(newVlan)) {
+    vlanOptions.push({ label: newVlan, value: newVlan });
+  }
+
   const handlePurposeChange = (selected: Item<InterfacePurpose>) =>
     handleChange({ purpose: selected.value, label, ipam_address: ipamAddress });
 
@@ -127,6 +133,15 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
       ipam_address: ipamAddress,
       label: selected?.value ?? '',
     });
+
+  const handleCreateOption = (_newVlan: string) => {
+    setNewVlan(_newVlan);
+    handleChange({
+      purpose,
+      ipam_address: ipamAddress,
+      label: _newVlan,
+    });
+  };
 
   return (
     <Grid container>
@@ -171,6 +186,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                   null
                 }
                 onChange={handleLabelChange}
+                createNew={handleCreateOption}
                 isClearable
                 disabled={readOnly}
                 noOptionsMessage={() =>

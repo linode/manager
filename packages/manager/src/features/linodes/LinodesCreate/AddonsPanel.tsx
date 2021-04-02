@@ -9,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -84,7 +85,8 @@ interface Props {
   ipamAddress: string;
   handleVLANChange: (updatedInterface: Interface) => void;
   disabled?: boolean;
-  vlanDisabledReason?: string;
+  selectedImageID?: string;
+  selectedTypeID?: string;
   hidePrivateIP?: boolean;
   labelError?: string;
   ipamError?: string;
@@ -98,13 +100,14 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     changeBackups,
     changePrivateIP,
     disabled,
-    vlanDisabledReason,
     vlanLabel,
     labelError,
     ipamAddress,
     ipamError,
     handleVLANChange,
     selectedRegionID,
+    selectedImageID,
+    selectedTypeID,
   } = props;
 
   const classes = useStyles();
@@ -120,6 +123,17 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const showVlans = capabilities.includes('Vlans') && flags.vlans;
 
   const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
+
+  const isBareMetal = /metal/.test(selectedTypeID ?? '');
+
+  const vlanDisabledReason = getVlanDisabledReason(
+    isBareMetal,
+    selectedImageID
+  );
+
+  const backupsDisabledReason = isBareMetal
+    ? 'Backups cannot be used with Bare Metal Linodes.'
+    : null;
 
   const renderBackupsPrice = () => {
     const { backupsMonthly } = props;
@@ -150,7 +164,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
           />
         ) : null}
         <Typography variant="h2" className={classes.title}>
-          Optional Add-ons
+          Optional Add-ons{' '}
+          {backupsDisabledReason ? (
+            <HelpIcon text={backupsDisabledReason} />
+          ) : null}
         </Typography>
         <Grid container>
           <Grid item xs={12}>
@@ -160,7 +177,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
                 <CheckBox
                   checked={accountBackups || props.backups}
                   onChange={changeBackups}
-                  disabled={accountBackups || disabled}
+                  disabled={accountBackups || disabled || isBareMetal}
                   data-qa-check-backups={
                     accountBackups
                       ? 'auto backup enabled'
@@ -220,6 +237,18 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
       </div>
     </Paper>
   );
+};
+
+const getVlanDisabledReason = (
+  isBareMetal: boolean,
+  selectedImage?: string
+) => {
+  if (isBareMetal) {
+    return 'VLANs cannot be used with Bare Metal Linodes.';
+  } else if (!selectedImage) {
+    return 'You must select an Image to attach a VLAN.';
+  }
+  return undefined;
 };
 
 export default React.memo(AddonsPanel);

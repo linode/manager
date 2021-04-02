@@ -1,9 +1,9 @@
-import produce from 'immer';
 import { Capabilities, Region, RegionStatus } from '@linode/api-v4/lib/regions';
+import produce from 'immer';
 import { Reducer } from 'redux';
 import regions from 'src/cachedData/regions.json';
-import { isProdAPI } from 'src/constants';
 import { EntityState } from 'src/store/types';
+import { isProdAPI } from 'src/utilities/isProdApi';
 import { isType } from 'typescript-fsa';
 import { regionsRequestActions } from './regions.actions';
 
@@ -18,8 +18,8 @@ export type State = EntityState<Region>;
  * use that as our default.
  */
 export const defaultState: State = {
-  results: isProdAPI ? regions?.data?.map((r) => r.id) ?? [] : [],
-  entities: isProdAPI ? (regions?.data as Region[]) ?? [] : [],
+  results: isProdAPI() ? regions?.data?.map((r) => r.id) ?? [] : [],
+  entities: isProdAPI() ? (regions?.data as Region[]) ?? [] : [],
   loading: true,
   lastUpdated: 0,
   error: undefined,

@@ -267,7 +267,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ selectedRegionID: id, disabledClasses });
   };
 
-  setTypeID = (id: string) => this.setState({ selectedTypeID: id });
+  setTypeID = (id: string) => {
+    if (/metal/.test(id)) {
+      // VLANs and backups don't work with bare metal;
+      // reset those values.
+      this.setState({
+        selectedTypeID: id,
+        vlanIPAMAddress: '',
+        attachedVLANLabel: '',
+        backupsEnabled: false,
+      });
+    } else {
+      this.setState({
+        selectedTypeID: id,
+      });
+    }
+  };
 
   setLinodeID = (id: number, diskSize?: number) => {
     if (id !== this.state.selectedLinodeID) {
