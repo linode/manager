@@ -1,6 +1,7 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
   changeLinodeDiskPassword,
+  changeLinodePassword,
   Disk,
   getLinodeDisks,
 } from '@linode/api-v4/lib/linodes';
@@ -97,6 +98,9 @@ class LinodeSettingsPasswordPanel extends React.Component<
     };
 
     if (isBareMetalInstance) {
+      changeLinodePassword(linodeId, value)
+        .then(handleSuccess)
+        .catch(handleError);
     } else {
       changeLinodeDiskPassword(linodeId, diskId!, value)
         .then(handleSuccess)

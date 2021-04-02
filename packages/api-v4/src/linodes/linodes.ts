@@ -128,7 +128,7 @@ export const deleteLinode = (linodeId: number) =>
  * through the API.
  */
 
-export const resetLinodePassword = (linodeId: number, root_pass: string) =>
+export const changeLinodePassword = (linodeId: number, root_pass: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/password`),
     setData({ root_pass }),
