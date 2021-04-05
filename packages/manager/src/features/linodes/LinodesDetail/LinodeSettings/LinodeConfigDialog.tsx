@@ -8,7 +8,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
-import { pathOr, repeat } from 'ramda';
+import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -198,11 +198,14 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
   if (!interfaces || interfaces.length === 0) {
     return [];
   }
-  return interfaces.some((thisInterface) => thisInterface.purpose === 'vlan')
-    ? (interfaces.filter(
+  return equals(interfaces, defaultInterfaceList)
+    ? // In this case, where eth0 is set to public interface
+      // and no other interfaces are specified, the API prefers
+      // to receive an empty array.
+      []
+    : (interfaces.filter(
         (thisInterface) => thisInterface.purpose !== 'none'
-      ) as Interface[])
-    : [];
+      ) as Interface[]);
 };
 
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
