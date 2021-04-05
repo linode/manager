@@ -121,8 +121,14 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
     vlanOptions.push({ label: newVlan, value: newVlan });
   }
 
-  const handlePurposeChange = (selected: Item<InterfacePurpose>) =>
-    handleChange({ purpose: selected.value, label, ipam_address: ipamAddress });
+  const handlePurposeChange = (selected: Item<InterfacePurpose>) => {
+    const purpose = selected.value;
+    handleChange({
+      purpose,
+      label: purpose === 'vlan' ? label : '',
+      ipam_address: purpose === 'vlan' ? ipamAddress : '',
+    });
+  };
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     handleChange({ purpose, label, ipam_address: e.target.value });
@@ -174,6 +180,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
               sm={fromAddonsPanel ? 6 : 12}
             >
               <Select
+                inputId={`vlan-label-${slotNumber}`}
                 className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
                 options={vlanOptions}
@@ -205,6 +212,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
             >
               <div className={fromAddonsPanel ? classes.ipamAddressLabel : ''}>
                 <TextField
+                  inputId={`ipam-input-${slotNumber}`}
                   label="IPAM Address (Optional)"
                   value={ipamAddress}
                   errorText={ipamError}
