@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-04-05] - v1.37.0
+
+### Added:
+- VLANs
+- Support for Bare Metal plans in Linode create flow
+
+### Changed:
+- Changes for VLAN attachment in Linode Create flow
+- Hide unneeded fields on LinodeDetail for Bare Metal plans
+- Make Domain, OBJ and LKE upgrade banners dismissible
+
+### Fixed:
+- Wrapping on Firewall Rule table
+- IP transfer not showing all options
+- Properly handle migration_pending notification
+- IP sharing bug
+
+
 ## [2021-03-23] - 1.36.0
 
 ### Added:
