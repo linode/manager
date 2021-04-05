@@ -5,16 +5,21 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
 import {
   allocateIPSchema,
   assignAddressesSchema,
   shareAddressesSchema,
-  updateIPSchema
+  updateIPSchema,
 } from './networking.schema';
-import { IPAddress, IPRange } from './types';
+import {
+  IPAddress,
+  IPAssignmentPayload,
+  IPRange,
+  IPSharingPayload,
+} from './types';
 
 /**
  * Returns a paginated list of IP Addresses on your Account, excluding private
@@ -89,7 +94,7 @@ export const allocateIp = (payload: any) =>
  * @param payload.assignments { Object[] } The ID of the Region in which these
  * assignments are to take place. All IPs and Linodes must exist in this Region.
  */
-export const assignAddresses = (payload: any) =>
+export const assignAddresses = (payload: IPAssignmentPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/networking/ipv4/assign`),
     setMethod('POST'),
@@ -110,7 +115,7 @@ export const assignAddresses = (payload: any) =>
  * You must have access to all of these addresses and they must be in the same
  * Region as the Linode.
  */
-export const shareAddresses = (payload: any) =>
+export const shareAddresses = (payload: IPSharingPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/networking/ipv4/share`),
     setMethod('POST'),
@@ -121,7 +126,7 @@ export const shareAddresses = (payload: any) =>
  * Displays the IPv6 pools on your Account.
  *
  */
-export const getIPv6Pools = (params?: any) =>
+export const getIPv6Pools = (params?: unknown) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/pools`),
     setMethod('GET'),
