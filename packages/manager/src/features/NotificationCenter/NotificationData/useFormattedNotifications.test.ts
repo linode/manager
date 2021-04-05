@@ -11,12 +11,12 @@ const migrationScheduled = notificationFactory.build({
 const migrationPending = notificationFactory.build({
   type: 'migration_pending',
   entity: { id: 1, type: 'linode', label: 'linode-1' },
-  severity: 'critical',
+  severity: 'major',
 });
 
 const maintenanceNotice = notificationFactory.build();
 const maintenanceWithLowSeverity = notificationFactory.build({
-  type: 'migration_pending',
+  type: 'maintenance',
   entity: { id: 4, type: 'linode', label: 'linode-4' },
   severity: 'minor',
 });
@@ -35,15 +35,18 @@ const emailBounce = notificationFactory.build({
 describe('Notification Severity', () => {
   describe('adjustSeverity helper', () => {
     it("should return 'major' severity for all maintenance types", () => {
-      expect(adjustSeverity(migrationScheduled)).toMatch('major');
-      expect(adjustSeverity(migrationPending)).toMatch('major');
-      expect(adjustSeverity(migrationPending)).toMatch('major');
       expect(adjustSeverity(maintenanceNotice)).toMatch('major');
       expect(adjustSeverity(maintenanceWithLowSeverity)).toMatch('major');
     });
 
     it('should return severity as returned by the API with no modification for non-maintenance types', () => {
       expect(adjustSeverity(emailBounce)).toMatch(emailBounce.severity);
+      expect(adjustSeverity(migrationScheduled)).toMatch(
+        migrationScheduled.severity
+      );
+      expect(adjustSeverity(migrationPending)).toMatch(
+        migrationPending.severity
+      );
     });
   });
 });
