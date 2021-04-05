@@ -733,6 +733,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     }
                   />
                 </Box>
+                {formik.errors.interfaces ? (
+                  <Notice error text={formik.errors.interfaces as string} />
+                ) : null}
                 <Typography>
                   VLAN is currently in beta and is subject to the terms of the{' '}
                   <ExternalLink
