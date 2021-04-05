@@ -77,18 +77,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelCol: {
     paddingLeft: 6,
+    whiteSpace: 'nowrap',
   },
   actionCell: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: 0,
-  },
-  actionHeader: {
-    [theme.breakpoints.down('sm')]: {
-      minWidth: 70,
-    },
-    minWidth: 140,
   },
   table: {
     backgroundColor: theme.color.border3,
@@ -223,15 +218,19 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             >
               Label
             </TableCell>
-            <Hidden xsDown>
+            <Hidden mdDown>
               <TableCell style={{ width: '10%' }}>Protocol</TableCell>
-              <TableCell style={{ width: '10%' }}>Port Range</TableCell>
+            </Hidden>
+            <Hidden xsDown>
+              <TableCell style={{ whiteSpace: 'nowrap', width: '10%' }}>
+                Port Range
+              </TableCell>
               <TableCell style={{ width: '15%' }}>
                 {capitalize(addressColumnLabel)}
               </TableCell>
             </Hidden>
             <TableCell style={{ width: '5%' }}>Action</TableCell>
-            <TableCell className={classes.actionHeader} />
+            <TableCell />
           </TableRow>
         </TableHead>
         <DragDropContext onDragEnd={onDragEnd}>
@@ -358,16 +357,18 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             </button>
           )}
         </TableCell>
-        <Hidden xsDown>
+        <Hidden mdDown>
           <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
+        </Hidden>
+        <Hidden xsDown>
           <TableCell>
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </TableCell>
-          <TableCell>
+          <TableCell style={{ whiteSpace: 'nowrap' }}>
             {addresses}{' '}
             <ConditionalError errors={errors} formField="addresses" />
           </TableCell>
@@ -421,7 +422,7 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   const theme: Theme = useTheme();
   const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
   const mdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const colSpan = xsDown ? 1 : 4;
+  const colSpan = xsDown ? 1 : mdDown ? 3 : 4;
 
   const helperText = mdDown ? (
     <strong>{capitalize(category)} policy:</strong>
