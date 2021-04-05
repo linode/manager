@@ -1,183 +1,216 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
-import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
-type ClassNames =
-  | 'root'
-  | 'stackscriptLabel'
-  | 'stackscriptTitles'
-  | 'selectingStackscriptTitles'
-  | 'deploys'
-  | 'revisions'
-  | 'tags'
-  | 'actionMenu'
-  | 'tr'
-  | 'tableHead';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    stackscriptLabel: {},
-    stackscriptTitles: {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& th': {
+      backgroundColor: theme.cmrBGColors.bgTableHeader,
+      border: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      fontFamily: theme.font.bold,
+      height: 40,
+      padding: '10px 15px',
+      '&:first-of-type': {
+        borderLeft: 'none',
+      },
+      '&:last-of-type': {
+        borderRight: 'none',
+      },
+      '&:hover': {
+        ...theme.applyTableHeaderStyles,
+      },
+    },
+  },
+  tr: {
+    height: 44,
+  },
+  tableHead: {
+    color: theme.cmrTextColors.tableHeader,
+    top: 104,
+    '& span': {
+      color: theme.cmrTextColors.tableHeader,
+    },
+  },
+  noHover: {
+    cursor: 'default !important',
+  },
+  stackscriptTitles: {
+    width: '36%',
+    [theme.breakpoints.down('md')]: {
+      width: '48%',
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
+    },
+    [theme.breakpoints.down('xs')]: {
       width: '60%',
-      [theme.breakpoints.up('lg')]: {
-        minWidth: 150,
-      },
     },
-    selectingStackscriptTitles: {
-      width: 'calc(100% - 65px)',
+  },
+  stackscriptTitlesAccount: {
+    width: '26%',
+    [theme.breakpoints.down('md')]: {
+      width: '38%',
     },
-    deploys: {
-      width: '10%',
-      [theme.breakpoints.up('lg')]: {
-        width: '12%',
-        minWidth: 140,
-      },
+    [theme.breakpoints.down('sm')]: {
+      width: '50%',
     },
-    revisions: {
-      width: '10%',
-      [theme.breakpoints.up('lg')]: {
-        width: '12%',
-        minWidth: 150,
-      },
+    [theme.breakpoints.down('xs')]: {
+      width: '60%',
     },
-    tags: {
-      width: '10%',
-      [theme.breakpoints.up('lg')]: {
-        width: '12%',
-        minWidth: 100,
-      },
+  },
+  selectingStackscriptTitles: {
+    paddingLeft: '20px !important',
+    width: 'calc(100% - 65px)',
+  },
+  deploys: {
+    width: '10%',
+    [theme.breakpoints.down('md')]: {
+      width: '15%',
     },
-    actionMenu: {
-      width: '10%',
-      [theme.breakpoints.up('lg')]: {
-        width: 65,
-      },
+    [theme.breakpoints.down('sm')]: {
+      width: '17%',
     },
-    tr: {
-      height: 48,
+    [theme.breakpoints.down('xs')]: {
+      width: '28%',
     },
-    tableHead: {
-      top: theme.spacing(11),
+  },
+  revisions: {
+    whiteSpace: 'nowrap',
+    width: '13%',
+    [theme.breakpoints.down('md')]: {
+      width: '17%',
     },
-  });
+    [theme.breakpoints.down('sm')]: {
+      width: '23%',
+    },
+  },
+  images: {
+    width: '26%',
+  },
+  imagesAccount: {
+    width: '20%',
+  },
+  status: {
+    width: '7%',
+  },
+}));
 
 type SortOrder = 'asc' | 'desc';
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 interface Props {
+  category?: string;
   isSelecting?: boolean;
   handleClickTableHeader?: (value: string) => void;
   sortOrder?: SortOrder;
   currentFilterType: CurrentFilter | null;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-class StackScriptTableHead extends React.Component<CombinedProps, {}> {
-  render() {
-    const {
-      classes,
-      currentFilterType,
-      isSelecting,
-      handleClickTableHeader,
-      sortOrder,
-    } = this.props;
+export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const {
+    currentFilterType,
+    isSelecting,
+    handleClickTableHeader,
+    sortOrder,
+    category,
+  } = props;
 
-    const Cell: React.ComponentType<any> =
-      !!handleClickTableHeader && sortOrder ? TableSortCell : TableCell;
+  const Cell: React.ComponentType<any> =
+    !!handleClickTableHeader && sortOrder ? TableSortCell : TableCell;
 
-    const maybeAddSortingProps = (orderBy: string) =>
-      !!handleClickTableHeader && sortOrder
-        ? {
-            direction: sortOrder,
-            active: currentFilterType === orderBy,
-            label: orderBy,
-            handleClick: handleClickTableHeader,
-          }
-        : {};
+  const maybeAddSortingProps = (orderBy: string) =>
+    !!handleClickTableHeader && sortOrder
+      ? {
+          direction: sortOrder,
+          active: currentFilterType === orderBy,
+          label: orderBy,
+          handleClick: handleClickTableHeader,
+        }
+      : {};
 
-    return (
-      <TableHead>
-        <TableRow className={classes.tr} role="rowgroup">
-          {!!isSelecting && (
-            <TableCell
-              className={classNames({
-                [classes.tableHead]: true,
-                [classes.stackscriptLabel]: true,
-              })}
-            />
-          )}
+  const communityStackScripts = category === 'community';
+
+  return (
+    <TableHead className={classes.root}>
+      <TableRow className={classes.tr}>
+        {/* The column width jumps in the Linode Create flow when the user
+            clicks on the table header. This is currently also happening in
+            production and might be related to the difference in width between
+            the panels in the StackScript landing page and the one in the
+            Linode Create flow.  */}
+        <Cell
+          className={classNames({
+            [classes.tableHead]: true,
+            [classes.stackscriptTitles]: true,
+            [classes.stackscriptTitlesAccount]: category === 'account',
+            [classes.selectingStackscriptTitles]: isSelecting,
+          })}
+          colSpan={isSelecting ? 2 : 1}
+          data-qa-stackscript-table-header
+          {...maybeAddSortingProps('label')}
+        >
+          StackScript
+        </Cell>
+        {!isSelecting && (
           <Cell
-            className={classNames({
-              [classes.tableHead]: true,
-              [classes.stackscriptTitles]: true,
-              [classes.selectingStackscriptTitles]: isSelecting,
-            })}
-            data-qa-stackscript-table-header
-            {...maybeAddSortingProps('label')}
+            className={`${classes.tableHead} ${classes.deploys}`}
+            data-qa-stackscript-active-deploy-header
+            {...maybeAddSortingProps('deploys')}
           >
-            StackScript
+            Deploys
           </Cell>
-          {!isSelecting && (
+        )}
+        {!isSelecting && (
+          <Hidden xsDown>
             <Cell
-              className={classNames({
-                [classes.tableHead]: true,
-                [classes.deploys]: true,
-              })}
-              data-qa-stackscript-active-deploy-header
-              {...maybeAddSortingProps('deploys')}
-            >
-              Total Deploys
-            </Cell>
-          )}
-          {!isSelecting && (
-            <Cell
-              className={classNames({
-                [classes.tableHead]: true,
-                [classes.revisions]: true,
-              })}
+              className={`${classes.tableHead} ${classes.revisions}`}
               data-qa-stackscript-revision-header
               {...maybeAddSortingProps('revision')}
             >
               Last Revision
             </Cell>
-          )}
-          {!isSelecting && (
+          </Hidden>
+        )}
+        {!isSelecting && (
+          <Hidden mdDown>
             <TableCell
               className={classNames({
                 [classes.tableHead]: true,
-                [classes.tags]: true,
+                [classes.images]: true,
+                [classes.imagesAccount]: category === 'account',
+                [classes.noHover]: true,
               })}
               data-qa-stackscript-compatible-images
             >
               Compatible Images
             </TableCell>
-          )}
-          {!isSelecting && (
+          </Hidden>
+        )}
+        {!isSelecting && !communityStackScripts ? (
+          <Hidden mdDown>
             <TableCell
-              className={classNames({
-                [classes.tableHead]: true,
-                [classes.stackscriptLabel]: true,
-              })}
-            />
-          )}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
+              className={`${classes.tableHead} ${classes.status} ${classes.noHover}`}
+              data-qa-stackscript-status-header
+            >
+              Status
+            </TableCell>
+          </Hidden>
+        ) : null}
+        {!isSelecting && (
+          <TableCell className={`${classes.tableHead} ${classes.noHover}`} />
+        )}
+      </TableRow>
+    </TableHead>
+  );
+};
 
-const styled = withStyles(styles);
-
-export default styled(StackScriptTableHead);
+export default StackScriptTableHead;

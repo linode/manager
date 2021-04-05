@@ -3,12 +3,12 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
 import { withStyles, WithStyles } from 'src/components/core/styles';
-import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TableRow from 'src/components/TableRow';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableRow from 'src/components/TableRow/TableRow';
 import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
 import { ClassNames, styles } from '../StackScriptRowHelpers';
 
@@ -85,9 +85,9 @@ export class StackScriptSelectionRow extends React.Component<
           </Grid>
           <Grid item className={classes.selectionGridButton}>
             <Button
-              compact
               buttonType="secondary"
               className={classes.detailsButton}
+              compact
               onClick={openDrawer}
             >
               Show Details
