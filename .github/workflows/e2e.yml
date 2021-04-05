@@ -8,13 +8,6 @@ env:
 on:
   schedule:
     - cron: '0 13 * * 1-5'
-  push:
-    branches:
-      - master
-  pull_request:
-    paths:
-    - '**/cypress/**'
-    - '**/e2e.yml'
 
 jobs:
   run-cypress-e2e:
@@ -35,6 +28,7 @@ jobs:
           path: |
             node_modules
             */*/node_modules
+            ~/.cache/Cypress
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: |
