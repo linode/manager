@@ -1,22 +1,20 @@
-import { curry } from 'ramda';
-import * as React from 'react';
 import {
+  Chart,
+  ChartData,
   ChartDataSets,
   ChartOptions,
-  Chart,
-  ChartXAxe,
   ChartTooltipItem,
-  ChartData,
+  ChartXAxe,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
-
-import LineChartIcon from 'src/assets/icons/line-chart.svg';
+import { curry } from 'ramda';
+import * as React from 'react';
 import Button from 'src/components/Button';
 import {
   makeStyles,
   Theme,
-  useTheme,
   useMediaQuery,
+  useTheme,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -28,6 +26,7 @@ import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
+
 setUpCharts();
 
 export interface DataSet {
@@ -80,14 +79,14 @@ const humanizeLargeData = (value: number) => {
 };
 
 const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
+  const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down(960));
+
   const inputEl: React.RefObject<any> = React.useRef(null);
   const chartInstance: React.MutableRefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
   const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
-
-  const classes = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down(960));
 
   const {
     chartHeight,
@@ -102,6 +101,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     nativeLegend,
     unit,
   } = props;
+
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
   const plugins = [
@@ -187,7 +187,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         bodyFontColor: '#32363C',
         displayColors: false,
         titleFontColor: '#606469',
-        xPadding: 16,
+        xPadding: 8,
         yPadding: 10,
         borderWidth: 0.5,
         borderColor: '#999',
@@ -288,16 +288,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell className={classes.tableHeadInner}>
-                    <Typography
-                      variant="body1"
-                      component="span"
-                      className={classes.text}
-                    >
-                      Toggle Graphs
-                    </Typography>
-                    <LineChartIcon className={classes.chartIcon} />
-                  </TableCell>
+                  <TableCell style={{ height: 26 }} />
                   {finalRowHeaders.map((section, i) => (
                     <TableCell
                       key={i}
