@@ -262,14 +262,14 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   });
   return (
     <div className={classes.wrapper}>
-      <div style={{ width: '100%' }}>
+      <div>
         <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table aria-label="Stats and metrics" className={classes.root}>
             <TableHead className={classes.tableHead}>
-              {/* Remove "Toggle Graph" label and repeat legend for each data set for mobile */}
+              {/* Repeat legend for each data set for mobile */}
               {matchesSmDown ? (
                 data.map((section) => (
                   <TableRow key={section.label}>
