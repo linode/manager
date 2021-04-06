@@ -136,7 +136,7 @@ interface Props {
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
-  vlanLabel: string;
+  vlanLabel: string | null;
   ipamAddress: string | null;
   handleVLANChange: (updatedInterface: Interface) => void;
 }

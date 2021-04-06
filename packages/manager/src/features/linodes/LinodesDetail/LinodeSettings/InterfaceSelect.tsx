@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   slotNumber: number;
   purpose: ExtendedPurpose;
-  label: string;
+  label: string | null;
   ipamAddress: string | null;
   readOnly: boolean;
   region?: string;
