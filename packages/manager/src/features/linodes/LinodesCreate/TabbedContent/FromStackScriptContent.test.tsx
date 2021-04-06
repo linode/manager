@@ -1,14 +1,14 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { Provider } from 'react-redux';
 import { imageFactory } from 'src/factories/images';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import store from 'src/store';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 import {
   CombinedProps,
   FromStackScriptContent,
 } from './FromStackScriptContent';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store from 'src/store';
-import { Provider } from 'react-redux';
 
 const mockImages = imageFactory.buildList(10);
 
@@ -31,8 +31,6 @@ const mockProps: CombinedProps = {
   header: '',
   updateStackScript: jest.fn(),
   handleSelectUDFs: jest.fn(),
-  ldClient: {} as any,
-  flags: {},
 };
 
 describe('FromImageContent', () => {
