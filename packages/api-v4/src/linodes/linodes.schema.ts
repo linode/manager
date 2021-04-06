@@ -1,11 +1,11 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 import { parseCIDR } from 'ipaddr.js';
 
-const validateIP = (ipAddress: string) => {
-  if (ipAddress === '') {
-    // ipam_address is technically required, but empty strings are valid
+const validateIP = (ipAddress: string | null) => {
+  if (!ipAddress) {
     return true;
   }
+
   // We accept IP ranges (i.e., CIDR notation).
   try {
     parseCIDR(ipAddress);
@@ -24,18 +24,20 @@ export const linodeInterfaceSchema = array().of(
       [null, 'public', 'vlan'],
       'Purpose must be null, public, or vlan.'
     ),
-    label: string().when('purpose', {
-      is: (value) => value === 'vlan',
-      then: string()
-        .required('Label is required.')
-        .min(1, 'Label must be between 1 and 64 characters.')
-        .max(64, 'Label must be between 1 and 64 characters.')
-        .matches(
-          /[a-z0-9-]+/,
-          'Interface labels cannot contain special characters.'
-        ),
-      otherwise: string().notRequired(),
-    }),
+    label: string()
+      .when('purpose', {
+        is: (value) => value === 'vlan',
+        then: string()
+          .required('Label is required.')
+          .min(1, 'Label must be between 1 and 64 characters.')
+          .max(64, 'Label must be between 1 and 64 characters.')
+          .matches(
+            /[a-z0-9-]+/,
+            'Interface labels cannot contain special characters.'
+          ),
+        otherwise: string().notRequired(),
+      })
+      .nullable(true),
     ipam_address: string().test({
       name: 'validateIPAM',
       message: 'Must be a valid IPv4 range',
