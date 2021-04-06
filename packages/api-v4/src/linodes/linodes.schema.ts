@@ -2,18 +2,14 @@ import { array, boolean, mixed, number, object, string } from 'yup';
 import { parseCIDR } from 'ipaddr.js';
 
 const validateIP = (ipAddress: string | null) => {
-  if (ipAddress === '') {
-    // ipam_address is technically required, but empty strings are valid
+  if (!ipAddress) {
     return true;
   }
 
-  if (ipAddress !== null) {
-    // We accept IP ranges (i.e., CIDR notation).
-    try {
-      parseCIDR(ipAddress);
-    } catch (err) {
-      return false;
-    }
+  try {
+    parseCIDR(ipAddress);
+  } catch (err) {
+    return false;
   }
 
   return true;
@@ -41,7 +37,7 @@ export const linodeInterfaceSchema = array().of(
         otherwise: string().notRequired(),
       })
       .nullable(true),
-    ipam_address: string().nullable().test({
+    ipam_address: string().test({
       name: 'validateIPAM',
       message: 'Must be a valid IPv4 range',
       test: validateIP,
