@@ -6,6 +6,7 @@ const validateIP = (ipAddress: string | null) => {
     return true;
   }
 
+  // We accept IP ranges (i.e., CIDR notation).
   try {
     parseCIDR(ipAddress);
   } catch (err) {
