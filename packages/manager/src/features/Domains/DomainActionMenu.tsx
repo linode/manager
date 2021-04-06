@@ -12,6 +12,7 @@ import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles(() => ({
   button: {
+    justifyContent: 'flex-start',
     minWidth: 66,
   },
 }));
