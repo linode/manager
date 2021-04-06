@@ -53,6 +53,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   chart: {
     paddingTop: theme.spacing(),
   },
+  ipv4: {
+    '& .chartjs-render-monitor': {
+      paddingLeft: theme.spacing(),
+    },
+  },
 }));
 
 interface Props extends ChartProps {
@@ -157,7 +162,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
 
   return (
     <Grid container className={classes.graphGrids}>
-      <Grid item className={classes.grid} xs={12}>
+      <Grid item className={`${classes.grid} ${classes.ipv4}`} xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}
           renderBody={() => (
