@@ -97,7 +97,7 @@ interface State {
   appInstancesLoading: boolean;
   appInstancesError?: string;
   disabledClasses?: LinodeTypeClass[];
-  attachedVLANLabel: string;
+  attachedVLANLabel: string | null;
   vlanIPAMAddress: string | null;
 }
 

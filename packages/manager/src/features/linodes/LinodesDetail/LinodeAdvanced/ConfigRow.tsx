@@ -109,7 +109,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
         return (
           <li
-            key={interfaceEntry.label + idx}
+            key={interfaceEntry.purpose + idx}
             className={classes.interfaceListItem}
           >
             {interfaceName} – {getInterfaceLabel(interfaceEntry)}
