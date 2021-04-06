@@ -5,6 +5,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { compose } from 'recompose';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
@@ -14,6 +15,7 @@ import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import PriceIcon from 'src/assets/icons/price-icon.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -23,15 +25,19 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
+import TagCell, { TagDrawer } from 'src/components/TagCell';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
+import { useDialog } from 'src/hooks/useDialog';
+import { deleteCluster } from 'src/store/kubernetes/kubernetes.requests';
+import { ThunkDispatch } from 'src/store/types';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 import { getTotalClusterPrice } from '../kubeUtils';
 import KubeConfigDrawer from './KubeConfigDrawer';
+import KubernetesDialog from './KubernetesDialog';
 
 type ClassNames =
   | 'root'
@@ -46,7 +52,8 @@ type ClassNames =
   | 'tagsSection'
   | 'mainGridContainer'
   | 'iconSharedOuter'
-  | 'iconTextOuter';
+  | 'iconTextOuter'
+  | 'tags';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -113,6 +120,25 @@ const styles = (theme: Theme) =>
       flexBasis: '72%',
       minWidth: 115,
     },
+    tags: {
+      [theme.breakpoints.up(1400)]: {
+        flexBasis: '100%',
+        flexGrow: 0,
+        maxWidth: '100%',
+      },
+      [theme.breakpoints.down(1400)]: {
+        marginLeft: theme.spacing(),
+        '& > div': {
+          flexDirection: 'row-reverse',
+          '& > button': {
+            marginRight: 4,
+          },
+          '& > div': {
+            justifyContent: 'flex-start !important',
+          },
+        },
+      },
+    },
   });
 
 interface Props {
@@ -160,7 +186,30 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = (
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
+  const [tagDrawerOpen, setTagDrawerOpen] = React.useState(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
+
+  // Deletion handlers
+  //
+  // NB: this is using dispatch directly because I don't want to
+  // add re-render issues to our useKubernetesClusters hook, especially
+  // since we're going to switch to queries for all of these soon.
+  const dispatch: ThunkDispatch = useDispatch();
+  const _deleteCluster = () =>
+    dispatch(deleteCluster({ clusterID: cluster.id }));
+
+  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
+    _deleteCluster
+  );
+
+  const addTag = (tag: string) => {
+    return handleUpdateTags([...cluster.tags, tag]);
+  };
+
+  const deleteTag = (tag: string) => {
+    const newTags = cluster.tags.filter((thisTag) => thisTag !== tag);
+    return handleUpdateTags(newTags);
+  };
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
@@ -391,12 +440,31 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = (
           {setKubeconfigDisplay()}
 
           <Grid item xs={12} lg={4}>
-            <Paper className={classes.tagsSection}>
-              <TagsPanelRedesigned
-                tags={cluster.tags}
-                updateTags={handleUpdateTags}
-              />
-            </Paper>
+            <Grid
+              container
+              direction="column"
+              alignItems="flex-end"
+              wrap="wrap"
+              className={classes.tagsSection}
+            >
+              <Grid item>
+                <Button
+                  buttonType="secondary"
+                  onClick={() => openDialog(cluster.id)}
+                >
+                  Delete Cluster
+                </Button>
+              </Grid>
+              <Grid item className={classes.tags}>
+                <TagCell
+                  tags={cluster.tags}
+                  width={500}
+                  addTag={addTag}
+                  deleteTag={deleteTag}
+                  listAllTags={() => setTagDrawerOpen(true)}
+                />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Paper>
@@ -408,6 +476,23 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = (
         closeDrawer={() => setDrawerOpen(false)}
         error={drawerError}
         loading={drawerLoading}
+      />
+      <KubernetesDialog
+        open={dialog.isOpen}
+        loading={dialog.isLoading}
+        error={dialog.error}
+        clusterLabel={cluster.label}
+        clusterPools={cluster.node_pools}
+        onClose={closeDialog}
+        onDelete={() => submitDialog(cluster.id)}
+      />
+      <TagDrawer
+        entityLabel={cluster.label}
+        open={tagDrawerOpen}
+        tags={cluster.tags}
+        addTag={addTag}
+        deleteTag={deleteTag}
+        onClose={() => setTagDrawerOpen(false)}
       />
     </React.Fragment>
   );
