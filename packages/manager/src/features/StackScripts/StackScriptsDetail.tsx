@@ -121,6 +121,7 @@ const styles = (theme: Theme) =>
       color: theme.cmrTextColors.tableStatic,
       fontFamily: theme.font.bold,
       fontSize: '1.125rem',
+      marginTop: -1,
     },
     userNameSlash: {
       color: theme.cmrTextColors.tableHeader,
