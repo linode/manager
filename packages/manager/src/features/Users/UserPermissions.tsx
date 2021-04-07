@@ -98,12 +98,13 @@ const styles = (theme: Theme) =>
       cursor: 'pointer',
     },
     setAll: {
-      width: 300,
-      marginTop: theme.spacing(1) / 2,
       '& > div': {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
+      },
+      '& label': {
+        marginTop: 6,
       },
       '& .react-select__menu, & .input': {
         width: 125,
@@ -751,7 +752,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
 
-          <Grid item>
+          <Grid item style={{ marginTop: 5 }}>
             <Select
               options={permOptions}
               defaultValue={defaultPerm}
