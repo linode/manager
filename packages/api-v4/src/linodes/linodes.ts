@@ -4,7 +4,7 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { DeepPartial, ResourcePage as Page } from '../types';
 import { Volume } from '../volumes/types';
@@ -116,4 +116,21 @@ export const deleteLinode = (linodeId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
     setMethod('DELETE')
+  );
+
+/**
+ * resetLinodePassword
+ *
+ * This method is distinct from changeLinodeDiskPassword,
+ * in that it resets the root password on the Linode itself
+ * rather than on a specific disk. This situation only applies
+ * to bare metal instances, which don't have disks that are managed
+ * through the API.
+ */
+
+export const changeLinodePassword = (linodeId: number, root_pass: string) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/password`),
+    setData({ root_pass }),
+    setMethod('POST')
   );
