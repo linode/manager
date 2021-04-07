@@ -121,7 +121,7 @@ export const deleteLinode = (linodeId: number) =>
 /**
  * resetLinodePassword
  *
- * This method is distinct from resetLinodeDiskPassword,
+ * This method is distinct from changeLinodeDiskPassword,
  * in that it resets the root password on the Linode itself
  * rather than on a specific disk. This situation only applies
  * to bare metal instances, which don't have disks that are managed
@@ -132,5 +132,5 @@ export const changeLinodePassword = (linodeId: number, root_pass: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/password`),
     setData({ root_pass }),
-    setMethod('DELETE')
+    setMethod('POST')
   );
