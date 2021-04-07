@@ -149,7 +149,7 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan';
 
 export interface Interface {
-  label: string;
+  label: string | null;
   purpose: InterfacePurpose;
   ipam_address: string | null;
 }
