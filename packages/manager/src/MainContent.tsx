@@ -199,6 +199,16 @@ const MainContent: React.FC<CombinedProps> = (props) => {
     account.data?.capabilities ?? []
   );
 
+  const machineImagesEnabled = isFeatureEnabled(
+    'Machine Images',
+    Boolean(flags.machineImages),
+    account.data?.capabilities ?? []
+  );
+
+  if (machineImagesEnabled) {
+    console.log('Machine Images enabled');
+  }
+
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
   const shouldDisplayMainContentBanner =
