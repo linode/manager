@@ -60,7 +60,7 @@ const LinodeSettings: React.FC<CombinedProps> = (props) => {
             </Typography>
             <LinodeSettingsLabelPanel />
             <LinodeSettingsPasswordPanel
-              linodeLabel={linode.label}
+              isBareMetalInstance={isBareMetalInstance}
               linodeId={linode.id}
               linodeStatus={linode.status}
             />
