@@ -89,12 +89,10 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const [newVlan, setNewVlan] = React.useState('');
 
   const purposeOptions: Item<ExtendedPurpose>[] = [
-    slotNumber === 0
-      ? {
-          label: 'Public Internet',
-          value: 'public',
-        }
-      : null,
+    {
+      label: 'Public Internet',
+      value: 'public',
+    },
     {
       label: 'VLAN',
       value: 'vlan',
@@ -103,7 +101,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
       label: 'None',
       value: 'none',
     },
-  ].filter(Boolean) as Item<ExtendedPurpose>[];
+  ];
 
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =

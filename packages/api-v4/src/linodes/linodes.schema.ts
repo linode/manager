@@ -18,33 +18,43 @@ const validateIP = (ipAddress: string | null) => {
 
 const stackscript_data = array().of(object()).nullable(true);
 
-export const linodeInterfaceSchema = array().of(
-  object({
-    purpose: mixed().oneOf(
-      [null, 'public', 'vlan'],
-      'Purpose must be null, public, or vlan.'
-    ),
-    label: string()
-      .when('purpose', {
-        is: (value) => value === 'vlan',
-        then: string()
-          .required('Label is required.')
-          .min(1, 'Label must be between 1 and 64 characters.')
-          .max(64, 'Label must be between 1 and 64 characters.')
-          .matches(
-            /[a-z0-9-]+/,
-            'Interface labels cannot contain special characters.'
-          ),
-        otherwise: string().notRequired(),
-      })
-      .nullable(true),
-    ipam_address: string().test({
-      name: 'validateIPAM',
-      message: 'Must be a valid IPv4 range',
-      test: validateIP,
-    }),
-  })
-);
+export const linodeInterfaceSchema = array()
+  .of(
+    object({
+      purpose: mixed().oneOf(
+        [null, 'public', 'vlan'],
+        'Purpose must be null, public, or vlan.'
+      ),
+      label: string()
+        .when('purpose', {
+          is: (value) => value === 'vlan',
+          then: string()
+            .required('Label is required.')
+            .min(1, 'Label must be between 1 and 64 characters.')
+            .max(64, 'Label must be between 1 and 64 characters.')
+            .matches(
+              /[a-z0-9-]+/,
+              'Interface labels cannot contain special characters.'
+            ),
+          otherwise: string().notRequired(),
+        })
+        .nullable(true),
+      ipam_address: string().test({
+        name: 'validateIPAM',
+        message: 'Must be a valid IPv4 range',
+        test: validateIP,
+      }),
+    })
+  )
+  .test(
+    'unique-public-interface',
+    'Only one public interface per config is allowed.',
+    (list: any[]) => {
+      return (
+        list.filter((thisSlot) => thisSlot.purpose === 'public').length <= 1
+      );
+    }
+  );
 
 // const rootPasswordValidation = string().test(
 //   'is-strong-password',
