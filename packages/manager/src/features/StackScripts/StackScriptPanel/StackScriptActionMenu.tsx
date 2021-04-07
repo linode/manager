@@ -1,4 +1,4 @@
-import { path, splitAt } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -7,12 +7,11 @@ import Hidden from 'src/components/core/Hidden';
 import {
   makeStyles,
   Theme,
-  useTheme,
   useMediaQuery,
+  useTheme,
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import withProfile from 'src/containers/profile.container';
-
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
 const useStyles = makeStyles(() => ({
@@ -119,35 +118,26 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
       : null,
   ].filter(Boolean) as Action[];
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
     <div className={classes.stackScriptActionsWrapper}>
-      {!matchesSmDown &&
-        inlineActions.map((action) => {
-          return (
-            <InlineMenuAction
-              key={action.title}
-              actionText={action.title}
-              disabled={action.disabled}
-              onClick={action.onClick}
-            />
-          );
-        })}
-      {/* Hacky way to only display the action menu button on smaller screens for community StackScripts */}
-      {category === 'community' || isPublic ? (
-        <Hidden mdUp>
-          <ActionMenu
-            actionsList={menuActions}
-            ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
-          />
-        </Hidden>
-      ) : (
+      {category === 'account' || matchesSmDown ? (
         <ActionMenu
-          actionsList={menuActions}
+          actionsList={actions}
           ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
         />
+      ) : (
+        <Hidden smDown>
+          {actions.map((action) => {
+            return (
+              <InlineMenuAction
+                key={action.title}
+                actionText={action.title}
+                disabled={action.disabled}
+                onClick={action.onClick}
+              />
+            );
+          })}
+        </Hidden>
       )}
     </div>
   );
