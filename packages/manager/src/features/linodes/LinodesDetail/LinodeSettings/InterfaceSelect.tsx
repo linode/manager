@@ -182,7 +182,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
                 options={vlanOptions}
-                label="Label"
+                label="VLAN"
                 placeholder="Create or select a VLAN"
                 variant="creatable"
                 createOptionPosition="first"
