@@ -240,8 +240,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
-    validateOnChange: true,
-    validateOnMount: true,
+    validateOnChange: false,
+    validateOnMount: false,
+    validate: (values) => onValidate(values),
     onSubmit: (values) => onSubmit(values),
   });
 
@@ -275,6 +276,21 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       helpers,
       root_device,
     };
+  };
+
+  const onValidate = (values: EditableFields) => {
+    const errors: any = {};
+    const { interfaces } = values;
+
+    const eth1 = interfaces[1];
+    const eth2 = interfaces[2];
+
+    if (eth1?.purpose === 'none' && eth2.purpose !== 'none') {
+      errors.interfaces =
+        'You cannot assign an interface to eth2 without an interface on eth1.';
+    }
+
+    return errors;
   };
 
   const onSubmit = (values: EditableFields) => {
@@ -745,10 +761,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   />
                   .
                 </Typography>
-                {values.interfaces.map((thisInterface, idx, arr) =>
-                  // Magic so that we show interfaces that have been filled plus one more
-                  arr[idx - 1]?.purpose !== 'none' ||
-                  thisInterface.purpose !== 'none' ? (
+                {values.interfaces.map((thisInterface, idx) => {
+                  return (
                     <InterfaceSelect
                       key={`eth${idx}-interface`}
                       slotNumber={idx}
@@ -765,8 +779,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                         handleInterfaceChange(idx, newInterface)
                       }
                     />
-                  ) : null
-                )}
+                  );
+                })}
               </Grid>
             ) : null}
 
