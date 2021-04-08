@@ -152,7 +152,14 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
       {fromAddonsPanel ? null : (
         <Grid item xs={12} sm={6}>
           <Select
-            options={purposeOptions}
+            options={
+              // Do not display "None" as an option for eth0, since
+              slotNumber > 0
+                ? purposeOptions
+                : purposeOptions.filter(
+                    (thisPurposeOption) => thisPurposeOption.value !== 'none'
+                  )
+            }
             label={`eth${slotNumber}`}
             value={purposeOptions.find(
               (thisOption) => thisOption.value === purpose
