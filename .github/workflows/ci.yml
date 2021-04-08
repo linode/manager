@@ -37,6 +37,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v2
+        with:
           name: packages-validation-lib
           path: packages/validation/lib
       - run: yarn workspace @linode/api-v4 run test
@@ -56,6 +57,7 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
+        with:
           name: packages-validation-lib
           path: packages/validation/lib
       - run: yarn --frozen-lockfile
@@ -81,9 +83,11 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
+        with:
           name: packages-validation-lib
           path: packages/validation/lib
       - uses: actions/download-artifact@v2
+        with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
@@ -106,15 +110,18 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: cp packages/manager/config/environments/beta packages/manager/.env
       - uses: actions/download-artifact@v2
+        with:
           name: packages-validation-lib
           path: packages/validation/lib
       - uses: actions/download-artifact@v2
+        with:
           name: packages-api-v4-lib
           path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
       - uses: actions/upload-artifact@v2
         with:
+          name: packages-manager-build
           path: packages/manager/build
 
   publish-sdk:
@@ -152,6 +159,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
+        with:
+          name: packages-manager-build
+          path: packages/manager/build
       - uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
