@@ -1,7 +1,7 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import ActionMenu from 'src/components/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 import {
   makeStyles,
   Theme,
@@ -34,6 +34,10 @@ interface Props extends Handlers {
   domain: string;
   id: number;
   status: DomainStatus;
+}
+
+interface ExtendedAction extends Action {
+  className?: string;
 }
 
 type CombinedProps = Props;
@@ -96,7 +100,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
         handleRemove();
       },
     },
-  ];
+  ] as ExtendedAction[];
 
   // Index at which non-inline actions begin. Our convention: place actions that are inline (at non-mobile/non-tablet viewports) at start of the array.
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
