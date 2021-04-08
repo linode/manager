@@ -879,7 +879,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   disabled={readOnly}
                   loading={formik.isSubmitting}
                 >
-                  {linodeConfigId ? 'Save' : 'Add'} Configuration
+                  {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
                 </Button>
                 <Button
                   buttonType="secondary"
