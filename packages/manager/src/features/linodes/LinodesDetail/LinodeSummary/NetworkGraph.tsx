@@ -34,8 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexWrap: 'nowrap',
     margin: 0,
     padding: theme.spacing(),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1100)]: {
       flexWrap: 'wrap',
+      marginTop: -theme.spacing(2),
     },
   },
   grid: {
@@ -46,17 +47,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.MuiGrid-item': {
       padding: theme.spacing(2),
     },
-    [theme.breakpoints.down('md')]: {
+    '& h2': {
+      fontSize: '1rem',
+    },
+    [theme.breakpoints.down(1100)]: {
       marginBottom: theme.spacing(2),
     },
   },
   chart: {
     paddingTop: theme.spacing(),
-  },
-  ipv4: {
-    '& .chartjs-render-monitor': {
-      paddingLeft: theme.spacing(),
-    },
   },
 }));
 
@@ -162,7 +161,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
 
   return (
     <Grid container className={classes.graphGrids}>
-      <Grid item className={`${classes.grid} ${classes.ipv4}`} xs={12}>
+      <Grid item className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}
           renderBody={() => (

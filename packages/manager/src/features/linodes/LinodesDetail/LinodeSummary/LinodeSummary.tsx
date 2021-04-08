@@ -68,13 +68,15 @@ const styles = (theme: Theme) =>
     graphControls: {
       display: 'flex',
       alignItems: 'center',
+      justifyContent: 'space-between',
       marginTop: theme.spacing(0.5),
       paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing(),
     },
     graphGrids: {
       flexWrap: 'nowrap',
       margin: 0,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(1100)]: {
         flexWrap: 'wrap',
       },
     },
@@ -86,11 +88,15 @@ const styles = (theme: Theme) =>
       '&.MuiGrid-item': {
         padding: theme.spacing(2),
       },
-      [theme.breakpoints.down('md')]: {
+      '& h2': {
+        fontSize: '1rem',
+      },
+      [theme.breakpoints.down(1100)]: {
         marginBottom: theme.spacing(2),
       },
     },
     labelRangeSelect: {
+      fontSize: '1rem',
       paddingRight: theme.spacing(2),
     },
   });

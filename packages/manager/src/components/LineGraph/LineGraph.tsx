@@ -140,14 +140,23 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       scales: {
         yAxes: [
           {
+            // Defines a fixed width for the Y-axis labels
+            afterFit(axes) {
+              axes.width = 32;
+            },
             gridLines: {
               borderDash: [3, 6],
+              drawTicks: false,
               zeroLineWidth: 1,
               zeroLineBorderDashOffset: 2,
             },
             ticks: {
-              suggestedMax: _suggestedMax ?? undefined,
               beginAtZero: true,
+              fontSize: 12,
+              fontStyle: 'normal',
+              maxTicksLimit: 8,
+              padding: 10,
+              suggestedMax: _suggestedMax ?? undefined,
               callback(value: number, _index: number) {
                 return humanizeLargeData(value);
               },
@@ -176,6 +185,10 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
               date: {
                 zone: timezone,
               },
+            },
+            ticks: {
+              fontSize: 12,
+              fontStyle: 'normal',
             },
             // This cast is because the type definition does not include adapters
           } as ChartXAxe,

@@ -42,10 +42,15 @@ const newMetricDisplayStyles = (theme: Theme) =>
     },
     root: {
       maxWidth: 600,
+      width: '85%',
       '& *': {
         height: 'auto',
         border: 'none',
         backgroundColor: 'transparent',
+        tableLayout: 'fixed',
+      },
+      '& th, td': {
+        padding: `${theme.spacing(0.5)}px !important`,
       },
       '& td:first-child': {
         backgroundColor: 'transparent !important',
@@ -60,6 +65,9 @@ const newMetricDisplayStyles = (theme: Theme) =>
         '& th, & td': {
           padding: '4px !important',
         },
+      },
+      [theme.breakpoints.down('md')]: {
+        width: '100%',
       },
       [theme.breakpoints.down('sm')]: {
         maxWidth: '100%',
@@ -103,8 +111,12 @@ const newMetricDisplayStyles = (theme: Theme) =>
       },
     },
     tableHeadInner: {
+      width: '23%',
       '& p': {
         color: theme.cmrTextColors.tableHeader,
+      },
+      [theme.breakpoints.down('md')]: {
+        width: '20%',
       },
     },
     toggleButton: {
