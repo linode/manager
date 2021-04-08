@@ -19,7 +19,7 @@ jobs:
       - run: yarn workspace @linode/validation run build
       - uses: actions/upload-artifact@v2
         with:
-          path: packages/validation
+          path: node_modules/@linode/validation
 
   test-sdk:
     runs-on: ubuntu-latest
@@ -51,13 +51,12 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: ls packages/validation
       - uses: actions/download-artifact@v2
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v2
         with:
-          path: packages/api-v4
+          path: node_modules/@linode/api-v4
 
   test-manager:
     runs-on: ubuntu-latest
