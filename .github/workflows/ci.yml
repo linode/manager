@@ -132,6 +132,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
+        with:
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
