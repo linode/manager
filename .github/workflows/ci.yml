@@ -36,7 +36,6 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v2
-      - run: -ls -l node_modules/@linode
       - run: yarn workspace @linode/api-v4 run test
 
   build-sdk:
@@ -55,6 +54,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v2
+      - run: ls -l node_modules/@linode
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v2
         with:
