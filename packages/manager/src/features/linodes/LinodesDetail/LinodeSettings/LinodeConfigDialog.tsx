@@ -783,7 +783,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 ]}
                 fullWidth
               >
-                <FormGroup>
+                <FormGroup style={{ alignItems: 'flex-start' }}>
                   <FormControlLabel
                     label="Enable distro helper"
                     name="helpers.distro"
