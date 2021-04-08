@@ -287,7 +287,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     if (eth1?.purpose === 'none' && eth2.purpose !== 'none') {
       errors.interfaces =
-        'You cannot assign an interface to eth2 without an interface on eth1.';
+        'You cannot assign an interface to eth2 without an interface assigned to eth1.';
     }
 
     return errors;
