@@ -153,7 +153,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         <Grid item xs={12} sm={6}>
           <Select
             options={
-              // Do not display "None" as an option for eth0, since
+              // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
               slotNumber > 0
                 ? purposeOptions
                 : purposeOptions.filter(
