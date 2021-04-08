@@ -84,6 +84,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   tooltip: {
     maxWidth: 350,
   },
+  formGroup: {
+    alignItems: 'flex-start',
+  },
 }));
 
 interface Helpers {
@@ -496,6 +499,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   VM Mode
                 </FormLabel>
                 <RadioGroup
+                  className={classes.formGroup}
                   aria-label="virt_mode"
                   name="virt_mode"
                   value={values.virt_mode}
@@ -560,6 +564,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   Run Level
                 </FormLabel>
                 <RadioGroup
+                  className={classes.formGroup}
                   aria-label="run_level"
                   name="run_level"
                   value={values.run_level}
@@ -606,6 +611,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   Memory Limit
                 </FormLabel>
                 <RadioGroup
+                  className={classes.formGroup}
                   aria-label="memory_limit"
                   name="setMemoryLimit"
                   value={values.setMemoryLimit}
@@ -664,7 +670,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 Add a Device
               </Button>
 
-              <FormControl fullWidth>
+              <FormControl className={classes.formGroup} fullWidth>
                 <FormControlLabel
                   label="Use Custom Root"
                   name="useCustomRoot"
@@ -783,7 +789,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 ]}
                 fullWidth
               >
-                <FormGroup style={{ alignItems: 'flex-start' }}>
+                <FormGroup className={classes.formGroup}>
                   <FormControlLabel
                     label="Enable distro helper"
                     name="helpers.distro"
