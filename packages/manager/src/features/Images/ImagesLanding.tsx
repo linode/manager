@@ -454,7 +454,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
       <LandingHeader
         title="Images"
         entity="Image"
-        onAddNew={openForCreate}
+        onAddNew={() => props.history.push('/images/create')} // openForCreate
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
       <Paper className={classes.imageTable}>

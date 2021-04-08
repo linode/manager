@@ -8,6 +8,9 @@ import {
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const ImagesLanding = React.lazy(() => import('./ImagesLanding'));
+const ImagesCreate = React.lazy(
+  () => import('./ImagesCreate/ImagesCreateContainer')
+);
 
 type Props = RouteComponentProps<{}>;
 
@@ -21,6 +24,7 @@ class ImagesRoutes extends React.Component<Props> {
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
           <Route component={ImagesLanding} path={path} exact />
+          <Route component={ImagesCreate} path={`${path}/create`} exact />
         </Switch>
       </React.Suspense>
     );
