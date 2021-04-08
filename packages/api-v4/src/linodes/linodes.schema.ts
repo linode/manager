@@ -39,7 +39,7 @@ export const linodeInterfaceSchema = array()
           otherwise: string().notRequired(),
         })
         .nullable(true),
-      ipam_address: string().test({
+      ipam_address: string().nullable(true).test({
         name: 'validateIPAM',
         message: 'Must be a valid IPv4 range',
         test: validateIP,
