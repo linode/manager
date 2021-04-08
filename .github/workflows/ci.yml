@@ -19,6 +19,7 @@ jobs:
       - run: yarn workspace @linode/validation run build
       - uses: actions/upload-artifact@v2
         with:
+          name: packages-validation-lib
           path: packages/validation/lib
 
   test-sdk:
@@ -36,6 +37,8 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v2
+          name: packages-validation-lib
+          path: packages/validation/lib
       - run: yarn workspace @linode/api-v4 run test
 
   build-sdk:
@@ -52,12 +55,15 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v2
+          name: packages-validation-lib
+          path: packages/validation/lib
+      - run: yarn --frozen-lockfile
       - run: ls -l node_modules/@linode
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v2
         with:
+          name: packages-api-v4-lib
           path: packages/api-v4/lib
 
   test-manager:
@@ -74,8 +80,13 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v2
+          name: packages-validation-lib
+          path: packages/validation/lib
+      - uses: actions/download-artifact@v2
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
+      - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
   build-manager:
@@ -94,8 +105,13 @@ jobs:
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: cp packages/manager/config/environments/beta packages/manager/.env
-      - run: yarn --frozen-lockfile
       - uses: actions/download-artifact@v2
+          name: packages-validation-lib
+          path: packages/validation/lib
+      - uses: actions/download-artifact@v2
+          name: packages-api-v4-lib
+          path: packages/api-v4/lib
+      - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
       - uses: actions/upload-artifact@v2
         with:
