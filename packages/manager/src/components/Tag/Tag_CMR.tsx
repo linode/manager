@@ -26,7 +26,9 @@ type CSSClasses = 'label' | 'root' | 'deleteButton' | Variants;
 
 const styles = (theme: Theme) =>
   createStyles({
-    label: {},
+    label: {
+      maxWidth: 350,
+    },
     root: {
       height: 30,
       paddingLeft: 0,
@@ -53,9 +55,6 @@ const styles = (theme: Theme) =>
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
         borderRight: `1px solid ${theme.color.tagBorder}`,
-      },
-      '&:last-child': {
-        marginRight: 8,
       },
     },
     deleteButton: {

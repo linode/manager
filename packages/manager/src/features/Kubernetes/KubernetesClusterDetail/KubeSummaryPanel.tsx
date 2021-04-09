@@ -14,7 +14,6 @@ import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import PriceIcon from 'src/assets/icons/price-icon.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
-import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -84,6 +83,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tagsSection: {
     display: 'flex',
+    height: '100%',
     [theme.breakpoints.up('lg')]: {
       justifyContent: 'flex-end',
       textAlign: 'right',
@@ -117,7 +117,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   deleteButton: {
-    paddingRight: 0,
+    ...theme.applyLinkStyles,
+    marginBottom: theme.spacing(),
   },
 }));
 
@@ -412,14 +413,13 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               alignItems="flex-end"
               className={classes.tagsSection}
             >
-              <Grid item className={classes.deleteButton}>
-                <Button
-                  superCompact
-                  buttonType="secondary"
+              <Grid item>
+                <button
+                  className={classes.deleteButton}
                   onClick={() => openDialog(cluster.id)}
                 >
                   Delete Cluster
-                </Button>
+                </button>
               </Grid>
               <Grid item className={classes.tags}>
                 <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />

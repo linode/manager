@@ -25,6 +25,7 @@ import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Tag from 'src/components/Tag/Tag_CMR';
+import { truncateEnd } from 'src/utilities/truncate';
 
 type ClassNames =
   | 'root'
@@ -51,15 +52,15 @@ const styles = (theme: Theme) =>
     root: {},
     tag: {
       marginTop: theme.spacing(1) / 2,
-      marginRight: theme.spacing(1),
+      marginLeft: theme.spacing(1),
+      marginRight: 0,
       [theme.breakpoints.down('xs')]: {
-        marginRight: theme.spacing(2),
+        marginLeft: theme.spacing(2),
       },
       fontWeight: 600,
     },
     addButtonWrapper: {
       width: '100%',
-      marginBottom: theme.spacing(2) + 1,
       display: 'flex',
       justifyContent: 'flex-end',
     },
@@ -99,7 +100,7 @@ const styles = (theme: Theme) =>
       },
     },
     tagsPanelItemWrapper: {
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(),
       position: 'relative',
     },
     selectTag: {
@@ -373,6 +374,10 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
             value={tagInputValue}
             createOptionPosition="first"
             className={classes.selectTag}
+            escapeClearsValue
+            blurInputOnSelect
+            // eslint-disable-next-line
+            autoFocus
           />
         ) : (
           <div
@@ -412,7 +417,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
                 <Tag
                   key={`tag-item-${thisTag}`}
                   colorVariant="lightBlue"
-                  label={thisTag}
+                  label={truncateEnd(thisTag, 30)}
                   onDelete={
                     disabled ? undefined : () => this.handleDeleteTag(thisTag)
                   }
