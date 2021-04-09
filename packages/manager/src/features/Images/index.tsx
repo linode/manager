@@ -14,22 +14,20 @@ const ImageCreate = React.lazy(
 
 type Props = RouteComponentProps<{}>;
 
-class ImagesRoutes extends React.Component<Props> {
-  render() {
-    const {
-      match: { path },
-    } = this.props;
+export const ImagesRoutes: React.FC<Props> = (props) => {
+  const {
+    match: { path },
+  } = props;
 
-    return (
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route component={ImagesLanding} path={path} exact />
-          <Route component={ImageCreate} path={`${path}/create`} exact />
-        </Switch>
-      </React.Suspense>
-    );
-  }
-}
+  return (
+    <React.Suspense fallback={<SuspenseLoader />}>
+      <Switch>
+        <Route component={ImagesLanding} path={path} exact />
+        <Route component={ImageCreate} path={`${path}/create`} exact />
+      </Switch>
+    </React.Suspense>
+  );
+};
 
 export default withRouter(ImagesRoutes);
 
