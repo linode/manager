@@ -52,12 +52,7 @@ const styles = (theme: Theme) =>
     root: {},
     tag: {
       marginTop: theme.spacing(1) / 2,
-      marginLeft: theme.spacing(1),
       marginRight: 0,
-      [theme.breakpoints.down('xs')]: {
-        marginLeft: theme.spacing(2),
-      },
-      fontWeight: 600,
     },
     addButtonWrapper: {
       width: '100%',
@@ -167,6 +162,7 @@ interface State {
 }
 
 export interface Props {
+  align?: 'left' | 'right';
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
@@ -385,6 +381,11 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               [classes.addButtonWrapper]: true,
               [classes.hasError]: tagError,
             })}
+            style={
+              this.props.align === 'left'
+                ? { justifyContent: 'flex-start' }
+                : { justifyContent: 'flex-end' }
+            }
           >
             <button
               className={classes.addTagButton}
@@ -418,6 +419,11 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
                   key={`tag-item-${thisTag}`}
                   colorVariant="lightBlue"
                   label={truncateEnd(thisTag, 30)}
+                  style={
+                    this.props.align === 'left'
+                      ? { marginRight: '4px' }
+                      : { marginLeft: '4px' }
+                  }
                   onDelete={
                     disabled ? undefined : () => this.handleDeleteTag(thisTag)
                   }

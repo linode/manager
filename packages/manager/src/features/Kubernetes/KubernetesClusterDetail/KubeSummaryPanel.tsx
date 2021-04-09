@@ -422,7 +422,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 </button>
               </Grid>
               <Grid item className={classes.tags}>
-                <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
+                <TagsPanel
+                  align="right"
+                  tags={cluster.tags}
+                  updateTags={handleUpdateTags}
+                />
               </Grid>
             </Grid>
           </Grid>
