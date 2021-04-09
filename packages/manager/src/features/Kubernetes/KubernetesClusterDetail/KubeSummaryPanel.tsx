@@ -19,7 +19,7 @@ import Paper from 'src/components/core/Paper';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagCell, { TagDrawer } from 'src/components/TagCell';
+import TagsPanel from 'src/components/TagsPanel/TagsPanelRedesigned';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
@@ -162,7 +162,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
-  const [tagDrawerOpen, setTagDrawerOpen] = React.useState(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
 
   // Deletion handlers
@@ -177,15 +176,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
     _deleteCluster
   );
-
-  const addTag = (tag: string) => {
-    return handleUpdateTags([...cluster.tags, tag]);
-  };
-
-  const deleteTag = (tag: string) => {
-    const newTags = cluster.tags.filter((thisTag) => thisTag !== tag);
-    return handleUpdateTags(newTags);
-  };
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
@@ -432,13 +422,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 </Button>
               </Grid>
               <Grid item className={classes.tags}>
-                <TagCell
-                  tags={cluster.tags}
-                  width={500}
-                  addTag={addTag}
-                  deleteTag={deleteTag}
-                  listAllTags={() => setTagDrawerOpen(true)}
-                />
+                <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
               </Grid>
             </Grid>
           </Grid>
@@ -461,14 +445,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         clusterPools={cluster.node_pools}
         onClose={closeDialog}
         onDelete={() => submitDialog(cluster.id)}
-      />
-      <TagDrawer
-        entityLabel={cluster.label}
-        open={tagDrawerOpen}
-        tags={cluster.tags}
-        addTag={addTag}
-        deleteTag={deleteTag}
-        onClose={() => setTagDrawerOpen(false)}
       />
     </React.Fragment>
   );

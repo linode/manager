@@ -7,7 +7,7 @@
  * "./TagsPanel.tsx" should be replaced with the contents of this file, and this
  * file should be deleted.
  */
-import AddCircle from '@material-ui/icons/AddCircle';
+import Plus from 'src/assets/icons/plusSign.svg';
 import * as classNames from 'classnames';
 import { getTags } from '@linode/api-v4/lib/tags';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -23,19 +23,16 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
-import IconTextLink from 'src/components/IconTextLink';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import TagsPanelItem from './TagsPanelItem';
+import Tag from 'src/components/Tag/Tag_CMR';
 
 type ClassNames =
   | 'root'
   | 'tag'
   | 'addButtonWrapper'
-  | 'addButtonCircleIcon'
-  | 'addButtonText'
   | 'hasError'
   | 'errorNotice'
-  | 'addButton'
+  | 'addTagButton'
   | 'tagsPanelItemWrapper'
   | 'selectTag'
   | 'progress'
@@ -63,6 +60,8 @@ const styles = (theme: Theme) =>
     addButtonWrapper: {
       width: '100%',
       marginBottom: theme.spacing(2) + 1,
+      display: 'flex',
+      justifyContent: 'flex-end',
     },
     hasError: {
       marginTop: 0,
@@ -78,26 +77,26 @@ const styles = (theme: Theme) =>
       paddingLeft: 10,
       marginTop: 20,
     },
-    addButton: {
-      padding: 0,
-      marginRight: 2,
-      position: 'relative',
-      top: 2,
-      display: 'inline-block',
+    addTagButton: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 3,
+      backgroundColor: theme.color.tagButton,
+      border: 'none',
+      color: theme.cmrTextColors.linkActiveLight,
+      cursor: 'pointer',
+      fontFamily: theme.font.normal,
+      fontSize: 14,
+      fontWeight: 'bold',
+      padding: '7px 10px',
+      whiteSpace: 'nowrap',
       '& svg': {
-        marginRight: theme.spacing(1),
+        color: theme.color.tagIcon,
+        marginLeft: 10,
+        height: 10,
+        width: 10,
       },
-      '&:hover p': {
-        color: theme.palette.primary.main,
-      },
-    },
-    addButtonCircleIcon: {
-      width: 16,
-      height: 16,
-    },
-    addButtonText: {
-      color: theme.palette.primary.main,
-      fontWeight: 700,
     },
     tagsPanelItemWrapper: {
       marginBottom: theme.spacing(2),
@@ -194,18 +193,18 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
          * tags that are already applied because there cannot
          * be duplicates.
          */
-        const filteredTags = response.data.filter((eachTag: Tag) => {
+        const filteredTags = response.data.filter((thisTag: Tag) => {
           return !tags.some((alreadyAppliedTag: string) => {
-            return alreadyAppliedTag === eachTag.label;
+            return alreadyAppliedTag === thisTag.label;
           });
         });
         /*
          * reshaping them for the purposes of being passed to the Select component
          */
-        const reshapedTags = filteredTags.map((eachTag: Tag) => {
+        const reshapedTags = filteredTags.map((thisTag: Tag) => {
           return {
-            label: eachTag.label,
-            value: eachTag.label,
+            label: thisTag.label,
+            value: thisTag.label,
           };
         });
         this.setState({ tagsToSuggest: reshapedTags });
@@ -238,9 +237,10 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
          * with the deleted tag filtered out). It's important to note that the Tag is *not*
          * being deleted here - it's just being removed from the list
          */
-        const tagsWithoutDeletedTag = tags.filter((eachTag: string) => {
-          return this.state.listDeletingTags.indexOf(eachTag) === -1;
+        const tagsWithoutDeletedTag = tags.filter((thisTag: string) => {
+          return this.state.listDeletingTags.indexOf(thisTag) === -1;
         });
+
         updateTags(tagsWithoutDeletedTag)
           .then(() => {
             /*
@@ -256,13 +256,13 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
                 ...cloneTagSuggestions,
               ],
               listDeletingTags: this.state.listDeletingTags.filter(
-                (eachTag) => eachTag !== label
+                (thisTag) => thisTag !== label
               ),
               loading: false,
               tagError: '',
             });
           })
-          .catch((e) => {
+          .catch((_) => {
             this.props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
               variant: 'error',
             });
@@ -271,7 +271,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
              */
             this.setState({
               listDeletingTags: this.state.listDeletingTags.filter(
-                (eachTag) => eachTag !== label
+                (thisTag) => thisTag !== label
               ),
               loading: false,
             });
@@ -326,8 +326,8 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
            * since we can't attach this tag anymore
            */
           const cloneTagSuggestions = clone(tagsToSuggest) || [];
-          const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
-            return eachTag.label !== value.label;
+          const filteredTags = cloneTagSuggestions.filter((thisTag: Item) => {
+            return thisTag.label !== value.label;
           });
           this.setState({
             tagsToSuggest: filteredTags,
@@ -349,7 +349,6 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
 
     const {
       isCreatingTag,
-      listDeletingTags,
       tagsToSuggest,
       tagInputValue,
       tagError,
@@ -373,10 +372,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
             hideLabel
             value={tagInputValue}
             createOptionPosition="first"
-            autoFocus
             className={classes.selectTag}
-            blurInputOnSelect={false}
-            menuIsOpen={!loading && !tagError}
           />
         ) : (
           <div
@@ -385,13 +381,14 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               [classes.hasError]: tagError,
             })}
           >
-            <IconTextLink
-              text="Add a tag"
-              SideIcon={AddCircle}
+            <button
+              className={classes.addTagButton}
               title="Add a tag"
               onClick={this.toggleTagInput}
-              className={classes.addButton}
-            />
+            >
+              Add a tag
+              <Plus />
+            </button>
           </div>
         )}
 
@@ -410,21 +407,16 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               [classes.loading]: loading,
             })}
           >
-            {tags.map((eachTag) => {
+            {tags.map((thisTag) => {
               return (
-                <TagsPanelItem
-                  key={eachTag}
-                  label={eachTag}
-                  tagLabel={eachTag}
-                  onDelete={disabled ? undefined : this.handleDeleteTag}
+                <Tag
+                  key={`tag-item-${thisTag}`}
+                  colorVariant="lightBlue"
+                  label={thisTag}
+                  onDelete={
+                    disabled ? undefined : () => this.handleDeleteTag(thisTag)
+                  }
                   className={classes.tag}
-                  loading={listDeletingTags.some((inProgressTag) => {
-                    /*
-                     * The tag is getting deleted if it appears in the state
-                     * which holds the list of tags queued for deletion
-                     */
-                    return eachTag === inProgressTag;
-                  })}
                 />
               );
             })}
