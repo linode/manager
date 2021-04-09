@@ -42,6 +42,7 @@ import DeviceSelection, {
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
 import { queryClient } from 'src/queries/base';
+import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
@@ -329,6 +330,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   React.useEffect(() => {
     if (open) {
+      // Ensure VLANs are fresh.
+      queryClient.invalidateQueries(vlansQueryKey);
+
       /**
        * If config is defined, we're editing. Set the state
        * to the values of the config.
