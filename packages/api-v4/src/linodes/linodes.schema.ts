@@ -29,12 +29,12 @@ export const linodeInterfaceSchema = array()
         .when('purpose', {
           is: (value) => value === 'vlan',
           then: string()
-            .required('Label is required.')
-            .min(1, 'Label must be between 1 and 64 characters.')
-            .max(64, 'Label must be between 1 and 64 characters.')
+            .required('VLAN label is required.')
+            .min(1, 'VLAN label must be between 1 and 64 characters.')
+            .max(64, 'VLAN label must be between 1 and 64 characters.')
             .matches(
               /[a-z0-9-]+/,
-              'Interface labels cannot contain special characters.'
+              'VLAN labels cannot contain special characters.'
             ),
           otherwise: string().notRequired(),
         })
