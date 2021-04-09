@@ -448,13 +448,21 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     return renderEmpty();
   }
 
+  const onCreateButtonClick = () => {
+    if (machineImagesEnabled) {
+      return props.history.push('/images/create');
+    }
+
+    return openForCreate();
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
       <LandingHeader
         title="Images"
         entity="Image"
-        onAddNew={() => props.history.push('/images/create')} // openForCreate
+        onAddNew={onCreateButtonClick}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
       <Paper className={classes.imageTable}>
