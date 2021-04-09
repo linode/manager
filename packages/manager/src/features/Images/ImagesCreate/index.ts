@@ -1,2 +1,2 @@
-import ImagesCreate from './ImagesCreateContainer';
-export default ImagesCreate;
+import ImageCreate from './ImageCreateContainer';
+export default ImageCreate;

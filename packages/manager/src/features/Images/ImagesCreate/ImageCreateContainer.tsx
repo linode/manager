@@ -2,6 +2,7 @@ import * as React from 'react';
 import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import ImageCreate from './ImageCreate';
 
 // type CombinedProps = Props;
 
@@ -17,7 +18,7 @@ export const ImagesCreateContainer: React.FC = () => {
             data-qa-create-image-header
           />
         </Grid>
-        {/* <ImagesCreate /> */}
+        <ImageCreate />
       </Grid>
     </>
   );
