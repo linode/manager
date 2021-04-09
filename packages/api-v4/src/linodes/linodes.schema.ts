@@ -50,6 +50,10 @@ export const linodeInterfaceSchema = array()
     'unique-public-interface',
     'Only one public interface per config is allowed.',
     (list: any[]) => {
+      if (!list) {
+        return true;
+      }
+
       return (
         list.filter((thisSlot) => thisSlot.purpose === 'public').length <= 1
       );
