@@ -278,6 +278,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     };
   };
 
+  // This validation runs BEFORE Yup schema validation. This validation logic
+  // is specific to Cloud Manager, which is why it is run separately (not in the
+  // shared Validation package).
   const onValidate = (values: EditableFields) => {
     const errors: any = {};
     const { interfaces } = values;
@@ -288,7 +291,16 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     if (eth1?.purpose === 'none' && eth2.purpose !== 'none') {
       errors.interfaces =
         'You cannot assign an interface to eth2 without an interface assigned to eth1.';
+      return errors;
     }
+
+    // The API field is called "label" and thus the Validation package error
+    // message is "Label is required." Our field in Cloud is called "VLAN".
+    interfaces.forEach((thisInterface, idx) => {
+      if (thisInterface.purpose === 'vlan' && !thisInterface.label) {
+        errors[`interfaces[${idx}].label`] = 'VLAN is required.';
+      }
+    });
 
     return errors;
   };
