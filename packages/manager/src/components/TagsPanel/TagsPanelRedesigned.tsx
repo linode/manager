@@ -7,13 +7,13 @@
  * "./TagsPanel.tsx" should be replaced with the contents of this file, and this
  * file should be deleted.
  */
-import Plus from 'src/assets/icons/plusSign.svg';
-import * as classNames from 'classnames';
 import { getTags } from '@linode/api-v4/lib/tags';
+import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Plus from 'src/assets/icons/plusSign.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -23,8 +23,8 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Tag from 'src/components/Tag/Tag_CMR';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { truncateEnd } from 'src/utilities/truncate';
 
 type ClassNames =
