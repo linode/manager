@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   headerLabel: {
     marginLeft: '0.25em',
+    maxWidth: 'calc(100% - 80px)',
   },
   editBtn: {
     minWidth: 'fit-content',
@@ -149,7 +150,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Grid container justify="space-between">
+      <Grid container alignItems="flex-start" justify="space-between">
         <H1Header
           className={classes.headerLabel}
           title={label}

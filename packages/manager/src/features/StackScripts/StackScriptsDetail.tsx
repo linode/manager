@@ -21,12 +21,12 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
-import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
 import {
   hasGrant,
   isRestrictedUser as _isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
+import useProfile from 'src/hooks/useProfile';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getStackScriptUrl } from './stackScriptUtils';
@@ -35,14 +35,9 @@ interface MatchProps {
   stackScriptId: string;
 }
 
-interface ProfileProps {
-  // From Profile container
-  username?: string;
-}
-
 type RouteProps = RouteComponentProps<MatchProps>;
 
-type CombinedProps = ProfileProps & RouteProps & StateProps & SetDocsProps;
+type CombinedProps = RouteProps & StateProps & SetDocsProps;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -58,7 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cta: {
     display: 'flex',
+    flexGrow: 1,
     alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginBottom: theme.spacing(),
     marginLeft: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
       alignSelf: 'flex-end',
@@ -89,8 +87,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-
-  const { history, username } = props;
+  const { profile } = useProfile();
+  const { history } = props;
+  const { stackScriptId } = props.match.params;
 
   const [label, setLabel] = React.useState<string | undefined>('');
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -99,9 +98,9 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
     undefined
   );
 
-  React.useEffect(() => {
-    const { stackScriptId } = props.match.params;
+  const username = profile.data?.username;
 
+  React.useEffect(() => {
     getStackScript(+stackScriptId)
       .then((stackScript) => {
         setLoading(false);
@@ -111,7 +110,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
         setLoading(false);
         setErrors(error);
       });
-  }, [props.match.params]);
+  }, [stackScriptId]);
 
   const handleCreateClick = () => {
     if (!stackScript) {
@@ -167,7 +166,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   const errorMap = getErrorMap(['label'], errors);
   const labelError = errorMap.label;
 
-  const stackScriptLabel = label !== undefined ? label : stackScript.label;
+  const stackScriptLabel = label ?? stackScript.label;
 
   return (
     <>
@@ -247,10 +246,7 @@ const connected = connect(mapStateToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,
-  setDocs([StackScriptsDocs]),
-  withProfile<ProfileProps, {}>((ownProps, { profileData: profile }) => ({
-    username: profile?.username,
-  }))
+  setDocs([StackScriptsDocs])
 );
 
 export default enhanced(StackScriptsDetail);
