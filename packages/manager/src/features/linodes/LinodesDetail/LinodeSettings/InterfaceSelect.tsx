@@ -218,7 +218,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                   onChange={handleAddressChange}
                   disabled={readOnly}
                   tooltipText={
-                    'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24'
+                    'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
                   }
                 />
               </div>
