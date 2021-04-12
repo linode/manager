@@ -152,7 +152,14 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
       {fromAddonsPanel ? null : (
         <Grid item xs={12} sm={6}>
           <Select
-            options={purposeOptions}
+            options={
+              // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
+              slotNumber > 0
+                ? purposeOptions
+                : purposeOptions.filter(
+                    (thisPurposeOption) => thisPurposeOption.value !== 'none'
+                  )
+            }
             label={`eth${slotNumber}`}
             value={purposeOptions.find(
               (thisOption) => thisOption.value === purpose
@@ -182,7 +189,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
                 options={vlanOptions}
-                label="Label"
+                label="VLAN"
                 placeholder="Create or select a VLAN"
                 variant="creatable"
                 createOptionPosition="first"
