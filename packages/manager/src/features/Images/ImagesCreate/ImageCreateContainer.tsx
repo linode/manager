@@ -4,8 +4,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import ImageCreate from './ImageCreate';
 
-// type CombinedProps = Props;
-
 export const ImagesCreateContainer: React.FC = () => {
   return (
     <>
