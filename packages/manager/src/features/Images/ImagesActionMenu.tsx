@@ -1,4 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
+import { ImageStatus } from '@linode/api-v4/lib/images/types';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -12,7 +13,7 @@ export interface Handlers {
   onRestore: (imageID: string) => void;
   onDeploy: (imageID: string) => void;
   onEdit: (label: string, description: string, imageID: string) => void;
-  onDelete: (label: string, imageID: string) => void;
+  onDelete: (label: string, imageID: string, status?: ImageStatus) => void;
   [index: string]: any;
 }
 
@@ -21,6 +22,7 @@ interface Props extends Handlers {
   event: Event;
   id: string;
   label: string;
+  status?: ImageStatus;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -33,38 +35,54 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     description,
     id,
     label,
+    status,
     onRestore,
     onDeploy,
     onEdit,
     onDelete,
   } = props;
 
-  const actions: Action[] = [
-    {
-      title: 'Edit',
-      onClick: () => {
-        onEdit(label, description ?? ' ', id);
-      },
-    },
-    {
-      title: 'Deploy New Linode',
-      onClick: () => {
-        onDeploy(id);
-      },
-    },
-    {
-      title: 'Restore to Existing Linode',
-      onClick: () => {
-        onRestore(id);
-      },
-    },
-    {
-      title: 'Delete',
-      onClick: () => {
-        onDelete(label, id);
-      },
-    },
-  ];
+  const actions: Action[] =
+    status === 'pending_upload'
+      ? [
+          // Cancelling a pending upload is functionally equivalent to deleting it
+          {
+            title: 'Cancel',
+            onClick: () => {
+              onDelete(label, id, status);
+            },
+          },
+        ]
+      : [
+          {
+            title: 'Edit',
+            onClick: () => {
+              onEdit(label, description ?? ' ', id);
+            },
+          },
+          {
+            title: 'Deploy New Linode',
+            // @todo remove first half of this conditional when the feature is GA
+
+            disabled: status && status !== 'available',
+            onClick: () => {
+              onDeploy(id);
+            },
+          },
+          {
+            title: 'Restore to Existing Linode',
+            disabled: status && status !== 'available',
+            onClick: () => {
+              onRestore(id);
+            },
+          },
+          {
+            title: 'Delete',
+            onClick: () => {
+              onDelete(label, id, status);
+            },
+          },
+        ];
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
@@ -78,6 +96,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
               key={action.title}
               actionText={action.title}
               onClick={action.onClick}
+              disabled={action.disabled}
             />
           );
         })}

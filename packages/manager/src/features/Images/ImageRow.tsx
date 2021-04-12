@@ -11,23 +11,6 @@ import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  label: {
-    width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '45%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '65%',
-    },
-  },
-  size: {
-    [theme.breakpoints.down('sm')]: {
-      width: '15%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '20%',
-    },
-  },
   loadingStatus: {
     marginBottom: theme.spacing() / 2,
   },
@@ -54,12 +37,13 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     id,
     label,
     size,
+    status,
     ...rest
   } = props;
 
   return isImageUpdating(event) ? (
     <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell className={classes.label} data-qa-image-label>
+      <TableCell data-qa-image-label>
         <ProgressDisplay
           className={classes.loadingStatus}
           text="Creating"
@@ -73,20 +57,25 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     </TableRow>
   ) : (
     <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell className={classes.label} data-qa-image-label>
-        {label}
-      </TableCell>
+      <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden xsDown>
+        {status ? <TableCell>{status.replace('_', ' ')}</TableCell> : null}
         <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
-        <TableCell data-qa-image-date>
-          {expiry ? formatDate(expiry) : 'Never'}
-        </TableCell>
       </Hidden>
-      <TableCell className={classes.size} data-qa-image-size>
-        {size} MB
-      </TableCell>
+      <TableCell data-qa-image-size>{size} MB</TableCell>
+      <Hidden xsDown>
+        {expiry ? (
+          <TableCell data-qa-image-date>{formatDate(expiry)}</TableCell>
+        ) : null}
+      </Hidden>
       <TableCell className={classes.actionMenu}>
-        <ActionMenu id={id} label={label} description={description} {...rest} />
+        <ActionMenu
+          id={id}
+          label={label}
+          description={description}
+          status={status}
+          {...rest}
+        />
       </TableCell>
     </TableRow>
   );
