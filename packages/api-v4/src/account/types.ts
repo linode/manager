@@ -37,7 +37,8 @@ export type AccountCapability =
   | 'Object Storage'
   | 'Kubernetes'
   | 'Cloud Firewall'
-  | 'Vlans';
+  | 'Vlans'
+  | 'Machine Images';
 
 export interface AccountSettings {
   managed: boolean;

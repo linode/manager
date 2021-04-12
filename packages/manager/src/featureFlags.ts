@@ -31,6 +31,7 @@ export interface Flags {
   firewallBetaNotification: boolean;
   entityTransfers: boolean;
   bareMetal: boolean;
+  machineImages: boolean;
 }
 
 type PromotionalOfferFeature =
