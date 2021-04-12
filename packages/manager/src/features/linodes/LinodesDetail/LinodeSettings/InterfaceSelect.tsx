@@ -212,10 +212,14 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 <TextField
                   inputId={`ipam-input-${slotNumber}`}
                   label="IPAM Address (Optional)"
+                  placeholder="192.0.2.0/24"
                   value={ipamAddress}
                   errorText={ipamError}
                   onChange={handleAddressChange}
                   disabled={readOnly}
+                  tooltipText={
+                    'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24'
+                  }
                 />
               </div>
             </Grid>
