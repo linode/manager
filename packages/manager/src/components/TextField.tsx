@@ -64,6 +64,7 @@ const styles = (theme: Theme) =>
     },
     helpIcon: {
       padding: '0px 0px 0px 8px',
+      color: theme.cmrTextColors.tableHeader,
     },
     expand: {
       maxWidth: '100%',
@@ -395,21 +396,21 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           {tooltipText && (
             <HelpIcon className={classes.helpIcon} text={tooltipText} />
           )}
-          {errorText && (
-            <FormHelperText
-              className={classNames({
-                [classes.errorText]: true,
-                [classes.errorTextLong]: errorText.length > 60,
-                [classes.editable]: editable,
-                [classes.absolute]: editable || hasAbsoluteError,
-              })}
-              data-qa-textfield-error-text={this.props.label}
-              role="alert"
-            >
-              {errorText}
-            </FormHelperText>
-          )}
         </div>
+        {errorText && (
+          <FormHelperText
+            className={classNames({
+              [classes.errorText]: true,
+              [classes.errorTextLong]: errorText.length > 60,
+              [classes.editable]: editable,
+              [classes.absolute]: editable || hasAbsoluteError,
+            })}
+            data-qa-textfield-error-text={this.props.label}
+            role="alert"
+          >
+            {errorText}
+          </FormHelperText>
+        )}
         {helperText &&
           (helperTextPosition === 'bottom' || !helperTextPosition) && (
             <FormHelperText data-qa-textfield-helper-text>
