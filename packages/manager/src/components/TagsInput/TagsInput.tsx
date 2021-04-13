@@ -23,6 +23,7 @@ export interface Props {
   hideLabel?: boolean;
   name?: string;
   tagError?: string;
+  fromLinodeCreateFlow?: boolean;
   value: Item[];
   onChange: (selected: Item[]) => void;
   disabled?: boolean;
@@ -64,10 +65,16 @@ class TagsInput extends React.Component<Props, State> {
         });
         this.setState({ accountTags });
       })
-      .catch((_) => {
+      .catch((e) => {
         const defaultError = [
           { reason: 'There was an error retrieving your tags.' },
         ];
+
+        // If a restricted user with Linode creation permission goes to create a Linode, do not display the defaultError to them.
+        if (e[0].reason === 'Unauthorized' && this.props.fromLinodeCreateFlow) {
+          return;
+        }
+
         this.setState({ errors: defaultError });
       });
   }
