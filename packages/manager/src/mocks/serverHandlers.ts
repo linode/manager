@@ -1,7 +1,7 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
-  // abuseTicketNotificationFactory,
+  abuseTicketNotificationFactory,
   accountFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
@@ -153,6 +153,7 @@ export const handlers = [
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(17, {
       backups: { enabled: false },
+      type: 'g6-metal-alpha-1',
       ipv4: ['000.000.000.000'],
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
@@ -322,7 +323,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.get('*/vlans', (req, res, ctx) => {
-    const vlans = VLANFactory.buildList(0);
+    const vlans = VLANFactory.buildList(2);
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
@@ -500,18 +501,27 @@ export const handlers = [
     //   body: null,
     // });
 
-    // const abuseTicket = abuseTicketNotificationFactory.build();
+    const abuseTicket = abuseTicketNotificationFactory.build();
 
-    const migrationTicket = notificationFactory.build({
+    const migrationNotification = notificationFactory.build({
       type: 'migration_pending',
+      label: 'You have a migration pending!',
+      message:
+        'You have a migration pending! Your Linode must be offline before starting the migration.',
       entity: { id: 0, type: 'linode', label: 'linode-0' },
-      severity: 'critical',
+      severity: 'major',
     });
 
-    const minorSeverityTicket = notificationFactory.build({
+    const minorSeverityNotification = notificationFactory.build({
       type: 'notice',
       message: 'Testing for minor notification',
       severity: 'minor',
+    });
+
+    const criticalSeverityNotification = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for critical notification',
+      severity: 'critical',
     });
 
     const balanceNotification = notificationFactory.build({
@@ -527,10 +537,11 @@ export const handlers = [
           ...notificationFactory.buildList(1),
           generalGlobalNotice,
           outageNotification,
-          minorSeverityTicket,
-          // abuseTicket,
+          minorSeverityNotification,
+          criticalSeverityNotification,
+          abuseTicket,
           // emailBounce,
-          migrationTicket,
+          migrationNotification,
           balanceNotification,
         ])
       )

@@ -1,4 +1,4 @@
-import { restoreBackup } from '@linode/api-v4/lib/linodes';
+import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -41,6 +41,7 @@ import {
   handleChangeCreateType,
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
+import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
@@ -52,6 +53,7 @@ import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
+import { v4 } from 'uuid';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -134,7 +136,9 @@ interface Props {
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
-  setVlanID: (ids: number[]) => void;
+  vlanLabel: string | null;
+  ipamAddress: string | null;
+  handleVLANChange: (updatedInterface: Interface) => void;
 }
 
 const errorMap = [
@@ -146,7 +150,8 @@ const errorMap = [
   'root_pass',
   'stackscript_id',
   'type',
-  'interfaces',
+  'interfaces[1].label',
+  'interfaces[1].ipam_address',
 ];
 
 type InnerProps = WithTypesRegionsAndImages &
@@ -172,6 +177,7 @@ type CombinedProps = Props &
 interface State {
   selectedTab: number;
   stackScriptSelectedTab: number;
+  planKey: string;
 }
 
 interface CreateTab extends Tab {
@@ -213,6 +219,7 @@ export class LinodeCreate extends React.PureComponent<
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
         preSelectedTab === 2 && location.search.search('Account') > -1 ? 1 : 0,
+      planKey: v4(),
     };
   }
 
@@ -229,9 +236,22 @@ export class LinodeCreate extends React.PureComponent<
     /** set the tab in redux state */
     this.props.setTab(this.tabs[index].type);
 
+    /** Reset the plan panel since types may have shifted */
+
     this.setState({
       selectedTab: index,
+      planKey: v4(),
     });
+  };
+
+  filterTypes = () => {
+    const { createType, typesData } = this.props;
+    const { selectedTab } = this.state;
+    const currentTypes = filterCurrentTypes(typesData ?? []);
+
+    return ['fromImage', 'fromBackup'].includes(createType) && selectedTab !== 0
+      ? currentTypes.filter((t) => t.class !== 'metal')
+      : currentTypes;
   };
 
   tabs: CreateTab[] = [
@@ -285,30 +305,53 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   createLinode = () => {
-    this.props.handleSubmitForm(
-      {
-        image: this.props.selectedImageID,
-        region: this.props.selectedRegionID,
-        type: this.props.selectedTypeID,
-        label: this.props.label,
-        tags: this.props.tags
-          ? this.props.tags.map((eachTag) => eachTag.label)
-          : [],
-        root_pass: this.props.password,
-        authorized_users: this.props.userSSHKeys
-          .filter((u) => u.selected)
-          .map((u) => u.username),
-        booted: true,
-        backups_enabled: this.props.backupsEnabled,
-        backup_id: this.props.selectedBackupID,
-        private_ip: this.props.privateIPEnabled,
-
-        // StackScripts
-        stackscript_id: this.props.selectedStackScriptID,
-        stackscript_data: this.props.selectedUDFs,
-      },
-      this.props.selectedLinodeID
+    const selectedRegion = this.props.selectedRegionID || '';
+    const regionSupportsVLANs = doesRegionSupportVLANs(
+      selectedRegion,
+      this.props.regionsData
     );
+
+    const payload = {
+      image: this.props.selectedImageID,
+      region: this.props.selectedRegionID,
+      type: this.props.selectedTypeID,
+      label: this.props.label,
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      root_pass: this.props.password,
+      authorized_users: this.props.userSSHKeys
+        .filter((u) => u.selected)
+        .map((u) => u.username),
+      booted: true,
+      backups_enabled: this.props.backupsEnabled,
+      backup_id: this.props.selectedBackupID,
+      private_ip: this.props.privateIPEnabled,
+
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+      stackscript_data: this.props.selectedUDFs,
+    };
+
+    if (
+      regionSupportsVLANs &&
+      this.props.selectedImageID &&
+      this.props.vlanLabel
+    ) {
+      // Only submit interfaces in the payload if the region supports VLANs
+      // and an image and VLAN have been selected.
+      const interfaces = [defaultPublicInterface];
+      if (Boolean(this.props.vlanLabel)) {
+        interfaces.push({
+          purpose: 'vlan',
+          label: this.props.vlanLabel,
+          ipam_address: this.props.ipamAddress,
+        });
+      }
+      payload['interfaces'] = interfaces;
+    }
+
+    this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
   };
 
   render() {
@@ -538,14 +581,16 @@ export class LinodeCreate extends React.PureComponent<
             />
           )}
           <SelectPlanPanel
+            key={this.state.planKey}
             data-qa-select-plan
             error={hasErrorFor.type}
-            types={filterCurrentTypes(typesData)!}
+            types={this.filterTypes()}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
             updateFor={[
               this.props.selectedTypeID,
               this.props.disabledClasses,
+              this.props.createType,
               errors,
             ]}
             disabled={userCannotCreateLinode}
@@ -603,11 +648,15 @@ export class LinodeCreate extends React.PureComponent<
             changeBackups={this.props.toggleBackupsEnabled}
             changePrivateIP={this.props.togglePrivateIPEnabled}
             disabled={userCannotCreateLinode}
+            selectedImageID={this.props.selectedImageID}
+            selectedTypeID={this.props.selectedTypeID}
             hidePrivateIP={this.props.createType === 'fromLinode'}
-            changeSelectedVLAN={this.props.setVlanID}
-            selectedVlanIDs={this.props.selectedVlanIDs}
+            vlanLabel={this.props.vlanLabel || ''}
+            ipamAddress={this.props.ipamAddress || ''}
+            handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
-            vlanError={hasErrorFor.interfaces}
+            labelError={hasErrorFor['interfaces[1].label']}
+            ipamError={hasErrorFor['interfaces[1].ipam_address']}
           />
         </Grid>
         <Grid item className="mlSidebar">
@@ -636,6 +685,12 @@ export class LinodeCreate extends React.PureComponent<
     );
   }
 }
+
+const defaultPublicInterface: Interface = {
+  purpose: 'public',
+  label: '',
+  ipam_address: '',
+};
 
 interface DispatchProps {
   setTab: (value: CreateTypes) => void;

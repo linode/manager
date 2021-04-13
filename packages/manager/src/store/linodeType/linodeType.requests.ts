@@ -6,9 +6,9 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import cachedTypes from 'src/cachedData/types.json';
 import cachedDeprecatedTypes from 'src/cachedData/typesLegacy.json';
-import { isProdAPI } from 'src/constants';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
+import { isProdAPI } from 'src/utilities/isProdApi';
 import { createRequestThunk } from '../store.helpers.tmp';
 import {
   getLinodeTypeActions,
@@ -24,7 +24,7 @@ export const requestTypes: RequestTypesThunk = () => (dispatch) => {
    * NOTE: We don't rely on cached data in non-production environments,
    * since it may not match dev/staging API data.
    */
-  if (isProdAPI && cachedTypes.data && cachedDeprecatedTypes.data) {
+  if (isProdAPI() && cachedTypes.data && cachedDeprecatedTypes.data) {
     // AC: need to cast as the Class string cannot be assigned to a type enum in TS 3.9
     const allCachedTypes: LinodeType[] = [
       ...cachedTypes.data,

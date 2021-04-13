@@ -2,6 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
   CreateLinodeRequest,
+  Interface,
   Linode,
   LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
@@ -14,9 +15,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-
+import Breadcrumb from 'src/components/Breadcrumb';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
+import { Tag } from 'src/components/TagsInput';
 import { REFRESH_INTERVAL } from 'src/constants';
-import regionsContainer from 'src/containers/regions.container';
+import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
@@ -26,18 +30,7 @@ import withImages, {
   WithImages,
 } from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
-import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
-import {
-  LinodeActionsProps,
-  withLinodeActions,
-} from 'src/store/linodes/linode.containers';
-
-import Breadcrumb from 'src/components/Breadcrumb';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
-import { Tag } from 'src/components/TagsInput';
-
-import { dcDisplayNames } from 'src/constants';
+import { resetEventsPolling } from 'src/eventsPolling';
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
@@ -48,10 +41,24 @@ import {
   hasGrant,
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
-import { getParamsFromUrl } from 'src/utilities/queryParams';
-import LinodeCreate from './LinodeCreate';
+import {
+  baseApps,
+  getOneClickApps,
+} from 'src/features/StackScripts/stackScriptUtils';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+import {
+  LinodeActionsProps,
+  withLinodeActions,
+} from 'src/store/linodes/linode.containers';
+import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-
+import { MapState } from 'src/store/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendCreateLinodeEvent } from 'src/utilities/ga';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { validatePassword } from 'src/utilities/validatePassword';
+import LinodeCreate from './LinodeCreate';
 import {
   HandleSubmit,
   Info,
@@ -62,20 +69,6 @@ import {
   WithRegionsProps,
   WithTypesProps,
 } from './types';
-
-import { resetEventsPolling } from 'src/eventsPolling';
-import {
-  baseApps,
-  getOneClickApps,
-} from 'src/features/StackScripts/stackScriptUtils';
-
-import { upsertLinode } from 'src/store/linodes/linodes.actions';
-import { MapState } from 'src/store/types';
-
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendCreateLinodeEvent } from 'src/utilities/ga';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { validatePassword } from 'src/utilities/validatePassword';
 import { getRegionIDFromLinodeID } from './utilities';
 
 const DEFAULT_IMAGE = 'linode/debian10';
@@ -104,7 +97,8 @@ interface State {
   appInstancesLoading: boolean;
   appInstancesError?: string;
   disabledClasses?: LinodeTypeClass[];
-  selectedVlanIDs: number[];
+  attachedVLANLabel: string | null;
+  vlanIPAMAddress: string | null;
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -140,7 +134,8 @@ const defaultState: State = {
   formIsSubmitting: false,
   errors: undefined,
   appInstancesLoading: false,
-  selectedVlanIDs: [],
+  attachedVLANLabel: '',
+  vlanIPAMAddress: null,
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -250,11 +245,16 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState(defaultState);
   };
 
-  setImageID = (id: string) => {
-    /** allows for de-selecting an image */
-    if (id === this.state.selectedImageID) {
-      return this.setState({ selectedImageID: undefined });
+  setImageID = (id: string | undefined) => {
+    if (typeof id === 'undefined') {
+      /** In this case we also clear any VLAN input, since VLANs are incompatible with empty Linodes */
+      return this.setState({
+        selectedImageID: undefined,
+        attachedVLANLabel: '',
+        vlanIPAMAddress: '',
+      });
     }
+
     return this.setState({ selectedImageID: id });
   };
 
@@ -267,7 +267,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ selectedRegionID: id, disabledClasses });
   };
 
-  setTypeID = (id: string) => this.setState({ selectedTypeID: id });
+  setTypeID = (id: string) => {
+    if (/metal/.test(id)) {
+      // VLANs and backups don't work with bare metal;
+      // reset those values.
+      this.setState({
+        selectedTypeID: id,
+        vlanIPAMAddress: '',
+        attachedVLANLabel: '',
+        backupsEnabled: false,
+      });
+    } else {
+      this.setState({
+        selectedTypeID: id,
+      });
+    }
+  };
 
   setLinodeID = (id: number, diskSize?: number) => {
     if (id !== this.state.selectedLinodeID) {
@@ -341,8 +356,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setUDFs = (udfs: any) => this.setState({ udfs });
 
-  setVlanID = (vlanIDs: number[]) => {
-    this.setState({ selectedVlanIDs: vlanIDs });
+  handleVLANChange = (updatedInterface: Interface) => {
+    this.setState({
+      attachedVLANLabel: updatedInterface.label,
+      vlanIPAMAddress: updatedInterface.ipam_address,
+    });
   };
 
   generateLabel = () => {
@@ -589,11 +607,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (!selectedRegionID) {
       return;
     }
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
-    const selectedRegion = this.props.regionsData!.find(
+
+    const selectedRegion = this.props.regionsData.find(
       (region) => region.id === selectedRegionID
     );
 
@@ -690,7 +705,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
             typesData={typesData}
-            setVlanID={this.setVlanID}
+            vlanLabel={this.state.attachedVLANLabel}
+            ipamAddress={this.state.vlanIPAMAddress}
+            handleVLANChange={this.handleVLANChange}
             {...restOfProps}
             {...restOfState}
           />
@@ -726,12 +743,6 @@ interface DispatchProps {
 }
 
 const connected = connect(mapStateToProps, { upsertLinode });
-
-const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
-  regionsLoading: loading,
-  regionsError: error,
-}));
 
 export default recompose<CombinedProps, {}>(
   deepCheckRouter(

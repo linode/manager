@@ -45,6 +45,7 @@ import { ChartProps } from './types';
 setUpCharts();
 
 type ClassNames =
+  | 'root'
   | 'chart'
   | 'chartSelect'
   | 'graphControls'
@@ -54,6 +55,9 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {
+      width: '100%',
+    },
     chart: {
       position: 'relative',
       paddingTop: theme.spacing(2),
@@ -103,7 +107,12 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = LinodeContextProps &
+interface Props {
+  isBareMetalInstance: boolean;
+}
+
+type CombinedProps = Props &
+  LinodeContextProps &
   WithTheme &
   WithTypesProps &
   WithImages &
@@ -267,6 +276,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
     const { classes, timezone, theme } = this.props;
+
     const data = pathOr([], ['data', 'cpu'], stats);
 
     const metrics = getMetrics(data);
@@ -346,7 +356,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { linodeData: linode, classes } = this.props;
+    const { linodeData: linode, isBareMetalInstance, classes } = this.props;
 
     const { dataIsLoading, statsError, isTooEarlyForGraphData } = this.state;
 
@@ -366,7 +376,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <Paper>
-        <Grid container className="m0">
+        <Grid container className={`${classes.root} m0`}>
           <Grid item xs={12}>
             <div className={classes.graphControls}>
               <Typography variant="h2" className={classes.labelRangeSelect}>
@@ -387,28 +397,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               />
             </div>
           </Grid>
-          <Grid container item xs={12} className={classes.graphGrids}>
-            <Grid item xs={12}>
-              <StatsPanel
-                title="CPU (%)"
-                renderBody={this.renderCPUChart}
-                {...chartProps}
-              />
+          {!isBareMetalInstance ? (
+            <Grid container item xs={12} className={classes.graphGrids}>
+              <Grid item xs={12}>
+                <StatsPanel
+                  title="CPU (%)"
+                  renderBody={this.renderCPUChart}
+                  {...chartProps}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <StatsPanel
+                  title="Disk IO (blocks/s)"
+                  renderBody={this.renderDiskIOChart}
+                  {...chartProps}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <StatsPanel
-                title="Disk IO (blocks/s)"
-                renderBody={this.renderDiskIOChart}
-                {...chartProps}
-              />
-            </Grid>
-          </Grid>
+          ) : null}
 
-          <Grid container item xs={12}>
-            <Grid item xs={12}>
-              <NetworkGraph stats={this.state.stats} {...chartProps} />
-            </Grid>
-          </Grid>
+          <NetworkGraph stats={this.state.stats} {...chartProps} />
         </Grid>
       </Paper>
     );
@@ -441,7 +449,7 @@ const withTypes = connect((state: ApplicationState, _ownProps) => ({
   mostRecentEventTime: state.events.mostRecentEventTime,
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   withTypes,
   linodeContext,
   withImages(),

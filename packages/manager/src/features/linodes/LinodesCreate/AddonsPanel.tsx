@@ -1,3 +1,4 @@
+import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';
@@ -8,10 +9,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import SelectVLAN from './SelectVLAN';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { useRegionsQuery } from 'src/queries/regions';
+import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
+import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -78,11 +81,15 @@ interface Props {
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
-  changeSelectedVLAN: (vlanID: number[]) => void;
+  vlanLabel: string;
+  ipamAddress: string;
+  handleVLANChange: (updatedInterface: Interface) => void;
   disabled?: boolean;
+  selectedImageID?: string;
+  selectedTypeID?: string;
   hidePrivateIP?: boolean;
-  selectedVlanIDs: number[];
-  vlanError?: string;
+  labelError?: string;
+  ipamError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
 }
 
@@ -92,28 +99,41 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     accountBackups,
     changeBackups,
     changePrivateIP,
-    changeSelectedVLAN,
-    vlanError,
     disabled,
+    vlanLabel,
+    labelError,
+    ipamAddress,
+    ipamError,
+    handleVLANChange,
+    selectedRegionID,
+    selectedImageID,
+    selectedTypeID,
   } = props;
 
+  const classes = useStyles();
   const flags = useFlags();
   const { account } = useAccount();
 
-  const handleVlanChange = React.useCallback(
-    (vlans: number[]) => {
-      changeSelectedVLAN(vlans);
-    },
-    [changeSelectedVLAN]
+  const regions = useRegionsQuery().data ?? [];
+  const selectedRegion = selectedRegionID || '';
+
+  // Making this an && instead of the usual hasFeatureEnabled, which is || based.
+  // Doing this so that we can toggle our flag without enabling vlans for all customers.
+  const capabilities = account?.data?.capabilities ?? [];
+  const showVlans = capabilities.includes('Vlans') && flags.vlans;
+
+  const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
+
+  const isBareMetal = /metal/.test(selectedTypeID ?? '');
+
+  const vlanDisabledReason = getVlanDisabledReason(
+    isBareMetal,
+    selectedImageID
   );
 
-  const classes = useStyles();
-
-  const showVlans = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.data?.capabilities ?? []
-  );
+  const backupsDisabledReason = isBareMetal
+    ? 'Backups cannot be used with Bare Metal Linodes.'
+    : null;
 
   const renderBackupsPrice = () => {
     const { backupsMonthly } = props;
@@ -131,8 +151,23 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   return (
     <Paper className={classes.root} data-qa-add-ons>
       <div className={classes.inner}>
+        {showVlans && regionSupportsVLANs ? (
+          <AttachVLAN
+            vlanLabel={vlanLabel}
+            labelError={labelError}
+            ipamAddress={ipamAddress}
+            ipamError={ipamError}
+            readOnly={disabled || Boolean(vlanDisabledReason)}
+            helperText={vlanDisabledReason}
+            handleVLANChange={handleVLANChange}
+            region={selectedRegionID}
+          />
+        ) : null}
         <Typography variant="h2" className={classes.title}>
-          Optional Add-ons
+          Optional Add-ons{' '}
+          {backupsDisabledReason ? (
+            <HelpIcon text={backupsDisabledReason} />
+          ) : null}
         </Typography>
         <Grid container>
           <Grid item xs={12}>
@@ -142,7 +177,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
                 <CheckBox
                   checked={accountBackups || props.backups}
                   onChange={changeBackups}
-                  disabled={accountBackups || disabled}
+                  disabled={accountBackups || disabled || isBareMetal}
                   data-qa-check-backups={
                     accountBackups
                       ? 'auto backup enabled'
@@ -199,24 +234,21 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             </React.Fragment>
           )
         }
-        {flags.cmr && showVlans ? (
-          <Grid container className={classes.lastItem}>
-            <Grid item xs={12}>
-              <Divider className={classes.divider} />
-            </Grid>
-            <div className={classes.vlanSelect}>
-              <SelectVLAN
-                selectedRegionID={props.selectedRegionID}
-                selectedVlanIDs={props.selectedVlanIDs}
-                handleSelectVLAN={handleVlanChange}
-                error={vlanError}
-              />
-            </div>
-          </Grid>
-        ) : null}
       </div>
     </Paper>
   );
+};
+
+const getVlanDisabledReason = (
+  isBareMetal: boolean,
+  selectedImage?: string
+) => {
+  if (isBareMetal) {
+    return 'VLANs cannot be used with Bare Metal Linodes.';
+  } else if (!selectedImage) {
+    return 'You must select an Image to attach a VLAN.';
+  }
+  return undefined;
 };
 
 export default React.memo(AddonsPanel);

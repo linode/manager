@@ -1,29 +1,64 @@
-import { array, boolean, lazy, mixed, number, object, string } from 'yup';
-// import zxcvbn from 'zxcvbn';
-// import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
+import { array, boolean, mixed, number, object, string } from 'yup';
+import { parseCIDR } from 'ipaddr.js';
+
+const validateIP = (ipAddress: string | null) => {
+  if (!ipAddress) {
+    return true;
+  }
+
+  // We accept IP ranges (i.e., CIDR notation).
+  try {
+    parseCIDR(ipAddress);
+  } catch (err) {
+    return false;
+  }
+
+  return true;
+};
 
 const stackscript_data = array().of(object()).nullable(true);
 
-/**
- * Interfaces are Record<string, InterfaceItem>
- *
- * {
- *  "eth0": { "id": 10 },
- *  "eth1": { "id": 12 }
- * }
- *
- * .default() and .lazy() below are required to
- * make this dynamic field naming work out
- */
-export const linodeInterfaceItemSchema = object({
-  id: number().required('Interface ID is required.'),
-}).default(undefined);
+export const linodeInterfaceSchema = array()
+  .of(
+    object({
+      purpose: mixed().oneOf(
+        [null, 'public', 'vlan'],
+        'Purpose must be null, public, or vlan.'
+      ),
+      label: string()
+        .when('purpose', {
+          is: (value) => value === 'vlan',
+          then: string()
+            .required('VLAN label is required.')
+            .min(1, 'VLAN label must be between 1 and 64 characters.')
+            .max(64, 'VLAN label must be between 1 and 64 characters.')
+            .matches(
+              /[a-z0-9-]+/,
+              'VLAN labels cannot contain special characters.'
+            ),
+          otherwise: string().notRequired(),
+        })
+        .nullable(true),
+      ipam_address: string().nullable(true).test({
+        name: 'validateIPAM',
+        message: 'Must be a valid IPv4 range, e.g. 192.0.2.0/24.',
+        test: validateIP,
+      }),
+    })
+  )
+  .test(
+    'unique-public-interface',
+    'Only one public interface per config is allowed.',
+    (list: any[]) => {
+      if (!list) {
+        return true;
+      }
 
-export const linodeInterfaceSchema = lazy((obj?: Record<any, any>) =>
-  typeof obj === 'undefined'
-    ? object().notRequired()
-    : object(Object.keys(obj).map((_) => linodeInterfaceItemSchema))
-);
+      return (
+        list.filter((thisSlot) => thisSlot.purpose === 'public').length <= 1
+      );
+    }
+  );
 
 // const rootPasswordValidation = string().test(
 //   'is-strong-password',

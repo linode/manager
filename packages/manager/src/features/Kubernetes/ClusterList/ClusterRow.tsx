@@ -7,6 +7,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+import { dcDisplayNames } from 'src/constants';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
@@ -122,7 +123,9 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
           <DateTimeDisplay value={cluster.created} />
         </TableCell>
       </Hidden>
-      <TableCell data-qa-cluster-region>{cluster.region}</TableCell>
+      <TableCell data-qa-cluster-region>
+        {dcDisplayNames[cluster.region] ?? cluster.region}
+      </TableCell>
       <Hidden xsDown>
         <TableCell data-qa-cluster-memory>
           {`${cluster.totalMemory / 1024}GB`}
