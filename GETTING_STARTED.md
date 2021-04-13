@@ -1,9 +1,13 @@
 # Getting Started
 
-1. Fork this repository, then clone your fork to your local machine.
-2. Go to [cloud.linode.com/profile/clients](https://cloud.linode.com/profile/clients) and click "Add an OAuth App". Enter a label and set the callback URL to `http://localhost:3000/oauth/callback`. Once the app has been created, copy the ID (not the secret).
-3. In `packages/manager` , copy the contents of `.env.example` and paste them into a new file called `.env`. Set `REACT_APP_CLIENT_ID` to the ID from step 2.\
-4. Install Node.js v14.15.4. We recommend using [Node Version Manager](https://github.com/nvm-sh/nvm) (nvm):
+1. Fork this repository.
+2. Clone your fork to your local machine.
+3. Go to [cloud.linode.com/profile/clients](https://cloud.linode.com/profile/clients) and click "Add an OAuth App".
+4. Enter a label and set the callback URL to `http://localhost:3000/oauth/callback`.
+5. After your OAuth App has been created, copy the ID (not the secret).
+6. In `packages/manager` , copy the contents of `.env.example` and paste them into a new file called `.env`.
+7. In `.env` set `REACT_APP_CLIENT_ID` to the ID from step 2.
+8. Install Node.js 14.15.4. We recommend using [Node Version Manager](https://github.com/nvm-sh/nvm) (nvm):
 
 ```bash
 
@@ -18,29 +22,17 @@ $ node --version
 
 ```
 
-5. Install the latest version of Yarn:
+9. Install the latest version of Yarn:
 
 ```bash
 $ npm install --global yarn --upgrade
 # 1.22.4
 ```
 
-6. Navigate to the root directory of the repository, then start Cloud Manager and the JS client with `yarn up`.
-7. After installation, Cloud Manager should be running at http://localhost:3000.
+10. Navigate to the root directory of the repository, then start Cloud Manager and the JS client with `yarn up`.
+11. After installation, Cloud Manager should be running at http://localhost:3000.
 
-## Testing
-
-See [this document](./TESTING.md)
-
-## Helper Scripts and other commands
-
-To learn more about the available commands read [COMMANDS](./COMMANDS.md)
-
-## Okay. I've got my development server running. So how do I contribute?
-
-Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
-
-## Serving a Build of Cloud Manager:
+## Serving a production build of Cloud Manager:
 
 ### Using yarn build
 
@@ -54,7 +46,7 @@ yarn workspace linode-manager build
 
 ```
 
-You can then serve these files however you prefer, for example:
+You can then serve these files however you prefer, for example, with [http-server](https://www.npmjs.com/package/http-server):
 
 ```bash
 
