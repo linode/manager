@@ -1,10 +1,8 @@
-TESTING.md
-
-# Testing Linode Manager
+# Testing Cloud Manager
 
 ## Unit Tests
 
-The unit tests for Linode Cloud Manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with the `.test.tsx` file extension and can be found throughout the codebase.
+The unit tests for Cloud Manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with the `.test.tsx` file extension and can be found throughout the codebase.
 
 To run tests:
 
@@ -26,7 +24,7 @@ Or you can run the tests in watch mode with:
 yarn test --watch
 ```
 
-To Run a specific file or files in a directory:
+To run a specific file or files in a directory:
 
 ```
 yarn test myFile.test.tsx
@@ -104,7 +102,7 @@ In general, components that make network requests should take any request handle
 
 ```js
 jest.mock("@linode/api-v4/lib/kubernetes", () => ({
-  getKubeConfig: () => jest.fn()
+  getKubeConfig: () => jest.fn(),
 }));
 ```
 
@@ -158,51 +156,19 @@ These mocks are automatically enabled for tests (using `beforeAll` and `afterAll
 the Jest environment). To use these same handlers while working locally in the browser, run the app
 with `REACT_APP_MOCK_SERVICE_WORKER=true` in your `.env` file.
 
-## End-to-End Tests
+## End-to-End tests
 
-E2E tests use [Cypress](https://cypress.io).
+We use [Cypress](https://cypress.io) for end-to-end testing. Test files are found in the `packages/manager/cypress` directory.
 
-### Run Cypress e2e tests
+#### Running the E2E tests
 
-#### set up your environment
+1. Follow the [Getting Started guide](GETTING_STARTED.md) to get Cloud Manager running locally.
+2. Go to [cloud.linode.com/profile/tokens](https://cloud.linode.com/profile/tokens) and click "Add a Personal Access Token" to create a token to use for the `MANAGER_OAUTH` environment variable in `packages/manager/.env`.
+3. In one terminal window, run the app with `yarn up`.
+4. In another terminal window, run the tests with `yarn cy:e2e`.
+5. Alternatively, use the interactive interface with `yarn cy:debug`.
 
-Cypress will read your env variables from `.env` in `/packages/manager`.
-It uses `MANAGER_OAUTH`, `REACT_APP_LOGIN_ROOT` and `REACT_APP_API_ROOT`.
-See the [_Getting Started_ documentation.](GETTING_STARTED.md) to setup your `.env` file
-
-To get your OAuth token, go to https://cloud.linode.com/profile/tokens and click "Add a Personal Access Token.
-
-#### How to run locally without Docker
-
-Run:
-
-- `yarn up` in one terminal
-- In a **new terminal** `yarn run wait-on http://localhost:3000 && yarn cy:e2e`
-
-`yarn run wait-on` will simply wait for the website on port 3000 to be ready.
-
-##### Commands
-
-Run the E2E in headless mode:
-
-```bash
-yarn cy:e2e
-```
-
-To use the debugging mode and the interactive interface:
-
-```bash
-yarn cy:debug
-```
-
-#### How to run with Docker
-
-Check that Docker is installed.
-Run `yarn docker:cy`
-
-#### How to contribute to E2E tests
-
-Read the [_Writing E2E Tests_ documentation.](WRITING_E2E_TESTS.md)
+## TODO: Rewrite the rest of this guide (it's out of date)
 
 ### Run Storybook UI Components e2e tests
 
@@ -228,7 +194,7 @@ Run `yarn docker:sb` or `docker build -t cloudsb -f Dockerfile-storybook . && do
 
 ### Testing React Storybook Components
 
-In addition to the Linode Manager E2E tests, there are also UI tests for the ReactJS components.
+In addition to the Cloud Manager E2E tests, there are also UI tests for components in.
 The components are tested via [Storybook](https://github.com/storybooks/storybook) and the test specs
 live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config lives in `e2e/config/wdio.storybook.conf.js`
 
@@ -266,35 +232,3 @@ yarn storybook:e2e
 
 yarn storybook:e2e --story StoryName
 ```
-
-#### Run a Test in Non-Headless Chrome
-
-```bash
-yarn selenium
-
-## New Shell
-## The --debug flag spawns a visible chrome session
-
-yarn storybook:e2e --debug --story StoryName
-```
-
-## Accessibility Testing
-
-**broken, needs chromedriver update**
-
-The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `packages/managere2e/constants.js`, loads the page and runs the accessibility tests.
-
-##### Dependencies
-
-- Same as E2E Manager tests
-
-#### Run Suite
-
-```bash
-# Starts the local development environment
-
-yarn install:all && yarn up
-yarn workspace linode-manager run axe
-```
-
-The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.
