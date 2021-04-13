@@ -199,12 +199,6 @@ const MainContent: React.FC<CombinedProps> = (props) => {
     account.data?.capabilities ?? []
   );
 
-  const machineImagesEnabled = isFeatureEnabled(
-    'Machine Images',
-    Boolean(flags.machineImages),
-    account.data?.capabilities ?? []
-  );
-
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
   const shouldDisplayMainContentBanner =
@@ -343,9 +337,6 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             <Route path="/managed" component={Managed} />
                             <Route path="/longview" component={Longview} />
                             <Route path="/images" component={Images} />
-                            {machineImagesEnabled ? null : (
-                              <Redirect path="/images*" to="/images" />
-                            )}
                             <Route
                               path="/stackscripts"
                               component={StackScripts}

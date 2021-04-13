@@ -46,27 +46,19 @@ const styles = (theme: Theme) =>
     },
   });
 
-export interface Props {
-  description?: string;
-  imageID?: string;
-  label?: string;
-  selectedDisk: string | null;
-  changeDisk: (disk: string | null) => void;
-  selectedLinode: number | null;
-  changeLinode: (linodeId: number) => void;
-  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
 interface State {
+  description: string;
+  imageID: string;
+  label: string;
+  selectedLinode: number;
+  selectedDisk: string | null;
   disks: Disk[];
   notice?: string;
   errors?: APIError[];
   submitting: boolean;
 }
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
+type CombinedProps = WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   WithSnackbarProps &
   ProfileProps &
@@ -75,6 +67,11 @@ type CombinedProps = Props &
 class CreateImageTab extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state = {
+    description: '',
+    imageID: '',
+    label: '',
+    selectedLinode: 0,
+    selectedDisk: '',
     disks: [],
     errors: undefined,
     notice: undefined,
@@ -89,68 +86,87 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (!this.props.selectedLinode && prevProps.selectedLinode) {
-      this.setState({ disks: [] });
-    }
+  fetchLinodeDisksOnLinodeChange = (selectedLinode: number) => {
+    this.setState({
+      selectedDisk: '',
+    });
 
-    if (
-      this.props.selectedLinode &&
-      this.props.selectedLinode !== prevProps.selectedLinode
-    ) {
-      getLinodeDisks(this.props.selectedLinode)
-        .then((response) => {
-          if (!this.mounted) {
-            return;
-          }
+    getLinodeDisks(selectedLinode)
+      .then((response) => {
+        if (!this.mounted) {
+          return;
+        }
 
-          const filteredDisks = response.data.filter(
-            (disk) => disk.filesystem !== 'swap'
-          );
-          if (!equals(this.state.disks, filteredDisks)) {
-            this.setState({ disks: filteredDisks });
-          }
-        })
-        .catch((_) => {
-          if (!this.mounted) {
-            return;
-          }
+        const filteredDisks = response.data.filter(
+          (disk) => disk.filesystem !== 'swap'
+        );
+        if (!equals(this.state.disks, filteredDisks)) {
+          this.setState({ disks: filteredDisks });
+        }
+      })
+      .catch((_) => {
+        if (!this.mounted) {
+          return;
+        }
 
-          if (this.mounted) {
-            this.setState({
-              errors: [
-                {
-                  field: 'disk_id',
-                  reason: 'Could not retrieve disks for this Linode.',
-                },
-              ],
-            });
-          }
-        });
-    }
-  }
+        if (this.mounted) {
+          this.setState({
+            errors: [
+              {
+                field: 'disk_id',
+                reason: 'Could not retrieve disks for this Linode.',
+              },
+            ],
+          });
+        }
+      });
+  };
+
+  changeSelectedLinode = (linodeId: number | null) => {
+    const linodeID = linodeId ?? 0;
+    this.fetchLinodeDisksOnLinodeChange(linodeID);
+    this.setState({
+      selectedLinode: linodeID,
+    });
+  };
 
   handleLinodeChange = (linodeID: number) => {
     // Clear any errors
     this.setState({ errors: undefined });
-    this.props.changeLinode(linodeID);
+    this.changeSelectedLinode(linodeID);
+  };
+
+  changeSelectedDisk = (disk: string | null) => {
+    this.setState({
+      selectedDisk: disk,
+    });
   };
 
   handleDiskChange = (diskID: string | null) => {
     // Clear any errors
     this.setState({ errors: undefined });
-    this.props.changeDisk(diskID);
+    this.changeSelectedDisk(diskID);
+  };
+
+  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    this.setState({
+      label: value,
+    });
+  };
+
+  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    this.setState({
+      description: value,
+    });
   };
 
   onSubmit = () => {
-    const {
-      label,
-      description,
-      history,
-      selectedDisk,
-      createImage,
-      enqueueSnackbar,
-    } = this.props;
+    const { history, createImage, enqueueSnackbar } = this.props;
+
+    const { label, description, selectedDisk } = this.state;
 
     this.setState({ errors: undefined, notice: undefined, submitting: true });
     const safeDescription = description ?? '';
@@ -195,7 +211,7 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
   checkRequirements = () => {
     // When creating an image, disable the submit button until a Linode and
     // disk are selected.
-    const { selectedDisk, selectedLinode } = this.props;
+    const { selectedDisk, selectedLinode } = this.state;
 
     const isDiskSelected = Boolean(selectedDisk);
 
@@ -203,18 +219,17 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
   };
 
   render() {
+    const { availableImages, canCreateImage, classes } = this.props;
     const {
-      availableImages,
+      disks,
+      errors,
+      notice,
+      submitting,
       label,
       description,
-      selectedDisk,
       selectedLinode,
-      canCreateImage,
-      changeLabel,
-      changeDescription,
-      classes,
-    } = this.props;
-    const { disks, errors, notice, submitting } = this.state;
+      selectedDisk,
+    } = this.state;
 
     const requirementsMet = this.checkRequirements();
 
@@ -287,7 +302,7 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
           <TextField
             label="Label"
             value={label}
-            onChange={changeLabel}
+            onChange={this.setLabel}
             error={Boolean(labelError)}
             errorText={labelError}
             disabled={!canCreateImage}
@@ -299,7 +314,7 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
             multiline
             rows={4}
             value={description}
-            onChange={changeDescription}
+            onChange={this.setDescription}
             error={Boolean(descriptionError)}
             errorText={descriptionError}
             disabled={!canCreateImage}
@@ -333,7 +348,7 @@ interface ProfileProps {
   availableImages: number[] | null;
 }
 
-export default compose<CombinedProps, Props>(
+export default compose<CombinedProps, {}>(
   styled,
   withRouter,
   withImages(),
