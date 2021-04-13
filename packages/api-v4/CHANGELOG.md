@@ -1,3 +1,12 @@
+## [2021-04-13] - v0.50.0
+
+### Added:
+- resetLinodePassword (only applies to Bare Metal instances)
+
+### Changed:
+- linodeInterfaceSchema (label and IPAM address field)
+
+
 ##  [2021-04-05] - v0.49.0
 
 ### Changed:
