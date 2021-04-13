@@ -218,6 +218,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: (e) => `Image ${e.entity?.label ?? ''} has been deleted.`,
     notification: (e) => `Image ${e.entity?.label ?? ''} has been deleted.`,
   },
+  image_upload: {
+    scheduled: (e) => `Image ${e.entity?.label ?? ''} scheduled for upload.`,
+    started: (e) => `Image ${e.entity?.label ?? ''} is being uploaded.`,
+    failed: (e) => `There was a problem uploading ${e.entity?.label ?? ''}.`,
+    finished: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
+    notification: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
+  },
   linode_addip: {
     notification: (e) => `An IP has been added to ${e.entity!.label}.`,
   },
@@ -339,6 +346,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: (e) => `Linode ${e.entity!.label} is being deleted.`,
     failed: (e) => `Linode ${e.entity!.label} could not be deleted.`,
     finished: (e) => `Linode ${e.entity!.label} has been deleted.`,
+    notification: (e) => `Linode ${e.entity!.label} has been deleted.`,
   },
   linode_deleteip: {
     notification: (e) => `An IP was deleted from Linode ${e.entity!.id}`,

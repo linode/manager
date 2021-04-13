@@ -222,6 +222,7 @@ export type EventAction =
   | 'firewall_update'
   | 'host_reboot'
   | 'image_update'
+  | 'image_upload'
   | 'image_delete'
   | 'lassie_reboot'
   | 'linode_addip'
