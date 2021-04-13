@@ -6,6 +6,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
@@ -167,6 +168,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     handleUpdateTags,
   } = props;
   const classes = useStyles();
+  const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
@@ -180,7 +182,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   // since we're going to switch to queries for all of these soon.
   const dispatch: ThunkDispatch = useDispatch();
   const _deleteCluster = () =>
-    dispatch(deleteCluster({ clusterID: cluster.id }));
+    dispatch(deleteCluster({ clusterID: cluster.id })).then(() =>
+      push('/kubernetes/clusters')
+    );
 
   const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
     _deleteCluster

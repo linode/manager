@@ -25,7 +25,6 @@ import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import Tag from 'src/components/Tag/Tag_CMR';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { truncateEnd } from 'src/utilities/truncate';
 
 type ClassNames =
   | 'root'
@@ -410,7 +409,8 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
                   key={`tag-item-${thisTag}`}
                   className={classes.tag}
                   colorVariant="lightBlue"
-                  label={truncateEnd(thisTag, 30)}
+                  label={thisTag}
+                  maxLength={30}
                   onDelete={
                     disabled ? undefined : () => this.handleDeleteTag(thisTag)
                   }

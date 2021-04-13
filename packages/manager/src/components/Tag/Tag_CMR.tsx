@@ -10,6 +10,7 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
+import { truncateEnd } from 'src/utilities/truncate';
 
 type Variants =
   | 'white'
@@ -157,6 +158,7 @@ export interface Props extends ChipProps {
   asSuggestion?: boolean;
   closeMenu?: any;
   component?: string;
+  maxLength?: number;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
@@ -181,18 +183,24 @@ class Tag extends React.Component<CombinedProps, {}> {
       colorVariant,
       classes,
       className,
+      label,
       history,
       location,
       staticContext,
       match, // Don't pass route props to the Chip component
       asSuggestion,
       closeMenu,
+      maxLength,
       ...chipProps
     } = this.props;
+
+    // If maxWidth is set, truncate display to that length.
+    const _label = maxLength ? truncateEnd(label, maxLength) : label;
 
     return (
       <Chip
         {...chipProps}
+        label={_label}
         className={classNames({
           ...(className && { [className]: true }),
           [classes[colorVariant!]]: true,
