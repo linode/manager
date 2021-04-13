@@ -32,21 +32,25 @@ const newMetricDisplayStyles = (theme: Theme) =>
       },
     },
     container: {
-      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
-        1
-      )}px`,
-      padding: 10,
+      borderTop: `1px solid ${theme.color.border3}`,
       color: '#777',
-      backgroundColor: theme.bg.offWhiteDT,
-      border: `1px solid ${theme.color.border3}`,
-      fontSize: 14,
+      fontSize: '0.875rem',
+      marginTop: theme.spacing(0.5),
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(),
+      paddingTop: theme.spacing(0.5),
     },
     root: {
       maxWidth: 600,
+      width: '85%',
       '& *': {
         height: 'auto',
         border: 'none',
         backgroundColor: 'transparent',
+        tableLayout: 'fixed',
+      },
+      '& th, td': {
+        padding: `${theme.spacing(0.5)}px !important`,
       },
       '& td:first-child': {
         backgroundColor: 'transparent !important',
@@ -61,6 +65,9 @@ const newMetricDisplayStyles = (theme: Theme) =>
         '& th, & td': {
           padding: '4px !important',
         },
+      },
+      [theme.breakpoints.down('md')]: {
+        width: '100%',
       },
       [theme.breakpoints.down('sm')]: {
         maxWidth: '100%',
@@ -104,16 +111,28 @@ const newMetricDisplayStyles = (theme: Theme) =>
       },
     },
     tableHeadInner: {
-      paddingBottom: 4,
+      width: '23%',
+      '& p': {
+        color: theme.cmrTextColors.tableHeader,
+      },
+      [theme.breakpoints.down('md')]: {
+        width: '20%',
+      },
     },
     toggleButton: {
-      padding: 0,
-      margin: 0,
       justifyContent: 'flex-start',
+      color: theme.color.headline,
       fontFamily: theme.font.normal,
-      fontSize: 14,
+      fontSize: '0.75rem',
+      margin: 0,
+      marginLeft: -2,
+      padding: 0,
       '&:focus': {
         outline: `1px dotted #ccc`,
+      },
+      '&:hover': {
+        backgroundColor: 'transparent',
+        color: theme.color.headline,
       },
     },
     legend: {
@@ -130,6 +149,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
     },
     text: {
       color: theme.color.black,
+      fontSize: '0.75rem',
     },
     simpleLegendRoot: {
       maxWidth: 'initial',
