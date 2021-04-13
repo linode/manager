@@ -49,15 +49,14 @@ const styles = (theme: Theme) =>
         opacity: 1,
       },
     },
-    root: {},
     tag: {
       marginTop: theme.spacing(1) / 2,
-      marginRight: 0,
+      marginRight: 4,
     },
     addButtonWrapper: {
-      width: '100%',
       display: 'flex',
       justifyContent: 'flex-end',
+      width: '100%',
     },
     hasError: {
       marginTop: 0,
@@ -69,9 +68,9 @@ const styles = (theme: Theme) =>
         ...theme.typography.body1,
         fontFamily: '"LatoWeb", sans-serif',
       },
-      textAlign: 'left',
-      paddingLeft: 10,
       marginTop: 20,
+      paddingLeft: 10,
+      textAlign: 'left',
     },
     addTagButton: {
       display: 'flex',
@@ -353,11 +352,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <div
-        className={classNames({
-          [classes.root]: true,
-        })}
-      >
+      <>
         {isCreatingTag ? (
           <Select
             onChange={this.handleCreateTag}
@@ -398,11 +393,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
           </div>
         )}
 
-        <div
-          className={classNames({
-            [classes.tagsPanelItemWrapper]: true,
-          })}
-        >
+        <div className={classes.tagsPanelItemWrapper}>
           {loading && (
             <div className={classes.progress}>
               <CircleProgress mini />
@@ -417,17 +408,12 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               return (
                 <Tag
                   key={`tag-item-${thisTag}`}
+                  className={classes.tag}
                   colorVariant="lightBlue"
                   label={truncateEnd(thisTag, 30)}
-                  style={
-                    this.props.align === 'left'
-                      ? { marginRight: '4px' }
-                      : { marginLeft: '4px' }
-                  }
                   onDelete={
                     disabled ? undefined : () => this.handleDeleteTag(thisTag)
                   }
-                  className={classes.tag}
                 />
               );
             })}
@@ -436,7 +422,7 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
             <Typography className={classes.errorNotice}>{tagError}</Typography>
           )}
         </div>
-      </div>
+      </>
     );
   }
 }

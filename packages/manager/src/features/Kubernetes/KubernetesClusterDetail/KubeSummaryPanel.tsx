@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }px ${theme.spacing(3)}px`,
   },
   mainGridContainer: {
+    position: 'relative',
     [theme.breakpoints.up('lg')]: {
       justifyContent: 'space-between',
     },
@@ -98,27 +99,34 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 115,
   },
   tags: {
-    [theme.breakpoints.up(1400)]: {
-      flexBasis: '100%',
-      flexGrow: 0,
-      maxWidth: '100%',
+    '&.MuiGrid-item': {
+      paddingBottom: 0,
     },
-    [theme.breakpoints.down(1400)]: {
-      marginLeft: theme.spacing(),
-      '& > div': {
-        flexDirection: 'row-reverse',
-        '& > button': {
-          marginRight: 4,
-        },
-        '& > div': {
-          justifyContent: 'flex-start !important',
-        },
+    [theme.breakpoints.up('lg')]: {
+      marginTop: theme.spacing(2),
+      '& .MuiChip-root': {
+        marginRight: 0,
+        marginLeft: 4,
+      },
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+      // Add a Tag button
+      '& > div:first-child': {
+        justifyContent: 'flex-start !important',
+      },
+      // Tags Panel wrapper
+      '& > div:last-child': {
+        marginBottom: 2,
       },
     },
   },
   deleteButton: {
     ...theme.applyLinkStyles,
     marginBottom: theme.spacing(),
+    position: 'absolute',
+    top: 4,
+    right: theme.spacing(),
   },
 }));
 
@@ -406,21 +414,13 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
 
           {setKubeconfigDisplay()}
 
-          <Grid item xs={12} lg={4}>
+          <Grid item xs={12} lg={4} style={{ marginTop: 8 }}>
             <Grid
               container
               direction="column"
               alignItems="flex-end"
               className={classes.tagsSection}
             >
-              <Grid item>
-                <button
-                  className={classes.deleteButton}
-                  onClick={() => openDialog(cluster.id)}
-                >
-                  Delete Cluster
-                </button>
-              </Grid>
               <Grid item className={classes.tags}>
                 <TagsPanel
                   align="right"
@@ -430,6 +430,13 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               </Grid>
             </Grid>
           </Grid>
+
+          <button
+            className={classes.deleteButton}
+            onClick={() => openDialog(cluster.id)}
+          >
+            Delete Cluster
+          </button>
         </Grid>
       </Paper>
 
