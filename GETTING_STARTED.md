@@ -34,8 +34,6 @@ $ npm install --global yarn --upgrade
 
 ## Serving a production build of Cloud Manager:
 
-### Using yarn build
-
 Since Cloud Manager was generated using Create React App, `yarn build` can be used to generate an optimized production bundle:
 
 ```bash

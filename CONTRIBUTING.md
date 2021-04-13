@@ -16,4 +16,4 @@ Feel free to open an issue to report a bug or request a feature.
 4. Make your changes, commit them, then push them to your fork.
 5. Open a pull request against `develop`.
 
-For your code to be merged, two reviews from Cloud Manager team members are required. After approval, all pull requests are squash merged.
+Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
