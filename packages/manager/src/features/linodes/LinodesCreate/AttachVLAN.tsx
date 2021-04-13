@@ -7,6 +7,8 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import { queryClient } from 'src/queries/base';
+import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,6 +50,11 @@ type CombinedProps = Props;
 
 const AttachVLAN: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+
+  React.useEffect(() => {
+    // Ensure VLANs are fresh.
+    queryClient.invalidateQueries(vlansQueryKey);
+  }, []);
 
   const {
     handleVLANChange,
