@@ -13,8 +13,6 @@ const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
 export const ImageCreate: React.FC<CombinedProps> = (props) => {
-  const [route, setRoute] = React.useState<string>('');
-
   const tabs = [
     /* NB: These must correspond to the routes, inside the Switch */
     {
@@ -27,16 +25,11 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
     },
   ];
 
-  React.useEffect(() => {
-    setRoute(props.location.pathname.replace('/create/', ''));
-  }, [route, props.location.pathname]);
-
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
   const navToURL = (index: number) => {
-    setRoute(props.location.pathname.replace('/create/', ''));
     props.history.push(tabs[index].routeName);
   };
 

@@ -219,7 +219,7 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { availableImages, canCreateImage, classes } = this.props;
+    const { availableLinodesToImagize, canCreateImage, classes } = this.props;
     const {
       disks,
       errors,
@@ -267,14 +267,16 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
           disabled={!canCreateImage}
           handleChange={(linode) => this.handleLinodeChange(linode.id)}
           filterCondition={(linode) =>
-            availableImages ? availableImages.includes(linode.id) : true
+            availableLinodesToImagize
+              ? availableLinodesToImagize.includes(linode.id)
+              : true
           }
           updateFor={[
             selectedLinode,
             linodeError,
             classes,
             canCreateImage,
-            availableImages,
+            availableLinodesToImagize,
           ]}
         />
 
@@ -345,7 +347,7 @@ const styled = withStyles(styles);
 
 interface ProfileProps {
   canCreateImage: boolean;
-  availableImages: number[] | null;
+  availableLinodesToImagize: number[] | null;
 }
 
 export default compose<CombinedProps, {}>(
@@ -361,7 +363,7 @@ export default compose<CombinedProps, {}>(
     // Unrestricted users can create Images from any disk;
     // Restricted users need read_write on the Linode they're trying to Imagize
     // (in addition to the global add_images grant).
-    availableImages: profile?.restricted
+    availableLinodesToImagize: profile?.restricted
       ? profile?.grants?.linode
           .filter((thisGrant) => thisGrant.permissions === 'read_write')
           .map((thisGrant) => thisGrant.id) ?? []
