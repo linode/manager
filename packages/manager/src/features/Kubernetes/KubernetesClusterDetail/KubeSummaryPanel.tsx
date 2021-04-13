@@ -53,35 +53,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(1),
   },
   label: {
-    marginBottom: `${theme.spacing(1) - 3}px`,
     fontWeight: 'bold',
+    marginBottom: `${theme.spacing(1) - 3}px`,
   },
   column: {},
   iconsSharedStyling: {
-    width: 24,
     height: 24,
+    width: 24,
     objectFit: 'contain',
   },
   kubeconfigSection: {
     marginTop: `${theme.spacing() + 2}px`,
   },
   kubeconfigElements: {
-    color: theme.palette.primary.main,
     display: 'flex',
     alignItems: 'center',
+    color: theme.palette.primary.main,
   },
   kubeconfigFileText: {
-    cursor: 'pointer',
     color: theme.cmrTextColors.linkActiveLight,
+    cursor: 'pointer',
     marginRight: theme.spacing(1),
   },
   kubeconfigIcons: {
     color: theme.cmrTextColors.linkActiveLight,
     cursor: 'pointer',
-    width: 16,
     height: 16,
-    objectFit: 'contain',
+    width: 16,
     margin: `0 ${theme.spacing(1)}px`,
+    objectFit: 'contain',
   },
   tagsSection: {
     display: 'flex',
@@ -92,34 +92,47 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   iconSharedOuter: {
-    textAlign: 'center',
     flexBasis: '28%',
+    textAlign: 'center',
   },
   iconTextOuter: {
     flexBasis: '72%',
     minWidth: 115,
   },
   tags: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignSelf: 'stretch',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
     '&.MuiGrid-item': {
       paddingBottom: 0,
     },
+    // Tags Panel wrapper
+    '& > div:last-child': {
+      marginTop: 2,
+      marginBottom: 0,
+      width: '100%',
+    },
     [theme.breakpoints.up('lg')]: {
-      marginTop: theme.spacing(2),
       '& .MuiChip-root': {
         marginRight: 0,
         marginLeft: 4,
       },
-    },
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
       // Add a Tag button
       '& > div:first-child': {
-        justifyContent: 'flex-start !important',
+        justifyContent: 'flex-end',
+        marginTop: theme.spacing(5),
       },
       // Tags Panel wrapper
       '& > div:last-child': {
-        marginBottom: 2,
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end',
       },
+    },
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
     },
   },
   deleteButton: {
@@ -418,21 +431,21 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
 
           {setKubeconfigDisplay()}
 
-          <Grid item xs={12} lg={4} style={{ marginTop: 8 }}>
-            <Grid
+          <Grid item className={classes.tags} xs={12} lg={4}>
+            {/* <Grid
               container
               direction="column"
               alignItems="flex-end"
               className={classes.tagsSection}
             >
-              <Grid item className={classes.tags}>
-                <TagsPanel
-                  align="right"
-                  tags={cluster.tags}
-                  updateTags={handleUpdateTags}
-                />
-              </Grid>
-            </Grid>
+              <Grid item className={classes.tags}> */}
+            <TagsPanel
+              align="right"
+              tags={cluster.tags}
+              updateTags={handleUpdateTags}
+            />
+            {/* </Grid>
+            </Grid> */}
           </Grid>
 
           <button

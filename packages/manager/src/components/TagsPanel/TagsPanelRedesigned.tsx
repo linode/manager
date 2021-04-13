@@ -54,15 +54,15 @@ const styles = (theme: Theme) =>
     },
     addButtonWrapper: {
       display: 'flex',
-      justifyContent: 'flex-end',
+      justifyContent: 'flex-start',
       width: '100%',
     },
     hasError: {
       marginTop: 0,
     },
     errorNotice: {
-      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       animation: '$fadeIn 225ms linear forwards',
+      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       '& .noticeText': {
         ...theme.typography.body1,
         fontFamily: '"LatoWeb", sans-serif',
@@ -75,13 +75,13 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 3,
       backgroundColor: theme.color.tagButton,
       border: 'none',
+      borderRadius: 3,
       color: theme.cmrTextColors.linkActiveLight,
       cursor: 'pointer',
       fontFamily: theme.font.normal,
-      fontSize: 14,
+      fontSize: '0.875rem',
       fontWeight: 'bold',
       padding: '7px 10px',
       whiteSpace: 'nowrap',
@@ -97,39 +97,40 @@ const styles = (theme: Theme) =>
       position: 'relative',
     },
     selectTag: {
+      animation: '$fadeIn .3s ease-in-out forwards',
+      marginTop: -3.5,
       minWidth: 275,
+      position: 'relative',
       textAlign: 'left',
       width: '100%',
-      position: 'relative',
       zIndex: 3,
-      animation: '$fadeIn .3s ease-in-out forwards',
       '& .error-for-scroll > div': {
         flexDirection: 'row',
         flexWrap: 'wrap-reverse',
       },
       '& .input': {
         '& p': {
-          fontSize: '.9rem',
           color: theme.color.grey1,
           borderLeft: 'none',
+          fontSize: '.9rem',
         },
       },
       '& .react-select__input': {
-        fontSize: '.9rem',
-        color: theme.palette.text.primary,
         backgroundColor: 'transparent',
+        color: theme.palette.text.primary,
+        fontSize: '.9rem',
       },
       '& .react-select__value-container': {
         padding: '6px',
       },
     },
     progress: {
-      position: 'absolute',
-      height: '100%',
-      width: '100%',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
       zIndex: 2,
     },
     loading: {
@@ -375,11 +376,6 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               [classes.addButtonWrapper]: true,
               [classes.hasError]: tagError,
             })}
-            style={
-              this.props.align === 'left'
-                ? { justifyContent: 'flex-start' }
-                : { justifyContent: 'flex-end' }
-            }
           >
             <button
               className={classes.addTagButton}
@@ -398,26 +394,23 @@ class TagsPanelRedesigned extends React.Component<CombinedProps, State> {
               <CircleProgress mini />
             </div>
           )}
-          <div
-            className={classNames({
-              [classes.loading]: loading,
-            })}
-          >
-            {tags.map((thisTag) => {
-              return (
-                <Tag
-                  key={`tag-item-${thisTag}`}
-                  className={classes.tag}
-                  colorVariant="lightBlue"
-                  label={thisTag}
-                  maxLength={30}
-                  onDelete={
-                    disabled ? undefined : () => this.handleDeleteTag(thisTag)
-                  }
-                />
-              );
-            })}
-          </div>
+          {tags.map((thisTag) => {
+            return (
+              <Tag
+                key={`tag-item-${thisTag}`}
+                className={classNames({
+                  [classes.tag]: true,
+                  [classes.loading]: loading,
+                })}
+                colorVariant="lightBlue"
+                label={thisTag}
+                maxLength={30}
+                onDelete={
+                  disabled ? undefined : () => this.handleDeleteTag(thisTag)
+                }
+              />
+            );
+          })}
           {tagError && (
             <Typography className={classes.errorNotice}>{tagError}</Typography>
           )}
