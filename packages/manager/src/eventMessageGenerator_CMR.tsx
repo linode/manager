@@ -41,6 +41,8 @@ export const eventMessageGenerator = (
       return `reboot with ${e.secondary_entity?.label}`;
     case 'linode_shutdown':
       return 'shutdown';
+    case 'linode_delete':
+      return 'delete';
     case 'linode_clone':
       return (
         <>
