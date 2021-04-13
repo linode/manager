@@ -9,6 +9,7 @@ module.exports = {
     path: path.resolve(__dirname),
     library: '@linode/validation',
     libraryTarget: 'umd',
+    globalObject: 'this',
   },
   plugins: [
     new NpmDtsPlugin({

@@ -3,6 +3,7 @@ export * from './buckets.schema';
 export * from './databases.schema';
 export * from './domains.schema';
 export * from './firewalls.schema';
+export * from './images.schema';
 export * from './kubernetes.schema';
 export * from './linodes.schema';
 export * from './longview.schema';
