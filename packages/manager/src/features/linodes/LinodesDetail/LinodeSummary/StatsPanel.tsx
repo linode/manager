@@ -1,6 +1,5 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -10,9 +9,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     padding: 16,
     paddingTop: 0,
+    width: '100%',
   },
   spinner: {
     display: 'flex',
@@ -46,7 +45,7 @@ export const StatsPanel: React.FC<CombinedProps> = (props) => {
   } = props;
 
   return (
-    <Paper>
+    <>
       <Typography variant="h2" data-qa-stats-title>
         {title}
       </Typography>
@@ -66,7 +65,7 @@ export const StatsPanel: React.FC<CombinedProps> = (props) => {
       ) : (
         renderBody()
       )}
-    </Paper>
+    </>
   );
 };
 

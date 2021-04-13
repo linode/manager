@@ -1,22 +1,20 @@
-import { curry } from 'ramda';
-import * as React from 'react';
 import {
+  Chart,
+  ChartData,
   ChartDataSets,
   ChartOptions,
-  Chart,
-  ChartXAxe,
   ChartTooltipItem,
-  ChartData,
+  ChartXAxe,
 } from 'chart.js';
 import 'chartjs-adapter-luxon';
-
-import LineChartIcon from 'src/assets/icons/line-chart.svg';
+import { curry } from 'ramda';
+import * as React from 'react';
 import Button from 'src/components/Button';
 import {
   makeStyles,
   Theme,
-  useTheme,
   useMediaQuery,
+  useTheme,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -28,6 +26,7 @@ import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
 import MetricDisplayStyles from './NewMetricDisplay.styles';
+
 setUpCharts();
 
 export interface DataSet {
@@ -80,14 +79,14 @@ const humanizeLargeData = (value: number) => {
 };
 
 const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
+  const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down(960));
+
   const inputEl: React.RefObject<any> = React.useRef(null);
   const chartInstance: React.MutableRefObject<any> = React.useRef(null);
   const [legendRendered, setLegendRendered] = React.useState(false);
   const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
-
-  const classes = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down(960));
 
   const {
     chartHeight,
@@ -102,6 +101,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     nativeLegend,
     unit,
   } = props;
+
   const finalRowHeaders = rowHeaders ? rowHeaders : ['Max', 'Avg', 'Last'];
   // is undefined on linode/summary
   const plugins = [
@@ -140,14 +140,23 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       scales: {
         yAxes: [
           {
+            // Defines a fixed width for the Y-axis labels
+            afterFit(axes) {
+              axes.width = 32;
+            },
             gridLines: {
               borderDash: [3, 6],
+              drawTicks: false,
               zeroLineWidth: 1,
               zeroLineBorderDashOffset: 2,
             },
             ticks: {
-              suggestedMax: _suggestedMax ?? undefined,
               beginAtZero: true,
+              fontSize: 12,
+              fontStyle: 'normal',
+              maxTicksLimit: 8,
+              padding: 10,
+              suggestedMax: _suggestedMax ?? undefined,
               callback(value: number, _index: number) {
                 return humanizeLargeData(value);
               },
@@ -177,6 +186,10 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                 zone: timezone,
               },
             },
+            ticks: {
+              fontSize: 12,
+              fontStyle: 'normal',
+            },
             // This cast is because the type definition does not include adapters
           } as ChartXAxe,
         ],
@@ -187,7 +200,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
         bodyFontColor: '#32363C',
         displayColors: false,
         titleFontColor: '#606469',
-        xPadding: 16,
+        xPadding: 8,
         yPadding: 10,
         borderWidth: 0.5,
         borderColor: '#999',
@@ -262,14 +275,14 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   });
   return (
     <div className={classes.wrapper}>
-      <div style={{ width: '100%' }}>
+      <div>
         <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table aria-label="Stats and metrics" className={classes.root}>
             <TableHead className={classes.tableHead}>
-              {/* Remove "Toggle Graph" label and repeat legend for each data set for mobile */}
+              {/* Repeat legend for each data set for mobile */}
               {matchesSmDown ? (
                 data.map((section) => (
                   <TableRow key={section.label}>
@@ -288,16 +301,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell className={classes.tableHeadInner}>
-                    <Typography
-                      variant="body1"
-                      component="span"
-                      className={classes.text}
-                    >
-                      Toggle Graphs
-                    </Typography>
-                    <LineChartIcon className={classes.chartIcon} />
-                  </TableCell>
+                  <TableCell style={{ height: 26 }} />
                   {finalRowHeaders.map((section, i) => (
                     <TableCell
                       key={i}

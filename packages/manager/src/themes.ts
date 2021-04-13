@@ -197,6 +197,26 @@ const darkThemeOptions = {
   cmrBorderColors,
   cmrTextColors,
   cmrIconColors,
+  graphs: {
+    network: {
+      outbound: `rgb(49, 206, 62)`,
+      inbound: `rgb(16, 162, 29)`,
+    },
+    cpu: {
+      system: `rgb(2, 118, 253)`,
+      user: `rgb(81, 166, 245)`,
+      wait: `rgb(145, 199, 237)`,
+      percent: `rgb(54, 131, 220)`,
+    },
+    diskIO: {
+      read: `rgb(255, 196, 105)`,
+      write: `rgb(255, 179, 77)`,
+      swap: `rgb(238, 44, 44)`,
+    },
+    purple: `rgb(217, 176, 217)`,
+    red: `rgb(255, 99, 60)`,
+    yellow: `rgb(255, 220, 125)`,
+  },
   animateCircleIcon: {
     ...iconCircleAnimation,
   },
