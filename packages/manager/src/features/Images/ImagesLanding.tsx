@@ -1,6 +1,5 @@
 import { Image, ImageStatus } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import produce from 'immer';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { partition } from 'ramda';
@@ -16,6 +15,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
@@ -25,8 +25,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import useAccount from 'src/hooks/useAccount';
-import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { DeleteImagePayload } from 'src/store/image/image.actions';
@@ -36,8 +34,6 @@ import {
 } from 'src/store/image/image.requests';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { capitalize } from 'src/utilities/capitalize';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
@@ -154,15 +150,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
-  // Feature flag logic for machine images
-  const { account } = useAccount();
-  const flags = useFlags();
-  const machineImagesEnabled = isFeatureEnabled(
-    'Machine Images',
-    Boolean(flags.machineImages),
-    account.data?.capabilities ?? []
-  );
-
   const { imagesData, imagesLoading, imagesError, deleteImage } = props;
 
   /**
@@ -188,6 +175,10 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   );
 
   const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
+  const dialogMessage =
+    dialogAction === 'cancel'
+      ? 'Are you sure you want to cancel this Image upload?'
+      : 'Are you sure you want to delete this Image?';
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
@@ -331,7 +322,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           onClick={handleRemoveImage}
           data-qa-submit
         >
-          {capitalize(dialogAction)} Image
+          {dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'}
         </Button>
       </ActionsPanel>
     );
@@ -369,6 +360,14 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onEdit: openForEdit,
     onDelete: openDialog,
   };
+
+  // @todo remove this check after Machine Images is in GA
+  // This is used instead of a feature flag, since there is no
+  // customer tag for this feature; if status is returned from the API,
+  // we want to include it in the table.
+  const machineImagesEnabled = imagesData.some((thisImage) =>
+    thisImage.hasOwnProperty('status')
+  );
 
   const manualHeaders = getHeaders('manual', machineImagesEnabled);
   const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
@@ -466,6 +465,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={manualImageRow}
           headers={manualHeaders}
+          emptyMessage={'No Manual Images to display.'}
         />
       </Paper>
       <Paper className={classes.imageTable}>
@@ -480,19 +480,22 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={autoImageRow}
           headers={automaticHeaders}
+          emptyMessage={'No Automatic Images to display.'}
         />
       </Paper>
       {renderImageDrawer()}
       <ConfirmationDialog
         open={dialog.open}
-        title={`${capitalize(dialogAction)} Image ${dialog.image}`}
+        title={
+          dialogAction === 'cancel'
+            ? 'Cancel Upload'
+            : `Delete Image ${dialog.image}`
+        }
         onClose={closeDialog}
         actions={getActions}
       >
         {dialog.error && <Notice error text={dialog.error} />}
-        <Typography>
-          Are you sure you want to {dialogAction} this Image?
-        </Typography>
+        <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
     </React.Fragment>
   );

@@ -7,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
 
@@ -59,7 +60,9 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     <TableRow key={id} data-qa-image-cell={id}>
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden xsDown>
-        {status ? <TableCell>{status.replace('_', ' ')}</TableCell> : null}
+        {status ? (
+          <TableCell>{capitalizeAllWords(status.replace('_', ' '))}</TableCell>
+        ) : null}
         <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
       </Hidden>
       <TableCell data-qa-image-size>{size} MB</TableCell>

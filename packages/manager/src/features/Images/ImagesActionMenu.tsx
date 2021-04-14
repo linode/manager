@@ -84,7 +84,13 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
           },
         ];
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  /**
+   * Moving all actions to the dropdown menu to prevent visual mismatches
+   * between different Image types/statuses.
+   *
+   * Leaving the logic in place in case until the decision has been officially OK'd.
+   */
+  const splitActionsArrayIndex = 0;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
