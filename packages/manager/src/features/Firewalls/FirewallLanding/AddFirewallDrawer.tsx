@@ -8,7 +8,6 @@ import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
 import Drawer, { DrawerProps } from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
@@ -142,11 +141,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                   data-qa-error
                 />
               )}
-              <Typography>
-                Firewalls are created with default rules to allow inbound SSH
-                (port 22) and DNS (port 53) traffic. You can edit these rules or
-                add additional rules once the Firewall has been created.
-              </Typography>
               <TextField
                 aria-label="Label for your new Firewall"
                 label="Label"
