@@ -36,7 +36,6 @@ interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   tagsInputProps?: TagsInputProps;
-  fromLinodeCreateFlow?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -56,9 +55,7 @@ export class InfoPanel extends React.Component<CombinedProps> {
             })}
             data-qa-label-input
           />
-          {tagsInputProps && (
-            <TagsInput fromLinodeCreateFlow {...tagsInputProps} />
-          )}
+          {tagsInputProps && <TagsInput {...tagsInputProps} />}
         </div>
       </Paper>
     );

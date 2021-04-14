@@ -612,7 +612,6 @@ export class LinodeCreate extends React.PureComponent<
                 : undefined
             }
             updateFor={[tags, label, errors]}
-            fromLinodeCreateFlow
           />
           {/* Hide for backups and clone */}
           {!['fromBackup', 'fromLinode'].includes(this.props.createType) && (
