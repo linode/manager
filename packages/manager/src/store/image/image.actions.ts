@@ -1,4 +1,9 @@
-import { CreateImagePayload, Image } from '@linode/api-v4/lib/images';
+import {
+  CreateImagePayload,
+  Image,
+  ImageUploadPayload,
+  UploadImageResponse,
+} from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -19,6 +24,12 @@ export const createImageActions = actionCreator.async<
   Image,
   APIError[]
 >('create');
+
+export const uploadImageActions = actionCreator.async<
+  ImageUploadPayload,
+  UploadImageResponse,
+  APIError[]
+>('upload');
 
 export interface UpdateImagePayload
   extends Pick<CreateImagePayload, 'label' | 'description'> {
