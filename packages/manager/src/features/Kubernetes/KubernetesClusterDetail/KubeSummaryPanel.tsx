@@ -15,6 +15,7 @@ import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import PriceIcon from 'src/assets/icons/price-icon.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -136,10 +137,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   deleteButton: {
-    ...theme.applyLinkStyles,
-    marginBottom: theme.spacing(),
     position: 'absolute',
-    top: 4,
     right: theme.spacing(),
   },
 }));
@@ -432,28 +430,21 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
           {setKubeconfigDisplay()}
 
           <Grid item className={classes.tags} xs={12} lg={4}>
-            {/* <Grid
-              container
-              direction="column"
-              alignItems="flex-end"
-              className={classes.tagsSection}
-            >
-              <Grid item className={classes.tags}> */}
             <TagsPanel
               align="right"
               tags={cluster.tags}
               updateTags={handleUpdateTags}
             />
-            {/* </Grid>
-            </Grid> */}
           </Grid>
 
-          <button
+          <Button
+            buttonType="secondary"
             className={classes.deleteButton}
             onClick={() => openDialog(cluster.id)}
+            superCompact
           >
             Delete Cluster
-          </button>
+          </Button>
         </Grid>
       </Paper>
 
