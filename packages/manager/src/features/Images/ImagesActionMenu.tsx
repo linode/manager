@@ -66,7 +66,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             title: 'Deploy New Linode',
             disabled: isDisabled,
             tooltip: isDisabled
-              ? 'Image is not yet available for deployment'
+              ? 'Image is not yet available for use.'
               : undefined,
             onClick: () => {
               onDeploy(id);
@@ -76,7 +76,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             title: 'Restore to Existing Linode',
             disabled: isDisabled,
             tooltip: isDisabled
-              ? 'Image is not yet available for use'
+              ? 'Image is not yet available for use.'
               : undefined,
             onClick: () => {
               onRestore(id);
