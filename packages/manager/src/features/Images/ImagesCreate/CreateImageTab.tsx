@@ -46,10 +46,13 @@ const styles = (theme: Theme) =>
     },
   });
 
+export interface Props {
+  label?: string;
+  description?: string;
+  changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 interface State {
-  description: string;
-  imageID: string;
-  label: string;
   selectedLinode: number;
   selectedDisk: string | null;
   disks: Disk[];
@@ -58,7 +61,8 @@ interface State {
   submitting: boolean;
 }
 
-type CombinedProps = WithStyles<ClassNames> &
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   WithSnackbarProps &
   ProfileProps &
@@ -67,9 +71,6 @@ type CombinedProps = WithStyles<ClassNames> &
 class CreateImageTab extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state = {
-    description: '',
-    imageID: '',
-    label: '',
     selectedLinode: 0,
     selectedDisk: '',
     disks: [],
@@ -148,25 +149,16 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
     this.changeSelectedDisk(diskID);
   };
 
-  setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    this.setState({
-      label: value,
-    });
-  };
-
-  setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    this.setState({
-      description: value,
-    });
-  };
-
   onSubmit = () => {
-    const { history, createImage, enqueueSnackbar } = this.props;
+    const {
+      history,
+      createImage,
+      enqueueSnackbar,
+      label,
+      description,
+    } = this.props;
 
-    const { label, description, selectedDisk } = this.state;
+    const { selectedDisk } = this.state;
 
     this.setState({ errors: undefined, notice: undefined, submitting: true });
     const safeDescription = description ?? '';
@@ -219,14 +211,20 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { availableLinodesToImagize, canCreateImage, classes } = this.props;
+    const {
+      availableLinodesToImagize,
+      canCreateImage,
+      classes,
+      label,
+      description,
+      changeLabel,
+      changeDescription,
+    } = this.props;
     const {
       disks,
       errors,
       notice,
       submitting,
-      label,
-      description,
       selectedLinode,
       selectedDisk,
     } = this.state;
@@ -304,7 +302,7 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
           <TextField
             label="Label"
             value={label}
-            onChange={this.setLabel}
+            onChange={changeLabel}
             error={Boolean(labelError)}
             errorText={labelError}
             disabled={!canCreateImage}
@@ -316,7 +314,7 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
             multiline
             rows={4}
             value={description}
-            onChange={this.setDescription}
+            onChange={changeDescription}
             error={Boolean(descriptionError)}
             errorText={descriptionError}
             disabled={!canCreateImage}
@@ -350,7 +348,7 @@ interface ProfileProps {
   availableLinodesToImagize: number[] | null;
 }
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, Props>(
   styled,
   withRouter,
   withImages(),

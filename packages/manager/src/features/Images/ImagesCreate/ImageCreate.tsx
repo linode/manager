@@ -13,6 +13,19 @@ const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
 export const ImageCreate: React.FC<CombinedProps> = (props) => {
+  const [label, setLabel] = React.useState<string>('');
+  const [description, setDescription] = React.useState<string>('');
+
+  const handleSetLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLabel(value);
+  };
+
+  const handleSetDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setDescription(value);
+  };
+
   const tabs = [
     /* NB: These must correspond to the routes, inside the Switch */
     {
@@ -47,7 +60,12 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <CreateImageTab />
+              <CreateImageTab
+                label={label}
+                description={description}
+                changeLabel={handleSetLabel}
+                changeDescription={handleSetDescription}
+              />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <ImageUpload />
