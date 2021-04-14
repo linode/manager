@@ -42,8 +42,10 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     onDelete,
   } = props;
 
-  const actions: Action[] =
-    status === 'pending_upload'
+  const actions: Action[] = React.useMemo(() => {
+    // @todo remove first half of this conditional when Machine Images is GA
+    const isDisabled = status && status !== 'available';
+    return status === 'pending_upload'
       ? [
           // Cancelling a pending upload is functionally equivalent to deleting it
           {
@@ -62,16 +64,20 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
           },
           {
             title: 'Deploy New Linode',
-            // @todo remove first half of this conditional when the feature is GA
-
-            disabled: status && status !== 'available',
+            disabled: isDisabled,
+            tooltip: isDisabled
+              ? 'Image is not yet available for deployment'
+              : undefined,
             onClick: () => {
               onDeploy(id);
             },
           },
           {
             title: 'Restore to Existing Linode',
-            disabled: status && status !== 'available',
+            disabled: isDisabled,
+            tooltip: isDisabled
+              ? 'Image is not yet available for use'
+              : undefined,
             onClick: () => {
               onRestore(id);
             },
@@ -83,6 +89,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             },
           },
         ];
+  }, [status, description, id, label, onDelete, onRestore, onDeploy, onEdit]);
 
   /**
    * Moving all actions to the dropdown menu to prevent visual mismatches
