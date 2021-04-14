@@ -85,7 +85,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
     <TableRow
       key={id}
       data-qa-nodebalancer-cell={label}
-      className={`${classes.row} fade-in-table`} //"fade-in-table"
+      className={`${classes.row} fade-in-table`}
       ariaLabel={label}
     >
       <TableCell data-qa-nodebalancer-label>
