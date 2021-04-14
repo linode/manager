@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipsWrapper: {
     display: 'inline-flex',
     flexDirection: 'column',
+    '& [data-qa-copy-ip]': {
+      opacity: 0,
+    },
   },
   actionCell: {
     // @todo: remove action cell duplication (this is from DomainTableRow_CMR)
@@ -49,6 +52,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       We can remove once we make the full switch to CMR styling
       */
     paddingRight: '0 !important',
+  },
+  row: {
+    '&:hover': {
+      '& [data-qa-copy-ip]': {
+        opacity: 1,
+      },
+    },
   },
 }));
 
@@ -75,7 +85,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
     <TableRow
       key={id}
       data-qa-nodebalancer-cell={label}
-      className="fade-in-table"
+      className={`${classes.row} fade-in-table`}
       ariaLabel={label}
     >
       <TableCell data-qa-nodebalancer-label>
