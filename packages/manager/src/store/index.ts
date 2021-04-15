@@ -132,10 +132,10 @@ import profile, {
   defaultState as defaultProfileState,
   State as ProfileState,
 } from 'src/store/profile/profile.reducer';
-import stackScriptDrawer, {
-  defaultState as stackScriptDrawerDefaultState,
-  State as StackScriptDrawerState,
-} from 'src/store/stackScriptDrawer';
+import stackScriptDialog, {
+  defaultState as stackScriptDialogDefaultState,
+  State as StackScriptDialogState,
+} from 'src/store/stackScriptDialog';
 import tagImportDrawer, {
   defaultState as tagDrawerDefaultState,
   State as TagImportDrawerState,
@@ -245,7 +245,7 @@ export interface ApplicationState {
   documentation: DocumentationState;
   domainDrawer: DomainDrawerState;
   events: EventsState;
-  stackScriptDrawer: StackScriptDrawerState;
+  stackScriptDialog: StackScriptDialogState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
   bucketDrawer: BucketDrawerState;
@@ -268,7 +268,7 @@ export const defaultState: ApplicationState = {
   documentation: documentationDefaultState,
   domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
-  stackScriptDrawer: stackScriptDrawerDefaultState,
+  stackScriptDialog: stackScriptDialogDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
@@ -319,7 +319,7 @@ const reducers = combineReducers<ApplicationState>({
   backups,
   documentation,
   domainDrawer,
-  stackScriptDrawer,
+  stackScriptDialog,
   tagImportDrawer,
   volumeDrawer,
   bucketDrawer,

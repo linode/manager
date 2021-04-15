@@ -9,7 +9,7 @@ import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
-import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
+import { openStackScriptDialog as openStackScriptDialogAction } from 'src/store/stackScriptDialog';
 import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
@@ -27,7 +27,7 @@ export interface Props {
 }
 
 interface DispatchProps {
-  openStackScriptDrawer: (stackScriptId: number) => void;
+  openStackScriptDialog: (stackScriptId: number) => void;
 }
 
 export type CombinedProps = Props &
@@ -49,14 +49,14 @@ export class StackScriptSelectionRow extends React.Component<
       description,
       stackScriptID,
       stackScriptUsername,
-      openStackScriptDrawer,
+      openStackScriptDialog,
       disabled,
     } = this.props;
 
     const renderLabel = () => {
-      const openDrawer = (event: React.MouseEvent<HTMLElement>) => {
+      const openDialog = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
-        openStackScriptDrawer(stackScriptID);
+        openStackScriptDialog(stackScriptID);
       };
       return (
         <Grid container alignItems="center" className={classes.selectionGrid}>
@@ -88,7 +88,7 @@ export class StackScriptSelectionRow extends React.Component<
               buttonType="secondary"
               className={classes.detailsButton}
               compact
-              onClick={openDrawer}
+              onClick={openDialog}
             >
               Show Details
             </Button>
@@ -126,8 +126,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   dispatch
 ) => {
   return {
-    openStackScriptDrawer: (stackScriptId: number) =>
-      dispatch(openStackScriptDrawerAction(stackScriptId)),
+    openStackScriptDialog: (stackScriptId: number) =>
+      dispatch(openStackScriptDialogAction(stackScriptId)),
   };
 };
 

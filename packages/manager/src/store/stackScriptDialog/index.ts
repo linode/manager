@@ -21,13 +21,13 @@ interface Close extends Action {
 type ActionCreator = (...args: any[]) => Action;
 
 // ACTION CREATORS
-export const openStackScriptDrawer: ActionCreator = (
+export const openStackScriptDialog: ActionCreator = (
   stackScriptId: number
 ): Open => ({
   type: OPEN,
   stackScriptId,
 });
-export const closeStackScriptDrawer: ActionCreator = (): Close => ({
+export const closeStackScriptDialog: ActionCreator = (): Close => ({
   type: CLOSE,
 });
 
