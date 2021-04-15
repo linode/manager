@@ -65,8 +65,12 @@ const styles = (theme: Theme) =>
       maxWidth: 150,
     },
     graphControls: {
-      marginTop: theme.spacing(),
-      marginLeft: theme.spacing(),
+      display: 'flex',
+      justifyContent: 'flex-end',
+      marginRight: theme.spacing(),
+      '&.MuiGrid-item': {
+        paddingBottom: 0,
+      },
     },
     graphGrids: {
       flexWrap: 'nowrap',
