@@ -30,6 +30,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
     headers,
     initialOrder,
     RowComponent,
+    emptyMessage,
   } = props;
 
   const _data = data ?? [];
@@ -62,6 +63,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
               loading={loading}
               error={error}
               lastUpdated={100}
+              emptyMessage={emptyMessage}
             >
               {normalizedData.map((thisEntity) => (
                 <RowComponent

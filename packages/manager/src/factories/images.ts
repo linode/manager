@@ -14,4 +14,5 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   type: 'image',
   vendor: null,
   expiry: null,
+  status: 'available',
 });

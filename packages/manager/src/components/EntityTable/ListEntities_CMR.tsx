@@ -24,6 +24,7 @@ export const ListEntities: React.FC<CombinedProps> = (props) => {
     RowComponent,
     toggleGroupByTag,
     isGroupedByTag,
+    emptyMessage,
   } = props;
 
   return (
@@ -57,6 +58,7 @@ export const ListEntities: React.FC<CombinedProps> = (props) => {
 
                   <TableBody>
                     <TableContentWrapper
+                      emptyMessage={emptyMessage}
                       length={paginatedAndOrderedData.length}
                       loading={loading}
                       error={error}

@@ -145,9 +145,30 @@ export const handlers = [
     return res(ctx.json(cachedTypes));
   }),
   rest.get('*/images', async (req, res, ctx) => {
-    const privateImages = imageFactory.buildList(0);
+    const privateImages = imageFactory.buildList(5, {
+      status: 'available',
+      type: 'manual',
+    });
+    const creatingImages = imageFactory.buildList(2, {
+      type: 'manual',
+      status: 'creating',
+    });
+    const pendingImages = imageFactory.buildList(5, {
+      status: 'pending_upload',
+      type: 'manual',
+    });
+    const automaticImages = imageFactory.buildList(5, {
+      type: 'automatic',
+      expiry: '2021-05-01',
+    });
     const publicImages = imageFactory.buildList(0, { is_public: true });
-    const images = [...privateImages, ...publicImages];
+    const images = [
+      ...automaticImages,
+      ...privateImages,
+      ...publicImages,
+      ...pendingImages,
+      ...creatingImages,
+    ];
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {

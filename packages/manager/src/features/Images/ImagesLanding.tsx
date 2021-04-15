@@ -1,7 +1,8 @@
-import { Image } from '@linode/api-v4/lib/images';
+import { Image, ImageStatus } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { partition } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -14,6 +15,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
@@ -36,6 +38,71 @@ import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  imageTable: { marginBottom: theme.spacing(3) },
+  imageTableHeader: {
+    padding: theme.spacing(),
+    marginLeft: theme.spacing(),
+  },
+  imageTableSubheader: {
+    marginTop: theme.spacing(),
+  },
+}));
+
+/**
+ * @todo remove conditional cell sizes when we're no longer relying on a flag here.
+ */
+const getHeaders = (
+  tableType: 'automatic' | 'manual',
+  flagEnabled: boolean = true
+): HeaderCell[] =>
+  [
+    {
+      label: 'Image',
+      dataColumn: 'label',
+      sortable: true,
+      widthPercent: flagEnabled ? 20 : 25,
+    },
+    flagEnabled
+      ? {
+          label: 'Status',
+          dataColumn: 'status',
+          sortable: true,
+          widthPercent: 15,
+          hideOnMobile: true,
+        }
+      : null,
+    {
+      label: 'Created',
+      dataColumn: 'created',
+      sortable: false,
+      widthPercent: flagEnabled ? 15 : 20,
+      hideOnMobile: true,
+    },
+    {
+      label: 'Size',
+      dataColumn: 'size',
+      sortable: true,
+      widthPercent: flagEnabled ? 15 : 20,
+    },
+    tableType === 'automatic'
+      ? {
+          label: 'Expires',
+          dataColumn: 'expires',
+          sortable: false,
+          widthPercent: 15,
+          hideOnMobile: true,
+        }
+      : null,
+    {
+      label: 'Action Menu',
+      visuallyHidden: true,
+      dataColumn: '',
+      sortable: false,
+      widthPercent: 35,
+    },
+  ].filter(Boolean) as HeaderCell[];
+
 interface ImageDrawerState {
   open: boolean;
   mode: DrawerMode;
@@ -52,6 +119,7 @@ interface ImageDialogState {
   image?: string;
   imageID?: string;
   error?: string;
+  status?: ImageStatus;
 }
 
 type CombinedProps = ImageDispatch &
@@ -80,43 +148,23 @@ const defaultDialogState = {
 export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
+  const classes = useStyles();
+
   const { imagesData, imagesLoading, imagesError, deleteImage } = props;
 
-  const headers: HeaderCell[] = [
-    {
-      label: 'Image',
-      dataColumn: 'label',
-      sortable: true,
-      widthPercent: 22,
-    },
-    {
-      label: 'Created',
-      dataColumn: 'created',
-      sortable: false,
-      widthPercent: 15,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Expires',
-      dataColumn: 'expires',
-      sortable: false,
-      widthPercent: 15,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Size',
-      dataColumn: 'size',
-      sortable: true,
-      widthPercent: 12,
-    },
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 35,
-    },
-  ];
+  /**
+   * Separate manual Images (created by the user, either from disk or from uploaded file)
+   * from automatic Images (created by the backend when a Linode is deleted).
+   *
+   * This is temporary until the API filtering for machine images is complete. Eventually,
+   * we should retire this code and use a React query for `is_mine` && `manual` and a separate
+   * query for `is_mine` && `automatic`.
+   */
+
+  const [manualImages, automaticImages] = partition(
+    (thisImage) => thisImage.type === 'manual',
+    imagesData ?? []
+  );
 
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(
     defaultDrawerState
@@ -126,13 +174,20 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     defaultDialogState
   );
 
-  const openDialog = (image: string, imageID: string) => {
+  const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
+  const dialogMessage =
+    dialogAction === 'cancel'
+      ? 'Are you sure you want to cancel this Image upload?'
+      : 'Are you sure you want to delete this Image?';
+
+  const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
       open: true,
       submitting: false,
       image,
       imageID,
       error: undefined,
+      status,
     });
   };
 
@@ -258,7 +313,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     return (
       <ActionsPanel>
         <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel>
-          Cancel
+          {dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'}
         </Button>
         <Button
           buttonType="primary"
@@ -267,7 +322,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           onClick={handleRemoveImage}
           data-qa-submit
         >
-          Delete Image
+          {dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'}
         </Button>
       </ActionsPanel>
     );
@@ -306,9 +361,28 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onDelete: openDialog,
   };
 
-  const imageRow: EntityTableRow<Image> = {
+  // @todo remove this check after Machine Images is in GA
+  // This is used instead of a feature flag, since there is no
+  // customer tag for this feature; if status is returned from the API,
+  // we want to include it in the table.
+  const machineImagesEnabled = imagesData.some((thisImage) =>
+    thisImage.hasOwnProperty('status')
+  );
+
+  const manualHeaders = getHeaders('manual', machineImagesEnabled);
+  const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
+
+  const manualImageRow: EntityTableRow<Image> = {
     Component: ImageRow,
-    data: imagesData ?? [],
+    data: manualImages,
+    loading: false,
+    lastUpdated: 100,
+    handlers,
+  };
+
+  const autoImageRow: EntityTableRow<Image> = {
+    Component: ImageRow,
+    data: automaticImages,
     loading: false,
     lastUpdated: 100,
     handlers,
@@ -383,18 +457,45 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         onAddNew={openForCreate}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
-      <Paper>
-        <EntityTable entity="image" row={imageRow} headers={headers} />
+      <Paper className={classes.imageTable}>
+        <Typography className={classes.imageTableHeader} variant="h3">
+          Manual Images
+        </Typography>
+        <EntityTable
+          entity="image"
+          row={manualImageRow}
+          headers={manualHeaders}
+          emptyMessage={'No Manual Images to display.'}
+        />
+      </Paper>
+      <Paper className={classes.imageTable}>
+        <div className={classes.imageTableHeader}>
+          <Typography variant="h3">Automatic Images</Typography>
+          <Typography className={classes.imageTableSubheader}>
+            These images are created automatically when a Linode is deleted.
+            They will be deleted after the indicated expiration date.
+          </Typography>
+        </div>
+        <EntityTable
+          entity="image"
+          row={autoImageRow}
+          headers={automaticHeaders}
+          emptyMessage={'No Automatic Images to display.'}
+        />
       </Paper>
       {renderImageDrawer()}
       <ConfirmationDialog
         open={dialog.open}
-        title={`Delete Image ${dialog.image}`}
+        title={
+          dialogAction === 'cancel'
+            ? 'Cancel Upload'
+            : `Delete Image ${dialog.image}`
+        }
         onClose={closeDialog}
         actions={getActions}
       >
         {dialog.error && <Notice error text={dialog.error} />}
-        <Typography>Are you sure you want to delete this Image?</Typography>
+        <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
     </React.Fragment>
   );

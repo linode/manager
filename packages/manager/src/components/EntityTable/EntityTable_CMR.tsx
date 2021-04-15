@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   entity: string;
   headers: HeaderCell[];
+  emptyMessage?: string;
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;
   row: EntityTableRow<any>;
@@ -43,6 +44,7 @@ export type CombinedProps = Props & PageyIntegrationProps;
 export const LandingTable: React.FC<CombinedProps> = (props) => {
   const {
     entity,
+    emptyMessage,
     headers,
     row,
     initialOrder,
@@ -63,6 +65,7 @@ export const LandingTable: React.FC<CombinedProps> = (props) => {
     handlers: row.handlers,
     toggleGroupByTag,
     isGroupedByTag,
+    emptyMessage,
   };
 
   if (row.request) {
