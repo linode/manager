@@ -47,7 +47,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
       </Hidden>
       <TableCell data-qa-image-size>
-        {isImageUpdating(event) ? 'N/A' : `${size} MB`}
+        {isImageUpdating(event) ? 'Pending' : `${size} MB`}
       </TableCell>
       <Hidden xsDown>
         {expiry ? (
