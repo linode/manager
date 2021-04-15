@@ -26,7 +26,7 @@ $ node --version
 
 ```bash
 $ npm install --global yarn --upgrade
-# 1.22.4
+# 1.22.10
 ```
 
 10. Navigate to the root directory of the repository, then start Cloud Manager and the JS client with `yarn up`.

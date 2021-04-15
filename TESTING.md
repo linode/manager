@@ -31,8 +31,8 @@ yarn test myFile.test.tsx
 yarn test src/some-folder
 ```
 
-Jest includes pattern matching out of the box, so you can also do things like run all tests whose filename
-contains "Linode" with
+Jest has built-in pattern matching, so you can also do things like run all tests whose filename
+contains "Linode" with:
 
 ```
 yarn test linode
