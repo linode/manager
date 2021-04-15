@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import SafeTabPanel from 'src/components/SafeTabPanel';
+import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList from 'src/components/TabLinkList';
 
 type CombinedProps = RouteComponentProps<{}>;
 
@@ -26,53 +23,32 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
     setDescription(value);
   };
 
-  const tabs = [
-    /* NB: These must correspond to the routes, inside the Switch */
+  const tabs: NavTab[] = [
     {
-      title: 'Create Image',
+      title: 'From Linode',
       routeName: `${props.match.url}/create-image`,
+      render: (
+        <CreateImageTab
+          label={label}
+          description={description}
+          changeLabel={handleSetLabel}
+          changeDescription={handleSetDescription}
+        />
+      ),
     },
     {
-      title: 'Upload Image',
+      title: 'From Uploaded Source',
       routeName: `${props.match.url}/upload-image`,
+      render: <ImageUpload />,
     },
   ];
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
-  };
 
   return (
     <>
       <DocumentTitleSegment segment="Create Image" />
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <CreateImageTab
-                label={label}
-                description={description}
-                changeLabel={handleSetLabel}
-                changeDescription={handleSetDescription}
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>
-              <ImageUpload />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
-      </Tabs>
+      <React.Suspense fallback={<SuspenseLoader />}>
+        <NavTabs tabs={tabs} />
+      </React.Suspense>
     </>
   );
 };

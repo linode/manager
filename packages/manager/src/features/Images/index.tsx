@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -38,6 +39,7 @@ export const ImagesRoutes: React.FC<Props> = (props) => {
         {machineImagesEnabled ? (
           <Route component={ImageCreate} path={`${path}/create`} />
         ) : null}
+        <Redirect to="/images" />
       </Switch>
     </React.Suspense>
   );

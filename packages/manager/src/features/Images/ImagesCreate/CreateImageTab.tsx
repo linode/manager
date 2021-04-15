@@ -36,6 +36,7 @@ const styles = (theme: Theme) =>
     root: {},
     helperText: {
       paddingTop: theme.spacing(1) / 2,
+      width: '70%',
     },
     container: {
       padding: theme.spacing(3),
