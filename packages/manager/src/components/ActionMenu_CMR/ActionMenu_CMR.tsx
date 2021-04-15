@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-items]': {
       padding: 0,
       minWidth: 200,
-      width: 'fit-content',
       background: '#3683dc',
       border: 'none',
       fontSize: 14,
