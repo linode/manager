@@ -39,13 +39,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   expiry: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    fontSize: '1rem',
   },
   entityTypeDisplay: {
     marginBottom: theme.spacing(),
   },
   summary: {
-    fontSize: '1rem',
     marginBottom: 4,
   },
   list: {
