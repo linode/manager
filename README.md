@@ -13,22 +13,15 @@ This repository is home to the [Linode Cloud Manager](https://cloud.linode.com) 
 
 ## Running Projects Within the Repository
 
-To get started running Cloud Manager locally, please [see the _Getting Started_ documentation.](GETTING_STARTED.md)
+To get started running Cloud Manager locally, please see the [_Getting Started_ guide](docs/GETTING_STARTED.md).
 
 ## Contributing
 
-If you already have your development environment set up, please read the [contributing guidelines](CONTRIBUTING.md) to get help in creating your first Pull Request.
-
-### I want to contribute to the JavaScript SDK
-
-Please check out the documentation in the [SDK directory](./packages/api-v4/README.md).
+If you already have your development environment set up, please read the [contributing guidelines](docs/CONTRIBUTING.md) to get help in creating your first Pull Request.
 
 ## Reaching Out
 
-You can submit feedback in two ways:
-
-1. Submit feedback to feedback@linode.com
-2. Create a GitHub Issue
+To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use feedback@linode.com
 
 ## License
 

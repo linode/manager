@@ -11,7 +11,7 @@ and it is still fine to write a class component if that works better for your si
 ### Function Component
 
 ```js
-export const Component: React.FC<Props> = props => {
+export const Component: React.FC<Props> = (props) => {
   const [count, setCount] = React.useState < number > 0;
 
   return <div>{count}</div>;
@@ -36,7 +36,7 @@ import Component from "./src/Component";
 ```js
 export class Component extends React.Component<CombinedProps, State> {
   state: State = {
-    count: 0
+    count: 0,
   };
 
   render() {
@@ -104,15 +104,15 @@ import { makeStyles, Theme } from "src/components/core/styles";
 const useStyles = makeStyles((theme: Theme) => ({
   message: {
     fontSize: "16px",
-    color: theme.color.red
-  }
+    color: theme.color.red,
+  },
 }));
 ```
 
 Inside the component, access these classes by calling `useStyles()`:
 
 ```js
-const Component: React.FC<{}> = props => {
+const Component: React.FC<{}> = (props) => {
   const classes = useStyles();
 
   return <div className={classes.message}>A message for you</div>;
@@ -124,12 +124,6 @@ const Component: React.FC<{}> = props => {
 - Utility classes (based off of [Tailwind CSS](https://tailwindcss.com) naming conventions) are located in `packages/manager/src/index.css`
 
 ## Avoid instance methods that could be made into components.
-
-Every time an instance of a component is created so are all the instance methods, just like
-renderContent in the following code. So this takes more CPU to create, more memory to store, and
-more CPU to tear down. This code smells because there's a function invocation that has no arguments.
-That screams side-effects. To correct this we simply extract the functionality into a new component
-passing the props as necessary.
 
 Before
 
@@ -208,10 +202,6 @@ const DataComponent = (props) => {
   return (...);
 }
 ```
-
-So now we have two separate and testable components. We've also done the type checking so inside the
-DataComponent, we don't have to worry about if there's no data or an empty array, we can just work
-with what we're provided!
 
 ## Abstraction
 
@@ -351,7 +341,7 @@ for this called `getAPIErrorOrDefault`.
 ```js
 import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
 
-apiRequest().catch(error => {
+apiRequest().catch((error) => {
   const apiError = getAPIErrorOrDefault(
     error, // If this is an array of API field errors, it will be returned unchanged.
     "Your Linode is hopelessly broken.", // If no field errors are present, an array consisting of an error with this reason is returned.
@@ -367,7 +357,7 @@ request, but it is used in many places throughout the app.
 ```js
 makeApiRequest()
   .then(doSomethingOnSuccess)
-  .catch(errorResponse => {
+  .catch((errorResponse) => {
     const fallBackMessage = "Oh no, something horrible happened!";
     const errorMessage = getAPIErrorOrDefault(errorResponse, fallbackMessage)[0]
       .reason;
@@ -387,7 +377,7 @@ API is considering are. To make sure that we catch these and show them to the us
 ```js
 import { getErrorMap } from "src/utilities/errorUtils";
 
-apiRequest().catch(error => {
+apiRequest().catch((error) => {
   const errorMap = getErrorMap(
     ["label", "region"], // Fields we want to check for
     error
@@ -412,15 +402,19 @@ console.log(errorMap);
 
 ### Paginating Things
 
-The first step to creating a paginated list is asking yourself one question:
-
-Is my data sourced from Redux state or is it being requested on `componentDidMount`?
-
-If your data is being sourced from Redux state, it's safe to assume that the data is being pre-loaded on app mount. But not just some of the data - ALL of the data. A pattern we have adopted is to request every single page of entities for data that we are storing in Redux. Because of this, there is a possibility that there may be more than 100 items in the slice of Redux state. Which leads us to the first solution...
-
 #### Paginating Data Sourced From Redux
 
-The first step in paginating things from Redux is to source the data
+To make sure the data you need is available, you can use the `useReduxLoad` hook:
+
+```js
+import { useReduxLoad } from 'src/hooks/useReduxLoad';
+
+...
+
+// _loading will be true until Images and Volumes have been requested
+const { _loading } = useReduxLoad(['images', 'volumes']);
+
+```
 
 ```js
 import { APIError } from "@linode/api-v4/lib/types";
@@ -433,7 +427,7 @@ interface ReduxStateProps {
   data: Volume[];
 }
 
-const MyComponent: React.FC<ReduxStateProps> = props => {
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
   return <div />;
 };
 
@@ -444,10 +438,10 @@ const mapStateToProps: MapStateToProps<
   {},
   /* global redux state */
   ApplicationState
-> = state => ({
+> = (state) => ({
   loading: state.__resources.volumes.loading,
   error: state.__resources.volumes.error,
-  volumes: state.__resources.volumes.items
+  volumes: state.__resources.volumes.items,
 });
 
 export default connected(mapStateToProps)(MyComponent);
@@ -456,7 +450,7 @@ export default connected(mapStateToProps)(MyComponent);
 Next, we need to leverage the `<Paginate />` render props Component, which has built-in pagination logic, so you don't have to worry about the heavy lifting
 
 ```js
-const MyComponent: React.FC<ReduxStateProps> = props => {
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -465,19 +459,17 @@ const MyComponent: React.FC<ReduxStateProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => <div />}
     </Paginate>
   );
 };
 ```
 
-Now we see that we have access to all the data, the current page, the page size, and helper functions to change page and page size.
-
-Finally, lets put it all together now with our `<PaginationFooter />` component
+The last piece is the `<PaginationFooter />` component:
 
 ```js
-const MyComponent: React.FC<ReduxStateProps> = props => {
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -486,13 +478,13 @@ const MyComponent: React.FC<ReduxStateProps> = props => {
         handlePageChange,
         handlePageSizeChange,
         page,
-        pageSize
+        pageSize,
       }) => (
         <React.Fragment>
           <Table aria-label="List of your Volumes">
             <TableHeader>My Volumes</TableHeader>
             <TableBody>
-              {paginatedData.map(eachVolume => {
+              {paginatedData.map((eachVolume) => {
                 return (
                   <TableRow>
                     <TableCell>{eachVolume.label}</TableCell>
@@ -516,83 +508,10 @@ const MyComponent: React.FC<ReduxStateProps> = props => {
 };
 ```
 
-#### Paginating Data requested in `componentDidMount()`
+#### Paginating Data Using API Pagination
 
-Paginating data this way is similar to the last approach with some differences. In this case, we'll be leveraging the `<Pagey />` higher-order component.
-
-The first step is to wrap your base component in the HOC and tell Pagey what request you want to fire when the page changes:
-
-```js
-import { Pagey, PaginationProps } from "src/components/Pagey";
-import { getInvoices } from "@linode/api-v4/lib/account";
-
-interface OtherProps {
-  someText: string;
-}
-
-const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
-  return <div />;
-};
-
-const paginated = Pagey((ownProps: OtherProps, params: any, filter: any) => {
-  return getInvoices(params, filter);
-});
-
-export default paginated(MyComponent);
-```
-
-Now we have access to the same props as before. Lets add in the rest of our markup
-
-```js
-const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
-  const {
-    data: myInvoices,
-    page,
-    pageSize,
-    loading,
-    error,
-    count,
-    handlePageChange,
-    handlePageSizeChange
-  } = props;
-
-  return (
-    <React.Fragment>
-      <Table aria-label="List of your Invoices">
-        <TableHeader>My Invoices</TableHeader>
-        <TableBody>
-          {myInvoices.map(eachInvoice => {
-            return (
-              <TableRow>
-                <TableCell>{eachInvoice.label}</TableCell>
-                <TableCell>{eachInvoice.amount}</TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-      <PaginationFooter
-        count={count}
-        page={page}
-        pageSize={pageSize}
-        handlePageChange={handlePageChange}
-        handleSizeChange={handlePageSizeChange}
-      />
-    </React.Fragment>
-  );
-};
-```
-
-Now, each time you change a page, the appropriate page will be requested. `<Pagey />` also gives you access to a bunch of other props that might help for other tasks you're attempting to accomplish, namely:
-
-| Prop Name         | Type                                                                       | Description                                                                                                                      |
-| ----------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| onDelete          | () => void                                                                 | Helper function that should be invoked when you're deleting items from the list. This will ensure no redundant requests are made |
-| order             | 'asc' or 'desc'                                                            | What order in which the data is being sorted.                                                                                    |
-| handleSearch      | (filter?: any) => void                                                     | Helper function to re-invoke the base request with new filters                                                                   |
-| searching         | boolean                                                                    | is the handleSeach Promise in-progress                                                                                           |
-| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) => void | Helper function to change the sort and sort order of the base request                                                            |
-| isSorting         | boolean                                                                    | is the handleOrderChange Promise in-progress                                                                                     |
+WIP; we now have mostly retired `<Pagey>` and use `src/hooks/usePagination` along with React Query to
+create a similar workflow to Redux based pagination.
 
 ### Toasts
 
@@ -615,10 +534,10 @@ interface Props extends InjectedNotistackProps {
    */
 }
 
-export const Example: React.FC<Props> = props => {
+export const Example: React.FC<Props> = (props) => {
   const handleClick = () => {
     props.enqueueSnackbar("this is a toast notification", {
-      onClick: () => alert("you clicked the toast!")
+      onClick: () => alert("you clicked the toast!"),
     });
   };
 
@@ -626,4 +545,14 @@ export const Example: React.FC<Props> = props => {
 };
 
 export default withSnackbar(Example);
+```
+
+There is also a hook version that can be used in function components:
+
+```js
+import { useSnackbar} from 'notistack';
+
+...
+
+const { enqueueSnackBar } = useSnackbar();
 ```
