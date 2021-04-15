@@ -26,7 +26,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
   const tabs: NavTab[] = [
     {
       title: 'From Linode',
-      routeName: `${props.match.url}/create-image`,
+      routeName: `${props.match.url}/from-linode`,
       render: (
         <CreateImageTab
           label={label}
@@ -38,7 +38,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
     },
     {
       title: 'From Uploaded Source',
-      routeName: `${props.match.url}/upload-image`,
+      routeName: `${props.match.url}/from-uploaded-source`,
       render: <ImageUpload />,
     },
   ];
