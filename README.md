@@ -13,11 +13,11 @@ This repository is home to the [Linode Cloud Manager](https://cloud.linode.com) 
 
 ## Running Projects Within the Repository
 
-To get started running Cloud Manager locally, please see the [_Getting Started_ guide](GETTING_STARTED.md).
+To get started running Cloud Manager locally, please see the [_Getting Started_ guide](docs/GETTING_STARTED.md).
 
 ## Contributing
 
-If you already have your development environment set up, please read the [contributing guidelines](CONTRIBUTING.md) to get help in creating your first Pull Request.
+If you already have your development environment set up, please read the [contributing guidelines](docs/CONTRIBUTING.md) to get help in creating your first Pull Request.
 
 ## Reaching Out
 
