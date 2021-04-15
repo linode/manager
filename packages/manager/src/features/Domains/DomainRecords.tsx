@@ -45,7 +45,7 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+} from 'src/containers/withFeatureFlagConsumer.container';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,

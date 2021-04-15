@@ -3,9 +3,10 @@ import {
   KubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import CPUIcon from 'src/assets/icons/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/disk.svg';
@@ -14,106 +15,132 @@ import MapPin from 'src/assets/icons/map-pin-icon.svg';
 import MiniKube from 'src/assets/icons/mini-kube.svg';
 import PriceIcon from 'src/assets/icons/price-icon.svg';
 import RamIcon from 'src/assets/icons/ram-sticks.svg';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
+import TagsPanel from 'src/components/TagsPanel/TagsPanelRedesigned';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
+import { useDialog } from 'src/hooks/useDialog';
+import { deleteCluster } from 'src/store/kubernetes/kubernetes.requests';
+import { ThunkDispatch } from 'src/store/types';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 import { getTotalClusterPrice } from '../kubeUtils';
 import KubeConfigDrawer from './KubeConfigDrawer';
+import KubernetesDialog from './KubernetesDialog';
 
-type ClassNames =
-  | 'root'
-  | 'item'
-  | 'label'
-  | 'column'
-  | 'iconsSharedStyling'
-  | 'kubeconfigSection'
-  | 'kubeconfigElements'
-  | 'kubeconfigFileText'
-  | 'kubeconfigIcons'
-  | 'tagsSection'
-  | 'mainGridContainer'
-  | 'iconSharedOuter'
-  | 'iconTextOuter';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginBottom: theme.spacing(3),
-      padding: `${theme.spacing(2) + 4}px ${
-        theme.spacing(2) + 4
-      }px ${theme.spacing(3)}px`,
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: `${theme.spacing(2) + 4}px ${
+      theme.spacing(2) + 4
+    }px ${theme.spacing(3)}px`,
+  },
+  mainGridContainer: {
+    position: 'relative',
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between',
     },
-    mainGridContainer: {
-      [theme.breakpoints.up('lg')]: {
-        justifyContent: 'space-between',
+  },
+  item: {
+    '&:last-of-type': {
+      paddingBottom: 0,
+    },
+    paddingBottom: theme.spacing(1),
+  },
+  label: {
+    fontWeight: 'bold',
+    marginBottom: `${theme.spacing(1) - 3}px`,
+  },
+  column: {},
+  iconsSharedStyling: {
+    height: 24,
+    width: 24,
+    objectFit: 'contain',
+  },
+  kubeconfigSection: {
+    marginTop: `${theme.spacing() + 2}px`,
+  },
+  kubeconfigElements: {
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.palette.primary.main,
+  },
+  kubeconfigFileText: {
+    color: theme.cmrTextColors.linkActiveLight,
+    cursor: 'pointer',
+    marginRight: theme.spacing(1),
+  },
+  kubeconfigIcons: {
+    color: theme.cmrTextColors.linkActiveLight,
+    cursor: 'pointer',
+    height: 16,
+    width: 16,
+    margin: `0 ${theme.spacing(1)}px`,
+    objectFit: 'contain',
+  },
+  tagsSection: {
+    display: 'flex',
+    height: '100%',
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'flex-end',
+      textAlign: 'right',
+    },
+  },
+  iconSharedOuter: {
+    flexBasis: '28%',
+    textAlign: 'center',
+  },
+  iconTextOuter: {
+    flexBasis: '72%',
+    minWidth: 115,
+  },
+  tags: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignSelf: 'stretch',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    '&.MuiGrid-item': {
+      paddingBottom: 0,
+    },
+    // Tags Panel wrapper
+    '& > div:last-child': {
+      marginTop: 2,
+      marginBottom: 0,
+      width: '100%',
+    },
+    [theme.breakpoints.up('lg')]: {
+      '& .MuiChip-root': {
+        marginRight: 0,
+        marginLeft: 4,
       },
-    },
-    item: {
-      '&:last-of-type': {
-        paddingBottom: 0,
-      },
-      paddingBottom: theme.spacing(1),
-    },
-    label: {
-      marginBottom: `${theme.spacing(1) - 3}px`,
-      fontWeight: 'bold',
-    },
-    column: {},
-    iconsSharedStyling: {
-      width: 24,
-      height: 24,
-      objectFit: 'contain',
-    },
-    kubeconfigSection: {
-      marginTop: `${theme.spacing() + 2}px`,
-    },
-    kubeconfigElements: {
-      color: theme.palette.primary.main,
-      display: 'flex',
-      alignItems: 'center',
-    },
-    kubeconfigFileText: {
-      cursor: 'pointer',
-      color: theme.cmrTextColors.linkActiveLight,
-      marginRight: theme.spacing(1),
-    },
-    kubeconfigIcons: {
-      color: theme.cmrTextColors.linkActiveLight,
-      cursor: 'pointer',
-      width: 16,
-      height: 16,
-      objectFit: 'contain',
-      margin: `0 ${theme.spacing(1)}px`,
-    },
-    tagsSection: {
-      display: 'flex',
-      [theme.breakpoints.up('lg')]: {
+      // Add a Tag button
+      '& > div:first-child': {
         justifyContent: 'flex-end',
-        textAlign: 'right',
+        marginTop: theme.spacing(5),
+      },
+      // Tags Panel wrapper
+      '& > div:last-child': {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'flex-end',
       },
     },
-    iconSharedOuter: {
-      textAlign: 'center',
-      flexBasis: '28%',
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
     },
-    iconTextOuter: {
-      flexBasis: '72%',
-      minWidth: 115,
-    },
-  });
+  },
+  deleteButton: {
+    position: 'absolute',
+    right: theme.spacing(),
+  },
+}));
 
 interface Props {
   cluster: ExtendedCluster;
@@ -124,8 +151,6 @@ interface Props {
   kubeconfigError?: string;
   handleUpdateTags: (updatedTags: string[]) => Promise<KubernetesCluster>;
 }
-
-type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 
 const renderEndpoint = (
   endpoint: string | null,
@@ -143,24 +168,38 @@ const renderEndpoint = (
   }
 };
 
-export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const {
-    classes,
     cluster,
     endpoint,
     endpointError,
     endpointLoading,
-    enqueueSnackbar,
     kubeconfigAvailable,
     kubeconfigError,
     handleUpdateTags,
   } = props;
+  const classes = useStyles();
+  const { push } = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
+
+  // Deletion handlers
+  //
+  // NB: this is using dispatch directly because I don't want to
+  // add re-render issues to our useKubernetesClusters hook, especially
+  // since we're going to switch to queries for all of these soon.
+  const dispatch: ThunkDispatch = useDispatch();
+  const _deleteCluster = () =>
+    dispatch(deleteCluster({ clusterID: cluster.id })).then(() =>
+      push('/kubernetes/clusters')
+    );
+
+  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
+    _deleteCluster
+  );
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
@@ -390,14 +429,22 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = (
 
           {setKubeconfigDisplay()}
 
-          <Grid item xs={12} lg={4}>
-            <Paper className={classes.tagsSection}>
-              <TagsPanelRedesigned
-                tags={cluster.tags}
-                updateTags={handleUpdateTags}
-              />
-            </Paper>
+          <Grid item className={classes.tags} xs={12} lg={4}>
+            <TagsPanel
+              align="right"
+              tags={cluster.tags}
+              updateTags={handleUpdateTags}
+            />
           </Grid>
+
+          <Button
+            buttonType="secondary"
+            className={classes.deleteButton}
+            onClick={() => openDialog(cluster.id)}
+            superCompact
+          >
+            Delete Cluster
+          </Button>
         </Grid>
       </Paper>
 
@@ -409,16 +456,17 @@ export const KubeSummaryPanel: React.FunctionComponent<CombinedProps> = (
         error={drawerError}
         loading={drawerLoading}
       />
+      <KubernetesDialog
+        open={dialog.isOpen}
+        loading={dialog.isLoading}
+        error={dialog.error}
+        clusterLabel={cluster.label}
+        clusterPools={cluster.node_pools}
+        onClose={closeDialog}
+        onDelete={() => submitDialog(cluster.id)}
+      />
     </React.Fragment>
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  styled,
-  withSnackbar
-);
-
-export default enhanced(KubeSummaryPanel);
+export default React.memo(KubeSummaryPanel);

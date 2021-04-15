@@ -38,7 +38,6 @@ const renderActions = (
       <Button
         buttonType="primary"
         disabled={disabled}
-        destructive
         loading={loading}
         onClick={onDelete}
         data-qa-confirm
