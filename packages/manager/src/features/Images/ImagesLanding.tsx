@@ -458,9 +458,14 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
       <Paper className={classes.imageTable}>
-        <Typography className={classes.imageTableHeader} variant="h3">
-          Manual Images
-        </Typography>
+        <div className={classes.imageTableHeader}>
+          <Typography variant="h3">Manual Images</Typography>
+          <Typography className={classes.imageTableSubheader}>
+            {machineImagesEnabled
+              ? `These images are created from a Linode's disk or by uploading your own image.`
+              : `These images are created from a Linode's disk.`}
+          </Typography>
+        </div>
         <EntityTable
           entity="image"
           row={manualImageRow}
