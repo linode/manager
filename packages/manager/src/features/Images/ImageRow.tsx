@@ -3,6 +3,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
@@ -42,12 +43,23 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden xsDown>
         {status ? (
-          <TableCell>{capitalizeAllWords(status.replace('_', ' '))}</TableCell>
+          <TableCell>
+            {status === 'creating' ? (
+              <ProgressDisplay
+                text="Creating"
+                progress={progressFromEvent(event)}
+              />
+            ) : (
+              capitalizeAllWords(status.replace('_', ' '))
+            )}
+          </TableCell>
         ) : null}
         <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
       </Hidden>
       <TableCell data-qa-image-size>
-        {isImageUpdating(event) ? 'Pending' : `${size} MB`}
+        {status === 'pending_upload' || isImageUpdating(event)
+          ? 'Pending'
+          : `${size} MB`}
       </TableCell>
       <Hidden xsDown>
         {expiry ? (
@@ -74,6 +86,26 @@ export const isImageUpdating = (e?: Event) => {
   }
   return (
     e?.action === 'disk_imagize' && ['scheduled', 'started'].includes(e.status)
+  );
+};
+
+const progressFromEvent = (e?: Event) => {
+  return e?.status === 'started' && e?.percent_complete
+    ? e.percent_complete
+    : undefined;
+};
+
+const ProgressDisplay: React.FC<{
+  progress: undefined | number;
+  text: string;
+}> = (props) => {
+  const { progress, text } = props;
+  const displayProgress = progress ? `${progress}%` : `scheduled`;
+
+  return (
+    <Typography variant="body1">
+      {text}: {displayProgress}
+    </Typography>
   );
 };
 
