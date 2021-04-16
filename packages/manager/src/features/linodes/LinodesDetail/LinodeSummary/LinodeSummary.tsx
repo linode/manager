@@ -21,7 +21,6 @@ import {
   WithTheme,
   withTheme,
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
@@ -67,11 +66,11 @@ const styles = (theme: Theme) =>
     },
     graphControls: {
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginTop: theme.spacing(0.5),
-      paddingLeft: theme.spacing(),
-      paddingRight: theme.spacing(),
+      justifyContent: 'flex-end',
+      marginRight: theme.spacing(),
+      '&.MuiGrid-item': {
+        paddingBottom: 0,
+      },
     },
     graphGrids: {
       flexWrap: 'nowrap',
@@ -388,25 +387,20 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <Paper>
         <Grid container className={`${classes.root} m0`}>
-          <Grid item xs={12}>
-            <div className={classes.graphControls}>
-              <Typography variant="h2" className={classes.labelRangeSelect}>
-                Metrics Dashboard
-              </Typography>
-              <Select
-                options={this.rangeSelectOptions}
-                defaultValue={this.rangeSelectOptions[0]}
-                onChange={this.handleChartRangeChange}
-                name="chartRange"
-                id="chartRange"
-                small
-                label="Select Time Range"
-                hideLabel
-                className={classes.chartSelect}
-                isClearable={false}
-                data-qa-item="chartRange"
-              />
-            </div>
+          <Grid item className={classes.graphControls} xs={12}>
+            <Select
+              options={this.rangeSelectOptions}
+              defaultValue={this.rangeSelectOptions[0]}
+              onChange={this.handleChartRangeChange}
+              name="chartRange"
+              id="chartRange"
+              small
+              label="Select Time Range"
+              hideLabel
+              className={classes.chartSelect}
+              isClearable={false}
+              data-qa-item="chartRange"
+            />
           </Grid>
           {!isBareMetalInstance ? (
             <Grid container item xs={12} className={classes.graphGrids}>
