@@ -629,7 +629,6 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Peppermint',
-<<<<<<< HEAD
     description: `Open source alternative to paid ticket management solutions with essential features including a streamlined task list, project and client management, and ticket prioritization.`,
     summary:'Simple yet scalable open source ticket management.',
     related_guides: [
