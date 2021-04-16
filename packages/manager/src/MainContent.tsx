@@ -336,13 +336,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             <Route path="/domains" component={Domains} />
                             <Route path="/managed" component={Managed} />
                             <Route path="/longview" component={Longview} />
-                            <Route
-                              exact
-                              strict
-                              path="/images"
-                              component={Images}
-                            />
-                            <Redirect path="/images*" to="/images" />
+                            <Route path="/images" component={Images} />
                             <Route
                               path="/stackscripts"
                               component={StackScripts}

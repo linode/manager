@@ -161,6 +161,10 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         {
           display: 'Images',
           href: '/images',
+          activeLinks: [
+            '/images/create/create-image',
+            '/images/create/upload-image',
+          ],
           icon: <Image />,
         },
       ],
