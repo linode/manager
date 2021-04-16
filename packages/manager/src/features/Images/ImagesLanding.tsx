@@ -37,6 +37,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: { marginBottom: theme.spacing(3) },
@@ -149,6 +150,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
   const classes = useStyles();
+  const { account } = useAccountManagement();
 
   const { imagesData, imagesLoading, imagesError, deleteImage } = props;
 
@@ -448,13 +450,21 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     return renderEmpty();
   }
 
+  const onCreateButtonClick = () => {
+    if (account.data?.capabilities.includes('Machine Images')) {
+      return props.history.push('/images/create');
+    }
+
+    return openForCreate();
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
       <LandingHeader
         title="Images"
         entity="Image"
-        onAddNew={openForCreate}
+        onAddNew={onCreateButtonClick}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
       <Paper className={classes.imageTable}>
