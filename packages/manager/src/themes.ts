@@ -321,6 +321,8 @@ const darkThemeOptions = {
       containedSecondary: {
         color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
+          backgroundColor: '#f5f8ff',
+          border: '1px solid #d7dfed',
           color: cmrTextColors.linkActiveLight,
         },
         '&:active': {

@@ -572,7 +572,8 @@ const themeDefaults: ThemeDefaults = () => {
           backgroundColor: 'transparent',
           color: cmrTextColors.linkActiveLight,
           '&:hover, &:focus': {
-            backgroundColor: 'transparent !important',
+            backgroundColor: '#f5f8ff',
+            border: '1px solid #d7dfed',
             color: cmrTextColors.linkActiveLight,
           },
           '&:active': {
