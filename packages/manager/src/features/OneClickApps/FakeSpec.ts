@@ -17,8 +17,14 @@ export interface Doc {
 export const oneClickApps: OCA[] = [
   {
     name: 'Ant Media Server',
+<<<<<<< HEAD
     description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
     summary:'A reliable, flexible and scalable video streaming solution.',
+=======
+    description: `A reliable, flexible and scalable video streaming solution.`,
+    summary:
+      'Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.',
+>>>>>>> fd65d73cf0a114bc04a2496db7bc7ce542a46f01
     related_guides: [
       {
         title: 'Deploy Ant Media Server with Marketplace Apps',
@@ -610,8 +616,14 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Owncast',
+<<<<<<< HEAD
     description: `A live streaming and chat server for use with existing popular broadcasting software.`,
     summary:'The standalone “Twitch in a Box” open source streaming and chat solution.',
+=======
+    description: `The standalone “Twitch in a Box” open source streaming and chat solution.`,
+    summary:
+      'A live streaming and chat server for use with existing popular broadcasting software.',
+>>>>>>> fd65d73cf0a114bc04a2496db7bc7ce542a46f01
     related_guides: [
       {
         title: 'Deploy Owncast with Marketplace Apps',
@@ -629,8 +641,14 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Peppermint',
+<<<<<<< HEAD
     description: `Open source alternative to paid ticket management solutions with essential features including a streamlined task list, project and client management, and ticket prioritization.`,
     summary:'Simple yet scalable open source ticket management.',
+=======
+    description: `Simple yet scalable open source ticket management.`,
+    summary:
+      'Open source alternative to paid ticket management solutions with essential features including a streamlined task list, project and client management, and ticket prioritization.',
+>>>>>>> fd65d73cf0a114bc04a2496db7bc7ce542a46f01
     related_guides: [
       {
         title: 'Deploy Peppermint with Marketplace Apps',
@@ -1112,7 +1130,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy VS Code Server with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-vscodeserver-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploy-vscode-with-marketplace-apps/',
       },
     ],
     related_info: [
