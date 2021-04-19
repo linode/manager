@@ -3,7 +3,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -25,9 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(3),
   },
   linode: {
-    marginBottom: theme.spacing(2),
-  },
-  divider: {
     marginBottom: theme.spacing(2),
   },
 }));
@@ -63,16 +59,13 @@ export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
       {success && <Notice success text={success} />}
       {!loading && (
         <>
-          <Paper className={classes.root}>
-            <TPAProviders authType={authType} />
-          </Paper>
+          <TPAProviders authType={authType} />
 
           {!thirdPartyEnabled && (
             <Paper className={classes.root}>
               <Typography className={classes.linode} variant="h3">
                 Linode Authentication
               </Typography>
-              <Divider className={classes.divider} />
               <ResetPassword username={username} />
               <TwoFactor
                 twoFactor={twoFactor}

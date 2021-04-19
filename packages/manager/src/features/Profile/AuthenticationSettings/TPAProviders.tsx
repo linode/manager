@@ -1,43 +1,49 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
+import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
+import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import LinodeLogo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
+import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { LOGIN_ROOT } from 'src/constants';
 import { ProviderOptions } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 import TPADialog from './TPADialog';
-import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
-import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  tpa: {
-    marginBottom: theme.spacing(),
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(3),
   },
   copy: {
-    lineHeight: 1.43,
-    marginBottom: theme.spacing(3),
-    maxWidth: 970,
+    lineHeight: '1.25rem',
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(2),
+    maxWidth: 1080,
   },
   providers: {
-    '& button': {
-      border: `1px solid ${theme.palette.divider}`,
-      borderRadius: 1,
-      backgroundColor: theme.bg.offWhiteDT,
-      minHeight: 70,
-      paddingRight: theme.spacing(3) - 4,
-      paddingLeft: theme.spacing(3) - 4,
-      width: '100%',
-      [theme.breakpoints.down('xs')]: {
-        marginLeft: 0,
-      },
+    marginBottom: 0,
+    width: 'calc(100% + 24px)',
+  },
+  provider: {
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: 1,
+    backgroundColor: theme.bg.offWhiteDT,
+    minHeight: 70,
+    paddingRight: theme.spacing(3) - 4,
+    paddingLeft: theme.spacing(3) - 4,
+    width: 'calc(100% - 8px)',
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: 0,
     },
-    '& button:hover': {
+    '&:hover': {
       backgroundColor: theme.color.grey6,
     },
     '& .MuiButton-label': {
@@ -67,15 +73,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.normal,
     marginLeft: theme.spacing() - 4,
   },
-  enabledDetails: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(),
-    marginLeft: theme.spacing(),
-  },
   notice: {
     fontFamily: theme.font.bold,
     fontSize: '0.875rem',
-    marginBottom: `${theme.spacing(2)}px !important`,
+    margin: `${theme.spacing(2)}px 0 !important`,
   },
 }));
 
@@ -86,9 +87,9 @@ interface Props {
 type CombinedProps = Props;
 
 const icons: Record<TPAProvider, any> = {
+  password: null,
   google: GoogleIcon,
   github: GitHubIcon,
-  password: null,
 };
 
 export const TPAProviders: React.FC<CombinedProps> = (props) => {
@@ -99,7 +100,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
   const thirdPartyEnabled = props.authType !== 'password';
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
-  const [provider, setProvider] = React.useState<ProviderOptions>(
+  const [provider, setProvider] = React.useState<ProviderOptions | undefined>(
     providers[0].name
   );
 
@@ -109,109 +110,119 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Typography className={classes.tpa} variant="h3">
-        Log-In Method
-      </Typography>
-      <Typography className={classes.copy}>
-        You can use your Linode credentials or another provider such as Google
-        or GitHub to log in to your Linode account. If you select a provider
-        below all aspects of logging in, such as passwords and Two-Factor
-        Authentication (TFA), are managed through this provider. You may use
-        only one provider at a time.
-      </Typography>
-      <Grid container className={classes.providers}>
-        {providers.map((thisProvider) => {
-          const Icon = icons[thisProvider.name];
-          return (
-            <Grid item xs={12} sm={6} md={4} key={thisProvider.displayName}>
-              <Button
-                className={
-                  thirdPartyEnabled && props.authType === thisProvider.name
-                    ? classes.enabled
-                    : ''
-                }
-                onClick={() => {
-                  setProvider(thisProvider.name);
-                  setDialogOpen(true);
-                }}
-                disabled={thirdPartyEnabled}
-              >
-                <div>
-                  <Icon className={classes.providerIcon} />
-                </div>
-                <div className={classes.providerWrapper}>
-                  <div>
-                    {thisProvider.displayName}
-                    {thirdPartyEnabled &&
-                      props.authType === thisProvider.name && (
-                        <span className={classes.enabledText}>(Enabled)</span>
-                      )}
-                  </div>
-                  {thirdPartyEnabled &&
-                    props.authType === thisProvider.name && <EnabledIcon />}
-                </div>
-              </Button>
-            </Grid>
-          );
-        })}
-        <Grid item xs={12} sm={6} md={4}>
-          <Button
-            className={!thirdPartyEnabled ? classes.enabled : ''}
-            onClick={() => {
-              window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener');
-            }}
-            disabled={!thirdPartyEnabled}
-          >
-            <div>
-              <LinodeLogo className={classes.providerIcon} />
-            </div>
-            <div className={classes.providerWrapper}>
+      <Paper className={classes.root}>
+        <Typography variant="h3">Log-In Method</Typography>
+        <Typography className={classes.copy}>
+          You can use your Linode credentials or another provider such as Google
+          or GitHub to log in to your Linode account. More information is
+          availible in{' '}
+          <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
+            How to Enable Third Party Authentication on Your Linode Account
+          </Link>
+          . We strongly recommend setting up Two-Factor Authentication (TFA).
+        </Typography>
+        <Grid container className={classes.providers}>
+          <Grid item xs={12} sm={6} md={4}>
+            <Button
+              className={classnames({
+                [classes.provider]: true,
+                [classes.enabled]: !thirdPartyEnabled,
+              })}
+              onClick={() => {
+                setProvider(undefined);
+                setDialogOpen(true);
+              }}
+              disabled={!thirdPartyEnabled}
+            >
               <div>
-                Linode
-                {!thirdPartyEnabled && (
-                  <span className={classes.enabledText}>(Enabled)</span>
-                )}
+                <LinodeLogo className={classes.providerIcon} />
               </div>
-              {!thirdPartyEnabled && <EnabledIcon />}
-            </div>
-          </Button>
+              <div className={classes.providerWrapper}>
+                <div>
+                  Linode
+                  {!thirdPartyEnabled && (
+                    <span className={classes.enabledText}>(Enabled)</span>
+                  )}
+                </div>
+                {!thirdPartyEnabled && <EnabledIcon />}
+              </div>
+            </Button>
+          </Grid>
+
+          {providers.map((thisProvider) => {
+            const Icon = icons[thisProvider.name];
+            return (
+              <Grid item xs={12} sm={6} md={4} key={thisProvider.displayName}>
+                <Button
+                  className={classnames({
+                    [classes.provider]: true,
+                    [classes.enabled]:
+                      thirdPartyEnabled && props.authType === thisProvider.name,
+                  })}
+                  onClick={() => {
+                    setProvider(thisProvider.name);
+                    setDialogOpen(true);
+                  }}
+                >
+                  <div>
+                    <Icon className={classes.providerIcon} />
+                  </div>
+                  <div className={classes.providerWrapper}>
+                    <div>
+                      {thisProvider.displayName}
+                      {thirdPartyEnabled &&
+                        props.authType === thisProvider.name && (
+                          <span className={classes.enabledText}>(Enabled)</span>
+                        )}
+                    </div>
+                    {thirdPartyEnabled &&
+                      props.authType === thisProvider.name && <EnabledIcon />}
+                  </div>
+                </Button>
+              </Grid>
+            );
+          })}
         </Grid>
+      </Paper>
 
-        {thirdPartyEnabled && (
-          <div className={classes.enabledDetails}>
-            <Notice className={classes.notice} warning>
-              Third-Party Authentication via {currentProvider?.displayName} is
-              enabled on your account.
-            </Notice>
-            <Typography variant="body1" className={classes.copy}>
-              Your login credentials are currently managed by{' '}
-              {currentProvider?.displayName}. If you need to reset your
-              password, please visit the{' '}
-              <ExternalLink
-                hideIcon
-                link={currentProvider?.href ?? ''}
-                text={`${currentProvider?.displayName}` + ` website`}
-              />
-              .
-            </Typography>
-            <Typography variant="body1" className={classes.copy}>
-              To remove the current Third-Party Authentication (TPA) from your
-              account and allow you to log in with Linode credentials, click on
-              the Linode button above.
-              <br />
-              We&apos;ll send you an e-mail with instructions on how to reset
-              your password.
-            </Typography>
-          </div>
-        )}
+      {thirdPartyEnabled && (
+        <Paper className={classes.root}>
+          <Typography variant="h3">
+            {currentProvider?.displayName} Authentication
+          </Typography>
+          <Notice className={classes.notice} warning>
+            Your login credentials are currently managed via{' '}
+            {currentProvider?.displayName}.
+          </Notice>
+          <Typography variant="body1" className={classes.copy}>
+            If you need to reset your password or set up Two-Factor
+            Authentication (TFA), please visit the{' '}
+            <ExternalLink
+              hideIcon
+              link={currentProvider?.href ?? ''}
+              text={`${currentProvider?.displayName}` + ` website`}
+            />
+            .
+          </Typography>
+          <Typography
+            variant="body1"
+            className={classes.copy}
+            style={{ marginBottom: 8 }}
+          >
+            To disable {currentProvider?.displayName} authentication and log in
+            using your Linode credentials, click the button above. We&apos;ll
+            send you an e-mail with instructions on how to reset your password.
+          </Typography>
+        </Paper>
+      )}
 
-        <TPADialog
-          open={dialogOpen}
-          loading={false}
-          onClose={() => setDialogOpen(false)}
-          provider={provider}
-        />
-      </Grid>
+      <TPADialog
+        open={dialogOpen}
+        loading={false}
+        onClose={() => setDialogOpen(false)}
+        currentProvider={currentProvider}
+        provider={provider}
+      />
     </>
   );
 };

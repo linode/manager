@@ -6,7 +6,7 @@ import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
-import { ProviderOptions } from 'src/featureFlags';
+import { Provider, ProviderOptions } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles(() => ({
@@ -25,7 +25,8 @@ interface Props {
   open: boolean;
   error?: string;
   loading: boolean;
-  provider: ProviderOptions;
+  currentProvider?: Provider;
+  provider?: ProviderOptions;
   onClose: () => void;
 }
 
@@ -35,41 +36,47 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const { open, error, loading, provider, onClose } = props;
+  const { open, error, loading, currentProvider, provider, onClose } = props;
 
   const providers = flags.tpaProviders ?? [];
 
   const displayName =
     providers.find((thisProvider) => thisProvider.name === provider)
-      ?.displayName || '';
+      ?.displayName || 'Linode';
 
   return (
     <ConfirmationDialog
       className={classes.dialog}
       open={open}
-      title="Change Log-in Method?"
+      title={`Change Login Method to ${displayName}?`}
       onClose={onClose}
-      actions={() => renderActions(loading, provider, displayName, onClose)}
+      actions={() => renderActions(loading, onClose, provider)}
     >
       {error && <Notice error text={error} />}
       <Typography className={classes.copy} variant="body1">
-        You will disable your current log-in and be asked to reset your Linode
-        password. You can then use your Linode credentials or select another
-        provider. Whichever provider you select will manage all aspects of
-        logging in, such as passwords and Two-Factor Authentication (TFA).
+        This will disable your {currentProvider?.displayName ?? 'Linode'} login.
       </Typography>
     </ConfirmationDialog>
   );
 };
 
+const changeLogin = (provider?: ProviderOptions) => {
+  return provider === undefined
+    ? window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener')
+    : window.open(
+        `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
+        '_blank',
+        'noopener'
+      );
+};
+
 const renderActions = (
   loading: boolean,
-  provider: ProviderOptions,
-  displayName: string,
-  onClose: () => void
+  onClose: () => void,
+  provider?: ProviderOptions
 ) => {
   return (
-    <ActionsPanel style={{ padding: 0 }}>
+    <ActionsPanel className="p0">
       <Button
         buttonType="cancel"
         onClick={onClose}
@@ -84,16 +91,12 @@ const renderActions = (
         loading={loading}
         onClick={() => {
           onClose();
-          window.open(
-            `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
-            '_blank',
-            'noopener'
-          );
+          changeLogin(provider);
         }}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Change Log-in
+        Change Login
       </Button>
     </ActionsPanel>
   );
