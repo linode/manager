@@ -1,0 +1,64 @@
+{
+  "name": "@linode/validation",
+  "version": "0.1.0",
+  "description": "Yup validation schemas for use with the Linode APIv4",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
+    "test": "jest --config jestconfig.json",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
+    "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
+    "precommit": "lint-staged"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linode/manager/tree/develop/packages/validation"
+  },
+  "dependencies": {
+    "@types/yup": "^0.26.22",
+    "ipaddr.js": "^2.0.0",
+    "yup": "^0.27.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.2",
+    "@babel/plugin-proposal-class-properties": "^7.10.1",
+    "@babel/plugin-proposal-object-rest-spread": "^7.10.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-typescript": "^7.10.1",
+    "@types/jest": "^26.0.13",
+    "@types/node": "^12.7.1",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "concurrently": "^4.1.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-ramda": "^2.5.1",
+    "eslint-plugin-sonarjs": "^0.5.0",
+    "jest": "~26.4.2",
+    "lint-staged": "^9.4.2",
+    "npm-dts-webpack-plugin": "^1.2.1",
+    "prettier": "~2.2.1",
+    "ts-jest": "^24.1.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0"
+  },
+  "keywords": [
+    "linode",
+    "api",
+    "validation"
+  ],
+  "lint-staged": {
+    "*.{ts,tsx,js}": [
+      "prettier --write",
+      "eslint --ext .js,.ts,.tsx",
+      "git add"
+    ],
+    ".{ts,tsx}": [
+      "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
+    ]
+  },
+  "author": "Linode LLC",
+  "license": "Apache-2.0"
+}
