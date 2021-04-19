@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - ci/validation
   pull_request:
 
 jobs:

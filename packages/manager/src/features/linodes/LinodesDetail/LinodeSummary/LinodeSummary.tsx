@@ -21,7 +21,6 @@ import {
   WithTheme,
   withTheme,
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
@@ -50,43 +49,54 @@ type ClassNames =
   | 'chartSelect'
   | 'graphControls'
   | 'graphGrids'
-  | 'headerOuter'
+  | 'grid'
   | 'labelRangeSelect';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      paddingBottom: theme.spacing(3),
       width: '100%',
     },
     chart: {
-      position: 'relative',
-      paddingTop: theme.spacing(2),
-      paddingLeft: theme.spacing(3),
+      paddingTop: theme.spacing(),
     },
     chartSelect: {
       maxWidth: 150,
     },
     graphControls: {
       display: 'flex',
-      alignItems: 'center',
-      marginTop: theme.spacing(0.5),
-      paddingLeft: theme.spacing(),
+      justifyContent: 'flex-end',
+      marginRight: theme.spacing(),
+      '&.MuiGrid-item': {
+        paddingBottom: 0,
+      },
     },
     graphGrids: {
       flexWrap: 'nowrap',
       margin: 0,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down(1100)]: {
         flexWrap: 'wrap',
       },
     },
-    headerOuter: {
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-        justifyContent: 'space-between',
+    grid: {
+      backgroundColor: theme.bg.offWhiteDT,
+      border: 'solid 1px #eeeeee',
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing(),
+      '&.MuiGrid-item': {
+        padding: theme.spacing(2),
+      },
+      '& h2': {
+        fontSize: '1rem',
+      },
+      [theme.breakpoints.down(1100)]: {
+        marginBottom: theme.spacing(2),
       },
     },
     labelRangeSelect: {
-      paddingRight: '1em',
+      fontSize: '1rem',
+      paddingRight: theme.spacing(2),
     },
   });
 
@@ -118,7 +128,7 @@ type CombinedProps = Props &
   WithImages &
   WithStyles<ClassNames>;
 
-const chartHeight = 240;
+const chartHeight = 160;
 
 const statsFetchInterval = 30000;
 
@@ -377,36 +387,31 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <Paper>
         <Grid container className={`${classes.root} m0`}>
-          <Grid item xs={12}>
-            <div className={classes.graphControls}>
-              <Typography variant="h2" className={classes.labelRangeSelect}>
-                Resource Allocation
-              </Typography>
-              <Select
-                options={this.rangeSelectOptions}
-                defaultValue={this.rangeSelectOptions[0]}
-                onChange={this.handleChartRangeChange}
-                name="chartRange"
-                id="chartRange"
-                small
-                label="Select Time Range"
-                hideLabel
-                className={classes.chartSelect}
-                isClearable={false}
-                data-qa-item="chartRange"
-              />
-            </div>
+          <Grid item className={classes.graphControls} xs={12}>
+            <Select
+              options={this.rangeSelectOptions}
+              defaultValue={this.rangeSelectOptions[0]}
+              onChange={this.handleChartRangeChange}
+              name="chartRange"
+              id="chartRange"
+              small
+              label="Select Time Range"
+              hideLabel
+              className={classes.chartSelect}
+              isClearable={false}
+              data-qa-item="chartRange"
+            />
           </Grid>
           {!isBareMetalInstance ? (
             <Grid container item xs={12} className={classes.graphGrids}>
-              <Grid item xs={12}>
+              <Grid item className={classes.grid} xs={12}>
                 <StatsPanel
                   title="CPU (%)"
                   renderBody={this.renderCPUChart}
                   {...chartProps}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item className={classes.grid} xs={12}>
                 <StatsPanel
                   title="Disk IO (blocks/s)"
                   renderBody={this.renderDiskIOChart}

@@ -72,6 +72,11 @@ export const baseApps = {
   '691621': 'Cloudron',
   '691622': 'OpenLiteSpeed',
   '692092': 'Secure Your Server',
+  '741206': 'CyberPanel',
+  '741207': 'Yacht',
+  '741208': 'Zabbix',
+  '774829': 'ServerWand',
+  '781317': 'Valheim',
 };
 
 const oneClickFilter = [

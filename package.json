@@ -39,12 +39,7 @@
     "cy:run": "yarn workspace linode-manager cy:run",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
-    "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
-    "docker:cy": "docker build -t cloudcy -f Dockerfile-e2e . && docker run --rm cloudcy",
-    "docker:sb": "docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb",
-    "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
-    "docker:serve": "docker run --rm --name www -p 3000:80 -v $(pwd)/packages/manager/build:/usr/share/nginx/html -v $(pwd)/nginx-e2e.conf:/etc/nginx/conf.d/default.conf:ro -d nginx",
-    "docker:dev": "docker run --rm -v $(pwd):/usr/src/ -w /usr/src/ -p 3000:3000 node:10-slim yarn up"
+    "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap"
   },
   "resolutions": {
     "handlebars": "^4.4.3",
