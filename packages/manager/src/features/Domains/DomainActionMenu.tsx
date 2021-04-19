@@ -2,8 +2,20 @@ import { DomainStatus } from '@linode/api-v4/lib/domains';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
-import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme,
+} from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+
+const useStyles = makeStyles(() => ({
+  button: {
+    justifyContent: 'flex-start',
+    minWidth: 66,
+  },
+}));
 
 export interface Handlers {
   onRemove: (domain: string, id: number) => void;
@@ -24,9 +36,15 @@ interface Props extends Handlers {
   status: DomainStatus;
 }
 
+interface ExtendedAction extends Action {
+  className?: string;
+}
+
 type CombinedProps = Props;
 
 export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
     domain,
     id,
@@ -52,7 +70,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
     onClone(domain, id);
   };
 
-  const actions: Action[] = [
+  const actions = [
     {
       title: 'Edit',
       onClick: () => {
@@ -61,6 +79,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
     },
     {
       title: status === 'active' ? 'Disable' : 'Enable',
+      className: classes.button,
       onClick: () => {
         onDisableOrEnable(
           status === 'active' ? 'disable' : 'enable',
@@ -81,7 +100,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
         handleRemove();
       },
     },
-  ];
+  ] as ExtendedAction[];
 
   // Index at which non-inline actions begin. Our convention: place actions that are inline (at non-mobile/non-tablet viewports) at start of the array.
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
@@ -96,6 +115,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
             <InlineMenuAction
               key={action.title}
               actionText={action.title}
+              className={action.className}
               onClick={action.onClick}
             />
           );

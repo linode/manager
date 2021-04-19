@@ -19,8 +19,8 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
-import { dcDisplayNames, REFRESH_INTERVAL } from 'src/constants';
-import regionsContainer from 'src/containers/regions.container';
+import { REFRESH_INTERVAL } from 'src/constants';
+import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
@@ -97,7 +97,7 @@ interface State {
   appInstancesLoading: boolean;
   appInstancesError?: string;
   disabledClasses?: LinodeTypeClass[];
-  attachedVLANLabel: string;
+  attachedVLANLabel: string | null;
   vlanIPAMAddress: string | null;
 }
 
@@ -245,11 +245,16 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState(defaultState);
   };
 
-  setImageID = (id: string) => {
-    /** allows for de-selecting an image */
-    if (id === this.state.selectedImageID) {
-      return this.setState({ selectedImageID: undefined });
+  setImageID = (id: string | undefined) => {
+    if (typeof id === 'undefined') {
+      /** In this case we also clear any VLAN input, since VLANs are incompatible with empty Linodes */
+      return this.setState({
+        selectedImageID: undefined,
+        attachedVLANLabel: '',
+        vlanIPAMAddress: '',
+      });
     }
+
     return this.setState({ selectedImageID: id });
   };
 
@@ -262,7 +267,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ selectedRegionID: id, disabledClasses });
   };
 
-  setTypeID = (id: string) => this.setState({ selectedTypeID: id });
+  setTypeID = (id: string) => {
+    if (/metal/.test(id)) {
+      // VLANs and backups don't work with bare metal;
+      // reset those values.
+      this.setState({
+        selectedTypeID: id,
+        vlanIPAMAddress: '',
+        attachedVLANLabel: '',
+        backupsEnabled: false,
+      });
+    } else {
+      this.setState({
+        selectedTypeID: id,
+      });
+    }
+  };
 
   setLinodeID = (id: number, diskSize?: number) => {
     if (id !== this.state.selectedLinodeID) {
@@ -587,11 +607,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (!selectedRegionID) {
       return;
     }
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
-    const selectedRegion = this.props.regionsData!.find(
+
+    const selectedRegion = this.props.regionsData.find(
       (region) => region.id === selectedRegionID
     );
 
@@ -726,12 +743,6 @@ interface DispatchProps {
 }
 
 const connected = connect(mapStateToProps, { upsertLinode });
-
-const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
-  regionsLoading: loading,
-  regionsError: error,
-}));
 
 export default recompose<CombinedProps, {}>(
   deepCheckRouter(

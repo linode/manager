@@ -1,4 +1,4 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeType } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -14,7 +14,7 @@ const LinodeNetworking = React.lazy(
   () => import('./LinodeNetworking/LinodeNetworking')
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
-const LinodeAdvanced = React.lazy(
+const LinodeConfigurations = React.lazy(
   () => import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
 );
 const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
@@ -33,8 +33,12 @@ type CombinedProps = ContextProps &
 const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const {
     linodeLabel,
+    linodeType,
     match: { url },
   } = props;
+
+  // Bare metal Linodes have a very different detail view
+  const isBareMetalInstance = linodeType?.class === 'metal';
 
   const tabs = [
     {
@@ -48,14 +52,17 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
     {
       routeName: `${url}/storage`,
       title: 'Storage',
+      hidden: isBareMetalInstance,
     },
     {
       routeName: `${url}/configurations`,
       title: 'Configurations',
+      hidden: isBareMetalInstance,
     },
     {
       routeName: `${url}/backup`,
       title: 'Backups',
+      hidden: isBareMetalInstance,
     },
     {
       routeName: `${url}/activity`,
@@ -65,7 +72,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       routeName: `${url}/settings`,
       title: 'Settings',
     },
-  ];
+  ].filter((thisTab) => !thisTab.hidden);
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: location.pathname }));
@@ -82,6 +89,8 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
     props.history.push(tabs[index].routeName);
   };
 
+  let idx = 0;
+
   return (
     <>
       <DocumentTitleSegment
@@ -93,32 +102,35 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
 
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
-              <SafeTabPanel index={0}>
-                <LinodeSummary />
+              <SafeTabPanel index={idx++}>
+                <LinodeSummary isBareMetalInstance={isBareMetalInstance} />
               </SafeTabPanel>
 
-              <SafeTabPanel index={1}>
+              <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
               </SafeTabPanel>
 
-              <SafeTabPanel index={2}>
-                <LinodeStorage />
-              </SafeTabPanel>
+              {isBareMetalInstance ? null : (
+                <>
+                  <SafeTabPanel index={idx++}>
+                    <LinodeStorage />
+                  </SafeTabPanel>
+                  <SafeTabPanel index={idx++}>
+                    <LinodeConfigurations />
+                  </SafeTabPanel>
 
-              <SafeTabPanel index={3}>
-                <LinodeAdvanced />
-              </SafeTabPanel>
+                  <SafeTabPanel index={idx++}>
+                    <LinodeBackup />
+                  </SafeTabPanel>
+                </>
+              )}
 
-              <SafeTabPanel index={4}>
-                <LinodeBackup />
-              </SafeTabPanel>
-
-              <SafeTabPanel index={5}>
+              <SafeTabPanel index={idx++}>
                 <LinodeActivity />
               </SafeTabPanel>
 
-              <SafeTabPanel index={6}>
-                <LinodeSettings />
+              <SafeTabPanel index={idx++}>
+                <LinodeSettings isBareMetalInstance={isBareMetalInstance} />
               </SafeTabPanel>
             </TabPanels>
           </React.Suspense>
@@ -133,6 +145,7 @@ interface ContextProps {
   linodeConfigs: Config[];
   linodeLabel: string;
   linodeRegion: string;
+  linodeType?: LinodeType | null | undefined;
   readOnly: boolean;
 }
 
@@ -143,6 +156,7 @@ const enhanced = compose<CombinedProps, {}>(
     linodeConfigs: linode._configs,
     linodeLabel: linode.label,
     linodeRegion: linode.region,
+    linodeType: linode._type,
     readOnly: linode._permissions === 'read_only',
   }))
 );

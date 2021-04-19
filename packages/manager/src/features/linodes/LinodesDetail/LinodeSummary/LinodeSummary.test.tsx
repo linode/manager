@@ -7,6 +7,7 @@ import { LinodeSummary } from './LinodeSummary';
 describe('LinodeSummary', () => {
   const wrapper = shallow(
     <LinodeSummary
+      isBareMetalInstance={false}
       mostRecentEventTime=""
       events={[]}
       inProgressEvents={[]}
@@ -15,11 +16,12 @@ describe('LinodeSummary', () => {
       linodeData={linodes[0]}
       timezone={'America/Los_Angeles'}
       classes={{
+        root: '',
         chart: '',
         graphControls: '',
         graphGrids: '',
+        grid: '',
         chartSelect: '',
-        headerOuter: '',
         labelRangeSelect: '',
       }}
       theme={light()}

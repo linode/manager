@@ -14,12 +14,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
-import SelectStackScriptPanel_CMR from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel_CMR';
-import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
+import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -70,9 +66,7 @@ type InnerProps = Props &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
-export type CombinedProps = FeatureFlagConsumerProps &
-  InnerProps &
-  WithStyles<ClassNames>;
+export type CombinedProps = InnerProps & WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
   handleSelectStackScript = (
@@ -151,39 +145,21 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           item
           className={`${classes.main} mlMain py0`}
         >
-          {this.props.flags.cmr ? (
-            <SelectStackScriptPanel_CMR
-              data-qa-select-stackscript
-              error={hasErrorFor('stackscript_id')}
-              header={header}
-              selectedId={selectedStackScriptID}
-              selectedUsername={selectedStackScriptUsername}
-              updateFor={[selectedStackScriptID, errors]}
-              onSelect={this.handleSelectStackScript}
-              publicImages={filterImagesByType(imagesData, 'public')}
-              resetSelectedStackScript={() => null}
-              disabled={userCannotCreateLinode}
-              request={request}
-              category={this.props.category}
-              isOnCreate
-            />
-          ) : (
-            <SelectStackScriptPanel
-              data-qa-select-stackscript
-              error={hasErrorFor('stackscript_id')}
-              header={header}
-              selectedId={selectedStackScriptID}
-              selectedUsername={selectedStackScriptUsername}
-              updateFor={[selectedStackScriptID, errors]}
-              onSelect={this.handleSelectStackScript}
-              publicImages={filterImagesByType(imagesData, 'public')}
-              resetSelectedStackScript={() => null}
-              disabled={userCannotCreateLinode}
-              request={request}
-              category={this.props.category}
-              isOnCreate
-            />
-          )}
+          <SelectStackScriptPanel
+            data-qa-select-stackscript
+            error={hasErrorFor('stackscript_id')}
+            header={header}
+            selectedId={selectedStackScriptID}
+            selectedUsername={selectedStackScriptUsername}
+            updateFor={[selectedStackScriptID, errors]}
+            onSelect={this.handleSelectStackScript}
+            publicImages={filterImagesByType(imagesData, 'public')}
+            resetSelectedStackScript={() => null}
+            disabled={userCannotCreateLinode}
+            request={request}
+            category={this.props.category}
+            isOnCreate
+          />
           {!userCannotCreateLinode &&
             userDefinedFields &&
             userDefinedFields.length > 0 && (
@@ -230,7 +206,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           )}
         </Grid>
 
-        <StackScriptDrawer />
+        <StackScriptDialog />
       </React.Fragment>
     );
   }
@@ -238,7 +214,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, InnerProps>(
-  styled,
-  withFeatureFlags
-)(FromStackScriptContent);
+export default compose<CombinedProps, InnerProps>(styled)(
+  FromStackScriptContent
+);

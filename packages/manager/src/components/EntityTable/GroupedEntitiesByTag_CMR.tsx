@@ -141,7 +141,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
                                   handleSizeChange={handlePageSizeChange}
                                   pageSize={pageSize}
                                   page={page}
-                                  eventCategory={'domains landing'}
+                                  eventCategory={'Entity table'}
                                   showAll
                                 />
                               </TableCell>

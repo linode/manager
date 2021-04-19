@@ -1,3 +1,9 @@
+export type ImageStatus =
+  | 'available'
+  | 'creating'
+  | 'deleted'
+  | 'pending_upload';
+
 export interface Image {
   id: string;
   label: string;
@@ -11,6 +17,7 @@ export interface Image {
   vendor: string | null;
   deprecated: boolean;
   expiry: null | string;
+  status: ImageStatus;
 }
 
 export interface CreateImagePayload {

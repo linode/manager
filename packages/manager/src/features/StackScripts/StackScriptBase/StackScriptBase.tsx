@@ -29,7 +29,7 @@ import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
 import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
-import StackScriptTableHead from '../Partials/StackScriptTableHead_CMR';
+import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
   generateCatchAllFilter,
@@ -571,6 +571,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                 colCount={isSelecting ? 1 : 4}
                 noOverflow={true}
                 tableClass={classes.table}
+                style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
                 border
               >
                 <StackScriptTableHead

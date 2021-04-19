@@ -1,14 +1,21 @@
-import { Config, Disk, Interface, Kernel } from '@linode/api-v4/lib/linodes';
+import {
+  Config,
+  Disk,
+  Interface,
+  Kernel,
+  LinodeConfigCreationData,
+} from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
-import { pathOr, repeat } from 'ramda';
+import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -23,6 +30,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
@@ -33,6 +41,9 @@ import DeviceSelection, {
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
+import { queryKey as vlansQueryKey } from 'src/queries/vlans';
+import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -67,6 +78,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.cmrTextColors.tableHeader,
       order: 3,
     },
+  },
+  helpIcon: {
+    color: theme.cmrTextColors.tableHeader,
+  },
+  tooltip: {
+    maxWidth: 350,
+  },
+  formGroup: {
+    alignItems: 'flex-start',
   },
 }));
 
@@ -171,6 +191,27 @@ const pathsOptions = [
   { label: '/dev/sdh', value: '/dev/sdh' },
 ];
 
+const interfacesToState = (interfaces?: Interface[]) => {
+  if (!interfaces || interfaces.length === 0) {
+    return defaultInterfaceList;
+  }
+  return padInterfaceList(interfaces);
+};
+
+const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
+  if (!interfaces || interfaces.length === 0) {
+    return [];
+  }
+  return equals(interfaces, defaultInterfaceList)
+    ? // In this case, where eth0 is set to public interface
+      // and no other interfaces are specified, the API prefers
+      // to receive an empty array.
+      []
+    : (interfaces.filter(
+        (thisInterface) => thisInterface.purpose !== 'none'
+      ) as Interface[]);
+};
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
@@ -185,6 +226,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const flags = useFlags();
+  const regions = useRegionsQuery().data ?? [];
   const { account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(1);
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
@@ -192,16 +234,25 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.data?.capabilities ?? [];
-  const showVlans = capabilities.includes('Vlans') && flags.vlans;
+  const regionHasVLANS = regions.some(
+    (thisRegion) =>
+      thisRegion.id === linodeRegion &&
+      thisRegion.capabilities.includes('Vlans')
+  );
+  const showVlans =
+    capabilities.includes('Vlans') && flags.vlans && regionHasVLANS;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
-    validateOnChange: true,
-    validateOnMount: true,
+    validateOnChange: false,
+    validateOnMount: false,
+    validate: (values) => onValidate(values),
     onSubmit: (values) => onSubmit(values),
   });
 
-  const convertStateToData = (state: EditableFields) => {
+  const convertStateToData = (
+    state: EditableFields
+  ): LinodeConfigCreationData => {
     const {
       label,
       devices,
@@ -223,15 +274,39 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       comments,
       /** if the user did not toggle the limit radio button, send a value of 0 */
       memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
+      interfaces: interfacesToPayload(interfaces),
       run_level,
       virt_mode,
-      // Remove empty interfaces from the payload
-      interfaces: interfaces.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
-      ) as Interface[],
       helpers,
       root_device,
     };
+  };
+
+  // This validation runs BEFORE Yup schema validation. This validation logic
+  // is specific to Cloud Manager, which is why it is run separately (not in the
+  // shared Validation package).
+  const onValidate = (values: EditableFields) => {
+    const errors: any = {};
+    const { interfaces } = values;
+
+    const eth1 = interfaces[1];
+    const eth2 = interfaces[2];
+
+    if (eth1?.purpose === 'none' && eth2.purpose !== 'none') {
+      errors.interfaces =
+        'You cannot assign an interface to eth2 without an interface assigned to eth1.';
+      return errors;
+    }
+
+    // The API field is called "label" and thus the Validation package error
+    // message is "Label is required." Our field in Cloud is called "VLAN".
+    interfaces.forEach((thisInterface, idx) => {
+      if (thisInterface.purpose === 'vlan' && !thisInterface.label) {
+        errors[`interfaces[${idx}].label`] = 'VLAN is required.';
+      }
+    });
+
+    return errors;
   };
 
   const onSubmit = (values: EditableFields) => {
@@ -239,10 +314,22 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     formik.setSubmitting(true);
 
-    const configData = convertStateToData(values);
+    const configData = convertStateToData(values) as LinodeConfigCreationData;
+
+    if (!regionHasVLANS) {
+      delete configData.interfaces;
+    }
 
     const handleSuccess = () => {
       formik.setSubmitting(false);
+      // If there's any chance a VLAN changed here, make sure our query data is up to date
+      if (
+        configData.interfaces?.some(
+          (thisInterface) => thisInterface.purpose === 'vlan'
+        )
+      ) {
+        queryClient.invalidateQueries('vlans');
+      }
       onClose();
     };
 
@@ -274,6 +361,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   React.useEffect(() => {
     if (open) {
+      // Ensure VLANs are fresh.
+      queryClient.invalidateQueries(vlansQueryKey);
+
       /**
        * If config is defined, we're editing. Set the state
        * to the values of the config.
@@ -299,9 +389,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             virt_mode: config.virt_mode,
             helpers: config.helpers,
             root_device: config.root_device,
-            interfaces: padInterfaceList(
-              config?.interfaces ?? defaultInterfaceList
-            ),
+            interfaces: interfacesToState(config.interfaces),
             setMemoryLimit:
               config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
           },
@@ -443,6 +531,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   VM Mode
                 </FormLabel>
                 <RadioGroup
+                  className={classes.formGroup}
                   aria-label="virt_mode"
                   name="virt_mode"
                   value={values.virt_mode}
@@ -507,6 +596,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   Run Level
                 </FormLabel>
                 <RadioGroup
+                  className={classes.formGroup}
                   aria-label="run_level"
                   name="run_level"
                   value={values.run_level}
@@ -553,6 +643,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   Memory Limit
                 </FormLabel>
                 <RadioGroup
+                  className={classes.formGroup}
                   aria-label="memory_limit"
                   name="setMemoryLimit"
                   value={values.setMemoryLimit}
@@ -611,7 +702,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 Add a Device
               </Button>
 
-              <FormControl fullWidth>
+              <FormControl className={classes.formGroup} fullWidth>
                 <FormControlLabel
                   label="Use Custom Root"
                   name="useCustomRoot"
@@ -658,11 +749,42 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             {showVlans ? (
               <Grid item xs={12} className={classes.section}>
-                <Typography variant="h3">Network Interfaces</Typography>
-                {values.interfaces.map((thisInterface, idx, arr) =>
-                  // Magic so that we show interfaces that have been filled plus one more
-                  arr[idx - 1]?.purpose !== 'none' ||
-                  thisInterface.purpose !== 'none' ? (
+                <Box display="flex" alignItems="center">
+                  <Typography variant="h3">Network Interfaces</Typography>
+                  <HelpIcon
+                    className={classes.helpIcon}
+                    classes={{ tooltip: classes.tooltip }}
+                    interactive
+                    text={
+                      <Typography>
+                        Configure the network that a selected interface will
+                        connect to (either &quot;Public Internet&quot; or a
+                        VLAN). Each Linode can have up to three Network
+                        Interfaces. For more information, see our{' '}
+                        <ExternalLink
+                          text="Network Interfaces guide"
+                          link="https://linode.com/docs/products/networking/vlans/guides/linode-network-interfaces/"
+                          hideIcon
+                        />
+                        .
+                      </Typography>
+                    }
+                  />
+                </Box>
+                {formik.errors.interfaces ? (
+                  <Notice error text={formik.errors.interfaces as string} />
+                ) : null}
+                <Typography>
+                  VLAN is currently in beta and is subject to the terms of the{' '}
+                  <ExternalLink
+                    text="Early Adopter Testing Agreement"
+                    link="https://www.linode.com/legal-eatp/"
+                    hideIcon
+                  />
+                  .
+                </Typography>
+                {values.interfaces.map((thisInterface, idx) => {
+                  return (
                     <InterfaceSelect
                       key={`eth${idx}-interface`}
                       slotNumber={idx}
@@ -679,8 +801,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                         handleInterfaceChange(idx, newInterface)
                       }
                     />
-                  ) : null
-                )}
+                  );
+                })}
               </Grid>
             ) : null}
 
@@ -697,7 +819,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 ]}
                 fullWidth
               >
-                <FormGroup>
+                <FormGroup className={classes.formGroup}>
                   <FormControlLabel
                     label="Enable distro helper"
                     name="helpers.distro"
@@ -787,7 +909,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   disabled={readOnly}
                   loading={formik.isSubmitting}
                 >
-                  {linodeConfigId ? 'Edit' : 'Add'} Configuration
+                  {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
                 </Button>
                 <Button
                   buttonType="secondary"

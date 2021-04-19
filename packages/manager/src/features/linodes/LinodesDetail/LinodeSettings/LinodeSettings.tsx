@@ -27,10 +27,14 @@ const styles = (theme: Theme) =>
     },
   });
 
-type CombinedProps = WithStyles<ClassNames>;
+interface Props {
+  isBareMetalInstance: boolean;
+}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const LinodeSettings: React.FC<CombinedProps> = (props) => {
-  const { classes } = props;
+  const { classes, isBareMetalInstance } = props;
 
   return (
     <LinodeDetailContextConsumer>
@@ -56,11 +60,12 @@ const LinodeSettings: React.FC<CombinedProps> = (props) => {
             </Typography>
             <LinodeSettingsLabelPanel />
             <LinodeSettingsPasswordPanel
-              linodeLabel={linode.label}
+              isBareMetalInstance={isBareMetalInstance}
               linodeId={linode.id}
               linodeStatus={linode.status}
             />
             <LinodeSettingsAlertsPanel
+              isBareMetalInstance={isBareMetalInstance}
               linodeId={linode.id}
               linodeLabel={linode.label}
               linodeAlerts={linode.alerts}

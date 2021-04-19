@@ -1,4 +1,5 @@
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import * as classnames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { isEmpty, pathOr } from 'ramda';
@@ -91,6 +92,7 @@ const styles = (theme: Theme) =>
       paddingRight: theme.spacing(),
     },
     gpuGuideLink: {
+      fontSize: '0.9em',
       '& a': {
         color: theme.cmrTextColors.linkActiveLight,
       },
@@ -131,6 +133,9 @@ const getDedicated = (types: ExtendedType[]) =>
 const getGPU = (types: ExtendedType[]) =>
   types.filter((t) => /gpu/.test(t.class));
 
+const getMetal = (types: ExtendedType[]) =>
+  types.filter((t) => t.class === 'metal');
+
 type CombinedProps = Props & WithStyles<ClassNames> & RegionsProps;
 
 export class SelectPlanPanel extends React.Component<CombinedProps> {
@@ -141,12 +146,12 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     return disabledClasses.includes(thisClass);
   };
 
-  getRegionsWithGPU = () => {
+  getRegionsWithCapability = (capability: Capabilities) => {
     const regions = this.props.regionsData ?? [];
-    const withGPU = regions
-      .filter((thisRegion) => thisRegion.capabilities.includes('GPU Linodes'))
+    const withCapability = regions
+      .filter((thisRegion) => thisRegion.capabilities.includes(capability))
       .map((thisRegion) => dcDisplayNames[thisRegion.id]);
-    return arrayToList(withGPU);
+    return arrayToList(withCapability);
   };
 
   renderSelection = (type: ExtendedType, idx: number) => {
@@ -330,6 +335,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
+    const metal = getMetal(types);
 
     const tabOrder: LinodeTypeClass[] = [];
 
@@ -394,7 +400,8 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       const programInfo = this.getDisabledClass('gpu') ? (
         <>
           GPU instances are not available in the selected region. Currently
-          these plans are only available in {this.getRegionsWithGPU()}.
+          these plans are only available in{' '}
+          {this.getRegionsWithCapability('GPU Linodes')}.
         </>
       ) : (
         <div className={classes.gpuGuideLink}>{gpuPlanText()}</div>
@@ -416,6 +423,41 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         title: 'GPU',
       });
       tabOrder.push('gpu');
+    }
+
+    if (!isEmpty(metal)) {
+      const programInfo = this.getDisabledClass('metal') ? (
+        // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass
+        // so this branch will never run.
+        <Typography>
+          Bare Metal instances are not available in the selected region.
+          Currently these plans are only available in{' '}
+          {this.getRegionsWithCapability('Bare Metal')}.
+        </Typography>
+      ) : (
+        <Typography className={classes.gpuGuideLink}>
+          Bare Metal Linodes have limited availability and may not be available
+          at the time of your request. Some additional verification may be
+          required to access these services.
+        </Typography>
+      );
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Notice warning>{programInfo}</Notice>
+              <Typography data-qa-gpu className={classes.copy}>
+                Bare Metal Linodes give you full, dedicated access to a single
+                physical machine. Some services, including backups, VLANs, and
+                disk management, are not available with these plans.
+              </Typography>
+              {this.renderPlanContainer(metal)}
+            </>
+          );
+        },
+        title: 'Bare Metal',
+      });
+      tabOrder.push('metal');
     }
 
     return [tabs, tabOrder];
@@ -471,5 +513,5 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
   styled,
-  withRegions()
+  withRegions
 )(SelectPlanPanel);

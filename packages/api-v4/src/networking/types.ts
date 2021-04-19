@@ -30,3 +30,17 @@ export interface IPRange {
   route_target: string | null;
   prefix?: number;
 }
+
+export interface IPSharingPayload {
+  ips: string[];
+  linode_id: number;
+}
+
+export interface IPAssignment {
+  address: string;
+  linode_id: number;
+}
+export interface IPAssignmentPayload {
+  region: string;
+  assignments: IPAssignment[];
+}

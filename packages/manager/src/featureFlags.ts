@@ -32,8 +32,8 @@ export interface Flags {
   firewallBetaNotification: boolean;
   entityTransfers: boolean;
   bareMetal: boolean;
-  tpaGoogle: boolean;
   tpaProviders: Provider[];
+  machineImages: boolean;
 }
 
 type PromotionalOfferFeature =
