@@ -6,12 +6,10 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanel from 'src/components/TagsPanel';
 import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
 import summaryPanelStyles, {
   StyleProps,
 } from 'src/containers/SummaryPanels.styles';
-import useFlags from 'src/hooks/useFlags';
 import DeleteDomain from './DeleteDomain';
 import DomainRecords from './DomainRecords';
 
@@ -44,9 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(),
     },
   },
-  tagPanel: {
-    maxWidth: 500,
-  },
+  tagPanel: {},
 }));
 
 interface Props {
@@ -62,7 +58,6 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
   const { domain, records, updateRecords, handleUpdateTags, classes } = props;
   const hookClasses = useStyles();
   const history = useHistory();
-  const flags = useFlags();
 
   return (
     <Grid container className={hookClasses.root}>
@@ -84,21 +79,14 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
             Tags
           </Typography>
           <div className={hookClasses.tagPanel}>
-            {flags.cmr ? (
-              <TagsPanelRedesigned
-                tags={domain.tags}
-                updateTags={handleUpdateTags}
-              />
-            ) : (
-              <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
-            )}
+            <TagsPanelRedesigned
+              align="left"
+              tags={domain.tags}
+              updateTags={handleUpdateTags}
+            />
           </div>
         </Paper>
-        <div
-          className={`${hookClasses.tagPanel} ${
-            flags.cmr && hookClasses.cmrSpacing
-          }`}
-        >
+        <div className={`${hookClasses.tagPanel} ${hookClasses.cmrSpacing}`}>
           <DeleteDomain
             domainId={domain.id}
             domainLabel={domain.domain}

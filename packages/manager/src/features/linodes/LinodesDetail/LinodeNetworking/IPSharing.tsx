@@ -16,10 +16,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import withLinodes, {
-  DispatchProps,
-} from 'src/containers/withLinodes.container';
+import { useLinodesQuery } from 'src/queries/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -70,21 +67,59 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithLinodesProps & DispatchProps;
+type CombinedProps = Props;
+
+const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
+  const choiceLabels = {};
+  const ipChoices = flatten<string>(
+    linodes
+      .filter((thisLinode: Linode) => {
+        // Filter out the current Linode
+        return thisLinode.id !== linodeID;
+      })
+      .map((thisLinode: Linode) => {
+        // side-effect of this mapping is saving the labels
+        thisLinode.ipv4.forEach((ip: string) => {
+          choiceLabels[ip] = thisLinode.label;
+        });
+        return thisLinode.ipv4;
+      })
+  );
+  /**
+   * NB: We were previously filtering private IP addresses out at this point,
+   * but it seems that the API (or our infra) doesn't care about this.
+   */
+  return {
+    ipChoices,
+    ipChoiceLabels: choiceLabels,
+  };
+};
 
 const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  // We should fix this, but for now we're relying on having all Linodes in a given region
-  const { _loading } = useReduxLoad(['linodes']);
   const {
+    linodeID,
     linodeIPs,
+    linodeRegion,
     readOnly,
-    ipChoices,
     open,
     onClose,
-    ipChoiceLabels,
     linodeSharedIPs,
   } = props;
+
+  const { data, isLoading } = useLinodesQuery(
+    {},
+    { region: linodeRegion },
+    open // Only run the query if the modal is open
+  );
+
+  const linodes = Object.values(data?.linodes ?? []);
+
+  const { ipChoices, ipChoiceLabels } = React.useMemo(
+    () => getIPChoicesAndLabels(linodeID, linodes),
+    [linodeID, linodes]
+  );
+
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState<
     string | undefined
@@ -119,7 +154,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const remainingChoices = (selectedIP: string): string[] => {
-    return props.ipChoices.filter((ip: string) => {
+    return ipChoices.filter((ip: string) => {
       const hasBeenSelected = ipsToShare.includes(ip);
       return ip === selectedIP || !hasBeenSelected;
     });
@@ -157,14 +192,14 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     setIpsToShare(linodeSharedIPs);
   };
 
-  const noChoices = props.ipChoices.length <= 1;
+  const noChoices = ipChoices.length <= 1;
 
   const errorMap = getErrorMap([], errors);
   const generalError = errorMap.none;
 
   return (
     <Dialog title="IP Sharing" open={open} onClose={handleClose}>
-      <DialogContent loading={_loading}>
+      <DialogContent loading={isLoading}>
         <>
           {generalError && (
             <Grid item xs={12}>
@@ -371,43 +406,8 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   );
 });
 
-interface WithLinodesProps {
-  ipChoices: string[];
-  ipChoiceLabels: {
-    [key: string]: string;
-  };
-}
-
 const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  withLinodes<WithLinodesProps, Props>((ownProps, linodesData) => {
-    const { linodeRegion, linodeID } = ownProps;
-    const choiceLabels = {};
-    const ipChoices = flatten<string>(
-      linodesData
-        .filter((linode: Linode) => {
-          // Filter out:
-          // 1. The current Linode
-          // 2. Linodes outside of the current Linode's region
-          return linode.id !== linodeID && linode.region === linodeRegion;
-        })
-        .map((linode: Linode) => {
-          // side-effect of this mapping is saving the labels
-          linode.ipv4.forEach((ip: string) => {
-            choiceLabels[ip] = linode.label;
-          });
-          return linode.ipv4;
-        })
-    );
-    /**
-     * NB: We were previously filtering private IP addresses out at this point,
-     * but it seems that the API (or our infra) doesn't care about this.
-     */
-    return {
-      ipChoices,
-      ipChoiceLabels: choiceLabels,
-    };
-  })
+  RenderGuard
 );
 
 export default enhanced(IPSharingPanel);

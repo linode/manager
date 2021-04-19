@@ -21,7 +21,6 @@ import {
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
-import truncateText from 'src/utilities/truncateText';
 import StackScriptRow from './StackScriptRow';
 
 const useStyles = makeStyles(() => ({
@@ -65,7 +64,7 @@ const StackScriptsSection: React.FC<CombinedProps> = (props) => {
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}
-      description={truncateText(s.description, 80)}
+      description={s.description}
       isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsTotal={s.deployments_total}

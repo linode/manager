@@ -19,6 +19,7 @@ const styles = (theme: Theme) =>
     root: {
       background: theme.cmrBGColors.bgPaper,
       margin: 0,
+      minHeight: theme.spacing(5),
       width: '100%',
     },
     padded: {

@@ -16,10 +16,14 @@ interface LinodeData {
   linodes: Record<string, Linode>;
 }
 
-export const useLinodesQuery = (params: any = {}, filter: any = {}) => {
+export const useLinodesQuery = (
+  params: any = {},
+  filter: any = {},
+  enabled: boolean = true
+) => {
   return useQuery<LinodeData, APIError[]>(
     [queryKey, params, filter],
     () => getLinodesRequest(params, filter),
-    queryPresets.longLived
+    { ...queryPresets.longLived, enabled }
   );
 };

@@ -1,3 +1,20 @@
+## [2021-04-13] - v0.50.0
+
+### Added:
+- resetLinodePassword (only applies to Bare Metal instances)
+
+### Changed:
+- linodeInterfaceSchema (label and IPAM address field)
+
+
+##  [2021-04-05] - v0.49.0
+
+### Changed:
+- Added metal to LinodeTypeClass type and removed LinodeInterface from linodes/types.ts
+- Added interfaces for IPAssignment, IPSharingPayload and IPAssignmentPayload in networking/types.ts 
+- Added Bare Metal to Capabilities type in regions/types.ts
+
+
 ## [2021-03-23] - v0.48.0
 
 ### Changed:

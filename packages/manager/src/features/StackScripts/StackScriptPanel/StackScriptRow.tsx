@@ -9,11 +9,7 @@ import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
-import {
-  ClassNames,
-  displayTagsAndShowMore,
-  styles,
-} from '../StackScriptRowHelpers';
+import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
   label: string;
@@ -59,7 +55,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
 
   const renderLabel = () => {
     return (
-      <React.Fragment>
+      <>
         <Link className={classes.link} to={`/stackscripts/${stackScriptID}`}>
           <Typography variant="h3" className={classes.libTitle}>
             {stackScriptUsername && (
@@ -77,22 +73,30 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
             {description}
           </Typography>
         )}
-      </React.Fragment>
+      </>
     );
   };
 
   return (
-    <TableRow data-qa-table-row={label} ariaLabel={label}>
-      <TableCell data-qa-stackscript-title>{renderLabel()}</TableCell>
+    <TableRow
+      data-qa-table-row={label}
+      ariaLabel={label}
+      className={classes.row}
+    >
+      <TableCell className={classes.libTitle} data-qa-stackscript-title>
+        {renderLabel()}
+      </TableCell>
       <TableCell>
         <Typography data-qa-stackscript-deploys>{deploymentsTotal}</Typography>
       </TableCell>
-      <Hidden smDown>
+      <Hidden xsDown>
         <TableCell>
           <Typography data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
-        <TableCell data-qa-stackscript-images className={classes.chip}>
-          {displayTagsAndShowMore(images)}
+      </Hidden>
+      <Hidden mdDown>
+        <TableCell data-qa-stackscript-images className={classes.images}>
+          {images.join(',  ')}
         </TableCell>
       </Hidden>
       {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.

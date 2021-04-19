@@ -3,13 +3,13 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
 import { withStyles, WithStyles } from 'src/components/core/styles';
-import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import TableRow from 'src/components/TableRow';
-import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableRow from 'src/components/TableRow/TableRow';
+import { openStackScriptDialog as openStackScriptDialogAction } from 'src/store/stackScriptDialog';
 import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
@@ -27,7 +27,7 @@ export interface Props {
 }
 
 interface DispatchProps {
-  openStackScriptDrawer: (stackScriptId: number) => void;
+  openStackScriptDialog: (stackScriptId: number) => void;
 }
 
 export type CombinedProps = Props &
@@ -49,18 +49,18 @@ export class StackScriptSelectionRow extends React.Component<
       description,
       stackScriptID,
       stackScriptUsername,
-      openStackScriptDrawer,
+      openStackScriptDialog,
       disabled,
     } = this.props;
 
     const renderLabel = () => {
-      const openDrawer = (event: React.MouseEvent<HTMLElement>) => {
+      const openDialog = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
-        openStackScriptDrawer(stackScriptID);
+        openStackScriptDialog(stackScriptID);
       };
       return (
         <Grid container alignItems="center" className={classes.selectionGrid}>
-          <Grid item>
+          <Grid item className={classes.selectionGridDetails}>
             <Typography variant="h3">
               {stackScriptUsername && (
                 <label
@@ -83,12 +83,12 @@ export class StackScriptSelectionRow extends React.Component<
               </Typography>
             )}
           </Grid>
-          <Grid item>
+          <Grid item className={classes.selectionGridButton}>
             <Button
-              compact
               buttonType="secondary"
               className={classes.detailsButton}
-              onClick={openDrawer}
+              compact
+              onClick={openDialog}
             >
               Show Details
             </Button>
@@ -98,28 +98,26 @@ export class StackScriptSelectionRow extends React.Component<
     };
 
     return (
-      <React.Fragment>
-        <TableRow
-          data-qa-table-row={label}
-          rowLink={onSelect ? (e) => onSelect(e, !checked) : undefined}
-          ariaLabel={label}
+      <TableRow
+        data-qa-table-row={label}
+        rowLink={onSelect ? (e) => onSelect(e, !checked) : undefined}
+        ariaLabel={label}
+      >
+        <TableCell>
+          <Radio
+            checked={!disabled && checked}
+            disabled={disabledCheckedSelect || disabled}
+            onChange={onSelect}
+            id={`${stackScriptID}`}
+          />
+        </TableCell>
+        <TableCell
+          className={classes.stackScriptCell}
+          data-qa-stackscript-title
         >
-          <TableCell>
-            <Radio
-              checked={!disabled && checked}
-              disabled={disabledCheckedSelect || disabled}
-              onChange={onSelect}
-              id={`${stackScriptID}`}
-            />
-          </TableCell>
-          <TableCell
-            className={classes.stackScriptCell}
-            data-qa-stackscript-title
-          >
-            {renderLabel()}
-          </TableCell>
-        </TableRow>
-      </React.Fragment>
+          {renderLabel()}
+        </TableCell>
+      </TableRow>
     );
   }
 }
@@ -128,8 +126,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   dispatch
 ) => {
   return {
-    openStackScriptDrawer: (stackScriptId: number) =>
-      dispatch(openStackScriptDrawerAction(stackScriptId)),
+    openStackScriptDialog: (stackScriptId: number) =>
+      dispatch(openStackScriptDialogAction(stackScriptId)),
   };
 };
 

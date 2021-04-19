@@ -1,7 +1,7 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
-  // abuseTicketNotificationFactory,
+  abuseTicketNotificationFactory,
   accountFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
@@ -145,14 +145,36 @@ export const handlers = [
     return res(ctx.json(cachedTypes));
   }),
   rest.get('*/images', async (req, res, ctx) => {
-    const privateImages = imageFactory.buildList(0);
+    const privateImages = imageFactory.buildList(5, {
+      status: 'available',
+      type: 'manual',
+    });
+    const creatingImages = imageFactory.buildList(2, {
+      type: 'manual',
+      status: 'creating',
+    });
+    const pendingImages = imageFactory.buildList(5, {
+      status: 'pending_upload',
+      type: 'manual',
+    });
+    const automaticImages = imageFactory.buildList(5, {
+      type: 'automatic',
+      expiry: '2021-05-01',
+    });
     const publicImages = imageFactory.buildList(0, { is_public: true });
-    const images = [...privateImages, ...publicImages];
+    const images = [
+      ...automaticImages,
+      ...privateImages,
+      ...publicImages,
+      ...pendingImages,
+      ...creatingImages,
+    ];
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(17, {
       backups: { enabled: false },
+      type: 'g6-metal-alpha-1',
       ipv4: ['000.000.000.000'],
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
@@ -500,18 +522,27 @@ export const handlers = [
     //   body: null,
     // });
 
-    // const abuseTicket = abuseTicketNotificationFactory.build();
+    const abuseTicket = abuseTicketNotificationFactory.build();
 
-    const migrationTicket = notificationFactory.build({
+    const migrationNotification = notificationFactory.build({
       type: 'migration_pending',
+      label: 'You have a migration pending!',
+      message:
+        'You have a migration pending! Your Linode must be offline before starting the migration.',
       entity: { id: 0, type: 'linode', label: 'linode-0' },
-      severity: 'critical',
+      severity: 'major',
     });
 
-    const minorSeverityTicket = notificationFactory.build({
+    const minorSeverityNotification = notificationFactory.build({
       type: 'notice',
       message: 'Testing for minor notification',
       severity: 'minor',
+    });
+
+    const criticalSeverityNotification = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for critical notification',
+      severity: 'critical',
     });
 
     const balanceNotification = notificationFactory.build({
@@ -527,10 +558,11 @@ export const handlers = [
           ...notificationFactory.buildList(1),
           generalGlobalNotice,
           outageNotification,
-          minorSeverityTicket,
-          // abuseTicket,
+          minorSeverityNotification,
+          criticalSeverityNotification,
+          abuseTicket,
           // emailBounce,
-          migrationTicket,
+          migrationNotification,
           balanceNotification,
         ])
       )

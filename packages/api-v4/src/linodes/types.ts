@@ -149,7 +149,7 @@ export type LinodeStatus =
 export type InterfacePurpose = 'public' | 'vlan';
 
 export interface Interface {
-  label: string;
+  label: string | null;
   purpose: InterfacePurpose;
   ipam_address: string | null;
 }
@@ -289,7 +289,8 @@ export type LinodeTypeClass =
   | 'standard'
   | 'dedicated'
   | 'highmem'
-  | 'gpu';
+  | 'gpu'
+  | 'metal';
 
 export interface IPAllocationRequest {
   type: 'ipv4';
@@ -352,14 +353,4 @@ export interface LinodeDiskCreationData {
   root_pass?: string;
   stackscript_id?: number;
   stackscript_data?: any;
-}
-
-export interface LinodeInterface {
-  id: number;
-  type: unknown;
-  description: string;
-  linode_id: number;
-  vlan_id: number;
-  mac_address: string;
-  ip_address: string;
 }

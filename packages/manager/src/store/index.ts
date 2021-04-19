@@ -132,14 +132,10 @@ import profile, {
   defaultState as defaultProfileState,
   State as ProfileState,
 } from 'src/store/profile/profile.reducer';
-import regions, {
-  defaultState as defaultRegionsState,
-  State as RegionsState,
-} from 'src/store/regions/regions.reducer';
-import stackScriptDrawer, {
-  defaultState as stackScriptDrawerDefaultState,
-  State as StackScriptDrawerState,
-} from 'src/store/stackScriptDrawer';
+import stackScriptDialog, {
+  defaultState as stackScriptDialogDefaultState,
+  State as StackScriptDialogState,
+} from 'src/store/stackScriptDialog';
 import tagImportDrawer, {
   defaultState as tagDrawerDefaultState,
   State as TagImportDrawerState,
@@ -209,7 +205,6 @@ const __resourcesDefaultState = {
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   profile: defaultProfileState,
-  regions: defaultRegionsState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
@@ -236,7 +231,6 @@ export interface ResourcesState {
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
   profile: ProfileState;
-  regions: RegionsState;
   types: TypesState;
   volumes: VolumesState;
   buckets: BucketsState;
@@ -251,7 +245,7 @@ export interface ApplicationState {
   documentation: DocumentationState;
   domainDrawer: DomainDrawerState;
   events: EventsState;
-  stackScriptDrawer: StackScriptDrawerState;
+  stackScriptDialog: StackScriptDialogState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
   bucketDrawer: BucketDrawerState;
@@ -274,7 +268,7 @@ export const defaultState: ApplicationState = {
   documentation: documentationDefaultState,
   domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
-  stackScriptDrawer: stackScriptDrawerDefaultState,
+  stackScriptDialog: stackScriptDialogDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
@@ -312,7 +306,6 @@ const __resources = combineReducers({
   nodeBalancerConfigs,
   notifications,
   profile,
-  regions,
   types,
   volumes,
   buckets,
@@ -326,7 +319,7 @@ const reducers = combineReducers<ApplicationState>({
   backups,
   documentation,
   domainDrawer,
-  stackScriptDrawer,
+  stackScriptDialog,
   tagImportDrawer,
   volumeDrawer,
   bucketDrawer,

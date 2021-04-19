@@ -30,17 +30,32 @@ const formatTotalTraffic = (value: number) =>
   readableBytes(value, { base10: true }).formatted;
 
 const useStyles = makeStyles((theme: Theme) => ({
-  chart: {
-    position: 'relative',
-    paddingTop: theme.spacing(2),
-    paddingLeft: theme.spacing(3),
-  },
   graphGrids: {
     flexWrap: 'nowrap',
-    paddingLeft: '8px',
-    [theme.breakpoints.down('md')]: {
+    margin: 0,
+    padding: theme.spacing(),
+    [theme.breakpoints.down(1100)]: {
       flexWrap: 'wrap',
+      marginTop: -theme.spacing(2),
     },
+  },
+  grid: {
+    backgroundColor: theme.bg.offWhiteDT,
+    border: 'solid 1px #eeeeee',
+    marginLeft: theme.spacing(),
+    marginRight: theme.spacing(),
+    '&.MuiGrid-item': {
+      padding: theme.spacing(2),
+    },
+    '& h2': {
+      fontSize: '1rem',
+    },
+    [theme.breakpoints.down(1100)]: {
+      marginBottom: theme.spacing(2),
+    },
+  },
+  chart: {
+    paddingTop: theme.spacing(),
   },
 }));
 
@@ -145,8 +160,8 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Grid container direction="row" className={classes.graphGrids}>
-      <Grid item xs={12}>
+    <Grid container className={classes.graphGrids}>
+      <Grid item className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}
           renderBody={() => (
@@ -161,7 +176,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
           {...rest}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv6 (${v6Unit}/s)`}
           renderBody={() => (
@@ -239,25 +254,25 @@ const Graph: React.FC<GraphProps> = (props) => {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.network.inbound,
             data: convertedPublicIn,
-            label: 'Public Inbound',
+            label: 'Public In',
           },
           {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.network.outbound,
             data: convertedPublicOut,
-            label: 'Public Outbound',
+            label: 'Public Out',
           },
           {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.purple,
             data: convertedPrivateIn,
-            label: 'Private Inbound',
+            label: 'Private In',
           },
           {
             borderColor: 'transparent',
             backgroundColor: theme.graphs.yellow,
             data: convertedPrivateOut,
-            label: 'Private Outbound',
+            label: 'Private Out',
           },
         ]}
         legendRows={[
