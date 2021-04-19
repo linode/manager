@@ -19,3 +19,8 @@ export const getTaxID = (
     Date.parse(invoiceItemDate) > Date.parse(taxDate);
   return taxStartedBeforeThisInvoiceItem ? taxID : undefined;
 };
+
+export const renderUnitPrice = (v: null | string) => {
+  const parsedValue = parseFloat(`${v}`);
+  return Number.isNaN(parsedValue) ? null : `$${parsedValue}`;
+};
