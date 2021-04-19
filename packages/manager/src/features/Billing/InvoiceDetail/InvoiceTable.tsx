@@ -11,6 +11,7 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { renderUnitPrice } from 'src/features/Billing/billingUtils.ts';
 
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -49,8 +50,6 @@ const InvoiceTable: React.FC<Props> = (props) => {
 
 const renderDate = (v: null | string) =>
   v ? <DateTimeDisplay value={v} data-qa-invoice-date /> : null;
-
-const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
