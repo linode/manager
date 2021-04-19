@@ -16,6 +16,25 @@ export interface Doc {
 
 export const oneClickApps: OCA[] = [
   {
+    name: 'Ant Media Server',
+    description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
+    summary:'A reliable, flexible and scalable video streaming solution.',
+    related_guides: [
+      {
+        title: 'Deploy Ant Media Server with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-antmediaserver-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://antmedia.io/',
+        href: 'https://antmedia.io/',
+      },
+    ],
+    logo_url: 'assets/antmediaserver_color.svg',
+  },
+  {
     name: 'Ark',
     description: `In Ark: Survival Evolved, you are placed on a series of fictional islands inhabited by dinosaurs and
       other prehistoric animals. Ark is an ongoing battle where animals and other players have the ability to destroy you.
@@ -590,6 +609,44 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/openlitespeedwordpress_color.svg',
   },
   {
+    name: 'Owncast',
+    description: `A live streaming and chat server for use with existing popular broadcasting software.`,
+    summary:'The standalone “Twitch in a Box” open source streaming and chat solution.',
+    related_guides: [
+      {
+        title: 'Deploy Owncast with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-owncast-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://owncast.online/',
+        href: 'https://owncast.online/',
+      },
+    ],
+    logo_url: 'assets/owncast_color.svg',
+  },
+  {
+    name: 'Peppermint',
+    description: `Open source alternative to paid ticket management solutions with essential features including a streamlined task list, project and client management, and ticket prioritization.`,
+    summary:'Simple yet scalable open source ticket management.',
+    related_guides: [
+      {
+        title: 'Deploy Peppermint with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-peppermint-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://pmint.dev/',
+        href: 'https://pmint.dev/',
+      },
+    ],
+    logo_url: 'assets/peppermint_color.svg',
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary:
@@ -1055,7 +1112,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy VS Code Server with Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-vscodeserver-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploy-vscode-with-marketplace-apps/',
       },
     ],
     related_info: [
