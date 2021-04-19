@@ -48,8 +48,9 @@ export const DeleteDomain: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Button
-        buttonType="primary"
+        buttonType="secondary"
         onClick={() => openDialog(props.domainId, props.domainLabel)}
+        outline
       >
         Delete Domain
       </Button>

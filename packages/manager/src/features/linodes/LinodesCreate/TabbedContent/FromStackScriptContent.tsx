@@ -15,7 +15,7 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
-import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
+import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { filterImagesByType } from 'src/store/image/image.helpers';
@@ -206,7 +206,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           )}
         </Grid>
 
-        <StackScriptDrawer />
+        <StackScriptDialog />
       </React.Fragment>
     );
   }

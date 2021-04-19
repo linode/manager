@@ -37,7 +37,8 @@ export type AccountCapability =
   | 'Object Storage'
   | 'Kubernetes'
   | 'Cloud Firewall'
-  | 'Vlans';
+  | 'Vlans'
+  | 'Machine Images';
 
 export interface AccountSettings {
   managed: boolean;
@@ -221,6 +222,7 @@ export type EventAction =
   | 'firewall_update'
   | 'host_reboot'
   | 'image_update'
+  | 'image_upload'
   | 'image_delete'
   | 'lassie_reboot'
   | 'linode_addip'

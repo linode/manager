@@ -25,7 +25,7 @@ import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
-import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
+import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -373,7 +373,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                 </Button>
               </ActionsPanel>
             </form>
-            <StackScriptDrawer />
+            <StackScriptDialog />
           </Grid>
         );
       }}
