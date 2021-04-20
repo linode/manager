@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiPaper-root': {
       minWidth: 480,
     },
+    '& .MuiDialogTitle-root': {
+      marginBottom: 10,
+    },
   },
   error: {
     color: '#C44742',
@@ -18,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actions: {
     justifyContent: 'flex-end',
+    '& button': {
+      marginBottom: 0,
+    },
   },
 }));
 
