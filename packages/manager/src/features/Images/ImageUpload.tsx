@@ -8,18 +8,20 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import ExternalLink from 'src/components/ExternalLink';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useRegionsQuery } from 'src/queries/regions';
 import { uploadImage } from 'src/store/image/image.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     minWidth: '100%',
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
     },
@@ -116,7 +118,18 @@ export const ImageUpload: React.FC<Props> = (props) => {
           other regions.
         </Typography>
 
-        <ActionsPanel style={{ marginTop: 16 }}>
+        <Typography style={{ marginTop: 16 }}>
+          <strong>Note:</strong> Image Uploads are currently in beta and are
+          subject to the terms of the{' '}
+          <ExternalLink
+            text="Early Adopter Testing Agreement"
+            link="https://www.linode.com/legal-eatp/"
+            hideIcon
+          />
+          .
+        </Typography>
+
+        <ActionsPanel>
           <Button
             onClick={handleSubmit}
             disabled={region === '' || !canCreateImage}
