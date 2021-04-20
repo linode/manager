@@ -1,14 +1,17 @@
 {
-    "compilerOptions": {
-      "allowJs": true,
-      "checkJs": false,
-      "strict": true,
-      "skipLibCheck": true,
-      "noImplicitAny": false,
-      "target": "es5",
-      "lib": ["es5", "dom"],
-      "baseUrl": "../../../node_modules",
-      "types": ["cypress", "@types/testing-library__cypress"]
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "baseUrl": "..",
+    "paths": {
+      "@src/*": ["src/*"]
     },
-    "include": ["**/*.*"]
+    "types": ["cypress", "@types/testing-library__cypress"]
+  },
+  "include": ["../cypress/**/*.ts"]
 }
