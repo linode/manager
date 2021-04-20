@@ -36,7 +36,7 @@ export const ImagesCreateContainer: React.FC = () => {
           <DocumentationButton href="https://www.linode.com/docs/products/tools/images/" />
         </Grid>
       </Grid>
-      <Grid item className="p0">
+      <Grid item className="p0" xs={12}>
         <ImageCreate />
       </Grid>
     </Grid>
