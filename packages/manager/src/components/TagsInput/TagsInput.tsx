@@ -64,10 +64,16 @@ class TagsInput extends React.Component<Props, State> {
         });
         this.setState({ accountTags });
       })
-      .catch((_) => {
+      .catch((e) => {
         const defaultError = [
           { reason: 'There was an error retrieving your tags.' },
         ];
+
+        // If a restricted user with entity creation permission goes to create/edit an entity, do not display the defaultError to them.
+        if (e[0].reason.match(/unauthorized/i)) {
+          return;
+        }
+
         this.setState({ errors: defaultError });
       });
   }
