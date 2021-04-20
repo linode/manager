@@ -26,25 +26,46 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.25rem',
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(2),
-    maxWidth: 1080,
+    maxWidth: 960,
   },
   providers: {
     marginBottom: 0,
     width: 'calc(100% + 24px)',
+    '& .MuiGrid-item': {
+      [theme.breakpoints.down(1100)]: {
+        flexBasis: '50%',
+        maxWidth: '50%',
+      },
+      [theme.breakpoints.down('xs')]: {
+        flexBasis: '100%',
+        maxWidth: '100%',
+      },
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing(),
+    },
   },
   provider: {
-    border: `1px solid ${theme.palette.divider}`,
     borderRadius: 1,
-    backgroundColor: theme.bg.offWhiteDT,
+    backgroundColor: theme.cmrBGColors.bgTPAButton,
+    marginTop: theme.spacing(),
     minHeight: 70,
     paddingRight: theme.spacing(3) - 4,
     paddingLeft: theme.spacing(3) - 4,
     width: 'calc(100% - 8px)',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 0,
+    },
     [theme.breakpoints.down('xs')]: {
+      marginTop: 0,
       marginLeft: 0,
     },
     '&:hover': {
       backgroundColor: theme.color.grey6,
+    },
+    '&.Mui-disabled': {
+      color: 'inherit',
+      opacity: 1,
     },
     '& .MuiButton-label': {
       color: theme.color.headline,
@@ -111,7 +132,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Paper className={classes.root}>
-        <Typography variant="h3">Log-In Method</Typography>
+        <Typography variant="h3">Login Method</Typography>
         <Typography className={classes.copy}>
           You can use your Linode credentials or another provider such as Google
           or GitHub to log in to your Linode account. More information is
@@ -122,7 +143,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           . We strongly recommend setting up Two-Factor Authentication (TFA).
         </Typography>
         <Grid container className={classes.providers}>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item md={4}>
             <Button
               className={classnames({
                 [classes.provider]: true,
@@ -152,7 +173,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           {providers.map((thisProvider) => {
             const Icon = icons[thisProvider.name];
             return (
-              <Grid item xs={12} sm={6} md={4} key={thisProvider.displayName}>
+              <Grid item md={4} key={thisProvider.displayName}>
                 <Button
                   className={classnames({
                     [classes.provider]: true,

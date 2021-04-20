@@ -3,27 +3,23 @@ import Dialog, { DialogProps } from 'src/components/core/Dialog';
 import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DialogTitle from 'src/components/DialogTitle';
 
-type ClassNames = 'root' | 'error' | 'actions';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    error: {
-      color: '#C44742',
-      marginTop: theme.spacing(2),
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& .MuiPaper-root': {
+      minWidth: 480,
     },
-    actions: {
-      justifyContent: 'flex-end',
-    },
-  });
+  },
+  error: {
+    color: '#C44742',
+    marginTop: theme.spacing(2),
+  },
+  actions: {
+    justifyContent: 'flex-end',
+  },
+}));
 
 interface Props extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
@@ -32,14 +28,17 @@ interface Props extends DialogProps {
   title: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
-  const { title, classes, children, actions, error, ...dialogProps } = props;
+  const classes = useStyles();
+
+  const { title, children, actions, error, ...dialogProps } = props;
 
   return (
     <Dialog
       {...dialogProps}
+      className={classes.root}
       disableBackdropClick={true}
       PaperProps={{ role: undefined }}
       role="dialog"
@@ -62,6 +61,4 @@ const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ConfirmationDialog);
+export default ConfirmationDialog;

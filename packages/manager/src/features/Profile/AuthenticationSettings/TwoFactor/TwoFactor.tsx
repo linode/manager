@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '20px',
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(),
-    maxWidth: 900,
+    maxWidth: 960,
   },
   button: {
     ...theme.applyLinkStyles,

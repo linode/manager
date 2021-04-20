@@ -86,6 +86,7 @@ const cmrBGColors = {
   bgPrimaryButton: '#3683dc',
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#e5f1ff',
+  bgTPAButton: '#f5f6f7',
   bgTableHeader: '#f9fafa',
   bgBillingSummary: '#f5f9ff',
   bgAccessRow: '#fafafa',
