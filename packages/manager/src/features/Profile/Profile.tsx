@@ -35,7 +35,7 @@ const Profile: React.FC<CombinedProps> = (props) => {
       component: DisplaySettings,
     },
     {
-      title: 'Password & Authentication',
+      title: 'Login Security',
       routeName: `${url}/auth`,
       component: AuthenticationSettings,
     },

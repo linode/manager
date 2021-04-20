@@ -226,7 +226,7 @@ const profileLinks: MenuLink[] = [
     display: 'Display',
     href: '/profile/display',
   },
-  { display: 'Password & Authentication', href: '/profile/auth' },
+  { display: 'Login Security', href: '/profile/auth' },
   { display: 'SSH Keys', href: '/profile/keys' },
   { display: 'LISH Console Settings', href: '/profile/lish' },
   {

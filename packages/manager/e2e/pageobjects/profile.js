@@ -240,7 +240,7 @@ export class Profile extends Page {
   }
 
   get passwordTab() {
-    return $('[data-qa-tab="Password & Authentication"]');
+    return $('[data-qa-tab="Login Security"]');
   }
 
   get tokenLabel() {
