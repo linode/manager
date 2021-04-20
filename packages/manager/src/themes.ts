@@ -16,7 +16,8 @@ const cmrBGColors = {
   bgPaper: '#2e3238',
   bgPrimaryButton: '#3683dc',
   // notification center, add a tag, breadcrumb
-  bgSecondaryButton: '#364863',
+  bgSecondaryButton: 'transparent',
+  bgCopyButton: '#364863',
   bgTableHeader: '#33373e',
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',
@@ -29,6 +30,7 @@ const cmrTextColors = {
   tableHeader: '#888F91',
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
+  secondaryButton: '#fff',
 };
 
 const cmrBorderColors = {
@@ -37,6 +39,7 @@ const cmrBorderColors = {
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
+  borderSecondaryButton: '#fff',
 };
 
 const cmrIconColors = {

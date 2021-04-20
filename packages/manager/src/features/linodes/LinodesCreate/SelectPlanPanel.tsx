@@ -89,7 +89,7 @@ const styles = (theme: Theme) =>
     radioCell: {
       height: theme.spacing(6),
       width: '5%',
-      paddingRight: theme.spacing(),
+      paddingRight: 0,
     },
     gpuGuideLink: {
       fontSize: '0.9em',

@@ -21,6 +21,10 @@ storiesOf('Button', module)
         Secondary
       </Button>
       <Divider />
+      <Button buttonType="secondary" outline data-qa-button="secondary">
+        Secondary with Outline
+      </Button>
+      <Divider />
       <Button buttonType="cancel" data-qa-button="cancel">
         Cancel
       </Button>

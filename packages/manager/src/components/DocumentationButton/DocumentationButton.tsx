@@ -18,10 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(),
     },
     '&:hover': {
+      color: theme.cmrTextColors.linkActiveLight,
       textDecoration: 'underline',
-      '& svg': {
-        color: theme.palette.primary.light,
-      },
     },
   },
 }));
