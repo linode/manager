@@ -84,7 +84,13 @@ export class App extends React.Component<CombinedProps, State> {
      */
     // eslint-disable-next-line
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.shiftKey && event.key === 'L') {
+      const isOsWindows = navigator.appVersion.includes('Win');
+      const letterForThemeShortcut = isOsWindows ? 'L' : 'D';
+      if (
+        event.ctrlKey &&
+        event.shiftKey &&
+        event.key === letterForThemeShortcut
+      ) {
         this.props.toggleTheme();
       }
 
