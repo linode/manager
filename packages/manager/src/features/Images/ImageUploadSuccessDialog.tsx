@@ -40,7 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   text: {
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(3),
+    '& p': {
+      lineHeight: 1.5,
+    },
   },
   done: {
     float: 'right',
@@ -84,15 +87,17 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
       <div className={classes.root}>
         <div className={classes.text}>
           <Typography>
-            The generated URL is created specifically for uploading this image.{' '}
+            This URL is created specifically for uploading this image.{' '}
             <strong>It won&apos;t be shown again.</strong>
           </Typography>
+          <Typography>
+            See{' '}
+            <Link to="https://linode.com/docs">
+              Deploy an Image to a Linode
+            </Link>{' '}
+            for more information on uploading an image to Linode.
+          </Typography>
         </div>
-        <Typography className={classes.text}>
-          See{' '}
-          <Link to="https://linode.com/docs">Deploy an Image to a Linode</Link>{' '}
-          for more information on uploading an image to Linode.
-        </Typography>
 
         <CopyableTextField
           className={classes.curlDisplay}
