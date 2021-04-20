@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
     padding: theme.spacing(3),
-    paddingTop: 22,
+    paddingTop: 17,
   },
   copy: {
     lineHeight: '1.25rem',
