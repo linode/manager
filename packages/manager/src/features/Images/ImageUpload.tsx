@@ -17,7 +17,7 @@ import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    width: '100%',
+    minWidth: '100%',
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(4),
     '& .MuiFormHelperText-root': {

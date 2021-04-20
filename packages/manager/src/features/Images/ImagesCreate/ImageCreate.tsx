@@ -25,7 +25,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
 
   const tabs: NavTab[] = [
     {
-      title: 'Disk Image',
+      title: 'Capture Image',
       routeName: `${props.match.url}/disk`,
       render: (
         <CreateImageTab
