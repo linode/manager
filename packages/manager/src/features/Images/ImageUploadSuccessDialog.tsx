@@ -102,7 +102,7 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
         <CopyableTextField
           className={classes.curlDisplay}
           value={curlExample}
-          label="Sample cURL Request"
+          label="Sample curl Request"
           hideIcon
           fullWidth
           multiline
@@ -118,7 +118,7 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
                   handleCopy(0, curlExample);
                 }}
               >
-                Copy Curl Request
+                Copy curl Request
               </Button>
             </div>
           </ToolTip>
