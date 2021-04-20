@@ -13,13 +13,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingBottom: theme.spacing(2),
   },
+  button: {
+    paddingRight: 0,
+    '& .MuiButton-label': {
+      justifyContent: 'flex-end',
+    },
+  },
   urlDisplay: {
     maxWidth: '100%',
-    marginTop: theme.spacing(2),
-  },
-  curl: {
-    overflow: 'wrap',
-    wordBreak: 'break-all',
   },
   curlDisplay: {
     maxWidth: '100%',
@@ -39,6 +40,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   text: {
+    marginBottom: theme.spacing(2),
+  },
+  done: {
+    float: 'right',
+    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
   },
 }));
@@ -64,7 +70,7 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
     );
   };
 
-  const curlExample = `curl -v -X PUT \\\n-H "Content-Type: application/octet-stream" \\\n--data-binary path/to/image \\\n"${url}"`;
+  const curlExample = `curl -v -X PUT \\\n-H "Content-Type: application/octet-stream" \\\n--data-binary @path/to/image \\\n"${url}"`;
 
   return (
     /** Disabling the normal ESC/click away to close, because once the modal goes away the URL is lost */
@@ -78,12 +84,8 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
       <div className={classes.root}>
         <div className={classes.text}>
           <Typography>
-            The generated URL is created specifically for uploading this image.
-          </Typography>
-          <Typography>
-            <strong>
-              Once this modal is closed the URL will not be shown again.
-            </strong>
+            The generated URL is created specifically for uploading this image.{' '}
+            <strong>It won&apos;t be shown again.</strong>
           </Typography>
         </div>
         <Typography className={classes.text}>
@@ -91,13 +93,11 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
           <Link to="https://linode.com/docs">Deploy an Image to a Linode</Link>{' '}
           for more information on uploading an image to Linode.
         </Typography>
-        <Typography>
-          <strong>Sample curl request</strong>
-        </Typography>
+
         <CopyableTextField
           className={classes.curlDisplay}
           value={curlExample}
-          label=""
+          label="Sample cURL Request"
           hideIcon
           fullWidth
           multiline
@@ -108,10 +108,10 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
             <div>
               <Button
                 buttonType="secondary"
+                className={classes.button}
                 onClick={() => {
                   handleCopy(0, curlExample);
                 }}
-                outline
               >
                 Copy Curl Request
               </Button>
@@ -122,32 +122,34 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
         <CopyableTextField
           className={classes.urlDisplay}
           value={url}
-          label=""
+          label="URL"
           hideIcon
           fullWidth
           aria-disabled
         />
         <div className={classes.actions}>
-          {/** <div /> wrapper is needed here to match the style of the tooltip-ed button */}
-          <div>
-            <Button buttonType="secondary" onClick={() => onClose()}>
-              Close
-            </Button>
-          </div>
           <ToolTip open={tooltipOpen[1]} title="Copied!" placement="bottom-end">
             <div>
               <Button
-                buttonType="primary"
+                buttonType="secondary"
+                className={classes.button}
                 onClick={() => {
                   handleCopy(1, url);
                 }}
-                outline
               >
                 Copy URL
               </Button>
             </div>
           </ToolTip>
         </div>
+        <Button
+          className={classes.done}
+          buttonType="secondary"
+          outline
+          onClick={onClose}
+        >
+          Done
+        </Button>
       </div>
     </InformationDialog>
   );
