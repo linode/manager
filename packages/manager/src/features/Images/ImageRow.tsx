@@ -49,6 +49,8 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
                 text="Creating"
                 progress={progressFromEvent(event)}
               />
+            ) : status === 'available' ? (
+              'Ready'
             ) : (
               capitalizeAllWords(status.replace('_', ' '))
             )}
