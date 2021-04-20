@@ -91,7 +91,6 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   );
 
   const username = profile.data?.username;
-  const stackScriptGrants = profile?.data?.grants?.stackscript ?? [];
   const userCannotAddLinodes = _isRestrictedUser && !_hasGrant('add_linodes');
 
   React.useEffect(() => {
@@ -206,6 +205,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
             buttonType="primary"
             className={classes.button}
             onClick={handleCreateClick}
+            disabled={userCannotAddLinodes}
             data-qa-stack-deploy
           >
             Deploy New Linode
