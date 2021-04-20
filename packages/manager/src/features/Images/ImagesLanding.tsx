@@ -103,6 +103,7 @@ const getHeaders = (
       widthPercent: 35,
     },
   ].filter(Boolean) as HeaderCell[];
+import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 interface ImageDrawerState {
   open: boolean;
@@ -150,9 +151,16 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
   const classes = useStyles();
-  const { account } = useAccountManagement();
+  const {
+    imagesData,
+    imagesLoading,
+    imagesError,
+    deleteImage,
+    history,
+    location,
+  } = props;
 
-  const { imagesData, imagesLoading, imagesError, deleteImage } = props;
+  const { account } = useAccountManagement();
 
   /**
    * Separate manual Images (created by the user, either from disk or from uploaded file)
@@ -181,6 +189,22 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     dialogAction === 'cancel'
       ? 'Are you sure you want to cancel this Image upload?'
       : 'Are you sure you want to delete this Image?';
+
+  const [successDialogOpen, setSuccessDialogOpen] = React.useState(false);
+  const [uploadURL, setUploadURL] = React.useState<string | undefined>();
+
+  const handleCloseSuccessDialog = () => {
+    setSuccessDialogOpen(false);
+    window.setTimeout(() => setUploadURL(undefined), 500);
+    history.replace({ state: undefined });
+  };
+
+  React.useEffect(() => {
+    if (location.state?.upload_url) {
+      setSuccessDialogOpen(true);
+      setUploadURL(location.state.upload_url);
+    }
+  }, [location]);
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
@@ -512,6 +536,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         {dialog.error && <Notice error text={dialog.error} />}
         <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
+      <ImageUploadSuccessDialog
+        isOpen={successDialogOpen}
+        onClose={handleCloseSuccessDialog}
+        url={uploadURL ?? ''}
+      />
     </React.Fragment>
   );
 };
