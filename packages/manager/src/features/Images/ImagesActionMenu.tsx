@@ -49,7 +49,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
       ? [
           // Cancelling a pending upload is functionally equivalent to deleting it
           {
-            title: 'Cancel',
+            title: 'Cancel Upload',
             onClick: () => {
               onDelete(label, id, status);
             },
@@ -63,7 +63,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             },
           },
           {
-            title: 'Deploy New Linode',
+            title: 'Deploy to New Linode',
             disabled: isDisabled,
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
@@ -73,7 +73,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             },
           },
           {
-            title: 'Restore to Existing Linode',
+            title: 'Deploy to Existing Linode',
             disabled: isDisabled,
             tooltip: isDisabled
               ? 'Image is not yet available for use.'
@@ -97,7 +97,8 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
    *
    * Leaving the logic in place in case until the decision has been officially OK'd.
    */
-  const splitActionsArrayIndex = 0;
+  const splitActionsArrayIndex =
+    !matchesSmDown && status === 'pending_upload' ? 1 : 0;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
