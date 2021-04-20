@@ -49,11 +49,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const [region, setRegion] = React.useState<string>('');
   const dispatch: Dispatch = useDispatch();
   const regions = useRegionsQuery().data ?? [];
+  // @todo replace this with React-query
   const [submitting, setSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
 
   const handleSubmit = () => {
     setSubmitting(true);
+    setErrors(undefined);
     dispatch(
       uploadImage({
         label,
@@ -81,13 +83,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   return (
     <Paper className={classes.container}>
       {errorMap.none ? <Notice error text={errorMap.none} /> : null}
-      <form
-        style={{ width: '100%' }}
-        onSubmit={(e: React.FormEvent) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-      >
+      <div style={{ width: '100%' }}>
         <TextField
           label="Label (required)"
           value={label}
@@ -130,7 +126,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             Generate URL
           </Button>
         </ActionsPanel>
-      </form>
+      </div>
     </Paper>
   );
 };
