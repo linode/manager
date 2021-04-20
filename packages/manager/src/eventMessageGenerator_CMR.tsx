@@ -66,6 +66,8 @@ export const eventMessageGenerator = (
       return 'rebuild';
     case 'linode_create':
       return 'provisioning';
+    case 'image_upload':
+      return 'image uploading';
 
     default:
       // If we haven't handled it explicitly here, it doesn't count as

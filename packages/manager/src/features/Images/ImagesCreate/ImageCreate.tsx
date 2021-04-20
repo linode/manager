@@ -25,7 +25,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
 
   const tabs: NavTab[] = [
     {
-      title: 'Disk Image',
+      title: 'Capture Image',
       routeName: `${props.match.url}/disk`,
       render: (
         <CreateImageTab
@@ -39,7 +39,15 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
     {
       title: 'Upload Image',
       routeName: `${props.match.url}/upload`,
-      render: <ImageUpload />,
+      render: (
+        <ImageUpload
+          label={label}
+          description={description}
+          changeLabel={handleSetLabel}
+          changeDescription={handleSetDescription}
+          canCreateImage
+        />
+      ),
     },
   ];
 

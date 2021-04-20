@@ -8,6 +8,7 @@ import {
   requestImageForStoreActions,
   requestImagesActions,
   updateImageActions,
+  uploadImageActions,
   upsertImage,
 } from './image.actions';
 import {
@@ -91,6 +92,23 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, createImageActions.failed)) {
+    const { error } = action.payload;
+
+    return onError({ create: error }, state);
+  }
+
+  if (isType(action, uploadImageActions.started)) {
+    return setError({ create: undefined }, state);
+  }
+
+  if (isType(action, uploadImageActions.done)) {
+    // We're throwing away the upload_to string here,
+    // but there's no reason for that to be stored.
+    const newImage = action.payload.result.image;
+    return onCreateOrUpdate(newImage, state);
+  }
+
+  if (isType(action, uploadImageActions.failed)) {
     const { error } = action.payload;
 
     return onError({ create: error }, state);

@@ -80,7 +80,6 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = (props) => {
                 downloadFile(`${clusterLabel}-kubeconfig.yaml`, kubeConfig)
               }
               className={classes.iconLink}
-              role="button"
               title="Download"
             >
               <Download className={classes.icon} />

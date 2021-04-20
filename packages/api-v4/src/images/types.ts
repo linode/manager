@@ -20,8 +20,21 @@ export interface Image {
   status: ImageStatus;
 }
 
-export interface CreateImagePayload {
-  diskID: number;
+export interface UploadImageResponse {
+  image: Image;
+  upload_to: string;
+}
+
+export interface BaseImagePayload {
   label?: string;
   description?: string;
+}
+
+export interface CreateImagePayload extends BaseImagePayload {
+  diskID: number;
+}
+
+export interface ImageUploadPayload extends BaseImagePayload {
+  label: string;
+  region: string;
 }
