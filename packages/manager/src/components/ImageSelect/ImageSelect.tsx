@@ -135,12 +135,15 @@ export const ImageSelect: React.FC<Props> = (props) => {
         .reason
     : undefined;
 
+  const imageIsReady = (image: Image) =>
+    !['creating', 'pending_upload'].includes(image.status);
+
   const filteredImages = images.filter((thisImage) => {
     switch (variant) {
       case 'public':
-        return thisImage.is_public;
+        return thisImage.is_public && imageIsReady(thisImage);
       case 'private':
-        return !thisImage.is_public;
+        return !thisImage.is_public && imageIsReady(thisImage);
       case 'all':
       default:
         return true;
