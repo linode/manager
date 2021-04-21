@@ -96,7 +96,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
               const isDeprecated = thisImage.deprecated;
               const fullLabel =
                 thisImage.label + (isDeprecated ? ' (Deprecated)' : '');
-              const _option = {
+              return {
                 created: thisImage.created,
                 label: fullLabel,
                 value: thisImage.id,
@@ -104,7 +104,6 @@ export const imagesToGroupedItems = (images: Image[]) => {
                   ? `fl-${distroIcons[thisImage.vendor]}`
                   : `fl-tux`,
               };
-              return _option;
             })
             .sort(sortByImageVersion),
         });
@@ -138,9 +137,9 @@ export const ImageSelect: React.FC<Props> = (props) => {
   const filteredImages = images.filter((thisImage) => {
     switch (variant) {
       case 'public':
-        return thisImage.is_public;
+        return thisImage.is_public && thisImage.status === 'available';
       case 'private':
-        return !thisImage.is_public;
+        return !thisImage.is_public && thisImage.status === 'available';
       case 'all':
       default:
         return true;
@@ -158,37 +157,35 @@ export const ImageSelect: React.FC<Props> = (props) => {
   };
 
   return (
-    <>
-      <Paper className={classes.root} data-qa-select-image-panel>
-        <Typography variant="h2" data-qa-tp={title}>
-          {title}
-        </Typography>
-        <Grid container direction="row" wrap="nowrap" spacing={4}>
-          <Grid container item direction="column">
-            <Grid container item direction="row">
-              <Grid item xs={12}>
-                <Select
-                  disabled={disabled}
-                  label="Images"
-                  isLoading={_loading}
-                  placeholder="Choose an image"
-                  options={options}
-                  onChange={onChange}
-                  value={getSelectedOptionFromGroupedOptions(
-                    selectedImageID || '',
-                    options
-                  )}
-                  errorText={error || imageError}
-                  components={{ Option: ImageOption, SingleValue }}
-                  {...reactSelectProps}
-                  className={classNames}
-                />
-              </Grid>
+    <Paper className={classes.root} data-qa-select-image-panel>
+      <Typography variant="h2" data-qa-tp={title}>
+        {title}
+      </Typography>
+      <Grid container direction="row" wrap="nowrap" spacing={4}>
+        <Grid container item direction="column">
+          <Grid container item direction="row">
+            <Grid item xs={12}>
+              <Select
+                disabled={disabled}
+                label="Images"
+                isLoading={_loading}
+                placeholder="Choose an image"
+                options={options}
+                onChange={onChange}
+                value={getSelectedOptionFromGroupedOptions(
+                  selectedImageID || '',
+                  options
+                )}
+                errorText={error || imageError}
+                components={{ Option: ImageOption, SingleValue }}
+                {...reactSelectProps}
+                className={classNames}
+              />
             </Grid>
           </Grid>
         </Grid>
-      </Paper>
-    </>
+      </Grid>
+    </Paper>
   );
 };
 
