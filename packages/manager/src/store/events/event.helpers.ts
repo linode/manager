@@ -18,7 +18,7 @@ import { EntityEvent, ExtendedEvent } from './event.types';
  * for that period, would be pointless. We treat these events differently
  * when determining whether they are in progress.
  */
-const LONG_PENDING_EVENTS = ['image_upload'];
+export const LONG_PENDING_EVENTS = ['image_upload'];
 
 /** We use the epoch on our initial request to get all of the users events. */
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
