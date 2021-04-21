@@ -9,7 +9,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
-import ExternalLink from 'src/components/ExternalLink';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
@@ -96,11 +96,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
       <Typography style={{ marginTop: 16 }}>
         <Chip className={classes.chip} label="beta" component="span" />
         Image Uploads is currently in beta and is subject to the terms of the{' '}
-        <ExternalLink
-          text="Early Adopter Testing Agreement"
-          link="https://www.linode.com/legal-eatp/"
-          hideIcon
-        />
+        <Link to="https://www.linode.com/legal-eatp/">
+          Early Adopter Testing Agreement
+        </Link>
         .
       </Typography>
       {errorMap.none ? <Notice error text={errorMap.none} /> : null}
