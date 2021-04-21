@@ -84,22 +84,37 @@ export class App extends React.Component<CombinedProps, State> {
      */
     // eslint-disable-next-line
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-      const isOsWindows = navigator.appVersion.includes('Win');
-      const letterForThemeShortcut = isOsWindows ? 'L' : 'D';
-      if (
-        event.ctrlKey &&
-        event.shiftKey &&
-        event.key === letterForThemeShortcut
-      ) {
-        this.props.toggleTheme();
+      const isOSMac = navigator.appVersion.includes('Mac');
+      const letterForThemeShortcut = isOSMac ? 'D' : 'Î';
+      const letterForGoToOpen = isOSMac ? 'K' : '\uf8ff';
+      const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
+      if (event[modifierKey] && event.shiftKey) {
+        switch (event.key) {
+          case letterForThemeShortcut:
+            this.props.toggleTheme();
+            break;
+          case letterForGoToOpen:
+            this.setState((prevState) => ({
+              ...prevState,
+              goToOpen: !prevState.goToOpen,
+            }));
+            break;
+        }
       }
+      /* if (
+       *   event[modifierKey] &&
+       *   event.shiftKey &&
+       *   event.key === letterForThemeShortcut
+       * ) {
+       *   this.props.toggleTheme();
+       * }
 
-      if (event.ctrlKey && event.shiftKey && event.key === 'K') {
-        this.setState((prevState) => ({
-          ...prevState,
-          goToOpen: !prevState.goToOpen,
-        }));
-      }
+       * if (event[modifierKey] && event.shiftKey && event.key === letterForGoToOpen) {
+       *   this.setState((prevState) => ({
+       *     ...prevState,
+       *     goToOpen: !prevState.goToOpen,
+       *   }));
+       * } */
     });
 
     /*
