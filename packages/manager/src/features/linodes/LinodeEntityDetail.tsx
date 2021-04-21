@@ -649,7 +649,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
   copyCell: {
     width: 36,
     height: 33,
-    backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
+    backgroundColor: `${theme.cmrBGColors.bgCopyButton} !important`,
     padding: '0px !important',
     '& svg': {
       width: 16,
