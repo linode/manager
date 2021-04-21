@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -28,6 +29,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     marginTop: theme.spacing(2),
+  },
+  chip: {
+    fontSize: '0.625rem',
+    height: 15,
+    marginBottom: 4,
+    lineHeight: '1px',
+    letterSpacing: '.25px',
+    textTransform: 'uppercase',
   },
 }));
 export interface Props {
@@ -84,6 +93,16 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
   return (
     <Paper className={classes.container}>
+      <Typography style={{ marginTop: 16 }}>
+        <Chip className={classes.chip} label="beta" component="span" />
+        Image Uploads is currently in beta and is subject to the terms of the{' '}
+        <ExternalLink
+          text="Early Adopter Testing Agreement"
+          link="https://www.linode.com/legal-eatp/"
+          hideIcon
+        />
+        .
+      </Typography>
       {errorMap.none ? <Notice error text={errorMap.none} /> : null}
       <div style={{ width: '100%' }}>
         <TextField
@@ -118,18 +137,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
           other regions.
         </Typography>
 
-        <Typography style={{ marginTop: 16 }}>
-          <strong>Note:</strong> Image Uploads are currently in beta and are
-          subject to the terms of the{' '}
-          <ExternalLink
-            text="Early Adopter Testing Agreement"
-            link="https://www.linode.com/legal-eatp/"
-            hideIcon
-          />
-          .
-        </Typography>
-
-        <ActionsPanel>
+        <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={handleSubmit}
             disabled={region === '' || !canCreateImage}

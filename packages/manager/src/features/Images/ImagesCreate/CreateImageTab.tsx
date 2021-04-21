@@ -319,7 +319,10 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
           />
         </>
 
-        <ActionsPanel updateFor={[requirementsMet, classes, submitting]}>
+        <ActionsPanel
+          style={{ marginTop: 16 }}
+          updateFor={[requirementsMet, classes, submitting]}
+        >
           <Button
             onClick={this.onSubmit}
             disabled={requirementsMet || !canCreateImage}
