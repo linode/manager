@@ -496,8 +496,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3">Manual Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             {machineImagesEnabled
-              ? `These are images you manually uploaded or captured from an existing disk or Linode. They never expire.`
-              : `These images are created from a Linode's disk.`}
+              ? `These are images you manually uploaded or captured from an existing Linode disk.`
+              : `These are images you captured from an existing disk.`}
           </Typography>
         </div>
         <EntityTable
@@ -511,8 +511,9 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Automatic Images</Typography>
           <Typography className={classes.imageTableSubheader}>
-            These are images we automatically capture when most Linodes or disks
-            are deleted. They automatically expire. See{' '}
+            These are images we automatically capture when Linode disks are
+            deleted. They will be deleted after the indicated expiration date.
+            See{' '}
             <Link to="https://www.linode.com/docs/guides/linode-images/">
               here
             </Link>{' '}
