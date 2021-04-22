@@ -34,8 +34,9 @@ describe('stackscripts', () => {
     getClick('[data-qa-save="true"]');
     fbtVisible(ssLabel);
     getVisible(`[data-qa-table-row="${ssLabel}"]`).within(() => {
-      fbtClick('Deploy New Linode');
+      getClick(`[aria-label="Action menu for StackScript ${ssLabel}"]`);
     });
+    fbtClick('Deploy New Linode');
     createLinode();
     cy.wait('@createLinode', { timeout: 300000 }).then((linode) => {
       cy.visit(`/linodes/${linode.response?.body.id}/storage`);
