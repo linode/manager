@@ -497,7 +497,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           <Typography className={classes.imageTableSubheader}>
             {machineImagesEnabled
               ? `These are images you manually uploaded or captured from an existing Linode disk.`
-              : `These are images you captured from an existing disk.`}
+              : `These are images you captured from an existing Linode disk.`}
           </Typography>
         </div>
         <EntityTable
