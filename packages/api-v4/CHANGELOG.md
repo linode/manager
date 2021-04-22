@@ -1,3 +1,13 @@
+## [2021-04-22] - v0.51.0
+
+### Added:
+- @linode/validation package
+- Methods and schemas for machine image uploads
+
+### Changed:
+- UpdateAccountSettingsSchema
+
+
 ## [2021-04-13] - v0.50.0
 
 ### Added:
