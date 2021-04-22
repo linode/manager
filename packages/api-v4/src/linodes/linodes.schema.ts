@@ -33,8 +33,8 @@ export const linodeInterfaceSchema = array()
             .min(1, 'VLAN label must be between 1 and 64 characters.')
             .max(64, 'VLAN label must be between 1 and 64 characters.')
             .matches(
-              /[a-z0-9-]+/,
-              'VLAN labels cannot contain special characters.'
+              /[a-zA-Z0-9-]+/,
+              'Must include only ASCII letters, numbers, and dashes'
             ),
           otherwise: string().notRequired(),
         })

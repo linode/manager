@@ -38,22 +38,27 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     ...rest
   } = props;
 
+  const getStatusForImage = (status: string) => {
+    switch (status) {
+      case 'creating':
+        return (
+          <ProgressDisplay
+            text="Creating"
+            progress={progressFromEvent(event)}
+          />
+        );
+      case 'available':
+        return 'Ready';
+      default:
+        return capitalizeAllWords(status.replace('_', ' '));
+    }
+  };
+
   return (
     <TableRow key={id} data-qa-image-cell={id}>
       <TableCell data-qa-image-label>{label}</TableCell>
       <Hidden xsDown>
-        {status ? (
-          <TableCell>
-            {status === 'creating' ? (
-              <ProgressDisplay
-                text="Creating"
-                progress={progressFromEvent(event)}
-              />
-            ) : (
-              capitalizeAllWords(status.replace('_', ' '))
-            )}
-          </TableCell>
-        ) : null}
+        {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
         <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
       </Hidden>
       <TableCell data-qa-image-size>

@@ -1,4 +1,3 @@
-import { Grant } from '@linode/api-v4/lib/account/types';
 import {
   getStackScript,
   StackScript,
@@ -6,9 +5,7 @@ import {
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -22,14 +19,9 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import {
-  hasGrant,
-  isRestrictedUser as _isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
-import useProfile from 'src/hooks/useProfile';
-import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getStackScriptUrl } from './stackScriptUtils';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 
 interface MatchProps {
   stackScriptId: string;
@@ -37,7 +29,7 @@ interface MatchProps {
 
 type RouteProps = RouteComponentProps<MatchProps>;
 
-type CombinedProps = RouteProps & StateProps & SetDocsProps;
+type CombinedProps = RouteProps & SetDocsProps;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -87,7 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { profile } = useProfile();
+  const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();
   const { history } = props;
   const { stackScriptId } = props.match.params;
 
@@ -99,6 +91,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   );
 
   const username = profile.data?.username;
+  const userCannotAddLinodes = _isRestrictedUser && !_hasGrant('add_linodes');
 
   React.useEffect(() => {
     getStackScript(+stackScriptId)
@@ -212,6 +205,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
             buttonType="primary"
             className={classes.button}
             onClick={handleCreateClick}
+            disabled={userCannotAddLinodes}
             data-qa-stack-deploy
           >
             Deploy New Linode
@@ -225,28 +219,6 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface StateProps {
-  isRestrictedUser: boolean;
-  stackScriptGrants: Grant[];
-  userCannotAddLinodes: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  isRestrictedUser: _isRestrictedUser(state),
-  stackScriptGrants: pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
-    state
-  ),
-  userCannotAddLinodes:
-    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
-});
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, {}>(
-  connected,
-  setDocs([StackScriptsDocs])
-);
+const enhanced = compose<CombinedProps, {}>(setDocs([StackScriptsDocs]));
 
 export default enhanced(StackScriptsDetail);
