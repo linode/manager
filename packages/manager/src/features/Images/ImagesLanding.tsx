@@ -513,11 +513,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           <Typography className={classes.imageTableSubheader}>
             These are images we automatically capture when Linode disks are
             deleted. They will be deleted after the indicated expiration date.
-            See{' '}
-            <Link to="https://www.linode.com/docs/guides/linode-images/">
-              here
-            </Link>{' '}
-            for more details.
           </Typography>
         </div>
         <EntityTable
