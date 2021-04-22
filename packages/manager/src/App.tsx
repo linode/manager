@@ -101,20 +101,6 @@ export class App extends React.Component<CombinedProps, State> {
             break;
         }
       }
-      /* if (
-       *   event[modifierKey] &&
-       *   event.shiftKey &&
-       *   event.key === letterForThemeShortcut
-       * ) {
-       *   this.props.toggleTheme();
-       * }
-
-       * if (event[modifierKey] && event.shiftKey && event.key === letterForGoToOpen) {
-       *   this.setState((prevState) => ({
-       *     ...prevState,
-       *     goToOpen: !prevState.goToOpen,
-       *   }));
-       * } */
     });
 
     /*
