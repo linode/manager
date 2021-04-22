@@ -39,7 +39,8 @@ const styles = (theme: Theme) =>
     },
     container: {
       padding: theme.spacing(3),
-      paddingBottom: theme.spacing(4),
+      paddingTop: theme.spacing(),
+      paddingBottom: theme.spacing(),
       '& .MuiFormHelperText-root': {
         marginBottom: theme.spacing(2),
       },

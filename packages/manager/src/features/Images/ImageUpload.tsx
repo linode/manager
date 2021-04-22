@@ -4,28 +4,39 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import Link from 'src/components/Link';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useRegionsQuery } from 'src/queries/regions';
 import { uploadImage } from 'src/store/image/image.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     minWidth: '100%',
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
     },
   },
   helperText: {
     marginTop: theme.spacing(2),
+  },
+  chip: {
+    fontSize: '0.625rem',
+    height: 15,
+    marginBottom: 4,
+    lineHeight: '1px',
+    letterSpacing: '.25px',
+    textTransform: 'uppercase',
   },
 }));
 export interface Props {
@@ -82,6 +93,14 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
   return (
     <Paper className={classes.container}>
+      <Typography style={{ marginTop: 16 }}>
+        <Chip className={classes.chip} label="beta" component="span" />
+        Image Uploads is currently in beta and is subject to the terms of the{' '}
+        <Link to="https://www.linode.com/legal-eatp/">
+          Early Adopter Testing Agreement
+        </Link>
+        .
+      </Typography>
       {errorMap.none ? <Notice error text={errorMap.none} /> : null}
       <div style={{ width: '100%' }}>
         <TextField
