@@ -80,7 +80,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 14,
     fontWeight: 'bold',
     height: 30,
-    padding: '7px 10px',
+    paddingLeft: 10,
+    paddingRight: 10,
     whiteSpace: 'nowrap',
     '& svg': {
       color: theme.color.tagIcon,
