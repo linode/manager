@@ -77,7 +77,7 @@ export const startEventsInterval = () =>
           setRequestDeadline(now + 500);
         } else {
           const timeout = INTERVAL * pollIteration;
-          /** Update the dealing */
+          /** Update the deadline */
           setRequestDeadline(now + timeout);
           /* Update the iteration to a maximum of 16. */
           const newIteration = Math.min(pollIteration * 2, 16);

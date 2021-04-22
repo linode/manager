@@ -1,5 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
+import { eventFactory } from 'src/factories/events';
 import {
   addToEvents,
   findInEvents,
@@ -65,13 +66,13 @@ describe('event.helpers', () => {
 
   describe('isInProgressEvent', () => {
     it('should return true', () => {
-      const event = { percent_complete: 60 };
+      const event = eventFactory.build({ percent_complete: 60 });
       const result = isInProgressEvent(event);
       expect(result).toBeTruthy();
     });
 
     it('should return false', () => {
-      const event = { percent_complete: 100 };
+      const event = eventFactory.build({ percent_complete: 100 });
       const result = isInProgressEvent(event);
       expect(result).toBeFalsy();
     });
@@ -330,43 +331,19 @@ describe('event.helpers', () => {
 
     it('should do nothing if there are no in-progress events', () => {
       const inProgressEvents = { '999': 23 };
-      const events = [
-        {
-          id: 1,
-          percent_complete: 100,
-        },
-        {
-          id: 2,
-          percent_complete: 100,
-        },
-        {
-          id: 3,
-          percent_complete: 100,
-        },
-      ];
+      const events = eventFactory.buildList(3, { percent_complete: 100 });
       const result = updateInProgressEvents(inProgressEvents, events);
       expect(result).toEqual({ '999': 23 });
     });
 
     it('should add in-progress events to the Map', () => {
       const inProgressEvents = {};
-      const events = [
-        {
-          id: 1,
-          percent_complete: 100,
-        },
-        {
-          id: 2,
-          percent_complete: 60,
-        },
-        {
-          id: 3,
-          percent_complete: 100,
-        },
-      ];
+      const events = eventFactory.buildList(3, { percent_complete: 100 });
+      // Mark one event as in progress
+      events[1].percent_complete = 60;
       const result = updateInProgressEvents(inProgressEvents, events);
 
-      expect(result).toEqual({ '2': 60 });
+      expect(result).toEqual({ [events[1].id]: 60 });
     });
   });
 });
