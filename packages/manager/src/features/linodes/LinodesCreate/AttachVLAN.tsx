@@ -7,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
@@ -42,6 +43,7 @@ interface Props {
   ipamError?: string;
   readOnly?: boolean;
   region?: string;
+  regionSupportsVLANs?: boolean;
   helperText?: string;
   handleVLANChange: (updatedInterface: Interface) => void;
 }
@@ -65,6 +67,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
     ipamError,
     readOnly,
     region,
+    regionSupportsVLANs,
   } = props;
 
   return (
@@ -77,6 +80,17 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
       </Box>
       <Grid container>
         <Grid item xs={12}>
+          {!regionSupportsVLANs ? (
+            <Notice warning>
+              <Typography>
+                <strong>
+                  VLAN instances are not available in the selected region.
+                  Currently they are available in Atlanta, GA; Toronto, CN;
+                  Mumbai, IN; and Sydney, AU.
+                </strong>
+              </Typography>
+            </Notice>
+          ) : null}
           <Typography variant="body1">
             VLANs are used to create a private L2 Virtual Local Area Network
             between Linodes. A VLAN created or attached in this section will be
@@ -101,7 +115,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
           </Typography>
           <InterfaceSelect
             slotNumber={1}
-            readOnly={readOnly || false}
+            readOnly={readOnly || !regionSupportsVLANs || false}
             label={vlanLabel}
             labelError={labelError}
             purpose="vlan"
