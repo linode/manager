@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'hidden',
     position: 'relative',
     whiteSpace: 'nowrap',
+    '& .MuiChip-root:last-child': {
+      marginRight: 4,
+    },
   },
   tagListOverflow: {
     maskImage: `linear-gradient(to right, rgba(0, 0, 0, 1.0) 75%, transparent)`,
@@ -76,6 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.normal,
     fontSize: 14,
     fontWeight: 'bold',
+    height: 30,
     padding: '7px 10px',
     whiteSpace: 'nowrap',
     '& svg': {
