@@ -232,8 +232,9 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             style={{ marginBottom: 8 }}
           >
             To disable {currentProvider?.displayName} authentication and log in
-            using your Linode credentials, click the button above. We&apos;ll
-            send you an e-mail with instructions on how to reset your password.
+            using your Linode credentials, click the Linode button above.
+            We&apos;ll send you an e-mail with instructions on how to reset your
+            password.
           </Typography>
         </Paper>
       )}

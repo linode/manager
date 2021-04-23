@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
     padding: theme.spacing(3),
+    paddingTop: 17,
   },
   linode: {
     marginBottom: theme.spacing(2),
