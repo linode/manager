@@ -9,7 +9,13 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
+import { ExtendedRegion, useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
+import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import {
+  doesRegionSupportVLANs,
+  regionsWithVLANs,
+} from 'src/utilities/doesRegionSupportVLANs';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,7 +49,6 @@ interface Props {
   ipamError?: string;
   readOnly?: boolean;
   region?: string;
-  regionSupportsVLANs?: boolean;
   helperText?: string;
   handleVLANChange: (updatedInterface: Interface) => void;
 }
@@ -51,13 +56,6 @@ interface Props {
 type CombinedProps = Props;
 
 const AttachVLAN: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
-  React.useEffect(() => {
-    // Ensure VLANs are fresh.
-    queryClient.invalidateQueries(vlansQueryKey);
-  }, []);
-
   const {
     handleVLANChange,
     helperText,
@@ -67,8 +65,31 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
     ipamError,
     readOnly,
     region,
-    regionSupportsVLANs,
   } = props;
+
+  const classes = useStyles();
+
+  React.useEffect(() => {
+    // Ensure VLANs are fresh.
+    queryClient.invalidateQueries(vlansQueryKey);
+  }, []);
+
+  const regions = useRegionsQuery().data ?? [];
+  const selectedRegion = region || '';
+
+  const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
+
+  const regionsThatSupportVLANs = regionsWithVLANs(regions).map(
+    (region: ExtendedRegion) => region.display
+  );
+  const unavailableInRegionMessage = `VLAN instances are not available in the selected region. Currently they are available in ${arrayToList(
+    regionsThatSupportVLANs,
+    ';'
+  )}.`;
+
+  const warningMessage = selectedRegion
+    ? unavailableInRegionMessage
+    : 'You must select a region before adding a VLAN.';
 
   return (
     <div className={classes.root}>
@@ -83,11 +104,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
           {!regionSupportsVLANs ? (
             <Notice warning>
               <Typography>
-                <strong>
-                  VLAN instances are not available in the selected region.
-                  Currently they are available in Atlanta, GA; Toronto, CN;
-                  Mumbai, IN; and Sydney, AU.
-                </strong>
+                <strong>{warningMessage}</strong>
               </Typography>
             </Notice>
           ) : null}

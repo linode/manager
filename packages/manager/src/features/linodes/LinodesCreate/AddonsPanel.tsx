@@ -12,8 +12,6 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
-import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -114,15 +112,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const flags = useFlags();
   const { account } = useAccount();
 
-  const regions = useRegionsQuery().data ?? [];
-  const selectedRegion = selectedRegionID || '';
-
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.data?.capabilities ?? [];
   const showVlans = capabilities.includes('Vlans') && flags.vlans;
-
-  const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
 
   const isBareMetal = /metal/.test(selectedTypeID ?? '');
 
@@ -161,7 +154,6 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             helperText={vlanDisabledReason}
             handleVLANChange={handleVLANChange}
             region={selectedRegionID}
-            regionSupportsVLANs={regionSupportsVLANs}
           />
         ) : null}
         <Typography variant="h2" className={classes.title}>

@@ -1,6 +1,6 @@
 import arrayToList from './arrayToList';
 
-describe('Array to comma-separated list', () => {
+describe('Array to delimiter-separated list', () => {
   it('should return a single item as an unaltered string', () => {
     expect(arrayToList(['hello'])).toEqual('hello');
   });
@@ -17,6 +17,15 @@ describe('Array to comma-separated list', () => {
     expect(arrayToList(['apples', 'peas', 'carrots', 'peaches'])).toEqual(
       'apples, peas, carrots, and peaches'
     );
+  });
+
+  it('should return a list with items containing commas as semicolon-separated', () => {
+    expect(
+      arrayToList(
+        ['Mumbai, IN', 'Toronto, ON', 'Sydney, AU', 'Atlanta, GA'],
+        ';'
+      )
+    ).toEqual('Mumbai, IN; Toronto, ON; Sydney, AU; and Atlanta, GA');
   });
 
   it('should handle undefined input', () => {
