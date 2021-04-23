@@ -7,7 +7,7 @@ import Select, {
   NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Tag {
   value: string;
@@ -87,9 +87,9 @@ const TagsInput: React.FC<Props> = (props) => {
     }
   };
 
-  const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
-  const labelError = hasErrorFor('label');
-  const generalError = hasErrorFor('none');
+  const errorMap = getErrorMap(['label'], errors);
+  const labelError = errorMap.label;
+  const generalError = errorMap.none;
 
   const error = disabled ? undefined : labelError || tagError || generalError;
 
