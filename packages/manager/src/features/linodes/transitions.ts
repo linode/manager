@@ -33,6 +33,12 @@ export const transitionAction = [
   'linode_migrate_datacenter',
 ];
 
+const transitionActionMap = {
+  linode_mutate: 'Upgrading',
+  linode_migrate_datacenter: 'Migrating',
+  disk_imagize: 'Capturing Image',
+};
+
 export const linodeInTransition = (
   status: string,
   recentEvent?: Event
@@ -54,14 +60,6 @@ export const transitionText = (
   linodeId: number,
   recentEvent?: Event
 ): string => {
-  // `linode_mutate` is a special case, because we want to display
-  // "Upgrading" instead of "Mutate".
-
-  // @todo @tdt: use a map instead (event_type to display name)
-  if (recentEvent?.action === 'linode_mutate') {
-    return 'Upgrading';
-  }
-
   if (recentEvent?.action === 'linode_clone') {
     if (isPrimaryEntity(recentEvent, linodeId)) {
       return 'Cloning';
@@ -71,17 +69,16 @@ export const transitionText = (
     }
   }
 
-  if (recentEvent?.action === 'linode_migrate_datacenter') {
-    return 'Migrating';
+  if (recentEvent && transitionActionMap[recentEvent.action]) {
+    return transitionActionMap[recentEvent.action];
   }
 
-  let event;
-  if (recentEvent && transitionAction.includes(recentEvent.action)) {
-    event = recentEvent.action.replace('linode_', '').replace('_', ' ');
-  } else {
-    event = status.replace('_', ' ');
+  if (recentEvent && transitionAction.includes(recentEvent?.action)) {
+    const event = recentEvent?.action.replace('linode_', '').replace('_', ' ');
+    return capitalizeAllWords(event);
   }
-  return capitalizeAllWords(event);
+
+  return capitalizeAllWords(status.replace('_', ' '));
 };
 
 // There are two possibilities here:
