@@ -1,3 +1,8 @@
+import {
+  createImageSchema,
+  updateImageSchema,
+  uploadImageSchema,
+} from '@linode/validation/lib/images.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,11 +12,6 @@ import Request, {
   setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import {
-  createImageSchema,
-  updateImageSchema,
-  uploadImageSchema,
-} from '@linode/validation/lib/images.schema';
 import { Image, ImageUploadPayload, UploadImageResponse } from './types';
 
 /**
