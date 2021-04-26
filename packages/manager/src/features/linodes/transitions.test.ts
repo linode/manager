@@ -46,4 +46,30 @@ describe('transitionText helper', () => {
       })
     ).toEqual('Optimus');
   });
+
+  it('should use present tense if an event is a transition event and capitalize it', () => {
+    expect(
+      transitionText('running', 123, {
+        id: 123,
+        action: 'disk_imagize',
+        secondary_entity: {
+          id: 12345,
+          label: 'Alpine 3.13 Disk',
+          type: 'image',
+          url: '/v4/images/private/12345',
+        },
+        created: '2020-12-12',
+        entity: null,
+        percent_complete: 34,
+        rate: null,
+        read: false,
+        seen: false,
+        status: 'started',
+        time_remaining: null,
+        username: 'linode',
+        duration: 12,
+        message: null,
+      })
+    ).toEqual('Capturing Image');
+  });
 });

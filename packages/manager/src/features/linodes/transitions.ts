@@ -22,21 +22,15 @@ export const transitionStatus = [
   'edit_mode',
 ];
 
-export const transitionAction = [
-  'linode_snapshot',
-  'disk_resize',
-  'backups_restore',
-  'disk_imagize',
-  'disk_duplicate',
-  'linode_mutate',
-  'linode_clone',
-  'linode_migrate_datacenter',
-];
-
-const transitionActionMap = {
+const transitionActionMap: Partial<Record<EventAction, string>> = {
+  backups_restore: 'Backups Restore',
+  linode_snapshot: 'Snapshot',
   linode_mutate: 'Upgrading',
+  linode_clone: 'Cloning',
   linode_migrate_datacenter: 'Migrating',
+  disk_resize: 'Resizing',
   disk_imagize: 'Capturing Image',
+  disk_duplicate: 'Duplicating',
 };
 
 export const linodeInTransition = (
@@ -49,7 +43,7 @@ export const linodeInTransition = (
 
   return (
     recentEvent !== undefined &&
-    transitionAction.includes(recentEvent.action || '') &&
+    transitionActionMap.hasOwnProperty(recentEvent.action) &&
     recentEvent.percent_complete !== null &&
     recentEvent.percent_complete < 100
   );
@@ -59,7 +53,7 @@ export const transitionText = (
   status: string,
   linodeId: number,
   recentEvent?: Event
-): string => {
+): string | undefined => {
   if (recentEvent?.action === 'linode_clone') {
     if (isPrimaryEntity(recentEvent, linodeId)) {
       return 'Cloning';
@@ -71,11 +65,6 @@ export const transitionText = (
 
   if (recentEvent && transitionActionMap[recentEvent.action]) {
     return transitionActionMap[recentEvent.action];
-  }
-
-  if (recentEvent && transitionAction.includes(recentEvent?.action)) {
-    const event = recentEvent?.action.replace('linode_', '').replace('_', ' ');
-    return capitalizeAllWords(event);
   }
 
   return capitalizeAllWords(status.replace('_', ' '));
