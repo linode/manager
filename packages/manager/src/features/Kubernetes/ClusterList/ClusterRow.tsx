@@ -128,7 +128,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
       </TableCell>
       <Hidden xsDown>
         <TableCell data-qa-cluster-memory>
-          {`${cluster.totalMemory / 1024}GB`}
+          {`${cluster.totalMemory / 1024} GB`}
         </TableCell>
       </Hidden>
       <Hidden xsDown>
