@@ -1,5 +1,4 @@
 import { Region } from '@linode/api-v4/lib/regions';
-import { ExtendedRegion } from 'src/queries/regions';
 
 export const doesRegionSupportVLANs = (
   region: string,
@@ -14,6 +13,6 @@ export const doesRegionSupportVLANs = (
   return regionMetaData.capabilities.includes('Vlans');
 };
 
-export const regionsWithVLANs = (regionsData: Region[] | ExtendedRegion[]) => {
+export const regionsWithVLANs = (regionsData: Region[]) => {
   return regionsData.filter((region) => region.capabilities.includes('Vlans'));
 };

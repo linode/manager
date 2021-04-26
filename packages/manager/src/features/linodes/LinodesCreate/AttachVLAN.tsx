@@ -11,7 +11,7 @@ import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
 import { ExtendedRegion, useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
   doesRegionSupportVLANs,
   regionsWithVLANs,
@@ -82,14 +82,16 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   const regionsThatSupportVLANs = regionsWithVLANs(regions).map(
     (region: ExtendedRegion) => region.display
   );
-  const unavailableInRegionMessage = `VLAN instances are not available in the selected region. Currently they are available in ${arrayToList(
+
+  const regionWarningMessage = selectedRegion
+    ? 'VLAN instances are not available in the selected region.'
+    : 'You must select a region before adding a VLAN.';
+  const regionalAvailabilityMessage = `Currently they are available in ${arrayToList(
     regionsThatSupportVLANs,
     ';'
   )}.`;
 
-  const warningMessage = selectedRegion
-    ? unavailableInRegionMessage
-    : 'You must select a region before adding a VLAN.';
+  const warningMessage = `${regionWarningMessage} ${regionalAvailabilityMessage}`;
 
   return (
     <div className={classes.root}>

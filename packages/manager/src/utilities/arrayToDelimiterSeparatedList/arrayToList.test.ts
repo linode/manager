@@ -19,7 +19,7 @@ describe('Array to delimiter-separated list', () => {
     );
   });
 
-  it('should return a list with items containing commas as semicolon-separated', () => {
+  it('should use the delimiter provided', () => {
     expect(
       arrayToList(
         ['Mumbai, IN', 'Toronto, ON', 'Sydney, AU', 'Atlanta, GA'],
