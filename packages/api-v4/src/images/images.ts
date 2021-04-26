@@ -11,7 +11,7 @@ import {
   createImageSchema,
   updateImageSchema,
   uploadImageSchema,
-} from './images.schema';
+} from '@linode/validation/lib/images.schema';
 import { Image, ImageUploadPayload, UploadImageResponse } from './types';
 
 /**
