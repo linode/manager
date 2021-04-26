@@ -205,7 +205,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             <TableCell className={classes.radioCell}>
               {!isSamePlan && (
                 <FormControlLabel
-                  label={type.heading}
+                  label={type.heading.replace('GB', ' GB')}
                   aria-label={type.heading}
                   className={'label-visually-hidden'}
                   control={
