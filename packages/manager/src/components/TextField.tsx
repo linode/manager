@@ -19,9 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   noTransform: {
     transform: 'none',
   },
-  root: {
-    marginTop: 0,
-  },
   helpWrapperContainer: {
     display: 'flex',
     width: '100%',
@@ -71,22 +68,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.red,
     height: 34,
     top: -2,
-    left: 280,
-    width: 200,
+    left: 285,
+    width: 'max-content',
+  },
+  // Adjusts position of errorText when textfield is in breadcrumb
+  errorTextBreadcrumb: {
+    [theme.breakpoints.down('md')]: {
+      maxWidth: 300,
+    },
     [theme.breakpoints.down('sm')]: {
-      left: 260,
+      left: 248,
+      maxWidth: 200,
     },
     [theme.breakpoints.down('xs')]: {
       top: 26,
-      left: 5,
-      width: 400,
+      left: 6,
+      maxWidth: 300,
     },
   },
   errorTextLong: {
-    width: '100%',
-    [theme.breakpoints.down(480)]: {
+    [theme.breakpoints.down('xs')]: {
       top: 36,
-      width: 240,
     },
   },
   absolute: {
@@ -94,7 +96,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   editable: {
     wordBreak: 'keep-all',
-    paddingLeft: 1,
   },
   helperTextTop: {
     marginBottom: theme.spacing(),
@@ -118,7 +119,7 @@ interface BaseProps {
   // Currently only used for LKE node pool inputs
   tiny?: boolean;
   /**
-   * number amounts allowed in textfield
+   * Number amounts allowed in textfield
    * "type" prop must also be set to "number"
    */
   min?: number;
@@ -129,6 +130,7 @@ interface BaseProps {
   hideLabel?: boolean;
   hasAbsoluteError?: boolean;
   inputId?: string;
+  inBreadcrumb?: boolean;
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
@@ -145,32 +147,33 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
 
   const {
     errorText,
-    editable,
     errorGroup,
     affirmative,
-    onChange,
+    helperText,
+    helperTextPosition,
     tooltipText,
     className,
     expand,
     small,
+    editable,
     tiny,
-    inputProps,
-    helperText,
-    helperTextPosition,
-    InputProps,
-    InputLabelProps,
-    SelectProps,
-    dataAttrs,
+    onChange,
     error,
-    hideLabel,
-    noMarginTop,
     label,
-    loading,
-    hasAbsoluteError,
-    inputId,
     type,
     min,
     max,
+    dataAttrs,
+    noMarginTop,
+    loading,
+    hideLabel,
+    hasAbsoluteError,
+    inputId,
+    inBreadcrumb,
+    inputProps,
+    InputProps,
+    InputLabelProps,
+    SelectProps,
     ...textFieldProps
   } = props;
 
@@ -246,6 +249,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
   const maybeRequiredLabel = !!props.required ? `${label} (required)` : label;
   const validInputId =
     inputId || (props.label ? convertToKebabCase(`${props.label}`) : undefined);
+
   return (
     <div
       className={classNames({
@@ -257,8 +261,8 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         <InputLabel
           data-qa-textfield-label={label}
           className={classNames({
-            [classes.wrapper]: noMarginTop ? false : true,
             [classes.noTransform]: true,
+            [classes.wrapper]: noMarginTop ? false : true,
             'visually-hidden': hideLabel,
           })}
           htmlFor={validInputId}
@@ -345,9 +349,9 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
           }}
           className={classNames(
             {
+              [classes.noMarginTop]: true,
               [classes.helpWrapperTextField]: Boolean(tooltipText),
               [classes.small]: small,
-              [classes.root]: true,
             },
             className
           )}
@@ -362,7 +366,8 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         <FormHelperText
           className={classNames({
             [classes.errorText]: true,
-            [classes.errorTextLong]: errorText.length > 60,
+            [classes.errorTextBreadcrumb]: inBreadcrumb,
+            [classes.errorTextLong]: inBreadcrumb && errorText.length > 45,
             [classes.editable]: editable,
             [classes.absolute]: editable || hasAbsoluteError,
           })}

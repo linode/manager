@@ -34,6 +34,12 @@ type CombinedProps = RouteProps & SetDocsProps;
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     margin: 0,
+    // Display label errorText below to save space
+    '& .MuiFormHelperText-root': {
+      top: 26,
+      left: 6,
+      maxWidth: 'max-content',
+    },
     [theme.breakpoints.down('sm')]: {
       paddingRight: theme.spacing(),
     },
@@ -74,6 +80,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.normal,
     fontSize: 20,
     marginRight: 2,
+  },
+  error: {
+    paddingTop: 20,
   },
 }));
 
@@ -212,7 +221,12 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
           </Button>
         </Grid>
       </Grid>
-      <div className="detailsWrapper">
+      <div
+        className={classnames({
+          detailsWrapper: true,
+          [classes.error]: Boolean(labelError),
+        })}
+      >
         <_StackScript data={stackScript} />
       </div>
     </>

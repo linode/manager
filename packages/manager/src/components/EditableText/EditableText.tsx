@@ -79,6 +79,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 6,
     minWidth: 'auto',
     padding: 0,
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 4,
+      marginRight: 4,
+    },
+    '&:first-of-type': {
+      marginLeft: 20,
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: 12,
+      },
+    },
   },
   icon: {
     color: theme.palette.text.primary,
@@ -95,9 +105,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 1,
       },
     },
-  },
-  saveIcon: {
-    marginLeft: theme.spacing(),
   },
   headline: {
     ...theme.typography.h1,
@@ -116,6 +123,7 @@ interface Props {
   errorText?: string;
   labelLink?: string;
   className?: string;
+  inBreadcrumb?: boolean;
 }
 
 type PassThroughProps = Props & TextFieldProps;
@@ -134,6 +142,7 @@ const EditableText: React.FC<FinalProps> = (props) => {
     onCancel,
     text: propText,
     className,
+    inBreadcrumb,
     ...rest
   } = props;
 
@@ -234,13 +243,14 @@ const EditableText: React.FC<FinalProps> = (props) => {
           }}
           // eslint-disable-next-line
           autoFocus={true}
+          inBreadcrumb={inBreadcrumb}
         />
         <Button
           className={classes.button}
           onClick={finishEditing}
           data-qa-save-edit
         >
-          <Check className={`${classes.icon} ${classes.saveIcon}`} />
+          <Check className={classes.icon} />
         </Button>
         <Button
           className={classes.button}

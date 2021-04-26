@@ -34,17 +34,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     // The docs button will wrap when the label is editing mode so do not add
     // padding when it wraps
-    [theme.breakpoints.down(395)]: {
+    [theme.breakpoints.down(396)]: {
       paddingBottom: 0,
     },
   },
   errorLong: {
-    [theme.breakpoints.down(480)]: {
+    [theme.breakpoints.down('xs')]: {
       paddingBottom: 40,
     },
     // The docs button will wrap when the label is editing mode so do not add
     // padding when it wraps
-    [theme.breakpoints.down(395)]: {
+    [theme.breakpoints.down(396)]: {
       paddingBottom: 0,
     },
   },
@@ -102,7 +102,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
       className={classnames({
         [classes.root]: true,
         [classes.error]: Boolean(editableLabelError),
-        [classes.errorLong]: Boolean(editableLabelError.length > 60),
+        [classes.errorLong]: editableLabelError.length > 45,
         m0: true,
       })}
       container

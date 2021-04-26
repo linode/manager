@@ -48,6 +48,7 @@ const FinalCrumb: React.FC<CombinedProps> = (props) => {
         labelLink={labelOptions && labelOptions.linkTo}
         data-qa-editable-text
         className={classes.editableContainer}
+        inBreadcrumb
       />
     );
   }
