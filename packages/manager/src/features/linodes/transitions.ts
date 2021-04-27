@@ -22,16 +22,16 @@ export const transitionStatus = [
   'edit_mode',
 ];
 
-export const transitionAction = [
-  'linode_snapshot',
-  'disk_resize',
-  'backups_restore',
-  'disk_imagize',
-  'disk_duplicate',
-  'linode_mutate',
-  'linode_clone',
-  'linode_migrate_datacenter',
-];
+const transitionActionMap: Partial<Record<EventAction, string>> = {
+  backups_restore: 'Backups Restore',
+  linode_snapshot: 'Snapshot',
+  linode_mutate: 'Upgrading',
+  linode_clone: 'Cloning',
+  linode_migrate_datacenter: 'Migrating',
+  disk_resize: 'Disk Resizing',
+  disk_imagize: 'Capturing Image',
+  disk_duplicate: 'Disk Duplicating',
+};
 
 export const linodeInTransition = (
   status: string,
@@ -43,7 +43,7 @@ export const linodeInTransition = (
 
   return (
     recentEvent !== undefined &&
-    transitionAction.includes(recentEvent.action || '') &&
+    transitionActionMap.hasOwnProperty(recentEvent.action) &&
     recentEvent.percent_complete !== null &&
     recentEvent.percent_complete < 100
   );
@@ -53,15 +53,7 @@ export const transitionText = (
   status: string,
   linodeId: number,
   recentEvent?: Event
-): string => {
-  // `linode_mutate` is a special case, because we want to display
-  // "Upgrading" instead of "Mutate".
-
-  // @todo @tdt: use a map instead (event_type to display name)
-  if (recentEvent?.action === 'linode_mutate') {
-    return 'Upgrading';
-  }
-
+): string | undefined => {
   if (recentEvent?.action === 'linode_clone') {
     if (isPrimaryEntity(recentEvent, linodeId)) {
       return 'Cloning';
@@ -71,50 +63,11 @@ export const transitionText = (
     }
   }
 
-  if (recentEvent?.action === 'linode_migrate_datacenter') {
-    return 'Migrating';
+  if (recentEvent && transitionActionMap[recentEvent.action]) {
+    return transitionActionMap[recentEvent.action];
   }
 
-  let event;
-  if (recentEvent && transitionAction.includes(recentEvent.action)) {
-    event = recentEvent.action.replace('linode_', '').replace('_', ' ');
-  } else {
-    event = status.replace('_', ' ');
-  }
-  return capitalizeAllWords(event);
-};
-
-// There are two possibilities here:
-//
-// 1. "Cloning from <linode_label>"
-// 2. "Cloning to <linode_label>"
-//
-// This function builds this message based on the event, its primary and
-// secondary entities, and the Linode ID.
-export const buildLinodeCloneTransitionText = (
-  event: Event,
-  linodeId: number,
-  cmr?: boolean
-) => {
-  let text = 'Cloning';
-
-  if (cmr !== true) {
-    if (isPrimaryEntity(event, linodeId)) {
-      const secondaryEntityLabel = event?.secondary_entity?.label;
-      if (secondaryEntityLabel) {
-        text += ` to: ${secondaryEntityLabel}`;
-      }
-    }
-
-    if (isSecondaryEntity(event, linodeId)) {
-      const primaryEntityLabel = event?.entity?.label;
-      if (primaryEntityLabel) {
-        text += ` from: ${primaryEntityLabel}`;
-      }
-    }
-  }
-
-  return text;
+  return capitalizeAllWords(status.replace('_', ' '));
 };
 
 // Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.
