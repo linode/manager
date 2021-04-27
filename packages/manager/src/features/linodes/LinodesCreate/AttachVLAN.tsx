@@ -1,6 +1,5 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -68,11 +67,9 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Box display="flex" alignItems="center">
-        <Typography variant="h2" className={classes.title}>
-          Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
-        </Typography>
-      </Box>
+      <Typography variant="h2" className={classes.title}>
+        Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
+      </Typography>
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="body1">
