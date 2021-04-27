@@ -6,7 +6,12 @@ import {
   abuseTicketNotificationFactory,
 } from '@src/factories/notification';
 import { createLinode } from '../../support/api/linodes';
-import { containsVisible, getVisible } from '../../support/helpers';
+import {
+  containsVisible,
+  fbtVisible,
+  getClick,
+  getVisible,
+} from '../../support/helpers';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 
 const abuseTicket = abuseTicketNotificationFactory.build();
@@ -28,21 +33,23 @@ describe('notifications', () => {
     createLinode().then((linode) => {
       const migrationTicket = notificationFactory.buildList(1, {
         type: 'migration_pending',
-        entity: { id: 0, type: 'linode', label: 'linode-0' },
+        entity: { id: 0, type: 'linode', label: linode.label },
         severity: 'critical',
       });
-      cy.visitWithLogin('/linodes');
-      waitForAppLoad();
-      // worker.start();
-      cy.get(`[data-qa-linode="${linode.label}"]`).within(() => {
-        containsVisible('Running');
-      });
-      cy.intercept('GET', '/account/notifications', (req) => {
+      cy.intercept('GET', '*/account/notifications*', (req) => {
         req.reply((res) => {
           res.send(makeResourcePage(migrationTicket));
         });
       }).as('mockNotification');
-      waitForAppLoad('@mockNotification');
+      cy.visitWithLogin('/linodes');
+      cy.wait('@mockNotification', { timeout: 300000 });
+      cy.get(`[data-qa-linode="${linode.label}"]`).within(() => {
+        containsVisible('Running');
+      });
+      getClick('button[aria-label="Notifications"]');
+      containsVisible(
+        `You have a migration pending! ${linode.label} must be offline before starting the migration.`
+      );
     });
   });
 });
