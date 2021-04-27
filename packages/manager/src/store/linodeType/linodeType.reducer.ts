@@ -94,9 +94,11 @@ export const extendType = (type: LinodeType): ExtendedType => {
     disk,
     price: { monthly, hourly },
   } = type;
+  const formattedLabel = label.replace('GB', ' GB');
   return {
     ...type,
-    heading: label.replace('GB', ' GB'),
+    label: formattedLabel,
+    heading: formattedLabel,
     subHeadings: [
       `$${monthly}/mo ($${hourly}/hr)`,
       typeLabelDetails(memory, disk, vcpus),
