@@ -33,10 +33,18 @@ describe('stackscripts', () => {
     getClick('[data-qa-stackscript-script="true"]').type('#!/bin/bash');
     getClick('[data-qa-save="true"]');
     fbtVisible(ssLabel);
-    getVisible(`[data-qa-table-row="${ssLabel}"]`).within(() => {
-      getClick(`[aria-label="Action menu for StackScript ${ssLabel}"]`);
-    });
-    fbtClick('Deploy New Linode');
+    getVisible(`[data-qa-table-row="${ssLabel}"]`);
+    cy.get(`[aria-label="Action menu for StackScript ${ssLabel}"]`)
+      .invoke('attr', 'aria-controls')
+      .then(($id) => {
+        if ($id) {
+          getClick(`[aria-label="Action menu for StackScript ${ssLabel}"]`);
+        }
+        getClick(
+          `[id="option-1--${$id}"][data-qa-action-menu-item="Deploy New Linode"]`
+        );
+      });
+
     createLinode();
     cy.wait('@createLinode', { timeout: 300000 }).then((linode) => {
       cy.visit(`/linodes/${linode.response?.body.id}/storage`);
