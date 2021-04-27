@@ -84,7 +84,7 @@ export class App extends React.Component<CombinedProps, State> {
      */
     // eslint-disable-next-line
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-      const isOSMac = navigator.appVersion.includes('Mac');
+      const isOSMac = navigator.userAgent.includes('Mac');
       const letterForThemeShortcut = 'D';
       const letterForGoToOpen = 'K';
       const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
