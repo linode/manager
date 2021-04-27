@@ -2,12 +2,11 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import { clamp } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
@@ -140,12 +139,13 @@ interface TextFieldPropsOverrides extends TextFieldProps {
 
 export type Props = BaseProps & TextFieldProps & TextFieldPropsOverrides;
 
-type CombinedProps = Props & WithTheme;
+type CombinedProps = Props;
 
 export const LinodeTextField: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
+    value,
     errorText,
     errorGroup,
     affirmative,
@@ -177,66 +177,56 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     ...textFieldProps
   } = props;
 
-  /** Initialize the state with our passed value if we have one */
-  const [currentValue, setCurrentValue] = React.useState<
-    string | number | undefined
-  >(
-    typeof props.value === 'string' || typeof props.value === 'number'
-      ? props.value
-      : ''
-  );
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const numberTypes = ['tel', 'number'];
-
-    /** because !!0 is falsy :( */
-    const minAndMaxExist = typeof min === 'number' && typeof max === 'number';
-
-    /**
-     * If we've provided a mix and max value, make sure the user
-     * input doesn't go outside of those bounds ONLY if the input
-     * type matches a number type
-     */
-    const cleanedValue =
-      minAndMaxExist &&
-      numberTypes.some((eachType) => eachType === type) &&
-      e.target.value !== ''
-        ? clamp(min, max, +e.target.value)
-        : e.target.value;
-
-    setCurrentValue(cleanedValue);
-
-    /**
-     * Invoke the onChange prop if one is provided with the cleaned value.
-     */
-    if (onChange) {
+  const handleChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const numberTypes = ['tel', 'number'];
+      /** because !!0 is falsy :( */
+      const minAndMaxExist = typeof min === 'number' && typeof max === 'number';
       /**
-       * Create clone of event node only if our cleanedValue
-       * is different from the e.target.value
-       *
-       * This solves for a specific scenario where the e.target on
-       * the MUI TextField select variants were actually a plain object
-       * rather than a DOM node.
-       *
-       * So e.target on a text field === <input />
-       *
-       * while e.target on the select variant === { value: 10, name: undefined }
-       *
-       * See GitHub issue: https://github.com/mui-org/material-ui/issues/16470
+       * If we've provided a mix and max value, make sure the user
+       * input doesn't go outside of those bounds ONLY if the input
+       * type matches a number type
        */
-      if (e.target.value !== cleanedValue) {
-        const clonedEvent = {
-          ...e,
-          target: e.target.cloneNode(),
-        } as React.ChangeEvent<HTMLInputElement>;
+      const cleanedValue =
+        minAndMaxExist &&
+        numberTypes.some((eachType) => eachType === type) &&
+        e.target.value !== ''
+          ? clamp(min, max, +e.target.value)
+          : e.target.value;
 
-        clonedEvent.target.value = `${cleanedValue}`;
-        onChange(clonedEvent);
-      } else {
-        onChange(e);
+      /**
+       * Invoke the onChange prop if one is provided with the cleaned value.
+       */
+      if (onChange) {
+        /**
+         * Create clone of event node only if our cleanedValue
+         * is different from the e.target.value
+         *
+         * This solves for a specific scenario where the e.target on
+         * the MUI TextField select variants were actually a plain object
+         * rather than a DOM node.
+         *
+         * So e.target on a text field === <input />
+         *
+         * while e.target on the select variant === { value: 10, name: undefined }
+         *
+         * See GitHub issue: https://github.com/mui-org/material-ui/issues/16470
+         */
+        if (e.target.value !== cleanedValue) {
+          const clonedEvent = {
+            ...e,
+            target: e.target.cloneNode(),
+          } as React.ChangeEvent<HTMLInputElement>;
+
+          clonedEvent.target.value = `${cleanedValue}`;
+          onChange(clonedEvent);
+        } else {
+          onChange(e);
+        }
       }
-    }
-  };
+    },
+    [max, min, onChange, type]
+  );
 
   let errorScrollClassName = '';
 
@@ -299,7 +289,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
 
             see UserDefinedFieldsPanel.tsx for a verbose explanation why.
           */
-          value={currentValue}
+          value={value}
           onChange={handleChange}
           InputLabelProps={{
             ...InputLabelProps,
@@ -387,6 +377,4 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>()(
-  LinodeTextField
-) as React.ComponentType<Props>;
+export default React.memo(LinodeTextField);

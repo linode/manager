@@ -664,7 +664,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   small
                   disabled={disabled}
                   noMarginTop
-                  InputProps={{ id: `port-${configIdx}` }}
+                  inputId={`port-${configIdx}`}
                 />
                 <FormHelperText>Listen on this port</FormHelperText>
               </Grid>

@@ -1,4 +1,5 @@
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -27,7 +28,7 @@ describe('EnhancedNumberInput', () => {
 
     const addButton = getByTestId('increment-button');
 
-    fireEvent.click(addButton);
+    userEvent.click(addButton);
     expect(setValue).toHaveBeenCalledWith(2);
   });
 
@@ -38,7 +39,7 @@ describe('EnhancedNumberInput', () => {
 
     const subtractButton = getByTestId('decrement-button');
 
-    fireEvent.click(subtractButton);
+    userEvent.click(subtractButton);
     expect(setValue).toHaveBeenCalledWith(0);
   });
 
@@ -48,7 +49,7 @@ describe('EnhancedNumberInput', () => {
     );
 
     const input = getByTestId('textfield-input');
-    fireEvent.change(input, { target: { value: '100' } });
+    userEvent.type(input, '100');
     expect(setValue).toHaveBeenCalledWith(100);
   });
 
@@ -58,7 +59,7 @@ describe('EnhancedNumberInput', () => {
     );
 
     const input = getByTestId('textfield-input');
-    fireEvent.change(input, { target: { value: 'prestidigitation' } });
+    userEvent.type(input, 'prestidigitation');
     expect(setValue).toHaveBeenCalledWith(0);
   });
 
