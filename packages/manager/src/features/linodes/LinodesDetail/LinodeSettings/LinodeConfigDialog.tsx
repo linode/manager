@@ -774,15 +774,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 {formik.errors.interfaces ? (
                   <Notice error text={formik.errors.interfaces as string} />
                 ) : null}
-                <Typography>
-                  VLAN is currently in beta and is subject to the terms of the{' '}
-                  <ExternalLink
-                    text="Early Adopter Testing Agreement"
-                    link="https://www.linode.com/legal-eatp/"
-                    hideIcon
-                  />
-                  .
-                </Typography>
                 {values.interfaces.map((thisInterface, idx) => {
                   return (
                     <InterfaceSelect
