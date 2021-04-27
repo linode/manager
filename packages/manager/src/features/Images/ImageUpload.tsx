@@ -9,6 +9,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import FileUploader from 'src/components/FileUploader/FileUploader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -38,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     letterSpacing: '.25px',
     textTransform: 'uppercase',
   },
+  browseFilesButton: {
+    marginLeft: '1rem',
+  },
 }));
 export interface Props {
   label: string;
@@ -64,6 +68,10 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const [submitting, setSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
 
+  const [dropzoneIsVisible, setDropzoneIsVisible] = React.useState<boolean>(
+    false
+  );
+
   const handleSubmit = () => {
     setSubmitting(true);
     setErrors(undefined);
@@ -87,6 +95,10 @@ export const ImageUpload: React.FC<Props> = (props) => {
         setSubmitting(false);
         setErrors(e);
       });
+  };
+
+  const showDropzone = () => {
+    setDropzoneIsVisible(!dropzoneIsVisible);
   };
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
@@ -144,7 +156,23 @@ export const ImageUpload: React.FC<Props> = (props) => {
           >
             Generate URL
           </Button>
+          <Button
+            onClick={showDropzone}
+            disabled={region === '' || !canCreateImage}
+            loading={submitting}
+            buttonType="primary"
+            className={classes.browseFilesButton}
+          >
+            Browse Files
+          </Button>
         </ActionsPanel>
+        {dropzoneIsVisible ? (
+          <FileUploader
+            label={label}
+            description={description}
+            region={region}
+          />
+        ) : null}
       </div>
     </Paper>
   );
