@@ -28,9 +28,9 @@ const transitionActionMap: Partial<Record<EventAction, string>> = {
   linode_mutate: 'Upgrading',
   linode_clone: 'Cloning',
   linode_migrate_datacenter: 'Migrating',
-  disk_resize: 'Resizing',
+  disk_resize: 'Disk Resizing',
   disk_imagize: 'Capturing Image',
-  disk_duplicate: 'Duplicating',
+  disk_duplicate: 'Disk Duplicating',
 };
 
 export const linodeInTransition = (
@@ -68,39 +68,6 @@ export const transitionText = (
   }
 
   return capitalizeAllWords(status.replace('_', ' '));
-};
-
-// There are two possibilities here:
-//
-// 1. "Cloning from <linode_label>"
-// 2. "Cloning to <linode_label>"
-//
-// This function builds this message based on the event, its primary and
-// secondary entities, and the Linode ID.
-export const buildLinodeCloneTransitionText = (
-  event: Event,
-  linodeId: number,
-  cmr?: boolean
-) => {
-  let text = 'Cloning';
-
-  if (cmr !== true) {
-    if (isPrimaryEntity(event, linodeId)) {
-      const secondaryEntityLabel = event?.secondary_entity?.label;
-      if (secondaryEntityLabel) {
-        text += ` to: ${secondaryEntityLabel}`;
-      }
-    }
-
-    if (isSecondaryEntity(event, linodeId)) {
-      const primaryEntityLabel = event?.entity?.label;
-      if (primaryEntityLabel) {
-        text += ` from: ${primaryEntityLabel}`;
-      }
-    }
-  }
-
-  return text;
 };
 
 // Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.
