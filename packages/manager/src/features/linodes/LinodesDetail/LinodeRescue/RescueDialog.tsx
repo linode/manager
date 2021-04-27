@@ -29,6 +29,7 @@ import DeviceSelection, {
 import Dialog from 'src/components/Dialog';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import usePrevious from 'src/hooks/usePrevious';
+import BareMetalRescue from './BareMetalRescue';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -120,6 +121,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
   const linodeDisks = linode?._disks.map((disk) =>
     assoc('_id', `disk-${disk.id}`, disk)
   );
+  const isBareMetalInstance = linode?._type?.class === 'metal';
 
   const filteredVolumes = React.useMemo(() => {
     return volumesData
@@ -193,6 +195,17 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
       ...rescueDevices,
       [slot]: _id,
     }));
+
+  if (isBareMetalInstance) {
+    return (
+      <BareMetalRescue
+        linodeID={linodeId}
+        linodeLabel={linodeLabel ?? ''}
+        onClose={onClose}
+        isOpen={open}
+      />
+    );
+  }
 
   return (
     <Dialog
