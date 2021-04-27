@@ -1,25 +1,25 @@
+import {
+  CreditCardSchema,
+  ExecutePaypalPaymentSchema,
+  PaymentSchema,
+  StagePaypalPaymentSchema,
+} from '@linode/validation/lib/account.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage } from '../types';
-import {
-  CreditCardSchema,
-  ExecutePaypalPaymentSchema,
-  PaymentSchema,
-  StagePaypalPaymentSchema
-} from './account.schema';
 import {
   ExecutePayload,
   Payment,
   PaymentResponse,
   Paypal,
   PaypalResponse,
-  SaveCreditCardData
+  SaveCreditCardData,
 } from './types';
 
 /**

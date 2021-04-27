@@ -1,3 +1,4 @@
+import { CreateTransferSchema } from '@linode/validation/lib/transfers.schema';
 import { BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,7 +8,6 @@ import Request, {
   setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { CreateTransferSchema } from './transfers.schema';
 import { CreateTransferPayload, EntityTransfer } from './types';
 
 // SELF SERVE ENTITY TRANSFERS

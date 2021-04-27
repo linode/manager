@@ -1,19 +1,18 @@
+import {
+  createDomainSchema,
+  importZoneSchema,
+  updateDomainSchema,
+} from '@linode/validation/lib/domains.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
-import {
-  createDomainSchema,
-  importZoneSchema,
-  updateDomainSchema
-} from './domains.schema';
-
 import { ResourcePage as Page } from '../types';
-import { Domain, CreateDomainPayload, UpdateDomainPayload } from './types';
+import { CreateDomainPayload, Domain, UpdateDomainPayload } from './types';
 
 /**
  * Returns a paginated list of Domains.

@@ -11,5 +11,3 @@ export * from './users';
 export * from './oauth';
 
 export * from './types';
-
-export * from './account.schema';

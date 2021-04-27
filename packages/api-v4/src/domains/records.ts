@@ -1,9 +1,9 @@
+import {
+  createRecordSchema,
+  updateRecordSchema,
+} from '@linode/validation/lib/records.schema';
 import { API_ROOT } from '../constants';
-
 import Request, { setData, setMethod, setParams, setURL } from '../request';
-
-import { createRecordSchema, updateRecordSchema } from './records.schema';
-
 import { ResourcePage as Page } from '../types';
 import { DomainRecord } from './types';
 

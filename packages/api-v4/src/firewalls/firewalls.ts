@@ -4,21 +4,21 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
 import {
   CreateFirewallSchema,
   FirewallDeviceSchema,
-  UpdateFirewallSchema
-} from './firewalls.schema';
+  UpdateFirewallSchema,
+} from '@linode/validation/lib/firewalls.schema';
 import {
   CreateFirewallPayload,
   Firewall,
   FirewallDevice,
   FirewallDevicePayload,
   FirewallRules,
-  UpdateFirewallPayload
+  UpdateFirewallPayload,
 } from './types';
 
 // FIREWALLS

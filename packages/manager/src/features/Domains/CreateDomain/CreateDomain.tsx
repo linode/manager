@@ -1,10 +1,10 @@
 import {
   CreateDomainPayload,
   createDomainRecord,
-  createDomainSchema,
   Domain,
   DomainType,
 } from '@linode/api-v4/lib/domains';
+import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';

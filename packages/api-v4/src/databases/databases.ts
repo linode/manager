@@ -1,26 +1,24 @@
+import {
+  createDatabaseSchema,
+  resetPasswordSchema,
+  updateDatabaseSchema,
+} from '@linode/validation/lib/databases.schema';
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from 'src/request';
 import { ResourcePage as Page } from '../types';
-
-import {
-  createDatabaseSchema,
-  resetPasswordSchema,
-  updateDatabaseSchema
-} from './databases.schema';
-
 import {
   CreateDatabasePayload,
   Database,
   DatabaseBackup,
   DatabaseConnection,
   DatabaseType,
-  UpdateDatabasePayload
+  UpdateDatabasePayload,
 } from './types';
 
 /**
