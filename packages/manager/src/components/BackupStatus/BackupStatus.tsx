@@ -10,12 +10,15 @@ import {
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames =
   | 'icon'
   | 'noBackupText'
   | 'root'
   | 'wrapper'
+  | 'helpIcon'
+  | 'withHelpIcon'
   | 'backupLink'
   | 'backupText';
 
@@ -32,6 +35,18 @@ const styles = (theme: Theme) =>
     wrapper: {
       display: 'flex',
       alignContent: 'center',
+    },
+    helpIcon: {
+      color: theme.color.grey1,
+      '& :hover': {
+        color: '#4d99f1',
+        backgroundColor: 'transparent',
+      },
+      padding: 0,
+    },
+    withHelpIcon: {
+      display: 'flex',
+      alignItems: 'center',
     },
     backupLink: {
       display: 'flex',
@@ -50,12 +65,22 @@ interface Props {
   mostRecentBackup: string | null;
   linodeId: number;
   backupsEnabled: boolean;
+  isBareMetalInstance?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const BackupStatus: React.FC<CombinedProps> = (props) => {
-  const { classes, mostRecentBackup, linodeId, backupsEnabled } = props;
+  const {
+    classes,
+    mostRecentBackup,
+    linodeId,
+    backupsEnabled,
+    isBareMetalInstance,
+  } = props;
+
+  const backupsUnavailableMessage =
+    'Backups are unavailable for Bare Metal instances.';
 
   if (mostRecentBackup) {
     return (
@@ -79,6 +104,20 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
             </Typography>
           </Link>
         </Tooltip>
+      </div>
+    );
+  }
+
+  if (isBareMetalInstance) {
+    return (
+      <div className={classes.withHelpIcon}>
+        <Typography variant="body1" className={classes.noBackupText}>
+          N/A
+        </Typography>
+        <HelpIcon
+          text={backupsUnavailableMessage}
+          className={classes.helpIcon}
+        />
       </div>
     );
   }
