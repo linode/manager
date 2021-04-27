@@ -4,7 +4,7 @@ import { array, mixed, number, object, string } from 'yup';
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
 
-export const validateIP = (ipAddress: string) => {
+export const validateIP = (ipAddress: string): boolean => {
   // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
   // methods for each, so we check for a netmask to decide the method to use.
   const [, mask] = ipAddress.split('/');
@@ -77,6 +77,7 @@ export const FirewallRuleSchema = object().shape({
 
 export const CreateFirewallSchema = object().shape({
   label: string()
+    .required('Label is required.')
     .min(3, 'Label must be between 3 and 32 characters.')
     .max(32, 'Label must be between 3 and 32 characters.'),
   // Label validation on the back end is more complicated, we only do basic checks here.

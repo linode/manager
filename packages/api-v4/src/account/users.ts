@@ -1,13 +1,16 @@
+import {
+  CreateUserSchema,
+  UpdateUserSchema,
+} from '@linode/validation/lib/account.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage } from '../types';
-import { CreateUserSchema, UpdateUserSchema } from './account.schema';
 import { Grants, User } from './types';
 
 /**
