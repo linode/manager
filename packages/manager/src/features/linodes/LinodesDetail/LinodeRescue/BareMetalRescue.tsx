@@ -6,6 +6,7 @@ import Button from 'src/components/Button';
 import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { RESCUE_HELPER_TEXT } from './shared';
 interface Props {
   linodeID: number;
   linodeLabel: string;
@@ -65,9 +66,7 @@ export const BareMetalRescue: React.FC<Props> = (props) => {
       actions={actions}
       error={error}
     >
-      If you suspect that your primary filesystem is corrupt, use the Linode
-      Manager to boot your Linode into Rescue Mode. This is a safe environment
-      for performing many system recovery and disk management tasks.
+      {RESCUE_HELPER_TEXT}
     </ConfirmationDialog>
   );
 };
