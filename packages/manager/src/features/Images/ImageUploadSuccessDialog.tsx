@@ -73,7 +73,7 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
     );
   };
 
-  const curlExample = `curl -v -X PUT \\\n-H "Content-Type: application/octet-stream" \\\n--upload-file example.img.gz \\\n"${url}" \\\n--progress-bar \\\n--output /dev/null`;
+  const curlExample = `curl -v \\\n-H "Content-Type: application/octet-stream" \\\n--upload-file example.img.gz \\\n"${url}" \\\n--progress-bar \\\n--output /dev/null`;
 
   return (
     /** Disabling the normal ESC/click away to close, because once the modal goes away the URL is lost */
