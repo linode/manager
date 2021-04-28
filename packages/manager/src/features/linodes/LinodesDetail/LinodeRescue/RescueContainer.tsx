@@ -3,7 +3,7 @@ import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import BareMetalRescue from './BareMetalRescue';
 import RescueDialog from './RescueDialog';
 
-interface Props {
+export interface Props {
   open: boolean;
   onClose: () => void;
   linodeId: number;

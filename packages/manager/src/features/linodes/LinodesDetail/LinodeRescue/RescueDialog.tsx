@@ -228,7 +228,6 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
               onClick={incrementCounter}
               label="Add Disk"
               disabled={disabled || counter >= 6}
-              left
             />
             <ActionsPanel>
               <Button
