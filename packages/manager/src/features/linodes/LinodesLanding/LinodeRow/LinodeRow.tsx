@@ -305,7 +305,7 @@ RenderFlag.displayName = `RenderFlag`;
 export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
-  text: string;
+  text: string | undefined;
 }> = (props) => {
   const { progress, text, className } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
