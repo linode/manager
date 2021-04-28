@@ -73,7 +73,7 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
     );
   };
 
-  const curlExample = `curl -v -X PUT \\\n-H "Content-Type: application/octet-stream" \\\n--data-binary @path/to/image \\\n"${url}"`;
+  const curlExample = `curl -v -X PUT \\\n-H "Content-Type: application/octet-stream" \\\n--upload-file example.img.gz \\\n"${url}" \\\n--progress-bar \\\n--output /dev/null`;
 
   return (
     /** Disabling the normal ESC/click away to close, because once the modal goes away the URL is lost */
@@ -91,11 +91,11 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
             <strong>It won&apos;t be shown again.</strong>
           </Typography>
           <Typography>
-            See{' '}
-            <Link to="https://linode.com/docs">
-              Deploy an Image to a Linode
+            See our{' '}
+            <Link to="https://www.linode.com/docs/products/tools/images/guides/upload-an-image/">
+              Upload an Image
             </Link>{' '}
-            for more information on uploading an image to Linode.
+            guide for more information.
           </Typography>
         </div>
 
