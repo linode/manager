@@ -1,7 +1,7 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import * as Factory from 'factory.ts';
 
-export const VLANFactory = Factory.Sync.makeFactory<LinodeType>({
+export const typeFactory = Factory.Sync.makeFactory<LinodeType>({
   id: 'g6-standard-1',
   label: 'Linode Metal Alpha 1',
   price: {
@@ -22,6 +22,6 @@ export const VLANFactory = Factory.Sync.makeFactory<LinodeType>({
   vcpus: 8,
   gpus: 0,
   network_out: 10000,
-  class: 'metal',
+  class: 'standard',
   successor: null,
 });
