@@ -3,10 +3,10 @@ import Promise from 'bluebird';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import AddNewLink_CMR from 'src/components/AddNewLink/AddNewLink_CMR';
-import Box from 'src/components/core/Box';
+import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import withLinodes, {
   Props as LinodesProps,
 } from 'src/containers/withLinodes.container';
@@ -18,17 +18,22 @@ import FirewallDevicesTable from './FirewallDevicesTable';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  message: {
-    fontSize: '16px',
+  copy: {
+    fontSize: '0.875rem',
+    marginTop: theme.spacing(),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
   },
-  link: {
-    margin: '8px 8px 8px auto',
-    [theme.breakpoints.up('md')]: {
-      marginRight: 0,
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    '&.MuiGrid-item': {
+      paddingTop: 0,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
     },
   },
 }));
@@ -128,24 +133,23 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        flexWrap="wrap"
-        marginTop="10px"
-      >
-        <Typography className={classes.message}>
-          The following Linodes have been assigned to this Firewall. A Linode
-          can only be assigned to a single Firewall.
-        </Typography>
-        <AddNewLink_CMR
-          onClick={() => setDeviceDrawerOpen(true)}
-          label="Add Linodes to Firewall"
-          className={classes.link}
-        />
-      </Box>
+      <Grid container direction="column">
+        <Grid item style={{ paddingBottom: 0 }}>
+          <Typography className={classes.copy}>
+            The following Linodes have been assigned to this Firewall. A Linode
+            can only be assigned to a single Firewall.
+          </Typography>
+        </Grid>
+        <Grid item className={classes.actions}>
+          <Button
+            buttonType="secondary"
+            onClick={() => setDeviceDrawerOpen(true)}
+            superCompact
+          >
+            Add Linodes to Firewall
+          </Button>
+        </Grid>
+      </Grid>
       <FirewallDevicesTable
         devices={deviceList}
         error={devices.error.read}
