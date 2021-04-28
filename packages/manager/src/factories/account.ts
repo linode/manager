@@ -13,6 +13,7 @@ export const promoFactory = Factory.Sync.makeFactory<ActivePromotion>({
   credit_monthly_cap: '20.00',
   credit_remaining: '20.00',
   this_month_credit_remaining: '20.00',
+  service_type: 'all',
 });
 
 export const accountFactory = Factory.Sync.makeFactory<Account>({
@@ -51,6 +52,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
       credit_monthly_cap: '20.00',
       credit_remaining: '20.00',
       this_month_credit_remaining: '20.00',
+      service_type: 'all',
     },
     {
       image_url: '',
@@ -61,6 +63,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
       credit_monthly_cap: '20.00',
       credit_remaining: '20.00',
       this_month_credit_remaining: '20.00',
+      service_type: 'all',
     },
   ],
   euuid: '278EC57D-7424-4B3A-B35C3CE395787567',
