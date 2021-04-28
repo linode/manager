@@ -64,7 +64,7 @@ const changeLogin = (provider?: ProviderOptions) => {
   return provider === undefined
     ? window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener')
     : window.open(
-        `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
+        `${LOGIN_ROOT}/tpa/` + `${provider}` + `/enable`,
         '_blank',
         'noopener'
       );

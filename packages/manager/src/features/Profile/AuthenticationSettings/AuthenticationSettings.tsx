@@ -55,7 +55,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
 
   return (
     <div data-testid="authSettings">
-      <DocumentTitleSegment segment={`Login Security`} />
+      <DocumentTitleSegment segment={`Login & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}
       {!loading && (
