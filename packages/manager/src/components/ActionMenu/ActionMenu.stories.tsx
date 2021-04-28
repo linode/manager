@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import ActionMenu, { Action } from './ActionMenu';
 
@@ -43,9 +42,7 @@ class StoryActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
-    );
+    return <ActionMenu createActions={this.createActions()} ariaLabel="label" />;
   }
 }
 
@@ -79,9 +76,7 @@ class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
   };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
-    );
+    return <ActionMenu createActions={this.createActions()} ariaLabel="label" />;
   }
 }
 
@@ -97,25 +92,36 @@ class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
     ];
   };
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} ariaLabel="label" />
-    );
+    return <ActionMenu createActions={this.createActions()} ariaLabel="label" />;
   }
 }
 
-storiesOf('Action Menu', module)
-  .add('Action Menu', () => (
-    <div style={{ float: 'left' }}>
-      <StoryActionMenu />
-    </div>
-  ))
-  .add('Action Menu with disabled menu item & tooltip', () => (
-    <div style={{ float: 'left' }}>
-      <StoryActionMenuWithTooltip />
-    </div>
-  ))
-  .add('Action Menu with one menu item', () => (
-    <div style={{ float: 'left' }}>
-      <StoryActionMenuWithOneAction />
-    </div>
-  ));
+export default {
+  title: 'Action Menu',
+};
+
+export const _ActionMenu = () => (
+  <div style={{ float: 'left' }}>
+    <StoryActionMenu />
+  </div>
+);
+
+export const ActionMenuWithDisabledMenuItemTooltip = () => (
+  <div style={{ float: 'left' }}>
+    <StoryActionMenuWithTooltip />
+  </div>
+);
+
+ActionMenuWithDisabledMenuItemTooltip.story = {
+  name: 'Action Menu with disabled menu item & tooltip',
+};
+
+export const ActionMenuWithOneMenuItem = () => (
+  <div style={{ float: 'left' }}>
+    <StoryActionMenuWithOneAction />
+  </div>
+);
+
+ActionMenuWithOneMenuItem.story = {
+  name: 'Action Menu with one menu item',
+};

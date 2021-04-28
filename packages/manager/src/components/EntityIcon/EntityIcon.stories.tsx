@@ -1,8 +1,11 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import EntityIcon from './EntityIcon';
 
-storiesOf('Entity Icon', module).add('Icons', () => (
+export default {
+  title: 'Entity Icon',
+};
+
+export const Icons = () => (
   <div style={{ padding: 20 }}>
     <div>
       <EntityIcon variant="nodebalancer" />
@@ -23,4 +26,4 @@ storiesOf('Entity Icon', module).add('Icons', () => (
       <EntityIcon variant="domain" status="disabled" />
     </div>
   </div>
-));
+);

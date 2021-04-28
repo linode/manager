@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { default as MDivider } from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
@@ -8,7 +7,11 @@ const Divider = () => (
   <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />
 );
 
-storiesOf('Typography', module).add('Headings', () => (
+export default {
+  title: 'Typography',
+};
+
+export const Headings = () => (
   <React.Fragment>
     <Typography variant="h1" gutterBottom>
       Primary Heading (h1)
@@ -47,9 +50,9 @@ storiesOf('Typography', module).add('Headings', () => (
     </Placeholder>
     <Divider />
   </React.Fragment>
-));
+);
 
-storiesOf('Typography', module).add('Text', () => (
+export const Text = () => (
   <React.Fragment>
     <Typography variant="body1" gutterBottom>
       Body1. Implemented using the 'body1' variant. Styles are identical for
@@ -74,4 +77,4 @@ storiesOf('Typography', module).add('Text', () => (
     </Typography>
     <Divider />
   </React.Fragment>
-));
+);

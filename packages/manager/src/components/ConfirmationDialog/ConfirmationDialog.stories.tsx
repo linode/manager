@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -61,6 +60,9 @@ class Example extends React.Component {
     );
   }
 }
-storiesOf('Confirmation Dialogs', module).add('Simple Confirmation', () => (
-  <Example />
-));
+
+export default {
+  title: 'Confirmation Dialogs',
+};
+
+export const SimpleConfirmation = () => <Example />;

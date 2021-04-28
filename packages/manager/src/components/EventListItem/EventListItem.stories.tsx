@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import List from 'src/components/core/List';
 import EventListItem from './EventListItem';
@@ -8,13 +7,14 @@ const testContent =
   "because you're participating in our Block Storage beta and we would like to " +
   "know more about how you're using the service.";
 
-storiesOf('EventListItem', module).add('All EventListItems', () => (
+export default {
+  title: 'EventListItem',
+};
+
+export const AllEventListItems = () => (
   <React.Fragment>
     <List disablePadding>
-      <EventListItem
-        title="Critical Maintainence required for FirstLinode"
-        content={testContent}
-      />
+      <EventListItem title="Critical Maintainence required for FirstLinode" content={testContent} />
       <EventListItem
         success
         title="Critical Maintainence required for FirstLinode"
@@ -32,4 +32,8 @@ storiesOf('EventListItem', module).add('All EventListItems', () => (
       />
     </List>
   </React.Fragment>
-));
+);
+
+AllEventListItems.story = {
+  name: 'All EventListItems',
+};

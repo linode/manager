@@ -1,5 +1,4 @@
 import { Config } from '@linode/api-v4/lib/linodes';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import cachedTypes from 'src/cachedData/types.json';
@@ -82,7 +81,11 @@ class StoryTable extends React.Component {
   }
 }
 
-storiesOf('Table', module).add('Default', () => (
+export default {
+  title: 'Table',
+};
+
+export const Default = () => (
   <TableWrapper>
     <TableHead data-qa-table>
       <TableRow>
@@ -118,6 +121,10 @@ storiesOf('Table', module).add('Default', () => (
       </TableRow>
     </TableBody>
   </TableWrapper>
-));
+);
 
-storiesOf('Table', module).add('CMR - Sorted', () => <StoryTable />);
+export const CmrSorted = () => <StoryTable />;
+
+CmrSorted.story = {
+  name: 'CMR - Sorted',
+};

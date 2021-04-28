@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import SelectExample from './StoryComponents/SelectExample';
 import TextFieldExample from './StoryComponents/TextFieldExample';
@@ -14,6 +13,9 @@ const list = [
   'ecumenical council number two',
 ];
 
-storiesOf('Debounced Search', module)
-  .add('Text Field', () => <TextFieldExample list={list} />)
-  .add('Select Field', () => <SelectExample list={list} />);
+export default {
+  title: 'Debounced Search',
+};
+
+export const TextField = () => <TextFieldExample list={list} />;
+export const SelectField = () => <SelectExample list={list} />;

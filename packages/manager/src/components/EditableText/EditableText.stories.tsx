@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import EditableText from './EditableText';
 
@@ -27,15 +26,17 @@ class InteractiveEditableText extends React.Component {
 
   render() {
     return (
-      <EditableText
-        text={this.state.text}
-        onEdit={this.editText}
-        onCancel={this.cancelEdit}
-      />
+      <EditableText text={this.state.text} onEdit={this.editText} onCancel={this.cancelEdit} />
     );
   }
 }
 
-storiesOf('Editable Text', module).add('Headline & Title', () => (
-  <InteractiveEditableText />
-));
+export default {
+  title: 'Editable Text',
+};
+
+export const HeadlineTitle = () => <InteractiveEditableText />;
+
+HeadlineTitle.story = {
+  name: 'Headline & Title',
+};

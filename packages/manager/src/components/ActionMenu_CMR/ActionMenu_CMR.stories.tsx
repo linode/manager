@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import ActionMenu, { Action } from './ActionMenu_CMR';
 
@@ -65,29 +64,36 @@ class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
   ];
 
   render() {
-    return (
-      <ActionMenu
-        actionsList={this.actions}
-        ariaLabel="label"
-        inlineLabel="More Actions"
-      />
-    );
+    return <ActionMenu actionsList={this.actions} ariaLabel="label" inlineLabel="More Actions" />;
   }
 }
 
-storiesOf('CMR Action Menu', module)
-  .add('Action Menu', () => (
-    <div style={{ display: 'inline-block' }}>
-      <StoryActionMenu />
-    </div>
-  ))
-  .add('Action Menu with disabled menu item & tooltip', () => (
-    <div style={{ display: 'inline-block' }}>
-      <StoryActionMenuWithTooltip />
-    </div>
-  ))
-  .add('Action Menu with inline label', () => (
-    <div style={{ display: 'inline-block' }}>
-      <StoryActionMenuWithInlineLabel />
-    </div>
-  ));
+export default {
+  title: 'CMR Action Menu',
+};
+
+export const _ActionMenu = () => (
+  <div style={{ display: 'inline-block' }}>
+    <StoryActionMenu />
+  </div>
+);
+
+export const ActionMenuWithDisabledMenuItemTooltip = () => (
+  <div style={{ display: 'inline-block' }}>
+    <StoryActionMenuWithTooltip />
+  </div>
+);
+
+ActionMenuWithDisabledMenuItemTooltip.story = {
+  name: 'Action Menu with disabled menu item & tooltip',
+};
+
+export const ActionMenuWithInlineLabel = () => (
+  <div style={{ display: 'inline-block' }}>
+    <StoryActionMenuWithInlineLabel />
+  </div>
+);
+
+ActionMenuWithInlineLabel.story = {
+  name: 'Action Menu with inline label',
+};

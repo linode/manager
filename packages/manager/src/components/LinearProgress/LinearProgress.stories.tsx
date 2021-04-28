@@ -1,8 +1,9 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
 import LinearProgress from './LinearProgress';
 
-storiesOf('Linear Progress Indicator', module).add('Indefinite', () => (
-  <LinearProgress />
-));
+export default {
+  title: 'Linear Progress Indicator',
+};
+
+export const Indefinite = () => <LinearProgress />;

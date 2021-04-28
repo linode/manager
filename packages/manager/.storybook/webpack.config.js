@@ -62,7 +62,7 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        include: paths.appSrc,
+        include: [paths.appSrc, __dirname],
         exclude: [
           path.resolve(__dirname, 'src/components/__image_snapshots__'),
           path.resolve(__dirname, 'src/components/__snapshots__'),

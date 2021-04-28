@@ -1,4 +1,4 @@
-import { select } from '@storybook/addon-knobs/react';
+import { select } from '@storybook/addon-knobs';
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import CssBaseline from 'src/components/core/CssBaseline';
@@ -10,12 +10,13 @@ const options = {
   light,
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const ThemeDecorator = (story: Function) => {
   const key = select('theme', ['light', 'dark'], 'light');
   const content = story();
 
   return (
-    <ThemeProvider theme={options[key](8)}>
+    <ThemeProvider theme={options[key]}>
       <CssBaseline />
       {content}
     </ThemeProvider>

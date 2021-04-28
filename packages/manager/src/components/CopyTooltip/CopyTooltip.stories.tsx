@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import CopyTooltip from './CopyTooltip';
 
@@ -17,4 +16,8 @@ class Example extends React.Component {
   }
 }
 
-storiesOf('Copy Tooltip', module).add('Copy Tooltip', () => <Example />);
+export default {
+  title: 'Copy Tooltip',
+};
+
+export const _CopyTooltip = () => <Example />;

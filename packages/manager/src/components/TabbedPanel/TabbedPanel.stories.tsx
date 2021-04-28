@@ -1,15 +1,14 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import TabbedPanel from './TabbedPanel';
 
-storiesOf('TabbedPanel', module).add('default', () => {
+export default {
+  title: 'TabbedPanel',
+};
+
+export const Default = () => {
   return (
-    <Grid
-      container
-      justify="center"
-      style={{ backgroundColor: '#F4F4F4', height: '100%' }}
-    >
+    <Grid container justify="center" style={{ backgroundColor: '#F4F4F4', height: '100%' }}>
       <Grid item xs={10}>
         <TabbedPanel
           header="Tabbed Panel"
@@ -40,4 +39,8 @@ storiesOf('TabbedPanel', module).add('default', () => {
       </Grid>
     </Grid>
   );
-});
+};
+
+Default.story = {
+  name: 'default',
+};

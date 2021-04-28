@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import Select, { Item } from './Select';
@@ -92,9 +91,7 @@ class Example extends React.Component<{}, State> {
   };
 
   filterFruit = (value: string) => {
-    return fruit.filter((f) =>
-      f.label.toLowerCase().includes(value.toLowerCase())
-    );
+    return fruit.filter((f) => f.label.toLowerCase().includes(value.toLowerCase()));
   };
 
   loadOptions = (inputValue?: string): Promise<Item[]> => {
@@ -198,4 +195,8 @@ class Example extends React.Component<{}, State> {
   }
 }
 
-storiesOf('Enhanced Select', module).add('Example', () => <Example />);
+export default {
+  title: 'Enhanced Select',
+};
+
+export const _Example = () => <Example />;

@@ -1,7 +1,8 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import ColorPalette from './ColorPalette_CMR';
 
-storiesOf('CMR Color Palette', module).add('Background', () => (
-  <ColorPalette />
-));
+export default {
+  title: 'CMR Color Palette',
+};
+
+export const Background = () => <ColorPalette />;
