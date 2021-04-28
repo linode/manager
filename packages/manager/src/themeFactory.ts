@@ -310,7 +310,7 @@ const themeDefaults: ThemeDefaults = () => {
       black: '#222',
       blue: primaryColors.main,
       offBlack: primaryColors.offBlack,
-      greenCyan: '#6FEC86',
+      greenCyan: '#17cf73',
       boxShadow: '#ddd',
       boxShadowDark: '#aaa',
       focusBorder: '#999',
