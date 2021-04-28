@@ -264,6 +264,14 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
       });
   };
 
+  const onCreateButtonClick = () => {
+    if (account.data?.capabilities.includes('Machine Images')) {
+      return props.history.push('/images/create');
+    }
+
+    return openForCreate();
+  };
+
   const openForCreate = () => {
     setDrawer({
       open: true,
@@ -437,7 +445,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           isEntity
           buttonProps={[
             {
-              onClick: openForCreate,
+              onClick: onCreateButtonClick,
               children: 'Create Image',
             },
           ]}
@@ -473,14 +481,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   if (!imagesData || imagesData.length === 0) {
     return renderEmpty();
   }
-
-  const onCreateButtonClick = () => {
-    if (account.data?.capabilities.includes('Machine Images')) {
-      return props.history.push('/images/create');
-    }
-
-    return openForCreate();
-  };
 
   return (
     <React.Fragment>
