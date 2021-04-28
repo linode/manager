@@ -123,7 +123,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [provider, setProvider] = React.useState<ProviderOptions | undefined>(
-    providers[0].name
+    providers[0]?.name
   );
 
   const currentProvider = providers.find(
