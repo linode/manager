@@ -160,7 +160,6 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     onChange,
     error,
     label,
-    type,
     min,
     max,
     dataAttrs,
@@ -189,7 +188,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
        */
       const cleanedValue =
         minAndMaxExist &&
-        numberTypes.some((eachType) => eachType === type) &&
+        numberTypes.some((eachType) => eachType === props.type) &&
         e.target.value !== ''
           ? clamp(min, max, +e.target.value)
           : e.target.value;
@@ -225,7 +224,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         }
       }
     },
-    [max, min, onChange, type]
+    [max, min, onChange, props.type]
   );
 
   let errorScrollClassName = '';
