@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-04-28] - v1.39.1
+
+### Changed:
+
+- Update Image Upload docs link
+- Update Image Upload curl command to match Linode docs
+### Fixed:
+
+- "Create Image" button from Image Landing empty state not allowing image uploads
+
 ## [2021-04-22] - v1.39.0
 
 ### Added:
