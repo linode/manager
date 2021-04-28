@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& $linkItem': {
         color: 'white',
       },
+      '& .icon': {
+        opacity: 1,
+      },
       '& svg': {
         color: theme.color.greenCyan,
         fill: theme.color.greenCyan,
