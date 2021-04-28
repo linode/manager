@@ -185,6 +185,9 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                     setProvider(thisProvider.name);
                     setDialogOpen(true);
                   }}
+                  disabled={
+                    thirdPartyEnabled && props.authType === thisProvider.name
+                  }
                 >
                   <div>
                     <Icon className={classes.providerIcon} />
