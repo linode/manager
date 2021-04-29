@@ -56,7 +56,7 @@ export interface ActivePromotion {
   this_month_credit_remaining: string;
   credit_monthly_cap: string;
   image_url: string;
-  service_type: string;
+  service_type: PromotionServiceType;
 }
 
 export type PromotionServiceType =

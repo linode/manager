@@ -54,17 +54,6 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
       this_month_credit_remaining: '20.00',
       service_type: 'all',
     },
-    {
-      image_url: '',
-      summary: 'BAD_PROMO',
-      description:
-        'This promotion is invalid since it has an expiration of null',
-      expire_dt: null,
-      credit_monthly_cap: '20.00',
-      credit_remaining: '20.00',
-      this_month_credit_remaining: '20.00',
-      service_type: 'all',
-    },
   ],
   euuid: '278EC57D-7424-4B3A-B35C3CE395787567',
 });

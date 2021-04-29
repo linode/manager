@@ -69,11 +69,11 @@ const serviceTypeMap: Partial<Record<PromotionServiceType, string>> = {
   linode: 'Linodes',
   linode_disk: 'Storage',
   linode_memory: 'Memory',
-  longview: 'Longviews',
+  longview: 'Longview',
   managed: 'Managed',
   nodebalancer: 'NodeBalancers',
   objectstorage: 'Object Storage',
-  transfer_tx: 'Service Transfers',
+  transfer_tx: 'Transfer Overages',
 };
 
 // =============================================================================
@@ -285,7 +285,7 @@ export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
           Expires: <DateTimeDisplay value={expire_dt} displayTime={false} />
         </Typography>
       ) : null}
-      {service_type !== 'all' ? (
+      {service_type !== 'all' && serviceTypeMap[service_type] ? (
         <Typography>Applies to: {serviceTypeMap[service_type]}</Typography>
       ) : null}
       {parsedCreditMonthlyCap > 0 ? (
