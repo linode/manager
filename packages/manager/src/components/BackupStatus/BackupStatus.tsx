@@ -14,7 +14,8 @@ import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames =
   | 'icon'
-  | 'noBackupText'
+  | 'backupScheduledOrNever'
+  | 'backupNotApplicable'
   | 'root'
   | 'wrapper'
   | 'helpIcon'
@@ -28,8 +29,11 @@ const styles = (theme: Theme) =>
       fontSize: 18,
       fill: theme.color.grey1,
     },
-    noBackupText: {
+    backupScheduledOrNever: {
       marginRight: theme.spacing(1),
+    },
+    backupNotApplicable: {
+      marginRight: theme.spacing(2.2),
     },
     root: {},
     wrapper: {
@@ -43,6 +47,11 @@ const styles = (theme: Theme) =>
         backgroundColor: 'transparent',
       },
       padding: 0,
+      '& svg': {
+        fontSize: 0,
+        height: 20,
+        width: 20,
+      },
     },
     withHelpIcon: {
       display: 'flex',
@@ -99,7 +108,10 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
             to={`/linodes/${linodeId}/backup`}
             className={classes.backupLink}
           >
-            <Typography variant="body1" className={classes.noBackupText}>
+            <Typography
+              variant="body1"
+              className={classes.backupScheduledOrNever}
+            >
               Scheduled
             </Typography>
           </Link>
@@ -111,7 +123,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
   if (isBareMetalInstance) {
     return (
       <div className={classes.withHelpIcon}>
-        <Typography variant="body1" className={classes.noBackupText}>
+        <Typography variant="body1" className={classes.backupNotApplicable}>
           N/A
         </Typography>
         <HelpIcon
@@ -130,7 +142,10 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
           to={`/linodes/${linodeId}/backup`}
           className={classes.backupLink}
         >
-          <Typography variant="body1" className={classes.noBackupText}>
+          <Typography
+            variant="body1"
+            className={classes.backupScheduledOrNever}
+          >
             Never
           </Typography>
           <Backup className={`${classes.icon} backupIcon`} />
