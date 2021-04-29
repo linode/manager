@@ -7,7 +7,6 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
-import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
 import { ExtendedRegion, useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
@@ -39,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     letterSpacing: '.25px',
     textTransform: 'uppercase',
+  },
+  paragraphBreak: {
+    marginTop: 16,
   },
 }));
 
@@ -83,15 +85,10 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
     (region: ExtendedRegion) => region.display
   );
 
-  const regionWarningMessage = selectedRegion
-    ? 'VLAN instances are not available in the selected region.'
-    : 'You must select a region before adding a VLAN.';
-  const regionalAvailabilityMessage = `Currently they are available in ${arrayToList(
+  const regionalAvailabilityMessage = `VLANs are currently available in ${arrayToList(
     regionsThatSupportVLANs,
     ';'
   )}.`;
-
-  const warningMessage = `${regionWarningMessage} ${regionalAvailabilityMessage}`;
 
   return (
     <div className={classes.root}>
@@ -103,14 +100,8 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
       </Box>
       <Grid container>
         <Grid item xs={12}>
-          {!regionSupportsVLANs ? (
-            <Notice warning>
-              <Typography>
-                <strong>{warningMessage}</strong>
-              </Typography>
-            </Notice>
-          ) : null}
-          <Typography variant="body1">
+          <Typography>{regionalAvailabilityMessage}</Typography>
+          <Typography variant="body1" className={classes.paragraphBreak}>
             VLANs are used to create a private L2 Virtual Local Area Network
             between Linodes. A VLAN created or attached in this section will be
             assigned to the eth1 interface, with eth0 being used for connections
@@ -123,7 +114,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
             />
             .
           </Typography>
-          <Typography style={{ marginTop: 16 }}>
+          <Typography className={classes.paragraphBreak}>
             VLAN is currently in beta and is subject to the terms of the{' '}
             <ExternalLink
               text="Early Adopter Testing Agreement"
