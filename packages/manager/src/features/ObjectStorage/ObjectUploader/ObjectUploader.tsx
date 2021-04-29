@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   copy: {
-    color: theme.palette.primary.main,
+    color: theme.palette.text.primary,
     margin: '0 auto',
   },
   uploadButton: {
