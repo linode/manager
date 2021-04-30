@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
+    marginBottom: theme.spacing(),
     '&.MuiGrid-item': {
       paddingTop: 0,
     },
