@@ -54,8 +54,8 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
     >
       {error && <Notice error text={error} />}
       <Typography className={classes.copy} variant="body1">
-        This will disable your{' '}
-        {currentProvider?.displayName ?? 'username and password'} login.
+        This will disable your login via{' '}
+        {currentProvider?.displayName ?? 'username and password'}.
       </Typography>
     </ConfirmationDialog>
   );
