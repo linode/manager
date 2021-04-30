@@ -242,7 +242,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
             <TableCell data-qa-hourly>
               {isGPU ? (
-                <Currency quantity={type.price.hourly} />
+                <Currency quantity={type.price.hourly ?? 0} />
               ) : (
                 `$` + type.price.hourly
               )}
