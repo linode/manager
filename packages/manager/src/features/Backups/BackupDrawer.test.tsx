@@ -105,8 +105,8 @@ describe('BackupDrawer component', () => {
   });
   describe('getTotalPrice function', () => {
     const price =
-      linode1Type!.addons.backups.price.monthly +
-      linode2Type!.addons.backups.price.monthly;
+      (linode1Type?.addons.backups.price.monthly ?? 0) +
+      (linode2Type?.addons.backups.price.monthly ?? 0);
     it('should return the total monthly backups price for all Linodes', () => {
       expect(getTotalPrice(extendedLinodes)).toEqual(price);
     });

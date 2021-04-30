@@ -22,6 +22,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 2048,
     vcpus: 1,
+    gpus: 0,
     disk: 50 * 1024,
   },
   {
@@ -45,6 +46,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 4096,
     vcpus: 2,
+    gpus: 0,
     disk: 80 * 1024,
   },
   {
@@ -68,6 +70,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 8192,
     vcpus: 4,
+    gpus: 0,
     disk: 98304,
   },
   {
@@ -91,6 +94,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 12288,
     vcpus: 6,
+    gpus: 0,
     disk: 196608,
   },
   {
@@ -114,6 +118,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 24576,
     vcpus: 8,
+    gpus: 0,
     disk: 393216,
   },
   {
@@ -137,6 +142,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 49152,
     vcpus: 12,
+    gpus: 0,
     disk: 786432,
   },
   {
@@ -160,6 +166,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 65536,
     vcpus: 16,
+    gpus: 0,
     disk: 1179648,
   },
   {
@@ -183,6 +190,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 81920,
     vcpus: 20,
+    gpus: 0,
     disk: 1572864,
   },
   {
@@ -206,6 +214,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 1024,
     vcpus: 1,
+    gpus: 0,
     disk: 20480,
   },
   {
@@ -229,6 +238,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 16384,
     vcpus: 1,
+    gpus: 0,
     disk: 20480,
   },
   {
@@ -252,6 +262,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 32768,
     vcpus: 2,
+    gpus: 0,
     disk: 40960,
   },
   {
@@ -275,6 +286,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 61440,
     vcpus: 4,
+    gpus: 0,
     disk: 92160,
   },
   {
@@ -298,6 +310,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 102400,
     vcpus: 8,
+    gpus: 0,
     disk: 204800,
   },
   {
@@ -321,6 +334,7 @@ export const types: LinodeType[] = [
     successor: null,
     memory: 204800,
     vcpus: 16,
+    gpus: 0,
     disk: 348160,
   },
 ];

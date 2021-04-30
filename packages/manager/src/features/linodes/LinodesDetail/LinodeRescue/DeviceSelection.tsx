@@ -36,7 +36,7 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
   const counter = defaultTo(0, props.counter) as number;
 
   return (
-    <React.Fragment>
+    <div data-testid="device-select">
       {slots.map((slot, idx) => {
         const deviceList = Object.entries(devices).map(([type, items]) => {
           const device = titlecase(type);
@@ -94,7 +94,7 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
           />
         </FormControl>
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

@@ -28,7 +28,8 @@ const badNodePool = {
 describe('helper functions', () => {
   describe('getMonthlyPrice', () => {
     it('should multiply node price by node count', () => {
-      const expectedPrice = extendedTypes[0].price.monthly * mockNodePool.count;
+      const expectedPrice =
+        (extendedTypes[0].price.monthly ?? 0) * mockNodePool.count;
       expect(
         getMonthlyPrice(mockNodePool.type, mockNodePool.count, extendedTypes)
       ).toBe(expectedPrice);

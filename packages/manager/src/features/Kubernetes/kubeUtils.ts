@@ -17,7 +17,7 @@ export const getMonthlyPrice = (
     return 0;
   }
   const thisType = types.find((t: LinodeType) => t.id === type);
-  return thisType ? thisType.price.monthly * count : 0;
+  return thisType ? (thisType.price.monthly ?? 0) * count : 0;
 };
 
 export const getTotalClusterPrice = (pools: PoolNodeWithPrice[]) =>
