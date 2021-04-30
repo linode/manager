@@ -1,4 +1,4 @@
-export default (input: string[]): string => {
+export default (input: string[], separator: string = ','): string => {
   if (!Array.isArray(input) || input.length === 0) {
     return '';
   }
@@ -10,6 +10,7 @@ export default (input: string[]): string => {
   } else {
     const head = input.slice(0, -1);
     const tail = input[input.length - 1];
-    return `${head.join(', ')}, and ${tail}`;
+
+    return `${head.join(`${separator} `)}${separator} and ${tail}`;
   }
 };

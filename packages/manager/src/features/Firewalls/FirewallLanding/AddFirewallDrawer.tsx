@@ -12,7 +12,7 @@ import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
   handleFieldErrors,
   handleGeneralErrors,

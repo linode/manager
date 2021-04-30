@@ -34,7 +34,7 @@ import withRegions, {
   DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 

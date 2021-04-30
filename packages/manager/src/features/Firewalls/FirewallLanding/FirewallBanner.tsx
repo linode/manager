@@ -4,7 +4,7 @@ import DismissibleBanner from 'src/components/DismissibleBanner';
 import ExternalLink from 'src/components/ExternalLink';
 import { dcDisplayNames } from 'src/constants';
 import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 
 export const FirewallBanner: React.FC<{}> = (_) => {
   const regions = useRegionsQuery().data ?? [];

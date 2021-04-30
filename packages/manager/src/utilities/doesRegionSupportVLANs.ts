@@ -12,3 +12,7 @@ export const doesRegionSupportVLANs = (
   }
   return regionMetaData.capabilities.includes('Vlans');
 };
+
+export const regionsWithVLANs = (regionsData: Region[]) => {
+  return regionsData.filter((region) => region.capabilities.includes('Vlans'));
+};
