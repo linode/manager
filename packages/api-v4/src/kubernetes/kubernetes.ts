@@ -1,19 +1,19 @@
+import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from 'src/request';
 import { ResourcePage as Page } from '../types';
-import { createKubeClusterSchema } from './kubernetes.schema';
 import {
   CreateKubeClusterPayload,
   KubeConfigResponse,
   KubernetesCluster,
   KubernetesEndpointResponse,
-  KubernetesVersion
+  KubernetesVersion,
 } from './types';
 
 /**
