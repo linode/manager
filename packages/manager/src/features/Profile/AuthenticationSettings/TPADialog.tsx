@@ -48,13 +48,14 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
     <ConfirmationDialog
       className={classes.dialog}
       open={open}
-      title={`Change Login Method to ${displayName}?`}
+      title={`Change login method to ${displayName}?`}
       onClose={onClose}
       actions={() => renderActions(loading, onClose, provider)}
     >
       {error && <Notice error text={error} />}
       <Typography className={classes.copy} variant="body1">
-        This will disable your {currentProvider?.displayName ?? 'Linode'} login.
+        This will disable your{' '}
+        {currentProvider?.displayName ?? 'username and password'} login.
       </Typography>
     </ConfirmationDialog>
   );
@@ -96,7 +97,7 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Change Login
+        Change login
       </Button>
     </ActionsPanel>
   );

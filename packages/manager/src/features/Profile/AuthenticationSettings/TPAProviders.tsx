@@ -137,7 +137,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
         <Typography className={classes.copy}>
           You can use your Linode credentials or another provider such as Google
           or GitHub to log in to your Linode account. More information is
-          availible in{' '}
+          available in{' '}
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
             How to Enable Third Party Authentication on Your Linode Account
           </Link>
