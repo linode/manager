@@ -1,7 +1,7 @@
+import { IPAllocationSchema } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from 'src/constants';
 import { IPAddress } from '../networking/types';
 import Request, { setData, setMethod, setURL } from '../request';
-import { IPAllocationSchema } from './linodes.schema';
 import { IPAllocationRequest, LinodeIPsResponse } from './types';
 
 /**

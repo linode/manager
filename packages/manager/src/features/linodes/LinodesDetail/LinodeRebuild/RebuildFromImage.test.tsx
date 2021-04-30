@@ -17,7 +17,6 @@ jest.mock('src/hooks/useImages', () => ({
 const images = normalizeEntities(imageFactory.buildList(10));
 
 const props: CombinedProps = {
-  classes: { root: '', error: '', actions: '' },
   linodeId: 1234,
   imagesData: images,
   imagesError: {},
@@ -26,10 +25,11 @@ const props: CombinedProps = {
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
-  permissions: 'read_write',
   passwordHelperText: '',
   requestKeys: jest.fn(),
   disabled: false,
+  handleRebuildError: jest.fn(),
+  onClose: jest.fn(),
   ...reactRouterProps,
 };
 
