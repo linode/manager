@@ -98,10 +98,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   active: {
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
     textDecoration: 'none',
+    '& .icon': {
+      opacity: 1,
+    },
     '& svg': {
       color: theme.color.greenCyan,
     },
-    '&:hover': {},
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)',
