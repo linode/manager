@@ -1,7 +1,5 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import Box from 'src/components/core/Box';
-import Chip from 'src/components/core/Chip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
@@ -92,12 +90,9 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Box display="flex" alignItems="center">
-        <Typography variant="h2" className={classes.title}>
-          Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
-        </Typography>
-        <Chip className={classes.chip} label="beta" component="span" />
-      </Box>
+      <Typography variant="h2" className={classes.title}>
+        Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
+      </Typography>
       <Grid container>
         <Grid item xs={12}>
           <Typography>{regionalAvailabilityMessage}</Typography>
@@ -110,15 +105,6 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
             <ExternalLink
               text="Configuration Profile"
               link="https://linode.com/docs/guides/disk-images-and-configuration-profiles/"
-              hideIcon
-            />
-            .
-          </Typography>
-          <Typography className={classes.paragraphBreak}>
-            VLAN is currently in beta and is subject to the terms of the{' '}
-            <ExternalLink
-              text="Early Adopter Testing Agreement"
-              link="https://www.linode.com/legal-eatp/"
               hideIcon
             />
             .
