@@ -1,74 +1,57 @@
 import Backup from '@material-ui/icons/Backup';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 
-type ClassNames =
-  | 'icon'
-  | 'backupScheduledOrNever'
-  | 'backupNotApplicable'
-  | 'root'
-  | 'wrapper'
-  | 'helpIcon'
-  | 'withHelpIcon'
-  | 'backupLink'
-  | 'backupText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    icon: {
-      fontSize: 18,
-      fill: theme.color.grey1,
+const useStyles = makeStyles((theme: Theme) => ({
+  icon: {
+    fontSize: 18,
+    fill: theme.color.grey1,
+  },
+  backupScheduledOrNever: {
+    marginRight: theme.spacing(1),
+  },
+  backupNotApplicable: {
+    marginRight: theme.spacing(2.2),
+  },
+  root: {},
+  wrapper: {
+    display: 'flex',
+    alignContent: 'center',
+  },
+  tooltip: {
+    maxWidth: 275,
+  },
+  helpIcon: {
+    color: theme.color.grey1,
+    padding: 0,
+    '& svg': {
+      fontSize: 0,
+      height: 20,
+      width: 20,
     },
-    backupScheduledOrNever: {
-      marginRight: theme.spacing(1),
-    },
-    backupNotApplicable: {
-      marginRight: theme.spacing(2.2),
-    },
-    root: {},
-    wrapper: {
-      display: 'flex',
-      alignContent: 'center',
-    },
-    helpIcon: {
-      color: theme.color.grey1,
-      '& :hover': {
-        color: '#4d99f1',
-        backgroundColor: 'transparent',
-      },
-      padding: 0,
-      '& svg': {
-        fontSize: 0,
-        height: 20,
-        width: 20,
+  },
+  withHelpIcon: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  backupLink: {
+    display: 'flex',
+    '&:hover': {
+      '& $icon': {
+        fill: theme.palette.primary.main,
       },
     },
-    withHelpIcon: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    backupLink: {
-      display: 'flex',
-      '&:hover': {
-        '& $icon': {
-          fill: theme.palette.primary.main,
-        },
-      },
-    },
-    backupText: {
-      whiteSpace: 'nowrap',
-    },
-  });
+  },
+  backupText: {
+    whiteSpace: 'nowrap',
+  },
+}));
 
 interface Props {
   mostRecentBackup: string | null;
@@ -77,19 +60,30 @@ interface Props {
   isBareMetalInstance?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const BackupStatus: React.FC<CombinedProps> = (props) => {
   const {
-    classes,
     mostRecentBackup,
     linodeId,
     backupsEnabled,
     isBareMetalInstance,
   } = props;
 
-  const backupsUnavailableMessage =
-    'Backups are unavailable for Bare Metal instances.';
+  const classes = useStyles();
+
+  const backupsUnavailableMessage = (
+    <Typography>
+      Backups are unavailable for Bare Metal instances. For other options, you
+      may consult our{' '}
+      <ExternalLink
+        hideIcon
+        text="data backup guide"
+        link="https://www.linode.com/docs/guides/backing-up-your-data/"
+      />
+      .
+    </Typography>
+  );
 
   if (mostRecentBackup) {
     return (
@@ -129,6 +123,8 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
         <HelpIcon
           text={backupsUnavailableMessage}
           className={classes.helpIcon}
+          classes={{ tooltip: classes.tooltip }}
+          interactive
         />
       </div>
     );
@@ -155,6 +151,4 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(BackupStatus);
+export default BackupStatus;
