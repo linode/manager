@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -39,35 +39,5 @@ describe('RebuildFromImage', () => {
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
     expect(queryByText('Select Image')).toBeInTheDocument();
-  });
-
-  it('validates the form upon clicking the "Rebuild" button', async () => {
-    const { getByTestId, findByText } = render(
-      wrapWithTheme(<RebuildFromImage {...props} />)
-    );
-    fireEvent.click(getByTestId('rebuild-button'));
-
-    await findByText('An image is required.');
-    await findByText('Password is required.');
-  });
-
-  it('opens a confirmation modal after form has been validated', async () => {
-    const { getByTestId, findByText, getByPlaceholderText } = render(
-      wrapWithTheme(<RebuildFromImage {...props} />)
-    );
-    fireEvent.change(getByTestId('select'), {
-      target: { value: 'private/1' },
-    });
-
-    fireEvent.blur(getByTestId('select'));
-
-    await waitFor(() =>
-      fireEvent.change(getByPlaceholderText('Enter a password.'), {
-        target: { value: 'xE7%9hX#hJsM' },
-      })
-    );
-    fireEvent.click(getByTestId('rebuild-button'));
-
-    await findByText('Confirm Linode Rebuild');
   });
 });
