@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-05-03] - v1.39.2
+
+### Added:
+- For release: Remove beta notices and link for VLANs since they're leaving beta
+
 ## [2021-04-28] - v1.39.1
 
 ### Changed:
