@@ -18,12 +18,13 @@ import PaymentDrawer from './PaymentDrawer';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: 0,
-    marginBottom: 20,
+    marginBottom: 16,
     minHeight: 97,
   },
   paper: {
     padding: `15px 20px`,
     height: '100%',
+    border: '1px solid #E6E7E7',
   },
   divider: {
     marginTop: 8,
