@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   superCompact: {
     paddingLeft: 0,
     paddingRight: 0,
+    minWidth: '50px',
   },
   outline: {
     border: `1px solid ${theme.palette.primary.main}`,
