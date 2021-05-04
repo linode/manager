@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Toggle from './Toggle';
@@ -13,15 +12,15 @@ class Example extends React.Component<{}, { value?: string }> {
   render() {
     return (
       <>
-        <FormControlLabel
-          className="toggleLabel"
-          control={<Toggle />}
-          label="Example Label"
-        />
+        <FormControlLabel className="toggleLabel" control={<Toggle />} label="Example Label" />
         <Toggle checked={true} />
       </>
     );
   }
 }
 
-storiesOf('Toggle', module).add('Interactive', () => <Example />);
+export default {
+  title: 'Toggle',
+};
+
+export const Interactive = () => <Example />;

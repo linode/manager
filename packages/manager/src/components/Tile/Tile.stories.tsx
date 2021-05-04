@@ -1,11 +1,14 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
 import Tile from './Tile';
 
 import Chat from 'src/assets/icons/chat.svg';
 
-storiesOf('Tile', module).add('internal', () => (
+export default {
+  title: 'Tile',
+};
+
+export const Internal = () => (
   <div>
     <Tile
       icon={<Chat />}
@@ -15,4 +18,8 @@ storiesOf('Tile', module).add('internal', () => (
       link="http://cloud.manager.com"
     />
   </div>
-));
+);
+
+Internal.story = {
+  name: 'internal',
+};

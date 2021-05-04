@@ -1,9 +1,6 @@
 import { Formik, FormikBag } from 'formik';
-import {
-  CreateFirewallPayload,
-  CreateFirewallSchema,
-  Firewall,
-} from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,7 +12,7 @@ import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
   handleFieldErrors,
   handleGeneralErrors,

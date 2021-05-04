@@ -18,7 +18,6 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import withProfile from 'src/containers/profile.container';
 import withImages, {
   ImagesDispatch,
@@ -36,11 +35,12 @@ const styles = (theme: Theme) =>
     root: {},
     helperText: {
       paddingTop: theme.spacing(1) / 2,
-      width: '70%',
+      width: '60%',
     },
     container: {
       padding: theme.spacing(3),
-      paddingBottom: theme.spacing(4),
+      paddingTop: theme.spacing(),
+      paddingBottom: theme.spacing(),
       '& .MuiFormHelperText-root': {
         marginBottom: theme.spacing(2),
       },
@@ -290,12 +290,8 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
             data-qa-disk-select
           />
           <Typography className={classes.helperText} variant="body1">
-            Linode Images are limited to {IMAGE_DEFAULT_LIMIT}MB of data per
-            disk by default. Please ensure that your disk content does not
-            exceed this size limit, or open a Support ticket to request a higher
-            limit. Additionally, Linode Images cannot be created if you are
-            using raw disks or disks that have been formatted using custom
-            filesystems.
+            Linode Images cannot be created if you are using raw disks or disks
+            that have been formatted using custom filesystems.
           </Typography>
         </>
 

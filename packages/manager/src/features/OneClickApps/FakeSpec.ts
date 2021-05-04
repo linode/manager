@@ -18,7 +18,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Ant Media Server',
     description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
-    summary:'A reliable, flexible and scalable video streaming solution.',
+    summary: 'A reliable, flexible and scalable video streaming solution.',
     related_guides: [
       {
         title: 'Deploy Ant Media Server with Marketplace Apps',
@@ -611,7 +611,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Owncast',
     description: `A live streaming and chat server for use with existing popular broadcasting software.`,
-    summary:'The standalone “Twitch in a Box” open source streaming and chat solution.',
+    summary:
+      'The standalone “Twitch in a Box” open source streaming and chat solution.',
     related_guides: [
       {
         title: 'Deploy Owncast with Marketplace Apps',
@@ -630,7 +631,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Peppermint',
     description: `Open source alternative to paid ticket management solutions with essential features including a streamlined task list, project and client management, and ticket prioritization.`,
-    summary:'Simple yet scalable open source ticket management.',
+    summary: 'Simple yet scalable open source ticket management.',
     related_guides: [
       {
         title: 'Deploy Peppermint with Marketplace Apps',

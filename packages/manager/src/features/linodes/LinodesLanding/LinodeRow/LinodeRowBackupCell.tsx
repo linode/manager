@@ -16,6 +16,7 @@ interface Props {
   linodeId: number;
   mostRecentBackup: string | null;
   backupsEnabled: boolean;
+  isBareMetalInstance: boolean;
 }
 
 type CombinedProps = Props;
@@ -23,7 +24,12 @@ type CombinedProps = Props;
 const LinodeRowBackupCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { linodeId, backupsEnabled, mostRecentBackup } = props;
+  const {
+    linodeId,
+    backupsEnabled,
+    mostRecentBackup,
+    isBareMetalInstance,
+  } = props;
 
   return (
     <TableCell className={classes.root}>
@@ -31,6 +37,7 @@ const LinodeRowBackupCell: React.FC<CombinedProps> = (props) => {
         linodeId={linodeId}
         backupsEnabled={backupsEnabled}
         mostRecentBackup={mostRecentBackup}
+        isBareMetalInstance={isBareMetalInstance}
       />
     </TableCell>
   );

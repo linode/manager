@@ -103,6 +103,7 @@ const getHeaders = (
       widthPercent: 35,
     },
   ].filter(Boolean) as HeaderCell[];
+import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 interface ImageDrawerState {
   open: boolean;
@@ -150,9 +151,16 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
   const classes = useStyles();
-  const { account } = useAccountManagement();
+  const {
+    imagesData,
+    imagesLoading,
+    imagesError,
+    deleteImage,
+    history,
+    location,
+  } = props;
 
-  const { imagesData, imagesLoading, imagesError, deleteImage } = props;
+  const { account } = useAccountManagement();
 
   /**
    * Separate manual Images (created by the user, either from disk or from uploaded file)
@@ -181,6 +189,22 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     dialogAction === 'cancel'
       ? 'Are you sure you want to cancel this Image upload?'
       : 'Are you sure you want to delete this Image?';
+
+  const [successDialogOpen, setSuccessDialogOpen] = React.useState(false);
+  const [uploadURL, setUploadURL] = React.useState<string | undefined>();
+
+  const handleCloseSuccessDialog = () => {
+    setSuccessDialogOpen(false);
+    window.setTimeout(() => setUploadURL(undefined), 500);
+    history.replace({ state: undefined });
+  };
+
+  React.useEffect(() => {
+    if (location.state?.upload_url) {
+      setSuccessDialogOpen(true);
+      setUploadURL(location.state.upload_url);
+    }
+  }, [location]);
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
@@ -238,6 +262,14 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           error: _error,
         }));
       });
+  };
+
+  const onCreateButtonClick = () => {
+    if (account.data?.capabilities.includes('Machine Images')) {
+      return props.history.push('/images/create');
+    }
+
+    return openForCreate();
   };
 
   const openForCreate = () => {
@@ -413,7 +445,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           isEntity
           buttonProps={[
             {
-              onClick: openForCreate,
+              onClick: onCreateButtonClick,
               children: 'Create Image',
             },
           ]}
@@ -450,14 +482,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     return renderEmpty();
   }
 
-  const onCreateButtonClick = () => {
-    if (account.data?.capabilities.includes('Machine Images')) {
-      return props.history.push('/images/create');
-    }
-
-    return openForCreate();
-  };
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
@@ -472,8 +496,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3">Manual Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             {machineImagesEnabled
-              ? `These images are created from a Linode's disk or by uploading your own image.`
-              : `These images are created from a Linode's disk.`}
+              ? `These are images you manually uploaded or captured from an existing Linode disk.`
+              : `These are images you captured from an existing Linode disk.`}
           </Typography>
         </div>
         <EntityTable
@@ -487,8 +511,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Automatic Images</Typography>
           <Typography className={classes.imageTableSubheader}>
-            These images are created automatically when a Linode is deleted.
-            They will be deleted after the indicated expiration date.
+            These are images we automatically capture when Linode disks are
+            deleted. They will be deleted after the indicated expiration date.
           </Typography>
         </div>
         <EntityTable
@@ -512,6 +536,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         {dialog.error && <Notice error text={dialog.error} />}
         <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
+      <ImageUploadSuccessDialog
+        isOpen={successDialogOpen}
+        onClose={handleCloseSuccessDialog}
+        url={uploadURL ?? ''}
+      />
     </React.Fragment>
   );
 };

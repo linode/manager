@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import MockAdapter from 'axios-mock-adapter';
 import { baseRequest } from '@linode/api-v4/lib/request';
 import * as React from 'react';
@@ -27,18 +26,26 @@ class TagsInputDemo extends React.Component<{}, {}> {
   }
 }
 
-storiesOf('Tags Input', module)
-  .add('Tags Input', () => {
-    const mock = new MockAdapter(baseRequest);
+export default {
+  title: 'Tags Input',
+};
 
-    mock.onGet('/tags').reply(200, {
-      data: ['tag1', 'tag2', 'tag3', 'tag4'].map((tag) => ({ label: tag })),
-    });
-    return <TagsInputDemo />;
-  })
-  .add('Tags Input with an error', () => {
-    const mock = new MockAdapter(baseRequest);
+export const _TagsInput = () => {
+  const mock = new MockAdapter(baseRequest);
 
-    mock.onGet('/tags').reply(500, {});
-    return <TagsInputDemo />;
+  mock.onGet('/tags').reply(200, {
+    data: ['tag1', 'tag2', 'tag3', 'tag4'].map((tag) => ({ label: tag })),
   });
+  return <TagsInputDemo />;
+};
+
+export const TagsInputWithAnError = () => {
+  const mock = new MockAdapter(baseRequest);
+
+  mock.onGet('/tags').reply(500, {});
+  return <TagsInputDemo />;
+};
+
+TagsInputWithAnError.story = {
+  name: 'Tags Input with an error',
+};

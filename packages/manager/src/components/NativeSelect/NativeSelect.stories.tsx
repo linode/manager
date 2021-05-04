@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from 'src/components/Grid';
@@ -66,7 +65,11 @@ class Example extends React.Component<Props, State> {
   }
 }
 
-storiesOf('Native Select', module).add('Example', () => (
+export default {
+  title: 'Native Select',
+};
+
+export const _Example = () => (
   <Grid container style={{ padding: 16 }}>
     <Grid item xs={12}>
       <h2>What is the worst band in recent history?</h2>
@@ -77,4 +80,4 @@ storiesOf('Native Select', module).add('Example', () => (
       <Example label="Small Select" small />
     </Grid>
   </Grid>
-));
+);

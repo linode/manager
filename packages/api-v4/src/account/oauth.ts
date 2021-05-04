@@ -1,16 +1,16 @@
+import {
+  createOAuthClientSchema,
+  updateOAuthClientSchema,
+} from '@linode/validation/lib/account.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage } from '../types';
-import {
-  createOAuthClientSchema,
-  updateOAuthClientSchema
-} from './account.schema';
 import { OAuthClient, OAuthClientRequest } from './types';
 
 /**

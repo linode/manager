@@ -23,7 +23,7 @@ import {
   withLinodeDetailContext,
 } from '../linodeDetailContext';
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
-import RescueDialog from '../LinodeRescue/RescueDialog';
+import RescueDialog from '../LinodeRescue';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';

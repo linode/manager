@@ -13,6 +13,7 @@ export const activePromotions: ActivePromotion[] = [
     summary: '$50 off each month for 5 months',
     credit_monthly_cap: '50',
     image_url: 'https://my-image.com/image',
+    service_type: 'linode',
   },
 ];
 

@@ -43,7 +43,7 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
-import RescueDialog from '../LinodesDetail/LinodeRescue/RescueDialog';
+import RescueDialog from '../LinodesDetail/LinodeRescue';
 import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
 import MigrateLinode from '../MigrateLanding/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
