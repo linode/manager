@@ -1,14 +1,13 @@
 import { formatStorageUnits } from './formatStorageUnits';
 
 describe('formatStorageUnits', () => {
-  it('returns "unknown" when formatting a string that does not contain a storage unit', () => {
-    expect(formatStorageUnits('Linode High Memory')).toBe('unknown');
-    expect(formatStorageUnits('Linode GB')).toBe('unknown');
-    expect(formatStorageUnits('')).toBe('unknown');
-    expect(formatStorageUnits(null)).toBe('unknown');
+  it('returns the original string when the string does not contain a storage unit', () => {
+    expect(formatStorageUnits('Linode High Memory')).toBe('Linode High Memory');
+    expect(formatStorageUnits('Linode GB')).toBe('Linode GB');
+    expect(formatStorageUnits('')).toBe('');
   });
 
-  it('returns a string that contains the storage units and measurement seperated by a single space character', () => {
+  it('returns a string that contains the storage units and measurement separated by a single space character', () => {
     expect(formatStorageUnits('Nanode 1GB')).toBe('Nanode 1 GB');
     expect(formatStorageUnits('Linode 4GB')).toBe('Linode 4 GB');
     expect(formatStorageUnits('10kB')).toBe('10 kB');
