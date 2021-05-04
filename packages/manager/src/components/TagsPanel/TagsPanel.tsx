@@ -1,5 +1,5 @@
-import * as classNames from 'classnames';
 import { getTags } from '@linode/api-v4/lib/tags';
+import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
@@ -14,6 +14,9 @@ import {
 } from 'src/components/core/styles';
 import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
+import withProfile, {
+  Props as ProfileActionsProps,
+} from 'src/containers/profile.container';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import TagsPanelItem from './TagsPanelItem';
 
@@ -154,7 +157,11 @@ export interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
+type CombinedProps = Props &
+  ProfileActionsProps &
+  StateProps &
+  WithStyles<ClassNames> &
+  WithSnackbarProps;
 
 class TagsPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -167,32 +174,34 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { tags } = this.props;
-    getTags()
-      .then((response) => {
-        /*
-         * The end goal is to display to the user a list of auto-suggestions
-         * when they start typing in a new tag, but we don't want to display
-         * tags that are already applied because there cannot
-         * be duplicates.
-         */
-        const filteredTags = response.data.filter((eachTag: Tag) => {
-          return !tags.some((alreadyAppliedTag: string) => {
-            return alreadyAppliedTag === eachTag.label;
+    const { tags, isRestrictedUser } = this.props;
+    if (!isRestrictedUser) {
+      getTags()
+        .then((response) => {
+          /*
+           * The end goal is to display to the user a list of auto-suggestions
+           * when they start typing in a new tag, but we don't want to display
+           * tags that are already applied because there cannot
+           * be duplicates.
+           */
+          const filteredTags = response.data.filter((eachTag: Tag) => {
+            return !tags.some((alreadyAppliedTag: string) => {
+              return alreadyAppliedTag === eachTag.label;
+            });
           });
-        });
-        /*
-         * reshaping them for the purposes of being passed to the Select component
-         */
-        const reshapedTags = filteredTags.map((eachTag: Tag) => {
-          return {
-            label: eachTag.label,
-            value: eachTag.label,
-          };
-        });
-        this.setState({ tagsToSuggest: reshapedTags });
-      })
-      .catch((e) => e);
+          /*
+           * reshaping them for the purposes of being passed to the Select component
+           */
+          const reshapedTags = filteredTags.map((eachTag: Tag) => {
+            return {
+              label: eachTag.label,
+              value: eachTag.label,
+            };
+          });
+          this.setState({ tagsToSuggest: reshapedTags });
+        })
+        .catch((e) => e);
+    }
   }
 
   toggleTagInput = () => {
@@ -423,6 +432,16 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   }
 }
 
+interface StateProps {
+  isRestrictedUser: boolean;
+}
+
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(styled, withSnackbar)(TagsPanel);
+export default compose<CombinedProps, Props>(
+  withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
+    isRestrictedUser: data?.restricted ?? false,
+  })),
+  styled,
+  withSnackbar
+)(TagsPanel);

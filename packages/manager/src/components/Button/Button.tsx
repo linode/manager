@@ -56,6 +56,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${theme.palette.primary.main}`,
     borderRadius: 1,
     minHeight: 34,
+    '&:hover, &:focus': {
+      backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
+      border: `1px solid ${theme.cmrBorderColors.borderSecondaryButton}`,
+      color: theme.cmrTextColors.secondaryButton,
+    },
   },
   reg: {
     display: 'flex',

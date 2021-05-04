@@ -4,30 +4,96 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-05-03] - v1.39.2
+
+### Added:
+- For release: Remove beta notices and link for VLANs since they're leaving beta
+
+## [2021-04-28] - v1.39.1
+
+### Changed:
+
+- Update Image Upload docs link
+- Update Image Upload curl command to match Linode docs
+### Fixed:
+
+- "Create Image" button from Image Landing empty state not allowing image uploads
+
+## [2021-04-22] - v1.39.0
+
+### Added:
+
+- @linode/validation package for maintaining validation schemas
+- Marketplace Partner Apps Q2/2021
+- Delete Cluster button/modal in LKE Detail view
+- Remove overriding font style for Receive Transfer modal
+- Upload Image tab
+
+### Changed:
+
+- Swap order of username and gravatar in the navbar
+- Update hover states for docs and secondary buttons
+- Filter out creating and pending images from ImageSelect in the Create flow
+- Linode Detail view graphs legend and spacing adjustments
+- NodeBalancer IP Addresses' copy tooltips appear on row hover
+
+Images:
+
+- Move Images Create drawer to a separate page
+- Separate Images into two tables: “Manual Images” and “Automatic Images”
+- Rename deployment actions in Images Landing action menu
+
+### Fixed:
+
+- Error for restricted users with Linode creation permissions
+
+## [2021-04-13] - v1.38.0
+
+### Changed:
+
+VLANs:
+
+- Add placeholder and tooltip to clarify IPAM address format
+- Public interface can appear in any slot
+- Display all interfaces all the time in Linode configuration modal
+
+- Update README.md
+- Separate password change flow for Bare Metal instances
+
+### Fixed:
+
+- Ensuring VLANs are fresh when opening the configs drawer
+- Editing VLAN configs
+- Wrapping for Account > User Permissions > Specific Permissions dropdown
+
 ## [2021-04-05] - v1.37.0
 
 ### Added:
+
 - VLANs
 - Support for Bare Metal plans in Linode create flow
 
 ### Changed:
+
 - Changes for VLAN attachment in Linode Create flow
 - Hide unneeded fields on LinodeDetail for Bare Metal plans
 - Make Domain, OBJ and LKE upgrade banners dismissible
 
 ### Fixed:
+
 - Wrapping on Firewall Rule table
 - IP transfer not showing all options
 - Properly handle migration_pending notification
 - IP sharing bug
 
-
 ## [2021-03-23] - 1.36.0
 
 ### Added:
+
 - Status banners on all /support pages showing open status.linode.com incidents
 
 ### Changed:
+
 - VLANs can now be created through the Linode Config create/edit dialog
 - Update Configurations table in Linode Detail to show revised VLAN information
 - Remove Kernel and VM Mode columns from Configurations table
@@ -37,32 +103,35 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Closing the notification drawer marks notifications as read
 
 ### Fixed:
+
 - Don't clear support modal contents from local storage on close
 - Alignment on Longview Landing filter input
 - Clear Linode config form when opening the modal
 - Scrollbar overlaps with UserMenu dropdown
 - Prevent wrapping of Linode Detail graph legends
 
-
 ## [2021-03-17] - v1.35.0
 
 ### Added:
+
 - CopyTooltip next to tokens in Service Transfer tables
 - Confirmation dialog when entering the migration queue
 - Banners for open status.linode.com incidents displayed on all /support pages
 
 ### Changed:
+
 - Billing Summary updates
 - Update hover states
 - "Status" column removed from Community StackScripts landing page
 
 ### Fixed:
-- Fix UI collision on Firewall “Linodes” tab
 
+- Fix UI collision on Firewall “Linodes” tab
 
 ## JS Client
 
 ### Fixed
+
 - Update Firewall schema to make “label” required
 - Update types for VLAN revamp
 

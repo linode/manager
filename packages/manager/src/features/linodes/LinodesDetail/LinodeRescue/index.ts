@@ -1,2 +1,1 @@
-import LinodeRescue from './LinodeRescue';
-export default LinodeRescue;
+export { default } from './RescueContainer';

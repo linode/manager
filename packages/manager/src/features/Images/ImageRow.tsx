@@ -2,35 +2,15 @@ import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  label: {
-    width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '45%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '65%',
-    },
-  },
-  size: {
-    [theme.breakpoints.down('sm')]: {
-      width: '15%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      width: '20%',
-    },
-  },
-  loadingStatus: {
-    marginBottom: theme.spacing() / 2,
-  },
+const useStyles = makeStyles(() => ({
   actionMenu: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -54,39 +34,51 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     id,
     label,
     size,
+    status,
     ...rest
   } = props;
 
-  return isImageUpdating(event) ? (
+  const getStatusForImage = (status: string) => {
+    switch (status) {
+      case 'creating':
+        return (
+          <ProgressDisplay
+            text="Creating"
+            progress={progressFromEvent(event)}
+          />
+        );
+      case 'available':
+        return 'Ready';
+      default:
+        return capitalizeAllWords(status.replace('_', ' '));
+    }
+  };
+
+  return (
     <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell className={classes.label} data-qa-image-label>
-        <ProgressDisplay
-          className={classes.loadingStatus}
-          text="Creating"
-          progress={progressFromEvent(event)}
-        />
-        {label}
-      </TableCell>
-      <TableCell colSpan={4}>
-        <LinearProgress value={progressFromEvent(event)} />
-      </TableCell>
-    </TableRow>
-  ) : (
-    <TableRow key={id} data-qa-image-cell={id}>
-      <TableCell className={classes.label} data-qa-image-label>
-        {label}
+      <TableCell data-qa-image-label>{label}</TableCell>
+      <Hidden xsDown>
+        {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
+        <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
+      </Hidden>
+      <TableCell data-qa-image-size>
+        {status === 'pending_upload' || isImageUpdating(event)
+          ? 'Pending'
+          : `${size} MB`}
       </TableCell>
       <Hidden xsDown>
-        <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
-        <TableCell data-qa-image-date>
-          {expiry ? formatDate(expiry) : 'Never'}
-        </TableCell>
+        {expiry ? (
+          <TableCell data-qa-image-date>{formatDate(expiry)}</TableCell>
+        ) : null}
       </Hidden>
-      <TableCell className={classes.size} data-qa-image-size>
-        {size} MB
-      </TableCell>
       <TableCell className={classes.actionMenu}>
-        <ActionMenu id={id} label={label} description={description} {...rest} />
+        <ActionMenu
+          id={id}
+          label={label}
+          description={description}
+          status={status}
+          {...rest}
+        />
       </TableCell>
     </TableRow>
   );
@@ -109,15 +101,14 @@ const progressFromEvent = (e?: Event) => {
 };
 
 const ProgressDisplay: React.FC<{
-  className: string;
   progress: undefined | number;
   text: string;
 }> = (props) => {
-  const { progress, text, className } = props;
+  const { progress, text } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 
   return (
-    <Typography variant="body1" className={className}>
+    <Typography variant="body1">
       {text}: {displayProgress}
     </Typography>
   );

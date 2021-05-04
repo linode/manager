@@ -167,7 +167,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   inlineUserName: {
-    paddingRight: theme.spacing(),
+    paddingLeft: theme.spacing(),
     fontSize: '0.875rem',
   },
   menuHeader: {
@@ -226,7 +226,7 @@ const profileLinks: MenuLink[] = [
     display: 'Display',
     href: '/profile/display',
   },
-  { display: 'Password & Authentication', href: '/profile/auth' },
+  { display: 'Login & Authentication', href: '/profile/auth' },
   { display: 'SSH Keys', href: '/profile/keys' },
   { display: 'LISH Console Settings', href: '/profile/lish' },
   {
@@ -324,11 +324,6 @@ export const UserMenu: React.FC<{}> = () => {
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
-            <Hidden smDown>
-              <Typography className={classes.inlineUserName}>
-                {userName}
-              </Typography>
-            </Hidden>
             {gravatarLoading || gravatarURL === 'not found' ? (
               <div className={classes.userWrapper}>
                 <UserIcon />
@@ -342,6 +337,11 @@ export const UserMenu: React.FC<{}> = () => {
                 />
               </div>
             )}
+            <Hidden smDown>
+              <Typography className={classes.inlineUserName}>
+                {userName}
+              </Typography>
+            </Hidden>
             <KeyboardArrowDown className={classes.caret} />
           </MenuButton>
         </Tooltip>

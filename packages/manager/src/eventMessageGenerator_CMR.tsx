@@ -41,6 +41,8 @@ export const eventMessageGenerator = (
       return `reboot with ${e.secondary_entity?.label}`;
     case 'linode_shutdown':
       return 'shutdown';
+    case 'linode_delete':
+      return 'delete';
     case 'linode_clone':
       return (
         <>
@@ -64,6 +66,8 @@ export const eventMessageGenerator = (
       return 'rebuild';
     case 'linode_create':
       return 'provisioning';
+    case 'image_upload':
+      return 'image uploading';
 
     default:
       // If we haven't handled it explicitly here, it doesn't count as

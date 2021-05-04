@@ -595,7 +595,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       type && {
         title: type.label,
         details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
-        monthly: type.price.monthly,
+        monthly: type.price.monthly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,
       }
     );

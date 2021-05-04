@@ -109,6 +109,8 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     mutationAvailable,
   } = props;
 
+  const isBareMetalInstance = type?.class === 'metal';
+
   const loading = linodeInTransition(status, recentEvent);
   const parsedMaintenanceStartTime = parseMaintenanceStartTime(
     maintenanceStartTime
@@ -229,6 +231,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           linodeId={id}
           backupsEnabled={backups.enabled || false}
           mostRecentBackup={mostRecentBackup || ''}
+          isBareMetalInstance={isBareMetalInstance}
         />
       </Hidden>
 
@@ -305,7 +308,7 @@ RenderFlag.displayName = `RenderFlag`;
 export const ProgressDisplay: React.FC<{
   className?: string;
   progress: null | number;
-  text: string;
+  text: string | undefined;
 }> = (props) => {
   const { progress, text, className } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;

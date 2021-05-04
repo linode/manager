@@ -37,7 +37,8 @@ export type AccountCapability =
   | 'Object Storage'
   | 'Kubernetes'
   | 'Cloud Firewall'
-  | 'Vlans';
+  | 'Vlans'
+  | 'Machine Images';
 
 export interface AccountSettings {
   managed: boolean;
@@ -55,7 +56,23 @@ export interface ActivePromotion {
   this_month_credit_remaining: string;
   credit_monthly_cap: string;
   image_url: string;
+  service_type: PromotionServiceType;
 }
+
+export type PromotionServiceType =
+  | 'all'
+  | 'backup'
+  | 'blockstorage'
+  | 'db_mysql'
+  | 'ip_v4'
+  | 'linode'
+  | 'linode_disk'
+  | 'linode_memory'
+  | 'longview'
+  | 'managed'
+  | 'nodebalancer'
+  | 'objectstorage'
+  | 'transfer_tx';
 
 interface CreditCard {
   expiry: string | null;
@@ -221,6 +238,7 @@ export type EventAction =
   | 'firewall_update'
   | 'host_reboot'
   | 'image_update'
+  | 'image_upload'
   | 'image_delete'
   | 'lassie_reboot'
   | 'linode_addip'

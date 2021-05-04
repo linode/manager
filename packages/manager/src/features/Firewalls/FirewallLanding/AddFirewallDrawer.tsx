@@ -1,14 +1,10 @@
 import { Formik, FormikBag } from 'formik';
-import {
-  CreateFirewallPayload,
-  CreateFirewallSchema,
-  Firewall,
-} from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
 import Drawer, { DrawerProps } from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
@@ -16,7 +12,7 @@ import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -142,11 +138,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                   data-qa-error
                 />
               )}
-              <Typography>
-                Firewalls are created with default rules to allow inbound SSH
-                (port 22) and DNS (port 53) traffic. You can edit these rules or
-                add additional rules once the Firewall has been created.
-              </Typography>
               <TextField
                 aria-label="Label for your new Firewall"
                 label="Label"

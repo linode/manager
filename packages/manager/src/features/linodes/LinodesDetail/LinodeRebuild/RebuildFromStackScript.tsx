@@ -1,10 +1,8 @@
-import { Formik, FormikProps } from 'formik';
-import {
-  rebuildLinode,
-  RebuildLinodeFromStackScriptSchema,
-} from '@linode/api-v4/lib/linodes';
+import { rebuildLinode } from '@linode/api-v4/lib/linodes';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
+import { Formik, FormikProps } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -14,29 +12,26 @@ import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
-import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
+import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
+import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -44,53 +39,35 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import { withLinodeDetailContext } from '../linodeDetailContext';
-import { RebuildDialog } from './RebuildDialog';
 
-import { filterImagesByType } from 'src/store/image/image.helpers';
-
-type ClassNames =
-  | 'root'
-  | 'error'
-  | 'emptyImagePanel'
-  | 'emptyImagePanelText'
-  | 'actions';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(3),
-    },
-    error: {
-      marginTop: theme.spacing(2),
-    },
-    emptyImagePanel: {
-      padding: theme.spacing(3),
-    },
-    emptyImagePanelText: {
-      marginTop: theme.spacing(1),
-      padding: `${theme.spacing(1)}px 0`,
-    },
-    actions: {
-      marginBottom: '16px !important',
-      marginLeft: theme.spacing(3),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    paddingTop: theme.spacing(3),
+  },
+  error: {
+    marginTop: theme.spacing(2),
+  },
+  emptyImagePanel: {
+    padding: theme.spacing(3),
+  },
+  emptyImagePanelText: {
+    marginTop: theme.spacing(1),
+    padding: `${theme.spacing(1)}px 0`,
+  },
+}));
 
 interface Props {
   type: 'community' | 'account';
   disabled: boolean;
   passwordHelperText: string;
-}
-
-interface ContextProps {
   linodeId: number;
+  linodeLabel?: string;
+  handleRebuildError: (status: string) => void;
+  onClose: () => void;
 }
 
 export type CombinedProps = Props &
-  WithStyles<ClassNames> &
   WithImages &
-  ContextProps &
   UserSSHKeyProps &
   RouteComponentProps &
   WithSnackbarProps;
@@ -109,19 +86,30 @@ const initialValues: RebuildFromStackScriptForm = {
 
 export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
   const {
-    classes,
     imagesData,
     userSSHKeys,
     sshError,
     requestKeys,
     linodeId,
+    linodeLabel,
+    handleRebuildError,
+    onClose,
     enqueueSnackbar,
-    history,
     passwordHelperText,
   } = props;
 
+  const classes = useStyles();
+
+  /**
+   * Dynamic validation schema, with password validation
+   * dependent on a value from a feature flag. Remove this
+   * once API password validation is stable.
+   */
   const RebuildSchema = () =>
     extendValidationSchema(RebuildLinodeFromStackScriptSchema);
+
+  const [confirmationText, setConfirmationText] = React.useState<string>('');
+  const submitButtonDisabled = confirmationText !== linodeLabel;
 
   const [
     ss,
@@ -138,8 +126,6 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
   const [udfErrors, setUdfErrors] = React.useState<APIError[] | undefined>(
     undefined
   );
-
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
   const handleFormSubmit = (
     { image, root_pass }: RebuildFromStackScriptForm,
@@ -165,12 +151,11 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
         resetEventsPolling();
 
         setSubmitting(false);
-        setIsDialogOpen(false);
 
         enqueueSnackbar('Linode rebuild started', {
           variant: 'info',
         });
-        history.push(`/linodes/${linodeId}/summary`);
+        onClose();
       })
       .catch((errorResponse) => {
         const APIErrors = getAPIErrorOrDefault(errorResponse);
@@ -205,7 +190,6 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
         handleFieldErrors(setErrors, modifiedErrors);
         handleGeneralErrors(mapErrorToStatus, modifiedErrors, defaultMessage);
 
-        setIsDialogOpen(false);
         scrollErrorIntoView();
       });
   };
@@ -241,14 +225,12 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
       {({
         errors,
         handleSubmit,
-        isSubmitting,
         setFieldValue,
-        status,
+        status, // holds generalError messages
         values,
         validateForm,
       }) => {
-        // The "Rebuild" button opens a confirmation modal.
-        // We'd like to validate the form before this happens.
+        // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {
           // Validate stackscript_id, image, & root_pass
           validateForm().then((maybeErrors) => {
@@ -256,9 +238,9 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
             const maybeUDFErrors = validateUdfs();
             setUdfErrors(maybeUDFErrors);
 
-            // If there aren't any errors, we can open the modal.
+            // If there aren't any errors, we can proceed.
             if (isEmpty(maybeErrors) && maybeUDFErrors.length === 0) {
-              setIsDialogOpen(true);
+              handleSubmit();
               // The form receives the errors automatically, and we scroll them into view.
             } else {
               scrollErrorIntoView();
@@ -285,77 +267,74 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
           setFieldValue('image', '');
         };
 
+        if (status) {
+          handleRebuildError(status.generalError);
+        }
+
         return (
           <Grid item className={classes.root}>
-            {status && (
-              <Notice
-                error
-                className={classes.error}
-                text={status.generalError}
-                data-qa-notice
-              />
-            )}
-            <SelectStackScriptPanel
-              error={errors.stackscript_id}
-              selectedId={ss.id}
-              selectedUsername={ss.username}
-              updateFor={[classes, ss.id, errors]}
-              onSelect={handleSelect}
-              publicImages={filterImagesByType(imagesData, 'public')}
-              resetSelectedStackScript={resetStackScript}
-              data-qa-select-stackscript
-              category={props.type}
-              header="Select StackScript"
-              request={
-                props.type === 'account'
-                  ? getMineAndAccountStackScripts
-                  : getCommunityStackscripts
-              }
-            />
-            {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
-              <UserDefinedFieldsPanel
-                errors={udfErrors}
-                selectedLabel={ss.label}
-                selectedUsername={ss.username}
-                handleChange={handleChangeUDF}
-                userDefinedFields={ss.user_defined_fields}
-                updateFor={[
-                  classes,
-                  ss.user_defined_fields,
-                  ss.udf_data,
-                  udfErrors,
-                ]}
-                udf_data={ss.udf_data}
-              />
-            )}
-            {ss.images && ss.images.length > 0 ? (
-              <ImageSelect
-                variant="public"
-                title="Choose Image"
-                images={ss.images}
-                handleSelectImage={(selected) =>
-                  setFieldValue('image', selected)
-                }
-                selectedImageID={values.image}
-                error={errors.image}
-              />
-            ) : (
-              <Paper className={classes.emptyImagePanel}>
-                {/* empty state for images */}
-                {errors.image && <Notice error={true} text={errors.image} />}
-                <Typography variant="h2" data-qa-tp="Select Image">
-                  Select Image
-                </Typography>
-                <Typography
-                  variant="body1"
-                  className={classes.emptyImagePanelText}
-                  data-qa-no-compatible-images
-                >
-                  No Compatible Images Available
-                </Typography>
-              </Paper>
-            )}
             <form>
+              <SelectStackScriptPanel
+                error={errors.stackscript_id}
+                selectedId={ss.id}
+                selectedUsername={ss.username}
+                updateFor={[classes, ss.id, errors]}
+                onSelect={handleSelect}
+                publicImages={filterImagesByType(imagesData, 'public')}
+                resetSelectedStackScript={resetStackScript}
+                data-qa-select-stackscript
+                category={props.type}
+                header="Select StackScript"
+                request={
+                  props.type === 'account'
+                    ? getMineAndAccountStackScripts
+                    : getCommunityStackscripts
+                }
+              />
+              {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
+                <UserDefinedFieldsPanel
+                  errors={udfErrors}
+                  selectedLabel={ss.label}
+                  selectedUsername={ss.username}
+                  handleChange={handleChangeUDF}
+                  userDefinedFields={ss.user_defined_fields}
+                  updateFor={[
+                    classes,
+                    ss.user_defined_fields,
+                    ss.udf_data,
+                    udfErrors,
+                  ]}
+                  udf_data={ss.udf_data}
+                />
+              )}
+
+              {ss.images && ss.images.length > 0 ? (
+                <ImageSelect
+                  variant="public"
+                  title="Choose Image"
+                  images={ss.images}
+                  handleSelectImage={(selected) =>
+                    setFieldValue('image', selected)
+                  }
+                  selectedImageID={values.image}
+                  error={errors.image}
+                />
+              ) : (
+                <Paper className={classes.emptyImagePanel}>
+                  {/* empty state for images */}
+                  {errors.image && <Notice error={true} text={errors.image} />}
+                  <Typography variant="h2" data-qa-tp="Select Image">
+                    Select Image
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    className={classes.emptyImagePanelText}
+                    data-qa-no-compatible-images
+                  >
+                    No Compatible Images Available
+                  </Typography>
+                </Paper>
+              )}
               <AccessPanel
                 password={values.root_pass}
                 handleChange={(value) => setFieldValue('root_pass', value)}
@@ -367,25 +346,31 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                 data-qa-access-panel
                 passwordHelperText={passwordHelperText}
               />
+              <ActionsPanel>
+                <Typography variant="h2">Confirm</Typography>
+                <Typography style={{ marginBottom: 8 }}>
+                  To confirm these changes, type the label of the Linode{' '}
+                  <strong>({linodeLabel})</strong> in the field below:
+                </Typography>
+                <TextField
+                  label="Linode Label"
+                  hideLabel
+                  onChange={(e) => setConfirmationText(e.target.value)}
+                  style={{ marginBottom: 16 }}
+                />
+                <Button
+                  disabled={submitButtonDisabled}
+                  buttonType="primary"
+                  className="destructive"
+                  onClick={handleRebuildButtonClick}
+                  data-qa-rebuild
+                  data-testid="rebuild-button"
+                >
+                  Rebuild Linode
+                </Button>
+              </ActionsPanel>
             </form>
-            <ActionsPanel>
-              <Button
-                buttonType="primary"
-                className="destructive"
-                onClick={handleRebuildButtonClick}
-                data-qa-rebuild
-                data-testid="rebuild-button"
-              >
-                Rebuild
-              </Button>
-            </ActionsPanel>
-            <RebuildDialog
-              isOpen={isDialogOpen}
-              isLoading={isSubmitting}
-              handleClose={() => setIsDialogOpen(false)}
-              handleSubmit={handleSubmit}
-            />
-            <StackScriptDrawer />
+            <StackScriptDialog />
           </Grid>
         );
       }}
@@ -393,16 +378,8 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeId: linode.id,
-}));
-
 const enhanced = compose<CombinedProps, Props>(
-  linodeContext,
   userSSHKeyHoc,
-  styled,
   withSnackbar,
   withImages(),
   withRouter

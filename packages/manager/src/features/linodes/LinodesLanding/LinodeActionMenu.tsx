@@ -126,6 +126,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
   const { types } = useTypes();
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
+  const isBareMetalInstance = linodeType?.class === 'metal';
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
@@ -137,16 +138,19 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
   ] = React.useState<boolean>(false);
 
   const toggleOpenActionMenu = () => {
-    getLinodeConfigs(props.linodeId)
-      .then((configs) => {
-        setConfigs(configs.data);
-        setConfigsError(undefined);
-        setHasMadeConfigsRequest(true);
-      })
-      .catch((err) => {
-        setConfigsError(err);
-        setHasMadeConfigsRequest(true);
-      });
+    if (!isBareMetalInstance) {
+      // Bare metal Linodes don't have configs that can be retrieved
+      getLinodeConfigs(props.linodeId)
+        .then((configs) => {
+          setConfigs(configs.data);
+          setConfigsError(undefined);
+          setHasMadeConfigsRequest(true);
+        })
+        .catch((err) => {
+          setConfigsError(err);
+          setHasMadeConfigsRequest(true);
+        });
+    }
 
     sendLinodeActionEvent();
   };
@@ -182,7 +186,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
 
   const inLandingListView = matchesMdDown && inTableContext;
   const inEntityView = matchesSmDown;
-  const isBareMetalInstance = linodeType?.class === 'metal';
 
   const actions = [
     inLandingListView || inEntityView || inTableContext
@@ -295,7 +298,7 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
     },
   ].filter(Boolean) as ExtendedAction[];
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
+  const splitActionsArrayIndex = matchesMdDown ? 0 : 2;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (

@@ -16,7 +16,9 @@ const cmrBGColors = {
   bgPaper: '#2e3238',
   bgPrimaryButton: '#3683dc',
   // notification center, add a tag, breadcrumb
-  bgSecondaryButton: '#364863',
+  bgSecondaryButton: 'transparent',
+  bgCopyButton: '#364863',
+  bgTPAButton: '#444',
   bgTableHeader: '#33373e',
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',
@@ -29,6 +31,7 @@ const cmrTextColors = {
   tableHeader: '#888F91',
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
+  secondaryButton: '#fff',
 };
 
 const cmrBorderColors = {
@@ -37,6 +40,7 @@ const cmrBorderColors = {
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
+  borderSecondaryButton: '#fff',
 };
 
 const cmrIconColors = {
@@ -197,6 +201,26 @@ const darkThemeOptions = {
   cmrBorderColors,
   cmrTextColors,
   cmrIconColors,
+  graphs: {
+    network: {
+      outbound: `rgb(49, 206, 62)`,
+      inbound: `rgb(16, 162, 29)`,
+    },
+    cpu: {
+      system: `rgb(2, 118, 253)`,
+      user: `rgb(81, 166, 245)`,
+      wait: `rgb(145, 199, 237)`,
+      percent: `rgb(54, 131, 220)`,
+    },
+    diskIO: {
+      read: `rgb(255, 196, 105)`,
+      write: `rgb(255, 179, 77)`,
+      swap: `rgb(238, 44, 44)`,
+    },
+    purple: `rgb(217, 176, 217)`,
+    red: `rgb(255, 99, 60)`,
+    yellow: `rgb(255, 220, 125)`,
+  },
   animateCircleIcon: {
     ...iconCircleAnimation,
   },

@@ -1,3 +1,9 @@
+export type ImageStatus =
+  | 'available'
+  | 'creating'
+  | 'deleted'
+  | 'pending_upload';
+
 export interface Image {
   id: string;
   label: string;
@@ -11,10 +17,24 @@ export interface Image {
   vendor: string | null;
   deprecated: boolean;
   expiry: null | string;
+  status: ImageStatus;
 }
 
-export interface CreateImagePayload {
-  diskID: number;
+export interface UploadImageResponse {
+  image: Image;
+  upload_to: string;
+}
+
+export interface BaseImagePayload {
   label?: string;
   description?: string;
+}
+
+export interface CreateImagePayload extends BaseImagePayload {
+  diskID: number;
+}
+
+export interface ImageUploadPayload extends BaseImagePayload {
+  label: string;
+  region: string;
 }

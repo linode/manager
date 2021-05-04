@@ -1,15 +1,15 @@
-import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from 'src/request';
 import {
   updateAccountSchema,
-  UpdateAccountSettingsSchema
-} from './account.schema';
+  UpdateAccountSettingsSchema,
+} from '@linode/validation/lib/account.schema';
+import { API_ROOT } from 'src/constants';
+import Request, { setData, setMethod, setURL } from 'src/request';
 import {
   Account,
   AccountSettings,
   CancelAccount,
   CancelAccountPayload,
-  NetworkUtilization
+  NetworkUtilization,
 } from './types';
 
 /**

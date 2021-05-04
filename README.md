@@ -1,7 +1,7 @@
 <h1 align="center">
   <img src="https://www.linode.com/media/images/logos/diagonal/light/linode-logo_diagonal_light_medium.png" width="200" />
   <br />
-  Linode UI
+  Linode Cloud Manager
 </h1>
 
 <p align="center">
@@ -9,33 +9,19 @@
   <a href="https://coveralls.io/github/linode/manager?branch=master"><img src="https://coveralls.io/repos/github/linode/manager/badge.svg?branch=master" alt="Code coverage" /></a>
 </p>
 
-This repository is the home for all things related to front-end development at Linode.
+This repository is home to the [Linode Cloud Manager](https://cloud.linode.com) and related projects, including the [JavaScript SDK](https://www.npmjs.com/package/@linode/api-v4).
 
 ## Running Projects Within the Repository
 
-To get started running Linode UI projects locally, please [see the _Getting Started_ documentation.](GETTING_STARTED.md)
+To get started running Cloud Manager locally, please see the [_Getting Started_ guide](docs/GETTING_STARTED.md).
 
 ## Contributing
 
-If you already have your development environment set up, please read the [contributing guidelines](CONTRIBUTING.md) to get help in making your first PR.
-
-### I want to contribute to Cloud Manager :heart_eyes:
-
-Along with the contributing guidelines, you can read our [code conventions](./CODE_CONVENTIONS.md) and [Cloud Manager testing conventions](./TESTING.md) docs for instructions on how write code inline with what we expect.
-
-### I want to contribute to the JavaScript SDK :sunglasses:
-
-Amazing! Please check out the documentation in the [SDK directory](./packages/api-v4/README.md)
+If you already have your development environment set up, please read the [contributing guidelines](docs/CONTRIBUTING.md) to get help in creating your first Pull Request.
 
 ## Reaching Out
 
-You can submit feedback in two ways
-
-1. Submit feedback to feedback@linode.com
-2. Create a GitHub Issue
-
-Both are monitored by the developers and product owners and we make a point to respond and take
-action upon feedback.
+To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use feedback@linode.com
 
 ## License
 

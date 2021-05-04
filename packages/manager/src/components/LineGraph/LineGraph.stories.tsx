@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
 import LineGraph from './LineGraph';
@@ -24,34 +23,31 @@ const mockData = [
   },
 ];
 
-storiesOf('Line Graph', module)
-  .add('Current Day', () => (
-    <LineGraph
-      showToday={true}
-      data={mockData}
-      timezone={'America/Los_Angeles'}
-    />
-  ))
-  .add('Multiple Days', () => (
-    <LineGraph
-      showToday={false}
-      data={mockData}
-      timezone={'America/Los_Angeles'}
-    />
-  ))
-  .add('Fixed Max Y Axis', () => (
-    <LineGraph
-      showToday={false}
-      data={mockData}
-      suggestedMax={7000}
-      timezone={'America/Los_Angeles'}
-    />
-  ))
-  .add('Using the Chart.js native legend functionality', () => (
-    <LineGraph
-      nativeLegend
-      showToday={false}
-      data={mockData}
-      timezone={'America/Los_Angeles'}
-    />
-  ));
+export default {
+  title: 'Line Graph',
+};
+
+export const CurrentDay = () => (
+  <LineGraph showToday={true} data={mockData} timezone={'America/Los_Angeles'} />
+);
+
+export const MultipleDays = () => (
+  <LineGraph showToday={false} data={mockData} timezone={'America/Los_Angeles'} />
+);
+
+export const FixedMaxYAxis = () => (
+  <LineGraph
+    showToday={false}
+    data={mockData}
+    suggestedMax={7000}
+    timezone={'America/Los_Angeles'}
+  />
+);
+
+export const UsingTheChartJsNativeLegendFunctionality = () => (
+  <LineGraph nativeLegend showToday={false} data={mockData} timezone={'America/Los_Angeles'} />
+);
+
+UsingTheChartJsNativeLegendFunctionality.story = {
+  name: 'Using the Chart.js native legend functionality',
+};

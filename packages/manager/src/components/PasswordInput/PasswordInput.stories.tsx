@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
@@ -18,4 +17,8 @@ const Input: React.FC<{}> = (props) => {
   );
 };
 
-storiesOf('Password Input', module).add('Example', () => <Input />);
+export default {
+  title: 'Password Input',
+};
+
+export const Example = () => <Input />;

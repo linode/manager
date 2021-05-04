@@ -1,3 +1,22 @@
+## [2021-04-22] - v0.51.0
+
+### Added:
+- @linode/validation package
+- Methods and schemas for machine image uploads
+
+### Changed:
+- UpdateAccountSettingsSchema
+
+
+## [2021-04-13] - v0.50.0
+
+### Added:
+- resetLinodePassword (only applies to Bare Metal instances)
+
+### Changed:
+- linodeInterfaceSchema (label and IPAM address field)
+
+
 ##  [2021-04-05] - v0.49.0
 
 ### Changed:

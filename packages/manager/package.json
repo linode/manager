@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.37.0",
+  "version": "1.39.2",
   "private": true,
   "engines": {
     "node": ">= 14.15.4"
@@ -16,7 +16,8 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.49.0",
+    "@linode/api-v4": "^0.51.0",
+    "@linode/validation": "0.1.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -132,11 +133,12 @@
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
     "@babel/register": "^7.10.1",
-    "@storybook/addon-actions": "~5.3.7",
-    "@storybook/addon-knobs": "~5.3.7",
-    "@storybook/addon-links": "~5.3.7",
-    "@storybook/addons": "~5.3.7",
-    "@storybook/react": "~5.3.7",
+    "@storybook/addon-actions": "~6.1.21",
+    "@storybook/addon-docs": "~6.1.21",
+    "@storybook/addon-knobs": "~6.1.21",
+    "@storybook/addon-links": "~6.1.21",
+    "@storybook/addons": "~6.1.21",
+    "@storybook/react": "~6.1.21",
     "@svgr/webpack": "^4.3.3",
     "@testing-library/cypress": "^7.0.3",
     "@testing-library/jest-dom": "~5.11.3",

@@ -89,12 +89,10 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
   const [newVlan, setNewVlan] = React.useState('');
 
   const purposeOptions: Item<ExtendedPurpose>[] = [
-    slotNumber === 0
-      ? {
-          label: 'Public Internet',
-          value: 'public',
-        }
-      : null,
+    {
+      label: 'Public Internet',
+      value: 'public',
+    },
     {
       label: 'VLAN',
       value: 'vlan',
@@ -103,7 +101,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
       label: 'None',
       value: 'none',
     },
-  ].filter(Boolean) as Item<ExtendedPurpose>[];
+  ];
 
   const { data: vlans, isLoading } = useVlansQuery();
   const vlanOptions =
@@ -154,7 +152,14 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
       {fromAddonsPanel ? null : (
         <Grid item xs={12} sm={6}>
           <Select
-            options={purposeOptions}
+            options={
+              // Do not display "None" as an option for eth0 (must be either Public Internet or a VLAN).
+              slotNumber > 0
+                ? purposeOptions
+                : purposeOptions.filter(
+                    (thisPurposeOption) => thisPurposeOption.value !== 'none'
+                  )
+            }
             label={`eth${slotNumber}`}
             value={purposeOptions.find(
               (thisOption) => thisOption.value === purpose
@@ -184,7 +189,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 className={fromAddonsPanel ? classes.vlanLabelField : ''}
                 errorText={labelError}
                 options={vlanOptions}
-                label="Label"
+                label="VLAN"
                 placeholder="Create or select a VLAN"
                 variant="creatable"
                 createOptionPosition="first"
@@ -214,10 +219,14 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 <TextField
                   inputId={`ipam-input-${slotNumber}`}
                   label="IPAM Address (Optional)"
+                  placeholder="192.0.2.0/24"
                   value={ipamAddress}
                   errorText={ipamError}
                   onChange={handleAddressChange}
                   disabled={readOnly}
+                  tooltipText={
+                    'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
+                  }
                 />
               </div>
             </Grid>

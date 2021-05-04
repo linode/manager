@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
 import { DataSet } from 'src/components/LineGraph';
@@ -54,4 +53,8 @@ const Example: React.FC<{}> = () => {
   );
 };
 
-storiesOf('Longview Line Graph', module).add('Example', () => <Example />);
+export default {
+  title: 'Longview Line Graph',
+};
+
+export const _Example = () => <Example />;

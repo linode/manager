@@ -6,16 +6,12 @@ import Select, {
   Item,
   NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Tag {
   value: string;
   label: string;
-}
-
-export interface State {
-  accountTags: Item[];
-  errors: APIError[];
 }
 
 export interface Props {
@@ -29,51 +25,61 @@ export interface Props {
   menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
 }
 
-class TagsInput extends React.Component<Props, State> {
-  static defaultProps = {
-    label: 'Add Tags',
-    name: 'tags',
-  };
-  createTag = (inputValue: string) => {
-    const { value, onChange } = this.props;
+const TagsInput: React.FC<Props> = (props) => {
+  const {
+    label,
+    hideLabel,
+    name,
+    tagError,
+    value,
+    onChange,
+    disabled,
+    menuPlacement,
+  } = props;
+
+  const [accountTags, setAccountTags] = React.useState<Tag[]>([]);
+  const [errors, setErrors] = React.useState<APIError[]>([]);
+
+  const { _isRestrictedUser } = useAccountManagement();
+
+  React.useEffect(() => {
+    if (!_isRestrictedUser) {
+      getTags()
+        .then((response) => {
+          const accountTags = response.data.map((tag: Tag) => {
+            return { label: tag.label, value: tag.label };
+          });
+          setAccountTags(accountTags);
+        })
+        .catch((e) => {
+          const defaultError = [
+            { reason: 'There was an error retrieving your tags.' },
+          ];
+
+          setErrors(defaultError);
+        });
+    }
+  }, [_isRestrictedUser]);
+
+  const createTag = (inputValue: string) => {
     const newTag = { value: inputValue, label: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
     if (inputValue.length < 3 || inputValue.length > 50) {
-      this.setState({
-        errors: [{ field: 'label', reason: 'Length must be 3-50 characters' }],
-      });
+      setErrors([
+        {
+          field: 'label',
+          reason: 'Length must be 3-50 characters',
+        },
+      ]);
     } else {
-      this.setState({
-        errors: [],
-      });
+      setErrors([]);
       onChange(updatedSelectedTags);
     }
   };
 
-  state: State = {
-    accountTags: [],
-    errors: [],
-  };
-
-  componentDidMount() {
-    getTags()
-      .then((response) => {
-        const accountTags: Item[] = response.data.map((tag: Tag) => {
-          return { label: tag.label, value: tag.label };
-        });
-        this.setState({ accountTags });
-      })
-      .catch((_) => {
-        const defaultError = [
-          { reason: 'There was an error retrieving your tags.' },
-        ];
-        this.setState({ errors: defaultError });
-      });
-  }
-
-  getEmptyMessage = (value: NoOptionsMessageProps) => {
-    const { value: tags } = this.props;
+  const getEmptyMessage = (value: NoOptionsMessageProps) => {
+    const { value: tags } = props;
     if (tags.map((tag) => tag.value).includes(value.inputValue)) {
       return 'This tag is already selected.';
     } else {
@@ -81,43 +87,30 @@ class TagsInput extends React.Component<Props, State> {
     }
   };
 
-  render() {
-    const {
-      tagError,
-      onChange,
-      value,
-      name,
-      label,
-      hideLabel,
-      disabled,
-      menuPlacement,
-    } = this.props;
-    const { accountTags, errors } = this.state;
+  const errorMap = getErrorMap(['label'], errors);
+  const labelError = errorMap.label;
+  const generalError = errorMap.none;
 
-    const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
-    const labelError = hasErrorFor('label');
-    const generalError = hasErrorFor('none');
+  const error = disabled ? undefined : labelError || tagError || generalError;
 
-    const error = disabled ? undefined : labelError || tagError || generalError;
+  return (
+    <Select
+      name={name}
+      variant="creatable"
+      isMulti={true}
+      label={label || 'Add Tags'}
+      hideLabel={hideLabel}
+      options={accountTags}
+      placeholder={'Type to choose or create a tag.'}
+      errorText={error}
+      value={value}
+      onChange={onChange}
+      createNew={createTag}
+      noOptionsMessage={getEmptyMessage}
+      disabled={disabled}
+      menuPlacement={menuPlacement}
+    />
+  );
+};
 
-    return (
-      <Select
-        name={name}
-        variant="creatable"
-        isMulti={true}
-        label={label || 'Add Tags'}
-        hideLabel={hideLabel}
-        options={accountTags}
-        placeholder={'Type to choose or create a tag.'}
-        errorText={error}
-        value={value}
-        onChange={onChange}
-        createNew={this.createTag}
-        noOptionsMessage={this.getEmptyMessage}
-        disabled={disabled}
-        menuPlacement={menuPlacement}
-      />
-    );
-  }
-}
 export default TagsInput;

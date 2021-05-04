@@ -20,8 +20,8 @@ describe('LinodeSummary', () => {
         chart: '',
         graphControls: '',
         graphGrids: '',
+        grid: '',
         chartSelect: '',
-        headerOuter: '',
         labelRangeSelect: '',
       }}
       theme={light()}

@@ -1,9 +1,9 @@
 import { getTags } from '@linode/api-v4/lib/tags';
-import * as React from 'react';
 import * as classNames from 'classnames';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-
+import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
@@ -38,20 +38,25 @@ export const AddTag: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
   const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
+
+  const { _isRestrictedUser } = useAccountManagement();
+
   React.useEffect(() => {
-    getTags()
-      .then((response) =>
-        response.data.map((thisTag) => ({
-          value: thisTag.label,
-          label: thisTag.label,
-        }))
-      )
-      .then((tags) => setAccountTags(tags))
-      // @todo should we toast for this? If we swallow the error the only
-      // thing we lose is preexisting tabs as options; the add tag flow
-      // should still work.
-      .catch((_) => null);
-  }, []);
+    if (!_isRestrictedUser) {
+      getTags()
+        .then((response) =>
+          response.data.map((thisTag) => ({
+            value: thisTag.label,
+            label: thisTag.label,
+          }))
+        )
+        .then((tags) => setAccountTags(tags))
+        // @todo should we toast for this? If we swallow the error the only
+        // thing we lose is preexisting tabs as options; the add tag flow
+        // should still work.
+        .catch((_) => null);
+    }
+  }, [_isRestrictedUser]);
 
   const tagOptions = accountTags.filter(
     (thisTag) => !tags.includes(thisTag.value)

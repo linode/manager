@@ -34,7 +34,7 @@ import withRegions, {
   DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 
@@ -89,7 +89,7 @@ const styles = (theme: Theme) =>
     radioCell: {
       height: theme.spacing(6),
       width: '5%',
-      paddingRight: theme.spacing(),
+      paddingRight: 0,
     },
     gpuGuideLink: {
       fontSize: '0.9em',
@@ -242,7 +242,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
             <TableCell data-qa-hourly>
               {isGPU ? (
-                <Currency quantity={type.price.hourly} />
+                <Currency quantity={type.price.hourly ?? 0} />
               ) : (
                 `$` + type.price.hourly
               )}

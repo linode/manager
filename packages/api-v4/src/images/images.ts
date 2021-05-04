@@ -1,14 +1,18 @@
+import {
+  createImageSchema,
+  updateImageSchema,
+  uploadImageSchema,
+} from '@linode/validation/lib/images.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { createImageSchema, updateImageSchema } from './images.schema';
-import { Image } from './types';
+import { Image, ImageUploadPayload, UploadImageResponse } from './types';
 
 /**
  * Get information about a single Image.
@@ -45,7 +49,7 @@ export const createImage = (
   const data = {
     disk_id: diskId,
     ...(label && { label }),
-    ...(description && { description })
+    ...(description && { description }),
   };
 
   return Request<Image>(
@@ -69,7 +73,7 @@ export const updateImage = (
 ) => {
   const data = {
     ...(label && { label }),
-    ...(description && { description })
+    ...(description && { description }),
   };
 
   return Request<Image>(
@@ -88,5 +92,22 @@ export const deleteImage = (imageId: string) => {
   return Request<{}>(
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('DELETE')
+  );
+};
+
+/**
+ * uploadImage
+ *
+ * Create a pending Image
+ *
+ * The returned object includes an upload_to field to which
+ * you can upload a pre-made Image that will be processed and
+ * prepared for use.
+ */
+export const uploadImage = (data: ImageUploadPayload) => {
+  return Request<UploadImageResponse>(
+    setURL(`${API_ROOT}/images/upload`),
+    setMethod('POST'),
+    setData(data, uploadImageSchema)
   );
 };
