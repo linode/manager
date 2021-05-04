@@ -1,13 +1,13 @@
+import { nodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { nodePoolSchema } from './kubernetes.schema';
 import { KubeNodePoolResponse, PoolNodeRequest } from './types';
 
 /**
