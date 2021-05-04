@@ -7,7 +7,6 @@ import { LOGIN_ROOT } from 'src/constants';
 
 interface Props {
   username?: string;
-  disabled?: boolean;
 }
 
 type CombinedProps = Props;
@@ -23,27 +22,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     color: theme.cmrTextColors.linkActiveLight,
+    fontSize: '0.875rem',
     marginTop: theme.spacing(),
-    '&:hover': {
-      color: theme.palette.primary.main,
-    },
-  },
-  disabled: {
-    '& *': {
-      color: theme.color.disabledText,
-    },
-  },
-  disabledLink: {
-    pointerEvents: 'none',
   },
 }));
 
 export const ResetPassword: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { username, disabled } = props;
+  const { username } = props;
 
   return (
-    <Paper className={`${classes.root} ${disabled ? classes.disabled : ''}`}>
+    <Paper className={classes.root}>
       <Typography variant="h3">Password Reset</Typography>
       <Typography variant="body1" className={classes.copy}>
         If you’ve forgotten your password or would like to change it, we’ll send
@@ -51,7 +40,7 @@ export const ResetPassword: React.FC<CombinedProps> = (props) => {
       </Typography>
       <Link
         to={`${LOGIN_ROOT}/forgot/password?username=${username}`}
-        className={`${classes.link} ${disabled ? classes.disabledLink : ''}`}
+        className={classes.link}
       >
         Reset Password
       </Link>

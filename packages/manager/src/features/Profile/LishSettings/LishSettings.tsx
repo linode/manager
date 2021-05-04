@@ -27,8 +27,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { ProviderOptions, providers } from '../AuthenticationSettings/shared';
-
 type ClassNames =
   | 'root'
   | 'title'
@@ -89,7 +87,6 @@ interface State {
   authorizedKeys: string[];
   authorizedKeysCount: number;
   authType: TPAProvider;
-  provider: ProviderOptions;
 }
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
@@ -103,7 +100,6 @@ class LishSettings extends React.Component<CombinedProps, State> {
       ? this.props.authorizedKeys.length
       : 1,
     authType: this.props.authType,
-    provider: providers[0].name,
   };
 
   render() {
