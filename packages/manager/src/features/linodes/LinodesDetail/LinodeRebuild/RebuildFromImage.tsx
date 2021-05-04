@@ -1,10 +1,6 @@
+import { rebuildLinode, RebuildRequest } from '@linode/api-v4/lib/linodes';
+import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { Formik, FormikProps } from 'formik';
-import { GrantLevel } from '@linode/api-v4/lib/account';
-import {
-  rebuildLinode,
-  RebuildLinodeSchema,
-  RebuildRequest,
-} from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -13,15 +9,11 @@ import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
@@ -33,39 +25,27 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import { withLinodeDetailContext } from '../linodeDetailContext';
-import { RebuildDialog } from './RebuildDialog';
 
-type ClassNames = 'root' | 'error' | 'actions';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(3),
-    },
-    error: {
-      marginTop: theme.spacing(2),
-    },
-    actions: {
-      marginBottom: '16px !important',
-      marginLeft: theme.spacing(3),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    paddingTop: theme.spacing(3),
+  },
+  error: {
+    marginTop: theme.spacing(2),
+  },
+}));
 
 interface Props {
   disabled: boolean;
   passwordHelperText: string;
-}
-
-interface ContextProps {
   linodeId: number;
-  permissions: GrantLevel;
+  linodeLabel?: string;
+  handleRebuildError: (status: string) => void;
+  onClose: () => void;
 }
 
 export type CombinedProps = Props &
   WithImages &
-  WithStyles<ClassNames> &
-  ContextProps &
   UserSSHKeyProps &
   RouteComponentProps &
   WithSnackbarProps;
@@ -82,7 +62,6 @@ const initialValues: RebuildFromImageForm = {
 
 export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const {
-    classes,
     disabled,
     imagesData,
     imagesError,
@@ -90,14 +69,19 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     sshError,
     requestKeys,
     linodeId,
+    linodeLabel,
+    handleRebuildError,
+    onClose,
     enqueueSnackbar,
-    history,
     passwordHelperText,
   } = props;
 
+  const classes = useStyles();
+
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
-  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+  const [confirmationText, setConfirmationText] = React.useState<string>('');
+  const submitButtonDisabled = confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
     { image, root_pass }: RebuildFromImageForm,
@@ -123,12 +107,11 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
         resetEventsPolling();
 
         setSubmitting(false);
-        setIsDialogOpen(false);
 
         enqueueSnackbar('Linode rebuild started', {
           variant: 'info',
         });
-        history.push(`/linodes/${linodeId}/summary`);
+        onClose();
       })
       .catch((errorResponse) => {
         const defaultMessage = `There was an issue rebuilding your Linode.`;
@@ -138,7 +121,6 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
         setSubmitting(false);
         handleFieldErrors(setErrors, errorResponse);
         handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
-        setIsDialogOpen(false);
         scrollErrorIntoView();
       });
   };
@@ -153,19 +135,18 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
       {({
         errors,
         handleSubmit,
-        isSubmitting,
         setFieldValue,
-        status,
+        status, // holds generalError messages
         values,
         validateForm,
       }) => {
-        // The "Rebuild" button opens a confirmation modal.
-        // We'd like to validate the form before this happens.
+        // We'd like to validate the form before submitting.
         const handleRebuildButtonClick = () => {
+          // Validate stackscript_id, image, & root_pass
           validateForm().then((maybeErrors) => {
-            // If there aren't any errors, we can open the modal.
+            // If there aren't any errors, we can submit the form.
             if (isEmpty(maybeErrors)) {
-              setIsDialogOpen(true);
+              handleSubmit();
               // The form receives the errors automatically, and we scroll them into view.
             } else {
               scrollErrorIntoView();
@@ -173,23 +154,28 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
           });
         };
 
+        if (status) {
+          handleRebuildError(status.generalError);
+        }
+
         return (
           <Grid item className={classes.root}>
-            {/* `status` holds generalError messages */}
-            {status && <Notice error>{status.generalError}</Notice>}
-            <ImageSelect
-              title="Select Image"
-              images={Object.values(imagesData)}
-              error={
-                (imagesError.read && imagesError.read[0].reason) || errors.image
-              }
-              selectedImageID={values.image}
-              handleSelectImage={(selected) => setFieldValue('image', selected)}
-              disabled={disabled}
-              variant="all"
-              data-qa-select-image
-            />
             <form>
+              <ImageSelect
+                title="Select Image"
+                images={Object.values(imagesData)}
+                error={
+                  (imagesError.read && imagesError.read[0].reason) ||
+                  errors.image
+                }
+                selectedImageID={values.image}
+                handleSelectImage={(selected) =>
+                  setFieldValue('image', selected)
+                }
+                disabled={disabled}
+                variant="all"
+                data-qa-select-image
+              />
               <AccessPanel
                 password={values.root_pass}
                 handleChange={(input) => setFieldValue('root_pass', input)}
@@ -210,24 +196,29 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 disabled={disabled}
                 passwordHelperText={passwordHelperText}
               />
+              <ActionsPanel>
+                <Typography variant="h2">Confirm</Typography>
+                <Typography style={{ marginBottom: 8 }}>
+                  To confirm these changes, type the label of the Linode{' '}
+                  <strong>({linodeLabel})</strong> in the field below:
+                </Typography>
+                <TextField
+                  label="Linode Label"
+                  hideLabel
+                  onChange={(e) => setConfirmationText(e.target.value)}
+                  style={{ marginBottom: 16 }}
+                />
+                <Button
+                  disabled={submitButtonDisabled || disabled}
+                  buttonType="primary"
+                  className="destructive"
+                  onClick={handleRebuildButtonClick}
+                  data-testid="rebuild-button"
+                >
+                  Rebuild Linode
+                </Button>
+              </ActionsPanel>
             </form>
-            <ActionsPanel>
-              <Button
-                buttonType="primary"
-                className="destructive"
-                onClick={handleRebuildButtonClick}
-                data-testid="rebuild-button"
-                disabled={disabled}
-              >
-                Rebuild
-              </Button>
-            </ActionsPanel>
-            <RebuildDialog
-              isOpen={isDialogOpen}
-              isLoading={isSubmitting}
-              handleClose={() => setIsDialogOpen(false)}
-              handleSubmit={handleSubmit}
-            />
           </Grid>
         );
       }}
@@ -235,18 +226,9 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeId: linode.id,
-  permissions: linode._permissions,
-}));
-
 const enhanced = compose<CombinedProps, Props>(
-  linodeContext,
   withImages(),
   userSSHKeyHoc,
-  styled,
   withSnackbar,
   withRouter
 );

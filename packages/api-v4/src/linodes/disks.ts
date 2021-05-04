@@ -1,17 +1,17 @@
+import {
+  CreateLinodeDiskSchema,
+  ResizeLinodeDiskSchema,
+  UpdateLinodePasswordSchema,
+} from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import {
-  CreateLinodeDiskSchema,
-  ResizeLinodeDiskSchema,
-  UpdateLinodePasswordSchema
-} from './linodes.schema';
 import { Disk, LinodeDiskCreationData } from './types';
 
 /**

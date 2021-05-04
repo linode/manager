@@ -1,6 +1,6 @@
+import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { RebuildLinodeSchema } from './linodes.schema';
 import {
   Devices,
   Linode,
