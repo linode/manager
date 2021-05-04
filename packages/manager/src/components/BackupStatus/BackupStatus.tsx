@@ -1,12 +1,12 @@
 import Backup from '@material-ui/icons/Backup';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
+import Link from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -74,14 +74,11 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
 
   const backupsUnavailableMessage = (
     <Typography>
-      Backups are unavailable for Bare Metal instances. For other options, you
-      may consult our{' '}
-      <ExternalLink
-        hideIcon
-        text="data backup guide"
-        link="https://www.linode.com/docs/guides/backing-up-your-data/"
-      />
-      .
+      Backups are unavailable for Bare Metal instances. See our{' '}
+      <Link to="https://www.linode.com/docs/guides/backing-up-your-data/">
+        data backup guide
+      </Link>{' '}
+      for other options to keep your data safe.
     </Typography>
   );
 
@@ -97,7 +94,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
     return (
       <div className={classes.wrapper}>
         <Tooltip title="Edit Backups" placement={'right'}>
-          <Link
+          <RouterLink
             aria-label={'Edit Backups'}
             to={`/linodes/${linodeId}/backup`}
             className={classes.backupLink}
@@ -108,7 +105,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
             >
               Scheduled
             </Typography>
-          </Link>
+          </RouterLink>
         </Tooltip>
       </div>
     );
@@ -133,7 +130,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
   return (
     <div className={classes.wrapper}>
       <Tooltip title="Enable Backups" placement={'right'}>
-        <Link
+        <RouterLink
           aria-label={'Enable Backups'}
           to={`/linodes/${linodeId}/backup`}
           className={classes.backupLink}
@@ -145,7 +142,7 @@ const BackupStatus: React.FC<CombinedProps> = (props) => {
             Never
           </Typography>
           <Backup className={`${classes.icon} backupIcon`} />
-        </Link>
+        </RouterLink>
       </Tooltip>
     </div>
   );
