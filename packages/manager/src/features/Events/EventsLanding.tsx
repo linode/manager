@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 200,
     paddingLeft: 10,
   },
+  columnHeader: {
+    fontWeight: 700,
+  },
 }));
 
 interface Props {
@@ -269,12 +272,22 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
               {!entityId && <TableCell style={{ padding: 0, width: '1%' }} />}
               <TableCell
                 data-qa-events-subject-header
-                className={classes.labelCell}
+                className={`${classes.labelCell} ${classes.columnHeader}`}
               >
                 Event
               </TableCell>
-              <TableCell data-qa-events-duration-header>Duration</TableCell>
-              <TableCell data-qa-events-time-header>When</TableCell>
+              <TableCell
+                className={classes.columnHeader}
+                data-qa-events-duration-header
+              >
+                Duration
+              </TableCell>
+              <TableCell
+                className={classes.columnHeader}
+                data-qa-events-time-header
+              >
+                When
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
