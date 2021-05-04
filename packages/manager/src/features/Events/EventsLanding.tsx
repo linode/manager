@@ -42,7 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 10,
   },
   columnHeader: {
-    fontWeight: 700,
+    fontFamily: theme.font.bold,
+    fontSize: 14,
+    color: theme.cmrTextColors.tableHeader,
   },
 }));
 
