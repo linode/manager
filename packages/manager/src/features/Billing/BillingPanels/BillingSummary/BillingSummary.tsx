@@ -1,4 +1,7 @@
-import { ActivePromotion } from '@linode/api-v4/lib/account/types';
+import {
+  ActivePromotion,
+  PromotionServiceType,
+} from '@linode/api-v4/lib/account/types';
 import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import * as classnames from 'classnames';
@@ -56,6 +59,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.primary,
   },
 }));
+
+const serviceTypeMap: Partial<Record<PromotionServiceType, string>> = {
+  all: 'All',
+  backup: 'Backups',
+  blockstorage: 'Volumes',
+  db_mysql: 'DBaaS',
+  ip_v4: 'IPv4',
+  linode: 'Linodes',
+  linode_disk: 'Storage',
+  linode_memory: 'Memory',
+  longview: 'Longview',
+  managed: 'Managed',
+  nodebalancer: 'NodeBalancers',
+  objectstorage: 'Object Storage',
+  transfer_tx: 'Transfer Overages',
+};
 
 // =============================================================================
 // <BillingSummary />
@@ -227,6 +246,7 @@ export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
     credit_remaining,
     expire_dt,
     credit_monthly_cap,
+    service_type,
   } = props;
 
   const parsedCreditRemaining = Number.parseFloat(credit_remaining);
@@ -260,11 +280,13 @@ export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
           </Typography>
         ) : null}
       </Box>
-      {/* @todo: Add support for service_type ("Applies to: Linodes"). */}
       {expire_dt ? (
         <Typography>
           Expires: <DateTimeDisplay value={expire_dt} displayTime={false} />
         </Typography>
+      ) : null}
+      {service_type !== 'all' && serviceTypeMap[service_type] ? (
+        <Typography>Applies to: {serviceTypeMap[service_type]}</Typography>
       ) : null}
       {parsedCreditMonthlyCap > 0 ? (
         <Typography>
