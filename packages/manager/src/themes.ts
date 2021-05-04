@@ -18,6 +18,7 @@ const cmrBGColors = {
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: 'transparent',
   bgCopyButton: '#364863',
+  bgTPAButton: '#444',
   bgTableHeader: '#33373e',
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',

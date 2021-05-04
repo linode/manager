@@ -134,7 +134,7 @@ export const pages = [
           loadAppNoLogin(routes.profile);
           cy.findByText('Username').should('be.visible');
           waitDoubleRerender();
-          containsClick('Password & Authentication');
+          containsClick('Login & Authentication');
         },
       },
     ],

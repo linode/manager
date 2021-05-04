@@ -7,7 +7,7 @@ export interface Referrals {
   credit: number;
 }
 
-export type TPAProvider = 'password' | 'github';
+export type TPAProvider = 'password' | 'github' | 'google';
 export interface Profile {
   uid: number;
   username: string;
