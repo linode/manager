@@ -67,6 +67,22 @@ describe('BillingSummary', () => {
     getByTextWithMarkup('Monthly cap: $20.00');
   });
 
+  it('displays promo service type unless the service type is all', () => {
+    const promotions = [
+      promoFactory.build(),
+      promoFactory.build({ summary: 'MY_PROMO_CODE', service_type: 'linode' }),
+    ];
+    renderWithTheme(
+      <BillingSummary
+        balance={0}
+        balanceUninvoiced={5}
+        promotions={promotions}
+      />
+    );
+    expect(screen.queryByText('Applies to: All')).not.toBeInTheDocument();
+    expect(screen.getByText('Applies to: Linodes'));
+  });
+
   it('displays accrued charges', () => {
     renderWithTheme(<BillingSummary balance={0} balanceUninvoiced={5} />);
     within(screen.getByTestId('accrued-charges-value')).getByText('$5.00');
