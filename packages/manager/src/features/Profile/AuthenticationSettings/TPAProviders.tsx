@@ -142,6 +142,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
         <Typography variant="h3">Login Method</Typography>
         <Typography className={classes.copy}>
           You can use your Linode credentials or another provider such as{' '}
+          {/* @todo: Remove the conditional when Google is released */}
           {flags.tpaProviders?.length === 3 ? 'Google or ' : ''}GitHub to log in
           to your Linode account. More information is available in{' '}
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
