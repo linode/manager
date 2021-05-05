@@ -13,7 +13,6 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { ProviderOptions } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 import TPADialog from './TPADialog';
 
@@ -109,7 +108,7 @@ interface Props {
 type CombinedProps = Props;
 
 const icons: Record<TPAProvider, any> = {
-  password: null,
+  password: LinodeLogo,
   google: GoogleIcon,
   github: GitHubIcon,
 };
@@ -122,7 +121,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
   const thirdPartyEnabled = props.authType !== 'password';
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
-  const [provider, setProvider] = React.useState<ProviderOptions | undefined>(
+  const [provider, setProvider] = React.useState<TPAProvider | undefined>(
     providers[0]?.name
   );
 
@@ -135,42 +134,15 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
       <Paper className={classes.root}>
         <Typography variant="h3">Login Method</Typography>
         <Typography className={classes.copy}>
-          You can use your Linode credentials or another provider such as Google
-          or GitHub to log in to your Linode account. More information is
-          available in{' '}
+          You can use your Linode credentials or another provider such as{' '}
+          {flags.tpaProviders?.length === 3 ? 'Google or ' : ''}GitHub to log in
+          to your Linode account. More information is available in{' '}
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
             How to Enable Third Party Authentication on Your Linode Account
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (TFA).
         </Typography>
         <Grid container className={classes.providers}>
-          <Grid item md={4}>
-            <Button
-              className={classnames({
-                [classes.provider]: true,
-                [classes.enabled]: !thirdPartyEnabled,
-              })}
-              onClick={() => {
-                setProvider(undefined);
-                setDialogOpen(true);
-              }}
-              disabled={!thirdPartyEnabled}
-            >
-              <div>
-                <LinodeLogo className={classes.providerIcon} />
-              </div>
-              <div className={classes.providerWrapper}>
-                <div>
-                  Linode
-                  {!thirdPartyEnabled && (
-                    <span className={classes.enabledText}>(Enabled)</span>
-                  )}
-                </div>
-                {!thirdPartyEnabled && <EnabledIcon />}
-              </div>
-            </Button>
-          </Grid>
-
           {providers.map((thisProvider) => {
             const Icon = icons[thisProvider.name];
             return (
@@ -178,16 +150,13 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                 <Button
                   className={classnames({
                     [classes.provider]: true,
-                    [classes.enabled]:
-                      thirdPartyEnabled && props.authType === thisProvider.name,
+                    [classes.enabled]: props.authType === thisProvider.name,
                   })}
                   onClick={() => {
                     setProvider(thisProvider.name);
                     setDialogOpen(true);
                   }}
-                  disabled={
-                    thirdPartyEnabled && props.authType === thisProvider.name
-                  }
+                  disabled={props.authType === thisProvider.name}
                 >
                   <div>
                     <Icon className={classes.providerIcon} />
@@ -195,13 +164,11 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                   <div className={classes.providerWrapper}>
                     <div>
                       {thisProvider.displayName}
-                      {thirdPartyEnabled &&
-                        props.authType === thisProvider.name && (
-                          <span className={classes.enabledText}>(Enabled)</span>
-                        )}
+                      {props.authType === thisProvider.name && (
+                        <span className={classes.enabledText}>(Enabled)</span>
+                      )}
                     </div>
-                    {thirdPartyEnabled &&
-                      props.authType === thisProvider.name && <EnabledIcon />}
+                    {props.authType === thisProvider.name && <EnabledIcon />}
                   </div>
                 </Button>
               </Grid>
