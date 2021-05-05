@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   logoCollapsed: {
-    background: theme.cmrBGColors.bgPrimaryNav,
+    background: theme.bg.primaryNavPaper,
     height: 48,
     width: 100,
     position: 'absolute',
