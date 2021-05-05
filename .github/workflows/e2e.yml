@@ -14,7 +14,6 @@ on:
 
 jobs:
   run-cypress-e2e:
-    if: contains(github.event.pull_request.labels.*.name, 'e2e')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
