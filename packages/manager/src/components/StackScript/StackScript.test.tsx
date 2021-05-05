@@ -7,7 +7,7 @@ import { SStackScript } from './StackScript';
 describe('StackScript', () => {
   it('should render the StackScript label, id, and username', () => {
     const stackScript = stackScriptFactory.build();
-    renderWithTheme(<SStackScript data={stackScript} />);
+    renderWithTheme(<SStackScript data={stackScript} userCanModify />);
 
     expect(screen.getByText(stackScript.label)).toBeInTheDocument();
     expect(screen.getByText(stackScript.username)).toBeInTheDocument();

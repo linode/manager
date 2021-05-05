@@ -20,7 +20,10 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { getStackScriptUrl } from './stackScriptUtils';
+import {
+  canUserModifyAccountStackScript,
+  getStackScriptUrl,
+} from './stackScriptUtils';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 
 interface MatchProps {
@@ -92,6 +95,18 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
 
   const username = profile.data?.username;
   const userCannotAddLinodes = _isRestrictedUser && !_hasGrant('add_linodes');
+
+  const isRestrictedUser = profile?.data?.restricted ?? false;
+  const stackScriptGrants = profile?.data?.grants?.stackscript ?? [];
+
+  const userCanModify = Boolean(
+    stackScript?.mine &&
+      canUserModifyAccountStackScript(
+        isRestrictedUser,
+        stackScriptGrants,
+        +stackScriptId
+      )
+  );
 
   React.useEffect(() => {
     getStackScript(+stackScriptId)
@@ -178,10 +193,13 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
               {
                 position: 1,
                 label: 'StackScripts',
+                linkTo: stackScript.mine
+                  ? '/stackscripts/account'
+                  : '/stackscripts/community',
               },
             ]}
             onEditHandlers={
-              stackScript && username === stackScript.username
+              userCanModify
                 ? {
                     editableTextTitle: stackScriptLabel,
                     onEdit: handleLabelChange,
@@ -213,7 +231,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
         </Grid>
       </Grid>
       <div className="detailsWrapper">
-        <_StackScript data={stackScript} />
+        <_StackScript data={stackScript} userCanModify={userCanModify} />
       </div>
     </>
   );
