@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-05-05] - v1.40.0
+
+### Added:
+- Google as TPA provider
+
+### Changed:
+Bare Metal:
+- Show “N/A” with helper text in "Last Backup" cell for Bare Metal instances
+- Confirmation dialog for booting Bare Metal Linodes into rescue mode
+- Add docs link in "Last Backup" Bare Metal column tooltips
+
+- EventsLanding table column headers styling
+- VLAN Refinements in Linode Create flow
+- “Disk Imagize” status changed to “Capturing Image”
+- Add box rule and adjust spacing in account billing
+- Show promo service type in billing summary
+- Update buttons styles on Firewalls Linodes tab to match the Rules tab
+
+### Fixed:
+- “Add Disk” button styling in RescueDialog
+- Prevent SideMenu scroll bar from overlapping text
+- Don’t request tags for restricted users
+
 ## [2021-05-03] - v1.39.2
 
 ### Added:
