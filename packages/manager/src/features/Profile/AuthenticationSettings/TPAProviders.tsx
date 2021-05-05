@@ -113,20 +113,27 @@ const icons: Record<TPAProvider, any> = {
   github: GitHubIcon,
 };
 
+const linodeProvider = {
+  displayName: 'Linode',
+  name: 'password' as TPAProvider,
+  icon: LinodeLogo,
+  href: '',
+};
+
 export const TPAProviders: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const providers = flags.tpaProviders ?? [];
   const thirdPartyEnabled = props.authType !== 'password';
+  const providers = flags.tpaProviders ?? [];
+  const providersWithLinode = [{ ...linodeProvider }, ...providers];
+  const currentProvider =
+    providers.find((thisProvider) => thisProvider.name === props.authType) ??
+    linodeProvider;
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
-  const [provider, setProvider] = React.useState<TPAProvider | undefined>(
-    providers[0]?.name
-  );
-
-  const currentProvider = providers.find(
-    (thisProvider) => thisProvider.name === props.authType
+  const [provider, setProvider] = React.useState<TPAProvider>(
+    providers[0].name
   );
 
   return (
@@ -143,7 +150,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           . We strongly recommend setting up Two-Factor Authentication (TFA).
         </Typography>
         <Grid container className={classes.providers}>
-          {providers.map((thisProvider) => {
+          {providersWithLinode.map((thisProvider) => {
             const Icon = icons[thisProvider.name];
             return (
               <Grid item md={4} key={thisProvider.displayName}>
@@ -180,19 +187,19 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
       {thirdPartyEnabled && (
         <Paper className={classes.root}>
           <Typography variant="h3">
-            {currentProvider?.displayName} Authentication
+            {currentProvider.displayName} Authentication
           </Typography>
           <Notice className={classes.notice} warning>
             Your login credentials are currently managed via{' '}
-            {currentProvider?.displayName}.
+            {currentProvider.displayName}.
           </Notice>
           <Typography variant="body1" className={classes.copy}>
             If you need to reset your password or set up Two-Factor
             Authentication (TFA), please visit the{' '}
             <ExternalLink
               hideIcon
-              link={currentProvider?.href ?? ''}
-              text={`${currentProvider?.displayName}` + ` website`}
+              link={currentProvider.href}
+              text={`${currentProvider.displayName}` + ` website`}
             />
             .
           </Typography>
@@ -201,7 +208,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             className={classes.copy}
             style={{ marginBottom: 8 }}
           >
-            To disable {currentProvider?.displayName} authentication and log in
+            To disable {currentProvider.displayName} authentication and log in
             using your Linode credentials, click the Linode button above.
             We&apos;ll send you an e-mail with instructions on how to reset your
             password.

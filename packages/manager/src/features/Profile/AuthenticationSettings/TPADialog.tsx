@@ -26,8 +26,8 @@ interface Props {
   open: boolean;
   error?: string;
   loading: boolean;
-  currentProvider?: Provider;
-  provider?: TPAProvider;
+  currentProvider: Provider;
+  provider: TPAProvider;
   onClose: () => void;
 }
 
@@ -41,9 +41,9 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
 
   const providers = flags.tpaProviders ?? [];
 
-  const displayName = providers.find(
-    (thisProvider) => thisProvider.name === provider
-  )?.displayName;
+  const displayName =
+    providers.find((thisProvider) => thisProvider.name === provider)
+      ?.displayName ?? 'Linode';
 
   return (
     <ConfirmationDialog
@@ -56,16 +56,18 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
       {error && <Notice error text={error} />}
       <Typography className={classes.copy} variant="body1">
         This will disable your login via{' '}
-        {currentProvider?.displayName === 'Linode'
+        {currentProvider.displayName === 'Linode'
           ? 'username and password'
-          : currentProvider?.displayName}
+          : currentProvider.displayName}
         .
       </Typography>
     </ConfirmationDialog>
   );
 };
 
-const changeLogin = (provider?: TPAProvider) => {
+const changeLogin = (provider: TPAProvider) => {
+  // If the selected provider is 'password', that means the user has decided
+  // to disable TPA and revert to using Linode credentials
   return provider === 'password'
     ? window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener')
     : window.open(
@@ -78,7 +80,7 @@ const changeLogin = (provider?: TPAProvider) => {
 const renderActions = (
   loading: boolean,
   onClose: () => void,
-  provider?: TPAProvider
+  provider: TPAProvider
 ) => {
   return (
     <ActionsPanel className="p0">
