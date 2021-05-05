@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -38,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'inline-flex',
       margin: `${theme.spacing(3)}px 0 0 0`,
     },
+  },
+  button: {
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -224,11 +226,15 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
               rescue
               disabled={disabled}
             />
-            <AddNewLink
+            <Button
+              className={classes.button}
+              buttonType="secondary"
+              superCompact
               onClick={incrementCounter}
-              label="Add Disk"
               disabled={disabled || counter >= 6}
-            />
+            >
+              Add Disk
+            </Button>
             <ActionsPanel>
               <Button
                 onClick={onSubmit}
