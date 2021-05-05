@@ -34,6 +34,7 @@ export interface Flags {
   bareMetal: boolean;
   tpaProviders: Provider[];
   machineImages: boolean;
+  googlePay: boolean;
 }
 
 type PromotionalOfferFeature =
