@@ -41,6 +41,9 @@ import { getTaxID } from '../../billingUtils';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: '8px 0',
+  },
   headerContainer: {
     backgroundColor: theme.color.white,
     display: 'flex',
@@ -355,7 +358,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
   return (
-    <>
+    <div className={classes.root}>
       <div className={classes.headerContainer}>
         <Typography variant="h2" className={classes.headline}>
           Billing &amp; Payment History
@@ -489,7 +492,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           ]
         )}
       </OrderBy>
-    </>
+    </div>
   );
 };
 
