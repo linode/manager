@@ -1,9 +1,7 @@
 import { Formik } from 'formik';
 import { AccountSettings } from '@linode/api-v4/lib/account';
-import {
-  CreateBucketSchema,
-  ObjectStorageBucket,
-} from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { CreateBucketSchema } from '@linode/validation/lib/buckets.schema';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

@@ -1,3 +1,4 @@
+import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
 import { Grants } from '../account';
 import Request, {
@@ -5,11 +6,10 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage } from '../types';
-import { updateProfileSchema } from './profile.schema';
-import { Profile, TrustedDevice, UserPreferences, ProfileLogin } from './types';
+import { Profile, ProfileLogin, TrustedDevice, UserPreferences } from './types';
 
 /**
  * getProfile
