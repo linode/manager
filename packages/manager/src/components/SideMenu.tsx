@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   collapsedDesktopMenu: {
     width: 52,
     '&:hover': {
-      overflowY: 'scroll',
+      overflowY: 'auto',
       width: 190,
       '& .primaryNavLink': {
         opacity: 1,
