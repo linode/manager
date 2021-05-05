@@ -1,14 +1,14 @@
+import {
+  createNodeBalancerConfigSchema,
+  UpdateNodeBalancerConfigSchema,
+} from '@linode/validation/lib/nodebalancers.schema';
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { ResourcePage as Page } from '../types';
 import {
-  createNodeBalancerConfigSchema,
-  UpdateNodeBalancerConfigSchema
-} from './nodebalancers.schema';
-import {
   CreateNodeBalancerConfig,
   NodeBalancerConfig,
-  UpdateNodeBalancerConfig
+  UpdateNodeBalancerConfig,
 } from './types';
 import { combineConfigNodeAddressAndPort } from './utils';
 
