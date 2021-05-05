@@ -11,7 +11,6 @@ import 'cypress-file-upload';
 describe('help & support', () => {
   it('open support ticket', () => {
     const image = 'test_screenshot.png';
-    const imagePath = `images/${image}`;
     const ticketDescription = 'this is a test ticket';
     const ticketLabel = 'cy-test ticket';
     const ticketId = Math.floor(Math.random() * 99999999 + 10000000);
@@ -67,7 +66,7 @@ describe('help & support', () => {
       );
       getVisible('[data-qa-enhanced-select="General/Account/Billing"]');
       getClick('[data-qa-ticket-description="true"]').type(ticketDescription);
-      cy.get('[id="attach-file"]').attachFile(imagePath);
+      cy.get('[id="attach-file"]').attachFile(image);
       getVisible('[value="test_screenshot.png"]');
       getClick('[data-qa-submit="true"]');
 
