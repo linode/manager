@@ -8,6 +8,7 @@ import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -62,6 +63,9 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
   const handleOpenDrawer = () => {
     setDrawerOpen(true);
   };
+
+  const flags = useFlags();
+  console.log(flags.additionalPaymentMethods);
 
   return (
     <Grid className={classes.root} item xs={12} md={6}>

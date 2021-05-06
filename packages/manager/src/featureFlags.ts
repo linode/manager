@@ -34,7 +34,7 @@ export interface Flags {
   bareMetal: boolean;
   tpaProviders: Provider[];
   machineImages: boolean;
-  googlePay: boolean;
+  additionalPaymentMethods: AdditionalPaymentMethod[];
 }
 
 type PromotionalOfferFeature =
@@ -84,3 +84,5 @@ export interface Provider {
   icon: any;
   href: string;
 }
+
+export type AdditionalPaymentMethod = 'google_pay';

@@ -12,7 +12,7 @@ const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Databases', flag: 'databases' },
   { label: 'Bare Metal', flag: 'bareMetal' },
   { label: 'Machine Images', flag: 'machineImages' },
-  { label: 'Google Pay', flag: 'googlePay' },
+  { label: 'Additional Payment Methods', flag: 'additionalPaymentMethods' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
