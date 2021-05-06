@@ -75,10 +75,8 @@ export interface MainContentBanner {
   key: string;
 }
 
-export type ProviderOptions = Exclude<TPAProvider, 'password'>;
-
 export interface Provider {
-  name: ProviderOptions;
+  name: TPAProvider;
   displayName: string;
   icon: any;
   href: string;
