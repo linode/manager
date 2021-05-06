@@ -13,7 +13,6 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { ProviderOptions } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 import TPADialog from './TPADialog';
 
@@ -109,25 +108,32 @@ interface Props {
 type CombinedProps = Props;
 
 const icons: Record<TPAProvider, any> = {
-  password: null,
+  password: LinodeLogo,
   google: GoogleIcon,
   github: GitHubIcon,
+};
+
+const linodeProvider = {
+  displayName: 'Linode',
+  name: 'password' as TPAProvider,
+  icon: LinodeLogo,
+  href: '',
 };
 
 export const TPAProviders: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const providers = flags.tpaProviders ?? [];
   const thirdPartyEnabled = props.authType !== 'password';
+  const providers = flags.tpaProviders ?? [];
+  const providersWithLinode = [{ ...linodeProvider }, ...providers];
+  const currentProvider =
+    providers.find((thisProvider) => thisProvider.name === props.authType) ??
+    linodeProvider;
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
-  const [provider, setProvider] = React.useState<ProviderOptions | undefined>(
+  const [provider, setProvider] = React.useState<TPAProvider>(
     providers[0]?.name
-  );
-
-  const currentProvider = providers.find(
-    (thisProvider) => thisProvider.name === props.authType
   );
 
   return (
@@ -135,59 +141,30 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
       <Paper className={classes.root}>
         <Typography variant="h3">Login Method</Typography>
         <Typography className={classes.copy}>
-          You can use your Linode credentials or another provider such as Google
-          or GitHub to log in to your Linode account. More information is
-          available in{' '}
+          You can use your Linode credentials or another provider such as{' '}
+          {/* @todo: Remove the conditional when Google is released */}
+          {flags.tpaProviders?.length === 2 ? 'Google or ' : ''}GitHub to log in
+          to your Linode account. More information is available in{' '}
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
             How to Enable Third Party Authentication on Your Linode Account
           </Link>
           . We strongly recommend setting up Two-Factor Authentication (TFA).
         </Typography>
         <Grid container className={classes.providers}>
-          <Grid item md={4}>
-            <Button
-              className={classnames({
-                [classes.provider]: true,
-                [classes.enabled]: !thirdPartyEnabled,
-              })}
-              onClick={() => {
-                setProvider(undefined);
-                setDialogOpen(true);
-              }}
-              disabled={!thirdPartyEnabled}
-            >
-              <div>
-                <LinodeLogo className={classes.providerIcon} />
-              </div>
-              <div className={classes.providerWrapper}>
-                <div>
-                  Linode
-                  {!thirdPartyEnabled && (
-                    <span className={classes.enabledText}>(Enabled)</span>
-                  )}
-                </div>
-                {!thirdPartyEnabled && <EnabledIcon />}
-              </div>
-            </Button>
-          </Grid>
-
-          {providers.map((thisProvider) => {
+          {providersWithLinode.map((thisProvider) => {
             const Icon = icons[thisProvider.name];
             return (
               <Grid item md={4} key={thisProvider.displayName}>
                 <Button
                   className={classnames({
                     [classes.provider]: true,
-                    [classes.enabled]:
-                      thirdPartyEnabled && props.authType === thisProvider.name,
+                    [classes.enabled]: props.authType === thisProvider.name,
                   })}
                   onClick={() => {
                     setProvider(thisProvider.name);
                     setDialogOpen(true);
                   }}
-                  disabled={
-                    thirdPartyEnabled && props.authType === thisProvider.name
-                  }
+                  disabled={props.authType === thisProvider.name}
                 >
                   <div>
                     <Icon className={classes.providerIcon} />
@@ -195,13 +172,11 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                   <div className={classes.providerWrapper}>
                     <div>
                       {thisProvider.displayName}
-                      {thirdPartyEnabled &&
-                        props.authType === thisProvider.name && (
-                          <span className={classes.enabledText}>(Enabled)</span>
-                        )}
+                      {props.authType === thisProvider.name && (
+                        <span className={classes.enabledText}>(Enabled)</span>
+                      )}
                     </div>
-                    {thirdPartyEnabled &&
-                      props.authType === thisProvider.name && <EnabledIcon />}
+                    {props.authType === thisProvider.name && <EnabledIcon />}
                   </div>
                 </Button>
               </Grid>
@@ -213,19 +188,19 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
       {thirdPartyEnabled && (
         <Paper className={classes.root}>
           <Typography variant="h3">
-            {currentProvider?.displayName} Authentication
+            {currentProvider.displayName} Authentication
           </Typography>
           <Notice className={classes.notice} warning>
             Your login credentials are currently managed via{' '}
-            {currentProvider?.displayName}.
+            {currentProvider.displayName}.
           </Notice>
           <Typography variant="body1" className={classes.copy}>
             If you need to reset your password or set up Two-Factor
             Authentication (TFA), please visit the{' '}
             <ExternalLink
               hideIcon
-              link={currentProvider?.href ?? ''}
-              text={`${currentProvider?.displayName}` + ` website`}
+              link={currentProvider.href}
+              text={`${currentProvider.displayName}` + ` website`}
             />
             .
           </Typography>
@@ -234,7 +209,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             className={classes.copy}
             style={{ marginBottom: 8 }}
           >
-            To disable {currentProvider?.displayName} authentication and log in
+            To disable {currentProvider.displayName} authentication and log in
             using your Linode credentials, click the Linode button above.
             We&apos;ll send you an e-mail with instructions on how to reset your
             password.

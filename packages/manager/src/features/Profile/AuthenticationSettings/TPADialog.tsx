@@ -1,3 +1,4 @@
+import { TPAProvider } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -6,7 +7,7 @@ import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
-import { Provider, ProviderOptions } from 'src/featureFlags';
+import { Provider } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles(() => ({
@@ -25,8 +26,8 @@ interface Props {
   open: boolean;
   error?: string;
   loading: boolean;
-  currentProvider?: Provider;
-  provider?: ProviderOptions;
+  currentProvider: Provider;
+  provider: TPAProvider;
   onClose: () => void;
 }
 
@@ -42,7 +43,7 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
 
   const displayName =
     providers.find((thisProvider) => thisProvider.name === provider)
-      ?.displayName || 'Linode';
+      ?.displayName ?? 'Linode';
 
   return (
     <ConfirmationDialog
@@ -55,14 +56,19 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
       {error && <Notice error text={error} />}
       <Typography className={classes.copy} variant="body1">
         This will disable your login via{' '}
-        {currentProvider?.displayName ?? 'username and password'}.
+        {currentProvider.displayName === 'Linode'
+          ? 'username and password'
+          : currentProvider.displayName}
+        .
       </Typography>
     </ConfirmationDialog>
   );
 };
 
-const changeLogin = (provider?: ProviderOptions) => {
-  return provider === undefined
+const changeLogin = (provider: TPAProvider) => {
+  // If the selected provider is 'password', that means the user has decided
+  // to disable TPA and revert to using Linode credentials
+  return provider === 'password'
     ? window.open(`${LOGIN_ROOT}/tpa/disable`, '_blank', 'noopener')
     : window.open(
         `${LOGIN_ROOT}/tpa/enable/` + `${provider}`,
@@ -74,7 +80,7 @@ const changeLogin = (provider?: ProviderOptions) => {
 const renderActions = (
   loading: boolean,
   onClose: () => void,
-  provider?: ProviderOptions
+  provider: TPAProvider
 ) => {
   return (
     <ActionsPanel className="p0">
