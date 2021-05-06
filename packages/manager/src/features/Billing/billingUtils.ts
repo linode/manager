@@ -24,3 +24,5 @@ export const renderUnitPrice = (v: null | string) => {
   const parsedValue = parseFloat(`${v}`);
   return Number.isNaN(parsedValue) ? null : `$${parsedValue}`;
 };
+
+export type AcceptedPaymentMethods = 'credit_card' | 'google_pay' | 'paypal';
