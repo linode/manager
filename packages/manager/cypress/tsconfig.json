@@ -11,7 +11,7 @@
     "paths": {
       "@src/*": ["src/*"]
     },
-    "types": ["cypress", "@types/testing-library__cypress"]
+    "types": ["cypress", "cypress-file-upload"]
   },
-  "include": ["../cypress/**/*.ts"]
+  "include": ["../cypress/**/*.ts", "**/*.*"]
 }
