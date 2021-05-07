@@ -3,24 +3,29 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
-import { makeStyles } from 'src/components/core/styles';
+import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
-import TabbedPanel from 'src/components/TabbedPanel';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
-import ThirdParty from './ThirdParty';
-import ThirdPartyContent from './ThirdPartyContent';
+import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
-const useStyles = makeStyles(() => ({
-  inner: {
-    paddingTop: 0,
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(3),
+    paddingTop: 17,
+  },
+  linode: {
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -48,55 +53,40 @@ export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
     setSuccess('IP allowlisting disabled. This feature cannot be re-enabled.');
   };
 
-  const tabs = [
-    {
-      title: 'Linode Credentials',
-      render: () => (
-        <React.Fragment>
-          {thirdPartyEnabled && <ThirdParty authType={authType} />}
-          <ResetPassword username={username} disabled={thirdPartyEnabled} />
-          <TwoFactor
-            twoFactor={twoFactor}
-            username={username}
-            clearState={clearState}
-            updateProfile={updateProfile}
-            disabled={thirdPartyEnabled}
-          />
-          <TrustedDevices disabled={thirdPartyEnabled} />
-          {ipAllowlisting && (
-            <SecuritySettings
-              updateProfile={updateProfile}
-              onSuccess={onAllowlistingDisable}
-              updateProfileError={props.profileUpdateError}
-              ipAllowlistingEnabled={ipAllowlisting}
-              data-qa-allowlisting-form
-            />
-          )}
-        </React.Fragment>
-      ),
-    },
-  ];
-
-  tabs.push({
-    title: 'Third-Party Authentication',
-    render: () => <ThirdPartyContent authType={authType} />,
-  });
-
-  const initialTab = 0;
-
   return (
     <div data-testid="authSettings">
-      <DocumentTitleSegment segment={`Password & Authentication`} />
+      <DocumentTitleSegment segment={`Login & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}
       {!loading && (
-        <TabbedPanel
-          rootClass={`tabbedPanel`}
-          innerClass={`${classes.inner}`}
-          header={''}
-          tabs={tabs}
-          initTab={initialTab}
-        />
+        <>
+          <TPAProviders authType={authType} />
+
+          {!thirdPartyEnabled && (
+            <Paper className={classes.root}>
+              <Typography className={classes.linode} variant="h3">
+                Linode Authentication
+              </Typography>
+              <ResetPassword username={username} />
+              <TwoFactor
+                twoFactor={twoFactor}
+                username={username}
+                clearState={clearState}
+                updateProfile={updateProfile}
+              />
+              <TrustedDevices />
+              {ipAllowlisting && (
+                <SecuritySettings
+                  updateProfile={updateProfile}
+                  onSuccess={onAllowlistingDisable}
+                  updateProfileError={props.profileUpdateError}
+                  ipAllowlistingEnabled={ipAllowlisting}
+                  data-qa-allowlisting-form
+                />
+              )}
+            </Paper>
+          )}
+        </>
       )}
     </div>
   );

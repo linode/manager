@@ -1,12 +1,12 @@
+import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { RebuildLinodeSchema } from './linodes.schema';
 import {
   Devices,
   Linode,
   LinodeCloneData,
   RebuildRequest,
-  RescueRequestObject
+  RescueRequestObject,
 } from './types';
 
 /**
@@ -87,7 +87,7 @@ export const resizeLinode = (
     setMethod('POST'),
     setData({
       type,
-      allow_auto_disk_resize
+      allow_auto_disk_resize,
     })
   );
 
@@ -139,6 +139,26 @@ export const rescueLinode = (
     setData({ devices: _devices as RescueRequestObject })
   );
 };
+
+/**
+ * rescueMetalLinode
+ *
+ * Boots a Bare Metal Linode into Rescue Mode, a safe environment
+ * for performing many system recovery and disk management tasks.
+ * Rescue Mode is based on the Finnix recovery distribution, a self-contained
+ * and bootable Linux distribution.
+ *
+ * Bare Metal Linodes have a different rescue flow, since their disks are not
+ * managed through the Linode API. This method hits the same endpoint as rescueLinode,
+ * but does not accept an array of devices.
+ *
+ * @param linodeId { number } The id of the Linode to boot into rescue mode.
+ */
+export const rescueMetalLinode = (linodeId: number): Promise<{}> =>
+  Request<{}>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/rescue`),
+    setMethod('POST')
+  );
 
 /**
  * cloneLinode

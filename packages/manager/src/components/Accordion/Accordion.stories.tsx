@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import Button from 'src/components/Button';
@@ -15,8 +14,7 @@ class AsyncContentExample extends React.Component {
   handleToggleExpand = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
       this.setState({ loading: true });
-      const myPromise = () =>
-        new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
+      const myPromise = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
       myPromise().then(() =>
         this.setState({
           data: 'Your patience has been rewarded',
@@ -28,15 +26,9 @@ class AsyncContentExample extends React.Component {
 
   renderContent = () => {
     if (this.state.loading) {
-      return (
-        <div style={{ textAlign: 'center', padding: '1em' }}>Loading...</div>
-      );
+      return <div style={{ textAlign: 'center', padding: '1em' }}>Loading...</div>;
     }
-    return (
-      <div style={{ textAlign: 'center', padding: '1em' }}>
-        {this.state.data}
-      </div>
-    );
+    return <div style={{ textAlign: 'center', padding: '1em' }}>{this.state.data}</div>;
   };
 
   render() {
@@ -58,54 +50,65 @@ class AsyncContentExample extends React.Component {
   }
 }
 
-storiesOf('Accordion', module)
-  .add('Interactive', () => (
+export default {
+  title: 'Accordion',
+};
+
+export const Interactive = () => (
+  <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
+    <Accordion heading="The best Linode department is?">
+      <p>Customer service!</p>
+    </Accordion>
+  </div>
+);
+
+export const Success = () => (
+  <Provider store={store}>
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <Accordion heading="The best Linode department is?">
+      <Accordion success="You did it!" heading="Why is Linode the best?" actions={renderActions}>
         <p>Customer service!</p>
       </Accordion>
     </div>
-  ))
-  .add('Success!', () => (
-    <Provider store={store}>
-      <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-        <Accordion
-          success="You did it!"
-          heading="Why is Linode the best?"
-          actions={renderActions}
-        >
-          <p>Customer service!</p>
-        </Accordion>
-      </div>
-    </Provider>
-  ))
-  .add('Warning!', () => (
-    <Provider store={store}>
-      <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-        <Accordion
-          warning="Careful now..."
-          heading="This is a warning"
-          actions={renderActions}
-        >
-          <p>Customer service!</p>
-        </Accordion>
-      </div>
-    </Provider>
-  ))
-  .add('Error!', () => (
-    <Provider store={store}>
-      <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-        <Accordion
-          error="Oh no! Something broke!"
-          heading="Creating a new linode"
-          actions={renderActions}
-        >
-          <p>Customer service!</p>
-        </Accordion>
-      </div>
-    </Provider>
-  ))
-  .add('Asynchronous Content', () => <AsyncContentExample />);
+  </Provider>
+);
+
+Success.story = {
+  name: 'Success!',
+};
+
+export const Warning = () => (
+  <Provider store={store}>
+    <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
+      <Accordion warning="Careful now..." heading="This is a warning" actions={renderActions}>
+        <p>Customer service!</p>
+      </Accordion>
+    </div>
+  </Provider>
+);
+
+Warning.story = {
+  name: 'Warning!',
+};
+
+export const Error = () => (
+  <Provider store={store}>
+    <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
+      <Accordion
+        error="Oh no! Something broke!"
+        heading="Creating a new linode"
+        actions={renderActions}
+      >
+        <p>Customer service!</p>
+      </Accordion>
+    </div>
+  </Provider>
+);
+
+Error.story = {
+  name: 'Error!',
+};
+
+export const AsynchronousContent = () => <AsyncContentExample />;
 
 const renderActions = () => {
   return (

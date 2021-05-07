@@ -8,7 +8,7 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { dcDisplayNames } from 'src/constants';
 import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToCommaSeparatedList';
+import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import v4 from 'uuid';
 

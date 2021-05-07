@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   logoCollapsed: {
-    background: theme.cmrBGColors.bgPrimaryNav,
+    background: theme.bg.primaryNavPaper,
     height: 48,
     width: 100,
     position: 'absolute',
@@ -59,6 +59,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'none',
       '& $linkItem': {
         color: 'white',
+      },
+      '& .icon': {
+        opacity: 1,
       },
       '& svg': {
         color: theme.color.greenCyan,
@@ -95,10 +98,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   active: {
     backgroundImage: 'linear-gradient(98deg, #38584B 1%, #3A5049 166%)',
     textDecoration: 'none',
+    '& .icon': {
+      opacity: 1,
+    },
     '& svg': {
       color: theme.color.greenCyan,
     },
-    '&:hover': {},
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)',

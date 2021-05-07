@@ -87,6 +87,7 @@ const cmrBGColors = {
   // notification center, add a tag, breadcrumb
   bgSecondaryButton: '#f5f8ff',
   bgCopyButton: '#e5f1ff',
+  bgTPAButton: '#f5f6f7',
   bgTableHeader: '#f9fafa',
   bgBillingSummary: '#f5f9ff',
   bgAccessRow: '#fafafa',
@@ -310,7 +311,7 @@ const themeDefaults: ThemeDefaults = () => {
       black: '#222',
       blue: primaryColors.main,
       offBlack: primaryColors.offBlack,
-      greenCyan: '#6FEC86',
+      greenCyan: '#17cf73',
       boxShadow: '#ddd',
       boxShadowDark: '#aaa',
       focusBorder: '#999',

@@ -1,3 +1,4 @@
+import { TPAProvider } from '@linode/api-v4/lib/profile';
 // These flags should correspond with active features flags in LD
 
 interface TaxBanner {
@@ -31,6 +32,7 @@ export interface Flags {
   firewallBetaNotification: boolean;
   entityTransfers: boolean;
   bareMetal: boolean;
+  tpaProviders: Provider[];
   machineImages: boolean;
 }
 
@@ -71,4 +73,11 @@ export interface MainContentBanner {
   };
   text: string;
   key: string;
+}
+
+export interface Provider {
+  name: TPAProvider;
+  displayName: string;
+  icon: any;
+  href: string;
 }

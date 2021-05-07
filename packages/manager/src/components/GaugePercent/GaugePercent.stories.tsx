@@ -1,4 +1,3 @@
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Gauge from './GaugePercent';
 
@@ -54,4 +53,8 @@ const Example: React.FC<{}> = (props) => {
   );
 };
 
-storiesOf('Gauge Percent', module).add('Example', () => <Example />);
+export default {
+  title: 'Gauge Percent',
+};
+
+export const _Example = () => <Example />;

@@ -264,8 +264,8 @@ export interface LinodeConfigCreationData {
 }
 
 export interface PriceObject {
-  monthly: number;
-  hourly: number;
+  monthly: number | null;
+  hourly: number | null;
 }
 
 export interface LinodeType {
@@ -282,6 +282,7 @@ export interface LinodeType {
   memory: number;
   transfer: number;
   vcpus: number;
+  gpus: number;
 }
 
 export type LinodeTypeClass =

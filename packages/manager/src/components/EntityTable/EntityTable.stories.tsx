@@ -1,5 +1,4 @@
 import { Domain } from '@linode/api-v4/lib/domains/types';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import EntityTable, { EntityTableRow, HeaderCell } from './EntityTable';
@@ -54,28 +53,30 @@ const domainRow: EntityTableRow<Domain> = {
   lastUpdated: 100,
 };
 
-storiesOf('EntityTable', module)
-  .add('list view', () => (
-    <Provider store={store}>
-      <Grid spacing={8}>
-        <EntityTable
-          entity="domains"
-          headers={headers}
-          row={domainRow}
-          groupByTag={false}
-        />
-      </Grid>
-    </Provider>
-  ))
-  .add('grouped by tag', () => (
-    <Provider store={store}>
-      <Grid spacing={8}>
-        <EntityTable
-          entity="domains"
-          headers={headers}
-          row={domainRow}
-          groupByTag={true}
-        />
-      </Grid>
-    </Provider>
-  ));
+export default {
+  title: 'EntityTable',
+};
+
+export const ListView = () => (
+  <Provider store={store}>
+    <Grid spacing={8}>
+      <EntityTable entity="domains" headers={headers} row={domainRow} groupByTag={false} />
+    </Grid>
+  </Provider>
+);
+
+ListView.story = {
+  name: 'list view',
+};
+
+export const GroupedByTag = () => (
+  <Provider store={store}>
+    <Grid spacing={8}>
+      <EntityTable entity="domains" headers={headers} row={domainRow} groupByTag={true} />
+    </Grid>
+  </Provider>
+);
+
+GroupedByTag.story = {
+  name: 'grouped by tag',
+};

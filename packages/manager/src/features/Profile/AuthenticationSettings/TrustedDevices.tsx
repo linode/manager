@@ -25,18 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   expireCell: {
     minWidth: 95,
   },
-  disabled: {
-    '& *': {
-      color: theme.color.disabledText,
-    },
-  },
 }));
 
-interface Props {
-  disabled?: boolean;
-}
-
-type CombinedProps = Props & PaginationProps<TrustedDevice>;
+type CombinedProps = PaginationProps<TrustedDevice>;
 
 export const TrustedDevices: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -57,7 +48,6 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
     pageSize,
     handlePageChange,
     handlePageSizeChange,
-    disabled,
   } = props;
 
   const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(0);
@@ -65,7 +55,7 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
   return (
     <ToggleState>
       {({ open: dialogOpen, toggle: toggleDialog }) => (
-        <Paper className={disabled ? classes.disabled : ''}>
+        <Paper>
           <Typography variant="h3" className={classes.title}>
             Trusted Devices
           </Typography>
@@ -80,15 +70,13 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {!disabled && (
-                <TrustedDevicesTable
-                  error={error}
-                  data={devices}
-                  loading={loading}
-                  toggleDialog={toggleDialog}
-                  setDevice={setSelectedDeviceId}
-                />
-              )}
+              <TrustedDevicesTable
+                error={error}
+                data={devices}
+                loading={loading}
+                toggleDialog={toggleDialog}
+                setDevice={setSelectedDeviceId}
+              />
             </TableBody>
             {devices && devices.length > 0 && (
               <PaginationFooter
@@ -117,4 +105,4 @@ const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
   getTrustedDevices(params, filter).then((response) => response)
 );
 
-export default compose<CombinedProps, Props>(paginated)(TrustedDevices);
+export default compose<CombinedProps, {}>(paginated)(TrustedDevices);

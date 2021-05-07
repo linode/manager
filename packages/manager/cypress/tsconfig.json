@@ -14,4 +14,3 @@
     "types": ["cypress", "cypress-file-upload"]
   },
   "include": ["../cypress/**/*.ts", "**/*.*"]
-}

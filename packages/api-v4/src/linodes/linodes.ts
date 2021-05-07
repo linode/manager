@@ -1,3 +1,7 @@
+import {
+  CreateLinodeSchema,
+  UpdateLinodeSchema,
+} from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
@@ -8,7 +12,6 @@ import Request, {
 } from '../request';
 import { DeepPartial, ResourcePage as Page } from '../types';
 import { Volume } from '../volumes/types';
-import { CreateLinodeSchema, UpdateLinodeSchema } from './linodes.schema';
 import { CreateLinodeRequest, Linode } from './types';
 
 /**

@@ -1,18 +1,74 @@
 import { action } from '@storybook/addon-actions';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
 import Tag from './Tag';
 
-storiesOf('Tags', module)
-  .add('primary', () => <Tag label="tag" />)
-  .add('white', () => <Tag label="tag" colorVariant="white" />)
-  .add('gray', () => <Tag label="tag" colorVariant="gray" />)
-  .add('lightGray', () => <Tag label="tag" colorVariant="lightGray" />)
-  .add('blue', () => <Tag label="tag" colorVariant="blue" />)
-  .add('lightBlue', () => <Tag label="tag" colorVariant="lightBlue" />)
-  .add('green', () => <Tag label="tag" colorVariant="green" />)
-  .add('lightGreen', () => <Tag label="tag" colorVariant="lightGreen" />)
-  .add('yellow', () => <Tag label="tag" colorVariant="yellow" />)
-  .add('lightYellow', () => <Tag label="tag" colorVariant="lightYellow" />)
-  .add('editable', () => <Tag label="delete-tag" onDelete={action('click')} />);
+export default {
+  title: 'Tags',
+};
+
+export const Primary = () => <Tag label="tag" />;
+
+Primary.story = {
+  name: 'primary',
+};
+
+export const White = () => <Tag label="tag" colorVariant="white" />;
+
+White.story = {
+  name: 'white',
+};
+
+export const Gray = () => <Tag label="tag" colorVariant="gray" />;
+
+Gray.story = {
+  name: 'gray',
+};
+
+export const LightGray = () => <Tag label="tag" colorVariant="lightGray" />;
+
+LightGray.story = {
+  name: 'lightGray',
+};
+
+export const Blue = () => <Tag label="tag" colorVariant="blue" />;
+
+Blue.story = {
+  name: 'blue',
+};
+
+export const LightBlue = () => <Tag label="tag" colorVariant="lightBlue" />;
+
+LightBlue.story = {
+  name: 'lightBlue',
+};
+
+export const Green = () => <Tag label="tag" colorVariant="green" />;
+
+Green.story = {
+  name: 'green',
+};
+
+export const LightGreen = () => <Tag label="tag" colorVariant="lightGreen" />;
+
+LightGreen.story = {
+  name: 'lightGreen',
+};
+
+export const Yellow = () => <Tag label="tag" colorVariant="yellow" />;
+
+Yellow.story = {
+  name: 'yellow',
+};
+
+export const LightYellow = () => <Tag label="tag" colorVariant="lightYellow" />;
+
+LightYellow.story = {
+  name: 'lightYellow',
+};
+
+export const Editable = () => <Tag label="delete-tag" onDelete={action('click')} />;
+
+Editable.story = {
+  name: 'editable',
+};

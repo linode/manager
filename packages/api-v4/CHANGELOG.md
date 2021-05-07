@@ -1,3 +1,15 @@
+## [2021-05-05] - v0.52.0
+
+### Added:
+- TPA Provider types
+
+### Changed:
+- Move validation schemas into separate library
+
+## Validation Library
+
+- Add README
+
 ## [2021-04-22] - v0.51.0
 
 ### Added:

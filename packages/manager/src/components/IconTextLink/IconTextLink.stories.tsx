@@ -1,5 +1,4 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import IconTextLink from './IconTextLink';
 
@@ -37,6 +36,8 @@ class InteractiveIconTextLink extends React.Component {
   }
 }
 
-storiesOf('IconTextLink', module).add('Interactive', () => (
-  <InteractiveIconTextLink />
-));
+export default {
+  title: 'IconTextLink',
+};
+
+export const Interactive = () => <InteractiveIconTextLink />;

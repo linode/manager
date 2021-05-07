@@ -8,7 +8,6 @@ export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
   disabled?: boolean;
   disabledReason?: string;
   label: string;
-  left?: boolean;
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -28,7 +27,6 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
     disabledReason,
     display,
     label,
-    left,
     onClick,
     className,
     ...remainingPropsAsTooltipProps
@@ -36,7 +34,6 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
 
   const baseProps = {
     disabled,
-    left,
     onClick,
     text: label,
     title: label,

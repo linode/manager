@@ -1,13 +1,12 @@
 import { rescueLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -29,6 +28,7 @@ import DeviceSelection, {
 import Dialog from 'src/components/Dialog';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import usePrevious from 'src/hooks/usePrevious';
+import { RESCUE_HELPER_TEXT } from './shared';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'inline-flex',
       margin: `${theme.spacing(3)}px 0 0 0`,
     },
+  },
+  button: {
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -56,12 +59,7 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props &
-  VolumesProps &
-  StateProps &
-  RouteComponentProps &
-  WithSnackbarProps;
-
+type CombinedProps = Props & VolumesProps & StateProps & RouteComponentProps;
 interface DeviceMap {
   sda?: string;
   sdb?: string;
@@ -120,7 +118,6 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
   const linodeDisks = linode?._disks.map((disk) =>
     assoc('_id', `disk-${disk.id}`, disk)
   );
-
   const filteredVolumes = React.useMemo(() => {
     return volumesData
       ? volumesData.filter((volume) => {
@@ -149,6 +146,8 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
     deviceMap
   );
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const [APIError, setAPIError] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -168,8 +167,6 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
   const disabled = unauthorized;
 
   const onSubmit = () => {
-    const { enqueueSnackbar } = props;
-
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then((_) => {
         enqueueSnackbar('Linode rescue started.', {
@@ -219,12 +216,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
         <div>
           <Paper className={classes.root}>
             {unauthorized && <LinodePermissionsError />}
-            <Typography>
-              If you suspect that your primary filesystem is corrupt, use the
-              Linode Manager to boot your Linode into Rescue Mode. This is a
-              safe environment for performing many system recovery and disk
-              management tasks.
-            </Typography>
+            <Typography>{RESCUE_HELPER_TEXT}</Typography>
             <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
               devices={devices}
@@ -234,12 +226,15 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
               rescue
               disabled={disabled}
             />
-            <AddNewLink
+            <Button
+              className={classes.button}
+              buttonType="secondary"
+              superCompact
               onClick={incrementCounter}
-              label="Add Disk"
               disabled={disabled || counter >= 6}
-              left
-            />
+            >
+              Add Disk
+            </Button>
             <ActionsPanel>
               <Button
                 onClick={onSubmit}
@@ -269,7 +264,6 @@ const connected = connect(mapStateToProps);
 export default compose<CombinedProps, Props>(
   React.memo,
   SectionErrorBoundary,
-  withSnackbar,
   withVolumes(
     (
       ownProps,
