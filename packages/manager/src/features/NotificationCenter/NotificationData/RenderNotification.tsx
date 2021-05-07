@@ -85,16 +85,23 @@ export const RenderNotification: React.FC<Props> = (props) => {
       <Grid
         container
         className={classes.root}
+        data-test-id={notification.type}
         wrap="nowrap"
         alignItems="center"
       >
         <Grid item>
           <div className={classes.notificationIcon}>
             {severity === 'critical' ? (
-              <ErrorIcon className={classes.criticalIcon} />
+              <ErrorIcon
+                className={classes.criticalIcon}
+                data-test-id={severity + 'Icon'}
+              />
             ) : null}
             {severity === 'major' ? (
-              <WarningIcon className={classes.majorIcon} />
+              <WarningIcon
+                className={classes.majorIcon}
+                data-test-id={severity + 'Icon'}
+              />
             ) : null}
           </div>
         </Grid>

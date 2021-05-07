@@ -1,55 +1,39 @@
+import { Notification } from '@linode/api-v4/lib/account';
 import { notificationFactory } from '@src/factories/notification';
-import { createLinode } from '../../support/api/linodes';
-import { containsVisible, getClick } from '../../support/helpers';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-
-const migrationTicket = (label) => {
-  return {
-    type: 'migration_pending',
-    message: `You have a migration pending! ${label} must be offline before starting the migration.`,
-    entity: { id: 0, type: 'linode', label },
+import { getClick } from '../../support/helpers';
+const notifications: Notification[] = [
+  notificationFactory.build({
+    type: 'migration_scheduled',
     severity: 'critical',
-  };
-};
+  }),
+  notificationFactory.build({ type: 'migration_pending', severity: 'major' }),
+  notificationFactory.build({ type: 'reboot_scheduled', severity: 'minor' }),
+  notificationFactory.build({ type: 'outage', severity: 'critical' }),
+  notificationFactory.build({ type: 'payment_due', severity: 'major' }),
+  notificationFactory.build({ type: 'ticket_important', severity: 'minor' }),
+  notificationFactory.build({ type: 'ticket_abuse', severity: 'critical' }),
+  notificationFactory.build({ type: 'notice', severity: 'major' }),
+  notificationFactory.build({ type: 'maintenance', severity: 'minor' }),
+  notificationFactory.build({ type: 'promotion', severity: 'critical' }),
+];
 
-const minorSeverityTicket = (_label) => {
-  return {
-    type: 'notice',
-    message: 'Testing for minor notification',
-    severity: 'minor',
-  };
-};
-
-const balanceNotification = (_label) => {
-  return {
-    type: 'payment_due',
-    message: 'You have an overdue balance!',
-    severity: 'major',
-  };
-};
-
-const data = [migrationTicket, minorSeverityTicket, balanceNotification];
-
-// to do: add icon validation for each notification type and add abuseTicket = abuseTicketNotificationFactory
-describe('notifications', () => {
-  data.forEach((notification) => {
-    it(`${notification('').type} notification`, () => {
-      createLinode().then((linode) => {
-        const request: Record<string, unknown> = notification(linode.label);
-        cy.intercept('GET', '*/account/notifications*', (req) => {
-          req.reply((res) => {
-            res.send(
-              makeResourcePage(notificationFactory.buildList(1, request))
-            );
-          });
-        }).as('mockNotification');
-        cy.visitWithLogin('/linodes');
-        cy.wait('@mockNotification');
-        cy.get(`[data-qa-linode="${linode.label}"]`).within(() => {
-          containsVisible('Running');
-        });
-        getClick('button[aria-label="Notifications"]');
-        containsVisible(request.message);
+describe('verify notification types and icons', () => {
+  it(`notifications`, () => {
+    cy.intercept('GET', '*/account/notifications*', (req) => {
+      req.reply((res) => {
+        res.send(makeResourcePage(notifications));
+      });
+    }).as('mockNotification');
+    cy.visitWithLogin('/linodes');
+    cy.waitFor('@mockNotifications');
+    getClick('button[aria-label="Notifications"]');
+    getClick('[data-test-id="showMoreButton"');
+    notifications.forEach((notification) => {
+      cy.get(`[data-test-id="${notification.type}"]`).within(() => {
+        if (notification.severity != 'minor') {
+          cy.get(`[data-test-id="${notification.severity + 'Icon'}"]`);
+        }
       });
     });
   });
