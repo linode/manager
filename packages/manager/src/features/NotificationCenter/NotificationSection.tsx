@@ -197,6 +197,7 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
           className={classes.showMore}
           onClick={() => setShowAll(!showAll)}
           aria-label={`Display all ${content.length} items`}
+          data-test-id="showMoreButton"
         >
           {showAll ? 'Close' : `${content.length - count} more`}
           <KeyboardArrowDown

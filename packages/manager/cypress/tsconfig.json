@@ -13,5 +13,6 @@
     },
     "types": ["cypress", "cypress-file-upload"]
   },
-  "include": ["../cypress/**/*.ts", "**/*.*"]
+  "include": ["../cypress/**/*.ts", "**/*.*"],
+  "exclude": ["./plugins/*", "./support/*"]
 }
