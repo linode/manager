@@ -3,7 +3,6 @@ import { array, boolean, mixed, number, object, string } from 'yup';
 interface NodeBalancerConfig {
   port: number;
 }
-
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
 

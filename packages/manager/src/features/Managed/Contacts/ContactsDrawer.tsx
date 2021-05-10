@@ -1,11 +1,11 @@
-import { Formik, FormikHelpers } from 'formik';
 import {
   ContactPayload,
   createContact,
-  createContactSchema,
   ManagedContact,
   updateContact,
 } from '@linode/api-v4/lib/managed';
+import { createContactSchema } from '@linode/validation/lib/managed.schema';
+import { Formik, FormikHelpers } from 'formik';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

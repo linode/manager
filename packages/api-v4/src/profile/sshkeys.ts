@@ -1,13 +1,13 @@
+import { createSSHKeySchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from 'src/request';
 import { ResourcePage as Page } from '../types';
-import { createSSHKeySchema } from './profile.schema';
 import { SSHKey } from './types';
 
 /**

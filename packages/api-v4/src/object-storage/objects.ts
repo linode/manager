@@ -4,7 +4,7 @@ import {
   ACLType,
   ObjectStorageObjectACL,
   ObjectStorageObjectURL,
-  ObjectStorageObjectURLOptions
+  ObjectStorageObjectURLOptions,
 } from './types';
 
 /**

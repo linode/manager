@@ -1,18 +1,18 @@
+import { longviewClientCreate } from '@linode/validation/lib/longview.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from 'src/request';
 import { ResourcePage } from '../types';
-import { longviewClientCreate } from './longview.schema';
 import {
+  ActiveLongviewPlan,
   LongviewClient,
   LongviewSubscription,
   LongviewSubscriptionPayload,
-  ActiveLongviewPlan
 } from './types';
 
 export const createLongviewClient = (label?: string) => {
@@ -20,7 +20,7 @@ export const createLongviewClient = (label?: string) => {
     setURL(`${API_ROOT}/longview/clients`),
     setData(
       {
-        label
+        label,
       },
       longviewClientCreate
     ),
@@ -47,7 +47,7 @@ export const updateLongviewClient = (id: number, label: string) => {
     setURL(`${API_ROOT}/longview/clients/${id}`),
     setData(
       {
-        label
+        label,
       },
       longviewClientCreate
     ),

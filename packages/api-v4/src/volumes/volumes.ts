@@ -1,10 +1,16 @@
+import {
+  CloneVolumeSchema,
+  CreateVolumeSchema,
+  ResizeVolumeSchema,
+  UpdateVolumeSchema,
+} from '@linode/validation/lib/volumes.schema';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
 import {
@@ -12,14 +18,8 @@ import {
   CloneVolumePayload,
   ResizeVolumePayload,
   Volume,
-  VolumeRequestPayload
+  VolumeRequestPayload,
 } from './types';
-import {
-  CloneVolumeSchema,
-  CreateVolumeSchema,
-  ResizeVolumeSchema,
-  UpdateVolumeSchema
-} from './volumes.schema';
 
 /**
  * getVolume

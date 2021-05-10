@@ -1,18 +1,21 @@
+import {
+  createReplySchema,
+  createSupportTicketSchema,
+} from '@linode/validation/lib/support.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { createReplySchema, createSupportTicketSchema } from './support.schema';
 import {
   ReplyRequest,
   SupportReply,
   SupportTicket,
-  TicketRequest
+  TicketRequest,
 } from './types';
 
 /**

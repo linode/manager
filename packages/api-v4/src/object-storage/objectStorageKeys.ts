@@ -1,17 +1,17 @@
+import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { createObjectStorageKeysSchema } from './objectStorageKeys.schema';
 import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
-  UpdateObjectStorageKeyRequest
+  UpdateObjectStorageKeyRequest,
 } from './types';
 
 /**

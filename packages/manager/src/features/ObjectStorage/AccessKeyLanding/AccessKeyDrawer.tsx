@@ -1,12 +1,12 @@
-import { Formik } from 'formik';
 import {
   AccessType,
-  createObjectStorageKeysSchema,
   ObjectStorageBucket,
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   Scope,
 } from '@linode/api-v4/lib/object-storage';
+import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+import { Formik } from 'formik';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';

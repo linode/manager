@@ -1,5 +1,10 @@
+import {
+  allocateIPSchema,
+  assignAddressesSchema,
+  shareAddressesSchema,
+  updateIPSchema,
+} from '@linode/validation/lib/networking.schema';
 import { API_ROOT } from '../constants';
-
 import Request, {
   setData,
   setMethod,
@@ -8,12 +13,6 @@ import Request, {
   setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import {
-  allocateIPSchema,
-  assignAddressesSchema,
-  shareAddressesSchema,
-  updateIPSchema,
-} from './networking.schema';
 import {
   IPAddress,
   IPAssignmentPayload,
