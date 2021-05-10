@@ -5,11 +5,10 @@ function replaceFunc(match: string, p1: string, p2: string) {
 }
 
 function formatStorageUnits(unformattedString: string) {
-  const cleanedUnformattedString = `${unformattedString}`;
-  if (!cleanedUnformattedString.match(storageRegex)) {
+  if (!unformattedString.match(storageRegex)) {
     return unformattedString;
   }
-  return cleanedUnformattedString.replace(storageRegex, replaceFunc);
+  return unformattedString.replace(storageRegex, replaceFunc);
 }
 
 export { formatStorageUnits };
