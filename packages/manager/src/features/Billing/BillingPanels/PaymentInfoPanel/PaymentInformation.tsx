@@ -6,8 +6,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
-import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
+import PaymentMethodRow from './PaymentMethodRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -79,9 +79,20 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
           </Button>
         </div>
 
-        <div className={classes.billingGroup}>
+        <PaymentMethodRow
+          lastFour={'1234'}
+          expiry={'10/2022'}
+          isDefault={true}
+        ></PaymentMethodRow>
+        <PaymentMethodRow
+          lastFour={lastFour}
+          expiry={expiry}
+          isDefault={false}
+        ></PaymentMethodRow>
+
+        {/* <div className={classes.billingGroup}>
           <CreditCard lastFour={lastFour} expiry={expiry} />
-        </div>
+        </div> */}
         <UpdateCreditCardDrawer
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
