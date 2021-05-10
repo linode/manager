@@ -389,7 +389,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               data-qa-disk-select
             />
             <Typography className={classes.helperText} variant="body1">
-              Linode Images are limited to {IMAGE_DEFAULT_LIMIT}MB of data per
+              Linode Images are limited to {IMAGE_DEFAULT_LIMIT} MB of data per
               disk by default. Please ensure that your disk content does not
               exceed this size limit, or open a Support ticket to request a
               higher limit. Additionally, Linode Images cannot be created if you

@@ -110,7 +110,7 @@ export const getDescriptionForCluster = (cluster: ExtendedCluster) => {
     'CPU core',
     'CPU cores',
     cluster.totalCPU
-  )}, ${cluster.totalMemory / 1024}GB RAM`;
+  )}, ${cluster.totalMemory / 1024} GB RAM`;
 };
 
 export const getNextVersion = (

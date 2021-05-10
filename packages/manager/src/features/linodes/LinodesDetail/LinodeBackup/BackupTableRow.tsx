@@ -47,12 +47,12 @@ const BackupTableRow: React.FC<Props> = (props) => {
       <TableCell parentColumn="Disks" data-qa-backup-disks>
         {backup.disks.map((disk, idx) => (
           <div key={idx}>
-            {disk.label} ({disk.filesystem}) - {disk.size}MB
+            {disk.label} ({disk.filesystem}) - {disk.size} MB
           </div>
         ))}
       </TableCell>
       <TableCell parentColumn="Space Required" data-qa-space-required>
-        {backup.disks.reduce((acc, disk) => acc + disk.size, 0)}MB
+        {backup.disks.reduce((acc, disk) => acc + disk.size, 0)} MB
       </TableCell>
       <TableCell>
         <LinodeBackupActionMenu

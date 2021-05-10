@@ -20,7 +20,7 @@ export const typeLabelDetails = (
 ) => {
   const memG = memory / 1024;
   const diskG = disk / 1024;
-  return `${cpus} CPU, ${diskG}GB Storage, ${memG}GB RAM`;
+  return `${cpus} CPU, ${diskG} GB Storage, ${memG} GB RAM`;
 };
 
 export const displayType = (
@@ -46,7 +46,7 @@ export const displayClass = (category: string) => {
 
 export const displaySize = (memory: number) => {
   const memG = memory / 1024;
-  return `${memG}GB`;
+  return `${memG} GB`;
 };
 
 export const displayTypeForKubePoolNode = (

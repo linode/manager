@@ -4,17 +4,17 @@ describe('Linode presentation helpers', () => {
   describe('type label details', () => {
     it('should return a string with memory, disk, and cpu details', () => {
       const typedLabel = typeLabelDetails(2048, 2048, 1);
-      expect(typedLabel).toBe('1 CPU, 2GB Storage, 2GB RAM');
+      expect(typedLabel).toBe('1 CPU, 2 GB Storage, 2 GB RAM');
     });
 
-    it('should return storage in GB', () => {
+    it('should return storage in  GB', () => {
       const typedLabel = typeLabelDetails(1024, 2048, 1);
-      expect(typedLabel.includes('2GB Storage'));
+      expect(typedLabel.includes('2 GB Storage'));
     });
 
-    it('should return memory in GB', () => {
+    it('should return memory in  GB', () => {
       const typedLabel = typeLabelDetails(1024, 2048, 1);
-      expect(typedLabel.includes('1GB Ram'));
+      expect(typedLabel.includes('1 GB Ram'));
     });
 
     it('should return number of CPUs', () => {
@@ -31,19 +31,19 @@ describe('Linode presentation helpers', () => {
   describe('Display for Kube pool nodes', () => {
     it('should return a string with heading, size, and CPUs', () => {
       expect(displayTypeForKubePoolNode('standard', 4096, 2)).toEqual(
-        'Standard 4GB, 2 CPUs'
+        'Standard 4 GB, 2 CPUs'
       );
     });
 
     it('should pluralize CPUs correctly', () => {
       expect(displayTypeForKubePoolNode('standard', 2048, 1)).toEqual(
-        'Standard 2GB, 1 CPU'
+        'Standard 2 GB, 1 CPU'
       );
     });
 
     it('should format highmem instances', () => {
       expect(displayTypeForKubePoolNode('highmem', 2048, 1)).toEqual(
-        'High Memory 2GB, 1 CPU'
+        'High Memory 2 GB, 1 CPU'
       );
     });
   });
