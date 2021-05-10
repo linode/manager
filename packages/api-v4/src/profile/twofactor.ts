@@ -1,6 +1,6 @@
+import { enableTwoFactorSchema } from '@linode/validation/lib/twofactor.schema';
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { enableTwoFactorSchema } from './twofactor.schema';
 import { Secret } from './types';
 
 /**

@@ -1,17 +1,17 @@
+import {
+  CreateBucketSchema,
+  UpdateBucketAccessSchema,
+  UploadCertificateSchema,
+} from '@linode/validation/lib/buckets.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import {
-  CreateBucketSchema,
-  UpdateBucketAccessSchema,
-  UploadCertificateSchema
-} from './buckets.schema';
 import {
   ObjectStorageBucket,
   ObjectStorageBucketAccessRequest,
@@ -21,7 +21,7 @@ import {
   ObjectStorageBucketSSLResponse,
   ObjectStorageDeleteBucketRequestPayload,
   ObjectStorageObjectListParams,
-  ObjectStorageObjectListResponse
+  ObjectStorageObjectListResponse,
 } from './types';
 
 /**
@@ -89,7 +89,7 @@ export const createBucket = (data: ObjectStorageBucketRequestPayload) =>
  */
 export const deleteBucket = ({
   cluster,
-  label
+  label,
 }: ObjectStorageDeleteBucketRequestPayload) =>
   Request<ObjectStorageBucket>(
     setURL(`${API_ROOT}/object-storage/buckets/${cluster}/${label}`),

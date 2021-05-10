@@ -1,20 +1,20 @@
-import { API_ROOT } from 'src/constants';
-import Request, {
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter
-} from '../request';
-import { ResourcePage as Page } from '../types';
 import {
   createContactSchema,
   createCredentialSchema,
   createServiceMonitorSchema,
   updateCredentialSchema,
   updateManagedLinodeSchema,
-  updatePasswordSchema
-} from './managed.schema';
+  updatePasswordSchema,
+} from '@linode/validation/lib/managed.schema';
+import { API_ROOT } from 'src/constants';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import {
   ContactPayload,
   CredentialPayload,
@@ -28,7 +28,7 @@ import {
   ManagedSSHSetting,
   ManagedStats,
   UpdateCredentialPayload,
-  UpdatePasswordPayload
+  UpdatePasswordPayload,
 } from './types';
 
 /**
