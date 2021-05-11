@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   editablePreContainer: {
     alignItems: 'center',
   },
+  hasError: {
+    marginBottom: theme.spacing(3),
+  },
 }));
 
 export const Breadcrumb: React.FC<CombinedProps> = (props) => {
@@ -58,8 +61,16 @@ export const Breadcrumb: React.FC<CombinedProps> = (props) => {
     ? removeByIndex(allPaths, removeCrumbX - 1)
     : allPaths;
 
+  const hasError = Boolean(onEditHandlers?.errorText);
+
   return (
-    <div className={`${classes.root} ${className}`}>
+    <div
+      className={classNames({
+        [classes.root]: true,
+        [classes.hasError]: hasError,
+        className,
+      })}
+    >
       <div
         className={classNames({
           [classes.preContainer]: true,
