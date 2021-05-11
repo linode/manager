@@ -63,18 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     marginLeft: theme.spacing(3),
   },
-  userName: {
-    color: theme.cmrTextColors.tableStatic,
-    fontFamily: theme.font.bold,
-    fontSize: '1.125rem',
-    marginTop: -1,
-  },
-  userNameSlash: {
-    color: theme.cmrTextColors.tableHeader,
-    fontFamily: theme.font.normal,
-    fontSize: 20,
-    marginRight: 2,
-  },
 }));
 
 export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
@@ -150,12 +138,6 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
     return <NotFound />;
   }
 
-  const userNameSlash = (
-    <Typography className={classes.userName}>
-      {stackScript.username} <span className={classes.userNameSlash}>/</span>
-    </Typography>
-  );
-
   const errorMap = getErrorMap(['label'], errors);
   const labelError = errorMap.label;
 
@@ -172,7 +154,6 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
         <Grid item className="p0">
           <Breadcrumb
             pathname={props.location.pathname}
-            labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
             labelTitle={stackScript.label}
             crumbOverrides={[
               {

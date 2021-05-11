@@ -94,18 +94,10 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       color: theme.color.red,
-      height: 34,
-      top: -2,
-      left: 280,
-      width: 200,
-      [theme.breakpoints.down('sm')]: {
-        left: 260,
-      },
-      [theme.breakpoints.down('xs')]: {
-        top: 26,
-        left: 5,
-        width: 400,
-      },
+      // height: 34,
+      top: 36,
+      left: 5,
+      width: '100%',
     },
     errorTextLong: {
       width: '100%',

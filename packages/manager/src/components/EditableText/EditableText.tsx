@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     boxShadow: 'none',
     marginLeft: 7,
-    maxWidth: 170,
+    maxWidth: 240,
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
       width: '100%',
