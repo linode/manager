@@ -9,16 +9,17 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { debounce } from 'throttle-debounce';
-import { uploadObject } from 'src/features/ObjectStorage/requests';
+// import { uploadObject } from 'src/features/ObjectStorage/requests';
+import { uploadImageFile } from 'src/features/Images/requests';
 import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import {
   curriedObjectUploaderReducer,
   defaultState,
   MAX_FILE_SIZE_IN_BYTES,
-  //   MAX_NUM_UPLOADS,
-  //   MAX_PARALLEL_UPLOADS,
-  //   ObjectUploaderAction,
-  //   pathOrFileName,
+  MAX_NUM_UPLOADS,
+  MAX_PARALLEL_UPLOADS,
+  ObjectUploaderAction,
+  pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
 import { Dispatch } from 'src/hooks/types';
 import { useDispatch } from 'react-redux';
@@ -132,9 +133,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   // This function is fired when objects are dropped in the upload area.
   const onDrop = (file: File) => {
-    console.log('onDrop activated');
-    console.log(file);
-
     dispatchAction(
       uploadImage({
         label,
@@ -147,7 +145,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         const uploadUrl = response.upload_to;
         console.log(uploadUrl);
 
-        uploadObject(uploadUrl, file, () => console.log('Processing...'))
+        uploadImageFile(uploadUrl, file, () => console.log('Processing...'))
           .then(() => console.log('Successfully uploaded to URL'))
           .catch(() => console.log('Error uploading to URL'));
       })
@@ -157,15 +155,12 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       });
     // Look at the files queued and in-progress, along with the new files,
     // to see if we'll go over the limit.
-    // if (
-    //   state.numInProgress + state.numQueued + files.length >
-    //   MAX_NUM_UPLOADS
-    // ) {
-    //   props.enqueueSnackbar(`Upload up to ${MAX_NUM_UPLOADS} files at a time`, {
-    //     variant: 'error',
-    //   });
-    //   return;
-    // }
+    if (state.numInProgress + state.numQueued + 1 > MAX_NUM_UPLOADS) {
+      props.enqueueSnackbar(`Upload up to ${MAX_NUM_UPLOADS} files at a time`, {
+        variant: 'error',
+      });
+      return;
+    }
 
     // @analytics
     // sendObjectsQueuedForUploadEvent(files.length);
@@ -173,15 +168,16 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     // We bind each file to the prefix at the time of onDrop. The prefix could
     // change later, if the user navigates to a different folder before the
     // upload is complete.
-    // dispatch({ type: 'ENQUEUE', files, prefix });
+    const files = [file];
+    const prefix = '';
+    dispatch({ type: 'ENQUEUE', files, prefix });
   };
 
-  // This function will be called when dropped files that are over the max size.
+  // This function will be called for dropped files that are over the max size.
   const onDropRejected = (files: File[]) => {
-    // let errorMessage = `Max file size (${
-    //   readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
-    // }) exceeded`;
-    let errorMessage = 'Max file size exceeded';
+    let errorMessage = `Max file size (${
+      readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
+    }) exceeded`;
 
     if (files.length > 1) {
       errorMessage += ' for some files';
@@ -192,17 +188,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  //   const nextBatch = React.useMemo(() => {
-  //     if (state.numQueued === 0 || state.numInProgress >= MAX_PARALLEL_UPLOADS) {
-  //       return [];
-  //     }
+  const nextBatch = React.useMemo(() => {
+    if (state.numQueued === 0 || state.numInProgress >= MAX_PARALLEL_UPLOADS) {
+      return [];
+    }
 
-  //     const queuedUploads = state.files.filter(
-  //       (upload) => upload.status === 'QUEUED'
-  //     );
+    const queuedUploads = state.files.filter(
+      (upload) => upload.status === 'QUEUED'
+    );
 
-  //     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
-  //   }, [state.numQueued, state.numInProgress]);
+    return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
+  }, [state.numQueued, state.numInProgress]);
 
   //   const debouncedGetBucket = React.useRef(
   //     debounce(400, false, () =>
@@ -214,97 +210,106 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   //   ).current;
 
   // When `nextBatch` changes, upload the files.
-  //   React.useEffect(() => {
-  //     if (nextBatch.length === 0) {
-  //       return;
-  //     }
+  React.useEffect(() => {
+    if (nextBatch.length === 0) {
+      return;
+    }
 
-  //     // Set status as "IN_PROGRESS" for each file.
-  //     dispatch({
-  //       type: 'UPDATE_FILES',
-  //       filesToUpdate: nextBatch.map((fileUpload) =>
-  //         pathOrFileName(fileUpload.file)
-  //       ),
-  //       data: { status: 'IN_PROGRESS' },
-  //     });
+    // Set status as "IN_PROGRESS" for each file.
+    dispatch({
+      type: 'UPDATE_FILES',
+      filesToUpdate: nextBatch.map((fileUpload) =>
+        pathOrFileName(fileUpload.file)
+      ),
+      data: { status: 'IN_PROGRESS' },
+    });
 
-  //     nextBatch.forEach((fileUpload) => {
-  //       const { file } = fileUpload;
+    nextBatch.forEach((fileUpload) => {
+      const { file } = fileUpload;
 
-  //       const path = pathOrFileName(fileUpload.file);
-  //       const isInFolder = path.startsWith('/');
+      const path = pathOrFileName(fileUpload.file);
+      //       const isInFolder = path.startsWith('/');
 
-  //       // We want to upload the object to the current "folder" the user is
-  //       // viewing, so we prepend the file name with the prefix. If the object
-  //       // being uploaded is itself in a folder, we drop the leading slash.
-  //       //
-  //       // We need to use the prefix on each object (bound at onDrop) because the
-  //       // prefix from the parent might have changed if the user has navigated to
-  //       // a different folder.
-  //       const fullObjectName =
-  //         fileUpload.prefix + (isInFolder ? path.substring(1) : path);
+      //       // We want to upload the object to the current "folder" the user is
+      //       // viewing, so we prepend the file name with the prefix. If the object
+      //       // being uploaded is itself in a folder, we drop the leading slash.
+      //       //
+      //       // We need to use the prefix on each object (bound at onDrop) because the
+      //       // prefix from the parent might have changed if the user has navigated to
+      //       // a different folder.
+      //       const fullObjectName =
+      //         fileUpload.prefix + (isInFolder ? path.substring(1) : path);
 
-  //       const onUploadProgress = onUploadProgressFactory(dispatch, path);
+      const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
-  //       const handleSuccess = () => {
-  //         // Request the Bucket again so the updated size is reflected on the Bucket Landing page.
-  //         // This request is debounced since many Objects can be uploaded at once.
-  //         debouncedGetBucket();
+      const handleSuccess = () => {
+        //         // Request the Bucket again so the updated size is reflected on the Bucket Landing page.
+        //         // This request is debounced since many Objects can be uploaded at once.
+        //         debouncedGetBucket();
 
-  //         // We may want to add the object to the table, depending on the prefix
-  //         // the user is currently viewing. Do this in the parent, which has the
-  //         // current prefix in scope.
-  //         props.maybeAddObjectToTable(fullObjectName, file.size);
+        //         // We may want to add the object to the table, depending on the prefix
+        //         // the user is currently viewing. Do this in the parent, which has the
+        //         // current prefix in scope.
+        //         props.maybeAddObjectToTable(fullObjectName, file.size);
 
-  //         dispatch({
-  //           type: 'UPDATE_FILES',
-  //           filesToUpdate: [path],
-  //           data: {
-  //             percentComplete: 100,
-  //             status: 'FINISHED',
-  //           },
-  //         });
-  //       };
+        dispatch({
+          type: 'UPDATE_FILES',
+          filesToUpdate: [path],
+          data: {
+            percentComplete: 100,
+            status: 'FINISHED',
+          },
+        });
+      };
 
-  //       const handleError = () => {
-  //         dispatch({
-  //           type: 'UPDATE_FILES',
-  //           filesToUpdate: [path],
-  //           data: {
-  //             status: 'ERROR',
-  //           },
-  //         });
-  //       };
+      const handleError = () => {
+        dispatch({
+          type: 'UPDATE_FILES',
+          filesToUpdate: [path],
+          data: {
+            status: 'ERROR',
+          },
+        });
+      };
 
-  //       // If we've already gotten the URL (i.e. we've confirmed this file should
-  //       // be overwritten) we can go ahead and upload it.
-  //       if (fileUpload.url) {
-  //         uploadObject(fileUpload.url, file, onUploadProgress)
-  //           .then((_) => handleSuccess())
-  //           .catch((_) => handleError());
-  //       } else {
-  //         // Otherwise, we need to make an API request to get the URL.
-  //         getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
-  //           content_type: file.type,
-  //         })
-  //           .then(({ url, exists }) => {
-  //             if (exists) {
-  //               dispatch({
-  //                 type: 'NOTIFY_FILE_EXISTS',
-  //                 fileName: path,
-  //                 url,
-  //               });
-  //               return;
-  //             }
+      // If we've already gotten the URL (i.e. we've confirmed this file should
+      // be overwritten) we can go ahead and upload it.
+      if (fileUpload.url) {
+        uploadImageFile(fileUpload.url, file, onUploadProgress)
+          .then((_) => handleSuccess())
+          .catch((_) => handleError());
+      } else {
+        handleError();
+        console.log('Error: need to handle case of no URL');
+        //   // Otherwise, we need to make an API request to get the URL.
+        //   dispatchAction(
+        //     uploadImage({
+        //       label,
+        //       description: description || undefined,
+        //       region,
+        //     })
+        //   )
+        //   getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
+        //     content_type: file.type,
+        //   })
+        //     .then(({ url, exists }) => {
+        //       if (exists) {
+        //         dispatch({
+        //           type: 'NOTIFY_FILE_EXISTS',
+        //           fileName: path,
+        //           url,
+        //         });
+        //         return;
+        //       }
 
-  //             return uploadObject(url, file, onUploadProgress)
-  //               .then((_) => handleSuccess())
-  //               .catch((_) => handleError());
-  //           })
-  //           .catch((_) => handleError());
-  //       }
-  //     });
-  //   }, [nextBatch]);
+        //       return uploadImageFile(url, file, onUploadProgress)
+        //         .then((_) => handleSuccess())
+        //         .catch((_) => handleError());
+        //     })
+        //     .catch((_) => handleError());
+      }
+    });
+  }, [nextBatch]);
 
   const {
     getInputProps,
@@ -396,15 +401,15 @@ const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
 
 export default enhanced(FileUploader);
 
-// const onUploadProgressFactory = (
-//   dispatch: (value: ObjectUploaderAction) => void,
-//   fileName: string
-// ) => (progressEvent: ProgressEvent) => {
-//   dispatch({
-//     type: 'UPDATE_FILES',
-//     filesToUpdate: [fileName],
-//     data: {
-//       percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
-//     },
-//   });
-// };
+const onUploadProgressFactory = (
+  dispatch: (value: ObjectUploaderAction) => void,
+  fileName: string
+) => (progressEvent: ProgressEvent) => {
+  dispatch({
+    type: 'UPDATE_FILES',
+    filesToUpdate: [fileName],
+    data: {
+      percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
+    },
+  });
+};
