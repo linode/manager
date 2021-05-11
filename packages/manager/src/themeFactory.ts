@@ -640,7 +640,7 @@ const themeDefaults: ThemeDefaults = () => {
       },
       MuiChip: {
         root: {
-          backgroundColor: '#f4f4f4',
+          backgroundColor: '#E7E7E7',
           height: 20,
           display: 'inline-flex',
           alignItems: 'center',
@@ -669,6 +669,7 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
         label: {
+          background: '#E7E7E7',
           paddingLeft: 4,
           paddingRight: 4,
           display: 'flex',

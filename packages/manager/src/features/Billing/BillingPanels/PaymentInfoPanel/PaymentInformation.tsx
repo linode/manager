@@ -83,11 +83,13 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
           lastFour={'1234'}
           expiry={'10/2022'}
           isDefault={true}
+          paymentMethod={'Visa'}
         ></PaymentMethodRow>
         <PaymentMethodRow
           lastFour={lastFour}
           expiry={expiry}
           isDefault={false}
+          paymentMethod={'Mastercard'}
         ></PaymentMethodRow>
 
         {/* <div className={classes.billingGroup}>

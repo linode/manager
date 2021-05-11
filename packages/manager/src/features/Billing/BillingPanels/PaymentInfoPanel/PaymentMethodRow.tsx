@@ -2,24 +2,27 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
-import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import Chip from 'src/components/core/Chip';
 import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import Typography from 'src/components/core/Typography';
+import Visa from 'src/assets/icons/paymentCards/visaBlue.svg';
+import Mastercard from 'src/assets/icons/paymentCards/mastercard.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(),
   },
-  icon: {
-    marginLeft: '10px',
+  expiry: {
+    marginLeft: theme.spacing(),
+    [theme.breakpoints.down('xs')]: {
+      marginLeft: '0',
+    },
   },
   expired: {
     color: theme.color.red,
-    paddingLeft: '0',
   },
   actions: {
     marginLeft: 'auto',
@@ -34,20 +37,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  paymentMethod: {
+    fontWeight: 'bold',
+  },
+  mastercard: {
+    paddingLeft: '5px',
+    marginLeft: '2px',
+    marginRight: '5px',
+  },
 }));
 
 interface Props {
   lastFour?: string;
   expiry?: string;
   isDefault?: boolean;
+  paymentMethod?: string;
 }
 
 type CombinedProps = Props;
 
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
-  const { expiry, lastFour, isDefault } = props;
+  const { expiry, lastFour, isDefault, paymentMethod } = props;
   const classes = useStyles();
   const isCardExpired = expiry && isCreditCardExpired(expiry);
+
+  const renderPaymentMethodIcon = (paymentMethod: string | undefined) => {
+    switch (paymentMethod) {
+      case 'Visa':
+        return <Visa />;
+      case 'Mastercard':
+        return <Mastercard className={classes.mastercard} />;
+    }
+  };
 
   const actions: Action[] = [
     {
@@ -81,26 +102,25 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     <Paper className={classes.root} border>
       <Grid container>
         <Grid item className={classes.item}>
-          <Volume className={classes.icon} />
-        </Grid>
-        <Grid item className={classes.item}>
+          {renderPaymentMethodIcon(paymentMethod)}
           <Grid item className={classes.card}>
-            <Typography>Visa ending in {lastFour}</Typography>
-            {Boolean(expiry) && (
-              <Typography>
-                {isCardExpired ? (
-                  <span className={classes.expired}>
-                    &nbsp;{`(Expired ${expiry})`}
-                  </span>
-                ) : (
-                  <span>&nbsp;{`(Expires ${expiry})`}</span>
-                )}
-              </Typography>
-            )}
+            <Typography className={classes.paymentMethod}>
+              &nbsp;{paymentMethod} ****{lastFour}
+            </Typography>
+            <Typography className={classes.expiry}>
+              {isCardExpired ? (
+                <span className={classes.expired}>
+                  &nbsp;{`Expired ${expiry}`}
+                </span>
+              ) : (
+                <span>&nbsp;{`Expires ${expiry}`}</span>
+              )}
+            </Typography>
           </Grid>
         </Grid>
         <Grid item className={classes.item}>
           {isDefault && <Chip label="Default" component="span" />}
+          {/* BG: E7E7E7 */}
         </Grid>
         <Grid item className={classes.actions}>
           <ActionMenu
