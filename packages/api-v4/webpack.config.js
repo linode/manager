@@ -8,11 +8,11 @@ module.exports = {
     filename: 'index.js',
     path: path.resolve(__dirname),
     library: '@linode/api-v4',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
   },
   plugins: [
     new NpmDtsPlugin({
-      logLevel: 'warn'
-    })
-  ]
+      logLevel: 'warn',
+    }),
+  ],
 };

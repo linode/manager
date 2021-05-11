@@ -21,6 +21,35 @@ jobs:
           name: packages-validation-lib
           path: packages/validation/lib
 
+  publish-validation:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - build-validation
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: packages-validation-lib
+          path: packages/validation/lib
+      - uses: JS-DevTools/npm-publish@v1
+        id: npm-publish
+        with:
+          token: ${{ secrets.NPM_AUTH_TOKEN }}
+          package: ./packages/validation/package.json
+      - name: slack-notify
+        uses: rtCamp/action-slack-notify@master
+        if: steps.npm-publish.outputs.type != 'none'
+        env:
+          SLACK_CHANNEL: api-js-client
+          SLACK_TITLE: "Linode Validation v${{ steps.npm-publish.outputs.version}}"
+          SLACK_MESSAGE: ":rocket: Linode Validation Library has been published to NPM: ${{ steps.npm-publish.outputs.old-version }} => ${{ steps.npm-publish.outputs.version }}. View the changelog at https://github.com/linode/manager/blob/master/packages/validation/CHANGELOG.md" 
+          SLACK_USERNAME: npm-bot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON_EMOJI: ":package:"
+          MSG_MINIMAL: true
+
+
   test-sdk:
     runs-on: ubuntu-latest
     needs: build-validation
@@ -128,6 +157,8 @@ jobs:
     needs:
       - test-sdk
       - build-sdk
+      # If the validation publish failed we could have mismatched versions and a broken JS client
+      - publish-validation
     steps:
       - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
