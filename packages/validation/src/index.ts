@@ -17,5 +17,4 @@ export * from './stackscripts.schema';
 export * from './support.schema';
 export * from './transfers.schema';
 export * from './twofactor.schema';
-export * from './vlans.schema';
 export * from './volumes.schema';

@@ -84,7 +84,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rxjs": "^5.5.6",
-    "sanitize-html": "~1.27.4",
+    "sanitize-html": "~2.3.2",
     "search-string": "^3.1.0",
     "throttle-debounce": "^2.0.0",
     "typescript-fsa": "^3.0.0",

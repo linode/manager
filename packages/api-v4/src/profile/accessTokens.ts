@@ -1,13 +1,13 @@
+import { createPersonalAccessTokenSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { createPersonalAccessTokenSchema } from './profile.schema';
 import { Token, TokenRequest } from './types';
 
 /**
