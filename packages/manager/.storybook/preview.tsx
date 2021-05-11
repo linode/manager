@@ -23,9 +23,9 @@ export const decorators = [
         <CssBaseline />
         <div
           style={{
-            margin: '1rem',
-            padding: '4rem',
             backgroundColor: options[_key]().cmrBGColors.bgApp,
+            height: '100vh',
+            padding: '1rem',
           }}
         >
           <Story />
