@@ -61,7 +61,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const isCardExpired = expiry && isCreditCardExpired(expiry);
 
-  const renderPaymentMethodIcon = (paymentMethod: string | undefined) => {
+  const renderPaymentMethodIcon = (paymentMethod: string | undefined): any => {
     switch (paymentMethod) {
       case 'Visa':
         return <Visa />;
@@ -120,7 +120,6 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
         </Grid>
         <Grid item className={classes.item}>
           {isDefault && <Chip label="Default" component="span" />}
-          {/* BG: E7E7E7 */}
         </Grid>
         <Grid item className={classes.actions}>
           <ActionMenu

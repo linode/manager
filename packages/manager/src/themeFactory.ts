@@ -668,8 +668,12 @@ const themeDefaults: ThemeDefaults = () => {
             outline: '1px dotted #999',
           },
         },
+        clickable: {
+          '&:hover': {
+            background: 'rgb(206, 206, 206)',
+          },
+        },
         label: {
-          background: '#E7E7E7',
           paddingLeft: 4,
           paddingRight: 4,
           display: 'flex',
