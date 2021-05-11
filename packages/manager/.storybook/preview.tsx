@@ -1,5 +1,5 @@
 // .storybook/preview.js
-import { select } from '@storybook/addon-knobs';
+import { select, withKnobs } from '@storybook/addon-knobs';
 import React from 'react';
 import '../public/fonts/fonts.css';
 import CssBaseline from '../src/components/core/CssBaseline';
@@ -13,16 +13,24 @@ const options = {
   light,
 };
 
-const key = select('theme', ['light', 'dark'], 'light');
-
 export const decorators = [
-  (Story) =>
-    wrapWithTheme(
-      <ThemeProvider theme={options[key]}>
+  withKnobs,
+  (Story) => {
+    const _key = select('theme', ['light', 'dark'], 'light');
+
+    return wrapWithTheme(
+      <ThemeProvider theme={options[_key]}>
         <CssBaseline />
-        <div style={{ margin: '1rem' }}>
+        <div
+          style={{
+            margin: '1rem',
+            padding: '4rem',
+            backgroundColor: options[_key]().cmrBGColors.bgApp,
+          }}
+        >
           <Story />
         </div>
       </ThemeProvider>
-    ),
+    );
+  },
 ];
