@@ -14,7 +14,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     price: {
-      fontSize: '1.5rem',
+      fontSize: '24px',
       color: theme.color.green,
       display: 'inline-block',
     },

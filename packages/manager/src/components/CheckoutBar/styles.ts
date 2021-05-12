@@ -35,7 +35,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     border: 0,
   },
   sidebarTitle: {
-    fontSize: '1.5rem',
+    fontSize: '24px',
     color: theme.color.green,
     wordBreak: 'break-word',
   },

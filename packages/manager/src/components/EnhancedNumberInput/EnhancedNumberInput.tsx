@@ -122,7 +122,8 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
       })}
     >
       <Button
-        buttonType="primary"
+        buttonType="secondary"
+        outline={true}
         className={classes.button}
         compact
         aria-label="Subtract 1"
@@ -154,7 +155,8 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
         data-testid={'quantity-input'}
       />
       <Button
-        buttonType="primary"
+        buttonType="secondary"
+        outline={true}
         compact
         className={classes.button}
         aria-label="Add 1"

@@ -1,6 +1,6 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
+import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import Delete from 'src/assets/icons/trash.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
@@ -23,6 +23,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   typeSubheader: {
     paddingLeft: theme.spacing(),
     fontSize: '14px',
+  },
+  button: {
+    color: '#979797',
+    '&:hover': {
+      color: '#6e6e6e',
+    },
   },
 }));
 
@@ -70,8 +76,12 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <IconButton onClick={onRemove} data-testid="remove-pool-button">
-            <Delete />
+          <IconButton
+            className={classes.button}
+            onClick={onRemove}
+            data-testid="remove-pool-button"
+          >
+            <Close />
           </IconButton>
         </Grid>
       </Grid>

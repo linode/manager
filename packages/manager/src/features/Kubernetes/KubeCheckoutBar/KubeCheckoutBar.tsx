@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { classNames } from 'react-select/src/utils';
 import CheckoutBar from 'src/components/CheckoutBar';
+import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
@@ -56,7 +58,15 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
           />
         ))}
         {showWarning && (
-          <Notice warning important text={nodeWarning} spacingTop={16} />
+          <Notice warning important spacingTop={16}>
+            {nodeWarning}
+
+            <ExternalLink
+              hideIcon
+              link="https://google.com"
+              text="Kubernetes docs and resources."
+            />
+          </Notice>
         )}
       </>
     </CheckoutBar>

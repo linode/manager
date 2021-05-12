@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   noticeText: {
     color: theme.palette.text.primary,
-    fontSize: '1rem',
+    fontSize: '16px',
     lineHeight: `20px`,
     fontFamily: 'LatoWebBold', // we keep this bold at all times
     '& p': {
