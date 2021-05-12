@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { classNames } from 'react-select/src/utils';
 import CheckoutBar from 'src/components/CheckoutBar';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
