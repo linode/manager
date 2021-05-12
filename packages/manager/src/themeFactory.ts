@@ -100,7 +100,7 @@ const cmrTextColors = {
   tableHeader: '#888F91',
   tableStatic: '#606469',
   textAccessTable: '#606469',
-  secondaryButton: '2575d0',
+  secondaryButton: '#2575d0',
 };
 
 const cmrBorderColors = {
