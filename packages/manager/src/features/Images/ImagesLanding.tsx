@@ -493,7 +493,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Manual Images</Typography>
+          <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             {machineImagesEnabled
               ? `These are images you manually uploaded or captured from an existing Linode disk.`
@@ -504,12 +504,12 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={manualImageRow}
           headers={manualHeaders}
-          emptyMessage={'No Manual Images to display.'}
+          emptyMessage={'No Custom Images to display.'}
         />
       </Paper>
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Automatic Images</Typography>
+          <Typography variant="h3">Recovery Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             These are images we automatically capture when Linode disks are
             deleted. They will be deleted after the indicated expiration date.
@@ -519,7 +519,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={autoImageRow}
           headers={automaticHeaders}
-          emptyMessage={'No Automatic Images to display.'}
+          emptyMessage={'No Recovery Images to display.'}
         />
       </Paper>
       {renderImageDrawer()}
