@@ -8,7 +8,7 @@ describe('resize linode', () => {
         'linodeResize'
       );
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
-      containsVisible('Linode 2GB');
+      containsVisible('Linode 2 GB');
       getClick('[id="g6-standard-4"]');
       cy.get('[data-testid="textfield-input"]').type(linode.label);
       cy.get('[data-qa-resize="true"]').click();
