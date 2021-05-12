@@ -28,8 +28,7 @@ import DeviceSelection, {
 import Dialog from 'src/components/Dialog';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import usePrevious from 'src/hooks/usePrevious';
-import { RESCUE_HELPER_TEXT } from './shared';
-import ExternalLink from 'src/components/ExternalLink';
+import RescueDescription from './RescueDescription';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -218,12 +217,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
           <Paper className={classes.root}>
             {unauthorized && <LinodePermissionsError />}
             <Typography>
-              {RESCUE_HELPER_TEXT}{' '}
-              <ExternalLink
-                fixedIcon
-                text="Learn more."
-                link="https://www.linode.com/docs/guides/rescue-and-rebuild/"
-              />
+              <RescueDescription />
             </Typography>
             <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
