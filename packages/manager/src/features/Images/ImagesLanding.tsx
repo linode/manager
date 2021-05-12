@@ -38,6 +38,7 @@ import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import ImagesPricingBanner from './ImagesPricingBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: { marginBottom: theme.spacing(3) },
@@ -491,6 +492,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         onAddNew={onCreateButtonClick}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
+      <ImagesPricingBanner />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Manual Images</Typography>

@@ -3,6 +3,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+// import ImagesPricingBanner from '../ImagesPricingBanner';
 
 type CombinedProps = RouteComponentProps<{}>;
 
@@ -54,6 +55,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Create Image" />
+      {/* <ImagesPricingBanner /> */}
       <React.Suspense fallback={<SuspenseLoader />}>
         <NavTabs tabs={tabs} />
       </React.Suspense>

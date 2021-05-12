@@ -35,6 +35,7 @@ export interface Flags {
   tpaProviders: Provider[];
   machineImages: boolean;
   additionalPaymentMethods: AdditionalPaymentMethod[];
+  imagesPricingBanner: boolean;
 }
 
 type PromotionalOfferFeature =
