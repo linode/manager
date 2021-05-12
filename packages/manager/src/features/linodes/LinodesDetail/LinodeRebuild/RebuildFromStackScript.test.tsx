@@ -10,7 +10,6 @@ import {
 
 const request = jest.requireMock('@linode/api-v4/lib/account');
 
-jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('@linode/api-v4/lib/account', () => ({
   getUsers: jest.fn(),
 }));

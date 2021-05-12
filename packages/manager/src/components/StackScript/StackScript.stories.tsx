@@ -12,7 +12,7 @@ export default {
 export const StackScriptWithMockData = () => {
   return (
     <Provider store={store}>
-      <StackScript data={stackScripts[0]} />
+      <StackScript data={stackScripts[0]} userCanModify={true} />
     </Provider>
   );
 };

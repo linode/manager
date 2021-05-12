@@ -66,7 +66,9 @@ export const StackScriptDialog: React.FC<CombinedProps> = (props) => {
           {error && (
             <Notice error text="There was an error loading this StackScript." />
           )}
-          {stackScript && <_StackScript data={stackScript} />}
+          {stackScript && (
+            <_StackScript data={stackScript} userCanModify={false} />
+          )}
         </>
       )}
     </Dialog>
@@ -74,8 +76,7 @@ export const StackScriptDialog: React.FC<CombinedProps> = (props) => {
 };
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch,
-  ownProps
+  dispatch
 ) => {
   return {
     closeDrawer: () => dispatch(closeStackScriptDialog()),

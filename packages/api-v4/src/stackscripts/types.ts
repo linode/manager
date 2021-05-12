@@ -17,6 +17,7 @@ export interface StackScript {
   deployments_total: number;
   username: string;
   is_public: boolean;
+  mine: boolean;
   created: string;
   updated: string;
   rev_note: string;

@@ -1,4 +1,3 @@
-import { User } from '@linode/api-v4/lib/account';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { stringify } from 'qs';
 import * as React from 'react';
@@ -13,11 +12,9 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
-import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useImages } from 'src/hooks/useImages';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { useAccountUsers } from 'src/queries/accountUsers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -84,6 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   data: StackScript;
+  userCanModify: boolean;
 }
 
 type CombinedProps = Props;
@@ -101,26 +99,15 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
       updated,
       images,
     },
+    userCanModify,
   } = props;
 
   const classes = useStyles();
   const history = useHistory();
-  const { data: accountUsersData } = useAccountUsers();
+  const { profile } = useAccountManagement();
 
   const { images: imagesData } = useImages('public');
   useReduxLoad(['images']);
-
-  const { profile } = useAccountManagement();
-  const isRestrictedUser = profile?.data?.restricted ?? false;
-  const stackScriptGrants = profile?.data?.grants?.stackscript ?? [];
-
-  const displayEditButton: boolean = isRestrictedUser
-    ? canUserModifyAccountStackScript(
-        isRestrictedUser,
-        stackScriptGrants,
-        stackscriptId
-      )
-    : usernameIsTiedToAccount(accountUsersData?.data, username);
 
   const compatibleImages = React.useMemo(() => {
     const imageChips = images.reduce((acc: any[], image: string) => {
@@ -156,7 +143,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
           title={label}
           data-qa-stack-title={label}
         />
-        {displayEditButton ? (
+        {userCanModify ? (
           <Button
             buttonType="secondary"
             className={classes.editBtn}
@@ -231,13 +218,6 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
       <ScriptCode script={script} />
     </div>
   );
-};
-
-const usernameIsTiedToAccount = (
-  accountUsers: User[] = [],
-  stackscriptUsername: string
-) => {
-  return accountUsers.some((user) => user.username === stackscriptUsername);
 };
 
 export default React.memo(SStackScript);

@@ -35,6 +35,7 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   profileFactory,
+  stackScriptFactory,
   supportReplyFactory,
   supportTicketFactory,
   volumeFactory,
@@ -467,6 +468,9 @@ export const handlers = [
   }),
   rest.get('*managed/issues', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));
+  }),
+  rest.get('*stackscripts/', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(stackScriptFactory.buildList(1))));
   }),
   rest.get('*/notifications', (req, res, ctx) => {
     // pastDueBalance included here merely for ease of testing for Notifications section in the Notifications drawer.
