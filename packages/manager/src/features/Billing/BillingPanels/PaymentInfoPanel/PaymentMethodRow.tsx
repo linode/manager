@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: '2px',
     marginRight: '5px',
   },
+  chip: {
+    fontSize: '0.625rem',
+  },
 }));
 
 interface Props {
@@ -119,7 +122,9 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
         <Grid item className={classes.item}>
-          {isDefault && <Chip label="Default" component="span" />}
+          {isDefault && (
+            <Chip className={classes.chip} label="DEFAULT" component="span" />
+          )}
         </Grid>
         <Grid item className={classes.actions}>
           <ActionMenu
