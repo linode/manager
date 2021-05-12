@@ -151,7 +151,6 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           display: 'Firewalls',
           href: '/firewalls',
           icon: <Firewall />,
-          isBeta: true,
         },
         {
           display: 'StackScripts',

@@ -55,6 +55,9 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
     )
     .map((thisRegion) => thisRegion.id);
 
+  const allRegionsHaveFirewalls =
+    regionsWithFirewalls.length === regions.length;
+
   const submitForm = (
     values: CreateFirewallPayload,
     { setSubmitting, setErrors, setStatus }: FormikProps
@@ -96,6 +99,16 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
         handleGeneralErrors(mapErrorToStatus, err, 'Error creating Firewall.');
       });
   };
+
+  let firewallHelperText = `Assign one or more Linodes to this firewall. You can add
+  Linodes later if you want to customize your rules first.`;
+
+  if (!allRegionsHaveFirewalls) {
+    firewallHelperText += ` Only Linodes in regions that support Firewalls (${arrayToList(
+      regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId]),
+      ';'
+    )}) will be displayed as options.`;
+  }
 
   return (
     <Drawer {...restOfDrawerProps} onClose={onClose}>
@@ -155,11 +168,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 showAllOption
                 disabled={_isRestrictedUser}
                 allowedRegions={regionsWithFirewalls}
-                helperText={`Assign one or more Linodes to this firewall. You can add
-                 Linodes later if you want to customize your rules first. Only Linodes in
-                 regions that support Firewalls (${arrayToList(
-                   regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId])
-                 )}) will be displayed as options.`}
+                helperText={firewallHelperText}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>
                   setFieldValue('devices.linodes', selected)
