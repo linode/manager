@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-05-12] - v1.40.1
+
+### Changed
+- Remove Beta notifications and text for Cloud Firewalls as part of GA release
+
 ## [2021-05-05] - v1.40.0
 
 ### Added:
