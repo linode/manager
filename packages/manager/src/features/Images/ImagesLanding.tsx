@@ -486,13 +486,13 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
+      <ImagesPricingBanner />
       <LandingHeader
         title="Images"
         entity="Image"
         onAddNew={onCreateButtonClick}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
-      <ImagesPricingBanner />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Manual Images</Typography>
