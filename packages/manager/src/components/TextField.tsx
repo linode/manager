@@ -25,7 +25,6 @@ type ClassNames =
   | 'helpWrapperTextField'
   | 'expand'
   | 'errorText'
-  | 'errorTextLong'
   | 'editable'
   | 'helperTextTop'
   | 'small'
@@ -94,17 +93,10 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       color: theme.color.red,
-      // height: 34,
-      top: 36,
+      height: 34,
+      top: 42,
       left: 5,
       width: '100%',
-    },
-    errorTextLong: {
-      width: '100%',
-      [theme.breakpoints.down(480)]: {
-        top: 36,
-        width: 240,
-      },
     },
     absolute: {
       position: 'absolute',
@@ -393,7 +385,6 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           <FormHelperText
             className={classNames({
               [classes.errorText]: true,
-              [classes.errorTextLong]: errorText.length > 60,
               [classes.editable]: editable,
               [classes.absolute]: editable || hasAbsoluteError,
             })}

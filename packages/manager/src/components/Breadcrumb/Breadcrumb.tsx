@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   hasError: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(5),
   },
 }));
 
