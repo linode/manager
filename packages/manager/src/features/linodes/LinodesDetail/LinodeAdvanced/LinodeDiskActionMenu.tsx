@@ -92,7 +92,9 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
       onClick: () => {
         props.onDelete();
       },
-      ...(readOnly ? disabledProps : {}),
+      
+      disabled: linodeStatus !== 'offline' || readOnly,
+      tooltip: linodeStatus !== 'offline' || readOnly ? _tooltip : '',
     },
   ];
 
