@@ -88,7 +88,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
         </Grid>
         <Typography className={classes.text}>
           <strong data-qa-disk-used-percentage>{formattedPercentage}%</strong>{' '}
-          of your {totalDiskSpace}MB is allocated towards
+          of your {totalDiskSpace} MB is allocated towards
           <strong> {disks.length}</strong> disk{' '}
           {disks.length === 1 ? 'image' : 'images'}.
         </Typography>

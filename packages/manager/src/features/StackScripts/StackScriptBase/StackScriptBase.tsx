@@ -1,4 +1,3 @@
-import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
@@ -69,7 +68,6 @@ export interface State {
 }
 
 interface StoreProps {
-  stackScriptGrants?: Grant[];
   userCannotCreateStackScripts: boolean;
   isOnCreate?: boolean;
 }
@@ -78,7 +76,6 @@ type CombinedProps = StyleProps &
   RouteComponentProps &
   StoreProps & {
     publicImages: Record<string, Image>;
-    currentUser: string;
     category: string;
     request: StackScriptsRequest;
   };
@@ -150,21 +147,14 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       filter: any = this.state.currentFilter,
       isSorting: boolean = false
     ) => {
-      const { currentUser, category, request, stackScriptGrants } = this.props;
+      const { request } = this.props;
       this.setState({
         gettingMoreStackScripts: true,
         isSorting,
         currentPage: page,
       });
 
-      const filteredUser = category === 'linode' ? 'linode' : currentUser;
-
-      return request(
-        filteredUser,
-        { page, page_size: 25 },
-        filter,
-        stackScriptGrants
-      )
+      return request({ page, page_size: 25 }, filter)
         .then((response: ResourcePage<StackScript>) => {
           if (!this.mounted) {
             return;
@@ -320,14 +310,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
     handleSearch = (value: string) => {
       const { currentFilter } = this.state;
-      const {
-        category,
-        currentUser,
-        request,
-        stackScriptGrants,
-        history,
-      } = this.props;
-      const filteredUser = category === 'linode' ? 'linode' : currentUser;
+      const { category, request, history } = this.props;
 
       const lowerCaseValue = value.toLowerCase().trim();
 
@@ -380,12 +363,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
 
       sendStackscriptsSearchEvent(lowerCaseValue);
 
-      request(
-        filteredUser,
-        { page: 1, page_size: 50 },
-        { ...filter, ...currentFilter },
-        stackScriptGrants
-      )
+      request({ page: 1, page_size: 50 }, { ...filter, ...currentFilter })
         .then((response: any) => {
           if (!this.mounted) {
             return;
@@ -642,13 +620,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
   }
 
   const mapStateToProps: MapState<StoreProps, CombinedProps> = (state) => ({
-    stackScriptGrants: isRestrictedUser(state)
-      ? pathOr(
-          undefined,
-          ['__resources', 'profile', 'data', 'grants', 'stackscript'],
-          state
-        )
-      : undefined,
     userCannotCreateStackScripts:
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
   });

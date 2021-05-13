@@ -1,16 +1,16 @@
+import {
+  stackScriptSchema,
+  updateStackScriptSchema,
+} from '@linode/validation/lib/stackscripts.schema';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
+  setXFilter,
 } from 'src/request';
 import { ResourcePage as Page } from '../types';
-import {
-  stackScriptSchema,
-  updateStackScriptSchema
-} from './stackscripts.schema';
 import { StackScript, StackScriptPayload } from './types';
 
 /**

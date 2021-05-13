@@ -7,6 +7,7 @@ export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   images: [],
   user_defined_fields: [],
   is_public: true,
+  mine: true,
   user_gravatar_id: 'ead4da00f4fe6a4bd0b4f11a510c031d',
   username: 'Linode',
   deployments_total: 2,

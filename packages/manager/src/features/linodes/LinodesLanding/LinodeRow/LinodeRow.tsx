@@ -213,7 +213,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
 
       <Hidden xsDown>
         <TableCell className={classes.planCell} data-qa-ips>
-          <div className={classes.planCell}>{type?.label ?? 'Unknown'}</div>
+          <div className={classes.planCell}>{type?.label}</div>
         </TableCell>
         <TableCell className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>

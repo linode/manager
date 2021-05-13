@@ -49,13 +49,13 @@ describe('LKE Create Cluster', () => {
     cy.get('[id="kubernetes-version"]').type('{enter}');
 
     const kNb2Gb = 2;
-    addNodes('Linode 2GB', kNb2Gb);
+    addNodes('Linode 2 GB', kNb2Gb);
 
     // wait for change to reflect on Checkout bar
 
-    fbtVisible('Linode 2GB Plan');
+    fbtVisible('Linode 2 GB Plan');
     cy.get('[data-testid="kube-checkout-bar"]').within((_bar) => {
-      fbtVisible('Linode 2GB Plan');
+      fbtVisible('Linode 2 GB Plan');
       getVisible('[data-testid="remove-pool-button"]');
       cy.get('[data-qa-notice="true"]').within((_notice) => {
         fbtVisible(

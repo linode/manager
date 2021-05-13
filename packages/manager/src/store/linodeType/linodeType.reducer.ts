@@ -7,6 +7,7 @@ import {
   getLinodeTypeActions,
 } from './linodeType.actions';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
@@ -94,9 +95,11 @@ export const extendType = (type: LinodeType): ExtendedType => {
     disk,
     price: { monthly, hourly },
   } = type;
+  const formattedLabel = formatStorageUnits(label);
   return {
     ...type,
-    heading: label,
+    label: formattedLabel,
+    heading: formattedLabel,
     subHeadings: [
       `$${monthly}/mo ($${hourly}/hr)`,
       typeLabelDetails(memory, disk, vcpus),
