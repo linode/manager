@@ -8,8 +8,8 @@ import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import Typography from 'src/components/core/Typography';
-import Visa from 'src/assets/icons/paymentCards/visaBlue.svg';
-import Mastercard from 'src/assets/icons/paymentCards/mastercard.svg';
+import Visa from 'src/assets/icons/payment/visa.svg';
+import Mastercard from 'src/assets/icons/payment/mastercard.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,10 +40,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   paymentMethod: {
     fontWeight: 'bold',
   },
+  visa: {
+    padding: '0 6px',
+    marginLeft: '3px',
+    marginRight: '1px',
+  },
   mastercard: {
     paddingLeft: '5px',
-    marginLeft: '2px',
-    marginRight: '5px',
+    marginRight: '2px',
   },
   chip: {
     fontSize: '0.625rem',
@@ -64,12 +68,39 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const isCardExpired = expiry && isCreditCardExpired(expiry);
 
-  const renderPaymentMethodIcon = (paymentMethod: string | undefined): any => {
+  const renderPaymentMethodIcon = (): any => {
     switch (paymentMethod) {
       case 'Visa':
-        return <Visa />;
+        return <Visa className={classes.visa} />;
       case 'Mastercard':
         return <Mastercard className={classes.mastercard} />;
+    }
+  };
+
+  const renderText = (): any => {
+    if (paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod)) {
+      return (
+        <Grid item>
+          <Typography>{paymentMethod}</Typography>
+        </Grid>
+      );
+    } else {
+      return (
+        <Grid item className={classes.card}>
+          <Typography className={classes.paymentMethod}>
+            &nbsp;{paymentMethod} ****{lastFour}
+          </Typography>
+          <Typography className={classes.expiry}>
+            {isCardExpired ? (
+              <span className={classes.expired}>
+                &nbsp;{`Expired ${expiry}`}
+              </span>
+            ) : (
+              <span>&nbsp;{`Expires ${expiry}`}</span>
+            )}
+          </Typography>
+        </Grid>
+      );
     }
   };
 
@@ -105,21 +136,8 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     <Paper className={classes.root} border>
       <Grid container>
         <Grid item className={classes.item}>
-          {renderPaymentMethodIcon(paymentMethod)}
-          <Grid item className={classes.card}>
-            <Typography className={classes.paymentMethod}>
-              &nbsp;{paymentMethod} ****{lastFour}
-            </Typography>
-            <Typography className={classes.expiry}>
-              {isCardExpired ? (
-                <span className={classes.expired}>
-                  &nbsp;{`Expired ${expiry}`}
-                </span>
-              ) : (
-                <span>&nbsp;{`Expires ${expiry}`}</span>
-              )}
-            </Typography>
-          </Grid>
+          {renderPaymentMethodIcon()}
+          {renderText()}
         </Grid>
         <Grid item className={classes.item}>
           {isDefault && (
@@ -137,4 +155,4 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default React.memo(PaymentMethodRow);
+export default PaymentMethodRow;

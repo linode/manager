@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
-import PaymentMethodRow from './PaymentMethodRow';
+import PaymentMethodRow from 'src/components/PaymentMethodRow/PaymentMethodRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
