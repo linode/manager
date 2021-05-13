@@ -59,10 +59,10 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
         {showWarning && (
           <Notice warning important spacingTop={16}>
             {nodeWarning}
-
             <ExternalLink
               hideIcon
-              link="https://google.com"
+              inline
+              link="https://kubernetes.io/docs/setup/production-environment/"
               text="Kubernetes docs and resources."
             />
           </Notice>

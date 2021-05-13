@@ -8,8 +8,8 @@ import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles(() => ({
   button: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 34,
     minWidth: 40,
     padding: 0,
   },
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
     width: 17,
   },
   minusIcon: {
-    width: 14,
+    width: 12,
   },
   inputGroup: {
     display: 'flex',
