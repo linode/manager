@@ -1,8 +1,8 @@
 import * as React from 'react';
+import Link from 'src/components/Link';
 import CheckoutBar from 'src/components/CheckoutBar';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
@@ -10,7 +10,7 @@ import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   notice: {
     fontSize: '16px',
   },
@@ -70,12 +70,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
           <Notice warning important spacingTop={16}>
             <Typography className={`${classes.notice} noticeText`}>
               {nodeWarning}
-              <ExternalLink
-                hideIcon
-                inline
-                link="https://kubernetes.io/docs/setup/production-environment/"
-                text="Kubernetes docs and resources."
-              />
+              <Link to="https://kubernetes.io/docs/setup/production-environment/">
+                Kubernetes docs and resources.
+              </Link>
             </Typography>
           </Notice>
         )}

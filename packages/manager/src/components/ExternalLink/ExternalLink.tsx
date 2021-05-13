@@ -1,6 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+
 import OpenInNew from '@material-ui/icons/OpenInNew';
+
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import {
   createStyles,
@@ -9,13 +11,7 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 
-type ClassNames =
-  | 'root'
-  | 'icon'
-  | 'absoluteIcon'
-  | 'black'
-  | 'fixedIcon'
-  | 'inline';
+type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black' | 'fixedIcon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,9 +51,6 @@ const styles = (theme: Theme) =>
     black: {
       color: theme.palette.text.primary,
     },
-    inline: {
-      display: 'inline',
-    },
   });
 
 interface Props {
@@ -68,7 +61,6 @@ interface Props {
   black?: boolean;
   fixedIcon?: boolean;
   hideIcon?: boolean;
-  inline?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -84,7 +76,6 @@ class ExternalLink extends React.Component<CombinedProps> {
       black,
       fixedIcon,
       hideIcon,
-      inline,
     } = this.props;
 
     return (
@@ -98,7 +89,6 @@ class ExternalLink extends React.Component<CombinedProps> {
             [classes.root]: true,
             [classes.absoluteIcon]: absoluteIcon,
             [classes.black]: black,
-            [classes.inline]: inline,
           },
           className
         )}
