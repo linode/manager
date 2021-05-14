@@ -8,7 +8,7 @@ import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
 import { useTypes } from 'src/hooks/useTypes';
 import { pluralize } from 'src/utilities/pluralize';
-import { nodeWarning } from '../../kubeUtils';
+import { nodeWarning } from '../../KubeNodeWarning';
 import { PoolNodeWithPrice } from '../../types';
 
 const useStyles = makeStyles((theme: Theme) => ({

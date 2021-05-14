@@ -12,7 +12,7 @@ import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(1),
+    marginTop: theme.spacing(),
   },
   typeHeader: {
     paddingLeft: theme.spacing(),

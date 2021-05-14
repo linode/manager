@@ -1,20 +1,11 @@
 import * as React from 'react';
-import Link from 'src/components/Link';
 import CheckoutBar from 'src/components/CheckoutBar';
-import { makeStyles } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
+import { getTotalClusterPrice } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
-
-const useStyles = makeStyles(() => ({
-  notice: {
-    fontSize: '16px',
-  },
-}));
+import KubeNodeWarning from '../KubeNodeWarning';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -34,8 +25,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     typesData,
     updatePool,
   } = props;
-
-  const classes = useStyles();
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
@@ -66,16 +55,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        {showWarning && (
-          <Notice warning important spacingTop={16}>
-            <Typography className={`${classes.notice} noticeText`}>
-              {nodeWarning}
-              <Link to="https://kubernetes.io/docs/setup/production-environment/">
-                Kubernetes docs and resources.
-              </Link>
-            </Typography>
-          </Notice>
-        )}
+        {showWarning && <KubeNodeWarning />}
       </>
     </CheckoutBar>
   );

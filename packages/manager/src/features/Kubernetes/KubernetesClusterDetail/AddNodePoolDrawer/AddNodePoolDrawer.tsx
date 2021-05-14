@@ -8,14 +8,14 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel.tsx';
+import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel';
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount,
-} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel.tsx';
+} from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { nodeWarning } from '../../kubeUtils';
+import { nodeWarning } from '../../KubeNodeWarning';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {

@@ -8,8 +8,8 @@ import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles(() => ({
   button: {
-    width: 35,
-    height: 34,
+    width: 40,
+    height: 40,
     minWidth: 40,
     padding: 0,
   },
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
     width: 17,
   },
   minusIcon: {
-    width: 12,
+    width: 14,
   },
   inputGroup: {
     display: 'flex',
@@ -52,6 +52,7 @@ const useStyles = makeStyles(() => ({
       width: 30,
       height: 30,
       minWidth: 30,
+      border: '1px solid #CCCCCC',
     },
     '& $input': {
       padding: '0 8px',
@@ -64,6 +65,9 @@ const useStyles = makeStyles(() => ({
     },
     '& $plusIcon': {
       width: 14,
+    },
+    '& $minusIcon': {
+      width: 12,
     },
   },
 }));
@@ -123,8 +127,8 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
     >
       <Button
         buttonType="secondary"
-        outline={true}
         className={classes.button}
+        outline
         compact
         aria-label="Subtract 1"
         name="Subtract 1"
@@ -156,9 +160,9 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
       />
       <Button
         buttonType="secondary"
-        outline={true}
-        compact
         className={classes.button}
+        outline
+        compact
         aria-label="Add 1"
         name="Add 1"
         onClick={incrementValue}
