@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     fontSize: '1rem',
     borderLeft: `solid 6px ${theme.color.yellow}`,
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     marginBottom: theme.spacing(),
   },
 }));
