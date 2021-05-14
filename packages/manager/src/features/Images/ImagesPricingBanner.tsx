@@ -55,8 +55,7 @@ export const ImagesPricingBanner: React.FC<{}> = (_) => {
     >
       <Typography>
         {generateLede()}
-        {bannerCoreText}
-        {generateLinkifiedText()}
+        {bannerCoreText} {generateLinkifiedText()}
       </Typography>
     </DismissibleBanner>
   );
