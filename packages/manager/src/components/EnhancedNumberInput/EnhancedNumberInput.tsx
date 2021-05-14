@@ -49,8 +49,8 @@ const useStyles = makeStyles(() => ({
   },
   small: {
     '& $button': {
-      width: 30,
-      height: 30,
+      width: 35,
+      height: 34,
       minWidth: 30,
       border: '1px solid #CCCCCC',
     },
@@ -60,7 +60,7 @@ const useStyles = makeStyles(() => ({
     '& $textField': {
       width: 50,
       minWidth: 40,
-      height: 30,
+      height: 34,
       minHeight: 30,
     },
     '& $plusIcon': {
