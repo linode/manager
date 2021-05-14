@@ -55,7 +55,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        {showWarning && <KubeNodeWarning />}
+        {showWarning && <KubeNodeWarning spacingTop={16} />}
       </>
     </CheckoutBar>
   );

@@ -15,7 +15,7 @@ import SelectPlanQuantityPanel, {
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { nodeWarning } from '../../KubeNodeWarning';
+import KubeNodeWarning from '../../KubeNodeWarning';
 
 const useStyles = makeStyles((theme: Theme) => ({
   drawer: {
@@ -171,7 +171,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
           resetValues={resetDrawer}
         />
         {currentCount > 0 && currentCount < 3 && (
-          <Notice important warning text={nodeWarning} spacingTop={8} />
+          <KubeNodeWarning spacingTop={8} />
         )}
         <ActionsPanel className={classes.button}>
           <Box

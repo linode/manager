@@ -8,7 +8,7 @@ import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
 import { useTypes } from 'src/hooks/useTypes';
 import { pluralize } from 'src/utilities/pluralize';
-import { nodeWarning } from '../../KubeNodeWarning';
+import KubeNodeWarning from '../../KubeNodeWarning';
 import { PoolNodeWithPrice } from '../../types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -120,7 +120,7 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
           <Notice important warning text={resizeWarning} />
         )}
 
-        {updatedCount < 3 && <Notice important warning text={nodeWarning} />}
+        {updatedCount < 3 && <KubeNodeWarning />}
 
         <ActionsPanel>
           <Button
