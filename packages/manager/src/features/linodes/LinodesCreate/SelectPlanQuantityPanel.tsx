@@ -19,7 +19,6 @@ import Typography from 'src/components/core/Typography';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
@@ -153,21 +152,6 @@ export class SelectPlanPanel extends React.Component<
               [classes.disabledRow]: disabled,
             })}
           >
-            <TableCell className={'visually-hidden'}>
-              <FormControlLabel
-                label={type.heading}
-                aria-label={type.heading}
-                className={'label-visually-hidden'}
-                control={
-                  <Radio
-                    checked={type.id === String(selectedID)}
-                    onChange={this.onSelect(type.id)}
-                    disabled={disabled}
-                    id={type.id}
-                  />
-                }
-              />
-            </TableCell>
             <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
                 {type.heading}{' '}
@@ -238,7 +222,6 @@ export class SelectPlanPanel extends React.Component<
     const tableHeader = (
       <TableHead>
         <TableRow>
-          <TableCell className={'visually-hidden'} />
           <TableCell data-qa-plan-header>Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
