@@ -6,7 +6,8 @@ import Button from 'src/components/Button';
 import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { RESCUE_HELPER_TEXT } from './shared';
+import RescueDescription from './RescueDescription';
+
 interface Props {
   linodeID: number;
   linodeLabel: string;
@@ -66,7 +67,7 @@ export const BareMetalRescue: React.FC<Props> = (props) => {
       actions={actions}
       error={error}
     >
-      {RESCUE_HELPER_TEXT}
+      <RescueDescription />
     </ConfirmationDialog>
   );
 };
