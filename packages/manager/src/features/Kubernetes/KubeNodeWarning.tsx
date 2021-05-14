@@ -29,7 +29,7 @@ function KubeNodeWarning(props: Props) {
     <Notice warning important spacingTop={spacingTop || 0}>
       <Typography className={`${classes.notice} noticeText`}>
         {`${nodeWarning} For more info see `}
-        <Link to="https://kubernetes.io/docs/setup/production-environment/">
+        <Link to="https://www.linode.com/docs/products/compute/kubernetes/guides/create-lke-cluster/">
           Kubernetes docs and resources.
         </Link>
       </Typography>
