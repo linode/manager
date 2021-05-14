@@ -28,8 +28,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     '& svg': {
-      width: 20,
       height: 20,
+      width: 20,
+      marginTop: 4,
     },
   },
   badge: {
