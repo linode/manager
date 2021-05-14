@@ -16,6 +16,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAllLinodesQuery } from 'src/queries/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
@@ -108,7 +109,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const { data, isLoading } = useAllLinodesQuery(
-    {},
+    { page_size: API_MAX_PAGE_SIZE },
     {
       region: linodeRegion,
     },
