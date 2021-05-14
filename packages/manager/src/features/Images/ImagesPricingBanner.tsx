@@ -20,24 +20,26 @@ export const ImagesPricingBanner: React.FC<{}> = (_) => {
   const flags = useFlags();
   const classes = useStyles();
 
-  return images.results > 0 && flags.imagesPricingBanner ? (
+  if (images.results === 0 || !flags.imagesPricingBanner) {
+    return null;
+  }
+
+  const bannerLede = flags.imagesPricingBanner.lede;
+  const bannerCoreText = flags.imagesPricingBanner.text;
+  const bannerLinkUrl = flags.imagesPricingBanner.link.url;
+  const bannerLinkText = flags.imagesPricingBanner.link.text;
+
+  return (
     <DismissibleBanner
       className={classes.root}
       preferenceKey="images-pricing-notification"
     >
       <Typography>
-        <strong>Pricing change</strong>: Beginning on September 1, 2021, Images
-        will transition to a paid service with a cost of $0.10/GB per month for
-        each Custom Image stored on an account. Recovery Images, generated
-        automatically after a Linode is deleted, are provided at no cost for a
-        finite period of time. For more information, please see our{' '}
-        <Link to="https://www.linode.com/docs/products/tools/images/">
-          Images tutorial
-        </Link>
-        .
+        <strong>{bannerLede}</strong>: {bannerCoreText}{' '}
+        <Link to={bannerLinkUrl}>{bannerLinkText}</Link>.
       </Typography>
     </DismissibleBanner>
-  ) : null;
+  );
 };
 
 export default ImagesPricingBanner;
