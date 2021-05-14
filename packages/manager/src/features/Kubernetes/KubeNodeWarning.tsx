@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
