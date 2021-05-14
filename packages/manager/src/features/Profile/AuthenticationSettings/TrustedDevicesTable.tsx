@@ -59,7 +59,7 @@ export const TrustedDevicesTable: React.FC<CombinedProps> = (props) => {
               <DateTimeDisplay value={eachDevice.expiry} />
             </TableCell>
             <TableCell className="p0">
-              <UntrustButton
+              <RevokeButton
                 deviceId={eachDevice.id}
                 triggerDeletion={triggerDeletion}
               />
@@ -77,7 +77,7 @@ interface ButtonProps {
   deviceId?: number;
   triggerDeletion: (deviceId: number) => void;
 }
-export const UntrustButton: React.FC<ButtonProps> = (props) => {
+export const RevokeButton: React.FC<ButtonProps> = (props) => {
   const handleDelete = () => {
     const { triggerDeletion, deviceId } = props;
     if (!!deviceId) {
@@ -86,10 +86,6 @@ export const UntrustButton: React.FC<ButtonProps> = (props) => {
   };
 
   return (
-    <InlineMenuAction
-      key="Untrust"
-      actionText="Untrust"
-      onClick={handleDelete}
-    />
+    <InlineMenuAction key="Revoke" actionText="Revoke" onClick={handleDelete} />
   );
 };

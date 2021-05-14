@@ -16,14 +16,13 @@ import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  title: {
+  copy: {
+    lineHeight: '20px',
+    marginTop: theme.spacing(),
     marginBottom: theme.spacing(2),
   },
-  usedCell: {
-    minWidth: 125,
-  },
-  expireCell: {
-    minWidth: 95,
+  dates: {
+    minWidth: 150,
   },
 }));
 
@@ -56,29 +55,31 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
     <ToggleState>
       {({ open: dialogOpen, toggle: toggleDialog }) => (
         <Paper>
-          <Typography variant="h3" className={classes.title}>
-            Trusted Devices
+          <Typography variant="h3">Trusted Devices</Typography>
+          <Typography variant="body1" className={classes.copy} data-qa-copy>
+            To add a trusted device, check the box &quot;Trust this device for
+            30 days&quot; at login.
           </Typography>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Device</TableCell>
-                <TableCell>Last IP</TableCell>
-                <TableCell className={classes.usedCell}>Last Used</TableCell>
-                <TableCell className={classes.expireCell}>Expires</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TrustedDevicesTable
-                error={error}
-                data={devices}
-                loading={loading}
-                toggleDialog={toggleDialog}
-                setDevice={setSelectedDeviceId}
-              />
-            </TableBody>
-            {devices && devices.length > 0 && (
+          {devices && devices.length > 0 && (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Device</TableCell>
+                  <TableCell>Last IP</TableCell>
+                  <TableCell className={classes.dates}>Last Used</TableCell>
+                  <TableCell className={classes.dates}>Expires</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TrustedDevicesTable
+                  error={error}
+                  data={devices}
+                  loading={loading}
+                  toggleDialog={toggleDialog}
+                  setDevice={setSelectedDeviceId}
+                />
+              </TableBody>
               <PaginationFooter
                 count={count}
                 page={page}
@@ -87,8 +88,8 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
                 handleSizeChange={handlePageSizeChange}
                 eventCategory="Trusted Devices Panel"
               />
-            )}
-          </Table>
+            </Table>
+          )}
           <Dialog
             open={dialogOpen}
             closeDialog={toggleDialog}
