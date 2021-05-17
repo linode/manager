@@ -1,11 +1,11 @@
 import * as React from 'react';
 import CheckoutBar from 'src/components/CheckoutBar';
+import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import { getTotalClusterPrice } from '../kubeUtils';
+import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
-import KubeNodeWarning from '../KubeNodeWarning';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -55,7 +55,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        {showWarning && <KubeNodeWarning spacingTop={16} />}
+        {showWarning && (
+          <Notice warning important text={nodeWarning} spacingTop={16} />
+        )}
       </>
     </CheckoutBar>
   );
