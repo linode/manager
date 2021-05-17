@@ -155,6 +155,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
           <Breadcrumb
             pathname={props.location.pathname}
             labelTitle={stackScript.label}
+            labelOptions={{ noCap: true }}
             crumbOverrides={[
               {
                 position: 1,
