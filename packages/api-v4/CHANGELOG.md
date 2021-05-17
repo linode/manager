@@ -4,14 +4,6 @@
 - Move remaining validation schemas to the validation package
 
 
-## Validation Library
-
-## [2021-05-18] - v0.3.0
-
-### Added:
-- Remaining schemas from api-v4 package
-
-
 ## [2021-05-05] - v0.52.0
 
 ### Added:
