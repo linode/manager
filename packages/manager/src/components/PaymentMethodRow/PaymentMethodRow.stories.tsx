@@ -41,6 +41,57 @@ export const Mastercard = () => (
   </>
 );
 
+export const Amex = () => (
+  <>
+    <PaymentMethodRow
+      lastFour={'1234'}
+      expiry={'10/2022'}
+      isDefault={true}
+      paymentMethod={'Amex'}
+    ></PaymentMethodRow>
+    <PaymentMethodRow
+      lastFour={'1234'}
+      expiry={'10/2022'}
+      isDefault={false}
+      paymentMethod={'Amex'}
+    ></PaymentMethodRow>
+  </>
+);
+
+export const Discover = () => (
+  <>
+    <PaymentMethodRow
+      lastFour={'1234'}
+      expiry={'10/2022'}
+      isDefault={true}
+      paymentMethod={'Discover'}
+    ></PaymentMethodRow>
+    <PaymentMethodRow
+      lastFour={'1234'}
+      expiry={'10/2022'}
+      isDefault={false}
+      paymentMethod={'Discover'}
+    ></PaymentMethodRow>
+  </>
+);
+
+export const JCB = () => (
+  <>
+    <PaymentMethodRow
+      lastFour={'1234'}
+      expiry={'10/2022'}
+      isDefault={true}
+      paymentMethod={'JCB'}
+    ></PaymentMethodRow>
+    <PaymentMethodRow
+      lastFour={'1234'}
+      expiry={'10/2022'}
+      isDefault={false}
+      paymentMethod={'JCB'}
+    ></PaymentMethodRow>
+  </>
+);
+
 export const GooglePay = () => (
   <>
     <PaymentMethodRow

@@ -91,6 +91,36 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
           isDefault={false}
           paymentMethod={'Mastercard'}
         ></PaymentMethodRow>
+        <PaymentMethodRow
+          lastFour={lastFour}
+          expiry={expiry}
+          isDefault={false}
+          paymentMethod={'Discover'}
+        ></PaymentMethodRow>
+        <PaymentMethodRow
+          lastFour={lastFour}
+          expiry={expiry}
+          isDefault={false}
+          paymentMethod={'JCB'}
+        ></PaymentMethodRow>
+        <PaymentMethodRow
+          lastFour={lastFour}
+          expiry={expiry}
+          isDefault={false}
+          paymentMethod={'Amex'}
+        ></PaymentMethodRow>
+        <PaymentMethodRow
+          lastFour={lastFour}
+          expiry={expiry}
+          isDefault={true}
+          paymentMethod={'GooglePay'}
+        ></PaymentMethodRow>
+        <PaymentMethodRow
+          lastFour={lastFour}
+          expiry={expiry}
+          isDefault={true}
+          paymentMethod={'PayPal'}
+        ></PaymentMethodRow>
 
         {/* <div className={classes.billingGroup}>
           <CreditCard lastFour={lastFour} expiry={expiry} />
