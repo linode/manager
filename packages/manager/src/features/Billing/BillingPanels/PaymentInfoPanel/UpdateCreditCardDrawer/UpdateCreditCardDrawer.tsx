@@ -9,7 +9,12 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme,
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
@@ -23,24 +28,12 @@ import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  expired: {
-    color: theme.color.red,
+  root: {
+    marginTop: -theme.spacing(3),
   },
-  newccContainer: {
-    padding: `${theme.spacing(1)}px 0 0`,
-  },
-  currentCCTitle: {
-    marginBottom: theme.spacing(1),
-  },
-  cardNumber: {
-    minWidth: 225,
-  },
-  fullWidthMobile: {
-    flexBasis: '50%',
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
 }));
 
@@ -53,6 +46,8 @@ type CombinedProps = Props & AccountContainerProps;
 
 export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesXSDown = useMediaQuery(theme.breakpoints.down('xs'));
 
   const { onClose, open } = props;
 
@@ -153,77 +148,73 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
 
   return (
     <Drawer title="Edit Credit Card" open={open} onClose={onClose}>
-      <Grid container className={classes.newccContainer}>
+      {generalError && (
+        <Notice error spacingBottom={16}>
+          {generalError}
+        </Notice>
+      )}
+      {success && (
+        <Notice success spacingBottom={16}>
+          Credit card successfully updated.
+        </Notice>
+      )}
+      <Grid container className={classes.root}>
         <Grid item xs={12}>
-          {generalError && (
-            <Notice error spacingTop={24} spacingBottom={8}>
-              {generalError}
-            </Notice>
-          )}
-          {success && (
-            <Notice success spacingTop={24} spacingBottom={8}>
-              Credit card successfully updated.
-            </Notice>
-          )}
-          <Grid container>
-            <Grid item xs={12}>
-              <TextField
-                label="Credit Card Number"
-                value={cardNumber}
-                onChange={handleCardNumberChange}
-                errorText={hasErrorFor.card_number}
-                className={classes.cardNumber}
-                InputProps={{
-                  inputComponent: creditCardField,
-                }}
-              />
-            </Grid>
-            <Grid item className={classes.fullWidthMobile}>
-              <TextField
-                label="Expiration Date"
-                value={expDate}
-                onChange={handleExpiryDateChange}
-                errorText={hasErrorFor.expiry_month || hasErrorFor.expiry_year}
-                placeholder={'MM/YY'}
-              />
-            </Grid>
-            <Grid item className={classes.fullWidthMobile}>
-              <TextField
-                label={cvvLabel}
-                value={cvv}
-                onChange={handleCVVChange}
-                errorText={hasErrorFor.cvv}
-              />
-            </Grid>
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: 16 }}>
-            <Typography>
-              The address affiliated with this credit card must match the{' '}
-              <Link
-                to={{
-                  pathname: '/account',
-                  state: { contactDrawerOpen: true },
-                }}
-              >
-                contact information
-              </Link>{' '}
-              active on this account.
-            </Typography>
-          </Grid>
+          <TextField
+            label="Credit Card Number"
+            value={cardNumber}
+            onChange={handleCardNumberChange}
+            errorText={hasErrorFor.card_number}
+            InputProps={{
+              inputComponent: creditCardField,
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Expiration Date"
+            value={expDate}
+            onChange={handleExpiryDateChange}
+            errorText={hasErrorFor.expiry_month || hasErrorFor.expiry_year}
+            placeholder={'MM/YY'}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label={cvvLabel}
+            value={cvv}
+            onChange={handleCVVChange}
+            errorText={hasErrorFor.cvv}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography>
+            The address affiliated with this credit card must match the{' '}
+            <Link
+              to={{
+                pathname: '/account',
+                state: { contactDrawerOpen: true },
+              }}
+            >
+              contact information
+            </Link>{' '}
+            active on this account.
+          </Typography>
         </Grid>
       </Grid>
-      <ActionsPanel>
-        <Button buttonType="primary" onClick={submitForm} loading={submitting}>
-          Save
-        </Button>
+      <ActionsPanel className={classes.actions}>
         <Button
           buttonType="cancel"
+          compact={matchesXSDown}
           onClick={() => {
             resetForm(undefined);
             onClose();
           }}
         >
           Cancel
+        </Button>
+        <Button buttonType="primary" onClick={submitForm} loading={submitting}>
+          Save Credit Card
         </Button>
       </ActionsPanel>
     </Drawer>
