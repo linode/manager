@@ -246,7 +246,7 @@ export class SelectPlanPanel extends React.Component<
               aria-label="List of Linode Plans"
             >
               {tableHeader}
-              <TableBody role="radiogroup">
+              <TableBody role="grid">
                 {plans.map(this.renderSelection)}
               </TableBody>
             </Table>
