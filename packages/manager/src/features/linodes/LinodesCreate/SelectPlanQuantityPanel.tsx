@@ -210,7 +210,7 @@ export class SelectPlanPanel extends React.Component<
             }
             displayButton={isOnCreate}
             submitForm={() => submitForm!(type.id, type.count)}
-            buttonDisabled={type.id !== String(selectedID)}
+            buttonDisabled={type.count < 1}
           />
         </Hidden>
       </React.Fragment>

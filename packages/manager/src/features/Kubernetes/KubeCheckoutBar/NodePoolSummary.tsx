@@ -1,6 +1,7 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
+import Divider from 'src/components/core/Divider';
+import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import Delete from 'src/assets/icons/trash.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
@@ -11,8 +12,7 @@ import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(3),
-    marginBottom: theme.spacing(1) - 2,
+    marginTop: theme.spacing(),
   },
   typeHeader: {
     paddingLeft: theme.spacing(),
@@ -23,6 +23,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   typeSubheader: {
     paddingLeft: theme.spacing(),
     fontSize: '14px',
+  },
+  button: {
+    color: '#979797',
+    '&:hover': {
+      color: '#6e6e6e',
+    },
+  },
+  divider: {
+    backgroundColor: '#C5C5C5',
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -46,47 +56,54 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
   }
 
   return (
-    <Grid
-      container
-      alignItems="flex-start"
-      direction="column"
-      className={classes.root}
-      data-testid="node-pool-summary"
-    >
+    <React.Fragment>
+      <Divider className={classes.divider} />
       <Grid
         container
-        direction="row"
-        alignItems="center"
-        justify="space-between"
-        wrap="nowrap"
+        alignItems="flex-start"
+        direction="column"
+        className={classes.root}
+        data-testid="node-pool-summary"
       >
-        <Grid item>
-          <Typography className={classes.typeHeader}>
-            {poolType.label} Plan
-          </Typography>
-          <Typography className={classes.typeSubheader}>
-            {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
-            GB Storage
-          </Typography>
+        <Grid
+          container
+          direction="row"
+          alignItems="center"
+          justify="space-between"
+          wrap="nowrap"
+        >
+          <Grid item>
+            <Typography className={classes.typeHeader}>
+              {poolType.label} Plan
+            </Typography>
+            <Typography className={classes.typeSubheader}>
+              {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
+              GB Storage
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton
+              className={classes.button}
+              onClick={onRemove}
+              data-testid="remove-pool-button"
+            >
+              <Close />
+            </IconButton>
+          </Grid>
         </Grid>
         <Grid item>
-          <IconButton onClick={onRemove} data-testid="remove-pool-button">
-            <Delete />
-          </IconButton>
+          <EnhancedNumberInput
+            value={nodeCount}
+            setValue={updateNodeCount}
+            small
+            min={1}
+          />
+        </Grid>
+        <Grid item>
+          <DisplayPrice price={price} fontSize="16px" interval="month" />
         </Grid>
       </Grid>
-      <Grid item>
-        <EnhancedNumberInput
-          value={nodeCount}
-          setValue={updateNodeCount}
-          small
-          min={1}
-        />
-      </Grid>
-      <Grid item>
-        <DisplayPrice price={price} fontSize="16px" interval="month" />
-      </Grid>
-    </Grid>
+    </React.Fragment>
   );
 };
 

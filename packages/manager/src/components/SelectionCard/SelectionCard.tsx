@@ -259,6 +259,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
                 <EnhancedNumberInput
                   value={inputValue}
                   setValue={setInputValue}
+                  small
                 />
                 {displayButton && (
                   <Button
