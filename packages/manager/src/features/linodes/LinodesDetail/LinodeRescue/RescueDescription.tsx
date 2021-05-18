@@ -1,8 +1,8 @@
 import * as React from 'react';
-import ExternalLink from 'src/components/ExternalLink';
 import Typography from 'src/components/core/Typography';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Link from 'src/components/Link';
 
 const rescueDescription = {
   text: `If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot your Linode into Rescue Mode. This is a safe environment for performing many system recovery and disk management tasks.`,
@@ -10,7 +10,7 @@ const rescueDescription = {
 };
 
 interface Props {
-  linodeId: number;
+  linodeId?: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -20,35 +20,36 @@ const useStyles = makeStyles((theme: Theme) => ({
   lishLink: theme.applyLinkStyles,
 }));
 
-const RescueDescription = (props: Props) => {
+const RescueDescription: React.FC<Props> = (props) => {
   const { linodeId } = props;
   const classes = useStyles();
 
+  /**
+   * Pass the prop 'linodeId' when you want to include a note about
+   * connection with LISH upon reboot into Rescue Mode. This is
+   * intended for the Bare Metal dialog.
+   */
   return (
     <React.Fragment>
       <Typography>
         {rescueDescription.text}{' '}
-        <ExternalLink
-          fixedIcon
-          text="Learn more."
-          link={rescueDescription.link}
-        />
+        <Link to={rescueDescription.link}>Learn more.</Link>
       </Typography>
-      <Typography className={classes.copy}>
-        {`When your Linode has successfully rebooted into Rescue Mode, use the `}
-        <button
-          className={classes.lishLink}
-          onClick={() => lishLaunch(linodeId)}
-        >
-          LISH Console
-        </button>
-        {` to access it. `}
-        <ExternalLink
-          fixedIcon
-          text="Learn more."
-          link="https://www.linode.com/docs/guides/rescue-and-rebuild/#connecting-to-a-linode-running-in-rescue-mode"
-        />
-      </Typography>
+      {linodeId && (
+        <Typography className={classes.copy}>
+          {`When your Linode has successfully rebooted into Rescue Mode, use the `}
+          <button
+            className={classes.lishLink}
+            onClick={() => lishLaunch(linodeId)}
+          >
+            LISH Console
+          </button>
+          {` to access it. `}
+          <Link to="https://www.linode.com/docs/guides/rescue-and-rebuild/#connecting-to-a-linode-running-in-rescue-mode">
+            Learn more.
+          </Link>
+        </Typography>
+      )}
     </React.Fragment>
   );
 };

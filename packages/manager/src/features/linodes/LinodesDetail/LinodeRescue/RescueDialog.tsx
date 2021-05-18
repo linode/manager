@@ -215,7 +215,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
         <div>
           <Paper className={classes.root}>
             {unauthorized && <LinodePermissionsError />}
-            <RescueDescription linodeId={linodeId} />
+            <RescueDescription />
             <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
               devices={devices}
