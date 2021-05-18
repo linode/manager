@@ -169,7 +169,9 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
         <Grid item className={classes.actions}>
           <ActionMenu
             actionsList={actions}
-            ariaLabel={`Action menu for card ending in ${lastFour}`}
+            ariaLabel={`Action menu for ${
+              lastFour ? `card ending in ${lastFour}` : paymentMethod
+            }`}
           />
         </Grid>
       </Grid>
