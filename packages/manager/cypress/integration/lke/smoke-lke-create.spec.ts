@@ -18,15 +18,16 @@ const multipleClick = (
   return multipleClick(subject.click(), n - 1);
 };
 
-const addNodes = (plan: string, nb: number) => {
-  const extraNb = Math.ceil(Math.random() * 5);
+const addNodes = (plan: string) => {
+  const defaultNodes = 3;
+  const extraNodes = Math.ceil(Math.random() * 5);
   cy.get(`[data-qa-plan-row="${plan}"`).within((_card) => {
-    multipleClick(cy.get('[data-testid="increment-button"]'), extraNb + nb);
-    multipleClick(cy.get('[data-testid="decrement-button"]'), extraNb);
+    multipleClick(cy.get('[data-testid="increment-button"]'), extraNodes);
+    multipleClick(cy.get('[data-testid="decrement-button"]'), extraNodes + 1);
 
     cy.get('[data-testid="textfield-input"]')
       .invoke('val')
-      .should('eq', `${nb}`);
+      .should('eq', `${defaultNodes - 1}`);
     fbtClick('Add');
   });
 };
@@ -48,8 +49,7 @@ describe('LKE Create Cluster', () => {
     containsClick(selectRegionString).type('Newar{enter}');
     cy.get('[id="kubernetes-version"]').type('{enter}');
 
-    const kNb2Gb = 2;
-    addNodes('Linode 2 GB', kNb2Gb);
+    addNodes('Linode 2 GB');
 
     // wait for change to reflect on Checkout bar
 
