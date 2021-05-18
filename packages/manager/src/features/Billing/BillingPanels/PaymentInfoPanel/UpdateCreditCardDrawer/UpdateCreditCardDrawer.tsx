@@ -200,7 +200,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
             The address affiliated with this credit card must match the{' '}
             <Link
               to={{
-                pathname: '/account',
+                pathname: '/account/billing',
                 state: { contactDrawerOpen: true },
               }}
             >
