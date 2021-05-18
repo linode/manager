@@ -59,7 +59,11 @@ export const useAPISearch = (): Search => {
   return { searchAPI };
 };
 
-const generateFilter = (text: string, labelFieldName: string = 'label') => {
+const generateFilter = (
+  text: string,
+  labelFieldName: string = 'label',
+  isLinode?: boolean
+) => {
   return {
     '+or': [
       {
@@ -67,6 +71,9 @@ const generateFilter = (text: string, labelFieldName: string = 'label') => {
       },
       {
         tags: { '+contains': text },
+      },
+      {
+        ipv4: isLinode ? { '+contains': text } : undefined,
       },
     ],
   };
@@ -84,7 +91,10 @@ const requestEntities = (
     getDomains(params, generateFilter(searchText, 'domain')).then((results) =>
       results.data.map(domainToSearchableItem)
     ),
-    getLinodes(params, generateFilter(searchText)).then((results) =>
+    getLinodes(
+      params,
+      generateFilter(searchText, 'label', true)
+    ).then((results) =>
       results.data.map((thisResult) => formatLinode(thisResult, types, images))
     ),
     getImages(
