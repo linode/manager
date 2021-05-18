@@ -62,7 +62,7 @@ export const useAPISearch = (): Search => {
 const generateFilter = (
   text: string,
   labelFieldName: string = 'label',
-  isLinode?: boolean
+  filterByIp?: boolean
 ) => {
   return {
     '+or': [
@@ -72,7 +72,7 @@ const generateFilter = (
       {
         tags: { '+contains': text },
       },
-      ...(isLinode
+      ...(filterByIp
         ? [
             {
               ipv4: { '+contains': text },
@@ -112,9 +112,10 @@ const requestEntities = (
     getVolumes(params, generateFilter(searchText)).then((results) =>
       results.data.map(volumeToSearchableItem)
     ),
-    getNodeBalancers(params, generateFilter(searchText)).then((results) =>
-      results.data.map(nodeBalToSearchableItem)
-    ),
+    getNodeBalancers(
+      params,
+      generateFilter(searchText, 'label', true)
+    ).then((results) => results.data.map(nodeBalToSearchableItem)),
     // Restricted users always get a 403 when requesting clusters
     !isRestricted
       ? getKubernetesClusters().then((results) =>
