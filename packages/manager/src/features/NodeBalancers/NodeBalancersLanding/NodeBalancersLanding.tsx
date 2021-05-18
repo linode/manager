@@ -263,7 +263,7 @@ export class NodeBalancersLanding extends React.Component<
                   toggleGroupByTag={toggleNodeBalancerGroupByTag}
                   row={nodeBalancerRow}
                   headers={headers}
-                  initialOrder={{ order: 'desc', orderBy: 'label' }}
+                  initialOrder={{ order: 'asc', orderBy: 'label' }}
                 />
               </>
             );
