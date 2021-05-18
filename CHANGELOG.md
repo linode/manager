@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2021-05-18] - v1.41.2
 
-### Added:
+### Changed:
 
 - Fallback to tux icon for uknown distros
 
