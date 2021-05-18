@@ -6,8 +6,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
+import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
-import PaymentMethodRow from 'src/components/PaymentMethodRow/PaymentMethodRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -73,58 +73,15 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3" className={classes.title}>
             Payment Method
           </Typography>
-
           <Button className={classes.edit} onClick={handleOpenDrawer}>
             Edit
           </Button>
         </div>
 
-        <PaymentMethodRow
-          lastFour={'1234'}
-          expiry={'10/2022'}
-          isDefault={true}
-          paymentMethod={'Visa'}
-        ></PaymentMethodRow>
-        <PaymentMethodRow
-          lastFour={lastFour}
-          expiry={expiry}
-          isDefault={false}
-          paymentMethod={'Mastercard'}
-        ></PaymentMethodRow>
-        <PaymentMethodRow
-          lastFour={lastFour}
-          expiry={expiry}
-          isDefault={false}
-          paymentMethod={'Discover'}
-        ></PaymentMethodRow>
-        <PaymentMethodRow
-          lastFour={lastFour}
-          expiry={expiry}
-          isDefault={false}
-          paymentMethod={'JCB'}
-        ></PaymentMethodRow>
-        <PaymentMethodRow
-          lastFour={lastFour}
-          expiry={expiry}
-          isDefault={false}
-          paymentMethod={'Amex'}
-        ></PaymentMethodRow>
-        <PaymentMethodRow
-          lastFour={lastFour}
-          expiry={expiry}
-          isDefault={true}
-          paymentMethod={'GooglePay'}
-        ></PaymentMethodRow>
-        <PaymentMethodRow
-          lastFour={lastFour}
-          expiry={expiry}
-          isDefault={true}
-          paymentMethod={'PayPal'}
-        ></PaymentMethodRow>
-
-        {/* <div className={classes.billingGroup}>
+        <div className={classes.billingGroup}>
           <CreditCard lastFour={lastFour} expiry={expiry} />
-        </div> */}
+        </div>
+
         <UpdateCreditCardDrawer
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}

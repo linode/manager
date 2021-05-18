@@ -1,96 +1,50 @@
 import * as React from 'react';
 import PaymentMethodRow from './PaymentMethodRow';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 
 export default {
   title: 'Payment Method Row',
-  decorators: [ThemeDecorator],
 };
 
-export const Visa = () => (
-  <>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={true}
-      paymentMethod={'Visa'}
-    ></PaymentMethodRow>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={false}
-      paymentMethod={'Visa'}
-    ></PaymentMethodRow>
-  </>
-);
+const card = (cardName: string) => {
+  return (
+    <>
+      <PaymentMethodRow
+        lastFour={'1234'}
+        expiry={'10/2022'}
+        isDefault={true}
+        paymentMethod={cardName}
+      ></PaymentMethodRow>
+      <PaymentMethodRow
+        lastFour={'1234'}
+        expiry={'10/2022'}
+        isDefault={false}
+        paymentMethod={cardName}
+      ></PaymentMethodRow>
+      <PaymentMethodRow
+        lastFour={'1234'}
+        expiry={'10/2020'}
+        isDefault={true}
+        paymentMethod={cardName}
+      ></PaymentMethodRow>
+      <PaymentMethodRow
+        lastFour={'1234'}
+        expiry={'10/2020'}
+        isDefault={false}
+        paymentMethod={cardName}
+      ></PaymentMethodRow>
+    </>
+  );
+};
 
-export const Mastercard = () => (
-  <>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={true}
-      paymentMethod={'Mastercard'}
-    ></PaymentMethodRow>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={false}
-      paymentMethod={'Mastercard'}
-    ></PaymentMethodRow>
-  </>
-);
+export const Visa = () => card('Visa');
 
-export const Amex = () => (
-  <>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={true}
-      paymentMethod={'Amex'}
-    ></PaymentMethodRow>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={false}
-      paymentMethod={'Amex'}
-    ></PaymentMethodRow>
-  </>
-);
+export const Mastercard = () => card('Mastercard');
 
-export const Discover = () => (
-  <>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={true}
-      paymentMethod={'Discover'}
-    ></PaymentMethodRow>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={false}
-      paymentMethod={'Discover'}
-    ></PaymentMethodRow>
-  </>
-);
+export const Amex = () => card('Amex');
 
-export const JCB = () => (
-  <>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={true}
-      paymentMethod={'JCB'}
-    ></PaymentMethodRow>
-    <PaymentMethodRow
-      lastFour={'1234'}
-      expiry={'10/2022'}
-      isDefault={false}
-      paymentMethod={'JCB'}
-    ></PaymentMethodRow>
-  </>
-);
+export const Discover = () => card('Discover');
+
+export const JCB = () => card('JCB');
 
 export const GooglePay = () => (
   <>

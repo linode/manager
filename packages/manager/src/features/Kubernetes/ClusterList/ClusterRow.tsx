@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   chip: {
     fontSize: '0.65rem',
-    // backgroundColor: theme.cmrBGColors.bgApp,
     textTransform: 'uppercase',
     minHeight: theme.spacing(2),
     paddingLeft: theme.spacing(0.5),

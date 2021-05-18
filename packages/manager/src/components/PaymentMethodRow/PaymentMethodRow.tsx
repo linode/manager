@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: '4px',
   },
   payPal: {
-    border: '1px solid #E2E5E8',
+    border: `1px solid ${theme.color.grey2}`,
     padding: '5px 8px',
     marginLeft: '6px',
     marginRight: '12px',
@@ -104,34 +104,27 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const paymentText = (): any => {
-    if (paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod)) {
-      return (
-        <Grid item>
-          <Typography className={classes.paymentText}>
-            {paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
-          </Typography>
-        </Grid>
-      );
-    } else {
-      return (
-        <Grid item className={classes.card}>
-          <Typography className={classes.paymentText}>
-            &nbsp;{paymentMethod} ****{lastFour}
-          </Typography>
-          <Typography className={classes.expiry}>
-            {isCardExpired ? (
-              <span className={classes.expired}>
-                &nbsp;{`Expired ${expiry}`}
-              </span>
-            ) : (
-              <span>&nbsp;{`Expires ${expiry}`}</span>
-            )}
-          </Typography>
-        </Grid>
-      );
-    }
-  };
+  const paymentText =
+    paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod) ? (
+      <Grid item>
+        <Typography className={classes.paymentText}>
+          {paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
+        </Typography>
+      </Grid>
+    ) : (
+      <Grid item className={classes.card}>
+        <Typography className={classes.paymentText}>
+          &nbsp;{paymentMethod} ****{lastFour}
+        </Typography>
+        <Typography className={classes.expiry}>
+          {isCardExpired ? (
+            <span className={classes.expired}>&nbsp;{`Expired ${expiry}`}</span>
+          ) : (
+            <span>&nbsp;{`Expires ${expiry}`}</span>
+          )}
+        </Typography>
+      </Grid>
+    );
 
   const actions: Action[] = [
     {
@@ -166,7 +159,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
       <Grid container>
         <Grid item className={classes.item}>
           {paymentIcon()}
-          {paymentText()}
+          {paymentText}
         </Grid>
         <Grid item className={classes.item}>
           {isDefault && (
