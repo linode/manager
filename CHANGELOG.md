@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-05-18] - v1.41.2
+
+### Added:
+
+- Fallback to tux icon for uknown distros
+
 ## [2021-05-18] - v1.41.1
 
 ### Fixed:
