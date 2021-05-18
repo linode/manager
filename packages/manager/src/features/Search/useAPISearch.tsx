@@ -72,9 +72,13 @@ const generateFilter = (
       {
         tags: { '+contains': text },
       },
-      {
-        ipv4: isLinode ? { '+contains': text } : undefined,
-      },
+      ...(isLinode
+        ? [
+            {
+              ipv4: { '+contains': text },
+            },
+          ]
+        : []),
     ],
   };
 };
