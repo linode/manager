@@ -4,37 +4,50 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-05-18] - v1.41.1
+
+### Fixed:
+
+- Fix Validation package on NPM
+
 ## [2021-05-18] - v1.41.0
 
 ### Added:
+
 - Link to documentation on Linode Rescue Modal
 
 ### Changed:
+
 - Create LKE Cluster UI buttons and change default number of nodes to 3
 - Hide Trusted Devices table if no devices are selected and rename “Untrust” to “Revoke”
 - Update keyboard shortcuts for Windows and Linux
 
 Images:
+
 - Rename sections
 - Rename dropdown option “Deploy to Existing Linode” to “Rebuild an Existing Linode”
 
 ### Fixed:
+
 - Create Cluster plan panel buttons flickering
 - IP sharing display for large accounts
-
 
 ## [2021-05-12] - v1.40.1
 
 ### Changed
+
 - Remove Beta notifications and text for Cloud Firewalls as part of GA release
 
 ## [2021-05-05] - v1.40.0
 
 ### Added:
+
 - Google as TPA provider
 
 ### Changed:
+
 Bare Metal:
+
 - Show “N/A” with helper text in "Last Backup" cell for Bare Metal instances
 - Confirmation dialog for booting Bare Metal Linodes into rescue mode
 - Add docs link in "Last Backup" Bare Metal column tooltips
@@ -47,6 +60,7 @@ Bare Metal:
 - Update buttons styles on Firewalls Linodes tab to match the Rules tab
 
 ### Fixed:
+
 - “Add Disk” button styling in RescueDialog
 - Prevent SideMenu scroll bar from overlapping text
 - Don’t request tags for restricted users
@@ -54,6 +68,7 @@ Bare Metal:
 ## [2021-05-03] - v1.39.2
 
 ### Added:
+
 - For release: Remove beta notices and link for VLANs since they're leaving beta
 
 ## [2021-04-28] - v1.39.1
@@ -62,6 +77,7 @@ Bare Metal:
 
 - Update Image Upload docs link
 - Update Image Upload curl command to match Linode docs
+
 ### Fixed:
 
 - "Create Image" button from Image Landing empty state not allowing image uploads
