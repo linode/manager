@@ -101,7 +101,8 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 label: fullLabel,
                 value: thisImage.id,
                 className: thisImage.vendor
-                  ? `fl-${distroIcons[thisImage.vendor]}`
+                  ? // Use Tux as a fallback.
+                    `fl-${distroIcons[thisImage.vendor] ?? 'tux'}`
                   : `fl-tux`,
               };
             })
