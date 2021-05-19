@@ -59,7 +59,11 @@ export const useAPISearch = (): Search => {
   return { searchAPI };
 };
 
-const generateFilter = (text: string, labelFieldName: string = 'label') => {
+const generateFilter = (
+  text: string,
+  labelFieldName: string = 'label',
+  filterByIp?: boolean
+) => {
   return {
     '+or': [
       {
@@ -68,6 +72,13 @@ const generateFilter = (text: string, labelFieldName: string = 'label') => {
       {
         tags: { '+contains': text },
       },
+      ...(filterByIp
+        ? [
+            {
+              ipv4: { '+contains': text },
+            },
+          ]
+        : []),
     ],
   };
 };
@@ -84,7 +95,10 @@ const requestEntities = (
     getDomains(params, generateFilter(searchText, 'domain')).then((results) =>
       results.data.map(domainToSearchableItem)
     ),
-    getLinodes(params, generateFilter(searchText)).then((results) =>
+    getLinodes(
+      params,
+      generateFilter(searchText, 'label', true)
+    ).then((results) =>
       results.data.map((thisResult) => formatLinode(thisResult, types, images))
     ),
     getImages(
@@ -98,9 +112,10 @@ const requestEntities = (
     getVolumes(params, generateFilter(searchText)).then((results) =>
       results.data.map(volumeToSearchableItem)
     ),
-    getNodeBalancers(params, generateFilter(searchText)).then((results) =>
-      results.data.map(nodeBalToSearchableItem)
-    ),
+    getNodeBalancers(
+      params,
+      generateFilter(searchText, 'label', true)
+    ).then((results) => results.data.map(nodeBalToSearchableItem)),
     // Restricted users always get a 403 when requesting clusters
     !isRestricted
       ? getKubernetesClusters().then((results) =>

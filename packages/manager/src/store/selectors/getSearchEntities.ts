@@ -129,6 +129,7 @@ export const nodeBalToSearchableItem = (
     path: `/nodebalancers/${nodebal.id}`,
     created: nodebal.created,
     ips: getNodebalIps(nodebal),
+    region: nodebal.region,
   },
 });
 
