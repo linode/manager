@@ -55,6 +55,7 @@ const Notifications: React.FC<CombinedProps> = (props) => {
             requestNotifications={requestNotifications}
             notificationMessage={notification.message}
             notificationType={notification.type}
+            migrationTime={notification.when}
           />
         );
       default:

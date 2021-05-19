@@ -12,6 +12,7 @@ import { notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
+import { formatDate } from 'src/utilities/formatDate';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -152,12 +153,12 @@ const interceptNotification = (
   if (notification.type === 'migration_scheduled') {
     const jsx = (
       <Typography>
-        You have a scheduled migration pending!{' '}
+        You have a migration pending for{' '}
         <Link to={`/linodes/${notification.entity?.id}`} onClick={onClose}>
           {notification.entity?.label}
-        </Link>{' '}
-        will be automatically shut down, migrated, and returned to its last
-        state.
+        </Link>
+        , which will automatically execute on{' '}
+        {formatDate(notification.when as string)}.
       </Typography>
     );
 

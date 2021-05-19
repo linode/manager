@@ -10,6 +10,9 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useDialog } from 'src/hooks/useDialog';
 import { capitalize } from 'src/utilities/capitalize';
+import { DateTime } from 'luxon';
+import { parseAPIDate } from 'src/utilities/date';
+import { formatDate } from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -22,6 +25,7 @@ interface Props {
   requestNotifications: () => void;
   notificationType: NotificationType;
   notificationMessage: string;
+  migrationTime: string | null;
 }
 
 const MigrationNotification: React.FC<Props> = (props) => {
@@ -33,6 +37,7 @@ const MigrationNotification: React.FC<Props> = (props) => {
     requestNotifications,
     notificationMessage,
     notificationType,
+    migrationTime,
   } = props;
 
   const {
@@ -86,11 +91,28 @@ const MigrationNotification: React.FC<Props> = (props) => {
       ? 'enter the migration queue now'
       : 'schedule your migration';
 
+  const migrationText = () => {
+    let returnText = `You have a migration pending, which will automatically execute `;
+
+    const migrationTimeObject = parseAPIDate(migrationTime as string).toLocal();
+
+    const formattedMigrationTime = formatDate(migrationTime as string);
+
+    const now = DateTime.local();
+    const hourDifference = migrationTimeObject.diff(now, 'hours').as('hours');
+
+    return hourDifference <= 24
+      ? (returnText += `in approximately ${Math.round(
+          hourDifference
+        )} hour(s) (${formattedMigrationTime}).`)
+      : (returnText += `on ${formattedMigrationTime}.`);
+  };
+
   return (
     <>
       <Notice important warning>
         <Typography>
-          {notificationMessage}
+          {migrationTime ? migrationText() : notificationMessage}
           {` `}
           <button
             className={classes.migrationLink}
