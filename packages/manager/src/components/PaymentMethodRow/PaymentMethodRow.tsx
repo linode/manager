@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   expiry: {
     marginLeft: theme.spacing(),
     [theme.breakpoints.down('xs')]: {
-      marginLeft: '0',
+      marginLeft: 0,
     },
   },
   expired: {
@@ -42,29 +42,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  icon: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: 45,
+  },
   paymentText: {
     fontWeight: 'bold',
-  },
-  visa: {
-    padding: '0 6px',
-    marginLeft: '3px',
-    marginRight: '1px',
-  },
-  mastercard: {
-    paddingLeft: '5px',
-    marginRight: '2px',
-  },
-  discover: {
-    marginLeft: '3px',
-  },
-  googlePay: {
-    marginRight: '4px',
   },
   payPal: {
     border: `1px solid ${theme.color.grey2}`,
     padding: '5px 8px',
-    marginLeft: '6px',
-    marginRight: '12px',
   },
   chip: {
     fontSize: '0.625rem',
@@ -74,8 +62,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   lastFour?: string;
   expiry?: string;
-  isDefault?: boolean;
-  paymentMethod?: string;
+  isDefault: boolean;
+  paymentMethod: string;
 }
 
 type CombinedProps = Props;
@@ -88,15 +76,15 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   const paymentIcon = (): any => {
     switch (paymentMethod) {
       case 'Visa':
-        return <Visa className={classes.visa} />;
+        return <Visa />;
       case 'Mastercard':
-        return <Mastercard className={classes.mastercard} />;
+        return <Mastercard />;
       case 'Amex':
         return <Amex />;
       case 'Discover':
-        return <Discover className={classes.discover} />;
+        return <Discover />;
       case 'GooglePay':
-        return <GooglePay className={classes.googlePay} />;
+        return <GooglePay />;
       case 'PayPal':
         return <PayPal className={classes.payPal} />;
       case 'JCB':
@@ -108,7 +96,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod) ? (
       <Grid item>
         <Typography className={classes.paymentText}>
-          {paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
+          &nbsp;{paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
         </Typography>
       </Grid>
     ) : (
@@ -158,7 +146,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     <Paper className={classes.root} border>
       <Grid container>
         <Grid item className={classes.item}>
-          {paymentIcon()}
+          <span className={classes.icon}>{paymentIcon()}</span>
           {paymentText}
         </Grid>
         <Grid item className={classes.item}>

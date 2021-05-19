@@ -10,28 +10,28 @@ const card = (cardName: string) => {
     <>
       <PaymentMethodRow
         lastFour={'1234'}
-        expiry={'10/2022'}
+        expiry={'10/2025'}
         isDefault={true}
         paymentMethod={cardName}
-      ></PaymentMethodRow>
+      />
       <PaymentMethodRow
         lastFour={'1234'}
-        expiry={'10/2022'}
+        expiry={'10/2025'}
         isDefault={false}
         paymentMethod={cardName}
-      ></PaymentMethodRow>
+      />
       <PaymentMethodRow
         lastFour={'1234'}
         expiry={'10/2020'}
         isDefault={true}
         paymentMethod={cardName}
-      ></PaymentMethodRow>
+      />
       <PaymentMethodRow
         lastFour={'1234'}
         expiry={'10/2020'}
         isDefault={false}
         paymentMethod={cardName}
-      ></PaymentMethodRow>
+      />
     </>
   );
 };
@@ -48,26 +48,14 @@ export const JCB = () => card('JCB');
 
 export const GooglePay = () => (
   <>
-    <PaymentMethodRow
-      isDefault={true}
-      paymentMethod={'GooglePay'}
-    ></PaymentMethodRow>
-    <PaymentMethodRow
-      isDefault={false}
-      paymentMethod={'GooglePay'}
-    ></PaymentMethodRow>
+    <PaymentMethodRow isDefault={true} paymentMethod={'GooglePay'} />
+    <PaymentMethodRow isDefault={false} paymentMethod={'GooglePay'} />
   </>
 );
 
 export const PayPal = () => (
   <>
-    <PaymentMethodRow
-      isDefault={true}
-      paymentMethod={'PayPal'}
-    ></PaymentMethodRow>
-    <PaymentMethodRow
-      isDefault={false}
-      paymentMethod={'PayPal'}
-    ></PaymentMethodRow>
+    <PaymentMethodRow isDefault={true} paymentMethod={'PayPal'} />
+    <PaymentMethodRow isDefault={false} paymentMethod={'PayPal'} />
   </>
 );
