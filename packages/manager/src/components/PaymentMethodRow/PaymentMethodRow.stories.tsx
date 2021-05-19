@@ -46,6 +46,8 @@ export const Discover = () => card('Discover');
 
 export const JCB = () => card('JCB');
 
+export const Other = () => card('Other');
+
 export const GooglePay = () => (
   <>
     <PaymentMethodRow isDefault={true} paymentMethod={'GooglePay'} />

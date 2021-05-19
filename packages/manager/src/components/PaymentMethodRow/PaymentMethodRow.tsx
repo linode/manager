@@ -15,6 +15,7 @@ import PayPal from 'src/assets/icons/payment/payPal.svg';
 import Amex from 'src/assets/icons/payment/amex.svg';
 import Discover from 'src/assets/icons/payment/discover.svg';
 import JCB from 'src/assets/icons/payment/jcb.svg';
+import CreditCard from 'src/assets/icons/credit-card.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -89,6 +90,8 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
         return <PayPal className={classes.payPal} />;
       case 'JCB':
         return <JCB />;
+      default:
+        return <CreditCard />;
     }
   };
 
