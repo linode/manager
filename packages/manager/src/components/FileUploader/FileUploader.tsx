@@ -134,15 +134,26 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     dispatch({ type: 'ENQUEUE', files, prefix });
   };
 
-  // This function will be called for dropped files that are over the max size.
-  const onDropRejected = () => {
-    const errorMessage = `Max file size (${
+  // This function will be called when the user drops files that are either over the max size or are not .gz files.
+  const onDropRejected = (files: File[]) => {
+    const fileSizeErrorMessage = `Max file size (${
       readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
     }) exceeded`;
 
-    props.enqueueSnackbar(errorMessage, {
-      variant: 'error',
-    });
+    const fileTypeErrorMessage =
+      'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
+
+    const wrongFileType = files[0].type !== 'application/x-gzip';
+
+    if (wrongFileType) {
+      props.enqueueSnackbar(fileTypeErrorMessage, {
+        variant: 'error',
+      });
+    } else {
+      props.enqueueSnackbar(fileSizeErrorMessage, {
+        variant: 'error',
+      });
+    }
   };
 
   const nextBatch = React.useMemo(() => {
