@@ -4,11 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-05-19] - v1.41.3
+
+### Fixed:
+
+- Search by IP for large accounts
+
 ## [2021-05-18] - v1.41.2
 
 ### Changed:
 
-- Fallback to tux icon for uknown distros
+- Fallback to tux icon for unknown distros
 
 ## [2021-05-18] - v1.41.1
 
