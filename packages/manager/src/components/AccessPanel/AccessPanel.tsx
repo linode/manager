@@ -10,13 +10,12 @@ import {
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
-import SuspenseLoader from 'src/components/SuspenseLoader';
 
 type ClassNames =
   | 'root'
-  | 'inner'
   | 'panelBody'
   | 'small'
   | 'passwordInputOuter'
@@ -29,9 +28,6 @@ const styles = (theme: Theme) =>
       width: '100%',
       marginTop: theme.spacing(3),
       backgroundColor: theme.cmrBGColors.bgPaper,
-    },
-    inner: {
-      padding: theme.spacing(3),
     },
     panelBody: {
       padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
@@ -67,7 +63,6 @@ interface Props {
   handleChange: (value: string) => void;
   heading?: string;
   label?: string;
-  noPadding?: boolean;
   required?: boolean;
   placeholder?: string;
   users?: UserSSHKeyObject[];
@@ -101,7 +96,6 @@ class AccessPanel extends React.Component<CombinedProps> {
       error,
       sshKeyError,
       label,
-      noPadding,
       required,
       placeholder,
       users,
@@ -126,34 +120,32 @@ class AccessPanel extends React.Component<CombinedProps> {
           className
         )}
       >
-        <div className={!noPadding ? classes.inner : ''}>
-          {error && <Notice text={error} error />}
-          <React.Suspense fallback={<SuspenseLoader />}>
-            <PasswordInput
-              name="password"
-              data-qa-password-input
-              className={classes.passwordInputOuter}
-              required={required}
-              disabled={disabled}
-              disabledReason={disabledReason || ''}
-              autoComplete="off"
-              value={this.props.password || ''}
-              label={label || 'Root Password'}
-              placeholder={placeholder || 'Enter a password.'}
-              onChange={this.handleChange}
-              hideStrengthLabel={hideStrengthLabel}
-              helperText={passwordHelperText}
-            />
-          </React.Suspense>
-          {users && (
-            <UserSSHKeyPanel
-              users={users}
-              error={sshKeyError}
-              disabled={disabled}
-              onKeyAddSuccess={requestKeys || (() => null)}
-            />
-          )}
-        </div>
+        {error && <Notice text={error} error />}
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <PasswordInput
+            name="password"
+            data-qa-password-input
+            className={classes.passwordInputOuter}
+            required={required}
+            disabled={disabled}
+            disabledReason={disabledReason || ''}
+            autoComplete="off"
+            value={this.props.password || ''}
+            label={label || 'Root Password'}
+            placeholder={placeholder || 'Enter a password.'}
+            onChange={this.handleChange}
+            hideStrengthLabel={hideStrengthLabel}
+            helperText={passwordHelperText}
+          />
+        </React.Suspense>
+        {users && (
+          <UserSSHKeyPanel
+            users={users}
+            error={sshKeyError}
+            disabled={disabled}
+            onKeyAddSuccess={requestKeys || (() => null)}
+          />
+        )}
       </Paper>
     );
   }

@@ -25,7 +25,7 @@ export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
 }
 
-type ClassNames = 'root' | 'inner' | 'panelBody' | 'wrapper';
+type ClassNames = 'root' | 'panelBody' | 'wrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -34,9 +34,6 @@ const styles = (theme: Theme) =>
       width: '100%',
       backgroundColor: theme.color.white,
       marginTop: theme.spacing(3),
-    },
-    inner: {
-      padding: theme.spacing(3),
     },
     panelBody: {
       width: '100%',
@@ -131,31 +128,30 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={`${classes.root}`}>
-        <div className={classes.inner}>
-          {error && <Notice text={error} error />}
-          <Typography variant="h2">Select Backup</Typography>
-          <Grid container alignItems="center" className={classes.wrapper}>
-            {loading ? (
-              <CircleProgress />
-            ) : selectedLinodeID ? (
-              <React.Fragment>
-                {aggregatedBackups.length !== 0 ? (
-                  <Typography component="div" className={classes.panelBody}>
-                    <Grid container>
-                      {aggregatedBackups.map((backup) => {
-                        return this.renderCard(backup);
-                      })}
-                    </Grid>
-                  </Typography>
-                ) : (
-                  <Typography variant="body1">No backup available</Typography>
-                )}
-              </React.Fragment>
-            ) : (
-              <Typography variant="body1">First, select a Linode</Typography>
-            )}
-          </Grid>
-        </div>
+        {error && <Notice text={error} error />}
+        <Typography variant="h2">Select Backup</Typography>
+        <Grid container alignItems="center" className={classes.wrapper}>
+          {loading ? (
+            <CircleProgress />
+          ) : selectedLinodeID ? (
+            // eslint-disable-next-line react/jsx-no-useless-fragment
+            <React.Fragment>
+              {aggregatedBackups.length !== 0 ? (
+                <Typography component="div" className={classes.panelBody}>
+                  <Grid container>
+                    {aggregatedBackups.map((backup) => {
+                      return this.renderCard(backup);
+                    })}
+                  </Grid>
+                </Typography>
+              ) : (
+                <Typography variant="body1">No backup available</Typography>
+              )}
+            </React.Fragment>
+          ) : (
+            <Typography variant="body1">First, select a Linode</Typography>
+          )}
+        </Grid>
       </Paper>
     );
   }

@@ -56,7 +56,6 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         required={!isOptional}
         handleChange={this.handleUpdatePassword}
         label={field.label}
-        noPadding
         placeholder={placeholder}
         error={error}
         hideStrengthLabel

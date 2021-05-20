@@ -5,6 +5,10 @@ import * as classNames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    paddingTop: 17,
+  },
   error: {
     borderColor: `#ca0813 !important`,
   },
@@ -32,6 +36,7 @@ const Paper: React.FC<CombinedProps> = (props) => {
       <_Paper
         className={classNames(
           {
+            [classes.root]: true,
             [classes.error]: error,
             [classes.border]: border,
           },
