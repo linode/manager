@@ -150,6 +150,11 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
           allObjectsFetched,
           nextMarker: response.next_marker,
         });
+
+        // For some reason, the API might return only return a small number of items even though we asked for a page size of 100. To ensure the user will be able to view all of their objects:
+        // If the response from the API is truncated but it did not fulfil our requested page size, load more
+        if (response.is_truncated && this.state.data.length < page_size)
+          this.getNextPage();
       })
       .catch((err) => {
         this.setState({
