@@ -46,12 +46,14 @@ import {
   nodeBalancerConfigNodeFactory,
   VLANFactory,
   promoFactory,
+  objectStorageObjectFactory,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
 import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
+import { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
 
 export const makeResourcePage = (
   e: any[],
@@ -65,6 +67,17 @@ export const makeResourcePage = (
   results: override.results ?? e.length,
   data: e,
 });
+
+const makeObjectsPage = (
+  e: ObjectStorageObject[],
+  override: { is_truncated: boolean; next_marker: string | null }
+) => ({
+  data: e,
+  is_truncated: override.is_truncated || false,
+  next_marker: override.next_marker || null,
+});
+
+const staticObjects = objectStorageObjectFactory.buildList(250);
 
 const statusPage = [
   rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
@@ -324,8 +337,49 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*/object-storage/buckets/*/*/object-list', (req, res, ctx) => {
+    const pageSize = Number(req.url.searchParams.get('page_size') || 100);
+    const marker = req.url.searchParams.get('marker');
+
+    if (!marker) {
+      const end =
+        pageSize > staticObjects.length ? staticObjects.length : pageSize;
+      const is_truncated = staticObjects.length > pageSize;
+
+      const page = staticObjects.slice(0, end);
+      return res(
+        ctx.json(
+          makeObjectsPage(page, {
+            is_truncated,
+            next_marker: is_truncated ? staticObjects[pageSize].name : null,
+          })
+        )
+      );
+    }
+    const index = staticObjects.findIndex((object) => object.name == marker);
+
+    const end =
+      index + pageSize > staticObjects.length
+        ? staticObjects.length
+        : index + pageSize;
+
+    const page = staticObjects.slice(index, end);
+
+    const is_truncated =
+      page[page.length - 1].name !=
+      staticObjects[staticObjects.length - 1].name;
+
+    return res(
+      ctx.json(
+        makeObjectsPage(page, {
+          is_truncated,
+          next_marker: is_truncated ? staticObjects[end].name : null,
+        })
+      )
+    );
+  }),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    const buckets = objectStorageBucketFactory.buildList(0);
+    const buckets = objectStorageBucketFactory.buildList(1);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
