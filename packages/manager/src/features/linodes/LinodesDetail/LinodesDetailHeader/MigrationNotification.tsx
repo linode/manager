@@ -92,7 +92,7 @@ const MigrationNotification: React.FC<Props> = (props) => {
       : 'schedule your migration';
 
   const migrationText = () => {
-    let returnText = `You have a migration pending, which will automatically execute `;
+    const baseText = `You have a scheduled migration pending, which will automatically execute`;
 
     const migrationTimeObject = parseAPIDate(migrationTime as string).toLocal();
 
@@ -102,10 +102,10 @@ const MigrationNotification: React.FC<Props> = (props) => {
     const hourDifference = migrationTimeObject.diff(now, 'hours').as('hours');
 
     return hourDifference <= 24
-      ? (returnText += `in approximately ${Math.round(
+      ? `${baseText} in approximately ${Math.round(
           hourDifference
-        )} hour(s) (${formattedMigrationTime}).`)
-      : (returnText += `on ${formattedMigrationTime}.`);
+        )} hour(s) (${formattedMigrationTime}).`
+      : `${baseText} on ${formattedMigrationTime}.`;
   };
 
   return (

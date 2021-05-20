@@ -153,7 +153,7 @@ const interceptNotification = (
   if (notification.type === 'migration_scheduled') {
     const jsx = (
       <Typography>
-        You have a migration pending for{' '}
+        You have a scheduled migration pending for{' '}
         <Link to={`/linodes/${notification.entity?.id}`} onClick={onClose}>
           {notification.entity?.label}
         </Link>
