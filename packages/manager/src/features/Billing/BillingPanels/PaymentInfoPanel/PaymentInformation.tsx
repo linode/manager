@@ -73,7 +73,6 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3" className={classes.title}>
             Payment Method
           </Typography>
-
           <Button className={classes.edit} onClick={handleOpenDrawer}>
             Edit
           </Button>
@@ -82,6 +81,7 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
         <div className={classes.billingGroup}>
           <CreditCard lastFour={lastFour} expiry={expiry} />
         </div>
+
         <UpdateCreditCardDrawer
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}

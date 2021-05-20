@@ -7,6 +7,7 @@ import { ThemeProvider } from '../src/components/core/styles';
 import '../src/index.css';
 import { dark, light } from '../src/themes';
 import { wrapWithTheme } from '../src/utilities/testHelpers';
+import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 const options = {
   dark,
@@ -34,3 +35,14 @@ export const decorators = [
     );
   },
 ];
+
+MINIMAL_VIEWPORTS.mobile1.styles = {
+  height: '667px',
+  width: '375px',
+};
+
+export const parameters = {
+  viewport: {
+    viewports: MINIMAL_VIEWPORTS,
+  },
+};
