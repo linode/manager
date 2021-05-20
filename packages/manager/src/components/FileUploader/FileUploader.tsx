@@ -14,9 +14,9 @@ import {
   defaultState,
   MAX_FILE_SIZE_IN_BYTES,
   MAX_PARALLEL_UPLOADS,
-  ObjectUploaderAction,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
+import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import { Dispatch } from 'src/hooks/types';
 import { useDispatch } from 'react-redux';
 import { uploadImage } from 'src/store/image/image.requests';
@@ -109,12 +109,13 @@ interface Props {
   label: string;
   description?: string;
   region: string;
+  setUploadInProgress: (uploadInProgress: boolean) => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
 
 const FileUploader: React.FC<CombinedProps> = (props) => {
-  const { label, description, region } = props;
+  const { label, description, region, setUploadInProgress } = props;
 
   const [error, setError] = React.useState<APIError[] | undefined>();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
@@ -183,6 +184,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       data: { status: 'IN_PROGRESS' },
     });
 
+    setUploadInProgress(true);
+
     nextBatch.forEach((fileUpload) => {
       const { file } = fileUpload;
 
@@ -199,6 +202,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             status: 'FINISHED',
           },
         });
+
+        setUploadInProgress(false);
       };
 
       const handleError = () => {
@@ -252,6 +257,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     noClick: true,
     noKeyboard: true,
     accept: '.gz', // Uploaded files must be compressed using the gzip compression algorithm.
+    // maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
   });
 
@@ -329,16 +335,3 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
 
 export default enhanced(FileUploader);
-
-const onUploadProgressFactory = (
-  dispatch: (value: ObjectUploaderAction) => void,
-  fileName: string
-) => (progressEvent: ProgressEvent) => {
-  dispatch({
-    type: 'UPDATE_FILES',
-    filesToUpdate: [fileName],
-    data: {
-      percentComplete: (progressEvent.loaded / progressEvent.total) * 100,
-    },
-  });
-};
