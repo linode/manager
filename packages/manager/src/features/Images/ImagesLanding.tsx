@@ -38,6 +38,7 @@ import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { Order } from 'src/components/Pagey';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: { marginBottom: theme.spacing(3) },
@@ -406,6 +407,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const manualHeaders = getHeaders('manual', machineImagesEnabled);
   const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
 
+  const initialOrder = {
+    order: 'asc' as Order,
+    orderBy: 'label',
+  };
+
   const manualImageRow: EntityTableRow<Image> = {
     Component: ImageRow,
     data: manualImages,
@@ -505,6 +511,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={manualImageRow}
           headers={manualHeaders}
           emptyMessage={'No Custom Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       <Paper className={classes.imageTable}>
@@ -520,6 +527,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={autoImageRow}
           headers={automaticHeaders}
           emptyMessage={'No Recovery Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       {renderImageDrawer()}
