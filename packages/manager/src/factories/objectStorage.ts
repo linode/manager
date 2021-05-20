@@ -39,3 +39,14 @@ export const objectStorageObjectFactory = Factory.Sync.makeFactory<ObjectStorage
     name: Factory.each((id) => `example-${id}`),
   }
 );
+
+export const makeObjectsPage = (
+  e: ObjectStorageObject[],
+  override: { is_truncated: boolean; next_marker: string | null }
+) => ({
+  data: e,
+  is_truncated: override.is_truncated || false,
+  next_marker: override.next_marker || null,
+});
+
+export const staticObjects = objectStorageObjectFactory.buildList(250);

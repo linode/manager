@@ -46,14 +46,14 @@ import {
   nodeBalancerConfigNodeFactory,
   VLANFactory,
   promoFactory,
-  objectStorageObjectFactory,
+  staticObjects,
+  makeObjectsPage,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
 import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
-import { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
 
 export const makeResourcePage = (
   e: any[],
@@ -67,17 +67,6 @@ export const makeResourcePage = (
   results: override.results ?? e.length,
   data: e,
 });
-
-const makeObjectsPage = (
-  e: ObjectStorageObject[],
-  override: { is_truncated: boolean; next_marker: string | null }
-) => ({
-  data: e,
-  is_truncated: override.is_truncated || false,
-  next_marker: override.next_marker || null,
-});
-
-const staticObjects = objectStorageObjectFactory.buildList(250);
 
 const statusPage = [
   rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
