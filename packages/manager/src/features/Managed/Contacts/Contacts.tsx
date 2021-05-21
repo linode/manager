@@ -2,7 +2,7 @@ import { deleteContact, ManagedContact } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import RootRef from 'src/components/core/RootRef';

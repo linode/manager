@@ -9,7 +9,7 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
