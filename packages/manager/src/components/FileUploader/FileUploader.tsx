@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, FileRejection } from 'react-dropzone';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -134,19 +134,25 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     dispatch({ type: 'ENQUEUE', files, prefix });
   };
 
-  // This function will be called when the user drops files that are either over the max size or are not .gz files.
-  const onDropRejected = (files: File[]) => {
+  // This function will be called when the user drops non-.gz files, more than one file at a time, or files that are over the max size.
+  const onDropRejected = (files: FileRejection[]) => {
+    const wrongFileType = files[0].file.type !== 'application/x-gzip';
+    const fileTypeErrorMessage =
+      'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
+
+    const moreThanOneFile = files.length > 1;
+    const fileNumberErrorMessage = 'Only one file may be uploaded at a time.';
+
     const fileSizeErrorMessage = `Max file size (${
       readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
     }) exceeded`;
 
-    const fileTypeErrorMessage =
-      'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
-
-    const wrongFileType = files[0].type !== 'application/x-gzip';
-
     if (wrongFileType) {
       props.enqueueSnackbar(fileTypeErrorMessage, {
+        variant: 'error',
+      });
+    } else if (moreThanOneFile) {
+      props.enqueueSnackbar(fileNumberErrorMessage, {
         variant: 'error',
       });
     } else {
@@ -256,7 +262,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     noClick: true,
     noKeyboard: true,
     accept: '.gz', // Uploaded files must be compressed using the gzip compression algorithm.
-    // maxFiles: 1,
+    maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
   });
 
