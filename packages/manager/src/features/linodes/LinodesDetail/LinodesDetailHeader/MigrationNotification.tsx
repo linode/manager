@@ -89,10 +89,10 @@ const MigrationNotification: React.FC<Props> = (props) => {
   const migrationActionDescription =
     notificationType === 'migration_scheduled'
       ? 'enter the migration queue now'
-      : 'schedule your migration';
+      : 'schedule your migration now';
 
   const migrationText = () => {
-    const baseText = `You have a scheduled migration pending, which will automatically execute`;
+    const baseText = `You have a scheduled migration, which will automatically execute`;
 
     const migrationTimeObject = parseAPIDate(migrationTime as string).toLocal();
 
