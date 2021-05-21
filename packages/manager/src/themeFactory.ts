@@ -1094,6 +1094,9 @@ const themeDefaults: ThemeDefaults = () => {
         rounded: {
           borderRadius: 0,
         },
+        outlined: {
+          border: '1px solid #e7e7e7',
+        },
       },
       MuiPopover: {
         paper: {
