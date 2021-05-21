@@ -182,9 +182,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
             to other regions.
           </Typography>
           <Typography className={classes.helperText}>
-            Closing this browser tab or window will cancel the upload. To use
-            other parts of Cloud Manager while your upload is in progress, we
-            recommend opening another tab or window.
+            <strong>
+              Closing this browser tab or window will cancel the upload.
+            </strong>{' '}
+            To use other parts of Cloud Manager while your upload is in
+            progress, we recommend opening another tab or window.
           </Typography>
 
           <ActionsPanel style={{ marginTop: 16 }}>

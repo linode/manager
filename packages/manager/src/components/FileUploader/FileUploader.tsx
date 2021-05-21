@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     backgroundColor: 'transparent',
     borderColor: theme.palette.primary.main,
-    borderRadius: 6,
     borderStyle: 'dashed',
     borderWidth: 1,
     color: theme.palette.primary.main,
