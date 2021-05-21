@@ -12,7 +12,6 @@ import Grid from 'src/components/Grid';
 
 type ClassNames =
   | 'root'
-  | 'wrapper'
   | 'postCard'
   | 'postTitle'
   | 'post'
@@ -22,9 +21,6 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      paddingTop: theme.spacing(3),
-      paddingBottom: theme.spacing(3),
-      border: `1px solid ${theme.color.grey2}`,
       margin: `${theme.spacing(6)}px 0`,
     },
     postCard: {
@@ -32,7 +28,6 @@ const styles = (theme: Theme) =>
       paddingRight: theme.spacing(3),
       paddingLeft: theme.spacing(3),
     },
-    wrapper: {},
     postTitle: {
       marginBottom: theme.spacing(2),
     },
@@ -123,8 +118,8 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
     const { classes } = this.props;
 
     return (
-      <Paper className={classes.root}>
-        <Grid container className={classes.wrapper}>
+      <Paper className={classes.root} variant="outlined">
+        <Grid container>
           <Grid item xs={12} sm={6} className={classes.withSeparator}>
             <div className={classes.postCard} data-qa-documentation-link>
               <Typography variant="h3" className={classes.postTitle}>
