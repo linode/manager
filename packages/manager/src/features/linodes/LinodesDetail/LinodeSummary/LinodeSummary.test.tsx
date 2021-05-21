@@ -17,7 +17,6 @@ describe('LinodeSummary', () => {
       timezone={'America/Los_Angeles'}
       classes={{
         root: '',
-        chart: '',
         graphControls: '',
         graphGrids: '',
         grid: '',
