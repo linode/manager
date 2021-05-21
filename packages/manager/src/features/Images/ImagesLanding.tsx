@@ -40,7 +40,10 @@ import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  imageTable: { marginBottom: theme.spacing(3) },
+  imageTable: {
+    marginBottom: theme.spacing(3),
+    padding: 0,
+  },
   imageTableHeader: {
     padding: theme.spacing(),
     marginLeft: theme.spacing(),
