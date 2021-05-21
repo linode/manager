@@ -8,7 +8,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
@@ -27,18 +26,16 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { Country } from './types';
 
-type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
+type ClassNames = 'mainFormContainer' | 'actions';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
-    root: {},
     mainFormContainer: {
       maxWidth: 860,
     },
-    stateZip: {
-      [theme.breakpoints.up('md')]: {
-        maxWidth: `calc(415px + ${theme.spacing(2)}px)`,
-      },
+    actions: {
+      display: 'flex',
+      justifyContent: 'flex-end',
     },
   });
 
@@ -497,28 +494,33 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   renderFormActions = () => {
-    const { accountLoading, accountLastUpdated, accountError } = this.props;
+    const {
+      accountLoading,
+      accountLastUpdated,
+      accountError,
+      classes,
+    } = this.props;
 
     if ((accountLoading && accountLastUpdated === 0) || accountError.read) {
       return null;
     }
 
     return (
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          onClick={this.submitForm}
-          loading={this.state.submitting}
-          data-qa-save-contact-info
-        >
-          Save
-        </Button>
+      <ActionsPanel className={classes.actions}>
         <Button
           buttonType="secondary"
           onClick={this.props.onClose}
           data-qa-reset-contact-info
         >
           Cancel
+        </Button>
+        <Button
+          buttonType="primary"
+          onClick={this.submitForm}
+          loading={this.state.submitting}
+          data-qa-save-contact-info
+        >
+          Save Changes
         </Button>
       </ActionsPanel>
     );
