@@ -7,7 +7,6 @@ import {
   recycleNode,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -259,15 +258,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           currentVersion={cluster.k8s_version}
         />
       </Grid>
-      <Grid
-        container
-        className={classnames({
-          [classes.root]: true,
-          [classes.error]: Boolean(updateError),
-        })}
-        alignItems="center"
-        justify="space-between"
-      >
+      <Grid container className={classes.root} justify="space-between">
         <Grid item className="p0">
           <Breadcrumb
             onEditHandlers={{
@@ -281,7 +272,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
             data-qa-breadcrumb
           />
         </Grid>
-        <Grid item>
+        <Grid item className="p0" style={{ marginTop: 14 }}>
           <DocumentationButton href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
         </Grid>
       </Grid>

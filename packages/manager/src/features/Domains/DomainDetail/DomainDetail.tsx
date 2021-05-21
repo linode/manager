@@ -111,23 +111,22 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Grid
-        container
-        className={classes.root}
-        alignItems="center"
-        justify="space-between"
-      >
-        <Breadcrumb
-          pathname={location.pathname}
-          labelOptions={{ noCap: true }}
-          onEditHandlers={{
-            editableTextTitle: domain.domain,
-            onEdit: handleLabelChange,
-            onCancel: resetEditableLabel,
-            errorText: updateError,
-          }}
-        />
-        <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
+      <Grid container className={`${classes.root} m0`} justify="space-between">
+        <Grid item className="p0">
+          <Breadcrumb
+            pathname={location.pathname}
+            labelOptions={{ noCap: true }}
+            onEditHandlers={{
+              editableTextTitle: domain.domain,
+              onEdit: handleLabelChange,
+              onCancel: resetEditableLabel,
+              errorText: updateError,
+            }}
+          />
+        </Grid>
+        <Grid item className="p0" style={{ marginTop: 14 }}>
+          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
+        </Grid>
       </Grid>
       {props.location.state && props.location.state.recordError && (
         <Notice

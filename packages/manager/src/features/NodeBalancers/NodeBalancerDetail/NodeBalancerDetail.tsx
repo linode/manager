@@ -12,6 +12,12 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import DocumentationButton from 'src/components/DocumentationButton';
 import ErrorState from 'src/components/ErrorState';
@@ -56,7 +62,19 @@ type CombinedProps = WithNodeBalancerActions &
   RouteProps &
   FeatureFlagConsumerProps &
   LoadingAndErrorHandlers &
-  LoadingAndErrorState;
+  LoadingAndErrorState &
+  WithStyles<ClassNames>;
+
+type ClassNames = 'root';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      [theme.breakpoints.down('xs')]: {
+        paddingLeft: theme.spacing(),
+      },
+    },
+  });
 
 class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   state: State = {
@@ -234,7 +252,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   render() {
     const matches = (pathName: string) =>
       Boolean(matchPath(this.props.location.pathname, { path: pathName }));
-    const { error, loading } = this.props;
+    const { classes, error, loading } = this.props;
     const { nodeBalancer } = this.state;
 
     /** Loading State */
@@ -275,8 +293,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         <React.Fragment>
           <Grid
             container
-            className="m0"
-            alignItems="center"
+            className={`${classes.root} m0`}
             justify="space-between"
           >
             <Grid item className="p0">
@@ -291,7 +308,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                 }}
               />
             </Grid>
-            <Grid item className="p0">
+            <Grid item className="p0" style={{ marginTop: 14 }}>
               <DocumentationButton href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
             </Grid>
           </Grid>
@@ -341,6 +358,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   }
 }
 
+const styled = withStyles(styles);
+
 const reloaded = reloadableWithRouter<
   CombinedProps,
   { nodeBalancerId?: number }
@@ -357,5 +376,6 @@ export default compose(
   withFeatureFlagConsumerContainer,
   withSnackbar,
   withNodeBalancerActions,
-  withLoadingAndError
+  withLoadingAndError,
+  styled
 )(NodeBalancerDetail);

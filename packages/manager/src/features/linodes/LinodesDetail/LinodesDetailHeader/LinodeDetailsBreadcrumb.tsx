@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
 import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -26,26 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       paddingLeft: theme.spacing(),
-    },
-  },
-  error: {
-    [theme.breakpoints.down('xs')]: {
-      paddingBottom: 20,
-    },
-    // The docs button will wrap when the label is editing mode so do not add
-    // padding when it wraps
-    [theme.breakpoints.down(395)]: {
-      paddingBottom: 0,
-    },
-  },
-  errorLong: {
-    [theme.breakpoints.down(480)]: {
-      paddingBottom: 40,
-    },
-    // The docs button will wrap when the label is editing mode so do not add
-    // padding when it wraps
-    [theme.breakpoints.down(395)]: {
-      paddingBottom: 0,
     },
   },
 }));
@@ -99,14 +78,8 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
   };
   return (
     <Grid
-      className={classnames({
-        [classes.root]: true,
-        [classes.error]: Boolean(editableLabelError),
-        [classes.errorLong]: Boolean(editableLabelError.length > 60),
-        m0: true,
-      })}
+      className={`${classes.root} m0`}
       container
-      alignItems="center"
       justify="space-between"
       data-qa-linode={linode.label}
     >
@@ -129,7 +102,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
           {...breadcrumbProps}
         />
       </Grid>
-      <Grid item className="px0">
+      <Grid item className="px0" style={{ marginTop: 4 }}>
         <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>

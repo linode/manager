@@ -10,6 +10,9 @@ import { EditableProps, LabelProps } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   editableContainer: {
     marginLeft: -theme.spacing(),
+    '& > div': {
+      width: 250,
+    },
   },
   labelWrapper: {
     display: 'flex',
