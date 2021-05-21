@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
@@ -9,12 +10,14 @@ import {
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
-type ClassNames = 'root' | 'accessPanel';
+type ClassNames = 'accessPanel' | 'marginTop';
 
 const styles = () =>
   createStyles({
-    root: {},
     accessPanel: {
+      padding: 0,
+    },
+    marginTop: {
       marginTop: 0,
     },
   });
@@ -41,7 +44,6 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         onChange={this.handleUpdateText}
         label={field.label}
         errorText={error}
-        // small={isOptional}
         helperText={placeholder}
         value={this.props.value}
       />
@@ -59,7 +61,10 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         placeholder={placeholder}
         error={error}
         hideStrengthLabel
-        className={!isOptional ? classes.accessPanel : ''}
+        className={classnames({
+          [classes.accessPanel]: true,
+          [classes.marginTop]: !isOptional,
+        })}
         isOptional={isOptional}
         password={this.props.value}
       />
@@ -77,9 +82,8 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes } = this.props;
     return (
-      <div className={classes.root}>
+      <div>
         {this.props.isPassword
           ? this.renderPasswordField()
           : this.renderTextField()}
