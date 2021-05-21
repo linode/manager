@@ -10,23 +10,12 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 
-type ClassNames =
-  | 'root'
-  | 'postCard'
-  | 'postTitle'
-  | 'post'
-  | 'withSeparator'
-  | 'postLink';
+type ClassNames = 'root' | 'postTitle' | 'post' | 'withSeparator' | 'postLink';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: `${theme.spacing(6)}px 0`,
-    },
-    postCard: {
-      height: '100%',
-      paddingRight: theme.spacing(3),
-      paddingLeft: theme.spacing(3),
     },
     postTitle: {
       marginBottom: theme.spacing(2),
@@ -43,7 +32,10 @@ const styles = (theme: Theme) =>
       },
     },
     withSeparator: {
-      borderRight: `1px solid ${theme.palette.divider}`,
+      borderLeft: `1px solid ${theme.palette.divider}`,
+      '&.MuiGrid-item': {
+        paddingLeft: theme.spacing(3),
+      },
     },
   });
 
@@ -120,21 +112,23 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
     return (
       <Paper className={classes.root} variant="outlined">
         <Grid container>
-          <Grid item xs={12} sm={6} className={classes.withSeparator}>
-            <div className={classes.postCard} data-qa-documentation-link>
-              <Typography variant="h3" className={classes.postTitle}>
-                Most Popular Documentation:
-              </Typography>
-              {this.renderPopularDocs()}
-            </div>
+          <Grid item xs={12} sm={6} data-qa-documentation-link>
+            <Typography variant="h3" className={classes.postTitle}>
+              Most Popular Documentation:
+            </Typography>
+            {this.renderPopularDocs()}
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <div className={classes.postCard} data-qa-community-link>
-              <Typography variant="h3" className={classes.postTitle}>
-                Most Popular Community Posts:
-              </Typography>
-              {this.renderPopularForumPosts()}
-            </div>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            className={classes.withSeparator}
+            data-qa-community-link
+          >
+            <Typography variant="h3" className={classes.postTitle}>
+              Most Popular Community Posts:
+            </Typography>
+            {this.renderPopularForumPosts()}
           </Grid>
         </Grid>
       </Paper>
