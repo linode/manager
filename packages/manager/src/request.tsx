@@ -48,19 +48,22 @@ export const handleError = (error: AxiosError) => {
   } catch {
     requestData = {};
   }
-  const requestedLinodeType = requestData?.type ?? '';
-  const requestedLinodeDisplayTitle = requestData?.type_display_title;
+
+  const requestedLinode = {
+    type: requestData?.type ?? '',
+    display_title: requestData?.type_display_title,
+  };
 
   const interceptedErrors = interceptErrors(errors, [
     {
       replacementText: (
         <VerificationError
           title={
-            requestedLinodeType.match(/gpu/i)
+            requestedLinode.type.match(/gpu/i)
               ? 'GPU Request'
               : 'Verification Request'
           }
-          description={`Request for ${requestedLinodeDisplayTitle} Plan`}
+          description={`Request for ${requestedLinode.display_title} Plan`}
         />
       ),
       condition: (e) => !!e.reason.match(/verification is required/i),
