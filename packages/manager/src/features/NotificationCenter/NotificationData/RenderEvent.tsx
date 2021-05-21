@@ -72,7 +72,12 @@ export const RenderEvent: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Grid container className={classes.root} justify="space-between">
+      <Grid
+        container
+        className={classes.root}
+        justify="space-between"
+        data-test-id={event.action}
+      >
         <Grid item xs={8}>
           <Grid container wrap="nowrap">
             <Grid item>

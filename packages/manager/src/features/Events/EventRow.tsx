@@ -103,7 +103,7 @@ export const Row: React.FC<RowProps> = (props) => {
   return (
     <TableRow
       rowLink={entityId ? undefined : (linkTarget as any)}
-      data-qa-event-row
+      data-test-id={action}
       ariaLabel={`Event ${displayedMessage}`}
     >
       {/** We don't use the event argument, so typing isn't critical here. */}
