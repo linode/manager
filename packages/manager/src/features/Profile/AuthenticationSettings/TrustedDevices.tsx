@@ -1,7 +1,6 @@
 import { getTrustedDevices, TrustedDevice } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -54,7 +53,7 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
   return (
     <ToggleState>
       {({ open: dialogOpen, toggle: toggleDialog }) => (
-        <Paper>
+        <>
           <Typography variant="h3">Trusted Devices</Typography>
           <Typography variant="body1" className={classes.copy} data-qa-copy>
             To add a trusted device, check the box &quot;Trust this device for
@@ -96,7 +95,7 @@ export const TrustedDevices: React.FC<CombinedProps> = (props) => {
             deviceId={selectedDeviceId}
             refreshListOfDevices={refreshList}
           />
-        </Paper>
+        </>
       )}
     </ToggleState>
   );

@@ -18,8 +18,6 @@ import TimezoneForm from './TimezoneForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
 }));
