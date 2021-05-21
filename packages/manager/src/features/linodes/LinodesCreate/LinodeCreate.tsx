@@ -315,6 +315,7 @@ export class LinodeCreate extends React.PureComponent<
       image: this.props.selectedImageID,
       region: this.props.selectedRegionID,
       type: this.props.selectedTypeID,
+      type_display_title: this.props.typeDisplayInfo?.title || '',
       label: this.props.label,
       tags: this.props.tags
         ? this.props.tags.map((eachTag) => eachTag.label)

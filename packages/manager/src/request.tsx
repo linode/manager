@@ -49,6 +49,7 @@ export const handleError = (error: AxiosError) => {
     requestData = {};
   }
   const requestedLinodeType = requestData?.type ?? '';
+  const requestedLinodeDisplayTitle = requestData?.type_display_title;
 
   const interceptedErrors = interceptErrors(errors, [
     {
@@ -59,6 +60,7 @@ export const handleError = (error: AxiosError) => {
               ? 'GPU Request'
               : 'Verification Request'
           }
+          description={`Request for ${requestedLinodeDisplayTitle} Plan`}
         />
       ),
       condition: (e) => !!e.reason.match(/verification is required/i),
