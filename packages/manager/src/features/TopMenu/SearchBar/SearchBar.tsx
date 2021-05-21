@@ -17,7 +17,7 @@ import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendSearchBarUsedEvent } from 'src/utilities/ga.ts';
+import { sendSearchBarUsedEvent } from 'src/utilities/ga';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';

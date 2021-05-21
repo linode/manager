@@ -1,3 +1,9 @@
+## [2021-05-18] - v0.53.0
+
+### Changed:
+- Move remaining validation schemas to the validation package
+
+
 ## [2021-05-05] - v0.52.0
 
 ### Added:
@@ -9,6 +15,7 @@
 ## Validation Library
 
 - Add README
+
 
 ## [2021-04-22] - v0.51.0
 

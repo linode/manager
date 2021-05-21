@@ -90,6 +90,7 @@ export const styles = (theme: Theme) =>
     },
     detailsButton: {
       fontSize: '0.875rem',
+      fontFamily: theme.font.normal,
       marginTop: 0,
       padding: theme.spacing(),
       width: 100,

@@ -53,7 +53,7 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
     return (
       <ConfirmationDialog
         open={open}
-        title={`Untrust Device`}
+        title={`Revoke Device`}
         onClose={closeDialog}
         error={error}
         actions={
@@ -105,7 +105,7 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
           onClick={this.handleSubmit}
           data-qa-submit
         >
-          Untrust Device
+          Revoke Device
         </Button>
       </ActionsPanel>
     );

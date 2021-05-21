@@ -402,7 +402,7 @@ export const reactSelectStyles = (theme: Theme) => ({
     ...base,
     padding: theme.spacing(1) / 2,
     backgroundColor: theme.bg.white,
-    height: '101%',
+    minHeight: '101%',
     overflow: 'auto',
     maxHeight: 285,
     '&::-webkit-scrollbar': {
