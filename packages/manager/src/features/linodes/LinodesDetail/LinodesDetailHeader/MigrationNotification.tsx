@@ -13,6 +13,7 @@ import { capitalize } from 'src/utilities/capitalize';
 import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
+import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -99,12 +100,13 @@ const MigrationNotification: React.FC<Props> = (props) => {
     const formattedMigrationTime = formatDate(migrationTime as string);
 
     const now = DateTime.local();
-    const hourDifference = migrationTimeObject.diff(now, 'hours').as('hours');
+    const roundedHourDifference = Math.round(
+      migrationTimeObject.diff(now, 'hours').as('hours')
+    );
+    const approximateTime = pluralize('hour', 'hours', roundedHourDifference);
 
-    return hourDifference <= 24
-      ? `${baseText} in approximately ${Math.round(
-          hourDifference
-        )} hour(s) (${formattedMigrationTime}).`
+    return roundedHourDifference <= 24
+      ? `${baseText} in approximately ${approximateTime} (${formattedMigrationTime}).`
       : `${baseText} on ${formattedMigrationTime}.`;
   };
 
