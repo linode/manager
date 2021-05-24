@@ -80,6 +80,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
   // @todo replace this with React-query
   const [submitting, setSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [urlButtonDisabled, setUrlButtonDisabled] = React.useState<boolean>(
+    false
+  );
 
   const [uploadInProgress, setUploadInProgress] = React.useState<boolean>(
     false
@@ -200,6 +203,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             region={region}
             dropzoneDisabled={uploadingDisabled}
             setErrors={setErrors}
+            setUrlButtonDisabled={setUrlButtonDisabled}
             setUploadInProgress={setUploadInProgress}
           />
           <ActionsPanel style={{ marginTop: 16 }}>
@@ -214,7 +218,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
             </Typography>
             <Button
               onClick={handleSubmit}
-              disabled={uploadingDisabled || !canCreateImage}
+              disabled={
+                uploadingDisabled || urlButtonDisabled || !canCreateImage
+              }
               loading={submitting}
               className={classes.generateUrlButton}
             >

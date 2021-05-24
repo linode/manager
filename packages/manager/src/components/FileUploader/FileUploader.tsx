@@ -117,6 +117,7 @@ interface Props {
   region: string;
   dropzoneDisabled: boolean;
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
+  setUrlButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setUploadInProgress: (uploadInProgress: boolean) => void;
 }
 
@@ -129,6 +130,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     region,
     dropzoneDisabled,
     setErrors,
+    setUrlButtonDisabled,
     setUploadInProgress,
   } = props;
 
@@ -191,6 +193,11 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
   }, [state.numQueued, state.numInProgress, state.files]);
+
+  const dropzoneDisabledExtended =
+    dropzoneDisabled || state.numInProgress > 0 || state.numFinished > 0;
+
+  setUrlButtonDisabled(dropzoneDisabledExtended);
 
   // When `nextBatch` changes, upload the files.
   React.useEffect(() => {
@@ -276,7 +283,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   } = useDropzone({
     onDrop,
     onDropRejected,
-    disabled: dropzoneDisabled,
+    disabled: dropzoneDisabledExtended,
     noClick: true,
     noKeyboard: true,
     accept: '.gz', // Uploaded files must be compressed using the gzip compression algorithm.
@@ -290,9 +297,9 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         [classes.active]: isDragActive,
         [classes.accept]: isDragAccept,
         [classes.reject]: isDragReject,
-        [classes.inactive]: dropzoneDisabled,
+        [classes.inactive]: dropzoneDisabledExtended,
       }),
-    [isDragActive, isDragAccept, isDragReject, dropzoneDisabled]
+    [isDragActive, isDragAccept, isDragReject, dropzoneDisabledExtended]
   );
 
   const UploadZoneActive = state.files.length !== 0;
@@ -305,7 +312,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     >
       <div
         {...getRootProps({
-          className: `${dropzoneDisabled ? 'disabled' : ''} ${
+          className: `${dropzoneDisabledExtended ? 'disabled' : ''} ${
             classes.dropzone
           } ${className}`,
         })}
@@ -352,7 +359,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             buttonType="primary"
             onClick={open}
             className={classes.uploadButton}
-            disabled={dropzoneDisabled || state.numInProgress > 0}
+            disabled={dropzoneDisabledExtended}
           >
             Browse Files
           </Button>
