@@ -19,6 +19,7 @@ import { v4 } from 'uuid';
 import CreditCard from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
+import GooglePay from './GooglePay';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -165,6 +166,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             minimumPayment={minimumPayment}
             setSuccess={setSuccess}
           />
+
+          <GooglePay />
 
           <AsyncPaypal
             key={payPalKey}
