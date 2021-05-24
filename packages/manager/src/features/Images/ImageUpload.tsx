@@ -45,6 +45,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   browseFilesButton: {
     marginLeft: '1rem',
   },
+  generateUrlButton: {
+    ...theme.applyLinkStyles,
+    fontWeight: 700,
+    marginTop: '0.5rem',
+    '&:hover': {
+      backgroundColor: 'transparent',
+      textDecoration: 'underline',
+      color: theme.cmrTextColors.linkActiveLight,
+    },
+  },
 }));
 export interface Props {
   label: string;
@@ -71,12 +81,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const [submitting, setSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
 
-  const [dropzoneIsVisible, setDropzoneIsVisible] = React.useState<boolean>(
-    false
-  );
   const [uploadInProgress, setUploadInProgress] = React.useState<boolean>(
     false
   );
+
+  const uploadingDisabled = !label || !region;
 
   const handleSubmit = () => {
     setSubmitting(true);
@@ -101,10 +110,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
         setSubmitting(false);
         setErrors(e);
       });
-  };
-
-  const showDropzone = () => {
-    setDropzoneIsVisible(!dropzoneIsVisible);
   };
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
@@ -189,33 +194,32 @@ export const ImageUpload: React.FC<Props> = (props) => {
             progress, we recommend opening another tab or window.
           </Typography>
 
+          <FileUploader
+            label={label}
+            description={description}
+            region={region}
+            dropzoneDisabled={uploadingDisabled}
+            setUploadInProgress={setUploadInProgress}
+          />
           <ActionsPanel style={{ marginTop: 16 }}>
+            <Typography>
+              If you would prefer to upload your Image from the command line,
+              you may generate a URL below. For more information on this option,
+              see our{' '}
+              <Link to="https://www.linode.com/docs/guides/linode-images/#uploading-an-image-through-the-cloud-manager">
+                Images tutorial
+              </Link>
+              .
+            </Typography>
             <Button
               onClick={handleSubmit}
-              disabled={region === '' || !canCreateImage}
+              disabled={uploadingDisabled || !canCreateImage}
               loading={submitting}
-              buttonType="primary"
+              className={classes.generateUrlButton}
             >
-              Generate URL
-            </Button>
-            <Button
-              onClick={showDropzone}
-              disabled={region === '' || !canCreateImage}
-              loading={submitting}
-              buttonType="primary"
-              className={classes.browseFilesButton}
-            >
-              Browse Files
+              Generate URL for Upload
             </Button>
           </ActionsPanel>
-          {dropzoneIsVisible ? (
-            <FileUploader
-              label={label}
-              description={description}
-              region={region}
-              setUploadInProgress={setUploadInProgress}
-            />
-          ) : null}
         </div>
       </Paper>
     </>

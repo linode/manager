@@ -57,6 +57,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0.5,
     },
   },
+  inactive: {
+    // When the dropzone is disabled (i.e., when the Label and/or Region fields aren't populated)
+    borderColor: '#888',
+    '& $uploadButton': {
+      opacity: 0.5,
+    },
+  },
   accept: {
     // The `accept` class active when a user is hovering over the dropzone
     // with files that will be accepted (based on file size, number of files).
@@ -94,7 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   copy: {
-    color: theme.palette.primary.main,
+    color: theme.palette.text.primary,
     margin: '0 auto',
   },
   uploadButton: {
@@ -108,13 +115,20 @@ interface Props {
   label: string;
   description?: string;
   region: string;
+  dropzoneDisabled: boolean;
   setUploadInProgress: (uploadInProgress: boolean) => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
 
 const FileUploader: React.FC<CombinedProps> = (props) => {
-  const { label, description, region, setUploadInProgress } = props;
+  const {
+    label,
+    description,
+    region,
+    dropzoneDisabled,
+    setUploadInProgress,
+  } = props;
 
   const [error, setError] = React.useState<APIError[] | undefined>();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
@@ -150,14 +164,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     if (wrongFileType) {
       props.enqueueSnackbar(fileTypeErrorMessage, {
         variant: 'error',
+        autoHideDuration: 10000,
       });
     } else if (moreThanOneFile) {
       props.enqueueSnackbar(fileNumberErrorMessage, {
         variant: 'error',
+        autoHideDuration: 10000,
       });
     } else {
       props.enqueueSnackbar(fileSizeErrorMessage, {
         variant: 'error',
+        autoHideDuration: 10000,
       });
     }
   };
@@ -259,6 +276,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   } = useDropzone({
     onDrop,
     onDropRejected,
+    disabled: dropzoneDisabled,
     noClick: true,
     noKeyboard: true,
     accept: '.gz', // Uploaded files must be compressed using the gzip compression algorithm.
@@ -272,8 +290,9 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         [classes.active]: isDragActive,
         [classes.accept]: isDragAccept,
         [classes.reject]: isDragReject,
+        [classes.inactive]: dropzoneDisabled,
       }),
-    [isDragActive, isDragAccept, isDragReject]
+    [isDragActive, isDragAccept, isDragReject, dropzoneDisabled]
   );
 
   const UploadZoneActive = state.files.length !== 0;
@@ -284,7 +303,13 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         [classes.root]: UploadZoneActive,
       })}
     >
-      <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
+      <div
+        {...getRootProps({
+          className: `${dropzoneDisabled ? 'disabled' : ''} ${
+            classes.dropzone
+          } ${className}`,
+        })}
+      >
         <input
           {...getInputProps()}
           placeholder={
@@ -327,7 +352,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             buttonType="primary"
             onClick={open}
             className={classes.uploadButton}
-            disabled={state.numInProgress > 0}
+            disabled={dropzoneDisabled || state.numInProgress > 0}
           >
             Browse Files
           </Button>
