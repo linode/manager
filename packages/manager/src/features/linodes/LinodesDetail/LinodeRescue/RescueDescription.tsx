@@ -35,7 +35,7 @@ const RescueDescription: React.FC<Props> = (props) => {
         {rescueDescription.text}{' '}
         <Link to={rescueDescription.link}>Learn more.</Link>
       </Typography>
-      {linodeId && (
+      {linodeId ? (
         <Typography className={classes.copy}>
           {`When your Linode has successfully rebooted into Rescue Mode, use the `}
           <button
@@ -49,7 +49,7 @@ const RescueDescription: React.FC<Props> = (props) => {
             Learn more.
           </Link>
         </Typography>
-      )}
+      ) : null}
     </React.Fragment>
   );
 };
