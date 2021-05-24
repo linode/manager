@@ -34,7 +34,7 @@ const styles = (theme: Theme) =>
     withSeparator: {
       borderLeft: `1px solid ${theme.palette.divider}`,
       '&.MuiGrid-item': {
-        paddingLeft: theme.spacing(3),
+        paddingLeft: theme.spacing(4),
       },
     },
   });

@@ -87,7 +87,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
         }) => {
           return (
             <>
-              <Paper className={`${classes.root}`} data-qa-select-linode-panel>
+              <Paper className={classes.root} data-qa-select-linode-panel>
                 {error && <Notice text={error} error />}
                 {notice && !disabled && (
                   <Notice
