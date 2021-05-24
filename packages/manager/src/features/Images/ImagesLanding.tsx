@@ -24,7 +24,9 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { DeleteImagePayload } from 'src/store/image/image.actions';
@@ -37,7 +39,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: { marginBottom: theme.spacing(3) },
@@ -103,7 +105,6 @@ const getHeaders = (
       widthPercent: 35,
     },
   ].filter(Boolean) as HeaderCell[];
-import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 interface ImageDrawerState {
   open: boolean;
@@ -406,6 +407,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const manualHeaders = getHeaders('manual', machineImagesEnabled);
   const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
 
+  const initialOrder = {
+    order: 'asc' as Order,
+    orderBy: 'label',
+  };
+
   const manualImageRow: EntityTableRow<Image> = {
     Component: ImageRow,
     data: manualImages,
@@ -505,6 +511,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={manualImageRow}
           headers={manualHeaders}
           emptyMessage={'No Custom Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       <Paper className={classes.imageTable}>
@@ -520,6 +527,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={autoImageRow}
           headers={automaticHeaders}
           emptyMessage={'No Recovery Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       {renderImageDrawer()}
