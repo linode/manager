@@ -167,14 +167,17 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             setSuccess={setSuccess}
           />
 
-          <GooglePay />
-
           <AsyncPaypal
             key={payPalKey}
             usd={usd}
             setSuccess={setSuccess}
             asyncScriptOnLoad={onScriptLoad}
             isScriptLoaded={isPaypalScriptLoaded}
+          />
+
+          <GooglePay
+            usd={usd}
+            setSuccess={setSuccess}
           />
         </Grid>
       </Grid>

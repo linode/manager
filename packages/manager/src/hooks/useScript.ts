@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 
+export enum ScriptStatus {
+  IDLE = 'idle',
+  LOADING = 'loading',
+  READY = 'ready',
+  ERROR = 'error'
+}
+
 // Copied from https://usehooks.com/useScript/ with minor modifications for TS
-export const useScript = (src: string) => {
+export const useScript = (src: string): ScriptStatus => {
   // Keep track of script status ('idle', 'loading', 'ready', 'error')
   const [status, setStatus] = useState(src ? 'loading' : 'idle');
   useEffect(
@@ -58,7 +65,7 @@ export const useScript = (src: string) => {
     },
     [src] // Only re-run effect if script src changes
   );
-  return status;
+  return status as ScriptStatus;
 };
 
 export default useScript;
