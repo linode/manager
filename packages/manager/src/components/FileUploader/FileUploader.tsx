@@ -116,6 +116,7 @@ interface Props {
   description?: string;
   region: string;
   dropzoneDisabled: boolean;
+  setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
   setUploadInProgress: (uploadInProgress: boolean) => void;
 }
 
@@ -127,10 +128,10 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     description,
     region,
     dropzoneDisabled,
+    setErrors,
     setUploadInProgress,
   } = props;
 
-  const [error, setError] = React.useState<APIError[] | undefined>();
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
 
   const classes = useStyles();
@@ -254,8 +255,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
               .catch(() => handleError());
           })
           .catch((e) => {
-            console.log(e);
-            setError(e);
+            setErrors(e);
           });
       } else {
         // Overwrite any file that was previously uploaded to the upload_to URL.

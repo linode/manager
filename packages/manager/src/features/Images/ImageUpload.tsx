@@ -199,6 +199,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             description={description}
             region={region}
             dropzoneDisabled={uploadingDisabled}
+            setErrors={setErrors}
             setUploadInProgress={setUploadInProgress}
           />
           <ActionsPanel style={{ marginTop: 16 }}>
