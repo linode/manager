@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as braintree from 'braintree-web';
-import { useEffect, useState, useRef } from 'react';
-import { ScriptStatus, useScript } from 'src/hooks/useScript';
+import { useEffect } from 'react';
+import { ScriptStatus, useLazyScript } from 'src/hooks/useScript';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { SetSuccess } from './types';
-import CircleProgress from 'src/components/CircleProgress';
 import GooglePayIcon from 'src/assets/icons/payment/googlePayButton.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -21,28 +20,35 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface TransactionInfo {
-  currencyCode: string;
-  totalPriceStatus: string;
-  totalPrice: string;
-}
-
 interface Props {
   usd: string;
   setSuccess: SetSuccess;
 }
 
 const GooglePay: React.FC<Props> = (props) => {
-  const googlePayStatus = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { setSuccess, usd } = props;
   const classes = useStyles();
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const [isReady, setIsReady] = useState<boolean>(false);
+  const { status, load } = useLazyScript(
+    'https://pay.google.com/gp/p/js/pay.js'
+  );
+
+  const handlePay = () => {
+    const client = new google.payments.api.PaymentsClient({
+      environment: 'TEST',
+    });
+
+    initPayment(process.env.REACT_APP_BT_TOKEN || '', client, {
+      totalPriceStatus: 'FINAL',
+      totalPrice: '123.45',
+      currencyCode: 'USD',
+      countryCode: 'US',
+    });
+  };
 
   const initPayment = async (
     clientToken: string,
     googlePayClient: any,
-    transactionInfo: TransactionInfo
+    transactionInfo: any
   ) => {
     const client = await braintree.client.create({
       // This is will be the client token we get from API v4
@@ -56,9 +62,9 @@ const GooglePay: React.FC<Props> = (props) => {
     });
 
     const transaction = await googlePayment.createPaymentDataRequest({
-      // merchantInfo: {
-      //   merchantId: 'kbnt2g7qd2q2m8p6'
-      // },
+      merchantInfo: {
+        merchantId: '12345678901234567890',
+      },
       transactionInfo,
     });
 
@@ -68,53 +74,32 @@ const GooglePay: React.FC<Props> = (props) => {
       allowedPaymentMethods: transaction.allowedPaymentMethods,
     });
 
-    setIsReady(isReadyToPay);
+    if (!isReadyToPay) {
+      setSuccess('Your device does not support Google Pay.');
+    }
 
-    const startPayment = async () => {
-      try {
-        const paymentData = await googlePayClient.loadPaymentData(transaction);
+    try {
+      const paymentData = await googlePayClient.loadPaymentData(transaction);
 
-        await googlePayment.parseResponse(paymentData);
-        setSuccess(`Payment for $${usd} successfully submitted`, true);
-        // console.log('Payment data with nonce', parsed);
-      } catch (error) {
-        if ((error.message as string).includes('User closed')) {
-          setSuccess('Payment Cancelled');
-        } else {
-          setSuccess('Payment was not completed.');
-        }
+      await googlePayment.parseResponse(paymentData);
+      setSuccess(`Payment for $${usd} successfully submitted`, true);
+    } catch (error) {
+      if ((error.message as string).includes('User closed')) {
+        setSuccess('Payment Cancelled');
+      } else {
+        setSuccess('Payment was not completed.');
       }
-    };
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
-    buttonRef.current?.addEventListener('click', startPayment);
+    }
   };
 
   useEffect(() => {
-    if (googlePayStatus == ScriptStatus.READY) {
-      const client = new google.payments.api.PaymentsClient({
-        environment: 'TEST',
-      });
-
-      initPayment(process.env.REACT_APP_BT_TOKEN || '', client, {
-        currencyCode: 'USD',
-        totalPriceStatus: 'FINAL',
-        totalPrice: usd,
-      });
+    if (status == ScriptStatus.READY) {
+      handlePay();
     }
-  }, [googlePayStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
-  if (
-    googlePayStatus == ScriptStatus.LOADING ||
-    googlePayStatus == ScriptStatus.IDLE
-  ) {
-    return (
-      <Grid container direction="column">
-        <CircleProgress mini />
-      </Grid>
-    );
-  }
-
-  if (googlePayStatus == ScriptStatus.ERROR) {
+  if (status == ScriptStatus.ERROR) {
     return (
       <Grid container direction="column">
         <Notice error text="There was an error connecting with Google Pay." />
@@ -122,12 +107,11 @@ const GooglePay: React.FC<Props> = (props) => {
     );
   }
 
-  if (!isReady) {
-    return null;
-  }
-
   return (
-    <button className={classes.button} ref={buttonRef}>
+    <button
+      className={classes.button}
+      onClick={status == ScriptStatus.READY ? handlePay : load}
+    >
       <GooglePayIcon className={classes.svg} />
     </button>
   );

@@ -175,10 +175,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             isScriptLoaded={isPaypalScriptLoaded}
           />
 
-          <GooglePay
-            usd={usd}
-            setSuccess={setSuccess}
-          />
+          <GooglePay usd={usd} setSuccess={setSuccess} />
         </Grid>
       </Grid>
     </Drawer>

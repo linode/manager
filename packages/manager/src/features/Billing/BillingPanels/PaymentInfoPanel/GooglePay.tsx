@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as braintree from 'braintree-web';
 import { useEffect } from 'react';
-import { useLazyScript } from 'src/hooks/useLazyScript';
+import { useLazyScript } from 'src/hooks/useScript';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { ScriptStatus } from 'src/hooks/useScript';
 import { makeStyles } from 'src/components/core/styles';
@@ -15,10 +15,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const GooglePay: React.FC<{}> = () => {
+  const classes = useStyles();
   const { status, load } = useLazyScript(
     'https://pay.google.com/gp/p/js/pay.js'
   );
-  const classes = useStyles();
 
   const handlePay = () => {
     const client = new google.payments.api.PaymentsClient({
@@ -61,21 +61,15 @@ const GooglePay: React.FC<{}> = () => {
         allowedPaymentMethods: transaction.allowedPaymentMethods,
       });
 
-      if (isReadyToPay) {
-        console.log("Ready to initialize adding payment method");
-      } else {
-        console.log("Unable to init google pay");
+      if (!isReadyToPay) {
+        return;
       }
 
-      try {
-        const paymentData = await googlePayClient.loadPaymentData(transaction);
+      const paymentData = await googlePayClient.loadPaymentData(transaction);
 
-        const parsed = await googlePayment.parseResponse(paymentData);
+      const parsed = await googlePayment.parseResponse(paymentData);
 
-        console.log("Payment data with nonce", parsed);
-      } catch (error) {
-        console.warn(error);
-      }
+      alert(parsed);
     }
   };
 
@@ -83,6 +77,7 @@ const GooglePay: React.FC<{}> = () => {
     if (status == ScriptStatus.READY) {
       handlePay();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   return (
