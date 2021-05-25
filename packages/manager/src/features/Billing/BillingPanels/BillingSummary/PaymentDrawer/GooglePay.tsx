@@ -13,7 +13,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     border: 0,
     backgroundColor: 'transparent',
-    marginTop: theme.spacing()
+    marginTop: theme.spacing(),
+    padding: 0,
+  },
+  svg: {
+    borderRadius: 5
   }
 }));
 
@@ -116,7 +120,7 @@ const GooglePay: React.FC<Props> = (props) => {
 
   if (!isReady) return null;
 
-  return <button className={classes.button} ref={buttonRef}><GooglePayIcon /></button>;
+  return <button className={classes.button} ref={buttonRef}><GooglePayIcon className={classes.svg} /></button>;
 }
 
 export default GooglePay;

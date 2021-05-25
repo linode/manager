@@ -9,7 +9,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     border: 0,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    padding: 0
   }
 }));
 
