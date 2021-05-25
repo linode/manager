@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useLazyScript } from 'src/hooks/useLazyScript';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { ScriptStatus } from 'src/hooks/useScript';
- import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -58,8 +58,12 @@ const GooglePay: React.FC<{}> = (props) => {
         allowedPaymentMethods: transaction.allowedPaymentMethods,
       });
       
-      if (isReadyToPay) console.log("Ready to initialize adding payment method");
-      else console.log("Unable to init google pay");
+      if (isReadyToPay) {
+        console.log("Ready to initialize adding payment method");
+      }
+      else {
+        console.log("Unable to init google pay");
+      }
 
       try {
         const paymentData = await googlePayClient.loadPaymentData(transaction);
