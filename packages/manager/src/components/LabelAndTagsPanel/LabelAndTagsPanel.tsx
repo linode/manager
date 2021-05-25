@@ -22,9 +22,6 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(3),
       backgroundColor: theme.color.white,
     },
-    inner: {
-      padding: theme.spacing(3),
-    },
     expPanelButton: {
       padding: 0,
       marginTop: theme.spacing(2),
@@ -46,17 +43,15 @@ export class InfoPanel extends React.Component<CombinedProps> {
 
     return (
       <Paper className={classes.root} data-qa-label-header>
-        <div className={classes.inner}>
-          {error && <Notice text={error} error />}
-          <TextField
-            {...(labelFieldProps || {
-              label: 'Label',
-              placeholder: 'Enter a label',
-            })}
-            data-qa-label-input
-          />
-          {tagsInputProps && <TagsInput {...tagsInputProps} />}
-        </div>
+        {error && <Notice text={error} error />}
+        <TextField
+          {...(labelFieldProps || {
+            label: 'Label',
+            placeholder: 'Enter a label',
+          })}
+          data-qa-label-input
+        />
+        {tagsInputProps && <TagsInput {...tagsInputProps} />}
       </Paper>
     );
   }

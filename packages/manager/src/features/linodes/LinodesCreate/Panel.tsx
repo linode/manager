@@ -1,23 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root' | 'flatImagePanel';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    flatImagePanel: {
-      padding: theme.spacing(3),
-    },
-    root: {},
-  });
 
 interface Props {
   error?: string;
@@ -25,15 +9,13 @@ interface Props {
   className?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const Panel: React.FC<CombinedProps> = (props) => {
-  const { classes, children, error, title } = props;
+  const { children, error, title } = props;
+
   return (
-    <Paper
-      className={`${classes.flatImagePanel} ${props.className}`}
-      data-qa-tp="Select Image"
-    >
+    <Paper className={props.className} data-qa-tp="Select Image">
       {error && <Notice text={error} error />}
       <Typography variant="h2" data-qa-tp="Select Image">
         {title || 'Select an Image'}
@@ -43,6 +25,4 @@ const Panel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(Panel);
+export default Panel;

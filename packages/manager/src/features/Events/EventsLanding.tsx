@@ -6,7 +6,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -23,7 +22,6 @@ import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
-
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
@@ -266,45 +264,43 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     <>
       {/* Only display this title on the main Events landing page */}
       {!entityId && <H1Header title="Events" className={classes.header} />}
-      <Paper>
-        <Table aria-label="List of Events">
-          <TableHead>
-            <TableRow>
-              {/* Cell for icon (global EventsLanding only) */}
-              {!entityId && <TableCell style={{ padding: 0, width: '1%' }} />}
-              <TableCell
-                data-qa-events-subject-header
-                className={`${classes.labelCell} ${classes.columnHeader}`}
-              >
-                Event
-              </TableCell>
-              <TableCell
-                className={classes.columnHeader}
-                data-qa-events-duration-header
-              >
-                Duration
-              </TableCell>
-              <TableCell
-                className={classes.columnHeader}
-                data-qa-events-time-header
-              >
-                When
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {renderTableBody(
-              isLoading,
-              isRequesting,
-              errorMessage,
-              entityId,
-              error,
-              events.reactStateEvents,
-              emptyMessage
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+      <Table aria-label="List of Events">
+        <TableHead>
+          <TableRow>
+            {/* Cell for icon (global EventsLanding only) */}
+            {!entityId && <TableCell style={{ padding: 0, width: '1%' }} />}
+            <TableCell
+              data-qa-events-subject-header
+              className={`${classes.labelCell} ${classes.columnHeader}`}
+            >
+              Event
+            </TableCell>
+            <TableCell
+              className={classes.columnHeader}
+              data-qa-events-duration-header
+            >
+              Duration
+            </TableCell>
+            <TableCell
+              className={classes.columnHeader}
+              data-qa-events-time-header
+            >
+              When
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {renderTableBody(
+            isLoading,
+            isRequesting,
+            errorMessage,
+            entityId,
+            error,
+            events.reactStateEvents,
+            emptyMessage
+          )}
+        </TableBody>
+      </Table>
       {loadMoreEvents && initialLoaded && !isLoading ? (
         <Waypoint onEnter={getNext}>
           <div />

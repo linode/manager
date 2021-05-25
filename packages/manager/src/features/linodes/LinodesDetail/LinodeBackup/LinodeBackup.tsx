@@ -83,7 +83,6 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
-      padding: theme.spacing(3),
       marginBottom: theme.spacing(3),
     },
     title: {
@@ -211,7 +210,6 @@ export const aggregateBackups = (
 };
 
 /* tslint:disable-next-line */
-// eslint-disable-next-line @typescript-eslint/class-name-casing
 class _LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
