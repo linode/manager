@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
   },
   svg: {
-    borderRadius: 5
-  }
+    borderRadius: 5,
+  },
 }));
 
 interface TransactionInfo {
@@ -39,23 +39,27 @@ const GooglePay: React.FC<Props> = (props) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
 
-  const initPayment = async (clientToken: string, googlePayClient: any, transactionInfo: TransactionInfo) => {
+  const initPayment = async (
+    clientToken: string,
+    googlePayClient: any,
+    transactionInfo: TransactionInfo
+  ) => {
     const client = await braintree.client.create({
-      //This is will be the client token we get from API v4
-      authorization: clientToken
+      // This is will be the client token we get from API v4
+      authorization: clientToken,
     });
 
     const googlePayment = await braintree.googlePayment.create({
-      client: client,
+      client,
       googlePayVersion: 2,
-      //googleMerchantId: 'merchant-id-from-google'
+      // googleMerchantId: 'merchant-id-from-google'
     });
 
     const transaction = await googlePayment.createPaymentDataRequest({
       // merchantInfo: {
       //   merchantId: 'kbnt2g7qd2q2m8p6'
       // },
-      transactionInfo: transactionInfo
+      transactionInfo,
     });
 
     const isReadyToPay = await googlePayClient.isReadyToPay({
@@ -69,40 +73,40 @@ const GooglePay: React.FC<Props> = (props) => {
     const startPayment = async () => {
       try {
         const paymentData = await googlePayClient.loadPaymentData(transaction);
-        const parsed = await googlePayment.parseResponse(paymentData);
-        setSuccess(
-          `Payment for $${usd} successfully submitted`,
-          true
-        );
-        console.log("Payment data with nonce", parsed);
-      }
-      catch (error) {
-        if ((error.message as string).includes("User closed")) {
+
+        await googlePayment.parseResponse(paymentData);
+        setSuccess(`Payment for $${usd} successfully submitted`, true);
+        // console.log('Payment data with nonce', parsed);
+      } catch (error) {
+        if ((error.message as string).includes('User closed')) {
           setSuccess('Payment Cancelled');
-        }
-        else {
+        } else {
           setSuccess('Payment was not completed.');
         }
       }
-    }
+    };
+    // eslint-disable-next-line scanjs-rules/call_addEventListener
     buttonRef.current?.addEventListener('click', startPayment);
-  }
+  };
 
   useEffect(() => {
     if (googlePayStatus == ScriptStatus.READY) {
       const client = new google.payments.api.PaymentsClient({
-        environment: 'TEST'
+        environment: 'TEST',
       });
 
       initPayment(process.env.REACT_APP_BT_TOKEN || '', client, {
         currencyCode: 'USD',
         totalPriceStatus: 'FINAL',
-        totalPrice: usd
+        totalPrice: usd,
       });
     }
   }, [googlePayStatus]);
 
-  if (googlePayStatus == ScriptStatus.LOADING || googlePayStatus == ScriptStatus.IDLE) {
+  if (
+    googlePayStatus == ScriptStatus.LOADING ||
+    googlePayStatus == ScriptStatus.IDLE
+  ) {
     return (
       <Grid container direction="column">
         <CircleProgress mini />
@@ -118,9 +122,15 @@ const GooglePay: React.FC<Props> = (props) => {
     );
   }
 
-  if (!isReady) return null;
+  if (!isReady) {
+    return null;
+  }
 
-  return <button className={classes.button} ref={buttonRef}><GooglePayIcon className={classes.svg} /></button>;
-}
+  return (
+    <button className={classes.button} ref={buttonRef}>
+      <GooglePayIcon className={classes.svg} />
+    </button>
+  );
+};
 
 export default GooglePay;

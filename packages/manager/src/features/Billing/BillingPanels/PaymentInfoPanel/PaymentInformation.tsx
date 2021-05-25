@@ -81,7 +81,7 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
 
         <div className={classes.billingGroup}>
           <CreditCard lastFour={lastFour} expiry={expiry} />
-          <GooglePay/>
+          <GooglePay />
         </div>
 
         <UpdateCreditCardDrawer
