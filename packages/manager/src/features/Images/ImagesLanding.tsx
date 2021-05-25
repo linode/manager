@@ -42,7 +42,10 @@ import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  imageTable: { marginBottom: theme.spacing(3) },
+  imageTable: {
+    marginBottom: theme.spacing(3),
+    padding: 0,
+  },
   imageTableHeader: {
     padding: theme.spacing(),
     marginLeft: theme.spacing(),

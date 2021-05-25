@@ -5,7 +5,6 @@ import {
 import produce from 'immer';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -86,7 +85,7 @@ const SSHAccessTable: React.FC<{}> = () => {
               }) => {
                 return (
                   <>
-                    <Paper className={classes.root}>
+                    <div className={classes.root}>
                       <Table aria-label="List of Your Managed SSH Access Settings">
                         <TableHead>
                           <TableRow>
@@ -154,7 +153,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                           />
                         </TableBody>
                       </Table>
-                    </Paper>
+                    </div>
                     <PaginationFooter
                       count={count}
                       handlePageChange={handlePageChange}

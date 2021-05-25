@@ -21,7 +21,7 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root' | 'inner' | 'panelBody';
+type ClassNames = 'root' | 'panelBody';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -29,10 +29,6 @@ const styles = (theme: Theme) =>
       flexGrow: 1,
       width: '100%',
       backgroundColor: theme.color.white,
-      // marginBottom: theme.spacing(3)
-    },
-    inner: {
-      padding: theme.spacing(3),
     },
     panelBody: {
       padding: `${theme.spacing(2)}px 0 0`,
@@ -80,56 +76,49 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
     const { error, classes, linodes, header, notice, disabled } = this.props;
 
     return (
-      <React.Fragment>
-        <Paginate data={linodes}>
-          {({
-            count,
-            data: linodesData,
-            handlePageChange,
-            handlePageSizeChange,
-            page,
-            pageSize,
-          }) => {
-            return (
-              <>
-                <Paper
-                  className={`${classes.root}`}
-                  data-qa-select-linode-panel
-                >
-                  <div className={classes.inner}>
-                    {error && <Notice text={error} error />}
-                    {notice && !disabled && (
-                      <Notice
-                        text={notice.text}
-                        error={notice.level === 'error'}
-                        warning={notice.level === 'warning'}
-                      />
-                    )}
-                    <Typography variant="h2" data-qa-select-linode-header>
-                      {!!header ? header : 'Select Linode'}
-                    </Typography>
-                    <Typography component="div" className={classes.panelBody}>
-                      <Grid container>
-                        {linodesData.map((linode) => {
-                          return this.renderCard(linode);
-                        })}
-                      </Grid>
-                    </Typography>
-                  </div>
-                </Paper>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory={'Clone from existing panel'}
-                />
-              </>
-            );
-          }}
-        </Paginate>
-      </React.Fragment>
+      <Paginate data={linodes}>
+        {({
+          count,
+          data: linodesData,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => {
+          return (
+            <>
+              <Paper className={classes.root} data-qa-select-linode-panel>
+                {error && <Notice text={error} error />}
+                {notice && !disabled && (
+                  <Notice
+                    text={notice.text}
+                    error={notice.level === 'error'}
+                    warning={notice.level === 'warning'}
+                  />
+                )}
+                <Typography variant="h2" data-qa-select-linode-header>
+                  {!!header ? header : 'Select Linode'}
+                </Typography>
+                <Typography component="div" className={classes.panelBody}>
+                  <Grid container>
+                    {linodesData.map((linode) => {
+                      return this.renderCard(linode);
+                    })}
+                  </Grid>
+                </Typography>
+              </Paper>
+              <PaginationFooter
+                count={count}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+                eventCategory={'Clone from existing panel'}
+              />
+            </>
+          );
+        }}
+      </Paginate>
     );
   }
 }

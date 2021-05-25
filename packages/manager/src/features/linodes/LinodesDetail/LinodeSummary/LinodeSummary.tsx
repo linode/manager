@@ -45,7 +45,6 @@ setUpCharts();
 
 type ClassNames =
   | 'root'
-  | 'chart'
   | 'chartSelect'
   | 'graphControls'
   | 'graphGrids'
@@ -55,11 +54,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      paddingBottom: theme.spacing(3),
       width: '100%',
-    },
-    chart: {
-      paddingTop: theme.spacing(),
     },
     chartSelect: {
       maxWidth: 150,
@@ -67,10 +62,7 @@ const styles = (theme: Theme) =>
     graphControls: {
       display: 'flex',
       justifyContent: 'flex-end',
-      marginRight: theme.spacing(),
-      '&.MuiGrid-item': {
-        paddingBottom: 0,
-      },
+      marginBottom: theme.spacing(),
     },
     graphGrids: {
       flexWrap: 'nowrap',
@@ -82,16 +74,17 @@ const styles = (theme: Theme) =>
     grid: {
       backgroundColor: theme.bg.offWhiteDT,
       border: 'solid 1px #eeeeee',
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
+      marginBottom: theme.spacing(2),
       '&.MuiGrid-item': {
         padding: theme.spacing(2),
       },
       '& h2': {
         fontSize: '1rem',
       },
-      [theme.breakpoints.down(1100)]: {
-        marginBottom: theme.spacing(2),
+      [theme.breakpoints.up(1100)]: {
+        '&:first-of-type': {
+          marginRight: theme.spacing(2),
+        },
       },
     },
     labelRangeSelect: {
@@ -285,7 +278,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
-    const { classes, timezone, theme } = this.props;
+    const { timezone, theme } = this.props;
 
     const data = pathOr([], ['data', 'cpu'], stats);
 
@@ -293,34 +286,32 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const format = formatPercentage;
 
     return (
-      <div className={classes.chart}>
-        <LineGraph
-          timezone={timezone}
-          chartHeight={chartHeight}
-          showToday={rangeSelection === '24'}
-          data={[
-            {
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.cpu.percent,
-              data,
-              label: 'CPU %',
-            },
-          ]}
-          legendRows={[
-            {
-              legendTitle: 'CPU %',
-              legendColor: 'blue',
-              data: metrics,
-              format,
-            },
-          ]}
-        />
-      </div>
+      <LineGraph
+        timezone={timezone}
+        chartHeight={chartHeight}
+        showToday={rangeSelection === '24'}
+        data={[
+          {
+            borderColor: 'transparent',
+            backgroundColor: theme.graphs.cpu.percent,
+            data,
+            label: 'CPU %',
+          },
+        ]}
+        legendRows={[
+          {
+            legendTitle: 'CPU %',
+            legendColor: 'blue',
+            data: metrics,
+            format,
+          },
+        ]}
+      />
     );
   };
 
   renderDiskIOChart = () => {
-    const { classes, timezone, theme } = this.props;
+    const { timezone, theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -331,37 +322,35 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const format = formatNumber;
 
     return (
-      <div className={`${classes.chart}`}>
-        <LineGraph
-          timezone={timezone}
-          chartHeight={chartHeight}
-          showToday={rangeSelection === '24'}
-          data={[
-            {
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.diskIO.read,
-              data: data.io,
-              label: 'I/O Rate',
-            },
-            {
-              borderColor: 'transparent',
-              backgroundColor: theme.graphs.diskIO.swap,
-              data: data.swap,
-              label: 'Swap Rate',
-            },
-          ]}
-          legendRows={[
-            {
-              data: getMetrics(data.io),
-              format,
-            },
-            {
-              data: getMetrics(data.swap),
-              format,
-            },
-          ]}
-        />
-      </div>
+      <LineGraph
+        timezone={timezone}
+        chartHeight={chartHeight}
+        showToday={rangeSelection === '24'}
+        data={[
+          {
+            borderColor: 'transparent',
+            backgroundColor: theme.graphs.diskIO.read,
+            data: data.io,
+            label: 'I/O Rate',
+          },
+          {
+            borderColor: 'transparent',
+            backgroundColor: theme.graphs.diskIO.swap,
+            data: data.swap,
+            label: 'Swap Rate',
+          },
+        ]}
+        legendRows={[
+          {
+            data: getMetrics(data.io),
+            format,
+          },
+          {
+            data: getMetrics(data.swap),
+            format,
+          },
+        ]}
+      />
     );
   };
 
@@ -387,7 +376,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <Paper>
         <Grid container className={`${classes.root} m0`}>
-          <Grid item className={classes.graphControls} xs={12}>
+          <Grid item className={`${classes.graphControls} p0`} xs={12}>
             <Select
               options={this.rangeSelectOptions}
               defaultValue={this.rangeSelectOptions[0]}
@@ -403,7 +392,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             />
           </Grid>
           {!isBareMetalInstance ? (
-            <Grid container item xs={12} className={classes.graphGrids}>
+            <Grid container item xs={12} className={`${classes.graphGrids} p0`}>
               <Grid item className={classes.grid} xs={12}>
                 <StatsPanel
                   title="CPU (%)"

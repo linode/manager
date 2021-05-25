@@ -24,7 +24,6 @@ import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -730,59 +729,55 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                       }) => {
                         return (
                           <>
-                            <Paper>
-                              <Table
-                                aria-label={`List of Domains ${type.title}`}
-                              >
-                                <TableHead>
-                                  <TableRow>
-                                    {type.columns.length > 0 &&
-                                      type.columns.map((col, columnIndex) => {
-                                        return (
-                                          <TableCell key={columnIndex}>
-                                            {col.title}
-                                          </TableCell>
-                                        );
-                                      })}
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {type.data.length === 0 ? (
-                                    <TableRowEmptyState
-                                      colSpan={type.columns.length}
-                                    />
-                                  ) : (
-                                    paginatedData.map((data, idx) => {
+                            <Table aria-label={`List of Domains ${type.title}`}>
+                              <TableHead>
+                                <TableRow>
+                                  {type.columns.length > 0 &&
+                                    type.columns.map((col, columnIndex) => {
                                       return (
-                                        <TableRow
-                                          key={idx}
-                                          data-qa-record-row={type.title}
-                                        >
-                                          {type.columns.length > 0 &&
-                                            type.columns.map(
-                                              (
-                                                { title, render },
-                                                columnIndex
-                                              ) => {
-                                                return (
-                                                  <TableCell
-                                                    parentColumn={title}
-                                                    key={columnIndex}
-                                                    data-qa-column={title}
-                                                    className={classes.cells}
-                                                  >
-                                                    {render(data)}
-                                                  </TableCell>
-                                                );
-                                              }
-                                            )}
-                                        </TableRow>
+                                        <TableCell key={columnIndex}>
+                                          {col.title}
+                                        </TableCell>
                                       );
-                                    })
-                                  )}
-                                </TableBody>
-                              </Table>
-                            </Paper>
+                                    })}
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {type.data.length === 0 ? (
+                                  <TableRowEmptyState
+                                    colSpan={type.columns.length}
+                                  />
+                                ) : (
+                                  paginatedData.map((data, idx) => {
+                                    return (
+                                      <TableRow
+                                        key={idx}
+                                        data-qa-record-row={type.title}
+                                      >
+                                        {type.columns.length > 0 &&
+                                          type.columns.map(
+                                            (
+                                              { title, render },
+                                              columnIndex
+                                            ) => {
+                                              return (
+                                                <TableCell
+                                                  parentColumn={title}
+                                                  key={columnIndex}
+                                                  data-qa-column={title}
+                                                  className={classes.cells}
+                                                >
+                                                  {render(data)}
+                                                </TableCell>
+                                              );
+                                            }
+                                          )}
+                                      </TableRow>
+                                    );
+                                  })
+                                )}
+                              </TableBody>
+                            </Table>
                             <PaginationFooter
                               count={count}
                               handlePageChange={handlePageChange}

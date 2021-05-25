@@ -68,7 +68,6 @@ const styles = (theme: Theme) =>
     },
     globalSection: {
       marginTop: theme.spacing(2),
-      padding: theme.spacing(3),
     },
     globalRow: {
       padding: `${theme.spacing(1)}px 0`,

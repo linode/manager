@@ -3,7 +3,6 @@ import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -65,37 +64,31 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
       >
         {capitalize(entity)}
       </Typography>
-      <Paper>
-        <Table aria-label="Search Results">
-          <TableHead>
-            <TableRow>
-              <TableCell>Label</TableCell>
-              <TableCell>Region</TableCell>
-              <Hidden smDown>
-                <TableCell>Created</TableCell>
-                <TableCell>Tags</TableCell>
-              </Hidden>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {initial.map((result, idx: number) => (
+      <Table aria-label="Search Results">
+        <TableHead>
+          <TableRow>
+            <TableCell>Label</TableCell>
+            <TableCell>Region</TableCell>
+            <Hidden smDown>
+              <TableCell>Created</TableCell>
+              <TableCell>Tags</TableCell>
+            </Hidden>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {initial.map((result, idx: number) => (
+            <ResultRow key={idx} result={result} data-qa-result-row-component />
+          ))}
+          {showMore &&
+            hidden.map((result, idx: number) => (
               <ResultRow
                 key={idx}
                 result={result}
                 data-qa-result-row-component
               />
             ))}
-            {showMore &&
-              hidden.map((result, idx: number) => (
-                <ResultRow
-                  key={idx}
-                  result={result}
-                  data-qa-result-row-component
-                />
-              ))}
-          </TableBody>
-        </Table>
-      </Paper>
+        </TableBody>
+      </Table>
       {!isEmpty(hidden) && (
         <Button
           buttonType="primary"

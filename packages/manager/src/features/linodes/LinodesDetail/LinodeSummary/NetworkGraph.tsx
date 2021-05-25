@@ -42,20 +42,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   grid: {
     backgroundColor: theme.bg.offWhiteDT,
     border: 'solid 1px #eeeeee',
-    marginLeft: theme.spacing(),
-    marginRight: theme.spacing(),
     '&.MuiGrid-item': {
       padding: theme.spacing(2),
     },
     '& h2': {
       fontSize: '1rem',
     },
-    [theme.breakpoints.down(1100)]: {
-      marginBottom: theme.spacing(2),
+    [theme.breakpoints.up(1100)]: {
+      '&:first-of-type': {
+        marginRight: theme.spacing(2),
+      },
     },
-  },
-  chart: {
-    paddingTop: theme.spacing(),
+    [theme.breakpoints.down(1100)]: {
+      '&:first-of-type': {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+      },
+    },
   },
 }));
 
@@ -160,7 +163,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Grid container className={classes.graphGrids}>
+    <Grid container className={`${classes.graphGrids} p0`}>
       <Grid item className={classes.grid} xs={12}>
         <StatsPanel
           title={`Network — IPv4 (${v4Unit}/s)`}
@@ -207,7 +210,6 @@ interface GraphProps {
 }
 
 const Graph: React.FC<GraphProps> = (props) => {
-  const classes = useStyles();
   const {
     chartHeight,
     data,
@@ -241,60 +243,58 @@ const Graph: React.FC<GraphProps> = (props) => {
   const convertedPrivateOut = data.privateOut;
 
   return (
-    <div className={classes.chart}>
-      <LineGraph
-        timezone={timezone}
-        chartHeight={chartHeight}
-        unit={`/s`}
-        formatData={convertNetworkData}
-        formatTooltip={_formatTooltip}
-        showToday={rangeSelection === '24'}
-        data={[
-          {
-            borderColor: 'transparent',
-            backgroundColor: theme.graphs.network.inbound,
-            data: convertedPublicIn,
-            label: 'Public In',
-          },
-          {
-            borderColor: 'transparent',
-            backgroundColor: theme.graphs.network.outbound,
-            data: convertedPublicOut,
-            label: 'Public Out',
-          },
-          {
-            borderColor: 'transparent',
-            backgroundColor: theme.graphs.purple,
-            data: convertedPrivateIn,
-            label: 'Private In',
-          },
-          {
-            borderColor: 'transparent',
-            backgroundColor: theme.graphs.yellow,
-            data: convertedPrivateOut,
-            label: 'Private Out',
-          },
-        ]}
-        legendRows={[
-          {
-            data: metrics.publicIn,
-            format,
-          },
-          {
-            data: metrics.publicOut,
-            format,
-          },
-          {
-            data: metrics.privateIn,
-            format,
-          },
-          {
-            data: metrics.privateOut,
-            format,
-          },
-        ]}
-      />
-    </div>
+    <LineGraph
+      timezone={timezone}
+      chartHeight={chartHeight}
+      unit={`/s`}
+      formatData={convertNetworkData}
+      formatTooltip={_formatTooltip}
+      showToday={rangeSelection === '24'}
+      data={[
+        {
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.network.inbound,
+          data: convertedPublicIn,
+          label: 'Public In',
+        },
+        {
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.network.outbound,
+          data: convertedPublicOut,
+          label: 'Public Out',
+        },
+        {
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.purple,
+          data: convertedPrivateIn,
+          label: 'Private In',
+        },
+        {
+          borderColor: 'transparent',
+          backgroundColor: theme.graphs.yellow,
+          data: convertedPrivateOut,
+          label: 'Private Out',
+        },
+      ]}
+      legendRows={[
+        {
+          data: metrics.publicIn,
+          format,
+        },
+        {
+          data: metrics.publicOut,
+          format,
+        },
+        {
+          data: metrics.privateIn,
+          format,
+        },
+        {
+          data: metrics.privateOut,
+          format,
+        },
+      ]}
+    />
   );
 };
 

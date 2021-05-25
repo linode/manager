@@ -6,7 +6,6 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -185,7 +184,7 @@ export const TwoFactor: React.FC<CombinedProps> = (props) => {
         <ToggleState>
           {({ open: scratchDialogOpen, toggle: toggleScratchDialog }) => (
             <React.Fragment>
-              <Paper
+              <div
                 className={`${classes.root} ${
                   disabled ? classes.disabled : ''
                 }`}
@@ -243,7 +242,7 @@ export const TwoFactor: React.FC<CombinedProps> = (props) => {
                       toggleDialog={toggleScratchDialog}
                     />
                   )}
-              </Paper>
+              </div>
               <ScratchDialog
                 open={scratchDialogOpen}
                 closeDialog={toggleScratchDialog}

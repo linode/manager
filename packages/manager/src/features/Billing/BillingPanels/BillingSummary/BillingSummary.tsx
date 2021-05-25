@@ -147,7 +147,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     <>
       <Grid container spacing={2} className={classes.root}>
         <Grid item {...gridDimensions} sm={6}>
-          <Paper border className={classes.paper}>
+          <Paper className={classes.paper} variant="outlined">
             <Typography variant="h3">Account Balance</Typography>
             <Divider className={classes.divider} />
             <Box
@@ -186,7 +186,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
         </Grid>
         {promotions && promotions?.length > 0 ? (
           <Grid item xs={12} sm={6} md={4}>
-            <Paper border className={classes.paper}>
+            <Paper className={classes.paper} variant="outlined">
               <Typography variant="h3">Promotions</Typography>
 
               <Divider className={classes.divider} />
@@ -199,7 +199,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
           </Grid>
         ) : null}
         <Grid item {...gridDimensions}>
-          <Paper border className={classes.paper}>
+          <Paper className={classes.paper} variant="outlined">
             <Box display="flex" alignItems="center">
               <Typography variant="h3">Accrued Charges</Typography>
               <HelpIcon

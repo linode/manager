@@ -146,7 +146,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   ];
 
   return (
-    <Paper className={classes.root} border>
+    <Paper className={classes.root} variant="outlined">
       <Grid container>
         <Grid item className={classes.item}>
           <span className={classes.icon}>{paymentIcon()}</span>

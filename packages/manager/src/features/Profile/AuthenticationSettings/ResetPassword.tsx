@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
@@ -32,7 +31,7 @@ export const ResetPassword: React.FC<CombinedProps> = (props) => {
   const { username } = props;
 
   return (
-    <Paper className={classes.root}>
+    <div className={classes.root}>
       <Typography variant="h3">Password Reset</Typography>
       <Typography variant="body1" className={classes.copy}>
         If you’ve forgotten your password or would like to change it, we’ll send
@@ -44,7 +43,7 @@ export const ResetPassword: React.FC<CombinedProps> = (props) => {
       >
         Reset Password
       </Link>
-    </Paper>
+    </div>
   );
 };
 

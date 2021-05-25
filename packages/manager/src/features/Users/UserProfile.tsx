@@ -39,7 +39,6 @@ const styles = (theme: Theme) =>
     wrapper: {
       backgroundColor: theme.color.white,
       marginTop: theme.spacing(),
-      padding: theme.spacing(3),
       '&:not(:last-child)': {
         marginBottom: theme.spacing(3),
       },

@@ -8,11 +8,10 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-
 import RegionSelect, {
   ExtendedRegion,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
@@ -20,7 +19,6 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(3),
-      padding: theme.spacing(3),
       '& svg': {
         '& g': {
           // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.

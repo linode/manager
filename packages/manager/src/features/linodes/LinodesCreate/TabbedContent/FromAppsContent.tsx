@@ -30,11 +30,7 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 
-type ClassNames =
-  | 'main'
-  | 'sidebar'
-  | 'emptyImagePanel'
-  | 'emptyImagePanelText';
+type ClassNames = 'main' | 'sidebar' | 'emptyImagePanelText';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -47,9 +43,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%',
       },
-    },
-    emptyImagePanel: {
-      padding: theme.spacing(3),
     },
     emptyImagePanelText: {
       marginTop: theme.spacing(1),
@@ -207,7 +200,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               variant="public"
             />
           ) : (
-            <Paper className={classes.emptyImagePanel}>
+            <Paper>
               {/* empty state for images */}
               {hasErrorFor('image') && (
                 <Notice error={true} text={hasErrorFor('image')} />

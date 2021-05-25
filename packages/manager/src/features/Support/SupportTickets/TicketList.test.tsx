@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { TicketList, CombinedProps } from './TicketList_CMR';
 import { screen } from '@testing-library/react';
-import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
+import * as React from 'react';
 import { supportTicketFactory } from 'src/factories';
+import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import { pageyProps } from 'src/__data__/pageyProps';
+import { CombinedProps, TicketList } from './TicketList';
 
 const supportTickets = supportTicketFactory.buildList(5);
 
@@ -11,7 +11,6 @@ const mockPageChange = jest.fn();
 const mockRequest = jest.fn();
 
 const props: CombinedProps = {
-  classes: { root: '' },
   ...pageyProps,
   filterStatus: 'open',
   orderBy: '',

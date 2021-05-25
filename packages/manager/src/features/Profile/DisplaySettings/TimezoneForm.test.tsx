@@ -8,10 +8,6 @@ describe('Timezone change form', () => {
 
   const component = shallow(
     <TimezoneForm
-      classes={{
-        root: '',
-        title: '',
-      }}
       timezone={'Pacific/Niue'}
       updateTimezone={updateProfile}
       loggedInAsCustomer={true}

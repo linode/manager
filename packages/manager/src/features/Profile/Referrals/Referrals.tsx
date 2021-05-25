@@ -15,14 +15,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
 
-type ClassNames = 'root' | 'results' | 'title' | 'copyField';
+type ClassNames = 'results' | 'copyField';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      padding: theme.spacing(3),
-    },
-    title: {},
     results: {
       margin: `${theme.spacing(2)}px 0`,
     },
@@ -47,11 +43,11 @@ class Referrals extends React.Component<CombinedProps, {}> {
     } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <Paper>
         <DocumentTitleSegment segment="Referrals" />
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="h2" className={classes.title} data-qa-title>
+            <Typography variant="h2" data-qa-title>
               Referrals
             </Typography>
           </Grid>

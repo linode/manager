@@ -5,29 +5,11 @@ import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-type ClassNames = 'root' | 'title';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(2),
-    },
-    title: {
-      marginBottom: theme.spacing(2),
-    },
-  });
 
 interface Props {
   timezone: string;
@@ -50,7 +32,7 @@ interface Timezone {
   offset: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const formatOffset = (offset: number, label: string) => {
   const remainder = Math.abs(offset) % 1;
@@ -129,7 +111,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, loggedInAsCustomer, timezone } = this.props;
+    const { loggedInAsCustomer, timezone } = this.props;
     const { errors, submitting, success, updatedTimezone } = this.state;
     const timezoneDisplay = pathOr(
       timezone,
@@ -151,7 +133,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <div className={classes.root}>
+      <div>
         {loggedInAsCustomer && (
           <div
             style={{
@@ -200,6 +182,4 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(TimezoneForm);
+export default TimezoneForm;

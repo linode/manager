@@ -11,7 +11,6 @@ import { FormikBag } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -260,44 +259,42 @@ export const CredentialList: React.FC<CombinedProps> = (props) => {
                 pageSize,
               }) => (
                 <>
-                  <Paper>
-                    <Table aria-label="List of Your Managed Credentials">
-                      <TableHead>
-                        <TableRow>
-                          <TableSortCell
-                            active={orderBy === 'label'}
-                            label={'label'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-credential-label-header
-                            style={{ width: '30%' }}
-                          >
-                            Credential
-                          </TableSortCell>
-                          <TableSortCell
-                            active={orderBy === 'last_decrypted'}
-                            label={'last_decrypted'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-credential-decrypted-header
-                            style={{ width: '60%' }}
-                          >
-                            Last Decrypted
-                          </TableSortCell>
-                          <TableCell className={classes.actionCell} />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <CredentialTableContent
-                          credentials={data}
-                          loading={loading}
-                          error={error}
-                          openDialog={openDialog}
-                          openForEdit={openForEdit}
-                        />
-                      </TableBody>
-                    </Table>
-                  </Paper>
+                  <Table aria-label="List of Your Managed Credentials">
+                    <TableHead>
+                      <TableRow>
+                        <TableSortCell
+                          active={orderBy === 'label'}
+                          label={'label'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-credential-label-header
+                          style={{ width: '30%' }}
+                        >
+                          Credential
+                        </TableSortCell>
+                        <TableSortCell
+                          active={orderBy === 'last_decrypted'}
+                          label={'last_decrypted'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-credential-decrypted-header
+                          style={{ width: '60%' }}
+                        >
+                          Last Decrypted
+                        </TableSortCell>
+                        <TableCell className={classes.actionCell} />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <CredentialTableContent
+                        credentials={data}
+                        loading={loading}
+                        error={error}
+                        openDialog={openDialog}
+                        openForEdit={openForEdit}
+                      />
+                    </TableBody>
+                  </Table>
                   <PaginationFooter
                     count={count}
                     handlePageChange={handlePageChange}

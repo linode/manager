@@ -2,7 +2,6 @@ import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableFooter from 'src/components/core/TableFooter';
@@ -78,73 +77,71 @@ export const NodeTable: React.FC<Props> = (props) => {
             pageSize,
           }) => (
             <>
-              <Paper>
-                <Table aria-label="List of Your Cluster Nodes">
-                  <TableHead>
-                    <TableRow>
-                      <TableSortCell
-                        active={orderBy === 'label'}
-                        label={'label'}
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        className={classes.labelCell}
-                      >
-                        Linode
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'instanceStatus'}
-                        label={'instanceStatus'}
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        className={classes.statusCell}
-                      >
-                        Status
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'ip'}
-                        label={'ip'}
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        className={classes.ipCell}
-                      >
-                        IP Address
-                      </TableSortCell>
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableContentWrapper
-                      loading={linodes.loading || _loading}
-                      lastUpdated={linodes.lastUpdated}
-                      length={paginatedAndOrderedData.length}
+              <Table aria-label="List of Your Cluster Nodes">
+                <TableHead>
+                  <TableRow>
+                    <TableSortCell
+                      active={orderBy === 'label'}
+                      label={'label'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      className={classes.labelCell}
                     >
-                      {paginatedAndOrderedData.map((eachRow) => {
-                        return (
-                          <NodeRow
-                            key={`node-row-${eachRow.nodeId}`}
-                            nodeId={eachRow.nodeId}
-                            instanceId={eachRow.instanceId}
-                            label={eachRow.label}
-                            instanceStatus={eachRow.instanceStatus}
-                            ip={eachRow.ip}
-                            nodeStatus={eachRow.nodeStatus}
-                            typeLabel={typeLabel}
-                            linodeError={linodes.error?.read}
-                            openRecycleNodeDialog={openRecycleNodeDialog}
-                          />
-                        );
-                      })}
-                    </TableContentWrapper>
-                  </TableBody>
-                  <TableFooter>
-                    <TableRow>
-                      <TableCell colSpan={4}>
-                        <Typography>Pool ID {poolId}</Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </Paper>
+                      Linode
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'instanceStatus'}
+                      label={'instanceStatus'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      className={classes.statusCell}
+                    >
+                      Status
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'ip'}
+                      label={'ip'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      className={classes.ipCell}
+                    >
+                      IP Address
+                    </TableSortCell>
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableContentWrapper
+                    loading={linodes.loading || _loading}
+                    lastUpdated={linodes.lastUpdated}
+                    length={paginatedAndOrderedData.length}
+                  >
+                    {paginatedAndOrderedData.map((eachRow) => {
+                      return (
+                        <NodeRow
+                          key={`node-row-${eachRow.nodeId}`}
+                          nodeId={eachRow.nodeId}
+                          instanceId={eachRow.instanceId}
+                          label={eachRow.label}
+                          instanceStatus={eachRow.instanceStatus}
+                          ip={eachRow.ip}
+                          nodeStatus={eachRow.nodeStatus}
+                          typeLabel={typeLabel}
+                          linodeError={linodes.error?.read}
+                          openRecycleNodeDialog={openRecycleNodeDialog}
+                        />
+                      );
+                    })}
+                  </TableContentWrapper>
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={4}>
+                      <Typography>Pool ID {poolId}</Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
               <PaginationFooter
                 count={count}
                 handlePageChange={handlePageChange}

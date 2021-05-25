@@ -4,7 +4,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
 import RootRef from 'src/components/core/RootRef';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -173,82 +172,80 @@ const Contacts: React.FC<CombinedProps> = (props) => {
                 }) => {
                   return (
                     <>
-                      <Paper>
-                        <Table aria-label="List of Your Managed Contacts">
-                          <TableHead>
-                            <TableRow>
+                      <Table aria-label="List of Your Managed Contacts">
+                        <TableHead>
+                          <TableRow>
+                            <TableSortCell
+                              active={orderBy === 'name'}
+                              label={'name'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              Name
+                            </TableSortCell>
+                            <Hidden smDown>
                               <TableSortCell
-                                active={orderBy === 'name'}
-                                label={'name'}
+                                active={orderBy === 'group'}
+                                label={'group'}
                                 direction={order}
                                 handleClick={handleOrderChange}
                               >
-                                Name
+                                Group
                               </TableSortCell>
-                              <Hidden smDown>
-                                <TableSortCell
-                                  active={orderBy === 'group'}
-                                  label={'group'}
-                                  direction={order}
-                                  handleClick={handleOrderChange}
-                                >
-                                  Group
-                                </TableSortCell>
-                              </Hidden>
+                            </Hidden>
+                            <TableSortCell
+                              active={orderBy === 'email'}
+                              label={'email'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                            >
+                              E-mail
+                            </TableSortCell>
+                            <Hidden xsDown>
                               <TableSortCell
-                                active={orderBy === 'email'}
-                                label={'email'}
+                                active={orderBy === 'phone:primary'}
+                                label={'phone:primary'}
                                 direction={order}
                                 handleClick={handleOrderChange}
                               >
-                                E-mail
+                                Primary Phone
                               </TableSortCell>
-                              <Hidden xsDown>
-                                <TableSortCell
-                                  active={orderBy === 'phone:primary'}
-                                  label={'phone:primary'}
-                                  direction={order}
-                                  handleClick={handleOrderChange}
-                                >
-                                  Primary Phone
-                                </TableSortCell>
-                                <TableSortCell
-                                  active={orderBy === 'phone:secondary'}
-                                  label={'phone:secondary'}
-                                  direction={order}
-                                  handleClick={handleOrderChange}
-                                >
-                                  Secondary Phone
-                                </TableSortCell>
-                              </Hidden>
-                              <TableCell />
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            <ContactTableContact
-                              contacts={paginatedData}
-                              loading={loading}
-                              lastUpdated={lastUpdated}
-                              updateOrAdd={updateOrAdd}
-                              openDrawer={(contactId: number) => {
-                                setSelectedContactId(contactId);
-                                setContactDrawerMode('edit');
-                                contactDrawer.open();
-                              }}
-                              openDialog={(contactId: number) => {
-                                const selectedContact = contacts.find(
-                                  (thisContact) => thisContact.id === contactId
-                                );
-                                const label = selectedContact
-                                  ? selectedContact.name
-                                  : '';
-                                openDialog(contactId, label);
-                              }}
-                              error={error}
-                            />
-                          </TableBody>
-                        </Table>
-                      </Paper>
+                              <TableSortCell
+                                active={orderBy === 'phone:secondary'}
+                                label={'phone:secondary'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Secondary Phone
+                              </TableSortCell>
+                            </Hidden>
+                            <TableCell />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <ContactTableContact
+                            contacts={paginatedData}
+                            loading={loading}
+                            lastUpdated={lastUpdated}
+                            updateOrAdd={updateOrAdd}
+                            openDrawer={(contactId: number) => {
+                              setSelectedContactId(contactId);
+                              setContactDrawerMode('edit');
+                              contactDrawer.open();
+                            }}
+                            openDialog={(contactId: number) => {
+                              const selectedContact = contacts.find(
+                                (thisContact) => thisContact.id === contactId
+                              );
+                              const label = selectedContact
+                                ? selectedContact.name
+                                : '';
+                              openDialog(contactId, label);
+                            }}
+                            error={error}
+                          />
+                        </TableBody>
+                      </Table>
                       <PaginationFooter
                         count={count}
                         handlePageChange={handlePageChange}

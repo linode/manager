@@ -55,7 +55,6 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
         disabled={disabled}
       />
       <AccessPanel
-        noPadding
         password={password || ''}
         handleChange={onPasswordChange}
         error={passwordError}
