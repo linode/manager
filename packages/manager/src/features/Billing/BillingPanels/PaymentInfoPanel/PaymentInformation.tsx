@@ -6,6 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
+import GooglePay from './GooglePay';
 import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
@@ -80,6 +81,7 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
 
         <div className={classes.billingGroup}>
           <CreditCard lastFour={lastFour} expiry={expiry} />
+          <GooglePay/>
         </div>
 
         <UpdateCreditCardDrawer

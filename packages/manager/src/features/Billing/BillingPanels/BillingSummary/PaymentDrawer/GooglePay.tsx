@@ -7,10 +7,15 @@ import Notice from 'src/components/Notice';
 import { SetSuccess } from './types';
 import CircleProgress from 'src/components/CircleProgress';
 import GooglePayIcon from 'src/assets/icons/payment/googlePayButton.svg';
-// import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
-// const useStyles = makeStyles((theme: Theme) => ({
-// }));
+const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    border: 0,
+    backgroundColor: 'transparent',
+    marginTop: theme.spacing()
+  }
+}));
 
 interface TransactionInfo {
   currencyCode: string;
@@ -23,12 +28,10 @@ interface Props {
   setSuccess: SetSuccess;
 }
 
-const clientToken = `braintree client token here`;
-
 const GooglePay: React.FC<Props> = (props) => {
   const googlePayStatus = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { setSuccess, usd } = props;
-  //const classes = useStyles();
+  const classes = useStyles();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -87,7 +90,7 @@ const GooglePay: React.FC<Props> = (props) => {
         environment: 'TEST'
       });
 
-      initPayment(clientToken, client, {
+      initPayment(process.env.REACT_APP_BT_TOKEN || '', client, {
         currencyCode: 'USD',
         totalPriceStatus: 'FINAL',
         totalPrice: usd
@@ -113,7 +116,7 @@ const GooglePay: React.FC<Props> = (props) => {
 
   if (!isReady) return null;
 
-  return <button ref={buttonRef}><GooglePayIcon /></button>;
+  return <button className={classes.button} ref={buttonRef}><GooglePayIcon /></button>;
 }
 
 export default GooglePay;
