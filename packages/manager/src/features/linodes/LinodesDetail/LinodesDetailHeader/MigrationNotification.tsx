@@ -114,7 +114,9 @@ const MigrationNotification: React.FC<Props> = (props) => {
     <>
       <Notice important warning>
         <Typography>
-          {migrationTime ? migrationText() : notificationMessage}
+          {notificationType === 'migration_scheduled'
+            ? migrationText()
+            : notificationMessage}
           {` `}
           <button
             className={classes.migrationLink}
