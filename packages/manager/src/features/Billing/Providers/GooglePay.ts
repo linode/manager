@@ -14,6 +14,19 @@ export default class GooglePayClient {
 
     this.googlePayClient = new google.payments.api.PaymentsClient({
       environment: 'TEST',
+      paymentDataCallbacks: {
+        onPaymentAuthorized: this.onPaymentAuthorized,
+      },
+    });
+  }
+
+  // send nonce to API
+  private onPaymentAuthorized(
+    paymentData: google.payments.api.PaymentData
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      // console.log('authorized', paymentData)
+      resolve({ transactionState: 'SUCCESS' });
     });
   }
 
@@ -41,6 +54,8 @@ export default class GooglePayClient {
       //   merchantId: '12345678901234567890',
       // },
       transactionInfo,
+      // @ts-expect-error createPaymentDataRequest object type is missing callbackIntents
+      callbackIntents: ['PAYMENT_AUTHORIZATION'],
     });
 
     if (!this.googlePayClient) {
