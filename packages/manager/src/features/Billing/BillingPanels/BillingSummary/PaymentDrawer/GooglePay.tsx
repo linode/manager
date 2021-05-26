@@ -31,11 +31,11 @@ interface Props {
 }
 
 const GooglePay: React.FC<Props> = (props) => {
-  const { setSuccess, usd } = props;
-  const classes = useStyles();
   const { status, load } = useLazyScript(
     'https://pay.google.com/gp/p/js/pay.js'
   );
+  const { setSuccess, usd } = props;
+  const classes = useStyles();
   const buttonDisabled = +usd < 5;
 
   const handlePay = () => {
@@ -49,7 +49,7 @@ const GooglePay: React.FC<Props> = (props) => {
         countryCode: 'US',
         totalPrice: usd,
       },
-      setSuccess
+      (message: string, _) => setSuccess(message)
     );
   };
 

@@ -5,6 +5,7 @@ import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { ScriptStatus } from 'src/hooks/useScript';
 import { makeStyles } from 'src/components/core/styles';
 import GooglePayClient from 'src/features/Billing/Providers/GooglePay';
+import { useSnackbar, VariantType } from 'notistack';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -15,10 +16,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 const GooglePay: React.FC<{}> = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const { status, load } = useLazyScript(
     'https://pay.google.com/gp/p/js/pay.js'
   );
+
+  const doToast = (message: string, variant: VariantType) =>
+    enqueueSnackbar(message, {
+      variant,
+    });
 
   const handlePay = () => {
     const client = new GooglePayClient();
@@ -26,13 +33,11 @@ const GooglePay: React.FC<{}> = () => {
     client.init(
       process.env.REACT_APP_BT_TOKEN || '',
       {
-        totalPriceStatus: 'FINAL',
+        totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
         currencyCode: 'USD',
         countryCode: 'US',
-        totalPrice: '10.00',
       },
-      // Temporary error handler
-      (message) => alert(message)
+      doToast
     );
   };
 

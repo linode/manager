@@ -1,5 +1,5 @@
 import braintree, { GooglePayment } from 'braintree-web';
-import { SetSuccess } from '../BillingPanels/BillingSummary/PaymentDrawer/types';
+import { VariantType } from 'notistack';
 import { getBraintreeClient } from './Braintree';
 
 export default class GooglePayClient {
@@ -25,7 +25,6 @@ export default class GooglePayClient {
     paymentData: google.payments.api.PaymentData
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      // console.log('authorized', paymentData)
       resolve({ transactionState: 'SUCCESS' });
     });
   }
@@ -42,9 +41,15 @@ export default class GooglePayClient {
 
   public async init(
     client_token: string,
-    transactionInfo: any,
-    setSuccess: SetSuccess
+    transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
+      totalPrice?: string;
+    },
+    setMessage: (message: string, variant: VariantType) => void
   ) {
+    const isOneTimePayment =
+      transactionInfo.totalPrice &&
+      transactionInfo.totalPriceStatus === 'FINAL';
+
     const braintreeGooglePayment = await this.getGooglePayBraintreeClient(
       client_token
     );
@@ -53,13 +58,13 @@ export default class GooglePayClient {
       // merchantInfo: {
       //   merchantId: '12345678901234567890',
       // },
+      // @ts-expect-error braintree's types are not accurate
       transactionInfo,
-      // @ts-expect-error createPaymentDataRequest object type is missing callbackIntents
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
     });
 
     if (!this.googlePayClient) {
-      return setSuccess('Unable to create Google Pay JS client.');
+      return setMessage('Unable to create Google Pay JS client.', 'error');
     }
 
     const isReadyToPay = await this.googlePayClient.isReadyToPay({
@@ -69,7 +74,7 @@ export default class GooglePayClient {
     });
 
     if (!isReadyToPay) {
-      return setSuccess('Your device does not support Google Pay.');
+      return setMessage('Your device does not support Google Pay.', 'warning');
     }
 
     try {
@@ -79,15 +84,25 @@ export default class GooglePayClient {
 
       await braintreeGooglePayment.parseResponse(paymentData);
 
-      setSuccess(
-        `Payment for $${transactionInfo.totalPrice} successfully submitted`,
-        true
+      setMessage(
+        isOneTimePayment
+          ? `Payment for $${transactionInfo.totalPrice} successfully submitted`
+          : 'Successfully Added Google Pay',
+        'success'
       );
     } catch (error) {
       if ((error.message as string).includes('User closed')) {
-        setSuccess('Payment Cancelled');
+        setMessage(
+          isOneTimePayment ? 'Payment Cancelled' : 'Canceled adding Google Pay',
+          'warning'
+        );
       } else {
-        setSuccess('Payment was not completed.');
+        setMessage(
+          isOneTimePayment
+            ? 'Payment was not completed'
+            : 'Unable to add payment method',
+          'error'
+        );
       }
     }
   }
