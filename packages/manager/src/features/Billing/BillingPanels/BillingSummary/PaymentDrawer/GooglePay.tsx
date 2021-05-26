@@ -3,10 +3,12 @@ import { useEffect } from 'react';
 import { ScriptStatus, useLazyScript } from 'src/hooks/useScript';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import Button from 'src/components/Button';
 import { SetSuccess } from './types';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import GooglePayClient from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/googlePayButton.svg';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -17,6 +19,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   svg: {
     borderRadius: 5,
+  },
+  disabled: {
+    opacity: 0.3,
   },
 }));
 
@@ -31,6 +36,7 @@ const GooglePay: React.FC<Props> = (props) => {
   const { status, load } = useLazyScript(
     'https://pay.google.com/gp/p/js/pay.js'
   );
+  const buttonDisabled = +usd < 5;
 
   const handlePay = () => {
     const client = new GooglePayClient();
@@ -62,12 +68,16 @@ const GooglePay: React.FC<Props> = (props) => {
   }
 
   return (
-    <button
-      className={classes.button}
+    <Button
+      className={classNames({
+        [classes.button]: true,
+        [classes.disabled]: buttonDisabled,
+      })}
+      disabled={buttonDisabled}
       onClick={status == ScriptStatus.READY ? handlePay : load}
     >
       <GooglePayIcon className={classes.svg} />
-    </button>
+    </Button>
   );
 };
 
