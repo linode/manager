@@ -44,10 +44,7 @@ const RescueDescription: React.FC<Props> = (props) => {
           >
             LISH Console
           </button>
-          {` to access it. `}
-          <Link to="https://www.linode.com/docs/guides/rescue-and-rebuild/#connecting-to-a-linode-running-in-rescue-mode">
-            Learn more.
-          </Link>
+          {` to access it.`}
         </Typography>
       ) : null}
     </React.Fragment>
