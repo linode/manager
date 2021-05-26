@@ -15,6 +15,7 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
+import useFlags from 'src/hooks/useFlags';
 import { v4 } from 'uuid';
 import CreditCard from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
@@ -65,6 +66,7 @@ const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
+  const flags = useFlags();
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
@@ -175,7 +177,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             isScriptLoaded={isPaypalScriptLoaded}
           />
 
-          <GooglePay usd={usd} setSuccess={setSuccess} />
+          {flags.additionalPaymentMethods?.includes('google_pay') ? (
+            <GooglePay usd={usd} setSuccess={setSuccess} />
+          ) : null}
         </Grid>
       </Grid>
     </Drawer>
