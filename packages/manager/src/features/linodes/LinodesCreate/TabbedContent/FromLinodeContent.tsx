@@ -61,7 +61,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line
     <React.Fragment>
       {linodesData && linodesData.length === 0 ? (
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid item className={`${classes.main} py0`}>
           <Paper>
             <Placeholder
               data-qa-placeholder
@@ -76,7 +76,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
           </Paper>
         </Grid>
       ) : (
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid item className={`${classes.main} py0`}>
           <SelectLinodePanel
             data-qa-linode-panel
             error={hasErrorFor('linode_id')}

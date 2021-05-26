@@ -48,7 +48,7 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
 
   if (variant === 'private' && Object.keys(privateImages).length === 0) {
     return (
-      <Grid item className={`${classes.main} mlMain py0`}>
+      <Grid item className={`${classes.main} py0`}>
         <Paper>
           <Placeholder title="My Images" icon={ImageIcon} isEntity>
             <Typography variant="subtitle1">
@@ -63,7 +63,7 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <Grid item className={`${classes.main} mlMain py0`}>
+    <Grid item className={`${classes.main} py0`}>
       <ImageSelect
         title={imagePanelTitle || 'Choose an Image'}
         images={Object.keys(imagesData).map((eachKey) => imagesData[eachKey])}

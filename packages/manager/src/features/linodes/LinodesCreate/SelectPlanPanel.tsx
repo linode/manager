@@ -283,7 +283,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           {plans.map(this.renderSelection)}
         </Hidden>
         <Hidden mdDown={isCreate} smDown={!isCreate}>
-          <Grid item xs={12} lg={11}>
+          <Grid item xs={12}>
             <Table border spacingBottom={16} aria-label="List of Linode Plans">
               <TableHead>
                 <TableRow>

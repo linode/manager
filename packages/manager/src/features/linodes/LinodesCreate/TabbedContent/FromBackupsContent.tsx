@@ -181,7 +181,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <Grid item className={`${classes.main} mlMain py0`}>
+      <Grid item className={`${classes.main} py0`}>
         {!userHasBackups ? (
           <Paper>
             <Placeholder
