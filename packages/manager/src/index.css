@@ -395,8 +395,9 @@ button::-moz-focus-inner {
   top: 0;
 }
 
-/* Removes focus styles for mouse users
-https://blog.chromium.org/2020/09/giving-users-and-developers-more.html
+/*
+Removes focus styles for mouse users.
+See: https://blog.chromium.org/2020/09/giving-users-and-developers-more.html
 */
 :focus:not(:focus-visible) {
   outline: none;
