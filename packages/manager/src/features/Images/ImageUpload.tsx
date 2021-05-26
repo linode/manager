@@ -15,7 +15,9 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { Dispatch } from 'src/hooks/types';
+import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useRegionsQuery } from 'src/queries/regions';
 import { uploadImage } from 'src/store/image/image.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -88,6 +90,8 @@ export const ImageUpload: React.FC<Props> = (props) => {
     false
   );
 
+  const authentication = useAuthentication();
+
   const uploadingDisabled = !label || !region;
 
   const handleSubmit = () => {
@@ -117,9 +121,26 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
+  /*
+  Purpose: if user's authentication expires, navigate away/stay on page prompt appears,
+  and they choose to stay on the page so their upload isn't interrupted, stop polling for events.
+  */
+  const stopEventsPolling = React.useCallback(() => {
+    if (!authentication.token) {
+      // @TODO: Add GA event to track frequency of this
+
+      // Setting the interval to infinity stops the polling
+      resetEventsPolling(Infinity);
+    }
+  }, [authentication]);
+
   return (
     <>
-      <Prompt when={uploadInProgress} confirmWhenLeaving={true}>
+      <Prompt
+        when={uploadInProgress}
+        confirmWhenLeaving={true}
+        cancelCallback={stopEventsPolling}
+      >
         {({ isModalOpen, handleCancel, handleConfirm }) => {
           return (
             <ConfirmationDialog
@@ -208,11 +229,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
           />
           <ActionsPanel style={{ marginTop: 16 }}>
             <Typography>
-              If you would prefer to upload your Image from the command line,
-              you may generate a URL below. For more information on this option,
-              see our{' '}
+              If you would prefer to upload your Image using another tool, you
+              may generate a URL below. For more information on this option, see
+              our{' '}
               <Link to="https://www.linode.com/docs/guides/linode-images/#uploading-an-image-through-the-cloud-manager">
-                Images tutorial
+                Images guide
               </Link>
               .
             </Typography>

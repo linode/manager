@@ -110,6 +110,7 @@ interface Props {
   dispatch: React.Dispatch<ObjectUploaderAction>;
   error?: string;
   url?: string;
+  image?: boolean;
 }
 
 const FileUpload: React.FC<Props> = (props) => {
@@ -218,7 +219,11 @@ const FileUpload: React.FC<Props> = (props) => {
     </div>
   );
 
-  const TooltipTitle = <div>Error uploading object. Click to retry.</div>;
+  const errorText = `Error uploading ${
+    props.image ? 'image' : 'object'
+  }. Click to retry.`;
+
+  const TooltipTitle = <div>{errorText}</div>;
 
   return props.error ? (
     <Tooltip title={TooltipTitle} placement="bottom">

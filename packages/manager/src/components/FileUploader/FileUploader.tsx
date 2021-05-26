@@ -1,14 +1,18 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { useDropzone, FileRejection } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { resetEventsPolling } from 'src/eventsPolling';
 import { uploadImageFile } from 'src/features/Images/requests';
 import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
+import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import {
   curriedObjectUploaderReducer,
   defaultState,
@@ -16,11 +20,11 @@ import {
   MAX_PARALLEL_UPLOADS,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
-import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import { Dispatch } from 'src/hooks/types';
-import { useDispatch } from 'react-redux';
+import { useAuthentication } from 'src/hooks/useAuthentication';
+import { redirectToLogin } from 'src/session';
 import { uploadImage } from 'src/store/image/image.requests';
-import { APIError } from '@linode/api-v4/lib/types';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -137,6 +141,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
 
   const classes = useStyles();
+  const history = useHistory();
 
   const [state, dispatch] = React.useReducer(
     curriedObjectUploaderReducer,
@@ -144,10 +149,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   );
 
   const dispatchAction: Dispatch = useDispatch();
+  const authentication = useAuthentication();
 
   // This function is fired when files are dropped in the upload area.
   const onDrop = (files: File[]) => {
     const prefix = '';
+
+    // If an upload attempt failed previously, clear the dropzone.
+    if (state.numErrors > 0) {
+      dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
+    }
+
     dispatch({ type: 'ENQUEUE', files, prefix });
   };
 
@@ -234,6 +246,25 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         });
 
         setUploadInProgress(false);
+
+        const successfulUploadMessage = `${file.name} successfully uploaded to ${label}.`;
+
+        // Enqueue snackbar and make it persistent
+        props.enqueueSnackbar(successfulUploadMessage, {
+          variant: 'success',
+          persist: true,
+        });
+
+        if (!authentication.token) {
+          // To handle the case where events polling was stopped because the user chose to stay on the page while their upload was in progress after their authentication token expired, reset the polling.
+          resetEventsPolling();
+
+          // If there's no authentication token, redirect to login (@TODO: requires further testing)
+          redirectToLogin(location.pathname, location.search);
+        } else {
+          // Redirect to Images landing
+          history.push('/images');
+        }
       };
 
       const handleError = () => {
@@ -244,6 +275,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             status: 'ERROR',
           },
         });
+
+        setUploadInProgress(false);
       };
 
       if (!uploadToURL) {
@@ -339,6 +372,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
                 error={
                   upload.status === 'ERROR' ? 'Error uploading image.' : ''
                 }
+                image={true}
               />
             );
           })}
