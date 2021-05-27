@@ -1,4 +1,5 @@
 export const distroIcons = {
+  AlmaLinux: 'almalinux',
   Alpine: 'alpine',
   Arch: 'archlinux',
   CentOS: 'centos',
