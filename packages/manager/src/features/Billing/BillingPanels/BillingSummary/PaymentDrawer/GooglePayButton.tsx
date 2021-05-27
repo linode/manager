@@ -6,7 +6,7 @@ import Notice from 'src/components/Notice';
 import Button from 'src/components/Button';
 import { SetSuccess } from './types';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import GooglePayClient from 'src/features/Billing/Providers/GooglePay';
+import { makePayment } from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/googlePayButton.svg';
 import classNames from 'classnames';
 
@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  usd: string;
+  usd?: string;
+  transactionInfo: google.payments.api.TransactionInfo;
   setSuccess: SetSuccess;
 }
 
@@ -34,35 +35,29 @@ const GooglePay: React.FC<Props> = (props) => {
   const { status, load } = useLazyScript(
     'https://pay.google.com/gp/p/js/pay.js'
   );
-  const { setSuccess, usd } = props;
   const classes = useStyles();
-  const buttonDisabled = +usd < 5;
+
+  const { usd, transactionInfo, setSuccess } = props;
+  const disabled = (usd && +usd < 5) || false;
 
   const handlePay = () => {
-    const client = new GooglePayClient();
-
-    client.init(
+    makePayment(
       process.env.REACT_APP_BT_TOKEN || '',
-      {
-        totalPriceStatus: 'FINAL',
-        currencyCode: 'USD',
-        countryCode: 'US',
-        totalPrice: usd,
-      },
+      transactionInfo,
       (message: string, _) => setSuccess(message)
     );
   };
 
   useEffect(() => {
-    if (status == ScriptStatus.READY) {
+    if (status === ScriptStatus.READY) {
       handlePay();
     }
   }, [status]);
 
-  if (status == ScriptStatus.ERROR) {
+  if (status === ScriptStatus.ERROR) {
     return (
       <Grid container direction="column">
-        <Notice error text="There was an error connecting with Google Pay." />
+        <Notice error text="There was an error loading Google Pay." />
       </Grid>
     );
   }
@@ -71,10 +66,10 @@ const GooglePay: React.FC<Props> = (props) => {
     <Button
       className={classNames({
         [classes.button]: true,
-        [classes.disabled]: buttonDisabled,
+        [classes.disabled]: disabled,
       })}
-      disabled={buttonDisabled}
-      onClick={status == ScriptStatus.READY ? handlePay : load}
+      disabled={disabled}
+      onClick={status === ScriptStatus.READY ? handlePay : load}
     >
       <GooglePayIcon className={classes.svg} />
     </Button>

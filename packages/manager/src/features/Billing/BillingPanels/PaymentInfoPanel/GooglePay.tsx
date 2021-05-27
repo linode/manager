@@ -4,7 +4,7 @@ import { useLazyScript } from 'src/hooks/useScript';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { ScriptStatus } from 'src/hooks/useScript';
 import { makeStyles } from 'src/components/core/styles';
-import GooglePayClient from 'src/features/Billing/Providers/GooglePay';
+import { makePayment } from 'src/features/Billing/Providers/GooglePay';
 import { useSnackbar, VariantType } from 'notistack';
 
 const useStyles = makeStyles(() => ({
@@ -28,9 +28,7 @@ const GooglePay: React.FC<{}> = () => {
     });
 
   const handlePay = () => {
-    const client = new GooglePayClient();
-
-    client.init(
+    makePayment(
       process.env.REACT_APP_BT_TOKEN || '',
       {
         totalPriceStatus: 'NOT_CURRENTLY_KNOWN',

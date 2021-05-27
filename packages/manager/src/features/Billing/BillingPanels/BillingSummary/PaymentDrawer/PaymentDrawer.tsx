@@ -20,7 +20,7 @@ import { v4 } from 'uuid';
 import CreditCard from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
-import GooglePay from './GooglePay';
+import GooglePayButton from './GooglePayButton';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -178,7 +178,16 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
           />
 
           {flags.additionalPaymentMethods?.includes('google_pay') ? (
-            <GooglePay usd={usd} setSuccess={setSuccess} />
+            <GooglePayButton
+              usd={usd}
+              transactionInfo={{
+                totalPriceStatus: 'FINAL',
+                currencyCode: 'USD',
+                countryCode: 'US',
+                totalPrice: usd,
+              }}
+              setSuccess={setSuccess}
+            />
           ) : null}
         </Grid>
       </Grid>
