@@ -36,13 +36,11 @@ interface Props {
   when: boolean;
   confirmWhenLeaving?: boolean;
   children: (props: ChildrenProps) => React.ReactNode;
-  cancelCallback?: () => void;
 }
 
 type CombinedProps = Props;
 
 const Prompt: React.FC<CombinedProps> = (props) => {
-  // const { cancelCallback } = props;
   const history = useHistory();
 
   React.useEffect(() => {

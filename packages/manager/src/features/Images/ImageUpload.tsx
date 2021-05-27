@@ -15,12 +15,11 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { Dispatch } from 'src/hooks/types';
-import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useRegionsQuery } from 'src/queries/regions';
 import { uploadImage } from 'src/store/image/image.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { imageUploadInProgress } from 'src/imageUploadProgressCheck';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -86,12 +85,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
     false
   );
 
-  const [uploadInProgress, setUploadInProgress] = React.useState<boolean>(
-    false
-  );
-
-  const authentication = useAuthentication();
-
   const uploadingDisabled = !label || !region;
 
   const handleSubmit = () => {
@@ -121,26 +114,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
-  /*
-  Purpose: if user's authentication expires, navigate away/stay on page prompt appears,
-  and they choose to stay on the page so their upload isn't interrupted, stop polling for events.
-  */
-  const stopEventsPolling = React.useCallback(() => {
-    if (!authentication.token) {
-      // @TODO: Add GA event to track frequency of this
-
-      // Setting the interval to infinity stops the polling
-      resetEventsPolling(Infinity);
-    }
-  }, [authentication]);
-
   return (
     <>
-      <Prompt
-        when={uploadInProgress}
-        confirmWhenLeaving={true}
-        cancelCallback={stopEventsPolling}
-      >
+      <Prompt when={imageUploadInProgress} confirmWhenLeaving={true}>
         {({ isModalOpen, handleCancel, handleConfirm }) => {
           return (
             <ConfirmationDialog
@@ -225,7 +201,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             dropzoneDisabled={uploadingDisabled}
             setErrors={setErrors}
             setUrlButtonDisabled={setUrlButtonDisabled}
-            setUploadInProgress={setUploadInProgress}
+            // setUploadInProgress={setUploadInProgress}
           />
           <ActionsPanel style={{ marginTop: 16 }}>
             <Typography>

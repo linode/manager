@@ -9,7 +9,6 @@ import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { uploadImageFile } from 'src/features/Images/requests';
 import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
@@ -21,8 +20,7 @@ import {
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
 import { Dispatch } from 'src/hooks/types';
-import { useAuthentication } from 'src/hooks/useAuthentication';
-import { redirectToLogin } from 'src/session';
+import { setImageUploadInProgress } from 'src/imageUploadProgressCheck';
 import { uploadImage } from 'src/store/image/image.requests';
 import { readableBytes } from 'src/utilities/unitConversions';
 
@@ -122,7 +120,6 @@ interface Props {
   dropzoneDisabled: boolean;
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
   setUrlButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  setUploadInProgress: (uploadInProgress: boolean) => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
@@ -135,7 +132,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     dropzoneDisabled,
     setErrors,
     setUrlButtonDisabled,
-    setUploadInProgress,
   } = props;
 
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
@@ -149,7 +145,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   );
 
   const dispatchAction: Dispatch = useDispatch();
-  const authentication = useAuthentication();
 
   // This function is fired when files are dropped in the upload area.
   const onDrop = (files: File[]) => {
@@ -226,7 +221,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       data: { status: 'IN_PROGRESS' },
     });
 
-    setUploadInProgress(true);
+    setImageUploadInProgress(true); // Global variable that is being set to help prevent redirection to login when user has upload in progress.
 
     nextBatch.forEach((fileUpload) => {
       const { file } = fileUpload;
@@ -245,7 +240,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           },
         });
 
-        setUploadInProgress(false);
+        setImageUploadInProgress(false);
 
         const successfulUploadMessage = `${file.name} successfully uploaded to ${label}.`;
 
@@ -255,16 +250,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           persist: true,
         });
 
-        if (!authentication.token) {
-          // To handle the case where events polling was stopped because the user chose to stay on the page while their upload was in progress after their authentication token expired, reset the polling.
-          resetEventsPolling();
-
-          // If there's no authentication token, redirect to login (@TODO: requires further testing)
-          redirectToLogin(location.pathname, location.search);
-        } else {
-          // Redirect to Images landing
-          history.push('/images');
-        }
+        // Redirect to Images landing
+        history.push('/images');
       };
 
       const handleError = () => {
@@ -276,7 +263,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           },
         });
 
-        setUploadInProgress(false);
+        // setUploadInProgress(false);
+        setImageUploadInProgress(false);
       };
 
       if (!uploadToURL) {
