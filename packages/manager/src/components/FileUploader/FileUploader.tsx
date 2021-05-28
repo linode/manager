@@ -343,7 +343,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     disabled: dropzoneDisabledExtended,
     noClick: true,
     noKeyboard: true,
-    accept: '.gz', // Uploaded files must be compressed using the gzip compression algorithm.
+    accept: 'application/x-gzip', // Uploaded files must be compressed using the gzip compression algorithm.
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
   });

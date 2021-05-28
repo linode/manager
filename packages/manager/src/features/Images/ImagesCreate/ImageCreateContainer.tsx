@@ -1,10 +1,9 @@
 import * as React from 'react';
 import Breadcrumb from 'src/components/Breadcrumb';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import ImageCreate from './ImageCreate';
-import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -23,7 +22,6 @@ export const ImagesCreateContainer: React.FC = () => {
 
   return (
     <Grid container className={classes.root}>
-      <DocumentTitleSegment segment="Create an Image" />
       <Grid container className={classes.header}>
         <Grid item xs={12} className="p0">
           <Breadcrumb
