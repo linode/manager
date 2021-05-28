@@ -122,6 +122,7 @@ interface Props {
   dropzoneDisabled: boolean;
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
   setUrlButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  // Send a function for cancelling the upload back to the parent.
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
 }
 
@@ -303,6 +304,10 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
               onUploadProgress
             );
 
+            // The parent might need to cancel this upload (e.g. if the user
+            // navigates away from the page). This is all to handle sessions
+            // that expire during uploads. This will be unnecessary when we have
+            // refresh tokens.
             props.setCancelFn(() => () => cancel());
 
             request() // response.upload_to used here instead of uploadToURL b/c of race condition
@@ -310,7 +315,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
               .catch(() => handleError());
           })
           .catch((e) => {
-            debugger;
             setErrors(e);
           });
       } else {

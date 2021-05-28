@@ -131,13 +131,22 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
+  // Called after a user confirms they want to navigate to another part of
+  // Cloud during a pending upload. When we have refresh tokens this won't be
+  // necessary; the user will be able to navigate to other components and we
+  // will show the upload progress in the lower part of the screen.
   const onConfirm = (nextLocation: string) => {
+    // This uses Axios's CancelToken. It comes from FileUploader.tsx, when the
+    // upload request is created.
     if (cancelFn) {
       cancelFn();
     }
 
     dispatch(setPendingUpload(false));
 
+    // If the user's session has expired we need to send them to Login to get
+    // a new token. They will be redirected back to path they were trying to
+    // reach.
     if (!tokenRef.current) {
       redirectToLogin(nextLocation);
     } else {
