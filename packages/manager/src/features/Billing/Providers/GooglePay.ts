@@ -80,7 +80,7 @@ export const makePayment = async (
       'success'
     );
   } catch (error) {
-    if ((error.message as string).includes('User closed')) {
+    if (error.message && (error.message as string).includes('User closed')) {
       return;
     }
     setMessage(
