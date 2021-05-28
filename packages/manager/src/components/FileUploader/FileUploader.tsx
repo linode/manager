@@ -20,8 +20,10 @@ import {
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
 import { Dispatch } from 'src/hooks/types';
-import { setImageUploadInProgress } from 'src/imageUploadProgressCheck';
+import { useAuthentication } from 'src/hooks/useAuthentication';
+import { redirectToLogin } from 'src/session';
 import { uploadImage } from 'src/store/image/image.requests';
+import { setPendingUpload } from 'src/store/pendingUpload';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -120,6 +122,7 @@ interface Props {
   dropzoneDisabled: boolean;
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
   setUrlButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
@@ -138,6 +141,15 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const history = useHistory();
+
+  // Keep track of the session token since we may need to grab the user a new
+  // one after a long upload (if their session has expired). This is stored in
+  // a ref because closures.
+  const { token } = useAuthentication();
+  const tokenRef = React.useRef(token);
+  React.useEffect(() => {
+    tokenRef.current = token;
+  });
 
   const [state, dispatch] = React.useReducer(
     curriedObjectUploaderReducer,
@@ -221,7 +233,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       data: { status: 'IN_PROGRESS' },
     });
 
-    setImageUploadInProgress(true); // Global variable that is being set to help prevent redirection to login when user has upload in progress.
+    dispatchAction(setPendingUpload(true));
 
     nextBatch.forEach((fileUpload) => {
       const { file } = fileUpload;
@@ -240,18 +252,26 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           },
         });
 
-        setImageUploadInProgress(false);
-
         const successfulUploadMessage = `${file.name} successfully uploaded to ${label}.`;
 
-        // Enqueue snackbar and make it persistent
         props.enqueueSnackbar(successfulUploadMessage, {
           variant: 'success',
           persist: true,
         });
 
-        // Redirect to Images landing
-        history.push('/images');
+        dispatchAction(setPendingUpload(false));
+
+        // EDGE CASE:
+        // The upload has finished, but the user's token has expired.
+        // Show the toast, then redirect them to /images, passing them through
+        // Login to get a new token.
+        if (!tokenRef.current) {
+          setTimeout(() => {
+            redirectToLogin('/images');
+          }, 3000);
+        } else {
+          history.push('/images');
+        }
       };
 
       const handleError = () => {
@@ -263,8 +283,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           },
         });
 
-        // setUploadInProgress(false);
-        setImageUploadInProgress(false);
+        dispatchAction(setPendingUpload(false));
       };
 
       if (!uploadToURL) {
@@ -278,16 +297,33 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           .then((response) => {
             setUploadToURL(response.upload_to);
 
-            uploadImageFile(response.upload_to, file, onUploadProgress) // response.upload_to used here instead of uploadToURL b/c of race condition
+            const { request, cancel } = uploadImageFile(
+              response.upload_to,
+              file,
+              onUploadProgress
+            );
+
+            props.setCancelFn(() => () => cancel());
+
+            request() // response.upload_to used here instead of uploadToURL b/c of race condition
               .then(() => handleSuccess())
               .catch(() => handleError());
           })
           .catch((e) => {
+            debugger;
             setErrors(e);
           });
       } else {
         // Overwrite any file that was previously uploaded to the upload_to URL.
-        uploadImageFile(uploadToURL, file, onUploadProgress)
+        const { request, cancel } = uploadImageFile(
+          uploadToURL,
+          file,
+          onUploadProgress
+        );
+
+        props.setCancelFn(cancel);
+
+        request()
           .then(() => handleSuccess())
           .catch(() => handleError());
       }
@@ -360,7 +396,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
                 error={
                   upload.status === 'ERROR' ? 'Error uploading image.' : ''
                 }
-                image={true}
+                type="image"
               />
             );
           })}
@@ -374,7 +410,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         >
           {!UploadZoneActive && (
             <Typography variant="subtitle2" className={classes.copy}>
-              You can browse your device to upload files or drop them here.
+              You can browse your device to upload an image file or drop it
+              here.
             </Typography>
           )}
           <Button

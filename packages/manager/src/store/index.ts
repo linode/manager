@@ -170,6 +170,10 @@ import notifications, {
   defaultState as notificationsDefaultState,
   State as NotificationsState,
 } from './notification/notification.reducer';
+import pendingUpload, {
+  defaultState as pendingUploadState,
+  State as PendingUploadState,
+} from './pendingUpload';
 import preferences, {
   defaultState as preferencesState,
   State as PreferencesState,
@@ -251,6 +255,7 @@ export interface ApplicationState {
   bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
   preferences: PreferencesState;
+  pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
   featureFlagsLoad: FeatureFlagsLoadState;
   firewalls: FirewallState;
@@ -274,6 +279,7 @@ export const defaultState: ApplicationState = {
   bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
   preferences: preferencesState,
+  pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
   featureFlagsLoad: featureFlagsLoadState,
   firewalls: defaultFirewallState,
@@ -326,6 +332,7 @@ const reducers = combineReducers<ApplicationState>({
   events,
   createLinode: linodeCreateReducer,
   preferences,
+  pendingUpload,
   initialLoad,
   featureFlagsLoad,
   firewalls,

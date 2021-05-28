@@ -10,6 +10,9 @@ export const uploadImageFile = (
   file: File,
   onUploadProgress: (e: ProgressEvent) => void
 ) => {
+  const CancelToken = Axios.CancelToken;
+  const source = CancelToken.source();
+
   const config: AxiosRequestConfig = {
     url: signedUrl,
     method: 'PUT',
@@ -18,6 +21,10 @@ export const uploadImageFile = (
     },
     data: file,
     onUploadProgress,
+    cancelToken: source.token,
   };
-  return axiosInstance.request(config);
+  return {
+    request: () => axiosInstance.request(config),
+    cancel: source.cancel,
+  };
 };

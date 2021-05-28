@@ -20,16 +20,17 @@ import { requestAccountSettings } from 'src/store/accountSettings/accountSetting
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
+import { GetLinodeTypeParams } from 'src/store/linodeType/linodeType.actions';
 import {
   requestLinodeType,
   requestTypes,
 } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
+import { State as PendingUploadState } from 'src/store/pendingUpload';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { MapState } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
-import { GetLinodeTypeParams } from 'src/store/linodeType/linodeType.actions';
 
 type CombinedProps = DispatchProps & StateProps;
 
@@ -167,7 +168,13 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     }
 
     /** basically handles for the case where our token is expired or we got a 401 error */
-    if (prevProps.isAuthenticated && !this.props.isAuthenticated) {
+    if (
+      prevProps.isAuthenticated &&
+      !this.props.isAuthenticated &&
+      // Do not redirect to Login if there is a pending image upload (which can
+      // be long-running). This will be unnecessary once we have refresh tokens.
+      !this.props.pendingUpload
+    ) {
       redirectToLogin(location.pathname, location.search);
     }
 
@@ -194,6 +201,7 @@ interface StateProps {
   linodesLoading: boolean;
   linodesLastUpdated: number;
   linodes: Linode[];
+  pendingUpload: PendingUploadState;
   types: LinodeType[];
   typesLastUpdated: number;
 }
@@ -203,6 +211,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   linodesLoading: state.__resources.linodes.loading,
   linodesLastUpdated: state.__resources.linodes.lastUpdated,
   linodes: Object.values(state.__resources.linodes.itemsById),
+  pendingUpload: state.pendingUpload,
   types: state.__resources.types.entities,
   typesLastUpdated: state.__resources.types.lastUpdated,
 });

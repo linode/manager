@@ -1,11 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -16,10 +15,13 @@ import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
+import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useRegionsQuery } from 'src/queries/regions';
+import { redirectToLogin } from 'src/session';
+import { ApplicationState } from 'src/store';
 import { uploadImage } from 'src/store/image/image.requests';
+import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import { imageUploadInProgress } from 'src/imageUploadProgressCheck';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -85,6 +87,21 @@ export const ImageUpload: React.FC<Props> = (props) => {
     false
   );
 
+  const [cancelFn, setCancelFn] = React.useState<(() => void) | null>(null);
+
+  const pendingUpload = useSelector<ApplicationState, boolean>(
+    (state) => state.pendingUpload
+  );
+
+  // Keep track of the session token since we may need to grab the user a new
+  // one after a long upload (if their session has expired). This is stored in
+  // a ref because closures.
+  const { token } = useAuthentication();
+  const tokenRef = React.useRef(token);
+  React.useEffect(() => {
+    tokenRef.current = token;
+  });
+
   const uploadingDisabled = !label || !region;
 
   const handleSubmit = () => {
@@ -114,9 +131,27 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
+  const onConfirm = (nextLocation: string) => {
+    if (cancelFn) {
+      cancelFn();
+    }
+
+    dispatch(setPendingUpload(false));
+
+    if (!tokenRef.current) {
+      redirectToLogin(nextLocation);
+    } else {
+      push(nextLocation);
+    }
+  };
+
   return (
     <>
-      <Prompt when={imageUploadInProgress} confirmWhenLeaving={true}>
+      <Prompt
+        when={pendingUpload}
+        confirmWhenLeaving={true}
+        onConfirm={onConfirm}
+      >
         {({ isModalOpen, handleCancel, handleConfirm }) => {
           return (
             <ConfirmationDialog
@@ -145,14 +180,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
       </Prompt>
 
       <Paper className={classes.container}>
-        <Typography style={{ marginTop: 16 }}>
-          <Chip className={classes.chip} label="beta" component="span" />
-          Image Uploads is currently in beta and is subject to the terms of the{' '}
-          <Link to="https://www.linode.com/legal-eatp/">
-            Early Adopter Testing Agreement
-          </Link>
-          .
-        </Typography>
         {errorMap.none ? <Notice error text={errorMap.none} /> : null}
         <div style={{ width: '100%' }}>
           <TextField
@@ -186,13 +213,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
             closest to you. Once uploaded you will be able to deploy the image
             to other regions.
           </Typography>
-          <Typography className={classes.helperText}>
-            <strong>
-              Closing this browser tab or window will cancel the upload.
-            </strong>{' '}
-            To use other parts of Cloud Manager while your upload is in
-            progress, we recommend opening another tab or window.
-          </Typography>
 
           <FileUploader
             label={label}
@@ -201,6 +221,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             dropzoneDisabled={uploadingDisabled}
             setErrors={setErrors}
             setUrlButtonDisabled={setUrlButtonDisabled}
+            setCancelFn={setCancelFn}
             // setUploadInProgress={setUploadInProgress}
           />
           <ActionsPanel style={{ marginTop: 16 }}>
