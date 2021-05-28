@@ -35,6 +35,7 @@ export interface Flags {
   tpaProviders: Provider[];
   machineImages: boolean;
   additionalPaymentMethods: AdditionalPaymentMethod[];
+  imagesPricingBanner: ImagesPricingBanner;
 }
 
 type PromotionalOfferFeature =
@@ -84,3 +85,13 @@ export interface Provider {
 }
 
 export type AdditionalPaymentMethod = 'google_pay';
+
+export interface ImagesPricingBanner {
+  key: string;
+  lede: string;
+  link: {
+    text: string;
+    url: string;
+  };
+  text: string;
+}
