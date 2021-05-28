@@ -22,12 +22,13 @@ import { ApplicationState } from 'src/store';
 import { uploadImage } from 'src/store/image/image.requests';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     minWidth: '100%',
     padding: theme.spacing(3),
-    paddingTop: theme.spacing(),
+    paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
@@ -35,7 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     marginTop: theme.spacing(2),
-    width: '65%',
   },
   chip: {
     fontSize: '0.625rem',
@@ -166,22 +166,22 @@ export const ImageUpload: React.FC<Props> = (props) => {
             <ConfirmationDialog
               open={isModalOpen}
               onClose={handleCancel}
-              title="Cancel Image upload?"
+              title="Leave this page?"
               actions={() => (
                 <ActionsPanel>
-                  <Button buttonType="cancel" onClick={handleConfirm}>
-                    Leave and cancel upload
+                  <Button buttonType="cancel" onClick={handleCancel}>
+                    Cancel
                   </Button>
 
-                  <Button buttonType="primary" onClick={handleCancel}>
-                    Go back and continue upload
+                  <Button buttonType="primary" onClick={handleConfirm}>
+                    Leave Page
                   </Button>
                 </ActionsPanel>
               )}
             >
               <Typography variant="subtitle1">
-                An Image upload is currently in progress. If you navigate away
-                from this page, the upload will be canceled.
+                An upload is in progress. If you navigate away from this page,
+                the upload will be canceled.
               </Typography>
             </ConfirmationDialog>
           );
@@ -190,6 +190,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
       <Paper className={classes.container}>
         {errorMap.none ? <Notice error text={errorMap.none} /> : null}
+
+        <ImagesPricingCopy type="uploadImage" />
+
         <div style={{ width: '100%' }}>
           <TextField
             label="Label (required)"
@@ -220,7 +223,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
           <Typography className={classes.helperText}>
             For fastest initial upload, select the region that is geographically
             closest to you. Once uploaded you will be able to deploy the image
-            to other regions.
+            to other regions. Image files must be raw disk images (.img)
+            compressed using gzip (.gz). The maximum file size is 5 GB
+            (compressed).
           </Typography>
 
           <FileUploader

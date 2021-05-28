@@ -159,6 +159,25 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   const dispatchAction: Dispatch = useDispatch();
 
+  React.useEffect(() => {
+    const preventDefault = (e: any) => {
+      e.preventDefault();
+    };
+
+    // Prevent the browser from opening files dropped on the screen, which will
+    // happen if the dropzone is disabled.
+
+    // eslint-disable-next-line scanjs-rules/call_addEventListener
+    window.addEventListener('dragover', preventDefault);
+    // eslint-disable-next-line scanjs-rules/call_addEventListener
+    window.addEventListener('drop', preventDefault);
+
+    return () => {
+      window.removeEventListener('dragover', preventDefault);
+      window.removeEventListener('drop', preventDefault);
+    };
+  }, []);
+
   // This function is fired when files are dropped in the upload area.
   const onDrop = (files: File[]) => {
     const prefix = '';
@@ -225,17 +244,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       return;
     }
 
-    // Set status as "IN_PROGRESS" for each file.
-    dispatch({
-      type: 'UPDATE_FILES',
-      filesToUpdate: nextBatch.map((fileUpload) =>
-        pathOrFileName(fileUpload.file)
-      ),
-      data: { status: 'IN_PROGRESS' },
-    });
-
-    dispatchAction(setPendingUpload(true));
-
     nextBatch.forEach((fileUpload) => {
       const { file } = fileUpload;
 
@@ -297,6 +305,13 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         )
           .then((response) => {
             setUploadToURL(response.upload_to);
+
+            dispatchAction(setPendingUpload(true));
+            dispatch({
+              type: 'UPDATE_FILES',
+              filesToUpdate: [pathOrFileName(fileUpload.file)],
+              data: { status: 'IN_PROGRESS' },
+            });
 
             const { request, cancel } = uploadImageFile(
               response.upload_to,
@@ -363,7 +378,15 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     [isDragActive, isDragAccept, isDragReject, dropzoneDisabledExtended]
   );
 
+  // const UploadZoneActive =
+  //   state.files.filter((upload) => upload.status !== 'QUEUED').length !== 0;
+
   const UploadZoneActive = state.files.length !== 0;
+
+  const placeholder =
+    !label || !region
+      ? 'To upload an image, complete the required fields.'
+      : 'You can browse your device to upload an image file or drop it here';
 
   return (
     <div
@@ -378,32 +401,29 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           } ${className}`,
         })}
       >
-        <input
-          {...getInputProps()}
-          placeholder={
-            'You can browse your device to upload files or drop them here.'
-          }
-        />
+        <input {...getInputProps()} placeholder={placeholder} />
 
         <div className={classes.fileUploads}>
-          {state.files.map((upload, idx) => {
-            const fileName = upload.file.name;
-            return (
-              <FileUpload
-                key={idx}
-                displayName={fileName}
-                fileName={fileName}
-                sizeInBytes={upload.file.size || 0}
-                percentCompleted={upload.percentComplete || 0}
-                overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
-                dispatch={dispatch}
-                error={
-                  upload.status === 'ERROR' ? 'Error uploading image.' : ''
-                }
-                type="image"
-              />
-            );
-          })}
+          {state.files
+            // .filter((upload) => upload.status !== 'QUEUED')
+            .map((upload, idx) => {
+              const fileName = upload.file.name;
+              return (
+                <FileUpload
+                  key={idx}
+                  displayName={fileName}
+                  fileName={fileName}
+                  sizeInBytes={upload.file.size || 0}
+                  percentCompleted={upload.percentComplete || 0}
+                  overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
+                  dispatch={dispatch}
+                  error={
+                    upload.status === 'ERROR' ? 'Error uploading image.' : ''
+                  }
+                  type="image"
+                />
+              );
+            })}
         </div>
 
         <div
@@ -414,8 +434,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         >
           {!UploadZoneActive && (
             <Typography variant="subtitle2" className={classes.copy}>
-              You can browse your device to upload an image file or drop it
-              here.
+              {placeholder}
             </Typography>
           )}
           <Button
