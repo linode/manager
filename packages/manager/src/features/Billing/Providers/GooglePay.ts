@@ -1,7 +1,6 @@
 import braintree, { GooglePayment } from 'braintree-web';
 import { VariantType } from 'notistack';
 
-// send nonce to API
 const onPaymentAuthorized = (
   paymentData: google.payments.api.PaymentData
 ): Promise<any> => {
@@ -31,9 +30,6 @@ export const makePayment = async (
   },
   setMessage: (message: string, variant: VariantType) => void
 ) => {
-  const isOneTimePayment =
-    transactionInfo.totalPrice && transactionInfo.totalPriceStatus === 'FINAL';
-
   let googlePaymentInstance, paymentDataRequest;
   try {
     googlePaymentInstance = await getGooglePaymentInstance(client_token);
@@ -55,23 +51,24 @@ export const makePayment = async (
       onPaymentAuthorized,
     },
   });
-
   const isReadyToPay = await googlePayClient.isReadyToPay({
     apiVersion: 2,
     apiVersionMinor: 0,
     allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
   });
-
   if (!isReadyToPay) {
     return setMessage('Your device does not support Google Pay.', 'warning');
   }
+
+  const isOneTimePayment =
+    transactionInfo.totalPrice && transactionInfo.totalPriceStatus === 'FINAL';
 
   try {
     const paymentData = await googlePayClient.loadPaymentData(
       paymentDataRequest
     );
-
-    await googlePaymentInstance.parseResponse(paymentData);
+    const { nonce } = await googlePaymentInstance.parseResponse(paymentData);
+    // send nonce to API
 
     setMessage(
       isOneTimePayment

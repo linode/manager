@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  usd?: string;
   transactionInfo: google.payments.api.TransactionInfo;
   setSuccess: SetSuccess;
 }
@@ -37,8 +36,8 @@ const GooglePay: React.FC<Props> = (props) => {
   );
   const classes = useStyles();
 
-  const { usd, transactionInfo, setSuccess } = props;
-  const disabled = (usd && +usd < 5) || false;
+  const { transactionInfo, setSuccess } = props;
+  const disabled = +transactionInfo.totalPrice < 5;
 
   const handlePay = () => {
     makePayment(

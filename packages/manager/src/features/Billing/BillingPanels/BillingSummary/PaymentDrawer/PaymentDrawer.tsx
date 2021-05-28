@@ -179,7 +179,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
 
           {flags.additionalPaymentMethods?.includes('google_pay') ? (
             <GooglePayButton
-              usd={usd}
               transactionInfo={{
                 totalPriceStatus: 'FINAL',
                 currencyCode: 'USD',
