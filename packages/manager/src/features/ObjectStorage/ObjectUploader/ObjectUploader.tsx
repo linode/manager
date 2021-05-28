@@ -2,7 +2,7 @@ import { getObjectURL } from '@linode/api-v4/lib/object-storage';
 import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, FileRejection } from 'react-dropzone';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -151,7 +151,7 @@ const ObjectUploader: React.FC<CombinedProps> = (props) => {
   };
 
   // This function will be called when dropped files that are over the max size.
-  const onDropRejected = (files: File[]) => {
+  const onDropRejected = (files: FileRejection[]) => {
     let errorMessage = `Max file size (${
       readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
     }) exceeded`;

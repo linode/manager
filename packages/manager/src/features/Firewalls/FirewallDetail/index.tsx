@@ -3,13 +3,13 @@ import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
@@ -29,8 +29,8 @@ type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing(),
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing(),
     },
   },
 }));
@@ -105,25 +105,23 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={thisFirewall.label} />
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        className={classes.root}
-      >
-        <Breadcrumb
-          pathname={props.location.pathname}
-          firstAndLastOnly
-          onEditHandlers={{
-            editableTextTitle: thisFirewall.label,
-            onEdit: handleLabelChange,
-            onCancel: resetEditableLabel,
-            errorText,
-          }}
-        />
-        <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
-      </Box>
+      <Grid container className={`${classes.root} m0`} justify="space-between">
+        <Grid item className="p0">
+          <Breadcrumb
+            pathname={props.location.pathname}
+            firstAndLastOnly
+            onEditHandlers={{
+              editableTextTitle: thisFirewall.label,
+              onEdit: handleLabelChange,
+              onCancel: resetEditableLabel,
+              errorText,
+            }}
+          />
+        </Grid>
+        <Grid item className="p0" style={{ marginTop: 14 }}>
+          <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
+        </Grid>
+      </Grid>
       <Tabs
         index={Math.max(
           tabs.findIndex((tab) => matches(tab.routeName)),

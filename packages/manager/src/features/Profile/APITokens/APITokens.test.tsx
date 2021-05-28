@@ -25,7 +25,7 @@ describe('APITokens', () => {
         classes={{
           root: '',
           headline: '',
-          paper: '',
+          tokens: '',
           addNewWrapper: '',
           addNewLink: '',
           labelCell: '',

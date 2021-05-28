@@ -51,7 +51,7 @@ export const addCountToTypes = (
 ): ExtendedTypeWithCount[] => {
   return types.map((thisType) => ({
     ...thisType,
-    count: 0,
+    count: 3,
   }));
 };
 

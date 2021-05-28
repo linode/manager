@@ -24,7 +24,9 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { DeleteImagePayload } from 'src/store/image/image.actions';
@@ -37,11 +39,14 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import ImagesPricingBanner from './ImagesPricingBanner';
+import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  imageTable: { marginBottom: theme.spacing(3) },
+  imageTable: {
+    marginBottom: theme.spacing(3),
+    padding: 0,
+  },
   imageTableHeader: {
     padding: theme.spacing(),
     marginLeft: theme.spacing(),
@@ -104,7 +109,6 @@ const getHeaders = (
       widthPercent: 35,
     },
   ].filter(Boolean) as HeaderCell[];
-import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 interface ImageDrawerState {
   open: boolean;
@@ -407,6 +411,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const manualHeaders = getHeaders('manual', machineImagesEnabled);
   const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
 
+  const initialOrder = {
+    order: 'asc' as Order,
+    orderBy: 'label',
+  };
+
   const manualImageRow: EntityTableRow<Image> = {
     Component: ImageRow,
     data: manualImages,
@@ -495,7 +504,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
       />
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Manual Images</Typography>
+          <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             {machineImagesEnabled
               ? `These are images you manually uploaded or captured from an existing Linode disk.`
@@ -506,12 +515,13 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={manualImageRow}
           headers={manualHeaders}
-          emptyMessage={'No Manual Images to display.'}
+          emptyMessage={'No Custom Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
-          <Typography variant="h3">Automatic Images</Typography>
+          <Typography variant="h3">Recovery Images</Typography>
           <Typography className={classes.imageTableSubheader}>
             These are images we automatically capture when Linode disks are
             deleted. They will be deleted after the indicated expiration date.
@@ -521,7 +531,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={autoImageRow}
           headers={automaticHeaders}
-          emptyMessage={'No Automatic Images to display.'}
+          emptyMessage={'No Recovery Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       {renderImageDrawer()}
