@@ -121,7 +121,6 @@ interface Props {
   region: string;
   dropzoneDisabled: boolean;
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
-  setUrlButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   // Send a function for cancelling the upload back to the parent.
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
 }
@@ -129,14 +128,7 @@ interface Props {
 type CombinedProps = Props & WithSnackbarProps;
 
 const FileUploader: React.FC<CombinedProps> = (props) => {
-  const {
-    label,
-    description,
-    region,
-    dropzoneDisabled,
-    setErrors,
-    setUrlButtonDisabled,
-  } = props;
+  const { label, description, region, dropzoneDisabled, setErrors } = props;
 
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
 
@@ -235,8 +227,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   const dropzoneDisabledExtended =
     dropzoneDisabled || state.numInProgress > 0 || state.numFinished > 0;
-
-  setUrlButtonDisabled(dropzoneDisabledExtended);
 
   // When `nextBatch` changes, upload the files.
   React.useEffect(() => {

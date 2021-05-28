@@ -39,7 +39,6 @@ import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
 import ImagesPricingBanner from './ImagesPricingBanner';
-import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -155,14 +154,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
   const classes = useStyles();
-  const {
-    imagesData,
-    imagesLoading,
-    imagesError,
-    deleteImage,
-    history,
-    location,
-  } = props;
+  const { imagesData, imagesLoading, imagesError, deleteImage } = props;
 
   /**
    * Separate manual Images (created by the user, either from disk or from uploaded file)
@@ -191,22 +183,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     dialogAction === 'cancel'
       ? 'Are you sure you want to cancel this Image upload?'
       : 'Are you sure you want to delete this Image?';
-
-  const [successDialogOpen, setSuccessDialogOpen] = React.useState(false);
-  const [uploadURL, setUploadURL] = React.useState<string | undefined>();
-
-  const handleCloseSuccessDialog = () => {
-    setSuccessDialogOpen(false);
-    window.setTimeout(() => setUploadURL(undefined), 500);
-    history.replace({ state: undefined });
-  };
-
-  React.useEffect(() => {
-    if (location.state?.upload_url) {
-      setSuccessDialogOpen(true);
-      setUploadURL(location.state.upload_url);
-    }
-  }, [location]);
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
@@ -531,11 +507,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         {dialog.error && <Notice error text={dialog.error} />}
         <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
-      <ImageUploadSuccessDialog
-        isOpen={successDialogOpen}
-        onClose={handleCloseSuccessDialog}
-        url={uploadURL ?? ''}
-      />
     </React.Fragment>
   );
 };

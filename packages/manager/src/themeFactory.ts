@@ -172,8 +172,10 @@ const genericLinkStyle = {
   font: 'inherit',
   padding: 0,
   cursor: 'pointer',
+  minWidth: 0,
   '&:hover': {
     color: primaryColors.main,
+    backgroundColor: 'transparent',
     textDecoration: 'underline',
   },
 };

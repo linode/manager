@@ -10,7 +10,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import FileUploader from 'src/components/FileUploader/FileUploader';
-import Link from 'src/components/Link';
+import LinodeCLIModal from 'src/components/LinodeCLIModal';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
@@ -19,9 +19,9 @@ import { useAuthentication } from 'src/hooks/useAuthentication';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
-import { uploadImage } from 'src/store/image/image.requests';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { wrapInQuotes } from 'src/utilities/stringUtils';
 import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,13 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   generateUrlButton: {
     ...theme.applyLinkStyles,
-    fontWeight: 700,
-    marginTop: '0.5rem',
-    '&:hover': {
-      backgroundColor: 'transparent',
-      textDecoration: 'underline',
-      color: theme.cmrTextColors.linkActiveLight,
-    },
   },
 }));
 export interface Props {
@@ -81,9 +74,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const dispatch: Dispatch = useDispatch();
   const regions = useRegionsQuery().data ?? [];
   // @todo replace this with React-query
-  const [submitting, setSubmitting] = React.useState(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [urlButtonDisabled, setUrlButtonDisabled] = React.useState<boolean>(
+
+  const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
   );
 
@@ -103,31 +96,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
   });
 
   const uploadingDisabled = !label || !region;
-
-  const handleSubmit = () => {
-    setSubmitting(true);
-    setErrors(undefined);
-    dispatch(
-      uploadImage({
-        label,
-        description: description || undefined,
-        region,
-      })
-    )
-      .then((response) => {
-        setSubmitting(false);
-        push({
-          pathname: '/images',
-          state: {
-            upload_url: response.upload_to,
-          },
-        });
-      })
-      .catch((e) => {
-        setSubmitting(false);
-        setErrors(e);
-      });
-  };
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
@@ -234,33 +202,31 @@ export const ImageUpload: React.FC<Props> = (props) => {
             region={region}
             dropzoneDisabled={uploadingDisabled}
             setErrors={setErrors}
-            setUrlButtonDisabled={setUrlButtonDisabled}
             setCancelFn={setCancelFn}
-            // setUploadInProgress={setUploadInProgress}
           />
-          <ActionsPanel style={{ marginTop: 16 }}>
+          <ActionsPanel style={{ marginTop: 8 }}>
             <Typography>
-              If you would prefer to upload your Image using another tool, you
-              may generate a URL below. For more information on this option, see
-              our{' '}
-              <Link to="https://www.linode.com/docs/guides/linode-images/#uploading-an-image-through-the-cloud-manager">
-                Images guide
-              </Link>
+              Or, upload an image using the{' '}
+              <button
+                className={classes.generateUrlButton}
+                onClick={() => setLinodeCLIModalOpen(true)}
+              >
+                Linode CLI
+              </button>
               .
             </Typography>
-            <Button
-              onClick={handleSubmit}
-              disabled={
-                uploadingDisabled || urlButtonDisabled || !canCreateImage
-              }
-              loading={submitting}
-              className={classes.generateUrlButton}
-            >
-              Generate URL for Upload
-            </Button>
           </ActionsPanel>
         </div>
       </Paper>
+      <LinodeCLIModal
+        isOpen={linodeCLIModalOpen}
+        onClose={() => setLinodeCLIModalOpen(false)}
+        command={`linode-cli image-upload --label ${
+          label ? wrapInQuotes(label) : '[LABEL]'
+        } --description ${
+          description ? wrapInQuotes(description) : '[DESCRIPTION]'
+        } --region ${region ? wrapInQuotes(region) : '[REGION]'} FILE`}
+      />
     </>
   );
 };
