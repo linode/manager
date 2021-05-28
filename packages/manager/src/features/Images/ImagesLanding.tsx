@@ -26,7 +26,6 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
 import { DeleteImagePayload } from 'src/store/image/image.actions';
@@ -39,6 +38,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
+import ImagesPricingBanner from './ImagesPricingBanner';
 import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -164,8 +164,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     location,
   } = props;
 
-  const { account } = useAccountManagement();
-
   /**
    * Separate manual Images (created by the user, either from disk or from uploaded file)
    * from automatic Images (created by the backend when a Linode is deleted).
@@ -269,21 +267,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCreateButtonClick = () => {
-    if (account.data?.capabilities.includes('Machine Images')) {
-      return props.history.push('/images/create');
-    }
-
-    return openForCreate();
-  };
-
-  const openForCreate = () => {
-    setDrawer({
-      open: true,
-      mode: 'create',
-      label: '',
-      description: '',
-      selectedDisk: null,
-    });
+    props.history.push('/images/create');
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {
@@ -472,7 +456,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             </Link>
           </Typography>
         </Placeholder>
-        {renderImageDrawer()}
       </React.Fragment>
     );
   };
@@ -494,6 +477,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
+      <ImagesPricingBanner />
       <LandingHeader
         title="Images"
         entity="Image"
