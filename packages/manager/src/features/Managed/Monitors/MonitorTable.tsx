@@ -8,7 +8,7 @@ import { FormikBag } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';

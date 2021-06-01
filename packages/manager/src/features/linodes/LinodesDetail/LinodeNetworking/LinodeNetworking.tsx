@@ -9,7 +9,7 @@ import { isEmpty, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Hidden from 'src/components/core/Hidden';

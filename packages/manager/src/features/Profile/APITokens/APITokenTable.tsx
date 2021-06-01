@@ -14,7 +14,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
