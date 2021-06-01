@@ -17,7 +17,9 @@ import AttachVLAN from './AttachVLAN';
 const useStyles = makeStyles((theme: Theme) => ({
   vlan: {
     marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(3),
+  },
+  addons: {
+    marginTop: theme.spacing(3),
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -137,7 +139,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
           />
         </Paper>
       ) : null}
-      <Paper data-qa-add-ons>
+      <Paper className={classes.addons} data-qa-add-ons>
         <Typography variant="h2" className={classes.title}>
           Add-ons{' '}
           {backupsDisabledReason ? (
