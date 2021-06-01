@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-06-01] - v1.42.0
+
+### Added:
+
+- Connect with LISH copy in Rescue modal for Bare Metal instances
+- Dismissible banner for Images pricing
+
+### Changed:
+
+- Images landing tables default sorted by label ascending
+- NodeBalancers landing table default sorted by label ascending
+- Clean up Paper component
+- Remove focus styles for mouse users
+- Update Credit Card drawer
+- Update LKE Create Cluster default node pool size to 3
+- Update font-logos dependency and added AlmaLinux icon
+- Update react-dropzone to 11.2.0
+
+### Fixed:
+
+- Search Linodes by IP address
+- TextField error message positioning and width
+- Viewing all Object Storage objects for some buckets
+
 ## [2021-05-19] - v1.41.3
 
 ### Fixed:
