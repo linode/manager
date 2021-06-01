@@ -7,7 +7,7 @@ import * as React from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import AcceptedCards from 'src/assets/icons/accepted-cards.svg';
+// import AcceptedCards from 'src/assets/icons/accepted-cards.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
