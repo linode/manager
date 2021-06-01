@@ -67,8 +67,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   inner: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
     '& > div': {
       marginBottom: theme.spacing(2),
     },

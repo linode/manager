@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -45,36 +44,34 @@ export const ListEntities: React.FC<CombinedProps> = (props) => {
             pageSize,
           }) => (
             <>
-              <Paper>
-                <Table aria-label={`List of ${entity}`}>
-                  <EntityTableHeader
-                    headers={headers}
-                    handleOrderChange={handleOrderChange}
-                    order={order}
-                    orderBy={orderBy}
-                    toggleGroupByTag={toggleGroupByTag}
-                    isGroupedByTag={isGroupedByTag}
-                  />
+              <Table aria-label={`List of ${entity}`}>
+                <EntityTableHeader
+                  headers={headers}
+                  handleOrderChange={handleOrderChange}
+                  order={order}
+                  orderBy={orderBy}
+                  toggleGroupByTag={toggleGroupByTag}
+                  isGroupedByTag={isGroupedByTag}
+                />
 
-                  <TableBody>
-                    <TableContentWrapper
-                      emptyMessage={emptyMessage}
-                      length={paginatedAndOrderedData.length}
-                      loading={loading}
-                      error={error}
-                      lastUpdated={lastUpdated}
-                    >
-                      {paginatedAndOrderedData.map((thisEntity) => (
-                        <RowComponent
-                          key={thisEntity.id}
-                          {...thisEntity}
-                          {...handlers}
-                        />
-                      ))}
-                    </TableContentWrapper>
-                  </TableBody>
-                </Table>
-              </Paper>
+                <TableBody>
+                  <TableContentWrapper
+                    emptyMessage={emptyMessage}
+                    length={paginatedAndOrderedData.length}
+                    loading={loading}
+                    error={error}
+                    lastUpdated={lastUpdated}
+                  >
+                    {paginatedAndOrderedData.map((thisEntity) => (
+                      <RowComponent
+                        key={thisEntity.id}
+                        {...thisEntity}
+                        {...handlers}
+                      />
+                    ))}
+                  </TableContentWrapper>
+                </TableBody>
+              </Table>
               <PaginationFooter
                 count={count}
                 handlePageChange={handlePageChange}

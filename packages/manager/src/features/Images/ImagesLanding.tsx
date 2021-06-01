@@ -24,6 +24,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
@@ -37,10 +38,14 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import ImagesPricingBanner from './ImagesPricingBanner';
+import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  imageTable: { marginBottom: theme.spacing(3) },
+  imageTable: {
+    marginBottom: theme.spacing(3),
+    padding: 0,
+  },
   imageTableHeader: {
     padding: theme.spacing(),
     marginLeft: theme.spacing(),
@@ -103,7 +108,6 @@ const getHeaders = (
       widthPercent: 35,
     },
   ].filter(Boolean) as HeaderCell[];
-import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 interface ImageDrawerState {
   open: boolean;
@@ -159,8 +163,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     history,
     location,
   } = props;
-
-  const { account } = useAccountManagement();
 
   /**
    * Separate manual Images (created by the user, either from disk or from uploaded file)
@@ -265,21 +267,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCreateButtonClick = () => {
-    if (account.data?.capabilities.includes('Machine Images')) {
-      return props.history.push('/images/create');
-    }
-
-    return openForCreate();
-  };
-
-  const openForCreate = () => {
-    setDrawer({
-      open: true,
-      mode: 'create',
-      label: '',
-      description: '',
-      selectedDisk: null,
-    });
+    props.history.push('/images/create');
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {
@@ -406,6 +394,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const manualHeaders = getHeaders('manual', machineImagesEnabled);
   const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
 
+  const initialOrder = {
+    order: 'asc' as Order,
+    orderBy: 'label',
+  };
+
   const manualImageRow: EntityTableRow<Image> = {
     Component: ImageRow,
     data: manualImages,
@@ -463,7 +456,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             </Link>
           </Typography>
         </Placeholder>
-        {renderImageDrawer()}
       </React.Fragment>
     );
   };
@@ -485,6 +477,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
+      <ImagesPricingBanner />
       <LandingHeader
         title="Images"
         entity="Image"
@@ -505,6 +498,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={manualImageRow}
           headers={manualHeaders}
           emptyMessage={'No Custom Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       <Paper className={classes.imageTable}>
@@ -520,6 +514,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={autoImageRow}
           headers={automaticHeaders}
           emptyMessage={'No Recovery Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       {renderImageDrawer()}

@@ -15,7 +15,6 @@ import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Checkbox from 'src/components/CheckBox';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -31,13 +30,13 @@ import TextField from 'src/components/TextField';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { EntityError } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { GetAllData } from 'src/utilities/getAll';
@@ -52,16 +51,11 @@ type ClassNames =
   | 'toolTip'
   | 'currentPlanContainer'
   | 'resizeTitle'
-  | 'checkbox'
   | 'currentHeaderEmptyCell'
-  | 'tabbedPanelInnerClass'
   | 'selectPlanPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
-    checkbox: {
-      marginTop: theme.spacing(3),
-    },
     toolTip: {
       paddingTop: theme.spacing(1),
     },
@@ -85,11 +79,12 @@ const styles = (theme: Theme) =>
     currentHeaderEmptyCell: {
       width: '13%',
     },
-    tabbedPanelInnerClass: {
-      padding: 0,
-    },
     selectPlanPanel: {
       marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(3),
+      '& > div': {
+        padding: 0,
+      },
     },
   });
 
@@ -329,55 +324,52 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             selectedID={this.state.selectedId}
             disabled={tableDisabled}
             updateFor={[this.state.selectedId]}
-            tabbedPanelInnerClass={classes.tabbedPanelInnerClass}
           />
         </div>
-        <Paper className={classes.checkbox}>
-          <Typography variant="h2" className={classes.resizeTitle}>
-            Auto Resize Disk
-            {disksError ? (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`There was an error loading your Linode's disks.`}
-              />
-            ) : isSmaller ? (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
-              />
-            ) : !_shouldEnableAutoResizeDiskOption ? (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`Your ext disk can only be automatically resized if you have one ext
+        <Typography variant="h2" className={classes.resizeTitle}>
+          Auto Resize Disk
+          {disksError ? (
+            <HelpIcon
+              className={classes.toolTip}
+              text={`There was an error loading your Linode's disks.`}
+            />
+          ) : isSmaller ? (
+            <HelpIcon
+              className={classes.toolTip}
+              text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+            />
+          ) : !_shouldEnableAutoResizeDiskOption ? (
+            <HelpIcon
+              className={classes.toolTip}
+              text={`Your ext disk can only be automatically resized if you have one ext
                       disk or one ext disk and one swap disk on this Linode.`}
-              />
-            ) : null}
-          </Typography>
-          <Checkbox
-            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
-            checked={
-              !_shouldEnableAutoResizeDiskOption || isSmaller
-                ? false
-                : this.state.autoDiskResize
-            }
-            onChange={this.handleToggleAutoDisksResize}
-            text={
-              <Typography>
-                Would you like{' '}
-                {_shouldEnableAutoResizeDiskOption ? (
-                  <strong>{diskToResize}</strong>
-                ) : (
-                  'your disk'
-                )}{' '}
-                to be automatically scaled with this Linode&apos;s new size? We
-                recommend you keep this option enabled when available. Automatic
-                resizing is only available when moving to a larger plan, and
-                when you have a single ext disk (or one ext and one swap disk)
-                on your Linode.
-              </Typography>
-            }
-          />
-        </Paper>
+            />
+          ) : null}
+        </Typography>
+        <Checkbox
+          disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
+          checked={
+            !_shouldEnableAutoResizeDiskOption || isSmaller
+              ? false
+              : this.state.autoDiskResize
+          }
+          onChange={this.handleToggleAutoDisksResize}
+          text={
+            <Typography>
+              Would you like{' '}
+              {_shouldEnableAutoResizeDiskOption ? (
+                <strong>{diskToResize}</strong>
+              ) : (
+                'your disk'
+              )}{' '}
+              to be automatically scaled with this Linode&apos;s new size? We
+              recommend you keep this option enabled when available. Automatic
+              resizing is only available when moving to a larger plan, and when
+              you have a single ext disk (or one ext and one swap disk) on your
+              Linode.
+            </Typography>
+          }
+        />
 
         <ActionsPanel>
           <Typography variant="h2">Confirm</Typography>
