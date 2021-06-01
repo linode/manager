@@ -11,7 +11,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
 import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -393,32 +392,30 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <Paper>
-          <Table aria-label="List of OAuth Apps">
-            <TableHead data-qa-table-head>
-              <TableRow>
-                <TableSortCell
-                  active={this.props.orderBy === 'label'}
-                  label="label"
-                  direction={this.props.order}
-                  handleClick={this.props.handleOrderChange}
-                  style={{ width: '20%' }}
-                >
-                  Label
-                </TableSortCell>
-                <Hidden xsDown>
-                  <TableCell>Access</TableCell>
-                </Hidden>
-                <TableCell style={{ width: '20%' }}>ID</TableCell>
-                <Hidden xsDown>
-                  <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
-                </Hidden>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
+        <Table aria-label="List of OAuth Apps">
+          <TableHead data-qa-table-head>
+            <TableRow>
+              <TableSortCell
+                active={this.props.orderBy === 'label'}
+                label="label"
+                direction={this.props.order}
+                handleClick={this.props.handleOrderChange}
+                style={{ width: '20%' }}
+              >
+                Label
+              </TableSortCell>
+              <Hidden xsDown>
+                <TableCell>Access</TableCell>
+              </Hidden>
+              <TableCell style={{ width: '20%' }}>ID</TableCell>
+              <Hidden xsDown>
+                <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
+              </Hidden>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>{this.renderContent()}</TableBody>
+        </Table>
 
         <Modals
           deleteModalOpen={this.state.deleteModalOpen}

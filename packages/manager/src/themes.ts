@@ -530,6 +530,9 @@ const darkThemeOptions = {
       root: {
         backgroundColor: cmrBGColors.bgPaper,
       },
+      outlined: {
+        border: '1px solid rgba(0, 0, 0, 0.2)',
+      },
     },
     MuiPopover: {
       paper: {

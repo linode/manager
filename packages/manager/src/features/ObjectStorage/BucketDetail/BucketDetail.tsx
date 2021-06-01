@@ -461,8 +461,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
                 {!loading &&
                   !allObjectsFetched &&
                   !generalError &&
-                  !nextPageError &&
-                  data.length >= 100 && (
+                  !nextPageError && (
                     <Waypoint onEnter={this.getNextPage}>
                       <div />
                     </Waypoint>
