@@ -6,7 +6,7 @@ import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
-export const nodeWarning = `We recommend at least 3 nodes in each pool. Fewer nodes may affect availability.`;
+export const nodeWarning = `We recommend a minimum of 3 node in each NodePool to avoid downtime during upgrades and maintenance.`;
 
 export const getMonthlyPrice = (
   type: string,
