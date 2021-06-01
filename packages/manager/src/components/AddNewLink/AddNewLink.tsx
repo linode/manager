@@ -1,38 +1,42 @@
 import * as React from 'react';
+import { makeStyles } from 'src/components/core/styles';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 import Button from '../Button';
 
 export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
-  label: string;
-  onClick: (e?: React.MouseEvent<HTMLElement>) => void;
   display?: string;
   disabled?: boolean;
   disabledReason?: string;
-  left?: boolean;
-  className?: any;
+  label: string;
+  onClick: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CombinedProps = Props;
 
+const useStyles = makeStyles(() => ({
+  root: {
+    minHeight: 30,
+  },
+}));
+
 const AddNewLink: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
-    onClick,
-    label,
-    display,
     disabled,
-    left,
-    className,
     disabledReason,
-    children,
+    display,
+    label,
+    onClick,
+    className,
     ...remainingPropsAsTooltipProps
   } = props;
 
   const baseProps = {
-    onClick,
-    title: label,
-    text: label,
     disabled,
-    left,
+    onClick,
+    text: label,
+    title: label,
     className,
   };
 
@@ -47,10 +51,8 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
         title={disabledReason}
       >
         <div>
-          {/*
-            wrapping in div because the child of tooltip needs to be able to hold a ref 
-          */}
-          <Button buttonType="secondary" {...baseProps}>
+          {/* Wrapping in div because the child of tooltip needs to be able to hold a ref */}
+          <Button buttonType="primary" className={classes.root} {...baseProps}>
             {display || label}
           </Button>
         </div>
@@ -58,7 +60,11 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
     );
   }
 
-  return <Button {...baseProps}>{display || label}</Button>;
+  return (
+    <Button buttonType="primary" className={classes.root} {...baseProps}>
+      {display || label}
+    </Button>
+  );
 };
 
 export default AddNewLink;
