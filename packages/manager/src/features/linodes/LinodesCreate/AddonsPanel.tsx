@@ -123,8 +123,8 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Paper className={classes.vlan} data-qa-add-ons>
-        {showVlans ? (
+      {showVlans ? (
+        <Paper className={classes.vlan} data-qa-add-ons>
           <AttachVLAN
             vlanLabel={vlanLabel}
             labelError={labelError}
@@ -135,8 +135,8 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             handleVLANChange={handleVLANChange}
             region={selectedRegionID}
           />
-        ) : null}
-      </Paper>
+        </Paper>
+      ) : null}
       <Paper data-qa-add-ons>
         <Typography variant="h2" className={classes.title}>
           Add-ons{' '}
