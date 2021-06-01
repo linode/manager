@@ -25,6 +25,8 @@ export const uploadImageFile = (
   };
   return {
     request: () => axiosInstance.request(config),
+    // Return the cancel function to the client, since this is a long-running
+    // request that the user may want to cancel.
     cancel: source.cancel,
   };
 };

@@ -171,8 +171,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     if (
       prevProps.isAuthenticated &&
       !this.props.isAuthenticated &&
-      // Do not redirect to Login if there is a pending image upload (which can
-      // be long-running). This will be unnecessary once we have refresh tokens.
+      // Do not redirect to Login if there is a pending image upload.
       !this.props.pendingUpload
     ) {
       redirectToLogin(location.pathname, location.search);

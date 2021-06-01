@@ -20,7 +20,7 @@ import {
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
 import { Dispatch } from 'src/hooks/types';
-import { useAuthentication } from 'src/hooks/useAuthentication';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';
 import { uploadImage } from 'src/store/image/image.requests';
 import { setPendingUpload } from 'src/store/pendingUpload';
@@ -136,13 +136,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
 
   // Keep track of the session token since we may need to grab the user a new
-  // one after a long upload (if their session has expired). This is stored in
-  // a ref because closures.
-  const { token } = useAuthentication();
-  const tokenRef = React.useRef(token);
-  React.useEffect(() => {
-    tokenRef.current = token;
-  });
+  // one after a long upload (if their session has expired).
+  const currentToken = useCurrentToken();
 
   const [state, dispatch] = React.useReducer(
     curriedObjectUploaderReducer,
@@ -156,8 +151,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       e.preventDefault();
     };
 
-    // Prevent the browser from opening files dropped on the screen, which will
-    // happen if the dropzone is disabled.
+    // This event listeners prevent the browser from opening files dropped on
+    // the screen, which was happening when the dropzone was disabled.
 
     // eslint-disable-next-line scanjs-rules/call_addEventListener
     window.addEventListener('dragover', preventDefault);
@@ -264,7 +259,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         // The upload has finished, but the user's token has expired.
         // Show the toast, then redirect them to /images, passing them through
         // Login to get a new token.
-        if (!tokenRef.current) {
+        if (!currentToken) {
           setTimeout(() => {
             redirectToLogin('/images');
           }, 3000);
@@ -296,7 +291,11 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           .then((response) => {
             setUploadToURL(response.upload_to);
 
+            // Let the entire app know that there's a pending upload via Redux.
+            // High-level components like AuthenticationWrapper need to know
+            // this, so the user isn't redirected to Login if the token expires.
             dispatchAction(setPendingUpload(true));
+
             dispatch({
               type: 'UPDATE_FILES',
               filesToUpdate: [pathOrFileName(fileUpload.file)],
@@ -310,16 +309,15 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             );
 
             // The parent might need to cancel this upload (e.g. if the user
-            // navigates away from the page). This is all to handle sessions
-            // that expire during uploads. This will be unnecessary when we have
-            // refresh tokens.
+            // navigates away from the page).
             props.setCancelFn(() => () => cancel());
 
-            request() // response.upload_to used here instead of uploadToURL b/c of race condition
+            request()
               .then(() => handleSuccess())
               .catch(() => handleError());
           })
           .catch((e) => {
+            dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
             setErrors(e);
           });
       } else {
@@ -334,7 +332,10 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
         request()
           .then(() => handleSuccess())
-          .catch(() => handleError());
+          .catch(() => {
+            handleError();
+            dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
+          });
       }
     });
   }, [nextBatch]);
@@ -352,7 +353,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     disabled: dropzoneDisabledExtended,
     noClick: true,
     noKeyboard: true,
-    accept: 'application/x-gzip', // Uploaded files must be compressed using the gzip compression algorithm.
+    accept: 'application/x-gzip', // Uploaded files must be compressed using gzip.
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
   });
@@ -394,26 +395,24 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         <input {...getInputProps()} placeholder={placeholder} />
 
         <div className={classes.fileUploads}>
-          {state.files
-            // .filter((upload) => upload.status !== 'QUEUED')
-            .map((upload, idx) => {
-              const fileName = upload.file.name;
-              return (
-                <FileUpload
-                  key={idx}
-                  displayName={fileName}
-                  fileName={fileName}
-                  sizeInBytes={upload.file.size || 0}
-                  percentCompleted={upload.percentComplete || 0}
-                  overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
-                  dispatch={dispatch}
-                  error={
-                    upload.status === 'ERROR' ? 'Error uploading image.' : ''
-                  }
-                  type="image"
-                />
-              );
-            })}
+          {state.files.map((upload, idx) => {
+            const fileName = upload.file.name;
+            return (
+              <FileUpload
+                key={idx}
+                displayName={fileName}
+                fileName={fileName}
+                sizeInBytes={upload.file.size || 0}
+                percentCompleted={upload.percentComplete || 0}
+                overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
+                dispatch={dispatch}
+                error={
+                  upload.status === 'ERROR' ? 'Error uploading image.' : ''
+                }
+                type="image"
+              />
+            );
+          })}
         </div>
 
         <div

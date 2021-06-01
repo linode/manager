@@ -15,7 +15,7 @@ import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
-import { useAuthentication } from 'src/hooks/useAuthentication';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
@@ -75,37 +75,30 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const regions = useRegionsQuery().data ?? [];
   // @todo replace this with React-query
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
-
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
   );
 
+  //  This holds a "cancel function" from the Axios instance that handles image
+  // uploads. Calling this function will cancel the HTTP request.
   const [cancelFn, setCancelFn] = React.useState<(() => void) | null>(null);
 
+  // Whether or not there is an upload pending. This is stored in Redux since
+  // high-level components like AuthenticationWrapper need to read it.
   const pendingUpload = useSelector<ApplicationState, boolean>(
     (state) => state.pendingUpload
   );
 
   // Keep track of the session token since we may need to grab the user a new
-  // one after a long upload (if their session has expired). This is stored in
-  // a ref because closures.
-  const { token } = useAuthentication();
-  const tokenRef = React.useRef(token);
-  React.useEffect(() => {
-    tokenRef.current = token;
-  });
-
-  const uploadingDisabled = !label || !region;
-
-  const errorMap = getErrorMap(['label', 'description', 'region'], errors);
+  // one after a long upload (if their session has expired).
+  const currentToken = useCurrentToken();
 
   // Called after a user confirms they want to navigate to another part of
   // Cloud during a pending upload. When we have refresh tokens this won't be
   // necessary; the user will be able to navigate to other components and we
-  // will show the upload progress in the lower part of the screen.
+  // will show the upload progress in the lower part of the screen. For now we
+  // box the user on this page so we can handle token expiry (semi)-gracefully.
   const onConfirm = (nextLocation: string) => {
-    // This uses Axios's CancelToken. It comes from FileUploader.tsx, when the
-    // upload request is created.
     if (cancelFn) {
       cancelFn();
     }
@@ -115,12 +108,21 @@ export const ImageUpload: React.FC<Props> = (props) => {
     // If the user's session has expired we need to send them to Login to get
     // a new token. They will be redirected back to path they were trying to
     // reach.
-    if (!tokenRef.current) {
+    if (!currentToken) {
       redirectToLogin(nextLocation);
     } else {
       push(nextLocation);
     }
   };
+
+  const uploadingDisabled = !label || !region;
+
+  const errorMap = getErrorMap(['label', 'description', 'region'], errors);
+
+  const cliLabel = formatForCLI(label, 'label');
+  const cliDescription = formatForCLI(description, 'description');
+  const cliRegion = formatForCLI(region, 'region');
+  const linodeCLICommand = `linode-cli image-upload --label ${cliLabel} --description ${cliDescription} --region ${cliRegion} FILE`;
 
   return (
     <>
@@ -221,14 +223,14 @@ export const ImageUpload: React.FC<Props> = (props) => {
       <LinodeCLIModal
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
-        command={`linode-cli image-upload --label ${
-          label ? wrapInQuotes(label) : '[LABEL]'
-        } --description ${
-          description ? wrapInQuotes(description) : '[DESCRIPTION]'
-        } --region ${region ? wrapInQuotes(region) : '[REGION]'} FILE`}
+        command={linodeCLICommand}
       />
     </>
   );
 };
 
 export default ImageUpload;
+
+const formatForCLI = (value: string, fallback: string) => {
+  return value ? wrapInQuotes(value) : `[${fallback.toUpperCase()}]`;
+};

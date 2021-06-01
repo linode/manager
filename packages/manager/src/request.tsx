@@ -6,7 +6,6 @@ import { AccountActivationError } from 'src/components/AccountActivation';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
-import { imageUploadInProgress } from 'src/imageUploadProgressCheck';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
@@ -26,15 +25,12 @@ const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
 
 export const handleError = (error: AxiosError) => {
   if (
-    !imageUploadInProgress &&
-    (!!error.config?.headers['x-maintenance-mode'] ||
-      (error.response && error.response.status === 401))
+    !!error.config?.headers['x-maintenance-mode'] ||
+    (error.response && error.response.status === 401)
   ) {
     /**
      * this will blow out redux state and the componentDidUpdate in the
      * AuthenticationWrapper.tsx will be responsible for redirecting to Login
-     *
-     * do not redirect the user to login if they have an image upload in progress -- confirm that this has the intended effect
      */
     store.dispatch(handleLogout());
   }
