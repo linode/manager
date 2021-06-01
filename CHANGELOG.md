@@ -15,18 +15,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Images landing tables default sorted by label ascending
 - NodeBalancers landing table default sorted by label ascending
-- Clean up Paper component
+
+- Add AlmaLinux icon
 - Remove focus styles for mouse users
 - Update Credit Card drawer
 - Update LKE Create Cluster default node pool size to 3
-- Update font-logos dependency and added AlmaLinux icon
-- Update react-dropzone to 11.2.0
 
 ### Fixed:
 
 - Search Linodes by IP address
-- TextField error message positioning and width
-- Viewing all Object Storage objects for some buckets
+- Input field error message positioning and width
+- Viewing all Object Storage objects for some Buckets
 
 ## [2021-05-19] - v1.41.3
 

@@ -176,7 +176,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
               inputComponent: creditCardField,
             }}
           />
-          <AcceptedCards className={classes.cards} />
+          {/* <AcceptedCards className={classes.cards} /> */}
         </Grid>
         <Grid item className={classes.cardDetails} xs={12} sm={6}>
           <TextField
