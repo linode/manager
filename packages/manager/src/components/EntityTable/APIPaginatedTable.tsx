@@ -49,7 +49,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Paper>
+      <Paper style={{ padding: 0 }}>
         <Table aria-label={`List of ${entity}`}>
           <EntityTableHeader
             headers={headers}
