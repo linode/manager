@@ -27,7 +27,7 @@ describe('KubeCheckoutBar', () => {
 
   it('should not show a warning if all pools have 3 nodes or more', () => {
     const { queryAllByText } = renderComponent(props);
-    expect(queryAllByText(/at least 3 nodes/i)).toHaveLength(0);
+    expect(queryAllByText(/minimum of 3 nodes/i)).toHaveLength(0);
   });
 
   it('should show a warning if any pool has fewer than 3 nodes', () => {
@@ -36,7 +36,7 @@ describe('KubeCheckoutBar', () => {
       ...props,
       pools: poolsWithSmallNode,
     });
-    getByText(/at least 3 nodes/i);
+    getByText(/minimum of 3 nodes/i);
   });
 
   it('should display the total price of the cluster', () => {
