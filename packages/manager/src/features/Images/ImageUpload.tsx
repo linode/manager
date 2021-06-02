@@ -206,7 +206,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             setErrors={setErrors}
             setCancelFn={setCancelFn}
           />
-          <ActionsPanel style={{ marginTop: 8 }}>
+          <ActionsPanel>
             <Typography>
               Or, upload an image using the{' '}
               <button

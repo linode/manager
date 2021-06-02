@@ -28,7 +28,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingBottom: 60,
+    paddingBottom: 30,
     position: 'relative',
   },
   dropzone: {
@@ -347,6 +347,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     isDragAccept,
     isDragReject,
     open,
+    acceptedFiles,
   } = useDropzone({
     onDrop,
     onDropRejected,
@@ -357,6 +358,9 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
   });
+
+  const disableAndHideDropzoneBrowseBtn =
+    isDragAccept || acceptedFiles.length > 0;
 
   const className = React.useMemo(
     () =>
@@ -426,14 +430,16 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
               {placeholder}
             </Typography>
           )}
-          <Button
-            buttonType="primary"
-            onClick={open}
-            className={classes.uploadButton}
-            disabled={dropzoneDisabledExtended}
-          >
-            Browse Files
-          </Button>
+          {!disableAndHideDropzoneBrowseBtn ? (
+            <Button
+              buttonType="primary"
+              onClick={open}
+              className={classes.uploadButton}
+              disabled={disableAndHideDropzoneBrowseBtn}
+            >
+              Browse Files
+            </Button>
+          ) : null}
         </div>
       </div>
     </div>
