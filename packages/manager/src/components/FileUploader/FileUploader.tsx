@@ -62,10 +62,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   inactive: {
-    // When the dropzone is disabled (i.e., when the Label and/or Region fields aren't populated)
+    // When the dropzone is disabled
     borderColor: '#888',
     '& $uploadButton': {
-      opacity: 0.5,
+      backgroundColor: theme.color.grey6,
+      '&:hover': {
+        cursor: 'default',
+      },
     },
   },
   accept: {

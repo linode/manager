@@ -217,9 +217,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
               >
                 Linode CLI
               </button>
-              . For information, please see our guide on{' '}
+              . For more information, please see{' '}
               <Link to="https://www.linode.com/docs/guides/linode-cli">
-                using the Linode CLI
+                our guide on using the Linode CLI
               </Link>
               .
             </Typography>
