@@ -11,46 +11,27 @@ import {
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import Divider from '../core/Divider';
 import UserSSHKeyPanel from './UserSSHKeyPanel';
+
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
-type ClassNames =
-  | 'root'
-  | 'panelBody'
-  | 'small'
-  | 'passwordInputOuter'
-  | 'isOptional';
+type ClassNames = 'root' | 'isOptional' | 'passwordInputOuter' | 'divider';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
-      width: '100%',
       marginTop: theme.spacing(3),
-      backgroundColor: theme.cmrBGColors.bgPaper,
     },
-    panelBody: {
-      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
-    },
-    small: {
-      '&$root': {
-        marginTop: 0,
-      },
-      '& $passwordInputOuter': {
-        marginTop: 0,
-      },
-      '& .input': {
-        minHeight: 32,
-        '& input': {
-          padding: 8,
-        },
-      },
-    },
-    passwordInputOuter: {},
     isOptional: {
       '& $passwordInputOuter': {
         marginTop: 0,
       },
+    },
+    passwordInputOuter: {},
+    divider: {
+      backgroundColor: theme.cmrBorderColors.borderTabs,
+      marginTop: theme.spacing(4),
     },
   });
 
@@ -103,7 +84,6 @@ class AccessPanel extends React.Component<CombinedProps> {
       disabledReason,
       hideStrengthLabel,
       className,
-      small,
       isOptional,
       passwordHelperText,
       requestKeys,
@@ -114,7 +94,6 @@ class AccessPanel extends React.Component<CombinedProps> {
         className={classNames(
           {
             [classes.root]: true,
-            [classes.small]: small,
             [classes.isOptional]: isOptional,
           },
           className
@@ -139,12 +118,15 @@ class AccessPanel extends React.Component<CombinedProps> {
           />
         </React.Suspense>
         {users && (
-          <UserSSHKeyPanel
-            users={users}
-            error={sshKeyError}
-            disabled={disabled}
-            onKeyAddSuccess={requestKeys || (() => null)}
-          />
+          <>
+            <Divider className={classes.divider} />
+            <UserSSHKeyPanel
+              users={users}
+              error={sshKeyError}
+              disabled={disabled}
+              onKeyAddSuccess={requestKeys || (() => null)}
+            />
+          </>
         )}
       </Paper>
     );
