@@ -10,7 +10,6 @@ const notifications: Notification[] = [
   notificationFactory.build({ type: 'migration_pending', severity: 'major' }),
   notificationFactory.build({ type: 'reboot_scheduled', severity: 'minor' }),
   notificationFactory.build({ type: 'outage', severity: 'critical' }),
-  notificationFactory.build({ type: 'payment_due', severity: 'major' }),
   notificationFactory.build({ type: 'ticket_important', severity: 'minor' }),
   notificationFactory.build({ type: 'ticket_abuse', severity: 'critical' }),
   notificationFactory.build({ type: 'notice', severity: 'major' }),
