@@ -8,18 +8,16 @@ import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
-import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
-import useFlags from 'src/hooks/useFlags';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
-  root: {
-    '& td': {
-      borderTop: 0,
-      paddingLeft: '15px',
-      paddingRight: '15px',
+  sortCell: {
+    fontFamily: theme.font.bold,
+    padding: '10px 15px',
+    '& .MuiTableSortLabel-active:hover': {
+      color: theme.palette.primary.main,
     },
   },
   thead: {
@@ -62,23 +60,21 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     isGroupedByTag,
   } = props;
   const classes = useStyles();
-  const flags = useFlags();
 
-  const SortCell = flags.cmr ? TableSortCell_CMR : TableSortCell;
-
-  const _SortCell: React.FC<SortCellProps> = (props) => {
+  const SortCell: React.FC<SortCellProps> = (props) => {
     const { orderBy, order, thisCell, handleOrderChange } = props;
     return (
-      <SortCell
+      <TableSortCell
         active={orderBy === thisCell.dataColumn}
         label={thisCell.dataColumn}
         direction={order}
         handleClick={handleOrderChange}
+        className={classes.sortCell}
         style={{ width: `${thisCell.widthPercent}%` }}
         data-testid={`${thisCell.label}-header-cell`}
       >
         {thisCell.label}
-      </SortCell>
+      </TableSortCell>
     );
   };
 
@@ -108,7 +104,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
           thisCell.sortable ? (
             thisCell.hideOnTablet ? (
               <Hidden smDown key={thisCell.dataColumn}>
-                <_SortCell
+                <SortCell
                   thisCell={thisCell}
                   order={order}
                   orderBy={orderBy}
@@ -117,7 +113,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
               </Hidden>
             ) : thisCell.hideOnMobile ? (
               <Hidden xsDown key={thisCell.dataColumn}>
-                <_SortCell
+                <SortCell
                   thisCell={thisCell}
                   order={order}
                   orderBy={orderBy}
@@ -125,7 +121,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
                 />
               </Hidden>
             ) : (
-              <_SortCell
+              <SortCell
                 thisCell={thisCell}
                 key={thisCell.dataColumn}
                 order={order}

@@ -31,6 +31,8 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
     initialOrder,
     RowComponent,
     emptyMessage,
+    toggleGroupByTag,
+    isGroupedByTag,
   } = props;
 
   const _data = data ?? [];
@@ -56,6 +58,8 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
             order={props.order}
             orderBy={props.orderBy ?? 'asc'}
             handleOrderChange={props.handleOrderChange}
+            toggleGroupByTag={toggleGroupByTag}
+            isGroupedByTag={isGroupedByTag}
           />
           <TableBody>
             <TableContentWrapper
