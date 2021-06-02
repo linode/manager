@@ -381,7 +381,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   const placeholder =
     !label || !region
       ? 'To upload an image, complete the required fields.'
-      : 'You can browse your device to upload an image file or drop it here';
+      : 'You can browse your device to upload an image file or drop it here.';
 
   return (
     <div
