@@ -44,7 +44,7 @@ describe('ResizeNodePoolDrawer', () => {
     const { getByText } = renderWithTheme(
       <ResizeNodePoolDrawer {...props} nodePool={smallPool} />
     );
-    expect(getByText(/we recommend at least 3 nodes/i));
+    expect(getByText(/minimum of 3 nodes/i));
   });
 
   it('should display a warning if the user tries to resize to a smaller node count', () => {
