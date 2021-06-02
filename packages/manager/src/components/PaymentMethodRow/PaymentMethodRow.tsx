@@ -2,42 +2,23 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import Chip from 'src/components/core/Chip';
 import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import Typography from 'src/components/core/Typography';
-import Visa from 'src/assets/icons/payment/visa.svg';
-import Mastercard from 'src/assets/icons/payment/mastercard.svg';
+import CreditCard from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
 import GooglePay from 'src/assets/icons/payment/googlePay.svg';
 import PayPal from 'src/assets/icons/payment/payPal.svg';
-import Amex from 'src/assets/icons/payment/amex.svg';
-import Discover from 'src/assets/icons/payment/discover.svg';
-import JCB from 'src/assets/icons/payment/jcb.svg';
-import CreditCard from 'src/assets/icons/credit-card.svg';
+import { CardProvider } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(),
-  },
-  expiry: {
-    marginLeft: theme.spacing(),
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 0,
-    },
-  },
-  expired: {
-    color: theme.color.red,
+    padding: 0,
   },
   actions: {
     marginLeft: 'auto',
-  },
-  card: {
-    display: 'flex',
-    [theme.breakpoints.down('xs')]: {
-      display: 'grid',
-    },
   },
   item: {
     display: 'flex',
@@ -48,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     width: 45,
   },
-  paymentText: {
+  paymentMethodText: {
     fontWeight: 'bold',
   },
   payPal: {
@@ -60,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+// @TODO: Separate payment method from (googlepay, paypal) from card type
 interface Props {
   lastFour?: string;
   expiry?: string;
@@ -72,49 +54,30 @@ type CombinedProps = Props;
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   const { expiry, lastFour, isDefault, paymentMethod } = props;
   const classes = useStyles();
-  const isCardExpired = expiry && isCreditCardExpired(expiry);
 
-  const paymentIcon = (): any => {
-    switch (paymentMethod) {
-      case 'Visa':
-        return <Visa />;
-      case 'Mastercard':
-        return <Mastercard />;
-      case 'Amex':
-        return <Amex />;
-      case 'Discover':
-        return <Discover />;
+  const paymentIcon = (provider: string): any => {
+    switch (provider) {
       case 'GooglePay':
         return <GooglePay />;
       case 'PayPal':
         return <PayPal className={classes.payPal} />;
-      case 'JCB':
-        return <JCB />;
-      default:
-        return <CreditCard />;
     }
   };
 
-  const paymentText =
+  const paymentInfo =
     paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod) ? (
-      <Grid item>
-        <Typography className={classes.paymentText}>
+      <>
+        <span className={classes.icon}>{paymentIcon(paymentMethod)}</span>
+        <Typography className={classes.paymentMethodText}>
           &nbsp;{paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
         </Typography>
-      </Grid>
+      </>
     ) : (
-      <Grid item className={classes.card}>
-        <Typography className={classes.paymentText}>
-          &nbsp;{paymentMethod} ****{lastFour}
-        </Typography>
-        <Typography className={classes.expiry}>
-          {isCardExpired ? (
-            <span className={classes.expired}>&nbsp;{`Expired ${expiry}`}</span>
-          ) : (
-            <span>&nbsp;{`Expires ${expiry}`}</span>
-          )}
-        </Typography>
-      </Grid>
+      <CreditCard
+        provider={paymentMethod}
+        expiry={expiry}
+        lastFour={lastFour}
+      />
     );
 
   const actions: Action[] = [
@@ -149,8 +112,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     <Paper className={classes.root} variant="outlined">
       <Grid container>
         <Grid item className={classes.item}>
-          <span className={classes.icon}>{paymentIcon()}</span>
-          {paymentText}
+          {paymentInfo}
         </Grid>
         <Grid item className={classes.item}>
           {isDefault && (

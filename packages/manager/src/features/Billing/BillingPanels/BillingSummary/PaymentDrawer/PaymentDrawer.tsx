@@ -16,7 +16,7 @@ import AccountContainer, {
   DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
 import { v4 } from 'uuid';
-import CreditCard from './CreditCardPayment';
+import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 
@@ -157,7 +157,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             />
           </Grid>
 
-          <CreditCard
+          <CreditCardPayment
             key={creditCardKey}
             lastFour={lastFour}
             expiry={expiry}
