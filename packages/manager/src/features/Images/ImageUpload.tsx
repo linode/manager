@@ -10,6 +10,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import FileUploader from 'src/components/FileUploader/FileUploader';
+import Link from 'src/components/Link';
 import LinodeCLIModal from 'src/components/LinodeCLIModal';
 import Notice from 'src/components/Notice';
 import Prompt from 'src/components/Prompt';
@@ -48,8 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   browseFilesButton: {
     marginLeft: '1rem',
   },
-  generateUrlButton: {
+  cliModalButton: {
     ...theme.applyLinkStyles,
+    fontWeight: 700,
   },
 }));
 export interface Props {
@@ -210,11 +212,15 @@ export const ImageUpload: React.FC<Props> = (props) => {
             <Typography>
               Or, upload an image using the{' '}
               <button
-                className={classes.generateUrlButton}
+                className={classes.cliModalButton}
                 onClick={() => setLinodeCLIModalOpen(true)}
               >
                 Linode CLI
               </button>
+              . For information, please see our guide on{' '}
+              <Link to="https://www.linode.com/docs/guides/linode-cli">
+                using the Linode CLI
+              </Link>
               .
             </Typography>
           </ActionsPanel>
