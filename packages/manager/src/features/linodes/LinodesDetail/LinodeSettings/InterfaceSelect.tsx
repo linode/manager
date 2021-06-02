@@ -234,7 +234,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         </Grid>
       ) : null}
 
-      <Divider className={classes.divider} />
+      {!fromAddonsPanel && <Divider className={classes.divider} />}
     </Grid>
   );
 };
