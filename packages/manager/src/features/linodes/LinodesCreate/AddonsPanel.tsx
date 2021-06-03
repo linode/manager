@@ -15,26 +15,14 @@ import useFlags from 'src/hooks/useFlags';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
+  vlan: {
     marginTop: theme.spacing(3),
-    backgroundColor: theme.color.white,
   },
-  flex: {
-    flex: 1,
+  addons: {
+    marginTop: theme.spacing(3),
   },
   title: {
     marginBottom: theme.spacing(2),
-  },
-  divider: {
-    marginTop: theme.spacing(1),
-  },
-  lastItem: {
-    paddingBottom: '0 !important',
-  },
-  panelBody: {
-    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
   },
   label: {
     '& > span:last-child': {
@@ -59,13 +47,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: theme.spacing(4) + 18, // 50
     },
   },
-  vlanSelect: {
-    paddingLeft: theme.spacing(2) + 24,
-    paddingTop: theme.spacing(),
-    paddingBottom: theme.spacing(),
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing(4) + 24,
-    },
+  divider: {
+    backgroundColor: theme.cmrBorderColors.borderTabs,
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
   },
 }));
 
@@ -139,72 +124,71 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Paper className={classes.root} data-qa-add-ons>
+    <>
       {showVlans ? (
-        <AttachVLAN
-          vlanLabel={vlanLabel}
-          labelError={labelError}
-          ipamAddress={ipamAddress}
-          ipamError={ipamError}
-          readOnly={disabled || Boolean(vlanDisabledReason)}
-          helperText={vlanDisabledReason}
-          handleVLANChange={handleVLANChange}
-          region={selectedRegionID}
-        />
-      ) : null}
-      <Typography variant="h2" className={classes.title}>
-        Optional Add-ons{' '}
-        {backupsDisabledReason ? (
-          <HelpIcon text={backupsDisabledReason} />
-        ) : null}
-      </Typography>
-      <Grid container>
-        <Grid item xs={12}>
-          <FormControlLabel
-            className={classes.label}
-            control={
-              <CheckBox
-                checked={accountBackups || props.backups}
-                onChange={changeBackups}
-                disabled={accountBackups || disabled || isBareMetal}
-                data-qa-check-backups={
-                  accountBackups
-                    ? 'auto backup enabled'
-                    : 'auto backup disabled'
-                }
-              />
-            }
-            label="Backups"
+        <Paper className={classes.vlan} data-qa-add-ons>
+          <AttachVLAN
+            vlanLabel={vlanLabel}
+            labelError={labelError}
+            ipamAddress={ipamAddress}
+            ipamError={ipamError}
+            readOnly={disabled || Boolean(vlanDisabledReason)}
+            helperText={vlanDisabledReason}
+            handleVLANChange={handleVLANChange}
+            region={selectedRegionID}
           />
-          {renderBackupsPrice()}
-          <Typography variant="body1" className={classes.caption}>
-            {accountBackups ? (
-              <React.Fragment>
-                You have enabled automatic backups for your account. This Linode
-                will automatically have backups enabled. To change this setting,{' '}
-                <Link to={'/account/settings'}>click here.</Link>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                Three backup slots are executed and rotated automatically: a
-                daily backup, a 2-7 day old backup, and an 8-14 day old backup.
-                Plans are priced according to the Linode plan selected above.
-              </React.Fragment>
-            )}
-          </Typography>
+        </Paper>
+      ) : null}
+      <Paper className={classes.addons} data-qa-add-ons>
+        <Typography variant="h2" className={classes.title}>
+          Add-ons{' '}
+          {backupsDisabledReason ? (
+            <HelpIcon text={backupsDisabledReason} />
+          ) : null}
+        </Typography>
+        <Grid container>
+          <Grid item xs={12}>
+            <FormControlLabel
+              className={classes.label}
+              control={
+                <CheckBox
+                  checked={accountBackups || props.backups}
+                  onChange={changeBackups}
+                  disabled={accountBackups || disabled || isBareMetal}
+                  data-qa-check-backups={
+                    accountBackups
+                      ? 'auto backup enabled'
+                      : 'auto backup disabled'
+                  }
+                />
+              }
+              label="Backups"
+            />
+            {renderBackupsPrice()}
+            <Typography variant="body1" className={classes.caption}>
+              {accountBackups ? (
+                <React.Fragment>
+                  You have enabled automatic backups for your account. This
+                  Linode will automatically have backups enabled. To change this
+                  setting, <Link to={'/account/settings'}>click here.</Link>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  Three backup slots are executed and rotated automatically: a
+                  daily backup, a 2-7 day old backup, and an 8-14 day old
+                  backup. Plans are priced according to the Linode plan selected
+                  above.
+                </React.Fragment>
+              )}
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
-      {
-        /** /v4/linodes/instances/clone does *not* support the private IP flag */
-        props.hidePrivateIP ? null : (
-          <React.Fragment>
-            <Grid container className={classes.divider}>
-              <Grid item xs={12}>
-                <Divider />
-              </Grid>
-            </Grid>
+        {
+          /** /v4/linodes/instances/clone does *not* support the private IP flag */
+          props.hidePrivateIP ? null : (
             <Grid container>
               <Grid item xs={12}>
+                <Divider className={classes.divider} />
                 <FormControlLabel
                   className={classes.label}
                   control={
@@ -219,10 +203,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
                 />
               </Grid>
             </Grid>
-          </React.Fragment>
-        )
-      }
-    </Paper>
+          )
+        }
+      </Paper>
+    </>
   );
 };
 
