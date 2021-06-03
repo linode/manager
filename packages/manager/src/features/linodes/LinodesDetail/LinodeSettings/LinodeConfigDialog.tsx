@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     backgroundColor: theme.cmrBorderColors.borderTabs,
-    margin: '36px 8px 16px',
+    margin: '36px 8px 12px',
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
   formControlToggle: {
