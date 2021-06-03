@@ -24,6 +24,7 @@ const EntityTransfersLanding = React.lazy(
 );
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
+const Maintenance = React.lazy(() => import('./maintenance/MaintenanceTable'));
 
 const AccountLanding: React.FC<Props> = (props) => {
   const { location } = props;
@@ -47,6 +48,10 @@ const AccountLanding: React.FC<Props> = (props) => {
           hide: !flags.entityTransfers,
         }
       : null,
+    {
+      title: 'Maintenance',
+      routeName: `${props.match.url}/maintenance`,
+    },
     {
       title: 'Settings',
       routeName: `${props.match.url}/settings`,
@@ -109,6 +114,9 @@ const AccountLanding: React.FC<Props> = (props) => {
                 <EntityTransfersLanding />
               </SafeTabPanel>
             ) : null}
+            <SafeTabPanel index={++idx}>
+              <Maintenance />
+            </SafeTabPanel>
             <SafeTabPanel index={++idx}>
               <GlobalSettings />
             </SafeTabPanel>

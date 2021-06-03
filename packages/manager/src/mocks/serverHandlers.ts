@@ -68,6 +68,7 @@ export const makeResourcePage = (
   data: e,
 });
 
+const accountMaintenance = accountMaintenanceFactory.buildList(100);
 const statusPage = [
   rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
     const response = incidentResponseFactory.build();
@@ -428,7 +429,41 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/account/maintenance', (req, res, ctx) => {
-    const accountMaintenance = accountMaintenanceFactory.buildList(2);
+    const page = Number(req.url.searchParams.get('page') || 1);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 10);
+
+    const sort = JSON.parse(req.headers.get('x-filter') || '');
+
+    accountMaintenance.sort((a, b) => {
+      const statusA = a[sort['+order_by']].toUpperCase();
+      const statusB = b[sort['+order_by']].toUpperCase();
+
+      if (statusA < statusB) {
+        return -1;
+      }
+      if (statusA > statusB) {
+        return 1;
+      }
+      return 0;
+    });
+    if (sort['+order'] == 'desc') {
+      accountMaintenance.reverse();
+    }
+
+    if (page) {
+      return res(
+        ctx.json({
+          data: accountMaintenance.slice(
+            (page - 1) * pageSize,
+            (page - 1) * pageSize + pageSize
+          ),
+          page,
+          pages: 100 / pageSize,
+          results: 100,
+        })
+      );
+    }
+
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/events', (req, res, ctx) => {
