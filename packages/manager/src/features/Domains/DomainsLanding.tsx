@@ -404,11 +404,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                 />
                 <EntityTable_CMR
                   entity="domain"
+                  headers={headers}
+                  row={domainRow}
+                  initialOrder={initialOrder}
                   toggleGroupByTag={toggleGroupDomains}
                   isGroupedByTag={domainsAreGrouped}
-                  row={domainRow}
-                  headers={headers}
-                  initialOrder={initialOrder}
+                  isLargeAccount={isLargeAccount}
                   normalizeData={(pageyData: Domain[]) => {
                     // Use Redux copies of each Domain, since Redux is more up-to-date.
                     return getReduxCopyOfDomains(

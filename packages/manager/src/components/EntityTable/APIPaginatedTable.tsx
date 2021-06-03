@@ -9,9 +9,14 @@ import TableContentWrapper from 'src/components/TableContentWrapper';
 import EntityTableHeader from './EntityTableHeader';
 import { Entity, ListProps, PageyIntegrationProps } from './types';
 
+interface Props {
+  isLargeAccount?: boolean;
+}
+
 export type CombinedProps = ListProps &
   PaginationProps<Entity> &
-  PageyIntegrationProps;
+  PageyIntegrationProps &
+  Props;
 
 export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
   const {
@@ -33,6 +38,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
     emptyMessage,
     toggleGroupByTag,
     isGroupedByTag,
+    isLargeAccount,
   } = props;
 
   const _data = data ?? [];
@@ -60,6 +66,7 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
             handleOrderChange={props.handleOrderChange}
             toggleGroupByTag={toggleGroupByTag}
             isGroupedByTag={isGroupedByTag}
+            isLargeAccount={isLargeAccount}
           />
           <TableBody>
             <TableContentWrapper

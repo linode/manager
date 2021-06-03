@@ -29,6 +29,7 @@ interface Props extends Omit<OrderByProps, 'data'> {
   headers: HeaderCell[];
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;
+  isLargeAccount?: boolean;
 }
 
 interface SortCellProps extends Omit<Props, 'headers'> {
@@ -47,6 +48,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     orderBy,
     toggleGroupByTag,
     isGroupedByTag,
+    isLargeAccount,
   } = props;
   const classes = useStyles();
 
@@ -136,6 +138,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
         {toggleGroupByTag && typeof isGroupedByTag !== 'undefined' ? (
           <TableCell className={classes.groupByTagCell}>
             <GroupByTagToggle
+              isLargeAccount={isLargeAccount}
               toggleGroupByTag={toggleGroupByTag}
               isGroupedByTag={isGroupedByTag}
             />
@@ -154,6 +157,7 @@ export default React.memo(EntityTableHeader);
 interface GroupByTagToggleProps {
   toggleGroupByTag: () => boolean;
   isGroupedByTag: boolean;
+  isLargeAccount?: boolean;
 }
 
 const useGroupByTagToggleStyles = makeStyles(() => ({
@@ -163,6 +167,9 @@ const useGroupByTagToggleStyles = makeStyles(() => ({
     '&:focus': {
       outline: '1px dotted #999',
     },
+    '&.Mui-disabled': {
+      display: 'none',
+    },
   },
 }));
 
@@ -170,7 +177,7 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
   (props) => {
     const classes = useGroupByTagToggleStyles();
 
-    const { toggleGroupByTag, isGroupedByTag } = props;
+    const { toggleGroupByTag, isGroupedByTag, isLargeAccount } = props;
 
     return (
       <>
@@ -189,6 +196,7 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
             onClick={toggleGroupByTag}
             disableRipple
             className={classes.toggleButton}
+            disabled={isLargeAccount}
           >
             <GroupByTag />
           </IconButton>
