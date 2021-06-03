@@ -50,15 +50,7 @@ import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
-type ClassNames =
-  | 'root'
-  | 'titleWrapper'
-  | 'title'
-  | 'breadcrumbs'
-  | 'domain'
-  | 'tagWrapper'
-  | 'tagGroup'
-  | 'importButton';
+type ClassNames = 'root' | 'importButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -69,28 +61,6 @@ const styles = (theme: Theme) =>
           paddingBottom: theme.spacing(2),
         },
       },
-    },
-    titleWrapper: {
-      flex: 1,
-    },
-    title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2,
-    },
-    breadcrumbs: {
-      marginBottom: theme.spacing(1),
-    },
-    domain: {
-      width: '60%',
-    },
-    tagWrapper: {
-      marginTop: theme.spacing(1) / 2,
-      '& [class*="MuiChip"]': {
-        cursor: 'pointer',
-      },
-    },
-    tagGroup: {
-      flexDirection: 'row-reverse',
-      marginBottom: theme.spacing(2) - 8,
     },
     importButton: {
       marginLeft: -theme.spacing(),

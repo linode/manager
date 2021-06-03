@@ -37,13 +37,7 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
   classes: {
-    domain: '',
     root: '',
-    titleWrapper: '',
-    tagWrapper: '',
-    tagGroup: '',
-    title: '',
-    breadcrumbs: '',
     importButton: '',
   },
   domainsByID: {},

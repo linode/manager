@@ -11,35 +11,8 @@ import ActionMenu, { Handlers } from './DomainActionMenu';
 import { getDomainDisplayType } from './domainUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  link: {
-    display: 'block',
-    lineHeight: '1.125rem',
-    color: theme.cmrTextColors.linkActiveLight,
-    '&:hover, &:focus': {
-      color: theme.palette.primary.main,
-      textDecoration: 'underline',
-    },
-  },
   button: {
     ...theme.applyLinkStyles,
-    display: 'block',
-    color: theme.cmrTextColors.linkActiveLight,
-    lineHeight: '1.125rem',
-    '&:hover, &:focus': {
-      color: theme.palette.primary.main,
-      textDecoration: 'underline',
-    },
-  },
-  domain: {
-    width: '60%',
-  },
-  domainRow: {
-    backgroundColor: theme.bg.white,
-  },
-  domainCellContainer: {
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'left',
-    },
   },
   labelStatusWrapper: {
     display: 'flex',
@@ -84,13 +57,13 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
     <TableRow
       key={id}
       data-qa-domain-cell={domain}
-      className={`${classes.domainRow} ${'fade-in-table'}`}
+      className="fade-in-table"
       ariaLabel={`Domain ${domain}`}
     >
       <TableCell data-qa-domain-label>
         <div className={classes.labelStatusWrapper}>
           {type !== 'slave' ? (
-            <Link to={`/domains/${id}`} tabIndex={0} className={classes.link}>
+            <Link to={`/domains/${id}`} tabIndex={0}>
               {domain}
             </Link>
           ) : (

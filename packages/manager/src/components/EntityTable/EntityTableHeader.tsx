@@ -14,25 +14,14 @@ import { HeaderCell } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
   sortCell: {
-    fontFamily: theme.font.bold,
-    padding: '10px 15px',
     '& .MuiTableSortLabel-active:hover': {
       color: theme.palette.primary.main,
     },
   },
-  thead: {
-    '& p': {
-      fontFamily: theme.font.bold,
-      fontWeight: 500,
-    },
-  },
-  '& .MuiTableCell-head': {
-    borderBottom: 0,
-  },
   groupByTagCell: {
-    textAlign: 'right',
     backgroundColor: theme.cmrBGColors.bgTableHeader,
     paddingRight: `0px !important`,
+    textAlign: 'right',
   },
 }));
 
@@ -83,7 +72,6 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     return (
       <TableCell
         data-testid={`${thisCell.label}-header-cell`}
-        className={classes.thead}
         style={{ width: `${thisCell.widthPercent}%` }}
       >
         <span
