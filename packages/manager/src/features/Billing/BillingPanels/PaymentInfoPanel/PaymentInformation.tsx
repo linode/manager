@@ -8,7 +8,6 @@ import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
-import PaymentMethodRow from 'src/components/PaymentMethodRow/PaymentMethodRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -80,13 +79,7 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
         </div>
 
         <div className={classes.billingGroup}>
-          <PaymentMethodRow
-            lastFour={'1234'}
-            expiry={'10/2025'}
-            isDefault={true}
-            paymentMethod={'Visa'}
-          />
-          {/* <CreditCard lastFour={lastFour} expiry={expiry} /> */}
+          <CreditCard lastFour={lastFour} expiry={expiry} />
         </div>
 
         <UpdateCreditCardDrawer

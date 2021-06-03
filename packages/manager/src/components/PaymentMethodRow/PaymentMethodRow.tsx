@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import CreditCard from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
 import GooglePay from 'src/assets/icons/payment/googlePay.svg';
 import PayPal from 'src/assets/icons/payment/payPal.svg';
-import { CardProvider } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
+import { CardType } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-// @TODO: Separate payment method from (googlepay, paypal) from card type
+// @TODO: Separate payment method (googlepay, paypal) from card type
 interface Props {
   lastFour?: string;
   expiry?: string;
@@ -73,11 +73,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
         </Typography>
       </>
     ) : (
-      <CreditCard
-        provider={paymentMethod}
-        expiry={expiry}
-        lastFour={lastFour}
-      />
+      <CreditCard type={paymentMethod} expiry={expiry} lastFour={lastFour} />
     );
 
   const actions: Action[] = [

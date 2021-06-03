@@ -37,7 +37,9 @@ import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { SetSuccess } from './types';
+import useFlags from 'src/hooks/useFlags';
 
+// @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(4),
@@ -98,6 +100,7 @@ export const paypalScriptSrc = () => {
 export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
   const { isScriptLoaded, usd, setSuccess } = props;
   const classes = useStyles();
+  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [isStagingPayment, setStaging] = React.useState<boolean>(false);
@@ -259,7 +262,15 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
 
   if (typeof errorLoadingPaypalScript === 'undefined') {
     return (
-      <Grid container direction="column" className={classes.root}>
+      <Grid
+        container
+        direction="column"
+        className={classnames({
+          [classes.root]: !flags.additionalPaymentMethods?.includes(
+            'google_pay'
+          ),
+        })}
+      >
         <CircleProgress mini />
       </Grid>
     );
@@ -267,9 +278,66 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
 
   if (errorLoadingPaypalScript) {
     return (
-      <Grid container direction="column" className={classes.root}>
+      <Grid
+        container
+        direction="column"
+        className={classnames({
+          [classes.root]: !flags.additionalPaymentMethods?.includes(
+            'google_pay'
+          ),
+        })}
+      >
         <Notice error text="There was an error connecting with PayPal." />
       </Grid>
+    );
+  }
+
+  if (flags.additionalPaymentMethods?.includes('google_pay')) {
+    return (
+      <>
+        <Grid item xs={6}>
+          {!enabled && (
+            <Tooltip
+              title={'Amount to charge must be between $5 and $10000'}
+              data-qa-help-tooltip
+              enterTouchDelay={0}
+              leaveTouchDelay={5000}
+            >
+              <div className={classes.paypalMask} />
+            </Tooltip>
+          )}
+          <div
+            data-qa-paypal-button
+            className={classnames({
+              [classes.paypalButtonWrapper]: true,
+              [classes.PaypalHidden]: !enabled,
+            })}
+          >
+            {PaypalButton.current && shouldRenderButton && (
+              <PaypalButton.current
+                env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
+                client={client}
+                createOrder={createOrder}
+                onApprove={onApprove}
+                onCancel={onCancel}
+                style={{
+                  color: 'gold',
+                  shape: 'rect',
+                }}
+              />
+            )}
+          </div>
+        </Grid>
+        <PaypalDialog
+          open={dialogOpen}
+          closeDialog={handleClose}
+          isExecutingPayment={isExecutingPayment}
+          isStagingPaypalPayment={isStagingPayment}
+          initExecutePayment={confirmPaypalPayment}
+          paypalPaymentFailed={paymentFailed}
+          usd={(+usd).toFixed(2)}
+        />
+      </>
     );
   }
 

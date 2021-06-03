@@ -19,7 +19,11 @@ import { v4 } from 'uuid';
 import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
+import Divider from 'src/components/core/Divider';
+import GooglePayButton from 'src/assets/icons/payment/gPayButtonBlack.svg';
+import useFlags from 'src/hooks/useFlags';
 
+// @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   currentBalance: {
@@ -28,6 +32,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   credit: {
     color: '#02b159',
+  },
+  divider: {
+    backgroundColor: '#d6d7d9',
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(2),
+  },
+  header: {
+    fontSize: '1.1rem',
+    marginBottom: theme.spacing(4),
+  },
+  gPayButton: {
+    cursor: 'pointer',
+    '&:hover': {
+      opacity: 0.8,
+    },
   },
 }));
 
@@ -64,6 +83,7 @@ const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
+  const flags = useFlags();
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
@@ -146,7 +166,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               </Typography>
             </Grid>
           )}
-          <Grid item>
+          <Grid item xs={6}>
             <TextField
               label="Payment Amount"
               onChange={handleUSDChange}
@@ -156,7 +176,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               placeholder={`${minimumPayment} minimum`}
             />
           </Grid>
-
+          <Divider className={classes.divider} />
           <CreditCardPayment
             key={creditCardKey}
             lastFour={lastFour}
@@ -165,7 +185,14 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             minimumPayment={minimumPayment}
             setSuccess={setSuccess}
           />
-
+          <Divider className={classes.divider} />
+          {flags.additionalPaymentMethods?.includes('google_pay') ? (
+            <Grid item>
+              <Typography variant="h3" className={classes.header}>
+                <strong>Or pay via:</strong>
+              </Typography>
+            </Grid>
+          ) : null}
           <AsyncPaypal
             key={payPalKey}
             usd={usd}
@@ -173,6 +200,11 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             asyncScriptOnLoad={onScriptLoad}
             isScriptLoaded={isPaypalScriptLoaded}
           />
+          {flags.additionalPaymentMethods?.includes('google_pay') ? (
+            <Grid item xs={6}>
+              <GooglePayButton className={classes.gPayButton} />
+            </Grid>
+          ) : null}
         </Grid>
       </Grid>
     </Drawer>

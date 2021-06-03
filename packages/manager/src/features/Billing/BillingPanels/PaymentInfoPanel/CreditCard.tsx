@@ -9,7 +9,9 @@ import Amex from 'src/assets/icons/payment/amex.svg';
 import Discover from 'src/assets/icons/payment/discover.svg';
 import JCB from 'src/assets/icons/payment/jcb.svg';
 import GenericCreditCard from 'src/assets/icons/credit-card.svg';
+import useFlags from 'src/hooks/useFlags';
 
+// @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   root: {
@@ -40,46 +42,47 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export type CardProvider = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
+export type CardType = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
 
 interface Props {
-  provider: string;
+  type?: string;
   lastFour?: string;
   expiry?: string;
 }
 
 export type CombinedProps = Props;
 
-const paymentIcon = (provider: string): any => {
-  switch (provider) {
-    case 'Visa':
-      return <Visa />;
-    case 'Mastercard':
-      return <Mastercard />;
-    case 'Amex':
-      return <Amex />;
-    case 'Discover':
-      return <Discover />;
-    case 'JCB':
-      return <JCB />;
-    default:
-      return <GenericCreditCard />;
-  }
-};
-
 export const CreditCard: React.FC<CombinedProps> = (props) => {
-  const { provider, expiry, lastFour } = props;
+  const { type, expiry, lastFour } = props;
   const classes = useStyles();
+  const flags = useFlags();
 
   const isCardExpired = expiry && isCreditCardExpired(expiry);
 
-  return (
+  const paymentIcon = (): any => {
+    switch (type) {
+      case 'Visa':
+        return <Visa />;
+      case 'Mastercard':
+        return <Mastercard />;
+      case 'Amex':
+        return <Amex />;
+      case 'Discover':
+        return <Discover />;
+      case 'JCB':
+        return <JCB />;
+      default:
+        return <GenericCreditCard />;
+    }
+  };
+
+  return flags.additionalPaymentMethods?.includes('google_pay') && type ? (
     <div className={classes.root}>
-      <span className={classes.icon}>{paymentIcon(provider)}</span>
+      <span className={classes.icon}>{paymentIcon()}</span>
       <div className={classes.card}>
         <Typography className={classes.cardInfo} data-qa-contact-cc>
           {lastFour
-            ? `${provider} ****${lastFour}`
+            ? `${type} ****${lastFour}`
             : 'No payment method has been specified for this account.'}
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
@@ -91,6 +94,27 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
         </Typography>
       </div>
     </div>
+  ) : (
+    <>
+      <div className={`${classes.section} ${classes.root}`} data-qa-contact-cc>
+        <div>
+          {lastFour
+            ? `Card ending in ${lastFour}`
+            : 'No payment method has been specified for this account.'}
+        </div>
+      </div>
+      <div
+        className={`${classes.section} ${classes.root}`}
+        data-qa-contact-cc-exp-date
+      >
+        <div>
+          {expiry && `Expires ${expiry}`}
+          {expiry && isCreditCardExpired(expiry) && (
+            <span className={classes.expired}> (Expired)</span>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
