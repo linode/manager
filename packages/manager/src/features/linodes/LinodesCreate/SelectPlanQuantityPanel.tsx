@@ -47,8 +47,8 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(3),
-      width: '100%',
+      padding: 0,
+      paddingTop: theme.spacing(3),
     },
     copy: {
       marginTop: theme.spacing(1),
