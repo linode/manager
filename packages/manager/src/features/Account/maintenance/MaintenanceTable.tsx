@@ -9,7 +9,6 @@ import { useAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import StatusIcon from 'src/components/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import capitalize from 'src/utilities/capitalize';
@@ -18,7 +17,12 @@ import TableSortCell from 'src/components/TableSortCell';
 import sync from 'css-animation-sync';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 
-export default function MaintenanceTable() {
+interface Props {
+  type: 'Linode'; // add more types when the endpoint supports then
+}
+
+const MaintenanceTable: React.FC<Props> = (props) => {
+  const { type } = props;
   const pagination = usePagination(1);
   const [orderBy, setOrderBy] = useState('status');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
@@ -75,11 +79,12 @@ export default function MaintenanceTable() {
     if (isLoading) {
       return (
         <TableRowLoading
-          numberOfRows={pagination.pageSize - 10}
+          oneLine
+          // numberOfRows={pagination.pageSize - 10}
           numberOfColumns={5}
           colSpan={5}
           widths={[15, 15, 15, 15, 40]}
-          compact
+          // compact
         />
       );
     } else if (error) {
@@ -107,8 +112,7 @@ export default function MaintenanceTable() {
   }, []);
 
   return (
-    <>
-      <DocumentTitleSegment segment="Maintenance" />
+    <React.Fragment>
       <Table>
         <TableHead>
           <TableRow>
@@ -137,16 +141,16 @@ export default function MaintenanceTable() {
         </TableHead>
         <TableBody>{renderTableContent()}</TableBody>
       </Table>
-      {data && data.results > 1 ? (
-        <PaginationFooter
-          count={data?.results || 0}
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          eventCategory="Maintenance Table"
-        />
-      ) : null}
-    </>
+      <PaginationFooter
+        count={data?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory={`${type} Maintenance Table`}
+      />
+    </React.Fragment>
   );
-}
+};
+
+export default MaintenanceTable;
