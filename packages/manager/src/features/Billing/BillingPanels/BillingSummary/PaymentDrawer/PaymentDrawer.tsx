@@ -1,8 +1,11 @@
-import * as classnames from 'classnames';
 import { APIWarning } from '@linode/api-v4/lib/types';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
 import { compose } from 'recompose';
+import GooglePayButtonBlack from 'src/assets/icons/payment/gPayButtonBlack.svg';
+import GooglePayButtonWhite from 'src/assets/icons/payment/gPayButtonWhite.svg';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
@@ -15,13 +18,12 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
+import useFlags from 'src/hooks/useFlags';
+import usePreferences from 'src/hooks/usePreferences';
 import { v4 } from 'uuid';
 import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
-import Divider from 'src/components/core/Divider';
-import GooglePayButton from 'src/assets/icons/payment/gPayButtonBlack.svg';
-import useFlags from 'src/hooks/useFlags';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,11 +45,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(4),
   },
   gPayButton: {
-    backgroundColor: '#000',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.cmrBGColors.bgGooglePay,
+    border: 0,
+    borderRadius: 4,
     cursor: 'pointer',
     height: 35,
+    width: '100%',
     '&:hover': {
       opacity: 0.8,
+    },
+    '& svg': {
+      height: 16,
     },
   },
 }));
@@ -86,6 +97,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
   const flags = useFlags();
+  const { preferences } = usePreferences();
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
@@ -206,7 +218,11 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             {flags.additionalPaymentMethods?.includes('google_pay') ? (
               <Grid item xs={6}>
                 <button className={classes.gPayButton}>
-                  <GooglePayButton />
+                  {preferences?.theme === 'light' ? (
+                    <GooglePayButtonBlack />
+                  ) : (
+                    <GooglePayButtonWhite />
+                  )}
                 </button>
               </Grid>
             ) : null}

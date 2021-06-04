@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Paper from 'src/components/core/Paper';
-import Grid from 'src/components/Grid';
-import Chip from 'src/components/core/Chip';
+import GooglePay from 'src/assets/icons/payment/googlePay.svg';
+import PayPal from 'src/assets/icons/payment/payPal.svg';
 import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import Chip from 'src/components/core/Chip';
+import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import CreditCard from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
-import GooglePay from 'src/assets/icons/payment/googlePay.svg';
-import PayPal from 'src/assets/icons/payment/payPal.svg';
-import { CardType } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
