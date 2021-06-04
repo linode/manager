@@ -43,7 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(4),
   },
   gPayButton: {
+    backgroundColor: '#000',
     cursor: 'pointer',
+    height: 35,
     '&:hover': {
       opacity: 0.8,
     },
@@ -193,18 +195,22 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               </Typography>
             </Grid>
           ) : null}
-          <AsyncPaypal
-            key={payPalKey}
-            usd={usd}
-            setSuccess={setSuccess}
-            asyncScriptOnLoad={onScriptLoad}
-            isScriptLoaded={isPaypalScriptLoaded}
-          />
-          {flags.additionalPaymentMethods?.includes('google_pay') ? (
-            <Grid item xs={6}>
-              <GooglePayButton className={classes.gPayButton} />
-            </Grid>
-          ) : null}
+          <Grid container item wrap="nowrap">
+            <AsyncPaypal
+              key={payPalKey}
+              usd={usd}
+              setSuccess={setSuccess}
+              asyncScriptOnLoad={onScriptLoad}
+              isScriptLoaded={isPaypalScriptLoaded}
+            />
+            {flags.additionalPaymentMethods?.includes('google_pay') ? (
+              <Grid item xs={6}>
+                <button className={classes.gPayButton}>
+                  <GooglePayButton />
+                </button>
+              </Grid>
+            ) : null}
+          </Grid>
         </Grid>
       </Grid>
     </Drawer>
