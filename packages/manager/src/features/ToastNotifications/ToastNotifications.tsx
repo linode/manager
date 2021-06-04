@@ -25,15 +25,23 @@ export const toastSuccessAndFailure = curry(
     enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'],
     eventStatus: EventStatus,
     successMessage: string | undefined,
-    failureMessage: string | undefined
+    failureMessage: string | undefined,
+    persistSuccess: boolean,
+    persistFailure: boolean
   ) => {
     if (
       ['finished', 'notification'].includes(eventStatus) &&
       Boolean(successMessage)
     ) {
-      return enqueueSnackbar(successMessage, { variant: 'success' });
+      return enqueueSnackbar(successMessage, {
+        variant: 'success',
+        persist: persistSuccess,
+      });
     } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
-      return enqueueSnackbar(failureMessage, { variant: 'error' });
+      return enqueueSnackbar(failureMessage, {
+        variant: 'error',
+        persist: persistFailure,
+      });
     } else {
       return;
     }
@@ -80,6 +88,13 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return _toast(
               `Image ${secondaryLabel} created successfully.`,
               `Error creating Image ${secondaryLabel}.`
+            );
+          case 'image_upload':
+            return _toast(
+              `Image ${label} has been uploaded.`,
+              `There was a problem uploading ${label}.`,
+              false,
+              true
             );
           case 'image_delete':
             return _toast(

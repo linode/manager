@@ -18,7 +18,7 @@ import { EntityEvent, ExtendedEvent } from './event.types';
  * for that period, would be pointless. We treat these events differently
  * when determining whether they are in progress.
  */
-export const LONG_PENDING_EVENTS = ['image_upload'];
+export const LONG_PENDING_EVENTS = [''];
 
 /** We use the epoch on our initial request to get all of the users events. */
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
@@ -162,10 +162,17 @@ export const isInProgressEvent = (event: Event) => {
   const { percent_complete } = event;
   if (percent_complete === null) {
     return false;
-  } else if (LONG_PENDING_EVENTS.includes(event.action)) {
+  } else if (
+    LONG_PENDING_EVENTS.includes(event.action) &&
+    event.status === 'started'
+  ) {
     return percent_complete > 0 && percent_complete < 100;
   } else {
-    return percent_complete !== null && percent_complete < 100;
+    return (
+      percent_complete !== null &&
+      percent_complete < 100 &&
+      event.status !== 'scheduled'
+    );
   }
 };
 

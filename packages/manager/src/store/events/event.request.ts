@@ -39,7 +39,8 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
 
       if (
         thisEventCreated === mostRecentEventTime &&
-        !isInProgressEvent(thisEvent)
+        !isInProgressEvent(thisEvent) &&
+        thisEvent.status !== 'scheduled'
       ) {
         neqIds.push(thisEvent.id);
       }
