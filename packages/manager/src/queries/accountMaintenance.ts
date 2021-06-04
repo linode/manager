@@ -24,6 +24,9 @@ export const useAccountMaintenanceQuery = (params: any, filter: any) => {
   return useQuery<ResourcePage<AccountMaintenance>, APIError[]>(
     [queryKey, params.page, params.page_size],
     () => getAccountMaintenance(params, filter),
-    queryPresets.longLived
+    {
+      ...queryPresets.longLived,
+      keepPreviousData: true,
+    }
   );
 };

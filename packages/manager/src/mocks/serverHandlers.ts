@@ -432,25 +432,25 @@ export const handlers = [
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 10);
 
-    const sort = JSON.parse(req.headers.get('x-filter') || '');
+    if (req.url.searchParams.get('page')) {
+      const sort = JSON.parse(req.headers.get('x-filter') || '{}');
 
-    accountMaintenance.sort((a, b) => {
-      const statusA = a[sort['+order_by']].toUpperCase();
-      const statusB = b[sort['+order_by']].toUpperCase();
+      accountMaintenance.sort((a, b) => {
+        const statusA = a[sort['+order_by']].toUpperCase();
+        const statusB = b[sort['+order_by']].toUpperCase();
 
-      if (statusA < statusB) {
-        return -1;
+        if (statusA < statusB) {
+          return -1;
+        }
+        if (statusA > statusB) {
+          return 1;
+        }
+        return 0;
+      });
+
+      if (sort['+order'] == 'desc') {
+        accountMaintenance.reverse();
       }
-      if (statusA > statusB) {
-        return 1;
-      }
-      return 0;
-    });
-    if (sort['+order'] == 'desc') {
-      accountMaintenance.reverse();
-    }
-
-    if (page) {
       return res(
         ctx.json({
           data: accountMaintenance.slice(

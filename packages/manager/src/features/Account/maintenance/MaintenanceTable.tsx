@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
@@ -14,7 +15,8 @@ import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import capitalize from 'src/utilities/capitalize';
 import usePagination from 'src/hooks/usePagination';
 import TableSortCell from 'src/components/TableSortCell';
-import { useState, useEffect } from 'react';
+import sync from 'css-animation-sync';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 
 export default function MaintenanceTable() {
   const pagination = usePagination(1);
@@ -29,6 +31,11 @@ export default function MaintenanceTable() {
     {
       ['+order_by']: orderBy,
       ['+order']: order,
+      // We will want to make queries for each type of entity
+      // when this endpoint supports more than Linodes
+      // entity: {
+      //   type: 'Linode',
+      // },
     }
   );
 
@@ -48,7 +55,10 @@ export default function MaintenanceTable() {
 
   const renderTableRow = (item: AccountMaintenance) => {
     return (
-      <TableRow key={item.entity.id}>
+      <TableRow
+        rowLink={`/${item.entity.type}s/${item.entity.id}`}
+        key={item.entity.id}
+      >
         <TableCell parentColumn="Label">{item.entity.label}</TableCell>
         <TableCell parentColumn="Date">{item.when}</TableCell>
         <TableCell parentColumn="Type">{item.type}</TableCell>
@@ -65,15 +75,17 @@ export default function MaintenanceTable() {
     if (isLoading) {
       return (
         <TableRowLoading
-          numberOfRows={pagination.pageSize - 9}
+          numberOfRows={pagination.pageSize - 10}
+          numberOfColumns={5}
           colSpan={5}
+          widths={[15, 15, 15, 15, 40]}
           compact
         />
       );
     } else if (error) {
       return <TableRowError colSpan={5} message={error[0].reason} />;
     } else if (data?.results == 0) {
-      return <TableRowError colSpan={5} message="No maintenance items" />;
+      return <TableRowEmptyState colSpan={5} />;
     } else if (data) {
       return data.data.map((item: AccountMaintenance) => renderTableRow(item));
     }
@@ -89,6 +101,10 @@ export default function MaintenanceTable() {
   useEffect(() => {
     refetch();
   }, [order, orderBy]);
+
+  React.useEffect(() => {
+    sync('pulse');
+  }, []);
 
   return (
     <>
