@@ -428,12 +428,11 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/account/maintenance', (req, res, ctx) => {
-    const accountMaintenance = accountMaintenanceFactory.buildList(100);
-
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
     if (req.url.searchParams.get('page')) {
+      const accountMaintenance = accountMaintenanceFactory.buildList(100);
       const sort = JSON.parse(req.headers.get('x-filter') || '{}');
 
       accountMaintenance.sort((a, b) => {
@@ -465,6 +464,7 @@ export const handlers = [
       );
     }
 
+    const accountMaintenance = accountMaintenanceFactory.buildList(2);
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/events', (req, res, ctx) => {
