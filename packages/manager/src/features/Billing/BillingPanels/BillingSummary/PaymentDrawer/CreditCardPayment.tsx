@@ -7,11 +7,11 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
-import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { SetSuccess } from './types';
+import CreditCard from './CreditCard';
 import useFlags from 'src/hooks/useFlags';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     flexFlow: 'column nowrap',
   },
-  cardSection2: {
+  cardSectionNew: {
     marginLeft: -7,
   },
   cardText: {
@@ -135,7 +135,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
         </Grid>
         {flags.additionalPaymentMethods?.includes('google_pay') ? (
           <>
-            <Grid item className={classes.cardSection2}>
+            <Grid item className={classes.cardSectionNew}>
               {hasCreditCardOnFile ? (
                 <CreditCard type={'Visa'} expiry={expiry} lastFour={lastFour} />
               ) : (

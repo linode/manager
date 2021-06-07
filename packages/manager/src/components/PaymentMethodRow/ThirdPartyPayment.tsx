@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const thirdPartyPaymentMap = {
+export const thirdPartyPaymentMap = {
   google_pay: {
     icon: GooglePayIcon,
     label: 'Google Pay',

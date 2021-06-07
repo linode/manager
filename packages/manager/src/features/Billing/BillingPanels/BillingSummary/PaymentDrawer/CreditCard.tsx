@@ -11,7 +11,6 @@ import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import GenericCardIcon from 'src/assets/icons/credit-card.svg';
 
-// @TODO: rename this component to CreditCard and use once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   root: {

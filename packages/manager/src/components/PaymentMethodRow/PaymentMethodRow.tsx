@@ -7,7 +7,7 @@ import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import ThirdPartyPayment from './ThirdPartyPayment';
+import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
 import {
   ThirdPartyPayment as ThirdPartyPaymentType,
   CreditCard as CreditCardType,
@@ -96,7 +96,8 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
             ariaLabel={`Action menu for ${
               creditCard?.last_four
                 ? `card ending in ${creditCard.last_four}`
-                : thirdPartyPayment
+                : thirdPartyPayment &&
+                  thirdPartyPaymentMap[thirdPartyPayment].label
             }`}
           />
         </Grid>
