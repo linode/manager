@@ -5,7 +5,7 @@ import MaintenanceTable from './MaintenanceTable';
 const MaintenanceLanding: React.FC<{}> = () => (
   <React.Fragment>
     <DocumentTitleSegment segment="Maintenance" />
-    <MaintenanceTable type="Linode" />;
+    <MaintenanceTable type="Linode" />
   </React.Fragment>
 );
 

@@ -13,12 +13,13 @@ import StatusIcon from 'src/components/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import capitalize from 'src/utilities/capitalize';
 import usePagination from 'src/hooks/usePagination';
-import TableSortCell from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import sync from 'css-animation-sync';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 
 interface Props {
-  type: 'Linode'; // add more types when the endpoint supports then
+  // we will add more types when the endpoint supports then
+  type: 'Linode';
 }
 
 const MaintenanceTable: React.FC<Props> = (props) => {
@@ -80,11 +81,9 @@ const MaintenanceTable: React.FC<Props> = (props) => {
       return (
         <TableRowLoading
           oneLine
-          // numberOfRows={pagination.pageSize - 10}
           numberOfColumns={5}
           colSpan={5}
           widths={[15, 15, 15, 15, 40]}
-          // compact
         />
       );
     } else if (error) {
