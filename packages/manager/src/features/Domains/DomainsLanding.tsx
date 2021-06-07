@@ -126,16 +126,16 @@ export const DomainsLanding: React.FC<CombinedProps> = (props) => {
   const {
     domainForEditing,
     domainsLastUpdated,
-    isLargeAccount,
-    openForEditing,
     getAllDomains,
-    deleteDomain,
-    domainsError,
+    openForEditing,
     domainsData,
     domainsLoading,
+    domainsError,
+    deleteDomain,
     howManyLinodesOnAccount,
-    isRestrictedUser,
     linodesLoading,
+    isRestrictedUser,
+    isLargeAccount,
   } = props;
 
   const [selectedDomainLabel, setSelectedDomainLabel] = React.useState<string>(
