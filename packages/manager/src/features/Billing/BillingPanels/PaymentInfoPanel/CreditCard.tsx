@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { CardType } from '@linode/api-v4/lib/account/types';
 import Typography from 'src/components/core/Typography';
 import styled from 'src/containers/SummaryPanels.styles';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
-import Visa from 'src/assets/icons/payment/visa.svg';
-import Mastercard from 'src/assets/icons/payment/mastercard.svg';
-import Amex from 'src/assets/icons/payment/amex.svg';
-import Discover from 'src/assets/icons/payment/discover.svg';
-import JCB from 'src/assets/icons/payment/jcb.svg';
-import GenericCreditCard from 'src/assets/icons/credit-card.svg';
+import VisaIcon from 'src/assets/icons/payment/visa.svg';
+import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
+import AmexIcon from 'src/assets/icons/payment/amex.svg';
+import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
+import JCBIcon from 'src/assets/icons/payment/jcb.svg';
+import GenericCardIcon from 'src/assets/icons/credit-card.svg';
 import useFlags from 'src/hooks/useFlags';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
@@ -42,43 +43,40 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export type CardType = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
+const iconMap = {
+  Visa: VisaIcon,
+  Mastercard: MastercardIcon,
+  Amex: AmexIcon,
+  Discover: DiscoverIcon,
+  JCB: JCBIcon,
+};
 
 interface Props {
-  type?: string;
-  lastFour?: string;
-  expiry?: string;
+  type?: CardType;
+  lastFour?: string | null;
+  expiry?: string | null;
 }
+
+const getIcon = (type: CardType) => {
+  return iconMap[type] ?? GenericCardIcon;
+};
 
 export type CombinedProps = Props;
 
 export const CreditCard: React.FC<CombinedProps> = (props) => {
-  const { type, expiry, lastFour } = props;
+  const { type, lastFour, expiry } = props;
+
   const classes = useStyles();
   const flags = useFlags();
 
+  const Icon = type && getIcon(type);
   const isCardExpired = expiry && isCreditCardExpired(expiry);
-
-  const paymentIcon = (): any => {
-    switch (type) {
-      case 'Visa':
-        return <Visa />;
-      case 'Mastercard':
-        return <Mastercard />;
-      case 'Amex':
-        return <Amex />;
-      case 'Discover':
-        return <Discover />;
-      case 'JCB':
-        return <JCB />;
-      default:
-        return <GenericCreditCard />;
-    }
-  };
 
   return flags.additionalPaymentMethods?.includes('google_pay') && type ? (
     <div className={classes.root}>
-      <span className={classes.icon}>{paymentIcon()}</span>
+      <span className={classes.icon}>
+        <Icon />
+      </span>
       <div className={classes.card}>
         <Typography className={classes.cardInfo} data-qa-contact-cc>
           {lastFour

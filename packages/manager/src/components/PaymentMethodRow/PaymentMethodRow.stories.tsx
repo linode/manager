@@ -1,36 +1,45 @@
 import * as React from 'react';
 import PaymentMethodRow from './PaymentMethodRow';
+import { CardType } from '@linode/api-v4/lib/account/types';
 
 export default {
   title: 'Payment Method Row',
 };
 
-const card = (cardName: string) => {
+const card = (type: CardType) => {
   return (
     <>
       <PaymentMethodRow
-        lastFour={'1234'}
-        expiry={'10/2025'}
+        creditCard={{
+          card_type: type,
+          last_four: '1234',
+          expiry: '10/2025',
+        }}
         isDefault={true}
-        paymentMethod={cardName}
       />
       <PaymentMethodRow
-        lastFour={'1234'}
-        expiry={'10/2025'}
+        creditCard={{
+          card_type: type,
+          last_four: '1234',
+          expiry: '10/2025',
+        }}
         isDefault={false}
-        paymentMethod={cardName}
       />
       <PaymentMethodRow
-        lastFour={'1234'}
-        expiry={'10/2020'}
+        creditCard={{
+          card_type: type,
+          last_four: '1234',
+          expiry: '10/2020',
+        }}
         isDefault={true}
-        paymentMethod={cardName}
       />
       <PaymentMethodRow
-        lastFour={'1234'}
-        expiry={'10/2020'}
+        creditCard={{
+          card_type: type,
+          last_four: '1234',
+          expiry: '10/2020',
+        }}
         isDefault={false}
-        paymentMethod={cardName}
       />
     </>
   );
@@ -50,14 +59,14 @@ export const Other = () => card('Other');
 
 export const GooglePay = () => (
   <>
-    <PaymentMethodRow isDefault={true} paymentMethod={'GooglePay'} />
-    <PaymentMethodRow isDefault={false} paymentMethod={'GooglePay'} />
+    <PaymentMethodRow isDefault={true} thirdPartyPayment={'GooglePay'} />
+    <PaymentMethodRow isDefault={false} thirdPartyPayment={'GooglePay'} />
   </>
 );
 
 export const PayPal = () => (
   <>
-    <PaymentMethodRow isDefault={true} paymentMethod={'PayPal'} />
-    <PaymentMethodRow isDefault={false} paymentMethod={'PayPal'} />
+    <PaymentMethodRow isDefault={true} thirdPartyPayment={'PayPal'} />
+    <PaymentMethodRow isDefault={false} thirdPartyPayment={'PayPal'} />
   </>
 );

@@ -74,9 +74,13 @@ export type PromotionServiceType =
   | 'objectstorage'
   | 'transfer_tx';
 
-interface CreditCard {
+export type ThirdPartyPayment = 'GooglePay' | 'PayPal';
+
+export type CardType = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
+export interface CreditCard {
   expiry: string | null;
   last_four: string | null;
+  card_type?: CardType;
 }
 
 export interface Invoice {

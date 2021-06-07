@@ -1,15 +1,20 @@
 import * as React from 'react';
-import GooglePay from 'src/assets/icons/payment/googlePay.svg';
-import PayPal from 'src/assets/icons/payment/payPal.svg';
+import * as classNames from 'classnames';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Paper from 'src/components/core/Paper';
+import Grid from 'src/components/Grid';
+import Chip from 'src/components/core/Chip';
 import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import Chip from 'src/components/core/Chip';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import CreditCard from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
+import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
+import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
+import {
+  ThirdPartyPayment,
+  CreditCard as CreditCardType,
+} from '@linode/api-v4/lib/account/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,39 +45,50 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-// @TODO: Separate payment method (googlepay, paypal) from card type
 interface Props {
-  lastFour?: string;
-  expiry?: string;
+  creditCard?: CreditCardType;
+  thirdPartyPayment?: ThirdPartyPayment;
   isDefault: boolean;
-  paymentMethod: string;
 }
 
 type CombinedProps = Props;
 
+const iconMap = {
+  GooglePay: GooglePayIcon,
+  PayPal: PayPalIcon,
+};
+
+const getIcon = (paymentMethod: ThirdPartyPayment) => {
+  return iconMap[paymentMethod];
+};
+
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
-  const { expiry, lastFour, isDefault, paymentMethod } = props;
+  const { creditCard, thirdPartyPayment, isDefault } = props;
   const classes = useStyles();
 
-  const paymentIcon = (provider: string): any => {
-    switch (provider) {
-      case 'GooglePay':
-        return <GooglePay />;
-      case 'PayPal':
-        return <PayPal className={classes.payPal} />;
-    }
-  };
-
   const paymentInfo =
-    paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod) ? (
+    thirdPartyPayment && ['GooglePay', 'PayPal'].includes(thirdPartyPayment) ? (
       <>
-        <span className={classes.icon}>{paymentIcon(paymentMethod)}</span>
+        <span
+          className={classNames({
+            [classes.icon]: true,
+            [classes.payPal]: thirdPartyPayment === 'PayPal',
+          })}
+        >
+          {getIcon(thirdPartyPayment)}
+        </span>
         <Typography className={classes.paymentMethodText}>
-          &nbsp;{paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
+          &nbsp;{thirdPartyPayment === 'GooglePay' ? 'Google Pay' : thirdPartyPayment}
         </Typography>
       </>
     ) : (
-      <CreditCard type={paymentMethod} expiry={expiry} lastFour={lastFour} />
+      creditCard && (
+        <CreditCard
+          type={creditCard.card_type}
+          lastFour={creditCard.last_four}
+          expiry={creditCard.expiry}
+        />
+      )
     );
 
   const actions: Action[] = [
@@ -118,7 +134,9 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
           <ActionMenu
             actionsList={actions}
             ariaLabel={`Action menu for ${
-              lastFour ? `card ending in ${lastFour}` : paymentMethod
+              creditCard?.last_four
+                ? `card ending in ${creditCard.last_four}`
+                : thirdPartyPayment
             }`}
           />
         </Grid>
