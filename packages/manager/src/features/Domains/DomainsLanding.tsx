@@ -1,7 +1,6 @@
 import { Domain, getDomains } from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { equals, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -9,18 +8,12 @@ import { compose } from 'recompose';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
-import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
@@ -31,7 +24,6 @@ import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import domainsContainer, {
   Props as DomainProps,
 } from 'src/containers/domains.container';
-import { Domains } from 'src/documentation';
 import { ApplicationState } from 'src/store';
 import {
   openForCloning,
@@ -42,49 +34,31 @@ import {
 import { upsertMultipleDomains } from 'src/store/domains/domains.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import DomainBanner from './DomainBanner';
 import DisableDomainDialog from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
+import DomainBanner from './DomainBanner';
 import DomainRow from './DomainTableRow';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
-type ClassNames = 'root' | 'importButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      // Adds spacing when the docs button wraps to make it look a little less awkward
-      [theme.breakpoints.down(380)]: {
-        '& .docsButton': {
-          paddingBottom: theme.spacing(2),
-        },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    // Adds spacing when the docs button wraps to make it look a little less awkward
+    [theme.breakpoints.down(380)]: {
+      '& .docsButton': {
+        paddingBottom: theme.spacing(2),
       },
     },
-    importButton: {
-      marginLeft: -theme.spacing(),
-      whiteSpace: 'nowrap',
-    },
-  });
-
-interface State {
-  importDrawerOpen: boolean;
-  importDrawerSubmitting: false;
-  importDrawerErrors?: APIError[];
-  remote_nameserver: string;
-  createDrawerOpen: boolean;
-  createDrawerMode: 'clone' | 'create';
-  selectedDomainLabel: string;
-  selectedDomainID?: number;
-  removeDialogOpen: boolean;
-  removeDialogLoading: boolean;
-  removeDialogError?: string;
-  disableDialogOpen: boolean;
-}
+  },
+  importButton: {
+    marginLeft: -theme.spacing(),
+    whiteSpace: 'nowrap',
+  },
+}));
 
 interface Props {
-  /** purely so we can force a preference to get the unit tests to pass */
+  // Purely so we can force a preference to get the unit tests to pass
   shouldGroupDomains?: boolean;
   // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
@@ -96,12 +70,11 @@ interface Props {
 
 const initialOrder = { order: 'asc' as Order, orderBy: 'domain' };
 
-export type CombinedProps = DomainProps &
-  WithStyles<ClassNames> &
+export type CombinedProps = DispatchProps &
+  DomainProps &
   Props &
   RouteComponentProps<{}> &
   StateProps &
-  DispatchProps &
   WithSnackbarProps;
 
 const headers: HeaderCell[] = [
@@ -133,30 +106,47 @@ const headers: HeaderCell[] = [
   },
 ];
 
-export class DomainsLanding extends React.Component<CombinedProps, State> {
-  state: State = {
-    importDrawerOpen: false,
-    importDrawerSubmitting: false,
-    importDrawerErrors: undefined,
-    remote_nameserver: '',
-    createDrawerMode: 'create',
-    createDrawerOpen: false,
-    removeDialogOpen: false,
-    removeDialogLoading: false,
-    selectedDomainLabel: '',
-    disableDialogOpen: false,
-  };
+export const DomainsLanding: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
 
-  static docs: Linode.Doc[] = [Domains];
+  const {
+    domainForEditing,
+    domainsLastUpdated,
+    isLargeAccount,
+    openForEditing,
+    getAllDomains,
+    deleteDomain,
+    domainsError,
+    domainsData,
+    domainsLoading,
+    howManyLinodesOnAccount,
+    isRestrictedUser,
+    linodesLoading,
+  } = props;
 
-  componentDidMount = () => {
-    const {
-      domainForEditing,
-      domainsLastUpdated,
-      isLargeAccount,
-      openForEditing,
-      getAllDomains,
-    } = this.props;
+  const [selectedDomainLabel, setSelectedDomainLabel] = React.useState<string>(
+    ''
+  );
+  const [selectedDomainID, setselectedDomainID] = React.useState<
+    number | undefined
+  >(undefined);
+  const [importDrawerOpen, setImportDrawerOpen] = React.useState<boolean>(
+    false
+  );
+  const [removeDialogOpen, setRemoveDialogOpen] = React.useState<boolean>(
+    false
+  );
+  const [removeDialogLoading, setRemoveDialogLoading] = React.useState<boolean>(
+    false
+  );
+  const [removeDialogError, setRemoveDialogError] = React.useState<
+    string | undefined
+  >(undefined);
+  const [disableDialogOpen, setDisableDialogOpen] = React.useState<boolean>(
+    false
+  );
+
+  React.useEffect(() => {
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
       const { domainId, domainLabel } = domainForEditing;
@@ -166,81 +156,89 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     if (!isLargeAccount && domainsLastUpdated === 0) {
       getAllDomains();
     }
-  };
+  }, [
+    domainForEditing,
+    domainsLastUpdated,
+    getAllDomains,
+    isLargeAccount,
+    openForEditing,
+  ]);
 
-  componentDidUpdate = (prevProps: CombinedProps) => {
+  React.useEffect(() => {
     // Open the "Edit Domain" drawer if so specified by this component's props.
-    const { domainForEditing } = this.props;
-    if (
-      !equals(prevProps.domainForEditing, domainForEditing) &&
-      domainForEditing
-    ) {
-      this.props.openForEditing(
+    if (domainForEditing) {
+      props.openForEditing(
         domainForEditing.domainLabel,
         domainForEditing.domainId
       );
     }
+  }, [domainForEditing, props]);
+
+  const navigateToCreate = () => {
+    props.history.push(DOMAIN_CREATE_ROUTE);
   };
 
-  openImportZoneDrawer = () => this.setState({ importDrawerOpen: true });
+  const openImportZoneDrawer = () => setImportDrawerOpen(true);
 
-  closeImportZoneDrawer = () =>
-    this.setState({
-      importDrawerOpen: false,
-      importDrawerSubmitting: false,
-      remote_nameserver: '',
-      selectedDomainLabel: '',
-      importDrawerErrors: undefined,
-    });
+  const closeImportZoneDrawer = () => {
+    setSelectedDomainLabel('');
+    setImportDrawerOpen(false);
+  };
 
-  handleSuccess = (domain: Domain) => {
-    this.props.upsertDomain(domain);
+  const handleSuccess = (domain: Domain) => {
+    props.upsertDomain(domain);
 
     if (domain.id) {
-      return this.props.history.push(`/domains/${domain.id}`);
+      return props.history.push(`/domains/${domain.id}`);
     }
   };
 
-  removeDomain = () => {
-    const { selectedDomainID } = this.state;
-    const { deleteDomain } = this.props;
-    this.setState({ removeDialogLoading: true, removeDialogError: undefined });
+  const openRemoveDialog = (domain: string, domainId: number) => {
+    setSelectedDomainLabel(domain);
+    setselectedDomainID(domainId);
+    setRemoveDialogOpen(true);
+    setRemoveDialogError(undefined);
+  };
+
+  const closeRemoveDialog = () => {
+    setRemoveDialogOpen(false);
+  };
+
+  const removeDomain = () => {
+    setRemoveDialogLoading(true);
+    setRemoveDialogError(undefined);
+
     if (selectedDomainID) {
       deleteDomain({ domainId: selectedDomainID })
         .then(() => {
-          this.closeRemoveDialog();
-          this.setState({ removeDialogLoading: false });
+          closeRemoveDialog();
+          setRemoveDialogLoading(false);
         })
         .catch((e) => {
-          this.setState({
-            removeDialogLoading: false,
-            removeDialogError: getAPIErrorOrDefault(
-              e,
-              'Error deleting Domain.'
-            )[0].reason,
-          });
+          setRemoveDialogLoading(false);
+          setRemoveDialogError(
+            getAPIErrorOrDefault(e, 'Error deleting Domain.')[0].reason
+          );
         });
     } else {
-      this.setState({
-        removeDialogLoading: false,
-        removeDialogError: 'Error deleting Domain.',
-      });
+      setRemoveDialogLoading(false);
+      setRemoveDialogError('Error deleting Domain.');
     }
   };
 
-  handleClickEnableOrDisableDomain = (
+  const handleClickEnableOrDisableDomain = (
     action: 'enable' | 'disable',
     domain: string,
     domainId: number
   ) => {
     if (action === 'enable') {
-      return this.props
+      props
         .updateDomain({
           domainId,
           status: 'active',
         })
         .catch((e) => {
-          return this.props.enqueueSnackbar(
+          return props.enqueueSnackbar(
             getAPIErrorOrDefault(
               e,
               'There was an issue enabling your domain'
@@ -251,207 +249,165 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           );
         });
     } else {
-      return this.setState({
-        disableDialogOpen: true,
-        selectedDomainID: domainId,
-        selectedDomainLabel: domain,
-      });
+      setSelectedDomainLabel(domain);
+      setselectedDomainID(domainId);
+      setDisableDialogOpen(true);
     }
   };
 
-  openRemoveDialog = (domain: string, domainId: number) => {
-    this.setState({
-      removeDialogOpen: true,
-      removeDialogError: undefined,
-      selectedDomainLabel: domain,
-      selectedDomainID: domainId,
-    });
+  const handlers: DomainHandlers = {
+    onClone: props.openForCloning,
+    onEdit: props.openForEditing,
+    onRemove: openRemoveDialog,
+    onDisableOrEnable: handleClickEnableOrDisableDomain,
   };
 
-  closeRemoveDialog = () => {
-    this.setState({
-      removeDialogOpen: false,
-    });
+  const domainRow: EntityTableRow<Domain> = {
+    Component: DomainRow,
+    data: domainsData ?? [],
+    request: isLargeAccount ? getDomains : undefined,
+    handlers,
+    loading: domainsLoading,
+    error: domainsError.read,
+    lastUpdated: domainsLastUpdated,
   };
 
-  openCreateDomainDrawer = () => {
-    this.props.openForCreating('Created from Domain Landing');
-  };
+  if (domainsLoading) {
+    return <RenderLoading />;
+  }
 
-  navigateToCreate = () => {
-    this.props.history.push(DOMAIN_CREATE_ROUTE);
-  };
+  if (domainsError.read) {
+    return <RenderError />;
+  }
 
-  render() {
-    const { classes } = this.props;
-    const {
-      domainsError,
-      domainsData,
-      domainsLoading,
-      domainsLastUpdated,
-      howManyLinodesOnAccount,
-      isLargeAccount,
-      isRestrictedUser,
-      linodesLoading,
-    } = this.props;
-
-    const handlers: DomainHandlers = {
-      onClone: this.props.openForCloning,
-      onEdit: this.props.openForEditing,
-      onRemove: this.openRemoveDialog,
-      onDisableOrEnable: this.handleClickEnableOrDisableDomain,
-    };
-
-    const domainRow: EntityTableRow<Domain> = {
-      Component: DomainRow,
-      data: domainsData ?? [],
-      request: isLargeAccount ? getDomains : undefined,
-      handlers,
-      loading: domainsLoading,
-      error: domainsError.read,
-      lastUpdated: domainsLastUpdated,
-    };
-
-    if (domainsLoading) {
-      return <RenderLoading />;
-    }
-
-    if (domainsError.read) {
-      return <RenderError />;
-    }
-
-    if (!isLargeAccount && domainsData?.length === 0) {
-      /**
-       * We don't know whether or not a large account is empty or not
-       * until Pagey has made its first request, and putting this
-       * empty state inside of Pagey would be weird/difficult.
-       *
-       * The other option is to make an initial request when this
-       * component mounts, which Pagey would ignore.
-       *
-       * I think a slightly different empty state for large accounts is
-       * the best trade-off until we have the thing-count endpoint,
-       * but open to persuasion on this.
-       */
-      return (
-        <React.Fragment>
-          <RenderEmpty
-            onCreateDomain={this.navigateToCreate}
-            onImportZone={this.openImportZoneDrawer}
-          />
-          <DomainZoneImportDrawer
-            open={this.state.importDrawerOpen}
-            onClose={this.closeImportZoneDrawer}
-            onSuccess={this.handleSuccess}
-          />
-        </React.Fragment>
-      );
-    }
-
+  if (!isLargeAccount && domainsData?.length === 0) {
     /**
-     * Users with no Linodes on their account should see a banner
-     * warning them that their DNS records are not being served.
+     * We don't know whether or not a large account is empty or not
+     * until Pagey has made its first request, and putting this
+     * empty state inside of Pagey would be weird/difficult.
      *
-     * Restricted users can often not view the number of Linodes
-     * on the account, so to prevent the possibility of displaying inaccurate
-     * warnings, we don't show the banner to restricted users.
+     * The other option is to make an initial request when this
+     * component mounts, which Pagey would ignore.
      *
-     * We also hide the banner while Linodes data are still loading, since count
-     * will be 0 until loading is complete.
+     * I think a slightly different empty state for large accounts is
+     * the best trade-off until we have the thing-count endpoint,
+     * but open to persuasion on this.
      */
-    const shouldShowBanner =
-      !isRestrictedUser &&
-      !linodesLoading &&
-      howManyLinodesOnAccount === 0 &&
-      domainsData &&
-      domainsData.length > 0;
-
     return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Domains" />
-        <DomainBanner hidden={!shouldShowBanner} />
-        {this.props.location.state?.recordError && (
-          <Notice error text={this.props.location.state.recordError} />
-        )}
-        <PreferenceToggle<boolean>
-          preferenceKey="domains_group_by_tag"
-          preferenceOptions={[false, true]}
-          localStorageKey="GROUP_DOMAINS"
-          toggleCallbackFnDebounced={toggleDomainsGroupBy}
-          /** again, this value prop should be undefined - purely for the unit test's sake */
-          value={this.props.shouldGroupDomains}
-        >
-          {({
-            preference: domainsAreGrouped,
-            togglePreference: toggleGroupDomains,
-          }: ToggleProps<boolean>) => {
-            return (
-              <div className={classes.root}>
-                <LandingHeader
-                  title="Domains"
-                  extraActions={
-                    <Button
-                      className={classes.importButton}
-                      onClick={this.openImportZoneDrawer}
-                      buttonType="secondary"
-                    >
-                      Import a Zone
-                    </Button>
-                  }
-                  entity="Domain"
-                  onAddNew={this.navigateToCreate}
-                  docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
-                />
-                <EntityTable_CMR
-                  entity="domain"
-                  headers={headers}
-                  row={domainRow}
-                  initialOrder={initialOrder}
-                  toggleGroupByTag={toggleGroupDomains}
-                  isGroupedByTag={domainsAreGrouped}
-                  isLargeAccount={isLargeAccount}
-                  normalizeData={(pageyData: Domain[]) => {
-                    // Use Redux copies of each Domain, since Redux is more up-to-date.
-                    return getReduxCopyOfDomains(
-                      pageyData,
-                      this.props.domainsByID
-                    );
-                  }}
-                  // Persist Pagey data to Redux.
-                  persistData={(data: Domain[]) => {
-                    this.props.upsertMultipleDomains(data);
-                  }}
-                />
-              </div>
-            );
-          }}
-        </PreferenceToggle>
+      <>
+        <RenderEmpty
+          onCreateDomain={navigateToCreate}
+          onImportZone={openImportZoneDrawer}
+        />
         <DomainZoneImportDrawer
-          open={this.state.importDrawerOpen}
-          onClose={this.closeImportZoneDrawer}
-          onSuccess={this.handleSuccess}
+          open={importDrawerOpen}
+          onClose={closeImportZoneDrawer}
+          onSuccess={handleSuccess}
         />
-        <DisableDomainDialog
-          updateDomain={this.props.updateDomain}
-          selectedDomainID={this.state.selectedDomainID}
-          selectedDomainLabel={this.state.selectedDomainLabel}
-          closeDialog={() => this.setState({ disableDialogOpen: false })}
-          open={this.state.disableDialogOpen}
-        />
-        <DeletionDialog
-          typeToConfirm
-          entity="domain"
-          open={this.state.removeDialogOpen}
-          label={this.state.selectedDomainLabel}
-          loading={this.state.removeDialogLoading}
-          error={this.state.removeDialogError}
-          onClose={this.closeRemoveDialog}
-          onDelete={this.removeDomain}
-        />
-      </React.Fragment>
+      </>
     );
   }
-}
+
+  /**
+   * Users with no Linodes on their account should see a banner
+   * warning them that their DNS records are not being served.
+   *
+   * Restricted users can often not view the number of Linodes
+   * on the account, so to prevent the possibility of displaying inaccurate
+   * warnings, we don't show the banner to restricted users.
+   *
+   * We also hide the banner while Linodes data are still loading, since count
+   * will be 0 until loading is complete.
+   */
+  const shouldShowBanner =
+    !isRestrictedUser &&
+    !linodesLoading &&
+    howManyLinodesOnAccount === 0 &&
+    domainsData &&
+    domainsData.length > 0;
+
+  return (
+    <>
+      <DocumentTitleSegment segment="Domains" />
+      <DomainBanner hidden={!shouldShowBanner} />
+      {props.location.state?.recordError && (
+        <Notice error text={props.location.state.recordError} />
+      )}
+      <PreferenceToggle<boolean>
+        preferenceKey="domains_group_by_tag"
+        preferenceOptions={[false, true]}
+        localStorageKey="GROUP_DOMAINS"
+        toggleCallbackFnDebounced={toggleDomainsGroupBy}
+        /** again, this value prop should be undefined - purely for the unit test's sake */
+        value={props.shouldGroupDomains}
+      >
+        {({
+          preference: domainsAreGrouped,
+          togglePreference: toggleGroupDomains,
+        }: ToggleProps<boolean>) => {
+          return (
+            <div className={classes.root}>
+              <LandingHeader
+                title="Domains"
+                extraActions={
+                  <Button
+                    className={classes.importButton}
+                    onClick={openImportZoneDrawer}
+                    buttonType="secondary"
+                  >
+                    Import a Zone
+                  </Button>
+                }
+                entity="Domain"
+                onAddNew={navigateToCreate}
+                docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
+              />
+              <EntityTable
+                entity="domain"
+                headers={headers}
+                row={domainRow}
+                initialOrder={initialOrder}
+                toggleGroupByTag={toggleGroupDomains}
+                isGroupedByTag={domainsAreGrouped}
+                isLargeAccount={isLargeAccount}
+                normalizeData={(pageyData: Domain[]) => {
+                  // Use Redux copies of each Domain, since Redux is more up-to-date.
+                  return getReduxCopyOfDomains(pageyData, props.domainsByID);
+                }}
+                // Persist Pagey data to Redux.
+                persistData={(data: Domain[]) => {
+                  props.upsertMultipleDomains(data);
+                }}
+              />
+            </div>
+          );
+        }}
+      </PreferenceToggle>
+      <DomainZoneImportDrawer
+        open={importDrawerOpen}
+        onClose={closeImportZoneDrawer}
+        onSuccess={handleSuccess}
+      />
+      <DisableDomainDialog
+        updateDomain={props.updateDomain}
+        selectedDomainID={selectedDomainID}
+        selectedDomainLabel={selectedDomainLabel}
+        closeDialog={() => setDisableDialogOpen(false)}
+        open={disableDialogOpen}
+      />
+      <DeletionDialog
+        typeToConfirm
+        entity="domain"
+        open={removeDialogOpen}
+        label={selectedDomainLabel}
+        loading={removeDialogLoading}
+        error={removeDialogError}
+        onClose={closeRemoveDialog}
+        onDelete={removeDomain}
+      />
+    </>
+  );
+};
 
 const RenderLoading: React.FC<{}> = () => {
   return <CircleProgress />;
@@ -468,7 +424,7 @@ const RenderEmpty: React.FC<{
   onImportZone: () => void;
 }> = (props) => {
   return (
-    <React.Fragment>
+    <>
       <DocumentTitleSegment segment="Domains" />
       <Placeholder
         title="Domains"
@@ -498,7 +454,7 @@ const RenderEmpty: React.FC<{
           </Link>
         </Typography>
       </Placeholder>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -506,8 +462,6 @@ const eventCategory = `domains landing`;
 
 const toggleDomainsGroupBy = (checked: boolean) =>
   sendGroupByTagEnabledEvent(eventCategory, checked);
-
-const styled = withStyles(styles);
 
 interface DispatchProps {
   openForCloning: (domain: string, id: number) => void;
@@ -546,11 +500,9 @@ export const connected = connect(mapStateToProps, {
 });
 
 export default compose<CombinedProps, Props>(
-  setDocs(DomainsLanding.docs),
   domainsContainer(),
   connected,
-  withSnackbar,
-  styled
+  withSnackbar
 )(DomainsLanding);
 
 // Given a list of "baseDomains" (requested from the API via Pagey) and a record of Domains

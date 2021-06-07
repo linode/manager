@@ -36,10 +36,6 @@ const props: CombinedProps = {
   openForEditing: jest.fn(),
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
-  classes: {
-    root: '',
-    importButton: '',
-  },
   domainsByID: {},
   upsertMultipleDomains: jest.fn(),
   ...reactRouterProps,
