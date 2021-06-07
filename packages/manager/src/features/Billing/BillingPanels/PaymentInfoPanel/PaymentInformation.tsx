@@ -8,7 +8,7 @@ import Grid from 'src/components/Grid';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import styled from 'src/containers/SummaryPanels.styles';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
-import CreditCard from './CreditCard';
+// import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -57,14 +57,14 @@ type CombinedProps = Props;
 const PaymentInformation: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { lastFour, expiry } = props;
+  // const { lastFour, expiry } = props;
 
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
-  const handleOpenEditDrawer = () => {
-    setEditDrawerOpen(true);
-  };
+  // const handleOpenEditDrawer = () => {
+  //   setEditDrawerOpen(true);
+  // };
 
   const handleOpenAddDrawer = () => {
     setAddDrawerOpen(true);

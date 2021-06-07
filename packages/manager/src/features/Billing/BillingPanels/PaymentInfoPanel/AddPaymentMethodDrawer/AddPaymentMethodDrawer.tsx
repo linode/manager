@@ -30,7 +30,7 @@ export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
             <Grid item xs>
               <Typography variant="subtitle1">Google Pay</Typography>
               <Typography>
-                You'll be taken to Google Pay to complete sign up.
+                You&apos;ll be taken to Google Pay to complete sign up.
               </Typography>
             </Grid>
           </Grid>
