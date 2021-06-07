@@ -10,10 +10,6 @@ import LineGraph, {
 } from 'src/components/LineGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  divider: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
   title: {
     color: theme.color.headline,
     fontWeight: 'bold',
@@ -62,7 +58,7 @@ const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
           </React.Fragment>
         )}
       </Typography>
-      <Divider className={classes.divider} />
+      <Divider spacingTop={16} spacingBottom={16} />
       <div style={{ position: 'relative' }}>
         {error ? (
           <div style={{ height: props.chartHeight || '300px' }}>

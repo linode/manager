@@ -281,7 +281,11 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           }
           return (
             <div key={idx}>
-              <Divider className={classes.divider} />
+              <Divider
+                className={classes.divider}
+                spacingTop={12}
+                spacingBottom={12}
+              />
               {filteredLinks.map((thisLink) => {
                 const props = {
                   key: thisLink.display,

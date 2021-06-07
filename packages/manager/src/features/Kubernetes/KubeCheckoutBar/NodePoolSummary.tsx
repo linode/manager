@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: '#6e6e6e',
     },
   },
-  divider: {
-    marginTop: theme.spacing(2),
-  },
 }));
 
 export interface Props {
@@ -56,7 +53,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Divider className={classes.divider} />
+      <Divider spacingTop={16} />
       <Grid
         container
         alignItems="flex-start"

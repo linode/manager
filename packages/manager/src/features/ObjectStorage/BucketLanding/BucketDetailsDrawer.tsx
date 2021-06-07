@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
@@ -18,11 +18,7 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from '../BucketDetail/AccessSelect';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  divider: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
+const useStyles = makeStyles(() => ({
   copy: {
     marginLeft: '1em',
     padding: 0,
@@ -94,7 +90,7 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
       ) : null}
 
       {formattedCreated || cluster ? (
-        <Divider className={classes.divider} />
+        <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
 
       {typeof size === 'number' ? (
@@ -110,7 +106,7 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
       ) : null}
 
       {typeof size === 'number' || typeof objectsNumber === 'number' ? (
-        <Divider className={classes.divider} />
+        <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
 
       {cluster && bucketLabel ? (

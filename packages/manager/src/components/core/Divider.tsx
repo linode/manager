@@ -16,12 +16,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface DividerProps extends _DividerProps {}
 
 interface Props extends _DividerProps {
-  type?: 'landingHeader' | 'other';
+  spacingTop?: number;
+  spacingBottom?: number;
 }
 
 const _Divider: React.FC<Props> = (props) => {
   const classes = useStyles();
-  return <Divider classes={{ root: classes.root }} {...props} />;
+  const { spacingTop, spacingBottom } = props;
+
+  return (
+    <Divider
+      classes={{ root: classes.root }}
+      style={{ marginTop: spacingTop, marginBottom: spacingBottom }}
+      {...props}
+    />
+  );
 };
 
 export default _Divider;

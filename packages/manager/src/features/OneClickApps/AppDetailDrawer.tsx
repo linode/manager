@@ -23,7 +23,6 @@ type ClassNames =
   | 'appName'
   | 'summary'
   | 'description'
-  | 'divider'
   | 'image'
   | 'wrapLogo'
   | 'wrapAppName';
@@ -47,9 +46,7 @@ const styles = (theme: Theme) =>
     description: {
       lineHeight: 1.5,
     },
-    divider: {
-      marginTop: theme.spacing(3),
-    },
+
     image: {
       maxWidth: 50,
     },
@@ -119,7 +116,7 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
           />
         </Grid>
       </Grid>
-      <Divider className={classes.divider} />
+      <Divider spacingTop={24} />
       <Grid container direction="column" alignItems="center" justify="center">
         <Grid item>
           <Typography variant="h3" className={classes.summary}>

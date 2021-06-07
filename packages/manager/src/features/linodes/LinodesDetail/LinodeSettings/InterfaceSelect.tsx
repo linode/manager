@@ -9,7 +9,7 @@ import useVlansQuery from 'src/queries/vlans';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
-    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+    margin: `${theme.spacing(2)}px ${theme.spacing()}px 0 `,
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
   vlanGrid: {

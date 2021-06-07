@@ -51,10 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fill: theme.color.blue,
     },
   },
-  divider: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
   submitButton: {
     marginTop: theme.spacing(3),
   },
@@ -238,7 +234,7 @@ export const Configs: React.FC<Props> = (props) => {
       </List>
 
       {(selectedConfigs.length > 0 || selectedDisks.length > 0) && (
-        <Divider className={classes.divider} />
+        <Divider spacingTop={16} spacingBottom={16} />
       )}
 
       <Typography>

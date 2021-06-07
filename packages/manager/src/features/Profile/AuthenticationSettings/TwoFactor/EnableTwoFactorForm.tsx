@@ -3,19 +3,11 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ConfirmToken from './ConfirmToken';
 import QRCodeForm from './QRCodeForm';
-
-const useStyles = makeStyles(() => ({
-  divider: {
-    marginTop: 44,
-    marginBottom: 20,
-  },
-}));
 
 interface Props {
   loading: boolean;
@@ -30,8 +22,6 @@ interface Props {
 type CombinedProps = Props;
 
 export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');
@@ -95,10 +85,10 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
         <QRCodeForm
           secret={secret}
           secretLink={secretLink}
-          updateFor={[secret, secretLink, classes]}
+          updateFor={[secret, secretLink]}
         />
       )}
-      <Divider className={classes.divider} />
+      <Divider spacingTop={44} spacingBottom={20} />
       <ConfirmToken
         error={tokenError}
         token={token}
@@ -107,7 +97,7 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
         handleChange={handleTokenInputChange}
         onCancel={props.onCancel}
         onSubmit={onSubmit}
-        updateFor={[token, tokenError, submitting, classes]}
+        updateFor={[token, tokenError, submitting]}
       />
     </React.Fragment>
   );

@@ -16,10 +16,6 @@ import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from './AccessSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  divider: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
   copy: {
     marginLeft: '1em',
     padding: 0,
@@ -89,7 +85,7 @@ const ObjectDetailsDrawer: React.FC<Props> = (props) => {
 
       {open && name ? (
         <>
-          <Divider className={classes.divider} />
+          <Divider spacingTop={16} spacingBottom={16} />
           <AccessSelect
             variant="object"
             name={name}

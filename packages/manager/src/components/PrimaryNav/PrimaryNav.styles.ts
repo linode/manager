@@ -107,8 +107,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)',
-    marginTop: theme.spacing(1.5),
-    marginBottom: theme.spacing(1.5),
   },
   chip: {
     fontSize: '0.625rem',
