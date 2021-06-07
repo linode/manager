@@ -36,7 +36,7 @@ const cmrTextColors = {
 
 const cmrBorderColors = {
   borderTypography: '#454b54',
-  borderTabs: cmrBGColors.bgPaper,
+  borderTabs: '#222',
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
