@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import Table from 'src/components/Table/Table_CMR';
+import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { useAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -16,6 +15,7 @@ import usePagination from 'src/hooks/usePagination';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import sync from 'css-animation-sync';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import Link from 'src/components/Link';
 
 interface Props {
   // we will add more types when the endpoint supports then
@@ -25,8 +25,8 @@ interface Props {
 const MaintenanceTable: React.FC<Props> = (props) => {
   const { type } = props;
   const pagination = usePagination(1);
-  const [orderBy, setOrderBy] = useState('status');
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = React.useState('status');
+  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
 
   const { data, isLoading, error, refetch } = useAccountMaintenanceQuery(
     {
@@ -60,18 +60,19 @@ const MaintenanceTable: React.FC<Props> = (props) => {
 
   const renderTableRow = (item: AccountMaintenance) => {
     return (
-      <TableRow
-        rowLink={`/${item.entity.type}s/${item.entity.id}`}
-        key={item.entity.id}
-      >
-        <TableCell parentColumn="Label">{item.entity.label}</TableCell>
-        <TableCell parentColumn="Date">{item.when}</TableCell>
-        <TableCell parentColumn="Type">{item.type}</TableCell>
-        <TableCell parentColumn="Status">
+      <TableRow key={item.entity.id}>
+        <TableCell>
+          <Link to={`/${item.entity.type}s/${item.entity.id}`} tabIndex={0}>
+            {item.entity.label}
+          </Link>
+        </TableCell>
+        <TableCell>{item.when}</TableCell>
+        <TableCell>{item.type}</TableCell>
+        <TableCell>
           <StatusIcon status={getStatusIcon(item.status)} />
           {capitalize(item.status)}
         </TableCell>
-        <TableCell parentColumn="Reason">{item.reason}</TableCell>
+        <TableCell>{item.reason}</TableCell>
       </TableRow>
     );
   };
@@ -102,7 +103,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     setOrder(order);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     refetch();
   }, [order, orderBy]);
 

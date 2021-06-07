@@ -25,7 +25,7 @@ const EntityTransfersLanding = React.lazy(
 const Users = React.lazy(() => import('src/features/Users'));
 const GlobalSettings = React.lazy(() => import('./GlobalSettings'));
 const MaintenanceLanding = React.lazy(
-  () => import('./maintenance/MaintenanceLanding')
+  () => import('./Maintenance/MaintenanceLanding')
 );
 
 const AccountLanding: React.FC<Props> = (props) => {
