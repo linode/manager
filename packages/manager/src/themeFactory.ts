@@ -102,6 +102,7 @@ const cmrTextColors = {
   tableStatic: '#606469',
   textAccessTable: '#606469',
   secondaryButton: '#2575d0',
+  textGooglePay: '#fff',
 };
 
 const cmrBorderColors = {

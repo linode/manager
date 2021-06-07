@@ -3,8 +3,7 @@ import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
 import { compose } from 'recompose';
-import GooglePayButtonBlack from 'src/assets/icons/payment/gPayButtonBlack.svg';
-import GooglePayButtonWhite from 'src/assets/icons/payment/gPayButtonWhite.svg';
+import GooglePayButton from 'src/assets/icons/payment/gPayButton.svg';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -19,7 +18,6 @@ import AccountContainer, {
   DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
 import useFlags from 'src/hooks/useFlags';
-import usePreferences from 'src/hooks/usePreferences';
 import { v4 } from 'uuid';
 import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
@@ -58,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0.8,
     },
     '& svg': {
+      color: theme.cmrTextColors.textGooglePay,
       height: 16,
     },
   },
@@ -97,7 +96,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
   const classes = useStyles();
   const flags = useFlags();
-  const { preferences } = usePreferences();
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
@@ -218,11 +216,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                 {flags.additionalPaymentMethods?.includes('google_pay') ? (
                   <Grid item xs={6}>
                     <button className={classes.gPayButton}>
-                      {preferences?.theme === 'light' ? (
-                        <GooglePayButtonBlack />
-                      ) : (
-                        <GooglePayButtonWhite />
-                      )}
+                      <GooglePayButton />
                     </button>
                   </Grid>
                 ) : null}
