@@ -5,7 +5,9 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import styled from 'src/containers/SummaryPanels.styles';
+import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 import CreditCard from './CreditCard';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
@@ -57,11 +59,39 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
 
   const { lastFour, expiry } = props;
 
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
+  const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
-  const handleOpenDrawer = () => {
-    setDrawerOpen(true);
+  const handleOpenEditDrawer = () => {
+    setEditDrawerOpen(true);
   };
+
+  const handleOpenAddDrawer = () => {
+    setAddDrawerOpen(true);
+  };
+
+  const paymentMethods = [
+    {
+      data: {
+        card_type: 'Discover',
+        expiry: '12/2022',
+        last_four: '1111',
+      },
+      is_default: 0,
+      created: '2021-06-01T20:14:49',
+      method: 'google_pay',
+    },
+    {
+      created: '2021-05-24T15:49:49',
+      method: 'credit_card',
+      is_default: 1,
+      data: {
+        expiry: '09/2027',
+        card_type: '',
+        last_four: '0061',
+      },
+    },
+  ];
 
   return (
     <Grid className={classes.root} item xs={12} md={6}>
@@ -73,18 +103,33 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3" className={classes.title}>
             Payment Method
           </Typography>
-          <Button className={classes.edit} onClick={handleOpenDrawer}>
-            Edit
+          <Button className={classes.edit} onClick={handleOpenAddDrawer}>
+            Add a Payment Method
           </Button>
+          {/* <Button className={classes.edit} onClick={handleOpenDrawer}>
+            Edit
+          </Button> */}
         </div>
 
-        <div className={classes.billingGroup}>
-          <CreditCard lastFour={lastFour} expiry={expiry} />
-        </div>
+        {/* <CreditCard lastFour={lastFour} expiry={expiry} /> */}
+
+        {paymentMethods.map((paymentMethod) => (
+          <PaymentMethodRow
+            key={paymentMethod.method}
+            paymentMethod={paymentMethod.data.card_type}
+            isDefault={Boolean(paymentMethod.is_default)}
+            expiry={paymentMethod.data.expiry}
+            lastFour={paymentMethod.data.last_four}
+          />
+        ))}
 
         <UpdateCreditCardDrawer
-          open={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          open={editDrawerOpen}
+          onClose={() => setEditDrawerOpen(false)}
+        />
+        <AddPaymentMethodDrawer
+          open={addDrawerOpen}
+          onClose={() => setAddDrawerOpen(false)}
         />
       </Paper>
     </Grid>

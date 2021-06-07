@@ -19,6 +19,8 @@ import CreditCard from 'src/assets/icons/credit-card.svg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    padding: '6px',
+    height: '58px',
     marginBottom: theme.spacing(),
   },
   expiry: {
