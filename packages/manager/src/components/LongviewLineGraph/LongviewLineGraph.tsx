@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Divider from 'src/components/core/Divider';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph, {
@@ -11,11 +10,9 @@ import LineGraph, {
 } from 'src/components/LineGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   divider: {
-    marginTop: theme.spacing(2) - 1,
-    marginBottom: theme.spacing(2) - 1,
-    marginRight: theme.spacing(2.5),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   title: {
     color: theme.color.headline,
@@ -65,7 +62,7 @@ const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
           </React.Fragment>
         )}
       </Typography>
-      <Divider type="landingHeader" className={classes.divider} />
+      <Divider className={classes.divider} />
       <div style={{ position: 'relative' }}>
         {error ? (
           <div style={{ height: props.chartHeight || '300px' }}>

@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.color.grey3,
   },
   submitButton: {
     marginTop: theme.spacing(3),

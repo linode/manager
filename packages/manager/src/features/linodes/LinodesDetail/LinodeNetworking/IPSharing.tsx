@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     marginBottom: -theme.spacing(2),
   },
-  containerDivider: {
-    marginTop: theme.spacing(1),
+  divider: {
+    marginBottom: 0,
   },
   ipField: {
     width: '100%',
@@ -318,7 +318,7 @@ export const IPRow: React.FC<RowProps> = React.memo((props) => {
   return (
     <Grid container key={ip}>
       <Grid item xs={12}>
-        <Divider className={classes.containerDivider} />
+        <Divider className={classes.divider} />
       </Grid>
       <Grid item xs={12}>
         <TextField
@@ -369,7 +369,7 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   return (
     <Grid container key={idx}>
       <Grid item xs={12}>
-        <Divider className={classes.containerDivider} />
+        <Divider className={classes.divider} />
       </Grid>
       <Grid item xs={12} sm={10}>
         <Select

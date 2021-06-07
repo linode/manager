@@ -24,14 +24,10 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
 
-type ClassNames = 'divider' | 'passiveChecks' | 'actionsPanel';
+type ClassNames = 'passiveChecks' | 'actionsPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
-    divider: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
     passiveChecks: {
       marginTop: 4,
     },
@@ -816,14 +812,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             </FormHelperText>
           </Grid>
           <Grid item xs={12}>
-            <Divider className={classes.divider} />
+            <Divider />
           </Grid>
         </Grid>
         <Grid container>
           {this.renderActiveCheck(errorMap)}
           {this.renderPassiveCheck()}
           <Grid item xs={12}>
-            <Divider className={classes.divider} />
+            <Divider />
           </Grid>
         </Grid>
 
@@ -896,7 +892,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         {(forEdit || configIdx !== 0) && (
           <React.Fragment>
             <Grid updateFor={[classes]} item xs={12}>
-              <Divider className={classes.divider} />
+              <Divider />
             </Grid>
             <Grid
               updateFor={[submitting, classes]}

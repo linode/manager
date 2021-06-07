@@ -29,8 +29,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  containerDivider: {
-    marginTop: theme.spacing(1),
+  divider: {
+    marginBottom: 0,
   },
   sourceIPWrapper: {
     display: 'flex',
@@ -255,7 +255,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     return (
       <Grid container key={state.sourceIP}>
         <Grid item xs={12}>
-          <Divider className={classes.containerDivider} />
+          <Divider className={classes.divider} />
         </Grid>
         <Grid item className={classes.sourceIPWrapper}>
           <Typography variant="body1" className={classes.ipField}>

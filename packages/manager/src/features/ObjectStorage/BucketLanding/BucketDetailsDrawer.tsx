@@ -1,8 +1,13 @@
+import {
+  ACLType,
+  getBucketAccess,
+  updateBucketAccess,
+} from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
@@ -12,18 +17,11 @@ import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from '../BucketDetail/AccessSelect';
-import {
-  getBucketAccess,
-  updateBucketAccess,
-  ACLType,
-} from '@linode/api-v4/lib/object-storage';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   divider: {
-    marginTop: 16,
-    marginBottom: 16,
-    height: 1,
-    backgroundColor: '#EBEBEB',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   copy: {
     marginLeft: '1em',

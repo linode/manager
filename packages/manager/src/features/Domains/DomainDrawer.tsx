@@ -20,7 +20,6 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
@@ -58,11 +57,11 @@ import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
 
 type ClassNames = 'divider';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     divider: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(4),
+      marginTop: 28,
+      marginBottom: 22,
     },
   });
 

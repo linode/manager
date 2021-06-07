@@ -30,8 +30,8 @@ const styles = (theme: Theme) =>
     },
     passwordInputOuter: {},
     divider: {
-      backgroundColor: theme.cmrBorderColors.borderTabs,
-      marginTop: theme.spacing(4),
+      marginTop: 44,
+      marginBottom: 20,
     },
   });
 

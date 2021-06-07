@@ -3,18 +3,17 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import { getErrorMap, getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ConfirmToken from './ConfirmToken';
 import QRCodeForm from './QRCodeForm';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+const useStyles = makeStyles(() => ({
   divider: {
-    margin: `${theme.spacing(3)}px 0`,
-    width: `calc(100% - ${theme.spacing(2)}px)`,
+    marginTop: 44,
+    marginBottom: 20,
   },
 }));
 

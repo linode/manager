@@ -5,11 +5,10 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  line: {
-    /** these colors match up with the AppBar component boxShadow colors */
-    boxShadow: `inset 0 -1px 0 ${
-      theme.name === 'lightTheme' ? theme.color.border2 : theme.color.border3
-    } !important`,
+  root: {
+    backgroundColor: theme.cmrBorderColors.borderTabs,
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
   },
 }));
 
@@ -22,14 +21,7 @@ interface Props extends _DividerProps {
 
 const _Divider: React.FC<Props> = (props) => {
   const classes = useStyles();
-  return (
-    <Divider
-      classes={{
-        root: props.type === 'landingHeader' ? classes.line : undefined,
-      }}
-      {...props}
-    />
-  );
+  return <Divider classes={{ root: classes.root }} {...props} />;
 };
 
 export default _Divider;

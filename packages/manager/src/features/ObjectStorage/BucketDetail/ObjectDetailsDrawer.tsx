@@ -17,10 +17,8 @@ import AccessSelect from './AccessSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
-    marginTop: 16,
-    marginBottom: 16,
-    height: 1,
-    backgroundColor: '#EBEBEB',
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   copy: {
     marginLeft: '1em',
@@ -28,9 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     display: 'flex',
-  },
-  submitButton: {
-    marginTop: theme.spacing(2),
   },
 }));
 
