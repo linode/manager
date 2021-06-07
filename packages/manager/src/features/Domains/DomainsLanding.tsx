@@ -8,7 +8,12 @@ import { compose } from 'recompose';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme,
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -77,37 +82,46 @@ export type CombinedProps = DispatchProps &
   StateProps &
   WithSnackbarProps;
 
-const headers: HeaderCell[] = [
-  {
-    label: 'Domain',
-    dataColumn: 'domain',
-    sortable: true,
-    widthPercent: 25,
-  },
-  {
-    label: 'Status',
-    dataColumn: 'status',
-    sortable: true,
-    widthPercent: 10,
-  },
-  {
-    label: 'Type',
-    dataColumn: 'type',
-    sortable: true,
-    widthPercent: 10,
-    hideOnMobile: true,
-  },
-  {
-    label: 'Last Modified',
-    dataColumn: 'updated',
-    sortable: true,
-    widthPercent: 20,
-    hideOnMobile: true,
-  },
-];
+const getHeaders = (
+  matchesXsDown: boolean,
+  matchesSmDown: boolean,
+  matchesMdDown: boolean
+): HeaderCell[] =>
+  [
+    {
+      label: 'Domain',
+      dataColumn: 'domain',
+      sortable: true,
+      widthPercent: matchesXsDown ? 50 : matchesSmDown ? 35 : 30,
+    },
+    {
+      label: 'Status',
+      dataColumn: 'status',
+      sortable: true,
+      widthPercent: matchesXsDown ? 25 : 12,
+    },
+    {
+      label: 'Type',
+      dataColumn: 'type',
+      sortable: true,
+      widthPercent: 12,
+      hideOnMobile: true,
+    },
+    {
+      label: 'Last Modified',
+      dataColumn: 'updated',
+      sortable: true,
+      widthPercent: matchesSmDown ? 25 : matchesMdDown ? 20 : 15,
+      hideOnMobile: true,
+    },
+  ].filter(Boolean) as HeaderCell[];
 
 export const DomainsLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     domainForEditing,
@@ -364,7 +378,11 @@ export const DomainsLanding: React.FC<CombinedProps> = (props) => {
               />
               <EntityTable
                 entity="domain"
-                headers={headers}
+                headers={getHeaders(
+                  matchesXsDown,
+                  matchesSmDown,
+                  matchesMdDown
+                )}
                 row={domainRow}
                 initialOrder={initialOrder}
                 toggleGroupByTag={toggleGroupDomains}

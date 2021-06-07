@@ -13,11 +13,6 @@ import { HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
-  sortCell: {
-    '& .MuiTableSortLabel-active:hover': {
-      color: theme.palette.primary.main,
-    },
-  },
   groupByTagCell: {
     backgroundColor: theme.cmrBGColors.bgTableHeader,
     paddingRight: `0px !important`,
@@ -60,7 +55,6 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
         label={thisCell.dataColumn}
         direction={order}
         handleClick={handleOrderChange}
-        className={classes.sortCell}
         style={{ width: `${thisCell.widthPercent}%` }}
         data-testid={`${thisCell.label}-header-cell`}
       >
