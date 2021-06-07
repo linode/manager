@@ -9,12 +9,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingBottom: theme.spacing(2),
   },
+  dialog: {
+    '& [data-qa-dialog-content]': {
+      overflowY: 'visible',
+    },
+  },
   commandDisplay: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgb(244, 244, 244)',
-    border: `1px solid rgb(204, 204, 204)`,
+    backgroundColor: theme.bg.main,
+    border: `1px solid ${theme.color.border2}`, // rgb(204, 204, 204)
     fontSize: '0.875rem',
     lineHeight: 1,
     padding: theme.spacing(),
@@ -70,6 +75,7 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
       onClose={onClose}
       fullWidth
       maxWidth="md"
+      className={classes.dialog}
     >
       {/* <div className={classes.root}> */}
       <Typography className={classes.commandDisplay}>
