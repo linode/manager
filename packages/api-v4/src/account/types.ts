@@ -74,7 +74,7 @@ export type PromotionServiceType =
   | 'objectstorage'
   | 'transfer_tx';
 
-export type ThirdPartyPayment = 'GooglePay' | 'PayPal';
+export type ThirdPartyPayment = 'google_pay' | 'paypal';
 
 export type CardType = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
 export interface CreditCard {

@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1,
     transition: theme.transitions.create(['opacity']),
   },
+  align: {
+    left: theme.spacing(),
+  },
   PaypalHidden: {
     opacity: 0.3,
   },
@@ -368,6 +371,9 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
             <div
               data-qa-paypal-button
               className={classnames({
+                [classes.align]: !flags.additionalPaymentMethods?.includes(
+                  'google_pay'
+                ),
                 [classes.paypalButtonWrapper]: true,
                 [classes.PaypalHidden]: !enabled,
               })}

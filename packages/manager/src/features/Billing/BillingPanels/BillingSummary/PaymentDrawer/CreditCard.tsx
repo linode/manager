@@ -10,9 +10,8 @@ import AmexIcon from 'src/assets/icons/payment/amex.svg';
 import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import GenericCardIcon from 'src/assets/icons/credit-card.svg';
-import useFlags from 'src/hooks/useFlags';
 
-// @TODO: remove unused code and feature flag logic once google pay is released
+// @TODO: rename this component to CreditCard and use once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   root: {
@@ -67,12 +66,11 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
   const { type, lastFour, expiry } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
 
   const Icon = type && getIcon(type);
   const isCardExpired = expiry && isCreditCardExpired(expiry);
 
-  return flags.additionalPaymentMethods?.includes('google_pay') && type ? (
+  return (
     <div className={classes.root}>
       <span className={classes.icon}>
         <Icon />
@@ -92,27 +90,6 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
         </Typography>
       </div>
     </div>
-  ) : (
-    <>
-      <div className={`${classes.section} ${classes.root}`} data-qa-contact-cc>
-        <div>
-          {lastFour
-            ? `Card ending in ${lastFour}`
-            : 'No payment method has been specified for this account.'}
-        </div>
-      </div>
-      <div
-        className={`${classes.section} ${classes.root}`}
-        data-qa-contact-cc-exp-date
-      >
-        <div>
-          {expiry && `Expires ${expiry}`}
-          {expiry && isCreditCardExpired(expiry) && (
-            <span className={classes.expired}> (Expired)</span>
-          )}
-        </div>
-      </div>
-    </>
   );
 };
 

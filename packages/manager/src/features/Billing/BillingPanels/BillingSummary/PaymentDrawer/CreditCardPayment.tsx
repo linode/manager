@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
-import CreditCard from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

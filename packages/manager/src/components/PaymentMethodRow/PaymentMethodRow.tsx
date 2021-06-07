@@ -1,18 +1,15 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
 import Chip from 'src/components/core/Chip';
 import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import CreditCard from 'src/features/Billing/BillingPanels/PaymentInfoPanel/CreditCard';
-import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
-import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import ThirdPartyPayment from './ThirdPartyPayment';
 import {
-  ThirdPartyPayment,
+  ThirdPartyPayment as ThirdPartyPaymentType,
   CreditCard as CreditCardType,
 } from '@linode/api-v4/lib/account/types';
 
@@ -28,18 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  icon: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: 45,
-  },
-  paymentMethodText: {
-    fontWeight: 'bold',
-  },
-  payPal: {
-    border: `1px solid ${theme.color.grey2}`,
-    padding: '5px 8px',
-  },
   chip: {
     fontSize: '0.625rem',
   },
@@ -47,49 +32,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   creditCard?: CreditCardType;
-  thirdPartyPayment?: ThirdPartyPayment;
+  thirdPartyPayment?: ThirdPartyPaymentType;
   isDefault: boolean;
 }
 
 type CombinedProps = Props;
 
-const iconMap = {
-  GooglePay: GooglePayIcon,
-  PayPal: PayPalIcon,
-};
-
-const getIcon = (paymentMethod: ThirdPartyPayment) => {
-  return iconMap[paymentMethod];
-};
-
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   const { creditCard, thirdPartyPayment, isDefault } = props;
   const classes = useStyles();
-
-  const paymentInfo =
-    thirdPartyPayment && ['GooglePay', 'PayPal'].includes(thirdPartyPayment) ? (
-      <>
-        <span
-          className={classNames({
-            [classes.icon]: true,
-            [classes.payPal]: thirdPartyPayment === 'PayPal',
-          })}
-        >
-          {getIcon(thirdPartyPayment)}
-        </span>
-        <Typography className={classes.paymentMethodText}>
-          &nbsp;{thirdPartyPayment === 'GooglePay' ? 'Google Pay' : thirdPartyPayment}
-        </Typography>
-      </>
-    ) : (
-      creditCard && (
-        <CreditCard
-          type={creditCard.card_type}
-          lastFour={creditCard.last_four}
-          expiry={creditCard.expiry}
-        />
-      )
-    );
 
   const actions: Action[] = [
     {
@@ -123,7 +74,16 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     <Paper className={classes.root} variant="outlined">
       <Grid container>
         <Grid item className={classes.item}>
-          {paymentInfo}
+          {thirdPartyPayment ? (
+            <ThirdPartyPayment thirdPartyPayment={thirdPartyPayment} />
+          ) : null}
+          {creditCard ? (
+            <CreditCard
+              type={creditCard.card_type}
+              lastFour={creditCard.last_four}
+              expiry={creditCard.expiry}
+            />
+          ) : null}
         </Grid>
         <Grid item className={classes.item}>
           {isDefault && (

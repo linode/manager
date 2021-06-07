@@ -55,18 +55,19 @@ export const Discover = () => card('Discover');
 
 export const JCB = () => card('JCB');
 
+// @ts-expect-error This is just an example
 export const Other = () => card('Other');
 
 export const GooglePay = () => (
   <>
-    <PaymentMethodRow isDefault={true} thirdPartyPayment={'GooglePay'} />
-    <PaymentMethodRow isDefault={false} thirdPartyPayment={'GooglePay'} />
+    <PaymentMethodRow isDefault={true} thirdPartyPayment={'google_pay'} />
+    <PaymentMethodRow isDefault={false} thirdPartyPayment={'google_pay'} />
   </>
 );
 
 export const PayPal = () => (
   <>
-    <PaymentMethodRow isDefault={true} thirdPartyPayment={'PayPal'} />
-    <PaymentMethodRow isDefault={false} thirdPartyPayment={'PayPal'} />
+    <PaymentMethodRow isDefault={true} thirdPartyPayment={'paypal'} />
+    <PaymentMethodRow isDefault={false} thirdPartyPayment={'paypal'} />
   </>
 );

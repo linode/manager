@@ -201,13 +201,34 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
           />
           <Divider className={classes.divider} />
           {flags.additionalPaymentMethods?.includes('google_pay') ? (
-            <Grid item>
-              <Typography variant="h3" className={classes.header}>
-                <strong>Or pay via:</strong>
-              </Typography>
-            </Grid>
-          ) : null}
-          <Grid container item wrap="nowrap">
+            <>
+              <Grid item>
+                <Typography variant="h3" className={classes.header}>
+                  <strong>Or pay via:</strong>
+                </Typography>
+              </Grid>
+              <Grid container item wrap="nowrap">
+                <AsyncPaypal
+                  key={payPalKey}
+                  usd={usd}
+                  setSuccess={setSuccess}
+                  asyncScriptOnLoad={onScriptLoad}
+                  isScriptLoaded={isPaypalScriptLoaded}
+                />
+                {flags.additionalPaymentMethods?.includes('google_pay') ? (
+                  <Grid item xs={6}>
+                    <button className={classes.gPayButton}>
+                      {preferences?.theme === 'light' ? (
+                        <GooglePayButtonBlack />
+                      ) : (
+                        <GooglePayButtonWhite />
+                      )}
+                    </button>
+                  </Grid>
+                ) : null}
+              </Grid>
+            </>
+          ) : (
             <AsyncPaypal
               key={payPalKey}
               usd={usd}
@@ -215,18 +236,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               asyncScriptOnLoad={onScriptLoad}
               isScriptLoaded={isPaypalScriptLoaded}
             />
-            {flags.additionalPaymentMethods?.includes('google_pay') ? (
-              <Grid item xs={6}>
-                <button className={classes.gPayButton}>
-                  {preferences?.theme === 'light' ? (
-                    <GooglePayButtonBlack />
-                  ) : (
-                    <GooglePayButtonWhite />
-                  )}
-                </button>
-              </Grid>
-            ) : null}
-          </Grid>
+          )}
         </Grid>
       </Grid>
     </Drawer>
