@@ -48,12 +48,12 @@ import {
   promoFactory,
   staticObjects,
   makeObjectsPage,
+  accountMaintenanceFactory,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
-import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
 
 export const makeResourcePage = (
   e: any[],
@@ -68,7 +68,6 @@ export const makeResourcePage = (
   data: e,
 });
 
-const accountMaintenance = accountMaintenanceFactory.buildList(100);
 const statusPage = [
   rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
     const response = incidentResponseFactory.build();
@@ -429,15 +428,17 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/account/maintenance', (req, res, ctx) => {
+    const accountMaintenance = accountMaintenanceFactory.buildList(100);
+
     const page = Number(req.url.searchParams.get('page') || 1);
-    const pageSize = Number(req.url.searchParams.get('page_size') || 10);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
     if (req.url.searchParams.get('page')) {
       const sort = JSON.parse(req.headers.get('x-filter') || '{}');
 
       accountMaintenance.sort((a, b) => {
-        const statusA = a[sort['+order_by']].toUpperCase();
-        const statusB = b[sort['+order_by']].toUpperCase();
+        const statusA = a[sort['+order_by']];
+        const statusB = b[sort['+order_by']];
 
         if (statusA < statusB) {
           return -1;
