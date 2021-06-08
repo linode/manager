@@ -158,20 +158,20 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) =>
       : [el, ...updatedArray];
   }, prevArr);
 
+export const isLongPendingEvent = (event: Event): boolean => {
+  const { status, action } = event;
+  return status === 'scheduled' && action === 'image_upload';
+};
+
 export const isInProgressEvent = (event: Event) => {
   const { percent_complete } = event;
-  if (percent_complete === null) {
+  if (percent_complete === null || isLongPendingEvent(event)) {
     return false;
-  } else if (
-    LONG_PENDING_EVENTS.includes(event.action) &&
-    event.status === 'started'
-  ) {
-    return percent_complete > 0 && percent_complete < 100;
   } else {
     return (
       percent_complete !== null &&
       percent_complete < 100 &&
-      event.status !== 'scheduled'
+      !isLongPendingEvent(event)
     );
   }
 };

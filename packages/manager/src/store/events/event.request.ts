@@ -8,7 +8,7 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
 import { addEvents, updateEventsAsSeen } from './event.actions';
-import { epoch, isInProgressEvent } from './event.helpers';
+import { epoch, isInProgressEvent, isLongPendingEvent } from './event.helpers';
 import { parseAPIDate } from 'src/utilities/date';
 
 /**
@@ -40,7 +40,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
       if (
         thisEventCreated === mostRecentEventTime &&
         !isInProgressEvent(thisEvent) &&
-        thisEvent.status !== 'scheduled'
+        !isLongPendingEvent(thisEvent)
       ) {
         neqIds.push(thisEvent.id);
       }
