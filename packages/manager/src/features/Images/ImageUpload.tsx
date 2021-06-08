@@ -205,6 +205,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             description={description}
             region={region}
             dropzoneDisabled={uploadingDisabled}
+            apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             setErrors={setErrors}
             setCancelFn={setCancelFn}
           />

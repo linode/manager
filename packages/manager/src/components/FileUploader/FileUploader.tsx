@@ -48,10 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     padding: theme.spacing(),
     transition: theme.transitions.create(['border-color', 'background-color']),
-    [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing(),
-      marginLeft: theme.spacing(),
-    },
   },
   active: {
     // The `active` class active when a user is hovering over the dropzone.
@@ -123,6 +119,7 @@ interface Props {
   description?: string;
   region: string;
   dropzoneDisabled: boolean;
+  apiError: string | undefined;
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
   // Send a function for cancelling the upload back to the parent.
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
@@ -131,7 +128,14 @@ interface Props {
 type CombinedProps = Props & WithSnackbarProps;
 
 const FileUploader: React.FC<CombinedProps> = (props) => {
-  const { label, description, region, dropzoneDisabled, setErrors } = props;
+  const {
+    label,
+    description,
+    region,
+    dropzoneDisabled,
+    apiError,
+    setErrors,
+  } = props;
 
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
 
@@ -363,7 +367,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   });
 
   const disableAndHideDropzoneBrowseBtn =
-    isDragAccept || acceptedFiles.length > 0;
+    (isDragAccept || acceptedFiles.length > 0) && !apiError; // Checking that there isn't an apiError set to prevent disappearance of button if image creation isn't available in a region at that moment, etc.
 
   const className = React.useMemo(
     () =>
