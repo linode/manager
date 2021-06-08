@@ -59,7 +59,7 @@ describe('LKE Create Cluster', () => {
       getVisible('[data-testid="remove-pool-button"]');
       cy.get('[data-qa-notice="true"]').within((_notice) => {
         fbtVisible(
-          'We recommend at least 3 nodes in each pool. Fewer nodes may affect availability.'
+          'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.'
         );
       });
     });
