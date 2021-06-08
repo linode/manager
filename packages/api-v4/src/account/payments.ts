@@ -3,6 +3,7 @@ import {
   ExecutePaypalPaymentSchema,
   PaymentSchema,
   StagePaypalPaymentSchema,
+  PaymentMethodSchema,
 } from '@linode/validation/lib/account.schema';
 import { API_ROOT } from '../constants';
 import Request, {
@@ -14,12 +15,16 @@ import Request, {
 } from '../request';
 import { ResourcePage } from '../types';
 import {
+  ClientToken,
   ExecutePayload,
   Payment,
+  PaymentMethod,
   PaymentResponse,
   Paypal,
   PaypalResponse,
   SaveCreditCardData,
+  PaymentMethodData,
+  MakePaymentData,
 } from './types';
 
 /**
@@ -41,15 +46,17 @@ export const getPayments = (params?: any, filter?: any) =>
  * makePayment
  *
  * Make a payment using the currently active credit card on your
- * account.
+ * account, a nonce, or by another payment method on your account
+ * (by providing its id).
  *
  * @param data { object }
  * @param data.usd { string } the dollar amount of the payment
  * @param data.cvv { string } the 3-digit code on the back of the
- * credit card.
+ * @param data.nonce { string } the payment nonce to make a one time payment
+ * @param data.payment_method_id { number } the payment nonce to make a one time payment
  *
  */
-export const makePayment = (data: { usd: string; cvv?: string }) => {
+export const makePayment = (data: MakePaymentData) => {
   /**
    * in the context of APIv4, CVV is optional - in other words, it's totally
    * valid to submit a payment without a CVV
@@ -136,5 +143,53 @@ export const saveCreditCard = (data: SaveCreditCardData) => {
     setURL(`${API_ROOT}/account/credit-card`),
     setMethod('POST'),
     setData(data, CreditCardSchema)
+  );
+};
+
+/**
+ * getPaymentMethods
+ *
+ * Gets a paginatated list of all the payment methods avalible
+ * on a user's account
+ *
+ */
+export const getPaymentMethods = (params?: any) => {
+  return Request<ResourcePage<PaymentMethod>>(
+    setURL(`${API_ROOT}/account/payment-methods`),
+    setMethod('GET'),
+    setParams(params)
+  );
+};
+
+/**
+ * getClientToken
+ *
+ * Gets a unique token that is used to interact with the
+ * Braintree front-end SDK
+ *
+ */
+export const getClientToken = () => {
+  return Request<ClientToken>(
+    setURL(`${API_ROOT}/account/client-token`),
+    setMethod('GET')
+  );
+};
+
+/**
+ * addPaymentMethod
+ *
+ * Adds a new payment method to a user's account via a nonce.
+ *
+ * @param data { object }
+ * @param data.nonce { string } the nonce for the payment method to be added
+ * @param data.is_default { boolean } whether of not this payment method should
+ * become a user's default method of payment
+ *
+ */
+export const addPaymentMethod = (data: PaymentMethodData) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/account/payment-methods`),
+    setMethod('POST'),
+    setData(data, PaymentMethodSchema)
   );
 };

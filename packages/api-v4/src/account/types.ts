@@ -373,3 +373,30 @@ export interface AccountMaintenance {
     url: string;
   };
 }
+
+export interface PaymentMethod {
+  method: string;
+  is_default: number; // bruh
+  created: string;
+  data: {
+    card_type: string;
+    last_four: string;
+    expiry: string;
+  };
+}
+
+export interface ClientToken {
+  client_token: string;
+}
+
+export interface PaymentMethodData {
+  nonce: string;
+  is_default: boolean;
+}
+
+export interface MakePaymentData {
+  usd: string;
+  cvv?: string;
+  nonce?: string;
+  payment_method_id?: number;
+}

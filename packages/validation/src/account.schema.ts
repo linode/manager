@@ -68,6 +68,13 @@ export const CreditCardSchema = object({
     .max(4, 'CVV code must be between 3 and 4 characters.'),
 });
 
+export const PaymentMethodSchema = object({
+  nonce: string().required('Payment nonce is required.'),
+  is_default: boolean().required(
+    'You must indicate if this should be your default method of payment.'
+  ),
+});
+
 export const CreateUserSchema = object({
   username: string()
     .required('Username is required.')
