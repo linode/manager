@@ -45,10 +45,7 @@ const CheckoutBar: React.FC<CombinedProps> = (props) => {
       </Typography>
       {props.children}
       {
-        <div
-          className={`${classes.checkoutSection} ${classes.noBorder}`}
-          data-qa-total-price
-        >
+        <div className={classes.checkoutSection} data-qa-total-price>
           <DisplayPrice price={price} interval="mo" />
           {priceHelperText && price > 0 && (
             <Typography className={classes.price}>{priceHelperText}</Typography>
@@ -56,7 +53,7 @@ const CheckoutBar: React.FC<CombinedProps> = (props) => {
         </div>
       }
 
-      <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
+      <div className={classes.checkoutSection}>
         <Button
           buttonType="primary"
           className={classes.createButton}

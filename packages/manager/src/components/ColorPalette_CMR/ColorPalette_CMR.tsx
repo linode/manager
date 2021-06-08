@@ -99,10 +99,6 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
       alias: 'theme.cmrBorderColors.borderTypography',
     },
     {
-      color: theme.cmrBorderColors.borderTabs,
-      alias: 'theme.cmrBorderColors.borderTabs',
-    },
-    {
       color: theme.cmrBorderColors.borderTabActive,
       alias: 'theme.cmrBorderColors.borderTabActive',
     },
@@ -117,6 +113,14 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
     {
       color: theme.cmrBorderColors.borderTable,
       alias: 'theme.cmrBorderColors.borderTable',
+    },
+    {
+      color: theme.cmrBorderColors.divider,
+      alias: 'theme.cmrBorderColors.divider',
+    },
+    {
+      color: theme.cmrBorderColors.dividerLight,
+      alias: 'theme.cmrBorderColors.dividerLight',
     },
   ];
 
