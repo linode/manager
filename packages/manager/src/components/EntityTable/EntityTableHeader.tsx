@@ -8,33 +8,15 @@ import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell';
-import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
-import useFlags from 'src/hooks/useFlags';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import { HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
-  root: {
-    '& td': {
-      borderTop: 0,
-      paddingLeft: '15px',
-      paddingRight: '15px',
-    },
-  },
-  thead: {
-    '& p': {
-      fontFamily: theme.font.bold,
-      fontWeight: 500,
-    },
-  },
-  '& .MuiTableCell-head': {
-    borderBottom: 0,
-  },
   groupByTagCell: {
-    textAlign: 'right',
     backgroundColor: theme.cmrBGColors.bgTableHeader,
     paddingRight: `0px !important`,
+    textAlign: 'right',
   },
 }));
 
@@ -42,6 +24,7 @@ interface Props extends Omit<OrderByProps, 'data'> {
   headers: HeaderCell[];
   toggleGroupByTag?: () => boolean;
   isGroupedByTag?: boolean;
+  isLargeAccount?: boolean;
 }
 
 interface SortCellProps extends Omit<Props, 'headers'> {
@@ -60,16 +43,14 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     orderBy,
     toggleGroupByTag,
     isGroupedByTag,
+    isLargeAccount,
   } = props;
   const classes = useStyles();
-  const flags = useFlags();
 
-  const SortCell = flags.cmr ? TableSortCell_CMR : TableSortCell;
-
-  const _SortCell: React.FC<SortCellProps> = (props) => {
+  const SortCell: React.FC<SortCellProps> = (props) => {
     const { orderBy, order, thisCell, handleOrderChange } = props;
     return (
-      <SortCell
+      <TableSortCell
         active={orderBy === thisCell.dataColumn}
         label={thisCell.dataColumn}
         direction={order}
@@ -78,7 +59,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
         data-testid={`${thisCell.label}-header-cell`}
       >
         {thisCell.label}
-      </SortCell>
+      </TableSortCell>
     );
   };
 
@@ -87,7 +68,6 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     return (
       <TableCell
         data-testid={`${thisCell.label}-header-cell`}
-        className={classes.thead}
         style={{ width: `${thisCell.widthPercent}%` }}
       >
         <span
@@ -108,7 +88,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
           thisCell.sortable ? (
             thisCell.hideOnTablet ? (
               <Hidden smDown key={thisCell.dataColumn}>
-                <_SortCell
+                <SortCell
                   thisCell={thisCell}
                   order={order}
                   orderBy={orderBy}
@@ -117,7 +97,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
               </Hidden>
             ) : thisCell.hideOnMobile ? (
               <Hidden xsDown key={thisCell.dataColumn}>
-                <_SortCell
+                <SortCell
                   thisCell={thisCell}
                   order={order}
                   orderBy={orderBy}
@@ -125,7 +105,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
                 />
               </Hidden>
             ) : (
-              <_SortCell
+              <SortCell
                 thisCell={thisCell}
                 key={thisCell.dataColumn}
                 order={order}
@@ -152,6 +132,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
         {toggleGroupByTag && typeof isGroupedByTag !== 'undefined' ? (
           <TableCell className={classes.groupByTagCell}>
             <GroupByTagToggle
+              isLargeAccount={isLargeAccount}
               toggleGroupByTag={toggleGroupByTag}
               isGroupedByTag={isGroupedByTag}
             />
@@ -170,6 +151,7 @@ export default React.memo(EntityTableHeader);
 interface GroupByTagToggleProps {
   toggleGroupByTag: () => boolean;
   isGroupedByTag: boolean;
+  isLargeAccount?: boolean;
 }
 
 const useGroupByTagToggleStyles = makeStyles(() => ({
@@ -179,6 +161,9 @@ const useGroupByTagToggleStyles = makeStyles(() => ({
     '&:focus': {
       outline: '1px dotted #999',
     },
+    '&.Mui-disabled': {
+      display: 'none',
+    },
   },
 }));
 
@@ -186,7 +171,7 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
   (props) => {
     const classes = useGroupByTagToggleStyles();
 
-    const { toggleGroupByTag, isGroupedByTag } = props;
+    const { toggleGroupByTag, isGroupedByTag, isLargeAccount } = props;
 
     return (
       <>
@@ -205,6 +190,9 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
             onClick={toggleGroupByTag}
             disableRipple
             className={classes.toggleButton}
+            // Group by Tag is only available when you have less than 500 Domains
+            // See https://github.com/linode/manager/pull/6653 for more details
+            disabled={isLargeAccount}
           >
             <GroupByTag />
           </IconButton>
