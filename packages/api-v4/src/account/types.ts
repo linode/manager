@@ -392,7 +392,6 @@ export interface ClientToken {
 export interface PaymentMethodData {
   type: 'credit_card' | 'payment_method_nonce';
   data: SaveCreditCardData | { nonce: string };
-  nonce: string;
   is_default: boolean;
 }
 
