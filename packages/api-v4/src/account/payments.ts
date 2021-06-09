@@ -5,7 +5,7 @@ import {
   StagePaypalPaymentSchema,
   PaymentMethodSchema,
 } from '@linode/validation/lib/account.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -155,7 +155,7 @@ export const saveCreditCard = (data: SaveCreditCardData) => {
  */
 export const getPaymentMethods = (params?: any) => {
   return Request<ResourcePage<PaymentMethod>>(
-    setURL(`${API_ROOT}/account/payment-methods`),
+    setURL(`${BETA_API_ROOT}/account/payment-methods`),
     setMethod('GET'),
     setParams(params)
   );
