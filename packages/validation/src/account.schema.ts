@@ -69,7 +69,17 @@ export const CreditCardSchema = object({
 });
 
 export const PaymentMethodSchema = object({
-  nonce: string().required('Payment nonce is required.'),
+  type: mixed().oneOf(
+    ['credit_card', 'payment_method_nonce'],
+    'Type must be credit_card or payment_method_nonce.'
+  ),
+  data: object().when('type', {
+    is: (value) => value === 'credit_card',
+    then: CreditCardSchema,
+    otherwise: object({
+      nonce: string().required('Payment nonce is required.'),
+    }),
+  }),
   is_default: boolean().required(
     'You must indicate if this should be your default method of payment.'
   ),
