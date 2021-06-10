@@ -640,7 +640,7 @@ const themeDefaults: ThemeDefaults = () => {
       },
       MuiChip: {
         root: {
-          backgroundColor: '#f4f4f4',
+          backgroundColor: '#E7E7E7',
           height: 20,
           display: 'inline-flex',
           alignItems: 'center',
@@ -666,6 +666,11 @@ const themeDefaults: ThemeDefaults = () => {
           },
           '&:focus': {
             outline: '1px dotted #999',
+          },
+        },
+        clickable: {
+          '&:hover': {
+            background: 'rgb(206, 206, 206)',
           },
         },
         label: {
@@ -1088,6 +1093,9 @@ const themeDefaults: ThemeDefaults = () => {
         root: {},
         rounded: {
           borderRadius: 0,
+        },
+        outlined: {
+          border: '1px solid #e7e7e7',
         },
       },
       MuiPopover: {

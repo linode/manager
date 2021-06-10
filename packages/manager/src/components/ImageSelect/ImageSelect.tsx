@@ -1,9 +1,8 @@
-import produce from 'immer';
 import { Image } from '@linode/api-v4/lib/images';
+import produce from 'immer';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
@@ -16,12 +15,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-  },
-}));
 
 export type Variant = 'public' | 'private' | 'all';
 
@@ -101,7 +94,8 @@ export const imagesToGroupedItems = (images: Image[]) => {
                 label: fullLabel,
                 value: thisImage.id,
                 className: thisImage.vendor
-                  ? `fl-${distroIcons[thisImage.vendor]}`
+                  ? // Use Tux as a fallback.
+                    `fl-${distroIcons[thisImage.vendor] ?? 'tux'}`
                   : `fl-tux`,
               };
             })
@@ -123,7 +117,6 @@ export const ImageSelect: React.FC<Props> = (props) => {
     classNames,
     ...reactSelectProps
   } = props;
-  const classes = useStyles();
 
   const { _loading } = useReduxLoad(['images']);
 
@@ -157,7 +150,7 @@ export const ImageSelect: React.FC<Props> = (props) => {
   };
 
   return (
-    <Paper className={classes.root} data-qa-select-image-panel>
+    <Paper data-qa-select-image-panel>
       <Typography variant="h2" data-qa-tp={title}>
         {title}
       </Typography>

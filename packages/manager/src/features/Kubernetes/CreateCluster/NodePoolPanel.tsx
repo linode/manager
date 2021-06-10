@@ -2,8 +2,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectPlanQuantityPanel, {
@@ -12,28 +10,6 @@ import SelectPlanQuantityPanel, {
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& .tabbedPanel': {
-      marginTop: 0,
-      paddingTop: 0,
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(1),
-  },
-  gridItem: {
-    paddingLeft: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-  },
-  countInput: {
-    maxWidth: '5em',
-  },
-  notice: {
-    paddingLeft: theme.spacing(3),
-  },
-}));
 
 interface Props {
   types: ExtendedType[];
@@ -51,19 +27,14 @@ export const addCountToTypes = (
 ): ExtendedTypeWithCount[] => {
   return types.map((thisType) => ({
     ...thisType,
-    count: 0,
+    count: 3,
   }));
 };
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = (
   props
 ) => {
-  const classes = useStyles();
-  return (
-    <Paper className={classes.root}>
-      <RenderLoadingOrContent {...props} />
-    </Paper>
-  );
+  return <RenderLoadingOrContent {...props} />;
 };
 
 const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (

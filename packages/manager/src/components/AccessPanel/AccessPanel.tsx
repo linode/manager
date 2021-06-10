@@ -10,51 +10,28 @@ import {
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import UserSSHKeyPanel from './UserSSHKeyPanel';
-const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import Divider from '../core/Divider';
+import UserSSHKeyPanel from './UserSSHKeyPanel';
 
-type ClassNames =
-  | 'root'
-  | 'inner'
-  | 'panelBody'
-  | 'small'
-  | 'passwordInputOuter'
-  | 'isOptional';
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
+
+type ClassNames = 'root' | 'isOptional' | 'passwordInputOuter' | 'divider';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
-      width: '100%',
       marginTop: theme.spacing(3),
-      backgroundColor: theme.cmrBGColors.bgPaper,
     },
-    inner: {
-      padding: theme.spacing(3),
-    },
-    panelBody: {
-      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
-    },
-    small: {
-      '&$root': {
-        marginTop: 0,
-      },
-      '& $passwordInputOuter': {
-        marginTop: 0,
-      },
-      '& .input': {
-        minHeight: 32,
-        '& input': {
-          padding: 8,
-        },
-      },
-    },
-    passwordInputOuter: {},
     isOptional: {
       '& $passwordInputOuter': {
         marginTop: 0,
       },
+    },
+    passwordInputOuter: {},
+    divider: {
+      backgroundColor: theme.cmrBorderColors.borderTabs,
+      marginTop: theme.spacing(4),
     },
   });
 
@@ -67,7 +44,6 @@ interface Props {
   handleChange: (value: string) => void;
   heading?: string;
   label?: string;
-  noPadding?: boolean;
   required?: boolean;
   placeholder?: string;
   users?: UserSSHKeyObject[];
@@ -101,7 +77,6 @@ class AccessPanel extends React.Component<CombinedProps> {
       error,
       sshKeyError,
       label,
-      noPadding,
       required,
       placeholder,
       users,
@@ -109,7 +84,6 @@ class AccessPanel extends React.Component<CombinedProps> {
       disabledReason,
       hideStrengthLabel,
       className,
-      small,
       isOptional,
       passwordHelperText,
       requestKeys,
@@ -120,40 +94,40 @@ class AccessPanel extends React.Component<CombinedProps> {
         className={classNames(
           {
             [classes.root]: true,
-            [classes.small]: small,
             [classes.isOptional]: isOptional,
           },
           className
         )}
       >
-        <div className={!noPadding ? classes.inner : ''}>
-          {error && <Notice text={error} error />}
-          <React.Suspense fallback={<SuspenseLoader />}>
-            <PasswordInput
-              name="password"
-              data-qa-password-input
-              className={classes.passwordInputOuter}
-              required={required}
-              disabled={disabled}
-              disabledReason={disabledReason || ''}
-              autoComplete="off"
-              value={this.props.password || ''}
-              label={label || 'Root Password'}
-              placeholder={placeholder || 'Enter a password.'}
-              onChange={this.handleChange}
-              hideStrengthLabel={hideStrengthLabel}
-              helperText={passwordHelperText}
-            />
-          </React.Suspense>
-          {users && (
+        {error && <Notice text={error} error />}
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <PasswordInput
+            name="password"
+            data-qa-password-input
+            className={classes.passwordInputOuter}
+            required={required}
+            disabled={disabled}
+            disabledReason={disabledReason || ''}
+            autoComplete="off"
+            value={this.props.password || ''}
+            label={label || 'Root Password'}
+            placeholder={placeholder || 'Enter a password.'}
+            onChange={this.handleChange}
+            hideStrengthLabel={hideStrengthLabel}
+            helperText={passwordHelperText}
+          />
+        </React.Suspense>
+        {users && (
+          <>
+            <Divider className={classes.divider} />
             <UserSSHKeyPanel
               users={users}
               error={sshKeyError}
               disabled={disabled}
               onKeyAddSuccess={requestKeys || (() => null)}
             />
-          )}
-        </div>
+          </>
+        )}
       </Paper>
     );
   }

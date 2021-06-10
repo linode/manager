@@ -8,8 +8,7 @@ import { FormikBag } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
-import Paper from 'src/components/core/Paper';
+import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -214,54 +213,52 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
               pageSize,
             }) => (
               <>
-                <Paper>
-                  <Table aria-label="List of Your Managed Service Monitors">
-                    <TableHead>
-                      <TableRow className={classes.headers}>
-                        <TableSortCell
-                          active={orderBy === 'label'}
-                          label={'label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          className={classes.labelHeader}
-                          data-qa-monitor-label-header
-                        >
-                          Monitor
-                        </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'status'}
-                          label={'status'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-monitor-status-header
-                        >
-                          Status
-                        </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'address'}
-                          label={'address'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-monitor-resource-header
-                        >
-                          Resource
-                        </TableSortCell>
-                        <TableCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <MonitorTableContent
-                        monitors={data}
-                        issues={issues}
-                        loading={loading}
-                        error={error}
-                        openDialog={openDialog}
-                        openMonitorDrawer={handleMonitorDrawerOpen}
-                        openHistoryDrawer={handleHistoryDrawerOpen}
-                      />
-                    </TableBody>
-                  </Table>
-                </Paper>
+                <Table aria-label="List of Your Managed Service Monitors">
+                  <TableHead>
+                    <TableRow className={classes.headers}>
+                      <TableSortCell
+                        active={orderBy === 'label'}
+                        label={'label'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        className={classes.labelHeader}
+                        data-qa-monitor-label-header
+                      >
+                        Monitor
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'status'}
+                        label={'status'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        data-qa-monitor-status-header
+                      >
+                        Status
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'address'}
+                        label={'address'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        data-qa-monitor-resource-header
+                      >
+                        Resource
+                      </TableSortCell>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <MonitorTableContent
+                      monitors={data}
+                      issues={issues}
+                      loading={loading}
+                      error={error}
+                      openDialog={openDialog}
+                      openMonitorDrawer={handleMonitorDrawerOpen}
+                      openHistoryDrawer={handleHistoryDrawerOpen}
+                    />
+                  </TableBody>
+                </Table>
                 <PaginationFooter
                   count={count}
                   handlePageChange={handlePageChange}

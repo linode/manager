@@ -49,9 +49,10 @@ const useStyles = makeStyles(() => ({
   },
   small: {
     '& $button': {
-      width: 30,
-      height: 30,
+      width: 35,
+      height: 34,
       minWidth: 30,
+      border: '1px solid #CCCCCC',
     },
     '& $input': {
       padding: '0 8px',
@@ -59,11 +60,14 @@ const useStyles = makeStyles(() => ({
     '& $textField': {
       width: 50,
       minWidth: 40,
-      height: 30,
+      height: 34,
       minHeight: 30,
     },
     '& $plusIcon': {
       width: 14,
+    },
+    '& $minusIcon': {
+      width: 12,
     },
   },
 }));
@@ -122,8 +126,9 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
       })}
     >
       <Button
-        buttonType="primary"
+        buttonType="secondary"
         className={classes.button}
+        outline
         compact
         aria-label="Subtract 1"
         name="Subtract 1"
@@ -154,9 +159,10 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
         data-testid={'quantity-input'}
       />
       <Button
-        buttonType="primary"
-        compact
+        buttonType="secondary"
         className={classes.button}
+        outline
+        compact
         aria-label="Add 1"
         name="Add 1"
         onClick={incrementValue}

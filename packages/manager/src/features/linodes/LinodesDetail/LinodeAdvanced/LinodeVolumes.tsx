@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';

@@ -8,7 +8,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -16,7 +16,8 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
-import { useLinodesQuery } from 'src/queries/linodes';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
+import { useAllLinodesQuery } from 'src/queries/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -107,9 +108,11 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     linodeSharedIPs,
   } = props;
 
-  const { data, isLoading } = useLinodesQuery(
-    {},
-    { region: linodeRegion },
+  const { data, isLoading } = useAllLinodesQuery(
+    { page_size: API_MAX_PAGE_SIZE },
+    {
+      region: linodeRegion,
+    },
     open // Only run the query if the modal is open
   );
 

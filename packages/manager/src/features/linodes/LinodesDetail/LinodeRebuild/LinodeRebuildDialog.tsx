@@ -1,15 +1,14 @@
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Dialog from 'src/components/Dialog';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import Notice from 'src/components/Notice';
+import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
-import Dialog from 'src/components/Dialog';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -93,7 +92,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
       maxWidth="md"
       fullHeight
     >
-      <Paper className={classes.root}>
+      <div className={classes.root}>
         {unauthorized && <LinodePermissionsError />}
         {hostMaintenance && <HostMaintenanceError />}
         {rebuildError && <Notice error>{rebuildError}</Notice>}
@@ -119,7 +118,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
           label="From Image"
           hideLabel
         />
-      </Paper>
+      </div>
       {mode === 'fromImage' && (
         <RebuildFromImage
           passwordHelperText={passwordHelperText}

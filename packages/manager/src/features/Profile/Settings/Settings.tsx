@@ -25,19 +25,15 @@ import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
 import ThemeToggle from './ThemeToggle';
 
-type ClassNames = 'root' | 'title' | 'label';
+type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(3),
       marginTop: theme.spacing(2),
     },
     title: {
       marginBottom: theme.spacing(2),
-    },
-    label: {
-      marginLeft: theme.spacing(1),
     },
   });
 

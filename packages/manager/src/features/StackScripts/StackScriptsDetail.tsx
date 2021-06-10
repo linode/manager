@@ -4,7 +4,6 @@ import {
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -12,19 +11,18 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
 } from './stackScriptUtils';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 
 interface MatchProps {
   stackScriptId: string;
@@ -50,33 +48,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
+    alignSelf: 'flex-start',
     justifyContent: 'flex-end',
-    marginBottom: theme.spacing(),
+    marginTop: 6,
     marginLeft: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
-      alignSelf: 'flex-end',
-      marginBottom: theme.spacing(),
-    },
-  },
-  ctaError: {
-    [theme.breakpoints.down(772)]: {
-      marginTop: 20,
-    },
   },
   button: {
     marginLeft: theme.spacing(3),
-  },
-  userName: {
-    color: theme.cmrTextColors.tableStatic,
-    fontFamily: theme.font.bold,
-    fontSize: '1.125rem',
-    marginTop: -1,
-  },
-  userNameSlash: {
-    color: theme.cmrTextColors.tableHeader,
-    fontFamily: theme.font.normal,
-    fontSize: 20,
-    marginRight: 2,
   },
 }));
 
@@ -165,12 +143,6 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
     return <NotFound />;
   }
 
-  const userNameSlash = (
-    <Typography className={classes.userName}>
-      {stackScript.username} <span className={classes.userNameSlash}>/</span>
-    </Typography>
-  );
-
   const errorMap = getErrorMap(['label'], errors);
   const labelError = errorMap.label;
 
@@ -178,17 +150,12 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Grid
-        container
-        className={classes.root}
-        alignItems="center"
-        justify="space-between"
-      >
+      <Grid container className={classes.root} justify="space-between">
         <Grid item className="p0">
           <Breadcrumb
             pathname={props.location.pathname}
-            labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
             labelTitle={stackScript.label}
+            labelOptions={{ noCap: true }}
             crumbOverrides={[
               {
                 position: 1,
@@ -210,14 +177,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
             }
           />
         </Grid>
-        <Grid
-          item
-          className={classnames({
-            [classes.cta]: true,
-            [classes.ctaError]: Boolean(labelError),
-            p0: true,
-          })}
-        >
+        <Grid item className={`${classes.cta} p0`}>
           <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
           <Button
             buttonType="primary"

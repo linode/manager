@@ -9,6 +9,7 @@ import useVlansQuery from 'src/queries/vlans';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
+    backgroundColor: theme.cmrBorderColors.borderTabs,
     margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
@@ -234,7 +235,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
         </Grid>
       ) : null}
 
-      <Divider className={classes.divider} />
+      {!fromAddonsPanel && <Divider className={classes.divider} />}
     </Grid>
   );
 };

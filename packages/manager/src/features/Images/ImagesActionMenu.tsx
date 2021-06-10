@@ -73,7 +73,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             },
           },
           {
-            title: 'Deploy to Existing Linode',
+            title: 'Rebuild an Existing Linode',
             disabled: isDisabled,
             tooltip: isDisabled
               ? 'Image is not yet available for use.'

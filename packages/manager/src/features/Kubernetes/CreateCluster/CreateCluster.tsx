@@ -19,8 +19,8 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { useRegionsQuery } from 'src/queries/regions';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  main: {},
   sidebar: {
     background: theme.color.white,
     padding: `0px 0px ${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
@@ -60,8 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   inner: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
     '& > div': {
       marginBottom: theme.spacing(2),
     },
@@ -256,82 +253,80 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
       </Grid>
 
       <Grid item className={`mlMain py0`}>
-        <div className={classes.main}>
-          {errorMap.none && <Notice error text={errorMap.none} />}
-          <Paper data-qa-label-header>
-            <div className={classes.inner}>
-              <Grid item>
-                <TextField
-                  className={classes.inputWidth}
-                  data-qa-label-input
-                  errorText={errorMap.label}
-                  label="Cluster Label"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    updateLabel(e.target.value)
-                  }
-                  value={label || ''}
-                />
-              </Grid>
-              <Grid item>
-                <RegionSelect
-                  className={classes.regionSubtitle}
-                  errorText={errorMap.region}
-                  handleSelection={(regionID: string) =>
-                    setSelectedRegion(regionID)
-                  }
-                  regions={filteredRegions}
-                  selectedID={selectedID}
-                  textFieldProps={
-                    // Only show the "Find out which region is best for you" message if there are
-                    // actually multiple regions to choose from.
-                    filteredRegions.length > 1
-                      ? {
-                          helperText: regionHelperText,
-                          helperTextPosition: 'top',
-                        }
-                      : undefined
-                  }
-                />
-              </Grid>
-              <Grid item>
-                <Select
-                  className={classes.inputWidth}
-                  label="Kubernetes Version"
-                  value={version || null}
-                  errorText={errorMap.k8s_version}
-                  options={versions}
-                  placeholder={' '}
-                  onChange={(selected: Item<string>) => setVersion(selected)}
-                  isClearable={false}
-                />
-              </Grid>
-            </div>
+        {errorMap.none && <Notice error text={errorMap.none} />}
+        <Paper data-qa-label-header>
+          <div className={classes.inner}>
             <Grid item>
-              <NodePoolPanel
-                types={typesData || []}
-                apiError={errorMap.node_pools}
-                typesLoading={typesLoading}
-                typesError={
-                  typesError
-                    ? getAPIErrorOrDefault(
-                        typesError,
-                        'Error loading Linode type information.'
-                      )[0].reason
-                    : undefined
+              <TextField
+                className={classes.inputWidth}
+                data-qa-label-input
+                errorText={errorMap.label}
+                label="Cluster Label"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  updateLabel(e.target.value)
                 }
-                addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
-                updateFor={[
-                  nodePools,
-                  typesData,
-                  errorMap,
-                  typesLoading,
-                  classes,
-                ]}
-                isOnCreate
+                value={label || ''}
               />
             </Grid>
-          </Paper>
-        </div>
+            <Grid item>
+              <RegionSelect
+                className={classes.regionSubtitle}
+                errorText={errorMap.region}
+                handleSelection={(regionID: string) =>
+                  setSelectedRegion(regionID)
+                }
+                regions={filteredRegions}
+                selectedID={selectedID}
+                textFieldProps={
+                  // Only show the "Find out which region is best for you" message if there are
+                  // actually multiple regions to choose from.
+                  filteredRegions.length > 1
+                    ? {
+                        helperText: regionHelperText,
+                        helperTextPosition: 'top',
+                      }
+                    : undefined
+                }
+              />
+            </Grid>
+            <Grid item>
+              <Select
+                className={classes.inputWidth}
+                label="Kubernetes Version"
+                value={version || null}
+                errorText={errorMap.k8s_version}
+                options={versions}
+                placeholder={' '}
+                onChange={(selected: Item<string>) => setVersion(selected)}
+                isClearable={false}
+              />
+            </Grid>
+          </div>
+          <Grid item>
+            <NodePoolPanel
+              types={typesData || []}
+              apiError={errorMap.node_pools}
+              typesLoading={typesLoading}
+              typesError={
+                typesError
+                  ? getAPIErrorOrDefault(
+                      typesError,
+                      'Error loading Linode type information.'
+                    )[0].reason
+                  : undefined
+              }
+              addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
+              updateFor={[
+                nodePools,
+                typesData,
+                errorMap,
+                typesLoading,
+                classes,
+              ]}
+              isOnCreate
+            />
+          </Grid>
+        </Paper>
       </Grid>
       <Grid
         item

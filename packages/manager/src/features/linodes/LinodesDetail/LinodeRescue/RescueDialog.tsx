@@ -10,7 +10,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -28,7 +27,7 @@ import DeviceSelection, {
 import Dialog from 'src/components/Dialog';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import usePrevious from 'src/hooks/usePrevious';
-import { RESCUE_HELPER_TEXT } from './shared';
+import RescueDescription from './RescueDescription';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -216,7 +215,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
         <div>
           <Paper className={classes.root}>
             {unauthorized && <LinodePermissionsError />}
-            <Typography>{RESCUE_HELPER_TEXT}</Typography>
+            <RescueDescription />
             <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
               devices={devices}

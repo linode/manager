@@ -25,7 +25,7 @@ import withGlobalErrors, {
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
-import TicketList from './TicketList_CMR';
+import TicketList from './TicketList';
 
 type ClassNames =
   | 'title'

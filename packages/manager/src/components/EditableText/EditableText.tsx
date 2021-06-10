@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     boxShadow: 'none',
     marginLeft: 7,
-    maxWidth: 170,
     [theme.breakpoints.up('md')]: {
       maxWidth: 415,
       width: '100%',
@@ -75,10 +74,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     background: 'transparent !important',
     marginTop: 2,
-    marginLeft: 6,
-    marginRight: 6,
+    marginLeft: 0,
     minWidth: 'auto',
-    padding: 0,
+    paddingRight: 6,
+    paddingLeft: 6,
+    '&:first-of-type': {
+      marginLeft: theme.spacing(2),
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: theme.spacing(2),
+      },
+    },
   },
   icon: {
     color: theme.palette.text.primary,
@@ -95,9 +100,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 1,
       },
     },
-  },
-  saveIcon: {
-    marginLeft: theme.spacing(),
   },
   headline: {
     ...theme.typography.h1,
@@ -240,7 +242,7 @@ const EditableText: React.FC<FinalProps> = (props) => {
           onClick={finishEditing}
           data-qa-save-edit
         >
-          <Check className={`${classes.icon} ${classes.saveIcon}`} />
+          <Check className={classes.icon} />
         </Button>
         <Button
           className={classes.button}
