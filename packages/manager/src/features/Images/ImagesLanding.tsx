@@ -569,15 +569,18 @@ const withPrivateImages = connect(
             // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
             const matchingEvent = events.find(
               (thisEvent) =>
-                (thisEvent.secondary_entity &&
-                  `private/${thisEvent.secondary_entity.id}` ===
-                    thisImage.id) ||
-                (thisEvent.entity &&
-                  thisEvent.entity.id &&
-                  `private${thisEvent.entity.id}` === thisImage.id &&
+                `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
+                (`private/${thisEvent.entity?.id}` === thisImage.id &&
                   thisEvent.status === 'failed')
             );
-            if (matchingEvent) {
+            if (matchingEvent && matchingEvent.status === 'failed') {
+              const indexOfImageToDelete = draft.findIndex(
+                (image) => image.id === `private/matchingEvent.entity?.id`
+              );
+              if (indexOfImageToDelete !== -1) {
+                draft.splice(indexOfImageToDelete, 1);
+              }
+            } else if (matchingEvent) {
               draft.push({ ...thisImage, event: matchingEvent });
             } else {
               draft.push(thisImage);

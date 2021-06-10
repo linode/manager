@@ -192,6 +192,18 @@ export const isCompletedEvent = ({
 
 export const isEntityEvent = (e: Event): e is EntityEvent => Boolean(e.entity);
 
+export const isEventInProgressDiskImagize = (event: Event): boolean => {
+  return (
+    event.action === 'disk_imagize' &&
+    Boolean(event.secondary_entity) &&
+    isInProgressEvent(event)
+  );
+};
+
+export const isEventFailedImageUpload = (event: Event): boolean => {
+  return event.action === 'image_upload' && event.status === 'failed';
+};
+
 /**
  * Iterate through new events.
  * If an event is "in-progress" it's added to the inProgressEvents map.
