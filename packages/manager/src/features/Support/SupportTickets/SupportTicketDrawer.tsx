@@ -259,6 +259,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setData([]);
     resetTicket(clearValues);
     setFiles([]);
+
+    if (clearValues) {
+      saveText('', '');
+    }
   };
 
   const handleSummaryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
