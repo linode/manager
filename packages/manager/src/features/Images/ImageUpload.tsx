@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     marginTop: theme.spacing(2),
+    width: '80%',
   },
   chip: {
     fontSize: '0.625rem',
