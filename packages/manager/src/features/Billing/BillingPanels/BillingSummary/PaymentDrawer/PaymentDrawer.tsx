@@ -1,4 +1,5 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
+import { CardType } from '@linode/api-v4/lib/account/types';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
@@ -72,6 +73,7 @@ interface AccountContextProps {
   balance: false | number;
   lastFour: string;
   expiry: string;
+  type?: CardType | null;
 }
 
 export type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
@@ -93,9 +95,19 @@ export const getMinimumPayment = (balance: number | false) => {
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
 export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
-  const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
+  const {
+    accountLoading,
+    balance,
+    type,
+    expiry,
+    lastFour,
+    open,
+    onClose,
+  } = props;
   const classes = useStyles();
   const flags = useFlags();
+
+  const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
@@ -191,6 +203,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
           <Divider className={classes.divider} />
           <CreditCardPayment
             key={creditCardKey}
+            type={type}
             lastFour={lastFour}
             expiry={expiry}
             usd={usd}
@@ -198,7 +211,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             setSuccess={setSuccess}
           />
           <Divider className={classes.divider} />
-          {flags.additionalPaymentMethods?.includes('google_pay') ? (
+          {showGooglePay ? (
             <>
               <Grid item>
                 <Typography variant="h3" className={classes.header}>
@@ -213,7 +226,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                   asyncScriptOnLoad={onScriptLoad}
                   isScriptLoaded={isPaypalScriptLoaded}
                 />
-                {flags.additionalPaymentMethods?.includes('google_pay') ? (
+                {showGooglePay ? (
                   <Grid item xs={6}>
                     <button className={classes.gPayButton}>
                       <GooglePayButton />
@@ -270,8 +283,9 @@ const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
     balance: accountData?.balance ?? false,
-    lastFour: accountData?.credit_card.last_four ?? '0000',
-    expiry: accountData?.credit_card.expiry ?? '',
+    type: accountData?.credit_card.expiry ?? null,
+    lastFour: accountData?.credit_card.last_four ?? null,
+    expiry: accountData?.credit_card.expiry ?? null,
   })
 );
 

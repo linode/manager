@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classnames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { CardType } from '@linode/api-v4/lib/account/types';
 import Typography from 'src/components/core/Typography';
@@ -31,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 0,
     },
   },
+  align: {
+    marginLeft: theme.spacing(),
+  },
   expired: {
     color: theme.color.red,
   },
@@ -50,7 +54,7 @@ const iconMap = {
 };
 
 interface Props {
-  type?: CardType;
+  type?: CardType | null;
   lastFour?: string | null;
   expiry?: string | null;
 }
@@ -65,27 +69,26 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
   const { type, lastFour, expiry } = props;
 
   const classes = useStyles();
-
   const Icon = type && getIcon(type);
-  const isCardExpired = expiry && isCreditCardExpired(expiry);
 
   return (
     <div className={classes.root}>
-      <span className={classes.icon}>
-        <Icon />
-      </span>
-      <div className={classes.card}>
+      {type ? <span className={classes.icon}>{<Icon />}</span> : null}
+      <div
+        className={classnames({
+          [classes.card]: true,
+          [classes.align]: !type,
+        })}
+      >
         <Typography className={classes.cardInfo} data-qa-contact-cc>
-          {lastFour
-            ? `${type} ****${lastFour}`
-            : 'No payment method has been specified for this account.'}
+          {lastFour ? `${type} ****${lastFour}` : 'No credit card on file.'}
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
-          {isCardExpired ? (
+          {expiry && isCreditCardExpired(expiry) ? (
             <span className={classes.expired}>{`Expired ${expiry}`}</span>
-          ) : (
+          ) : expiry ? (
             <span>{`Expires ${expiry}`}</span>
-          )}
+          ) : null}
         </Typography>
       </div>
     </div>

@@ -41,9 +41,6 @@ import useFlags from 'src/hooks/useFlags';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(4),
-  },
   header: {
     fontSize: '1.1rem',
   },
@@ -103,6 +100,8 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
   const { isScriptLoaded, usd, setSuccess } = props;
   const classes = useStyles();
   const flags = useFlags();
+
+  const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [isStagingPayment, setStaging] = React.useState<boolean>(false);
@@ -264,15 +263,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
 
   if (typeof errorLoadingPaypalScript === 'undefined') {
     return (
-      <Grid
-        container
-        direction="column"
-        className={classnames({
-          [classes.root]: !flags.additionalPaymentMethods?.includes(
-            'google_pay'
-          ),
-        })}
-      >
+      <Grid container direction="column">
         <CircleProgress mini />
       </Grid>
     );
@@ -280,21 +271,13 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
 
   if (errorLoadingPaypalScript) {
     return (
-      <Grid
-        container
-        direction="column"
-        className={classnames({
-          [classes.root]: !flags.additionalPaymentMethods?.includes(
-            'google_pay'
-          ),
-        })}
-      >
+      <Grid container direction="column">
         <Notice error text="There was an error connecting with PayPal." />
       </Grid>
     );
   }
 
-  if (flags.additionalPaymentMethods?.includes('google_pay')) {
+  if (showGooglePay) {
     return (
       <>
         <Grid item xs={6}>
@@ -345,7 +328,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Grid container direction="column" className={classes.root}>
+      <Grid container direction="column">
         <Grid item>
           <Typography variant="h3" className={classes.header}>
             <strong>Pay via PayPal</strong>
@@ -371,9 +354,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
             <div
               data-qa-paypal-button
               className={classnames({
-                [classes.align]: !flags.additionalPaymentMethods?.includes(
-                  'google_pay'
-                ),
+                [classes.align]: !showGooglePay,
                 [classes.paypalButtonWrapper]: true,
                 [classes.PaypalHidden]: !enabled,
               })}

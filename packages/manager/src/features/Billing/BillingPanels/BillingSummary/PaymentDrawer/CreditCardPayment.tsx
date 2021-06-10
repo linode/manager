@@ -1,8 +1,7 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
-import { makePayment } from '@linode/api-v4/lib/account';
+import { makePayment, CardType } from '@linode/api-v4/lib/account';
 import Button from 'src/components/Button';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
@@ -15,10 +14,7 @@ import CreditCard from './CreditCard';
 import useFlags from 'src/hooks/useFlags';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(4),
-  },
+const useStyles = makeStyles(() => ({
   header: {
     fontSize: '1.1rem',
   },
@@ -53,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
+  type?: CardType | null;
   lastFour: string;
   expiry: string;
   usd: string;
@@ -61,7 +58,7 @@ export interface Props {
 }
 
 export const CreditCardPayment: React.FC<Props> = (props) => {
-  const { expiry, lastFour, minimumPayment, setSuccess, usd } = props;
+  const { expiry, lastFour, minimumPayment, usd, setSuccess } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -69,7 +66,10 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const flags = useFlags();
+
+  const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
   const isCardExpired = (expiry && isCreditCardExpired(expiry)) || false;
+  const paymentTooLow = +usd < +minimumPayment;
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const _cvv = cleanCVV(e.target.value);
@@ -114,37 +114,22 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
       });
   };
 
-  const hasCreditCardOnFile = Boolean(lastFour);
-  const paymentTooLow = +usd < +minimumPayment;
-
   return (
     <>
-      <Grid
-        container
-        direction="column"
-        className={classnames({
-          [classes.root]: !flags.additionalPaymentMethods?.includes(
-            'google_pay'
-          ),
-        })}
-      >
+      <Grid container direction="column">
         <Grid item>
           <Typography variant="h3" className={classes.header}>
             <strong>Pay via credit card</strong>
           </Typography>
         </Grid>
-        {flags.additionalPaymentMethods?.includes('google_pay') ? (
+        {showGooglePay ? (
           <>
             <Grid item className={classes.cardSectionNew}>
-              {hasCreditCardOnFile ? (
-                <CreditCard type={'Visa'} expiry={expiry} lastFour={lastFour} />
-              ) : (
-                <Typography>No credit card on file.</Typography>
-              )}
+              <CreditCard type={'Visa'} expiry={expiry} lastFour={lastFour} />
             </Grid>
-            <Grid item className={classes.input}>
-              <Grid item>
-                {hasCreditCardOnFile ? (
+            {lastFour ? (
+              <Grid item className={classes.input}>
+                <Grid item>
                   <TextField
                     label="CVV (optional):"
                     onChange={handleCVVChange}
@@ -155,27 +140,25 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
                     hasAbsoluteError
                     noMarginTop
                   />
-                ) : null}
+                </Grid>
+                <Grid item className={classes.button}>
+                  <Button
+                    buttonType="primary"
+                    onClick={handleOpenDialog}
+                    disabled={paymentTooLow || isCardExpired}
+                    tooltipText={
+                      paymentTooLow
+                        ? `Payment amount must be at least ${minimumPayment}.`
+                        : undefined
+                    }
+                  >
+                    Pay via Credit Card
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item className={classes.button}>
-                <Button
-                  buttonType="primary"
-                  onClick={handleOpenDialog}
-                  disabled={
-                    !hasCreditCardOnFile || paymentTooLow || isCardExpired
-                  }
-                  tooltipText={
-                    paymentTooLow
-                      ? `Payment amount must be at least ${minimumPayment}.`
-                      : undefined
-                  }
-                >
-                  Pay via Credit Card
-                </Button>
-              </Grid>
-            </Grid>
+            ) : null}
           </>
-        ) : hasCreditCardOnFile ? (
+        ) : lastFour ? (
           <>
             <Grid item>
               <Grid container direction="row" wrap="nowrap" alignItems="center">
@@ -208,7 +191,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
               <Button
                 buttonType="primary"
                 onClick={handleOpenDialog}
-                disabled={!hasCreditCardOnFile || paymentTooLow}
+                disabled={!lastFour || paymentTooLow}
                 tooltipText={
                   paymentTooLow
                     ? `Payment amount must be at least ${minimumPayment}.`
@@ -220,7 +203,9 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
             </Grid>
           </>
         ) : (
-          <Typography>No credit card on file.</Typography>
+          <Grid item>
+            <Typography>No credit card on file.</Typography>
+          </Grid>
         )}
       </Grid>
       <CreditCardDialog
