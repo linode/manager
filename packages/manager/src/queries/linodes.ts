@@ -33,12 +33,12 @@ export const useLinodesQuery = (
 export const queryKeyAll = 'linodes-all';
 
 const getAllLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
-  getAll<Linode>(() => getLinodes(passedParams, passedFilter))().then(
-    (data) => ({
-      linodes: listToItemsByID(data.data),
-      results: data.results,
-    })
-  );
+  getAll<Linode>((params, filter) =>
+    getLinodes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  )().then((data) => ({
+    linodes: listToItemsByID(data.data),
+    results: data.results,
+  }));
 
 export const useAllLinodesQuery = (
   params: any = {},
