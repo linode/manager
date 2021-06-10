@@ -92,7 +92,7 @@ const MigrationNotification: React.FC<Props> = (props) => {
       ? 'enter the migration queue now'
       : 'schedule your migration now';
 
-  const migrationText = () => {
+  const migrationScheduledText = () => {
     const baseText = `You have a scheduled migration, which will automatically execute`;
 
     const migrationTimeObject = parseAPIDate(migrationTime as string).toLocal();
@@ -115,7 +115,7 @@ const MigrationNotification: React.FC<Props> = (props) => {
       <Notice important warning>
         <Typography>
           {notificationType === 'migration_scheduled'
-            ? migrationText()
+            ? migrationScheduledText()
             : notificationMessage}
           {` `}
           <button
