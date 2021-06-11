@@ -70,8 +70,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
       onClick: () => {
         props.onResize();
       },
-      disabled: linodeStatus !== 'offline' || readOnly,
-      tooltip: linodeStatus !== 'offline' || readOnly ? _tooltip : '',
+      ...disabledProps,
     },
     {
       title: 'Imagize',
@@ -92,9 +91,7 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
       onClick: () => {
         props.onDelete();
       },
-      
-      disabled: linodeStatus !== 'offline' || readOnly,
-      tooltip: linodeStatus !== 'offline' || readOnly ? _tooltip : '',
+      ...disabledProps,
     },
   ];
 
