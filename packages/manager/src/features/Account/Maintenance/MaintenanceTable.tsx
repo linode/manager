@@ -4,7 +4,6 @@ import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table/Table_CMR';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
-import { useAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
@@ -16,11 +15,29 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import sync from 'css-animation-sync';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Link from 'src/components/Link';
+import CSVLink from 'src/components/DownloadCSV';
+import formatDate from 'src/utilities/formatDate';
+import { DateTime } from 'luxon';
+import {
+  useAccountMaintenanceQuery,
+  useAllAccountMaintenanceQuery,
+} from 'src/queries/accountMaintenance';
 
 interface Props {
   // we will add more types when the endpoint supports then
   type: 'Linode';
 }
+
+const headers = [
+  { label: 'label', key: 'entity.label' },
+  { label: 'id', key: 'entity.id' },
+  { label: 'type', key: 'entity.type' },
+  { label: 'url', key: 'entity.url' },
+  { label: 'when', key: 'when' },
+  { label: 'reason', key: 'reason' },
+  { label: 'status', key: 'status' },
+  { label: 'type', key: 'type' },
+];
 
 const MaintenanceTable: React.FC<Props> = (props) => {
   const { type } = props;
@@ -28,6 +45,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   const [orderBy, setOrderBy] = React.useState('status');
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
 
+  const { data: csv } = useAllAccountMaintenanceQuery();
   const { data, isLoading, error, refetch } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
@@ -149,6 +167,14 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         pageSize={pagination.pageSize}
         eventCategory={`${type} Maintenance Table`}
       />
+      <CSVLink
+        className={''}
+        headers={headers}
+        filename={`maintenance-${formatDate(DateTime.local().toISO())}.csv`}
+        data={csv || []}
+      >
+        Download CSV
+      </CSVLink>
     </React.Fragment>
   );
 };
