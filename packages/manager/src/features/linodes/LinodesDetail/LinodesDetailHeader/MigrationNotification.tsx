@@ -10,6 +10,10 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useDialog } from 'src/hooks/useDialog';
 import { capitalize } from 'src/utilities/capitalize';
+import { DateTime } from 'luxon';
+import { parseAPIDate } from 'src/utilities/date';
+import { formatDate } from 'src/utilities/formatDate';
+import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   migrationLink: {
@@ -22,6 +26,7 @@ interface Props {
   requestNotifications: () => void;
   notificationType: NotificationType;
   notificationMessage: string;
+  migrationTime: string | null;
 }
 
 const MigrationNotification: React.FC<Props> = (props) => {
@@ -33,6 +38,7 @@ const MigrationNotification: React.FC<Props> = (props) => {
     requestNotifications,
     notificationMessage,
     notificationType,
+    migrationTime,
   } = props;
 
   const {
@@ -84,13 +90,33 @@ const MigrationNotification: React.FC<Props> = (props) => {
   const migrationActionDescription =
     notificationType === 'migration_scheduled'
       ? 'enter the migration queue now'
-      : 'schedule your migration';
+      : 'schedule your migration now';
+
+  const migrationScheduledText = () => {
+    const baseText = `You have a scheduled migration, which will automatically execute`;
+
+    const migrationTimeObject = parseAPIDate(migrationTime as string).toLocal();
+
+    const formattedMigrationTime = formatDate(migrationTime as string);
+
+    const now = DateTime.local();
+    const roundedHourDifference = Math.round(
+      migrationTimeObject.diff(now, 'hours').as('hours')
+    );
+    const approximateTime = pluralize('hour', 'hours', roundedHourDifference);
+
+    return roundedHourDifference <= 24
+      ? `${baseText} in approximately ${approximateTime} (${formattedMigrationTime}).`
+      : `${baseText} on ${formattedMigrationTime}.`;
+  };
 
   return (
     <>
       <Notice important warning>
         <Typography>
-          {notificationMessage}
+          {notificationType === 'migration_scheduled'
+            ? migrationScheduledText()
+            : notificationMessage}
           {` `}
           <button
             className={classes.migrationLink}
