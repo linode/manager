@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   cliText: {
     overflowY: 'hidden', // For Edge
     overflowX: 'auto',
+    height: '1rem',
     paddingRight: 15,
   },
   copyIcon: {
