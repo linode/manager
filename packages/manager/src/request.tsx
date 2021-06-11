@@ -64,7 +64,7 @@ export const handleError = (error: AxiosError) => {
     description:
       'Hello. I am trying to deploy a ' +
       displayTitle +
-      ' Plan, but I am getting a messaging asking me for additional verification.' +
+      ' Plan, but I am getting a message asking me for additional verification.' +
       '\n\nMy use case is ___.\n\n' +
       'Please let me know if there is any other information I can provide. Thank you.',
   };
