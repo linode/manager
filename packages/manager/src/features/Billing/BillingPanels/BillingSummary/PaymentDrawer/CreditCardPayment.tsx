@@ -58,7 +58,7 @@ export interface Props {
 }
 
 export const CreditCardPayment: React.FC<Props> = (props) => {
-  const { expiry, lastFour, minimumPayment, usd, setSuccess } = props;
+  const { type, expiry, lastFour, minimumPayment, usd, setSuccess } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -125,7 +125,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
         {showGooglePay ? (
           <>
             <Grid item className={classes.cardSectionNew}>
-              <CreditCard type={'Visa'} expiry={expiry} lastFour={lastFour} />
+              <CreditCard type={type} expiry={expiry} lastFour={lastFour} />
             </Grid>
             {lastFour ? (
               <Grid item className={classes.input}>

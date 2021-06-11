@@ -283,9 +283,9 @@ const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
     balance: accountData?.balance ?? false,
-    type: accountData?.credit_card.expiry ?? null,
-    lastFour: accountData?.credit_card.last_four ?? null,
-    expiry: accountData?.credit_card.expiry ?? null,
+    type: accountData?.credit_card.card_type ?? '',
+    lastFour: accountData?.credit_card.last_four ?? '',
+    expiry: accountData?.credit_card.expiry ?? '',
   })
 );
 
