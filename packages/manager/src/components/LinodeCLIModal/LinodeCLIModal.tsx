@@ -7,7 +7,7 @@ import CopyTooltip from '../CopyTooltip';
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
     width: '100%',
-    padding: theme.spacing(),
+    padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
     '& [data-qa-copied]': {
       zIndex: 2,
     },
