@@ -28,7 +28,6 @@ import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingBottom: 30,
     position: 'relative',
   },
   dropzone: {
