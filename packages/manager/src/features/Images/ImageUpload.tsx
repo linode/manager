@@ -28,8 +28,7 @@ import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     minWidth: '100%',
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
@@ -38,14 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginTop: theme.spacing(2),
     width: '80%',
-  },
-  chip: {
-    fontSize: '0.625rem',
-    height: 15,
-    marginBottom: 4,
-    lineHeight: '1px',
-    letterSpacing: '.25px',
-    textTransform: 'uppercase',
   },
   browseFilesButton: {
     marginLeft: '1rem',

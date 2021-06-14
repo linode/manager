@@ -68,7 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 1,
   },
   divider: {
-    backgroundColor: theme.cmrBorderColors.borderTabs,
     margin: '36px 8px 12px',
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },

@@ -1,4 +1,3 @@
-import * as classNames from 'classnames';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import useStyles from './styles';
@@ -6,19 +5,13 @@ import useStyles from './styles';
 export interface Props {
   title: string;
   details?: string | number;
-  hideBorder?: boolean;
 }
 
 export const DisplaySection: React.FC<Props> = (props) => {
-  const { title, details, hideBorder } = props;
+  const { title, details } = props;
   const classes = useStyles();
   return (
-    <div
-      className={classNames({
-        [classes.checkoutSection]: true,
-        [classes.noBorder]: hideBorder,
-      })}
-    >
+    <div className={classes.checkoutSection}>
       {title && (
         <Typography variant="h3" data-qa-subheading={title}>
           {title}
