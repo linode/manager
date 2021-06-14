@@ -28,7 +28,7 @@ import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     minWidth: '100%',
-    paddingTop: theme.spacing(),
+    paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
