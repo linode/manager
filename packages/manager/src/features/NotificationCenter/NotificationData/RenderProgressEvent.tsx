@@ -90,7 +90,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
           variant={type as Variant}
           status={status}
         />
-        <div className={classes.message}>
+        <div className={classes.message} data-test-id={event.action}>
           <Typography>
             {linkTarget ? (
               <Link className={classes.link} to={linkTarget} onClick={onClose}>
