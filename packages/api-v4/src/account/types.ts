@@ -375,7 +375,7 @@ export interface AccountMaintenance {
 }
 
 export interface PaymentMethod {
-  method: string;
+  type: string;
   is_default: boolean;
   created: string;
   data: {
