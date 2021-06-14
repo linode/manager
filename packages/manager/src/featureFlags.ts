@@ -36,6 +36,7 @@ export interface Flags {
   machineImages: boolean;
   additionalPaymentMethods: AdditionalPaymentMethod[];
   imagesPricingBanner: ImagesPricingBanner;
+  imagesPricingCopy: ImagesPricingCopy;
 }
 
 type PromotionalOfferFeature =
@@ -94,4 +95,9 @@ export interface ImagesPricingBanner {
     url: string;
   };
   text: string;
+}
+
+export interface ImagesPricingCopy {
+  captureImage: string;
+  uploadImage: string;
 }
