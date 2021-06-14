@@ -55,26 +55,28 @@ export const handleError = (error: AxiosError) => {
     },
   } = store.getState();
 
-  const displayTitle = entities.find((e) => e.id === requestData.type)?.label;
+  const planTitle = entities.find((e) => e.id === requestData.type)?.label;
 
-  const requestedLinode = {
-    title: `${
-      requestData?.type?.match(/gpu/i) ? 'GPU' : 'Verification'
-    } Request for a ${displayTitle} Plan`,
-    description:
-      'Hello. I am trying to deploy a ' +
-      displayTitle +
+  const titlePrefix = `${
+    requestData?.type?.match(/gpu/i) ? 'GPU' : 'Verification'
+  } Request`;
+
+  const description = planTitle
+    ? 'Hello. I am trying to deploy a ' +
+      planTitle +
       ' Plan, but I am getting a message asking me for additional verification.' +
       '\n\nMy use case is ___.\n\n' +
-      'Please let me know if there is any other information I can provide. Thank you.',
-  };
+      'Please let me know if there is any other information I can provide. Thank you.'
+    : '';
 
   const interceptedErrors = interceptErrors(errors, [
     {
       replacementText: (
         <VerificationError
-          title={requestedLinode.title}
-          description={requestedLinode.description}
+          title={
+            planTitle ? `${titlePrefix} for a ${planTitle} Plan` : titlePrefix
+          }
+          description={description}
         />
       ),
       condition: (e) => !!e.reason.match(/verification is required/i),
