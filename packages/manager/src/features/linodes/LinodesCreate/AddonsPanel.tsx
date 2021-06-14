@@ -47,11 +47,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: theme.spacing(4) + 18, // 50
     },
   },
-  divider: {
-    backgroundColor: theme.cmrBorderColors.borderTabs,
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(),
-  },
 }));
 
 interface Props {
@@ -188,7 +183,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
           props.hidePrivateIP ? null : (
             <Grid container>
               <Grid item xs={12}>
-                <Divider className={classes.divider} />
+                <Divider />
                 <FormControlLabel
                   className={classes.label}
                   control={

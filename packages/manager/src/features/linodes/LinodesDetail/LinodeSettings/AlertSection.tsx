@@ -29,7 +29,7 @@ const styles = (theme: Theme) =>
     },
     root: {
       position: 'relative',
-      padding: `${theme.spacing(3)}px 0`,
+      padding: `${theme.spacing(2)}px 0`,
       '&:last-of-type + hr': {
         display: 'none',
       },
