@@ -94,10 +94,8 @@ const eventActions: RecPartial<EventAction>[] = [
   // unwanted 'volume_update',
 ];
 
-const events: Event[] = [];
-
-eventActions.forEach((action) => {
-  const buildEvent = eventFactory.build({
+const events: Event[] = eventActions.map((action) => {
+  return eventFactory.build({
     action,
     message: `${action + ' message'}`,
     seen: false,
@@ -105,7 +103,6 @@ eventActions.forEach((action) => {
     percent_complete: null,
     entity: { id: 0, label: 'linode-0' },
   });
-  events.push(buildEvent);
 });
 
 describe('verify notification types and icons', () => {
