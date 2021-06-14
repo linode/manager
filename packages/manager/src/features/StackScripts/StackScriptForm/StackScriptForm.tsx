@@ -3,7 +3,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Divider from 'src/components/core/Divider';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -20,28 +19,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(2),
   },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34,
-    },
-  },
-  createTitle: {
-    lineHeight: '2.25em',
-  },
-  divider: {
-    margin: `0 0 ${theme.spacing(2)}px 0`,
-    height: 0,
-  },
   labelField: {
     '& input': {
       paddingLeft: 0,
     },
-  },
-  titleWrapper: {
-    display: 'flex',
-    marginTop: 5,
   },
   gridWithTips: {
     maxWidth: '50%',
@@ -61,15 +42,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(2),
     },
-  },
-  chipsContainer: {
-    maxWidth: 415,
-  },
-  warning: {
-    marginTop: theme.spacing(4),
-  },
-  targetTag: {
-    margin: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 0`,
   },
   scriptTextarea: {
     maxWidth: '100%',
@@ -207,7 +179,6 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
           </Notice>
         </Grid>
       </Grid>
-      <Divider className={classes.divider} />
       <TextField
         multiline
         rows={1}

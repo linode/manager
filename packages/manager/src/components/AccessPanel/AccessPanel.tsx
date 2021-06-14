@@ -16,7 +16,7 @@ import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
-type ClassNames = 'root' | 'isOptional' | 'passwordInputOuter' | 'divider';
+type ClassNames = 'root' | 'isOptional' | 'passwordInputOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -29,10 +29,6 @@ const styles = (theme: Theme) =>
       },
     },
     passwordInputOuter: {},
-    divider: {
-      backgroundColor: theme.cmrBorderColors.borderTabs,
-      marginTop: theme.spacing(4),
-    },
   });
 
 const styled = withStyles(styles);
@@ -119,7 +115,7 @@ class AccessPanel extends React.Component<CombinedProps> {
         </React.Suspense>
         {users && (
           <>
-            <Divider className={classes.divider} />
+            <Divider spacingTop={44} spacingBottom={20} />
             <UserSSHKeyPanel
               users={users}
               error={sshKeyError}

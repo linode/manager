@@ -1,7 +1,7 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
-import Divider from 'src/components/core/Divider';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
@@ -30,10 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: '#6e6e6e',
     },
   },
-  divider: {
-    backgroundColor: '#C5C5C5',
-    marginTop: theme.spacing(2),
-  },
 }));
 
 export interface Props {
@@ -57,7 +53,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Divider className={classes.divider} />
+      <Divider spacingTop={16} />
       <Grid
         container
         alignItems="flex-start"

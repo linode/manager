@@ -73,10 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     marginTop: theme.spacing(1),
   },
-  divider: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
 }));
 
 export interface Props {
@@ -188,7 +184,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
             className={classes.copyIcon}
           />
         </Typography>
-        <Divider className={classes.divider} />
+        <Divider spacingTop={16} spacingBottom={16} />
       </div>
       {description && (
         <div className={classes.description}>
@@ -198,7 +194,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
           >
             {description}
           </Typography>
-          <Divider className={classes.divider} />
+          <Divider spacingTop={16} spacingBottom={16} />
         </div>
       )}
       <div>
@@ -210,7 +206,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
           <strong>Compatible with:</strong>
           <span className={classes.compatibleImages}>{compatibleImages}</span>
         </Typography>
-        <Divider className={classes.divider} />
+        <Divider spacingTop={16} spacingBottom={16} />
       </div>
       <Typography className={classes.scriptHeading}>
         <strong>Script:</strong>

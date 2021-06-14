@@ -21,18 +21,14 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   checkoutSection: {
+    animation: '$fadeIn 225ms linear forwards',
     opacity: 0,
     padding: `${theme.spacing(2)}px 0`,
-    borderTop: `1px solid ${theme.color.border2}`,
-    animation: '$fadeIn 225ms linear forwards',
     [theme.breakpoints.down('sm')]: {
       '& button': {
         marginLeft: 0,
       },
     },
-  },
-  noBorder: {
-    border: 0,
   },
   sidebarTitle: {
     fontSize: '1.5rem',

@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 2,
     paddingBottom: 2,
   },
-  divider: {
-    marginTop: theme.spacing(),
-  },
   criticalIcon: {
     fill: theme.color.red,
   },
@@ -126,7 +123,7 @@ export const RenderNotification: React.FC<Props> = (props) => {
           )}
         </Grid>
       </Grid>
-      <Divider className={classes.divider} />
+      <Divider />
     </>
   );
 };

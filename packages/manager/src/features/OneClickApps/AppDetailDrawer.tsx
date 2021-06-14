@@ -1,4 +1,7 @@
 import * as React from 'react';
+import LibraryBook from 'src/assets/icons/guides.svg';
+import Info from 'src/assets/icons/info.svg';
+import Link from 'src/assets/icons/moreInfo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import {
@@ -11,29 +14,21 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { APP_ROOT } from 'src/constants';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
-
 import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
 import TipSection from './TipSection';
 
-import LibraryBook from 'src/assets/icons/guides.svg';
-import Info from 'src/assets/icons/info.svg';
-import Link from 'src/assets/icons/moreInfo.svg';
-
 type ClassNames =
-  | 'root'
   | 'logo'
   | 'appName'
   | 'summary'
   | 'description'
-  | 'divider'
   | 'image'
   | 'wrapLogo'
   | 'wrapAppName';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     logo: {
       marginRight: theme.spacing(1),
     },
@@ -51,10 +46,7 @@ const styles = (theme: Theme) =>
     description: {
       lineHeight: 1.5,
     },
-    divider: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(2),
-    },
+
     image: {
       maxWidth: 50,
     },
@@ -124,7 +116,7 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
           />
         </Grid>
       </Grid>
-      <Divider className={classes.divider} />
+      <Divider spacingTop={24} />
       <Grid container direction="column" alignItems="center" justify="center">
         <Grid item>
           <Typography variant="h3" className={classes.summary}>

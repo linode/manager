@@ -36,11 +36,12 @@ const cmrTextColors = {
 
 const cmrBorderColors = {
   borderTypography: '#454b54',
-  borderTabs: '#222',
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
   borderSecondaryButton: '#fff',
+  divider: '#222',
+  dividerLight: '#2e3238',
 };
 
 const cmrIconColors = {
@@ -311,7 +312,7 @@ const darkThemeOptions = {
         },
         '&$disabled': {
           backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.borderTabs,
+          color: cmrBorderColors.divider,
         },
         '&.loading': {
           backgroundColor: primaryColors.text,

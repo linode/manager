@@ -1,3 +1,8 @@
+import {
+  ACLType,
+  getBucketAccess,
+  updateBucketAccess,
+} from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -12,19 +17,8 @@ import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from '../BucketDetail/AccessSelect';
-import {
-  getBucketAccess,
-  updateBucketAccess,
-  ACLType,
-} from '@linode/api-v4/lib/object-storage';
 
 const useStyles = makeStyles(() => ({
-  divider: {
-    marginTop: 16,
-    marginBottom: 16,
-    height: 1,
-    backgroundColor: '#EBEBEB',
-  },
   copy: {
     marginLeft: '1em',
     padding: 0,
@@ -96,7 +90,7 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
       ) : null}
 
       {formattedCreated || cluster ? (
-        <Divider className={classes.divider} />
+        <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
 
       {typeof size === 'number' ? (
@@ -112,7 +106,7 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
       ) : null}
 
       {typeof size === 'number' || typeof objectsNumber === 'number' ? (
-        <Divider className={classes.divider} />
+        <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
 
       {cluster && bucketLabel ? (

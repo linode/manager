@@ -13,10 +13,6 @@ import SelectIP from './ConfigNodeIPSelect';
 import { NodeBalancerConfigNodeFields } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  divider: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
   backendIPAction: {
     display: 'flex',
     alignItems: 'flex-end',

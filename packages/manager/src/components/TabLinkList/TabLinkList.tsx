@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.tableHeaderText,
     '&[data-reach-tab-list]': {
       background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.borderTabs}`,
+      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.dividerLight}`,
       marginBottom: theme.spacing(),
       [theme.breakpoints.down('md')]: {
         overflowX: 'auto',
