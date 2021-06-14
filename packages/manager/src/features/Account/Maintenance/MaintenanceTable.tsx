@@ -135,7 +135,15 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         <TableHead>
           <TableRow>
             <TableCell style={{ width: '15%' }}>Label</TableCell>
-            <TableCell style={{ width: '15%' }}>Date</TableCell>
+            <TableSortCell
+              active={orderBy === 'when'}
+              direction={order}
+              label="when"
+              handleClick={handleOrderChange}
+              style={{ width: '15%' }}
+            >
+              Date
+            </TableSortCell>
             <TableSortCell
               active={orderBy === 'type'}
               direction={order}
