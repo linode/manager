@@ -36,7 +36,16 @@ interface Props {
   when: boolean;
   confirmWhenLeaving?: boolean;
   children: (props: ChildrenProps) => React.ReactNode;
+  onConfirm?: (path: string) => void;
 }
+
+// See: https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+  // Prevent the unload event.
+  e.preventDefault();
+  // Chrome requires returnValue to be set to a string.
+  e.returnValue = '';
+};
 
 type CombinedProps = Props;
 
@@ -48,13 +57,7 @@ const Prompt: React.FC<CombinedProps> = (props) => {
       return;
     }
 
-    // See: https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      // Prevent the unload event.
-      e.preventDefault();
-      // Chrome requires returnValue to be set to a string.
-      e.returnValue = '';
-    };
+    // eslint-disable-next-line scanjs-rules/call_addEventListener
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [props.when, props.confirmWhenLeaving]);
@@ -78,6 +81,13 @@ const Prompt: React.FC<CombinedProps> = (props) => {
 
     // Set confirmedNav to `true`, which will allow navigation in `handleNavigation()`.
     confirmedNav.current = true;
+
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+
+    if (props.onConfirm) {
+      return props.onConfirm(nextLocation.pathname);
+    }
+
     history.push(nextLocation.pathname);
   };
 

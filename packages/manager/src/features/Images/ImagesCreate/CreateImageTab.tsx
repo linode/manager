@@ -27,6 +27,7 @@ import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import ImagesPricingCopy from './ImagesPricingCopy';
 
 type ClassNames = 'root' | 'helperText' | 'container';
 
@@ -35,11 +36,10 @@ const styles = (theme: Theme) =>
     root: {},
     helperText: {
       paddingTop: theme.spacing(1) / 2,
-      width: '60%',
     },
     container: {
       padding: theme.spacing(3),
-      paddingTop: theme.spacing(),
+      paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(),
       '& .MuiFormHelperText-root': {
         marginBottom: theme.spacing(2),
@@ -259,6 +259,8 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
         {generalError && <Notice error text={generalError} data-qa-notice />}
 
         {notice && <Notice success text={notice} data-qa-notice />}
+
+        <ImagesPricingCopy type="captureImage" />
 
         <LinodeSelect
           selectedLinode={selectedLinode}

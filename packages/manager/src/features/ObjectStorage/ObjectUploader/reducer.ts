@@ -38,7 +38,8 @@ export type ObjectUploaderAction =
     }
   | { type: 'NOTIFY_FILE_EXISTS'; fileName: string; url: string }
   | { type: 'CANCEL_OVERWRITE'; fileName: string }
-  | { type: 'RESUME_UPLOAD'; fileName: string };
+  | { type: 'RESUME_UPLOAD'; fileName: string }
+  | { type: 'CLEAR_UPLOAD_HISTORY' };
 
 const cloneLandingReducer = (
   draft: ObjectUploaderState,
@@ -137,6 +138,11 @@ const cloneLandingReducer = (
       if (idx > -1) {
         draft.files.splice(idx, 1);
       }
+      updateCount(draft);
+      break;
+
+    case 'CLEAR_UPLOAD_HISTORY':
+      draft.files = [];
       updateCount(draft);
       break;
   }

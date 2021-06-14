@@ -373,7 +373,7 @@ const enhanced = compose<CombinedProps, Props>(
 
 export default enhanced(ObjectUploader);
 
-const onUploadProgressFactory = (
+export const onUploadProgressFactory = (
   dispatch: (value: ObjectUploaderAction) => void,
   fileName: string
 ) => (progressEvent: ProgressEvent) => {
