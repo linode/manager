@@ -8,7 +8,7 @@ import Typography from 'src/components/core/Typography';
 import { PaginationProps } from 'src/components/Pagey';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';

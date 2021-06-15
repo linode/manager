@@ -12,13 +12,9 @@ import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
-import getEventsActionLink from 'src/utilities/getEventsActionLink';
-
-import { formatEventWithUsername } from './Event.helpers';
-
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -42,16 +38,9 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
-  const linkTarget = getEventsActionLink(
-    event.action,
-    event.entity,
-    event._deleted,
-    (s: string) => props.history.push(s)
-  );
 
   const rowProps = {
     created: event.created,
-    linkTarget,
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
     type,
@@ -67,7 +56,6 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
 export interface RowProps {
   message?: string | void;
   entityId?: number;
-  linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   status?: string;
   action: EventAction;
@@ -82,7 +70,6 @@ export const Row: React.FC<RowProps> = (props) => {
   const {
     action,
     entityId,
-    linkTarget,
     message,
     status,
     type,
@@ -102,7 +89,6 @@ export const Row: React.FC<RowProps> = (props) => {
 
   return (
     <TableRow
-      rowLink={entityId ? undefined : (linkTarget as any)}
       data-qa-event-row
       data-test-id={action}
       ariaLabel={`Event ${displayedMessage}`}

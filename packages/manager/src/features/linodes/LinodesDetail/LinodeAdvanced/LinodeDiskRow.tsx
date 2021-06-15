@@ -5,7 +5,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import useEvents from 'src/hooks/useEvents';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 

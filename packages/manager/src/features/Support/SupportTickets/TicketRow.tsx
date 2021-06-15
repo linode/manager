@@ -10,7 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 interface Props {
@@ -55,7 +55,6 @@ const TicketRow: React.FC<CombinedProps> = (props) => {
     <TableRow
       data-qa-support-ticket={ticket.id}
       key={`ticket-${ticket.id}`}
-      rowLink={`/support/tickets/${ticket.id}`}
       data-testid="ticket-row"
       ariaLabel={`Ticket subject ${ticket.summary}`}
     >

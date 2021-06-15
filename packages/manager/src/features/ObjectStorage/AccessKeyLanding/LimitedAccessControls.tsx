@@ -9,7 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import Toggle from 'src/components/Toggle';
 import AccessCell from './AccessCell';
 import { MODE } from './types';

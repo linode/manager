@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import useDatabases from 'src/hooks/useDatabases';
 import { capitalize } from 'src/utilities/capitalize';

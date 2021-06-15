@@ -8,7 +8,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 
 const useStyles = makeStyles((theme: Theme) => ({

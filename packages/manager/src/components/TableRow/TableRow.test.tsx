@@ -9,14 +9,8 @@ const mockHistoryPush = jest.fn();
 
 const props: CombinedProps = {
   classes: {
-    activeCaret: '',
-    activeCaretOverlay: '',
     root: '',
     selected: '',
-    selectedOuter: '',
-    withForcedIndex: '',
-    highlight: '',
-    disabled: '',
   },
   ...reactRouterProps,
   history: {

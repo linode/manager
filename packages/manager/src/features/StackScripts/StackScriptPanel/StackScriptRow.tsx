@@ -6,7 +6,7 @@ import { withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 import { ClassNames, styles } from '../StackScriptRowHelpers';

@@ -7,7 +7,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import BucketTableRow from './BucketTableRow';
 

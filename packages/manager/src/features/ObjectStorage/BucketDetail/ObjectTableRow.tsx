@@ -7,7 +7,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import { readableBytes } from 'src/utilities/unitConversions';
 import ObjectActionMenu from './ObjectActionMenu';
 

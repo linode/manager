@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell_PreCMR from 'src/components/TableCell';
 import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
-import TableRow_PreCMR from 'src/components/TableRow';
-import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import { useFlags } from 'src/hooks/useFlags';
-import Hidden from 'src/components/core/Hidden';
 
 // Keep this for when we display URL on hover
 // import { generateObjectUrl } from '../utilities';
@@ -37,26 +36,17 @@ interface Props {
 }
 
 const FolderTableRow: React.FC<Props> = (props) => {
-  const { folderName, displayName, manuallyCreated } = props;
-
-  const history = useHistory();
-
   const classes = useStyles();
-
   const flags = useFlags();
 
-  const handleClick = () => {
-    history.push({ search: `?prefix=${folderName}` });
-  };
+  const { folderName, displayName, manuallyCreated } = props;
 
-  const TableRow = flags.cmr ? TableRow_CMR : TableRow_PreCMR;
   const TableCell = flags.cmr ? TableCell_CMR : TableCell_PreCMR;
 
   return (
     <TableRow
       className={manuallyCreated ? classes.manuallyCreated : ''}
       key={folderName}
-      rowLink={handleClick}
       ariaLabel={`Folder ${displayName}`}
     >
       <TableCell parentColumn="Object">

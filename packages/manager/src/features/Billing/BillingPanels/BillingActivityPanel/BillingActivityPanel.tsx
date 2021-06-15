@@ -24,7 +24,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableContentWrapper from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import {
   printInvoice,
@@ -356,6 +356,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       return matchesType && matchesDate;
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
+
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
@@ -518,10 +519,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading,
     } = props;
-    const rowProps = { rowLink: '' };
-    if (type === 'invoice' && !isLoading) {
-      rowProps.rowLink = `/account/billing/invoices/${id}`;
-    }
 
     const handleClick = React.useCallback(
       (e: React.MouseEvent) => {
@@ -539,7 +536,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
     };
 
     return (
-      <TableRow {...rowProps} data-testid={`${type}-${id}`}>
+      <TableRow data-testid={`${type}-${id}`}>
         <TableCell>
           {type === 'invoice' ? (
             <Link to={`/account/billing/invoices/${id}`}>{label}</Link>

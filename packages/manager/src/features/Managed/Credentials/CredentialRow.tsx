@@ -3,7 +3,7 @@ import * as React from 'react';
 import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import ActionMenu from './CredentialActionMenu';
 
 const useStyles = makeStyles((theme: Theme) =>

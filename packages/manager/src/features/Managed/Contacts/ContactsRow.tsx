@@ -3,7 +3,7 @@ import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import ActionMenu from './ContactsActionMenu';
 
 const useStyles = makeStyles(() => ({

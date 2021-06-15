@@ -6,7 +6,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 
@@ -68,7 +68,6 @@ export const ResultRow: React.FC<CombinedProps> = (props) => {
   return (
     <TableRow
       className={classes.root}
-      rowLink={result.data.path}
       data-qa-result-row={result.label}
       ariaLabel={result.label}
     >

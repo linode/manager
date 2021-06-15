@@ -4,7 +4,7 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({

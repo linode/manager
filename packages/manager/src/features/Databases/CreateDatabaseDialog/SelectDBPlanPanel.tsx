@@ -16,7 +16,7 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
-import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import {
   ExtendedType,
   extendType,
@@ -117,7 +117,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
   const renderPlanContainer = (plans: DatabaseType[]) => {
     const tableHeader = (
       <TableHead>
-        <TableRow_CMR>
+        <TableRow>
           <TableCell_CMR className={classes.headerCell} />
           <TableCell_CMR className={classes.headerCell} data-qa-plan-header>
             Plan
@@ -140,7 +140,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
           <TableCell_CMR className={classes.headerCell} data-qa-storage-header>
             Backups
           </TableCell_CMR>
-        </TableRow_CMR>
+        </TableRow>
       </TableHead>
     );
 
@@ -166,12 +166,11 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
-          <TableRow_CMR
+          <TableRow
             data-qa-plan-row={type.label}
             aria-label={type.label}
             key={type.id}
             onClick={selectPlan(type.id)}
-            rowLink={selectPlan(type.id)}
           >
             <TableCell_CMR className={classes.radioCell}>
               <FormControlLabel
@@ -201,7 +200,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
             <TableCell_CMR data-qa-backup>
               Daily — Included in Plan
             </TableCell_CMR>
-          </TableRow_CMR>
+          </TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
         <Hidden mdUp>

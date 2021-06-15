@@ -28,7 +28,7 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps,
@@ -200,7 +200,6 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 ? this.onSelect(type.id)
                 : undefined
             }
-            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
             className={classnames({
               [classes.disabledRow]:

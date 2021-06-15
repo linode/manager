@@ -6,7 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ActionMenu from './ClusterActionMenu';

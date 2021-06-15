@@ -4,7 +4,7 @@ import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';

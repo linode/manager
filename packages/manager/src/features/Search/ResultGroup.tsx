@@ -11,7 +11,7 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import capitalize from 'src/utilities/capitalize';
 import ResultRow from './ResultRow';
 

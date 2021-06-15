@@ -15,7 +15,7 @@ import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableRow from 'src/components/TableRow';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {
   getProgressOrDefault,
@@ -163,7 +163,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
       className={classes.bodyRow}
       data-qa-loading
       data-qa-linode={label}
-      rowLink={`/linodes/${id}`}
       ariaLabel={label}
     >
       {headCell}
