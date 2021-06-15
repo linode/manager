@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';

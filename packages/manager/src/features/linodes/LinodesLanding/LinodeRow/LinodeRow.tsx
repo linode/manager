@@ -14,7 +14,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import StatusIcon from 'src/components/StatusIcon';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import {

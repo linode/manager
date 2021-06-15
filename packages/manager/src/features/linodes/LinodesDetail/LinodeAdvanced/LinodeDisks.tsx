@@ -24,11 +24,11 @@ import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableSortCell from 'src/components/TableSortCell';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImagesDrawer, { DrawerMode } from 'src/features/Images/ImagesDrawer';
 import {

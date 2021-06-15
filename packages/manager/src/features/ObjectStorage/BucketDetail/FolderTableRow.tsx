@@ -2,27 +2,16 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import TableCell_PreCMR from 'src/components/TableCell';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { useFlags } from 'src/hooks/useFlags';
-
-// Keep this for when we display URL on hover
-// import { generateObjectUrl } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
       backgroundColor: theme.bg.lightBlue,
     },
-  },
-  folderNameWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
   },
   iconWrapper: {
     margin: '2px 0',
@@ -37,11 +26,8 @@ interface Props {
 
 const FolderTableRow: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const { folderName, displayName, manuallyCreated } = props;
-
-  const TableCell = flags.cmr ? TableCell_CMR : TableCell_PreCMR;
 
   return (
     <TableRow
@@ -55,29 +41,17 @@ const FolderTableRow: React.FC<Props> = (props) => {
             <EntityIcon variant="folder" size={22} />
           </Grid>
           <Grid item>
-            {flags.cmr ? (
-              <Link to={`?prefix=${folderName}`} className="secondaryLink">
-                {displayName}
-              </Link>
-            ) : (
-              <div className={classes.folderNameWrapper}>
-                <Typography variant="h3" style={{ whiteSpace: 'nowrap' }}>
-                  {displayName}
-                </Typography>
-              </div>
-            )}
+            <Link to={`?prefix=${folderName}`} className="secondaryLink">
+              {displayName}
+            </Link>
           </Grid>
         </Grid>
       </TableCell>
       {/* Three empty TableCells corresponding to the Size, Last Modified, and Action Menu (for ObjectTableRow) columns for formatting purposes. */}
       <TableCell />
-      {flags.cmr ? (
-        <Hidden smDown>
-          <TableCell />
-        </Hidden>
-      ) : (
+      <Hidden smDown>
         <TableCell />
-      )}
+      </Hidden>
       <TableCell />
     </TableRow>
   );

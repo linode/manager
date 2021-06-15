@@ -4,7 +4,7 @@ import BarPercent from 'src/components/BarPercent';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import useEvents from 'src/hooks/useEvents';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';

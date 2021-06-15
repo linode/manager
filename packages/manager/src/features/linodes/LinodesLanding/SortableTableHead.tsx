@@ -7,9 +7,9 @@ import TableHead from 'src/components/core/TableHead';
 import Tooltip from 'src/components/core/Tooltip';
 import { GroupByTagToggle } from 'src/components/EntityTable/EntityTableHeader';
 import { OrderByProps } from 'src/components/OrderBy';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableSortCell from 'src/components/TableSortCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {

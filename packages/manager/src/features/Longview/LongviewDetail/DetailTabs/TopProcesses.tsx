@@ -9,17 +9,12 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Table from 'src/components/Table';
-import TableCell_PreCMR from 'src/components/TableCell';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableRowEmptyState_PreCMR from 'src/components/TableRowEmptyState';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError_PreCMR from 'src/components/TableRowError';
-import TableRowError_CMR from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading_PreCMR from 'src/components/TableRowLoading';
-import TableRowLoading_CMR from 'src/components/TableRowLoading/TableRowLoading_CMR';
-import TableSortCell_PreCMR from 'src/components/TableSortCell';
-import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell';
 import {
   LongviewTopProcesses,
   TopProcessStat,
@@ -41,7 +36,6 @@ export interface Props {
   topProcessesLoading: boolean;
   topProcessesError?: APIError[];
   lastUpdatedError?: APIError[];
-  cmrFlag?: boolean;
   clientID: number;
 }
 
@@ -52,7 +46,6 @@ export const TopProcesses: React.FC<Props> = (props) => {
     topProcessesLoading,
     topProcessesError,
     lastUpdatedError,
-    cmrFlag,
     clientID,
   } = props;
 
@@ -60,7 +53,6 @@ export const TopProcesses: React.FC<Props> = (props) => {
     ? 'There was an error getting Top Processes.'
     : undefined;
 
-  const TableSortCell = cmrFlag ? TableSortCell_CMR : TableSortCell_PreCMR;
   return (
     <Grid item xs={12} lg={4}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -118,8 +110,7 @@ export const TopProcesses: React.FC<Props> = (props) => {
               {renderLoadingErrorData(
                 orderedData,
                 topProcessesLoading,
-                errorMessage,
-                cmrFlag
+                errorMessage
               )}
             </TableBody>
           </Table>
@@ -132,17 +123,8 @@ export const TopProcesses: React.FC<Props> = (props) => {
 const renderLoadingErrorData = (
   data: ExtendedTopProcessStat[],
   loading: boolean,
-  errorMessage?: string,
-  cmrFlag?: boolean
+  errorMessage?: string
 ) => {
-  const TableRowError = cmrFlag ? TableRowError_CMR : TableRowError_PreCMR;
-  const TableRowLoading = cmrFlag
-    ? TableRowLoading_CMR
-    : TableRowLoading_PreCMR;
-  const TableRowEmptyState = cmrFlag
-    ? TableRowEmptyState_CMR
-    : TableRowEmptyState_PreCMR;
-
   if (errorMessage && data.length === 0) {
     return <TableRowError colSpan={4} message={errorMessage} />;
   }
@@ -163,7 +145,6 @@ const renderLoadingErrorData = (
           name={thisTopProcessStat.name}
           cpu={thisTopProcessStat.cpu}
           mem={thisTopProcessStat.mem}
-          cmrFlag={cmrFlag}
         />
       ))
   );
@@ -173,14 +154,11 @@ interface TopProcessRowProps {
   name: string;
   cpu: number;
   mem: number;
-  cmrFlag?: boolean;
 }
 
 export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(
   (props) => {
-    const { name, cpu, mem, cmrFlag } = props;
-
-    const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;
+    const { name, cpu, mem } = props;
 
     // Memory is given from the API in KB.
     const memInBytes = mem * 1024;

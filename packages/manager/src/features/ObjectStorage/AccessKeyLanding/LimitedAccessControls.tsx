@@ -8,7 +8,7 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import Toggle from 'src/components/Toggle';
 import AccessCell from './AccessCell';

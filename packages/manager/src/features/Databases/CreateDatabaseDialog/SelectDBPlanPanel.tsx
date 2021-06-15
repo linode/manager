@@ -15,7 +15,7 @@ import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import {
   ExtendedType,
@@ -118,28 +118,28 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
     const tableHeader = (
       <TableHead>
         <TableRow>
-          <TableCell_CMR className={classes.headerCell} />
-          <TableCell_CMR className={classes.headerCell} data-qa-plan-header>
+          <TableCell className={classes.headerCell} />
+          <TableCell className={classes.headerCell} data-qa-plan-header>
             Plan
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-monthly-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-monthly-header>
             Monthly
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-hourly-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-hourly-header>
             Hourly
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-cpu-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-cpu-header>
             CPUs
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-ram-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-ram-header>
             RAM
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-storage-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-storage-header>
             Storage
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-storage-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-storage-header>
             Backups
-          </TableCell_CMR>
+          </TableCell>
         </TableRow>
       </TableHead>
     );
@@ -172,7 +172,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
             key={type.id}
             onClick={selectPlan(type.id)}
           >
-            <TableCell_CMR className={classes.radioCell}>
+            <TableCell className={classes.radioCell}>
               <FormControlLabel
                 label={type.label}
                 aria-label={type.label}
@@ -186,20 +186,18 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
                   />
                 }
               />
-            </TableCell_CMR>
-            <TableCell_CMR data-qa-plan-name>
+            </TableCell>
+            <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>{type.label} </div>
-            </TableCell_CMR>
-            <TableCell_CMR data-qa-monthly>${type.price.monthly}</TableCell_CMR>
-            <TableCell_CMR data-qa-hourly> ${type.price.hourly}</TableCell_CMR>
-            <TableCell_CMR data-qa-cpu>{type.vcpus}</TableCell_CMR>
-            <TableCell_CMR data-qa-ram>
+            </TableCell>
+            <TableCell data-qa-monthly>${type.price.monthly}</TableCell>
+            <TableCell data-qa-hourly> ${type.price.hourly}</TableCell>
+            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
+            <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
-            </TableCell_CMR>
-            <TableCell_CMR data-qa-storage>{type.disk} GB</TableCell_CMR>
-            <TableCell_CMR data-qa-backup>
-              Daily — Included in Plan
-            </TableCell_CMR>
+            </TableCell>
+            <TableCell data-qa-storage>{type.disk} GB</TableCell>
+            <TableCell data-qa-backup>Daily — Included in Plan</TableCell>
           </TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}

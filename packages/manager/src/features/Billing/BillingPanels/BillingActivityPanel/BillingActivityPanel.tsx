@@ -22,7 +22,7 @@ import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
 import TableRow from 'src/components/TableRow';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';

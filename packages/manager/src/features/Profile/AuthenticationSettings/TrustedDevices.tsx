@@ -8,7 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ToggleState from 'src/components/ToggleState';
 import Dialog from './TrustedDevicesDialog';

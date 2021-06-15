@@ -8,7 +8,7 @@ import Typography from 'src/components/core/Typography';
 import DebouncedSearchTextField from 'src/components/DebouncedSearchTextField';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

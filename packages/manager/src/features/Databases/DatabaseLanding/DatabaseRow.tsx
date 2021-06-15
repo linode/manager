@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import StatusIcon from 'src/components/StatusIcon';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import useDatabases from 'src/hooks/useDatabases';

@@ -5,19 +5,13 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
 import Table from 'src/components/Table';
-import TableCell_PreCMR from 'src/components/TableCell';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableRowEmptyState_PreCMR from 'src/components/TableRowEmptyState';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError_PreCMR from 'src/components/TableRowError';
-import TableRowError_CMR from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading_PreCMR from 'src/components/TableRowLoading';
-import TableRowLoading_CMR from 'src/components/TableRowLoading/TableRowLoading_CMR';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell_PreCMR from 'src/components/TableSortCell';
-import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
-import useFlags from 'src/hooks/useFlags';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Process } from './types';
@@ -77,8 +71,7 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
     setSelectedProcess,
   } = props;
 
-  const flags = useFlags();
-  const TableSortCell = flags.cmr ? TableSortCell_CMR : TableSortCell_PreCMR;
+  const TableSortCell = TableSortCell_PreCMR;
 
   const { width } = useWindowDimensions();
   const classes = useStyles();
@@ -96,7 +89,7 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
           // This prop is necessary to show the "ActiveCaret", and we only
           // want it on large viewports.
           noOverflow={width >= 1280}
-          className={flags.cmr ? classes.cmrTableModifier : ''}
+          className={classes.cmrTableModifier}
         >
           <TableHead>
             <TableRow>
@@ -162,8 +155,7 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
               orderedData,
               selectedProcess,
               setSelectedProcess,
-              error,
-              flags.cmr
+              error
             )}
           </TableBody>
         </Table>
@@ -177,17 +169,8 @@ const renderLoadingErrorData = (
   data: ExtendedProcess[],
   selectedProcess: Process | null,
   setSelectedProcess: (process: Process) => void,
-  error?: string,
-  cmrFlag?: boolean
+  error?: string
 ) => {
-  const TableRowError = cmrFlag ? TableRowError_CMR : TableRowError_PreCMR;
-  const TableRowLoading = cmrFlag
-    ? TableRowLoading_CMR
-    : TableRowLoading_PreCMR;
-  const TableRowEmptyState = cmrFlag
-    ? TableRowEmptyState_CMR
-    : TableRowEmptyState_PreCMR;
-
   if (error && data.length === 0) {
     return <TableRowError colSpan={12} message={error} />;
   }
@@ -206,7 +189,6 @@ const renderLoadingErrorData = (
         selectedProcess?.user === thisProcess.user
       }
       setSelectedProcess={setSelectedProcess}
-      cmrFlag={cmrFlag}
       {...thisProcess}
     />
   ));
@@ -229,12 +211,9 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
       averageMem,
       setSelectedProcess,
       isSelected,
-      cmrFlag,
     } = props;
 
     const classes = useStyles();
-
-    const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;
 
     return (
       <TableRow
