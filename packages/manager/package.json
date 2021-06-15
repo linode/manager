@@ -67,7 +67,7 @@
     "react": "~16.12.0",
     "react-async-script": "^1.2.0",
     "react-beautiful-dnd": "^13.0.0",
-    "react-csv": "^1.1.2",
+    "react-csv": "^2.0.3",
     "react-dom": "~16.12.0",
     "react-dropzone": "~11.2.0",
     "react-ga": "^2.5.3",

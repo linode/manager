@@ -12,11 +12,11 @@ const getAllAccountMaintenance = () =>
     getAccountMaintenance(passedParams, passedFilter)
   )().then((res) => res.data);
 
-export const useAllAccountMaintenanceQuery = () => {
+export const useAllAccountMaintenanceQuery = (enabled: boolean = false) => {
   return useQuery<AccountMaintenance[], APIError[]>(
     queryKey,
     getAllAccountMaintenance,
-    queryPresets.longLived
+    { ...queryPresets.longLived, enabled }
   );
 };
 

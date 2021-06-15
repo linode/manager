@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -15,13 +16,15 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import sync from 'css-animation-sync';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Link from 'src/components/Link';
-import CSVLink from 'src/components/DownloadCSV';
+import { CSVLink } from 'react-csv';
 import formatDate from 'src/utilities/formatDate';
 import { DateTime } from 'luxon';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
 } from 'src/queries/accountMaintenance';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
 
 interface Props {
   // we will add more types when the endpoint supports then
@@ -39,13 +42,37 @@ const headers = [
   { label: 'type', key: 'type' },
 ];
 
+const useStyles = makeStyles((theme: Theme) => ({
+  CSVlink: {
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+    },
+    color: '#888F91',
+    fontSize: '.9rem',
+  },
+  CSVlinkContainer: {
+    marginTop: theme.spacing(0.5),
+    '&.MuiGrid-item': {
+      paddingRight: 0,
+    },
+  },
+  CSVwrapper: {
+    marginLeft: 0,
+    marginRight: 0,
+    width: '100%',
+  },
+}));
+
 const MaintenanceTable: React.FC<Props> = (props) => {
   const { type } = props;
   const pagination = usePagination(1);
   const [orderBy, setOrderBy] = React.useState('status');
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
 
-  const { data: csv } = useAllAccountMaintenanceQuery();
+  const csvRef = React.useRef();
+  const classes = useStyles();
+
+  const { data: csv, refetch: fetch } = useAllAccountMaintenanceQuery(false);
   const { data, isLoading, error, refetch } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
@@ -121,6 +148,12 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     setOrder(order);
   };
 
+  const downloadCSV = async () => {
+    await fetch();
+    // @ts-expect-error everythings fine
+    csvRef.current.link.click();
+  };
+
   React.useEffect(() => {
     refetch();
   }, [order, orderBy]);
@@ -175,14 +208,23 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         pageSize={pagination.pageSize}
         eventCategory={`${type} Maintenance Table`}
       />
-      <CSVLink
-        className={''}
-        headers={headers}
-        filename={`maintenance-${formatDate(DateTime.local().toISO())}.csv`}
-        data={csv || []}
-      >
-        Download CSV
-      </CSVLink>
+      <Grid container className={classes.CSVwrapper} justify="flex-end">
+        <Grid item className={classes.CSVlinkContainer}>
+          <CSVLink
+            ref={csvRef}
+            headers={headers}
+            filename={`maintenance-${formatDate(DateTime.local().toISO())}.csv`}
+            data={csv || []}
+          />
+          <a
+            className={`${classes.CSVlink} ${classes.CSVlink}`}
+            onClick={downloadCSV}
+            aria-hidden="true"
+          >
+            Download CSV
+          </a>
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 };

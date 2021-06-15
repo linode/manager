@@ -17243,10 +17243,10 @@ react-colorful@^5.0.1:
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.1.4.tgz#7391568db7c0a4163436bfb076e5da8ef394e87c"
   integrity sha512-WOEpRNz8Oo2SEU4eYQ279jEKFSjpFPa9Vi2U/K0DGwP9wOQ8wYkJcNSd5Qbv1L8OFvyKDCbWekjftXaU5mbmtg==
 
-react-csv@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-1.1.2.tgz#6cb47e625f51878d24bb68a120efb45a30ad243a"
-  integrity sha512-pTOTYntW+gQWzCxyEGfS5ZeOfQw4Mu3B+DJd4jrJKNuAWFQ+EEyF2Earfg0+FVEkPwMr62OLtbYCHmc6vQWj2w==
+react-csv@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-2.0.3.tgz#f5d17a3c71107d9bcbe580049350200debdc042a"
+  integrity sha512-exyAdFLAxtuM4wNwLYrlKyPYLiJ7e0mv9tqPAd3kq+k1CiJFtznevR3yP0icv5q/y200w+lzNgi7TQn1Wrhu0w==
 
 react-dev-utils@^11.0.3:
   version "11.0.4"
