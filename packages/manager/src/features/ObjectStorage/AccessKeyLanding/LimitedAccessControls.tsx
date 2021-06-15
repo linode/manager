@@ -7,7 +7,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import Toggle from 'src/components/Toggle';

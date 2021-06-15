@@ -6,15 +6,14 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import Paginate from 'src/components/Paginate';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
-
-import Paginate from 'src/components/Paginate';
-import PaginationFooter from 'src/components/PaginationFooter';
 
 interface Props {
   loading: boolean;
@@ -26,7 +25,7 @@ const InvoiceTable: React.FC<Props> = (props) => {
   const { loading, errors, items } = props;
 
   return (
-    <Table border aria-label="Invoice Details">
+    <Table aria-label="Invoice Details" noBorder>
       <TableHead>
         <TableRow>
           <TableCell data-qa-column="Description">Description</TableCell>

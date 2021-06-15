@@ -7,7 +7,7 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import ToggleState from 'src/components/ToggleState';

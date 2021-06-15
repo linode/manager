@@ -7,7 +7,7 @@ import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';

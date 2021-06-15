@@ -8,37 +8,36 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Link from 'src/components/Link';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import InlineMenuAction from 'src/components/InlineMenuAction';
+import Link from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableContentWrapper from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useSet } from 'src/hooks/useSet';
-import { isAfter } from 'src/utilities/date';
+import { isAfter, parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll, getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
-import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

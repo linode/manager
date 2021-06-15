@@ -23,7 +23,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';

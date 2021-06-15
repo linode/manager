@@ -7,8 +7,7 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table_PreCMR from 'src/components/Table';
-import Table_CMR from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableRow_PreCMR from 'src/components/TableRow';
 import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState_PreCMR from 'src/components/TableRowEmptyState';
@@ -82,7 +81,6 @@ export const ConnectionsTable: React.FC<TableProps> = (props) => {
   const { connections, connectionsLoading, connectionsError, cmrFlag } = props;
   const classes = useStyles();
 
-  const Table = cmrFlag ? Table_CMR : Table_PreCMR;
   const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
   const TableSortCell = cmrFlag ? TableSortCell_CMR : TableSortCell_PreCMR;
 

@@ -26,7 +26,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import { dcDisplayNames } from 'src/constants';
@@ -42,6 +42,7 @@ type ClassNames =
   | 'root'
   | 'copy'
   | 'disabledRow'
+  | 'table'
   | 'headerCell'
   | 'chip'
   | 'headingCellContainer'
@@ -63,13 +64,17 @@ const styles = (theme: Theme) =>
       cursor: 'not-allowed',
       opacity: 0.4,
     },
+    table: {
+      borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    },
     headingCellContainer: {
       display: 'flex',
       alignItems: 'center',
     },
     headerCell: {
-      borderTop: 'none !important',
-      borderBottom: '1px solid #f4f5f6 !important',
+      borderTop: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
+      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
       '&.emptyCell': {
         borderRight: 'none',
       },
@@ -284,7 +289,11 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         </Hidden>
         <Hidden mdDown={isCreate} smDown={!isCreate}>
           <Grid item xs={12} lg={11}>
-            <Table border spacingBottom={16} aria-label="List of Linode Plans">
+            <Table
+              aria-label="List of Linode Plans"
+              className={classes.table}
+              spacingBottom={16}
+            >
               <TableHead>
                 <TableRow>
                   <TableCell className={classes.headerCell} />

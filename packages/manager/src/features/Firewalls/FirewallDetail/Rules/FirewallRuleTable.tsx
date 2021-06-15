@@ -2,6 +2,12 @@ import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import classnames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from 'react-beautiful-dnd';
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
@@ -17,16 +23,10 @@ import TableFooter from 'src/components/core/TableFooter';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from 'react-beautiful-dnd';
 import {
   generateAddressesLabel,
   generateRuleLabel,

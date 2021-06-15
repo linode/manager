@@ -9,7 +9,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
   MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';

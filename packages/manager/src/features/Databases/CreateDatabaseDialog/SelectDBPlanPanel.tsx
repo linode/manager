@@ -14,7 +14,7 @@ import Radio from 'src/components/Radio';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import Table_CMR from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
 import {
@@ -149,16 +149,12 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
         <Hidden mdUp>{plans.map(renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={10}>
-            <Table_CMR
-              border
-              spacingBottom={16}
-              aria-label="List of Database Plans"
-            >
+            <Table spacingBottom={16} aria-label="List of Database Plans">
               {tableHeader}
               <TableBody role="radiogroup">
                 {plans.map(renderSelection)}
               </TableBody>
-            </Table_CMR>
+            </Table>
           </Grid>
         </Hidden>
       </Grid>

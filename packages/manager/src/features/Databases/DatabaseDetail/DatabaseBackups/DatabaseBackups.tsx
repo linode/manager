@@ -9,7 +9,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell/TableCell_CMR';
 import TableContentWrapper_CMR from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';

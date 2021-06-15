@@ -2,7 +2,7 @@ import { Disk } from '@linode/api-v4/lib/linodes';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -14,8 +14,7 @@ import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { DiskSelection } from './utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+const useStyles = makeStyles(() => ({
   tableCell: {
     paddingTop: 0,
     paddingBottom: 0,
@@ -54,7 +53,7 @@ export const Disks: React.FC<Props> = (props) => {
           <React.Fragment>
             <Grid container>
               <Grid item xs={12} md={9}>
-                <Table isResponsive={false} aria-label="List of Disks" border>
+                <Table aria-label="List of Disks">
                   <TableHead>
                     <TableRow>
                       <TableCell className={classes.labelCol}>Label</TableCell>

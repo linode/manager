@@ -8,8 +8,7 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
-import Table_PreCMR from 'src/components/Table';
-import Table_CMR from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell_PreCMR from 'src/components/TableCell';
 import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
 import TableRow_PreCMR from 'src/components/TableRow';
@@ -62,7 +61,6 @@ export const TopProcesses: React.FC<Props> = (props) => {
     ? 'There was an error getting Top Processes.'
     : undefined;
 
-  const Table = cmrFlag ? Table_CMR : Table_PreCMR;
   const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
   const TableSortCell = cmrFlag ? TableSortCell_CMR : TableSortCell_PreCMR;
   return (

@@ -1,11 +1,6 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
@@ -15,33 +10,32 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import BackupLinodes from './BackupLinodes';
 import { ExtendedLinode } from './types';
 
-type ClassNames = 'root' | 'container';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    container: {
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+const useStyles = makeStyles(() => ({
+  root: {
+    width: '100%',
+  },
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+}));
 
 interface Props {
   linodes: ExtendedLinode[];
   loading: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const BackupsTable: React.FC<CombinedProps> = (props) => {
-  const { classes, linodes, loading } = props;
+  const classes = useStyles();
+
+  const { linodes, loading } = props;
 
   return (
-    <Table tableClass={classes.root} border>
+    <Table tableClass={classes.root}>
       <TableHead>
         <TableRow>
           <TableCell data-qa-table-header="Label">Label</TableCell>
@@ -60,6 +54,4 @@ export const BackupsTable: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(BackupsTable);
+export default BackupsTable;
