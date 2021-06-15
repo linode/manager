@@ -92,7 +92,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           case 'image_upload':
             return _toast(
               `Image ${label} has been uploaded.`,
-              `There was a problem uploading ${label}.`,
+              `There was a problem uploading image ${label}. ${event.message}`,
               false,
               true
             );
