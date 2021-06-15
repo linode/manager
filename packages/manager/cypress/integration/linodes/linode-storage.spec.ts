@@ -7,9 +7,8 @@ import {
   getClick,
   getVisible,
 } from '../../support/helpers';
-import { assertToast } from '../../support/ui/events';
 
-const deleteDisk = (diskName) => {
+const deleteDisk = (diskName, inUse = false) => {
   cy.get(`[aria-label="Action menu for Disk ${diskName}"]`)
     .invoke('attr', 'aria-controls')
     .then(($id) => {
@@ -22,10 +21,20 @@ const deleteDisk = (diskName) => {
           cy.contains('BOOTING', { timeout: 180000 }).should('not.exist') &&
           cy.contains('Resizing', { timeout: 180000 }).should('not.exist')
         ) {
-          getClick(
-            `[id="option-2--${$id}"][data-qa-action-menu-item="Delete"]`
-          );
-          getClick('button[data-qa-confirm-delete="true"]');
+          if (!inUse) {
+            getClick(
+              `[id="option-2--${$id}"][data-qa-action-menu-item="Delete"]`
+            );
+            getClick('button[data-qa-confirm-delete="true"]');
+          } else {
+            cy.get(
+              `[id="option-2--${$id}"][data-qa-action-menu-item="Delete"][aria-disabled="true"]`
+            ).within(() => {
+              cy.get(
+                '[title="Your Linode must be fully powered down in order to perform this action"]'
+              );
+            });
+          }
         }
       }
     });
@@ -57,12 +66,7 @@ describe('linode storage tab', () => {
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
         cy.contains('Resize').should('be.disabled');
       });
-      deleteDisk(diskName);
-      cy.wait('@deleteDisk')
-        .its('response.statusCode')
-        // this does give a 200 response... not sure if that should be the case or not
-        .should('eq', 200);
-      assertToast(`Unable to delete disk ${diskName}`);
+      deleteDisk(diskName, true);
       cy.get('button[title="Add a Disk"]').should('be.disabled');
     });
     deleteAllTestLinodes();

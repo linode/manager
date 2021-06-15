@@ -105,11 +105,12 @@ const cmrTextColors = {
 
 const cmrBorderColors = {
   borderTypography: '#e3e5e8',
-  borderTabs: '#e3e5e8',
   borderBillingSummary: '#cce2ff',
   borderBalance: '#c2daff',
   borderTable: '#f4f5f6',
   borderSecondaryButton: '#d7dfed',
+  divider: '#e3e5e8',
+  dividerLight: '#e3e5e8',
 };
 
 const cmrIconColors = {
@@ -172,8 +173,10 @@ const genericLinkStyle = {
   font: 'inherit',
   padding: 0,
   cursor: 'pointer',
+  minWidth: 0,
   '&:hover': {
     color: primaryColors.main,
+    backgroundColor: 'transparent',
     textDecoration: 'underline',
   },
 };

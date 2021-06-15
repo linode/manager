@@ -18,12 +18,6 @@ import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
@@ -56,16 +50,6 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DeleteDomain from './DeleteDomain';
 import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
 
-type ClassNames = 'divider';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    divider: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(4),
-    },
-  });
-
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 
 interface State {
@@ -83,8 +67,7 @@ interface State {
   selectedDefaultNodeBalancer?: NodeBalancer;
 }
 
-type CombinedProps = WithStyles<ClassNames> &
-  DomainActionsProps &
+type CombinedProps = DomainActionsProps &
   DispatchProps &
   RouteComponentProps<{}> &
   StateProps &
@@ -217,7 +200,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, open, mode, disabled } = this.props;
+    const { open, mode, disabled } = this.props;
     const {
       type,
       domain,
@@ -363,7 +346,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         </ActionsPanel>
         {mode === EDITING && this.props.id && this.props.domain && (
           <>
-            <Divider className={classes.divider} />
+            <Divider spacingTop={28} spacingBottom={22} />
             <DeleteDomain
               domainId={this.props.id}
               domainLabel={this.props.domain}
@@ -550,8 +533,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
-
 interface DispatchProps {
   resetDrawer: () => void;
   upsertDomain: (domain: Domain) => void;
@@ -590,7 +571,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
   withDomainActions,
-  styled,
   connected,
   withRouter,
   withSnackbar

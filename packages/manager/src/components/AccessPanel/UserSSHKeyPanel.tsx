@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -10,49 +10,35 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
-import TableHeader from 'src/components/TableHeader';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/SSHKeyCreationDrawer';
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 export const MAX_SSH_KEYS_DISPLAY = 100;
 
-type ClassNames =
-  | 'root'
-  | 'cellCheckbox'
-  | 'cellUser'
-  | 'userWrapper'
-  | 'gravatar';
-
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-import { truncateAndJoinList } from 'src/utilities/stringUtils';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    cellCheckbox: {
-      width: 50,
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-    },
-    cellUser: {
-      width: '30%',
-    },
-    userWrapper: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      marginTop: theme.spacing(1) / 2,
-    },
-    gravatar: {
-      borderRadius: '50%',
-      marginRight: theme.spacing(1),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  cellCheckbox: {
+    width: 50,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+  cellUser: {
+    width: '30%',
+  },
+  userWrapper: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(1) / 2,
+  },
+  gravatar: {
+    borderRadius: '50%',
+    marginRight: theme.spacing(1),
+  },
+}));
 
 export interface UserSSHKeyObject {
   gravatarUrl: string;
@@ -72,9 +58,11 @@ interface Props {
   onKeyAddSuccess: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   /**
    * Success state can be handled here, which makes it hard to clear on e.g. form errors,
@@ -85,7 +73,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
    * In addition, there's never been any error handling for SSH keys, which maybe we should add.
    */
   const [success, setSuccess] = React.useState<boolean>(false);
-  const { classes, disabled, error, onKeyAddSuccess, users } = props;
+  const { disabled, error, onKeyAddSuccess, users } = props;
 
   const handleKeyAddSuccess = () => {
     onKeyAddSuccess();
@@ -104,7 +92,9 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <TableHeader title="SSH Keys" />
+      <Typography variant="h2" className={classes.title}>
+        SSH Keys
+      </Typography>
       {success && (
         <Notice success data-testid="ssh-success-message">
           <Typography>
@@ -184,8 +174,4 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(styled, React.memo);
-
-export default enhanced(UserSSHKeyPanel);
+export default React.memo(UserSSHKeyPanel);

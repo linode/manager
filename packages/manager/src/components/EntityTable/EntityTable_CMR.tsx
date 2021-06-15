@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import { OrderByProps } from 'src/components/OrderBy';
 import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag_CMR';
 import ListEntities from './ListEntities_CMR';
 import type { EntityTableRow, PageyIntegrationProps } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  hiddenHeaderCell: theme.visually.hidden,
+const useStyles = makeStyles(() => ({
   root: {
     '& td': {
       borderTop: 0,
@@ -15,28 +14,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: '15px',
     },
   },
-  '& .MuiTableCell-head': {
-    borderBottom: 0,
-  },
-  thead: {
-    '& p': {
-      fontFamily: theme.font.bold,
-      fontWeight: 500,
-    },
-  },
 }));
 
 interface Props {
   entity: string;
   headers: HeaderCell[];
-  emptyMessage?: string;
-  toggleGroupByTag?: () => boolean;
-  isGroupedByTag?: boolean;
   row: EntityTableRow<any>;
+  emptyMessage?: string;
   initialOrder?: {
     order: OrderByProps['order'];
     orderBy: OrderByProps['orderBy'];
   };
+  toggleGroupByTag?: () => boolean;
+  isGroupedByTag?: boolean;
+  isLargeAccount?: boolean;
 }
 
 export type CombinedProps = Props & PageyIntegrationProps;
@@ -44,12 +35,13 @@ export type CombinedProps = Props & PageyIntegrationProps;
 export const LandingTable: React.FC<CombinedProps> = (props) => {
   const {
     entity,
-    emptyMessage,
     headers,
     row,
+    emptyMessage,
     initialOrder,
     toggleGroupByTag,
     isGroupedByTag,
+    isLargeAccount,
   } = props;
   const classes = useStyles();
   const tableProps = {
@@ -58,14 +50,15 @@ export const LandingTable: React.FC<CombinedProps> = (props) => {
     error: row.error,
     loading: row.loading,
     lastUpdated: row.lastUpdated,
-    RowComponent: row.Component,
-    headers,
-    initialOrder,
     entity,
+    headers,
+    RowComponent: row.Component,
     handlers: row.handlers,
+    emptyMessage,
+    initialOrder,
     toggleGroupByTag,
     isGroupedByTag,
-    emptyMessage,
+    isLargeAccount,
   };
 
   if (row.request) {

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabList: {
     '&[data-reach-tab-list]': {
       background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.borderTabs}`,
+      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.divider}`,
       marginTop: 22,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {

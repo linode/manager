@@ -3,13 +3,16 @@ import Divider, {
 } from '@material-ui/core/Divider';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import * as classnames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  line: {
-    /** these colors match up with the AppBar component boxShadow colors */
-    boxShadow: `inset 0 -1px 0 ${
-      theme.name === 'lightTheme' ? theme.color.border2 : theme.color.border3
-    } !important`,
+  root: {
+    backgroundColor: theme.cmrBorderColors.divider,
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
+  },
+  light: {
+    backgroundColor: theme.cmrBorderColors.dividerLight,
   },
 }));
 
@@ -17,16 +20,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface DividerProps extends _DividerProps {}
 
 interface Props extends _DividerProps {
-  type?: 'landingHeader' | 'other';
+  light?: boolean;
+  spacingTop?: number;
+  spacingBottom?: number;
 }
 
 const _Divider: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const { light, spacingTop, spacingBottom } = props;
+
   return (
     <Divider
-      classes={{
-        root: props.type === 'landingHeader' ? classes.line : undefined,
-      }}
+      className={classnames({
+        [classes.root]: true,
+        [classes.light]: light,
+      })}
+      style={{ marginTop: spacingTop, marginBottom: spacingBottom }}
       {...props}
     />
   );

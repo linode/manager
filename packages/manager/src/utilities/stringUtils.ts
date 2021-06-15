@@ -19,3 +19,5 @@ export const truncateAndJoinList = (strList: string[], max = 100) => {
     ? strList.slice(0, max).join(', ') + `, plus ${count - max} more`
     : strList.join(', ');
 };
+
+export const wrapInQuotes = (s: string) => '"' + s + '"';

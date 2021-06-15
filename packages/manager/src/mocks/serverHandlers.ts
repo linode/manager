@@ -46,6 +46,8 @@ import {
   nodeBalancerConfigNodeFactory,
   VLANFactory,
   promoFactory,
+  staticObjects,
+  makeObjectsPage,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -324,8 +326,49 @@ export const handlers = [
       return res(ctx.json(makeResourcePage(configs)));
     }
   ),
+  rest.get('*/object-storage/buckets/*/*/object-list', (req, res, ctx) => {
+    const pageSize = Number(req.url.searchParams.get('page_size') || 100);
+    const marker = req.url.searchParams.get('marker');
+
+    if (!marker) {
+      const end =
+        pageSize > staticObjects.length ? staticObjects.length : pageSize;
+      const is_truncated = staticObjects.length > pageSize;
+
+      const page = staticObjects.slice(0, end);
+      return res(
+        ctx.json(
+          makeObjectsPage(page, {
+            is_truncated,
+            next_marker: is_truncated ? staticObjects[pageSize].name : null,
+          })
+        )
+      );
+    }
+    const index = staticObjects.findIndex((object) => object.name == marker);
+
+    const end =
+      index + pageSize > staticObjects.length
+        ? staticObjects.length
+        : index + pageSize;
+
+    const page = staticObjects.slice(index, end);
+
+    const is_truncated =
+      page[page.length - 1].name !=
+      staticObjects[staticObjects.length - 1].name;
+
+    return res(
+      ctx.json(
+        makeObjectsPage(page, {
+          is_truncated,
+          next_marker: is_truncated ? staticObjects[end].name : null,
+        })
+      )
+    );
+  }),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    const buckets = objectStorageBucketFactory.buildList(0);
+    const buckets = objectStorageBucketFactory.buildList(1);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
