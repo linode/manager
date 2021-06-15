@@ -49,6 +49,10 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         );
       case 'available':
         return 'Ready';
+      case 'pending_upload':
+        if (event?.status === 'failed') {
+          return 'Failed';
+        }
       default:
         return capitalizeAllWords(status.replace('_', ' '));
     }

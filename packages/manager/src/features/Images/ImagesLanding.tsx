@@ -573,14 +573,7 @@ const withPrivateImages = connect(
                 (`private/${thisEvent.entity?.id}` === thisImage.id &&
                   thisEvent.status === 'failed')
             );
-            if (matchingEvent && matchingEvent.status === 'failed') {
-              const indexOfImageToDelete = draft.findIndex(
-                (image) => image.id === `private/matchingEvent.entity?.id`
-              );
-              if (indexOfImageToDelete !== -1) {
-                draft.splice(indexOfImageToDelete, 1);
-              }
-            } else if (matchingEvent) {
+            if (matchingEvent) {
               draft.push({ ...thisImage, event: matchingEvent });
             } else {
               draft.push(thisImage);
