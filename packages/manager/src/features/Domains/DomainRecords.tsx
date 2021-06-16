@@ -82,6 +82,10 @@ const styles = (theme: Theme) =>
           maxWidth: 750,
         },
       },
+      '&:last-of-type': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+      },
     },
     linkContainer: {
       [theme.breakpoints.down('sm')]: {

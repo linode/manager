@@ -1,10 +1,7 @@
 import { Domain } from '@linode/api-v4/lib/domains';
-
-import { append, compose, has, when } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 
 interface EditPayload {
   id?: number;
@@ -33,47 +30,38 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class DomainRecordActionMenu extends React.Component<CombinedProps> {
-  handleEdit = () => {
-    const { editPayload, onEdit } = this.props;
+export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
+  const { editPayload, onEdit, deleteData } = props;
+
+  const handleEdit = () => {
     onEdit(editPayload);
   };
 
-  handleDelete = () => {
-    const { deleteData } = this.props;
+  const handleDelete = () => {
     deleteData!.onDelete(deleteData!.recordID);
   };
 
-  createActions = () => (closeMenu: () => void): Action[] =>
-    compose<Action[], Action[], Action[]>(
-      when(
-        () => has('deleteData', this.props),
-        append({
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleDelete();
-            closeMenu();
-            e.preventDefault();
-          },
-        })
-      ),
-      append({
-        title: 'Edit',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.handleEdit();
-          closeMenu();
-          e.preventDefault();
-        },
-      })
-    )([]);
-  render() {
-    return (
-      <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Record ${this.props.label}`}
-      />
-    );
-  }
-}
+  const actions: Action[] = [
+    {
+      title: 'Edit',
+      onClick: () => {
+        handleEdit();
+      },
+    },
+    {
+      title: 'Delete',
+      onClick: () => {
+        handleDelete();
+      },
+    },
+  ];
+
+  return (
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Record ${props.label}`}
+    />
+  );
+};
 
 export default withRouter(DomainRecordActionMenu);
