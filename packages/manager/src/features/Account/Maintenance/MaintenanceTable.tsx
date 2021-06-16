@@ -61,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 0,
     width: '100%',
   },
+  cell: {
+    width: '15%',
+  },
 }));
 
 const MaintenanceTable: React.FC<Props> = (props) => {
@@ -150,7 +153,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
 
   const downloadCSV = async () => {
     await fetch();
-    // @ts-expect-error everythings fine
+    // @ts-expect-error everything's fine
     csvRef.current.link.click();
   };
 
@@ -167,13 +170,13 @@ const MaintenanceTable: React.FC<Props> = (props) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell style={{ width: '15%' }}>Label</TableCell>
+            <TableCell className={classes.cell}>Label</TableCell>
             <TableSortCell
               active={orderBy === 'when'}
               direction={order}
               label="when"
               handleClick={handleOrderChange}
-              style={{ width: '15%' }}
+              className={classes.cell}
             >
               Date
             </TableSortCell>
@@ -182,7 +185,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
               direction={order}
               label="type"
               handleClick={handleOrderChange}
-              style={{ width: '15%' }}
+              className={classes.cell}
             >
               Type
             </TableSortCell>
@@ -191,7 +194,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
               direction={order}
               label="status"
               handleClick={handleOrderChange}
-              style={{ width: '15%' }}
+              className={classes.cell}
             >
               Status
             </TableSortCell>
