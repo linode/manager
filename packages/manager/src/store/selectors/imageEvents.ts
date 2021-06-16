@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import {
   isEventInProgressDiskImagize,
-  isEventFailedImageUpload,
+  isEventImageUpload,
 } from 'src/store/events/event.helpers';
 
 /**
@@ -17,7 +17,6 @@ export default createSelector<ApplicationState['events'], Event[], Event[]>(
   (events) =>
     events.filter(
       (thisEvent: Event) =>
-        isEventInProgressDiskImagize(thisEvent) ||
-        isEventFailedImageUpload(thisEvent)
+        isEventInProgressDiskImagize(thisEvent) || isEventImageUpload(thisEvent)
     )
 );

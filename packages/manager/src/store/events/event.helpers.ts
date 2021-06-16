@@ -186,7 +186,7 @@ export const isEventInProgressDiskImagize = (event: Event): boolean => {
   );
 };
 
-export const isEventFailedImageUpload = (event: Event): boolean => {
+export const isEventImageUpload = (event: Event): boolean => {
   return event.action === 'image_upload';
 };
 

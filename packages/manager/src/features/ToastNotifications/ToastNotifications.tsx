@@ -103,7 +103,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return _toastWithPersist(
               false,
               true,
-              `Image ${label} is available.`,
+              `Image ${label} is now available.`,
               isDeletion
                 ? undefined
                 : `There was a problem processing image ${label}: ${event.message}`
