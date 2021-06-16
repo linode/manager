@@ -194,7 +194,7 @@
     "babel-core": "^7.0.0-bridge",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
-    "browserslist": "^4.13.0",
+    "browserslist": "^4.16.5",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chai-string": "^1.5.0",
     "chalk": "^2.4.2",
