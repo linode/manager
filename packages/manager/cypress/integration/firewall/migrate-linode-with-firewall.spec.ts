@@ -230,7 +230,7 @@ describe('Migrate Linode With Firewall', () => {
         containsVisible(`Migrate Linode ${linode.label}`);
         getClick('[data-qa-checked="false"]');
         fbtClick(selectRegionString);
-        fbtClick('Dallas, TX');
+        fbtClick('Newark, NJ');
         validateBlockedMigration();
 
         if (!cy.findByText('Linode busy.').should('not.exist')) {
