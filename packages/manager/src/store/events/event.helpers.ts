@@ -10,16 +10,6 @@ import updateRight from 'src/utilities/updateRight';
 
 import { EntityEvent, ExtendedEvent } from './event.types';
 
-/**
- * Some events can be in a pending state, with a percent_complete
- * of 0 and a status of "scheduled", for hours or days. We don't want
- * to treat these as in-progress events in Cloud, since displaying an empty
- * progress bar for 24 hours, or polling /events at our maximum frequency
- * for that period, would be pointless. We treat these events differently
- * when determining whether they are in progress.
- */
-export const LONG_PENDING_EVENTS = ['image_upload'];
-
 /** We use the epoch on our initial request to get all of the users events. */
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
 
@@ -158,12 +148,15 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) =>
       : [el, ...updatedArray];
   }, prevArr);
 
+export const isLongPendingEvent = (event: Event): boolean => {
+  const { status, action } = event;
+  return status === 'scheduled' && action === 'image_upload';
+};
+
 export const isInProgressEvent = (event: Event) => {
   const { percent_complete } = event;
-  if (percent_complete === null) {
+  if (percent_complete === null || isLongPendingEvent(event)) {
     return false;
-  } else if (LONG_PENDING_EVENTS.includes(event.action)) {
-    return percent_complete > 0 && percent_complete < 100;
   } else {
     return percent_complete !== null && percent_complete < 100;
   }
@@ -184,6 +177,18 @@ export const isCompletedEvent = ({
   percent_complete !== null && percent_complete === 100;
 
 export const isEntityEvent = (e: Event): e is EntityEvent => Boolean(e.entity);
+
+export const isEventInProgressDiskImagize = (event: Event): boolean => {
+  return (
+    event.action === 'disk_imagize' &&
+    Boolean(event.secondary_entity) &&
+    isInProgressEvent(event)
+  );
+};
+
+export const isEventImageUpload = (event: Event): boolean => {
+  return event.action === 'image_upload';
+};
 
 /**
  * Iterate through new events.

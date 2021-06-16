@@ -1,5 +1,8 @@
 import { removeImage } from 'src/store/image/image.actions';
-import { requestImages } from 'src/store/image/image.requests';
+import {
+  requestImages,
+  requestImageForStore,
+} from 'src/store/image/image.requests';
 import { EventHandler } from 'src/store/types';
 
 const imageEventsHandler: EventHandler = (event, dispatch) => {
@@ -20,6 +23,11 @@ const imageEventsHandler: EventHandler = (event, dispatch) => {
 
       if (['finished', 'notification'].includes(event.status)) {
         return dispatch(requestImages());
+      }
+
+    case 'image_upload':
+      if (event.status === 'finished') {
+        return dispatch(requestImageForStore(`private/${event.entity?.id}`));
       }
 
     default:

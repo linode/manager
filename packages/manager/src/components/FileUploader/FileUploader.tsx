@@ -252,11 +252,11 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           },
         });
 
-        const successfulUploadMessage = `${file.name} successfully uploaded to ${label}.`;
+        const successfulUploadMessage = `Image ${label} uploaded successfully. It is being processed and will be available shortly.`;
 
         props.enqueueSnackbar(successfulUploadMessage, {
           variant: 'success',
-          persist: true,
+          autoHideDuration: 6000,
         });
 
         dispatchAction(setPendingUpload(false));

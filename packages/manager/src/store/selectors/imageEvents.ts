@@ -1,7 +1,10 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
+import {
+  isEventInProgressDiskImagize,
+  isEventImageUpload,
+} from 'src/store/events/event.helpers';
 
 /**
  * Return a list of all in-progress
@@ -14,8 +17,6 @@ export default createSelector<ApplicationState['events'], Event[], Event[]>(
   (events) =>
     events.filter(
       (thisEvent: Event) =>
-        thisEvent.action === 'disk_imagize' &&
-        !!thisEvent.secondary_entity &&
-        isInProgressEvent(thisEvent)
+        isEventInProgressDiskImagize(thisEvent) || isEventImageUpload(thisEvent)
     )
 );
