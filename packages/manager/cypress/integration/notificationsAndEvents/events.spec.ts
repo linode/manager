@@ -2,7 +2,11 @@ import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { eventFactory } from '@src/factories/events';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { RecPartial } from 'factory.ts';
-import { containsClick, getClick } from '../../support/helpers';
+import {
+  containsClick,
+  containsVisible,
+  getClick,
+} from '../../support/helpers';
 
 const eventActions: RecPartial<EventAction>[] = [
   'backups_enable',
@@ -14,7 +18,7 @@ const eventActions: RecPartial<EventAction>[] = [
   'disk_delete',
   'disk_update',
   'disk_duplicate',
-  'disk_imagize',
+  // 'disk_imagize',
   'disk_resize',
   'entity_transfer_accept',
   'entity_transfer_cancel',
@@ -114,14 +118,18 @@ describe('verify notification types and icons', () => {
     cy.wait('@mockEvents').then(() => {
       getClick('button[aria-label="Notifications"]');
       for (let i = 0; i < 20; i++) {
+        const text = [`${events[i].message}`, `${events[i].entity?.label}`];
+        const regex = new RegExp(`${text.join('|')}`, 'g');
         cy.get(`[data-test-id="${events[i].action}"]`).within(() => {
-          cy.contains(`${events[i].message}`);
+          cy.contains(regex);
         });
       }
       containsClick('View all events');
       events.forEach((event) => {
+        const text = [`${event.message}`, `${event.entity?.label}`];
+        const regex = new RegExp(`${text.join('|')}`, 'g');
         cy.get(`[data-test-id="${event.action}"]`).within(() => {
-          cy.contains(`${event.message}`);
+          cy.contains(regex);
         });
       });
     });
