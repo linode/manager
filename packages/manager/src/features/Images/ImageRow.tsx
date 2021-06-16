@@ -86,13 +86,15 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         ) : null}
       </Hidden>
       <TableCell className={classes.actionMenu}>
-        <ActionMenu
-          id={id}
-          label={label}
-          description={description}
-          status={status}
-          {...rest}
-        />
+        {event?.status !== 'failed' ? (
+          <ActionMenu
+            id={id}
+            label={label}
+            description={description}
+            status={status}
+            {...rest}
+          />
+        ) : null}
       </TableCell>
     </TableRow>
   );
