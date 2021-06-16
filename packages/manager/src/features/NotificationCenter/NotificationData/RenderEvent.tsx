@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
-import { LONG_PENDING_EVENTS } from 'src/store/events/event.helpers';
+import { isLongPendingEvent } from 'src/store/events/event.helpers';
 import formatDate from 'src/utilities/formatDate';
 import useEventInfo from './useEventInfo';
 
@@ -59,7 +59,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
       })}
     >
       {message}
-      {event.duration && !LONG_PENDING_EVENTS.includes(event.action)
+      {event.duration && !isLongPendingEvent(event)
         ? event.status === 'failed'
           ? ` (Failed after ${duration})`
           : ` (Completed in ${duration})`

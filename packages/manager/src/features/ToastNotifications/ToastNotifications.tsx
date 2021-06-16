@@ -24,6 +24,8 @@ export const toastSuccessAndFailure = curry(
   (
     enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'],
     eventStatus: EventStatus,
+    persistSuccessMessage: boolean | undefined,
+    persistFailureMessage: boolean | undefined,
     successMessage: string | undefined,
     failureMessage: string | undefined
   ) => {
@@ -31,9 +33,15 @@ export const toastSuccessAndFailure = curry(
       ['finished', 'notification'].includes(eventStatus) &&
       Boolean(successMessage)
     ) {
-      return enqueueSnackbar(successMessage, { variant: 'success' });
+      return enqueueSnackbar(successMessage, {
+        variant: 'success',
+        persist: persistSuccessMessage,
+      });
     } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
-      return enqueueSnackbar(failureMessage, { variant: 'error' });
+      return enqueueSnackbar(failureMessage, {
+        variant: 'error',
+        persist: persistFailureMessage,
+      });
     } else {
       return;
     }
@@ -52,7 +60,16 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
       .filter((e) => !e._initial)
       .map((event) => {
         const { enqueueSnackbar } = this.props;
-        const _toast = toastSuccessAndFailure(enqueueSnackbar, event.status);
+        const _toastWithPersist = toastSuccessAndFailure(
+          enqueueSnackbar,
+          event.status
+        );
+        const _toast = toastSuccessAndFailure(
+          enqueueSnackbar,
+          event.status,
+          false,
+          false
+        );
         const label = getLabel(event);
         const secondaryLabel = getSecondaryLabel(event);
         switch (event.action) {
@@ -80,6 +97,16 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return _toast(
               `Image ${secondaryLabel} created successfully.`,
               `Error creating Image ${secondaryLabel}.`
+            );
+          case 'image_upload':
+            const isDeletion = event.message === 'Upload cancelled.';
+            return _toastWithPersist(
+              false,
+              true,
+              `Image ${label} is now available.`,
+              isDeletion
+                ? undefined
+                : `There was a problem processing image ${label}: ${event.message}`
             );
           case 'image_delete':
             return _toast(

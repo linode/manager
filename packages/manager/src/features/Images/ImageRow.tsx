@@ -49,8 +49,24 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         );
       case 'available':
         return 'Ready';
+      case 'pending_upload':
+        return event?.status === 'failed' ? 'Failed' : 'Pending Upload';
       default:
         return capitalizeAllWords(status.replace('_', ' '));
+    }
+  };
+
+  const getSizeForImage = (
+    size: number,
+    status: string,
+    eventStatus: string | undefined
+  ) => {
+    if (status === 'available' || eventStatus === 'finished') {
+      return `${size} MB`;
+    } else if (status === 'pending_upload' && eventStatus === 'failed') {
+      return 'N/A';
+    } else {
+      return 'Pending';
     }
   };
 
@@ -62,9 +78,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
       </Hidden>
       <TableCell data-qa-image-size>
-        {status === 'pending_upload' || isImageUpdating(event)
-          ? 'Pending'
-          : `${size} MB`}
+        {getSizeForImage(size, status, event?.status)}
       </TableCell>
       <Hidden xsDown>
         {expiry ? (
@@ -72,13 +86,15 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
         ) : null}
       </Hidden>
       <TableCell className={classes.actionMenu}>
-        <ActionMenu
-          id={id}
-          label={label}
-          description={description}
-          status={status}
-          {...rest}
-        />
+        {event?.status !== 'failed' ? (
+          <ActionMenu
+            id={id}
+            label={label}
+            description={description}
+            status={status}
+            {...rest}
+          />
+        ) : null}
       </TableCell>
     </TableRow>
   );
