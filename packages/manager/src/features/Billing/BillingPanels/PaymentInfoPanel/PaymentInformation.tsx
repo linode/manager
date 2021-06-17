@@ -6,7 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
-import CreditCard from './CreditCard';
+import CreditCardInfo from './CreditCardInfo';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -79,7 +79,7 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
         </div>
 
         <div className={classes.billingGroup}>
-          <CreditCard lastFour={lastFour} expiry={expiry} />
+          <CreditCardInfo lastFour={lastFour} expiry={expiry} />
         </div>
 
         <UpdateCreditCardDrawer
