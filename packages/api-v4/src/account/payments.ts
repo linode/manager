@@ -181,9 +181,14 @@ export const getClientToken = () => {
  * Adds a new payment method to a user's account via a nonce.
  *
  * @param data { object }
- * @param data.nonce { string } the nonce for the payment method to be added
+ * @param data.type { string } 'credit_card' or 'payment_method_nonce'
  * @param data.is_default { boolean } whether of not this payment method should
- * become a user's default method of payment
+ * @param data.data { object } this will be data containting a nonce or credit card info
+ * @param data.data.nonce { string } the nonce for the payment method to be added
+ * @param data.data.card_number { string } a credit card number
+ * @param data.data.expiry_year { number } credit card's expiry year
+ * @param data.data.expiry_month { number } credit card's expiry month
+ * @param data.data.cvv { string } credit card's cvv
  *
  */
 export const addPaymentMethod = (data: PaymentMethodData) => {
