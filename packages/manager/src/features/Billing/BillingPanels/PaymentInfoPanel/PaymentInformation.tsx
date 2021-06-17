@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -154,4 +153,4 @@ const PaymentInformation: React.FC<Props> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(PaymentInformation);
+export default React.memo(PaymentInformation);
