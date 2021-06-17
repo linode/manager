@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { useEffect } from 'react';
-import { ScriptStatus, useLazyScript } from 'src/hooks/useScript';
+import { ScriptStatus, useScript } from 'src/hooks/useScript';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Button from 'src/components/Button';
 import { SetSuccess } from './types';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { makePayment } from 'src/features/Billing/Providers/GooglePay';
+import {
+  initGooglePaymentInstance,
+  makePayment,
+} from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/googlePayButton.svg';
 import classNames from 'classnames';
 
@@ -31,27 +33,21 @@ interface Props {
 }
 
 const GooglePay: React.FC<Props> = (props) => {
-  const { status, load } = useLazyScript(
-    'https://pay.google.com/gp/p/js/pay.js'
-  );
+  const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const classes = useStyles();
 
   const { transactionInfo, setSuccess } = props;
   const disabled = +transactionInfo.totalPrice < 5;
 
-  const handlePay = () => {
-    makePayment(
-      process.env.REACT_APP_BT_TOKEN || '',
-      transactionInfo,
-      (message: string, _) => setSuccess(message)
-    );
-  };
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (status === ScriptStatus.READY) {
-      handlePay();
+      initGooglePaymentInstance(process.env.REACT_APP_BT_TOKEN || '');
     }
   }, [status]);
+
+  const handlePay = () => {
+    makePayment(transactionInfo, (message: string, _) => setSuccess(message));
+  };
 
   if (status === ScriptStatus.ERROR) {
     return (
@@ -68,7 +64,7 @@ const GooglePay: React.FC<Props> = (props) => {
         [classes.disabled]: disabled,
       })}
       disabled={disabled}
-      onClick={status === ScriptStatus.READY ? handlePay : load}
+      onClick={handlePay}
     >
       <GooglePayIcon className={classes.svg} />
     </Button>

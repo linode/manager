@@ -1,6 +1,8 @@
 import braintree, { GooglePayment } from 'braintree-web';
 import { VariantType } from 'notistack';
 
+let googlePaymentInstance: GooglePayment | undefined;
+
 const onPaymentAuthorized = (
   paymentData: google.payments.api.PaymentData
 ): Promise<any> => {
@@ -9,14 +11,14 @@ const onPaymentAuthorized = (
   });
 };
 
-const getGooglePaymentInstance = async (
+export const initGooglePaymentInstance = async (
   client_token: string
-): Promise<GooglePayment> => {
+): Promise<void> => {
   const braintreeClientToken = await braintree.client.create({
     authorization: client_token,
   });
 
-  return await braintree.googlePayment.create({
+  googlePaymentInstance = await braintree.googlePayment.create({
     client: braintreeClientToken,
     googlePayVersion: 2,
     // googleMerchantId: 'merchant-id-from-google'
@@ -24,15 +26,18 @@ const getGooglePaymentInstance = async (
 };
 
 export const makePayment = async (
-  client_token: string,
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
   setMessage: (message: string, variant: VariantType) => void
 ) => {
-  let googlePaymentInstance, paymentDataRequest;
+  if (!googlePaymentInstance) {
+    return setMessage('Unable to open Google Pay.', 'error');
+  }
+
+  let paymentDataRequest;
+
   try {
-    googlePaymentInstance = await getGooglePaymentInstance(client_token);
     paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
       // merchantInfo: {
       //   merchantId: '12345678901234567890',
