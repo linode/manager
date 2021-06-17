@@ -5,7 +5,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DeletionDialog from 'src/components/DeletionDialog';
-import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import TagDrawer, {

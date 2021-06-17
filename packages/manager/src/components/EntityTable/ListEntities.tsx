@@ -1,10 +1,9 @@
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
+import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import OrderBy from 'src/components/OrderBy';
-import Table from 'src/components/Table';
+import Table from 'src/components/Table/Table_CMR';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import EntityTableHeader from './EntityTableHeader';
 import { ListProps } from './types';
@@ -12,12 +11,27 @@ import { ListProps } from './types';
 export type CombinedProps = ListProps;
 
 export const ListEntities: React.FC<CombinedProps> = (props) => {
-  const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
+  const {
+    data,
+    entity,
+    error,
+    handlers,
+    headers,
+    initialOrder,
+    loading,
+    lastUpdated,
+    RowComponent,
+    toggleGroupByTag,
+    isGroupedByTag,
+    emptyMessage,
+  } = props;
+
   return (
     <OrderBy
       data={data}
       orderBy={initialOrder?.orderBy}
       order={initialOrder?.order}
+      preferenceKey={entity}
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
@@ -30,39 +44,41 @@ export const ListEntities: React.FC<CombinedProps> = (props) => {
             pageSize,
           }) => (
             <>
-              <Paper>
-                <Table aria-label={`List of ${entity}`}>
-                  <EntityTableHeader
-                    headers={headers}
-                    handleOrderChange={handleOrderChange}
-                    order={order}
-                    orderBy={orderBy}
-                  />
-                  <TableBody>
-                    <TableContentWrapper
-                      length={paginatedAndOrderedData.length}
-                      loading={false}
-                      error={undefined}
-                      lastUpdated={100}
-                    >
-                      {paginatedAndOrderedData.map((thisEntity) => (
-                        <RowComponent
-                          key={thisEntity.id}
-                          {...thisEntity}
-                          {...handlers}
-                        />
-                      ))}
-                    </TableContentWrapper>
-                  </TableBody>
-                </Table>
-              </Paper>
+              <Table aria-label={`List of ${entity}`}>
+                <EntityTableHeader
+                  headers={headers}
+                  handleOrderChange={handleOrderChange}
+                  order={order}
+                  orderBy={orderBy}
+                  toggleGroupByTag={toggleGroupByTag}
+                  isGroupedByTag={isGroupedByTag}
+                />
+
+                <TableBody>
+                  <TableContentWrapper
+                    emptyMessage={emptyMessage}
+                    length={paginatedAndOrderedData.length}
+                    loading={loading}
+                    error={error}
+                    lastUpdated={lastUpdated}
+                  >
+                    {paginatedAndOrderedData.map((thisEntity) => (
+                      <RowComponent
+                        key={thisEntity.id}
+                        {...thisEntity}
+                        {...handlers}
+                      />
+                    ))}
+                  </TableContentWrapper>
+                </TableBody>
+              </Table>
               <PaginationFooter
                 count={count}
                 handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
                 page={page}
                 pageSize={pageSize}
-                eventCategory="Firewall Devices Table"
+                eventCategory={`${entity} table view`}
               />
             </>
           )}
