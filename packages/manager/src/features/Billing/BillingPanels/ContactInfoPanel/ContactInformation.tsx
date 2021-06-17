@@ -18,11 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   cancel: {
     marginTop: theme.spacing(2),
   },
-  grid: {
-    [theme.breakpoints.up('lg')]: {
-      height: '100%',
-    },
-  },
   switchWrapper: {
     flex: 1,
     maxWidth: '100%',
@@ -137,7 +132,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={2} className={classes.grid}>
+        <Grid container spacing={2}>
           {(firstName ||
             lastName ||
             company ||

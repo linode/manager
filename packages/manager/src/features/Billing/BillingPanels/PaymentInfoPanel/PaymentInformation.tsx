@@ -49,32 +49,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  balanceUninvoiced: number;
-  balance: number;
-  expiry: string;
-  lastFour: string;
-  promoCredit?: string;
-}
-
-const PaymentInformation: React.FC<Props> = (props) => {
-  const classes = useStyles();
-  const flags = useFlags();
-  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
-    'google_pay'
-  );
-  // const { lastFour, expiry } = props;
-
+const PaymentInformation: React.FC<{}> = () => {
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
-  // const handleOpenEditDrawer = () => {
-  //   setEditDrawerOpen(true);
-  // };
+  const classes = useStyles();
+  const flags = useFlags();
 
-  const handleOpenAddDrawer = () => {
-    setAddDrawerOpen(true);
-  };
+  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
+    'google_pay'
+  );
 
   const paymentMethods = [
     {
@@ -111,11 +95,18 @@ const PaymentInformation: React.FC<Props> = (props) => {
           </Typography>
 
           {isGooglePayEnabled ? (
-            <Button className={classes.edit} onClick={handleOpenAddDrawer}>
+            <Button
+              className={classes.edit}
+              onClick={() => setAddDrawerOpen(true)}
+            >
               Add a Payment Method
             </Button>
           ) : null}
         </div>
+
+        {paymentMethods.length == 0
+          ? 'No payment methods have been specified for this account.'
+          : null}
 
         {paymentMethods.map((paymentMethod) => (
           <PaymentMethodRow
@@ -128,7 +119,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
         ))}
 
         {isGooglePayEnabled ? (
-          <Box display="flex" alignItems="center">
+          <Box display="flex" alignItems="center" mt={2}>
             <GooglePay width={16} height={16} />
             <Typography className={classes.googlePayNotice}>
               Google Pay is now available for recurring payments.
