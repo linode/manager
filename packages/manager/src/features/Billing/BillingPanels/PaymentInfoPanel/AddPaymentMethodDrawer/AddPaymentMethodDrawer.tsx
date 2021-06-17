@@ -15,9 +15,12 @@ const useStyles = makeStyles(() => ({
   root: {
     marginTop: '4px',
   },
+  paymentMethodName: {
+    color: '#171718',
+  },
 }));
 
-export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
+export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   const { onClose, open } = props;
   const classes = useStyles();
 
@@ -28,7 +31,12 @@ export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
         <Grid item xs={12} sm container>
           <Grid item xs container direction="column" spacing={4}>
             <Grid item xs>
-              <Typography variant="subtitle1">Google Pay</Typography>
+              <Typography
+                className={classes.paymentMethodName}
+                variant="subtitle1"
+              >
+                Google Pay
+              </Typography>
               <Typography>
                 You&apos;ll be taken to Google Pay to complete sign up.
               </Typography>
@@ -45,4 +53,4 @@ export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
   );
 };
 
-export default UpdateCreditCardDrawer;
+export default AddPaymentMethodDrawer;
