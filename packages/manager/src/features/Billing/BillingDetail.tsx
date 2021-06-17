@@ -85,16 +85,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 history={props.history}
                 taxId={account.data.tax_id}
               />
-              <PaymentInformation
-                balance={account?.data?.balance ?? 0}
-                balanceUninvoiced={account?.data?.balance_uninvoiced ?? 0}
-                expiry={account?.data?.credit_card?.expiry ?? ''}
-                lastFour={account?.data?.credit_card?.last_four ?? ''}
-                promoCredit={
-                  account?.data?.active_promotions?.[0]
-                    ?.this_month_credit_remaining
-                }
-              />
+              <PaymentInformation />
             </Grid>
             <BillingActivityPanel
               accountActiveSince={account?.data?.active_since}

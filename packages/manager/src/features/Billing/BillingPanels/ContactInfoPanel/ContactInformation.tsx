@@ -118,7 +118,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
   return (
     <Grid item xs={12} md={6}>
       <Paper className={classes.summarySection} data-qa-contact-summary>
-        <Grid container spacing={2} className={classes.grid}>
+        <Grid container spacing={2}>
           <Grid item className={classes.switchWrapper}>
             <Typography variant="h3" className={classes.title}>
               Billing Contact
