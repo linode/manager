@@ -34,11 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   credit: {
     color: '#02b159',
   },
-  divider: {
-    backgroundColor: '#d6d7d9',
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(2),
-  },
   header: {
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
@@ -200,7 +195,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               placeholder={`${minimumPayment} minimum`}
             />
           </Grid>
-          <Divider className={classes.divider} />
+          <Divider spacingTop={32} spacingBottom={16} />
           <CreditCardPayment
             key={creditCardKey}
             type={type}
@@ -210,7 +205,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             minimumPayment={minimumPayment}
             setSuccess={setSuccess}
           />
-          <Divider className={classes.divider} />
+          <Divider spacingTop={32} spacingBottom={16} />
           {showGooglePay ? (
             <>
               <Grid item>

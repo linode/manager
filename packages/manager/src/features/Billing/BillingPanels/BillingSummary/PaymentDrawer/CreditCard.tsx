@@ -80,7 +80,7 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
       >
         <Typography className={classes.cardInfo} data-qa-contact-cc>
           {lastFour
-            ? `${type ?? ''} ****${lastFour}`
+            ? `${type || 'Card ending in'} ****${lastFour}`
             : 'No credit card on file.'}
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
