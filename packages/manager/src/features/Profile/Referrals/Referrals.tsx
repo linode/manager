@@ -13,6 +13,11 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
+import Notice from 'src/components/Notice';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps,
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'results' | 'copyField';
@@ -27,7 +32,9 @@ const styles = (theme: Theme) =>
     },
   });
 
-type CombinedProps = StateProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps &
+  WithStyles<ClassNames> &
+  FeatureFlagConsumerProps;
 
 class Referrals extends React.Component<CombinedProps, {}> {
   render() {
@@ -40,6 +47,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
       completed,
       pending,
       credit,
+      flags,
     } = this.props;
 
     return (
@@ -50,6 +58,16 @@ class Referrals extends React.Component<CombinedProps, {}> {
             <Typography variant="h2" data-qa-title>
               Referrals
             </Typography>
+            {flags.referralBannerText?.text ? (
+              <Notice warning spacingTop={16} spacingBottom={16}>
+                {flags.referralBannerText.text}{' '}
+                {flags.referralBannerText.link ? (
+                  <Link to={flags.referralBannerText?.link?.url}>
+                    {flags.referralBannerText.link?.text}
+                  </Link>
+                ) : null}
+              </Notice>
+            ) : null}
           </Grid>
           <Grid item xs={12}>
             <Typography>
@@ -119,6 +137,10 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(styled, connected);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  connected,
+  withFeatureFlags
+);
 
 export default enhanced(Referrals);
