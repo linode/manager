@@ -1,7 +1,7 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -13,10 +13,18 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
+import getEventsActionLink from 'src/utilities/getEventsActionLink';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  row: {
+    '&:hover': {
+      backgroundColor: theme.cmrBGColors.bgTableRow,
+      boxShadow: `inset 5px 0 0 ${theme.palette.primary.main}`,
+      cursor: 'pointer',
+    },
+  },
   icon: {
     marginLeft: theme.spacing(1.5),
   },
@@ -31,34 +39,37 @@ interface Props {
   entityId?: number;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
   const { event, entityId } = props;
+  const link = getEventsActionLink(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
 
   const rowProps = {
-    created: event.created,
+    action: event.action,
+    entityId,
+    link,
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
     type,
-    entityId,
-    duration: event.duration,
+    created: event.created,
     username: event.username,
-    action: event.action,
+    duration: event.duration,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
 };
 
 export interface RowProps {
-  message?: string | void;
-  entityId?: number;
-  type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
-  status?: string;
   action: EventAction;
+  entityId?: number;
+  link?: string | (() => void);
+  message?: string | void;
+  status?: string;
+  type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   created: string;
   username: string | null;
   duration: Event['duration'];
@@ -66,10 +77,12 @@ export interface RowProps {
 
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
+  const history = useHistory();
 
   const {
     action,
     entityId,
+    link,
     message,
     status,
     type,
@@ -92,6 +105,8 @@ export const Row: React.FC<RowProps> = (props) => {
       data-qa-event-row
       data-test-id={action}
       ariaLabel={`Event ${displayedMessage}`}
+      className={link ? classes.row : ''}
+      onClick={() => history.push(link as string)}
     >
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}
@@ -130,9 +145,6 @@ export const Row: React.FC<RowProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
-  withRouter,
-  renderGuard
-);
+const enhanced = compose<CombinedProps, Props & RenderGuardProps>(renderGuard);
 
 export default enhanced(EventRow);

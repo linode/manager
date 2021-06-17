@@ -10,7 +10,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import TableSortCell_PreCMR from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -63,6 +63,9 @@ export interface Props {
 export type CombinedProps = Props;
 
 export const ProcessesTable: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const { width } = useWindowDimensions();
+
   const {
     processesData,
     processesLoading,
@@ -70,11 +73,6 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
     selectedProcess,
     setSelectedProcess,
   } = props;
-
-  const TableSortCell = TableSortCell_PreCMR;
-
-  const { width } = useWindowDimensions();
-  const classes = useStyles();
 
   return (
     <OrderBy
