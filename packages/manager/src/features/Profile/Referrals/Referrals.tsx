@@ -58,16 +58,14 @@ class Referrals extends React.Component<CombinedProps, {}> {
             <Typography variant="h2" data-qa-title>
               Referrals
             </Typography>
-            {flags.referralChangeBanner ? (
+            {flags.referralBannerText?.text ? (
               <Notice warning spacingTop={16} spacingBottom={16}>
-                We’re updating our customer referral program on July 1, 2021.
-                Afterwards, referred customers will receive a $100, 60-day
-                credit. Once that referral bills $25 of services, you will
-                receive a $25 non-expiring credit. Learn more about eligibility{' '}
-                <Link to="https://www.linode.com/promotional-policy/">
-                  here
-                </Link>
-                .
+                {flags.referralBannerText.text}{' '}
+                {flags.referralBannerText.link ? (
+                  <Link to={flags.referralBannerText?.link?.url}>
+                    {flags.referralBannerText.link?.text}
+                  </Link>
+                ) : null}
               </Notice>
             ) : null}
           </Grid>
