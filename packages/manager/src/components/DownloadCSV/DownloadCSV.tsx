@@ -10,7 +10,7 @@ interface Props {
   data: any[];
   headers: { label: string; key: string }[];
   filename: string;
-  className: string;
+  className?: string;
 }
 
 type CombinedProps = Props;

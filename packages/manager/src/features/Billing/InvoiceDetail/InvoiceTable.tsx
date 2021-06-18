@@ -15,18 +15,21 @@ import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
+import DownloadCSV from 'src/components/DownloadCSV';
+import TableFooter from 'src/components/core/TableFooter';
 
 interface Props {
   loading: boolean;
   errors?: APIError[];
   items?: InvoiceItem[];
+  invoiceDate?: string;
 }
 
 const InvoiceTable: React.FC<Props> = (props) => {
-  const { loading, errors, items } = props;
+  const { loading, errors, items, invoiceDate } = props;
 
   return (
-    <Table border aria-label="Invoice Details">
+    <Table aria-label="Invoice Details">
       <TableHead>
         <TableRow>
           <TableCell data-qa-column="Description">Description</TableCell>
@@ -44,6 +47,19 @@ const InvoiceTable: React.FC<Props> = (props) => {
       <TableBody>
         <MaybeRenderContent loading={loading} errors={errors} items={items} />
       </TableBody>
+      <TableFooter>
+        {items && invoiceDate ? (
+          <div style={{ marginTop: 8 }}>
+            <DownloadCSV
+              filename={`invoice-${invoiceDate}.csv`}
+              headers={csvHeaders}
+              data={items}
+            >
+              Download CSV
+            </DownloadCSV>
+          </div>
+        ) : null}
+      </TableFooter>
     </Table>
   );
 };
@@ -52,6 +68,17 @@ const renderDate = (v: null | string) =>
   v ? <DateTimeDisplay value={v} data-qa-invoice-date /> : null;
 
 const renderQuantity = (v: null | number) => (v ? v : null);
+
+const csvHeaders = [
+  { label: 'Description', key: 'label' },
+  { label: 'From', key: 'from' },
+  { label: 'To', key: 'to' },
+  { label: 'Quantity', key: 'quantity' },
+  { label: 'Unit Price', key: 'unit_price' },
+  { label: 'Amount (USD)', key: 'amount' },
+  { label: 'Tax (USD)', key: 'tax' },
+  { label: 'Total (USD)', key: 'total' },
+];
 
 const RenderData: React.FC<{
   items: InvoiceItem[];
