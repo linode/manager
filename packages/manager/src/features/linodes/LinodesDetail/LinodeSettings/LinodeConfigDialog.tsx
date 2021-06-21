@@ -414,6 +414,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     volumes: props.volumes,
   };
 
+  const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+
   /**
    * Form change handlers
    * (where formik.handleChange is insufficient)
@@ -683,7 +685,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
-                slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
+                slots={deviceSlots}
                 devices={availableDevices}
                 onChange={handleDevicesChanges}
                 getSelected={(slot) => pathOr('', [slot], values.devices)}
@@ -694,7 +696,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 buttonType="secondary"
                 superCompact
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
-                disabled={readOnly || deviceCounter >= 6}
+                disabled={readOnly || deviceCounter >= deviceSlots.length - 1}
               >
                 Add a Device
               </Button>
