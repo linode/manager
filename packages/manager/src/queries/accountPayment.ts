@@ -16,10 +16,10 @@ export const usePaymentMethodsQuery = (params?: any) => {
   );
 };
 
-export const useAllPaymentMethodsQuery = (params?: any) => {
+export const useAllPaymentMethodsQuery = () => {
   return useQuery<PaymentMethod[], APIError[]>(
-    ['all-' + queryKey, params?.page, params?.page_size],
-    () => getAllPaymentMethodsRequest(params),
+    [queryKey + '-all'],
+    getAllPaymentMethodsRequest,
     {
       ...queryPresets.longLived,
     }
@@ -30,10 +30,10 @@ export const useAllPaymentMethodsQuery = (params?: any) => {
  * This getAll is probably overkill for getting all paginated payment
  * methods, but for now, use it to be safe.
  */
-const getAllPaymentMethodsRequest = (passedParams: any = {}) =>
-  getAll<PaymentMethod>((params) =>
-    getPaymentMethods({ ...params, ...passedParams })
-  )().then((data) => data.data);
+const getAllPaymentMethodsRequest = () =>
+  getAll<PaymentMethod>((params) => getPaymentMethods(params))().then(
+    (data) => data.data
+  );
 
 /**
  * Temporary helper function to help us find the main card on file as we
