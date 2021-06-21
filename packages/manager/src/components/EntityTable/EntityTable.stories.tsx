@@ -64,7 +64,7 @@ export const ListView = () => (
         entity="domains"
         headers={headers}
         row={domainRow}
-        isGroupedByTag={false}
+        isGroupedByTag
       />
     </Grid>
   </Provider>
@@ -81,7 +81,7 @@ export const GroupedByTag = () => (
         entity="domains"
         headers={headers}
         row={domainRow}
-        isGroupedByTag={true}
+        isGroupedByTag
       />
     </Grid>
   </Provider>
