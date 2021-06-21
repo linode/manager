@@ -377,3 +377,31 @@ export interface AccountMaintenance {
     url: string;
   };
 }
+
+export interface PaymentMethod {
+  type: string;
+  is_default: boolean;
+  created: string;
+  data: {
+    card_type: string;
+    last_four: string;
+    expiry: string;
+  };
+}
+
+export interface ClientToken {
+  client_token: string;
+}
+
+export interface PaymentMethodData {
+  type: 'credit_card' | 'payment_method_nonce';
+  data: SaveCreditCardData | { nonce: string };
+  is_default: boolean;
+}
+
+export interface MakePaymentData {
+  usd: string;
+  cvv?: string;
+  nonce?: string;
+  payment_method_id?: number;
+}
