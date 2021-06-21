@@ -55,7 +55,6 @@ import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
 import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
-import { PaymentMethodSchema } from '@linode/validation';
 
 export const makeResourcePage = (
   e: any[],
