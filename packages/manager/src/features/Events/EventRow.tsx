@@ -42,6 +42,8 @@ interface Props {
 type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
+  const history = useHistory();
+
   const { event, entityId } = props;
   const link = getEventsActionLink(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -58,6 +60,7 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     created: event.created,
     username: event.username,
     duration: event.duration,
+    history,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -73,11 +76,11 @@ export interface RowProps {
   created: string;
   username: string | null;
   duration: Event['duration'];
+  history: any;
 }
 
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
-  const history = useHistory();
 
   const {
     action,
@@ -89,6 +92,7 @@ export const Row: React.FC<RowProps> = (props) => {
     created,
     username,
     duration,
+    history,
   } = props;
 
   /** Some event types may not be handled by our system (or new types
