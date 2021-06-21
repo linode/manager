@@ -106,17 +106,15 @@ const PaymentInformation: React.FC<{}> = () => {
 
         {paymentMethods.length == 0
           ? 'No payment methods have been specified for this account.'
-          : null}
-
-        {paymentMethods.map((paymentMethod) => (
-          <PaymentMethodRow
-            key={paymentMethod.method}
-            paymentMethod={paymentMethod.data.card_type}
-            isDefault={paymentMethod.is_default}
-            expiry={paymentMethod.data.expiry}
-            lastFour={paymentMethod.data.last_four}
-          />
-        ))}
+          : paymentMethods.map((paymentMethod) => (
+              <PaymentMethodRow
+                key={paymentMethod.method}
+                paymentMethod={paymentMethod.data.card_type}
+                isDefault={paymentMethod.is_default}
+                expiry={paymentMethod.data.expiry}
+                lastFour={paymentMethod.data.last_four}
+              />
+            ))}
 
         {isGooglePayEnabled ? (
           <Box display="flex" alignItems="center" mt={2}>
