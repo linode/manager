@@ -147,8 +147,7 @@ const UsersLanding: React.FC<Props> = (props) => {
 
     deleteUser(username)
       .then(() => {
-        // What is this and what magical prop did it come from
-        // onDelete();
+        refetch();
         enqueueSnackbar(`User ${username} has been deleted successfully.`, {
           variant: 'success',
         });
