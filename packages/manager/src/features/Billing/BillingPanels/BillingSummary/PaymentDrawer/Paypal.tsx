@@ -280,7 +280,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
   if (showGooglePay) {
     return (
       <>
-        <Grid item xs={6}>
+        <Grid item xs={6} style={{ position: 'relative' }}>
           {!enabled && (
             <Tooltip
               title={'Amount to charge must be between $5 and $10000'}

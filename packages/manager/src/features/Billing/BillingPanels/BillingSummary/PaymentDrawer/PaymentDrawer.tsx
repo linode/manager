@@ -211,6 +211,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                       countryCode: 'US',
                       totalPrice: usd,
                     }}
+                    balance={balance}
                     setSuccess={setSuccess}
                   />
                 </Grid>
