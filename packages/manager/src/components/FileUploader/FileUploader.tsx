@@ -19,7 +19,6 @@ import {
   MAX_PARALLEL_UPLOADS,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
-import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';
 import { uploadImage } from 'src/store/image/image.requests';
@@ -262,7 +261,6 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
         dispatchAction(setPendingUpload(false));
 
-        // @analytics
         recordImageAnalytics('success', file);
 
         // EDGE CASE:
