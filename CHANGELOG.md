@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-06-16] - v1.43.0
+
+### Added:
+- Toast notifications and updated table entries for Image upload success/failures
+- Drag & Drop Image uploads
+- Time of migration to Scheduled Migrations banner
+
+### Changed:
+- Event text for Domain record creation and update
+- Minimum LKE node warning message
+- Remove "beta" tag from Machine Images
+
+### Fixed:
+- Clearing ticket form state after submit
+- Domains table header for large accounts
+- IP Sharing for large accounts
+- Paper padding regression in Create Cluster
+- Prevent Linode disks from being deleted while a Linode is running
+
+## [2021-06-01] - v1.42.0
+
+### Added:
+
+- Connect with LISH copy in Rescue modal for Bare Metal instances
+- Dismissible banner for Images pricing
+
+### Changed:
+
+- Images landing tables default sorted by label ascending
+- NodeBalancers landing table default sorted by label ascending
+
+- Add AlmaLinux icon
+- Remove focus styles for mouse users
+- Update Credit Card drawer
+- Update LKE Create Cluster default node pool size to 3
+
+### Fixed:
+
+- Search Linodes by IP address
+- Input field error message positioning and width
+- Viewing all Object Storage objects for some Buckets
+
 ## [2021-05-19] - v1.41.3
 
 ### Fixed:

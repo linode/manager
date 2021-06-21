@@ -13,12 +13,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
   },
-  inner: {
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing(3),
-    },
-  },
   copy: {
     fontSize: '0.875rem',
     marginTop: theme.spacing(1),
@@ -54,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabList: {
     '&[data-reach-tab-list]': {
       background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.borderTabs}`,
+      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.divider}`,
       marginTop: 22,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {
@@ -103,7 +97,7 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
-      <div className={`${classes.inner} ${innerClass}`}>
+      <div className={innerClass}>
         {error && <Notice error>{error}</Notice>}
         {header !== '' && (
           <Typography variant="h2" data-qa-tp-title>

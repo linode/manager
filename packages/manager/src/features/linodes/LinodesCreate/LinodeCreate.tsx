@@ -101,7 +101,6 @@ const styles = (theme: Theme) =>
       },
     },
     stackScriptWrapper: {
-      padding: theme.spacing(3),
       '& [role="tablist"]': {
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(),

@@ -1,23 +1,20 @@
-import * as classNames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account/types';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
-import { LONG_PENDING_EVENTS } from 'src/store/events/event.helpers';
+import { isLongPendingEvent } from 'src/store/events/event.helpers';
 import formatDate from 'src/utilities/formatDate';
 import useEventInfo from './useEventInfo';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     paddingTop: 2,
     paddingBottom: 2,
-  },
-  divider: {
-    marginTop: theme.spacing(),
   },
   icon: {
     '& svg': {
@@ -62,7 +59,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
       })}
     >
       {message}
-      {event.duration && !LONG_PENDING_EVENTS.includes(event.action)
+      {event.duration && !isLongPendingEvent(event)
         ? event.status === 'failed'
           ? ` (Failed after ${duration})`
           : ` (Completed in ${duration})`
@@ -72,7 +69,12 @@ export const RenderEvent: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Grid container className={classes.root} justify="space-between">
+      <Grid
+        container
+        className={classes.root}
+        justify="space-between"
+        data-test-id={event.action}
+      >
         <Grid item xs={8}>
           <Grid container wrap="nowrap">
             <Grid item>
@@ -102,7 +104,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
           </Typography>
         </Grid>
       </Grid>
-      <Divider className={classes.divider} />
+      <Divider />
     </>
   );
 };

@@ -8,7 +8,7 @@ import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
 import GooglePay from './GooglePay';
-import CreditCard from './CreditCard';
+import CreditCardInfo from './CreditCardInfo';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -82,10 +82,10 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
         </div>
 
         <div className={classes.billingGroup}>
-          <CreditCard lastFour={lastFour} expiry={expiry} />
           {flags.additionalPaymentMethods?.includes('google_pay') ? (
             <GooglePay />
           ) : null}
+          <CreditCardInfo lastFour={lastFour} expiry={expiry} />
         </div>
 
         <UpdateCreditCardDrawer

@@ -1,10 +1,8 @@
 import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
-import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -16,6 +14,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -26,9 +25,9 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
+import { parseAPIDate } from 'src/utilities/date';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 type ClassNames =
   | 'root'
@@ -139,21 +138,19 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <Paper>
-          <Table>
-            <TableHead data-qa-table-head>
-              <TableRow>
-                <TableCell data-qa-label-column>Label</TableCell>
-                <TableCell data-qa-key-column>Key</TableCell>
-                <Hidden xsDown>
-                  <TableCell data-qa-created-column>Created</TableCell>
-                </Hidden>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
+        <Table>
+          <TableHead data-qa-table-head>
+            <TableRow>
+              <TableCell data-qa-label-column>Label</TableCell>
+              <TableCell data-qa-key-column>Key</TableCell>
+              <Hidden xsDown>
+                <TableCell data-qa-created-column>Created</TableCell>
+              </Hidden>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody>{this.renderContent()}</TableBody>
+        </Table>
         <PaginationFooter
           page={this.props.page}
           pageSize={this.props.pageSize}

@@ -134,7 +134,7 @@ describe('Billing Contact', () => {
       .click()
       .clear()
       .type(newAccountData['tax_id']);
-    fbtClick('Save').then(() => {
+    getClick('[data-qa-save-contact-info="true"]').then(() => {
       cy.wait('@createAccount').then((xhr) => {
         expect(xhr.request.body).to.eql(newAccountData);
       });

@@ -28,10 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `15px 20px`,
     height: '100%',
   },
-  divider: {
-    marginTop: 8,
-    backgroundColor: '#d6d7d9',
-  },
   helpIcon: {
     padding: `0px 8px`,
     color: '#888f91',
@@ -147,9 +143,9 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     <>
       <Grid container spacing={2} className={classes.root}>
         <Grid item {...gridDimensions} sm={6}>
-          <Paper border className={classes.paper}>
+          <Paper className={classes.paper} variant="outlined">
             <Typography variant="h3">Account Balance</Typography>
-            <Divider className={classes.divider} />
+            <Divider />
             <Box
               marginTop="12px"
               display="flex"
@@ -186,10 +182,10 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
         </Grid>
         {promotions && promotions?.length > 0 ? (
           <Grid item xs={12} sm={6} md={4}>
-            <Paper border className={classes.paper}>
+            <Paper className={classes.paper} variant="outlined">
               <Typography variant="h3">Promotions</Typography>
 
-              <Divider className={classes.divider} />
+              <Divider />
               <div style={{ maxHeight: 300, overflowY: 'auto' }}>
                 {promotions?.map((thisPromo) => (
                   <PromoDisplay key={thisPromo.summary} {...thisPromo} />
@@ -199,7 +195,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
           </Grid>
         ) : null}
         <Grid item {...gridDimensions}>
-          <Paper border className={classes.paper}>
+          <Paper className={classes.paper} variant="outlined">
             <Box display="flex" alignItems="center">
               <Typography variant="h3">Accrued Charges</Typography>
               <HelpIcon
@@ -207,7 +203,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
                 text="Our billing cycle ends on the last day of the month. You may be invoiced before the end of the cycle if your balance exceeds your credit limit."
               />
             </Box>
-            <Divider className={classes.divider} />
+            <Divider />
             <Box
               marginTop="12px"
               display="flex"

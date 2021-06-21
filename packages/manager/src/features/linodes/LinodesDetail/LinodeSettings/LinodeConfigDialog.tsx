@@ -42,8 +42,8 @@ import DeviceSelection, {
 import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
 import { queryClient } from 'src/queries/base';
-import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { useRegionsQuery } from 'src/queries/regions';
+import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -65,12 +65,10 @@ import KernelSelect from './KernelSelect';
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     marginTop: theme.spacing(),
-  },
-  section: {
-    marginTop: theme.spacing(2),
+    marginLeft: 1,
   },
   divider: {
-    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+    margin: '36px 8px 12px',
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
   formControlToggle: {
@@ -81,12 +79,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpIcon: {
     color: theme.cmrTextColors.tableHeader,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   tooltip: {
     maxWidth: 350,
   },
   formGroup: {
     alignItems: 'flex-start',
+    '&.MuiFormGroup-root[role="radiogroup"]': {
+      marginBottom: 0,
+    },
   },
 }));
 
@@ -514,12 +517,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid
-              item
-              xs={12}
-              className={classes.section}
-              updateFor={[values.virt_mode, classes]}
-            >
+            <Grid item xs={12} updateFor={[values.virt_mode, classes]}>
               <Typography variant="h3">Virtual Machine</Typography>
               <FormControl>
                 <FormLabel
@@ -558,12 +556,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               </FormControl>
             </Grid>
 
-            <Divider className={classes.divider} style={{ marginTop: 0 }} />
+            <Divider className={classes.divider} />
 
             <Grid
               item
               xs={12}
-              className={classes.section}
               updateFor={[
                 deviceCounter,
                 values.kernel,
@@ -682,7 +679,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid item xs={12} className={classes.section}>
+            <Grid item xs={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
@@ -748,7 +745,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             <Divider className={classes.divider} />
 
             {showVlans ? (
-              <Grid item xs={12} className={classes.section}>
+              <Grid item xs={12}>
                 <Box display="flex" alignItems="center">
                   <Typography variant="h3">Network Interfaces</Typography>
                   <HelpIcon
@@ -797,7 +794,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               </Grid>
             ) : null}
 
-            <Grid item xs={12} className={classes.section}>
+            <Grid item xs={12}>
               <Typography variant="h3">Filesystem/Boot Helpers</Typography>
               <FormControl
                 updateFor={[

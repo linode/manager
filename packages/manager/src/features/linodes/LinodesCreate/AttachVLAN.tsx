@@ -16,29 +16,13 @@ import {
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingBottom: theme.spacing(3),
-  },
   title: {
-    marginBottom: theme.spacing(2),
     display: 'flex',
     alignItems: 'center',
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  chip: {
-    fontSize: '0.625rem',
-    height: 15,
-    marginTop: 2,
-    marginLeft: theme.spacing(),
     marginBottom: theme.spacing(2),
-    letterSpacing: '.25px',
-    textTransform: 'uppercase',
   },
   paragraphBreak: {
-    marginTop: 16,
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -89,7 +73,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   )}.`;
 
   return (
-    <div className={classes.root}>
+    <>
       <Typography variant="h2" className={classes.title}>
         Attach a VLAN {helperText ? <HelpIcon text={helperText} /> : null}
       </Typography>
@@ -125,7 +109,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 

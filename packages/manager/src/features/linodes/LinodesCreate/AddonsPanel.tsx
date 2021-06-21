@@ -15,29 +15,14 @@ import useFlags from 'src/hooks/useFlags';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
+  vlan: {
     marginTop: theme.spacing(3),
-    backgroundColor: theme.color.white,
   },
-  flex: {
-    flex: 1,
+  addons: {
+    marginTop: theme.spacing(3),
   },
   title: {
     marginBottom: theme.spacing(2),
-  },
-  divider: {
-    marginTop: theme.spacing(1),
-  },
-  lastItem: {
-    paddingBottom: '0 !important',
-  },
-  inner: {
-    padding: theme.spacing(3),
-  },
-  panelBody: {
-    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
   },
   label: {
     '& > span:last-child': {
@@ -60,14 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(2) + 18, // 34,
     [theme.breakpoints.up('md')]: {
       paddingLeft: theme.spacing(4) + 18, // 50
-    },
-  },
-  vlanSelect: {
-    paddingLeft: theme.spacing(2) + 24,
-    paddingTop: theme.spacing(),
-    paddingBottom: theme.spacing(),
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing(4) + 24,
     },
   },
 }));
@@ -142,9 +119,9 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Paper className={classes.root} data-qa-add-ons>
-      <div className={classes.inner}>
-        {showVlans ? (
+    <>
+      {showVlans ? (
+        <Paper className={classes.vlan} data-qa-add-ons>
           <AttachVLAN
             vlanLabel={vlanLabel}
             labelError={labelError}
@@ -155,9 +132,11 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
             handleVLANChange={handleVLANChange}
             region={selectedRegionID}
           />
-        ) : null}
+        </Paper>
+      ) : null}
+      <Paper className={classes.addons} data-qa-add-ons>
         <Typography variant="h2" className={classes.title}>
-          Optional Add-ons{' '}
+          Add-ons{' '}
           {backupsDisabledReason ? (
             <HelpIcon text={backupsDisabledReason} />
           ) : null}
@@ -202,33 +181,27 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         {
           /** /v4/linodes/instances/clone does *not* support the private IP flag */
           props.hidePrivateIP ? null : (
-            <React.Fragment>
-              <Grid container className={classes.divider}>
-                <Grid item xs={12}>
-                  <Divider />
-                </Grid>
+            <Grid container>
+              <Grid item xs={12}>
+                <Divider />
+                <FormControlLabel
+                  className={classes.label}
+                  control={
+                    <CheckBox
+                      checked={props.privateIP}
+                      onChange={() => changePrivateIP()}
+                      data-qa-check-private-ip
+                      disabled={disabled}
+                    />
+                  }
+                  label="Private IP"
+                />
               </Grid>
-              <Grid container>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    className={classes.label}
-                    control={
-                      <CheckBox
-                        checked={props.privateIP}
-                        onChange={() => changePrivateIP()}
-                        data-qa-check-private-ip
-                        disabled={disabled}
-                      />
-                    }
-                    label="Private IP"
-                  />
-                </Grid>
-              </Grid>
-            </React.Fragment>
+            </Grid>
           )
         }
-      </div>
-    </Paper>
+      </Paper>
+    </>
   );
 };
 

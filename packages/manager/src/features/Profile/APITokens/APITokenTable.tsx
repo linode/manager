@@ -14,10 +14,9 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import AddNewLink from 'src/components/AddNewLink/AddNewLink_CMR';
+import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -50,7 +49,7 @@ import { basePermNameMap, basePerms } from './utils';
 type ClassNames =
   | 'root'
   | 'headline'
-  | 'paper'
+  | 'tokens'
   | 'addNewWrapper'
   | 'addNewLink'
   | 'labelCell'
@@ -65,7 +64,7 @@ const styles = (theme: Theme) =>
     headline: {
       marginLeft: 7,
     },
-    paper: {
+    tokens: {
       marginBottom: theme.spacing(2),
     },
     addNewWrapper: {
@@ -567,7 +566,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             )}
           </Grid>
         </Grid>
-        <Paper className={classes.paper}>
+        <div className={classes.tokens}>
           <Table aria-label="List of Personal Access Tokens">
             <TableHead>
               <TableRow data-qa-table-head>
@@ -601,7 +600,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             </TableHead>
             <TableBody>{this.renderContent()}</TableBody>
           </Table>
-        </Paper>
+        </div>
         <PaginationFooter
           page={this.props.page}
           pageSize={this.props.pageSize}

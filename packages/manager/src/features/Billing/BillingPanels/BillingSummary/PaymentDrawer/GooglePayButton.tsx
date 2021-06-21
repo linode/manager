@@ -9,18 +9,28 @@ import {
   initGooglePaymentInstance,
   makePayment,
 } from 'src/features/Billing/Providers/GooglePay';
-import GooglePayIcon from 'src/assets/icons/payment/googlePayButton.svg';
+import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.cmrBGColors.bgGooglePay,
     border: 0,
-    backgroundColor: 'transparent',
-    marginTop: theme.spacing(),
-    padding: 0,
-  },
-  svg: {
-    borderRadius: 5,
+    borderRadius: 4,
+    cursor: 'pointer',
+    height: 35,
+    width: '100%',
+    '&:hover': {
+      opacity: 0.8,
+      background: theme.cmrBGColors.bgGooglePay,
+    },
+    '& svg': {
+      color: theme.cmrTextColors.textGooglePay,
+      height: 16,
+    },
   },
   disabled: {
     opacity: 0.3,
@@ -66,7 +76,7 @@ const GooglePay: React.FC<Props> = (props) => {
       disabled={disabled}
       onClick={handlePay}
     >
-      <GooglePayIcon className={classes.svg} />
+      <GooglePayIcon />
     </Button>
   );
 };

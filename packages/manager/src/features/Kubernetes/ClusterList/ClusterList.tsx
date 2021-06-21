@@ -4,7 +4,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import Hidden from 'src/components/core/Hidden';
-import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -17,14 +16,14 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow/TableRow_CMR';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { DeleteClusterParams } from 'src/store/kubernetes/kubernetes.actions';
 import { EntityError } from 'src/store/types';
+import { getNextVersion } from '../kubeUtils';
+import UpgradeVersionModal from '../UpgradeVersionModal';
 import ClusterDialog from './../KubernetesClusterDetail/KubernetesDialog';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ClusterRow from './ClusterRow';
-import UpgradeVersionModal from '../UpgradeVersionModal';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
-import { getNextVersion } from '../kubeUtils';
 
 interface Props {
   clusters: ExtendedCluster[];
@@ -172,95 +171,93 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = (props) => {
               pageSize,
             }) => (
               <>
-                <Paper>
-                  <Table
-                    aria-label="List of Your Kubernetes Clusters"
-                    rowCount={data.length}
-                    colCount={6}
-                  >
-                    <TableHead role="rowgroup">
-                      <TableRow>
+                <Table
+                  aria-label="List of Your Kubernetes Clusters"
+                  rowCount={data.length}
+                  colCount={6}
+                >
+                  <TableHead role="rowgroup">
+                    <TableRow>
+                      <TableSortCell
+                        active={orderBy === 'label'}
+                        label={'label'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        data-qa-kubernetes-clusters-name-header
+                      >
+                        Cluster Label
+                      </TableSortCell>
+                      <Hidden smDown>
                         <TableSortCell
-                          active={orderBy === 'label'}
-                          label={'label'}
+                          active={orderBy === 'k8s_version'}
+                          label={'k8s_version'}
                           direction={order}
                           handleClick={handleOrderChange}
-                          data-qa-kubernetes-clusters-name-header
+                          data-qa-kubernetes-clusters-version-header
                         >
-                          Cluster Label
+                          Version
                         </TableSortCell>
-                        <Hidden smDown>
-                          <TableSortCell
-                            active={orderBy === 'k8s_version'}
-                            label={'k8s_version'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-version-header
-                          >
-                            Version
-                          </TableSortCell>
-                          <TableSortCell
-                            active={orderBy === 'created'}
-                            label={'created'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-created-header
-                          >
-                            Created
-                          </TableSortCell>
-                        </Hidden>
                         <TableSortCell
-                          active={orderBy === 'region'}
-                          label={'region'}
+                          active={orderBy === 'created'}
+                          label={'created'}
                           direction={order}
                           handleClick={handleOrderChange}
-                          data-qa-kubernetes-clusters-region-header
+                          data-qa-kubernetes-clusters-created-header
                         >
-                          Region
+                          Created
                         </TableSortCell>
-                        <Hidden xsDown>
-                          <TableSortCell
-                            active={orderBy === 'totalMemory'}
-                            label={'totalMemory'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-memory-header
-                          >
-                            Total Memory
-                          </TableSortCell>
-                          <TableSortCell
-                            active={orderBy === 'totalCPU'}
-                            label={'totalCPU'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-kubernetes-clusters-cpu-header
-                          >
-                            Total CPUs
-                          </TableSortCell>
-                        </Hidden>
-                        <TableCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {data.map((cluster: ClusterWithVersion, idx: number) => (
-                        <ClusterRow
-                          key={`kubernetes-cluster-list-${idx}`}
-                          cluster={cluster}
-                          hasUpgrade={Boolean(cluster.nextVersion)}
-                          openDeleteDialog={openDialog}
-                          openUpgradeDialog={() =>
-                            openUpgradeDialog(
-                              cluster.id,
-                              cluster.label,
-                              cluster.k8s_version,
-                              cluster.nextVersion
-                            )
-                          }
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Paper>
+                      </Hidden>
+                      <TableSortCell
+                        active={orderBy === 'region'}
+                        label={'region'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        data-qa-kubernetes-clusters-region-header
+                      >
+                        Region
+                      </TableSortCell>
+                      <Hidden xsDown>
+                        <TableSortCell
+                          active={orderBy === 'totalMemory'}
+                          label={'totalMemory'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-kubernetes-clusters-memory-header
+                        >
+                          Total Memory
+                        </TableSortCell>
+                        <TableSortCell
+                          active={orderBy === 'totalCPU'}
+                          label={'totalCPU'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-kubernetes-clusters-cpu-header
+                        >
+                          Total CPUs
+                        </TableSortCell>
+                      </Hidden>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data.map((cluster: ClusterWithVersion, idx: number) => (
+                      <ClusterRow
+                        key={`kubernetes-cluster-list-${idx}`}
+                        cluster={cluster}
+                        hasUpgrade={Boolean(cluster.nextVersion)}
+                        openDeleteDialog={openDialog}
+                        openUpgradeDialog={() =>
+                          openUpgradeDialog(
+                            cluster.id,
+                            cluster.label,
+                            cluster.k8s_version,
+                            cluster.nextVersion
+                          )
+                        }
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
                 <PaginationFooter
                   count={count}
                   handlePageChange={handlePageChange}

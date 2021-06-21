@@ -156,12 +156,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Domain ${e.entity!.label} has been deleted.`,
   },
   domain_record_create: {
-    notification: (e) =>
-      `A domain record has been created for ${e.entity!.label}`,
+    notification: (e) => `${e.message} added to ${e.entity!.label}`,
   },
   domain_record_update: {
-    notification: (e) =>
-      `A domain record has been updated for ${e.entity!.label}`,
+    notification: (e) => `${e.message} updated for ${e.entity!.label}`,
   },
   domain_record_delete: {
     notification: (e) =>
@@ -692,12 +690,6 @@ export default (e: Event): string => {
     eventMessageCreators
   );
 
-  if (e.message) {
-    // If the API has specified a message for this event, rely on that instead of
-    // our custom logic.
-    return formatEventWithAPIMessage(e);
-  }
-
   /** we couldn't find the event in our list above */
   if (!fn) {
     /** log unknown events to the console */
@@ -710,7 +702,9 @@ export default (e: Event): string => {
     }
 
     /** finally return some default fallback text */
-    return `${e.action}${e.entity ? ` on ${e.entity.label}` : ''}`;
+    return e.message
+      ? formatEventWithAPIMessage(e)
+      : `${e.action}${e.entity ? ` on ${e.entity.label}` : ''}`;
   }
 
   let message = '';

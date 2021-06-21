@@ -23,6 +23,7 @@ const cmrBGColors = {
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',
   bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
+  bgGooglePay: '#fff',
 };
 
 const cmrTextColors = {
@@ -32,15 +33,17 @@ const cmrTextColors = {
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
   secondaryButton: '#fff',
+  textGooglePay: '#616161',
 };
 
 const cmrBorderColors = {
   borderTypography: '#454b54',
-  borderTabs: cmrBGColors.bgPaper,
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
   borderSecondaryButton: '#fff',
+  divider: '#222',
+  dividerLight: '#2e3238',
 };
 
 const cmrIconColors = {
@@ -311,7 +314,7 @@ const darkThemeOptions = {
         },
         '&$disabled': {
           backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.borderTabs,
+          color: cmrBorderColors.divider,
         },
         '&.loading': {
           backgroundColor: primaryColors.text,
@@ -529,6 +532,9 @@ const darkThemeOptions = {
     MuiPaper: {
       root: {
         backgroundColor: cmrBGColors.bgPaper,
+      },
+      outlined: {
+        border: '1px solid rgba(0, 0, 0, 0.2)',
       },
     },
     MuiPopover: {

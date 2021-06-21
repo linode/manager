@@ -7,7 +7,6 @@ import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -25,14 +24,10 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import NodeBalancerConfigNode from './NodeBalancerConfigNode';
 import { NodeBalancerConfigNodeFields } from './types';
 
-type ClassNames = 'divider' | 'passiveChecks' | 'actionsPanel';
+type ClassNames = 'passiveChecks' | 'actionsPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
-    divider: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
     passiveChecks: {
       marginTop: 4,
     },
@@ -614,328 +609,324 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     const tcpSelected = protocol === 'tcp';
 
     return (
-      <Grid item xs={12}>
-        <Paper data-qa-label-header>
-          <div>
-            {globalFormError && (
-              <Notice
-                className={`error-for-scroll-${configIdx}`}
-                text={globalFormError}
-                error
-              />
-            )}
-            <Grid
-              updateFor={[
-                port,
-                errorMap.port,
-                errorMap.configs,
-                protocol,
-                errorMap.protocol,
-                proxyProtocol,
-                errorMap.proxy_protocol,
-                algorithm,
-                errorMap.algorithm,
-                sessionStickiness,
-                errorMap.stickiness,
-                errorMap.ssl_cert,
-                errorMap.ssl_key,
-                configIdx,
-                sslCertificate,
-                privateKey,
-                classes,
-              ]}
-              container
-            >
-              <Grid item xs={12}>
-                <Typography variant="h2" data-qa-port-config-header>
-                  Port Configuration
-                </Typography>
-              </Grid>
-              <Grid item xs={6} md={3}>
-                <TextField
-                  type="number"
-                  label="Port"
-                  required
-                  value={port || ''}
-                  onChange={this.onPortChange}
-                  errorText={errorMap.port || errorMap.configs}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  data-qa-port
-                  small
-                  disabled={disabled}
-                  noMarginTop
-                  InputProps={{ id: `port-${configIdx}` }}
-                />
-                <FormHelperText>Listen on this port</FormHelperText>
-              </Grid>
-              <Grid item xs={6} md={3}>
-                <Select
-                  options={protocolOptions}
-                  label="Protocol"
-                  inputId={`protocol-${configIdx}`}
-                  value={defaultProtocol || protocolOptions[0]}
-                  onChange={this.onProtocolChange}
-                  errorText={errorMap.protocol}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-protocol-select': true,
-                    },
-                  }}
-                  disabled={disabled}
-                  noMarginTop
-                  small
-                  isClearable={false}
-                />
-              </Grid>
+      <Grid item xs={12} data-qa-label-header>
+        {globalFormError && (
+          <Notice
+            className={`error-for-scroll-${configIdx}`}
+            text={globalFormError}
+            error
+          />
+        )}
+        <Grid
+          updateFor={[
+            port,
+            errorMap.port,
+            errorMap.configs,
+            protocol,
+            errorMap.protocol,
+            proxyProtocol,
+            errorMap.proxy_protocol,
+            algorithm,
+            errorMap.algorithm,
+            sessionStickiness,
+            errorMap.stickiness,
+            errorMap.ssl_cert,
+            errorMap.ssl_key,
+            configIdx,
+            sslCertificate,
+            privateKey,
+            classes,
+          ]}
+          container
+        >
+          <Grid item xs={12}>
+            <Typography variant="h2" data-qa-port-config-header>
+              Port Configuration
+            </Typography>
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <TextField
+              type="number"
+              label="Port"
+              required
+              value={port || ''}
+              onChange={this.onPortChange}
+              errorText={errorMap.port || errorMap.configs}
+              errorGroup={forEdit ? `${configIdx}` : undefined}
+              data-qa-port
+              small
+              disabled={disabled}
+              noMarginTop
+              InputProps={{ id: `port-${configIdx}` }}
+            />
+            <FormHelperText>Listen on this port</FormHelperText>
+          </Grid>
+          <Grid item xs={6} md={3}>
+            <Select
+              options={protocolOptions}
+              label="Protocol"
+              inputId={`protocol-${configIdx}`}
+              value={defaultProtocol || protocolOptions[0]}
+              onChange={this.onProtocolChange}
+              errorText={errorMap.protocol}
+              errorGroup={forEdit ? `${configIdx}` : undefined}
+              textFieldProps={{
+                dataAttrs: {
+                  'data-qa-protocol-select': true,
+                },
+              }}
+              disabled={disabled}
+              noMarginTop
+              small
+              isClearable={false}
+            />
+          </Grid>
 
-              {protocol === 'https' && (
+          {protocol === 'https' && (
+            <Grid item xs={12}>
+              <Grid
+                updateFor={[
+                  sslCertificate,
+                  protocol,
+                  errorMap.ssl_cert,
+                  privateKey,
+                  errorMap.ssl_key,
+                  configIdx,
+                  classes,
+                ]}
+                container
+              >
                 <Grid item xs={12}>
-                  <Grid
-                    updateFor={[
-                      sslCertificate,
-                      protocol,
-                      errorMap.ssl_cert,
-                      privateKey,
-                      errorMap.ssl_key,
-                      configIdx,
-                      classes,
-                    ]}
-                    container
-                  >
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        rows={3}
-                        label="SSL Certificate"
-                        value={sslCertificate || ''}
-                        onChange={this.onSslCertificateChange}
-                        required={protocol === 'https'}
-                        errorText={errorMap.ssl_cert}
-                        errorGroup={forEdit ? `${configIdx}` : undefined}
-                        data-qa-cert-field
-                        small
-                        disabled={disabled}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        multiline
-                        rows={3}
-                        label="Private Key"
-                        value={privateKey || ''}
-                        onChange={this.onPrivateKeyChange}
-                        required={protocol === 'https'}
-                        errorText={errorMap.ssl_key}
-                        errorGroup={forEdit ? `${configIdx}` : undefined}
-                        data-qa-private-key-field
-                        small
-                        disabled={disabled}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-              )}
-
-              {tcpSelected && (
-                <Grid item xs={6} md={3}>
-                  <Select
-                    options={proxyProtocolOptions}
-                    label="Proxy Protocol"
-                    inputId={`proxy-protocol-${configIdx}`}
-                    value={selectedProxyProtocol || proxyProtocolOptions[0]}
-                    onChange={this.onProxyProtocolChange}
-                    errorText={errorMap.proxy_protocol}
+                  <TextField
+                    multiline
+                    rows={3}
+                    label="SSL Certificate"
+                    value={sslCertificate || ''}
+                    onChange={this.onSslCertificateChange}
+                    required={protocol === 'https'}
+                    errorText={errorMap.ssl_cert}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
-                    textFieldProps={{
-                      dataAttrs: {
-                        'data-qa-proxy-protocol-select': true,
-                      },
-                    }}
-                    disabled={disabled}
-                    noMarginTop
+                    data-qa-cert-field
                     small
-                    isClearable={false}
+                    disabled={disabled}
                   />
-                  <FormHelperText>
-                    Proxy Protocol preserves initial TCP connection information.
-                    Please consult{' '}
-                    <Link to="https://www.linode.com/docs/platform/nodebalancer/nodebalancer-proxypass-configuration/">
-                      our Proxy Protocol guide
-                    </Link>
-                    {` `}
-                    for information on the differences between each option.
-                  </FormHelperText>
                 </Grid>
-              )}
-
-              <Grid item xs={6} md={tcpSelected ? 6 : 3}>
-                <Select
-                  options={algOptions}
-                  label="Algorithm"
-                  inputId={`algorithm-${configIdx}`}
-                  value={defaultAlg || algOptions[0]}
-                  onChange={this.onAlgorithmChange}
-                  errorText={errorMap.algorithm}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-algorithm-select': true,
-                    },
-                  }}
-                  small
-                  disabled={disabled}
-                  isClearable={false}
-                  noMarginTop
-                />
-                <FormHelperText>
-                  Roundrobin. Least connections assigns connections to the
-                  backend with the least connections. Source uses the
-                  client&#39;s IPv4 address
-                </FormHelperText>
-              </Grid>
-
-              <Grid item xs={6} md={3}>
-                <Select
-                  options={sessionOptions}
-                  label="Session Stickiness"
-                  inputId={`session-stickiness-${configIdx}`}
-                  value={defaultSession || sessionOptions[1]}
-                  onChange={this.onSessionStickinessChange}
-                  errorText={errorMap.stickiness}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-session-stickiness-select': true,
-                    },
-                  }}
-                  small
-                  disabled={disabled}
-                  isClearable={false}
-                  noMarginTop
-                />
-                <FormHelperText>
-                  Route subsequent requests from the client to the same backend
-                </FormHelperText>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-            </Grid>
-            <Grid container>
-              {this.renderActiveCheck(errorMap)}
-              {this.renderPassiveCheck()}
-              <Grid item xs={12}>
-                <Divider className={classes.divider} />
-              </Grid>
-            </Grid>
-
-            <Grid
-              updateFor={[
-                nodes,
-                errors,
-                nodeMessage,
-                classes,
-                errorMap.nodes,
-                this.props.nodeBalancerRegion,
-              ]}
-              container
-            >
-              <Grid item xs={12}>
-                <Grid updateFor={[nodeMessage, classes]} item xs={12}>
-                  {nodeMessage && <Notice text={nodeMessage} success />}
-                </Grid>
-                <Typography variant="h2" data-qa-backend-ip-header>
-                  Backend Nodes
-                </Typography>
-                {errorMap.nodes && (
-                  <FormHelperText error>{errorMap.nodes}</FormHelperText>
-                )}
-              </Grid>
-              <Grid item xs={12} style={{ paddingBottom: 24 }}>
-                <Grid container>
-                  {nodes &&
-                    nodes.map((node, nodeIdx) => (
-                      <NodeBalancerConfigNode
-                        key={`nb-node-${nodeIdx}`}
-                        forEdit={Boolean(forEdit)}
-                        node={node}
-                        idx={nodeIdx}
-                        configIdx={configIdx}
-                        nodeBalancerRegion={this.props.nodeBalancerRegion}
-                        onNodeLabelChange={this.onNodeLabelChange}
-                        onNodeAddressChange={this.props.onNodeAddressChange}
-                        onNodeModeChange={this.onNodeModeChange}
-                        onNodeWeightChange={this.onNodeWeightChange}
-                        onNodePortChange={this.onNodePortChange}
-                        disabled={Boolean(disabled)}
-                        removeNode={this.removeNode}
-                      />
-                    ))}
-                  <Grid
-                    item
-                    xs={12}
-                    updateFor={[classes]}
-                    // is the Save/Delete ActionsPanel showing?
-                    style={
-                      forEdit || configIdx !== 0
-                        ? { marginTop: 0, marginBottom: -16 }
-                        : { marginTop: 16 }
-                    }
-                  >
-                    <Button
-                      buttonType="secondary"
-                      disabled={disabled}
-                      onClick={this.addNode}
-                      outline
-                    >
-                      Add a Node
-                    </Button>
-                  </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    multiline
+                    rows={3}
+                    label="Private Key"
+                    value={privateKey || ''}
+                    onChange={this.onPrivateKeyChange}
+                    required={protocol === 'https'}
+                    errorText={errorMap.ssl_key}
+                    errorGroup={forEdit ? `${configIdx}` : undefined}
+                    data-qa-private-key-field
+                    small
+                    disabled={disabled}
+                  />
                 </Grid>
               </Grid>
             </Grid>
+          )}
 
-            {(forEdit || configIdx !== 0) && (
-              <React.Fragment>
-                <Grid updateFor={[classes]} item xs={12}>
-                  <Divider className={classes.divider} />
-                </Grid>
-                <Grid
-                  updateFor={[submitting, classes]}
-                  container
-                  justify="flex-end"
-                  alignItems="center"
-                >
-                  <ActionsPanel className={classes.actionsPanel}>
-                    {(forEdit || configIdx !== 0) && (
-                      <Button
-                        onClick={this.props.onDelete}
-                        buttonType="secondary"
-                        destructive
-                        data-qa-delete-config
-                        disabled={disabled}
-                      >
-                        Delete
-                      </Button>
-                    )}
-                    {forEdit && (
-                      <Button
-                        buttonType="primary"
-                        onClick={this.onSave}
-                        loading={submitting}
-                        data-qa-save-config
-                        disabled={disabled}
-                      >
-                        Save
-                      </Button>
-                    )}
-                  </ActionsPanel>
-                </Grid>
-              </React.Fragment>
+          {tcpSelected && (
+            <Grid item xs={6} md={3}>
+              <Select
+                options={proxyProtocolOptions}
+                label="Proxy Protocol"
+                inputId={`proxy-protocol-${configIdx}`}
+                value={selectedProxyProtocol || proxyProtocolOptions[0]}
+                onChange={this.onProxyProtocolChange}
+                errorText={errorMap.proxy_protocol}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                textFieldProps={{
+                  dataAttrs: {
+                    'data-qa-proxy-protocol-select': true,
+                  },
+                }}
+                disabled={disabled}
+                noMarginTop
+                small
+                isClearable={false}
+              />
+              <FormHelperText>
+                Proxy Protocol preserves initial TCP connection information.
+                Please consult{' '}
+                <Link to="https://www.linode.com/docs/platform/nodebalancer/nodebalancer-proxypass-configuration/">
+                  our Proxy Protocol guide
+                </Link>
+                {` `}
+                for information on the differences between each option.
+              </FormHelperText>
+            </Grid>
+          )}
+
+          <Grid item xs={6} md={tcpSelected ? 6 : 3}>
+            <Select
+              options={algOptions}
+              label="Algorithm"
+              inputId={`algorithm-${configIdx}`}
+              value={defaultAlg || algOptions[0]}
+              onChange={this.onAlgorithmChange}
+              errorText={errorMap.algorithm}
+              errorGroup={forEdit ? `${configIdx}` : undefined}
+              textFieldProps={{
+                dataAttrs: {
+                  'data-qa-algorithm-select': true,
+                },
+              }}
+              small
+              disabled={disabled}
+              isClearable={false}
+              noMarginTop
+            />
+            <FormHelperText>
+              Roundrobin. Least connections assigns connections to the backend
+              with the least connections. Source uses the client&#39;s IPv4
+              address
+            </FormHelperText>
+          </Grid>
+
+          <Grid item xs={6} md={3}>
+            <Select
+              options={sessionOptions}
+              label="Session Stickiness"
+              inputId={`session-stickiness-${configIdx}`}
+              value={defaultSession || sessionOptions[1]}
+              onChange={this.onSessionStickinessChange}
+              errorText={errorMap.stickiness}
+              errorGroup={forEdit ? `${configIdx}` : undefined}
+              textFieldProps={{
+                dataAttrs: {
+                  'data-qa-session-stickiness-select': true,
+                },
+              }}
+              small
+              disabled={disabled}
+              isClearable={false}
+              noMarginTop
+            />
+            <FormHelperText>
+              Route subsequent requests from the client to the same backend
+            </FormHelperText>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+        </Grid>
+        <Grid container>
+          {this.renderActiveCheck(errorMap)}
+          {this.renderPassiveCheck()}
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+        </Grid>
+
+        <Grid
+          updateFor={[
+            nodes,
+            errors,
+            nodeMessage,
+            classes,
+            errorMap.nodes,
+            this.props.nodeBalancerRegion,
+          ]}
+          container
+        >
+          <Grid item xs={12}>
+            <Grid updateFor={[nodeMessage, classes]} item xs={12}>
+              {nodeMessage && <Notice text={nodeMessage} success />}
+            </Grid>
+            <Typography variant="h2" data-qa-backend-ip-header>
+              Backend Nodes
+            </Typography>
+            {errorMap.nodes && (
+              <FormHelperText error>{errorMap.nodes}</FormHelperText>
             )}
-          </div>
-        </Paper>
+          </Grid>
+          <Grid item xs={12} style={{ paddingBottom: 24 }}>
+            <Grid container>
+              {nodes &&
+                nodes.map((node, nodeIdx) => (
+                  <NodeBalancerConfigNode
+                    key={`nb-node-${nodeIdx}`}
+                    forEdit={Boolean(forEdit)}
+                    node={node}
+                    idx={nodeIdx}
+                    configIdx={configIdx}
+                    nodeBalancerRegion={this.props.nodeBalancerRegion}
+                    onNodeLabelChange={this.onNodeLabelChange}
+                    onNodeAddressChange={this.props.onNodeAddressChange}
+                    onNodeModeChange={this.onNodeModeChange}
+                    onNodeWeightChange={this.onNodeWeightChange}
+                    onNodePortChange={this.onNodePortChange}
+                    disabled={Boolean(disabled)}
+                    removeNode={this.removeNode}
+                  />
+                ))}
+              <Grid
+                item
+                xs={12}
+                updateFor={[classes]}
+                // is the Save/Delete ActionsPanel showing?
+                style={
+                  forEdit || configIdx !== 0
+                    ? { marginTop: 0, marginBottom: -16 }
+                    : { marginTop: 16 }
+                }
+              >
+                <Button
+                  buttonType="secondary"
+                  disabled={disabled}
+                  onClick={this.addNode}
+                  outline
+                >
+                  Add a Node
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        {(forEdit || configIdx !== 0) && (
+          <React.Fragment>
+            <Grid updateFor={[classes]} item xs={12}>
+              <Divider />
+            </Grid>
+            <Grid
+              updateFor={[submitting, classes]}
+              container
+              justify="flex-end"
+              alignItems="center"
+            >
+              <ActionsPanel className={classes.actionsPanel}>
+                {(forEdit || configIdx !== 0) && (
+                  <Button
+                    onClick={this.props.onDelete}
+                    buttonType="secondary"
+                    destructive
+                    data-qa-delete-config
+                    disabled={disabled}
+                  >
+                    Delete
+                  </Button>
+                )}
+                {forEdit && (
+                  <Button
+                    buttonType="primary"
+                    onClick={this.onSave}
+                    loading={submitting}
+                    data-qa-save-config
+                    disabled={disabled}
+                  >
+                    Save
+                  </Button>
+                )}
+              </ActionsPanel>
+            </Grid>
+          </React.Fragment>
+        )}
       </Grid>
     );
   }

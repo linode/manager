@@ -2,58 +2,28 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import Chip from 'src/components/core/Chip';
 import ActionMenu, {
   Action,
 } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import Typography from 'src/components/core/Typography';
-import Visa from 'src/assets/icons/payment/visa.svg';
-import Mastercard from 'src/assets/icons/payment/mastercard.svg';
-import GooglePay from 'src/assets/icons/payment/googlePay.svg';
-import PayPal from 'src/assets/icons/payment/payPal.svg';
-import Amex from 'src/assets/icons/payment/amex.svg';
-import Discover from 'src/assets/icons/payment/discover.svg';
-import JCB from 'src/assets/icons/payment/jcb.svg';
-import CreditCard from 'src/assets/icons/credit-card.svg';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
+import {
+  ThirdPartyPayment as ThirdPartyPaymentType,
+  CreditCard as CreditCardType,
+} from '@linode/api-v4/lib/account/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(),
-  },
-  expiry: {
-    marginLeft: theme.spacing(),
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 0,
-    },
-  },
-  expired: {
-    color: theme.color.red,
+    padding: 0,
   },
   actions: {
     marginLeft: 'auto',
   },
-  card: {
-    display: 'flex',
-    [theme.breakpoints.down('xs')]: {
-      display: 'grid',
-    },
-  },
   item: {
     display: 'flex',
     alignItems: 'center',
-  },
-  icon: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: 45,
-  },
-  paymentText: {
-    fontWeight: 'bold',
-  },
-  payPal: {
-    border: `1px solid ${theme.color.grey2}`,
-    padding: '5px 8px',
   },
   chip: {
     fontSize: '0.625rem',
@@ -61,61 +31,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  lastFour?: string;
-  expiry?: string;
+  creditCard?: CreditCardType;
+  thirdPartyPayment?: ThirdPartyPaymentType;
   isDefault: boolean;
-  paymentMethod: string;
 }
 
 type CombinedProps = Props;
 
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
-  const { expiry, lastFour, isDefault, paymentMethod } = props;
+  const { creditCard, thirdPartyPayment, isDefault } = props;
   const classes = useStyles();
-  const isCardExpired = expiry && isCreditCardExpired(expiry);
-
-  const paymentIcon = (): any => {
-    switch (paymentMethod) {
-      case 'Visa':
-        return <Visa />;
-      case 'Mastercard':
-        return <Mastercard />;
-      case 'Amex':
-        return <Amex />;
-      case 'Discover':
-        return <Discover />;
-      case 'GooglePay':
-        return <GooglePay />;
-      case 'PayPal':
-        return <PayPal className={classes.payPal} />;
-      case 'JCB':
-        return <JCB />;
-      default:
-        return <CreditCard />;
-    }
-  };
-
-  const paymentText =
-    paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod) ? (
-      <Grid item>
-        <Typography className={classes.paymentText}>
-          &nbsp;{paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
-        </Typography>
-      </Grid>
-    ) : (
-      <Grid item className={classes.card}>
-        <Typography className={classes.paymentText}>
-          &nbsp;{paymentMethod} ****{lastFour}
-        </Typography>
-        <Typography className={classes.expiry}>
-          {isCardExpired ? (
-            <span className={classes.expired}>&nbsp;{`Expired ${expiry}`}</span>
-          ) : (
-            <span>&nbsp;{`Expires ${expiry}`}</span>
-          )}
-        </Typography>
-      </Grid>
-    );
 
   const actions: Action[] = [
     {
@@ -146,11 +71,19 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   ];
 
   return (
-    <Paper className={classes.root} border>
+    <Paper className={classes.root} variant="outlined">
       <Grid container>
         <Grid item className={classes.item}>
-          <span className={classes.icon}>{paymentIcon()}</span>
-          {paymentText}
+          {thirdPartyPayment ? (
+            <ThirdPartyPayment thirdPartyPayment={thirdPartyPayment} />
+          ) : null}
+          {creditCard ? (
+            <CreditCard
+              type={creditCard.card_type}
+              lastFour={creditCard.last_four}
+              expiry={creditCard.expiry}
+            />
+          ) : null}
         </Grid>
         <Grid item className={classes.item}>
           {isDefault && (
@@ -161,7 +94,10 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
           <ActionMenu
             actionsList={actions}
             ariaLabel={`Action menu for ${
-              lastFour ? `card ending in ${lastFour}` : paymentMethod
+              creditCard?.last_four
+                ? `card ending in ${creditCard.last_four}`
+                : thirdPartyPayment &&
+                  thirdPartyPaymentMap[thirdPartyPayment].label
             }`}
           />
         </Grid>

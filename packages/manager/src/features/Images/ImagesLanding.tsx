@@ -24,6 +24,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
@@ -37,10 +38,13 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import ImagesPricingBanner from './ImagesPricingBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  imageTable: { marginBottom: theme.spacing(3) },
+  imageTable: {
+    marginBottom: theme.spacing(3),
+    padding: 0,
+  },
   imageTableHeader: {
     padding: theme.spacing(),
     marginLeft: theme.spacing(),
@@ -103,7 +107,6 @@ const getHeaders = (
       widthPercent: 35,
     },
   ].filter(Boolean) as HeaderCell[];
-import ImageUploadSuccessDialog from './ImageUploadSuccessDialog';
 
 interface ImageDrawerState {
   open: boolean;
@@ -151,16 +154,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images']);
 
   const classes = useStyles();
-  const {
-    imagesData,
-    imagesLoading,
-    imagesError,
-    deleteImage,
-    history,
-    location,
-  } = props;
-
-  const { account } = useAccountManagement();
+  const { imagesData, imagesLoading, imagesError, deleteImage } = props;
 
   /**
    * Separate manual Images (created by the user, either from disk or from uploaded file)
@@ -189,22 +183,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     dialogAction === 'cancel'
       ? 'Are you sure you want to cancel this Image upload?'
       : 'Are you sure you want to delete this Image?';
-
-  const [successDialogOpen, setSuccessDialogOpen] = React.useState(false);
-  const [uploadURL, setUploadURL] = React.useState<string | undefined>();
-
-  const handleCloseSuccessDialog = () => {
-    setSuccessDialogOpen(false);
-    window.setTimeout(() => setUploadURL(undefined), 500);
-    history.replace({ state: undefined });
-  };
-
-  React.useEffect(() => {
-    if (location.state?.upload_url) {
-      setSuccessDialogOpen(true);
-      setUploadURL(location.state.upload_url);
-    }
-  }, [location]);
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
@@ -265,21 +243,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCreateButtonClick = () => {
-    if (account.data?.capabilities.includes('Machine Images')) {
-      return props.history.push('/images/create');
-    }
-
-    return openForCreate();
-  };
-
-  const openForCreate = () => {
-    setDrawer({
-      open: true,
-      mode: 'create',
-      label: '',
-      description: '',
-      selectedDisk: null,
-    });
+    props.history.push('/images/create');
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {
@@ -406,6 +370,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const manualHeaders = getHeaders('manual', machineImagesEnabled);
   const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
 
+  const initialOrder = {
+    order: 'asc' as Order,
+    orderBy: 'label',
+  };
+
   const manualImageRow: EntityTableRow<Image> = {
     Component: ImageRow,
     data: manualImages,
@@ -463,7 +432,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             </Link>
           </Typography>
         </Placeholder>
-        {renderImageDrawer()}
       </React.Fragment>
     );
   };
@@ -485,6 +453,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
+      <ImagesPricingBanner />
       <LandingHeader
         title="Images"
         entity="Image"
@@ -505,6 +474,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={manualImageRow}
           headers={manualHeaders}
           emptyMessage={'No Custom Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       <Paper className={classes.imageTable}>
@@ -520,6 +490,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           row={autoImageRow}
           headers={automaticHeaders}
           emptyMessage={'No Recovery Images to display.'}
+          initialOrder={initialOrder}
         />
       </Paper>
       {renderImageDrawer()}
@@ -536,11 +507,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         {dialog.error && <Notice error text={dialog.error} />}
         <Typography>{dialogMessage}</Typography>
       </ConfirmationDialog>
-      <ImageUploadSuccessDialog
-        isOpen={successDialogOpen}
-        onClose={handleCloseSuccessDialog}
-        url={uploadURL ?? ''}
-      />
     </React.Fragment>
   );
 };
@@ -574,8 +540,9 @@ const withPrivateImages = connect(
             // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
             const matchingEvent = events.find(
               (thisEvent) =>
-                thisEvent.secondary_entity &&
-                `private/${thisEvent.secondary_entity.id}` === thisImage.id
+                `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
+                (`private/${thisEvent.entity?.id}` === thisImage.id &&
+                  thisEvent.status === 'failed')
             );
             if (matchingEvent) {
               draft.push({ ...thisImage, event: matchingEvent });
