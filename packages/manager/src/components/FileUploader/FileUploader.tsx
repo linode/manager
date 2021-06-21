@@ -24,6 +24,7 @@ import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';
 import { uploadImage } from 'src/store/image/image.requests';
 import { setPendingUpload } from 'src/store/pendingUpload';
+import { sendImageUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -261,6 +262,9 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
         dispatchAction(setPendingUpload(false));
 
+        // @analytics
+        recordImageAnalytics('success', file);
+
         // EDGE CASE:
         // The upload has finished, but the user's token has expired.
         // Show the toast, then redirect them to /images, passing them through
@@ -308,6 +312,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
               data: { status: 'IN_PROGRESS' },
             });
 
+            recordImageAnalytics('start', file);
+
             const { request, cancel } = uploadImageFile(
               response.upload_to,
               file,
@@ -327,6 +333,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             setErrors(e);
           });
       } else {
+        recordImageAnalytics('start', file);
+
         // Overwrite any file that was previously uploaded to the upload_to URL.
         const { request, cancel } = uploadImageFile(
           uploadToURL,
@@ -340,6 +348,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           .then(() => handleSuccess())
           .catch(() => {
             handleError();
+            recordImageAnalytics('fail', file);
             dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
           });
       }
@@ -461,3 +470,11 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
 
 export default enhanced(FileUploader);
+
+const recordImageAnalytics = (
+  action: 'start' | 'success' | 'fail',
+  file: File
+) => {
+  const readableFileSize = readableBytes(file.size).formatted;
+  sendImageUploadEvent(action, readableFileSize);
+};
