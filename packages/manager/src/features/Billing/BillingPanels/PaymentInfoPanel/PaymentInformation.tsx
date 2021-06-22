@@ -98,7 +98,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
 
           {isGooglePayEnabled ? (
             <Button className={classes.edit} onClick={openAddDrawer}>
-              Add a Payment Method
+              Add Payment Method
             </Button>
           ) : null}
         </div>
@@ -132,13 +132,13 @@ const PaymentInformation: React.FC<Props> = (props) => {
         !paymentMethods?.some(
           (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
         ) ? (
-          <Box display="flex" alignItems="center" mt={2}>
+          <Box display="flex" alignItems="center" mt={3}>
             <GooglePay width={16} height={16} />
             <Typography className={classes.googlePayNotice}>
               Google Pay is now available for recurring payments.
               <Link to="#" onClick={openAddDrawer}>
                 {' '}
-                Add Payment Method.
+                Add Google Pay
               </Link>
             </Typography>
           </Box>

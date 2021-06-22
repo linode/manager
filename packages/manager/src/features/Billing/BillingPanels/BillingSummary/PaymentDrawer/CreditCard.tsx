@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 0,
     },
   },
-  align: {
-    marginLeft: theme.spacing(),
-  },
   expired: {
     color: theme.color.red,
   },
@@ -77,7 +74,6 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
       <div
         className={classnames({
           [classes.card]: true,
-          [classes.align]: !type,
         })}
       >
         <Typography className={classes.cardInfo} data-qa-contact-cc>
