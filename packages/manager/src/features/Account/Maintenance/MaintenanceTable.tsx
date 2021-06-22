@@ -17,7 +17,7 @@ import sync from 'css-animation-sync';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Link from 'src/components/Link';
 import { CSVLink } from 'react-csv';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
 import { DateTime } from 'luxon';
 import {
   useAccountMaintenanceQuery,
@@ -25,21 +25,22 @@ import {
 } from 'src/queries/accountMaintenance';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 
 interface Props {
-  // we will add more types when the endpoint supports then
+  // we will add more types when the endpoint supports them
   type: 'Linode';
 }
 
 const headers = [
   { label: 'label', key: 'entity.label' },
-  { label: 'id', key: 'entity.id' },
-  { label: 'type', key: 'entity.type' },
-  { label: 'url', key: 'entity.url' },
   { label: 'when', key: 'when' },
-  { label: 'reason', key: 'reason' },
-  { label: 'status', key: 'status' },
   { label: 'type', key: 'type' },
+  { label: 'status', key: 'status' },
+  { label: 'reason', key: 'reason' },
+  { label: 'type', key: 'entity.type' },
+  { label: 'id', key: 'entity.id' },
+  { label: 'url', key: 'entity.url' },
 ];
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -64,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   cell: {
     width: '15%',
   },
+  capitalize: {
+    textTransform: 'capitalize',
+  },
 }));
 
 const MaintenanceTable: React.FC<Props> = (props) => {
@@ -72,10 +76,13 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   const [orderBy, setOrderBy] = React.useState('status');
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
 
-  const csvRef = React.useRef();
+  const csvRef = React.useRef<any>();
   const classes = useStyles();
 
-  const { data: csv, refetch: fetch } = useAllAccountMaintenanceQuery(false);
+  const { data: csv, refetch: getCSVData } = useAllAccountMaintenanceQuery(
+    false
+  );
+
   const { data, isLoading, error, refetch } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
@@ -114,8 +121,10 @@ const MaintenanceTable: React.FC<Props> = (props) => {
             {item.entity.label}
           </Link>
         </TableCell>
-        <TableCell>{item.when}</TableCell>
-        <TableCell>{item.type}</TableCell>
+        <TableCell>{formatDate(item.when)}</TableCell>
+        <TableCell className={classes.capitalize}>
+          {item.type.replace('_', ' ')}
+        </TableCell>
         <TableCell>
           <StatusIcon status={getStatusIcon(item.status)} />
           {capitalize(item.status)}
@@ -138,7 +147,9 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     } else if (error) {
       return <TableRowError colSpan={5} message={error[0].reason} />;
     } else if (data?.results == 0) {
-      return <TableRowEmptyState colSpan={5} />;
+      return (
+        <TableRowEmptyState message="No pending maintenance." colSpan={5} />
+      );
     } else if (data) {
       return data.data.map((item: AccountMaintenance) => renderTableRow(item));
     }
@@ -152,8 +163,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   };
 
   const downloadCSV = async () => {
-    await fetch();
-    // @ts-expect-error everything's fine
+    await getCSVData();
     csvRef.current.link.click();
   };
 
@@ -211,23 +221,33 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         pageSize={pagination.pageSize}
         eventCategory={`${type} Maintenance Table`}
       />
-      <Grid container className={classes.CSVwrapper} justify="flex-end">
-        <Grid item className={classes.CSVlinkContainer}>
-          <CSVLink
-            ref={csvRef}
-            headers={headers}
-            filename={`maintenance-${formatDate(DateTime.local().toISO())}.csv`}
-            data={csv || []}
-          />
-          <a
-            className={`${classes.CSVlink} ${classes.CSVlink}`}
-            onClick={downloadCSV}
-            aria-hidden="true"
-          >
-            Download CSV
-          </a>
+      {data && data.results > 0 ? (
+        <Grid container className={classes.CSVwrapper} justify="flex-end">
+          <Grid item className={classes.CSVlinkContainer}>
+            {/*
+              We are using a hidden CSVLink and an <a> to allow us to lazy load the
+              entire maintenance list for the CSV download. The <a> is what shows up
+              to the user and the onClick fetches the full user data and then
+              uses a ref to 'click' the real CSVLink.
+              This adds some complexity but gives us the benefit of lazy loading a potentially
+              large set of maintenance events on mount for the CSV download.
+            */}
+            <CSVLink
+              ref={csvRef}
+              headers={headers}
+              filename={`maintenance-${DateTime.local().toISO()}.csv`}
+              data={cleanCSVData(csv || [])}
+            />
+            <a
+              className={`${classes.CSVlink} ${classes.CSVlink}`}
+              onClick={downloadCSV}
+              aria-hidden="true"
+            >
+              Download CSV
+            </a>
+          </Grid>
         </Grid>
-      </Grid>
+      ) : null}
     </React.Fragment>
   );
 };
