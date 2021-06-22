@@ -128,10 +128,6 @@ const UsersLanding: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const addUser = () => {
-    refetch();
-  };
-
   const openForCreate = () => {
     setCreateDrawerOpen(true);
   };
@@ -289,7 +285,7 @@ const UsersLanding: React.FC<Props> = (props) => {
       <CreateUserDrawer
         open={createDrawerOpen}
         onClose={userCreateOnClose}
-        addUser={addUser}
+        refetch={refetch}
       />
       <UserDeleteConfirmationDialog
         username={toDeleteUsername || ''}
