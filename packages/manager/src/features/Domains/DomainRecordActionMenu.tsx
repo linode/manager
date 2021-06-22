@@ -1,4 +1,5 @@
 import { Domain } from '@linode/api-v4/lib/domains';
+import { has } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
@@ -41,20 +42,22 @@ export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
     deleteData!.onDelete(deleteData!.recordID);
   };
 
-  const actions: Action[] = [
+  const actions = [
     {
       title: 'Edit',
       onClick: () => {
         handleEdit();
       },
     },
-    {
-      title: 'Delete',
-      onClick: () => {
-        handleDelete();
-      },
-    },
-  ];
+    has('deleteData', props)
+      ? {
+          title: 'Delete',
+          onClick: () => {
+            handleDelete();
+          },
+        }
+      : null,
+  ].filter(Boolean) as Action[];
 
   return (
     <ActionMenu
