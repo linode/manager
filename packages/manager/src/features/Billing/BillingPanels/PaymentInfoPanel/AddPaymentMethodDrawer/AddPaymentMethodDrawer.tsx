@@ -15,9 +15,6 @@ const useStyles = makeStyles(() => ({
   root: {
     marginTop: '4px',
   },
-  paymentMethodName: {
-    color: '#171718',
-  },
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
@@ -27,16 +24,13 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   return (
     <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
       <Divider />
-      <Grid container spacing={2} className={classes.root}>
-        <Grid item xs={12} sm container>
-          <Grid item xs container direction="column" spacing={4}>
+      <Grid container spacing={1} className={classes.root}>
+        <Grid item xs={12} sm container alignItems="center">
+          <Grid item xs container direction="column" spacing={1}>
             <Grid item xs>
-              <Typography
-                className={classes.paymentMethodName}
-                variant="subtitle1"
-              >
-                Google Pay
-              </Typography>
+              <Typography variant="h3">Google Pay</Typography>
+            </Grid>
+            <Grid item xs>
               <Typography>
                 You&apos;ll be taken to Google Pay to complete sign up.
               </Typography>

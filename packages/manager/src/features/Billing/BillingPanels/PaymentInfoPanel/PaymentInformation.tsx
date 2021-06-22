@@ -93,7 +93,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
       >
         <div className={classes.container}>
           <Typography variant="h3" className={classes.title}>
-            Payment Method
+            Payment Methods
           </Typography>
 
           {isGooglePayEnabled ? (
@@ -112,7 +112,9 @@ const PaymentInformation: React.FC<Props> = (props) => {
             }
           </Typography>
         ) : !paymentMethods || paymentMethods?.length == 0 ? (
-          'No payment methods have been specified for this account.'
+          <Typography>
+            No payment methods have been specified for this account.
+          </Typography>
         ) : (
           paymentMethods.map((paymentMethod: PaymentMethod) => (
             <PaymentMethodRow
@@ -126,7 +128,10 @@ const PaymentInformation: React.FC<Props> = (props) => {
             />
           ))
         )}
-        {isGooglePayEnabled ? (
+        {isGooglePayEnabled &&
+        !paymentMethods?.some(
+          (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
+        ) ? (
           <Box display="flex" alignItems="center" mt={2}>
             <GooglePay width={16} height={16} />
             <Typography className={classes.googlePayNotice}>
