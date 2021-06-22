@@ -4,7 +4,7 @@ import { ScriptStatus, useScript } from 'src/hooks/useScript';
 import { makeStyles } from 'src/components/core/styles';
 import {
   initGooglePaymentInstance,
-  makePayment,
+  gPay,
 } from 'src/features/Billing/Providers/GooglePay';
 import { useSnackbar, VariantType } from 'notistack';
 
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const GooglePay: React.FC<{}> = () => {
+export const GooglePayChip: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
@@ -33,7 +33,8 @@ const GooglePay: React.FC<{}> = () => {
     });
 
   const handlePay = () => {
-    makePayment(
+    gPay(
+      'add-recurring-payment',
       {
         totalPriceStatus: 'NOT_CURRENTLY_KNOWN',
         currencyCode: 'USD',
@@ -50,4 +51,4 @@ const GooglePay: React.FC<{}> = () => {
   );
 };
 
-export default GooglePay;
+export default GooglePayChip;

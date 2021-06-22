@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
-import GooglePay from './GooglePay';
+// import GooglePayChip from './GooglePayChip';
 import CreditCardInfo from './CreditCardInfo';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
@@ -82,9 +82,9 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
         </div>
 
         <div className={classes.billingGroup}>
-          {flags.additionalPaymentMethods?.includes('google_pay') ? (
-            <GooglePay />
-          ) : null}
+          {/* {flags.additionalPaymentMethods?.includes('google_pay') ? (
+            <GooglePayChip />
+          ) : null} */}
           <CreditCardInfo lastFour={lastFour} expiry={expiry} />
         </div>
 

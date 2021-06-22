@@ -5,13 +5,14 @@ import { ScriptStatus, useScript } from 'src/hooks/useScript';
 import { SetSuccess } from './types';
 import {
   initGooglePaymentInstance,
-  makePayment,
+  gPay,
 } from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
+import { useClientToken } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,8 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     height: 35,
     width: '100%',
+    transition: theme.transitions.create(['opacity']),
     '&:hover': {
       opacity: 0.8,
+      transition: 'none',
       background: theme.cmrBGColors.bgGooglePay,
     },
     '& svg': {
@@ -55,8 +58,9 @@ interface Props {
   setSuccess: SetSuccess;
 }
 
-const GooglePay: React.FC<Props> = (props) => {
+export const GooglePayButton: React.FC<Props> = (props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
+  const { data } = useClientToken();
   const classes = useStyles();
 
   const { transactionInfo, balance, setSuccess } = props;
@@ -73,13 +77,15 @@ const GooglePay: React.FC<Props> = (props) => {
     +transactionInfo.totalPrice > 50000;
 
   React.useEffect(() => {
-    if (status === ScriptStatus.READY) {
-      initGooglePaymentInstance(process.env.REACT_APP_BT_TOKEN || '');
+    if (status === ScriptStatus.READY && data) {
+      initGooglePaymentInstance(data.client_token as string);
     }
-  }, [status]);
+  }, [status, data]);
 
   const handlePay = () => {
-    makePayment(transactionInfo, (message: string, _) => setSuccess(message));
+    gPay('one-time-payment', transactionInfo, (message: string, _) =>
+      setSuccess(message)
+    );
   };
 
   if (status === ScriptStatus.ERROR) {
@@ -118,4 +124,4 @@ const GooglePay: React.FC<Props> = (props) => {
   );
 };
 
-export default GooglePay;
+export default GooglePayButton;

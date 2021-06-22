@@ -1,4 +1,5 @@
 import braintree, { GooglePayment } from 'braintree-web';
+import { makePayment } from '@linode/api-v4/lib/account/payments';
 import { VariantType } from 'notistack';
 
 let googlePaymentInstance: GooglePayment | undefined;
@@ -25,7 +26,8 @@ export const initGooglePaymentInstance = async (
   });
 };
 
-export const makePayment = async (
+export const gPay = async (
+  action: 'one-time-payment' | 'add-recurring-payment',
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
@@ -65,15 +67,22 @@ export const makePayment = async (
     return setMessage('Your device does not support Google Pay.', 'warning');
   }
 
-  const isOneTimePayment =
-    transactionInfo.totalPrice && transactionInfo.totalPriceStatus === 'FINAL';
+  const isOneTimePayment = action === 'one-time-payment';
 
   try {
     const paymentData = await googlePayClient.loadPaymentData(
       paymentDataRequest
     );
     const { nonce } = await googlePaymentInstance.parseResponse(paymentData);
-    // send nonce to API
+
+    if (isOneTimePayment) {
+      await makePayment({
+        nonce: 'fake-android-pay-nonce', // use actual nonce later
+        usd: transactionInfo.totalPrice as string,
+      });
+    } else {
+      // add payment
+    }
 
     setMessage(
       isOneTimePayment
