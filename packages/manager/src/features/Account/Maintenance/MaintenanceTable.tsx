@@ -18,7 +18,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import Link from 'src/components/Link';
 import { CSVLink } from 'react-csv';
 import { formatDate } from 'src/utilities/formatDate';
-import { DateTime } from 'luxon';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
@@ -26,6 +25,7 @@ import {
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
+import Typography from 'src/components/core/Typography';
 
 interface Props {
   // we will add more types when the endpoint supports them
@@ -67,6 +67,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   capitalize: {
     textTransform: 'capitalize',
+  },
+  heading: {
+    marginBottom: theme.spacing(),
   },
 }));
 
@@ -169,6 +172,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
 
   React.useEffect(() => {
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, orderBy]);
 
   React.useEffect(() => {
@@ -177,6 +181,9 @@ const MaintenanceTable: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
+      <Typography variant="h2" className={classes.heading}>
+        Linodes
+      </Typography>
       <Table>
         <TableHead>
           <TableRow>
@@ -235,7 +242,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
             <CSVLink
               ref={csvRef}
               headers={headers}
-              filename={`maintenance-${DateTime.local().toISO()}.csv`}
+              filename={`maintenance-${Date.now()}.csv`}
               data={cleanCSVData(csv || [])}
             />
             <a
