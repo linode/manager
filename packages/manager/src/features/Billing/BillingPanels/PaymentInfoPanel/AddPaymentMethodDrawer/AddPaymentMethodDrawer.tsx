@@ -38,7 +38,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           </Grid>
           <Grid item>
             <Typography>
-              <GooglePay />
+              <GooglePay height="48px" />
             </Typography>
           </Grid>
         </Grid>

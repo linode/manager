@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     fontSize: '0.625rem',
   },
+  container: {
+    flexWrap: 'nowrap',
+  },
 }));
 
 interface Props {
@@ -63,7 +66,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper className={classes.root} variant="outlined">
-      <Grid container>
+      <Grid container className={classes.container}>
         <Grid item className={classes.item}>
           {thirdPartyPayment ? (
             <ThirdPartyPayment thirdPartyPayment={thirdPartyPayment} />
