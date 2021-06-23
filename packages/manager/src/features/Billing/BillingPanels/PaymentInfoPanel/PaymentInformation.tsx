@@ -6,7 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
-import useFlags from 'src/hooks/useFlags';
+// import useFlags from 'src/hooks/useFlags';
 // import GooglePayChip from './GooglePayChip';
 import CreditCardInfo from './CreditCardInfo';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
@@ -56,7 +56,7 @@ type CombinedProps = Props;
 
 const PaymentInformation: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
+  // const flags = useFlags();
 
   const { lastFour, expiry } = props;
 

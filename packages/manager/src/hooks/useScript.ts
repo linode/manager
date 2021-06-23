@@ -1,20 +1,15 @@
 import { useState, useEffect } from 'react';
 
-export enum ScriptStatus {
-  IDLE = 'idle',
-  LOADING = 'loading',
-  READY = 'ready',
-  ERROR = 'error',
-}
+type ScriptStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 /**
  * Used to load a traditional Javascript file as if you were using html script tags
  * The logic comes from https://usehooks.com/useScript/
- * @param src is the source url of the script you intend to load
- * @param setStatus pass a react state set function so the hook's state can be updated
+ * @param src source url of the script you intend to load
+ * @param setStatus a react state set function so that the hook's state can be updated
  * @returns void
  */
-const loadScript = (src: string, setStatus: (status: string) => void) => {
+const loadScript = (src: string, setStatus: (status: ScriptStatus) => void) => {
   // Allow falsy src value if waiting on other data needed for
   // constructing the script URL passed to this hook.
   if (!src) {
@@ -46,7 +41,7 @@ const loadScript = (src: string, setStatus: (status: string) => void) => {
     script.addEventListener('error', setAttributeFromEvent);
   } else {
     // Grab existing script status from attribute and set to state.
-    setStatus(script.getAttribute('data-status') ?? '');
+    setStatus(script.getAttribute('data-status') as ScriptStatus);
   }
   // Script event handler to update status in state
   // Note: Even if the script already exists we still need to add
@@ -72,11 +67,11 @@ const loadScript = (src: string, setStatus: (status: string) => void) => {
  * @returns {ScriptStatus} the status of the script you are loading
  */
 export const useScript = (src: string): ScriptStatus => {
-  const [status, setStatus] = useState(src ? 'loading' : 'idle');
+  const [status, setStatus] = useState<ScriptStatus>(src ? 'loading' : 'idle');
 
   useEffect(() => loadScript(src, setStatus), [src]);
 
-  return status as ScriptStatus;
+  return status;
 };
 
 /**

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { ScriptStatus, useScript } from 'src/hooks/useScript';
+import { useScript } from 'src/hooks/useScript';
+import { useClientToken } from 'src/queries/accountPayment';
 import { SetSuccess } from './types';
 import {
   initGooglePaymentInstance,
@@ -12,7 +13,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
-import { useClientToken } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -60,7 +60,7 @@ interface Props {
 
 export const GooglePayButton: React.FC<Props> = (props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
-  const { data } = useClientToken();
+  const { data, error } = useClientToken();
   const classes = useStyles();
 
   const { transactionInfo, balance, setSuccess } = props;
@@ -77,7 +77,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     +transactionInfo.totalPrice > 50000;
 
   React.useEffect(() => {
-    if (status === ScriptStatus.READY && data) {
+    if (status === 'ready' && data) {
       initGooglePaymentInstance(data.client_token as string);
     }
   }, [status, data]);
@@ -88,7 +88,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     );
   };
 
-  if (status === ScriptStatus.ERROR) {
+  if (status === 'error' || error) {
     return (
       <Grid container direction="column">
         <Notice error text="There was an error loading Google Pay." />
@@ -100,7 +100,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     <div className={classes.root}>
       {disabled && (
         <Tooltip
-          title={`Amount to charge must be between $5 and ${
+          title={`Payment amount must be between $5 and ${
             balance > 2000 ? '$50000' : '$2000'
           }`}
           data-qa-help-tooltip

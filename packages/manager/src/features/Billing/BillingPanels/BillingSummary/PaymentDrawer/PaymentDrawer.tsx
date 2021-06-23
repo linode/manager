@@ -114,8 +114,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     setUSD(e.target.value || '');
   };
 
-  const formatUSD = (e: React.FocusEvent<HTMLInputElement>) => {
-    setUSD(Number(e.target.value).toFixed(2) || '');
+  const handleOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const formattedUSD = Number(e.target.value).toFixed(2) || '';
+    setUSD(formattedUSD);
   };
 
   const setSuccess: SetSuccess = (
@@ -175,7 +176,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             <TextField
               label="Payment Amount"
               onChange={handleUSDChange}
-              onBlur={formatUSD}
+              onBlur={handleOnBlur}
               value={usd}
               required
               type="number"

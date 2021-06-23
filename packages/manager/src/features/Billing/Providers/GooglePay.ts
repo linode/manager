@@ -1,4 +1,5 @@
 import braintree, { GooglePayment } from 'braintree-web';
+// import { GPAY_MERCHANT_ID } from 'src/constants';
 import { makePayment } from '@linode/api-v4/lib/account/payments';
 import { VariantType } from 'notistack';
 
@@ -42,7 +43,7 @@ export const gPay = async (
   try {
     paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
       // merchantInfo: {
-      //   merchantId: '12345678901234567890',
+      //   merchantId: GPAY_MERCHANT_ID || '',
       // },
       // @ts-expect-error braintree's types are not accurate
       transactionInfo,
@@ -96,7 +97,7 @@ export const gPay = async (
     }
     setMessage(
       isOneTimePayment
-        ? 'Unable to complete payment'
+        ? 'Unable to complete Google Pay payment'
         : 'Unable to add payment method',
       'error'
     );

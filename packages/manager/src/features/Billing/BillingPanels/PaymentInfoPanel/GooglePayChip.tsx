@@ -1,6 +1,7 @@
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
-import { ScriptStatus, useScript } from 'src/hooks/useScript';
+import { useScript } from 'src/hooks/useScript';
+import { useClientToken } from 'src/queries/accountPayment';
 import { makeStyles } from 'src/components/core/styles';
 import {
   initGooglePaymentInstance,
@@ -20,12 +21,13 @@ export const GooglePayChip: React.FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
+  const { data } = useClientToken();
 
   React.useEffect(() => {
-    if (status === ScriptStatus.READY) {
-      initGooglePaymentInstance(process.env.REACT_APP_BT_TOKEN || '');
+    if (status === 'ready' && data) {
+      initGooglePaymentInstance(data.client_token as string);
     }
-  }, [status]);
+  }, [status, data]);
 
   const doToast = (message: string, variant: VariantType) =>
     enqueueSnackbar(message, {
