@@ -215,6 +215,8 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
       ) as Interface[]);
 };
 
+const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
@@ -339,8 +341,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     const handleError = (error: APIError[]) => {
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
+
       formik.setSubmitting(false);
+
       handleFieldErrors(formik.setErrors, error);
+
       handleGeneralErrors(
         mapErrorToStatus,
         error,
@@ -373,8 +378,18 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
        */
       if (config) {
         const devices = createStringsFromDevices(config.devices);
-        const initialCounter = Object.keys(devices).length;
-        setDeviceCounter(initialCounter);
+
+        // If device slots are populated out of sequential order (e.g. sda and sdb are assigned but no others are until sdf), ascertain the last assigned slot to determine how many device slots to display initially.
+        const assignedDevices = Object.keys(devices);
+        const lastAssignedDeviceSlot =
+          assignedDevices[assignedDevices.length - 1];
+
+        const positionInSequentialSlots = deviceSlots.indexOf(
+          lastAssignedDeviceSlot
+        );
+
+        setDeviceCounter(positionInSequentialSlots);
+
         setUseCustomRoot(
           !pathsOptions.some(
             (thisOption) => thisOption.value === config?.root_device
@@ -401,6 +416,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         // Create mode; make sure loading/error states are cleared.
         resetForm({ values: defaultFieldsValues });
         setUseCustomRoot(false);
+        setDeviceCounter(1);
       }
     }
   }, [open, config, resetForm]);
@@ -413,8 +429,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     disks: props.disks,
     volumes: props.volumes,
   };
-
-  const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 
   /**
    * Form change handlers
