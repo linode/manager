@@ -26,10 +26,10 @@ import Typography from 'src/components/core/Typography';
 import EntityHeader from 'src/components/EntityHeader';
 import ErrorState from 'src/components/ErrorState';
 import OrderBy from 'src/components/OrderBy';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableSortCell from 'src/components/TableSortCell';
 import withAccount, { StateProps } from 'src/containers/account.container';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,

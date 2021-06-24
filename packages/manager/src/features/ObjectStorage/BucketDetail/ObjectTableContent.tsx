@@ -1,8 +1,8 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError_CMR from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading_CMR from 'src/components/TableRowLoading/TableRowLoading_CMR';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 import { ExtendedObject } from '../utilities';
@@ -33,12 +33,12 @@ const ObjectTableContent: React.FC<Props> = (props) => {
   const { width } = useWindowDimensions();
 
   if (loading && data.length === 0) {
-    return <TableRowLoading_CMR colSpan={4} widths={[20]} />;
+    return <TableRowLoading colSpan={4} widths={[20]} />;
   }
 
   if (error) {
     return (
-      <TableRowError_CMR
+      <TableRowError
         colSpan={6}
         message="We were unable to load your Objects."
       />
@@ -47,9 +47,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
 
   // If there is no prefix, this is NOT a folder, so display the empty bucket message.
   if (data.length === 0 && !prefix) {
-    return (
-      <TableRowEmptyState_CMR colSpan={6} message="This bucket is empty." />
-    );
+    return <TableRowEmptyState colSpan={6} message="This bucket is empty." />;
   }
 
   // A folder is considered "empty" if `_shouldDisplayObject` is `false` for
@@ -57,9 +55,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
   const isFolderEmpty = data.every((object) => !object._shouldDisplayObject);
 
   if (isFolderEmpty) {
-    return (
-      <TableRowEmptyState_CMR colSpan={6} message="This folder is empty." />
-    );
+    return <TableRowEmptyState colSpan={6} message="This folder is empty." />;
   }
 
   // Be more strict with truncation lengths on smaller viewports.
@@ -103,7 +99,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
           />
         );
       })}
-      {loading && <TableRowLoading_CMR colSpan={12} transparent />}
+      {loading && <TableRowLoading colSpan={12} transparent />}
     </>
   );
 };

@@ -9,8 +9,7 @@ import {
 export default (
   action: EventAction,
   entity: null | Entity,
-  deleted: undefined | string | boolean,
-  onClick: (path: string) => void
+  deleted: undefined | string | boolean
 ) => {
   const type = path(['type'], entity);
   const id = path(['id'], entity);
@@ -28,24 +27,15 @@ export default (
      * although these are deletion events, they refer to a Linode,
      * which still exists; we can therefore provide a link target.
      */
-    return (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      onClick(`/linodes/${id}/advanced`);
-    };
+    return `/linodes/${id}/advanced`;
   }
 
   if (['user_ssh_key_add', 'user_ssh_key_delete'].includes(action)) {
-    return (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      onClick(`/profile/keys`);
-    };
+    return `/profile/keys`;
   }
 
   if (['account_settings_update'].includes(action)) {
-    return (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      onClick(`/account/settings`);
-    };
+    return `/account/settings`;
   }
 
   /**
@@ -83,65 +73,37 @@ export default (
 
   switch (type) {
     case 'linode':
-      const link =
-        action === 'linode_addip'
-          ? `/linodes/${id}/networking`
-          : `/linodes/${id}`;
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(link);
-      };
+      return action === 'linode_addip'
+        ? `/linodes/${id}/networking`
+        : `/linodes/${id}`;
 
     case 'ticket':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/support/tickets/${id}`);
-      };
+      return `/support/tickets/${id}`;
 
     case 'domain':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/domains/${id}`);
-      };
+      return `/domains/${id}`;
 
     case 'entity_transfer':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/account/entity-transfers`);
-      };
+      return `/account/entity-transfers`;
 
     case 'volume':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/volumes`);
-      };
+      return `/volumes`;
 
     case 'stackscript':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/stackscripts/${id}`);
-      };
+      return `/stackscripts/${id}`;
 
     case 'nodebalancer':
+      // eslint-disable-next-line sonarjs/no-small-switch
       switch (action) {
         case 'nodebalancer_config_create':
-          return (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            onClick(`/nodebalancers/${id}/configurations`);
-          };
+          return `/nodebalancers/${id}/configurations`;
 
         default:
-          return (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            onClick(`/nodebalancers/${id}/summary`);
-          };
+          return `/nodebalancers/${id}/summary`;
       }
 
     case 'user':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/account/users/${label}/profile`);
-      };
+      return `/account/users/${label}/profile`;
 
     default:
       return;

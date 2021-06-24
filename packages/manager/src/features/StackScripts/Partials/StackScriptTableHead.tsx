@@ -3,9 +3,9 @@ import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableSortCell from 'src/components/TableSortCell';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

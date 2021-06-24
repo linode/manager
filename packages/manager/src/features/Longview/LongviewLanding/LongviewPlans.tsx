@@ -457,7 +457,6 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
       <TableRow
         key={id}
         onClick={handleClick}
-        rowLink={disabled ? undefined : handleClick}
         className={classnames({
           [styles.disabledTableRow]: disabled,
         })}

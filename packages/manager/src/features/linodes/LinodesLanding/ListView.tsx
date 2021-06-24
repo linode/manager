@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
@@ -81,7 +81,7 @@ export const ListView: React.FC<CombinedProps> = (props) => {
   // state is shown higher up in the tree). This is specifically for the case of
   // VLAN Details, where we want to show the table even if there's nothing attached.
   if (data.length === 0) {
-    return <TableRowEmptyState_CMR colSpan={12} />;
+    return <TableRowEmptyState colSpan={12} />;
   }
 
   return (

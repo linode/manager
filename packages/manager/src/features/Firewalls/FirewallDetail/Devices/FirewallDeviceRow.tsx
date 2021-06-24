@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import ActionMenu, { Props as ActionProps } from './FirewallDeviceActionMenu';
 
 const useStyles = makeStyles(() => ({

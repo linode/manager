@@ -17,7 +17,7 @@ import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import {
   hasGrant,
   isRestrictedUser,
@@ -550,7 +550,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                 noOverflow={true}
                 tableClass={classes.table}
                 style={!isSelecting ? { tableLayout: 'fixed' } : undefined}
-                border
               >
                 <StackScriptTableHead
                   handleClickTableHeader={this.handleClickTableHeader}

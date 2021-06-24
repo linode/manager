@@ -4,25 +4,17 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
-import Table_PreCMR from 'src/components/Table';
-import Table_CMR from 'src/components/Table/Table_CMR';
-import TableCell_PreCMR from 'src/components/TableCell';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
-import TableRow_PreCMR from 'src/components/TableRow';
-import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
-import TableRowEmptyState_PreCMR from 'src/components/TableRowEmptyState';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError_PreCMR from 'src/components/TableRowError';
-import TableRowError_CMR from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading_PreCMR from 'src/components/TableRowLoading';
-import TableRowLoading_CMR from 'src/components/TableRowLoading/TableRowLoading_CMR';
-import TableSortCell_PreCMR from 'src/components/TableSortCell';
-import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { Process } from './types';
-import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   processName: {
@@ -71,6 +63,9 @@ export interface Props {
 export type CombinedProps = Props;
 
 export const ProcessesTable: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const { width } = useWindowDimensions();
+
   const {
     processesData,
     processesLoading,
@@ -78,14 +73,6 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
     selectedProcess,
     setSelectedProcess,
   } = props;
-
-  const flags = useFlags();
-  const Table = flags.cmr ? Table_CMR : Table_PreCMR;
-  const TableRow = flags.cmr ? TableRow_CMR : TableRow_PreCMR;
-  const TableSortCell = flags.cmr ? TableSortCell_CMR : TableSortCell_PreCMR;
-
-  const { width } = useWindowDimensions();
-  const classes = useStyles();
 
   return (
     <OrderBy
@@ -100,7 +87,7 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
           // This prop is necessary to show the "ActiveCaret", and we only
           // want it on large viewports.
           noOverflow={width >= 1280}
-          className={flags.cmr ? classes.cmrTableModifier : ''}
+          className={classes.cmrTableModifier}
         >
           <TableHead>
             <TableRow>
@@ -166,8 +153,7 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
               orderedData,
               selectedProcess,
               setSelectedProcess,
-              error,
-              flags.cmr
+              error
             )}
           </TableBody>
         </Table>
@@ -181,17 +167,8 @@ const renderLoadingErrorData = (
   data: ExtendedProcess[],
   selectedProcess: Process | null,
   setSelectedProcess: (process: Process) => void,
-  error?: string,
-  cmrFlag?: boolean
+  error?: string
 ) => {
-  const TableRowError = cmrFlag ? TableRowError_CMR : TableRowError_PreCMR;
-  const TableRowLoading = cmrFlag
-    ? TableRowLoading_CMR
-    : TableRowLoading_PreCMR;
-  const TableRowEmptyState = cmrFlag
-    ? TableRowEmptyState_CMR
-    : TableRowEmptyState_PreCMR;
-
   if (error && data.length === 0) {
     return <TableRowError colSpan={12} message={error} />;
   }
@@ -210,7 +187,6 @@ const renderLoadingErrorData = (
         selectedProcess?.user === thisProcess.user
       }
       setSelectedProcess={setSelectedProcess}
-      cmrFlag={cmrFlag}
       {...thisProcess}
     />
   ));
@@ -233,13 +209,9 @@ export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
       averageMem,
       setSelectedProcess,
       isSelected,
-      cmrFlag,
     } = props;
 
     const classes = useStyles();
-
-    const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
-    const TableCell = cmrFlag ? TableCell_CMR : TableCell_PreCMR;
 
     return (
       <TableRow

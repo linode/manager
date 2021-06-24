@@ -96,8 +96,6 @@ describe('OAuth Clients', () => {
 
   it('should display TableEmptyState if done loading and there is no data', () => {
     wrapper.setProps({ loading: false, data: [] });
-    expect(
-      wrapper.find(`WithStyles(TableRowEmptyState)`).exists()
-    ).toBeTruthy();
+    expect(wrapper.find(`TableRowEmptyState`).exists()).toBeTruthy();
   });
 });

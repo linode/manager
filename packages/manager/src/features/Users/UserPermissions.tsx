@@ -618,7 +618,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         >
           {entityNameMap[entity]}
         </Typography>
-        <Table aria-label="User Permissions" className={classes.grantTable}>
+        <Table
+          aria-label="User Permissions"
+          className={classes.grantTable}
+          noBorder
+        >
           <TableHead data-qa-table-head>
             <TableRow>
               <TableCell>Label</TableCell>

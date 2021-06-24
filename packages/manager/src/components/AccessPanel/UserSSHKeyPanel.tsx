@@ -103,7 +103,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
           </Typography>
         </Notice>
       )}
-      <Table isResponsive={false} border spacingBottom={16}>
+      <Table spacingBottom={16}>
         <TableHead>
           <TableRow>
             <TableCell className={classes.cellCheckbox} />

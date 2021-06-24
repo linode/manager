@@ -13,6 +13,7 @@ describe('Select Plan Panel', () => {
           root: '',
           copy: '',
           disabledRow: '',
+          table: '',
           headerCell: '',
           chip: '',
           radioCell: '',

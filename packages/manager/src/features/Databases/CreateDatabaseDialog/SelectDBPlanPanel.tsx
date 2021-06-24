@@ -14,9 +14,9 @@ import Radio from 'src/components/Radio';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import Table_CMR from 'src/components/Table/Table_CMR';
-import TableCell_CMR from 'src/components/TableCell/TableCell_CMR';
-import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import {
   ExtendedType,
   extendType,
@@ -117,30 +117,30 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
   const renderPlanContainer = (plans: DatabaseType[]) => {
     const tableHeader = (
       <TableHead>
-        <TableRow_CMR>
-          <TableCell_CMR className={classes.headerCell} />
-          <TableCell_CMR className={classes.headerCell} data-qa-plan-header>
+        <TableRow>
+          <TableCell className={classes.headerCell} />
+          <TableCell className={classes.headerCell} data-qa-plan-header>
             Plan
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-monthly-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-monthly-header>
             Monthly
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-hourly-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-hourly-header>
             Hourly
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-cpu-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-cpu-header>
             CPUs
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-ram-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-ram-header>
             RAM
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-storage-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-storage-header>
             Storage
-          </TableCell_CMR>
-          <TableCell_CMR className={classes.headerCell} data-qa-storage-header>
+          </TableCell>
+          <TableCell className={classes.headerCell} data-qa-storage-header>
             Backups
-          </TableCell_CMR>
-        </TableRow_CMR>
+          </TableCell>
+        </TableRow>
       </TableHead>
     );
 
@@ -149,16 +149,12 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
         <Hidden mdUp>{plans.map(renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={10}>
-            <Table_CMR
-              border
-              spacingBottom={16}
-              aria-label="List of Database Plans"
-            >
+            <Table spacingBottom={16} aria-label="List of Database Plans">
               {tableHeader}
               <TableBody role="radiogroup">
                 {plans.map(renderSelection)}
               </TableBody>
-            </Table_CMR>
+            </Table>
           </Grid>
         </Hidden>
       </Grid>
@@ -170,14 +166,13 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
-          <TableRow_CMR
+          <TableRow
             data-qa-plan-row={type.label}
             aria-label={type.label}
             key={type.id}
             onClick={selectPlan(type.id)}
-            rowLink={selectPlan(type.id)}
           >
-            <TableCell_CMR className={classes.radioCell}>
+            <TableCell className={classes.radioCell}>
               <FormControlLabel
                 label={type.label}
                 aria-label={type.label}
@@ -191,21 +186,19 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
                   />
                 }
               />
-            </TableCell_CMR>
-            <TableCell_CMR data-qa-plan-name>
+            </TableCell>
+            <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>{type.label} </div>
-            </TableCell_CMR>
-            <TableCell_CMR data-qa-monthly>${type.price.monthly}</TableCell_CMR>
-            <TableCell_CMR data-qa-hourly> ${type.price.hourly}</TableCell_CMR>
-            <TableCell_CMR data-qa-cpu>{type.vcpus}</TableCell_CMR>
-            <TableCell_CMR data-qa-ram>
+            </TableCell>
+            <TableCell data-qa-monthly>${type.price.monthly}</TableCell>
+            <TableCell data-qa-hourly> ${type.price.hourly}</TableCell>
+            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
+            <TableCell data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
-            </TableCell_CMR>
-            <TableCell_CMR data-qa-storage>{type.disk} GB</TableCell_CMR>
-            <TableCell_CMR data-qa-backup>
-              Daily — Included in Plan
-            </TableCell_CMR>
-          </TableRow_CMR>
+            </TableCell>
+            <TableCell data-qa-storage>{type.disk} GB</TableCell>
+            <TableCell data-qa-backup>Daily — Included in Plan</TableCell>
+          </TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
         <Hidden mdUp>

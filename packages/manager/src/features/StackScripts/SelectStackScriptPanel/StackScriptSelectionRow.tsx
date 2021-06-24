@@ -98,11 +98,7 @@ export class StackScriptSelectionRow extends React.Component<
     };
 
     return (
-      <TableRow
-        data-qa-table-row={label}
-        rowLink={onSelect ? (e) => onSelect(e, !checked) : undefined}
-        ariaLabel={label}
-      >
+      <TableRow data-qa-table-row={label} ariaLabel={label}>
         <TableCell>
           <Radio
             checked={!disabled && checked}

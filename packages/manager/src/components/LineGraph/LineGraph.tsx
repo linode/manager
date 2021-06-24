@@ -280,7 +280,11 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
-          <Table aria-label="Stats and metrics" className={classes.root}>
+          <Table
+            aria-label="Stats and metrics"
+            className={classes.root}
+            noBorder
+          >
             <TableHead className={classes.tableHead}>
               {/* Repeat legend for each data set for mobile */}
               {matchesSmDown ? (

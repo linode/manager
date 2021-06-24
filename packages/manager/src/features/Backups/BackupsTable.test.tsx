@@ -1,10 +1,8 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import TableRowLoading from 'src/components/TableRowLoading';
 import * as linodes from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';
-import TableRowLoading from 'src/components/TableRowLoading';
-
 import { BackupsTable } from './BackupsTable';
 import { ExtendedLinode } from './types';
 
@@ -13,13 +11,7 @@ const type = types.types[0];
 const linode1: ExtendedLinode = { ...linodes.linode1, typeInfo: type };
 const linode2: ExtendedLinode = { ...linodes.linode2, typeInfo: type };
 
-const component = shallow(
-  <BackupsTable
-    linodes={[]}
-    loading={true}
-    classes={{ root: '', container: '' }}
-  />
-);
+const component = shallow(<BackupsTable linodes={[]} loading={true} />);
 
 describe('BackupsTable component', () => {
   it('should render', () => {

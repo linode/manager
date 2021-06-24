@@ -10,12 +10,12 @@ jest.mock('src/components/core/styles', () => ({
 const message = 'this is a message.';
 const props: RowProps = {
   action: 'linode_boot',
-  duration: 0,
   message,
   type: 'linode',
   created: '2018-01-01',
   username: null,
-  linkTarget: jest.fn(),
+  duration: 0,
+  history,
 };
 
 describe('EventRow component', () => {
@@ -36,16 +36,6 @@ describe('EventRow component', () => {
 
     row.setProps({ entityId: 0 });
     expect(row.find('[data-qa-entity-icon]')).toHaveLength(1);
-  });
-
-  it("should only include a link if it's not an events page for a specific entity", () => {
-    row.setProps({ entityId: 1 });
-    let tableRowProps: any = row.find('[data-qa-event-row]').props();
-    expect(tableRowProps.rowLink).toBe(undefined);
-
-    row.setProps({ entityId: 0 });
-    tableRowProps = row.find('[data-qa-event-row]').props();
-    expect(tableRowProps.rowLink).toBeDefined();
   });
 
   it('should display the message with a username if one exists', () => {

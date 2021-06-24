@@ -8,9 +8,9 @@ import TableRow from 'src/components/core/TableRow';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableSortCell from 'src/components/TableSortCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallDeviceRow from './FirewallDeviceRow';
 

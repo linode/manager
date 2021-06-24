@@ -1,63 +1,45 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 
-type ClassNames =
-  | 'root'
-  | 'noWrap'
-  | 'sortable'
-  | 'data'
-  | 'compact'
-  | 'parentColSpan';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      borderTop: 'none',
-      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    borderTop: 'none',
+    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    color: theme.cmrTextColors.tableStatic,
+    fontSize: '.875rem',
+    lineHeight: '1rem',
+    padding: '0px 15px',
+    '&.emptyCell': {
+      height: 40,
     },
-    noWrap: {
-      whiteSpace: 'nowrap',
+    '&:last-child': {
+      paddingRight: 0,
     },
-    sortable: {
+  },
+  noWrap: {
+    whiteSpace: 'nowrap',
+  },
+  sortable: {
+    color: theme.color.headline,
+    fontWeight: 'normal',
+    cursor: 'pointer',
+    '& button, & button:focus': {
       color: theme.color.headline,
       fontWeight: 'normal',
-      cursor: 'pointer',
-      '& button, & button:focus': {
-        color: theme.color.headline,
-        fontWeight: 'normal',
-        fontSize: '.9rem',
-      },
-      '& .sortIcon': {
-        position: 'relative',
-        top: 2,
-        left: 10,
-        color: theme.palette.primary.main,
-      },
     },
-    data: {
-      [theme.breakpoints.down('sm')]: {
-        textAlign: 'right',
-        marginLeft: theme.spacing(3),
-      },
-      [theme.breakpoints.down('xs')]: {
-        width: '100%',
-      },
+    '& .sortIcon': {
+      position: 'relative',
+      top: 2,
+      left: 10,
+      color: theme.palette.primary.main,
     },
-    parentColSpan: {
-      width: '100%',
-    },
-    compact: {
-      padding: 6,
-    },
-  });
+  },
+  compact: {
+    padding: 6,
+  },
+}));
 
 export interface Props extends TableCellProps {
   noWrap?: boolean;
@@ -71,45 +53,28 @@ export interface Props extends TableCellProps {
   compact?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-class WrappedTableCell extends React.Component<CombinedProps> {
-  render() {
-    const {
-      classes,
-      className,
-      parentColumn,
-      noWrap,
-      sortable,
-      compact,
-      ...rest
-    } = this.props;
+export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
 
-    return (
-      <TableCell
-        className={classNames(className, {
-          [classes.root]: true,
-          [classes.noWrap]: noWrap,
-          [classes.sortable]: sortable,
-          [classes.compact]: compact,
-          // hide the cell at small breakpoints if it's empty with no parent column
-          emptyCell: !parentColumn && !this.props.children,
-        })}
-        {...rest}
-      >
-        {!!parentColumn ? (
-          <React.Fragment>
-            <Hidden mdUp>
-              <span className={classes.parentColSpan}>{parentColumn}</span>
-            </Hidden>
-            <div className={`${classes.data} data`}>{this.props.children}</div>
-          </React.Fragment>
-        ) : (
-          this.props.children
-        )}
-      </TableCell>
-    );
-  }
-}
+  const { className, parentColumn, noWrap, sortable, compact, ...rest } = props;
 
-export default withStyles(styles)(WrappedTableCell);
+  return (
+    <TableCell
+      className={classNames(className, {
+        [classes.root]: true,
+        [classes.noWrap]: noWrap,
+        [classes.sortable]: sortable,
+        [classes.compact]: compact,
+        // hide the cell at small breakpoints if it's empty with no parent column
+        emptyCell: !parentColumn && !props.children,
+      })}
+      {...rest}
+    >
+      {props.children}
+    </TableCell>
+  );
+};
+
+export default WrappedTableCell;

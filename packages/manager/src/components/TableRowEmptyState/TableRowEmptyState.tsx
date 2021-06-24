@@ -1,32 +1,25 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      textAlign: 'center',
-      borderColor: theme.cmrBorderColors.borderTable,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    textAlign: 'center',
+    borderColor: theme.cmrBorderColors.borderTable,
+  },
+}));
 
 export interface Props {
   colSpan: number;
   message?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const TableRowEmptyState: React.FC<CombinedProps> = (props) => {
-  const { classes } = props;
+  const classes = useStyles();
+
   return (
     <TableRow data-testid={'table-row-empty'}>
       <TableCell colSpan={props.colSpan} className={classes.root}>
@@ -36,6 +29,4 @@ const TableRowEmptyState: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(TableRowEmptyState);
+export default TableRowEmptyState;

@@ -2,8 +2,7 @@ import sync from 'css-animation-sync';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
-import { TableProps } from 'src/components/Table';
-import Table from 'src/components/Table/Table_CMR';
+import Table, { TableProps } from 'src/components/Table';
 import SortableTableHead_CMR from './SortableTableHead';
 
 interface Props {

@@ -1,8 +1,7 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
 
 interface Props {
   backup: LinodeBackup;
@@ -13,49 +12,38 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeBackupActionMenu extends React.Component<CombinedProps> {
-  createActions = () => {
-    const { backup, disabled, onRestore, onDeploy } = this.props;
-    const disabledProps = {
-      disabled,
-      tooltip: disabled
-        ? "You don't have permission to deploy from this Linode's backups"
-        : undefined,
-    };
-
-    return (closeMenu: () => void): Action[] => {
-      const actions = [
-        {
-          title: 'Restore to Existing Linode',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onRestore(backup);
-            closeMenu();
-            e.preventDefault();
-          },
-          ...disabledProps,
-        },
-        {
-          title: 'Deploy New Linode',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onDeploy(backup);
-            closeMenu();
-            e.preventDefault();
-          },
-          ...disabledProps,
-        },
-      ];
-      return actions;
-    };
+export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
+  const { backup, disabled, onRestore, onDeploy } = props;
+  const disabledProps = {
+    disabled,
+    tooltip: disabled
+      ? "You don't have permission to deploy from this Linode's backups"
+      : undefined,
   };
 
-  render() {
-    return (
-      <ActionMenu
-        createActions={this.createActions()}
-        ariaLabel={`Action menu for Backup ${this.props.backup.label}`}
-      />
-    );
-  }
-}
+  const actions: Action[] = [
+    {
+      title: 'Restore to Existing Linode',
+      onClick: () => {
+        onRestore(backup);
+      },
+      ...disabledProps,
+    },
+    {
+      title: 'Deploy New Linode',
+      onClick: () => {
+        onDeploy(backup);
+      },
+      ...disabledProps,
+    },
+  ];
+
+  return (
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Backup ${props.backup.label}`}
+    />
+  );
+};
 
 export default withRouter(LinodeBackupActionMenu);

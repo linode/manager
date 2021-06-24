@@ -8,7 +8,7 @@ import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableSortCell from 'src/components/TableSortCell';
 import { HeaderCell } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({

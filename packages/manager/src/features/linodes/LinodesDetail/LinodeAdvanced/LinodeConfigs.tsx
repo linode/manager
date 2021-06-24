@@ -32,10 +32,10 @@ import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableSortCell from 'src/components/TableSortCell';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
@@ -456,7 +456,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
               } = this.props;
               return (
                 <React.Fragment>
-                  <Table aria-label="List of Configurations" border>
+                  <Table aria-label="List of Configurations">
                     <TableHead>
                       <TableRow>
                         <TableSortCell
