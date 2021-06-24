@@ -61,7 +61,6 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import {
   HandleSubmit,
-  Info,
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
   TypeInfo,
@@ -601,46 +600,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     );
   };
 
-  getRegionInfo = (): Info | undefined => {
-    const { selectedRegionID } = this.state;
-
-    if (!selectedRegionID) {
-      return;
-    }
-
-    const selectedRegion = this.props.regionsData.find(
-      (region) => region.id === selectedRegionID
-    );
-
-    return (
-      selectedRegion && {
-        title: selectedRegion.country.toUpperCase(),
-        details: selectedRegion.display,
-      }
-    );
-  };
-
-  getImageInfo = (): Info | undefined => {
-    const { selectedImageID } = this.state;
-
-    if (!selectedImageID) {
-      return;
-    }
-
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
-    const selectedImage = this.props.imagesData![selectedImageID];
-
-    return (
-      selectedImage && {
-        title: `${selectedImage.vendor || selectedImage.label}`,
-        details: `${selectedImage.vendor ? selectedImage.label : ''}`,
-      }
-    );
-  };
-
   render() {
     const {
       enqueueSnackbar,
@@ -681,9 +640,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             />
           </Grid>
           <LinodeCreate
-            regionDisplayInfo={this.getRegionInfo()}
-            imageDisplayInfo={this.getImageInfo()}
-            typeDisplayInfo={this.getTypeInfo()}
             backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
             updateRegionID={this.setRegionID}
             updateImageID={this.setImageID}

@@ -140,11 +140,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid
-          data-qa-panel={header}
-          item
-          className={`${classes.main} mlMain py0`}
-        >
+        <Grid data-qa-panel={header} item className={`${classes.main} py0`}>
           <SelectStackScriptPanel
             data-qa-select-stackscript
             error={hasErrorFor('stackscript_id')}

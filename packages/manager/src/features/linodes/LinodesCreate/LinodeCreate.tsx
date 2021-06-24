@@ -1,12 +1,10 @@
 import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -19,7 +17,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
-import DocsSidebar from 'src/components/DocsSidebar';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -52,13 +49,11 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { v4 } from 'uuid';
 import {
   AllFormStateAndHandlers,
   AppsData,
   HandleSubmit,
-  Info,
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
   StackScriptFormStateHandlers,
@@ -68,38 +63,12 @@ import {
   WithTypesProps,
   WithTypesRegionsAndImages,
 } from './types';
+import Button from 'src/components/Button';
 
-type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
+type ClassNames = 'stackScriptWrapper' | 'imageSelect';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      '& .mlMain': {
-        maxWidth: '100%',
-        flexBasis: '100%',
-        [theme.breakpoints.up('md')]: {
-          maxWidth: '78.8%',
-          flexBasis: '78.8%',
-        },
-      },
-      '& .mlSidebar': {
-        position: 'static',
-        width: '100%',
-        flexBasis: '100%',
-        maxWidth: '100%',
-        [theme.breakpoints.up('md')]: {
-          position: 'sticky',
-          maxWidth: '21.2%',
-          flexBasis: '21.2%',
-        },
-      },
-    },
-    form: {
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-      },
-    },
     stackScriptWrapper: {
       '& [role="tablist"]': {
         marginTop: theme.spacing(2),
@@ -116,9 +85,6 @@ interface Props {
   history: any;
   createType: CreateTypes;
   updatePassword: (password: string) => void;
-  regionDisplayInfo: Info;
-  imageDisplayInfo: Info;
-  typeDisplayInfo: Info;
   backupsMonthlyPrice?: number | null;
   updateLinodeID: (id: number, diskSize?: number | undefined) => void;
   updateDiskSize: (size: number) => void;
@@ -362,15 +328,12 @@ export class LinodeCreate extends React.PureComponent<
       linodesLoading,
       linodesError,
       imagesData,
-      imageDisplayInfo,
       imagesError,
       imagesLoading,
       regionsError,
       regionsData,
-      regionDisplayInfo,
       regionsLoading,
       typesData,
-      typeDisplayInfo,
       typesError,
       typesLoading,
       label,
@@ -414,50 +377,9 @@ export class LinodeCreate extends React.PureComponent<
       disabled: userCannotCreateLinode,
     };
 
-    const hasBackups = Boolean(
-      this.props.backupsEnabled || accountBackupsEnabled
-    );
-
-    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-      calculatedPrice += typeDisplayInfo.backupsMonthly;
-    }
-
-    const displaySections = [];
-    if (imageDisplayInfo) {
-      displaySections.push(imageDisplayInfo);
-    }
-
-    if (regionDisplayInfo) {
-      displaySections.push({
-        title: regionDisplayInfo.title,
-        details: regionDisplayInfo.details,
-      });
-    }
-
-    if (typeDisplayInfo) {
-      displaySections.push(typeDisplayInfo);
-    }
-
-    if (label) {
-      displaySections.push({
-        title: 'Linode Label',
-        details: label,
-      });
-    }
-
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-      displaySections.push(
-        renderBackupsDisplaySection(
-          accountBackupsEnabled,
-          typeDisplayInfo.backupsMonthly
-        )
-      );
-    }
-
     return (
-      <form className={classes.form}>
-        <Grid item className={`mlMain py0`}>
+      <form>
+        <Grid item className={`py0`}>
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
@@ -625,7 +547,7 @@ export class LinodeCreate extends React.PureComponent<
               error={hasErrorFor.root_pass}
               sshKeyError={sshError}
               password={this.props.password}
-              handleChange={this.props.updatePassword}
+              handleChange={updatePassword}
               updateFor={[
                 this.props.password,
                 errors,
@@ -658,28 +580,18 @@ export class LinodeCreate extends React.PureComponent<
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
           />
         </Grid>
-        <Grid item className="mlSidebar">
-          <CheckoutBar
-            data-qa-checkout-bar
-            heading="Linode Summary"
-            calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
-            onDeploy={this.createLinode}
-            submitText="Create Linode"
-            footer={
-              <SMTPRestrictionText>
-                {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
-              </SMTPRestrictionText>
-            }
-          >
-            <DisplaySectionList displaySections={displaySections} />
-          </CheckoutBar>
-          {this.props.createType === 'fromApp' &&
-            this.props.documentation.length > 0 && (
-              <DocsSidebar docs={this.props.documentation} />
-            )}
-        </Grid>
+        <SMTPRestrictionText>
+          {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
+        </SMTPRestrictionText>
+        <Button
+          style={{ marginTop: 16 }}
+          buttonType="primary"
+          onClick={this.createLinode}
+          loading={this.props.formIsSubmitting}
+          disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+        >
+          Create Linode
+        </Button>
       </form>
     );
   }

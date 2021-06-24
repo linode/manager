@@ -164,7 +164,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid item className={`${classes.main} py0`}>
           <SelectAppPanel
             appInstances={appInstances}
             appInstancesError={appInstancesError}
