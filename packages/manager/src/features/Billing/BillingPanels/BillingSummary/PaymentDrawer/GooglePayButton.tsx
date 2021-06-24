@@ -9,7 +9,6 @@ import {
   gPay,
 } from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
@@ -37,6 +36,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       color: theme.cmrTextColors.textGooglePay,
       height: 16,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 0,
+      width: '101.5%',
     },
   },
   disabled: {
@@ -89,11 +92,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   };
 
   if (status === 'error' || error) {
-    return (
-      <Grid container direction="column">
-        <Notice error text="There was an error loading Google Pay." />
-      </Grid>
-    );
+    return <Notice error text="There was an error loading Google Pay." />;
   }
 
   return (

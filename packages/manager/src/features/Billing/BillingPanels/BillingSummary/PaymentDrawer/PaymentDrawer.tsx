@@ -201,15 +201,17 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                   <strong>Or pay via:</strong>
                 </Typography>
               </Grid>
-              <Grid container item wrap="nowrap">
-                <AsyncPaypal
-                  key={payPalKey}
-                  usd={usd}
-                  setSuccess={setSuccess}
-                  asyncScriptOnLoad={onScriptLoad}
-                  isScriptLoaded={isPaypalScriptLoaded}
-                />
-                <Grid item xs={6}>
+              <Grid container>
+                <Grid item>
+                  <AsyncPaypal
+                    key={payPalKey}
+                    usd={usd}
+                    setSuccess={setSuccess}
+                    asyncScriptOnLoad={onScriptLoad}
+                    isScriptLoaded={isPaypalScriptLoaded}
+                  />
+                </Grid>
+                <Grid item xs={9} sm={6}>
                   <GooglePayButton
                     transactionInfo={{
                       totalPriceStatus: 'FINAL',
