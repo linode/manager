@@ -213,7 +213,11 @@ export class RestoreToLinodeDrawer extends React.Component<
           >
             Restore
           </Button>
-          <Button data-qa-restore-cancel onClick={this.handleCloseDrawer}>
+          <Button
+            buttonType="secondary"
+            onClick={this.handleCloseDrawer}
+            data-qa-restore-cancel
+          >
             Cancel
           </Button>
         </ActionsPanel>

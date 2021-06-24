@@ -7,41 +7,19 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table_PreCMR from 'src/components/Table';
-import Table_CMR from 'src/components/Table/Table_CMR';
-import TableRow_PreCMR from 'src/components/TableRow';
-import TableRow_CMR from 'src/components/TableRow/TableRow_CMR';
-import TableRowEmptyState_PreCMR from 'src/components/TableRowEmptyState';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError_PreCMR from 'src/components/TableRowError';
-import TableRowError_CMR from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading_PreCMR from 'src/components/TableRowLoading';
-import TableRowLoading_CMR from 'src/components/TableRowLoading/TableRowLoading_CMR';
-import TableSortCell_PreCMR from 'src/components/TableSortCell';
-import TableSortCell_CMR from 'src/components/TableSortCell/TableSortCell_CMR';
+import Table from 'src/components/Table';
+import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell';
 import { LongviewPort } from 'src/features/Longview/request.types';
-import useFlags from 'src/hooks/useFlags';
 import ConnectionRow from './ConnectionRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(3),
-    },
-  },
-  table: {
-    [theme.breakpoints.down('sm')]: {
-      '& tbody > tr > td:first-child .data': {
-        textAlign: 'right',
-      },
-    },
-    [theme.breakpoints.up('md')]: {
-      '& thead > tr > th:last-child': {
-        textAlign: 'right',
-      },
-      '& tbody > tr > td:last-child': {
-        textAlign: 'right',
-      },
     },
   },
   cmrSpacing: {
@@ -56,35 +34,27 @@ export interface TableProps {
   connections: LongviewPort[];
   connectionsLoading: boolean;
   connectionsError?: string;
-  cmrFlag?: boolean;
 }
 
 export const ActiveConnections: React.FC<TableProps> = (props) => {
-  const { connections, connectionsError, connectionsLoading, cmrFlag } = props;
+  const { connections, connectionsError, connectionsLoading } = props;
   const classes = useStyles();
-  const flags = useFlags();
 
   return (
     <Grid item xs={12} md={4} className={classes.container}>
-      <Typography className={flags.cmr ? classes.cmrSpacing : ''} variant="h2">
+      <Typography className={classes.cmrSpacing} variant="h2">
         Active Connections
       </Typography>
       <ConnectionsTable
         connections={connections}
         connectionsLoading={connectionsLoading}
         connectionsError={connectionsError}
-        cmrFlag={cmrFlag}
       />
     </Grid>
   );
 };
 export const ConnectionsTable: React.FC<TableProps> = (props) => {
-  const { connections, connectionsLoading, connectionsError, cmrFlag } = props;
-  const classes = useStyles();
-
-  const Table = cmrFlag ? Table_CMR : Table_PreCMR;
-  const TableRow = cmrFlag ? TableRow_CMR : TableRow_PreCMR;
-  const TableSortCell = cmrFlag ? TableSortCell_CMR : TableSortCell_PreCMR;
+  const { connections, connectionsLoading, connectionsError } = props;
 
   return (
     <OrderBy
@@ -104,12 +74,7 @@ export const ConnectionsTable: React.FC<TableProps> = (props) => {
             pageSize,
           }) => (
             <>
-              <Table
-                spacingTop={16}
-                tableClass={`${
-                  connections.length > 0 && !cmrFlag ? classes.table : ''
-                }`}
-              >
+              <Table spacingTop={16}>
                 <TableHead>
                   <TableRow>
                     <TableSortCell
@@ -145,8 +110,7 @@ export const ConnectionsTable: React.FC<TableProps> = (props) => {
                   {renderLoadingErrorData(
                     connectionsLoading,
                     paginatedData,
-                    connectionsError,
-                    cmrFlag
+                    connectionsError
                   )}
                 </TableBody>
               </Table>
@@ -169,17 +133,8 @@ export const ConnectionsTable: React.FC<TableProps> = (props) => {
 const renderLoadingErrorData = (
   loading: boolean,
   data: LongviewPort[],
-  error?: string,
-  cmrFlag?: boolean
+  error?: string
 ) => {
-  const TableRowError = cmrFlag ? TableRowError_CMR : TableRowError_PreCMR;
-  const TableRowLoading = cmrFlag
-    ? TableRowLoading_CMR
-    : TableRowLoading_PreCMR;
-  const TableRowEmptyState = cmrFlag
-    ? TableRowEmptyState_CMR
-    : TableRowEmptyState_PreCMR;
-
   if (error) {
     return <TableRowError colSpan={12} message={error} />;
   }
@@ -196,7 +151,6 @@ const renderLoadingErrorData = (
     <ConnectionRow
       key={`longview-active-connection-${idx}`}
       connection={thisConnection}
-      cmrFlag={cmrFlag}
     />
   ));
 };

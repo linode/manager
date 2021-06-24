@@ -239,12 +239,7 @@ export class SelectPlanPanel extends React.Component<
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={12}>
-            <Table
-              isResponsive={false}
-              border
-              spacingBottom={16}
-              aria-label="List of Linode Plans"
-            >
+            <Table aria-label="List of Linode Plans" spacingBottom={16}>
               {tableHeader}
               <TableBody role="grid">
                 {plans.map(this.renderSelection)}

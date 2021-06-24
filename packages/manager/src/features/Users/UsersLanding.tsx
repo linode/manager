@@ -1,6 +1,6 @@
-import { map as mapPromise } from 'bluebird';
 import { deleteUser, getUsers, User } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import { map as mapPromise } from 'bluebird';
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -10,9 +10,9 @@ import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import {
   makeStyles,
-  useTheme,
   Theme,
   useMediaQuery,
+  useTheme,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -22,12 +22,12 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
@@ -188,7 +188,6 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
       <TableRow
         key={user.username}
         data-qa-user-row
-        rowLink={`/account/users/${user.username}/profile`}
         ariaLabel={`User ${user.username}`}
       >
         <TableCell data-qa-username>
