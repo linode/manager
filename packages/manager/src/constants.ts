@@ -47,6 +47,9 @@ export const LARGE_ACCOUNT_THRESHOLD = API_MAX_PAGE_SIZE;
 export const PAYPAL_CLIENT_ENV =
   process.env.REACT_APP_PAYPAL_ENV || 'production';
 
+// GooglePay Merchant Id
+export const GPAY_MERCHANT_ID = process.env.REACT_APP_GPAY_MERCHANT_ID;
+
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 
 /** optional variables */
