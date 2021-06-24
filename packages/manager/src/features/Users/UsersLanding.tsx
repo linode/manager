@@ -98,7 +98,7 @@ interface Props {
 }
 
 const UsersLanding: React.FC<Props> = (props) => {
-  const pagination = usePagination(1);
+  const pagination = usePagination(1, 'account-users');
   const { data: users, isLoading, error, refetch } = useAccountUsers(
     {
       page: pagination.page,
