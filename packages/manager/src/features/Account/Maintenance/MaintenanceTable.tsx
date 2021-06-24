@@ -33,13 +33,13 @@ interface Props {
 
 // Headers for CSV download.
 const headers = [
-  { label: 'Label', key: 'entity.label' },
+  { label: 'Entity Label', key: 'entity.label' },
+  { label: 'Entity Type', key: 'entity.type' },
+  { label: 'Entity ID', key: 'entity.id' },
   { label: 'When', key: 'when' },
   { label: 'Type', key: 'type' },
   { label: 'Status', key: 'status' },
   { label: 'Reason', key: 'reason' },
-  { label: 'Entity Type', key: 'entity.type' },
-  { label: 'Entity ID', key: 'entity.id' },
 ];
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -76,12 +76,24 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   const { type } = props;
   const pagination = usePagination(1);
   const [orderBy, setOrderBy] = React.useState('status');
-  const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
+  const [order, setOrder] = React.useState<'asc' | 'desc'>('desc');
 
   const csvRef = React.useRef<any>();
   const classes = useStyles();
 
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+    // We will want to make queries for each type of entity
+    // when this endpoint supports more than Linodes
+    // entity: {
+    //   type: 'Linode',
+    // },
+  };
+
   const { data: csv, refetch: getCSVData } = useAllAccountMaintenanceQuery(
+    {},
+    filter,
     false
   );
 
@@ -90,15 +102,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    {
-      ['+order_by']: orderBy,
-      ['+order']: order,
-      // We will want to make queries for each type of entity
-      // when this endpoint supports more than Linodes
-      // entity: {
-      //   type: 'Linode',
-      // },
-    }
+    filter
   );
 
   const getStatusIcon = (
@@ -106,7 +110,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   ) => {
     switch (status) {
       case 'started':
-      case 'pending':
         return 'other';
       case 'completed':
         return 'active';
@@ -143,7 +146,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
           oneLine
           numberOfColumns={5}
           colSpan={5}
-          widths={[15, 15, 15, 15, 40]}
+          widths={[15, 15, 15, 12, 43]}
         />
       );
     } else if (error) {
@@ -210,7 +213,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
               direction={order}
               label="status"
               handleClick={handleOrderChange}
-              className={classes.cell}
+              style={{ width: '12%' }}
             >
               Status
             </TableSortCell>

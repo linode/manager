@@ -7,15 +7,25 @@ import { queryPresets } from './base';
 
 export const queryKey = 'account-maintenance';
 
-const getAllAccountMaintenance = () =>
-  getAll<AccountMaintenance>((passedParams, passedFilter) =>
-    getAccountMaintenance(passedParams, passedFilter)
+const getAllAccountMaintenance = (
+  passedParams: any = {},
+  passedFilter: any = {}
+) =>
+  getAll<AccountMaintenance>((params, filter) =>
+    getAccountMaintenance(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter }
+    )
   )().then((res) => res.data);
 
-export const useAllAccountMaintenanceQuery = (enabled: boolean = false) => {
+export const useAllAccountMaintenanceQuery = (
+  params: any = {},
+  filter: any = {},
+  enabled: boolean = false
+) => {
   return useQuery<AccountMaintenance[], APIError[]>(
     queryKey,
-    getAllAccountMaintenance,
+    () => getAllAccountMaintenance(params, filter),
     { ...queryPresets.longLived, enabled }
   );
 };

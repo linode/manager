@@ -429,12 +429,17 @@ export const handlers = [
   }),
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
-    const results = 100;
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
-    if (req.url.searchParams.get('page')) {
-      const accountMaintenance = accountMaintenanceFactory.buildList(results);
+    const accountMaintenance = [
+      ...accountMaintenanceFactory.buildList(20, { status: 'pending' }),
+      ...accountMaintenanceFactory.buildList(5, { status: 'completed' }),
+      ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
+      ...accountMaintenanceFactory.buildList(3, { status: 'ready' }),
+    ];
+
+    if (req.headers.get('x-filter')) {
       const sort = JSON.parse(req.headers.get('x-filter') || '{}');
 
       accountMaintenance.sort((a, b) => {
@@ -460,13 +465,12 @@ export const handlers = [
             (page - 1) * pageSize + pageSize
           ),
           page,
-          pages: results / pageSize,
-          results,
+          pages: accountMaintenance.length / pageSize,
+          results: accountMaintenance.length,
         })
       );
     }
 
-    const accountMaintenance = accountMaintenanceFactory.buildList(2);
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/events', (req, res, ctx) => {
