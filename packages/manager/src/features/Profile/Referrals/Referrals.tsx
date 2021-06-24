@@ -64,6 +64,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       height: 145,
       width: 145,
+      [theme.breakpoints.only('sm')]: {
+        height: 120,
+        width: 120,
+      },
+    },
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'center',
     },
   },
   image: {
@@ -71,12 +79,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: theme.spacing(2),
+    },
   },
   imageCopy: {
     color: theme.color.headline,
     fontFamily: theme.font.bold,
     textAlign: 'center',
     marginTop: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: 216,
+    },
   },
 }));
 
@@ -229,30 +243,25 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
                   container
                   direction="row"
                   justify="space-between"
+                  wrap="nowrap"
                   className={classes.images}
                 >
-                  <Grid item className={classes.image} xs={4}>
+                  <Grid item className={classes.image}>
                     <Step1 />
                     <Typography variant="body1" className={classes.imageCopy}>
-                      Share your referral link with
-                      <br />
-                      friends and colleagues
+                      Share your referral link with friends and colleagues
                     </Typography>
                   </Grid>
-                  <Grid item className={classes.image} xs={4}>
+                  <Grid item className={classes.image}>
                     <Step2 />
                     <Typography variant="body1" className={classes.imageCopy}>
-                      They sign up and receive a $100,
-                      <br />
-                      60-day credit
+                      They sign up and receive a $100, 60-day credit
                     </Typography>
                   </Grid>
-                  <Grid item className={classes.image} xs={4}>
+                  <Grid item className={classes.image}>
                     <Step3 />
                     <Typography variant="body1" className={classes.imageCopy}>
-                      You earn $25 after they make their first
-                      <br />
-                      payment of $25
+                      You earn $25 after they make their first payment of $25
                     </Typography>
                   </Grid>
                 </Grid>
