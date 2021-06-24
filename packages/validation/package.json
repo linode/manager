@@ -2,8 +2,15 @@
   "name": "@linode/validation",
   "version": "0.4.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib/*",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
     "test": "jest --config jestconfig.json",
