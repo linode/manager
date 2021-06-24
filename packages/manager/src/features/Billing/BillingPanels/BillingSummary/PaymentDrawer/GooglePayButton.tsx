@@ -1,5 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import { VariantType } from 'notistack';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
@@ -59,6 +60,7 @@ interface Props {
   transactionInfo: google.payments.api.TransactionInfo;
   balance: false | number;
   setSuccess: SetSuccess;
+  setError: (error: string) => void;
 }
 
 export const GooglePayButton: React.FC<Props> = (props) => {
@@ -66,7 +68,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   const { data, error } = useClientToken();
   const classes = useStyles();
 
-  const { transactionInfo, balance, setSuccess } = props;
+  const { transactionInfo, balance, setSuccess, setError } = props;
 
   /**
    * We're following API's validation logic:
@@ -86,8 +88,11 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   }, [status, data]);
 
   const handlePay = () => {
-    gPay('one-time-payment', transactionInfo, (message: string, _) =>
-      setSuccess(message)
+    gPay(
+      'one-time-payment',
+      transactionInfo,
+      (message: string, variant: VariantType) =>
+        variant === 'error' ? setError(message) : setSuccess(message)
     );
   };
 

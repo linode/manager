@@ -90,6 +90,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
     null
   );
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
@@ -156,6 +157,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
       <Grid container>
         <Grid item xs={12}>
           {successMessage && <Notice success text={successMessage ?? ''} />}
+          {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {balance !== false && (
             <Grid item>
@@ -221,6 +223,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                     }}
                     balance={balance}
                     setSuccess={setSuccess}
+                    setError={setErrorMessage}
                   />
                 </Grid>
               </Grid>
