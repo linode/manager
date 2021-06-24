@@ -9,9 +9,9 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableContentWrapper_CMR from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import BackupTableRow from './DatabaseBackupTableRow';
 
@@ -46,14 +46,13 @@ export const DatabaseBackups: React.FC<Props> = (props) => {
           <TableHead>
             <TableRow>
               <TableCell>Backup ID</TableCell>
-              {/* <TableCell>Status</TableCell> */}
               <TableCell>Date Created</TableCell>
               <TableCell>Duration</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableContentWrapper_CMR
+            <TableContentWrapper
               length={backups.data.length}
               loading={backups.loading}
               error={backups.error}
@@ -61,7 +60,7 @@ export const DatabaseBackups: React.FC<Props> = (props) => {
               {backups.data.map((backup: DatabaseBackup, idx: number) => (
                 <BackupTableRow key={idx} backup={backup} />
               ))}
-            </TableContentWrapper_CMR>
+            </TableContentWrapper>
           </TableBody>
         </Table>
       </Paper>

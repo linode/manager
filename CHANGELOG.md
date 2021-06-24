@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-06-17] - v1.43.1
+
+### Added:
+
+- Notice to the Referrals page to highlight upcoming changes to the program
+
+## [2021-06-16] - v1.43.0
+
+### Added:
+
+- Toast notifications and updated table entries for Image upload success/failures
+- Drag & Drop Image uploads
+- Time of migration to Scheduled Migrations banner
+
+### Changed:
+
+- Event text for Domain record creation and update
+- Minimum LKE node warning message
+- Remove "beta" tag from Machine Images
+
+### Fixed:
+
+- Clearing ticket form state after submit
+- Domains table header for large accounts
+- IP Sharing for large accounts
+- Paper padding regression in Create Cluster
+- Prevent Linode disks from being deleted while a Linode is running
+
 ## [2021-06-01] - v1.42.0
 
 ### Added:

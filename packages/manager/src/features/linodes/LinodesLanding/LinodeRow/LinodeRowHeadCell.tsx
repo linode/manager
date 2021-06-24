@@ -8,7 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import TableCell from 'src/components/TableCell';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 

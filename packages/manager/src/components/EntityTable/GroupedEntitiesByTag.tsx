@@ -9,8 +9,8 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter, {
   MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import EntityTableHeader from './EntityTableHeader';
