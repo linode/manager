@@ -6,3 +6,15 @@
 export const pickRandom = <T>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
 };
+
+/**
+ * Generates a random date between two dates
+ * @param start {Date} the start date
+ * @param end {Date} the end date
+ * @returns {Date} a random date between start and end
+ */
+export const randomDate = (
+  start: Date = new Date(2003, 6, 16),
+  end: Date = new Date()
+) =>
+  new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));

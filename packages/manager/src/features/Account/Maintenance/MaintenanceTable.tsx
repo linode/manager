@@ -10,7 +10,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
 import StatusIcon from 'src/components/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
-import capitalize from 'src/utilities/capitalize';
 import usePagination from 'src/hooks/usePagination';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
 import sync from 'css-animation-sync';
@@ -32,15 +31,15 @@ interface Props {
   type: 'Linode';
 }
 
+// Headers for CSV download.
 const headers = [
-  { label: 'label', key: 'entity.label' },
-  { label: 'when', key: 'when' },
-  { label: 'type', key: 'type' },
-  { label: 'status', key: 'status' },
-  { label: 'reason', key: 'reason' },
-  { label: 'type', key: 'entity.type' },
-  { label: 'id', key: 'entity.id' },
-  { label: 'url', key: 'entity.url' },
+  { label: 'Label', key: 'entity.label' },
+  { label: 'When', key: 'when' },
+  { label: 'Type', key: 'type' },
+  { label: 'Status', key: 'status' },
+  { label: 'Reason', key: 'reason' },
+  { label: 'Entity Type', key: 'entity.type' },
+  { label: 'Entity ID', key: 'entity.id' },
 ];
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -128,9 +127,9 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         <TableCell className={classes.capitalize}>
           {item.type.replace('_', ' ')}
         </TableCell>
-        <TableCell>
+        <TableCell className={classes.capitalize}>
           <StatusIcon status={getStatusIcon(item.status)} />
-          {capitalize(item.status)}
+          {item.status}
         </TableCell>
         <TableCell>{item.reason}</TableCell>
       </TableRow>
