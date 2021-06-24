@@ -428,6 +428,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/account/maintenance', (req, res, ctx) => {
+    accountMaintenanceFactory.resetSequenceNumber();
     const results = 100;
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
