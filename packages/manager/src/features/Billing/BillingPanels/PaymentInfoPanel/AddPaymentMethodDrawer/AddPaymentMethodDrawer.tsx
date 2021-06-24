@@ -4,7 +4,7 @@ import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
-import GooglePay from 'src/assets/icons/payment/googlePay.svg';
+import GooglePayChip from '../GooglePayChip';
 
 interface Props {
   open: boolean;
@@ -37,9 +37,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
             </Grid>
           </Grid>
           <Grid item>
-            <Typography>
-              <GooglePay height="48px" />
-            </Typography>
+            <GooglePayChip onAdd={onClose} />
           </Grid>
         </Grid>
       </Grid>

@@ -31,7 +31,7 @@ export const useAllPaymentMethodsQuery = () => {
  * This getAll is probably overkill for getting all paginated payment
  * methods, but for now, use it to be safe.
  */
-const getAllPaymentMethodsRequest = () =>
+export const getAllPaymentMethodsRequest = () =>
   getAll<PaymentMethod>((params) => getPaymentMethods(params))().then(
     (data) => data.data
   );

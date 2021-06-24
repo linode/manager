@@ -1,7 +1,12 @@
 import braintree, { GooglePayment } from 'braintree-web';
 // import { GPAY_MERCHANT_ID } from 'src/constants';
-import { makePayment } from '@linode/api-v4/lib/account/payments';
+import {
+  addPaymentMethod,
+  makePayment,
+} from '@linode/api-v4/lib/account/payments';
 import { VariantType } from 'notistack';
+import { queryClient } from 'src/queries/base';
+import { getAllPaymentMethodsRequest } from 'src/queries/accountPayment';
 
 let googlePaymentInstance: GooglePayment | undefined;
 
@@ -32,7 +37,8 @@ export const gPay = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
-  setMessage: (message: string, variant: VariantType) => void
+  setMessage: (message: string, variant: VariantType) => void,
+  onSuccess?: () => void
 ) => {
   if (!googlePaymentInstance) {
     return setMessage('Unable to open Google Pay.', 'error');
@@ -76,13 +82,25 @@ export const gPay = async (
     );
     const { nonce } = await googlePaymentInstance.parseResponse(paymentData);
 
+    // @TODO handle these API calls if they fail and maybe use React Query mutations?
     if (isOneTimePayment) {
       await makePayment({
         nonce: 'fake-android-pay-nonce', // use actual nonce later
         usd: transactionInfo.totalPrice as string,
       });
     } else {
-      // add payment
+      await addPaymentMethod({
+        type: 'payment_method_nonce',
+        data: { nonce: 'fake-android-pay-nonce' },
+        is_default: true,
+      });
+      if (onSuccess) {
+        onSuccess();
+      }
+      await queryClient.fetchQuery(
+        'account-payment-methods',
+        getAllPaymentMethodsRequest
+      );
     }
 
     setMessage(
@@ -95,6 +113,7 @@ export const gPay = async (
     if (error.message && (error.message as string).includes('User closed')) {
       return;
     }
+    // @TODO log to Sentry
     setMessage(
       isOneTimePayment
         ? 'Unable to complete Google Pay payment'
