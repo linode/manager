@@ -7,9 +7,7 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
     type: Factory.each(() =>
       pickRandom(['cold_migration', 'live_migration', 'reboot'])
     ),
-    status: Factory.each(() =>
-      pickRandom(['pending', 'ready', 'started', 'completed'])
-    ),
+    status: Factory.each(() => pickRandom(['pending', 'started'])),
     reason: Factory.each(() =>
       pickRandom([
         `This maintenance will allow us to update the BIOS on the host’s motherboard.`,

@@ -433,10 +433,8 @@ export const handlers = [
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
     const accountMaintenance = [
-      ...accountMaintenanceFactory.buildList(20, { status: 'pending' }),
-      ...accountMaintenanceFactory.buildList(5, { status: 'completed' }),
+      ...accountMaintenanceFactory.buildList(27, { status: 'pending' }),
       ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
-      ...accountMaintenanceFactory.buildList(3, { status: 'ready' }),
     ];
 
     if (req.headers.get('x-filter')) {
