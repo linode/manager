@@ -25,6 +25,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import Typography from 'src/components/core/Typography';
+import { useOrder } from 'src/hooks/useOrder';
 
 interface Props {
   // we will add more types when the endpoint supports them
@@ -73,11 +74,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const MaintenanceTable: React.FC<Props> = (props) => {
+  const prefrenceKey = 'account-maintenance';
   const { type } = props;
-  const pagination = usePagination(1);
-  const [orderBy, setOrderBy] = React.useState('status');
-  const [order, setOrder] = React.useState<'asc' | 'desc'>('desc');
-
+  const pagination = usePagination(1, prefrenceKey);
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'status',
+      order: 'desc',
+    },
+    prefrenceKey + '-order'
+  );
   const csvRef = React.useRef<any>();
   const classes = useStyles();
 
@@ -160,11 +166,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     }
 
     return null;
-  };
-
-  const handleOrderChange = (key: string, order: 'asc' | 'desc') => {
-    setOrderBy(key);
-    setOrder(order);
   };
 
   const downloadCSV = async () => {
