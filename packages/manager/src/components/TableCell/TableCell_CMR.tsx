@@ -14,9 +14,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.emptyCell': {
       height: 40,
     },
-    '&:last-child': {
-      paddingRight: 0,
-    },
   },
   noWrap: {
     whiteSpace: 'nowrap',
@@ -39,6 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   compact: {
     padding: 6,
   },
+  lastChild: {
+    '&:last-child': {
+      paddingRight: 0,
+    },
+  },
 }));
 
 export interface Props extends TableCellProps {
@@ -51,6 +53,7 @@ export interface Props extends TableCellProps {
    */
   parentColumn?: string;
   compact?: boolean;
+  lastChild?: boolean;
 }
 
 type CombinedProps = Props;
@@ -58,7 +61,15 @@ type CombinedProps = Props;
 export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { className, parentColumn, noWrap, sortable, compact, ...rest } = props;
+  const {
+    className,
+    parentColumn,
+    noWrap,
+    sortable,
+    compact,
+    lastChild,
+    ...rest
+  } = props;
 
   return (
     <TableCell
@@ -67,6 +78,7 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
         [classes.noWrap]: noWrap,
         [classes.sortable]: sortable,
         [classes.compact]: compact,
+        [classes.lastChild]: !lastChild,
         // hide the cell at small breakpoints if it's empty with no parent column
         emptyCell: !parentColumn && !props.children,
       })}

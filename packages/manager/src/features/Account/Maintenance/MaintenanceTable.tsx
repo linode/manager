@@ -145,7 +145,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
           {item.status}
         </TableCell>
         <Hidden mdDown>
-          <TableCell>{item.reason}</TableCell>
+          <TableCell lastChild>{item.reason}</TableCell>
         </Hidden>
       </TableRow>
     );
