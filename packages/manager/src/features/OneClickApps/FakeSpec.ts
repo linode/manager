@@ -1094,7 +1094,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Virtualmin with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-virtualmin-with-one-click-apps/',
+          'https://www.linode.com/docs/guides/how-to-deploy-virtualmin-with-marketplace-apps/',
       },
     ],
     related_info: [
@@ -1132,7 +1132,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Webmin with One-Click Apps',
         href:
-          'https://linode.com/docs/platform/one-click/deploy-webmin-with-one-click-apps/',
+          'https://www.linode.com/docs/guides/how-to-deploy-webmin-with-marketplace-apps/',
       },
     ],
     related_info: [
