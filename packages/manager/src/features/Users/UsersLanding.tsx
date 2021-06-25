@@ -5,9 +5,9 @@ import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import {
   makeStyles,
-  useTheme,
   Theme,
   useMediaQuery,
+  useTheme,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -16,14 +16,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
 import usePagination from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
@@ -170,7 +170,6 @@ const UsersLanding: React.FC<Props> = (props) => {
       <TableRow
         key={user.username}
         data-qa-user-row
-        rowLink={`/account/users/${user.username}/profile`}
         ariaLabel={`User ${user.username}`}
       >
         <TableCell data-qa-username>
