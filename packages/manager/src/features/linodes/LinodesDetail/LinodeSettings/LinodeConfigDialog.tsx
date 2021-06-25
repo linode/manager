@@ -342,7 +342,18 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
 
+      // override 'disk_id' and 'volume_id' value for 'field' key with 'devices' to map and surface errors appropriately
+      const overrideFieldForDevices = (error: APIError[]) => {
+        error.forEach((err) => {
+          if (err.field && ['disk_id', 'volume_id'].includes(err.field)) {
+            err.field = 'devices';
+          }
+        });
+      };
+
       formik.setSubmitting(false);
+
+      overrideFieldForDevices(error);
 
       handleFieldErrors(formik.setErrors, error);
 
@@ -445,8 +456,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const handleDevicesChanges = React.useCallback(
     (slot: string, value: string) => {
       setFieldValue(`devices[${slot}]`, value);
+      formik.setFieldError('devices', '');
     },
-    [setFieldValue]
+    [setFieldValue, formik]
   );
 
   const handleInterfaceChange = React.useCallback(
@@ -695,7 +707,16 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid item xs={12}>
+            <Grid
+              item
+              xs={12}
+              updateFor={[
+                deviceCounter,
+                values.devices,
+                values.useCustomRoot,
+                formik.errors.devices,
+              ]}
+            >
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
@@ -703,6 +724,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 devices={availableDevices}
                 onChange={handleDevicesChanges}
                 getSelected={(slot) => pathOr('', [slot], values.devices)}
+                errorText={formik.errors.devices as string}
                 disabled={readOnly}
               />
               <Button
