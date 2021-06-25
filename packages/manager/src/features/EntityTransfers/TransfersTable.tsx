@@ -11,7 +11,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import capitalize from 'src/utilities/capitalize';

@@ -17,7 +17,7 @@ import PaginationFooter, {
   MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
@@ -259,7 +259,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
       >
         {orderedGroupedLinodes.length === 0 ? (
           <TableBody>
-            <TableRowEmptyState_CMR colSpan={12} />
+            <TableRowEmptyState colSpan={12} />
           </TableBody>
         ) : null}
         {orderedGroupedLinodes.map(([tag, linodes]) => {

@@ -7,24 +7,12 @@ import { ResultRow } from './ResultRow';
 
 const classes = {
   root: '',
-  description: '',
-  label: '',
-  icon: '',
-  resultBody: '',
-  rowContent: '',
-  iconTableCell: '',
-  tag: '',
-  link: '',
-  status: '',
-  labelRow: '',
   labelCell: '',
-  iconGridCell: '',
   regionCell: '',
   createdCell: '',
   tagCell: '',
-  linkCMR: '',
-  preCMRCell: '',
-  labelCellCMR: '',
+  tag: '',
+  link: '',
 };
 
 const props = {

@@ -92,6 +92,7 @@ const cmrBGColors = {
   bgBillingSummary: '#f5f9ff',
   bgAccessRow: '#fafafa',
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
+  bgTableRow: '#fbfbfb',
 };
 
 const cmrTextColors = {

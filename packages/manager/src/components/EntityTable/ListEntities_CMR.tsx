@@ -3,7 +3,7 @@ import TableBody from 'src/components/core/TableBody';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import EntityTableHeader from './EntityTableHeader';
 import { ListProps } from './types';

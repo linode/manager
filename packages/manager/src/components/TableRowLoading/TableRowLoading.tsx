@@ -1,29 +1,20 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Skeleton from 'src/components/Skeleton';
 
-type ClassNames = 'root' | 'tableCell' | 'transparent';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    tableCell: {
-      paddingTop: 0,
-      paddingBottom: 0,
-      textAlign: 'center',
-    },
-    transparent: {
-      backgroundColor: theme.bg.main,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  tableCell: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    textAlign: 'center',
+  },
+  transparent: {
+    backgroundColor: theme.bg.main,
+  },
+}));
 
 type Columns = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
@@ -38,11 +29,12 @@ export interface Props {
   hasEntityIcon?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-const tableRowLoading: React.FC<CombinedProps> = (props) => {
+export const TableRowLoading: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
-    classes,
     transparent,
     colSpan,
     widths,
@@ -102,9 +94,8 @@ const tableRowLoading: React.FC<CombinedProps> = (props) => {
     return rows;
   };
 
+  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{rowBuilder()}</>;
 };
 
-const styled = withStyles(styles);
-
-export default styled(tableRowLoading);
+export default TableRowLoading;
