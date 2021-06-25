@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     '& label': {
-      color: theme.color.headline,
+      color: theme.cmrTextColors.headlineStatic,
     },
   },
   // @todo: Remove when referral UI changes move to GA
@@ -44,11 +44,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(),
     width: 180,
   },
-  completed: {
-    color: theme.color.headline,
+  referrals: {
+    color: theme.cmrTextColors.headlineStatic,
   },
   earned: {
-    color: theme.color.headline,
+    color: theme.cmrTextColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
   limitNotice: {
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   imageCopy: {
-    color: theme.color.headline,
+    color: theme.cmrTextColors.headlineStatic,
     fontFamily: theme.font.bold,
     textAlign: 'center',
     marginTop: theme.spacing(2),
@@ -117,7 +117,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
     <Paper>
       <DocumentTitleSegment segment="Referrals" />
       <Grid container className={classes.root}>
-        {!flags.referral && (
+        {!flags.referral ? (
           <Grid item>
             <Typography variant="h2" data-qa-title>
               Referrals
@@ -138,7 +138,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
               </Notice>
             ) : null}
           </Grid>
-        )}
+        ) : null}
         <Grid item>
           {flags.referral ? (
             <>
@@ -170,28 +170,28 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
           <div />
         ) : (
           <>
-            {!flags.referral && (
+            {!flags.referral ? (
               <Grid item>
                 <Typography variant="h3" className={classes.results}>
                   You have {total} total referrals: {completed} completed ($
                   {credit}) and {pending} pending.
                 </Typography>
               </Grid>
-            )}
+            ) : null}
             <Grid
               item
               xs={12}
               className={flags.referral ? classes.link : undefined}
             >
-              {!flags.referral && (
+              {!flags.referral ? (
                 <CopyableTextField
                   className={classes.copyField}
                   expand
                   label="Referral Code"
                   value={code}
                 />
-              )}
-              {allowReferral && (
+              ) : null}
+              {allowReferral ? (
                 <CopyableTextField
                   className={!flags.referral ? classes.copyField : undefined}
                   expand
@@ -202,17 +202,27 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
                   }
                   value={url}
                 />
-              )}
+              ) : null}
             </Grid>
-            {flags.referral && (
+            {flags.referral ? (
               <>
                 <Grid item>
-                  {allowReferral && total !== undefined && total > 0 && (
+                  {allowReferral && total !== undefined && total > 0 ? (
                     <div className={classes.resultsWrapper}>
+                      {pending != undefined && pending > 0 ? (
+                        <Grid
+                          container
+                          justify="space-between"
+                          className={classes.referrals}
+                        >
+                          <Grid item>Pending referrals</Grid>
+                          <Grid item>{pending}</Grid>
+                        </Grid>
+                      ) : null}
                       <Grid
                         container
                         justify="space-between"
-                        className={classes.completed}
+                        className={classes.referrals}
                       >
                         <Grid item>Completed referrals</Grid>
                         <Grid item>{completed}</Grid>
@@ -226,8 +236,8 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
                         <Grid item>${credit}</Grid>
                       </Grid>
                     </div>
-                  )}
-                  {!allowReferral && (
+                  ) : null}
+                  {!allowReferral ? (
                     <Notice
                       warning
                       className={classes.limitNotice}
@@ -237,7 +247,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
                       Spend $25 with Linode to activate your personal referral
                       link
                     </Notice>
-                  )}
+                  ) : null}
                 </Grid>
                 <Grid
                   container
@@ -266,7 +276,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
                   </Grid>
                 </Grid>
               </>
-            )}
+            ) : null}
           </>
         )}
       </Grid>
