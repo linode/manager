@@ -35,8 +35,9 @@ export const useAccountMaintenanceQuery = (params: any, filter: any) => {
     [queryKey, params, filter],
     () => getAccountMaintenance(params, filter),
     {
-      ...queryPresets.longLived,
       keepPreviousData: true,
+      refetchOnWindowFocus: 'always',
+      refetchInterval: 20000,
     }
   );
 };
