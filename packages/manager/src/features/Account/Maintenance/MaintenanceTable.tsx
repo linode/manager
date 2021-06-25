@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table/Table_CMR';
@@ -32,12 +33,13 @@ interface Props {
   type: 'Linode';
 }
 
-// Headers for CSV download.
-const headers = [
+const preferenceKey = 'account-maintenance';
+
+const headersForCSVDownload = [
   { label: 'Entity Label', key: 'entity.label' },
   { label: 'Entity Type', key: 'entity.type' },
   { label: 'Entity ID', key: 'entity.id' },
-  { label: 'When', key: 'when' },
+  { label: 'Date', key: 'when' },
   { label: 'Type', key: 'type' },
   { label: 'Status', key: 'status' },
   { label: 'Reason', key: 'reason' },
@@ -74,18 +76,18 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const MaintenanceTable: React.FC<Props> = (props) => {
-  const prefrenceKey = 'account-maintenance';
   const { type } = props;
-  const pagination = usePagination(1, prefrenceKey);
+  const csvRef = React.useRef<any>();
+  const classes = useStyles();
+  const pagination = usePagination(1, preferenceKey);
+
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'status',
       order: 'desc',
     },
-    prefrenceKey + '-order'
+    preferenceKey + '-order'
   );
-  const csvRef = React.useRef<any>();
-  const classes = useStyles();
 
   const filter = {
     ['+order_by']: orderBy,
@@ -103,7 +105,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     false
   );
 
-  const { data, isLoading, error, refetch } = useAccountMaintenanceQuery(
+  const { data, isLoading, error } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -133,14 +135,18 @@ const MaintenanceTable: React.FC<Props> = (props) => {
           </Link>
         </TableCell>
         <TableCell>{formatDate(item.when)}</TableCell>
-        <TableCell className={classes.capitalize}>
-          {item.type.replace('_', ' ')}
-        </TableCell>
+        <Hidden xsDown>
+          <TableCell className={classes.capitalize}>
+            {item.type.replace('_', ' ')}
+          </TableCell>
+        </Hidden>
         <TableCell className={classes.capitalize}>
           <StatusIcon status={getStatusIcon(item.status)} />
           {item.status}
         </TableCell>
-        <TableCell>{item.reason}</TableCell>
+        <Hidden mdDown>
+          <TableCell>{item.reason}</TableCell>
+        </Hidden>
       </TableRow>
     );
   };
@@ -174,11 +180,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   };
 
   React.useEffect(() => {
-    refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [order, orderBy]);
-
-  React.useEffect(() => {
     sync('pulse');
   }, []);
 
@@ -200,15 +201,17 @@ const MaintenanceTable: React.FC<Props> = (props) => {
             >
               Date
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'type'}
-              direction={order}
-              label="type"
-              handleClick={handleOrderChange}
-              className={classes.cell}
-            >
-              Type
-            </TableSortCell>
+            <Hidden xsDown>
+              <TableSortCell
+                active={orderBy === 'type'}
+                direction={order}
+                label="type"
+                handleClick={handleOrderChange}
+                className={classes.cell}
+              >
+                Type
+              </TableSortCell>
+            </Hidden>
             <TableSortCell
               active={orderBy === 'status'}
               direction={order}
@@ -218,7 +221,9 @@ const MaintenanceTable: React.FC<Props> = (props) => {
             >
               Status
             </TableSortCell>
-            <TableCell style={{ width: '40%' }}>Reason</TableCell>
+            <Hidden mdDown>
+              <TableCell style={{ width: '40%' }}>Reason</TableCell>
+            </Hidden>
           </TableRow>
         </TableHead>
         <TableBody>{renderTableContent()}</TableBody>
@@ -244,7 +249,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
             */}
             <CSVLink
               ref={csvRef}
-              headers={headers}
+              headers={headersForCSVDownload}
               filename={`maintenance-${Date.now()}.csv`}
               data={cleanCSVData(csv || [])}
             />

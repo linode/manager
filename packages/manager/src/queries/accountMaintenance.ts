@@ -32,7 +32,7 @@ export const useAllAccountMaintenanceQuery = (
 
 export const useAccountMaintenanceQuery = (params: any, filter: any) => {
   return useQuery<ResourcePage<AccountMaintenance>, APIError[]>(
-    [queryKey, params.page, params.page_size],
+    [queryKey, params, filter],
     () => getAccountMaintenance(params, filter),
     {
       ...queryPresets.longLived,

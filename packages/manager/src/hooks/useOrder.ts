@@ -6,6 +6,18 @@ import { OrderSet } from 'src/store/preferences/preferences.actions';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 
+/**
+ * useOrder is a hook that allows you to handle ordering tables. It takes in to account
+ * the following items when determining inital order
+ *  1. Query Params (Ex. ?order=asc&orderBy=status)
+ *  2. User Preference
+ *  3. Initial Order passed as params
+ * When a user changes order using the handleOrderChange function, the query params are
+ * updated and the user prefrences are also updated.
+ * @param initial {OrderSet} include the initial order
+ * @param preferenceKey {string} include a prefrence key so user order preference is persisted
+ * @returns {order, orderBy, handleOrderChange}
+ */
 export const useOrder = (initial: OrderSet, preferenceKey?: string) => {
   const { preferences, updatePreferences } = usePreferences();
 
