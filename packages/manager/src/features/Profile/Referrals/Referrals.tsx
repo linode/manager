@@ -2,9 +2,9 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import Step1 from 'src/assets/icons/referrals/step-1.svg';
-import Step2 from 'src/assets/icons/referrals/step-2.svg';
-import Step3 from 'src/assets/icons/referrals/step-3.svg';
+import Step1 from 'src/assets/referrals/step-1.svg';
+import Step2 from 'src/assets/referrals/step-2.svg';
+import Step3 from 'src/assets/referrals/step-3.svg';
 import CopyableTextField from 'src/components/CopyableTextField';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -40,7 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderTop: '1px solid #D6D7D9',
     fontSize: '0.875rem',
     lineHeight: '1.125rem',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(),
     paddingTop: theme.spacing(),
     width: 180,
   },
@@ -51,14 +52,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
+  earnedAmount: {
+    color: theme.color.green,
+  },
   limitNotice: {
+    marginLeft: theme.spacing(),
     '& p': {
       color: `${theme.cmrTextColors.tableStatic} !important`,
       fontSize: '0.875rem',
     },
   },
   images: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(5),
     marginBottom: theme.spacing(),
     maxWidth: 850,
     '& svg': {
@@ -110,10 +115,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
     credit,
   } = props;
 
-  // If users have spent at least $25, set this to true to allow users to
-  // make referrals
-  // @todo: Replace with actual variable
-  const allowReferral = true;
+  const allowReferral = url !== undefined;
 
   // To see results section, uncomment the following code:
   // total = 1;
@@ -217,49 +219,49 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
             </Grid>
             {flags.referral ? (
               <>
-                <Grid item>
-                  {allowReferral && total !== undefined && total > 0 ? (
-                    <div className={classes.resultsWrapper}>
-                      {pending != undefined && pending > 0 ? (
-                        <Grid
-                          container
-                          justify="space-between"
-                          className={classes.referrals}
-                        >
-                          <Grid item>Pending referrals</Grid>
-                          <Grid item>{pending}</Grid>
-                        </Grid>
-                      ) : null}
+                {allowReferral && total !== undefined && total > 0 ? (
+                  <div className={classes.resultsWrapper}>
+                    {pending != undefined && pending > 0 ? (
                       <Grid
                         container
                         justify="space-between"
                         className={classes.referrals}
                       >
-                        <Grid item>Completed referrals</Grid>
-                        <Grid item>{completed}</Grid>
+                        <Grid item>Pending referrals</Grid>
+                        <Grid item>{pending}</Grid>
                       </Grid>
-                      <Grid
-                        container
-                        justify="space-between"
-                        className={classes.earned}
-                      >
-                        <Grid item>Credit earned</Grid>
-                        <Grid item>${credit}</Grid>
-                      </Grid>
-                    </div>
-                  ) : null}
-                  {!allowReferral ? (
-                    <Notice
-                      warning
-                      className={classes.limitNotice}
-                      spacingTop={0}
-                      spacingBottom={0}
+                    ) : null}
+                    <Grid
+                      container
+                      justify="space-between"
+                      className={classes.referrals}
                     >
-                      Spend $25 with Linode to activate your personal referral
-                      link
-                    </Notice>
-                  ) : null}
-                </Grid>
+                      <Grid item>Completed referrals</Grid>
+                      <Grid item>{completed}</Grid>
+                    </Grid>
+                    <Grid
+                      container
+                      justify="space-between"
+                      className={classes.earned}
+                    >
+                      <Grid item>Credit earned</Grid>
+                      <Grid item className={classes.earnedAmount}>
+                        ${credit}
+                      </Grid>
+                    </Grid>
+                  </div>
+                ) : null}
+                {!allowReferral ? (
+                  <Notice
+                    warning
+                    className={classes.limitNotice}
+                    spacingTop={8}
+                    spacingBottom={0}
+                  >
+                    Spend $25 with Linode to activate your personal referral
+                    link
+                  </Notice>
+                ) : null}
                 <Grid
                   container
                   direction="row"

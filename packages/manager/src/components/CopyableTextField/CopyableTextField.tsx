@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(0.5),
     '& svg': {
       height: 14,
+      top: 1,
     },
   },
 }));
