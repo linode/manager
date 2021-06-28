@@ -18,8 +18,10 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
-import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell,
+} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';

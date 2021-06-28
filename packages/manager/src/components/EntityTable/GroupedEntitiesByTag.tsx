@@ -36,8 +36,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   groupContainer: {
     [theme.breakpoints.up('md')]: {
       '& $tagHeaderRow > td': {
-        padding: `${theme.spacing(1) + 2}px 0`,
         borderTop: 'none',
+        padding: `${theme.spacing(1) + 2}px 0`,
       },
     },
   },
@@ -56,7 +56,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type CombinedProps = ListProps;
 
 export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
-  const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
+  const {
+    data,
+    entity,
+    handlers,
+    headers,
+    initialOrder,
+    RowComponent,
+    toggleGroupByTag,
+    isGroupedByTag,
+  } = props;
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
@@ -68,7 +77,6 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => {
         const groupedEntities = compose(sortGroups, groupByTags)(orderedData);
-
         return (
           <Table aria-label={`List of ${entity}`}>
             <EntityTableHeader
@@ -76,6 +84,8 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
               handleOrderChange={handleOrderChange}
               order={order}
               orderBy={orderBy}
+              toggleGroupByTag={toggleGroupByTag}
+              isGroupedByTag={isGroupedByTag}
             />
             {groupedEntities.map(([tag, domains]: [string, any[]]) => {
               return (
@@ -131,7 +141,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
                                   handleSizeChange={handlePageSizeChange}
                                   pageSize={pageSize}
                                   page={page}
-                                  eventCategory={'domains landing'}
+                                  eventCategory={'Entity table'}
                                   showAll
                                 />
                               </TableCell>

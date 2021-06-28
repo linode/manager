@@ -60,7 +60,12 @@ export default {
 export const ListView = () => (
   <Provider store={store}>
     <Grid spacing={8}>
-      <EntityTable entity="domains" headers={headers} row={domainRow} groupByTag={false} />
+      <EntityTable
+        entity="domains"
+        headers={headers}
+        row={domainRow}
+        isGroupedByTag
+      />
     </Grid>
   </Provider>
 );
@@ -72,7 +77,12 @@ ListView.story = {
 export const GroupedByTag = () => (
   <Provider store={store}>
     <Grid spacing={8}>
-      <EntityTable entity="domains" headers={headers} row={domainRow} groupByTag={true} />
+      <EntityTable
+        entity="domains"
+        headers={headers}
+        row={domainRow}
+        isGroupedByTag
+      />
     </Grid>
   </Provider>
 );
