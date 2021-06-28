@@ -18,7 +18,7 @@ import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
-import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';

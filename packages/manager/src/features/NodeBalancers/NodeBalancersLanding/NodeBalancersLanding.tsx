@@ -15,8 +15,10 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
-import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell,
+} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
@@ -257,7 +259,7 @@ export class NodeBalancersLanding extends React.Component<
                   createButtonWidth={190}
                   docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
                 />
-                <EntityTable_CMR
+                <EntityTable
                   entity="nodebalancer"
                   isGroupedByTag={nodeBalancersAreGrouped}
                   toggleGroupByTag={toggleNodeBalancerGroupByTag}
