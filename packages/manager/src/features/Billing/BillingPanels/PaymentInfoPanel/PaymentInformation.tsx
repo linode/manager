@@ -12,6 +12,7 @@ import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 import GooglePay from 'src/assets/icons/providers/google-logo.svg';
 import Box from 'src/components/core/Box';
 import useFlags from 'src/hooks/useFlags';
+import { PaymentMethod } from '@linode/api-v4';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -49,7 +50,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const PaymentInformation: React.FC<{}> = () => {
+interface Props {
+  paymentMethods: PaymentMethod[] | undefined;
+}
+
+const PaymentInformation: React.FC<Props> = (props) => {
+  const { paymentMethods } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
@@ -59,29 +65,6 @@ const PaymentInformation: React.FC<{}> = () => {
   const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
     'google_pay'
   );
-
-  const paymentMethods = [
-    {
-      data: {
-        card_type: 'Discover',
-        expiry: '12/2022',
-        last_four: '1111',
-      },
-      is_default: false,
-      created: '2021-06-01T20:14:49',
-      method: 'google_pay',
-    },
-    {
-      created: '2021-05-24T15:49:49',
-      method: 'credit_card',
-      is_default: true,
-      data: {
-        expiry: '09/2027',
-        card_type: '',
-        last_four: '0061',
-      },
-    },
-  ];
 
   return (
     <Grid className={classes.root} item xs={12} md={6}>
@@ -104,9 +87,9 @@ const PaymentInformation: React.FC<{}> = () => {
           ) : null}
         </div>
 
-        {paymentMethods.length == 0
+        {!paymentMethods || paymentMethods?.length == 0
           ? 'No payment methods have been specified for this account.'
-          : paymentMethods.map((paymentMethod) => (
+          : paymentMethods.map((paymentMethod: PaymentMethod) => (
               <PaymentMethodRow
                 key={paymentMethod.method}
                 paymentMethod={paymentMethod.data.card_type}

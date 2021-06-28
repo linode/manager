@@ -14,6 +14,7 @@ import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingAc
 import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
+import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -32,6 +33,10 @@ type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
 export const BillingDetail: React.FC<CombinedProps> = (props) => {
   const { account, requestAccount } = useAccount();
+  const {
+    data: paymentMethods,
+    isLoading: isPaymentMethodsLoading,
+  } = useAllPaymentMethodsQuery();
 
   const classes = useStyles();
 
@@ -41,7 +46,10 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
     }
   }, [account.loading, account.lastUpdated, requestAccount]);
 
-  if (account.loading && account.lastUpdated === 0) {
+  if (
+    isPaymentMethodsLoading ||
+    (account.loading && account.lastUpdated === 0)
+  ) {
     return <CircleProgress />;
   }
 
@@ -85,7 +93,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 history={props.history}
                 taxId={account.data.tax_id}
               />
-              <PaymentInformation />
+              <PaymentInformation paymentMethods={paymentMethods} />
             </Grid>
             <BillingActivityPanel
               accountActiveSince={account?.data?.active_since}
