@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   images: {
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(4),
     marginBottom: theme.spacing(),
     maxWidth: 850,
     '& svg': {
