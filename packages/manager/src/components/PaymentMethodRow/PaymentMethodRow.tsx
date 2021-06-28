@@ -9,8 +9,8 @@ import ActionMenu, {
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
 import {
-  ThirdPartyPayment as ThirdPartyPaymentType,
   PaymentMethod,
+  ThirdPartyPayment as ThirdPartyPaymentTypes,
 } from '@linode/api-v4/lib/account/types';
 import { useHistory } from 'react-router-dom';
 
@@ -40,6 +40,7 @@ type CombinedProps = Props;
 
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   const { paymentMethod, onEdit } = props;
+  const { data, type, is_default } = paymentMethod;
   const classes = useStyles();
   const history = useHistory();
 
@@ -69,14 +70,18 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
           ) : null}
           {creditCard ? (
             <CreditCard
-              type={paymentMethod.data?.card_type}
-              lastFour={paymentMethod.data?.last_four}
-              expiry={paymentMethod.data?.expiry}
+              type={data?.card_type}
+              lastFour={data?.last_four}
+              expiry={data?.expiry}
             />
-          ) : null}
+          ) : (
+            <ThirdPartyPayment
+              thirdPartyPayment={type as ThirdPartyPaymentTypes}
+            />
+          )}
         </Grid>
         <Grid item className={classes.item}>
-          {isDefault && (
+          {is_default && (
             <Chip className={classes.chip} label="DEFAULT" component="span" />
           )}
         </Grid>
@@ -84,10 +89,9 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
           <ActionMenu
             actionsList={actions}
             ariaLabel={`Action menu for ${
-              creditCard?.last_four
-                ? `card ending in ${creditCard.last_four}`
-                : thirdPartyPayment &&
-                  thirdPartyPaymentMap[thirdPartyPayment].label
+              type === 'credit_card'
+                ? `card ending in ${data?.last_four}`
+                : thirdPartyPaymentMap[type]?.label
             }`}
           />
         </Grid>

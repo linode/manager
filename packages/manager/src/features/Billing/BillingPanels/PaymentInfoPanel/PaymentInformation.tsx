@@ -111,20 +111,21 @@ const PaymentInformation: React.FC<Props> = (props) => {
               )[0].reason
             }
           </Typography>
-        ) : null}
-        {!paymentMethods || paymentMethods?.length == 0
-          ? 'No payment methods have been specified for this account.'
-          : paymentMethods.map((paymentMethod: PaymentMethod) => (
-              <PaymentMethodRow
-                key={paymentMethod.type}
-                paymentMethod={paymentMethod}
-                onEdit={
-                  paymentMethod.type === 'credit_card'
-                    ? openEditDrawer
-                    : undefined
-                }
-              />
-            ))}
+        ) : !paymentMethods || paymentMethods?.length == 0 ? (
+          'No payment methods have been specified for this account.'
+        ) : (
+          paymentMethods.map((paymentMethod: PaymentMethod) => (
+            <PaymentMethodRow
+              key={paymentMethod.type}
+              paymentMethod={paymentMethod}
+              onEdit={
+                paymentMethod.type === 'credit_card'
+                  ? openEditDrawer
+                  : undefined
+              }
+            />
+          ))
+        )}
         {isGooglePayEnabled ? (
           <Box display="flex" alignItems="center" mt={2}>
             <GooglePay width={16} height={16} />
