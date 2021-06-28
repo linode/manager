@@ -68,10 +68,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
     <Paper className={classes.root} variant="outlined">
       <Grid container className={classes.container}>
         <Grid item className={classes.item}>
-          {thirdPartyPayment ? (
-            <ThirdPartyPayment thirdPartyPayment={thirdPartyPayment} />
-          ) : null}
-          {creditCard ? (
+          {paymentMethod.type === 'credit_card' ? (
             <CreditCard
               type={data?.card_type}
               lastFour={data?.last_four}
