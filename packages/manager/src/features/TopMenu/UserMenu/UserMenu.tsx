@@ -274,6 +274,10 @@ export const UserMenu: React.FC<{}> = () => {
         href: '/account/service-transfers',
         hide: _isRestrictedUser || !flags.entityTransfers,
       },
+      {
+        display: 'Maintenance',
+        href: '/account/maintenance',
+      },
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
