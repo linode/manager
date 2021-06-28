@@ -12,6 +12,7 @@ import {
   ThirdPartyPayment as ThirdPartyPaymentType,
   CreditCard as CreditCardType,
 } from '@linode/api-v4/lib/account/types';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -31,43 +32,32 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  creditCard?: CreditCardType;
-  thirdPartyPayment?: ThirdPartyPaymentType;
-  isDefault: boolean;
+  paymentMethod: PaymentMethod;
+  onEdit?: () => void;
 }
 
 type CombinedProps = Props;
 
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
-  const { creditCard, thirdPartyPayment, isDefault } = props;
+  const { paymentMethod, onEdit } = props;
   const classes = useStyles();
+  const history = useHistory();
 
   const actions: Action[] = [
     {
       title: 'Make a Payment',
       onClick: () => {
-        ('');
+        history.replace('/account/billing/make-payment');
       },
     },
-    {
-      title: 'Make Default',
-      disabled: isDefault,
-      onClick: () => {
-        ('');
-      },
-    },
-    {
-      title: 'Edit',
-      onClick: () => {
-        ('');
-      },
-    },
-    {
-      title: 'Remove',
-      onClick: () => {
-        ('');
-      },
-    },
+    ...(onEdit
+      ? [
+          {
+            title: 'Edit',
+            onClick: onEdit,
+          },
+        ]
+      : []),
   ];
 
   return (

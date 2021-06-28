@@ -67,11 +67,13 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
   const { type, lastFour, expiry } = props;
 
   const classes = useStyles();
-  const Icon = type && getIcon(type);
+  const Icon = type ? getIcon(type) : GenericCardIcon;
 
   return (
     <div className={classes.root}>
-      {type ? <span className={classes.icon}>{<Icon />}</span> : null}
+      <span className={classes.icon}>
+        <Icon />
+      </span>
       <div
         className={classnames({
           [classes.card]: true,

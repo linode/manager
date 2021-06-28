@@ -48,12 +48,14 @@ import {
   promoFactory,
   staticObjects,
   makeObjectsPage,
+  paymentMethodFactory,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
 import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
+import { PaymentMethodSchema } from '@linode/validation';
 
 export const makeResourcePage = (
   e: any[],
@@ -430,6 +432,14 @@ export const handlers = [
   rest.get('*/account/maintenance', (req, res, ctx) => {
     const accountMaintenance = accountMaintenanceFactory.buildList(2);
     return res(ctx.json(makeResourcePage(accountMaintenance)));
+  }),
+  rest.get('*/account/payment-methods', (req, res, ctx) => {
+    const method1 = paymentMethodFactory.build({ is_default: true });
+    const method2 = paymentMethodFactory.build({
+      data: { card_type: 'Discover' },
+    });
+    const method3 = paymentMethodFactory.build({ type: 'google_pay' });
+    return res(ctx.json(makeResourcePage([method1, method2, method3])));
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {

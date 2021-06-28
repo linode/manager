@@ -91,11 +91,13 @@ const PaymentInformation: React.FC<Props> = (props) => {
           ? 'No payment methods have been specified for this account.'
           : paymentMethods.map((paymentMethod: PaymentMethod) => (
               <PaymentMethodRow
-                key={paymentMethod.method}
-                paymentMethod={paymentMethod.data.card_type}
-                isDefault={paymentMethod.is_default}
-                expiry={paymentMethod.data.expiry}
-                lastFour={paymentMethod.data.last_four}
+                key={paymentMethod.type}
+                paymentMethod={paymentMethod}
+                onEdit={
+                  paymentMethod.type === 'credit_card'
+                    ? () => setEditDrawerOpen(true)
+                    : undefined
+                }
               />
             ))}
 
