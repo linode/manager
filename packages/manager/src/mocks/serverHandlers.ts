@@ -433,6 +433,10 @@ export const handlers = [
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
 
     const accountMaintenance = [
+      ...accountMaintenanceFactory.buildList(1, {
+        entity: { label: 'very-long-name-for-a-linode-for-testing' },
+        when: new Date(Date.now() + 5000).toISOString(),
+      }),
       ...accountMaintenanceFactory.buildList(27, { status: 'pending' }),
       ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
     ];

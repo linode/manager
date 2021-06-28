@@ -27,6 +27,8 @@ import Grid from 'src/components/Grid';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import Typography from 'src/components/core/Typography';
 import { useOrder } from 'src/hooks/useOrder';
+import { parseAPIDate } from 'src/utilities/date';
+import capitalize from 'src/utilities/capitalize';
 
 interface Props {
   // we will add more types when the endpoint supports them
@@ -65,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   cell: {
-    width: '15%',
+    width: '12%',
   },
   capitalize: {
     textTransform: 'capitalize',
@@ -134,16 +136,26 @@ const MaintenanceTable: React.FC<Props> = (props) => {
             {item.entity.label}
           </Link>
         </TableCell>
-        <TableCell>{formatDate(item.when)}</TableCell>
+        <TableCell>
+          <div>{formatDate(item.when)}</div>
+        </TableCell>
         <Hidden xsDown>
           <TableCell className={classes.capitalize}>
             {item.type.replace('_', ' ')}
           </TableCell>
         </Hidden>
-        <TableCell className={classes.capitalize}>
+        <TableCell>
           <StatusIcon status={getStatusIcon(item.status)} />
-          {item.status}
+          {
+            // @ts-expect-error api will change pending -> scheduled
+            item.status === 'pending' || item.status === 'scheduled'
+              ? 'Scheduled'
+              : capitalize(item.status)
+          }{' '}
         </TableCell>
+        <Hidden smDown>
+          <TableCell>{parseAPIDate(item.when).toRelative()}</TableCell>
+        </Hidden>
         <Hidden mdDown>
           <TableCell lastChild>{item.reason}</TableCell>
         </Hidden>
@@ -156,16 +168,16 @@ const MaintenanceTable: React.FC<Props> = (props) => {
       return (
         <TableRowLoading
           oneLine
-          numberOfColumns={5}
-          colSpan={5}
-          widths={[15, 15, 15, 12, 43]}
+          numberOfColumns={6}
+          colSpan={6}
+          widths={[12, 12, 12, 12, 12, 40]}
         />
       );
     } else if (error) {
-      return <TableRowError colSpan={5} message={error[0].reason} />;
+      return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results == 0) {
       return (
-        <TableRowEmptyState message="No pending maintenance." colSpan={5} />
+        <TableRowEmptyState message="No pending maintenance." colSpan={6} />
       );
     } else if (data) {
       return data.data.map((item: AccountMaintenance) => renderTableRow(item));
@@ -217,10 +229,21 @@ const MaintenanceTable: React.FC<Props> = (props) => {
               direction={order}
               label="status"
               handleClick={handleOrderChange}
-              style={{ width: '12%' }}
+              className={classes.cell}
             >
               Status
             </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'when'}
+                direction={order}
+                label="when"
+                handleClick={handleOrderChange}
+                className={classes.cell}
+              >
+                When
+              </TableSortCell>
+            </Hidden>
             <Hidden mdDown>
               <TableCell style={{ width: '40%' }}>Reason</TableCell>
             </Hidden>

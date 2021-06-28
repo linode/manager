@@ -14,7 +14,7 @@ export const pickRandom = <T>(items: T[]): T => {
  * @returns {Date} a random date between start and end
  */
 export const randomDate = (
-  start: Date = new Date(2021, 6, 26),
+  start: Date = new Date(),
   end: Date = new Date(2021, 10, 25)
 ) =>
   new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
