@@ -49,11 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.headlineStatic,
   },
   earned: {
-    color: theme.cmrTextColors.headlineStatic,
-    fontFamily: theme.font.bold,
-  },
-  earnedAmount: {
     color: theme.color.green,
+    fontFamily: theme.font.bold,
   },
   limitNotice: {
     marginLeft: theme.spacing(),
@@ -84,6 +81,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    '& svg': {
+      color: theme.cmrBGColors.bgReferralsImage,
+    },
     [theme.breakpoints.down('xs')]: {
       marginBottom: theme.spacing(2),
     },
@@ -115,7 +115,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
     credit,
   } = props;
 
-  const allowReferral = url !== undefined;
+  const allowReferral = true;
 
   // To see results section, uncomment the following code:
   // total = 1;
@@ -221,7 +221,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
               <>
                 {allowReferral && total !== undefined && total > 0 ? (
                   <div className={classes.resultsWrapper}>
-                    {pending != undefined && pending > 0 ? (
+                    {pending !== undefined && pending > 0 ? (
                       <Grid
                         container
                         justify="space-between"
@@ -245,9 +245,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
                       className={classes.earned}
                     >
                       <Grid item>Credit earned</Grid>
-                      <Grid item className={classes.earnedAmount}>
-                        ${credit}
-                      </Grid>
+                      <Grid item>${credit}</Grid>
                     </Grid>
                   </div>
                 ) : null}
