@@ -148,15 +148,16 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
             <>
               <Typography variant="body1" style={{ marginBottom: 12 }}>
                 When you refer friends or colleagues to Linode using your
-                referral link, they’ll receive a $100, 60-day credit once a
+                referral link, they&apos;ll receive a $100, 60-day credit once a
                 valid payment method is added to their new account.
               </Typography>
               <Typography variant="body1">
-                When the referred customer spends $25 on Linode services, you’ll
-                receive a $25 non-expiring account credit. There are no limits
-                to the number of people you can refer.{' '}
+                When the referred customer spends $25 on Linode services, and
+                has remained an active customer in good standing for 90 days,
+                you&apos;ll receive a $25 non-expiring account credit. There are
+                no limits to the number of people you can refer.{' '}
                 <Link to="https://www.linode.com/promotional-policy/">
-                  Learn more about eligibility
+                  Read more about our promotions policy
                 </Link>
                 .
               </Typography>
