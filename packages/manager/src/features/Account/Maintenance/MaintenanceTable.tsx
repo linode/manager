@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing(),
     },
-    color: '#888F91',
+    color: theme.cmrTextColors.tableHeader,
     fontSize: '.9rem',
   },
   CSVlinkContainer: {
@@ -73,6 +73,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'capitalize',
   },
   heading: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing(),
+    },
     marginBottom: theme.spacing(),
   },
 }));
