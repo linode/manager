@@ -87,7 +87,7 @@ export const BucketTable: React.FC<CombinedProps> = (props) => {
                 >
                   Size
                 </TableSortCell>
-                <Hidden smDown>
+                <Hidden xsDown>
                   <TableSortCell
                     active={orderBy === 'objects'}
                     label="objects"

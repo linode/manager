@@ -86,28 +86,30 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Region">
-        <Typography variant="body1" data-qa-region>
-          {formatObjectStorageCluster(cluster) || cluster}
-        </Typography>
-      </TableCell>
-      <TableCell parentColumn="Created">
-        <DateTimeDisplay value={created} data-qa-created />
-      </TableCell>
+      <Hidden xsDown>
+        <TableCell parentColumn="Region">
+          <Typography variant="body1" data-qa-region>
+            {formatObjectStorageCluster(cluster) || cluster}
+          </Typography>
+        </TableCell>
+      </Hidden>
+      <Hidden smDown>
+        <TableCell parentColumn="Created">
+          <DateTimeDisplay value={created} data-qa-created />
+        </TableCell>
+      </Hidden>
       <TableCell parentColumn="Size">
         <Typography variant="body1" data-qa-size>
           {readableBytes(size).formatted}
         </Typography>
       </TableCell>
-
-      <Hidden smDown>
+      <Hidden xsDown>
         <TableCell>
           <Typography variant="body1" data-qa-size>
             {objects}
           </Typography>
         </TableCell>
       </Hidden>
-
       <TableCell className={classes.actionCell}>
         <BucketActionMenu
           onRemove={onRemove}
