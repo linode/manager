@@ -33,10 +33,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'underline',
     },
   },
-  actionCell: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: 0,
+  bucketRegion: {
+    width: '20%',
+  },
+  bucketSize: {
+    width: '15%',
+  },
+  bucketObjects: {
+    width: '10%',
   },
 }));
 
@@ -86,29 +90,33 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Region">
-        <Typography variant="body1" data-qa-region>
-          {formatObjectStorageCluster(cluster) || cluster}
-        </Typography>
-      </TableCell>
-      <TableCell parentColumn="Created">
-        <DateTimeDisplay value={created} data-qa-created />
-      </TableCell>
-      <TableCell parentColumn="Size">
+      <Hidden xsDown>
+        <TableCell className={classes.bucketRegion}>
+          <Typography variant="body1" data-qa-region>
+            {formatObjectStorageCluster(cluster) || cluster}
+          </Typography>
+        </TableCell>
+      </Hidden>
+      <Hidden mdDown>
+        <TableCell>
+          <DateTimeDisplay value={created} data-qa-created />
+        </TableCell>
+      </Hidden>
+      <TableCell className={classes.bucketSize} noWrap>
         <Typography variant="body1" data-qa-size>
           {readableBytes(size).formatted}
         </Typography>
       </TableCell>
 
-      <Hidden smDown>
-        <TableCell>
+      <Hidden xsDown>
+        <TableCell className={classes.bucketObjects}>
           <Typography variant="body1" data-qa-size>
             {objects}
           </Typography>
         </TableCell>
       </Hidden>
 
-      <TableCell className={classes.actionCell}>
+      <TableCell>
         <BucketActionMenu
           onRemove={onRemove}
           onDetails={onDetails}
