@@ -4,7 +4,6 @@ import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
 import { compose } from 'recompose';
-import GooglePayButton from 'src/assets/icons/payment/gPayButton.svg';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -23,6 +22,7 @@ import { v4 } from 'uuid';
 import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
+import GooglePayButton from './GooglePayButton';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,24 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
-  },
-  gPayButton: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.cmrBGColors.bgGooglePay,
-    border: 0,
-    borderRadius: 4,
-    cursor: 'pointer',
-    height: 35,
-    width: '100%',
-    '&:hover': {
-      opacity: 0.8,
-    },
-    '& svg': {
-      color: theme.cmrTextColors.textGooglePay,
-      height: 16,
-    },
   },
 }));
 
@@ -108,6 +90,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
     null
   );
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
@@ -130,6 +113,11 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
 
   const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUSD(e.target.value || '');
+  };
+
+  const handleOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const formattedUSD = Number(e.target.value).toFixed(2) || '';
+    setUSD(formattedUSD);
   };
 
   const setSuccess: SetSuccess = (
@@ -169,6 +157,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
       <Grid container>
         <Grid item xs={12}>
           {successMessage && <Notice success text={successMessage ?? ''} />}
+          {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {balance !== false && (
             <Grid item>
@@ -189,6 +178,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             <TextField
               label="Payment Amount"
               onChange={handleUSDChange}
+              onBlur={handleOnBlur}
               value={usd}
               required
               type="number"
@@ -213,21 +203,29 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                   <strong>Or pay via:</strong>
                 </Typography>
               </Grid>
-              <Grid container item wrap="nowrap">
-                <AsyncPaypal
-                  key={payPalKey}
-                  usd={usd}
-                  setSuccess={setSuccess}
-                  asyncScriptOnLoad={onScriptLoad}
-                  isScriptLoaded={isPaypalScriptLoaded}
-                />
-                {showGooglePay ? (
-                  <Grid item xs={6}>
-                    <button className={classes.gPayButton}>
-                      <GooglePayButton />
-                    </button>
-                  </Grid>
-                ) : null}
+              <Grid container>
+                <Grid item>
+                  <AsyncPaypal
+                    key={payPalKey}
+                    usd={usd}
+                    setSuccess={setSuccess}
+                    asyncScriptOnLoad={onScriptLoad}
+                    isScriptLoaded={isPaypalScriptLoaded}
+                  />
+                </Grid>
+                <Grid item xs={9} sm={6}>
+                  <GooglePayButton
+                    transactionInfo={{
+                      totalPriceStatus: 'FINAL',
+                      currencyCode: 'USD',
+                      countryCode: 'US',
+                      totalPrice: usd,
+                    }}
+                    balance={balance}
+                    setSuccess={setSuccess}
+                    setError={setErrorMessage}
+                  />
+                </Grid>
               </Grid>
             </>
           ) : (

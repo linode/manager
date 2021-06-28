@@ -3,6 +3,7 @@ import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
+import { getClientToken, ClientToken } from '@linode/api-v4/lib/account';
 
 const queryKey = 'account-payment-methods';
 
@@ -45,3 +46,10 @@ export const getCreditCard = (paymentMethods: PaymentMethod[] | undefined) => {
       paymentMethod.is_default === true && paymentMethod.type === 'credit_card'
   );
 };
+
+export const useClientToken = () =>
+  useQuery<ClientToken, APIError[]>(
+    queryKey + '-client-token',
+    getClientToken,
+    queryPresets.longLived
+  );
