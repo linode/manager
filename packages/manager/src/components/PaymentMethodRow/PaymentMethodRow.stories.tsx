@@ -10,36 +10,28 @@ const card = (type: CardType) => {
   return (
     <>
       <PaymentMethodRow
-        creditCard={{
-          card_type: type,
-          last_four: '1234',
-          expiry: '10/2025',
+        paymentMethod={{
+          type: 'credit_card',
+          is_default: true,
+          created: '2021-06-01T20:14:49',
+          data: {
+            card_type: type,
+            last_four: '1234',
+            expiry: '10/2025',
+          },
         }}
-        isDefault={true}
       />
       <PaymentMethodRow
-        creditCard={{
-          card_type: type,
-          last_four: '1234',
-          expiry: '10/2025',
+        paymentMethod={{
+          type: 'credit_card',
+          is_default: false,
+          created: '2021-06-01T20:14:49',
+          data: {
+            card_type: type,
+            last_four: '1234',
+            expiry: '10/2025',
+          },
         }}
-        isDefault={false}
-      />
-      <PaymentMethodRow
-        creditCard={{
-          card_type: type,
-          last_four: '1234',
-          expiry: '10/2020',
-        }}
-        isDefault={true}
-      />
-      <PaymentMethodRow
-        creditCard={{
-          card_type: type,
-          last_four: '1234',
-          expiry: '10/2020',
-        }}
-        isDefault={false}
       />
     </>
   );
@@ -60,14 +52,58 @@ export const Other = () => card('Other');
 
 export const GooglePay = () => (
   <>
-    <PaymentMethodRow isDefault={true} thirdPartyPayment={'google_pay'} />
-    <PaymentMethodRow isDefault={false} thirdPartyPayment={'google_pay'} />
+    <PaymentMethodRow
+      paymentMethod={{
+        data: {
+          card_type: 'Discover',
+          expiry: '12/2022',
+          last_four: '1111',
+        },
+        is_default: true,
+        created: '2021-06-01T20:14:49',
+        type: 'google_pay',
+      }}
+    />
+    <PaymentMethodRow
+      paymentMethod={{
+        data: {
+          card_type: 'Discover',
+          expiry: '12/2022',
+          last_four: '1111',
+        },
+        is_default: false,
+        created: '2021-06-01T20:14:49',
+        type: 'google_pay',
+      }}
+    />
   </>
 );
 
 export const PayPal = () => (
   <>
-    <PaymentMethodRow isDefault={true} thirdPartyPayment={'paypal'} />
-    <PaymentMethodRow isDefault={false} thirdPartyPayment={'paypal'} />
+    <PaymentMethodRow
+      paymentMethod={{
+        data: {
+          card_type: 'Discover',
+          expiry: '12/2022',
+          last_four: '1111',
+        },
+        is_default: true,
+        created: '2021-06-01T20:14:49',
+        type: 'paypal',
+      }}
+    />
+    <PaymentMethodRow
+      paymentMethod={{
+        data: {
+          card_type: 'Discover',
+          expiry: '12/2022',
+          last_four: '1111',
+        },
+        is_default: false,
+        created: '2021-06-01T20:14:49',
+        type: 'paypal',
+      }}
+    />
   </>
 );

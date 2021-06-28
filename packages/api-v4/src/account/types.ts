@@ -77,6 +77,9 @@ export type PromotionServiceType =
 export type ThirdPartyPayment = 'google_pay' | 'paypal';
 
 export type CardType = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
+
+export type PaymentType = 'credit_card' | ThirdPartyPayment;
+
 export interface CreditCard {
   expiry: string | null;
   last_four: string | null;
@@ -379,11 +382,11 @@ export interface AccountMaintenance {
 }
 
 export interface PaymentMethod {
-  type: string;
+  type: PaymentType;
   is_default: boolean;
   created: string;
   data: {
-    card_type: string;
+    card_type: CardType;
     last_four: string;
     expiry: string;
   };

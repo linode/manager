@@ -8,25 +8,53 @@ import {
   gPay,
 } from 'src/features/Billing/Providers/GooglePay';
 import { useSnackbar, VariantType } from 'notistack';
+import classNames from 'classnames';
 
 const useStyles = makeStyles(() => ({
   button: {
     border: 0,
     backgroundColor: 'transparent',
     padding: 0,
+    '&:hover': {
+      opacity: 0.7,
+    },
+  },
+  disabled: {
+    opacity: 0.3,
+    '&:hover': {
+      opacity: 0.3,
+    },
   },
 }));
 
-export const GooglePayChip: React.FC<{}> = () => {
+interface Props {
+  onAdd: () => void;
+}
+
+export const GooglePayChip: React.FC<Props> = (props) => {
+  const { onAdd } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data } = useClientToken();
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    if (status === 'ready' && data) {
-      initGooglePaymentInstance(data.client_token as string);
-    }
+    const init = async () => {
+      if (status === 'ready' && data) {
+        try {
+          await initGooglePaymentInstance(data.client_token as string);
+        } catch (error) {
+          // maybe log to Sentry or something
+          enqueueSnackbar('Unable to initialize Google Pay.', {
+            variant: 'error',
+          });
+        }
+        setLoading(false);
+      }
+    };
+    init();
+
   }, [status, data]);
 
   const doToast = (message: string, variant: VariantType) =>
@@ -42,13 +70,21 @@ export const GooglePayChip: React.FC<{}> = () => {
         currencyCode: 'USD',
         countryCode: 'US',
       },
-      doToast
+      doToast,
+      onAdd
     );
   };
 
   return (
-    <button className={classes.button} onClick={handlePay}>
-      <GooglePayIcon />
+    <button
+      className={classNames({
+        [classes.button]: true,
+        [classes.disabled]: loading,
+      })}
+      disabled={loading}
+      onClick={handlePay}
+    >
+      <GooglePayIcon height="48px" />
     </button>
   );
 };

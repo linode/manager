@@ -9,9 +9,10 @@ import ActionMenu, {
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
 import {
-  ThirdPartyPayment as ThirdPartyPaymentType,
-  CreditCard as CreditCardType,
+  PaymentMethod,
+  ThirdPartyPayment as ThirdPartyPaymentTypes,
 } from '@linode/api-v4/lib/account/types';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -28,65 +29,59 @@ const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     fontSize: '0.625rem',
   },
+  container: {
+    flexWrap: 'nowrap',
+  },
 }));
 
 interface Props {
-  creditCard?: CreditCardType;
-  thirdPartyPayment?: ThirdPartyPaymentType;
-  isDefault: boolean;
+  paymentMethod: PaymentMethod;
+  onEdit?: () => void;
 }
 
 type CombinedProps = Props;
 
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
-  const { creditCard, thirdPartyPayment, isDefault } = props;
+  const { paymentMethod, onEdit } = props;
+  const { data, type, is_default } = paymentMethod;
   const classes = useStyles();
+  const history = useHistory();
 
   const actions: Action[] = [
     {
       title: 'Make a Payment',
       onClick: () => {
-        ('');
+        history.replace('/account/billing/make-payment');
       },
     },
-    {
-      title: 'Make Default',
-      disabled: isDefault,
-      onClick: () => {
-        ('');
-      },
-    },
-    {
-      title: 'Edit',
-      onClick: () => {
-        ('');
-      },
-    },
-    {
-      title: 'Remove',
-      onClick: () => {
-        ('');
-      },
-    },
+    ...(onEdit
+      ? [
+          {
+            title: 'Edit',
+            onClick: onEdit,
+          },
+        ]
+      : []),
   ];
 
   return (
     <Paper className={classes.root} variant="outlined">
-      <Grid container>
+      <Grid container className={classes.container}>
         <Grid item className={classes.item}>
-          {thirdPartyPayment ? (
-            <ThirdPartyPayment thirdPartyPayment={thirdPartyPayment} />
-          ) : null}
-          {creditCard ? (
+          {paymentMethod.type === 'credit_card' ? (
             <CreditCard
-              type={creditCard.card_type}
-              lastFour={creditCard.last_four}
-              expiry={creditCard.expiry}
+              type={data?.card_type}
+              lastFour={data?.last_four}
+              expiry={data?.expiry}
             />
-          ) : null}
+          ) : (
+            <ThirdPartyPayment
+              thirdPartyPayment={type as ThirdPartyPaymentTypes}
+            />
+          )}
         </Grid>
         <Grid item className={classes.item}>
-          {isDefault && (
+          {is_default && (
             <Chip className={classes.chip} label="DEFAULT" component="span" />
           )}
         </Grid>
@@ -94,10 +89,9 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
           <ActionMenu
             actionsList={actions}
             ariaLabel={`Action menu for ${
-              creditCard?.last_four
-                ? `card ending in ${creditCard.last_four}`
-                : thirdPartyPayment &&
-                  thirdPartyPaymentMap[thirdPartyPayment].label
+              type === 'credit_card'
+                ? `card ending in ${data?.last_four}`
+                : thirdPartyPaymentMap[type]?.label
             }`}
           />
         </Grid>
