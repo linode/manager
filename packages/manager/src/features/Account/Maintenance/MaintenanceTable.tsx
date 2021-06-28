@@ -157,7 +157,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
           <TableCell>{parseAPIDate(item.when).toRelative()}</TableCell>
         </Hidden>
         <Hidden mdDown>
-          <TableCell lastChild>{item.reason}</TableCell>
+          <TableCell>{item.reason}</TableCell>
         </Hidden>
       </TableRow>
     );
