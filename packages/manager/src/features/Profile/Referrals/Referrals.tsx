@@ -115,16 +115,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
     credit,
   } = props;
 
-  const allowReferral = true;
-
-  // To see results section, uncomment the following code:
-  // total = 1;
-  // completed = 1;
-  // credit = 25;
-
-  // To see pending results, uncomment the following code:
-  // total = 1;
-  // pending = 1;
+  const allowReferral = url !== undefined;
 
   return (
     <Paper>
