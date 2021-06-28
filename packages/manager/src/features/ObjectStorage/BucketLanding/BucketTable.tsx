@@ -67,7 +67,7 @@ export const BucketTable: React.FC<CombinedProps> = (props) => {
                     Region
                   </TableSortCell>
                 </Hidden>
-                <Hidden smDown>
+                <Hidden mdDown>
                   <TableSortCell
                     active={orderBy === 'created'}
                     label="created"
@@ -87,7 +87,7 @@ export const BucketTable: React.FC<CombinedProps> = (props) => {
                 >
                   Size
                 </TableSortCell>
-                <Hidden smDown>
+                <Hidden xsDown>
                   <TableSortCell
                     active={orderBy === 'objects'}
                     label="objects"
