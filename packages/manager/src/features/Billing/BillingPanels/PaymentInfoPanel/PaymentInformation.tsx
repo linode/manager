@@ -13,6 +13,8 @@ import GooglePay from 'src/assets/icons/providers/google-logo.svg';
 import Box from 'src/components/core/Box';
 import useFlags from 'src/hooks/useFlags';
 import { PaymentMethod } from '@linode/api-v4';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -51,11 +53,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  error?: APIError[] | null;
   paymentMethods: PaymentMethod[] | undefined;
 }
 
 const PaymentInformation: React.FC<Props> = (props) => {
-  const { paymentMethods } = props;
+  const { paymentMethods, error } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
@@ -65,6 +68,22 @@ const PaymentInformation: React.FC<Props> = (props) => {
   const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
     'google_pay'
   );
+
+  const openAddDrawer = () => {
+    setAddDrawerOpen(true);
+  };
+
+  const openEditDrawer = () => {
+    setEditDrawerOpen(true);
+  };
+
+  const closeAddDrawer = () => {
+    setAddDrawerOpen(false);
+  };
+
+  const closeEditDrawer = () => {
+    setEditDrawerOpen(false);
+  };
 
   return (
     <Grid className={classes.root} item xs={12} md={6}>
@@ -78,15 +97,21 @@ const PaymentInformation: React.FC<Props> = (props) => {
           </Typography>
 
           {isGooglePayEnabled ? (
-            <Button
-              className={classes.edit}
-              onClick={() => setAddDrawerOpen(true)}
-            >
+            <Button className={classes.edit} onClick={openAddDrawer}>
               Add a Payment Method
             </Button>
           ) : null}
         </div>
-
+        {error ? (
+          <Typography>
+            {
+              getAPIErrorOrDefault(
+                error,
+                'There was an error retrieving your payment methods.'
+              )[0].reason
+            }
+          </Typography>
+        ) : null}
         {!paymentMethods || paymentMethods?.length == 0
           ? 'No payment methods have been specified for this account.'
           : paymentMethods.map((paymentMethod: PaymentMethod) => (
@@ -95,33 +120,28 @@ const PaymentInformation: React.FC<Props> = (props) => {
                 paymentMethod={paymentMethod}
                 onEdit={
                   paymentMethod.type === 'credit_card'
-                    ? () => setEditDrawerOpen(true)
+                    ? openEditDrawer
                     : undefined
                 }
               />
             ))}
-
         {isGooglePayEnabled ? (
           <Box display="flex" alignItems="center" mt={2}>
             <GooglePay width={16} height={16} />
             <Typography className={classes.googlePayNotice}>
               Google Pay is now available for recurring payments.
-              <Link to="#" onClick={() => setAddDrawerOpen(true)}>
+              <Link to="#" onClick={openAddDrawer}>
                 {' '}
                 Add Payment Method.
               </Link>
             </Typography>
           </Box>
         ) : null}
-
         <UpdateCreditCardDrawer
           open={editDrawerOpen}
-          onClose={() => setEditDrawerOpen(false)}
+          onClose={closeEditDrawer}
         />
-        <AddPaymentMethodDrawer
-          open={addDrawerOpen}
-          onClose={() => setAddDrawerOpen(false)}
-        />
+        <AddPaymentMethodDrawer open={addDrawerOpen} onClose={closeAddDrawer} />
       </Paper>
     </Grid>
   );

@@ -36,6 +36,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
   const {
     data: paymentMethods,
     isLoading: isPaymentMethodsLoading,
+    error: paymentMethodsError,
   } = useAllPaymentMethodsQuery();
 
   const classes = useStyles();
@@ -93,7 +94,10 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 history={props.history}
                 taxId={account.data.tax_id}
               />
-              <PaymentInformation paymentMethods={paymentMethods} />
+              <PaymentInformation
+                error={paymentMethodsError}
+                paymentMethods={paymentMethods}
+              />
             </Grid>
             <BillingActivityPanel
               accountActiveSince={account?.data?.active_since}

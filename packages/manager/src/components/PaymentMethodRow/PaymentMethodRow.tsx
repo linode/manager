@@ -10,7 +10,7 @@ import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/Paymen
 import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
 import {
   ThirdPartyPayment as ThirdPartyPaymentType,
-  CreditCard as CreditCardType,
+  PaymentMethod,
 } from '@linode/api-v4/lib/account/types';
 import { useHistory } from 'react-router-dom';
 
@@ -69,9 +69,9 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
           ) : null}
           {creditCard ? (
             <CreditCard
-              type={creditCard.card_type}
-              lastFour={creditCard.last_four}
-              expiry={creditCard.expiry}
+              type={paymentMethod.data?.card_type}
+              lastFour={paymentMethod.data?.last_four}
+              expiry={paymentMethod.data?.expiry}
             />
           ) : null}
         </Grid>
