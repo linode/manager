@@ -38,6 +38,7 @@ export interface Flags {
   imagesPricingBanner: ImagesPricingBanner;
   imagesPricingCopy: ImagesPricingCopy;
   referralBannerText: ReferralBannerText;
+  referral: boolean;
 }
 
 type PromotionalOfferFeature =

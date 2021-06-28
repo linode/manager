@@ -1,62 +1,46 @@
-import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
-type ClassNames = 'root' | 'input' | 'copyIcon';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    input: {
-      backgroundColor: theme.bg.offWhite,
+const useStyles = makeStyles((theme: Theme) => ({
+  input: {
+    backgroundColor: theme.bg.offWhite,
+  },
+  copyIcon: {
+    marginRight: theme.spacing(0.5),
+    '& svg': {
+      height: 14,
+      top: 1,
     },
-    copyIcon: {
-      marginRight: theme.spacing(1),
-    },
-  });
+  },
+}));
 
 type Props = TextFieldProps & {
-  className: string;
+  className?: string;
   hideIcon?: boolean;
 };
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-class CopyableTextField extends React.Component<CombinedProps> {
-  clickIcon = (value: string) => {
-    this.setState({
-      copied: true,
-    });
-    window.setTimeout(() => this.setState({ copied: false }), 1500);
-    copy(value);
-  };
+export const CopyableTextField: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
 
-  render() {
-    const { value, classes, className, hideIcon, ...restProps } = this.props;
+  const { value, className, hideIcon, ...restProps } = props;
 
-    return (
-      <TextField
-        value={value}
-        {...restProps}
-        className={`${className} ${'copy'}`}
-        data-qa-copy-tooltip
-        InputProps={{
-          endAdornment: hideIcon ? undefined : (
-            <CopyTooltip text={`${value}`} className={classes.copyIcon} />
-          ),
-        }}
-      />
-    );
-  }
-}
+  return (
+    <TextField
+      value={value}
+      {...restProps}
+      className={`${className} ${'copy'}`}
+      data-qa-copy-tooltip
+      InputProps={{
+        endAdornment: hideIcon ? undefined : (
+          <CopyTooltip text={`${value}`} className={classes.copyIcon} />
+        ),
+      }}
+    />
+  );
+};
 
-const styled = withStyles(styles);
-
-export default styled(CopyableTextField);
+export default CopyableTextField;
