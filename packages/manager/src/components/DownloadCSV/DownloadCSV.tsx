@@ -10,20 +10,21 @@ interface Props {
   data: any[];
   headers: { label: string; key: string }[];
   filename: string;
-  className: string;
+  className?: string;
 }
 
 type CombinedProps = Props;
 
 const DownloadCSV: React.FC<CombinedProps> = (props) => {
+  const { className, headers, filename, data, children } = props;
   return (
     <CSVLink
-      className={props.className}
-      headers={props.headers}
-      filename={props.filename}
-      data={cleanCSVData(props.data)}
+      className={className}
+      headers={headers}
+      filename={filename}
+      data={cleanCSVData(data)}
     >
-      {props.children}
+      {children}
     </CSVLink>
   );
 };
