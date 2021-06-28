@@ -33,6 +33,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'underline',
     },
   },
+  bucketRegion: {
+    width: '20%',
+  },
+  bucketSize: {
+    width: '15%',
+  },
+  bucketObjects: {
+    width: '10%',
+  },
 }));
 
 interface BucketTableRowProps extends ObjectStorageBucket {
@@ -82,25 +91,25 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
         </Grid>
       </TableCell>
       <Hidden xsDown>
-        <TableCell>
+        <TableCell className={classes.bucketRegion}>
           <Typography variant="body1" data-qa-region>
             {formatObjectStorageCluster(cluster) || cluster}
           </Typography>
         </TableCell>
       </Hidden>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell>
           <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
       </Hidden>
-      <TableCell>
+      <TableCell className={classes.bucketSize} noWrap>
         <Typography variant="body1" data-qa-size>
           {readableBytes(size).formatted}
         </Typography>
       </TableCell>
 
-      <Hidden smDown>
-        <TableCell>
+      <Hidden xsDown>
+        <TableCell className={classes.bucketObjects}>
           <Typography variant="body1" data-qa-size>
             {objects}
           </Typography>
