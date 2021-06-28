@@ -54,6 +54,7 @@ export const GooglePayChip: React.FC<Props> = (props) => {
       }
     };
     init();
+
   }, [status, data]);
 
   const doToast = (message: string, variant: VariantType) =>
