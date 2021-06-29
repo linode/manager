@@ -117,6 +117,15 @@ const genericStatusPillStyle = {
   },
 };
 
+const genericTableHeaderStyle = {
+  '&:hover': {
+    cursor: 'pointer',
+    '& span': {
+      color: cmrTextColors.linkActiveLight,
+    },
+  },
+};
+
 export const dark = () => {
   const options: any = { ...darkThemeOptions };
 
@@ -268,6 +277,9 @@ const darkThemeOptions = {
   },
   applyStatusPillStyles: {
     ...genericStatusPillStyle,
+  },
+  applyTableHeaderStyles: {
+    ...genericTableHeaderStyle,
   },
   overrides: {
     MuiAppBar: {

@@ -1,13 +1,17 @@
 import * as React from 'react';
-
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowLoading from 'src/components/TableRowLoading';
 
-const renderTableHead = (w1?: number, w2?: number, w3?: number, w4?: number) => (
+const renderTableHead = (
+  w1?: number,
+  w2?: number,
+  w3?: number,
+  w4?: number
+) => (
   <TableHead>
     <TableRow>
       <TableCell style={{ width: w1 ? `${w1}%` : '25%' }}>Label</TableCell>
@@ -91,11 +95,17 @@ export const TableWithWidthsDefinedForAllColumnsOneLineSkeletonAndEntityIcon = (
   <Table>
     {renderTableHead(40, 20, 20, 20)}
     <TableBody>
-      <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} oneLine hasEntityIcon />
+      <TableRowLoading
+        colSpan={4}
+        widths={[40, 20, 20, 20]}
+        oneLine
+        hasEntityIcon
+      />
     </TableBody>
   </Table>
 );
 
 TableWithWidthsDefinedForAllColumnsOneLineSkeletonAndEntityIcon.story = {
-  name: 'Table with widths defined for all columns, one line skeleton and entity icon',
+  name:
+    'Table with widths defined for all columns, one line skeleton and entity icon',
 };

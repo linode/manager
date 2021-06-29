@@ -1,9 +1,9 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
 import Skeleton from 'src/components/Skeleton';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tableCell: {
@@ -70,7 +70,6 @@ export const TableRowLoading: React.FC<CombinedProps> = (props) => {
           data-testid="table-row-loading"
           aria-label="Table content is loading"
           key={`table-row-loading-${rowCount}`}
-          style={compact ? { height: 'auto' } : undefined}
         >
           <TableCell
             colSpan={colSpan}
