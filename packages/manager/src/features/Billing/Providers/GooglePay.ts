@@ -97,10 +97,7 @@ export const gPay = async (
       if (onSuccess) {
         onSuccess();
       }
-      await queryClient.fetchQuery(
-        'account-payment-methods',
-        getAllPaymentMethodsRequest
-      );
+      await queryClient.refetchQueries(['account-payment-methods-all']);
     }
 
     setMessage(

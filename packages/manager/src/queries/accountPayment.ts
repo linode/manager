@@ -1,6 +1,10 @@
-import { getPaymentMethods, PaymentMethod } from '@linode/api-v4/lib/account';
+import {
+  addPaymentMethod,
+  getPaymentMethods,
+  PaymentMethod,
+} from '@linode/api-v4/lib/account';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 import { getClientToken, ClientToken } from '@linode/api-v4/lib/account';
@@ -19,7 +23,7 @@ export const usePaymentMethodsQuery = (params?: any) => {
 
 export const useAllPaymentMethodsQuery = () => {
   return useQuery<PaymentMethod[], APIError[]>(
-    [queryKey + '-all'],
+    queryKey + '-all',
     getAllPaymentMethodsRequest,
     {
       ...queryPresets.longLived,
