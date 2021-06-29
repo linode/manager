@@ -13,7 +13,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
-import { getAllPaymentMethodsRequest } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actions: {
