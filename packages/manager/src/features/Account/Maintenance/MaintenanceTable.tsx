@@ -9,26 +9,21 @@ import TableRow from 'src/components/TableRow/TableRow';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
-import StatusIcon from 'src/components/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import usePagination from 'src/hooks/usePagination';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell';
-import sync from 'css-animation-sync';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import Link from 'src/components/Link';
 import { CSVLink } from 'react-csv';
-import { formatDate } from 'src/utilities/formatDate';
-import {
-  useAccountMaintenanceQuery,
-  useAllAccountMaintenanceQuery,
-} from 'src/queries/accountMaintenance';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import Typography from 'src/components/core/Typography';
 import { useOrder } from 'src/hooks/useOrder';
-import { parseAPIDate } from 'src/utilities/date';
-import capitalize from 'src/utilities/capitalize';
+import MaintenanceTableRow from './MaintenanceTableRow';
+import {
+  useAccountMaintenanceQuery,
+  useAllAccountMaintenanceQuery,
+} from 'src/queries/accountMaintenance';
 
 interface Props {
   // we will add more types when the endpoint supports them
@@ -68,9 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cell: {
     width: '12%',
-  },
-  capitalize: {
-    textTransform: 'capitalize',
   },
   heading: {
     [theme.breakpoints.down('sm')]: {
@@ -118,54 +110,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     filter
   );
 
-  const getStatusIcon = (
-    status: 'pending' | 'ready' | 'started' | 'completed'
-  ) => {
-    switch (status) {
-      case 'started':
-        return 'other';
-      case 'completed':
-        return 'active';
-      default:
-        return 'inactive';
-    }
-  };
-
-  const renderTableRow = (item: AccountMaintenance) => {
-    return (
-      <TableRow key={item.entity.id}>
-        <TableCell>
-          <Link to={`/${item.entity.type}s/${item.entity.id}`} tabIndex={0}>
-            {item.entity.label}
-          </Link>
-        </TableCell>
-        <TableCell>
-          <div>{formatDate(item.when)}</div>
-        </TableCell>
-        <Hidden xsDown>
-          <TableCell className={classes.capitalize}>
-            {item.type.replace('_', ' ')}
-          </TableCell>
-        </Hidden>
-        <TableCell>
-          <StatusIcon status={getStatusIcon(item.status)} />
-          {
-            // @ts-expect-error api will change pending -> scheduled
-            item.status === 'pending' || item.status === 'scheduled'
-              ? 'Scheduled'
-              : capitalize(item.status)
-          }{' '}
-        </TableCell>
-        <Hidden smDown>
-          <TableCell>{parseAPIDate(item.when).toRelative()}</TableCell>
-        </Hidden>
-        <Hidden mdDown>
-          <TableCell>{item.reason}</TableCell>
-        </Hidden>
-      </TableRow>
-    );
-  };
-
   const renderTableContent = () => {
     if (isLoading) {
       return (
@@ -183,7 +127,9 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         <TableRowEmptyState message="No pending maintenance." colSpan={6} />
       );
     } else if (data) {
-      return data.data.map((item: AccountMaintenance) => renderTableRow(item));
+      return data.data.map((item: AccountMaintenance) => (
+        <MaintenanceTableRow key={`${item.entity.id}`} {...item} />
+      ));
     }
 
     return null;
@@ -193,10 +139,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     await getCSVData();
     csvRef.current.link.click();
   };
-
-  React.useEffect(() => {
-    sync('pulse');
-  }, []);
 
   return (
     <React.Fragment>
