@@ -13,6 +13,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
+import CheckBox from 'src/components/CheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actions: {
@@ -32,6 +33,7 @@ interface Values {
   card_number: string;
   expiry: string;
   cvv: string;
+  is_default: boolean;
   address: string;
   address2: string;
   city: string;
@@ -52,7 +54,7 @@ const AddCreditCardForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const addCreditCard = async (
-    { card_number, cvv, expiry }: Values,
+    { card_number, cvv, expiry, is_default }: Values,
     {
       setSubmitting,
       setFieldError,
@@ -68,7 +70,7 @@ const AddCreditCardForm = (props: Props) => {
     try {
       await addPaymentMethod({
         type: 'credit_card',
-        is_default: true,
+        is_default,
         data: {
           card_number,
           cvv,
@@ -118,6 +120,7 @@ const AddCreditCardForm = (props: Props) => {
       card_number: '',
       expiry: '',
       cvv: '',
+      is_default: false,
       address: '',
       address2: '',
       city: '',
@@ -235,6 +238,11 @@ const AddCreditCardForm = (props: Props) => {
           />
         </Grid>
       </Grid>
+      <CheckBox
+        text="Make default?"
+        checked={values.is_default}
+        onChange={() => setFieldValue('is_default', !values.is_default)}
+      />
       <ActionsPanel className={classes.actions}>
         <Button onClick={onClose} buttonType="secondary">
           Cancel
