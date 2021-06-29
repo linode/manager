@@ -393,7 +393,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
               <Typography data-qa-highmem className={classes.copy}>
                 High Memory instances favor RAM over other resources, and can be
                 good for memory hungry use cases like caching and in-memory
-                databases. All High Memory plans contain dedicated CPU cores.
+                databases. All High Memory plans use dedicated CPU cores.
               </Typography>
               {this.renderPlanContainer(highmem)}
             </>
