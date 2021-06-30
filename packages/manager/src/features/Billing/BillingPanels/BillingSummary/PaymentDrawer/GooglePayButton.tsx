@@ -4,6 +4,8 @@ import { VariantType } from 'notistack';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountBilling';
 import { SetSuccess } from './types';
 import {
   initGooglePaymentInstance,
@@ -91,8 +93,14 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     gPay(
       'one-time-payment',
       transactionInfo,
-      (message: string, variant: VariantType) =>
-        variant === 'error' ? setError(message) : setSuccess(message)
+      (message: string, variant: VariantType) => {
+        if (variant === 'error') {
+          setError(message);
+        } else {
+          setSuccess(message);
+          queryClient.invalidateQueries(`${queryKey}-payments`);
+        }
+      }
     );
   };
 
