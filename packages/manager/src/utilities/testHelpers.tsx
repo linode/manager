@@ -3,7 +3,7 @@ import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/contex
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
-import { QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
@@ -30,6 +30,7 @@ interface Options {
   MemoryRouter?: MemoryRouterProps;
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
+  queryClient?: QueryClient;
 }
 
 /**
@@ -43,11 +44,11 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
   );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
-  const { customStore } = options;
+  const { customStore, queryClient: passedQueryClient } = options;
   const storeToPass = customStore ? baseStore(customStore) : store;
   return (
     <Provider store={storeToPass}>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme="dark">
           <LDProvider value={{ flags: options.flags ?? {} }}>
             <SnackbarProvider>

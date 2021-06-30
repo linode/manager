@@ -58,7 +58,9 @@ const MaintenanceTableRow = (props: AccountMaintenance) => {
         }{' '}
       </TableCell>
       <Hidden smDown>
-        <TableCell>{parseAPIDate(when).toRelative()}</TableCell>
+        <TableCell data-testid="relative-date">
+          {parseAPIDate(when).toRelative()}
+        </TableCell>
       </Hidden>
       <Hidden mdDown>
         <TableCell>{reason}</TableCell>

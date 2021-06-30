@@ -1,21 +1,55 @@
 import * as React from 'react';
 import { accountMaintenanceFactory } from 'src/factories';
-import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithTheme,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
 import MaintenanceTableRow from './MaintenanceTableRow';
 import MaintenanceTable from './MaintenanceTable';
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import {
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 import { rest, server } from 'src/mocks/testServer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { queryPresets } from 'src/queries/base';
+import { QueryClient } from 'react-query';
+import { parseAPIDate } from 'src/utilities/date';
+import formatDate from 'src/utilities/formatDate';
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: queryPresets.oneTimeFetch },
+});
+
+beforeAll(() => mockMatchMedia());
+afterEach(() => {
+  queryClient.clear();
+});
 
 const loadingTestId = 'table-row-loading';
 
 describe('Maintenance Table Row', () => {
-  it('should render the entity label', () => {
-    const maintenance = accountMaintenanceFactory.build();
+  const maintenance = accountMaintenanceFactory.build();
+  it('should render the maintenance event', () => {
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<MaintenanceTableRow {...maintenance} />)
     );
-    getByText(String(maintenance.entity.label));
+    getByText(maintenance.entity.label);
+    getByText(formatDate(maintenance.when));
+    getByText(maintenance.reason);
+  });
+
+  it('should render a relative time', () => {
+    renderWithTheme(
+      wrapWithTableBody(<MaintenanceTableRow {...maintenance} />)
+    );
+    const { getByText } = within(screen.getByTestId('relative-date'));
+
+    expect(
+      getByText(parseAPIDate(maintenance.when).toRelative()!)
+    ).toBeInTheDocument();
   });
 });
 
@@ -51,24 +85,18 @@ describe('Maintenance Table', () => {
     screen.getByText('Download CSV');
   });
 
-  // it('should render maintenance table with empty state', async () => {
-  //   server.use(
-  //     rest.get('*/account/maintenance*', (req, res, ctx) => {
-  //       return res(
-  //         ctx.json({
-  //           pages: 0,
-  //           data: [],
-  //           results: 0,
-  //           page: 0,
-  //         })
-  //       );
-  //     })
-  //   );
-  //   renderWithTheme(<MaintenanceTable type="Linode" />);
+  it('should render maintenance table with empty state', async () => {
+    server.use(
+      rest.get('*/account/maintenance', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage([])));
+      })
+    );
 
-  //   expect(screen.getByTestId('table-row-empty')).toBeInTheDocument();
+    renderWithTheme(<MaintenanceTable type="Linode" />, { queryClient });
 
-  //   // Check for custom empty state
-  //   screen.getByText('No pending maintenance.');
-  // });
+    expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
+
+    // Check for custom empty state
+    screen.getByText('No pending maintenance.');
+  });
 });
