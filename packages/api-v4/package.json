@@ -18,7 +18,7 @@
   "license": "Apache-2.0",
   "private": false,
   "main": "./index.js",
-  "types": "./index.d.ts",
+  "types": "./lib/index.d.ts",
   "unpkg": "./index.js",
   "dependencies": {
     "@linode/validation": "0.4.0",

@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
   "main": "./index.js",
-  "types": "./index.d.ts",
+  "types": "./lib/index.d.ts",
   "files": [
     "index.js",
     "index.d.ts",
