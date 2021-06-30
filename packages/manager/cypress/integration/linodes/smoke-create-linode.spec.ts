@@ -16,6 +16,11 @@ describe('create linode', () => {
     cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');
   });
+
+  afterEach(() => {
+    deleteAllTestLinodes();
+  });
+
   it('creates a nanode', () => {
     const rootpass = strings.randomPass();
     const linodeLabel = makeLinodeLabel();
@@ -30,6 +35,6 @@ describe('create linode', () => {
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     assertToast(`Your Linode ${linodeLabel} is being created.`);
     containsVisible('PROVISIONING');
-    deleteAllTestLinodes();
+    cy.contains('RUNNING', { timeout: 180000 }).should('be.visible');
   });
 });
