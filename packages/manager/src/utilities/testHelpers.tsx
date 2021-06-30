@@ -61,6 +61,23 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   );
 };
 
+/**
+ * Wraps children with just the Redux Store. This is
+ * useful for testing React hooks that need to access
+ * the Redux store.
+ * @example
+ * ```ts
+ * const { result } = renderHook(() => useOrder(defaultOrder), {
+ *   wrapper: wrapWithStore,
+ * });
+ * ```
+ * @param param {object} contains children to render
+ * @returns {JSX.Element} wrapped component with Redux available for use
+ */
+export const wrapWithStore = ({ children }: { children: any }) => {
+  return <Provider store={store}>{children}</Provider>;
+};
+
 // When wrapping a TableRow component to test, we'll get an invalid DOM nesting
 // error complaining that a <tr /> cannot appear as a child of a <div />. This
 // is a wrapper around `wrapWithTheme()` that renders the `ui` argument in a
