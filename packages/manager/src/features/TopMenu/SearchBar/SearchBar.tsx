@@ -10,22 +10,26 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
+import withSearch, {
+  AlgoliaState as AlgoliaProps,
+} from 'src/features/Help/SearchHOC';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
-import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
-import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 
 type CombinedProps = WithTypesProps &
   WithImages &
   SearchProps &
+  AlgoliaProps &
   StyleProps &
   RouteComponentProps<{}>;
 
@@ -73,7 +77,14 @@ const searchDeps: ReduxEntity[] = [
 ];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
-  const { classes, combinedResults, entitiesLoading, search } = props;
+  const {
+    classes,
+    combinedResults,
+    entitiesLoading,
+    search,
+    searchAlgolia,
+    searchResults: algoliaResults,
+  } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
@@ -126,6 +137,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
       _searchAPI(searchText);
     } else {
       search(searchText);
+      searchAlgolia(searchText);
+      console.log(algoliaResults);
     }
   }, [
     _loading,
@@ -134,6 +147,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     searchText,
     _searchAPI,
     _isLargeAccount,
+    searchAlgolia,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
@@ -284,10 +298,13 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
 };
 
+const withAlgoliaSearch = withSearch({ hitsPerPage: 10, highlight: true });
+
 export default compose<CombinedProps, {}>(
   withTypes,
   withRouter,
   withImages(),
+  withAlgoliaSearch,
   withStoreSearch(),
   styled
 )(SearchBar) as React.ComponentType<{}>;
