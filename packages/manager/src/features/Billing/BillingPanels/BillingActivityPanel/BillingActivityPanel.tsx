@@ -216,12 +216,9 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   React.useEffect(() => {
     if (accountPaymentsError || accountInvoicesError) {
       setLoading(false);
-      setError(
-        getAPIErrorOrDefault(
-          (accountPaymentsError || accountInvoicesError) as APIError[],
-          'There was an error retrieving your billing activity.'
-        )
-      );
+      setError([
+        { reason: 'There was an error retrieving your billing activity.' },
+      ]);
     }
   }, [accountInvoicesError, accountPaymentsError]);
 
