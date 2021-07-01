@@ -115,7 +115,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
     credit,
   } = props;
 
-  const allowReferral = url !== '';
+  const allowReferral = Boolean(url);
 
   return (
     <Paper>
