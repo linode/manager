@@ -94,6 +94,11 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const [apiError, setAPIError] = React.useState<string | null>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
 
+  const [
+    formattedAlgoliaResults,
+    setFormattedAlgoliaResults,
+  ] = React.useState<any>();
+
   const { _isLargeAccount } = useAccountManagement();
 
   // Only request things if the search bar is open/active.
@@ -112,8 +117,11 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { searchAPI } = useAPISearch();
 
   const _searchAPI = React.useRef(
-    debounce(500, false, (_searchText: string) => {
+    debounce(500, false, (_searchText: string, algoliaResults: any) => {
       setAPILoading(true);
+      setFormattedAlgoliaResults(
+        getOptionsFromResults(algoliaResults, _searchText)
+      );
       searchAPI(_searchText)
         .then((searchResults) => {
           setAPIResults(searchResults.combinedResults);
@@ -131,14 +139,17 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   ).current;
 
   React.useEffect(() => {
+    searchAlgolia(searchText);
+
     // We can't store all data for large accounts for client side search,
     // so use the API's filtering instead.
     if (_isLargeAccount) {
-      _searchAPI(searchText);
+      _searchAPI(searchText, algoliaResults);
     } else {
       search(searchText);
-      searchAlgolia(searchText);
-      console.log(algoliaResults);
+      setFormattedAlgoliaResults(
+        getOptionsFromResults(algoliaResults, searchText)
+      );
     }
   }, [
     _loading,
@@ -235,7 +246,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.
-    Boolean(apiError) && apiError !== 'Unauthorized'
+    Boolean(apiError) && apiError !== 'Unauthorized',
+    formattedAlgoliaResults
   );
 
   return (
@@ -313,7 +325,8 @@ export const createFinalOptions = (
   results: Item[],
   searchText: string = '',
   loading: boolean = false,
-  error: boolean = false
+  error: boolean = false,
+  formattedAlgoliaResults?: any[]
 ) => {
   const redirectOption = {
     value: 'redirect',
@@ -350,6 +363,11 @@ export const createFinalOptions = (
 
   // LESS THAN 20 RESULTS:
   if (results.length <= 20) {
+    const algoliaResultsIncluded = [
+      ...results,
+      Object.values(formattedAlgoliaResults as {}),
+    ];
+    console.log(algoliaResultsIncluded);
     return [redirectOption, ...results];
   }
 
@@ -364,4 +382,17 @@ export const createFinalOptions = (
 
   const first20Results = take(20, results);
   return [redirectOption, ...first20Results, lastOption];
+};
+
+export const getOptionsFromResults = (
+  searchResults: any,
+  inputValue: string
+) => {
+  const [docs, community] = searchResults;
+  const options = [...docs, ...community];
+
+  return [
+    { value: 'search', label: inputValue, data: { source: 'finalLink' } },
+    ...options,
+  ];
 };
