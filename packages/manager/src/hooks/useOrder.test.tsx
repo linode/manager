@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import { Provider } from 'react-redux';
 import { OrderSet } from 'src/store/preferences/preferences.actions';
 import { baseStore, wrapWithStore } from 'src/utilities/testHelpers';
@@ -20,6 +20,12 @@ const queryOrder: OrderSet = {
 // Expected order for preference test
 const preferenceOrder: OrderSet = {
   order: 'asc',
+  orderBy: 'type',
+};
+
+// Expected order for calling handleOrderChange
+const handleOrderChangeOrder: OrderSet = {
+  order: 'desc',
   orderBy: 'type',
 };
 
@@ -45,6 +51,11 @@ const wrapWithCustomStore = ({ children }: { children: any }) => {
   );
 };
 
+const mockHistory = {
+  push: jest.fn(),
+  replace: jest.fn(),
+};
+
 // Used to mock query params
 jest.mock('react-router-dom', () => ({
   useLocation: jest
@@ -55,12 +66,10 @@ jest.mock('react-router-dom', () => ({
     .mockReturnValueOnce({
       search: `https://cloud.linode.com/account/maintenance?order=desc&orderBy=when`,
     })
-    .mockReturnValueOnce({
+    .mockReturnValue({
       search: '',
     }),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
+  useHistory: jest.fn(() => mockHistory),
 }));
 
 describe('useOrder hook', () => {
@@ -92,5 +101,41 @@ describe('useOrder hook', () => {
 
     expect(result.current.order).toBe(preferenceOrder.order);
     expect(result.current.orderBy).toBe(preferenceOrder.orderBy);
+  });
+
+  it('should change order when handleOrderChange is called with new values', () => {
+    const { result } = renderHook(() => useOrder(defaultOrder), {
+      wrapper: wrapWithStore,
+    });
+
+    act(() =>
+      result.current.handleOrderChange(
+        handleOrderChangeOrder.orderBy,
+        handleOrderChangeOrder.order
+      )
+    );
+
+    expect(result.current.order).toBe(handleOrderChangeOrder.order);
+    expect(result.current.orderBy).toBe(handleOrderChangeOrder.orderBy);
+  });
+
+  it('should update query params when handleOrderChange is called', () => {
+    const { result } = renderHook(() => useOrder(defaultOrder), {
+      wrapper: wrapWithStore,
+    });
+
+    act(() =>
+      result.current.handleOrderChange(
+        handleOrderChangeOrder.orderBy,
+        handleOrderChangeOrder.order
+      )
+    );
+
+    expect(mockHistory.replace).toBeCalledWith({
+      search: `?order=${handleOrderChangeOrder.order}&orderBy=${handleOrderChangeOrder.orderBy}`,
+    });
+
+    expect(result.current.order).toBe(handleOrderChangeOrder.order);
+    expect(result.current.orderBy).toBe(handleOrderChangeOrder.orderBy);
   });
 });
