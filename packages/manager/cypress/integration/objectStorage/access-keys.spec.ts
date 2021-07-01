@@ -37,8 +37,6 @@ describe('access keys', () => {
       );
       getClick('[data-qa-close-dialog="true"]');
       fbtVisible(accessKeyLabel);
-      deleteBucketByLabel(clusterId, bucketLabel);
-      deleteAllTestAccessKeys();
     });
   });
 });

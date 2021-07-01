@@ -1,4 +1,5 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
+import { deleteAllTestDomains } from '../api/domains';
 import { deleteAllTestFirewalls } from '../api/firewalls';
 import { deleteAllTestImages } from '../api/images';
 import { deleteAllTestLinodes } from '../api/linodes';
@@ -63,4 +64,5 @@ export const deleteAllTestData = () => {
   deleteAllTestBuckets();
   deleteAllTestFirewalls();
   deleteAllTestStackscripts();
+  deleteAllTestDomains();
 };

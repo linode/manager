@@ -51,8 +51,6 @@ describe('longview', () => {
                 containsVisible('Swap');
               }
             });
-            deleteLinodeById(linode.id);
-            deleteClientById(client.id);
           });
       });
     });

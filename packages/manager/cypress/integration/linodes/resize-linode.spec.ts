@@ -16,7 +16,6 @@ describe('resize linode', () => {
       fbtVisible(
         'Your Linode will soon be automatically powered off, migrated, and restored to its previous state (booted or powered off).'
       );
-      deleteLinodeById(linode.id);
     });
   });
 });

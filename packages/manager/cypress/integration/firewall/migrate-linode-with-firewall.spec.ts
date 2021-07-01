@@ -1,9 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import {
-  clickLinodeActionMenu,
-  createLinode,
-  deleteAllTestLinodes,
-} from '../../support/api/linodes';
+import { clickLinodeActionMenu, createLinode } from '../../support/api/linodes';
 import { deleteFirewallByLabel } from '../../support/api/firewalls';
 import {
   getClick,
@@ -238,7 +234,6 @@ describe('Migrate Linode With Firewall', () => {
         }
 
         deleteFirewallByLabel(firewallLabel);
-        deleteAllTestLinodes();
       }
     });
   });
@@ -272,7 +267,6 @@ describe('Migrate Linode With Firewall', () => {
         '[data-qa-enhanced-select="Select a Linode or type to search..."]'
       );
       cy.contains(linode.label).should('not.exist');
-      deleteAllTestLinodes();
     });
   });
 });

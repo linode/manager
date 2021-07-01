@@ -1,10 +1,12 @@
 import strings from '../../support/cypresshelpers';
-import {
-  makeLinodeLabel,
-  deleteAllTestLinodes,
-} from '../../support/api/linodes';
+import { makeLinodeLabel } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
-import { containsClick, fbtVisible, getClick } from '../../support/helpers';
+import {
+  containsClick,
+  containsVisible,
+  fbtVisible,
+  getClick,
+} from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
 describe('create linode', () => {
@@ -23,8 +25,8 @@ describe('create linode', () => {
     getClick('[data-qa-deploy-linode]');
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     assertToast(`Your Linode ${linodeLabel} is being created.`);
+    containsVisible('PROVISIONING');
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
-    deleteAllTestLinodes();
   });
 });
