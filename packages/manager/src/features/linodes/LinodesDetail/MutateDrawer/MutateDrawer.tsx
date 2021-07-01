@@ -204,7 +204,7 @@ const HighmemG6ToG7: React.FC<{}> = () => {
     <ul className="nonMUI-list">
       <ListItem>
         <Typography>
-          Instance now contains <strong>dedicated CPU cores</strong>
+          Linode now uses <strong>dedicated CPU cores</strong>
         </Typography>
       </ListItem>
     </ul>
