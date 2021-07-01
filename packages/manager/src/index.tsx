@@ -54,7 +54,7 @@ const renderApp = (props: RouteComponentProps) => (
     <LinodeThemeWrapper>
       {(toggle) => (
         <SnackBar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           maxSnack={3}
           autoHideDuration={4000}
           data-qa-toast
