@@ -4,7 +4,7 @@ import produce from 'immer';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { partition } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect, MapDispatchToProps, useDispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
@@ -28,7 +28,7 @@ import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
-import { DeleteImagePayload } from 'src/store/image/image.actions';
+import { DeleteImagePayload, removeImage } from 'src/store/image/image.actions';
 import {
   deleteImage as _deleteImage,
   requestImages as _requestImages,
@@ -178,6 +178,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     defaultDialogState
   );
 
+  const dispatch = useDispatch();
+
   const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
   const dialogMessage =
     dialogAction === 'cancel'
@@ -244,6 +246,18 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
 
   const onCreateButtonClick = () => {
     props.history.push('/images/create');
+  };
+
+  const onRetryClick = (
+    imageId: string,
+    imageLabel: string,
+    imageDescription: string
+  ) => {
+    dispatch(removeImage(imageId));
+    props.history.push('/images/create/upload', {
+      imageLabel,
+      imageDescription,
+    });
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {
@@ -357,6 +371,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onDeploy: deployNewLinode,
     onEdit: openForEdit,
     onDelete: openDialog,
+    onRetry: onRetryClick,
   };
 
   // @todo remove this check after Machine Images is in GA

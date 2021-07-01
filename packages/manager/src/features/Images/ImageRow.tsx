@@ -35,8 +35,11 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     label,
     size,
     status,
+    onRetry,
     ...rest
   } = props;
+
+  const isFailed = status === 'pending_upload' && event?.status === 'failed';
 
   const getStatusForImage = (status: string) => {
     switch (status) {
@@ -50,7 +53,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
       case 'available':
         return 'Ready';
       case 'pending_upload':
-        return event?.status === 'failed' ? 'Failed' : 'Pending Upload';
+        return isFailed ? 'Failed' : 'Pending Upload';
       default:
         return capitalizeAllWords(status.replace('_', ' '));
     }
@@ -63,7 +66,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
   ) => {
     if (status === 'available' || eventStatus === 'finished') {
       return `${size} MB`;
-    } else if (status === 'pending_upload' && eventStatus === 'failed') {
+    } else if (isFailed) {
       return 'N/A';
     } else {
       return 'Pending';
@@ -94,7 +97,16 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
             status={status}
             {...rest}
           />
-        ) : null}
+        ) : (
+          <ActionMenu
+            id={id}
+            label={label}
+            description={description}
+            status={status}
+            event={event}
+            onRetry={onRetry}
+          />
+        )}
       </TableCell>
     </TableRow>
   );
