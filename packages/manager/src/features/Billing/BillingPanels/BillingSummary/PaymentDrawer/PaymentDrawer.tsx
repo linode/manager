@@ -4,6 +4,8 @@ import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
 import { compose } from 'recompose';
+import { v4 } from 'uuid';
+import { useSnackbar } from 'notistack';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -18,7 +20,6 @@ import AccountContainer, {
   DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
 import useFlags from 'src/hooks/useFlags';
-import { v4 } from 'uuid';
 import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
@@ -81,6 +82,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     open,
     onClose,
   } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const flags = useFlags();
 
@@ -111,6 +113,14 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     }
   }, [open]);
 
+  React.useEffect(() => {
+    if (successMessage) {
+      enqueueSnackbar(successMessage, {
+        variant: 'success',
+      });
+    }
+  }, [successMessage, enqueueSnackbar]);
+
   const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUSD(e.target.value || '');
   };
@@ -132,6 +142,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
       setCreditCardKey(v4());
       setPayPalKey(v4());
       props.requestAccount();
+      onClose();
     }
     if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
@@ -156,7 +167,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
         <Grid item xs={12}>
-          {successMessage && <Notice success text={successMessage ?? ''} />}
           {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {balance !== false && (
