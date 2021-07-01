@@ -96,8 +96,8 @@ export const GooglePayButton: React.FC<Props> = (props) => {
       (message: string, variant: VariantType) => {
         if (variant === 'error') {
           setError(message);
-        } else {
-          setSuccess(message);
+        } else if (variant === 'success') {
+          setSuccess(message, true);
           queryClient.invalidateQueries(`${queryKey}-payments`);
         }
       }
