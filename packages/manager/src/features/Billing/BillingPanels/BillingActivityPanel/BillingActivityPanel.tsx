@@ -5,12 +5,10 @@ import {
   InvoiceItem,
   Payment,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { parseAPIDate } from 'src/utilities/date';
 import { isAfter } from 'src/utilities/date';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
@@ -175,9 +173,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   const flags = useFlags();
   const { account } = useAccount();
 
-  const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError[] | undefined>();
-
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
@@ -208,19 +203,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     {},
     makeFilter(getCutoffFromDateRange(selectedTransactionDate))
   );
-
-  React.useEffect(() => {
-    setLoading(accountPaymentsLoading || accountInvoicesLoading);
-  }, [accountPaymentsLoading, accountInvoicesLoading]);
-
-  React.useEffect(() => {
-    if (accountPaymentsError || accountInvoicesError) {
-      setLoading(false);
-      setError([
-        { reason: 'There was an error retrieving your billing activity.' },
-      ]);
-    }
-  }, [accountInvoicesError, accountPaymentsError]);
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
@@ -421,8 +403,19 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                     <TableBody>
                       <TableContentWrapper
                         length={paginatedAndOrderedData.length}
-                        loading={loading}
-                        error={error}
+                        loading={
+                          accountPaymentsLoading || accountInvoicesLoading
+                        }
+                        error={
+                          accountPaymentsError || accountInvoicesError
+                            ? [
+                                {
+                                  reason:
+                                    'There was an error retrieving your billing activity.',
+                                },
+                              ]
+                            : undefined
+                        }
                       >
                         {paginatedAndOrderedData.map((thisItem) => {
                           return (
@@ -463,8 +456,10 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             classes.dateColumn,
             classes.totalColumn,
             classes.pdfDownloadColumn,
-            loading,
-            error,
+            accountPaymentsLoading,
+            accountInvoicesLoading,
+            accountPaymentsError,
+            accountInvoicesError,
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,

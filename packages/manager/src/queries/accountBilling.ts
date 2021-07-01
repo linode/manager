@@ -15,8 +15,8 @@ const getAllAccountInvoices = async (
   passedParams: any = {},
   passedFilter: any = {}
 ) => {
-  const res = await getAll<Invoice>(() =>
-    getInvoices(passedParams, passedFilter)
+  const res = await getAll<Invoice>((params, filter) =>
+    getInvoices({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )();
   return res.data;
 };
@@ -25,8 +25,8 @@ const getAllAccountPayments = async (
   passedParams: any = {},
   passedFilter: any = {}
 ) => {
-  const res = await getAll<Payment>(() =>
-    getPayments(passedParams, passedFilter)
+  const res = await getAll<Payment>((params, filter) =>
+    getPayments({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )();
   return res.data;
 };
