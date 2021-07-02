@@ -134,7 +134,6 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         href: '/linodes/create?type=One-Click',
       },
       {
-        // @TODO reactQueryRefactor hide: account.lastUpdated === 0 || !_hasAccountAccess,
         hide: !_hasAccountAccess,
         display: 'Account',
         href: '/account/billing',

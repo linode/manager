@@ -557,8 +557,11 @@ class UpdateContactInformationForm extends React.Component<
       submitting: true,
     });
 
-    updateAccountInfo(this.state.fields)
-      .then((_) => {
+    queryClient.executeMutation({
+      variables: this.state.fields,
+      mutationFn: updateAccountInfo,
+      mutationKey: 'account',
+      onSuccess: (data) => {
         // If there's a "billing_email_bounce" notification on the account, and
         // the user has just updated their email, re-request notifications to
         // potentially clear the email bounce notification.
@@ -569,21 +572,29 @@ class UpdateContactInformationForm extends React.Component<
           this.props.requestNotifications();
         }
 
+        // If we refactor this component to a functional component,
+        // this is something we would look into cleaning up
+        queryClient.setQueryData('account', (oldData: Account) => ({
+          ...oldData,
+          ...data,
+        }));
+
         this.setState({
           success: 'Account information updated.',
           submitting: false,
           errResponse: undefined,
         });
         this.props.onClose();
-      })
-      .catch((errResponse) => {
+      },
+      onError: (error: APIError[]) => {
         this.setState({
           submitting: false,
           success: undefined,
-          errResponse,
+          errResponse: error,
         });
         scrollErrorIntoView();
-      });
+      },
+    });
   };
 }
 

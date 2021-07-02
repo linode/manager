@@ -61,8 +61,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
-      // Grants/what a user has permission to view
-      // @TODO reactQueryRefactor
+      queryClient.prefetchQuery({
+        queryFn: getAccountInfo,
+        queryKey: 'account',
+      }),
 
       // Username and whether a user is restricted
       this.props.requestProfile(),
