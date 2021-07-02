@@ -135,9 +135,8 @@ const PaymentInformation: React.FC<Props> = (props) => {
           <Box display="flex" alignItems="center" mt={3}>
             <GooglePay width={16} height={16} />
             <Typography className={classes.googlePayNotice}>
-              Google Pay is now available for recurring payments.
+              Google Pay is now available for recurring payments.{' '}
               <Link to="#" onClick={openAddDrawer}>
-                {' '}
                 Add Google Pay
               </Link>
             </Typography>
