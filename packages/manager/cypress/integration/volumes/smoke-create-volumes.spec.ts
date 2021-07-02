@@ -1,17 +1,11 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import {
   makeVolumeLabel,
-  deleteAllTestVolumes,
   clickVolumeActionMenu,
   createVolume,
-  deleteVolumeById,
 } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
-import {
-  createLinode,
-  deleteAllTestLinodes,
-  deleteLinodeById,
-} from '../../support/api/linodes';
+import { createLinode } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
   containsClick,
@@ -82,8 +76,6 @@ describe('volumes', () => {
       validateBasicVolume(label, id);
       clickVolumeActionMenu(label);
       getVisible('[data-qa-action-menu-item="Delete"]');
-      deleteAllTestLinodes();
-      deleteAllTestVolumes();
     });
   });
 
@@ -93,7 +85,6 @@ describe('volumes', () => {
       const linodeId = linode.id;
       const linodeLabel = linode.label;
       createVolume(linodeId).then((volume) => {
-        const volumeId = volume.id;
         const volumeLabel = volume.label;
         // catch detach volume post
         cy.intercept('POST', '*/volumes/' + volume.id + '/detach').as(
@@ -108,10 +99,6 @@ describe('volumes', () => {
         getClick('[data-qa-confirm="true"]');
         cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
         assertToast('Volume detachment started', 2);
-        deleteLinodeById(linodeId);
-        deleteVolumeById(volumeId);
-        deleteAllTestLinodes();
-        deleteAllTestVolumes();
       });
     });
   });
