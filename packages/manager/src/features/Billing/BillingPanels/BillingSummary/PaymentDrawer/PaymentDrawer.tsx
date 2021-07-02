@@ -122,7 +122,9 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
         <Grid item xs={12}>
           {successMessage && <Notice success text={successMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
-          {account ? (
+          {accountLoading ? (
+            <Typography data-testid="loading-account">Loading</Typography>
+          ) : account ? (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
                 <strong>
