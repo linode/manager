@@ -5,7 +5,6 @@ import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
-import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
 
 import Logo from 'src/assets/logo/logo-animated.svg';
 import './keyframes.css';
@@ -42,9 +41,7 @@ const SplashScreen: React.FC<CombinedProps> = (props) => {
     srSpeak('Loading Linode Cloud Manager', 'polite');
   }, []);
 
-  const { featureFlagsLoading } = useFeatureFlagsLoad();
-
-  return props.appIsLoading || featureFlagsLoading ? (
+  return props.appIsLoading ? (
     <div
       className={classNames({
         [classes.root]: true,

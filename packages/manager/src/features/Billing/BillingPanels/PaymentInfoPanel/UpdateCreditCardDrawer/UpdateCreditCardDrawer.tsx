@@ -2,11 +2,10 @@ import { saveCreditCard } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 // eslint-disable-next-line no-restricted-imports
 import { InputBaseComponentProps } from '@material-ui/core';
-import { take, takeLast } from 'ramda';
+import { take } from 'ramda';
 import * as React from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 // import AcceptedCards from 'src/assets/icons/accepted-cards.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,9 +20,6 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import accountContainer, {
-  Props as AccountContainerProps,
-} from 'src/containers/account.container';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -49,9 +45,7 @@ export interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & AccountContainerProps;
-
-export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
+export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesXSDown = useMediaQuery(theme.breakpoints.down('xs'));
@@ -119,14 +113,15 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
       cvv,
     })
       .then(() => {
-        const credit_card = {
-          last_four: takeLast(4, cardNumber),
-          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
-          cvv,
-        };
+        // const credit_card = {
+        //   last_four: takeLast(4, cardNumber),
+        //   expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
+        //   cvv,
+        // };
         // Update Redux store so subscribed components will display updated
         // information.
-        props.saveCreditCard(credit_card);
+        // @TODO accountRefactor
+        // props.saveCreditCard(credit_card);
         resetForm(true);
         setSubmitting(false);
         onClose();
@@ -258,6 +253,4 @@ const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(accountContainer());
-
-export default enhanced(UpdateCreditCardDrawer);
+export default UpdateCreditCardDrawer;

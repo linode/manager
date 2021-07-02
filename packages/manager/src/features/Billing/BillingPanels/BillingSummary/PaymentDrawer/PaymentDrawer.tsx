@@ -2,7 +2,6 @@ import * as classnames from 'classnames';
 import { APIWarning } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
@@ -12,13 +11,11 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
-import AccountContainer, {
-  DispatchProps as AccountDispatchProps,
-} from 'src/containers/account.container';
 import { v4 } from 'uuid';
 import CreditCard from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
+import { useAccount } from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -36,15 +33,6 @@ interface Props {
   onClose: () => void;
 }
 
-interface AccountContextProps {
-  accountLoading: boolean;
-  balance: false | number;
-  lastFour: string;
-  expiry: string;
-}
-
-export type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
-
 export const getMinimumPayment = (balance: number | false) => {
   if (!balance || balance <= 0) {
     return '5.00';
@@ -61,11 +49,14 @@ export const getMinimumPayment = (balance: number | false) => {
 
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
-export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
-  const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
+export const PaymentDrawer: React.FC<Props> = (props) => {
+  const { open, onClose } = props;
+  const { data: account, isLoading: accountLoading, refetch } = useAccount();
   const classes = useStyles();
 
-  const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
+  const [usd, setUSD] = React.useState<string>(
+    getMinimumPayment(account?.balance || 0)
+  );
   const [successMessage, setSuccessMessage] = React.useState<string | null>(
     null
   );
@@ -79,8 +70,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   ] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    setUSD(getMinimumPayment(balance));
-  }, [balance]);
+    setUSD(getMinimumPayment(account?.balance || 0));
+  }, [account]);
 
   React.useEffect(() => {
     if (open) {
@@ -104,16 +95,16 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
       setUSD('0.00');
       setCreditCardKey(v4());
       setPayPalKey(v4());
-      props.requestAccount();
+      refetch();
     }
     if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
     }
   };
 
-  const minimumPayment = getMinimumPayment(balance || 0);
+  const minimumPayment = getMinimumPayment(account?.balance || 0);
 
-  if (!accountLoading && balance === undefined) {
+  if (!accountLoading && account?.balance === undefined) {
     return (
       <Grid container>
         <ErrorState errorText="You are not authorized to view billing information" />
@@ -131,16 +122,18 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
         <Grid item xs={12}>
           {successMessage && <Notice success text={successMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
-          {balance !== false && (
+          {account?.balance && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
                 <strong>
                   Current balance:{' '}
                   <span
-                    className={classnames({ [classes.credit]: balance < 0 })}
+                    className={classnames({
+                      [classes.credit]: account?.balance < 0,
+                    })}
                   >
-                    <Currency quantity={Math.abs(balance)} />
-                    {balance < 0 ? ' Credit' : ''}
+                    <Currency quantity={Math.abs(account?.balance || 0)} />
+                    {account?.balance < 0 ? ' Credit' : ''}
                   </span>
                 </strong>
               </Typography>
@@ -159,8 +152,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
 
           <CreditCard
             key={creditCardKey}
-            lastFour={lastFour}
-            expiry={expiry}
+            lastFour={account?.credit_card.last_four || ''}
+            expiry={account?.credit_card.expiry || ''}
             usd={usd}
             minimumPayment={minimumPayment}
             setSuccess={setSuccess}
@@ -208,13 +201,4 @@ const Warning: React.FC<WarningProps> = (props) => {
   return <Notice warning>{message}</Notice>;
 };
 
-const withAccount = AccountContainer(
-  (ownProps, { accountLoading, accountData }) => ({
-    accountLoading,
-    balance: accountData?.balance ?? false,
-    lastFour: accountData?.credit_card.last_four ?? '0000',
-    expiry: accountData?.credit_card.expiry ?? '',
-  })
-);
-
-export default compose<CombinedProps, Props>(withAccount)(PaymentDrawer);
+export default PaymentDrawer;

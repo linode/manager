@@ -3,24 +3,18 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { paymentFactory } from 'src/factories/billing';
 import { rest, server } from 'src/mocks/testServer';
-import PaymentDrawer, {
-  CombinedProps,
-  getMinimumPayment,
-} from './PaymentDrawer';
+import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { isAllowedUSDAmount, shouldEnablePaypalButton } from './Paypal';
 
-const props: CombinedProps = {
+const props = {
   open: true,
   onClose: jest.fn(),
   accountLoading: false,
   balance: 50,
   lastFour: '9999',
   expiry: '',
-  requestAccount: jest.fn(),
-  updateAccount: jest.fn(),
-  saveCreditCard: jest.fn(),
 };
 
 describe('Make a Payment Panel', () => {

@@ -8,7 +8,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
-import { useAccount } from 'src/hooks/useAccount';
+import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
@@ -31,31 +31,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
 export const BillingDetail: React.FC<CombinedProps> = (props) => {
-  const { account, requestAccount } = useAccount();
+  const { data: account, error, isLoading } = useAccount();
 
   const classes = useStyles();
 
-  React.useEffect(() => {
-    if (account.loading && account.lastUpdated === 0) {
-      requestAccount();
-    }
-  }, [account.loading, account.lastUpdated, requestAccount]);
-
-  if (account.loading && account.lastUpdated === 0) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (account.error.read) {
+  if (error) {
     const errorText = getAPIErrorOrDefault(
-      account.error.read,
+      error,
       'There was an error retrieving your account data.'
     )[0].reason;
     return <ErrorState errorText={errorText} />;
   }
 
-  /* This will never happen, /account is requested on app load
-  and the splash screen doesn't resolve until it succeeds */
-  if (!account.data) {
+  if (!account) {
     return null;
   }
 
@@ -66,39 +58,36 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary
-              balance={account?.data?.balance ?? 0}
-              promotions={account?.data?.active_promotions}
-              balanceUninvoiced={account?.data?.balance_uninvoiced ?? 0}
+              balance={account?.balance ?? 0}
+              promotions={account?.active_promotions}
+              balanceUninvoiced={account?.balance_uninvoiced ?? 0}
             />
             <Grid container direction="row">
               <ContactInfo
-                company={account.data.company}
-                firstName={account.data.first_name}
-                lastName={account.data.last_name}
-                address1={account.data.address_1}
-                address2={account.data.address_2}
-                email={account.data.email}
-                phone={account.data.phone}
-                city={account.data.city}
-                state={account.data.state}
-                zip={account.data.zip}
+                company={account.company}
+                firstName={account.first_name}
+                lastName={account.last_name}
+                address1={account.address_1}
+                address2={account.address_2}
+                email={account.email}
+                phone={account.phone}
+                city={account.city}
+                state={account.state}
+                zip={account.zip}
                 history={props.history}
-                taxId={account.data.tax_id}
+                taxId={account.tax_id}
               />
               <PaymentInformation
-                balance={account?.data?.balance ?? 0}
-                balanceUninvoiced={account?.data?.balance_uninvoiced ?? 0}
-                expiry={account?.data?.credit_card?.expiry ?? ''}
-                lastFour={account?.data?.credit_card?.last_four ?? ''}
+                balance={account?.balance ?? 0}
+                balanceUninvoiced={account?.balance_uninvoiced ?? 0}
+                expiry={account?.credit_card?.expiry ?? ''}
+                lastFour={account?.credit_card?.last_four ?? ''}
                 promoCredit={
-                  account?.data?.active_promotions?.[0]
-                    ?.this_month_credit_remaining
+                  account?.active_promotions?.[0]?.this_month_credit_remaining
                 }
               />
             </Grid>
-            <BillingActivityPanel
-              accountActiveSince={account?.data?.active_since}
-            />
+            <BillingActivityPanel accountActiveSince={account?.active_since} />
           </Grid>
         </Grid>
       </div>

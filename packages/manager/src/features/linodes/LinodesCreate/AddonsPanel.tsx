@@ -10,8 +10,8 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
-import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -87,11 +87,11 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const flags = useFlags();
-  const { account } = useAccount();
+  const { data: account } = useAccount();
 
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
-  const capabilities = account?.data?.capabilities ?? [];
+  const capabilities = account?.capabilities ?? [];
   const showVlans = capabilities.includes('Vlans') && flags.vlans;
 
   const isBareMetal = /metal/.test(selectedTypeID ?? '');
