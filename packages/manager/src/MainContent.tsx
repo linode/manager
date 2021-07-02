@@ -196,7 +196,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
     Boolean(flags.firewalls),
-    account.data?.capabilities ?? []
+    account?.capabilities ?? []
   );
 
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';

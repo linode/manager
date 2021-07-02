@@ -1,4 +1,3 @@
-import { Account } from '@linode/api-v4/lib/account';
 import {
   Config,
   Disk,
@@ -38,7 +37,7 @@ import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableSortCell from 'src/components/TableSortCell';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import {
   DeleteLinodeConfig,
@@ -577,7 +576,6 @@ interface StateProps {
   configsError?: APIError[];
   configsLoading: boolean;
   configsLastUpdated: number;
-  accountData?: Account;
 }
 
 const mapStateToProps: MapState<StateProps, LinodeContext> = (
@@ -589,7 +587,6 @@ const mapStateToProps: MapState<StateProps, LinodeContext> = (
     configsLastUpdated: configState?.lastUpdated ?? 0,
     configsLoading: configState?.loading ?? false,
     configsError: configState?.error.read ?? undefined,
-    accountData: state.__resources.account.data,
   };
 };
 

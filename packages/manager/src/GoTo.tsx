@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import useFlags from './hooks/useFlags';
 import { isFeatureEnabled } from './utilities/accountCapabilities';
 import useAccountManagement from './hooks/useAccountManagement';
+import { useAccount } from './queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -62,16 +63,13 @@ const GoTo: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const flags = useFlags();
-  const {
-    _isManagedAccount,
-    _hasAccountAccess,
-    account,
-  } = useAccountManagement();
+  const { _isManagedAccount, _hasAccountAccess } = useAccountManagement();
+  const { data: account } = useAccount();
 
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
     Boolean(flags.firewalls),
-    account?.data?.capabilities ?? []
+    account?.capabilities ?? []
   );
 
   const onSelect = (item: Item<string>) => {
@@ -136,7 +134,8 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         href: '/linodes/create?type=One-Click',
       },
       {
-        hide: account.lastUpdated === 0 || !_hasAccountAccess,
+        // @TODO reactQueryRefactor hide: account.lastUpdated === 0 || !_hasAccountAccess,
+        hide: !_hasAccountAccess,
         display: 'Account',
         href: '/account/billing',
       },
@@ -149,7 +148,7 @@ const GoTo: React.FC<CombinedProps> = (props) => {
         href: '/profile/display',
       },
     ],
-    [showFirewalls, _hasAccountAccess, _isManagedAccount, account.lastUpdated]
+    [showFirewalls, _hasAccountAccess, _isManagedAccount]
   );
 
   const options: Item[] = React.useMemo(

@@ -21,22 +21,6 @@ export const withoutManaged: DeepPartial<ApplicationState> = {
   },
 };
 
-export const withAccountLoaded: DeepPartial<ApplicationState> = {
-  __resources: {
-    account: {
-      lastUpdated: 1,
-    },
-  },
-};
-
-export const withAccountNotLoaded: DeepPartial<ApplicationState> = {
-  __resources: {
-    account: {
-      lastUpdated: 0,
-    },
-  },
-};
-
 export const withRestrictedUser: DeepPartial<ApplicationState> = {
   __resources: {
     profile: {
