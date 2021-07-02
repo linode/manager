@@ -28,7 +28,6 @@ describe('rescue linode', () => {
         .its('response.statusCode')
         .should('eq', 200);
       assertToast('Linode rescue started.');
-      deleteLinodeById(linode.id);
     });
   });
 
@@ -48,7 +47,6 @@ describe('rescue linode', () => {
         .its('response.statusCode')
         .should('eq', 400);
       fbtVisible('Linode busy.');
-      deleteLinodeById(linode.id);
     });
   });
 });

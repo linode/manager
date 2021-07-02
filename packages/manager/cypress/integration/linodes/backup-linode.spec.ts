@@ -78,7 +78,6 @@ describe('linode backups', () => {
       fbtClick('Take Snapshot');
       getClick('[data-qa-confirm="true"]');
       containsVisible('Linode busy.');
-      deleteLinodeById(linode.id);
     });
   });
 });

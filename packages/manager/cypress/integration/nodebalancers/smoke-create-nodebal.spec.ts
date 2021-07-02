@@ -49,9 +49,6 @@ describe('create NodeBalancer', () => {
       cy.wait('@createNodeBalancer')
         .its('response.statusCode')
         .should('eq', 200);
-
-      deleteNodeBalancerByLabel(nodeBal.label);
-      deleteLinodeById(linode.id);
     });
   });
   it('API error Handling', () => {
@@ -79,7 +76,6 @@ describe('create NodeBalancer', () => {
           errors: [{ field: 'configs[0].stickiness', reason: errMessage }],
         });
       fbtVisible(errMessage);
-      deleteLinodeById(linode.id);
     });
   });
 });

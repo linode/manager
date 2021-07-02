@@ -210,7 +210,7 @@
     "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "~8.1.0",
-    "eslint-plugin-cypress": "^2.11.1",
+    "eslint-plugin-cypress": "^2.11.3",
     "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-node": "^11.0.0",
