@@ -51,10 +51,6 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
 
   return (
     <SnackbarProvider
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
       ref={notistackRef}
       {...rest}
       classes={{

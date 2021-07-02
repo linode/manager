@@ -91,8 +91,14 @@ class UpdateContactInformationForm extends React.Component<
       queryKey: 'account',
       queryFn: getAccountInfo,
     });
+
+    const accountWithoutCard: Partial<Account> = {
+      ...account,
+      credit_card: undefined,
+    };
+
     if (account) {
-      this.setState({ fields: account });
+      this.setState({ fields: accountWithoutCard });
     }
 
     // Auto-focus the "Email" field if appropriate (if the user is here via
