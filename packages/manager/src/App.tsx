@@ -1,6 +1,5 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
-import { AccountCapability } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -198,26 +197,18 @@ export class App extends React.Component<CombinedProps, State> {
         </div>
         <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
         {/** Update the LD client with the user's id as soon as we know it */}
-        <IdentifyUser
-          userID={userId}
-          username={username}
-          accountError={undefined}
-          accountCountry={undefined}
-          taxID={undefined}
-          euuid={this.props.euuid}
-        />
+        <IdentifyUser userID={userId} username={username} />
         <DocumentTitleSegment segment="Linode Manager" />
-        <MainContent
-          accountCapabilities={[]}
-          accountError={undefined}
-          accountLoading={false}
-          history={this.props.history}
-          location={this.props.location}
-          toggleTheme={toggleTheme}
-          appIsLoading={false}
-          isLoggedInAsCustomer={true}
-          username={'bnussman'}
-        />
+        {this.props.featureFlagsLoading ? null : (
+          <MainContent
+            history={this.props.history}
+            location={this.props.location}
+            toggleTheme={toggleTheme}
+            appIsLoading={this.props.appIsLoading}
+            isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+            username={username}
+          />
+        )}
       </React.Fragment>
     );
   }
@@ -233,7 +224,6 @@ interface StateProps {
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
-  accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
   accountSettingsLoading: boolean;
   accountSettingsError?: APIError[];
@@ -269,11 +259,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   isLoggedInAsCustomer: pathOr(
     false,
     ['authentication', 'loggedInAsCustomer'],
-    state
-  ),
-  accountCapabilities: pathOr(
-    [],
-    ['__resources', 'account', 'data', 'capabilities'],
     state
   ),
   accountSettingsLoading: pathOr(

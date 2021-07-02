@@ -1,5 +1,3 @@
-import { AccountCapability } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -134,9 +132,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  accountLoading: boolean;
-  accountError?: APIError[];
-  accountCapabilities: AccountCapability[];
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
   appIsLoading: boolean;
