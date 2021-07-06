@@ -6,7 +6,6 @@ import {
 } from '@linode/api-v4/lib/account/payments';
 import { VariantType } from 'notistack';
 import { queryClient } from 'src/queries/base';
-import { getAllPaymentMethodsRequest } from 'src/queries/accountPayment';
 
 let googlePaymentInstance: GooglePayment | undefined;
 
@@ -97,10 +96,7 @@ export const gPay = async (
       if (onSuccess) {
         onSuccess();
       }
-      await queryClient.fetchQuery(
-        'account-payment-methods',
-        getAllPaymentMethodsRequest
-      );
+      await queryClient.refetchQueries(['account-payment-methods-all']);
     }
 
     setMessage(
