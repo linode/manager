@@ -1,5 +1,5 @@
 import { updateAccountInfo } from '@linode/api-v4';
-import { Account, getAccountInfo } from '@linode/api-v4/lib/account';
+import { Account } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import countryData from 'country-region-data';
 import { defaultTo, lensPath, set } from 'ramda';
@@ -87,10 +87,7 @@ class UpdateContactInformationForm extends React.Component<
   emailRef = React.createRef<HTMLInputElement>();
 
   async componentDidMount() {
-    const account = await queryClient.fetchQuery({
-      queryKey: 'account',
-      queryFn: getAccountInfo,
-    });
+    const account = queryClient.getQueryData<Account>('account');
 
     const accountWithoutCard: Partial<Account> = {
       ...account,
