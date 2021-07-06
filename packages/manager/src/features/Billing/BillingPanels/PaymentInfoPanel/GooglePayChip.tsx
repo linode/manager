@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSnackbar, VariantType } from 'notistack';
+import { VariantType } from 'notistack';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
@@ -30,12 +30,12 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
+  makeToast: (message: string, variant: VariantType) => void;
   onClose: () => void;
 }
 
 export const GooglePayChip: React.FC<Props> = (props) => {
-  const { onClose } = props;
-  const { enqueueSnackbar } = useSnackbar();
+  const { makeToast, onClose } = props;
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
@@ -57,18 +57,8 @@ export const GooglePayChip: React.FC<Props> = (props) => {
     init();
   }, [status, data]);
 
-  if (status === 'error' || clientTokenError) {
-    return <Notice error text="Error loading Google Pay." />;
-  }
-
-  if (initializationError) {
-    return <Notice error text="Error initializing Google Pay." />;
-  }
-
   const handleMessage = (message: string, variant: VariantType) => {
-    enqueueSnackbar(message, {
-      variant,
-    });
+    makeToast(message, variant);
     if (variant === 'success') {
       onClose();
     }
@@ -85,6 +75,14 @@ export const GooglePayChip: React.FC<Props> = (props) => {
       handleMessage
     );
   };
+
+  if (status === 'error' || clientTokenError) {
+    return <Notice error text="Error loading Google Pay." />;
+  }
+
+  if (initializationError) {
+    return <Notice error text="Error initializing Google Pay." />;
+  }
 
   if (isLoading) {
     return <CircleProgress mini />;

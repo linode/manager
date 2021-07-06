@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSnackbar, VariantType } from 'notistack';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -20,6 +21,13 @@ const useStyles = makeStyles(() => ({
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   const { onClose, open } = props;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const makeToast = (message: string, variant: VariantType) => {
+    enqueueSnackbar(message, {
+      variant,
+    });
+  };
 
   return (
     <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
@@ -32,7 +40,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={4} md={3}>
-          <GooglePayChip onClose={onClose} />
+          <GooglePayChip makeToast={makeToast} onClose={onClose} />
         </Grid>
       </Grid>
     </Drawer>
