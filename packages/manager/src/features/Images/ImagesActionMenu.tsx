@@ -59,6 +59,10 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
       : [
           {
             title: 'Edit',
+            disabled: isDisabled,
+            tooltip: isDisabled
+              ? 'Image is not yet available for use.'
+              : undefined,
             onClick: () => {
               onEdit(label, description ?? ' ', id);
             },
