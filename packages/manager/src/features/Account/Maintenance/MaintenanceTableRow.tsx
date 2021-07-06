@@ -16,22 +16,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MaintenanceTableRow = (props: AccountMaintenance) => {
+const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
   const { entity, when, type, status, reason } = props;
   const classes = useStyles();
-
-  const getStatusIcon = (
-    status: 'pending' | 'ready' | 'started' | 'completed'
-  ) => {
-    switch (status) {
-      case 'started':
-        return 'other';
-      case 'completed':
-        return 'active';
-      default:
-        return 'inactive';
-    }
-  };
 
   return (
     <TableRow key={entity.id}>
@@ -49,7 +36,7 @@ const MaintenanceTableRow = (props: AccountMaintenance) => {
         </TableCell>
       </Hidden>
       <TableCell>
-        <StatusIcon status={getStatusIcon(status)} />
+        <StatusIcon status={status == 'started' ? 'other' : 'inactive'} />
         {
           // @ts-expect-error api will change pending -> scheduled
           status === 'pending' || status === 'scheduled'
