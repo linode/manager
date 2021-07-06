@@ -1,4 +1,4 @@
-import { AccountCapability } from '@linode/api-v4/lib/account';
+import { Account, AccountCapability } from '@linode/api-v4/lib/account';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu,
@@ -29,6 +29,7 @@ import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { dbaasContext } from 'src/context';
+import { queryClient } from 'src/queries/base';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
 
@@ -147,11 +148,12 @@ const styled = withStyles(styles);
 class AddNewMenu extends React.Component<CombinedProps> {
   render() {
     const { classes, flags } = this.props;
+    const account = queryClient.getQueryData<Account>('account');
 
     const showFirewalls = isFeatureEnabled(
       'Cloud Firewall',
       Boolean(flags.firewalls),
-      []
+      account?.capabilities ?? []
     );
 
     return (

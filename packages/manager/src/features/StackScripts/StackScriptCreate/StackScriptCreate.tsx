@@ -207,7 +207,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ label: e.target.value }, this.saveStateToLocalStorage);
-    this.setState({ label: e.target.value });
   };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -229,7 +228,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ script: e.target.value }, this.saveStateToLocalStorage);
-    this.setState({ script: e.target.value });
   };
 
   handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {

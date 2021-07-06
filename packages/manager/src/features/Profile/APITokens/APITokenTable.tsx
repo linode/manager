@@ -36,9 +36,11 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { Account } from '@linode/api-v4/lib';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 import { basePermNameMap, basePerms } from './utils';
@@ -530,6 +532,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   render() {
     const { classes, type, title } = this.props;
     const { form, dialog, submitting } = this.state;
+    const account = queryClient.getQueryData<Account>('account');
 
     const basePermsWithLKE = [...basePerms];
     basePermsWithLKE.splice(5, 0, 'lke');
@@ -613,11 +616,19 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           label={form.values.label}
           scopes={form.values.scopes}
           expiry={form.values.expiry}
-          perms={basePermsWithLKE}
-          permNameMap={{
-            ...basePermNameMap,
-            lke: 'Kubernetes',
-          }}
+          perms={
+            !account?.capabilities.includes('Kubernetes')
+              ? basePerms
+              : basePermsWithLKE
+          }
+          permNameMap={
+            !account?.capabilities.includes('Kubernetes')
+              ? basePermNameMap
+              : {
+                  ...basePermNameMap,
+                  lke: 'Kubernetes',
+                }
+          }
           closeDrawer={this.closeDrawer}
           onChange={this.handleDrawerChange}
           onCreate={this.createToken}
