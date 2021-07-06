@@ -363,10 +363,15 @@ export const createFinalOptions = (
 
   // LESS THAN 20 RESULTS:
   if (results.length <= 20) {
-    const algoliaResultsIncluded = [
-      ...results,
-      Object.values(formattedAlgoliaResults as {}),
-    ];
+    const algoliaResultsIterator = Object.values(
+      formattedAlgoliaResults as {}
+    ).values();
+    const algoliaResultsIncluded = [...results];
+
+    for (const result of algoliaResultsIterator) {
+      algoliaResultsIncluded.push(result as any);
+    }
+
     console.log(algoliaResultsIncluded);
     return [redirectOption, ...results];
   }
