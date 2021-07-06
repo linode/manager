@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { makePayment, CardType } from '@linode/api-v4/lib/account';
+import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { cleanCVV } from 'src/features/Billing/billingUtils';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
-import { cleanCVV } from 'src/features/Billing/billingUtils';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { SetSuccess } from './types';
 import CreditCard from './CreditCard';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountBilling';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles(() => ({
@@ -98,10 +100,11 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
         setSubmitting(false);
         setDialogOpen(false);
         setSuccess(
-          `Payment for $${usd} submitted successfully`,
+          `Payment for $${usd} successfully submitted`,
           true,
           response.warnings
         );
+        queryClient.invalidateQueries(`${queryKey}-payments`);
       })
       .catch((errorResponse) => {
         setSubmitting(false);

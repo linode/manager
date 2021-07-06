@@ -38,6 +38,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { SetSuccess } from './types';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountBilling';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -175,6 +177,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
           true,
           response.warnings
         );
+        queryClient.invalidateQueries(`${queryKey}-payments`);
       })
       .catch((_) => {
         setExecuting(false);
