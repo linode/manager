@@ -15,6 +15,7 @@ import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import Notice from 'src/components/Notice';
 import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
+import CircleProgress from 'src/components/CircleProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -66,9 +67,12 @@ interface Props {
 }
 
 export const GooglePayButton: React.FC<Props> = (props) => {
-  const status = useScript('https://pay.google.com/gp/p/js/pay.js');
-  const { data, error } = useClientToken();
   const classes = useStyles();
+  const status = useScript('https://pay.google.com/gp/p/js/pay.js');
+  const { data, isLoading, error: clientTokenError } = useClientToken();
+  const [initializationError, setInitializationError] = React.useState<boolean>(
+    false
+  );
 
   const { transactionInfo, balance, setSuccess, setError } = props;
 
@@ -84,28 +88,42 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     +transactionInfo.totalPrice > 50000;
 
   React.useEffect(() => {
-    if (status === 'ready' && data) {
-      initGooglePaymentInstance(data.client_token as string);
-    }
-  }, [status, data]);
-
-  const handlePay = () => {
-    gPay(
-      'one-time-payment',
-      transactionInfo,
-      (message: string, variant: VariantType) => {
-        if (variant === 'error') {
-          setError(message);
-        } else if (variant === 'success') {
-          setSuccess(message, true);
-          queryClient.invalidateQueries(`${queryKey}-payments`);
+    const init = async () => {
+      if (status === 'ready' && data) {
+        try {
+          await initGooglePaymentInstance(data.client_token as string);
+        } catch (error) {
+          // maybe log to Sentry or something
+          setInitializationError(true);
         }
       }
-    );
+    };
+    init();
+  }, [status, data]);
+
+  const handleMessage = (message: string, variant: VariantType) => {
+    if (variant === 'error') {
+      setError(message);
+    } else if (variant === 'success') {
+      setSuccess(message, true);
+      queryClient.invalidateQueries(`${queryKey}-payments`);
+    }
   };
 
-  if (status === 'error' || error) {
-    return <Notice error text="There was an error loading Google Pay." />;
+  const handlePay = () => {
+    gPay('one-time-payment', transactionInfo, handleMessage);
+  };
+
+  if (status === 'error' || clientTokenError) {
+    return <Notice error text="Error loading Google Pay." />;
+  }
+
+  if (initializationError) {
+    return <Notice error text="Error initializing Google Pay." />;
+  }
+
+  if (isLoading) {
+    return <CircleProgress mini />;
   }
 
   return (
