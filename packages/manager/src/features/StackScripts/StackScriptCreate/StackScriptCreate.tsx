@@ -1,4 +1,4 @@
-import { Grant } from '@linode/api-v4/lib/account';
+import { Account, Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   createStackScript,
@@ -43,6 +43,8 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import { debounce } from 'throttle-debounce';
+import { queryClient } from 'src/queries/base';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -116,6 +118,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       },
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
+    const account = queryClient.getQueryData<Account>('account');
 
     if (stackScriptID) {
       // If we have a stackScriptID we're in the edit flow and
@@ -148,6 +151,19 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         .catch((error) => {
           this.setState({ errors: error, isLoadingStackScript: false });
         });
+    } else if (valuesFromStorage.id === account?.euuid) {
+      /**
+       * We're creating a stackscript and we have cached
+       * data from a user that was creating a stackscript,
+       * so load that in.
+       */
+      this.setState({
+        label: valuesFromStorage.label ?? '',
+        description: valuesFromStorage.description ?? '',
+        images: valuesFromStorage.images ?? [],
+        script: valuesFromStorage.script ?? '',
+        revisionNote: valuesFromStorage.rev_note ?? '',
+      });
     }
   }
 
@@ -155,47 +171,49 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  // _saveStateToLocalStorage = () => {
-  //   const {
-  //     label,
-  //     description,
-  //     script,
-  //     images,
-  //     revisionNote: rev_note,
-  //   } = this.state;
-  //   const {
-  //     euuid,
-  //     mode,
-  //     match: {
-  //       params: { stackScriptID },
-  //     },
-  //   } = this.props;
+  _saveStateToLocalStorage = () => {
+    const {
+      label,
+      description,
+      script,
+      images,
+      revisionNote: rev_note,
+    } = this.state;
+    const {
+      mode,
+      match: {
+        params: { stackScriptID },
+      },
+    } = this.props;
+    const account = queryClient.getQueryData<Account>('account');
 
-  //   // Use the euuid if we're creating to avoid loading another user's data
-  //   // (if an expired token has left stale values in local storage)
-  //   const id = mode === 'create' ? euuid : +stackScriptID;
+    if (account) {
+      // Use the euuid if we're creating to avoid loading another user's data
+      // (if an expired token has left stale values in local storage)
+      const id = mode === 'create' ? account.euuid : +stackScriptID;
 
-  //   storage.stackScriptInProgress.set({
-  //     id,
-  //     label,
-  //     description,
-  //     script,
-  //     images,
-  //     rev_note,
-  //   });
-  // };
+      storage.stackScriptInProgress.set({
+        id,
+        label,
+        description,
+        script,
+        images,
+        rev_note,
+      });
+    }
+  };
 
-  // saveStateToLocalStorage = debounce(1000, this._saveStateToLocalStorage);
+  saveStateToLocalStorage = debounce(1000, this._saveStateToLocalStorage);
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // this.setState({ label: e.target.value }, this.saveStateToLocalStorage);
+    this.setState({ label: e.target.value }, this.saveStateToLocalStorage);
     this.setState({ label: e.target.value });
   };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(
-      { description: e.target.value }
-      // this.saveStateToLocalStorage
+      { description: e.target.value },
+      this.saveStateToLocalStorage
     );
   };
 
@@ -204,20 +222,20 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState(
       {
         images: imageList,
-      }
-      // this.saveStateToLocalStorage
+      },
+      this.saveStateToLocalStorage
     );
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // this.setState({ script: e.target.value }, this.saveStateToLocalStorage);
+    this.setState({ script: e.target.value }, this.saveStateToLocalStorage);
     this.setState({ script: e.target.value });
   };
 
   handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState(
-      { revisionNote: e.target.value }
-      // this.saveStateToLocalStorage
+      { revisionNote: e.target.value },
+      this.saveStateToLocalStorage
     );
   };
 
@@ -230,8 +248,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         images: payload?.images ?? [],
         description: payload?.description ?? '',
         revisionNote: payload?.rev_note ?? '',
-      }
-      // this.saveStateToLocalStorage
+      },
+      this.saveStateToLocalStorage
     );
   };
 

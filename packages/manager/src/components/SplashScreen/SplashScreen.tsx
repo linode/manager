@@ -8,6 +8,7 @@ import { srSpeak } from 'src/utilities/accessibility';
 
 import Logo from 'src/assets/logo/logo-animated.svg';
 import './keyframes.css';
+import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
 
 const useStyles = makeStyles({
   root: {
@@ -41,7 +42,9 @@ const SplashScreen: React.FC<CombinedProps> = (props) => {
     srSpeak('Loading Linode Cloud Manager', 'polite');
   }, []);
 
-  return props.appIsLoading ? (
+  const { featureFlagsLoading } = useFeatureFlagsLoad();
+
+  return props.appIsLoading || featureFlagsLoading ? (
     <div
       className={classNames({
         [classes.root]: true,

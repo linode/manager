@@ -1,8 +1,8 @@
-import { saveCreditCard } from '@linode/api-v4/lib/account';
+import { Account, saveCreditCard } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 // eslint-disable-next-line no-restricted-imports
 import { InputBaseComponentProps } from '@material-ui/core';
-import { take } from 'ramda';
+import { take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { Link } from 'react-router-dom';
@@ -22,6 +22,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -113,15 +114,16 @@ export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
       cvv,
     })
       .then(() => {
-        // const credit_card = {
-        //   last_four: takeLast(4, cardNumber),
-        //   expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
-        //   cvv,
-        // };
-        // Update Redux store so subscribed components will display updated
+        const credit_card = {
+          last_four: takeLast(4, cardNumber),
+          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
+        };
+        // Update React Query so subscribed components will display updated
         // information.
-        // @TODO accountRefactor
-        // props.saveCreditCard(credit_card);
+        queryClient.setQueryData('account', (oldData: Account) => ({
+          ...oldData,
+          credit_card,
+        }));
         resetForm(true);
         setSubmitting(false);
         onClose();

@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import useFlags from './hooks/useFlags';
 import { isFeatureEnabled } from './utilities/accountCapabilities';
 import useAccountManagement from './hooks/useAccountManagement';
-import { useAccount } from './queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
@@ -63,8 +62,11 @@ const GoTo: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const flags = useFlags();
-  const { _isManagedAccount, _hasAccountAccess } = useAccountManagement();
-  const { data: account } = useAccount();
+  const {
+    _isManagedAccount,
+    _hasAccountAccess,
+    account,
+  } = useAccountManagement();
 
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',

@@ -1,5 +1,4 @@
 import {
-  Account,
   AccountSettings,
   getAccountInfo,
   Notification,
@@ -221,7 +220,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
 interface DispatchProps {
   initSession: () => void;
   checkAccountSize: () => Promise<null>;
-  requestAccount: () => Promise<Account>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<GetAllData<Notification>>;
   requestSettings: () => Promise<AccountSettings>;
@@ -237,8 +235,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
   checkAccountSize: () => dispatch(checkAccountSize()),
-  requestAccount: () =>
-    queryClient.fetchQuery({ queryKey: 'account', queryFn: getAccountInfo }),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
   requestSettings: () => dispatch(requestAccountSettings()),
