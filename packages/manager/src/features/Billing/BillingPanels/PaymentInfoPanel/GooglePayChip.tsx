@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSnackbar, VariantType } from 'notistack';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
@@ -7,14 +8,15 @@ import {
   initGooglePaymentInstance,
   gPay,
 } from 'src/features/Billing/Providers/GooglePay';
-import { useSnackbar, VariantType } from 'notistack';
-import classNames from 'classnames';
+import Notice from 'src/components/Notice';
+import CircleProgress from 'src/components/CircleProgress';
 
 const useStyles = makeStyles(() => ({
   button: {
     border: 0,
-    backgroundColor: 'transparent',
     padding: 0,
+    backgroundColor: 'transparent',
+    cursor: 'pointer',
     '&:hover': {
       opacity: 0.7,
     },
@@ -28,16 +30,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  onAdd: () => void;
+  onClose: () => void;
 }
 
 export const GooglePayChip: React.FC<Props> = (props) => {
-  const { onAdd } = props;
+  const { onClose } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
-  const { data } = useClientToken();
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const { data, isLoading, error: clientTokenError } = useClientToken();
+  const [initializationError, setInitializationError] = React.useState<boolean>(
+    false
+  );
 
   React.useEffect(() => {
     const init = async () => {
@@ -46,21 +50,29 @@ export const GooglePayChip: React.FC<Props> = (props) => {
           await initGooglePaymentInstance(data.client_token as string);
         } catch (error) {
           // maybe log to Sentry or something
-          enqueueSnackbar('Unable to initialize Google Pay.', {
-            variant: 'error',
-          });
+          setInitializationError(true);
         }
-        setLoading(false);
       }
     };
     init();
-
   }, [status, data]);
 
-  const doToast = (message: string, variant: VariantType) =>
+  if (status === 'error' || clientTokenError) {
+    return <Notice error text="Error loading Google Pay." />;
+  }
+
+  if (initializationError) {
+    return <Notice error text="Error initializing Google Pay." />;
+  }
+
+  const handleMessage = (message: string, variant: VariantType) => {
     enqueueSnackbar(message, {
       variant,
     });
+    if (variant === 'success') {
+      onClose();
+    }
+  };
 
   const handlePay = () => {
     gPay(
@@ -70,20 +82,16 @@ export const GooglePayChip: React.FC<Props> = (props) => {
         currencyCode: 'USD',
         countryCode: 'US',
       },
-      doToast,
-      onAdd
+      handleMessage
     );
   };
 
+  if (isLoading) {
+    return <CircleProgress mini />;
+  }
+
   return (
-    <button
-      className={classNames({
-        [classes.button]: true,
-        [classes.disabled]: loading,
-      })}
-      disabled={loading}
-      onClick={handlePay}
-    >
+    <button className={classes.button} onClick={handlePay}>
       <GooglePayIcon height="48px" />
     </button>
   );

@@ -24,21 +24,15 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   return (
     <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
       <Divider />
-      <Grid container spacing={1} className={classes.root}>
-        <Grid item xs={12} sm container alignItems="center">
-          <Grid item xs container direction="column" spacing={1}>
-            <Grid item xs>
-              <Typography variant="h3">Google Pay</Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography>
-                You&apos;ll be taken to Google Pay to complete sign up.
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <GooglePayChip onAdd={onClose} />
-          </Grid>
+      <Grid className={classes.root} container>
+        <Grid item direction="column" xs={8} md={9}>
+          <Typography variant="h3">Google Pay</Typography>
+          <Typography>
+            You&apos;ll be taken to Google Pay to complete sign up.
+          </Typography>
+        </Grid>
+        <Grid item xs={4} md={3}>
+          <GooglePayChip onClose={onClose} />
         </Grid>
       </Grid>
     </Drawer>
