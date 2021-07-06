@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Action } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Action } from 'src/components/ActionMenu';
 import { makeStyles } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
