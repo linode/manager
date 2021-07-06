@@ -20,6 +20,7 @@ import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import Typography from 'src/components/core/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import MaintenanceTableRow from './MaintenanceTableRow';
+import * as sync from 'css-animation-sync';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
@@ -109,6 +110,10 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     },
     filter
   );
+
+  React.useEffect(() => {
+    sync('pulse');
+  }, []);
 
   const renderTableContent = () => {
     if (isLoading) {
