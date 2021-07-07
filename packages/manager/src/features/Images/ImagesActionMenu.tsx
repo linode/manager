@@ -14,6 +14,8 @@ export interface Handlers {
   onDeploy: (imageID: string) => void;
   onEdit: (label: string, description: string, imageID: string) => void;
   onDelete: (label: string, imageID: string, status?: ImageStatus) => void;
+  onRetry: (imageID: string, label: string, description: string) => void;
+  onCancelFailed: (imageID: string) => void;
   [index: string]: any;
 }
 
@@ -42,6 +44,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     onEdit,
     onDelete,
     onRetry,
+    onCancelFailed,
   } = props;
 
   const actions: Action[] = React.useMemo(() => {
@@ -53,6 +56,12 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             title: 'Retry',
             onClick: () => {
               onRetry(id, label, description);
+            },
+          },
+          {
+            title: 'Cancel',
+            onClick: () => {
+              onCancelFailed(id);
             },
           },
         ]
@@ -104,6 +113,8 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     onDeploy,
     onEdit,
     onRetry,
+    onCancelFailed,
+    event,
   ]);
 
   /**
@@ -126,6 +137,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
               actionText={action.title}
               onClick={action.onClick}
               disabled={action.disabled}
+              tooltip={action.tooltip}
             />
           );
         })}

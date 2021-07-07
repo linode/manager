@@ -260,6 +260,10 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     });
   };
 
+  const onCancelFailedClick = (imageId: string) => {
+    dispatch(removeImage(imageId));
+  };
+
   const openForEdit = (label: string, description: string, imageID: string) => {
     setDrawer({
       open: true,
@@ -372,6 +376,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onEdit: openForEdit,
     onDelete: openDialog,
     onRetry: onRetryClick,
+    onCancelFailed: onCancelFailedClick,
   };
 
   // @todo remove this check after Machine Images is in GA

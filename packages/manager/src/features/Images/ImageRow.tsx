@@ -36,6 +36,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     size,
     status,
     onRetry,
+    onCancelFailed,
     ...rest
   } = props;
 
@@ -105,6 +106,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
             status={status}
             event={event}
             onRetry={onRetry}
+            onCancelFailed={onCancelFailed}
           />
         )}
       </TableCell>
