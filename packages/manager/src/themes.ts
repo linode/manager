@@ -393,6 +393,11 @@ const darkThemeOptions = {
         color: primaryColors.text,
         backgroundColor: primaryColors.main,
       },
+      clickable: {
+        '&:hover': {
+          background: '#226dc3',
+        },
+      },
     },
     MuiCardActions: {
       root: {

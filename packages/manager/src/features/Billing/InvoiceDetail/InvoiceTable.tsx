@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${theme.cmrBorderColors.borderTable}`,
     '& thead th': {
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      '&:last-of-type': {
+        paddingRight: 10,
+      },
     },
   },
 }));
