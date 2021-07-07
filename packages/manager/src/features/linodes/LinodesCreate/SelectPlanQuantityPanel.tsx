@@ -239,12 +239,7 @@ export class SelectPlanPanel extends React.Component<
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
           <Grid item xs={12} lg={12}>
-            <Table
-              isResponsive={false}
-              border
-              spacingBottom={16}
-              aria-label="List of Linode Plans"
-            >
+            <Table aria-label="List of Linode Plans" spacingBottom={16}>
               {tableHeader}
               <TableBody role="grid">
                 {plans.map(this.renderSelection)}
@@ -316,7 +311,7 @@ export class SelectPlanPanel extends React.Component<
                 <Typography data-qa-highmem className={classes.copy}>
                   High Memory instances favor RAM over other resources, and can
                   be good for memory hungry use cases like caching and in-memory
-                  databases. All High Memory plans contain dedicated CPU cores.
+                  databases. All High Memory plans use dedicated CPU cores.
                 </Typography>
               )}
               {this.renderPlanContainer(highmem)}

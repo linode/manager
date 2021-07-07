@@ -1,7 +1,16 @@
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu_CMR/';
 import Hidden from 'src/components/core/Hidden';
+import { makeStyles } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+
+const useStyles = makeStyles(() => ({
+  root: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: 0,
+  },
+}));
 
 export interface Props {
   onRemove: () => void;
@@ -11,6 +20,8 @@ export interface Props {
 }
 
 export const BucketActionMenu: React.FC<Props> = (props) => {
+  const classes = useStyles();
+
   const actions: Action[] = [
     {
       title: 'Details',
@@ -27,7 +38,7 @@ export const BucketActionMenu: React.FC<Props> = (props) => {
   ];
 
   return (
-    <>
+    <div className={classes.root}>
       <Hidden smDown>
         <InlineMenuAction
           actionText="Details"
@@ -48,7 +59,7 @@ export const BucketActionMenu: React.FC<Props> = (props) => {
           ariaLabel={`Action menu for Bucket ${props.label}`}
         />
       </Hidden>
-    </>
+    </div>
   );
 };
 

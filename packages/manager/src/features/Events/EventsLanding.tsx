@@ -264,7 +264,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
     <>
       {/* Only display this title on the main Events landing page */}
       {!entityId && <H1Header title="Events" className={classes.header} />}
-      <Table aria-label="List of Events">
+      <Table aria-label="List of Events" noBorder>
         <TableHead>
           <TableRow>
             {/* Cell for icon (global EventsLanding only) */}

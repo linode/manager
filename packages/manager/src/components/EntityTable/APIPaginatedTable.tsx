@@ -4,7 +4,7 @@ import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
+import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import EntityTableHeader from './EntityTableHeader';
 import { Entity, ListProps, PageyIntegrationProps } from './types';

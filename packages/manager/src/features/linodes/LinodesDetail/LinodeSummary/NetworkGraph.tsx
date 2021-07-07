@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   grid: {
     backgroundColor: theme.bg.offWhiteDT,
-    border: 'solid 1px #eeeeee',
+    border: `solid 1px ${theme.cmrBorderColors.divider}`,
     '&.MuiGrid-item': {
       padding: theme.spacing(2),
     },

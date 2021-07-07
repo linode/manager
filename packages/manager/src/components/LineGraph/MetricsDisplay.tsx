@@ -32,7 +32,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
 
   return (
-    <Table aria-label="Stats and metrics" className={classes.root}>
+    <Table aria-label="Stats and metrics" className={classes.root} noBorder>
       <TableHead>
         <TableRow>
           <TableCell>{''}</TableCell>
@@ -50,33 +50,31 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        <React.Fragment>
-          {rows.map((row) => {
-            const { legendTitle, legendColor, data, format } = row;
-            return (
-              <TableRow key={legendTitle} data-qa-metric-row>
-                <TableCell className={classes.legend}>
-                  <div className={classes[legendColor]} data-qa-legend-title>
-                    <Typography component="span">{legendTitle}</Typography>
-                  </div>
-                </TableCell>
-                {metricsBySection(data).map((section, idx) => {
-                  return (
-                    <TableCell
-                      key={idx}
-                      parentColumn={rowHeaders[idx]}
-                      data-qa-body-cell
-                    >
-                      <Typography variant="body1" className={classes.text}>
-                        {format(section)}
-                      </Typography>
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </React.Fragment>
+        {rows.map((row) => {
+          const { legendTitle, legendColor, data, format } = row;
+          return (
+            <TableRow key={legendTitle} data-qa-metric-row>
+              <TableCell className={classes.legend}>
+                <div className={classes[legendColor]} data-qa-legend-title>
+                  <Typography component="span">{legendTitle}</Typography>
+                </div>
+              </TableCell>
+              {metricsBySection(data).map((section, idx) => {
+                return (
+                  <TableCell
+                    key={idx}
+                    parentColumn={rowHeaders[idx]}
+                    data-qa-body-cell
+                  >
+                    <Typography variant="body1" className={classes.text}>
+                      {format(section)}
+                    </Typography>
+                  </TableCell>
+                );
+              })}
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

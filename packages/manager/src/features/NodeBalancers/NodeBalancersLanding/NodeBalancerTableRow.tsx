@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   actionCell: {
-    // @todo: remove action cell duplication (this is from DomainTableRow_CMR)
+    // @todo: remove action cell duplication (this is from DomainTableRow)
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
