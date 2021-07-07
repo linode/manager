@@ -5,7 +5,6 @@ module.exports = {
     '@storybook/addon-docs',
     '@storybook/addon-knobs',
     '@storybook/addon-viewport',
-    '@storybook/preset-typescript',
   ],
   webpackFinal: (config) => ({
     ...config,

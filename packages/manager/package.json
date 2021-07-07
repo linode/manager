@@ -293,9 +293,7 @@
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js",
-      "^.+\\.[tj]sx?$": "babel-jest",
-      "^.+\\.mdx$": "@storybook/addon-docs/jest-transform-mdx"
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
@@ -312,7 +310,6 @@
       "ts",
       "web.tsx",
       "tsx",
-      "mdx",
       "web.js",
       "js",
       "web.jsx",
