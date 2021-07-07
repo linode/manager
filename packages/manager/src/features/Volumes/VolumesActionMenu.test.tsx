@@ -1,13 +1,13 @@
-import { render } from '@testing-library/react';
 import * as React from 'react';
+import {
+  includesActions,
+  renderWithTheme,
+  wrapWithTheme,
+} from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { CombinedProps as Props, VolumesActionMenu } from './VolumesActionMenu';
+import { CombinedProps, VolumesActionMenu } from './VolumesActionMenu';
 
-import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
-
-jest.mock('src/components/ActionMenu/ActionMenu');
-
-const props: Props = {
+const props: CombinedProps = {
   onAttach: jest.fn(),
   onShowConfig: jest.fn(),
   onClone: jest.fn(),
@@ -37,48 +37,46 @@ const props: Props = {
 };
 
 describe('Volume action menu', () => {
-  it('should include standard Volume actions', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<VolumesActionMenu {...props} />)
-    );
-    includesActions(['Show Config', 'Edit'], queryByText);
+  it('should include basic Volume actions', () => {
+    const { queryByText } = renderWithTheme(<VolumesActionMenu {...props} />);
+    expect(includesActions(['Show Config', 'Edit'], queryByText));
   });
 
-  // Hidden in dropdown menu
-  it.skip('should render an Attach action if the volume is not attached', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<VolumesActionMenu {...props} />)
+  it('should include Attach if the Volume is not attached', () => {
+    const { queryByText, debug } = renderWithTheme(
+      <VolumesActionMenu {...props} isVolumesLanding={true} />
     );
-    expect(queryByText('Attach')).toBeInTheDocument();
-    expect(queryByText('Detach')).not.toBeInTheDocument();
+    // expect(queryByText('Attach')).toBeInTheDocument();
+    // expect(queryByText('Detach')).not.toBeInTheDocument();
+    debug();
+    expect(includesActions(['Attach'], queryByText));
+    expect(queryByText('Detach')).toBeNull();
   });
 
-  it('should show an Detach action (and not show Attach) if the Volume is already attached', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<VolumesActionMenu {...props} attached={true} />)
+  it('should include Detach if the Volume is attached', () => {
+    const { queryByText } = renderWithTheme(
+      <VolumesActionMenu {...props} attached={true} />
     );
-    expect(queryByText('Detach')).toBeInTheDocument();
-    expect(queryByText('Attach')).not.toBeInTheDocument();
+    expect(includesActions(['Detach'], queryByText));
+    expect(queryByText('Attach')).toBeNull();
   });
 
-  it('should show Delete if the Volume is unattached or the Linode to which it is attached is powered off', () => {
-    const { queryByText, rerender } = render(
-      wrapWithTheme(
-        <VolumesActionMenu {...props} attached={false} poweredOff={true} />
-      )
+  it('should include Delete if the Volume is not attached or the Linode to which it is attached is powered off', () => {
+    const { queryByText, rerender } = renderWithTheme(
+      <VolumesActionMenu {...props} attached={false} poweredOff={true} />
     );
-    expect(queryByText('Delete')).toBeInTheDocument();
+    expect(includesActions(['Delete'], queryByText));
     rerender(
       wrapWithTheme(
         <VolumesActionMenu {...props} attached={true} poweredOff={true} />
       )
     );
-    expect(queryByText('Delete')).toBeInTheDocument();
+    expect(includesActions(['Delete'], queryByText));
     rerender(
       wrapWithTheme(
         <VolumesActionMenu {...props} attached={true} poweredOff={false} />
       )
     );
-    expect(queryByText('Delete')).not.toBeInTheDocument();
+    expect(queryByText('Delete')).toBeNull();
   });
 });
