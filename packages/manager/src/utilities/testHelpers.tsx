@@ -3,7 +3,7 @@ import { Provider as LDProvider } from 'launchdarkly-react-client-sdk/lib/contex
 import { SnackbarProvider } from 'notistack';
 import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
-import { QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
@@ -30,6 +30,7 @@ interface Options {
   MemoryRouter?: MemoryRouterProps;
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
+  queryClient?: QueryClient;
 }
 
 /**
@@ -43,11 +44,11 @@ export const baseStore = (customStore: DeepPartial<ApplicationState> = {}) =>
   );
 
 export const wrapWithTheme = (ui: any, options: Options = {}) => {
-  const { customStore } = options;
+  const { customStore, queryClient: passedQueryClient } = options;
   const storeToPass = customStore ? baseStore(customStore) : store;
   return (
     <Provider store={storeToPass}>
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme="dark">
           <LDProvider value={{ flags: options.flags ?? {} }}>
             <SnackbarProvider>
@@ -58,6 +59,23 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       </QueryClientProvider>
     </Provider>
   );
+};
+
+/**
+ * Wraps children with just the Redux Store. This is
+ * useful for testing React hooks that need to access
+ * the Redux store.
+ * @example
+ * ```ts
+ * const { result } = renderHook(() => useOrder(defaultOrder), {
+ *   wrapper: wrapWithStore,
+ * });
+ * ```
+ * @param param {object} contains children to render
+ * @returns {JSX.Element} wrapped component with Redux available for use
+ */
+export const wrapWithStore = ({ children }: { children: any }) => {
+  return <Provider store={store}>{children}</Provider>;
 };
 
 // When wrapping a TableRow component to test, we'll get an invalid DOM nesting
