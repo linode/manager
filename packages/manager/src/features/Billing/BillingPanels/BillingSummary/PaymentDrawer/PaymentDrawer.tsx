@@ -16,7 +16,6 @@ import CreditCard from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 import { useAccount } from 'src/queries/account';
-import CircleProgress from 'src/components/CircleProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -124,7 +123,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           {successMessage ? <Notice success text={successMessage} /> : null}
           {warning ? <Warning warning={warning} /> : null}
           {accountLoading ? (
-            <CircleProgress data-testid="loading-account" />
+            <Typography data-testid="loading-account">Loading</Typography>
           ) : account ? (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
