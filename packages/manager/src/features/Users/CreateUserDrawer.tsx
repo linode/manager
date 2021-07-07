@@ -15,7 +15,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 interface Props {
   open: boolean;
   onClose: () => void;
-  addUser: (user: User) => void;
+  refetch: () => void;
 }
 
 interface State {
@@ -51,7 +51,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const {
-      addUser,
+      refetch,
       onClose,
       history: { push },
     } = this.props;
@@ -61,13 +61,12 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
       .then((user: User) => {
         this.setState({ submitting: false });
         onClose();
-        if (!user.restricted) {
-          addUser(user);
-        } else {
+        if (user.restricted) {
           push(`/account/users/${username}/permissions`, {
             newUsername: user.username,
           });
         }
+        refetch();
       })
       .catch((errResponse) => {
         const errors = getAPIErrorOrDefault(
