@@ -39,7 +39,14 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
             You&apos;ll be taken to Google Pay to complete sign up.
           </Typography>
         </Grid>
-        <Grid item xs={4} md={3}>
+        <Grid
+          container
+          item
+          xs={4}
+          md={3}
+          justify="center"
+          alignContent="center"
+        >
           <GooglePayChip makeToast={makeToast} onClose={onClose} />
         </Grid>
       </Grid>

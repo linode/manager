@@ -16,6 +16,7 @@ import Notice from 'src/components/Notice';
 import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 0,
       width: '101.5%',
     },
+  },
+  loading: {
+    padding: 4,
   },
   disabled: {
     opacity: 0.3,
@@ -123,7 +127,16 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   }
 
   if (isLoading) {
-    return <CircleProgress mini />;
+    return (
+      <Grid
+        container
+        className={classes.loading}
+        justify="center"
+        alignContent="center"
+      >
+        <CircleProgress mini />
+      </Grid>
+    );
   }
 
   return (
