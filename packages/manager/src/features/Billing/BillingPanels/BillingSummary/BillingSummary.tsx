@@ -152,6 +152,37 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
     promotions && promotions.length > 0 ? { xs: 12, md: 4 } : { xs: 12, sm: 6 };
 
+  const generateBalanceJSX = (balance: number, pastDueBalance: boolean) => {
+    if (pastDueBalance) {
+      return (
+        <Typography style={{ marginTop: 16 }}>
+          <button
+            className={classes.makeAPaymentButton}
+            onClick={() => replace('/account/billing/make-payment')}
+          >
+            Make a payment immediately
+          </button>{' '}
+          to avoid service disruption.
+        </Typography>
+      );
+    }
+
+    if (balance > 0) {
+      return (
+        <Typography style={{ marginTop: 16 }}>
+          <button
+            className={classes.makeAPaymentButton}
+            onClick={() => replace('/account/billing/make-payment')}
+          >
+            Make a payment.
+          </button>
+        </Typography>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <>
       <Grid container spacing={2} className={classes.root}>
@@ -180,17 +211,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
                 />
               </Typography>
             </Box>
-            {balance > 0 ? (
-              <Typography style={{ marginTop: 16 }}>
-                <button
-                  className={classes.makeAPaymentButton}
-                  onClick={() => replace('/account/billing/make-payment')}
-                >
-                  Make a payment immediately
-                </button>{' '}
-                to avoid service disruption.
-              </Typography>
-            ) : null}
+            {generateBalanceJSX(balance, pastDueBalance)}
           </Paper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
