@@ -3,18 +3,19 @@ import { VariantType } from 'notistack';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import {
   initGooglePaymentInstance,
   gPay,
 } from 'src/features/Billing/Providers/GooglePay';
-import Notice from 'src/components/Notice';
 import CircleProgress from 'src/components/CircleProgress';
+import HelpIcon from 'src/components/HelpIcon';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   button: {
     border: 0,
     padding: 0,
+    marginTop: 10,
     backgroundColor: 'transparent',
     cursor: 'pointer',
     '&:hover': {
@@ -25,6 +26,13 @@ const useStyles = makeStyles(() => ({
     opacity: 0.3,
     '&:hover': {
       opacity: 0.3,
+    },
+  },
+  errorIcon: {
+    color: theme.color.red,
+    '&:hover': {
+      color: theme.color.red,
+      opacity: 0.7,
     },
   },
 }));
@@ -76,12 +84,17 @@ export const GooglePayChip: React.FC<Props> = (props) => {
     );
   };
 
-  if (status === 'error' || clientTokenError) {
-    return <Notice error text="Error loading Google Pay." />;
-  }
-
-  if (initializationError) {
-    return <Notice error text="Error initializing Google Pay." />;
+  if (status === 'error' || clientTokenError || initializationError) {
+    return (
+      <HelpIcon
+        className={classes.errorIcon}
+        isError={true}
+        size={35}
+        text={`Error ${
+          initializationError ? 'initializing' : 'loading'
+        } Google Pay.`}
+      />
+    );
   }
 
   if (isLoading) {
