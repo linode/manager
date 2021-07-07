@@ -16,6 +16,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
+import useNotifications from 'src/hooks/useNotifications';
 import PaymentDrawer from './PaymentDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,10 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
     },
   },
-  noBalance: {
+  noBalanceOrNotDue: {
     color: theme.palette.text.primary,
   },
-  positiveBalance: {
+  pastDueBalance: {
     color: theme.cmrIconColors.iRed,
   },
   credit: {
@@ -83,6 +84,16 @@ interface BillingSummaryProps {
 
 export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const classes = useStyles();
+  const notifications = useNotifications();
+
+  // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
+  const isBalanceOutsideGracePeriod = Boolean(
+    notifications.find(
+      (notification) =>
+        notification.type === 'payment_due' &&
+        notification.severity === 'critical'
+    )
+  );
 
   const { promotions, balanceUninvoiced, balance } = props;
 
@@ -120,18 +131,20 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   //
   // Account Balance logic
   //
-  let accountBalanceText = 'You have no balance at this time.';
-  // @todo: In the future make this account for grace period, etc.
-  if (balance > 0) {
-    accountBalanceText = 'Payment Due';
-  }
-  if (balance < 0) {
-    accountBalanceText = 'Credit';
-  }
+  const pastDueBalance = balance > 0 && isBalanceOutsideGracePeriod;
+
+  const accountBalanceText = pastDueBalance
+    ? 'Payment Due'
+    : balance > 0
+    ? 'Balance'
+    : balance < 0
+    ? 'Credit'
+    : 'You have no balance at this time.';
 
   const accountBalanceClassnames = classnames({
-    [classes.noBalance]: balance === 0,
-    [classes.positiveBalance]: balance > 0,
+    [classes.noBalanceOrNotDue]:
+      balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod),
+    [classes.pastDueBalance]: pastDueBalance,
     [classes.credit]: balance < 0,
   });
 
