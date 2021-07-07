@@ -26,16 +26,14 @@ describe('Monitor action menu', () => {
     const { queryByText } = renderWithTheme(
       <MonitorActionMenu {...props} status="disabled" />
     );
-    expect(
-      includesActions(['View Issue History', 'Edit', 'Delete'], queryByText)
-    );
+    includesActions(['View Issue History', 'Edit', 'Delete'], queryByText);
   });
 
   it('should include Enable if the monitor is disabled', () => {
     const { queryByText } = renderWithTheme(
       <MonitorActionMenu {...props} status="disabled" />
     );
-    expect(includesActions(['Enable'], queryByText));
+    includesActions(['Enable'], queryByText);
     expect(queryByText('Disable')).toBeNull();
   });
 
@@ -43,7 +41,7 @@ describe('Monitor action menu', () => {
     const { queryByText } = renderWithTheme(
       <MonitorActionMenu {...props} status="ok" />
     );
-    expect(includesActions(['Disable'], queryByText));
+    includesActions(['Disable'], queryByText);
     expect(queryByText('Enable')).toBeNull();
   });
 });

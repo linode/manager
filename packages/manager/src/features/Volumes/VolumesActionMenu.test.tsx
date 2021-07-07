@@ -39,17 +39,14 @@ const props: CombinedProps = {
 describe('Volume action menu', () => {
   it('should include basic Volume actions', () => {
     const { queryByText } = renderWithTheme(<VolumesActionMenu {...props} />);
-    expect(includesActions(['Show Config', 'Edit'], queryByText));
+    includesActions(['Show Config', 'Edit'], queryByText);
   });
 
   it('should include Attach if the Volume is not attached', () => {
-    const { queryByText, debug } = renderWithTheme(
+    const { queryByText } = renderWithTheme(
       <VolumesActionMenu {...props} isVolumesLanding={true} />
     );
-    // expect(queryByText('Attach')).toBeInTheDocument();
-    // expect(queryByText('Detach')).not.toBeInTheDocument();
-    debug();
-    expect(includesActions(['Attach'], queryByText));
+    includesActions(['Attach'], queryByText);
     expect(queryByText('Detach')).toBeNull();
   });
 
@@ -57,7 +54,7 @@ describe('Volume action menu', () => {
     const { queryByText } = renderWithTheme(
       <VolumesActionMenu {...props} attached={true} />
     );
-    expect(includesActions(['Detach'], queryByText));
+    includesActions(['Detach'], queryByText);
     expect(queryByText('Attach')).toBeNull();
   });
 
@@ -65,13 +62,13 @@ describe('Volume action menu', () => {
     const { queryByText, rerender } = renderWithTheme(
       <VolumesActionMenu {...props} attached={false} poweredOff={true} />
     );
-    expect(includesActions(['Delete'], queryByText));
+    includesActions(['Delete'], queryByText);
     rerender(
       wrapWithTheme(
         <VolumesActionMenu {...props} attached={true} poweredOff={true} />
       )
     );
-    expect(includesActions(['Delete'], queryByText));
+    includesActions(['Delete'], queryByText);
     rerender(
       wrapWithTheme(
         <VolumesActionMenu {...props} attached={true} poweredOff={false} />
