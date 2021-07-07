@@ -132,13 +132,14 @@
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
     "@babel/register": "^7.10.1",
-    "@storybook/addon-actions": "~6.2.9",
-    "@storybook/addon-docs": "~6.2.9",
+    "@mdx-js/loader": "^1.6.22",
+    "@storybook/addon-actions": "~6.3.3",
+    "@storybook/addon-docs": "^6.3.3",
     "@storybook/addon-knobs": "~6.2.9",
-    "@storybook/addon-links": "~6.2.9",
-    "@storybook/addon-viewport": "^6.2.9",
-    "@storybook/addons": "~6.2.9",
-    "@storybook/react": "~6.2.9",
+    "@storybook/addon-links": "~6.3.3",
+    "@storybook/addon-viewport": "^6.3.3",
+    "@storybook/addons": "~6.3.3",
+    "@storybook/react": "~6.3.3",
     "@svgr/webpack": "^4.3.3",
     "@testing-library/cypress": "^7.0.3",
     "@testing-library/jest-dom": "~5.11.3",
@@ -192,7 +193,7 @@
     "autoprefixer": "^9.4.8",
     "axe-core": "^3.5.1",
     "babel-core": "^7.0.0-bridge",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^8.2.2",
     "babel-preset-react-app": "^9.1.2",
     "browserslist": "^4.16.5",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
@@ -292,7 +293,9 @@
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js",
+      "^.+\\.[tj]sx?$": "babel-jest",
+      "^.+\\.mdx$": "@storybook/addon-docs/jest-transform-mdx"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
@@ -309,6 +312,7 @@
       "ts",
       "web.tsx",
       "tsx",
+      "mdx",
       "web.js",
       "js",
       "web.jsx",

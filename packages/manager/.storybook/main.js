@@ -5,10 +5,11 @@ module.exports = {
     '@storybook/addon-docs',
     '@storybook/addon-knobs',
     '@storybook/addon-viewport',
+    '@storybook/preset-typescript',
   ],
   webpackFinal: (config) => ({
     ...config,
     resolve: { ...config.resolve, ...custom.resolve },
-    module: { ...config.module, rules: custom.module.rules },
+    module: { ...config.module },
   }),
 };
