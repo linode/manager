@@ -5,6 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
+import LinearProgress from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 
 interface Props {
@@ -21,12 +22,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: -theme.spacing(2),
     },
   },
+  progress: {
+    marginBottom: 18,
+    width: '100%',
+    height: 5,
+  },
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   const { onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (open) {
+      setIsProcessing(false);
+    }
+  }, [open]);
 
   const makeToast = (message: string, variant: VariantType) => {
     enqueueSnackbar(message, {
@@ -36,6 +49,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
 
   return (
     <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
+      {isProcessing ? <LinearProgress className={classes.progress} /> : null}
       <Divider />
       <Grid className={classes.root} container>
         <Grid item direction="column" xs={8} md={9}>
@@ -53,7 +67,12 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           justify="flex-end"
           alignContent="center"
         >
-          <GooglePayChip makeToast={makeToast} onClose={onClose} />
+          <GooglePayChip
+            makeToast={makeToast}
+            onClose={onClose}
+            setProcessing={setIsProcessing}
+            disabled={isProcessing}
+          />
         </Grid>
       </Grid>
     </Drawer>

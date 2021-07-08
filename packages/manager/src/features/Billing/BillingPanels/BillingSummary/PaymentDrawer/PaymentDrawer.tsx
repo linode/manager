@@ -25,6 +25,7 @@ import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 import GooglePayButton from './GooglePayButton';
+import LinearProgress from 'src/components/LinearProgress';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,6 +40,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   header: {
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
+  },
+  progress: {
+    marginBottom: 18,
+    width: '100%',
+    height: 5,
   },
 }));
 
@@ -112,6 +118,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     setIsPaypalScriptLoaded,
   ] = React.useState<boolean>(false);
 
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
   }, [balance]);
@@ -119,6 +127,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     if (open) {
       setWarning(null);
+      setIsProcessing(false);
     }
   }, [open]);
 
@@ -172,6 +181,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
         <Grid item xs={12}>
           {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
+          {isProcessing ? (
+            <LinearProgress className={classes.progress} />
+          ) : null}
           {balance !== false && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
@@ -195,6 +207,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               value={usd}
               type="number"
               placeholder={`${minimumPayment} minimum`}
+              disabled={isProcessing}
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
@@ -207,6 +220,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               usd={usd}
               minimumPayment={minimumPayment}
               setSuccess={setSuccess}
+              disabled={isProcessing}
             />
           ) : (
             <CreditCardPayment
@@ -235,6 +249,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                     setSuccess={setSuccess}
                     asyncScriptOnLoad={onScriptLoad}
                     isScriptLoaded={isPaypalScriptLoaded}
+                    disabled={isProcessing}
                   />
                 </Grid>
                 <Grid item xs={9} sm={6}>
@@ -248,6 +263,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                     balance={balance}
                     setSuccess={setSuccess}
                     setError={setErrorMessage}
+                    setProcessing={setIsProcessing}
+                    disabled={isProcessing}
                   />
                 </Grid>
               </Grid>

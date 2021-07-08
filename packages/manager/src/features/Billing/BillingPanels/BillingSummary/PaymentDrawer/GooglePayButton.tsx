@@ -68,6 +68,8 @@ interface Props {
   balance: false | number;
   setSuccess: SetSuccess;
   setError: (error: string) => void;
+  setProcessing: (processing: boolean) => void;
+  disabled?: boolean;
 }
 
 export const GooglePayButton: React.FC<Props> = (props) => {
@@ -78,7 +80,14 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     false
   );
 
-  const { transactionInfo, balance, setSuccess, setError } = props;
+  const {
+    transactionInfo,
+    balance,
+    setSuccess,
+    setError,
+    setProcessing,
+    disabled = false,
+  } = props;
 
   /**
    * We're following API's validation logic:
@@ -86,7 +95,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
    * GPay min is $5, max of $2000.
    * If the customer has a balance over $2000, then the max is $50000
    */
-  const disabled =
+  const disabledDueToPrice =
     +transactionInfo.totalPrice < 5 ||
     (+transactionInfo.totalPrice > 2000 && balance < 2000) ||
     +transactionInfo.totalPrice > 50000;
@@ -107,6 +116,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
 
   const handleMessage = (message: string, variant: VariantType) => {
     if (variant === 'error') {
+      setProcessing(false);
       setError(message);
     } else if (variant === 'success') {
       setSuccess(message, true);
@@ -115,7 +125,10 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   };
 
   const handlePay = () => {
-    gPay('one-time-payment', transactionInfo, handleMessage);
+    if (disabled) {
+      return;
+    }
+    gPay('one-time-payment', transactionInfo, handleMessage, setProcessing);
   };
 
   if (status === 'error' || clientTokenError) {
@@ -141,7 +154,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      {disabled && (
+      {disabledDueToPrice && (
         <Tooltip
           title={`Payment amount must be between $5 and ${
             balance > 2000 ? '$50000' : '$2000'
@@ -156,9 +169,9 @@ export const GooglePayButton: React.FC<Props> = (props) => {
       <Button
         className={classNames({
           [classes.button]: true,
-          [classes.disabled]: disabled,
+          [classes.disabled]: disabled || disabledDueToPrice,
         })}
-        disabled={disabled}
+        disabled={disabledDueToPrice}
         onClick={handlePay}
       >
         <GooglePayIcon />

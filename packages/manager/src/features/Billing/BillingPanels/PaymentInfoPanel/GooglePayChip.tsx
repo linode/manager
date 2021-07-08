@@ -10,6 +10,7 @@ import {
 } from 'src/features/Billing/Providers/GooglePay';
 import CircleProgress from 'src/components/CircleProgress';
 import HelpIcon from 'src/components/HelpIcon';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   disabled: {
+    cursor: 'default',
     opacity: 0.3,
     '&:hover': {
       opacity: 0.3,
@@ -39,11 +41,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   makeToast: (message: string, variant: VariantType) => void;
+  setProcessing: (processing: boolean) => void;
   onClose: () => void;
+  disabled?: boolean;
 }
 
 export const GooglePayChip: React.FC<Props> = (props) => {
-  const { makeToast, onClose } = props;
+  const { makeToast, setProcessing, onClose, disabled = false } = props;
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
@@ -80,7 +84,8 @@ export const GooglePayChip: React.FC<Props> = (props) => {
         currencyCode: 'USD',
         countryCode: 'US',
       },
-      handleMessage
+      handleMessage,
+      setProcessing
     );
   };
 
@@ -102,7 +107,14 @@ export const GooglePayChip: React.FC<Props> = (props) => {
   }
 
   return (
-    <button className={classes.button} onClick={handlePay}>
+    <button
+      className={classNames({
+        [classes.button]: true,
+        [classes.disabled]: disabled,
+      })}
+      onClick={handlePay}
+      disabled={disabled}
+    >
       <GooglePayIcon height="48px" />
     </button>
   );

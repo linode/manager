@@ -39,9 +39,9 @@ const card = (type: CardType) => {
 
 export const Visa = () => card('Visa');
 
-export const Mastercard = () => card('Mastercard');
+export const Mastercard = () => card('MasterCard');
 
-export const Amex = () => card('Amex');
+export const Amex = () => card('American Express');
 
 export const Discover = () => card('Discover');
 

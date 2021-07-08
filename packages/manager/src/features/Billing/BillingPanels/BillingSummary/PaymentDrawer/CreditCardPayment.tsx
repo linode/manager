@@ -57,10 +57,19 @@ export interface Props {
   usd: string;
   minimumPayment: string;
   setSuccess: SetSuccess;
+  disabled?: boolean;
 }
 
 export const CreditCardPayment: React.FC<Props> = (props) => {
-  const { type, expiry, lastFour, minimumPayment, usd, setSuccess } = props;
+  const {
+    type,
+    expiry,
+    lastFour,
+    minimumPayment,
+    usd,
+    setSuccess,
+    disabled = false,
+  } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -142,13 +151,14 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
                     className={classes.cvvField}
                     hasAbsoluteError
                     noMarginTop
+                    disabled={disabled}
                   />
                 </Grid>
                 <Grid item className={classes.button}>
                   <Button
                     buttonType="primary"
                     onClick={handleOpenDialog}
-                    disabled={paymentTooLow || isCardExpired}
+                    disabled={paymentTooLow || isCardExpired || disabled}
                     tooltipText={
                       paymentTooLow
                         ? `Payment amount must be at least ${minimumPayment}.`

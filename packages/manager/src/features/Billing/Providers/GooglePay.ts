@@ -37,7 +37,8 @@ export const gPay = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
-  setMessage: (message: string, variant: VariantType) => void
+  setMessage: (message: string, variant: VariantType) => void,
+  setProcessing: (processing: boolean) => void
 ) => {
   if (!googlePaymentInstance) {
     return setMessage('Unable to open Google Pay.', 'error');
@@ -84,6 +85,8 @@ export const gPay = async (
     );
     const { nonce } = await googlePaymentInstance.parseResponse(paymentData);
 
+    setProcessing(true);
+
     // @TODO handle these API calls if they fail and maybe use React Query mutations?
     if (isOneTimePayment) {
       await makePayment({
@@ -109,6 +112,7 @@ export const gPay = async (
       'success'
     );
   } catch (error) {
+    setProcessing(false);
     if (error.message && (error.message as string).includes('User closed')) {
       return;
     }
