@@ -203,6 +203,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             type={creditCard?.card_type}
             lastFour={creditCard?.last_four ?? ''}
             expiry={creditCard?.expiry ?? ''}
+            disabled={isProcessing}
             usd={usd}
             minimumPayment={minimumPayment}
             setSuccess={setSuccess}

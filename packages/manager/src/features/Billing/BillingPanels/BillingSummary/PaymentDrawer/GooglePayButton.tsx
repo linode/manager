@@ -125,9 +125,6 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   };
 
   const handlePay = () => {
-    if (disabled) {
-      return;
-    }
     gPay('one-time-payment', transactionInfo, handleMessage, setProcessing);
   };
 
@@ -171,7 +168,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
           [classes.button]: true,
           [classes.disabled]: disabled || disabledDueToPrice,
         })}
-        disabled={disabledDueToPrice}
+        disabled={disabled || disabledDueToPrice}
         onClick={handlePay}
       >
         <GooglePayIcon />

@@ -263,7 +263,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
     setDialogOpen(false);
   };
 
-  const enabled = shouldEnablePaypalButton(+usd);
+  const enabled = shouldEnablePaypalButton(+usd) && !disabled;
 
   if (typeof errorLoadingPaypalScript === 'undefined') {
     return (
