@@ -4,10 +4,10 @@ import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { HeaderCell } from './types';
 

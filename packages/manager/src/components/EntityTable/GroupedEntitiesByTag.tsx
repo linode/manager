@@ -2,7 +2,6 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -11,16 +10,13 @@ import PaginationFooter, {
 } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import EntityTableHeader from './EntityTableHeader';
 import { ListProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  tagGridRow: {
-    marginBottom: theme.spacing(2) + theme.spacing(1) / 2,
-  },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
     height: 'auto',
@@ -44,7 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   tagHeader: {
     marginBottom: 2,
   },
-  tagHeaderOuter: {},
   paginationCell: {
     paddingTop: 2,
     '& div:first-child': {
@@ -108,10 +103,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
                           className={classes.groupContainer}
                           data-qa-tag-header={tag}
                         >
-                          <TableRow
-                            className={classes.tagHeaderRow}
-                            role="cell"
-                          >
+                          <TableRow className={classes.tagHeaderRow}>
                             <TableCell colSpan={7}>
                               <Typography
                                 variant="h2"
