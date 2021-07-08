@@ -184,7 +184,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               onChange={handleUSDChange}
               onBlur={handleOnBlur}
               value={usd}
-              required
               type="number"
               placeholder={`${minimumPayment} minimum`}
             />
