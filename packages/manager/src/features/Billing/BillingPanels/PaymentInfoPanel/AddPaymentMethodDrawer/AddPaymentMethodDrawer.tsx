@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { useSnackbar, VariantType } from 'notistack';
+import * as React from 'react';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
@@ -12,9 +12,14 @@ interface Props {
   onClose: () => void;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: '4px',
+    marginTop: 4,
+  },
+  gpay: {
+    '& button': {
+      marginRight: -theme.spacing(2),
+    },
   },
 }));
 
@@ -42,9 +47,10 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
         <Grid
           container
           item
+          className={classes.gpay}
           xs={4}
           md={3}
-          justify="center"
+          justify="flex-end"
           alignContent="center"
         >
           <GooglePayChip makeToast={makeToast} onClose={onClose} />

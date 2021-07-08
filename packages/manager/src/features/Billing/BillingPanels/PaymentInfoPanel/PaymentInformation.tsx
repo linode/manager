@@ -1,5 +1,9 @@
+import { PaymentMethod } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import GooglePay from 'src/assets/icons/providers/google-logo.svg';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -7,14 +11,10 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import styled from 'src/containers/SummaryPanels.styles';
+import useFlags from 'src/hooks/useFlags';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
-import GooglePay from 'src/assets/icons/providers/google-logo.svg';
-import Box from 'src/components/core/Box';
-import useFlags from 'src/hooks/useFlags';
-import { PaymentMethod } from '@linode/api-v4';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     fontWeight: 700,
     marginBottom: theme.spacing(2),
-    marginRight: theme.spacing(1),
     minWidth: 'auto',
     padding: 0,
     '&:hover, &:focus': {
