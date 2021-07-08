@@ -13,7 +13,6 @@ import {
 } from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import Notice from 'src/components/Notice';
-import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
@@ -163,7 +162,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
           <div className={classes.mask} />
         </Tooltip>
       )}
-      <Button
+      <button
         className={classNames({
           [classes.button]: true,
           [classes.disabled]: disabled || disabledDueToPrice,
@@ -172,7 +171,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
         onClick={handlePay}
       >
         <GooglePayIcon />
-      </Button>
+      </button>
     </div>
   );
 };
