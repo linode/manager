@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makePayment, CardType } from '@linode/api-v4/lib/account';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import Button from 'src/components/Button';
@@ -171,7 +171,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
                   </Typography>
                   {Boolean(expiry) && (
                     <Typography className={classes.cardText}>
-                      Expires {expiry}
+                      Expires {formatExpiry(expiry)}
                     </Typography>
                   )}
                 </Grid>
