@@ -49,6 +49,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
 
   const actions: Action[] = React.useMemo(() => {
     const isDisabled = status && status !== 'available';
+    const isAvailable = !isDisabled;
     const isFailed = event?.status === 'failed';
     return isFailed
       ? [
@@ -97,7 +98,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             },
           },
           {
-            title: 'Delete',
+            title: isAvailable ? 'Delete' : 'Cancel Upload',
             onClick: () => {
               onDelete(label, id, status);
             },
