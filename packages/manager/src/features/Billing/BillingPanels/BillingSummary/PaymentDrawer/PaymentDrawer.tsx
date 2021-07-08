@@ -92,7 +92,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
    */
   const creditCard = paymentMethods?.filter(
     (payment) => payment.type === 'credit_card'
-  )[0].data;
+  )[0]?.data;
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
