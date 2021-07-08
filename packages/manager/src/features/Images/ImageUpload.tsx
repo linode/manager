@@ -133,7 +133,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
               title="Leave this page?"
               actions={() => (
                 <ActionsPanel>
-                  <Button buttonType="cancel" onClick={handleCancel}>
+                  <Button buttonType="secondary" onClick={handleCancel}>
                     Cancel
                   </Button>
 

@@ -1,7 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -112,26 +111,23 @@ const resetDialogActions = ({
   loading,
 }: ActionsProps) => {
   return (
-    <React.Fragment>
-      <ActionsPanel>
-        <Button
-          onClick={closeDialogs}
-          buttonType="cancel"
-          data-qa-button-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          destructive
-          buttonType="primary"
-          onClick={resetSecret}
-          data-qa-button-confirm
-          loading={loading}
-        >
-          Reset Secret
-        </Button>
-      </ActionsPanel>
-    </React.Fragment>
+    <ActionsPanel>
+      <Button
+        buttonType="secondary"
+        onClick={closeDialogs}
+        data-qa-button-cancel
+      >
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={resetSecret}
+        loading={loading}
+        data-qa-button-confirm
+      >
+        Reset Secret
+      </Button>
+    </ActionsPanel>
   );
 };
 
@@ -147,26 +143,23 @@ const deleteDialogActions = ({
   closeDialogs,
 }: DeleteActionsProps) => {
   return (
-    <React.Fragment>
-      <ActionsPanel>
-        <Button
-          onClick={closeDialogs}
-          buttonType="cancel"
-          data-qa-button-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          destructive
-          buttonType="primary"
-          onClick={deleteSecret}
-          data-qa-button-confirm
-          loading={loading}
-        >
-          Delete
-        </Button>
-      </ActionsPanel>
-    </React.Fragment>
+    <ActionsPanel>
+      <Button
+        onClick={closeDialogs}
+        buttonType="secondary"
+        data-qa-button-cancel
+      >
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={deleteSecret}
+        data-qa-button-confirm
+        loading={loading}
+      >
+        Delete
+      </Button>
+    </ActionsPanel>
   );
 };
 

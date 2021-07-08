@@ -114,14 +114,13 @@ interface ActionsProps {
 const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="cancel">
+      <Button buttonType="secondary" onClick={props.onClose}>
         Cancel
       </Button>
       <Button
+        buttonType="primary"
         onClick={props.onSubmit}
         loading={props.isSubmitting}
-        destructive={props.mode === 'delete'}
-        buttonType="primary"
       >
         {capitalize(props.mode)} Firewall
       </Button>

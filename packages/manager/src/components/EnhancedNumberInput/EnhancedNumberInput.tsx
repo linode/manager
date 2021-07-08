@@ -11,7 +11,6 @@ const useStyles = makeStyles(() => ({
     width: 40,
     height: 40,
     minWidth: 40,
-    padding: 0,
   },
   textField: {
     margin: '0 5px',
@@ -127,13 +126,13 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
     >
       <Button
         buttonType="secondary"
+        onClick={decrementValue}
         className={classes.button}
-        outline
         compact
+        disabled={disabled || value === min}
+        outline
         aria-label="Subtract 1"
         name="Subtract 1"
-        onClick={decrementValue}
-        disabled={disabled || value === min}
         data-testid={'decrement-button'}
       >
         <Minus className={classes.minusIcon} />
@@ -160,13 +159,13 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
       />
       <Button
         buttonType="secondary"
+        onClick={incrementValue}
         className={classes.button}
-        outline
         compact
+        disabled={disabled || value === max}
+        outline
         aria-label="Add 1"
         name="Add 1"
-        onClick={incrementValue}
-        disabled={disabled || value === max}
         data-testid={'increment-button'}
       >
         <Plus className={classes.plusIcon} />

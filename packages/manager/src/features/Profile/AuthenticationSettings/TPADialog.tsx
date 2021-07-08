@@ -85,7 +85,7 @@ const renderActions = (
   return (
     <ActionsPanel className="p0">
       <Button
-        buttonType="cancel"
+        buttonType="secondary"
         onClick={onClose}
         data-qa-cancel
         data-testid={'dialog-cancel'}
@@ -93,13 +93,13 @@ const renderActions = (
         Cancel
       </Button>
       <Button
-        aria-describedby="external-site"
         buttonType="primary"
-        loading={loading}
         onClick={() => {
           onClose();
           changeLogin(provider);
         }}
+        loading={loading}
+        aria-describedby="external-site"
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >

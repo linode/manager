@@ -7,16 +7,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 export interface Props extends ButtonProps {
-  loading?: boolean;
-  destructive?: boolean;
   buttonType?: 'primary' | 'secondary';
   className?: string;
-  tooltipText?: string;
   compact?: boolean;
+  loading?: boolean;
   outline?: boolean;
-  superCompact?: boolean;
-  deleteText?: string;
-  loadingText?: string;
+  tooltipText?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,11 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   compact: {
-    paddingLeft: theme.spacing(2) - 2,
-    paddingRight: theme.spacing(2) - 2,
-    minWidth: '75px',
-  },
-  superCompact: {
     paddingLeft: 0,
     paddingRight: 0,
     minWidth: '50px',
@@ -88,7 +79,6 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
     tooltipText,
     buttonType,
     compact,
-    superCompact,
     outline,
     className,
     ...rest
@@ -98,9 +88,6 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
     <React.Fragment>
       <Button
         {...rest}
-        variant={getVariant(props)}
-        disabled={props.disabled || loading}
-        color={getColor(props)}
         className={classNames(
           buttonType,
           {
@@ -108,12 +95,14 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
             [classes.loading]: loading,
             loading,
             [classes.compact]: compact,
-            [classes.superCompact]: superCompact,
             [classes.outline]: outline,
             disabled: props.disabled,
           },
           className
         )}
+        color={getColor(props)}
+        disabled={props.disabled || loading}
+        variant={getVariant(props)}
       >
         <span
           className={classNames({

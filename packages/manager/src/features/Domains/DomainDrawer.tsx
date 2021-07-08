@@ -333,14 +333,18 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           <Button
             buttonType="primary"
             onClick={this.submit}
+            disabled={disabled}
+            loading={submitting}
             data-qa-submit
             data-testid="create-domain-submit"
-            loading={submitting}
-            disabled={disabled}
           >
             {mode === EDITING ? 'Save Changes' : 'Create Domain'}
           </Button>
-          <Button onClick={this.closeDrawer} buttonType="cancel" data-qa-cancel>
+          <Button
+            buttonType="secondary"
+            onClick={this.closeDrawer}
+            data-qa-cancel
+          >
             Cancel
           </Button>
         </ActionsPanel>

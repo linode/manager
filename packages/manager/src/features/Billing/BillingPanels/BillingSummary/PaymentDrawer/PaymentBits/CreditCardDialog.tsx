@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -43,13 +42,17 @@ class DialogActions extends React.PureComponent<Actions> {
   render() {
     return (
       <ActionsPanel>
-        <Button buttonType="cancel" onClick={this.props.cancel} data-qa-cancel>
+        <Button
+          buttonType="secondary"
+          onClick={this.props.cancel}
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button
           buttonType="primary"
-          loading={this.props.isMakingPayment}
           onClick={this.props.executePayment}
+          loading={this.props.isMakingPayment}
           data-qa-submit
           data-testid="credit-card-submit"
         >

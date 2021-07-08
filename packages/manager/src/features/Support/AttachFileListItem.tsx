@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { compose, withHandlers } from 'recompose';
-
 import Close from '@material-ui/icons/Close';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-
+import * as React from 'react';
+import { compose, withHandlers } from 'recompose';
+import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
   createStyles,
@@ -11,12 +10,9 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-
-import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TextField from 'src/components/TextField';
-
 import { FileAttachment } from './index';
 
 type ClassNames =
@@ -76,54 +72,52 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
     file.errors && file.errors.length ? file.errors[0].reason : undefined;
 
   return (
-    <React.Fragment>
-      <Grid container className={classes.attachmentsContainer}>
+    <Grid container className={classes.attachmentsContainer}>
+      <Grid item>
+        <TextField
+          className={classes.attachmentField}
+          value={file.name}
+          errorText={err}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="end">
+                <CloudUpload />
+              </InputAdornment>
+            ),
+            endAdornment: inlineDisplay && (
+              <InputAdornment
+                onClick={onClick}
+                position="end"
+                className={classes.closeIcon}
+                data-qa-inline-delete
+              >
+                <Close />
+              </InputAdornment>
+            ),
+          }}
+          label="File Attached"
+          aria-label="Disabled Text Field"
+          hideLabel
+        />
+      </Grid>
+      {!inlineDisplay && (
         <Grid item>
-          <TextField
-            className={classes.attachmentField}
-            value={file.name}
-            errorText={err}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="end">
-                  <CloudUpload />
-                </InputAdornment>
-              ),
-              endAdornment: inlineDisplay && (
-                <InputAdornment
-                  onClick={onClick}
-                  position="end"
-                  className={classes.closeIcon}
-                  data-qa-inline-delete
-                >
-                  <Close />
-                </InputAdornment>
-              ),
-            }}
-            label="File Attached"
-            aria-label="Disabled Text Field"
-            hideLabel
+          <Button
+            buttonType="primary"
+            onClick={onClick}
+            data-qa-delete-button
           />
         </Grid>
-        {!inlineDisplay && (
-          <Grid item>
-            <Button
-              buttonType="remove"
-              data-qa-delete-button
-              onClick={onClick}
-            />
-          </Grid>
-        )}
-        {file.uploading && (
-          <Grid item xs={12}>
-            <LinearProgress
-              className={classes.uploadProgress}
-              variant="indeterminate"
-            />
-          </Grid>
-        )}
-      </Grid>
-    </React.Fragment>
+      )}
+      {file.uploading && (
+        <Grid item xs={12}>
+          <LinearProgress
+            className={classes.uploadProgress}
+            variant="indeterminate"
+          />
+        </Grid>
+      )}
+    </Grid>
   );
 };
 

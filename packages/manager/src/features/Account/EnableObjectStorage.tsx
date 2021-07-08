@@ -3,11 +3,11 @@ import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Accordion from 'src/components/Accordion';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 
@@ -44,11 +44,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button
-            buttonType="primary"
-            destructive
-            onClick={openConfirmationModal}
-          >
+          <Button buttonType="primary" onClick={openConfirmationModal}>
             Cancel Object Storage
           </Button>
         </Grid>
@@ -101,16 +97,11 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="cancel" onClick={handleClose}>
+      <Button buttonType="secondary" onClick={handleClose}>
         Cancel
       </Button>
 
-      <Button
-        buttonType="primary"
-        destructive
-        onClick={handleSubmit}
-        loading={isLoading}
-      >
+      <Button buttonType="primary" onClick={handleSubmit} loading={isLoading}>
         Confirm cancellation
       </Button>
     </ActionsPanel>

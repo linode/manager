@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 
@@ -44,7 +43,7 @@ const PaypalDialogActionButtons: React.SFC<CombinedProps> = (props) => {
     return (
       <ActionsPanel>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={handleCancelPayment}
           data-qa-cancel
         >
@@ -52,8 +51,8 @@ const PaypalDialogActionButtons: React.SFC<CombinedProps> = (props) => {
         </Button>
         <Button
           buttonType="primary"
-          loading={isExecutingPayment}
           onClick={initExecutePayment}
+          loading={isExecutingPayment}
           data-qa-submit
         >
           Confirm Payment

@@ -312,14 +312,13 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const getActions = () => {
     return (
       <ActionsPanel>
-        <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel>
+        <Button buttonType="secondary" onClick={closeDialog} data-qa-cancel>
           {dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'}
         </Button>
         <Button
           buttonType="primary"
-          destructive
-          loading={dialog.submitting}
           onClick={handleRemoveImage}
+          loading={dialog.submitting}
           data-qa-submit
         >
           {dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'}

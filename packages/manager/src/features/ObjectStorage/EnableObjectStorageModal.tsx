@@ -24,7 +24,7 @@ export const EnableObjectStorageModal: React.FC<Props> = ({
       title="Just to confirm..."
       actions={() => (
         <ActionsPanel>
-          <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
             Cancel
           </Button>
           <Button

@@ -439,9 +439,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
 
           <Button
             buttonType="secondary"
-            className={classes.deleteButton}
             onClick={() => openDialog(cluster.id)}
-            superCompact
+            className={classes.deleteButton}
+            compact
           >
             Delete Cluster
           </Button>

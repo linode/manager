@@ -254,14 +254,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button onClick={onClose} buttonType="cancel" data-qa-cancel-delete>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel-delete>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        destructive
-        loading={this.state.confirmDelete.submitting}
         onClick={this.deleteConfig}
+        loading={this.state.confirmDelete.submitting}
         data-qa-confirm-delete
       >
         Delete
@@ -273,14 +272,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         onClick={this.cancelBoot}
-        buttonType="cancel"
+        buttonType="secondary"
         data-qa-cancel-delete
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        destructive
         loading={this.state.confirmBoot.submitting}
         onClick={this.handleBoot}
         data-qa-confirm-reboot

@@ -3,11 +3,10 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import useProfile from 'src/hooks/useProfile';
@@ -157,15 +156,14 @@ interface ActionsProps {
 const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="cancel">
+      <Button onClick={props.onClose} buttonType="secondary">
         Cancel
       </Button>
       <Button
-        disabled={props.disabled}
-        onClick={props.onSubmit}
-        loading={props.isCancelling}
-        destructive
         buttonType="primary"
+        onClick={props.onSubmit}
+        disabled={props.disabled}
+        loading={props.isCancelling}
       >
         Close Account
       </Button>

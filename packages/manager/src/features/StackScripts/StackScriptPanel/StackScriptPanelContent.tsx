@@ -9,11 +9,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import { StackScriptsRequest } from 'src/features/StackScripts/types';
 import StackScriptBase, {
   StateProps,
 } from '../StackScriptBase/StackScriptBase';
 import StackScriptsSection from './StackScriptsSection';
-import { StackScriptsRequest } from 'src/features/StackScripts/types';
 
 interface DialogVariantProps {
   open: boolean;
@@ -157,12 +157,11 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const renderConfirmDeleteActions = () => {
     return (
       <ActionsPanel>
-        <Button buttonType="cancel" onClick={handleCloseDialog}>
+        <Button buttonType="secondary" onClick={handleCloseDialog}>
           Cancel
         </Button>
         <Button
           buttonType="primary"
-          destructive
           onClick={handleDeleteStackScript}
           loading={dialog.delete.submitting}
         >
@@ -178,7 +177,7 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
         <Button buttonType="secondary" onClick={handleCloseDialog}>
           Cancel
         </Button>
-        <Button buttonType="primary" destructive onClick={handleMakePublic}>
+        <Button buttonType="primary" onClick={handleMakePublic}>
           Yes, make me a star!
         </Button>
       </ActionsPanel>

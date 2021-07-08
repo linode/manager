@@ -62,7 +62,7 @@ const ConfirmToken: React.FC<CombinedProps> = (props) => {
         >
           Confirm Token
         </Button>
-        <Button buttonType="cancel" onClick={onCancel} data-qa-cancel>
+        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
           Cancel
         </Button>
         {twoFactorConfirmed && (
