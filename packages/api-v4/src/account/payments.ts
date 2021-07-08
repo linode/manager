@@ -136,7 +136,7 @@ export const executePaypalPayment = (data: ExecutePayload) =>
  * Add or update credit card information to your account. Only one
  * card is allowed per account, so this method will overwrite any
  * existing information.
- *
+ * @deprecated Use POST /account/payment-methods
  */
 export const saveCreditCard = (data: SaveCreditCardData) => {
   return Request<{}>(

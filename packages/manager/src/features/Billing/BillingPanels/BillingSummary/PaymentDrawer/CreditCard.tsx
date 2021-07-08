@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const iconMap = {
   Visa: VisaIcon,
-  Mastercard: MastercardIcon,
-  Amex: AmexIcon,
+  MasterCard: MastercardIcon,
+  'American Express': AmexIcon,
   Discover: DiscoverIcon,
   JCB: JCBIcon,
 };
