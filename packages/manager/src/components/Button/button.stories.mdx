@@ -1,16 +1,58 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import Button from 'src/components/Button';
 
-<Meta title="Button" component={Button} />
+<Meta title="UI Elements/Button" component={Button} />
 
 # Button
 
 With `MDX`, we can define a story for `Button` right in the middle of our Markdown documentation.
 
+### Default
+
 <Canvas>
-  <Story name="Button">
+  <Story name="Default">
     <Button buttonType="primary" data-qa-button="primary">
       Primary
     </Button>
+    <Button buttonType="secondary" data-qa-button="secondary">
+      Secondary
+    </Button>
+    <Button buttonType="secondary" outline data-qa-button="secondary">
+      Secondary with Outline
+    </Button>
   </Story>
 </Canvas>
+
+### Disabled
+
+<Canvas>
+  <Story name="Disabled">
+    <Button buttonType="primary" disabled data-qa-button="primary">
+      Primary
+    </Button>
+    <Button buttonType="secondary" disabled data-qa-button="secondary">
+      Secondary
+    </Button>
+    <Button buttonType="secondary" disabled outline data-qa-button="secondary">
+      Secondary with Outline
+    </Button>
+  </Story>
+</Canvas>
+
+### Loading
+
+<Canvas>
+  <Story name="Loading">
+    <Button buttonType="primary" loading data-qa-button="primary">
+      Primary
+    </Button>
+    <Button buttonType="secondary" loading data-qa-button="secondary">
+      Secondary
+    </Button>
+    <Button buttonType="secondary" loading outline data-qa-button="secondary">
+      Secondary with Outline
+    </Button>
+  </Story>
+</Canvas>
+
+<Props of={Button} />

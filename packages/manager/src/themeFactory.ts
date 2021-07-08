@@ -571,11 +571,6 @@ const themeDefaults: ThemeDefaults = () => {
           '&.loading': {
             backgroundColor: primaryColors.text,
           },
-          '&.cancel': {
-            '&:hover, &:focus': {
-              borderColor: '#222',
-            },
-          },
         },
         containedSecondary: {
           backgroundColor: 'transparent',
@@ -594,30 +589,6 @@ const themeDefaults: ThemeDefaults = () => {
             borderColor: '#c9cacb',
             color: '#c9cacb',
           },
-          // '&.cancel': {
-          //   borderColor: 'transparent',
-          //   '&:hover, &:focus': {
-          //     borderColor: primaryColors.light,
-          //     backgroundColor: 'transparent'
-          //   }
-          // },
-          // '&.destructive': {
-          //   backgroundColor: primaryColors.main,
-          //   color: '#fff',
-          //   '&:hover, &:focus': {
-          //     color: '#fff',
-          //     backgroundColor: primaryColors.light
-          //   },
-          //   '&:active': {
-          //     color: '#963530',
-          //     borderColor: '#963530'
-          //   },
-          //   '&$disabled': {
-          //     borderColor: '#c9cacb',
-          //     backgroundColor: 'transparent',
-          //     color: '#c9cacb'
-          //   }
-          // },
           '&.loading': {
             borderColor: primaryColors.text,
             color: primaryColors.text,

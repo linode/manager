@@ -26,11 +26,12 @@ export const decorators = [
       <ThemeProvider theme={options[_key]}>
         <CssBaseline />
         <div
-          style={{
-            backgroundColor: options[_key]().cmrBGColors.bgApp,
-            height: '100vh',
-            padding: '1rem',
-          }}
+          style={
+            {
+              // backgroundColor: options[_key]().cmrBGColors.bgApp,
+              // padding: '1rem',
+            }
+          }
         >
           <Story />
         </div>
@@ -45,6 +46,7 @@ MINIMAL_VIEWPORTS.mobile1.styles = {
 };
 
 export const parameters = {
+  layout: 'centered',
   viewport: {
     viewports: MINIMAL_VIEWPORTS,
   },

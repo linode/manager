@@ -331,11 +331,6 @@ const darkThemeOptions = {
         '&.loading': {
           backgroundColor: primaryColors.text,
         },
-        '&.cancel': {
-          '&:hover, &:focus': {
-            borderColor: '#fff',
-          },
-        },
       },
       containedSecondary: {
         color: cmrTextColors.linkActiveLight,
@@ -349,25 +344,6 @@ const darkThemeOptions = {
         '&$disabled': {
           color: '#c9cacb',
         },
-        '&.cancel': {
-          borderColor: 'transparent',
-          '&:hover, &:focus': {
-            borderColor: primaryColors.light,
-          },
-        },
-        // '&.destructive': {
-        //   borderColor: '#c44742',
-        //   color: '#c44742',
-        //   '&:hover, &:focus': {
-        //     color: '#df6560',
-        //     borderColor: '#df6560',
-        //     backgroundColor: 'transparent'
-        //   },
-        //   '&:active': {
-        //     color: '#963530',
-        //     borderColor: '#963530'
-        //   }
-        // },
         '&.loading': {
           color: primaryColors.text,
           minWidth: 100,

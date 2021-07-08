@@ -9,7 +9,7 @@ import HelpIcon from 'src/components/HelpIcon';
 export interface Props extends ButtonProps {
   loading?: boolean;
   destructive?: boolean;
-  buttonType?: 'primary' | 'secondary' | 'cancel' | 'remove';
+  buttonType?: 'primary' | 'secondary';
   className?: string;
   tooltipText?: string;
   compact?: boolean;
@@ -39,9 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: `${theme.spacing(1) + 8}px !important`,
       animation: '$rotate 2s linear infinite',
     },
-  },
-  loadingText: {
-    marginRight: 8,
   },
   compact: {
     paddingLeft: theme.spacing(2) - 2,
@@ -74,31 +71,21 @@ type CombinedProps = Props;
 const getVariant = cond([
   [propEq('buttonType', 'primary'), always('contained')],
   [propEq('buttonType', 'secondary'), always('contained')],
-  [propEq('buttonType', 'remove'), always('contained')],
-  [propEq('buttonType', 'cancel'), always('contained')],
   [() => true, always(undefined)],
 ]);
 
 const getColor = cond([
   [propEq('buttonType', 'primary'), always('primary')],
   [propEq('buttonType', 'secondary'), always('secondary')],
-  [propEq('buttonType', 'remove'), always('primary')],
-  [propEq('buttonType', 'destructive'), always('primary')],
-  [propEq('buttonType', 'cancel'), always('secondary')],
   [() => true, always(undefined)],
 ]);
-
-// Add invariant warning if loading destructive cancel
-// Add invariant warning if destructive cancel
 
 const WrappedButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
     loading,
-    deleteText,
     tooltipText,
-    loadingText,
     buttonType,
     compact,
     superCompact,
@@ -134,25 +121,8 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
           })}
           data-qa-loading={loading}
         >
-          {loading ? (
-            loadingText ? (
-              /*
-                The recommendation here is to not use loadingText that
-                will create a large width for the button. Keep
-                your loading text strings short.
-              */
-              <React.Fragment>
-                <span className={classes.loadingText}>{loadingText}</span>
-                <Reload />
-              </React.Fragment>
-            ) : (
-              <Reload />
-            )
-          ) : (
-            props.children
-          )}
+          {loading ? <Reload /> : props.children}
         </span>
-        {buttonType === 'remove' && (deleteText ? deleteText : 'Remove')}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>
