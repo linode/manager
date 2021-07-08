@@ -89,10 +89,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
-  const [successMessage, setSuccessMessage] = React.useState<string | null>(
-    null
-  );
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
@@ -108,18 +104,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
 
   React.useEffect(() => {
     if (open) {
-      setSuccessMessage(null);
       setWarning(null);
     }
   }, [open]);
-
-  React.useEffect(() => {
-    if (successMessage) {
-      enqueueSnackbar(successMessage, {
-        variant: 'success',
-      });
-    }
-  }, [successMessage, enqueueSnackbar]);
 
   const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUSD(e.target.value || '');
@@ -135,8 +122,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     paymentWasMade = false,
     warnings = undefined
   ) => {
-    setSuccessMessage(message);
     if (paymentWasMade) {
+      enqueueSnackbar(message, {
+        variant: 'success',
+      });
       // Reset everything
       setUSD('0.00');
       setCreditCardKey(v4());
@@ -147,6 +136,12 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
     }
+  };
+
+  const setError = (message: string) => {
+    enqueueSnackbar(message, {
+      variant: 'error',
+    });
   };
 
   const minimumPayment = getMinimumPayment(balance || 0);
@@ -167,7 +162,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
         <Grid item xs={12}>
-          {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {balance !== false && (
             <Grid item>
@@ -233,7 +227,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                     }}
                     balance={balance}
                     setSuccess={setSuccess}
-                    setError={setErrorMessage}
+                    setError={setError}
                   />
                 </Grid>
               </Grid>

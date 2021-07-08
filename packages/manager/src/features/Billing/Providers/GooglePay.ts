@@ -37,8 +37,7 @@ export const gPay = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
-  setMessage: (message: string, variant: VariantType) => void,
-  onSuccess?: () => void
+  setMessage: (message: string, variant: VariantType) => void
 ) => {
   if (!googlePaymentInstance) {
     return setMessage('Unable to open Google Pay.', 'error');
@@ -94,9 +93,6 @@ export const gPay = async (
         data: { nonce: 'fake-android-pay-nonce' },
         is_default: true,
       });
-      if (onSuccess) {
-        onSuccess();
-      }
       await queryClient.fetchQuery(
         'account-payment-methods',
         getAllPaymentMethodsRequest
