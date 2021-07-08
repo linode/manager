@@ -36,17 +36,6 @@ export const getAllPaymentMethodsRequest = () =>
     (data) => data.data
   );
 
-/**
- * Temporary helper function to help us find the main card on file as we
- * now have an endpoint that can return many payment methods
- */
-export const getCreditCard = (paymentMethods: PaymentMethod[] | undefined) => {
-  return paymentMethods?.find(
-    (paymentMethod) =>
-      paymentMethod.is_default === true && paymentMethod.type === 'credit_card'
-  );
-};
-
 export const useClientToken = () =>
   useQuery<ClientToken, APIError[]>(
     queryKey + '-client-token',

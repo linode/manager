@@ -1,5 +1,6 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
 import { CardType } from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   open: boolean;
+  paymentMethods: PaymentMethod[] | undefined;
   onClose: () => void;
 }
 
@@ -79,6 +81,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     type,
     expiry,
     lastFour,
+    paymentMethods,
     open,
     onClose,
   } = props;
@@ -87,6 +90,16 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const flags = useFlags();
 
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
+
+  /**
+   * Show actual credit card instead of Google Pay card
+   *
+   * @TOOD: If a user has multiple credit cards and clicks 'Make a Payment' through the
+   * payment method actions dropdown, display that credit card instead of the first one
+   */
+  const creditCard = paymentMethods?.filter(
+    (payment) => payment.type === 'credit_card'
+  )[0].data;
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
@@ -185,15 +198,27 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
-          <CreditCardPayment
-            key={creditCardKey}
-            type={type}
-            lastFour={lastFour}
-            expiry={expiry}
-            usd={usd}
-            minimumPayment={minimumPayment}
-            setSuccess={setSuccess}
-          />
+          {showGooglePay && creditCard ? (
+            <CreditCardPayment
+              key={creditCardKey}
+              type={creditCard.card_type}
+              lastFour={creditCard.last_four}
+              expiry={creditCard.expiry}
+              usd={usd}
+              minimumPayment={minimumPayment}
+              setSuccess={setSuccess}
+            />
+          ) : (
+            <CreditCardPayment
+              key={creditCardKey}
+              type={type}
+              lastFour={lastFour}
+              expiry={expiry}
+              usd={usd}
+              minimumPayment={minimumPayment}
+              setSuccess={setSuccess}
+            />
+          )}
           <Divider spacingTop={32} spacingBottom={16} />
           {showGooglePay ? (
             <>

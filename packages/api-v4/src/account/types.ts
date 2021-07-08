@@ -76,7 +76,12 @@ export type PromotionServiceType =
 
 export type ThirdPartyPayment = 'google_pay' | 'paypal';
 
-export type CardType = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
+export type CardType =
+  | 'Visa'
+  | 'MasterCard'
+  | 'American Express'
+  | 'Discover'
+  | 'JCB';
 
 export type PaymentType = 'credit_card' | ThirdPartyPayment;
 
