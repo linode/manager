@@ -32,21 +32,18 @@ const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
   ];
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      <div className={classes.root}>
-        {actions.map((action) => {
-          return (
-            <InlineMenuAction
-              key={action.title}
-              actionText={action.title}
-              onClick={action.onClick}
-              disabled={action.disabled}
-            />
-          );
-        })}
-      </div>
-    </>
+    <div className={classes.root}>
+      {actions.map((action) => {
+        return (
+          <InlineMenuAction
+            key={action.title}
+            actionText={action.title}
+            onClick={action.onClick}
+            disabled={action.disabled}
+          />
+        );
+      })}
+    </div>
   );
 };
 

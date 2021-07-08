@@ -63,33 +63,28 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
       : null,
   ].filter(Boolean) as Action[];
 
-  return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
+  return !isEmpty(actions) ? (
     <>
-      {!isEmpty(actions) ? (
-        <>
-          {!matchesMdDown &&
-            actions.map((action) => {
-              return (
-                <InlineMenuAction
-                  key={action.title}
-                  actionText={action.title}
-                  disabled={readOnly}
-                  onClick={action.onClick}
-                />
-              );
-            })}
-          {matchesMdDown && (
-            <ActionMenu
-              actionsList={actions}
-              ariaLabel={`Action menu for IP Address ${props.ipAddress}`}
+      {!matchesMdDown &&
+        actions.map((action) => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              disabled={readOnly}
+              onClick={action.onClick}
             />
-          )}
-        </>
-      ) : (
-        <span className={classes.emptyCell}></span>
+          );
+        })}
+      {matchesMdDown && (
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={`Action menu for IP Address ${props.ipAddress}`}
+        />
       )}
     </>
+  ) : (
+    <span className={classes.emptyCell}></span>
   );
 };
 

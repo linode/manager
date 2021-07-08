@@ -75,7 +75,7 @@ class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
 }
 
 export default {
-  title: 'CMR Action Menu',
+  title: 'Action Menu',
 };
 
 export const _ActionMenu = () => (
