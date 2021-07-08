@@ -125,8 +125,8 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
         cvv,
       },
     })
-      .then(async () => {
-        await queryClient.refetchQueries(['account-payment-methods-all']);
+      .then(() => {
+        queryClient.invalidateQueries('account-payment-methods-all');
         enqueueSnackbar('Successfully updated your credit card.', {
           variant: 'success',
         });

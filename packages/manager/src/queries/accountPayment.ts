@@ -7,12 +7,12 @@ import { getClientToken, ClientToken } from '@linode/api-v4/lib/account';
 
 const queryKey = 'account-payment-methods';
 
-export const usePaymentMethodsQuery = (params?: any) => {
+export const usePaymentMethodsQuery = (params: any = {}, filter: any = {}) => {
   return useQuery<ResourcePage<PaymentMethod>, APIError[]>(
-    [queryKey, params?.page, params?.page_size],
+    [queryKey, params, filter],
     () => getPaymentMethods(params),
     {
-      ...queryPresets.longLived,
+      ...queryPresets.oneTimeFetch,
     }
   );
 };
@@ -22,7 +22,7 @@ export const useAllPaymentMethodsQuery = () => {
     [queryKey + '-all'],
     getAllPaymentMethodsRequest,
     {
-      ...queryPresets.longLived,
+      ...queryPresets.oneTimeFetch,
     }
   );
 };
