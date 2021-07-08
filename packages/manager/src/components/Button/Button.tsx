@@ -71,7 +71,7 @@ const getColor = cond([
   [() => true, always(undefined)],
 ]);
 
-const WrappedButton: React.FC<CombinedProps> = (props) => {
+export const WrappedButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
