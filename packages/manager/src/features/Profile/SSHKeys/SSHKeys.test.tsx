@@ -50,9 +50,7 @@ describe('SSHKeys', () => {
     });
 
     it('should display table row for each key', () => {
-      expect(
-        wrapper.find(`WithStyles(ForwardRef(TableRow))[data-qa-content-row]`)
-      ).toHaveLength(3);
+      expect(wrapper.find('[data-qa-content-row]')).toHaveLength(3);
     });
   });
 
