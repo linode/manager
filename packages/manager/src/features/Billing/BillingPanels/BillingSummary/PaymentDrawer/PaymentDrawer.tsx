@@ -1,5 +1,4 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
-import { CardType } from '@linode/api-v4/lib/account/types';
 import { PaymentMethod } from '@linode/api-v4';
 import * as classnames from 'classnames';
 import * as React from 'react';
@@ -57,9 +56,6 @@ interface Props {
 interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
-  lastFour: string;
-  expiry: string;
-  type?: CardType | null;
 }
 
 export type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
@@ -81,16 +77,7 @@ export const getMinimumPayment = (balance: number | false) => {
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
 export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
-  const {
-    accountLoading,
-    balance,
-    type,
-    expiry,
-    lastFour,
-    paymentMethods,
-    open,
-    onClose,
-  } = props;
+  const { accountLoading, balance, paymentMethods, open, onClose } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const flags = useFlags();
@@ -211,28 +198,15 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
-          {showGooglePay && creditCard ? (
-            <CreditCardPayment
-              key={creditCardKey}
-              type={creditCard.card_type}
-              lastFour={creditCard.last_four}
-              expiry={creditCard.expiry}
-              usd={usd}
-              minimumPayment={minimumPayment}
-              setSuccess={setSuccess}
-              disabled={isProcessing}
-            />
-          ) : (
-            <CreditCardPayment
-              key={creditCardKey}
-              type={type}
-              lastFour={lastFour}
-              expiry={expiry}
-              usd={usd}
-              minimumPayment={minimumPayment}
-              setSuccess={setSuccess}
-            />
-          )}
+          <CreditCardPayment
+            key={creditCardKey}
+            type={creditCard?.card_type}
+            lastFour={creditCard?.last_four ?? ''}
+            expiry={creditCard?.expiry ?? ''}
+            usd={usd}
+            minimumPayment={minimumPayment}
+            setSuccess={setSuccess}
+          />
           <Divider spacingTop={32} spacingBottom={16} />
           {showGooglePay ? (
             <>
@@ -317,9 +291,6 @@ const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
     balance: accountData?.balance ?? false,
-    type: accountData?.credit_card.card_type ?? '',
-    lastFour: accountData?.credit_card.last_four ?? '',
-    expiry: accountData?.credit_card.expiry ?? '',
   })
 );
 
