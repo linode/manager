@@ -1,5 +1,4 @@
 import braintree, { GooglePayment } from 'braintree-web';
-// import { GPAY_MERCHANT_ID } from 'src/constants';
 import {
   addPaymentMethod,
   makePayment,
@@ -7,6 +6,7 @@ import {
 import { VariantType } from 'notistack';
 import { queryClient } from 'src/queries/base';
 import { getAllPaymentMethodsRequest } from 'src/queries/accountPayment';
+import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 
 let googlePaymentInstance: GooglePayment | undefined;
 
@@ -47,10 +47,10 @@ export const gPay = async (
 
   try {
     paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
-      // merchantInfo: {
-      //   merchantId: GPAY_MERCHANT_ID || '',
-      // },
-      // @ts-expect-error braintree's types are not accurate
+      merchantInfo: {
+        merchantId: GPAY_MERCHANT_ID || '',
+      },
+      // @ts-expect-error Brintree types are wrong
       transactionInfo,
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
     });
@@ -59,7 +59,10 @@ export const gPay = async (
   }
 
   const googlePayClient = new google.payments.api.PaymentsClient({
-    environment: 'TEST',
+    environment: GPAY_CLIENT_ENV as google.payments.api.Environment,
+    merchantInfo: {
+      merchantId: GPAY_MERCHANT_ID || '',
+    },
     paymentDataCallbacks: {
       onPaymentAuthorized,
     },
@@ -91,7 +94,7 @@ export const gPay = async (
       await addPaymentMethod({
         type: 'payment_method_nonce',
         data: { nonce: 'fake-android-pay-nonce' },
-        is_default: true,
+        is_default: false,
       });
       await queryClient.fetchQuery(
         'account-payment-methods',
@@ -102,7 +105,7 @@ export const gPay = async (
     setMessage(
       isOneTimePayment
         ? `Payment for $${transactionInfo.totalPrice} successfully submitted`
-        : 'Successfully Added Google Pay',
+        : 'Successfully added Google Pay',
       'success'
     );
   } catch (error) {
