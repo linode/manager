@@ -90,6 +90,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
@@ -138,12 +139,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const setError = (message: string) => {
-    enqueueSnackbar(message, {
-      variant: 'error',
-    });
-  };
-
   const minimumPayment = getMinimumPayment(balance || 0);
 
   if (!accountLoading && balance === undefined) {
@@ -162,6 +157,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
         <Grid item xs={12}>
+          {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
           {balance !== false && (
             <Grid item>
@@ -226,7 +222,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                     }}
                     balance={balance}
                     setSuccess={setSuccess}
-                    setError={setError}
+                    setError={setErrorMessage}
                   />
                 </Grid>
               </Grid>
