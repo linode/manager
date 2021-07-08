@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& thead th': {
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
       '&:last-of-type': {
-        paddingRight: 10,
+        paddingRight: 15,
       },
     },
   },
