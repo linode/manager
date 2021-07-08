@@ -24,9 +24,9 @@ describe('BillingSummary', () => {
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
   });
 
-  it('displays an overdue payment notice when there is a positive balance', () => {
+  it('displays the balance when there is a positive balance that is not yet past due', () => {
     renderWithTheme(<BillingSummary balance={10} balanceUninvoiced={5} />);
-    within(screen.getByTestId(accountBalanceText)).getByText(/payment due/gi);
+    within(screen.getByTestId(accountBalanceText)).getByText(/Balance/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
   });
 

@@ -102,9 +102,8 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   //
 
   // On-the-fly route matching so this component can open the drawer itself.
-  const makePaymentRouteMatch = Boolean(
-    useRouteMatch('/account/billing/make-payment')
-  );
+  const routeForMakePayment = '/account/billing/make-payment';
+  const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
 
   const { replace } = useHistory();
 
@@ -158,7 +157,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
         <Typography style={{ marginTop: 16 }}>
           <button
             className={classes.makeAPaymentButton}
-            onClick={() => replace('/account/billing/make-payment')}
+            onClick={() => replace(routeForMakePayment)}
           >
             Make a payment immediately
           </button>{' '}
@@ -172,7 +171,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
         <Typography style={{ marginTop: 16 }}>
           <button
             className={classes.makeAPaymentButton}
-            onClick={() => replace('/account/billing/make-payment')}
+            onClick={() => replace(routeForMakePayment)}
           >
             Make a payment.
           </button>
