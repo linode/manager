@@ -21,7 +21,7 @@ describe('create image', () => {
     cy.intercept('POST', '*/images', (req) => {
       req.reply(200);
     }).as('postImages');
-    createLinode().then((linode) => {
+    createLinode().then((linode: any) => {
       // stub incoming disks response
       cy.intercept(`*/linode/instances/${linode.id}/disks*`, {
         results: 2,

@@ -1,9 +1,12 @@
+import * as dayjs from 'dayjs';
+dayjs().format();
+
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const _loginWithToken = (win) => {
   win.localStorage.setItem('authentication/oauth-token', oauthtoken);
   win.localStorage.setItem('authentication/scopes', '*');
   // cy.log(window.localStorage.getItem('authentication/oauth-token'));
-  const expireDate = Cypress.moment().add(30, 'days');
+  const expireDate = dayjs().add(30, 'day');
   const isoExpire = expireDate.toISOString();
   // cy.log(isoExpire);
   win.localStorage.setItem('authentication/expires', isoExpire);
