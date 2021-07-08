@@ -20,7 +20,6 @@ const props: CombinedProps = {
   requestAccount: jest.fn(),
   updateAccount: jest.fn(),
   saveCreditCard: jest.fn(),
-  paymentMethods: [],
 };
 
 describe('Make a Payment Panel', () => {
