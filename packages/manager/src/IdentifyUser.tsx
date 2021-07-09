@@ -26,6 +26,8 @@ export const IdentifyUser: React.FC<Props> = (props) => {
 
   const { setFeatureFlagsLoaded } = useFeatureFlagsLoad();
 
+  const euuid = account?.euuid;
+
   // Configure user for error reporting once we have the info we need.
   React.useEffect(() => {
     if (userID && username) {
@@ -35,10 +37,10 @@ export const IdentifyUser: React.FC<Props> = (props) => {
 
   // Configure user for GTM once we have the info we need.
   React.useEffect(() => {
-    if (account?.euuid) {
-      initGTMUser(account.euuid);
+    if (euuid) {
+      initGTMUser(euuid);
     }
-  }, [account]);
+  }, [euuid]);
 
   React.useEffect(() => {
     if (!LAUNCH_DARKLY_API_KEY) {
