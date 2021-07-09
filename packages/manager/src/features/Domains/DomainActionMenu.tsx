@@ -1,7 +1,7 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import {
   makeStyles,
   Theme,
