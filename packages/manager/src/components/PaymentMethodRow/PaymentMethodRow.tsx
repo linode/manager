@@ -1,21 +1,19 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Paper from 'src/components/core/Paper';
-import Grid from 'src/components/Grid';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
-import Chip from 'src/components/core/Chip';
-import ActionMenu, {
-  Action,
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import Typography from 'src/components/core/Typography';
-import Visa from 'src/assets/icons/payment/visa.svg';
-import Mastercard from 'src/assets/icons/payment/mastercard.svg';
-import GooglePay from 'src/assets/icons/payment/googlePay.svg';
-import PayPal from 'src/assets/icons/payment/payPal.svg';
+import CreditCard from 'src/assets/icons/credit-card.svg';
 import Amex from 'src/assets/icons/payment/amex.svg';
 import Discover from 'src/assets/icons/payment/discover.svg';
+import GooglePay from 'src/assets/icons/payment/googlePay.svg';
 import JCB from 'src/assets/icons/payment/jcb.svg';
-import CreditCard from 'src/assets/icons/credit-card.svg';
+import Mastercard from 'src/assets/icons/payment/mastercard.svg';
+import PayPal from 'src/assets/icons/payment/payPal.svg';
+import Visa from 'src/assets/icons/payment/visa.svg';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import Chip from 'src/components/core/Chip';
+import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
+import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
