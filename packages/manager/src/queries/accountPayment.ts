@@ -5,7 +5,7 @@ import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 import { getClientToken, ClientToken } from '@linode/api-v4/lib/account';
 
-const queryKey = 'account-payment-methods';
+export const queryKey = 'account-payment-methods';
 
 export const usePaymentMethodsQuery = (params: any = {}, filter: any = {}) => {
   return useQuery<ResourcePage<PaymentMethod>, APIError[]>(

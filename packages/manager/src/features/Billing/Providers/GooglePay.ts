@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/account/payments';
 import { VariantType } from 'notistack';
 import { queryClient } from 'src/queries/base';
-import { getAllPaymentMethodsRequest } from 'src/queries/accountPayment';
+import { queryKey } from 'src/queries/accountPayment';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 
 let googlePaymentInstance: GooglePayment | undefined;
@@ -99,10 +99,7 @@ export const gPay = async (
         data: { nonce: 'fake-android-pay-nonce' },
         is_default: false,
       });
-      await queryClient.fetchQuery(
-        'account-payment-methods',
-        getAllPaymentMethodsRequest
-      );
+      queryClient.invalidateQueries(queryKey + '-all');
     }
 
     setMessage(
