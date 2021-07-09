@@ -76,7 +76,7 @@ interface PaypalScript {
 export interface Props {
   usd: string;
   setSuccess: SetSuccess;
-  disabled?: boolean;
+  disabled: boolean;
 }
 
 type CombinedProps = Props & PaypalScript;
@@ -100,7 +100,7 @@ export const paypalScriptSrc = () => {
 };
 
 export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
-  const { isScriptLoaded, usd, setSuccess, disabled = false } = props;
+  const { isScriptLoaded, usd, setSuccess, disabled } = props;
   const classes = useStyles();
   const flags = useFlags();
 

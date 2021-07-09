@@ -87,7 +87,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   /**
    * Show actual credit card instead of Google Pay card
    *
-   * @TOOD: If a user has multiple credit cards and clicks 'Make a Payment' through the
+   * @TODO: If a user has multiple credit cards and clicks 'Make a Payment' through the
    * payment method actions dropdown, display that credit card instead of the first one
    */
   const creditCard = paymentMethods?.filter(
@@ -114,6 +114,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     if (open) {
       setWarning(null);
+      setErrorMessage(null);
       setIsProcessing(false);
     }
   }, [open]);
@@ -236,10 +237,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                       totalPrice: usd,
                     }}
                     balance={balance}
+                    disabled={isProcessing}
                     setSuccess={setSuccess}
                     setError={setErrorMessage}
                     setProcessing={setIsProcessing}
-                    disabled={isProcessing}
                   />
                 </Grid>
               </Grid>

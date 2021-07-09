@@ -43,11 +43,16 @@ interface Props {
   makeToast: (message: string, variant: VariantType) => void;
   setProcessing: (processing: boolean) => void;
   onClose: () => void;
-  disabled?: boolean;
+  disabled: boolean;
 }
 
 export const GooglePayChip: React.FC<Props> = (props) => {
-  const { makeToast, setProcessing, onClose, disabled = false } = props;
+  const {
+    disabled: disabledDueToProcessing,
+    makeToast,
+    setProcessing,
+    onClose,
+  } = props;
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();
@@ -110,10 +115,10 @@ export const GooglePayChip: React.FC<Props> = (props) => {
     <button
       className={classNames({
         [classes.button]: true,
-        [classes.disabled]: disabled,
+        [classes.disabled]: disabledDueToProcessing,
       })}
       onClick={handlePay}
-      disabled={disabled}
+      disabled={disabledDueToProcessing}
     >
       <GooglePayIcon height="48px" />
     </button>

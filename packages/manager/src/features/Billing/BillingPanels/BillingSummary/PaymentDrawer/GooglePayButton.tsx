@@ -66,7 +66,7 @@ interface Props {
   setSuccess: SetSuccess;
   setError: (error: string) => void;
   setProcessing: (processing: boolean) => void;
-  disabled?: boolean;
+  disabled: boolean;
 }
 
 export const GooglePayButton: React.FC<Props> = (props) => {
@@ -80,10 +80,10 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   const {
     transactionInfo,
     balance,
+    disabled: disabledDueToProcessing,
     setSuccess,
     setError,
     setProcessing,
-    disabled = false,
   } = props;
 
   /**
@@ -113,7 +113,6 @@ export const GooglePayButton: React.FC<Props> = (props) => {
 
   const handleMessage = (message: string, variant: VariantType) => {
     if (variant === 'error') {
-      setProcessing(false);
       setError(message);
     } else if (variant === 'success') {
       setSuccess(message, true);
@@ -162,9 +161,9 @@ export const GooglePayButton: React.FC<Props> = (props) => {
       <button
         className={classNames({
           [classes.button]: true,
-          [classes.disabled]: disabled || disabledDueToPrice,
+          [classes.disabled]: disabledDueToPrice || disabledDueToProcessing,
         })}
-        disabled={disabled || disabledDueToPrice}
+        disabled={disabledDueToPrice || disabledDueToProcessing}
         onClick={handlePay}
       >
         <GooglePayIcon />

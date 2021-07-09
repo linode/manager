@@ -57,7 +57,7 @@ export interface Props {
   usd: string;
   minimumPayment: string;
   setSuccess: SetSuccess;
-  disabled?: boolean;
+  disabled: boolean;
 }
 
 export const CreditCardPayment: React.FC<Props> = (props) => {
@@ -68,7 +68,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
     minimumPayment,
     usd,
     setSuccess,
-    disabled = false,
+    disabled,
   } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);

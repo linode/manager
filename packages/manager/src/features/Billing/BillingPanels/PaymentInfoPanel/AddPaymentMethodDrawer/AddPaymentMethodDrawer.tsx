@@ -68,10 +68,10 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           alignContent="center"
         >
           <GooglePayChip
+            disabled={isProcessing}
             makeToast={makeToast}
             onClose={onClose}
             setProcessing={setIsProcessing}
-            disabled={isProcessing}
           />
         </Grid>
       </Grid>

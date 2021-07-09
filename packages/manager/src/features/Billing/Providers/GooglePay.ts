@@ -52,7 +52,7 @@ export const gPay = async (
       merchantInfo: {
         merchantId: GPAY_MERCHANT_ID || '',
       },
-      // @ts-expect-error Brintree types are wrong
+      // @ts-expect-error Braintree types are wrong
       transactionInfo,
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
     });
@@ -110,6 +110,7 @@ export const gPay = async (
         : 'Successfully added Google Pay',
       'success'
     );
+    setProcessing(false);
   } catch (error) {
     setProcessing(false);
     if (error.message && (error.message as string).includes('User closed')) {
