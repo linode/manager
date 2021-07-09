@@ -80,7 +80,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
 
   const actions = (
     <ActionsPanel className={classes.actions}>
-      <Button onClick={onClose} buttonType="secondary">
+      <Button buttonType="secondary" onClick={onClose}>
         Keep Service Transfer
       </Button>
       <Button

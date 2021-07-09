@@ -25,16 +25,14 @@ export const decorators = [
     return wrapWithTheme(
       <ThemeProvider theme={options[_key]}>
         <CssBaseline />
-        <div
-          style={
-            {
-              // backgroundColor: options[_key]().cmrBGColors.bgApp,
-              // padding: '1rem',
-            }
-          }
-        >
-          <Story />
-        </div>
+        {/* Keep this in case we want to change the background color based on the mode */}
+        {/* <div
+          style={{
+            backgroundColor: options[_key]().cmrBGColors.bgApp,
+          }}
+        > */}
+        <Story />
+        {/* </div> */}
       </ThemeProvider>
     );
   },
