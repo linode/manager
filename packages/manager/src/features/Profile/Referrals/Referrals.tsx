@@ -96,11 +96,6 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
 
   const allowReferral = url !== undefined;
 
-  // Remove before merge
-  pending = 1;
-  credit = 25;
-  total = 2;
-
   return (
     <Paper>
       <DocumentTitleSegment segment="Referrals" />
