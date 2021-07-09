@@ -10,22 +10,26 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
+import withSearch, {
+  AlgoliaState as AlgoliaProps,
+} from 'src/features/Help/SearchHOC';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
-import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendSearchBarUsedEvent } from 'src/utilities/ga';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
-import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 
 type CombinedProps = WithTypesProps &
   WithImages &
   SearchProps &
+  AlgoliaProps &
   StyleProps &
   RouteComponentProps<{}>;
 
@@ -73,7 +77,14 @@ const searchDeps: ReduxEntity[] = [
 ];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
-  const { classes, combinedResults, entitiesLoading, search } = props;
+  const {
+    classes,
+    combinedResults,
+    entitiesLoading,
+    search,
+    searchAlgolia,
+    searchResults: algoliaResults,
+  } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
@@ -82,6 +93,11 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const [apiResults, setAPIResults] = React.useState<any[]>([]);
   const [apiError, setAPIError] = React.useState<string | null>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
+
+  const [
+    formattedAlgoliaResults,
+    setFormattedAlgoliaResults,
+  ] = React.useState<any>();
 
   const { _isLargeAccount } = useAccountManagement();
 
@@ -101,8 +117,11 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { searchAPI } = useAPISearch();
 
   const _searchAPI = React.useRef(
-    debounce(500, false, (_searchText: string) => {
+    debounce(500, false, (_searchText: string, algoliaResults: any) => {
       setAPILoading(true);
+      setFormattedAlgoliaResults(
+        getOptionsFromResults(algoliaResults, _searchText)
+      );
       searchAPI(_searchText)
         .then((searchResults) => {
           setAPIResults(searchResults.combinedResults);
@@ -120,12 +139,17 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   ).current;
 
   React.useEffect(() => {
+    searchAlgolia(searchText);
+
     // We can't store all data for large accounts for client side search,
     // so use the API's filtering instead.
     if (_isLargeAccount) {
-      _searchAPI(searchText);
+      _searchAPI(searchText, algoliaResults);
     } else {
       search(searchText);
+      setFormattedAlgoliaResults(
+        getOptionsFromResults(algoliaResults, searchText)
+      );
     }
   }, [
     _loading,
@@ -134,6 +158,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     searchText,
     _searchAPI,
     _isLargeAccount,
+    searchAlgolia,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
@@ -221,7 +246,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.
-    Boolean(apiError) && apiError !== 'Unauthorized'
+    Boolean(apiError) && apiError !== 'Unauthorized',
+    formattedAlgoliaResults
   );
 
   return (
@@ -284,10 +310,13 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
 };
 
+const withAlgoliaSearch = withSearch({ hitsPerPage: 10, highlight: true });
+
 export default compose<CombinedProps, {}>(
   withTypes,
   withRouter,
   withImages(),
+  withAlgoliaSearch,
   withStoreSearch(),
   styled
 )(SearchBar) as React.ComponentType<{}>;
@@ -296,7 +325,8 @@ export const createFinalOptions = (
   results: Item[],
   searchText: string = '',
   loading: boolean = false,
-  error: boolean = false
+  error: boolean = false,
+  formattedAlgoliaResults?: any[]
 ) => {
   const redirectOption = {
     value: 'redirect',
@@ -333,6 +363,16 @@ export const createFinalOptions = (
 
   // LESS THAN 20 RESULTS:
   if (results.length <= 20) {
+    const algoliaResultsIterator = Object.values(
+      formattedAlgoliaResults as {}
+    ).values();
+    const algoliaResultsIncluded = [...results];
+
+    for (const result of algoliaResultsIterator) {
+      algoliaResultsIncluded.push(result as any);
+    }
+
+    console.log(algoliaResultsIncluded);
     return [redirectOption, ...results];
   }
 
@@ -347,4 +387,17 @@ export const createFinalOptions = (
 
   const first20Results = take(20, results);
   return [redirectOption, ...first20Results, lastOption];
+};
+
+export const getOptionsFromResults = (
+  searchResults: any,
+  inputValue: string
+) => {
+  const [docs, community] = searchResults;
+  const options = [...docs, ...community];
+
+  return [
+    { value: 'search', label: inputValue, data: { source: 'finalLink' } },
+    ...options,
+  ];
 };
