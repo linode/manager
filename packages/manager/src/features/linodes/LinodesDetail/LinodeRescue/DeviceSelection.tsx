@@ -89,7 +89,7 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
               label={`/dev/${slot}`}
               errorText={
                 selectedDevice?.value === diskOrVolumeInErrReason
-                  ? errorText
+                  ? adjustedErrorText(errorText!, selectedDevice.label)
                   : undefined
               }
               noMarginTop
@@ -118,9 +118,24 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
 
 export default DeviceSelection as React.ComponentType<Props>;
 
-const blockDeviceRegex = /[0-9][0-9]+/g;
+const blockDeviceRegex = /[0-9]+/g;
 
 export const extractDiskOrVolumeId = (errorText: string) => {
   const type = errorText.includes('disk') ? 'disk' : 'volume';
-  return `${type}-${Number(errorText.match(blockDeviceRegex)?.[0])}`; // return a string structured in a way that it is easily compared to selectedDevice.value
+
+  const blockDeviceRegexMatch = errorText.match(blockDeviceRegex)?.[0];
+
+  if (!blockDeviceRegexMatch) {
+    return null;
+  }
+
+  return `${type}-${Number(blockDeviceRegexMatch)}`; // return a string structured in a way that it is easily compared to selectedDevice.value
+};
+
+export const adjustedErrorText = (errorText: string, deviceLabel?: string) => {
+  if (!deviceLabel) {
+    return errorText;
+  }
+
+  return `${deviceLabel} is already in use.`;
 };

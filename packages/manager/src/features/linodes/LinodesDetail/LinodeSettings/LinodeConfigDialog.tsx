@@ -216,6 +216,7 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
 };
 
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+const deviceCounterDefault = 1;
 
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
@@ -233,7 +234,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const flags = useFlags();
   const regions = useRegionsQuery().data ?? [];
   const { account } = useAccount();
-  const [deviceCounter, setDeviceCounter] = React.useState(1);
+  const [deviceCounter, setDeviceCounter] = React.useState(
+    deviceCounterDefault
+  );
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
@@ -390,7 +393,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       if (config) {
         const devices = createStringsFromDevices(config.devices);
 
-        // If device slots are populated out of sequential order (e.g. sda and sdb are assigned but no others are until sdf), ascertain the last assigned slot to determine how many device slots to display initially.
+        /*
+        If device slots are populated out of sequential order (e.g. sda and sdb are assigned
+        but no others are until sdf), ascertain the last assigned slot to determine how many
+        device slots to display initially.
+        */
         const assignedDevices = Object.keys(devices);
         const lastAssignedDeviceSlot =
           assignedDevices[assignedDevices.length - 1];
@@ -427,7 +434,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         // Create mode; make sure loading/error states are cleared.
         resetForm({ values: defaultFieldsValues });
         setUseCustomRoot(false);
-        setDeviceCounter(1);
+        setDeviceCounter(deviceCounterDefault);
       }
     }
   }, [open, config, resetForm]);
