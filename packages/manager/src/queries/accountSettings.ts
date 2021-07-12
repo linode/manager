@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
-import { mutationHandlers, queryClient, queryPresets } from './base';
+import { queryClient, queryPresets } from './base';
 
 const queryKey = 'account-settings';
 
@@ -21,7 +21,14 @@ export const useMutateAccountSettings = () => {
     (data) => {
       return updateAccountSettings(data);
     },
-    mutationHandlers(queryKey)
+    {
+      onSuccess: (updatedEntity) => {
+        queryClient.setQueryData<AccountSettings>(queryKey, (oldData) => ({
+          ...oldData,
+          ...updatedEntity,
+        }));
+      },
+    }
   );
 };
 
