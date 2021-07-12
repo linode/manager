@@ -20,9 +20,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import withBackupCta, {
-  BackupCTAProps,
-} from 'src/containers/withBackupCTA.container';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -98,7 +95,6 @@ type CombinedProps = Props &
   StyleProps &
   SetDocsProps &
   WithSnackbarProps &
-  BackupCTAProps &
   FeatureFlagConsumerProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
@@ -556,7 +552,6 @@ const sendGroupByAnalytic = (value: boolean) => {
 };
 
 interface StateProps {
-  managed: boolean;
   linodesCount: number;
   userTimezone: string;
   userProfileLoading: boolean;
@@ -566,7 +561,6 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
-    managed: state.__resources.accountSettings.data?.managed ?? false,
     linodesCount: state.__resources.linodes.results,
     userTimezone: getUserTimezone(state),
     userProfileLoading: state.__resources.profile.loading,
@@ -601,7 +595,6 @@ export const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
   connected,
   withImages(),
-  withBackupCta,
   styled,
   withFeatureFlagConsumer
 );

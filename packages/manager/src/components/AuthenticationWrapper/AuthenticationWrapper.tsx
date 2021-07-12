@@ -1,6 +1,6 @@
 import {
   Account,
-  AccountSettings,
+  getAccountSettings,
   Notification,
 } from '@linode/api-v4/lib/account';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
@@ -12,11 +12,11 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { startEventsInterval } from 'src/events';
+import { queryClient } from 'src/queries/base';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
-import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
@@ -67,7 +67,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestProfile(),
 
       // Is a user managed
-      this.props.requestSettings(),
+      queryClient.prefetchQuery({
+        queryKey: 'account-settings',
+        queryFn: getAccountSettings,
+      }),
 
       // Is this a large account? (should we use API or Redux-based search/pagination)
       this.props.checkAccountSize(),
@@ -221,7 +224,6 @@ interface DispatchProps {
   requestAccount: () => Promise<Account>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<GetAllData<Notification>>;
-  requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
   requestProfile: () => Promise<Profile>;
@@ -237,7 +239,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestAccount: () => dispatch(requestAccount()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
-  requestSettings: () => dispatch(requestAccountSettings()),
   requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
   requestProfile: () => dispatch(requestProfile()),

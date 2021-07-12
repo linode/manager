@@ -8,7 +8,6 @@ import {
 import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -17,7 +16,7 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import useBuckets from 'src/hooks/useObjectStorageBuckets';
-import { ApplicationState } from 'src/store';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import LimitedAccessControls from './LimitedAccessControls';
@@ -74,12 +73,8 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
     objectStorageKey,
   } = props;
 
-  const object_storage = useSelector(
-    (state: ApplicationState) =>
-      state.__resources.accountSettings.data?.object_storage ?? 'disabled'
-  );
-
   const { objectStorageBuckets: buckets } = useBuckets();
+  const { data: accountSettings } = useAccountSettings();
   const hidePermissionsTable = buckets.data.length === 0;
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -152,8 +147,10 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
             } = formikProps;
 
             const beforeSubmit = () => {
-              confirmObjectStorage<FormState>(object_storage, formikProps, () =>
-                setDialogOpen(true)
+              confirmObjectStorage<FormState>(
+                accountSettings?.object_storage || 'active',
+                formikProps,
+                () => setDialogOpen(true)
               );
             };
 

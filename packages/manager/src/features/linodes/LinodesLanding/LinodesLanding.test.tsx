@@ -44,10 +44,8 @@ describe('ListLinodes', () => {
           linodesCount={0}
           linodesRequestError={undefined}
           linodesRequestLoading={false}
-          managed={false}
           closeSnackbar={jest.fn()}
           setDocs={setDocs}
-          backupsCTA={false}
           deleteLinode={jest.fn()}
           {...reactRouterProps}
           ldClient={{} as any}

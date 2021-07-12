@@ -15,13 +15,11 @@ import Search from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import withSettings, {
-  Props as SettingsProps,
-} from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import withProfile from 'src/containers/profile.container';
+import { isManaged } from 'src/queries/accountSettings';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
@@ -82,8 +80,6 @@ export type CombinedProps = Props &
   LongviewProps &
   WithSnackbarProps &
   StateProps &
-  // we need this to know if the account is managed
-  SettingsProps &
   GrantsProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
@@ -192,7 +188,6 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
     longviewClientsLoading,
     longviewClientsResults,
     lvClientData,
-    accountSettings,
     activeSubscription,
     deleteLongviewClient,
     userCanCreateClient,
@@ -207,8 +202,6 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
   const handleSortKeyChange = (selected: Item<string>) => {
     setSortKey(selected.value as SortKey);
   };
-
-  const isManaged = pathOr(false, ['managed'], accountSettings);
 
   // If this value is defined they're not on the free plan
   // and don't need to be CTA'd to upgrade.
@@ -349,7 +342,6 @@ export default compose<CombinedProps, Props & RouteComponentProps>(
     };
   }),
   withLongviewClients(),
-  withSettings(),
   withSnackbar
 )(LongviewClients);
 
