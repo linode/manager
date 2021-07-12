@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    textAlign: 'center',
     borderColor: theme.cmrBorderColors.borderTable,
+    textAlign: 'center',
   },
 }));
 

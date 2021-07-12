@@ -3,7 +3,7 @@ import * as React from 'react';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Table, { TableProps } from 'src/components/Table';
-import SortableTableHead_CMR from './SortableTableHead';
+import SortableTableHead from './SortableTableHead';
 
 interface Props {
   dataLength: number;
@@ -42,9 +42,10 @@ const TableWrapper: React.FC<CombinedProps> = (props) => {
           aria-label="List of Linodes"
           rowCount={dataLength}
           colCount={5}
+          stickyHeader
           {...tableProps}
         >
-          <SortableTableHead_CMR
+          <SortableTableHead
             order={order}
             orderBy={orderBy}
             handleOrderChange={handleOrderChange}
