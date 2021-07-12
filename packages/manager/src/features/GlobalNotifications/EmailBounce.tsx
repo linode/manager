@@ -11,15 +11,16 @@ import { Theme } from 'src/components/core/styles/createMuiTheme';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import useAccount from 'src/hooks/useAccount';
 import useNotifications from 'src/hooks/useNotifications';
 import useProfile from 'src/hooks/useProfile';
+import { useAccount, useMutateAccount } from 'src/queries/account';
 
 // =============================================================================
 // <EmailBounceNotificationSection />
 // =============================================================================
 export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
-  const { account, updateAccount } = useAccount();
+  const { data: account } = useAccount();
+  const { mutateAsync: updateAccount } = useMutateAccount();
   const { profile, updateProfile } = useProfile();
   const notifications = useNotifications();
   const history = useHistory();
@@ -27,7 +28,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
   // Have to use refs here, because these values should be static. I.e. if we
   // used the raw Redux values, when the user updated their email, the text of
   // this banner would change briefly before disappearing.
-  const accountEmailRef = React.useRef(account.data?.email);
+  const accountEmailRef = React.useRef(account?.email);
   const profileEmailRef = React.useRef(profile.data?.email);
 
   const billingEmailBounceNotification = notifications.find(

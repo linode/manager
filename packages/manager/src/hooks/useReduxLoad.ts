@@ -5,7 +5,6 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import usePageVisibility from 'src/hooks/usePageVisibility';
 import { ApplicationState } from 'src/store';
-import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { getAllDatabases } from 'src/store/databases/databases.requests';
@@ -33,7 +32,6 @@ interface UseReduxPreload {
 export type ReduxEntity =
   | 'linodes'
   | 'volumes'
-  | 'account'
   | 'accountSettings'
   | 'databases'
   | 'domains'
@@ -58,7 +56,6 @@ type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
   volumes: getAllVolumes,
-  account: requestAccount,
   accountSettings: requestAccountSettings,
   databases: () => getAllDatabases({}),
   domains: requestDomains,

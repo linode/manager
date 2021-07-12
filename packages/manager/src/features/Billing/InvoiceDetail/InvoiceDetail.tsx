@@ -8,7 +8,6 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -23,12 +22,10 @@ import Notice from 'src/components/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
 import useFlags from 'src/hooks/useFlags';
-import { ApplicationState } from 'src/store';
-import { requestAccount } from 'src/store/account/account.requests';
-import { ThunkDispatch } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import InvoiceTable from './InvoiceTable';
+import { useAccount } from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -58,12 +55,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = RouteComponentProps<{ invoiceId: string }> & StateProps;
+type CombinedProps = RouteComponentProps<{ invoiceId: string }>;
 
 export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { data } = props;
+  const { data: account } = useAccount();
 
   const [invoice, setInvoice] = React.useState<Invoice | undefined>(undefined);
   const [items, setItems] = React.useState<InvoiceItem[] | undefined>(
@@ -82,13 +79,8 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
       match: {
         params: { invoiceId },
       },
-      data,
     } = props;
     setLoading(true);
-
-    if (!data) {
-      props.requestAccount();
-    }
 
     const getAllInvoiceItems = getAll<InvoiceItem>((params, filter) =>
       getInvoiceItems(+invoiceId, params, filter)
@@ -151,10 +143,10 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
               className={classes.titleWrapper}
               data-qa-printable-invoice
             >
-              {data && invoice && items && (
+              {account && invoice && items && (
                 <Button
                   buttonType="primary"
-                  onClick={() => printInvoicePDF(data, invoice, items)}
+                  onClick={() => printInvoicePDF(account, invoice, items)}
                 >
                   Download PDF
                 </Button>
@@ -215,19 +207,6 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-type S = ApplicationState['__resources']['account'];
-
-interface StateProps extends S {
-  requestAccount: () => void;
-}
-
-const connected = connect(
-  (state: ApplicationState): S => state.__resources.account,
-  (dispatch: ThunkDispatch): { requestAccount: () => void } => ({
-    requestAccount: () => dispatch(requestAccount()),
-  })
-);
-
-const enhanced = compose<CombinedProps, {}>(connected, withRouter);
+const enhanced = compose<CombinedProps, {}>(withRouter);
 
 export default enhanced(InvoiceDetail);

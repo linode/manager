@@ -1,4 +1,4 @@
-import { Grant } from '@linode/api-v4/lib/account';
+import { Account, Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   createStackScript,
@@ -42,9 +42,9 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { debounce } from 'throttle-debounce';
-
 import { filterImagesByType } from 'src/store/image/image.helpers';
+import { debounce } from 'throttle-debounce';
+import { queryClient } from 'src/queries/base';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -116,9 +116,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       match: {
         params: { stackScriptID },
       },
-      euuid,
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
+    const account = queryClient.getQueryData<Account>('account');
 
     if (stackScriptID) {
       // If we have a stackScriptID we're in the edit flow and
@@ -151,7 +151,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         .catch((error) => {
           this.setState({ errors: error, isLoadingStackScript: false });
         });
-    } else if (valuesFromStorage.id === euuid) {
+    } else if (valuesFromStorage.id === account?.euuid) {
       /**
        * We're creating a stackscript and we have cached
        * data from a user that was creating a stackscript,
@@ -180,25 +180,27 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       revisionNote: rev_note,
     } = this.state;
     const {
-      euuid,
       mode,
       match: {
         params: { stackScriptID },
       },
     } = this.props;
+    const account = queryClient.getQueryData<Account>('account');
 
-    // Use the euuid if we're creating to avoid loading another user's data
-    // (if an expired token has left stale values in local storage)
-    const id = mode === 'create' ? euuid : +stackScriptID;
+    if (account) {
+      // Use the euuid if we're creating to avoid loading another user's data
+      // (if an expired token has left stale values in local storage)
+      const id = mode === 'create' ? account.euuid : +stackScriptID;
 
-    storage.stackScriptInProgress.set({
-      id,
-      label,
-      description,
-      script,
-      images,
-      rev_note,
-    });
+      storage.stackScriptInProgress.set({
+        id,
+        label,
+        description,
+        script,
+        images,
+        rev_note,
+      });
+    }
   };
 
   saveStateToLocalStorage = debounce(1000, this._saveStateToLocalStorage);
@@ -522,7 +524,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
-  euuid: string;
   username?: string;
   userCannotCreateStackScripts: boolean;
   userCannotModifyStackScript: boolean;
@@ -542,7 +543,6 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 
   return {
     username: path(['data', 'username'], state.__resources.profile),
-    euuid: state.__resources.account.data?.euuid ?? '',
     userCannotCreateStackScripts:
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
     userCannotModifyStackScript:

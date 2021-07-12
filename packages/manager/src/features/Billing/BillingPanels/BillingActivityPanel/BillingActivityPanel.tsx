@@ -30,9 +30,9 @@ import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
-import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
+import { useAccount } from 'src/queries/account';
 import { isAfter, parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -168,9 +168,10 @@ export interface Props {
 export const BillingActivityPanel: React.FC<Props> = (props) => {
   const { accountActiveSince } = props;
 
+  const { data: account } = useAccount();
+
   const classes = useStyles();
   const flags = useFlags();
-  const { account } = useAccount();
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>();
@@ -232,7 +233,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       const id = `invoice-${invoiceId}`;
 
       // TS Safeguard.
-      if (!account.data || !invoice) {
+      if (!account || !invoice) {
         pdfErrors.add(id);
         return;
       }
@@ -246,7 +247,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
 
           const invoiceItems = response.data;
           const result = printInvoice(
-            account.data!,
+            account!,
             invoice,
             invoiceItems,
             flags.taxBanner
@@ -261,7 +262,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           pdfErrors.add(id);
         });
     },
-    [account.data, flags.taxBanner, invoices, pdfErrors, pdfLoading]
+    [account, flags.taxBanner, invoices, pdfErrors, pdfLoading]
   );
 
   const downloadPaymentPDF = React.useCallback(
@@ -273,7 +274,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       const id = `payment-${paymentId}`;
 
       // TS Safeguard.
-      if (!account.data || !payment) {
+      if (!account || !payment) {
         pdfErrors.add(id);
         return;
       }
@@ -286,13 +287,13 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         taxBanner?.date,
         taxBanner?.linode_tax_id
       );
-      const result = printPayment(account.data, payment, taxId);
+      const result = printPayment(account, payment, taxId);
 
       if (result.status === 'error') {
         pdfErrors.add(id);
       }
     },
-    [payments, flags.taxBanner, account.data, pdfErrors]
+    [payments, flags.taxBanner, account, pdfErrors]
   );
 
   // Handlers for <Select /> components.

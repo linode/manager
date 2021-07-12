@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as md5 from 'md5';
 import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
@@ -6,14 +5,11 @@ import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
 import { initGTMUser } from './analytics';
 import { configureErrorReportingUser } from './exceptionReporting';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
+import { useAccount } from './queries/account';
 
 interface Props {
-  accountCountry?: string;
-  accountError?: APIError[];
   userID?: number;
   username?: string;
-  taxID?: string;
-  euuid?: string;
 }
 
 /**
@@ -24,17 +20,13 @@ interface Props {
  */
 
 export const IdentifyUser: React.FC<Props> = (props) => {
-  const {
-    userID,
-    accountCountry,
-    accountError,
-    username,
-    taxID,
-    euuid,
-  } = props;
+  const { data: account, error: accountError } = useAccount();
+  const { userID, username } = props;
   const client = useLDClient();
 
   const { setFeatureFlagsLoaded } = useFeatureFlagsLoad();
+
+  const euuid = account?.euuid;
 
   // Configure user for error reporting once we have the info we need.
   React.useEffect(() => {
@@ -67,15 +59,15 @@ export const IdentifyUser: React.FC<Props> = (props) => {
        */
       const country = accountError
         ? 'Unknown'
-        : accountCountry === ''
+        : account?.country === ''
         ? 'Unknown'
-        : accountCountry;
+        : account?.country;
 
       const _taxID = accountError
         ? 'Unknown'
-        : taxID === ''
+        : account?.tax_id === ''
         ? 'Unknown'
-        : taxID;
+        : account?.tax_id;
 
       if (client && userID && country && username && _taxID) {
         client
@@ -96,7 +88,7 @@ export const IdentifyUser: React.FC<Props> = (props) => {
           .catch(() => setFeatureFlagsLoaded());
       }
     }
-  }, [client, userID, accountCountry, username, taxID]);
+  }, [client, userID, username, account]);
 
   return null;
 };
