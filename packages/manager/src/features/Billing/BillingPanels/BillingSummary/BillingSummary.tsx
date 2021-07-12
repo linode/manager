@@ -150,34 +150,17 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     promotions && promotions.length > 0 ? { xs: 12, md: 4 } : { xs: 12, sm: 6 };
 
   const generateBalanceJSX = (balance: number, pastDueBalance: boolean) => {
-    if (pastDueBalance) {
-      return (
-        <Typography style={{ marginTop: 16 }}>
-          <button
-            className={classes.makeAPaymentButton}
-            onClick={() => replace(routeForMakePayment)}
-          >
-            Make a payment immediately
-          </button>{' '}
-          to avoid service disruption.
-        </Typography>
-      );
-    }
-
-    if (balance > 0) {
-      return (
-        <Typography style={{ marginTop: 16 }}>
-          <button
-            className={classes.makeAPaymentButton}
-            onClick={() => replace(routeForMakePayment)}
-          >
-            Make a payment.
-          </button>
-        </Typography>
-      );
-    }
-
-    return null;
+    return balance > 0 ? (
+      <Typography style={{ marginTop: 16 }}>
+        <button
+          className={classes.makeAPaymentButton}
+          onClick={() => replace(routeForMakePayment)}
+        >
+          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
+        </button>
+        {pastDueBalance ? `${' '} to avoid service disruption.` : null}
+      </Typography>
+    ) : null;
   };
 
   return (
