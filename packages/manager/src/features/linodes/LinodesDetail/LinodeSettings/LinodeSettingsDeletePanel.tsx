@@ -3,11 +3,11 @@ import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Accordion from 'src/components/Accordion';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
@@ -72,11 +72,10 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
         <Accordion heading="Delete Linode">
           <Button
             buttonType="primary"
-            destructive
-            style={{ marginBottom: 8 }}
             onClick={this.openDeleteDialog}
-            data-qa-delete-linode
             disabled={readOnly}
+            style={{ marginBottom: 8 }}
+            data-qa-delete-linode
           >
             Delete
           </Button>
@@ -103,7 +102,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   renderConfirmationActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
-        buttonType="cancel"
+        buttonType="secondary"
         onClick={this.closeDeleteDialog}
         data-qa-cancel-delete
       >
@@ -111,7 +110,6 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
       </Button>
       <Button
         buttonType="primary"
-        destructive
         onClick={this.deleteLinode}
         data-qa-confirm-delete
       >

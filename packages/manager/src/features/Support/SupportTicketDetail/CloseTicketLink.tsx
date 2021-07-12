@@ -106,7 +106,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.closeConfirmationDialog}
           data-qa-dialog-cancel
         >
@@ -114,8 +114,8 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           buttonType="primary"
-          loading={this.state.isClosingTicket}
           onClick={this.onClose}
+          loading={this.state.isClosingTicket}
           data-qa-dialog-submit
         >
           Confirm

@@ -741,12 +741,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SettingsForm />
         <Button
           buttonType="secondary"
-          destructive
-          className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
-          data-qa-cancel
+          className={classes.cancelButton}
           disabled={disabled}
           outline
+          data-qa-cancel
         >
           Cancel Backups
         </Button>
@@ -791,7 +790,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.handleCloseBackupsAlert}
           data-qa-cancel-cancel
         >
@@ -799,7 +798,6 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           buttonType="primary"
-          destructive
           onClick={this.cancelBackups}
           data-qa-confirm-cancel
         >

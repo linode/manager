@@ -691,7 +691,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.closeRevokeDialog}
           data-qa-button-cancel
         >
@@ -699,9 +699,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           buttonType="primary"
-          loading={this.state.dialog.submittingDialog}
-          destructive
           onClick={this.revokeAction}
+          loading={this.state.dialog.submittingDialog}
           data-qa-button-confirm
         >
           Revoke

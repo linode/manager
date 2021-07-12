@@ -91,17 +91,16 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
     return (
       <ActionsPanel>
         <Button
+          buttonType="secondary"
           onClick={this.props.closeDialog}
-          buttonType="cancel"
           data-qa-cancel
         >
           Cancel
         </Button>
         <Button
           buttonType="primary"
-          destructive
-          loading={this.props.loading}
           onClick={this.handleSubmit}
+          loading={this.props.loading}
           data-qa-submit
         >
           Disable Two-factor Authentication

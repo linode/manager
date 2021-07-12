@@ -2,11 +2,11 @@ import { AccountSettings } from '@linode/api-v4/lib/account';
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Accordion from 'src/components/Accordion';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import SupportLink from 'src/components/SupportLink';
@@ -96,14 +96,14 @@ export const EnableManaged: React.FC<CombinedProps> = (props) => {
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="cancel" onClick={handleClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
         Cancel
       </Button>
       <Button
         buttonType="primary"
         onClick={handleSubmit}
-        data-qa-submit-managed-enrollment
         loading={isLoading}
+        data-qa-submit-managed-enrollment
       >
         Add Linode Managed
       </Button>

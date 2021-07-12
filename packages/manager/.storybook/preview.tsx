@@ -25,15 +25,14 @@ export const decorators = [
     return wrapWithTheme(
       <ThemeProvider theme={options[_key]}>
         <CssBaseline />
-        <div
+        {/* Keep this in case we want to change the background color based on the mode */}
+        {/* <div
           style={{
             backgroundColor: options[_key]().cmrBGColors.bgApp,
-            height: '100vh',
-            padding: '1rem',
           }}
-        >
-          <Story />
-        </div>
+        > */}
+        <Story />
+        {/* </div> */}
       </ThemeProvider>
     );
   },
@@ -45,6 +44,7 @@ MINIMAL_VIEWPORTS.mobile1.styles = {
 };
 
 export const parameters = {
+  layout: 'centered',
   viewport: {
     viewports: MINIMAL_VIEWPORTS,
   },

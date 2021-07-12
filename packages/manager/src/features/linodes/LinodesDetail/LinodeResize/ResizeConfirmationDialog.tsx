@@ -22,7 +22,7 @@ const renderActions = (
   return (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
-        buttonType="cancel"
+        buttonType="secondary"
         onClick={onClose}
         data-qa-cancel
         data-testid={'resize-dialog-cancel'}
@@ -31,8 +31,8 @@ const renderActions = (
       </Button>
       <Button
         buttonType="primary"
-        loading={loading}
         onClick={onResize}
+        loading={loading}
         data-qa-confirm
         data-testid={'resize-dialog-confirm'}
       >

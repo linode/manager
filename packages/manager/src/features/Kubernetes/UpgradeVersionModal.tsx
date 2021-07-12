@@ -85,12 +85,11 @@ export const UpgradeDialog: React.FC<DialogProps> = (props) => {
 
   const actions = hasUpdatedSuccessfully ? (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        destructive
         onClick={onSubmitRecycleDialog}
         loading={submitting}
         data-qa-confirm
@@ -100,12 +99,11 @@ export const UpgradeDialog: React.FC<DialogProps> = (props) => {
     </ActionsPanel>
   ) : (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        destructive
         onClick={onSubmitUpgradeDialog}
         loading={submitting}
         data-qa-confirm

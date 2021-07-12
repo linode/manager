@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 
@@ -26,12 +25,11 @@ class DeleteIPActions extends React.PureComponent<CombinedProps> {
     const { handleCancel, loading } = this.props;
     return (
       <ActionsPanel>
-        <Button onClick={handleCancel} buttonType="cancel">
+        <Button buttonType="secondary" onClick={handleCancel}>
           Cancel
         </Button>
         <Button
           buttonType="primary"
-          destructive
           onClick={this.handleDeleteIP}
           loading={loading}
         >

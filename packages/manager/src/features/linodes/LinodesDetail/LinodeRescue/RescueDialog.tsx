@@ -10,11 +10,14 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Notice from 'src/components/Notice';
+import Dialog from 'src/components/Dialog';
 import ErrorState from 'src/components/ErrorState';
+import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import withVolumes from 'src/containers/volumes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import usePrevious from 'src/hooks/usePrevious';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -24,9 +27,6 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
 } from './DeviceSelection';
-import Dialog from 'src/components/Dialog';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import usePrevious from 'src/hooks/usePrevious';
 import RescueDescription from './RescueDescription';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -226,20 +226,20 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
               disabled={disabled}
             />
             <Button
-              className={classes.button}
               buttonType="secondary"
-              superCompact
               onClick={incrementCounter}
+              className={classes.button}
+              compact
               disabled={disabled || counter >= 6}
             >
               Add Disk
             </Button>
             <ActionsPanel>
               <Button
-                onClick={onSubmit}
                 buttonType="primary"
-                data-qa-submit
+                onClick={onSubmit}
                 disabled={disabled}
+                data-qa-submit
               >
                 Reboot into Rescue Mode
               </Button>

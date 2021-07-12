@@ -5,16 +5,16 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import EnhancedSelect from 'src/components/EnhancedSelect';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import useOpenClose from 'src/hooks/useOpenClose';
 import capitalize from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { objectACLOptions, bucketACLOptions } from '../utilities';
-import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
+import { bucketACLOptions, objectACLOptions } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   submitButton: { marginTop: theme.spacing(3) },
@@ -227,10 +227,10 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
         onClose={closeDialog}
         actions={() => (
           <ActionsPanel style={{ padding: 0 }}>
-            <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel>
+            <Button buttonType="secondary" onClick={closeDialog} data-qa-cancel>
               Cancel
             </Button>
-            <Button buttonType="primary" destructive onClick={handleSubmit}>
+            <Button buttonType="primary" onClick={handleSubmit}>
               Confirm
             </Button>
           </ActionsPanel>

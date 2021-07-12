@@ -7,16 +7,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 export interface Props extends ButtonProps {
-  loading?: boolean;
-  destructive?: boolean;
-  buttonType?: 'primary' | 'secondary' | 'cancel' | 'remove';
+  buttonType?: 'primary' | 'secondary';
   className?: string;
-  tooltipText?: string;
   compact?: boolean;
+  loading?: boolean;
   outline?: boolean;
-  superCompact?: boolean;
-  deleteText?: string;
-  loadingText?: string;
+  tooltipText?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,15 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       animation: '$rotate 2s linear infinite',
     },
   },
-  loadingText: {
-    marginRight: 8,
-  },
   compact: {
-    paddingLeft: theme.spacing(2) - 2,
-    paddingRight: theme.spacing(2) - 2,
-    minWidth: '75px',
-  },
-  superCompact: {
     paddingLeft: 0,
     paddingRight: 0,
     minWidth: '50px',
@@ -74,34 +62,23 @@ type CombinedProps = Props;
 const getVariant = cond([
   [propEq('buttonType', 'primary'), always('contained')],
   [propEq('buttonType', 'secondary'), always('contained')],
-  [propEq('buttonType', 'remove'), always('contained')],
-  [propEq('buttonType', 'cancel'), always('contained')],
   [() => true, always(undefined)],
 ]);
 
 const getColor = cond([
   [propEq('buttonType', 'primary'), always('primary')],
   [propEq('buttonType', 'secondary'), always('secondary')],
-  [propEq('buttonType', 'remove'), always('primary')],
-  [propEq('buttonType', 'destructive'), always('primary')],
-  [propEq('buttonType', 'cancel'), always('secondary')],
   [() => true, always(undefined)],
 ]);
 
-// Add invariant warning if loading destructive cancel
-// Add invariant warning if destructive cancel
-
-const WrappedButton: React.FC<CombinedProps> = (props) => {
+export const WrappedButton: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
     loading,
-    deleteText,
     tooltipText,
-    loadingText,
     buttonType,
     compact,
-    superCompact,
     outline,
     className,
     ...rest
@@ -111,9 +88,6 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
     <React.Fragment>
       <Button
         {...rest}
-        variant={getVariant(props)}
-        disabled={props.disabled || loading}
-        color={getColor(props)}
         className={classNames(
           buttonType,
           {
@@ -121,12 +95,14 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
             [classes.loading]: loading,
             loading,
             [classes.compact]: compact,
-            [classes.superCompact]: superCompact,
             [classes.outline]: outline,
             disabled: props.disabled,
           },
           className
         )}
+        color={getColor(props)}
+        disabled={props.disabled || loading}
+        variant={getVariant(props)}
       >
         <span
           className={classNames({
@@ -134,25 +110,8 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
           })}
           data-qa-loading={loading}
         >
-          {loading ? (
-            loadingText ? (
-              /*
-                The recommendation here is to not use loadingText that
-                will create a large width for the button. Keep
-                your loading text strings short.
-              */
-              <React.Fragment>
-                <span className={classes.loadingText}>{loadingText}</span>
-                <Reload />
-              </React.Fragment>
-            ) : (
-              <Reload />
-            )
-          ) : (
-            props.children
-          )}
+          {loading ? <Reload /> : props.children}
         </span>
-        {buttonType === 'remove' && (deleteText ? deleteText : 'Remove')}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>
