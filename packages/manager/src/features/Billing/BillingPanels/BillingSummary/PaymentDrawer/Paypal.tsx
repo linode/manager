@@ -37,11 +37,12 @@ import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { SetSuccess } from './types';
+import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountBilling';
 
+// @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(4),
-  },
   header: {
     fontSize: '1.1rem',
   },
@@ -55,9 +56,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paypalButtonWrapper: {
     position: 'relative',
-    left: theme.spacing(),
     zIndex: 1,
     transition: theme.transitions.create(['opacity']),
+  },
+  align: {
+    left: theme.spacing(),
   },
   PaypalHidden: {
     opacity: 0.3,
@@ -73,6 +76,7 @@ interface PaypalScript {
 export interface Props {
   usd: string;
   setSuccess: SetSuccess;
+  disabled: boolean;
 }
 
 type CombinedProps = Props & PaypalScript;
@@ -96,8 +100,11 @@ export const paypalScriptSrc = () => {
 };
 
 export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
-  const { isScriptLoaded, usd, setSuccess } = props;
+  const { isScriptLoaded, usd, setSuccess, disabled } = props;
   const classes = useStyles();
+  const flags = useFlags();
+
+  const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [isStagingPayment, setStaging] = React.useState<boolean>(false);
@@ -171,6 +178,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
           true,
           response.warnings
         );
+        queryClient.invalidateQueries(`${queryKey}-payments`);
       })
       .catch((_) => {
         setExecuting(false);
@@ -255,11 +263,11 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
     setDialogOpen(false);
   };
 
-  const enabled = shouldEnablePaypalButton(+usd);
+  const enabled = shouldEnablePaypalButton(+usd) && !disabled;
 
   if (typeof errorLoadingPaypalScript === 'undefined') {
     return (
-      <Grid container direction="column" className={classes.root}>
+      <Grid container direction="column">
         <CircleProgress mini />
       </Grid>
     );
@@ -267,15 +275,64 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
 
   if (errorLoadingPaypalScript) {
     return (
-      <Grid container direction="column" className={classes.root}>
+      <Grid container direction="column">
         <Notice error text="There was an error connecting with PayPal." />
       </Grid>
     );
   }
 
+  if (showGooglePay) {
+    return (
+      <>
+        <Grid item xs={6} style={{ position: 'relative' }}>
+          {!enabled && (
+            <Tooltip
+              title={'Payment amount must be between $5 and $10000'}
+              data-qa-help-tooltip
+              enterTouchDelay={0}
+              leaveTouchDelay={5000}
+            >
+              <div className={classes.paypalMask} />
+            </Tooltip>
+          )}
+          <div
+            data-qa-paypal-button
+            className={classnames({
+              [classes.paypalButtonWrapper]: true,
+              [classes.PaypalHidden]: !enabled || disabled,
+            })}
+          >
+            {PaypalButton.current && shouldRenderButton && (
+              <PaypalButton.current
+                env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
+                client={client}
+                createOrder={createOrder}
+                onApprove={onApprove}
+                onCancel={onCancel}
+                style={{
+                  color: 'gold',
+                  shape: 'rect',
+                }}
+              />
+            )}
+          </div>
+        </Grid>
+        <PaypalDialog
+          open={dialogOpen}
+          closeDialog={handleClose}
+          isExecutingPayment={isExecutingPayment}
+          isStagingPaypalPayment={isStagingPayment}
+          initExecutePayment={confirmPaypalPayment}
+          paypalPaymentFailed={paymentFailed}
+          usd={(+usd).toFixed(2)}
+        />
+      </>
+    );
+  }
+
   return (
     <>
-      <Grid container direction="column" className={classes.root}>
+      <Grid container direction="column">
         <Grid item>
           <Typography variant="h3" className={classes.header}>
             <strong>Pay via PayPal</strong>
@@ -290,7 +347,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
           <Grid item style={{ position: 'relative' }}>
             {!enabled && (
               <Tooltip
-                title={'Amount to charge must be between $5 and $10000'}
+                title={'Payment amount must be between $5 and $10000'}
                 data-qa-help-tooltip
                 enterTouchDelay={0}
                 leaveTouchDelay={5000}
@@ -301,6 +358,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
             <div
               data-qa-paypal-button
               className={classnames({
+                [classes.align]: !showGooglePay,
                 [classes.paypalButtonWrapper]: true,
                 [classes.PaypalHidden]: !enabled,
               })}

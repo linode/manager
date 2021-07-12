@@ -1,9 +1,7 @@
 import * as React from 'react';
-
 import { makeStyles, Theme } from 'src/components/core/styles';
-
 import styled from 'src/containers/SummaryPanels.styles';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -22,7 +20,11 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const CreditCard: React.FC<CombinedProps> = (props) => {
+/**
+ * @TODO: delete this component once google pay is released.
+ * this component will be replaced by the Payment Method Row Component
+ */
+export const CreditCardInfo: React.FC<CombinedProps> = (props) => {
   const { expiry, lastFour } = props;
   const classes = useStyles();
 
@@ -40,7 +42,7 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
         data-qa-contact-cc-exp-date
       >
         <div>
-          {expiry && `Expires ${expiry}`}
+          {expiry && `Expires ${formatExpiry(expiry)}`}
           {expiry && isCreditCardExpired(expiry) && (
             <span className={classes.expired}> (Expired)</span>
           )}
@@ -50,4 +52,4 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default CreditCard;
+export default CreditCardInfo;

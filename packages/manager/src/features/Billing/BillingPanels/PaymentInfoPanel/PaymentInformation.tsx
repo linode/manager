@@ -1,12 +1,19 @@
+import { PaymentMethod } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
+import GooglePay from 'src/assets/icons/providers/google-logo.svg';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
+import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import styled from 'src/containers/SummaryPanels.styles';
-import CreditCard from './CreditCard';
+import useFlags from 'src/hooks/useFlags';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,13 +32,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   billingGroup: {
     marginBottom: theme.spacing(3),
   },
+  googlePayNotice: {
+    marginLeft: theme.spacing(),
+  },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '.875rem',
     fontWeight: 700,
     marginBottom: theme.spacing(2),
-    marginRight: theme.spacing(1),
     minWidth: 'auto',
     padding: 0,
     '&:hover, &:focus': {
@@ -43,24 +52,36 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  balanceUninvoiced: number;
-  balance: number;
-  expiry: string;
-  lastFour: string;
-  promoCredit?: string;
+  error?: APIError[] | null;
+  paymentMethods: PaymentMethod[] | undefined;
 }
 
-type CombinedProps = Props;
+const PaymentInformation: React.FC<Props> = (props) => {
+  const { paymentMethods, error } = props;
+  const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
+  const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
-const PaymentInformation: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
 
-  const { lastFour, expiry } = props;
+  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
+    'google_pay'
+  );
 
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const openAddDrawer = () => {
+    setAddDrawerOpen(true);
+  };
 
-  const handleOpenDrawer = () => {
-    setDrawerOpen(true);
+  const openEditDrawer = () => {
+    setEditDrawerOpen(true);
+  };
+
+  const closeAddDrawer = () => {
+    setAddDrawerOpen(false);
+  };
+
+  const closeEditDrawer = () => {
+    setEditDrawerOpen(false);
   };
 
   return (
@@ -71,24 +92,63 @@ const PaymentInformation: React.FC<CombinedProps> = (props) => {
       >
         <div className={classes.container}>
           <Typography variant="h3" className={classes.title}>
-            Payment Method
+            Payment Methods
           </Typography>
-          <Button className={classes.edit} onClick={handleOpenDrawer}>
-            Edit
-          </Button>
-        </div>
 
-        <div className={classes.billingGroup}>
-          <CreditCard lastFour={lastFour} expiry={expiry} />
+          {isGooglePayEnabled ? (
+            <Button className={classes.edit} onClick={openAddDrawer}>
+              Add Payment Method
+            </Button>
+          ) : null}
         </div>
-
+        {error ? (
+          <Typography>
+            {
+              getAPIErrorOrDefault(
+                error,
+                'There was an error retrieving your payment methods.'
+              )[0].reason
+            }
+          </Typography>
+        ) : !paymentMethods || paymentMethods?.length == 0 ? (
+          <Typography>
+            No payment methods have been specified for this account.
+          </Typography>
+        ) : (
+          paymentMethods.map((paymentMethod: PaymentMethod) => (
+            <PaymentMethodRow
+              key={paymentMethod.type}
+              paymentMethod={paymentMethod}
+              onEdit={
+                paymentMethod.type === 'credit_card'
+                  ? openEditDrawer
+                  : undefined
+              }
+            />
+          ))
+        )}
+        {isGooglePayEnabled &&
+        !paymentMethods?.some(
+          (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
+        ) ? (
+          <Box display="flex" alignItems="center" mt={3}>
+            <GooglePay width={16} height={16} />
+            <Typography className={classes.googlePayNotice}>
+              Google Pay is now available for recurring payments.{' '}
+              <Link to="#" onClick={openAddDrawer}>
+                Add Google Pay
+              </Link>
+            </Typography>
+          </Box>
+        ) : null}
         <UpdateCreditCardDrawer
-          open={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
+          open={editDrawerOpen}
+          onClose={closeEditDrawer}
         />
+        <AddPaymentMethodDrawer open={addDrawerOpen} onClose={closeAddDrawer} />
       </Paper>
     </Grid>
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(PaymentInformation);
+export default React.memo(PaymentInformation);

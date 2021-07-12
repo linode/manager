@@ -1,5 +1,6 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
+import { paymentMethodFactory } from 'src/factories';
 import { accountFactory } from 'src/factories/account';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -13,6 +14,12 @@ jest.mock('@linode/api-v4/lib/account', () => {
       page: 1,
       pages: 1,
       data: invoiceFactory.buildList(2),
+    }),
+    getPaymentMethods: jest.fn().mockResolvedValue({
+      results: 1,
+      page: 1,
+      pages: 1,
+      data: paymentMethodFactory.buildList(1),
     }),
     getPayments: jest.fn().mockResolvedValue({
       results: 2,

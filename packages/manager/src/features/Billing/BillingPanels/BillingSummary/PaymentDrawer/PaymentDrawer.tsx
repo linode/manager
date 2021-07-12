@@ -1,8 +1,12 @@
-import * as classnames from 'classnames';
 import { APIWarning } from '@linode/api-v4/lib/types';
+import { PaymentMethod } from '@linode/api-v4';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
 import { compose } from 'recompose';
+import { v4 } from 'uuid';
+import { useSnackbar } from 'notistack';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
@@ -15,11 +19,14 @@ import TextField from 'src/components/TextField';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps,
 } from 'src/containers/account.container';
-import { v4 } from 'uuid';
-import CreditCard from './CreditCardPayment';
+import useFlags from 'src/hooks/useFlags';
+import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
+import GooglePayButton from './GooglePayButton';
+import LinearProgress from 'src/components/LinearProgress';
 
+// @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   currentBalance: {
@@ -29,18 +36,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   credit: {
     color: '#02b159',
   },
+  header: {
+    fontSize: '1.1rem',
+    marginBottom: theme.spacing(4),
+  },
+  progress: {
+    marginBottom: 18,
+    width: '100%',
+    height: 5,
+  },
 }));
 
 interface Props {
   open: boolean;
+  paymentMethods: PaymentMethod[] | undefined;
   onClose: () => void;
 }
 
 interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
-  lastFour: string;
-  expiry: string;
 }
 
 export type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
@@ -62,14 +77,26 @@ export const getMinimumPayment = (balance: number | false) => {
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
 export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
-  const { accountLoading, balance, expiry, lastFour, open, onClose } = props;
+  const { accountLoading, balance, paymentMethods, open, onClose } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const flags = useFlags();
+
+  const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
+
+  /**
+   * Show actual credit card instead of Google Pay card
+   *
+   * @TODO: If a user has multiple credit cards and clicks 'Make a Payment' through the
+   * payment method actions dropdown, display that credit card instead of the first one
+   */
+  const creditCard = paymentMethods?.filter(
+    (payment) => payment.type === 'credit_card'
+  )[0]?.data;
 
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
-  const [successMessage, setSuccessMessage] = React.useState<string | null>(
-    null
-  );
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
@@ -78,14 +105,17 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     setIsPaypalScriptLoaded,
   ] = React.useState<boolean>(false);
 
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
   }, [balance]);
 
   React.useEffect(() => {
     if (open) {
-      setSuccessMessage(null);
       setWarning(null);
+      setErrorMessage(null);
+      setIsProcessing(false);
     }
   }, [open]);
 
@@ -93,18 +123,26 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     setUSD(e.target.value || '');
   };
 
+  const handleOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const formattedUSD = Number(e.target.value).toFixed(2) || '';
+    setUSD(formattedUSD);
+  };
+
   const setSuccess: SetSuccess = (
     message,
     paymentWasMade = false,
     warnings = undefined
   ) => {
-    setSuccessMessage(message);
     if (paymentWasMade) {
+      enqueueSnackbar(message, {
+        variant: 'success',
+      });
       // Reset everything
       setUSD('0.00');
       setCreditCardKey(v4());
       setPayPalKey(v4());
       props.requestAccount();
+      onClose();
     }
     if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
@@ -129,8 +167,11 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
         <Grid item xs={12}>
-          {successMessage && <Notice success text={successMessage ?? ''} />}
+          {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
+          {isProcessing ? (
+            <LinearProgress className={classes.progress} />
+          ) : null}
           {balance !== false && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
@@ -146,33 +187,73 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               </Typography>
             </Grid>
           )}
-          <Grid item>
+          <Grid item xs={6}>
             <TextField
               label="Payment Amount"
               onChange={handleUSDChange}
+              onBlur={handleOnBlur}
               value={usd}
-              required
               type="number"
               placeholder={`${minimumPayment} minimum`}
+              disabled={isProcessing}
             />
           </Grid>
-
-          <CreditCard
+          <Divider spacingTop={32} spacingBottom={16} />
+          <CreditCardPayment
             key={creditCardKey}
-            lastFour={lastFour}
-            expiry={expiry}
+            type={creditCard?.card_type}
+            lastFour={creditCard?.last_four ?? ''}
+            expiry={creditCard?.expiry ?? ''}
+            disabled={isProcessing}
             usd={usd}
             minimumPayment={minimumPayment}
             setSuccess={setSuccess}
           />
-
-          <AsyncPaypal
-            key={payPalKey}
-            usd={usd}
-            setSuccess={setSuccess}
-            asyncScriptOnLoad={onScriptLoad}
-            isScriptLoaded={isPaypalScriptLoaded}
-          />
+          <Divider spacingTop={32} spacingBottom={16} />
+          {showGooglePay ? (
+            <>
+              <Grid item>
+                <Typography variant="h3" className={classes.header}>
+                  <strong>Or pay via:</strong>
+                </Typography>
+              </Grid>
+              <Grid container>
+                <Grid item>
+                  <AsyncPaypal
+                    key={payPalKey}
+                    usd={usd}
+                    setSuccess={setSuccess}
+                    asyncScriptOnLoad={onScriptLoad}
+                    isScriptLoaded={isPaypalScriptLoaded}
+                    disabled={isProcessing}
+                  />
+                </Grid>
+                <Grid item xs={9} sm={6}>
+                  <GooglePayButton
+                    transactionInfo={{
+                      totalPriceStatus: 'FINAL',
+                      currencyCode: 'USD',
+                      countryCode: 'US',
+                      totalPrice: usd,
+                    }}
+                    balance={balance}
+                    disabled={isProcessing}
+                    setSuccess={setSuccess}
+                    setError={setErrorMessage}
+                    setProcessing={setIsProcessing}
+                  />
+                </Grid>
+              </Grid>
+            </>
+          ) : (
+            <AsyncPaypal
+              key={payPalKey}
+              usd={usd}
+              setSuccess={setSuccess}
+              asyncScriptOnLoad={onScriptLoad}
+              isScriptLoaded={isPaypalScriptLoaded}
+            />
+          )}
         </Grid>
       </Grid>
     </Drawer>
@@ -212,8 +293,6 @@ const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
     balance: accountData?.balance ?? false,
-    lastFour: accountData?.credit_card.last_four ?? '0000',
-    expiry: accountData?.credit_card.expiry ?? '',
   })
 );
 
