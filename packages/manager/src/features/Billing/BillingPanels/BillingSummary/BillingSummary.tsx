@@ -87,12 +87,10 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const notifications = useNotifications();
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
-  const isBalanceOutsideGracePeriod = Boolean(
-    notifications.find(
-      (notification) =>
-        notification.type === 'payment_due' &&
-        notification.severity === 'critical'
-    )
+  const isBalanceOutsideGracePeriod = notifications.some(
+    (notification) =>
+      notification.type === 'payment_due' &&
+      notification.severity === 'critical'
   );
 
   const { promotions, balanceUninvoiced, balance } = props;
