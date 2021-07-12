@@ -22,7 +22,6 @@ export interface Flags {
   firewalls: boolean;
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
-  thirdPartyAuth: boolean;
   cmr: boolean;
   mainContentBanner: MainContentBanner;
   changelog: Changelog;
@@ -38,7 +37,6 @@ export interface Flags {
   imagesPricingBanner: ImagesPricingBanner;
   imagesPricingCopy: ImagesPricingCopy;
   referralBannerText: ReferralBannerText;
-  referral: boolean;
 }
 
 type PromotionalOfferFeature =
