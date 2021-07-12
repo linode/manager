@@ -104,9 +104,7 @@ const GlobalSettings: React.FC<CombinedProps> = (props) => {
   } = accountSettings;
 
   const toggleAutomaticBackups = () => {
-    return updateAccount({ backups_enabled: !backups_enabled }).catch(
-      displayError
-    );
+    updateAccount({ backups_enabled: !backups_enabled }).catch(displayError);
   };
 
   const toggleNetworkHelper = () => {
