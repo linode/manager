@@ -84,6 +84,7 @@ export const gPay = async (
     const paymentData = await googlePayClient.loadPaymentData(
       paymentDataRequest
     );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { nonce } = await googlePaymentInstance.parseResponse(paymentData);
 
     setProcessing(true);

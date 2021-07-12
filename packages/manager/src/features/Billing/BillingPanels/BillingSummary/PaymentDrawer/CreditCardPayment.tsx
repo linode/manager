@@ -143,7 +143,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
               <Grid item className={classes.input}>
                 <Grid item>
                   <TextField
-                    label="CVV (optional)"
+                    label="Security Code (optional)"
                     onChange={handleCVVChange}
                     value={cvv}
                     type="text"
