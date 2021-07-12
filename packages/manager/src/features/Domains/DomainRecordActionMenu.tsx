@@ -2,7 +2,7 @@ import { Domain } from '@linode/api-v4/lib/domains';
 import { has } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 interface EditPayload {
   id?: number;
