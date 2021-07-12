@@ -150,7 +150,6 @@ export class App extends React.Component<CombinedProps, State> {
       notificationsError,
       profileError,
       volumesError,
-      settingsError,
       bucketsError,
       nodeBalancersError,
       accountData,
@@ -179,7 +178,6 @@ export class App extends React.Component<CombinedProps, State> {
         notificationsError,
         volumesError,
         profileError,
-        settingsError,
         bucketsError,
         nodeBalancersError
       )
@@ -243,8 +241,6 @@ interface StateProps {
   accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
   accountLoading: boolean;
-  accountSettingsLoading: boolean;
-  accountSettingsError?: APIError[];
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
@@ -253,7 +249,6 @@ interface StateProps {
   bucketsError?: APIError[];
   profileError?: APIError[];
   accountError?: APIError[];
-  settingsError?: APIError[];
   notificationsError?: APIError[];
   typesError?: APIError[];
   regionsError?: APIError[];
@@ -270,7 +265,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
   notificationsError: state.__resources.notifications.error,
-  settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
@@ -284,15 +278,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   accountCapabilities: pathOr(
     [],
     ['__resources', 'account', 'data', 'capabilities'],
-    state
-  ),
-  accountSettingsLoading: pathOr(
-    true,
-    ['__resources', 'accountSettings', 'loading'],
-    state
-  ),
-  accountSettingsError: path(
-    ['__resources', 'accountSettings', 'error', 'read'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,

@@ -37,7 +37,6 @@ it('renders without crashing.', () => {
             accountCapabilities={[]}
             accountLoading={false}
             linodesLoading={false}
-            accountSettingsLoading={false}
             ldClient={{} as any}
             featureFlagsLoading={false}
             flags={{}}

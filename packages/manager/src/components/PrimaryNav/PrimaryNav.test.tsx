@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
-import { withManaged, withoutManaged } from 'src/utilities/testHelpersStore';
 import PrimaryNav from './PrimaryNav';
 
 const props = {
@@ -13,18 +12,11 @@ const props = {
 describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', () => {
     const { getByTestId, rerender, queryByTestId } = renderWithTheme(
-      <PrimaryNav {...props} />,
-      {
-        customStore: withoutManaged,
-      }
+      <PrimaryNav {...props} />
     );
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 
-    rerender(
-      wrapWithTheme(<PrimaryNav {...props} />, {
-        customStore: withManaged,
-      })
-    );
+    rerender(wrapWithTheme(<PrimaryNav {...props} />));
 
     getByTestId('menu-item-Managed');
   });
