@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-07-01] - v1.44.1
+
+### Fixed:
+- Referral link is not hidden properly
+
 ## [2021-06-28] - v1.44.0
 
 ### Added:
