@@ -9,6 +9,11 @@ import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 
+const merchantInfo: google.payments.api.MerchantInfo = {
+  merchantId: GPAY_MERCHANT_ID || '',
+  merchantName: 'Linode',
+};
+
 let googlePaymentInstance: GooglePayment | undefined;
 
 const onPaymentAuthorized = (
@@ -29,7 +34,7 @@ export const initGooglePaymentInstance = async (
   googlePaymentInstance = await braintree.googlePayment.create({
     client: braintreeClientToken,
     googlePayVersion: 2,
-    // googleMerchantId: 'merchant-id-from-google'
+    googleMerchantId: GPAY_MERCHANT_ID,
   });
 };
 
@@ -49,9 +54,7 @@ export const gPay = async (
 
   try {
     paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
-      merchantInfo: {
-        merchantId: GPAY_MERCHANT_ID || '',
-      },
+      merchantInfo,
       // @ts-expect-error Braintree types are wrong
       transactionInfo,
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
@@ -62,9 +65,7 @@ export const gPay = async (
 
   const googlePayClient = new google.payments.api.PaymentsClient({
     environment: GPAY_CLIENT_ENV as google.payments.api.Environment,
-    merchantInfo: {
-      merchantId: GPAY_MERCHANT_ID || '',
-    },
+    merchantInfo,
     paymentDataCallbacks: {
       onPaymentAuthorized,
     },
@@ -84,23 +85,30 @@ export const gPay = async (
     const paymentData = await googlePayClient.loadPaymentData(
       paymentDataRequest
     );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // @ts-expect-error will be used later
-    const { nonce } = await googlePaymentInstance.parseResponse(paymentData);
+
+    const { nonce: realNonce } = await googlePaymentInstance.parseResponse(
+      paymentData
+    );
+
+    // Use the real nonce (real money) when the Google Merchant ID is provided and
+    // the Google Pay environment is set to production.
+    const nonce =
+      Boolean(GPAY_MERCHANT_ID) && GPAY_CLIENT_ENV === 'PRODUCTION'
+        ? realNonce
+        : 'fake-android-pay-nonce';
 
     setProcessing(true);
 
-    // @TODO handle these API calls if they fail and maybe use React Query mutations?
     if (isOneTimePayment) {
       await makePayment({
-        nonce: 'fake-android-pay-nonce', // use actual nonce later
+        nonce,
         usd: transactionInfo.totalPrice as string,
       });
       queryClient.invalidateQueries(`${accountBillingKey}-payments`);
     } else {
       await addPaymentMethod({
         type: 'payment_method_nonce',
-        data: { nonce: 'fake-android-pay-nonce' },
+        data: { nonce },
         is_default: false,
       });
       queryClient.invalidateQueries(`${accountPaymentKey}-all`);
@@ -119,6 +127,7 @@ export const gPay = async (
       return;
     }
     // @TODO log to Sentry
+    // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
     setMessage(
       isOneTimePayment
         ? 'Unable to complete Google Pay payment'
