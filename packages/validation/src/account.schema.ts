@@ -113,3 +113,10 @@ export const UpdateAccountSettingsSchema = object({
   backups_enabled: boolean(),
   managed: boolean(),
 });
+
+export const PromoCodeSchema = object({
+  promo_code: string()
+    .required('Promo code is required.')
+    .min(1, 'Promo code must be between 1 and 32 characters.')
+    .max(32, 'Promo code must be between 1 and 32 characters.'),
+});
