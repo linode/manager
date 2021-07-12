@@ -94,7 +94,7 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
 
   const { profileLoading, url, total, completed, pending, credit } = props;
 
-  const allowReferral = url !== undefined;
+  const allowReferral = Boolean(url);
 
   return (
     <Paper>
