@@ -31,17 +31,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
 export const BillingDetail: React.FC<CombinedProps> = (props) => {
-  const { data: account, error, isLoading } = useAccount();
+  const {
+    data: account,
+    error: accountError,
+    isLoading: accountLoading,
+  } = useAccount();
 
   const classes = useStyles();
 
-  if (isLoading) {
+  if (accountLoading) {
     return <CircleProgress />;
   }
 
-  if (error) {
+  if (accountError) {
     const errorText = getAPIErrorOrDefault(
-      error,
+      accountError,
       'There was an error retrieving your account data.'
     )[0].reason;
     return <ErrorState errorText={errorText} />;

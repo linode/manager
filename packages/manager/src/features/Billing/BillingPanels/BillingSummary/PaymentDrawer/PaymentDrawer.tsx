@@ -51,7 +51,11 @@ const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
 export const PaymentDrawer: React.FC<Props> = (props) => {
   const { open, onClose } = props;
-  const { data: account, isLoading: accountLoading, refetch } = useAccount();
+  const {
+    data: account,
+    isLoading: accountLoading,
+    refetch: accountRefetch,
+  } = useAccount();
   const classes = useStyles();
 
   const [usd, setUSD] = React.useState<string>(
@@ -95,7 +99,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       setUSD('0.00');
       setCreditCardKey(v4());
       setPayPalKey(v4());
-      refetch();
+      accountRefetch();
     }
     if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
