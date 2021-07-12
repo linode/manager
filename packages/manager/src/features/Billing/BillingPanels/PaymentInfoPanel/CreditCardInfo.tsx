@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import styled from 'src/containers/SummaryPanels.styles';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -42,7 +42,7 @@ export const CreditCardInfo: React.FC<CombinedProps> = (props) => {
         data-qa-contact-cc-exp-date
       >
         <div>
-          {expiry && `Expires ${expiry}`}
+          {expiry && `Expires ${formatExpiry(expiry)}`}
           {expiry && isCreditCardExpired(expiry) && (
             <span className={classes.expired}> (Expired)</span>
           )}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makePayment, CardType } from '@linode/api-v4/lib/account';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import Button from 'src/components/Button';
@@ -57,10 +57,19 @@ export interface Props {
   usd: string;
   minimumPayment: string;
   setSuccess: SetSuccess;
+  disabled: boolean;
 }
 
 export const CreditCardPayment: React.FC<Props> = (props) => {
-  const { type, expiry, lastFour, minimumPayment, usd, setSuccess } = props;
+  const {
+    type,
+    expiry,
+    lastFour,
+    minimumPayment,
+    usd,
+    setSuccess,
+    disabled,
+  } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -134,7 +143,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
               <Grid item className={classes.input}>
                 <Grid item>
                   <TextField
-                    label="CVV (optional):"
+                    label="Security Code (optional)"
                     onChange={handleCVVChange}
                     value={cvv}
                     type="text"
@@ -142,13 +151,14 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
                     className={classes.cvvField}
                     hasAbsoluteError
                     noMarginTop
+                    disabled={disabled}
                   />
                 </Grid>
                 <Grid item className={classes.button}>
                   <Button
                     buttonType="primary"
                     onClick={handleOpenDialog}
-                    disabled={paymentTooLow || isCardExpired}
+                    disabled={paymentTooLow || isCardExpired || disabled}
                     tooltipText={
                       paymentTooLow
                         ? `Payment amount must be at least ${minimumPayment}.`
@@ -171,13 +181,13 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
                   </Typography>
                   {Boolean(expiry) && (
                     <Typography className={classes.cardText}>
-                      Expires {expiry}
+                      Expires {formatExpiry(expiry)}
                     </Typography>
                   )}
                 </Grid>
                 <Grid item className={classes.cvvFieldWrapper}>
                   <TextField
-                    label="CVV (optional):"
+                    label="CVV (optional)"
                     small
                     onChange={handleCVVChange}
                     value={cvv}

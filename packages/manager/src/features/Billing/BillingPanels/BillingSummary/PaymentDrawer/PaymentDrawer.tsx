@@ -1,5 +1,5 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
-import { CardType } from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
@@ -24,6 +24,7 @@ import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 import GooglePayButton from './GooglePayButton';
+import LinearProgress from 'src/components/LinearProgress';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,19 +40,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
   },
+  progress: {
+    marginBottom: 18,
+    width: '100%',
+    height: 5,
+  },
 }));
 
 interface Props {
   open: boolean;
+  paymentMethods: PaymentMethod[] | undefined;
   onClose: () => void;
 }
 
 interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
-  lastFour: string;
-  expiry: string;
-  type?: CardType | null;
 }
 
 export type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
@@ -73,23 +77,26 @@ export const getMinimumPayment = (balance: number | false) => {
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
 export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
-  const {
-    accountLoading,
-    balance,
-    type,
-    expiry,
-    lastFour,
-    open,
-    onClose,
-  } = props;
+  const { accountLoading, balance, paymentMethods, open, onClose } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const flags = useFlags();
 
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
+  /**
+   * Show actual credit card instead of Google Pay card
+   *
+   * @TODO: If a user has multiple credit cards and clicks 'Make a Payment' through the
+   * payment method actions dropdown, display that credit card instead of the first one
+   */
+  const creditCard = paymentMethods?.filter(
+    (payment) => payment.type === 'credit_card'
+  )[0]?.data;
+
   const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
+  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
   const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
@@ -98,6 +105,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     setIsPaypalScriptLoaded,
   ] = React.useState<boolean>(false);
 
+  const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
+
   React.useEffect(() => {
     setUSD(getMinimumPayment(balance));
   }, [balance]);
@@ -105,6 +114,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     if (open) {
       setWarning(null);
+      setErrorMessage(null);
+      setIsProcessing(false);
     }
   }, [open]);
 
@@ -138,12 +149,6 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const setError = (message: string) => {
-    enqueueSnackbar(message, {
-      variant: 'error',
-    });
-  };
-
   const minimumPayment = getMinimumPayment(balance || 0);
 
   if (!accountLoading && balance === undefined) {
@@ -162,7 +167,11 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
       <Grid container>
         <Grid item xs={12}>
+          {errorMessage && <Notice error text={errorMessage ?? ''} />}
           {warning ? <Warning warning={warning} /> : null}
+          {isProcessing ? (
+            <LinearProgress className={classes.progress} />
+          ) : null}
           {balance !== false && (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
@@ -184,17 +193,18 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
               onChange={handleUSDChange}
               onBlur={handleOnBlur}
               value={usd}
-              required
               type="number"
               placeholder={`${minimumPayment} minimum`}
+              disabled={isProcessing}
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
           <CreditCardPayment
             key={creditCardKey}
-            type={type}
-            lastFour={lastFour}
-            expiry={expiry}
+            type={creditCard?.card_type}
+            lastFour={creditCard?.last_four ?? ''}
+            expiry={creditCard?.expiry ?? ''}
+            disabled={isProcessing}
             usd={usd}
             minimumPayment={minimumPayment}
             setSuccess={setSuccess}
@@ -215,6 +225,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                     setSuccess={setSuccess}
                     asyncScriptOnLoad={onScriptLoad}
                     isScriptLoaded={isPaypalScriptLoaded}
+                    disabled={isProcessing}
                   />
                 </Grid>
                 <Grid item xs={9} sm={6}>
@@ -226,8 +237,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                       totalPrice: usd,
                     }}
                     balance={balance}
+                    disabled={isProcessing}
                     setSuccess={setSuccess}
-                    setError={setError}
+                    setError={setErrorMessage}
+                    setProcessing={setIsProcessing}
                   />
                 </Grid>
               </Grid>
@@ -280,9 +293,6 @@ const withAccount = AccountContainer(
   (ownProps, { accountLoading, accountData }) => ({
     accountLoading,
     balance: accountData?.balance ?? false,
-    type: accountData?.credit_card.card_type ?? '',
-    lastFour: accountData?.credit_card.last_four ?? '',
-    expiry: accountData?.credit_card.expiry ?? '',
   })
 );
 

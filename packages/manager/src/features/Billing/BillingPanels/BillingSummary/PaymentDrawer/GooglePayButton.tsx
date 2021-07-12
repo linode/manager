@@ -4,8 +4,6 @@ import { VariantType } from 'notistack';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
-import { queryClient } from 'src/queries/base';
-import { queryKey } from 'src/queries/accountBilling';
 import { SetSuccess } from './types';
 import {
   initGooglePaymentInstance,
@@ -13,7 +11,6 @@ import {
 } from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import Notice from 'src/components/Notice';
-import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
@@ -68,6 +65,8 @@ interface Props {
   balance: false | number;
   setSuccess: SetSuccess;
   setError: (error: string) => void;
+  setProcessing: (processing: boolean) => void;
+  disabled: boolean;
 }
 
 export const GooglePayButton: React.FC<Props> = (props) => {
@@ -78,7 +77,14 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     false
   );
 
-  const { transactionInfo, balance, setSuccess, setError } = props;
+  const {
+    transactionInfo,
+    balance,
+    disabled: disabledDueToProcessing,
+    setSuccess,
+    setError,
+    setProcessing,
+  } = props;
 
   /**
    * We're following API's validation logic:
@@ -86,7 +92,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
    * GPay min is $5, max of $2000.
    * If the customer has a balance over $2000, then the max is $50000
    */
-  const disabled =
+  const disabledDueToPrice =
     +transactionInfo.totalPrice < 5 ||
     (+transactionInfo.totalPrice > 2000 && balance < 2000) ||
     +transactionInfo.totalPrice > 50000;
@@ -110,12 +116,11 @@ export const GooglePayButton: React.FC<Props> = (props) => {
       setError(message);
     } else if (variant === 'success') {
       setSuccess(message, true);
-      queryClient.invalidateQueries(`${queryKey}-payments`);
     }
   };
 
   const handlePay = () => {
-    gPay('one-time-payment', transactionInfo, handleMessage);
+    gPay('one-time-payment', transactionInfo, handleMessage, setProcessing);
   };
 
   if (status === 'error' || clientTokenError) {
@@ -141,7 +146,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      {disabled && (
+      {disabledDueToPrice && (
         <Tooltip
           title={`Payment amount must be between $5 and ${
             balance > 2000 ? '$50000' : '$2000'
@@ -153,16 +158,16 @@ export const GooglePayButton: React.FC<Props> = (props) => {
           <div className={classes.mask} />
         </Tooltip>
       )}
-      <Button
+      <button
         className={classNames({
           [classes.button]: true,
-          [classes.disabled]: disabled,
+          [classes.disabled]: disabledDueToPrice || disabledDueToProcessing,
         })}
-        disabled={disabled}
+        disabled={disabledDueToPrice || disabledDueToProcessing}
         onClick={handlePay}
       >
         <GooglePayIcon />
-      </Button>
+      </button>
     </div>
   );
 };

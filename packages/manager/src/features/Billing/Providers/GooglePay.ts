@@ -1,12 +1,13 @@
 import braintree, { GooglePayment } from 'braintree-web';
-// import { GPAY_MERCHANT_ID } from 'src/constants';
 import {
   addPaymentMethod,
   makePayment,
 } from '@linode/api-v4/lib/account/payments';
 import { VariantType } from 'notistack';
 import { queryClient } from 'src/queries/base';
-import { getAllPaymentMethodsRequest } from 'src/queries/accountPayment';
+import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
+import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
+import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 
 let googlePaymentInstance: GooglePayment | undefined;
 
@@ -37,7 +38,8 @@ export const gPay = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
-  setMessage: (message: string, variant: VariantType) => void
+  setMessage: (message: string, variant: VariantType) => void,
+  setProcessing: (processing: boolean) => void
 ) => {
   if (!googlePaymentInstance) {
     return setMessage('Unable to open Google Pay.', 'error');
@@ -47,10 +49,10 @@ export const gPay = async (
 
   try {
     paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
-      // merchantInfo: {
-      //   merchantId: GPAY_MERCHANT_ID || '',
-      // },
-      // @ts-expect-error braintree's types are not accurate
+      merchantInfo: {
+        merchantId: GPAY_MERCHANT_ID || '',
+      },
+      // @ts-expect-error Braintree types are wrong
       transactionInfo,
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
     });
@@ -59,7 +61,10 @@ export const gPay = async (
   }
 
   const googlePayClient = new google.payments.api.PaymentsClient({
-    environment: 'TEST',
+    environment: GPAY_CLIENT_ENV as google.payments.api.Environment,
+    merchantInfo: {
+      merchantId: GPAY_MERCHANT_ID || '',
+    },
     paymentDataCallbacks: {
       onPaymentAuthorized,
     },
@@ -79,7 +84,10 @@ export const gPay = async (
     const paymentData = await googlePayClient.loadPaymentData(
       paymentDataRequest
     );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { nonce } = await googlePaymentInstance.parseResponse(paymentData);
+
+    setProcessing(true);
 
     // @TODO handle these API calls if they fail and maybe use React Query mutations?
     if (isOneTimePayment) {
@@ -87,25 +95,25 @@ export const gPay = async (
         nonce: 'fake-android-pay-nonce', // use actual nonce later
         usd: transactionInfo.totalPrice as string,
       });
+      queryClient.invalidateQueries(`${accountBillingKey}-payments`);
     } else {
       await addPaymentMethod({
         type: 'payment_method_nonce',
         data: { nonce: 'fake-android-pay-nonce' },
-        is_default: true,
+        is_default: false,
       });
-      await queryClient.fetchQuery(
-        'account-payment-methods',
-        getAllPaymentMethodsRequest
-      );
+      queryClient.invalidateQueries(`${accountPaymentKey}-all`);
     }
 
     setMessage(
       isOneTimePayment
         ? `Payment for $${transactionInfo.totalPrice} successfully submitted`
-        : 'Successfully Added Google Pay',
+        : 'Successfully added Google Pay',
       'success'
     );
+    setProcessing(false);
   } catch (error) {
+    setProcessing(false);
     if (error.message && (error.message as string).includes('User closed')) {
       return;
     }

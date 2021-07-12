@@ -5,7 +5,7 @@ import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 import { getClientToken, ClientToken } from '@linode/api-v4/lib/account';
 
-const queryKey = 'account-payment-methods';
+export const queryKey = 'account-payment-methods';
 
 export const usePaymentMethodsQuery = (params: any = {}, filter: any = {}) => {
   return useQuery<ResourcePage<PaymentMethod>, APIError[]>(
@@ -35,17 +35,6 @@ export const getAllPaymentMethodsRequest = () =>
   getAll<PaymentMethod>((params) => getPaymentMethods(params))().then(
     (data) => data.data
   );
-
-/**
- * Temporary helper function to help us find the main card on file as we
- * now have an endpoint that can return many payment methods
- */
-export const getCreditCard = (paymentMethods: PaymentMethod[] | undefined) => {
-  return paymentMethods?.find(
-    (paymentMethod) =>
-      paymentMethod.is_default === true && paymentMethod.type === 'credit_card'
-  );
-};
 
 export const useClientToken = () =>
   useQuery<ClientToken, APIError[]>(
