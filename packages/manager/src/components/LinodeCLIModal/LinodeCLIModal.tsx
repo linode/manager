@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import CopyTooltip from '../CopyTooltip';
+import { sendCLIClickEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
@@ -58,12 +58,13 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   command: string;
+  analyticsKey?: string;
 }
 
 export type CombinedProps = Props;
 
 export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
-  const { isOpen, onClose, command } = props;
+  const { isOpen, onClose, command, analyticsKey } = props;
   const classes = useStyles();
 
   return (
@@ -75,10 +76,16 @@ export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
       className={classes.dialog}
     >
       <div className={classes.commandAndCopy}>
-        <Typography className={classes.commandDisplay}>
+        <div className={classes.commandDisplay}>
           <div className={classes.cliText}>{command}</div>{' '}
-          <CopyTooltip text={command} className={classes.copyIcon} />
-        </Typography>
+          <CopyTooltip
+            text={command}
+            className={classes.copyIcon}
+            onClickCallback={
+              analyticsKey ? () => sendCLIClickEvent(analyticsKey) : undefined
+            }
+          />
+        </div>
       </div>
     </Dialog>
   );

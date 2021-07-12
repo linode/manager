@@ -375,3 +375,18 @@ export const sendHelpButtonClickEvent = (buttonLabel: string) => {
     action: buttonLabel,
   });
 };
+
+export const sendCLIClickEvent = (action: string) => {
+  sendEvent({
+    category: 'Linode CLI Prompt',
+    action,
+  });
+};
+
+export const sendImageUploadEvent = (action: string, imageSize: string) => {
+  sendEvent({
+    category: 'Image Upload',
+    action,
+    label: imageSize,
+  });
+};
