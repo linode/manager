@@ -6,35 +6,34 @@ import {
   Payment,
 } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { parseAPIDate } from 'src/utilities/date';
-import { isAfter } from 'src/utilities/date';
-import formatDate from 'src/utilities/formatDate';
-import { getAllWithArguments } from 'src/utilities/getAll';
-import { getTaxID } from '../../billingUtils';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Link from 'src/components/Link';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import InlineMenuAction from 'src/components/InlineMenuAction';
+import Link from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableContentWrapper from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
+import TableRow from 'src/components/TableRow';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
-import { useSet } from 'src/hooks/useSet';
 import useFlags from 'src/hooks/useFlags';
+import { useSet } from 'src/hooks/useSet';
+import { isAfter, parseAPIDate } from 'src/utilities/date';
+import formatDate from 'src/utilities/formatDate';
+import { getAllWithArguments } from 'src/utilities/getAll';
+import { getTaxID } from '../../billingUtils';
 import {
   useAllAccountInvoices,
   useAllAccountPayments,
@@ -319,6 +318,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       return matchesType && matchesDate;
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
+
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
@@ -494,10 +494,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading,
     } = props;
-    const rowProps = { rowLink: '' };
-    if (type === 'invoice' && !isLoading) {
-      rowProps.rowLink = `/account/billing/invoices/${id}`;
-    }
 
     const handleClick = React.useCallback(
       (e: React.MouseEvent) => {
@@ -515,7 +511,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
     };
 
     return (
-      <TableRow {...rowProps} data-testid={`${type}-${id}`}>
+      <TableRow data-testid={`${type}-${id}`}>
         <TableCell>
           {type === 'invoice' ? (
             <Link to={`/account/billing/invoices/${id}`}>{label}</Link>

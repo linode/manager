@@ -185,7 +185,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   // This function will be called when the user drops non-.gz files, more than one file at a time, or files that are over the max size.
   const onDropRejected = (files: FileRejection[]) => {
-    const wrongFileType = files[0].file.type !== 'application/x-gzip';
+    const wrongFileType = !files[0].file.type.match(/gzip/gi);
     const fileTypeErrorMessage =
       'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
 

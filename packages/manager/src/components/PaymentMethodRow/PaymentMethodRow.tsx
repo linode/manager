@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Paper from 'src/components/core/Paper';
-import Grid from 'src/components/Grid';
-import Chip from 'src/components/core/Chip';
-import ActionMenu, {
-  Action,
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
-import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
+import { useHistory } from 'react-router-dom';
 import {
   PaymentMethod,
   ThirdPartyPayment as ThirdPartyPaymentTypes,
 } from '@linode/api-v4/lib/account/types';
-import { useHistory } from 'react-router-dom';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Paper from 'src/components/core/Paper';
+import Grid from 'src/components/Grid';
+import Chip from 'src/components/core/Chip';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

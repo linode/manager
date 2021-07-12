@@ -1,152 +1,193 @@
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  MenuPopover,
+} from '@reach/menu-button';
+import '@reach/menu-button/styles.css';
+import { positionRight } from '@reach/popover';
+import * as classNames from 'classnames';
 import * as React from 'react';
-import IconButton from 'src/components/core/IconButton';
-import Menu from 'src/components/core/Menu';
+import KebabIcon from 'src/assets/icons/kebab.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import MenuItem from 'src/components/MenuItem';
+import HelpIcon from 'src/components/HelpIcon';
 
 export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
-  isLoading?: boolean;
-  ariaDescribedBy?: string;
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  onClick: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+  button: {
+    '&[data-reach-menu-button]': {
+      display: 'flex',
+      alignItems: 'center',
+      background: 'none',
+      fontSize: '1rem',
+      border: 'none',
+      padding: '10px',
+      color: theme.cmrIconColors.iActiveLight,
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: '#3683dc',
+        color: '#fff',
+      },
+      '&[aria-expanded="true"]': {
+        backgroundColor: '#3683dc',
+        color: '#fff',
+      },
+    },
+  },
+  buttonWithLabel: {
+    padding: '15px 10px !important',
+  },
+  buttonLabel: {
+    margin: `0 0 0 ${theme.spacing() + 2}px`,
+    fontFamily: theme.font.normal,
+    lineHeight: 1,
+  },
+  icon: {
+    '& svg': {
+      fill: theme.color.blue,
+    },
+  },
+  popover: {
+    zIndex: 1,
+  },
+  itemsOuter: {
+    '&[data-reach-menu-items]': {
+      padding: 0,
+      minWidth: 200,
+      background: '#3683dc',
+      border: 'none',
+      fontSize: 14,
+      color: '#fff',
+      textAlign: 'left',
+    },
   },
   item: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingTop: theme.spacing(1) * 1.5,
-    paddingBottom: theme.spacing(1) * 1.5,
-    fontFamily: 'LatoWeb',
-    fontSize: '.9rem',
-    color: theme.color.blueDTwhite,
-    transition: `
-      ${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
-      ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}
-    `,
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
+    '&[data-reach-menu-item]': {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: theme.spacing(1) + 2,
+      paddingLeft: '16px',
+      borderBottom: '1px solid #5294e0',
+      background: '#3683dc',
       color: '#fff',
     },
+    '&[data-reach-menu-item][data-selected]': {
+      background: '#226dc3',
+    },
   },
-  button: {
-    width: 26,
-    padding: 0,
+  disabled: {
+    '&[data-reach-menu-item]': {
+      color: '#93bcec',
+      cursor: 'auto',
+    },
+    '&[data-reach-menu-item][data-selected]': {
+      background: '#3683dc',
+      color: '#93bcec',
+    },
+  },
+  tooltip: {
+    color: '#fff',
+    '& :hover': {
+      color: '#4d99f1',
+      backgroundColor: 'transparent',
+    },
+    padding: '0 0 0 8px',
     '& svg': {
-      fontSize: '28px',
+      height: 20,
+      width: 20,
     },
-    '&[aria-expanded="true"] .kebob': {
-      fill: theme.palette.primary.dark,
-    },
-  },
-  actionSingleLink: {
-    marginRight: theme.spacing(1),
-    whiteSpace: 'nowrap',
-    float: 'right',
-    fontFamily: theme.font.bold,
-  },
-  menu: {
-    maxWidth: theme.spacing(25),
   },
 }));
 
 export interface Props {
-  createActions: (closeMenu: Function) => Action[];
+  actionsList: Action[];
   toggleOpenCallback?: () => void;
-  // we want to require using aria label for these buttons
+  // We want to require using aria label for these buttons
   // as they don't have text (just an icon)
   ariaLabel: string;
   className?: string;
   disabled?: boolean;
+  // Displays inline next to the button icon
+  inlineLabel?: string;
 }
 
 type CombinedProps = Props;
 
 const ActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { createActions } = props;
+  const { toggleOpenCallback, actionsList } = props;
 
-  const [actions, setActions] = React.useState<Action[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<
-    (EventTarget & HTMLElement) | undefined
-  >(undefined);
+  const { ariaLabel, inlineLabel } = props;
 
-  React.useEffect(() => {
-    setActions(createActions(handleClose));
-  }, [createActions]);
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (props.toggleOpenCallback) {
-      props.toggleOpenCallback();
+  const handleClick = () => {
+    if (toggleOpenCallback) {
+      toggleOpenCallback();
     }
-    setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(undefined);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (toggleOpenCallback && e.keyCode === 13) {
+      toggleOpenCallback();
+    }
   };
 
-  const { ariaLabel, disabled } = props;
-
-  if (typeof actions === 'undefined') {
+  if (!actionsList || actionsList.length === 0) {
     return null;
   }
 
   return (
-    <div className={`${classes.root} action-menu ${props.className ?? ''}`}>
-      <IconButton
-        disabled={disabled}
-        aria-owns={anchorEl ? 'action-menu' : undefined}
-        aria-expanded={anchorEl ? true : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-        className={classes.button}
-        data-qa-action-menu
+    <Menu>
+      <MenuButton
+        className={classNames({
+          [classes.button]: true,
+          [classes.buttonWithLabel]: Boolean(inlineLabel),
+        })}
         aria-label={ariaLabel}
+        onMouseDown={handleClick}
+        onKeyDown={handleKeyPress}
       >
-        <MoreHoriz type="primary" className="kebob" />
-      </IconButton>
-      <Menu
-        id="action-menu"
-        className={classes.menu}
-        anchorEl={anchorEl}
-        getContentAnchorEl={undefined}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        BackdropProps={{
-          style: {
-            backgroundColor: 'transparent',
-          },
-        }}
-      >
-        {(actions as Action[]).map((a, idx) => (
-          <MenuItem
-            key={idx}
-            onClick={a.onClick}
-            className={classes.item}
-            data-qa-action-menu-item={a.title}
-            disabled={a.disabled}
-            tooltip={a.tooltip}
-            isLoading={a.isLoading}
-            aria-describedby={a.ariaDescribedBy}
-            role="menuitem"
-          >
-            {a.title}
-          </MenuItem>
-        ))}
-      </Menu>
-    </div>
+        <KebabIcon aria-hidden className={classes.icon} type="primary" />
+        {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
+      </MenuButton>
+      <MenuPopover className={classes.popover} position={positionRight}>
+        <MenuItems className={classes.itemsOuter}>
+          {(actionsList as Action[]).map((a, idx) => (
+            <MenuItem
+              key={idx}
+              className={classNames({
+                [classes.item]: true,
+                [classes.disabled]: a.disabled,
+              })}
+              onSelect={() => {
+                if (!a.disabled) {
+                  return a.onClick();
+                }
+              }}
+              data-qa-action-menu-item={a.title}
+              disabled={a.disabled}
+            >
+              {a.title}
+              {a.tooltip ? (
+                <HelpIcon
+                  data-qa-tooltip-icon
+                  text={a.tooltip}
+                  tooltipPosition="right"
+                  className={classes.tooltip}
+                />
+              ) : null}
+            </MenuItem>
+          ))}
+        </MenuItems>
+      </MenuPopover>
+    </Menu>
   );
 };
 
-export default ActionMenu;
+export default React.memo(ActionMenu);

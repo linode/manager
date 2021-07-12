@@ -96,6 +96,10 @@ const newMetricDisplayStyles = (theme: Theme) =>
       },
     },
     tableHead: {
+      backgroundColor: theme.bg.offWhiteDT,
+      '& tr > th': {
+        backgroundColor: theme.bg.offWhiteDT,
+      },
       [theme.breakpoints.down('sm')]: {
         display: 'block !important',
         '& tr': {

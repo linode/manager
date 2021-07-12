@@ -26,9 +26,9 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps,
@@ -42,6 +42,7 @@ type ClassNames =
   | 'root'
   | 'copy'
   | 'disabledRow'
+  | 'table'
   | 'headerCell'
   | 'chip'
   | 'headingCellContainer'
@@ -63,13 +64,17 @@ const styles = (theme: Theme) =>
       cursor: 'not-allowed',
       opacity: 0.4,
     },
+    table: {
+      borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    },
     headingCellContainer: {
       display: 'flex',
       alignItems: 'center',
     },
     headerCell: {
-      borderTop: 'none !important',
-      borderBottom: '1px solid #f4f5f6 !important',
+      borderTop: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
+      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
       '&.emptyCell': {
         borderRight: 'none',
       },
@@ -195,7 +200,6 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 ? this.onSelect(type.id)
                 : undefined
             }
-            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
             className={classnames({
               [classes.disabledRow]:
@@ -284,7 +288,11 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         </Hidden>
         <Hidden mdDown={isCreate} smDown={!isCreate}>
           <Grid item xs={12} lg={11}>
-            <Table border spacingBottom={16} aria-label="List of Linode Plans">
+            <Table
+              aria-label="List of Linode Plans"
+              className={classes.table}
+              spacingBottom={16}
+            >
               <TableHead>
                 <TableRow>
                   <TableCell className={classes.headerCell} />
@@ -385,7 +393,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
               <Typography data-qa-highmem className={classes.copy}>
                 High Memory instances favor RAM over other resources, and can be
                 good for memory hungry use cases like caching and in-memory
-                databases. All High Memory plans contain dedicated CPU cores.
+                databases. All High Memory plans use dedicated CPU cores.
               </Typography>
               {this.renderPlanContainer(highmem)}
             </>

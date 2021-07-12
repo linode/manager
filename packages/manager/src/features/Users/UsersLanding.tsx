@@ -1,18 +1,13 @@
-import { map as mapPromise } from 'bluebird';
-import { deleteUser, getUsers, User } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as memoize from 'memoizee';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { deleteUser, User } from '@linode/api-v4/lib/account';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import {
   makeStyles,
-  useTheme,
   Theme,
   useMediaQuery,
+  useTheme,
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -20,15 +15,15 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
-import TableRowError from 'src/components/TableRowError/TableRowError_CMR';
-import TableRowLoading from 'src/components/TableRowLoading/TableRowLoading_CMR';
-import { getGravatarUrl } from 'src/utilities/gravatar';
+import usePagination from 'src/hooks/usePagination';
+import { useAccountUsers } from 'src/queries/accountUsers';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
@@ -102,21 +97,16 @@ interface Props {
   isRestrictedUser: boolean;
 }
 
-type CombinedProps = WithSnackbarProps &
-  Props &
-  PaginationProps<User> &
-  RouteComponentProps<{}>;
-
-const UsersLanding: React.FC<CombinedProps> = (props) => {
-  const {
-    request,
-    onDelete,
-    enqueueSnackbar,
-    data: users,
-    error,
-    loading,
-  } = props;
-
+const UsersLanding: React.FC<Props> = (props) => {
+  const pagination = usePagination(1, 'account-users');
+  const { data: users, isLoading, error, refetch } = useAccountUsers(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    true
+  );
+  const { enqueueSnackbar } = useSnackbar();
   const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
     false
   );
@@ -138,14 +128,6 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  React.useEffect(() => {
-    request();
-  }, [request]);
-
-  const addUser = () => {
-    request();
-  };
-
   const openForCreate = () => {
     setCreateDrawerOpen(true);
   };
@@ -161,7 +143,7 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
 
     deleteUser(username)
       .then(() => {
-        onDelete();
+        refetch();
         enqueueSnackbar(`User ${username} has been deleted successfully.`, {
           variant: 'success',
         });
@@ -188,7 +170,6 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
       <TableRow
         key={user.username}
         data-qa-user-row
-        rowLink={`/account/users/${user.username}/profile`}
         ariaLabel={`User ${user.username}`}
       >
         <TableCell data-qa-username>
@@ -224,12 +205,8 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  const renderTableContent = (
-    loading: boolean,
-    error?: APIError[],
-    data?: User[]
-  ) => {
-    if (loading) {
+  const renderTableContent = () => {
+    if (isLoading) {
       return <TableRowLoading colSpan={4} oneLine hasEntityIcon />;
     }
 
@@ -237,11 +214,11 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
       return <TableRowError colSpan={4} message={error[0].reason} />;
     }
 
-    if (!data || data.length === 0) {
+    if (!users || users.results === 0) {
       return <TableRowEmptyState colSpan={4} />;
     }
 
-    return data.map((user) => renderUserRow(user));
+    return users.data.map((user) => renderUserRow(user));
   };
 
   return (
@@ -293,22 +270,21 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
               <TableCell />
             </TableRow>
           </TableHead>
-          <TableBody>{renderTableContent(loading, error, users)}</TableBody>
+          <TableBody>{renderTableContent()}</TableBody>
         </Table>
       </div>
-
       <PaginationFooter
-        count={props.count}
-        page={props.page}
-        pageSize={props.pageSize}
-        handlePageChange={props.handlePageChange}
-        handleSizeChange={props.handlePageSizeChange}
+        count={users?.results || 0}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
         eventCategory="users landing"
       />
       <CreateUserDrawer
         open={createDrawerOpen}
         onClose={userCreateOnClose}
-        addUser={addUser}
+        refetch={refetch}
       />
       <UserDeleteConfirmationDialog
         username={toDeleteUsername || ''}
@@ -320,21 +296,4 @@ const UsersLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const memoizedGetGravatarURL = memoize(getGravatarUrl);
-
-const paginated = Pagey((ownProps, params, filters) =>
-  getUsers(params, filters).then(({ data, page, pages, results }) =>
-    mapPromise(data, (user) =>
-      memoizedGetGravatarURL(user.email).then((gravatarUrl: string) => ({
-        ...user,
-        gravatarUrl,
-      }))
-    ).then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))
-  )
-);
-
-export default compose<CombinedProps, Props>(
-  withRouter,
-  paginated,
-  withSnackbar
-)(UsersLanding);
+export default UsersLanding;

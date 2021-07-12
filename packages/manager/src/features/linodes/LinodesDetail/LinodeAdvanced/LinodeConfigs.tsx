@@ -25,17 +25,17 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR.tsx';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import TableRow from 'src/components/TableRow';
+import TableSortCell from 'src/components/TableSortCell';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container.ts';
@@ -56,9 +56,6 @@ type ClassNames =
   | 'addNewWrapper'
   | 'tableCell'
   | 'labelColumn'
-  | 'vmColumn'
-  | 'memoryColumn'
-  | 'kernelColumn'
   | 'interfacesColumn'
   | 'deviceColumn'
   | 'actionsColumn';
@@ -456,7 +453,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
               } = this.props;
               return (
                 <React.Fragment>
-                  <Table aria-label="List of Configurations" border>
+                  <Table aria-label="List of Configurations">
                     <TableHead>
                       <TableRow>
                         <TableSortCell

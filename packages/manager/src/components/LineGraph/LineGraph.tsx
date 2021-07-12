@@ -18,10 +18,10 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { setUpCharts } from 'src/utilities/charts';
 import roundTo from 'src/utilities/roundTo';
 import { Metrics } from 'src/utilities/statMetrics';
@@ -280,7 +280,11 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
-          <Table aria-label="Stats and metrics" className={classes.root}>
+          <Table
+            aria-label="Stats and metrics"
+            className={classes.root}
+            noBorder
+          >
             <TableHead className={classes.tableHead}>
               {/* Repeat legend for each data set for mobile */}
               {matchesSmDown ? (

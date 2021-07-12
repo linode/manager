@@ -375,7 +375,7 @@ export interface SaveCreditCardData {
 
 export interface AccountMaintenance {
   reason: string;
-  status: 'pending' | 'ready' | 'started' | 'completed';
+  status: 'pending' | 'started';
   type: 'reboot' | 'cold_migration' | 'live_migration';
   when: string;
   entity: {
