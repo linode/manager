@@ -3,12 +3,12 @@ import { enableBackups, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { isEmpty, pathOr } from 'ramda';
 import { Reducer } from 'redux';
-import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
+import { useMutateAccountSettings } from 'src/queries/accountSettings';
 
 export interface BackupError {
   linodeId: number;
@@ -299,6 +299,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
     state
   );
   const shouldEnableBackups = Boolean(backups.autoEnroll);
+  const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
 
   /** If the selected toggle setting matches the setting already on the user's account,
    * don't bother the API.
@@ -309,7 +310,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
   }
 
   dispatch(handleAutoEnroll());
-  dispatch(updateAccountSettings({ backups_enabled: shouldEnableBackups }))
+  updateAccountSettings({ backups_enabled: shouldEnableBackups })
     .then((_) => {
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());

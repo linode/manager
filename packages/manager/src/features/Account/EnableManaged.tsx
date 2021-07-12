@@ -1,4 +1,3 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -14,10 +13,10 @@ import withLinodes, {
   DispatchProps,
 } from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
+import { updateAccountSettingsData } from 'src/queries/accountSettings';
 
 interface Props {
   isManaged: boolean;
-  update: (data: Partial<AccountSettings>) => void;
 }
 
 interface StateProps {
@@ -67,7 +66,7 @@ export const ManagedContent: React.FC<ContentProps> = (props) => {
 };
 
 export const EnableManaged: React.FC<CombinedProps> = (props) => {
-  const { isManaged, linodeCount, update } = props;
+  const { isManaged, linodeCount } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -88,8 +87,8 @@ export const EnableManaged: React.FC<CombinedProps> = (props) => {
     enableManaged()
       .then(() => {
         handleClose();
-        update({ managed: true });
-        //push('/managed');
+        updateAccountSettingsData({ managed: true });
+        // push('/managed');
       })
       .catch(handleError);
   };

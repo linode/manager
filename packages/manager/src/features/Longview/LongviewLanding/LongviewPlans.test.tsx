@@ -1,6 +1,5 @@
 import { screen, within } from '@testing-library/react';
 import * as React from 'react';
-import { accountSettings } from 'src/__data__/account';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -14,12 +13,6 @@ import {
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
 
 const props: CombinedProps = {
-  accountSettingsError: {},
-  accountSettingsLastUpdated: 0,
-  accountSettingsLoading: false,
-  requestAccountSettings: jest.fn(),
-  updateAccountSettings: jest.fn(),
-  updateAccountSettingsInStore: jest.fn(),
   mayUserModifyLVSubscription: true,
   mayUserViewAccountSettings: true,
   subscriptionRequestHook: {
@@ -82,9 +75,7 @@ describe('LongviewPlans', () => {
   });
 
   it('highlights the LV subscription currently on the account', async () => {
-    renderWithTheme(
-      <LongviewPlans accountSettings={accountSettings} {...props} />
-    );
+    renderWithTheme(<LongviewPlans {...props} />);
 
     await screen.findByTestId('current-plan-longview-3');
   });

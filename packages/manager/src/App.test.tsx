@@ -35,7 +35,6 @@ it('renders without crashing.', () => {
             appIsLoading={false}
             toggleTheme={jest.fn()}
             linodesLoading={false}
-            accountSettingsLoading={false}
             ldClient={{} as any}
             featureFlagsLoading={false}
             flags={{}}
