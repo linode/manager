@@ -537,12 +537,19 @@ export const handlers = [
   rest.post('*/backups/enable/*', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.put('*/account/settings/*', (req, res, ctx) => {
+  rest.get('*/account/settings', (req, res, ctx) => {
     return res(
       ctx.json({
-        managed: false,
+        backups_enabled: true,
+        longview_subscription: 'longview-100',
+        managed: true,
+        network_helper: true,
+        object_storage: 'active',
       })
     );
+  }),
+  rest.put('*/account/settings/*', (req, res, ctx) => {
+    return res(ctx.json({}));
   }),
   rest.get('*/tags', (req, res, ctx) => {
     tagFactory.resetSequenceNumber();
