@@ -144,6 +144,7 @@ const AddCreditCardForm = (props: Props) => {
             label="Credit Card Number"
             error={Boolean(errors.card_number)}
             errorText={errors.card_number}
+            disabled={isSubmitting}
             InputProps={{
               inputComponent: creditCardField,
             }}
@@ -158,6 +159,7 @@ const AddCreditCardForm = (props: Props) => {
             placeholder="MM/YY"
             error={Boolean(errors.expiry)}
             errorText={errors.expiry}
+            disabled={isSubmitting}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -165,9 +167,10 @@ const AddCreditCardForm = (props: Props) => {
             name="cvv"
             value={values.cvv}
             onChange={handleChange}
-            label="CVV"
+            label="Security Code"
             error={Boolean(errors.cvv)}
             errorText={errors.cvv}
+            disabled={isSubmitting}
           />
         </Grid>
         {/* <Grid item xs={12}>
