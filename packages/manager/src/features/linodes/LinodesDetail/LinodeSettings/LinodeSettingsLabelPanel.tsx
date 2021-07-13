@@ -84,6 +84,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
       <Accordion
         heading="Linode Label"
         success={this.state.success}
+        defaultExpanded
         actions={() => (
           <ActionsPanel>
             <Button

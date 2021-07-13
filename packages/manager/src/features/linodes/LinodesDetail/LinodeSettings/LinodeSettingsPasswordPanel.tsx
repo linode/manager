@@ -59,6 +59,10 @@ class LinodeSettingsPasswordPanel extends React.Component<
     disks: [],
   };
 
+  componentDidMount() {
+    this.searchDisks();
+  }
+
   handleSubmit = () => {
     const { diskId, value } = this.state;
     const { linodeId, isBareMetalInstance } = this.props;
@@ -223,6 +227,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
         success={this.state.success}
         actions={this.renderExpansionActions}
         onChange={this.handlePanelChange}
+        defaultExpanded
       >
         <form>
           {generalError && <Notice text={generalError} error />}
