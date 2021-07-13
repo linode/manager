@@ -589,7 +589,7 @@ export const paymentToActivityFeedItem = (
   // Note: this is confusing.
   // We flip the polarity here, since we display a positive payment as e.g. "-($5.00)"
   // and a negative payment (i.e. refund) as e.g. "$5.00"
-  const total = usd <= 0 ? Math.abs(usd) : -usd;
+  const total = Math.abs(usd);
 
   return {
     label,
