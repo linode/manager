@@ -10,7 +10,10 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
-import { creditCardField } from '../UpdateCreditCardDrawer/UpdateCreditCardDrawer';
+import {
+  CreditCardAddressMessage,
+  creditCardField,
+} from '../UpdateCreditCardDrawer/UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actions: {
@@ -246,6 +249,7 @@ const AddCreditCardForm = (props: Props) => {
         checked={values.is_default}
         onChange={() => setFieldValue('is_default', !values.is_default)}
       /> */}
+        <CreditCardAddressMessage />
       </Grid>
       <ActionsPanel className={classes.actions}>
         <Button onClick={onClose} buttonType="secondary">

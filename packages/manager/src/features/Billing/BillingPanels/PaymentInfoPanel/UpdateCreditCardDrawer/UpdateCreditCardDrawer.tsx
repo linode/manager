@@ -46,6 +46,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+export const CreditCardAddressMessage: React.FC<{}> = () => (
+  <Typography>
+    The address affiliated with this credit card must match the{' '}
+    <Link
+      to={{
+        pathname: '/account/billing',
+        state: { contactDrawerOpen: true },
+      }}
+    >
+      contact information
+    </Link>{' '}
+    active on this account.
+  </Typography>
+);
+
 export interface Props {
   open: boolean;
   onClose: () => void;
@@ -199,18 +214,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography>
-            The address affiliated with this credit card must match the{' '}
-            <Link
-              to={{
-                pathname: '/account/billing',
-                state: { contactDrawerOpen: true },
-              }}
-            >
-              contact information
-            </Link>{' '}
-            active on this account.
-          </Typography>
+          <CreditCardAddressMessage />
         </Grid>
       </Grid>
       <ActionsPanel className={classes.actions}>
