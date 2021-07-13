@@ -149,8 +149,8 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
     promotions && promotions.length > 0 ? { xs: 12, md: 4 } : { xs: 12, sm: 6 };
 
-  const generateBalanceJSX = (balance: number, pastDueBalance: boolean) => {
-    return balance > 0 ? (
+  const balanceJSX =
+    balance > 0 ? (
       <Typography style={{ marginTop: 16 }}>
         <button
           className={classes.makeAPaymentButton}
@@ -158,10 +158,9 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
         >
           {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
         </button>
-        {pastDueBalance ? `${' '} to avoid service disruption.` : null}
+        {pastDueBalance ? `${' '}to avoid service disruption.` : null}
       </Typography>
     ) : null;
-  };
 
   return (
     <>
@@ -191,7 +190,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
                 />
               </Typography>
             </Box>
-            {generateBalanceJSX(balance, pastDueBalance)}
+            {balanceJSX}
           </Paper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
