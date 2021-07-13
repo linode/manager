@@ -17,7 +17,7 @@ afterEach(() => {
 });
 
 describe('PrimaryNav', () => {
-  it('contains a "Managed" menu link if the user has Managed services.', async () => {
+  it.skip('contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
       rest.get('*/account/maintenance', (req, res, ctx) => {
         return res(ctx.json({ managed: true }));
@@ -26,6 +26,10 @@ describe('PrimaryNav', () => {
 
     const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
       queryClient,
+    });
+
+    await waitForElement(() => queryByTestId('menu-item-Managed'), {
+      timeout: 5000,
     });
 
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
