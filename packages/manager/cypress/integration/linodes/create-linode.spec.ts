@@ -1,25 +1,21 @@
 import strings from '../../support/cypresshelpers';
-import {
-  makeLinodeLabel,
-  deleteAllTestLinodes,
-} from '../../support/api/linodes';
+import { makeLinodeLabel } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
 import {
   containsClick,
   containsVisible,
+  fbtVisible,
   getClick,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
 
 describe('create linode', () => {
-  beforeEach(() => {
-    cy.visitWithLogin('/linodes/create');
-    cy.get('[data-qa-deploy-linode]');
-  });
   it('creates a nanode', () => {
     const rootpass = strings.randomPass();
     const linodeLabel = makeLinodeLabel();
     // intercept request
+    cy.visitWithLogin('/linodes/create');
+    cy.get('[data-qa-deploy-linode]');
     cy.intercept('POST', '*/linode/instances').as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     containsClick(selectRegionString).type('new {enter}');
@@ -30,6 +26,7 @@ describe('create linode', () => {
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
     assertToast(`Your Linode ${linodeLabel} is being created.`);
     containsVisible('PROVISIONING');
-    deleteAllTestLinodes();
+    fbtVisible(linodeLabel);
+    cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
   });
 });

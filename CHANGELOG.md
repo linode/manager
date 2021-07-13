@@ -4,19 +4,44 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-06-28] - v1.44.0
+
+### Added:
+- Dedicated Maintenance Table at `/account/maintenance`
+- Use React Query query to populate account network transfer
+
+### Changed:
+- Referral page changes
+- Update Virtualmin and Webmin Marketplace links
+- EntityTables and Tables CMR cleanup
+
+### Fixed:
+- Console warning for Divider custom props
+- Object Storage landing table UI bugs
+- Ability to access /dev/sdh Block Device in Configuration modal
+
+## [2021-06-17] - v1.43.1
+
+### Added:
+
+- Notice to the Referrals page to highlight upcoming changes to the program
+
 ## [2021-06-16] - v1.43.0
 
 ### Added:
+
 - Toast notifications and updated table entries for Image upload success/failures
 - Drag & Drop Image uploads
 - Time of migration to Scheduled Migrations banner
 
 ### Changed:
+
 - Event text for Domain record creation and update
 - Minimum LKE node warning message
 - Remove "beta" tag from Machine Images
 
 ### Fixed:
+
 - Clearing ticket form state after submit
 - Domains table header for large accounts
 - IP Sharing for large accounts

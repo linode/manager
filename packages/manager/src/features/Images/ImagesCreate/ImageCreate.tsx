@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter, useHistory } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -10,8 +10,14 @@ const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
 export const ImageCreate: React.FC<CombinedProps> = (props) => {
-  const [label, setLabel] = React.useState<string>('');
-  const [description, setDescription] = React.useState<string>('');
+  const { location } = useHistory();
+
+  const [label, setLabel] = React.useState<string>(
+    location?.state ? location.state.imageLabel : ''
+  );
+  const [description, setDescription] = React.useState<string>(
+    location?.state ? location.state.imageDescription : ''
+  );
 
   const handleSetLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

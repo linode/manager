@@ -7,7 +7,6 @@ import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -17,7 +16,8 @@ import PaginationFooter, {
   MIN_PAGE_SIZE,
 } from 'src/components/PaginationFooter';
 import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter';
-import TableRowEmptyState_CMR from 'src/components/TableRowEmptyState/TableRowEmptyState_CMR';
+import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
@@ -259,7 +259,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
       >
         {orderedGroupedLinodes.length === 0 ? (
           <TableBody>
-            <TableRowEmptyState_CMR colSpan={12} />
+            <TableRowEmptyState colSpan={12} />
           </TableBody>
         ) : null}
         {orderedGroupedLinodes.map(([tag, linodes]) => {
@@ -295,7 +295,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                       className={classes.groupContainer}
                       data-qa-tag-header={tag}
                     >
-                      <TableRow className={classes.tagHeaderRow} role="cell">
+                      <TableRow className={classes.tagHeaderRow}>
                         <TableCell colSpan={7}>
                           <Typography
                             variant="h2"

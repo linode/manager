@@ -5,10 +5,10 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
-import TableSortCell from 'src/components/TableSortCell/TableSortCell_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableSortCell from 'src/components/TableSortCell';
 import BucketTableRow from './BucketTableRow';
 
 interface Props {
@@ -67,7 +67,7 @@ export const BucketTable: React.FC<CombinedProps> = (props) => {
                     Region
                   </TableSortCell>
                 </Hidden>
-                <Hidden smDown>
+                <Hidden mdDown>
                   <TableSortCell
                     active={orderBy === 'created'}
                     label="created"
@@ -87,7 +87,7 @@ export const BucketTable: React.FC<CombinedProps> = (props) => {
                 >
                   Size
                 </TableSortCell>
-                <Hidden smDown>
+                <Hidden xsDown>
                   <TableSortCell
                     active={orderBy === 'objects'}
                     label="objects"

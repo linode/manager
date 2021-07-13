@@ -1,15 +1,14 @@
 import * as React from 'react';
-import Table from 'src/components/Table/Table_CMR';
-import TableHead from 'src/components/core/TableHead';
-import TableBody from 'src/components/core/TableBody';
-import TableRow from 'src/components/core/TableRow';
-import Typography from 'src/components/core/Typography';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
 import CheckBox from 'src/components/CheckBox';
-import PaginationFooter from 'src/components/PaginationFooter';
-import DebouncedSearchTextField from 'src/components/DebouncedSearchTextField';
-
 import { makeStyles, Theme } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
+import DebouncedSearchTextField from 'src/components/DebouncedSearchTextField';
+import PaginationFooter from 'src/components/PaginationFooter';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

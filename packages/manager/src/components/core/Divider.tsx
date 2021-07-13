@@ -27,7 +27,7 @@ interface Props extends _DividerProps {
 
 const _Divider: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { light, spacingTop, spacingBottom } = props;
+  const { light, spacingTop, spacingBottom, ...rest } = props;
 
   return (
     <Divider
@@ -36,7 +36,7 @@ const _Divider: React.FC<Props> = (props) => {
         [classes.light]: light,
       })}
       style={{ marginTop: spacingTop, marginBottom: spacingBottom }}
-      {...props}
+      {...rest}
     />
   );
 };

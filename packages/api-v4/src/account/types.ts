@@ -76,7 +76,12 @@ export type PromotionServiceType =
 
 export type ThirdPartyPayment = 'google_pay' | 'paypal';
 
-export type CardType = 'Visa' | 'Mastercard' | 'Amex' | 'Discover' | 'JCB';
+export type CardType =
+  | 'Visa'
+  | 'MasterCard'
+  | 'American Express'
+  | 'Discover'
+  | 'JCB';
 
 export type PaymentType = 'credit_card' | ThirdPartyPayment;
 
@@ -370,7 +375,7 @@ export interface SaveCreditCardData {
 
 export interface AccountMaintenance {
   reason: string;
-  status: 'pending' | 'ready' | 'started' | 'completed';
+  status: 'pending' | 'started';
   type: 'reboot' | 'cold_migration' | 'live_migration';
   when: string;
   entity: {

@@ -6,14 +6,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   label: {
     fontFamily: theme.font.bold,
     width: '30%',

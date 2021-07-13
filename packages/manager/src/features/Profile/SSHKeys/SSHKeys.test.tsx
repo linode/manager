@@ -40,7 +40,7 @@ describe('SSHKeys', () => {
     });
 
     it('should have a table', () => {
-      expect(wrapper.find(`WithStyles(WrappedTable)`).exists()).toBeTruthy();
+      expect(wrapper.find(`WrappedTable`).exists()).toBeTruthy();
     });
 
     it('should have pagination controls', () => {
@@ -50,9 +50,7 @@ describe('SSHKeys', () => {
     });
 
     it('should display table row for each key', () => {
-      expect(
-        wrapper.find(`WithStyles(ForwardRef(TableRow))[data-qa-content-row]`)
-      ).toHaveLength(3);
+      expect(wrapper.find('[data-qa-content-row]')).toHaveLength(3);
     });
   });
 
@@ -74,7 +72,7 @@ describe('SSHKeys', () => {
       />
     );
 
-    expect(wrapper.find(`WithStyles(tableRowLoading)`).exists()).toBeTruthy();
+    expect(wrapper.find(`TableRowLoading`).exists()).toBeTruthy();
   });
 
   it('should display TableRowError if error if state.error is set.', () => {
@@ -115,8 +113,6 @@ describe('SSHKeys', () => {
       />
     );
 
-    expect(
-      wrapper.find(`WithStyles(TableRowEmptyState)`).exists()
-    ).toBeTruthy();
+    expect(wrapper.find(`TableRowEmptyState`).exists()).toBeTruthy();
   });
 });

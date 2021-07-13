@@ -3,7 +3,7 @@ import * as classnames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { CardType } from '@linode/api-v4/lib/account/types';
 import Typography from 'src/components/core/Typography';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
 import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import AmexIcon from 'src/assets/icons/payment/amex.svg';
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const iconMap = {
   Visa: VisaIcon,
   MasterCard: MastercardIcon,
-  Amex: AmexIcon,
+  'American Express': AmexIcon,
   Discover: DiscoverIcon,
   JCB: JCBIcon,
 };
@@ -83,9 +83,11 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
           {expiry && isCreditCardExpired(expiry) ? (
-            <span className={classes.expired}>{`Expired ${expiry}`}</span>
+            <span className={classes.expired}>{`Expired ${formatExpiry(
+              expiry
+            )}`}</span>
           ) : expiry ? (
-            <span>{`Expires ${expiry}`}</span>
+            <span>{`Expires ${formatExpiry(expiry)}`}</span>
           ) : null}
         </Typography>
       </div>

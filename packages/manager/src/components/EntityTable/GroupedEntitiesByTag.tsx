@@ -2,7 +2,6 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -11,16 +10,13 @@ import PaginationFooter, {
 } from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import EntityTableHeader from './EntityTableHeader';
 import { ListProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  tagGridRow: {
-    marginBottom: theme.spacing(2) + theme.spacing(1) / 2,
-  },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
     height: 'auto',
@@ -36,15 +32,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   groupContainer: {
     [theme.breakpoints.up('md')]: {
       '& $tagHeaderRow > td': {
-        padding: `${theme.spacing(1) + 2}px 0`,
         borderTop: 'none',
+        padding: `${theme.spacing(1) + 2}px 0`,
       },
     },
   },
   tagHeader: {
     marginBottom: 2,
   },
-  tagHeaderOuter: {},
   paginationCell: {
     paddingTop: 2,
     '& div:first-child': {
@@ -56,7 +51,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type CombinedProps = ListProps;
 
 export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
-  const { data, entity, handlers, headers, initialOrder, RowComponent } = props;
+  const {
+    data,
+    entity,
+    handlers,
+    headers,
+    initialOrder,
+    RowComponent,
+    toggleGroupByTag,
+    isGroupedByTag,
+  } = props;
   const classes = useStyles();
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
 
@@ -68,7 +72,6 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => {
         const groupedEntities = compose(sortGroups, groupByTags)(orderedData);
-
         return (
           <Table aria-label={`List of ${entity}`}>
             <EntityTableHeader
@@ -76,6 +79,8 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
               handleOrderChange={handleOrderChange}
               order={order}
               orderBy={orderBy}
+              toggleGroupByTag={toggleGroupByTag}
+              isGroupedByTag={isGroupedByTag}
             />
             {groupedEntities.map(([tag, domains]: [string, any[]]) => {
               return (
@@ -98,10 +103,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
                           className={classes.groupContainer}
                           data-qa-tag-header={tag}
                         >
-                          <TableRow
-                            className={classes.tagHeaderRow}
-                            role="cell"
-                          >
+                          <TableRow className={classes.tagHeaderRow}>
                             <TableCell colSpan={7}>
                               <Typography
                                 variant="h2"
@@ -131,7 +133,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
                                   handleSizeChange={handlePageSizeChange}
                                   pageSize={pageSize}
                                   page={page}
-                                  eventCategory={'domains landing'}
+                                  eventCategory={'Entity table'}
                                   showAll
                                 />
                               </TableCell>

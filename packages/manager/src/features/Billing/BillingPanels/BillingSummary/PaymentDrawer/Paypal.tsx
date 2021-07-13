@@ -38,6 +38,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { SetSuccess } from './types';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountBilling';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -74,6 +76,7 @@ interface PaypalScript {
 export interface Props {
   usd: string;
   setSuccess: SetSuccess;
+  disabled: boolean;
 }
 
 type CombinedProps = Props & PaypalScript;
@@ -97,7 +100,7 @@ export const paypalScriptSrc = () => {
 };
 
 export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
-  const { isScriptLoaded, usd, setSuccess } = props;
+  const { isScriptLoaded, usd, setSuccess, disabled } = props;
   const classes = useStyles();
   const flags = useFlags();
 
@@ -175,6 +178,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
           true,
           response.warnings
         );
+        queryClient.invalidateQueries(`${queryKey}-payments`);
       })
       .catch((_) => {
         setExecuting(false);
@@ -259,7 +263,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
     setDialogOpen(false);
   };
 
-  const enabled = shouldEnablePaypalButton(+usd);
+  const enabled = shouldEnablePaypalButton(+usd) && !disabled;
 
   if (typeof errorLoadingPaypalScript === 'undefined') {
     return (
@@ -295,7 +299,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
             data-qa-paypal-button
             className={classnames({
               [classes.paypalButtonWrapper]: true,
-              [classes.PaypalHidden]: !enabled,
+              [classes.PaypalHidden]: !enabled || disabled,
             })}
           >
             {PaypalButton.current && shouldRenderButton && (

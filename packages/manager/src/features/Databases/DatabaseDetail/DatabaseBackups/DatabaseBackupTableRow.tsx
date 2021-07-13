@@ -1,12 +1,12 @@
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { Duration } from 'luxon';
 import * as React from 'react';
-import TableRow from 'src/components/core/TableRow';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
-import { formatDuration } from 'src/utilities/formatDuration';
-import { parseAPIDate } from 'src/utilities/date';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import { parseAPIDate } from 'src/utilities/date';
+import { formatDuration } from 'src/utilities/formatDuration';
+import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 
 interface Props {
   backup: DatabaseBackup;

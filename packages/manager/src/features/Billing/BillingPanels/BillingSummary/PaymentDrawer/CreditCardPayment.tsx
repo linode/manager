@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { makePayment, CardType } from '@linode/api-v4/lib/account';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { cleanCVV } from 'src/features/Billing/billingUtils';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
-import { cleanCVV } from 'src/features/Billing/billingUtils';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { SetSuccess } from './types';
 import CreditCard from './CreditCard';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountBilling';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles(() => ({
@@ -55,10 +57,19 @@ export interface Props {
   usd: string;
   minimumPayment: string;
   setSuccess: SetSuccess;
+  disabled: boolean;
 }
 
 export const CreditCardPayment: React.FC<Props> = (props) => {
-  const { type, expiry, lastFour, minimumPayment, usd, setSuccess } = props;
+  const {
+    type,
+    expiry,
+    lastFour,
+    minimumPayment,
+    usd,
+    setSuccess,
+    disabled,
+  } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -98,10 +109,11 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
         setSubmitting(false);
         setDialogOpen(false);
         setSuccess(
-          `Payment for $${usd} submitted successfully`,
+          `Payment for $${usd} successfully submitted`,
           true,
           response.warnings
         );
+        queryClient.invalidateQueries(`${queryKey}-payments`);
       })
       .catch((errorResponse) => {
         setSubmitting(false);
@@ -131,7 +143,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
               <Grid item className={classes.input}>
                 <Grid item>
                   <TextField
-                    label="CVV (optional):"
+                    label="Security Code (optional)"
                     onChange={handleCVVChange}
                     value={cvv}
                     type="text"
@@ -139,13 +151,14 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
                     className={classes.cvvField}
                     hasAbsoluteError
                     noMarginTop
+                    disabled={disabled}
                   />
                 </Grid>
                 <Grid item className={classes.button}>
                   <Button
                     buttonType="primary"
                     onClick={handleOpenDialog}
-                    disabled={paymentTooLow || isCardExpired}
+                    disabled={paymentTooLow || isCardExpired || disabled}
                     tooltipText={
                       paymentTooLow
                         ? `Payment amount must be at least ${minimumPayment}.`
@@ -168,13 +181,13 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
                   </Typography>
                   {Boolean(expiry) && (
                     <Typography className={classes.cardText}>
-                      Expires {expiry}
+                      Expires {formatExpiry(expiry)}
                     </Typography>
                   )}
                 </Grid>
                 <Grid item className={classes.cvvFieldWrapper}>
                   <TextField
-                    label="CVV (optional):"
+                    label="CVV (optional)"
                     small
                     onChange={handleCVVChange}
                     value={cvv}

@@ -4,7 +4,7 @@ import produce from 'immer';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { partition } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect, MapDispatchToProps, useDispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
@@ -18,8 +18,10 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
-import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable, {
+  EntityTableRow,
+  HeaderCell,
+} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
@@ -28,7 +30,7 @@ import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
-import { DeleteImagePayload } from 'src/store/image/image.actions';
+import { DeleteImagePayload, removeImage } from 'src/store/image/image.actions';
 import {
   deleteImage as _deleteImage,
   requestImages as _requestImages,
@@ -178,6 +180,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     defaultDialogState
   );
 
+  const dispatch = useDispatch();
+
   const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
   const dialogMessage =
     dialogAction === 'cancel'
@@ -244,6 +248,22 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
 
   const onCreateButtonClick = () => {
     props.history.push('/images/create');
+  };
+
+  const onRetryClick = (
+    imageId: string,
+    imageLabel: string,
+    imageDescription: string
+  ) => {
+    dispatch(removeImage(imageId));
+    props.history.push('/images/create/upload', {
+      imageLabel,
+      imageDescription,
+    });
+  };
+
+  const onCancelFailedClick = (imageId: string) => {
+    dispatch(removeImage(imageId));
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {
@@ -357,6 +377,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onDeploy: deployNewLinode,
     onEdit: openForEdit,
     onDelete: openDialog,
+    onRetry: onRetryClick,
+    onCancelFailed: onCancelFailedClick,
   };
 
   // @todo remove this check after Machine Images is in GA

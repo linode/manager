@@ -1,17 +1,17 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ConfigSelection } from './utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& td': {
       borderBottom: 'none',
@@ -43,12 +43,7 @@ export const Configs: React.FC<Props> = (props) => {
       }) => {
         return (
           <div>
-            <Table
-              isResponsive={false}
-              aria-label="List of Configurations"
-              border={false}
-              className={classes.root}
-            >
+            <Table aria-label="List of Configurations" className={classes.root}>
               <TableBody>
                 {paginatedData.length === 0 ? (
                   <TableRowEmptyState colSpan={1} />

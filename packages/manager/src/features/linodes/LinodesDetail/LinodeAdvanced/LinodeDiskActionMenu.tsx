@@ -1,18 +1,16 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, {
-  Action,
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import {
+  makeStyles,
   Theme,
   useMediaQuery,
   useTheme,
-  makeStyles,
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',

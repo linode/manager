@@ -6,8 +6,6 @@ import {
   getVisible,
 } from '../../support/helpers';
 import strings from '../../support/cypresshelpers';
-import { deleteAllTestStackscripts } from '../../support/api/stackscripts';
-import { deleteAllTestLinodes } from '../../support/api/linodes';
 
 const createLinode = () => {
   const password = strings.randomPass();
@@ -50,7 +48,5 @@ describe('stackscripts', () => {
       cy.visit(`/linodes/${linode.response?.body.id}/storage`);
       fbtVisible(linode.response?.body.label);
     });
-    deleteAllTestLinodes();
-    deleteAllTestStackscripts();
   });
 });

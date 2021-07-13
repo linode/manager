@@ -26,7 +26,6 @@ import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   header: {
     marginBottom: theme.spacing(1),
   },
@@ -255,7 +254,12 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
         mostRecentEventTime: props.mostRecentEventTime,
       },
     });
-  }, [props.eventsFromRedux, props.inProgressEvents]);
+  }, [
+    events.reactStateEvents,
+    props,
+    props.eventsFromRedux,
+    props.inProgressEvents,
+  ]);
 
   const { entitiesLoading, errorMessage, entityId, emptyMessage } = props;
   const isLoading = loading || entitiesLoading;

@@ -11,8 +11,9 @@ import {
 } from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import Notice from 'src/components/Notice';
-import Button from 'src/components/Button';
 import Tooltip from 'src/components/core/Tooltip';
+import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -43,6 +44,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '101.5%',
     },
   },
+  loading: {
+    padding: 4,
+  },
   disabled: {
     opacity: 0.3,
   },
@@ -61,14 +65,26 @@ interface Props {
   balance: false | number;
   setSuccess: SetSuccess;
   setError: (error: string) => void;
+  setProcessing: (processing: boolean) => void;
+  disabled: boolean;
 }
 
 export const GooglePayButton: React.FC<Props> = (props) => {
-  const status = useScript('https://pay.google.com/gp/p/js/pay.js');
-  const { data, error } = useClientToken();
   const classes = useStyles();
+  const status = useScript('https://pay.google.com/gp/p/js/pay.js');
+  const { data, isLoading, error: clientTokenError } = useClientToken();
+  const [initializationError, setInitializationError] = React.useState<boolean>(
+    false
+  );
 
-  const { transactionInfo, balance, setSuccess, setError } = props;
+  const {
+    transactionInfo,
+    balance,
+    disabled: disabledDueToProcessing,
+    setSuccess,
+    setError,
+    setProcessing,
+  } = props;
 
   /**
    * We're following API's validation logic:
@@ -76,33 +92,61 @@ export const GooglePayButton: React.FC<Props> = (props) => {
    * GPay min is $5, max of $2000.
    * If the customer has a balance over $2000, then the max is $50000
    */
-  const disabled =
+  const disabledDueToPrice =
     +transactionInfo.totalPrice < 5 ||
     (+transactionInfo.totalPrice > 2000 && balance < 2000) ||
     +transactionInfo.totalPrice > 50000;
 
   React.useEffect(() => {
-    if (status === 'ready' && data) {
-      initGooglePaymentInstance(data.client_token as string);
-    }
+    const init = async () => {
+      if (status === 'ready' && data) {
+        try {
+          await initGooglePaymentInstance(data.client_token as string);
+        } catch (error) {
+          // maybe log to Sentry or something
+          setInitializationError(true);
+        }
+      }
+    };
+    init();
   }, [status, data]);
 
-  const handlePay = () => {
-    gPay(
-      'one-time-payment',
-      transactionInfo,
-      (message: string, variant: VariantType) =>
-        variant === 'error' ? setError(message) : setSuccess(message)
-    );
+  const handleMessage = (message: string, variant: VariantType) => {
+    if (variant === 'error') {
+      setError(message);
+    } else if (variant === 'success') {
+      setSuccess(message, true);
+    }
   };
 
-  if (status === 'error' || error) {
-    return <Notice error text="There was an error loading Google Pay." />;
+  const handlePay = () => {
+    gPay('one-time-payment', transactionInfo, handleMessage, setProcessing);
+  };
+
+  if (status === 'error' || clientTokenError) {
+    return <Notice error text="Error loading Google Pay." />;
+  }
+
+  if (initializationError) {
+    return <Notice error text="Error initializing Google Pay." />;
+  }
+
+  if (isLoading) {
+    return (
+      <Grid
+        container
+        className={classes.loading}
+        justify="center"
+        alignContent="center"
+      >
+        <CircleProgress mini />
+      </Grid>
+    );
   }
 
   return (
     <div className={classes.root}>
-      {disabled && (
+      {disabledDueToPrice && (
         <Tooltip
           title={`Payment amount must be between $5 and ${
             balance > 2000 ? '$50000' : '$2000'
@@ -114,16 +158,16 @@ export const GooglePayButton: React.FC<Props> = (props) => {
           <div className={classes.mask} />
         </Tooltip>
       )}
-      <Button
+      <button
         className={classNames({
           [classes.button]: true,
-          [classes.disabled]: disabled,
+          [classes.disabled]: disabledDueToPrice || disabledDueToProcessing,
         })}
-        disabled={disabled}
+        disabled={disabledDueToPrice || disabledDueToProcessing}
         onClick={handlePay}
       >
         <GooglePayIcon />
-      </Button>
+      </button>
     </div>
   );
 };

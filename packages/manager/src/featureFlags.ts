@@ -37,6 +37,8 @@ export interface Flags {
   additionalPaymentMethods: AdditionalPaymentMethod[];
   imagesPricingBanner: ImagesPricingBanner;
   imagesPricingCopy: ImagesPricingCopy;
+  referralBannerText: ReferralBannerText;
+  referral: boolean;
 }
 
 type PromotionalOfferFeature =
@@ -100,4 +102,12 @@ export interface ImagesPricingBanner {
 export interface ImagesPricingCopy {
   captureImage: string;
   uploadImage: string;
+}
+
+interface ReferralBannerText {
+  text: string;
+  link?: {
+    text: string;
+    url: string;
+  };
 }

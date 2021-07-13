@@ -1,44 +1,43 @@
+import * as React from 'react';
 import {
   getInvoiceItems,
-  getInvoices,
-  getPayments,
   Invoice,
   InvoiceItem,
   Payment,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import { parseAPIDate } from 'src/utilities/date';
-import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Link from 'src/components/Link';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import InlineMenuAction from 'src/components/InlineMenuAction';
+import Link from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableContentWrapper from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
+import TableRow from 'src/components/TableRow';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useSet } from 'src/hooks/useSet';
-import { isAfter } from 'src/utilities/date';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { isAfter, parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
-import { getAll, getAllWithArguments } from 'src/utilities/getAll';
+import { getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import {
+  useAllAccountInvoices,
+  useAllAccountPayments,
+} from 'src/queries/accountBilling';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -173,11 +172,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   const flags = useFlags();
   const { account } = useAccount();
 
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<APIError[] | undefined>();
-  const [invoices, setInvoices] = React.useState<Invoice[]>([]);
-  const [payments, setPayments] = React.useState<Payment[]>([]);
-
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
@@ -191,42 +185,27 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     setSelectedTransactionDate,
   ] = React.useState<DateRange>(defaultDateRange);
 
-  const requestAllInvoicesAndPayments = React.useCallback(
-    (endDate?: string) => {
-      const filter = makeFilter(endDate);
-
-      setLoading(true);
-      setError(undefined);
-
-      Promise.all([getAllInvoices({}, filter), getAllPayments({}, filter)])
-        .then(([invoices, payments]) => {
-          setLoading(false);
-          setInvoices(invoices.data);
-          setPayments(payments.data);
-        })
-        .catch((_error) => {
-          setError(
-            getAPIErrorOrDefault(
-              _error,
-              'There was an error retrieving your billing activity.'
-            )
-          );
-          setLoading(false);
-        });
-    },
-    []
+  const {
+    data: payments,
+    isLoading: accountPaymentsLoading,
+    error: accountPaymentsError,
+  } = useAllAccountPayments(
+    {},
+    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
   );
 
-  // Request all invoices and payments when component mounts.
-  React.useEffect(() => {
-    const defaultDateCutoff = getCutoffFromDateRange(defaultDateRange);
-    requestAllInvoicesAndPayments(defaultDateCutoff);
-    // eslint-disable-next-line
-  }, []);
+  const {
+    data: invoices,
+    isLoading: accountInvoicesLoading,
+    error: accountInvoicesError,
+  } = useAllAccountInvoices(
+    {},
+    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
+  );
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
-      const invoice = invoices.find(
+      const invoice = invoices?.find(
         (thisInvoice) => thisInvoice.id === invoiceId
       );
 
@@ -267,7 +246,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
 
   const downloadPaymentPDF = React.useCallback(
     (paymentId: number) => {
-      const payment = payments.find(
+      const payment = payments?.find(
         (thisPayment) => thisPayment.id === paymentId
       );
 
@@ -305,39 +284,21 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     },
     [pdfErrors, pdfLoading]
   );
+
   const handleTransactionDateChange = React.useCallback(
     (item: Item<DateRange>) => {
       setSelectedTransactionDate(item.value);
       pdfErrors.clear();
       pdfLoading.clear();
-
-      const earliestInvoiceDate =
-        invoices[invoices.length - 1]?.date ||
-        DateTime.utc().toFormat(ISO_DATETIME_NO_TZ_FORMAT);
-      const earliestPaymentDate =
-        payments[payments.length - 1]?.date ||
-        DateTime.utc().toFormat(ISO_DATETIME_NO_TZ_FORMAT);
-      const dateCutoff = getCutoffFromDateRange(item.value);
-
-      // If the data we already have falls within the selected date range,
-      // no need to request more data.
-      if (
-        isAfter(dateCutoff, earliestInvoiceDate) &&
-        isAfter(dateCutoff, earliestPaymentDate)
-      ) {
-        return;
-      }
-
-      requestAllInvoicesAndPayments(dateCutoff);
     },
-    [requestAllInvoicesAndPayments, invoices, payments, pdfErrors, pdfLoading]
+    [pdfErrors, pdfLoading]
   );
 
   // Combine Invoices and Payments
   const combinedData = React.useMemo(
     () => [
-      ...invoices.map(invoiceToActivityFeedItem),
-      ...payments.map(paymentToActivityFeedItem),
+      ...(invoices?.map(invoiceToActivityFeedItem) ?? []),
+      ...(payments?.map(paymentToActivityFeedItem) ?? []),
     ],
     [invoices, payments]
   );
@@ -357,6 +318,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       return matchesType && matchesDate;
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
+
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
@@ -441,8 +403,19 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                     <TableBody>
                       <TableContentWrapper
                         length={paginatedAndOrderedData.length}
-                        loading={loading}
-                        error={error}
+                        loading={
+                          accountPaymentsLoading || accountInvoicesLoading
+                        }
+                        error={
+                          accountPaymentsError || accountInvoicesError
+                            ? [
+                                {
+                                  reason:
+                                    'There was an error retrieving your billing activity.',
+                                },
+                              ]
+                            : undefined
+                        }
                       >
                         {paginatedAndOrderedData.map((thisItem) => {
                           return (
@@ -483,8 +456,10 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             classes.dateColumn,
             classes.totalColumn,
             classes.pdfDownloadColumn,
-            loading,
-            error,
+            accountPaymentsLoading,
+            accountInvoicesLoading,
+            accountPaymentsError,
+            accountInvoicesError,
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,
@@ -519,10 +494,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading,
     } = props;
-    const rowProps = { rowLink: '' };
-    if (type === 'invoice' && !isLoading) {
-      rowProps.rowLink = `/account/billing/invoices/${id}`;
-    }
 
     const handleClick = React.useCallback(
       (e: React.MouseEvent) => {
@@ -540,7 +511,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
     };
 
     return (
-      <TableRow {...rowProps} data-testid={`${type}-${id}`}>
+      <TableRow data-testid={`${type}-${id}`}>
         <TableCell>
           {type === 'invoice' ? (
             <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
@@ -570,8 +541,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
 // =============================================================================
 // Utilities
 // =============================================================================
-const getAllInvoices = getAll<Invoice>(getInvoices);
-const getAllPayments = getAll<Payment>(getPayments);
 const getAllInvoiceItems = getAllWithArguments<InvoiceItem>(getInvoiceItems);
 
 export const invoiceToActivityFeedItem = (
