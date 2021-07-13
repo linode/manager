@@ -237,7 +237,7 @@ export interface CreditCardFormProps extends NumberFormatProps {
 type CombinedCreditCardFormProps = CreditCardFormProps &
   InputBaseComponentProps;
 
-const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
+export const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
   inputRef,
   onChange,
   ...other

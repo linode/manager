@@ -1,3 +1,4 @@
+import { PaymentMethod } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -10,6 +11,7 @@ import AddCreditCardForm from './AddCreditCardForm';
 interface Props {
   open: boolean;
   onClose: () => void;
+  paymentMethods: PaymentMethod[] | undefined;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -20,8 +22,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
-  const { onClose, open } = props;
+  const { onClose, open, paymentMethods } = props;
   const classes = useStyles();
+
+  const numberOfCreditCards = paymentMethods?.filter(
+    (method: PaymentMethod) => method.type === 'credit_card'
+  ).length;
 
   return (
     <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
@@ -43,11 +49,15 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      <Divider spacingBottom={12} />
-      <Grid>
-        <Typography variant="h3">Credit Card</Typography>
-        <AddCreditCardForm onClose={onClose} />
-      </Grid>
+      {numberOfCreditCards !== undefined && numberOfCreditCards < 1 ? (
+        <>
+          <Divider spacingBottom={12} />
+          <Grid>
+            <Typography variant="h3">Credit Card</Typography>
+            <AddCreditCardForm onClose={onClose} />
+          </Grid>
+        </>
+      ) : null}
     </Drawer>
   );
 };

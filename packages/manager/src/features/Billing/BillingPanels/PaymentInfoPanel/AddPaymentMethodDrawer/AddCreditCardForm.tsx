@@ -5,15 +5,12 @@ import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
-import countryData from 'country-region-data';
-import { Country } from '../../ContactInfoPanel/UpdateContactInformationForm/types';
 import { addPaymentMethod } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
-import CheckBox from 'src/components/CheckBox';
+import { creditCardField } from '../UpdateCreditCardDrawer/UpdateCreditCardDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actions: {
@@ -44,7 +41,7 @@ interface Values {
 
 const keyMap = {
   expiry_month: 'expiry',
-  exity_year: 'expiry',
+  expiry_year: 'expiry',
 };
 
 const AddCreditCardForm = (props: Props) => {
@@ -81,7 +78,7 @@ const AddCreditCardForm = (props: Props) => {
       enqueueSnackbar('Successfully added Credit Card', {
         variant: 'success',
       });
-      await queryClient.refetchQueries(['account-payment-methods-all']);
+      queryClient.invalidateQueries('account-payment-methods-all');
       onClose();
     } catch (errors) {
       errors.forEach((error: APIError) => {
@@ -101,12 +98,12 @@ const AddCreditCardForm = (props: Props) => {
     setSubmitting(false);
   };
 
-  const countryResults: Item<string>[] = countryData.map((country: Country) => {
-    return {
-      value: country.countryShortCode,
-      label: country.countryName,
-    };
-  });
+  // const countryResults: Item<string>[] = countryData.map((country: Country) => {
+  //   return {
+  //     value: country.countryShortCode,
+  //     label: country.countryName,
+  //   };
+  // });
 
   const {
     values,
@@ -120,7 +117,7 @@ const AddCreditCardForm = (props: Props) => {
       card_number: '',
       expiry: '',
       cvv: '',
-      is_default: false,
+      is_default: true,
       address: '',
       address2: '',
       city: '',
@@ -143,10 +140,13 @@ const AddCreditCardForm = (props: Props) => {
           <TextField
             name="card_number"
             value={values.card_number}
-            onChange={handleChange}
+            onChange={(e) => setFieldValue('card_number', e.target.value)}
             label="Credit Card Number"
             error={Boolean(errors.card_number)}
             errorText={errors.card_number}
+            InputProps={{
+              inputComponent: creditCardField,
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -170,7 +170,7 @@ const AddCreditCardForm = (props: Props) => {
             errorText={errors.cvv}
           />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <TextField
             name="address"
             value={values.address}
@@ -242,7 +242,8 @@ const AddCreditCardForm = (props: Props) => {
         text="Make default?"
         checked={values.is_default}
         onChange={() => setFieldValue('is_default', !values.is_default)}
-      />
+      /> */}
+      </Grid>
       <ActionsPanel className={classes.actions}>
         <Button onClick={onClose} buttonType="secondary">
           Cancel

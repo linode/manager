@@ -147,7 +147,11 @@ const PaymentInformation: React.FC<Props> = (props) => {
           open={editDrawerOpen}
           onClose={closeEditDrawer}
         />
-        <AddPaymentMethodDrawer open={addDrawerOpen} onClose={closeAddDrawer} />
+        <AddPaymentMethodDrawer
+          open={addDrawerOpen}
+          onClose={closeAddDrawer}
+          paymentMethods={paymentMethods}
+        />
       </Paper>
     </Grid>
   );
