@@ -177,6 +177,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                 onChange={handleChange}
                 value={values.label}
                 disabled={isRestrictedUser}
+                data-testid="label"
               />
 
               <ClusterSelect

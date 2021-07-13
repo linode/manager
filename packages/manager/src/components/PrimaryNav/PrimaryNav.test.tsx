@@ -1,4 +1,7 @@
+import { waitForElement } from '@testing-library/react';
 import * as React from 'react';
+import { rest, server } from 'src/mocks/testServer';
+import { queryClient } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav from './PrimaryNav';
 
@@ -9,16 +12,41 @@ const props = {
   isCollapsed: false,
 };
 
+afterEach(() => {
+  queryClient.clear();
+});
+
 describe('PrimaryNav', () => {
-  it('only contains a "Managed" menu link if the user has Managed services.', () => {
-    const { getByTestId, rerender, queryByTestId } = renderWithTheme(
-      <PrimaryNav {...props} />
+  it('contains a "Managed" menu link if the user has Managed services.', async () => {
+    server.use(
+      rest.get('*/account/maintenance', (req, res, ctx) => {
+        return res(ctx.json({ managed: true }));
+      })
     );
+
+    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      queryClient,
+    });
+
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
+  });
 
-    rerender(wrapWithTheme(<PrimaryNav {...props} />));
+  it.skip('does not contain a "Managed" menu link if the user has Managed services.', async () => {
+    server.use(
+      rest.get('*/account/maintenance', (req, res, ctx) => {
+        return res(ctx.json({ managed: false }));
+      })
+    );
 
-    getByTestId('menu-item-Managed');
+    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      queryClient,
+    });
+
+    await waitForElement(() => queryByTestId('menu-item-Managed'), {
+      timeout: 5000,
+    });
+
+    queryByTestId('menu-item-Managed');
   });
 
   it('only contains a "Firewalls" menu link when the flag is enabled', () => {

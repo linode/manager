@@ -1,10 +1,11 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { buckets } from 'src/__data__/buckets';
 import { CreateBucketForm, isDuplicateBucket } from './CreateBucketForm';
+import { screen } from '@testing-library/react';
 
 describe('CreateBucketForm', () => {
-  const wrapper = shallow(
+  renderWithTheme(
     <CreateBucketForm
       onClose={jest.fn()}
       onSuccess={jest.fn()}
@@ -19,14 +20,7 @@ describe('CreateBucketForm', () => {
   );
 
   it('should render without crashing', () => {
-    expect(wrapper).toHaveLength(1);
-  });
-
-  it('initializes form with blank values', () => {
-    expect(wrapper.find('Formik').prop('initialValues')).toEqual({
-      label: '',
-      cluster: '',
-    });
+    screen.getByTestId('label');
   });
 });
 

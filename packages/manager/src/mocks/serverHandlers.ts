@@ -538,7 +538,11 @@ export const handlers = [
     return res(ctx.json({}));
   }),
   rest.put('*/account/settings/*', (req, res, ctx) => {
-    return res(ctx.json({}));
+    return res(
+      ctx.json({
+        managed: false,
+      })
+    );
   }),
   rest.get('*/tags', (req, res, ctx) => {
     tagFactory.resetSequenceNumber();
