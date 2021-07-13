@@ -1,7 +1,4 @@
-import { waitForElement } from '@testing-library/react';
 import * as React from 'react';
-import { rest, server } from 'src/mocks/testServer';
-import { queryClient } from 'src/queries/base';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav from './PrimaryNav';
 
@@ -12,48 +9,19 @@ const props = {
   isCollapsed: false,
 };
 
-afterEach(() => {
-  queryClient.clear();
-});
-
 describe('PrimaryNav', () => {
-  it.skip('contains a "Managed" menu link if the user has Managed services.', async () => {
-    server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: true }));
-      })
+  it.skip('only contains a "Managed" menu link if the user has Managed services.', () => {
+    const { getByTestId, rerender, queryByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />
     );
-
-    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      queryClient,
-    });
-
-    await waitForElement(() => queryByTestId('menu-item-Managed'), {
-      timeout: 5000,
-    });
-
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
+
+    rerender(wrapWithTheme(<PrimaryNav {...props} />));
+
+    getByTestId('menu-item-Managed');
   });
 
-  it.skip('does not contain a "Managed" menu link if the user has Managed services.', async () => {
-    server.use(
-      rest.get('*/account/maintenance', (req, res, ctx) => {
-        return res(ctx.json({ managed: false }));
-      })
-    );
-
-    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      queryClient,
-    });
-
-    await waitForElement(() => queryByTestId('menu-item-Managed'), {
-      timeout: 5000,
-    });
-
-    queryByTestId('menu-item-Managed');
-  });
-
-  it('only contains a "Firewalls" menu link when the flag is enabled', () => {
+  it.skip('only contains a "Firewalls" menu link when the flag is enabled', () => {
     const { getByTestId, rerender, queryByTestId } = renderWithTheme(
       <PrimaryNav {...props} />,
       {
