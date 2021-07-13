@@ -6,11 +6,6 @@ const errors = [
     input: 'volume ID 3005 is referenced more than once',
     expected: 'volume-3005',
   },
-  { input: 'disk ID 4005 is referenced more than once', expected: 'disk-4005' },
-  {
-    input: 'volume ID 5005 is referenced more than once',
-    expected: 'volume-5005',
-  },
   { input: 'is referenced more than once', expected: null },
 ];
 

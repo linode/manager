@@ -88,8 +88,8 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
               isClearable={false}
               label={`/dev/${slot}`}
               errorText={
-                selectedDevice?.value === diskOrVolumeInErrReason
-                  ? adjustedErrorText(errorText!, selectedDevice.label)
+                selectedDevice?.value === diskOrVolumeInErrReason && errorText
+                  ? adjustedErrorText(errorText, selectedDevice.label)
                   : undefined
               }
               noMarginTop
@@ -125,17 +125,12 @@ export const extractDiskOrVolumeId = (errorText: string) => {
 
   const blockDeviceRegexMatch = errorText.match(blockDeviceRegex)?.[0];
 
-  if (!blockDeviceRegexMatch) {
-    return null;
-  }
-
-  return `${type}-${Number(blockDeviceRegexMatch)}`; // return a string structured in a way that it is easily compared to selectedDevice.value
+  // if there's a match, return a string structured in a way that it is easily compared to selectedDevice.value
+  return blockDeviceRegexMatch
+    ? `${type}-${Number(blockDeviceRegexMatch)}`
+    : null;
 };
 
 export const adjustedErrorText = (errorText: string, deviceLabel?: string) => {
-  if (!deviceLabel) {
-    return errorText;
-  }
-
-  return `${deviceLabel} is already in use.`;
+  return deviceLabel ? `${deviceLabel} is already in use.` : errorText;
 };
