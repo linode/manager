@@ -198,3 +198,11 @@ export const addPaymentMethod = (data: PaymentMethodData) => {
     setData(data, PaymentMethodSchema)
   );
 };
+
+export const editPaymentMethod = (id: number, data: any) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/account/payment-methods/${id}`),
+    setMethod('PUT'),
+    setData(data)
+  );
+};
