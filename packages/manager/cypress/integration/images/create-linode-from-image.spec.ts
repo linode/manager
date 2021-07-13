@@ -12,6 +12,9 @@ describe('create linode from image', () => {
     cy.intercept('*/images*', (req) => {
       req.reply(mockImage(imageLabel));
     }).as('mockImage');
+    cy.intercept('POST', '*/linode/instances*', (req) => {
+      req.reply(mockImage(imageLabel));
+    }).as('mockLinode');
     cy.visitWithLogin('/linodes/create?type=Images');
     cy.wait('@mockImage');
 
