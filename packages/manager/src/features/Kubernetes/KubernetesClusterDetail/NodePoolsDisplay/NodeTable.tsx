@@ -11,7 +11,7 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import StatusIndicator from 'src/components/StatusIndicator';
+import StatusIcon from 'src/components/StatusIcon';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
@@ -195,9 +195,11 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
 
   const recentEvent = useRecentEventForLinode(instanceId ?? -1);
 
-  const rowLink = instanceId ? `/linodes/${instanceId}` : undefined;
-  const statusIndicator =
-    nodeStatus === 'ready' && instanceStatus === 'running' ? 'active' : 'other';
+  const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
+  const iconStatus =
+    nodeStatus === 'ready' && instanceStatus === 'running'
+      ? 'active'
+      : 'inactive';
   const displayLabel = label ?? typeLabel;
   const displayStatus =
     nodeStatus === 'not_ready'
@@ -211,12 +213,9 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
-            <StatusIndicator status={statusIndicator} />
-          </Grid>
-          <Grid item>
-            <Typography variant="h3">
-              {rowLink ? (
-                <Link to={rowLink}>{displayLabel}</Link>
+            <Typography>
+              {linodeLink ? (
+                <Link to={linodeLink}>{displayLabel}</Link>
               ) : (
                 displayLabel
               )}
@@ -230,7 +229,12 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
             Error retrieving status
           </Typography>
         ) : (
-          displayStatus
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item>
+              <StatusIcon status={iconStatus} />
+            </Grid>
+            <Grid item>{displayStatus}</Grid>
+          </Grid>
         )}
       </TableCell>
       <TableCell>
@@ -268,6 +272,7 @@ export const nodeToRow = (
 
   return {
     nodeId: node.id,
+    instanceId: node.instance_id || undefined,
     label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0],
