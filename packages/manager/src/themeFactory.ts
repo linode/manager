@@ -1331,10 +1331,8 @@ const themeDefaults: ThemeDefaults = () => {
         },
         head: {
           fontSize: '.9rem',
+          height: 46,
           lineHeight: 1.1,
-          '&.emptyCell': {
-            height: 48,
-          },
         },
         body: {
           fontSize: '.9rem',

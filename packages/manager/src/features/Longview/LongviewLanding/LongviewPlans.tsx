@@ -35,43 +35,26 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const border = `1px solid ${theme.bg.main}`;
-
   return {
     root: {
       padding: theme.spacing(3),
       paddingBottom: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      // These values represent the table size with 5 elements in compact
-      // and normal mode. It's brittle, I know, but I'm not sure of another way.
-      minHeight: 419,
     },
     collapsedTable: {
       minHeight: 0,
     },
     table: {
-      borderTop: border,
-      borderRight: border,
-      borderLeft: border,
+      border: `1px solid ${theme.cmrBorderColors.borderTable}`,
       '& td': {
         whiteSpace: 'nowrap',
-        borderBottom: border,
       },
       '& tbody tr': {
         cursor: 'pointer',
       },
-      '& th, thead > tr:first-child:before': {
-        borderBottom: border,
-      },
-      '& tr:before': {
-        borderBottom: border,
-      },
     },
     radio: {
-      marginLeft: -(theme.spacing(1) / 2),
-      marginRight: theme.spacing(2) - 1,
+      marginLeft: -theme.spacing(0.5),
+      marginRight: theme.spacing(2),
       padding: 2,
     },
     currentSubscriptionLabel: {
@@ -84,15 +67,12 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     chip: {
-      backgroundColor: theme.color.green,
-      color: '#fff',
-      textTransform: 'uppercase',
-      minHeight: theme.spacing(2) + 11,
+      borderRadius: 1,
+      fontSize: '0.65rem',
+      marginLeft: theme.spacing(2),
       paddingLeft: theme.spacing(0.5),
       paddingRight: theme.spacing(0.5),
-      marginTop: 0,
-      marginBottom: 0,
-      marginLeft: theme.spacing(2),
+      textTransform: 'uppercase',
     },
     planCell: {
       [theme.breakpoints.up('md')]: {
@@ -120,9 +100,8 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     submitButton: {
-      alignSelf: 'flex-start',
-      marginTop: theme.spacing(4) - 2,
-      marginBottom: theme.spacing(4) - 2,
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
     },
     disabledTableRow: {
       cursor: 'not-allowed !important',
@@ -308,11 +287,11 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
               </TableBody>
             </Table>
             <Button
-              className={styles.submitButton}
               buttonType="primary"
               onClick={onSubmit}
-              loading={updateLoading}
+              className={styles.submitButton}
               disabled={isButtonDisabled}
+              loading={updateLoading}
               data-testid="submit-button"
             >
               Change Plan
