@@ -19,7 +19,7 @@ export const usePaymentMethodsQuery = (params: any = {}, filter: any = {}) => {
 
 export const useAllPaymentMethodsQuery = () => {
   return useQuery<PaymentMethod[], APIError[]>(
-    [queryKey + '-all'],
+    queryKey + '-all',
     getAllPaymentMethodsRequest,
     {
       ...queryPresets.oneTimeFetch,
