@@ -6,7 +6,6 @@ import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { addPaymentMethod } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
@@ -16,6 +15,7 @@ import {
 } from '../UpdateCreditCardDrawer/UpdateCreditCardDrawer';
 import { CreditCardSchema } from '@linode/validation';
 import { take } from 'ramda';
+import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actions: {
@@ -84,22 +84,7 @@ const AddCreditCardForm = (props: Props) => {
       queryClient.invalidateQueries('account-payment-methods-all');
       onClose();
     } catch (errors) {
-      errors.forEach((error: APIError) => {
-        if (error.field) {
-          /**
-           * The line below gets the field name because the API returns something like this...
-           * {"errors": [{"reason": "Invalid credit card number", "field": "data.card_number"}]}
-           * It takes 'data.card_number' and translates it to 'card_number'
-           */
-          const key = error.field.split('.')[error.field.split('.').length - 1];
-          if (key) {
-            setFieldError(key, error.reason);
-          }
-        } else {
-          // Put any general API errors into a <Notice />
-          setError(error.reason);
-        }
-      });
+      handleAPIErrors(errors, setFieldError, setError);
     }
 
     setSubmitting(false);

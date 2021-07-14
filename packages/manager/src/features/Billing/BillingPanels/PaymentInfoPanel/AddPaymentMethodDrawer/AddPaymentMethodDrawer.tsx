@@ -86,14 +86,12 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           />
         </Grid>
       </Grid>
-      {numberOfCreditCards !== undefined && numberOfCreditCards < 1 ? (
-        <>
+      {numberOfCreditCards === 0 ? (
+        <React.Fragment>
           <Divider spacingBottom={16} spacingTop={16} />
-          <Grid>
-            <Typography variant="h3">Credit Card</Typography>
-            <AddCreditCardForm onClose={onClose} />
-          </Grid>
-        </>
+          <Typography variant="h3">Credit Card</Typography>
+          <AddCreditCardForm onClose={onClose} />
+        </React.Fragment>
       ) : null}
     </Drawer>
   );
