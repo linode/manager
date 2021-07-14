@@ -25,6 +25,10 @@ import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinod
 import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  table: {
+    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+  },
   labelCell: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
@@ -80,7 +84,10 @@ export const NodeTable: React.FC<Props> = (props) => {
             pageSize,
           }) => (
             <>
-              <Table aria-label="List of Your Cluster Nodes">
+              <Table
+                aria-label="List of Your Cluster Nodes"
+                className={classes.table}
+              >
                 <TableHead>
                   <TableRow>
                     <TableSortCell
