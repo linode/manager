@@ -764,6 +764,52 @@ const themeDefaults: ThemeDefaults = () => {
       },
       MuiAccordion: {
         root: {
+          flexBasis: '100%',
+          width: '100%',
+          '& .MuiAccordionSummary-root': {
+            justifyContent: 'space-between',
+            backgroundColor: 'transparent',
+            borderTop: `1px solid ${cmrBorderColors.borderTable}`,
+            paddingRight: 2,
+            paddingLeft: 16,
+            '& h3': {
+              color: primaryColors.text,
+            },
+            '&:hover': {
+              '& h3': {
+                color: primaryColors.light,
+              },
+              '& svg': {
+                fill: '#2575d0',
+                stroke: '#2575d0',
+              },
+            },
+            // Remove focus styles for mouse users
+            '&:focus:not(:focus-visible)': {
+              outline: 'none',
+            },
+          },
+          '& .MuiAccordionSummary-content': {
+            alignItems: 'center',
+            order: 1,
+          },
+          '& .MuiAccordionSummary-expandIcon': {
+            order: 2,
+            '& svg': {
+              fill: '#2575d0',
+              stroke: '#2575d0',
+            },
+          },
+          '&.Mui-expanded': {
+            margin: '16px 0',
+            '& .caret': {
+              transform: 'rotate(0deg)',
+            },
+          },
+          '& .MuiAccordionDetails-root': {
+            padding: 16,
+            paddingTop: 0,
+          },
           '& .actionPanel': {
             paddingLeft: 16,
             paddingRight: 16,

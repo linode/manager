@@ -17,12 +17,12 @@ import {
   formatMemory,
 } from 'src/features/Longview/shared/formatters';
 import { statMax } from 'src/features/Longview/shared/utilities';
-import useFlags from 'src/hooks/useFlags';
 import {
   convertBytesToTarget,
   readableBytes,
 } from 'src/utilities/unitConversions';
 import { Process } from './types';
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1) + 2,
@@ -54,7 +54,6 @@ type CombinedProps = Props & WithTheme;
 
 const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     error,
@@ -111,7 +110,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Typography variant="h2" className={flags.cmr ? classes.cmrSpacing : ''}>
+      <Typography variant="h2" className={classes.cmrSpacing}>
         Process History{name && `: ${name}`}
       </Typography>
       <Paper className={classes.root}>

@@ -20,12 +20,10 @@ import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import TransferDisplay from 'src/components/TransferDisplay';
 import withBackupCta, {
   BackupCTAProps,
 } from 'src/containers/withBackupCTA.container';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
@@ -55,7 +53,6 @@ import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
-import TransferDisplay from 'src/components/TransferDisplay';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 interface State {
@@ -98,8 +95,7 @@ type CombinedProps = Props &
   StyleProps &
   SetDocsProps &
   WithSnackbarProps &
-  BackupCTAProps &
-  FeatureFlagConsumerProps;
+  BackupCTAProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -317,10 +313,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             userProfileLoading={this.props.userProfileLoading}
           />
         )}
-        <Grid
-          container
-          className={this.props.flags.cmr ? classes.cmrSpacing : ''}
-        >
+        <Grid container className={classes.cmrSpacing}>
           <Grid item xs={12}>
             <DocumentTitleSegment segment="Linodes" />
             <PreferenceToggle<boolean>
@@ -506,9 +499,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   filename={`linodes-${formatDate(
                                     DateTime.local().toISO()
                                   )}.csv`}
-                                  className={`${classes.CSVlink} ${
-                                    this.props.flags.cmr && classes.cmrCSVlink
-                                  }`}
+                                  className={classes.CSVlink}
                                 >
                                   Download CSV
                                 </CSVLink>
@@ -602,8 +593,7 @@ export const enhanced = compose<CombinedProps, Props>(
   connected,
   withImages(),
   withBackupCta,
-  styled,
-  withFeatureFlagConsumer
+  styled
 );
 
 export default enhanced(ListLinodes);
