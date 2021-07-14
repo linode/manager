@@ -63,7 +63,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
       <Divider />
       <Grid className={classes.root} container>
-        <Grid item direction="column" xs={8} md={9}>
+        <Grid item xs={8} md={9}>
           <Typography variant="h3">Google Pay</Typography>
           <Typography>
             You&apos;ll be taken to Google Pay to complete sign up.

@@ -14,6 +14,8 @@ import {
   CreditCardAddressMessage,
   creditCardField,
 } from '../UpdateCreditCardDrawer/UpdateCreditCardDrawer';
+import { CreditCardSchema } from '@linode/validation';
+import { take } from 'ramda';
 
 const useStyles = makeStyles((theme: Theme) => ({
   actions: {
@@ -21,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end',
   },
   error: {
+    marginTop: theme.spacing(2),
+  },
+  notice: {
     marginTop: theme.spacing(2),
   },
 }));
@@ -31,7 +36,8 @@ interface Props {
 
 interface Values {
   card_number: string;
-  expiry: string;
+  expiry_month: string;
+  expiry_year: string;
   cvv: string;
   is_default: boolean;
   address: string;
@@ -42,11 +48,6 @@ interface Values {
   country: string;
 }
 
-const keyMap = {
-  expiry_month: 'expiry',
-  expiry_year: 'expiry',
-};
-
 const AddCreditCardForm = (props: Props) => {
   const [error, setError] = React.useState<string>();
   const { onClose } = props;
@@ -54,7 +55,7 @@ const AddCreditCardForm = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const addCreditCard = async (
-    { card_number, cvv, expiry, is_default }: Values,
+    { card_number, cvv, expiry_month, expiry_year, is_default }: Values,
     {
       setSubmitting,
       setFieldError,
@@ -65,7 +66,6 @@ const AddCreditCardForm = (props: Props) => {
   ) => {
     setError(undefined);
     setSubmitting(true);
-    const expireData = expiry.split('/');
 
     try {
       await addPaymentMethod({
@@ -74,8 +74,8 @@ const AddCreditCardForm = (props: Props) => {
         data: {
           card_number,
           cvv,
-          expiry_month: Number(expireData[0]),
-          expiry_year: Number('20' + expireData[1]),
+          expiry_month: Number(expiry_month),
+          expiry_year: Number(expiry_year),
         },
       });
       enqueueSnackbar('Successfully added Credit Card', {
@@ -86,13 +86,17 @@ const AddCreditCardForm = (props: Props) => {
     } catch (errors) {
       errors.forEach((error: APIError) => {
         if (error.field) {
-          const key = error.field?.split('.')[
-            error.field.split('.').length - 1
-          ];
+          /**
+           * The line below gets the field name because the API returns something like this...
+           * {"errors": [{"reason": "Invalid credit card number", "field": "data.card_number"}]}
+           * It takes 'data.card_number' and translates it to 'card_number'
+           */
+          const key = error.field.split('.')[error.field.split('.').length - 1];
           if (key) {
-            setFieldError(keyMap[key] || key, error.reason);
+            setFieldError(key, error.reason);
           }
         } else {
+          // Put any general API errors into a <Notice />
           setError(error.reason);
         }
       });
@@ -111,6 +115,7 @@ const AddCreditCardForm = (props: Props) => {
   const {
     values,
     errors,
+    touched,
     isSubmitting,
     handleChange,
     handleSubmit,
@@ -118,7 +123,8 @@ const AddCreditCardForm = (props: Props) => {
   } = useFormik({
     initialValues: {
       card_number: '',
-      expiry: '',
+      expiry_month: '',
+      expiry_year: '',
       cvv: '',
       is_default: true,
       address: '',
@@ -129,6 +135,7 @@ const AddCreditCardForm = (props: Props) => {
       country: '',
     },
     onSubmit: addCreditCard,
+    validationSchema: CreditCardSchema,
   });
 
   return (
@@ -145,8 +152,8 @@ const AddCreditCardForm = (props: Props) => {
             value={values.card_number}
             onChange={(e) => setFieldValue('card_number', e.target.value)}
             label="Credit Card Number"
-            error={Boolean(errors.card_number)}
-            errorText={errors.card_number}
+            error={touched.card_number && Boolean(errors.card_number)}
+            errorText={touched.card_number ? errors.card_number : undefined}
             disabled={isSubmitting}
             InputProps={{
               inputComponent: creditCardField,
@@ -156,12 +163,28 @@ const AddCreditCardForm = (props: Props) => {
         <Grid item xs={12} sm={6}>
           <TextField
             name="expiry"
-            value={values.expiry}
-            onChange={handleChange}
+            // value={values.expiry}
+            onChange={(e) => {
+              const value: string[] = e.target.value.split('/');
+              setFieldValue('expiry_month', value[0]);
+              setFieldValue(
+                'expiry_year',
+                value[1]
+                  ? take(2, String(new Date().getFullYear())) + value[1]
+                  : undefined
+              );
+            }}
             label="Expiration Date"
             placeholder="MM/YY"
-            error={Boolean(errors.expiry)}
-            errorText={errors.expiry}
+            error={
+              (touched.expiry_month || touched.expiry_year) &&
+              Boolean(errors.expiry_month || errors.expiry_year)
+            }
+            errorText={
+              touched.expiry_month || touched.expiry_year
+                ? errors.expiry_month || errors.expiry_year
+                : undefined
+            }
             disabled={isSubmitting}
           />
         </Grid>
@@ -171,8 +194,8 @@ const AddCreditCardForm = (props: Props) => {
             value={values.cvv}
             onChange={handleChange}
             label="Security Code"
-            error={Boolean(errors.cvv)}
-            errorText={errors.cvv}
+            error={touched.cvv && Boolean(errors.cvv)}
+            errorText={touched.cvv ? errors.cvv : undefined}
             disabled={isSubmitting}
           />
         </Grid>
@@ -249,8 +272,10 @@ const AddCreditCardForm = (props: Props) => {
         checked={values.is_default}
         onChange={() => setFieldValue('is_default', !values.is_default)}
       /> */}
-        <CreditCardAddressMessage />
       </Grid>
+      <div className={classes.notice}>
+        <CreditCardAddressMessage />
+      </div>
       <ActionsPanel className={classes.actions}>
         <Button onClick={onClose} buttonType="secondary">
           Cancel

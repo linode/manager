@@ -56,10 +56,12 @@ export const CreditCardSchema = object({
     .max(23, 'Credit card number must be between 13 and 23 characters.'),
   expiry_year: number()
     .required('Expiration year is required.')
+    .typeError('Expiration year must be a number.')
     .min(new Date().getFullYear(), 'Expiration year must not be in the past.')
     .max(new Date().getFullYear() + 20, 'Expiry too far in the future.'),
   expiry_month: number()
     .required('Expiration month is required.')
+    .typeError('Expiration month must be a number.')
     .min(1, 'Expiration month must be a number from 1 to 12.')
     .max(12, 'Expiration month must be a number from 1 to 12.'),
   cvv: string()
