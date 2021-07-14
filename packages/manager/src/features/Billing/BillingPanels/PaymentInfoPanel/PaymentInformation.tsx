@@ -66,9 +66,9 @@ const PaymentInformation: React.FC<Props> = (props) => {
   const flags = useFlags();
   const { replace } = useHistory();
 
-  const addPaymentMethodRouteMatch = Boolean(
-    useRouteMatch('/account/billing/add-payment-method')
-  );
+  const drawerLink = '/account/billing/add-payment-method';
+
+  const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
   const openAddDrawer = React.useCallback(() => setAddDrawerOpen(true), []);
 
@@ -109,7 +109,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
           {isGooglePayEnabled ? (
             <Button
               className={classes.edit}
-              onClick={() => replace('/account/billing/add-payment-method')}
+              onClick={() => replace(drawerLink)}
             >
               Add Payment Method
             </Button>
@@ -149,10 +149,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
             <GooglePay width={16} height={16} />
             <Typography className={classes.googlePayNotice}>
               Google Pay is now available for recurring payments.{' '}
-              <Link
-                to="#"
-                onClick={() => replace('/account/billing/add-payment-method')}
-              >
+              <Link to="#" onClick={() => replace(drawerLink)}>
                 Add Google Pay
               </Link>
             </Typography>
