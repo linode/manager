@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   error: {
     color: theme.color.red,
   },
+  statusIconAndText: {
+    whiteSpace: 'nowrap',
+  },
 }));
 
 // =============================================================================
@@ -229,11 +232,11 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
             Error retrieving status
           </Typography>
         ) : (
-          <Grid container wrap="nowrap" alignItems="center">
-            <Grid item>
+          <Grid container alignItems="center">
+            <Grid item className={classes.statusIconAndText}>
               <StatusIcon status={iconStatus} />
+              {displayStatus}
             </Grid>
-            <Grid item>{displayStatus}</Grid>
           </Grid>
         )}
       </TableCell>
