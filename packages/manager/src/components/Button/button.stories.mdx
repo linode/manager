@@ -5,15 +5,38 @@ import Button from 'src/components/Button';
   title="UI Elements/Button"
   component={Button}
   argTypes={{
+    buttonType: {
+      description: 'The variant to use.',
+      <!-- Keeping this as an example for labelling a prop as required: -->
+      <!-- type: { required: true }, -->
+    },
     compact: {
-      description: 'test desc',
+      description: 'Insert description here.',
+      table: { defaultValue: { summary: false } },
+    },
+    disabled: {
+      table: { defaultValue: { summary: false } },
+    },
+    disableRipple: {
+      table: { defaultValue: { summary: false } },
+    },
+    fullWidth: {
+      table: { defaultValue: { summary: false } },
+    },
+    loading: {
+      description: 'Insert description here.',
+      table: { defaultValue: { summary: false } },
+    },
+    tooltipText: {
+      description: 'Insert description here.',
+      table: { defaultValue: { summary: false } },
     },
   }}
 />
 
 # Button
 
-With `MDX`, we can define a story for `Button` right in the middle of our Markdown documentation.
+Buttons allow users to take actions, and make choices, with a single tap.
 
 export const Template = (args) => <Button {...args}>I'm a basic button</Button>;
 
@@ -69,4 +92,30 @@ export const Template = (args) => <Button {...args}>I'm a basic button</Button>;
   </Story>
 </Canvas>
 
-<ArgsTable story="Basic" />
+<ArgsTable
+  story="Basic"
+  sort="requiredFirst"
+  exclude={[
+    <!-- These are props that are not relevant -->
+    'children',
+    'className',
+    'color',
+    'disableElevation',
+    'disableFocusRipple',
+    'endIcon',
+    'href',
+    'size',
+    'startIcon',
+    'tabIndex',
+    'variant',
+    <!-- These are props inherited from `ButtonBase` that we don't use -->
+    'ref',
+    'action',
+    'centerRipple',
+    'disableTouchRipple',
+    'focusRipple',
+    'focusVisibleClassName',
+    'onFocusVisible',
+    'TouchRippleProps',
+  ]}
+/>

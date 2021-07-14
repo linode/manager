@@ -536,7 +536,7 @@ const themeDefaults: ThemeDefaults = () => {
             backgroundColor: '#226dc3',
           },
           '&:active': {
-            backgroundColor: 'red',
+            backgroundColor: primaryColors.dark,
           },
           '&$disabled': {
             color: 'white',
