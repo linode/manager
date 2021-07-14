@@ -1,12 +1,11 @@
 import { Domain } from '@linode/api-v4/lib/domains/types';
 import * as React from 'react';
-import Grid from 'src/components/Grid';
-import EntityTable, { EntityTableRow, HeaderCell } from './EntityTable';
 import { Provider } from 'react-redux';
-import store from 'src/store';
-
+import Grid from 'src/components/Grid';
 import { domainFactory } from 'src/factories/domain';
 import DomainRow from 'src/features/Domains/DomainTableRow';
+import store from 'src/store';
+import EntityTable, { EntityTableRow, HeaderCell } from './EntityTable';
 
 const domains1 = domainFactory.buildList(10, { tags: ['tag1'] });
 const domains2 = domainFactory.buildList(10, { tags: ['tag2'] });
@@ -54,7 +53,7 @@ const domainRow: EntityTableRow<Domain> = {
 };
 
 export default {
-  title: 'EntityTable',
+  title: 'Components/Entity Table',
 };
 
 export const ListView = () => (

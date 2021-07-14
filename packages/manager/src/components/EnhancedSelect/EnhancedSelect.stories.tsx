@@ -91,7 +91,9 @@ class Example extends React.Component<{}, State> {
   };
 
   filterFruit = (value: string) => {
-    return fruit.filter((f) => f.label.toLowerCase().includes(value.toLowerCase()));
+    return fruit.filter((f) =>
+      f.label.toLowerCase().includes(value.toLowerCase())
+    );
   };
 
   loadOptions = (inputValue?: string): Promise<Item[]> => {
@@ -196,7 +198,7 @@ class Example extends React.Component<{}, State> {
 }
 
 export default {
-  title: 'Enhanced Select',
+  title: 'Components/Forms/Selection Drop Down',
 };
 
 export const _Example = () => <Example />;

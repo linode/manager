@@ -2,7 +2,7 @@ import * as React from 'react';
 import CircleProgress from './CircleProgress';
 
 export default {
-  title: 'Circle Progress Indicator',
+  title: 'UI Elements/Circle Progress Indicator',
 };
 
 export const Indefinite = () => <CircleProgress noTopMargin />;

@@ -27,12 +27,25 @@ class InteractiveCheckboxes extends React.Component {
         <span style={{ marginLeft: '8px' }} />
         <CheckBox disabled checked={true} onChange={this.handleDefaultClick} />
         <span style={{ marginLeft: '8px' }} />
-        <CheckBox checked={this.state.checkedDefault} onChange={this.handleDefaultClick} />
+        <CheckBox
+          checked={this.state.checkedDefault}
+          onChange={this.handleDefaultClick}
+        />
         <br />
         <br />
-        <CheckBox variant="warning" disabled checked={false} onChange={this.handleWarningClick} />
+        <CheckBox
+          variant="warning"
+          disabled
+          checked={false}
+          onChange={this.handleWarningClick}
+        />
         <span style={{ marginLeft: '8px' }} />
-        <CheckBox disabled variant="warning" checked={true} onChange={this.handleDefaultClick} />
+        <CheckBox
+          disabled
+          variant="warning"
+          checked={true}
+          onChange={this.handleDefaultClick}
+        />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           variant="warning"
@@ -41,9 +54,19 @@ class InteractiveCheckboxes extends React.Component {
         />
         <br />
         <br />
-        <CheckBox variant="error" disabled checked={false} onChange={this.handleErrorClick} />
+        <CheckBox
+          variant="error"
+          disabled
+          checked={false}
+          onChange={this.handleErrorClick}
+        />
         <span style={{ marginLeft: '8px' }} />
-        <CheckBox disabled variant="error" checked={true} onChange={this.handleDefaultClick} />
+        <CheckBox
+          disabled
+          variant="error"
+          checked={true}
+          onChange={this.handleDefaultClick}
+        />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           variant="error"
@@ -56,7 +79,7 @@ class InteractiveCheckboxes extends React.Component {
 }
 
 export default {
-  title: 'CheckBox',
+  title: 'UI Elements/CheckBox',
 };
 
 export const Interactive = () => <InteractiveCheckboxes />;
