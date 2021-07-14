@@ -740,11 +740,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="secondary"
-          onClick={this.handleOpenBackupsAlert}
+          buttonType="outlined"
           className={classes.cancelButton}
           disabled={disabled}
-          outline
+          onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
         >
           Cancel Backups

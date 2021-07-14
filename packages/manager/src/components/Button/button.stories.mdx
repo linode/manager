@@ -1,11 +1,25 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Button from 'src/components/Button';
 
-<Meta title="UI Elements/Button" component={Button} />
+<Meta
+  title="UI Elements/Button"
+  component={Button}
+  argTypes={{
+    compact: {
+      description: 'test desc',
+    },
+  }}
+/>
 
 # Button
 
 With `MDX`, we can define a story for `Button` right in the middle of our Markdown documentation.
+
+export const Template = (args) => <Button {...args}>I'm a basic button</Button>;
+
+<Canvas>
+  <Story name="Basic">{Template.bind({})}</Story>
+</Canvas>
 
 ### Default
 
@@ -17,8 +31,8 @@ With `MDX`, we can define a story for `Button` right in the middle of our Markdo
     <Button buttonType="secondary" data-qa-button="secondary">
       Secondary
     </Button>
-    <Button buttonType="secondary" outline data-qa-button="secondary">
-      Secondary with Outline
+    <Button buttonType="outlined" data-qa-button="secondary">
+      Outlined
     </Button>
   </Story>
 </Canvas>
@@ -33,8 +47,8 @@ With `MDX`, we can define a story for `Button` right in the middle of our Markdo
     <Button buttonType="secondary" disabled data-qa-button="secondary">
       Secondary
     </Button>
-    <Button buttonType="secondary" disabled outline data-qa-button="secondary">
-      Secondary with Outline
+    <Button buttonType="outlined" disabled data-qa-button="secondary">
+      Outlined
     </Button>
   </Story>
 </Canvas>
@@ -49,10 +63,10 @@ With `MDX`, we can define a story for `Button` right in the middle of our Markdo
     <Button buttonType="secondary" loading data-qa-button="secondary">
       Secondary
     </Button>
-    <Button buttonType="secondary" loading outline data-qa-button="secondary">
-      Secondary with Outline
+    <Button buttonType="outlined" loading data-qa-button="secondary">
+      Outlined
     </Button>
   </Story>
 </Canvas>
 
-<ArgsTable story="Default" />
+<ArgsTable story="Basic" />

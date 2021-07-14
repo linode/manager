@@ -1121,10 +1121,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         {!hasUnsavedConfig && (
           <Grid item style={{ marginTop: 16 }}>
             <Button
-              buttonType="secondary"
-              onClick={() => this.addNodeBalancerConfig()}
+              buttonType="outlined"
               className={flags.cmr ? classes.cmrSpacing : ''}
-              outline
+              onClick={() => this.addNodeBalancerConfig()}
               data-qa-add-config
             >
               {configs.length === 0

@@ -516,54 +516,27 @@ const themeDefaults: ThemeDefaults = () => {
         },
       },
       MuiButton: {
-        label: {
-          position: 'relative',
-        },
         root: {
-          textTransform: 'inherit',
-          fontSize: '1rem',
-          lineHeight: 1,
-          fontFamily: primaryFonts.bold,
-          // backgroundColor: primaryColors.main,
-          // color: '#fff',
-          // padding: `2px 20px`,
-          // maxHeight: 34,
-          // position: 'relative',
-          // minHeight: `34px`,
-          cursor: 'pointer',
           border: 'none',
-          [breakpoints.down('sm')]: {
-            marginLeft: 8,
-            maxHeight: 34,
-            minWidth: 100,
-          },
-          '&:hover': {
-            backgroundColor: primaryColors.light,
-            color: '#fff',
-          },
-          '&[aria-expanded="true"]': {
-            backgroundColor: primaryColors.light,
-          },
-          '&$disabled': {
-            color: '#bbb',
-          },
-          '&.loading': {
-            color: primaryColors.text,
-          },
+          cursor: 'pointer',
+          fontFamily: primaryFonts.bold,
+          fontSize: '1rem',
+          minHeight: 34,
+          minWidth: 105,
+          lineHeight: 1,
+          textTransform: 'inherit',
+          transition: 'none',
         },
         containedPrimary: {
           backgroundColor: primaryColors.main,
           borderRadius: 1,
           color: '#fff',
-          padding: `2px 20px`,
-          maxHeight: 34,
-          position: 'relative',
-          minHeight: 34,
+          padding: '2px 20px',
           '&:hover, &:focus': {
             backgroundColor: '#226dc3',
           },
           '&:active': {
-            backgroundColor: primaryColors.dark,
+            backgroundColor: 'red',
           },
           '&$disabled': {
             color: 'white',
@@ -590,13 +563,19 @@ const themeDefaults: ThemeDefaults = () => {
             color: '#c9cacb',
           },
           '&.loading': {
-            borderColor: primaryColors.text,
             color: primaryColors.text,
-            minWidth: 100,
-            '& svg': {
-              width: 22,
-              height: 22,
-            },
+          },
+        },
+        outlined: {
+          backgroundColor: 'transparent',
+          border: `1px solid ${primaryColors.main}`,
+          borderRadius: 1,
+          color: cmrTextColors.linkActiveLight,
+          minHeight: 34,
+          '&:hover, &:focus': {
+            backgroundColor: `${cmrBGColors.bgSecondaryButton} !important`,
+            border: `1px solid ${cmrBorderColors.borderSecondaryButton}`,
+            color: cmrTextColors.secondaryButton,
           },
         },
       },

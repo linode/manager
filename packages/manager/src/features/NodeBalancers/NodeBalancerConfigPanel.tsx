@@ -877,10 +877,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 }
               >
                 <Button
-                  buttonType="secondary"
+                  buttonType="outlined"
                   disabled={disabled}
                   onClick={this.addNode}
-                  outline
                 >
                   Add a Node
                 </Button>

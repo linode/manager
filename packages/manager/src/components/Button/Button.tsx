@@ -2,16 +2,15 @@ import * as classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
-import Button, { ButtonProps } from 'src/components/core/Button';
+import _Button, { ButtonProps } from 'src/components/core/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 export interface Props extends ButtonProps {
-  buttonType?: 'primary' | 'secondary';
+  buttonType?: 'primary' | 'secondary' | 'outlined';
   className?: string;
   compact?: boolean;
   loading?: boolean;
-  outline?: boolean;
   tooltipText?: string;
 }
 
@@ -24,32 +23,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       transform: 'rotate(360deg)',
     },
   },
-  root: {
-    minWidth: '105px',
-    transition: 'none',
-  },
   loading: {
     '& svg': {
-      margin: '0 auto',
-      width: `${theme.spacing(1) + 8}px !important`,
-      height: `${theme.spacing(1) + 8}px !important`,
       animation: '$rotate 2s linear infinite',
+      margin: '0 auto',
+      height: `${theme.spacing(2)}px !important`,
+      width: `${theme.spacing(2)}px !important`,
     },
   },
   compact: {
-    paddingLeft: 0,
+    minWidth: 50,
     paddingRight: 0,
-    minWidth: '50px',
-  },
-  outline: {
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: 1,
-    minHeight: 34,
-    '&:hover, &:focus': {
-      backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
-      border: `1px solid ${theme.cmrBorderColors.borderSecondaryButton}`,
-      color: theme.cmrTextColors.secondaryButton,
-    },
+    paddingLeft: 0,
   },
   reg: {
     display: 'flex',
@@ -62,6 +47,7 @@ type CombinedProps = Props;
 const getVariant = cond([
   [propEq('buttonType', 'primary'), always('contained')],
   [propEq('buttonType', 'secondary'), always('contained')],
+  [propEq('buttonType', 'outlined'), always('outlined')],
   [() => true, always(undefined)],
 ]);
 
@@ -71,32 +57,29 @@ const getColor = cond([
   [() => true, always(undefined)],
 ]);
 
-export const WrappedButton: React.FC<CombinedProps> = (props) => {
+export const Button: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
+    buttonType,
+    className,
+    compact,
     loading,
     tooltipText,
-    buttonType,
-    compact,
-    outline,
-    className,
     ...rest
   } = props;
 
   return (
     <React.Fragment>
-      <Button
+      <_Button
         {...rest}
         className={classNames(
           buttonType,
           {
-            [classes.root]: true,
-            [classes.loading]: loading,
-            loading,
             [classes.compact]: compact,
-            [classes.outline]: outline,
+            [classes.loading]: loading,
             disabled: props.disabled,
+            loading,
           },
           className
         )}
@@ -112,10 +95,10 @@ export const WrappedButton: React.FC<CombinedProps> = (props) => {
         >
           {loading ? <Reload /> : props.children}
         </span>
-      </Button>
+      </_Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>
   );
 };
 
-export default WrappedButton;
+export default Button;
