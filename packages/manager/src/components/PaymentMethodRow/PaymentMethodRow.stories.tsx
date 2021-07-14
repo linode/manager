@@ -11,6 +11,7 @@ const card = (type: CardType) => {
     <>
       <PaymentMethodRow
         paymentMethod={{
+          id: 0,
           type: 'credit_card',
           is_default: true,
           created: '2021-06-01T20:14:49',
@@ -23,6 +24,7 @@ const card = (type: CardType) => {
       />
       <PaymentMethodRow
         paymentMethod={{
+          id: 0,
           type: 'credit_card',
           is_default: false,
           created: '2021-06-01T20:14:49',
@@ -54,6 +56,7 @@ export const GooglePay = () => (
   <>
     <PaymentMethodRow
       paymentMethod={{
+        id: 0,
         data: {
           card_type: 'Discover',
           expiry: '12/2022',
@@ -66,6 +69,7 @@ export const GooglePay = () => (
     />
     <PaymentMethodRow
       paymentMethod={{
+        id: 0,
         data: {
           card_type: 'Discover',
           expiry: '12/2022',
@@ -83,6 +87,7 @@ export const PayPal = () => (
   <>
     <PaymentMethodRow
       paymentMethod={{
+        id: 0,
         data: {
           card_type: 'Discover',
           expiry: '12/2022',
@@ -95,6 +100,7 @@ export const PayPal = () => (
     />
     <PaymentMethodRow
       paymentMethod={{
+        id: 0,
         data: {
           card_type: 'Discover',
           expiry: '12/2022',

@@ -199,10 +199,13 @@ export const addPaymentMethod = (data: PaymentMethodData) => {
   );
 };
 
-export const editPaymentMethod = (id: number, data: any) => {
+/**
+ * Action endpoint to change your default payment method
+ * @param id {number} id of the payment method
+ */
+export const makeDefaultPaymentMethod = (id: number) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/account/payment-methods/${id}`),
-    setMethod('PUT'),
-    setData(data)
+    setURL(`${API_ROOT}/account/payment-methods/${id}/default`),
+    setMethod('POST')
   );
 };
