@@ -206,10 +206,11 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const recentEvent = useRecentEventForLinode(instanceId ?? -1);
 
   const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
-  const iconStatus =
-    nodeStatus === 'ready' && instanceStatus === 'running'
-      ? 'active'
-      : 'inactive';
+
+  const nodeReadyAndInstanceRunning =
+    nodeStatus === 'ready' && instanceStatus === 'running';
+  const iconStatus = nodeReadyAndInstanceRunning ? 'active' : 'inactive';
+
   const displayLabel = label ?? typeLabel;
   const displayStatus =
     nodeStatus === 'not_ready'
