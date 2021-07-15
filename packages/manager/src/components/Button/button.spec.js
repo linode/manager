@@ -10,7 +10,6 @@ describe('Button Suite', () => {
     'Disabled',
     'Primary Dropdown',
     'Secondary Dropdown',
-    'Destructive',
   ];
   const button = {
     generic: '[data-qa-button]',
@@ -18,7 +17,6 @@ describe('Button Suite', () => {
     secondary: '[data-qa-button="secondary"]',
     primaryDropdown: '[data-qa-button="Primary Dropdown"]',
     secondaryDropdown: '[data-qa-button="Secondary Dropdown"]',
-    destructive: '[data-qa-button="Destructive"]',
   };
 
   it('should display buttons in each story', () => {
@@ -94,32 +92,6 @@ describe('Button Suite', () => {
     });
   });
 
-  describe('Primary Dropdown', () => {
-    let primaryDowndowns;
-
-    beforeAll(() => {
-      navigateToStory(component, childStories[2]);
-      $(button.generic).waitForDisplayed();
-    });
-
-    it('should display dropdown buttons with carat', () => {
-      primaryDropdowns = $$(button.primaryDropdown);
-      primaryDropdowns.forEach((d) => {
-        expect(d.$('svg').isDisplayed())
-          .withContext(`svg should be displayed`)
-          .toBe(true);
-      });
-    });
-
-    it('should have primary included in class of each dropdown', () => {
-      primaryDropdowns.forEach((d) => {
-        expect(d.getAttribute('class').includes('Primary'))
-          .withContext(`missing Primary class`)
-          .toBe(true);
-      });
-    });
-  });
-
   describe('Secondary Dropdown', () => {
     let secondaryDropdowns;
 
@@ -143,41 +115,6 @@ describe('Button Suite', () => {
           .withContext(`missing Secondary class`)
           .toBe(true);
       });
-    });
-  });
-
-  describe('Destructive Button', () => {
-    beforeAll(() => {
-      navigateToStory(component, childStories[4]);
-    });
-
-    let destructiveButtons;
-
-    it('should display an enabled destructive button and a disabled button', () => {
-      destructiveButtons = $$(button.generic);
-      const disabledButtons = destructiveButtons.filter((d) =>
-        d.getAttribute('class').includes('disabled')
-      );
-
-      destructiveButtons.forEach((d) => {
-        expect(d.isDisplayed())
-          .withContext(`destructive button should be displayed`)
-          .toBe(true);
-      });
-
-      expect(destructiveButtons.length)
-        .withContext(`incorrect number of destructive buttons`)
-        .toBe(2);
-
-      disabledButtons.forEach((d) => {
-        expect(d.isDisplayed())
-          .withContext(`disabled button should be displayed`)
-          .toBe(true);
-      });
-
-      expect(disabledButtons.length)
-        .withContext(`incorrect number of disabled buttons`)
-        .toBe(1);
     });
   });
 });
