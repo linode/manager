@@ -3,15 +3,9 @@ import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -21,16 +15,6 @@ import {
   LinodeActionsProps,
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
-
-type ClassNames = 'root' | 'shutDownWatchdog';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    shutDownWatchdog: {
-      margin: `${theme.spacing(2)}px 0`,
-    },
-  });
 
 interface Props {
   linodeId: number;
@@ -48,8 +32,7 @@ interface State {
 type CombinedProps = Props &
   ContextProps &
   LinodeActionsProps &
-  RouteComponentProps<{}> &
-  WithStyles<ClassNames>;
+  RouteComponentProps<{}>;
 
 class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -92,7 +75,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { currentStatus, submitting, success, errors } = this.state;
-    const { classes, permissions } = this.props;
+    const { permissions } = this.props;
 
     const disabled = permissions === 'read_only';
 
@@ -102,11 +85,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
         data-qa-watchdog-panel
         defaultExpanded
       >
-        <Grid
-          container
-          alignItems="center"
-          className={classes.shutDownWatchdog}
-        >
+        <Grid container alignItems="center">
           {(success || errors) && (
             <Grid item xs={12}>
               <Notice
@@ -164,8 +143,6 @@ const setSubmitting = (v: boolean) => set(L.submitting, v);
 
 const setSuccess = (v: string) => set(L.success, v);
 
-const styled = withStyles(styles);
-
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
 interface ContextProps {
@@ -179,7 +156,6 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 export default recompose<CombinedProps, Props>(
   errorBoundary,
   withRouter,
-  styled,
   withLinodeActions,
   linodeContext
 )(LinodeWatchdogPanel) as React.ComponentType<Props>;
