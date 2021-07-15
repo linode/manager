@@ -109,21 +109,6 @@ export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-// const L = {
-//   currentStatus: lensPath(['currentStatus']),
-//   error: lensPath(['errors']),
-//   submitting: lensPath(['submitting']),
-//   success: lensPath(['success']),
-// };
-
-// const setCurrentStatus = (v: boolean) => set(L.currentStatus, v);
-
-// const setSubmitting = (v: boolean) => set(L.submitting, v);
-
-// const setSuccess = (v: string) => set(L.success, v);
-
-// const setErrors = (v: string) => set(L.error, v);
-
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
 interface ContextProps {
