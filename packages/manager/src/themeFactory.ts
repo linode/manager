@@ -1388,7 +1388,7 @@ const themeDefaults: ThemeDefaults = () => {
           backfaceVisibility: 'hidden',
           position: 'relative',
           zIndex: 1,
-          height: 41,
+          height: 40,
           '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
