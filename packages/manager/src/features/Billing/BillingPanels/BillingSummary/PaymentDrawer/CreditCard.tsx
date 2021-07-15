@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { CardType } from '@linode/api-v4/lib/account/types';
 import Typography from 'src/components/core/Typography';
@@ -76,15 +75,9 @@ export const CreditCard: React.FC<CombinedProps> = (props) => {
           <Icon />
         </span>
       ) : null}
-      <div
-        className={classnames({
-          [classes.card]: true,
-        })}
-      >
+      <div className={classes.card}>
         <Typography className={classes.cardInfo} data-qa-contact-cc>
-          {lastFour
-            ? `${type || 'Card ending in'} ****${lastFour}`
-            : 'No credit card on file.'}
+          {`${type || 'Card ending in'} ****${lastFour}`}
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
           {expiry && isCreditCardExpired(expiry) ? (

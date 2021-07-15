@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import {
@@ -57,7 +56,7 @@ export const TPP: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
-  const Icon = thirdPartyPayment && getIcon(thirdPartyPayment);
+  const Icon = getIcon(thirdPartyPayment);
 
   return (
     <>
@@ -69,9 +68,6 @@ export const TPP: React.FC<CombinedProps> = (props) => {
         />
       </span>
       <div className={classes.paymentContainer}>
-        <Typography className={classes.paymentLabel}>
-          &nbsp;{thirdPartyPaymentMap[thirdPartyPayment].label}
-        </Typography>
         <CreditCard creditCard={creditCard} showIcon={false} />
       </div>
     </>

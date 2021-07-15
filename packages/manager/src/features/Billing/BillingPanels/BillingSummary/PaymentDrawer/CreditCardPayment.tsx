@@ -73,7 +73,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
 
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
   const isCardExpired =
-    (creditCard.expiry && isCreditCardExpired(creditCard.expiry)) || false;
+    creditCard.expiry && isCreditCardExpired(creditCard.expiry);
   const paymentTooLow = +usd < +minimumPayment;
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {

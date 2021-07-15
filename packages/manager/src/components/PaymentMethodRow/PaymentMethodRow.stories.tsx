@@ -6,16 +6,16 @@ export default {
   title: 'Payment Method Row',
 };
 
-const render = (paymentMethod: PaymentType, type: CardType) => {
+const render = (paymentMethodType: PaymentType, cardType: CardType) => {
   return (
     <>
       <PaymentMethodRow
         paymentMethod={{
-          type: paymentMethod,
+          type: paymentMethodType,
           is_default: true,
           created: '2021-06-01T20:14:49',
           data: {
-            card_type: type,
+            card_type: cardType,
             last_four: '1234',
             expiry: '10/2025',
           },
@@ -23,11 +23,11 @@ const render = (paymentMethod: PaymentType, type: CardType) => {
       />
       <PaymentMethodRow
         paymentMethod={{
-          type: paymentMethod,
+          type: paymentMethodType,
           is_default: false,
           created: '2021-06-01T20:14:49',
           data: {
-            card_type: type,
+            card_type: cardType,
             last_four: '1234',
             expiry: '10/2025',
           },

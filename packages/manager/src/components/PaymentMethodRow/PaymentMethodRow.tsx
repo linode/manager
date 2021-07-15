@@ -75,7 +75,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
             />
           )}
         </Grid>
-        <Grid item className={classes.item}>
+        <Grid item className={classes.item} style={{ paddingRight: 0 }}>
           {is_default && (
             <Chip className={classes.chip} label="DEFAULT" component="span" />
           )}
