@@ -16,11 +16,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     width: 45,
   },
-  paymentText: {
-    fontWeight: 'bold',
+  paymentContainer: {
     display: 'flex',
   },
   paymentLabel: {
+    fontWeight: 'bold',
     marginRight: 8,
   },
   payPal: {
@@ -68,12 +68,12 @@ export const TPP: React.FC<CombinedProps> = (props) => {
           })}
         />
       </span>
-      <Typography className={classes.paymentText}>
-        <span className={classes.paymentLabel}>
+      <div className={classes.paymentContainer}>
+        <Typography className={classes.paymentLabel}>
           &nbsp;{thirdPartyPaymentMap[thirdPartyPayment].label}
-        </span>
+        </Typography>
         <CreditCard creditCard={creditCard} showIcon={false} />
-      </Typography>
+      </div>
     </>
   );
 };
