@@ -9,7 +9,7 @@ import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
 import Chip from 'src/components/core/Chip';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
+import ThirdPartyPayment from './ThirdPartyPayment';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,7 +41,7 @@ type CombinedProps = Props;
 
 const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
   const { paymentMethod, onEdit } = props;
-  const { data, type, is_default } = paymentMethod;
+  const { data: creditCard, type, is_default } = paymentMethod;
   const classes = useStyles();
   const history = useHistory();
 
@@ -67,14 +67,11 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
       <Grid container className={classes.container}>
         <Grid item className={classes.item}>
           {paymentMethod.type === 'credit_card' ? (
-            <CreditCard
-              type={data?.card_type}
-              lastFour={data?.last_four}
-              expiry={data?.expiry}
-            />
+            <CreditCard creditCard={creditCard} />
           ) : (
             <ThirdPartyPayment
               thirdPartyPayment={type as ThirdPartyPaymentTypes}
+              creditCard={creditCard}
             />
           )}
         </Grid>
@@ -86,11 +83,7 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
         <Grid item className={classes.actions}>
           <ActionMenu
             actionsList={actions}
-            ariaLabel={`Action menu for ${
-              type === 'credit_card'
-                ? `card ending in ${data?.last_four}`
-                : thirdPartyPaymentMap[type]?.label
-            }`}
+            ariaLabel={`Action menu for card ending in ${creditCard?.last_four}`}
           />
         </Grid>
       </Grid>

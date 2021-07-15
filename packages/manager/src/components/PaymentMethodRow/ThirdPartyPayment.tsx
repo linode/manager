@@ -4,7 +4,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
-import { ThirdPartyPayment as ThirdPartyPaymentType } from '@linode/api-v4/lib/account/types';
+import {
+  CreditCard as CreditCardType,
+  ThirdPartyPayment as ThirdPartyPaymentType,
+} from '@linode/api-v4/lib/account/types';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
@@ -14,6 +18,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   paymentText: {
     fontWeight: 'bold',
+    display: 'flex',
+  },
+  paymentLabel: {
+    marginRight: 8,
   },
   payPal: {
     border: `1px solid ${theme.color.grey2}`,
@@ -35,6 +43,7 @@ export const thirdPartyPaymentMap = {
 
 interface Props {
   thirdPartyPayment: ThirdPartyPaymentType;
+  creditCard: CreditCardType;
 }
 
 const getIcon = (paymentMethod: ThirdPartyPaymentType) => {
@@ -44,7 +53,7 @@ const getIcon = (paymentMethod: ThirdPartyPaymentType) => {
 export type CombinedProps = Props;
 
 export const TPP: React.FC<CombinedProps> = (props) => {
-  const { thirdPartyPayment } = props;
+  const { thirdPartyPayment, creditCard } = props;
 
   const classes = useStyles();
 
@@ -60,7 +69,10 @@ export const TPP: React.FC<CombinedProps> = (props) => {
         />
       </span>
       <Typography className={classes.paymentText}>
-        &nbsp;{thirdPartyPaymentMap[thirdPartyPayment].label}
+        <span className={classes.paymentLabel}>
+          &nbsp;{thirdPartyPaymentMap[thirdPartyPayment].label}
+        </span>
+        <CreditCard creditCard={creditCard} showIcon={false} />
       </Typography>
     </>
   );

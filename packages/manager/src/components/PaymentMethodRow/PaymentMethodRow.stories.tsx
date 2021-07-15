@@ -1,17 +1,17 @@
 import * as React from 'react';
 import PaymentMethodRow from './PaymentMethodRow';
-import { CardType } from '@linode/api-v4/lib/account/types';
+import { PaymentType, CardType } from '@linode/api-v4/lib/account/types';
 
 export default {
   title: 'Payment Method Row',
 };
 
-const card = (type: CardType) => {
+const render = (paymentMethod: PaymentType, type: CardType) => {
   return (
     <>
       <PaymentMethodRow
         paymentMethod={{
-          type: 'credit_card',
+          type: paymentMethod,
           is_default: true,
           created: '2021-06-01T20:14:49',
           data: {
@@ -23,7 +23,7 @@ const card = (type: CardType) => {
       />
       <PaymentMethodRow
         paymentMethod={{
-          type: 'credit_card',
+          type: paymentMethod,
           is_default: false,
           created: '2021-06-01T20:14:49',
           data: {
@@ -37,73 +37,19 @@ const card = (type: CardType) => {
   );
 };
 
-export const Visa = () => card('Visa');
+export const Visa = () => render('credit_card', 'Visa');
 
-export const Mastercard = () => card('MasterCard');
+export const Mastercard = () => render('credit_card', 'MasterCard');
 
-export const Amex = () => card('American Express');
+export const Amex = () => render('credit_card', 'American Express');
 
-export const Discover = () => card('Discover');
+export const Discover = () => render('credit_card', 'Discover');
 
-export const JCB = () => card('JCB');
+export const JCB = () => render('credit_card', 'JCB');
 
 // @ts-expect-error This is just an example
-export const Other = () => card('Other');
+export const Other = () => render('credit_card', 'Other');
 
-export const GooglePay = () => (
-  <>
-    <PaymentMethodRow
-      paymentMethod={{
-        data: {
-          card_type: 'Discover',
-          expiry: '12/2022',
-          last_four: '1111',
-        },
-        is_default: true,
-        created: '2021-06-01T20:14:49',
-        type: 'google_pay',
-      }}
-    />
-    <PaymentMethodRow
-      paymentMethod={{
-        data: {
-          card_type: 'Discover',
-          expiry: '12/2022',
-          last_four: '1111',
-        },
-        is_default: false,
-        created: '2021-06-01T20:14:49',
-        type: 'google_pay',
-      }}
-    />
-  </>
-);
+export const GooglePay = () => render('google_pay', 'Discover');
 
-export const PayPal = () => (
-  <>
-    <PaymentMethodRow
-      paymentMethod={{
-        data: {
-          card_type: 'Discover',
-          expiry: '12/2022',
-          last_four: '1111',
-        },
-        is_default: true,
-        created: '2021-06-01T20:14:49',
-        type: 'paypal',
-      }}
-    />
-    <PaymentMethodRow
-      paymentMethod={{
-        data: {
-          card_type: 'Discover',
-          expiry: '12/2022',
-          last_four: '1111',
-        },
-        is_default: false,
-        created: '2021-06-01T20:14:49',
-        type: 'paypal',
-      }}
-    />
-  </>
-);
+export const PayPal = () => render('paypal', 'MasterCard');
