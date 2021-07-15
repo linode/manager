@@ -1,6 +1,7 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import GooglePay from 'src/assets/icons/providers/google-logo.svg';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
@@ -63,26 +64,36 @@ const PaymentInformation: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const flags = useFlags();
+  const { replace } = useHistory();
 
-  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
-    'google_pay'
-  );
+  const drawerLink = '/account/billing/add-payment-method';
 
-  const openAddDrawer = () => {
-    setAddDrawerOpen(true);
-  };
+  const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
+
+  const openAddDrawer = React.useCallback(() => setAddDrawerOpen(true), []);
+
+  const closeAddDrawer = React.useCallback(() => {
+    setAddDrawerOpen(false);
+    replace('/account/billing');
+  }, [replace]);
 
   const openEditDrawer = () => {
     setEditDrawerOpen(true);
   };
 
-  const closeAddDrawer = () => {
-    setAddDrawerOpen(false);
-  };
-
   const closeEditDrawer = () => {
     setEditDrawerOpen(false);
   };
+
+  React.useEffect(() => {
+    if (addPaymentMethodRouteMatch) {
+      openAddDrawer();
+    }
+  }, [addPaymentMethodRouteMatch, openAddDrawer]);
+
+  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
+    'google_pay'
+  );
 
   return (
     <Grid className={classes.root} item xs={12} md={6}>
@@ -96,7 +107,10 @@ const PaymentInformation: React.FC<Props> = (props) => {
           </Typography>
 
           {isGooglePayEnabled ? (
-            <Button className={classes.edit} onClick={openAddDrawer}>
+            <Button
+              className={classes.edit}
+              onClick={() => replace(drawerLink)}
+            >
               Add Payment Method
             </Button>
           ) : null}
@@ -135,7 +149,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
             <GooglePay width={16} height={16} />
             <Typography className={classes.googlePayNotice}>
               Google Pay is now available for recurring payments.{' '}
-              <Link to="#" onClick={openAddDrawer}>
+              <Link to="#" onClick={() => replace(drawerLink)}>
                 Add Google Pay
               </Link>
             </Typography>
