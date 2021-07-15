@@ -2,7 +2,7 @@ import * as Factory from 'factory.ts';
 import { PaymentMethod } from '@linode/api-v4';
 
 export const paymentMethodFactory = Factory.Sync.makeFactory<PaymentMethod>({
-  id: 0,
+  id: Factory.each((id: number) => id),
   data: {
     expiry: '12/2022',
     last_four: '1881',

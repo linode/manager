@@ -69,8 +69,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       );
     } catch (errors) {
       enqueueSnackbar(
-        errors[0].reason ||
-          `Unable to make your ${paymentMethod.type} default.`,
+        errors[0].reason || `Unable to change your default payment method.`,
         { variant: 'error' }
       );
     }
