@@ -13,28 +13,16 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import useFlags from 'src/hooks/useFlags';
 import { MapState } from 'src/store/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     maxWidth: 920,
   },
-  changeNotice: {
-    fontSize: '0.875rem',
-  },
-  // @todo: Remove when referral UI changes move to GA
-  copyField: {
-    marginTop: theme.spacing(),
-  },
   link: {
     '& label': {
       color: theme.cmrTextColors.headlineStatic,
     },
-  },
-  // @todo: Remove when referral UI changes move to GA
-  results: {
-    margin: `${theme.spacing(2)}px 0`,
   },
   resultsWrapper: {
     borderTop: '1px solid #D6D7D9',
@@ -103,183 +91,111 @@ type CombinedProps = StateProps;
 
 export const Referrals: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
-  const {
-    profileLoading,
-    code,
-    url,
-    total,
-    completed,
-    pending,
-    credit,
-  } = props;
+  const { profileLoading, url, total, completed, pending, credit } = props;
 
-  const allowReferral = url !== undefined;
+  const allowReferral = Boolean(url);
 
   return (
     <Paper>
       <DocumentTitleSegment segment="Referrals" />
       <Grid container className={classes.root}>
-        {!flags.referral ? (
-          <Grid item>
-            <Typography variant="h2" data-qa-title>
-              Referrals
-            </Typography>
-            {flags.referralBannerText?.text ? (
-              <Notice
-                warning
-                className={classes.changeNotice}
-                spacingTop={16}
-                spacingBottom={16}
-              >
-                {flags.referralBannerText.text}{' '}
-                {flags.referralBannerText.link ? (
-                  <Link to={flags.referralBannerText?.link?.url}>
-                    {flags.referralBannerText.link?.text}
-                  </Link>
-                ) : null}
-              </Notice>
-            ) : null}
-          </Grid>
-        ) : null}
         <Grid item>
-          {flags.referral ? (
-            <>
-              <Typography variant="body1" style={{ marginBottom: 12 }}>
-                When you refer friends or colleagues to Linode using your
-                referral link, they&apos;ll receive a $100, 60-day credit once a
-                valid payment method is added to their new account.
-              </Typography>
-              <Typography variant="body1">
-                When the referred customer spends $25 on Linode services, and
-                has remained an active customer in good standing for 90 days,
-                you&apos;ll receive a $25 non-expiring account credit. There are
-                no limits to the number of people you can refer.{' '}
-                <Link to="https://www.linode.com/promotional-policy/">
-                  Read more about our promotions policy
-                </Link>
-                .
-              </Typography>
-            </>
-          ) : (
-            <Typography>
-              Referrals reward you when you refer people to Linode. If someone
-              signs up using your referral code, you&apos;ll receive a credit of
-              $20.00, so long as the person you referred remains an active
-              customer for 90 days and spends a minimum of $15.
-            </Typography>
-          )}
+          <Typography variant="body1" style={{ marginBottom: 12 }}>
+            When you refer friends or colleagues to Linode using your referral
+            link, they&apos;ll receive a $100, 60-day credit once a valid
+            payment method is added to their new account.
+          </Typography>
+          <Typography variant="body1">
+            When the referred customer spends $25 on Linode services, and has
+            remained an active customer in good standing for 90 days,
+            you&apos;ll receive a $25 non-expiring account credit. There are no
+            limits to the number of people you can refer.{' '}
+            <Link to="https://www.linode.com/promotional-policy/">
+              Read more about our promotions policy
+            </Link>
+            .
+          </Typography>
         </Grid>
         {profileLoading ? (
           <div />
         ) : (
           <>
-            {!flags.referral ? (
-              <Grid item>
-                <Typography variant="h3" className={classes.results}>
-                  You have {total} total referrals: {completed} completed ($
-                  {credit}) and {pending} pending.
-                </Typography>
-              </Grid>
-            ) : null}
-            <Grid
-              item
-              xs={12}
-              className={flags.referral ? classes.link : undefined}
-            >
-              {!flags.referral ? (
-                <CopyableTextField
-                  className={classes.copyField}
-                  expand
-                  label="Referral Code"
-                  value={code}
-                />
-              ) : null}
+            <Grid item xs={12} className={classes.link}>
               {allowReferral ? (
                 <CopyableTextField
-                  className={!flags.referral ? classes.copyField : undefined}
                   expand
-                  label={
-                    flags.referral
-                      ? 'Your personal referral link'
-                      : 'Referral URL'
-                  }
+                  label="Your personal referral link"
                   value={url}
                 />
               ) : null}
             </Grid>
-            {flags.referral ? (
-              <>
-                {allowReferral && total !== undefined && total > 0 ? (
-                  <div className={classes.resultsWrapper}>
-                    {pending !== undefined && pending > 0 ? (
-                      <Grid
-                        container
-                        justify="space-between"
-                        className={classes.referrals}
-                      >
-                        <Grid item>Pending referrals</Grid>
-                        <Grid item>{pending}</Grid>
-                      </Grid>
-                    ) : null}
-                    <Grid
-                      container
-                      justify="space-between"
-                      className={classes.referrals}
-                    >
-                      <Grid item>Completed referrals</Grid>
-                      <Grid item>{completed}</Grid>
-                    </Grid>
-                    <Grid
-                      container
-                      justify="space-between"
-                      className={classes.earned}
-                    >
-                      <Grid item>Credit earned</Grid>
-                      <Grid item>${credit}</Grid>
-                    </Grid>
-                  </div>
-                ) : null}
-                {!allowReferral ? (
-                  <Notice
-                    warning
-                    className={classes.limitNotice}
-                    spacingTop={8}
-                    spacingBottom={0}
+            {allowReferral && total !== undefined && total > 0 ? (
+              <div className={classes.resultsWrapper}>
+                {pending !== undefined && pending > 0 ? (
+                  <Grid
+                    container
+                    justify="space-between"
+                    className={classes.referrals}
                   >
-                    Spend $25 with Linode to activate your personal referral
-                    link
-                  </Notice>
+                    <Grid item>Pending referrals</Grid>
+                    <Grid item>{pending}</Grid>
+                  </Grid>
                 ) : null}
                 <Grid
                   container
-                  direction="row"
                   justify="space-between"
-                  wrap="nowrap"
-                  className={classes.images}
+                  className={classes.referrals}
                 >
-                  <Grid item className={classes.image}>
-                    <Step1 />
-                    <Typography variant="body1" className={classes.imageCopy}>
-                      Share your referral link with friends and colleagues
-                    </Typography>
-                  </Grid>
-                  <Grid item className={classes.image}>
-                    <Step2 />
-                    <Typography variant="body1" className={classes.imageCopy}>
-                      They sign up and receive a $100, 60-day credit
-                    </Typography>
-                  </Grid>
-                  <Grid item className={classes.image}>
-                    <Step3 />
-                    <Typography variant="body1" className={classes.imageCopy}>
-                      You earn $25 after they make their first payment of $25
-                    </Typography>
-                  </Grid>
+                  <Grid item>Completed referrals</Grid>
+                  <Grid item>{completed}</Grid>
                 </Grid>
-              </>
+                <Grid
+                  container
+                  justify="space-between"
+                  className={classes.earned}
+                >
+                  <Grid item>Credit earned</Grid>
+                  <Grid item>${credit}</Grid>
+                </Grid>
+              </div>
             ) : null}
+            {!allowReferral ? (
+              <Notice
+                warning
+                className={classes.limitNotice}
+                spacingTop={8}
+                spacingBottom={0}
+              >
+                Spend $25 with Linode to activate your personal referral link
+              </Notice>
+            ) : null}
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              wrap="nowrap"
+              className={classes.images}
+            >
+              <Grid item className={classes.image}>
+                <Step1 />
+                <Typography variant="body1" className={classes.imageCopy}>
+                  Share your referral link with friends and colleagues
+                </Typography>
+              </Grid>
+              <Grid item className={classes.image}>
+                <Step2 />
+                <Typography variant="body1" className={classes.imageCopy}>
+                  They sign up and receive a $100, 60-day credit
+                </Typography>
+              </Grid>
+              <Grid item className={classes.image}>
+                <Step3 />
+                <Typography variant="body1" className={classes.imageCopy}>
+                  You earn $25 after they make their first payment of $25
+                </Typography>
+              </Grid>
+            </Grid>
           </>
         )}
       </Grid>

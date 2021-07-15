@@ -69,7 +69,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Accordion heading="Delete Linode">
+        <Accordion heading="Delete Linode" defaultExpanded>
           <Button
             buttonType="primary"
             onClick={this.openDeleteDialog}

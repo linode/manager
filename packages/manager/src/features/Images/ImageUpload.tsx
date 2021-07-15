@@ -223,6 +223,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
         command={linodeCLICommand}
+        analyticsKey="Image Upload"
       />
     </>
   );

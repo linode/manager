@@ -1,4 +1,3 @@
-import { AccountCapability } from '@linode/api-v4/lib/account';
 import {
   createPersonalAccessToken,
   deleteAppToken,
@@ -10,7 +9,6 @@ import {
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -38,10 +36,11 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import withAccount from 'src/containers/account.container';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { Account } from '@linode/api-v4/lib';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 import { basePermNameMap, basePerms } from './utils';
@@ -128,10 +127,7 @@ interface State {
   submitting: boolean;
 }
 
-type CombinedProps = Props &
-  PaginationProps<Token> &
-  WithStyles<ClassNames> &
-  AccountStateProps;
+type CombinedProps = Props & PaginationProps<Token> & WithStyles<ClassNames>;
 
 export class APITokenTable extends React.Component<CombinedProps, State> {
   static defaultState: State = {
@@ -536,6 +532,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   render() {
     const { classes, type, title } = this.props;
     const { form, dialog, submitting } = this.state;
+    const account = queryClient.getQueryData<Account>('account');
 
     const basePermsWithLKE = [...basePerms];
     basePermsWithLKE.splice(5, 0, 'lke');
@@ -620,12 +617,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           scopes={form.values.scopes}
           expiry={form.values.expiry}
           perms={
-            !this.props.accountCapabilities.includes('Kubernetes')
+            !account?.capabilities.includes('Kubernetes')
               ? basePerms
               : basePermsWithLKE
           }
           permNameMap={
-            !this.props.accountCapabilities.includes('Kubernetes')
+            !account?.capabilities.includes('Kubernetes')
               ? basePermNameMap
               : {
                   ...basePermNameMap,
@@ -740,16 +737,6 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-interface AccountStateProps {
-  accountCapabilities: AccountCapability[];
-}
-
-const enhanced = compose<CombinedProps, Props>(
-  withAccount<AccountStateProps, {}>((_, { accountData }) => ({
-    accountCapabilities: pathOr([], ['capabilities'], accountData),
-  })),
-  paginated,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(paginated, styled);
 
 export default enhanced(APITokenTable);
