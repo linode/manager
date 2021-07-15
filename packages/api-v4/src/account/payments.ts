@@ -205,7 +205,7 @@ export const addPaymentMethod = (data: PaymentMethodData) => {
  */
 export const makeDefaultPaymentMethod = (id: number) => {
   return Request<{}>(
-    setURL(`${API_ROOT}/account/payment-methods/${id}/default`),
+    setURL(`${API_ROOT}/account/payment-methods/${id}/make-default`),
     setMethod('POST')
   );
 };
