@@ -8,7 +8,6 @@ import Button from 'src/components/Button';
   argTypes={{
     buttonType: {
       description: 'The variant to use.',
-      control: {}
       <!-- Keeping this as an example for labelling a prop as required: -->
       <!-- type: { required: true }, -->
     },
@@ -120,6 +119,8 @@ This hybrid button style should be used with discretion. It is used when:
 ### Component API
 
 <hr />
+
+<!-- TODO: Look into why the code generated from binding the component is not accurate -->
 
 export const Template = (args) => (
   <Button buttonType="primary" {...args}>

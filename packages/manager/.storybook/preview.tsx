@@ -44,7 +44,6 @@ MINIMAL_VIEWPORTS.mobile1.styles = {
 };
 
 export const parameters = {
-  layout: 'centered',
   viewport: {
     viewports: MINIMAL_VIEWPORTS,
   },
