@@ -4,17 +4,20 @@ import Button from 'src/components/Button';
 <Meta
   title="UI Elements/Button"
   component={Button}
+  decorators={[(Story) => <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}><Story/></div>]}
   argTypes={{
     buttonType: {
       description: 'The variant to use.',
+      control: {}
       <!-- Keeping this as an example for labelling a prop as required: -->
       <!-- type: { required: true }, -->
     },
     compact: {
-      description: 'Insert description here.',
+      description: 'Removes the spacing to the left and right of the text for secondary buttons only.',
       table: { defaultValue: { summary: false } },
     },
     disabled: {
+      description: 'A button should remain disabled until all required data has been entered in a form or data has been changed in an edit state.',
       table: { defaultValue: { summary: false } },
     },
     disableRipple: {
@@ -24,11 +27,11 @@ import Button from 'src/components/Button';
       table: { defaultValue: { summary: false } },
     },
     loading: {
-      description: 'Insert description here.',
+      description: 'Used to depict a loading state.',
       table: { defaultValue: { summary: false } },
     },
     tooltipText: {
-      description: 'Insert description here.',
+      description: 'Displays informative text when users hover over the icon.',
       table: { defaultValue: { summary: false } },
     },
   }}
@@ -36,64 +39,100 @@ import Button from 'src/components/Button';
 
 # Button
 
+### Overview
+
+<hr />
+
 Buttons allow users to take actions, and make choices, with a single tap.
 
-export const Template = (args) => <Button {...args}>I'm a basic button</Button>;
+- Buttons are aligned right with primary button to the far right and secondary buttons positioned to the left.
+- There can be more than one secondary button.
+- Ideally there is one primary button per page. This helps provide a visual focus to the main purpose of the page.
+- Button labels should support the user taking their desired action by clearly stating what will happen when clicked (ex. Create Linode, Delete Firewall).
+- There is no destructive button style. We do not take an implied position on the user’s knowledge or intention by using an alert color such as red for destructive actions.
+
+### Primary
+
+<hr />
+
+Bold and easily visible. Represents the primary or preferred action on the page.
 
 <Canvas>
-  <Story name="Basic">{Template.bind({})}</Story>
-</Canvas>
-
-### Default
-
-<Canvas>
-  <Story name="Default">
+  <Story name="Primary">
     <Button buttonType="primary" data-qa-button="primary">
       Primary
     </Button>
+    <Button buttonType="primary" disabled data-qa-button="primary">
+      Disabled Primary
+    </Button>
+    <Button buttonType="primary" loading data-qa-button="primary">
+      Loading Primary
+    </Button>
+  </Story>
+</Canvas>
+
+### Secondary
+
+<hr />
+
+The bold text is intentionally understated to pair well with a primary button, sit inside a table head or within a form.
+
+<Canvas>
+  <Story name="Secondary">
     <Button buttonType="secondary" data-qa-button="secondary">
       Secondary
     </Button>
-    <Button buttonType="outlined" data-qa-button="secondary">
-      Outlined
-    </Button>
-  </Story>
-</Canvas>
-
-### Disabled
-
-<Canvas>
-  <Story name="Disabled">
-    <Button buttonType="primary" disabled data-qa-button="primary">
-      Primary
+    <Button buttonType="secondary" compact data-qa-button="secondary">
+      Compact Secondary
     </Button>
     <Button buttonType="secondary" disabled data-qa-button="secondary">
-      Secondary
+      Disabled Secondary
     </Button>
-    <Button buttonType="outlined" disabled data-qa-button="secondary">
-      Outlined
+    <Button buttonType="secondary" loading data-qa-button="secondary">
+      Loading Secondary
     </Button>
   </Story>
 </Canvas>
 
-### Loading
+### Outlined
+
+<hr />
+
+This hybrid button style should be used with discretion. It is used when:
+
+- A primary button is appropriate but is distracting or misleading. One example is a Delete button on an entity and we do not want to suggest deleting is the preferred action.
+- A secondary button is appropriate but it could be missed because of its positioning on the page.
 
 <Canvas>
-  <Story name="Loading">
-    <Button buttonType="primary" loading data-qa-button="primary">
-      Primary
-    </Button>
-    <Button buttonType="secondary" loading data-qa-button="secondary">
-      Secondary
-    </Button>
-    <Button buttonType="outlined" loading data-qa-button="secondary">
+  <Story name="Outlined">
+    <Button buttonType="outlined" data-qa-button="outlined">
       Outlined
     </Button>
+    <Button buttonType="outlined" disabled data-qa-button="outlined">
+      Disabled Outlined
+    </Button>
+    <Button buttonType="outlined" loading data-qa-button="outlined">
+      Loading Outlined
+    </Button>
   </Story>
+</Canvas>
+
+### Component API
+
+<hr />
+
+export const Template = (args) => (
+  <Button buttonType="primary" {...args}>
+    I'm a button, style me using the table below
+  </Button>
+);
+
+<Canvas>
+  <Story name="Default">{Template.bind({})}</Story>
 </Canvas>
 
 <ArgsTable
-  story="Basic"
+  story="Default"
   sort="requiredFirst"
   exclude={[
     <!-- These are props that are not relevant -->
@@ -102,6 +141,7 @@ export const Template = (args) => <Button {...args}>I'm a basic button</Button>;
     'color',
     'disableElevation',
     'disableFocusRipple',
+    'disableRipple',
     'endIcon',
     'href',
     'size',

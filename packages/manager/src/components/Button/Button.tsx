@@ -76,7 +76,7 @@ export const Button: React.FC<CombinedProps> = (props) => {
         className={classNames(
           buttonType,
           {
-            [classes.compact]: compact,
+            [classes.compact]: buttonType === 'secondary' ? compact : false,
             [classes.loading]: loading,
             disabled: props.disabled,
             loading,
