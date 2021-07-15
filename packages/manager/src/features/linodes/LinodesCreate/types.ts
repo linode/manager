@@ -73,8 +73,8 @@ export interface WithLinodesTypesRegionsAndImages
 }
 
 export interface ReduxStateProps {
-  accountBackupsEnabled: boolean;
   userCannotCreateLinode: boolean;
+  accountBackupsEnabled: boolean;
 }
 
 export type HandleSubmit = (

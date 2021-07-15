@@ -18,16 +18,9 @@ export const useAccountSettings = () =>
 
 export const useMutateAccountSettings = () => {
   return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>(
-    (data) => {
-      return updateAccountSettings(data);
-    },
+    (data) => updateAccountSettings(data),
     {
-      onSuccess: (updatedEntity) => {
-        queryClient.setQueryData<AccountSettings>(queryKey, (oldData) => ({
-          ...oldData,
-          ...updatedEntity,
-        }));
-      },
+      onSuccess: updateAccountSettingsData,
     }
   );
 };
@@ -36,16 +29,22 @@ export const isManaged = Boolean(
   queryClient.getQueryData<AccountSettings>('account-settings')?.managed
 );
 
+export const accountBackupsEnabled = Boolean(
+  queryClient.getQueryData<AccountSettings>('account-settings')?.backups_enabled
+);
+
 /**
  * updateAccountSettingsData is a function that we can use to directly update
  * the React Query store for account settings.
+ * @todo In the future, we might want to make this generic and move it to
+ * the react query base file so other query files can use it
  * @param data {Partial<AccountSettings>} account settings to update
  */
 export const updateAccountSettingsData = (
-  data: Partial<AccountSettings>
+  newData: Partial<AccountSettings>
 ): void => {
   queryClient.setQueryData(queryKey, (oldData: AccountSettings) => ({
     ...oldData,
-    ...data,
+    ...newData,
   }));
 };
