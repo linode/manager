@@ -43,7 +43,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
   const vlansEnabled = isFeatureEnabled(
     'Vlans',
     Boolean(flags.vlans),
-    account.data?.capabilities ?? []
+    account?.capabilities ?? []
   );
 
   React.useEffect(() => {

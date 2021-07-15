@@ -93,7 +93,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
     Boolean(flags.firewalls),
-    account?.data?.capabilities ?? []
+    account?.capabilities ?? []
   );
 
   // No account capability returned yet.

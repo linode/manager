@@ -4,9 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import _TableRow, {
-  TableRowProps as _TableRowProps,
-} from 'src/components/core/TableRow';
+import _TableRow, { TableRowProps } from 'src/components/core/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -132,7 +130,7 @@ export interface Props {
   selected?: boolean;
 }
 
-export type CombinedProps = Props & _TableRowProps & RouteComponentProps<{}>;
+export type CombinedProps = Props & TableRowProps & RouteComponentProps<{}>;
 
 export const TableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -145,6 +143,10 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
     forceIndex,
     highlight,
     selected,
+    // Defining `staticContext` here to prevent `...rest` from containing it
+    // since it leads to a console warning
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    staticContext,
     ...rest
   } = props;
 
