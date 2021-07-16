@@ -12,6 +12,7 @@ const render = (paymentMethodType: PaymentType, cardType: CardType) => {
       <PaymentMethodRow
         paymentMethod={{
           type: paymentMethodType,
+          id: 0,
           is_default: true,
           created: '2021-06-01T20:14:49',
           data: {
@@ -24,6 +25,7 @@ const render = (paymentMethodType: PaymentType, cardType: CardType) => {
       <PaymentMethodRow
         paymentMethod={{
           type: paymentMethodType,
+          id: 1,
           is_default: false,
           created: '2021-06-01T20:14:49',
           data: {

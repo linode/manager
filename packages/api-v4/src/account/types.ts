@@ -387,6 +387,7 @@ export interface AccountMaintenance {
 }
 
 export interface PaymentMethod {
+  id: number;
   type: PaymentType;
   is_default: boolean;
   created: string;

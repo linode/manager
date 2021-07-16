@@ -11,6 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import styled from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -32,6 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   billingGroup: {
     marginBottom: theme.spacing(3),
+  },
+  googlePayNoticeContainer: {
+    marginTop: theme.spacing(2),
+    padding: `8px 0px`,
   },
   googlePayNotice: {
     marginLeft: theme.spacing(),
@@ -67,8 +72,17 @@ const PaymentInformation: React.FC<Props> = (props) => {
   const { replace } = useHistory();
 
   const drawerLink = '/account/billing/add-payment-method';
-
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
+
+  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
+    'google_pay'
+  );
+
+  const showGooglePayAvailableNotice =
+    isGooglePayEnabled &&
+    !paymentMethods?.some(
+      (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
+    );
 
   const openAddDrawer = React.useCallback(() => setAddDrawerOpen(true), []);
 
@@ -90,10 +104,6 @@ const PaymentInformation: React.FC<Props> = (props) => {
       openAddDrawer();
     }
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
-
-  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
-    'google_pay'
-  );
 
   return (
     <Grid className={classes.root} item xs={12} md={6}>
@@ -141,19 +151,21 @@ const PaymentInformation: React.FC<Props> = (props) => {
             />
           ))
         )}
-        {isGooglePayEnabled &&
-        !paymentMethods?.some(
-          (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
-        ) ? (
-          <Box display="flex" alignItems="center" mt={3}>
-            <GooglePay width={16} height={16} />
-            <Typography className={classes.googlePayNotice}>
-              Google Pay is now available for recurring payments.{' '}
-              <Link to="#" onClick={() => replace(drawerLink)}>
-                Add Google Pay
-              </Link>
-            </Typography>
-          </Box>
+        {showGooglePayAvailableNotice ? (
+          <DismissibleBanner
+            className={classes.googlePayNoticeContainer}
+            preferenceKey="google-pay-available-notification"
+          >
+            <Box display="flex" alignItems="center">
+              <GooglePay width={16} height={16} />
+              <Typography className={classes.googlePayNotice}>
+                Google Pay is now available for recurring payments.{' '}
+                <Link to="#" onClick={() => replace(drawerLink)}>
+                  Add Google Pay
+                </Link>
+              </Typography>
+            </Box>
+          </DismissibleBanner>
         ) : null}
         <UpdateCreditCardDrawer
           open={editDrawerOpen}
