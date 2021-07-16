@@ -11,6 +11,10 @@ import Chip from 'src/components/core/Chip';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment, { thirdPartyPaymentMap } from './ThirdPartyPayment';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
+import { useSnackbar } from 'notistack';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -37,13 +41,24 @@ interface Props {
   onEdit?: () => void;
 }
 
-type CombinedProps = Props;
-
-const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
+const PaymentMethodRow: React.FC<Props> = (props) => {
   const { paymentMethod, onEdit } = props;
   const { data, type, is_default } = paymentMethod;
   const classes = useStyles();
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const makeDefault = async (id: number) => {
+    try {
+      await makeDefaultPaymentMethod(id);
+      queryClient.invalidateQueries(`${queryKey}-all`);
+    } catch (errors) {
+      enqueueSnackbar(
+        errors[0]?.reason || `Unable to change your default payment method.`,
+        { variant: 'error' }
+      );
+    }
+  };
 
   const actions: Action[] = [
     {
@@ -51,6 +66,14 @@ const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
       onClick: () => {
         history.replace('/account/billing/make-payment');
       },
+    },
+    {
+      title: 'Make Default',
+      disabled: paymentMethod.is_default,
+      tooltip: paymentMethod.is_default
+        ? 'This is already your default payment method'
+        : undefined,
+      onClick: () => makeDefault(paymentMethod.id),
     },
     ...(onEdit
       ? [
