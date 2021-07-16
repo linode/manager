@@ -477,12 +477,13 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/account/payment-methods', (req, res, ctx) => {
-    const method1 = paymentMethodFactory.build({ is_default: true });
-    const method2 = paymentMethodFactory.build({
-      data: { card_type: 'Discover', expiry: '02/2020' },
+    const defaultPaymentMethod = paymentMethodFactory.build({
+      is_default: true,
     });
-    const method3 = paymentMethodFactory.build({ type: 'google_pay' });
-    return res(ctx.json(makeResourcePage([method1, method2, method3])));
+    const otherPaymentMethods = paymentMethodFactory.buildList(5);
+    return res(
+      ctx.json(makeResourcePage([defaultPaymentMethod, ...otherPaymentMethods]))
+    );
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
