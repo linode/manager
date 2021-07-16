@@ -144,13 +144,13 @@ describe('paymentToActivityFeedItem', () => {
     expect(paymentToActivityFeedItem(payment).label).toBe('Refund');
   });
 
-  it('sets total as -usd', () => {
+  it('sets total as absolute value of usd', () => {
     const paymentNegative = paymentFactory.build({ usd: -1 });
     const paymentZero = paymentFactory.build({ usd: 0 });
     const paymentPositive = paymentFactory.build({ usd: 1 });
     expect(paymentToActivityFeedItem(paymentNegative).total).toBe(1);
     expect(paymentToActivityFeedItem(paymentZero).total).toBe(0);
-    expect(paymentToActivityFeedItem(paymentPositive).total).toBe(-1);
+    expect(paymentToActivityFeedItem(paymentPositive).total).toBe(1);
   });
 
   describe('getCutoffFromDateRange', () => {
