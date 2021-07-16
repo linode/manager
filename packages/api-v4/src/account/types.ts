@@ -391,11 +391,7 @@ export interface PaymentMethod {
   type: PaymentType;
   is_default: boolean;
   created: string;
-  data: {
-    card_type: CardType;
-    last_four: string;
-    expiry: string;
-  };
+  data: CreditCard;
 }
 
 export interface ClientToken {

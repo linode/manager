@@ -199,16 +199,20 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
-          <CreditCardPayment
-            key={creditCardKey}
-            type={creditCard?.card_type}
-            lastFour={creditCard?.last_four ?? ''}
-            expiry={creditCard?.expiry ?? ''}
-            disabled={isProcessing}
-            usd={usd}
-            minimumPayment={minimumPayment}
-            setSuccess={setSuccess}
-          />
+          {creditCard ? (
+            <CreditCardPayment
+              key={creditCardKey}
+              creditCard={creditCard}
+              disabled={isProcessing}
+              usd={usd}
+              minimumPayment={minimumPayment}
+              setSuccess={setSuccess}
+            />
+          ) : (
+            <Grid item>
+              <Typography>No credit card on file.</Typography>
+            </Grid>
+          )}
           <Divider spacingTop={32} spacingBottom={16} />
           {showGooglePay ? (
             <>

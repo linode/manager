@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as classnames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { CardType } from '@linode/api-v4/lib/account/types';
 import Typography from 'src/components/core/Typography';
@@ -10,6 +9,7 @@ import AmexIcon from 'src/assets/icons/payment/amex.svg';
 import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import GenericCardIcon from 'src/assets/icons/credit-card.svg';
+import { CreditCard as CreditCardType } from '@linode/api-v4/lib/account/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -49,9 +49,8 @@ const iconMap = {
 };
 
 interface Props {
-  type?: CardType | null;
-  lastFour?: string | null;
-  expiry?: string | null;
+  creditCard: CreditCardType;
+  showIcon?: boolean;
 }
 
 const getIcon = (type: CardType) => {
@@ -61,25 +60,24 @@ const getIcon = (type: CardType) => {
 export type CombinedProps = Props;
 
 export const CreditCard: React.FC<CombinedProps> = (props) => {
-  const { type, lastFour, expiry } = props;
+  const {
+    creditCard: { card_type: type = undefined, last_four: lastFour, expiry },
+    showIcon = true,
+  } = props;
 
   const classes = useStyles();
   const Icon = type ? getIcon(type) : GenericCardIcon;
 
   return (
     <div className={classes.root}>
-      <span className={classes.icon}>
-        <Icon />
-      </span>
-      <div
-        className={classnames({
-          [classes.card]: true,
-        })}
-      >
+      {showIcon ? (
+        <span className={classes.icon}>
+          <Icon />
+        </span>
+      ) : null}
+      <div className={classes.card}>
         <Typography className={classes.cardInfo} data-qa-contact-cc>
-          {lastFour
-            ? `${type || 'Card ending in'} ****${lastFour}`
-            : 'No credit card on file.'}
+          {`${type || 'Card ending in'} ****${lastFour}`}
         </Typography>
         <Typography data-qa-contact-cc-exp-date>
           {expiry && isCreditCardExpired(expiry) ? (

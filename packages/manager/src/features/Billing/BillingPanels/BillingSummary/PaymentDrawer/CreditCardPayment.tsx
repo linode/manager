@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { makePayment, CardType } from '@linode/api-v4/lib/account';
+import {
+  makePayment,
+  CreditCard as CreditCardType,
+} from '@linode/api-v4/lib/account';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
@@ -51,9 +54,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface Props {
-  type?: CardType | null;
-  lastFour: string;
-  expiry: string;
+  creditCard: CreditCardType;
   usd: string;
   minimumPayment: string;
   setSuccess: SetSuccess;
@@ -61,15 +62,7 @@ export interface Props {
 }
 
 export const CreditCardPayment: React.FC<Props> = (props) => {
-  const {
-    type,
-    expiry,
-    lastFour,
-    minimumPayment,
-    usd,
-    setSuccess,
-    disabled,
-  } = props;
+  const { creditCard, minimumPayment, usd, setSuccess, disabled } = props;
   const [cvv, setCVV] = React.useState<string>('');
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -79,7 +72,8 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
   const flags = useFlags();
 
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
-  const isCardExpired = (expiry && isCreditCardExpired(expiry)) || false;
+  const isCardExpired =
+    creditCard.expiry && isCreditCardExpired(creditCard.expiry);
   const paymentTooLow = +usd < +minimumPayment;
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,9 +131,9 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
         {showGooglePay ? (
           <>
             <Grid item className={classes.cardSectionNew}>
-              <CreditCard type={type} expiry={expiry} lastFour={lastFour} />
+              <CreditCard creditCard={creditCard} />
             </Grid>
-            {lastFour ? (
+            {creditCard.last_four ? (
               <Grid item className={classes.input}>
                 <Grid item>
                   <TextField
@@ -171,17 +165,17 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
               </Grid>
             ) : null}
           </>
-        ) : lastFour ? (
+        ) : creditCard.last_four ? (
           <>
             <Grid item>
               <Grid container direction="row" wrap="nowrap" alignItems="center">
                 <Grid item className={classes.cardSection}>
                   <Typography className={classes.cardText}>
-                    Card ending in {lastFour}
+                    Card ending in {creditCard.last_four}
                   </Typography>
-                  {Boolean(expiry) && (
+                  {Boolean(creditCard.expiry) && (
                     <Typography className={classes.cardText}>
-                      Expires {formatExpiry(expiry)}
+                      Expires {formatExpiry(creditCard.expiry ?? '')}
                     </Typography>
                   )}
                 </Grid>
@@ -204,7 +198,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
               <Button
                 buttonType="primary"
                 onClick={handleOpenDialog}
-                disabled={!lastFour || paymentTooLow}
+                disabled={!creditCard.last_four || paymentTooLow}
                 tooltipText={
                   paymentTooLow
                     ? `Payment amount must be at least ${minimumPayment}.`
@@ -215,11 +209,7 @@ export const CreditCardPayment: React.FC<Props> = (props) => {
               </Button>
             </Grid>
           </>
-        ) : (
-          <Grid item>
-            <Typography>No credit card on file.</Typography>
-          </Grid>
-        )}
+        ) : null}
       </Grid>
       <CreditCardDialog
         error={errorMessage}
