@@ -39,11 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#5ad865',
     },
   },
-  lightGreen: {
-    '&:before': {
-      backgroundColor: '#99ec79',
-    },
-  },
   grey: {
     '&:before': {
       backgroundColor: theme.color.grey2,
