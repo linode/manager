@@ -1,6 +1,12 @@
 import * as React from 'react';
 import * as classNames from 'classnames';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  useMediaQuery,
+  useTheme,
+} from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import {
@@ -15,10 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     width: 45,
   },
-  paymentContainer: {
+  paymentTextContainer: {
     display: 'flex',
   },
-  paymentLabel: {
+  paymentMethodLabel: {
     fontWeight: 'bold',
     marginRight: 8,
   },
@@ -55,6 +61,8 @@ export const TPP: React.FC<CombinedProps> = (props) => {
   const { thirdPartyPayment, creditCard } = props;
 
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const Icon = getIcon(thirdPartyPayment);
 
@@ -67,7 +75,12 @@ export const TPP: React.FC<CombinedProps> = (props) => {
           })}
         />
       </span>
-      <div className={classes.paymentContainer}>
+      <div className={classes.paymentTextContainer}>
+        {!matchesSmDown ? (
+          <Typography className={classes.paymentMethodLabel}>
+            &nbsp;{thirdPartyPaymentMap[thirdPartyPayment].label}
+          </Typography>
+        ) : null}
         <CreditCard creditCard={creditCard} showIcon={false} />
       </div>
     </>
