@@ -228,6 +228,13 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
 
   const isManaged = accountSettings ? accountSettings.managed : false;
 
+  // Hide table if current plan is not being displayed
+  // ie. Users with no access to Longview
+  const isTableDisplayed =
+    Boolean(subscriptions.error) ||
+    currentSubscription === selectedSub ||
+    mayUserModifyLVSubscription;
+
   const isButtonDisabled =
     Boolean(subscriptions.error) ||
     currentSubscription === selectedSub ||
@@ -257,7 +264,7 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
             />
           )}
           {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
-          {mayUserModifyLVSubscription && (
+          {isTableDisplayed && (
             <>
               <Table className={classes.table}>
                 <TableHead>
