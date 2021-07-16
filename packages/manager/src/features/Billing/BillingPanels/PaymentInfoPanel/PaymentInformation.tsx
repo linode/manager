@@ -55,11 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'underline',
     },
   },
-  scroll: {
-    overflowY: 'scroll',
-    overflowX: 'hidden',
-    maxHeight: 200,
-  },
 }));
 
 interface Props {
@@ -130,34 +125,32 @@ const PaymentInformation: React.FC<Props> = (props) => {
             </Button>
           ) : null}
         </div>
-        <div className={classes.scroll}>
-          {error ? (
-            <Typography>
-              {
-                getAPIErrorOrDefault(
-                  error,
-                  'There was an error retrieving your payment methods.'
-                )[0].reason
+        {error ? (
+          <Typography>
+            {
+              getAPIErrorOrDefault(
+                error,
+                'There was an error retrieving your payment methods.'
+              )[0].reason
+            }
+          </Typography>
+        ) : !paymentMethods || paymentMethods?.length == 0 ? (
+          <Typography>
+            No payment methods have been specified for this account.
+          </Typography>
+        ) : (
+          paymentMethods.map((paymentMethod: PaymentMethod) => (
+            <PaymentMethodRow
+              key={paymentMethod.type}
+              paymentMethod={paymentMethod}
+              onEdit={
+                paymentMethod.type === 'credit_card'
+                  ? openEditDrawer
+                  : undefined
               }
-            </Typography>
-          ) : !paymentMethods || paymentMethods?.length == 0 ? (
-            <Typography>
-              No payment methods have been specified for this account.
-            </Typography>
-          ) : (
-            paymentMethods.map((paymentMethod: PaymentMethod) => (
-              <PaymentMethodRow
-                key={paymentMethod.type}
-                paymentMethod={paymentMethod}
-                onEdit={
-                  paymentMethod.type === 'credit_card'
-                    ? openEditDrawer
-                    : undefined
-                }
-              />
-            ))
-          )}
-        </div>
+            />
+          ))
+        )}
         {isGooglePayEnabled &&
         !paymentMethods?.some(
           (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
