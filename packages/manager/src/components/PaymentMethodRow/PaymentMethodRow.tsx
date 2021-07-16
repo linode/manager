@@ -14,6 +14,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
 import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,26 +51,10 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
   const makeDefault = async (id: number) => {
     try {
       await makeDefaultPaymentMethod(id);
-
-      queryClient.setQueryData(
-        'account-payment-methods-all',
-        (oldData: PaymentMethod[]) => {
-          const otherPaymentMethods = oldData
-            .filter((method: PaymentMethod) => method.id !== paymentMethod.id)
-            .map((method) => (method.is_default = false));
-
-          return [
-            ...otherPaymentMethods,
-            {
-              ...paymentMethod,
-              is_default: true,
-            },
-          ];
-        }
-      );
+      queryClient.invalidateQueries(`${queryKey}-all`);
     } catch (errors) {
       enqueueSnackbar(
-        errors[0].reason || `Unable to change your default payment method.`,
+        errors[0]?.reason || `Unable to change your default payment method.`,
         { variant: 'error' }
       );
     }
