@@ -34,6 +34,7 @@ type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 export const BillingDetail: React.FC<CombinedProps> = (props) => {
   const {
     data: paymentMethods,
+    isLoading: paymentMethodsLoading,
     error: paymentMethodsError,
   } = useAllPaymentMethodsQuery();
 
@@ -89,6 +90,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 taxId={account.tax_id}
               />
               <PaymentInformation
+                loading={paymentMethodsLoading}
                 error={paymentMethodsError}
                 paymentMethods={paymentMethods}
               />

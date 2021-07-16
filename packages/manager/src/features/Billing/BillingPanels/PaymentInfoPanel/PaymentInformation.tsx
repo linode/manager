@@ -12,6 +12,7 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import DismissibleBanner from 'src/components/DismissibleBanner';
+import CircleProgress from 'src/components/CircleProgress';
 import styled from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -26,6 +27,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   summarySectionHeight: {
     flex: '0 1 auto',
     width: '100%',
+  },
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
   },
   container: {
     display: 'flex',
@@ -58,12 +63,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  loading: boolean;
   error?: APIError[] | null;
   paymentMethods: PaymentMethod[] | undefined;
 }
 
 const PaymentInformation: React.FC<Props> = (props) => {
-  const { paymentMethods, error } = props;
+  const { loading, error, paymentMethods } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
@@ -125,7 +131,11 @@ const PaymentInformation: React.FC<Props> = (props) => {
             </Button>
           ) : null}
         </div>
-        {error ? (
+        {loading ? (
+          <Grid className={classes.loading}>
+            <CircleProgress mini />
+          </Grid>
+        ) : error ? (
           <Typography>
             {
               getAPIErrorOrDefault(
