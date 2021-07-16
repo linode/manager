@@ -305,8 +305,16 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#888',
-          opacity: 0.5,
+          // color: '#888',
+          // opacity: 0.5,
+          // backgroundColor: '#454b54',
+          // color: '#5c6470'
+          backgroundColor: '#454b54',
+          color: '#5c6470',
+        },
+        '&Miu-disabled': {
+          backgroundColor: '#454b54',
+          color: '#5c6470',
         },
         '&.loading': {
           color: primaryColors.text,
@@ -324,9 +332,15 @@ const darkThemeOptions = {
         '&:active': {
           backgroundColor: primaryColors.dark,
         },
+        '&Miu-disabled': {
+          backgroundColor: '#454b54',
+          color: '#5c6470',
+        },
         '&$disabled': {
-          backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.divider,
+          // backgroundColor: cmrBorderColors.borderTable,
+          // color: cmrBorderColors.divider,
+          backgroundColor: '#454b54',
+          color: '#5c6470',
         },
         '&.loading': {
           backgroundColor: primaryColors.text,
@@ -347,7 +361,8 @@ const darkThemeOptions = {
           borderColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#c9cacb',
+          color: '#5c6470',
+          backgroundColor: '#454b54',
         },
         '&.cancel': {
           borderColor: 'transparent',
