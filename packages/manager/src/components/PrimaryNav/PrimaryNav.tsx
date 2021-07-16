@@ -179,6 +179,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         {
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
+          activeLinks: ['/kubernetes/create'],
           icon: <Kubernetes />,
         },
         {
