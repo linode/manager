@@ -151,19 +151,21 @@ const PaymentInformation: React.FC<Props> = (props) => {
             />
           ))
         )}
-        {isGooglePayEnabled &&
-        !paymentMethods?.some(
-          (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
-        ) ? (
-          <Box display="flex" alignItems="center" mt={3}>
-            <GooglePay width={16} height={16} />
-            <Typography className={classes.googlePayNotice}>
-              Google Pay is now available for recurring payments.{' '}
-              <Link to="#" onClick={() => replace(drawerLink)}>
-                Add Google Pay
-              </Link>
-            </Typography>
-          </Box>
+        {showGooglePayAvailableNotice ? (
+          <DismissibleBanner
+            className={classes.googlePayNoticeContainer}
+            preferenceKey="google-pay-available-notification"
+          >
+            <Box display="flex" alignItems="center">
+              <GooglePay width={16} height={16} />
+              <Typography className={classes.googlePayNotice}>
+                Google Pay is now available for recurring payments.{' '}
+                <Link to="#" onClick={() => replace(drawerLink)}>
+                  Add Google Pay
+                </Link>
+              </Typography>
+            </Box>
+          </DismissibleBanner>
         ) : null}
         <UpdateCreditCardDrawer
           open={editDrawerOpen}
