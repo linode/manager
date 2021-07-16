@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   paymentMethodLabel: {
     fontWeight: 'bold',
     marginRight: 8,
+    marginLeft: 3,
   },
   payPal: {
     border: `1px solid ${theme.color.grey2}`,
@@ -78,7 +79,7 @@ export const TPP: React.FC<CombinedProps> = (props) => {
       <div className={classes.paymentTextContainer}>
         {!matchesSmDown ? (
           <Typography className={classes.paymentMethodLabel}>
-            &nbsp;{thirdPartyPaymentMap[thirdPartyPayment].label}
+            {thirdPartyPaymentMap[thirdPartyPayment].label}
           </Typography>
         ) : null}
         <CreditCard creditCard={creditCard} showIcon={false} />
