@@ -290,6 +290,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         heading="Notification Thresholds"
         success={this.state.success}
         actions={this.renderExpansionActions}
+        defaultExpanded
       >
         {generalError && <Notice error>{generalError}</Notice>}
         {alertSections.map((p, idx) => (

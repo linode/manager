@@ -70,11 +70,11 @@ export const makeResourcePage = (
 });
 
 const statusPage = [
-  rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
+  rest.get('*/api/v2/incidents*', (req, res, ctx) => {
     const response = incidentResponseFactory.build();
     return res(ctx.json(response));
   }),
-  rest.get('*statuspage.io/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+  rest.get('*/api/v2/scheduled_maintenances*', (req, res, ctx) => {
     const response = maintenanceResponseFactory.build();
     return res(ctx.json(response));
   }),

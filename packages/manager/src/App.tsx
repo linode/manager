@@ -1,6 +1,5 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
-import { Account, AccountCapability } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
@@ -153,10 +152,6 @@ export class App extends React.Component<CombinedProps, State> {
       settingsError,
       bucketsError,
       nodeBalancersError,
-      accountData,
-      accountCapabilities,
-      accountLoading,
-      accountError,
       userId,
       username,
     } = this.props;
@@ -202,20 +197,10 @@ export class App extends React.Component<CombinedProps, State> {
         </div>
         <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
         {/** Update the LD client with the user's id as soon as we know it */}
-        <IdentifyUser
-          userID={userId}
-          username={username}
-          accountError={accountError}
-          accountCountry={accountData ? accountData.country : undefined}
-          taxID={accountData ? accountData.tax_id : undefined}
-          euuid={this.props.euuid}
-        />
+        <IdentifyUser userID={userId} username={username} />
         <DocumentTitleSegment segment="Linode Manager" />
         {this.props.featureFlagsLoading ? null : (
           <MainContent
-            accountCapabilities={accountCapabilities}
-            accountError={accountError}
-            accountLoading={accountLoading}
             history={this.props.history}
             location={this.props.location}
             toggleTheme={toggleTheme}
@@ -236,13 +221,10 @@ interface StateProps {
   types?: string[];
   regions?: Region[];
   userId?: number;
-  accountData?: Account;
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
-  accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
-  accountLoading: boolean;
   accountSettingsLoading: boolean;
   accountSettingsError?: APIError[];
   linodesError?: APIError[];
@@ -252,7 +234,6 @@ interface StateProps {
   imagesError?: APIError[];
   bucketsError?: APIError[];
   profileError?: APIError[];
-  accountError?: APIError[];
   settingsError?: APIError[];
   notificationsError?: APIError[];
   typesError?: APIError[];
@@ -274,16 +255,10 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   typesError: state.__resources.types.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
-  accountData: state.__resources.account.data,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
     ['authentication', 'loggedInAsCustomer'],
-    state
-  ),
-  accountCapabilities: pathOr(
-    [],
-    ['__resources', 'account', 'data', 'capabilities'],
     state
   ),
   accountSettingsLoading: pathOr(
@@ -296,8 +271,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
-  accountLoading: state.__resources.account.loading,
-  accountError: path(['read'], state.__resources.account.error),
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,

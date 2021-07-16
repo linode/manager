@@ -97,7 +97,11 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
     const disabled = permissions === 'read_only';
 
     return (
-      <Accordion heading="Shutdown Watchdog" data-qa-watchdog-panel>
+      <Accordion
+        heading="Shutdown Watchdog"
+        data-qa-watchdog-panel
+        defaultExpanded
+      >
         <Grid
           container
           alignItems="center"

@@ -3,7 +3,6 @@ import { PaymentMethod } from '@linode/api-v4';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
-import { compose } from 'recompose';
 import { v4 } from 'uuid';
 import { useSnackbar } from 'notistack';
 import Divider from 'src/components/core/Divider';
@@ -16,15 +15,13 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
-import AccountContainer, {
-  DispatchProps as AccountDispatchProps,
-} from 'src/containers/account.container';
+import LinearProgress from 'src/components/LinearProgress';
 import useFlags from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import CreditCardPayment from './CreditCardPayment';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 import GooglePayButton from './GooglePayButton';
-import LinearProgress from 'src/components/LinearProgress';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -53,13 +50,6 @@ interface Props {
   onClose: () => void;
 }
 
-interface AccountContextProps {
-  accountLoading: boolean;
-  balance: false | number;
-}
-
-export type CombinedProps = Props & AccountContextProps & AccountDispatchProps;
-
 export const getMinimumPayment = (balance: number | false) => {
   if (!balance || balance <= 0) {
     return '5.00';
@@ -76,11 +66,18 @@ export const getMinimumPayment = (balance: number | false) => {
 
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
-export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
-  const { accountLoading, balance, paymentMethods, open, onClose } = props;
-  const { enqueueSnackbar } = useSnackbar();
+export const PaymentDrawer: React.FC<Props> = (props) => {
+  const { paymentMethods, open, onClose } = props;
+
+  const {
+    data: account,
+    isLoading: accountLoading,
+    refetch: accountRefetch,
+  } = useAccount();
+
   const classes = useStyles();
   const flags = useFlags();
+  const { enqueueSnackbar } = useSnackbar();
 
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
@@ -94,7 +91,10 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     (payment) => payment.type === 'credit_card'
   )[0]?.data;
 
-  const [usd, setUSD] = React.useState<string>(getMinimumPayment(balance));
+  const [usd, setUSD] = React.useState<string>(
+    getMinimumPayment(account?.balance || 0)
+  );
+
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
@@ -108,8 +108,8 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    setUSD(getMinimumPayment(balance));
-  }, [balance]);
+    setUSD(getMinimumPayment(account?.balance || 0));
+  }, [account]);
 
   React.useEffect(() => {
     if (open) {
@@ -141,7 +141,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
       setUSD('0.00');
       setCreditCardKey(v4());
       setPayPalKey(v4());
-      props.requestAccount();
+      accountRefetch();
       onClose();
     }
     if (warnings && warnings.length > 0) {
@@ -149,9 +149,9 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const minimumPayment = getMinimumPayment(balance || 0);
+  const minimumPayment = getMinimumPayment(account?.balance || 0);
 
-  if (!accountLoading && balance === undefined) {
+  if (!accountLoading && account?.balance === undefined) {
     return (
       <Grid container>
         <ErrorState errorText="You are not authorized to view billing information" />
@@ -172,21 +172,25 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
           {isProcessing ? (
             <LinearProgress className={classes.progress} />
           ) : null}
-          {balance !== false && (
+          {accountLoading ? (
+            <Typography data-testid="loading-account">Loading</Typography>
+          ) : account ? (
             <Grid item>
               <Typography variant="h3" className={classes.currentBalance}>
                 <strong>
                   Current balance:{' '}
                   <span
-                    className={classnames({ [classes.credit]: balance < 0 })}
+                    className={classnames({
+                      [classes.credit]: account?.balance < 0,
+                    })}
                   >
-                    <Currency quantity={Math.abs(balance)} />
-                    {balance < 0 ? ' Credit' : ''}
+                    <Currency quantity={Math.abs(account?.balance || 0)} />
+                    {account?.balance < 0 ? ' Credit' : ''}
                   </span>
                 </strong>
               </Typography>
             </Grid>
-          )}
+          ) : null}
           <Grid item xs={6}>
             <TextField
               label="Payment Amount"
@@ -240,7 +244,7 @@ export const PaymentDrawer: React.FC<CombinedProps> = (props) => {
                       countryCode: 'US',
                       totalPrice: usd,
                     }}
-                    balance={balance}
+                    balance={account?.balance ?? false}
                     disabled={isProcessing}
                     setSuccess={setSuccess}
                     setError={setErrorMessage}
@@ -293,11 +297,4 @@ const Warning: React.FC<WarningProps> = (props) => {
   return <Notice warning>{message}</Notice>;
 };
 
-const withAccount = AccountContainer(
-  (ownProps, { accountLoading, accountData }) => ({
-    accountLoading,
-    balance: accountData?.balance ?? false,
-  })
-);
-
-export default compose<CombinedProps, Props>(withAccount)(PaymentDrawer);
+export default PaymentDrawer;

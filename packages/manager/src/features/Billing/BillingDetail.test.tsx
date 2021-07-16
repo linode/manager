@@ -1,7 +1,6 @@
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { paymentMethodFactory } from 'src/factories';
-import { accountFactory } from 'src/factories/account';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { history, match, mockLocation } from 'src/__data__/reactRouterProps';
@@ -30,17 +29,6 @@ jest.mock('@linode/api-v4/lib/account', () => {
     getAccountInfo: jest.fn().mockResolvedValue([]),
   };
 });
-
-jest.mock('src/hooks/useAccount', () => ({
-  useAccount: jest.fn().mockReturnValue({
-    account: {
-      data: accountFactory.build(),
-      loading: false,
-      error: {},
-    },
-    requestAccount: jest.fn(),
-  }),
-}));
 
 describe('Account Landing', () => {
   it('should render', async () => {

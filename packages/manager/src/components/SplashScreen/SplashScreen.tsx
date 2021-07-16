@@ -5,10 +5,10 @@ import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
-import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
 
 import Logo from 'src/assets/logo/logo-animated.svg';
 import './keyframes.css';
+import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
 
 const useStyles = makeStyles({
   root: {

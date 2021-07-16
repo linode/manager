@@ -1,25 +1,21 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { paymentFactory } from 'src/factories/billing';
 import { rest, server } from 'src/mocks/testServer';
-import PaymentDrawer, {
-  CombinedProps,
-  getMinimumPayment,
-} from './PaymentDrawer';
+import PaymentDrawer, { getMinimumPayment } from './PaymentDrawer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { isAllowedUSDAmount, shouldEnablePaypalButton } from './Paypal';
 
-const props: CombinedProps = {
+const props = {
+  paymentMethods: [],
   open: true,
   onClose: jest.fn(),
-  accountLoading: false,
-  paymentMethods: [],
-  balance: 50,
-  requestAccount: jest.fn(),
-  updateAccount: jest.fn(),
-  saveCreditCard: jest.fn(),
 };
 
 describe('Make a Payment Panel', () => {
@@ -66,7 +62,10 @@ describe('Make a Payment Panel', () => {
   describe('Jailbreak warnings', () => {
     it.skip('should display a jailbreak warning if returned from the API', async () => {
       render(wrapWithTheme(<PaymentDrawer {...props} />));
-      userEvent.click(screen.getByText(/pay via credit card/i));
+
+      await waitForElementToBeRemoved(screen.getByTestId('loading-account'));
+
+      userEvent.click(screen.getByText(/pay now/i));
       userEvent.click(screen.getByTestId('credit-card-submit'));
       expect(
         await screen.findByText(/your payment has been processed but/i)
