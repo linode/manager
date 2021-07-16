@@ -1,13 +1,12 @@
-import * as dayjs from 'dayjs';
-dayjs().format();
+import { DateTime } from 'luxon';
 
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const _loginWithToken = (win) => {
   win.localStorage.setItem('authentication/oauth-token', oauthtoken);
   win.localStorage.setItem('authentication/scopes', '*');
   // cy.log(window.localStorage.getItem('authentication/oauth-token'));
-  const expireDate = dayjs().add(30, 'day');
-  const isoExpire = expireDate.toISOString();
+  const expireDate = DateTime.local().plus({ days: 30 });
+  const isoExpire = expireDate.toISO();
   // cy.log(isoExpire);
   win.localStorage.setItem('authentication/expires', isoExpire);
   win.localStorage.setItem('authentication/expire-datetime', isoExpire);

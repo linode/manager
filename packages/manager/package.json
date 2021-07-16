@@ -206,7 +206,6 @@
     "cypress": "^7.7.0",
     "cypress-axe": "^0.8.1",
     "cypress-file-upload": "^5.0.7",
-    "dayjs": "^1.10.6",
     "dotenv": "^6.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
