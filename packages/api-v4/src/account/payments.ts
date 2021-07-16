@@ -162,6 +162,22 @@ export const getPaymentMethods = (params?: any) => {
 };
 
 /**
+ * getPaymentMethod
+ *
+ * Gets information about a specific payment method on
+ * your account.
+ *
+ * @param id {number} the id of the payment method
+ *
+ */
+export const getPaymentMethod = (id: number) => {
+  return Request<PaymentMethod>(
+    setURL(`${API_ROOT}/account/payment-method/${id}`),
+    setMethod('GET')
+  );
+};
+
+/**
  * getClientToken
  *
  * Gets a unique token that is used to interact with the
@@ -200,7 +216,10 @@ export const addPaymentMethod = (data: PaymentMethodData) => {
 };
 
 /**
+ * makeDefaultPaymentMethod
+ *
  * Action endpoint to change your default payment method
+ *
  * @param id {number} id of the payment method
  */
 export const makeDefaultPaymentMethod = (id: number) => {
