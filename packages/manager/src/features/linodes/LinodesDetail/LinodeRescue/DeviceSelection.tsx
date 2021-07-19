@@ -26,14 +26,27 @@ interface Props {
   slots: string[];
   rescue?: boolean;
   disabled?: boolean;
+  errorText?: string;
 }
 
 type CombinedProps = Props;
 
 const DeviceSelection: React.FC<CombinedProps> = (props) => {
-  const { devices, onChange, getSelected, slots, rescue, disabled } = props;
+  const {
+    devices,
+    onChange,
+    getSelected,
+    slots,
+    rescue,
+    disabled,
+    errorText,
+  } = props;
 
   const counter = defaultTo(0, props.counter) as number;
+
+  const diskOrVolumeInErrReason = errorText
+    ? extractDiskOrVolumeId(errorText)
+    : null;
 
   return (
     <div data-testid="device-select">
@@ -62,7 +75,7 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
 
         return counter < idx ? null : (
           <FormControl
-            updateFor={[selectedDevice, deviceList]}
+            updateFor={[selectedDevice, deviceList, errorText]}
             key={slot}
             fullWidth
           >
@@ -74,6 +87,11 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
               placeholder={'None'}
               isClearable={false}
               label={`/dev/${slot}`}
+              errorText={
+                selectedDevice?.value === diskOrVolumeInErrReason && errorText
+                  ? adjustedErrorText(errorText, selectedDevice.label)
+                  : undefined
+              }
               noMarginTop
             />
           </FormControl>
@@ -99,3 +117,20 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
 };
 
 export default DeviceSelection as React.ComponentType<Props>;
+
+const blockDeviceRegex = /[0-9]+/g;
+
+export const extractDiskOrVolumeId = (errorText: string) => {
+  const type = errorText.includes('disk') ? 'disk' : 'volume';
+
+  const blockDeviceRegexMatch = errorText.match(blockDeviceRegex)?.[0];
+
+  // if there's a match, return a string structured in a way that it is easily compared to selectedDevice.value
+  return blockDeviceRegexMatch
+    ? `${type}-${Number(blockDeviceRegexMatch)}`
+    : null;
+};
+
+export const adjustedErrorText = (errorText: string, deviceLabel?: string) => {
+  return deviceLabel ? `${deviceLabel} is already in use.` : errorText;
+};
