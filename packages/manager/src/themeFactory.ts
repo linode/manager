@@ -764,69 +764,64 @@ const themeDefaults: ThemeDefaults = () => {
       },
       MuiAccordion: {
         root: {
+          flexBasis: '100%',
+          width: '100%',
           '& .actionPanel': {
+            paddingBottom: 12,
             paddingLeft: 16,
-            paddingRight: 16,
           },
-          '& table': {
-            border: `1px solid ${primaryColors.divider}`,
-            borderBottom: 0,
-          },
-        },
-      },
-      MuiAccordionDetails: {
-        root: {
-          padding: 16,
-          backgroundColor: 'white',
         },
       },
       MuiAccordionSummary: {
         root: {
-          justifyContent: 'flex-start',
-          backgroundColor: '#fbfbfb',
-          minHeight: 48,
-          padding: '0 18px',
-          '& h3': {
-            transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-          },
+          justifyContent: 'space-between',
+          backgroundColor: 'transparent',
+          paddingRight: 2,
+          paddingLeft: 16,
           '&:hover': {
             '& h3': {
               color: primaryColors.light,
             },
-          },
-          '&:focus': {
-            outline: '1px dotted #999',
-            zIndex: 2,
+            '& svg': {
+              fill: '#2575d0',
+              stroke: '#2575d0',
+            },
           },
           '&$expanded': {
-            minHeight: 48,
             margin: 0,
+            minHeight: 48,
+            '& .caret': {
+              transform: 'rotate(0deg)',
+            },
           },
-          '&$focused': {
-            backgroundColor: '#fbfbfb',
+          '& h3': {
+            transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           },
         },
         content: {
-          flexGrow: 0,
-          order: 2,
-          margin: '12px 0',
           '&$expanded': {
             margin: '12px 0',
           },
         },
         expandIcon: {
-          display: 'flex',
-          marginLeft: -16,
+          '&$expanded': {
+            transform: 'rotate(180deg)',
+          },
           '& svg': {
-            fill: cmrTextColors.tableHeader,
+            fill: '#2575d0',
+            stroke: '#2575d0',
             height: 22,
             width: 22,
             transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
             ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
           },
-          '&$expanded': {
-            transform: 'rotate(180deg)',
-          },
+        },
+      },
+      MuiAccordionDetails: {
+        root: {
+          backgroundColor: 'transparent',
+          padding: 16,
+          paddingTop: 0,
         },
       },
       MuiFormControl: {

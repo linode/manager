@@ -16,9 +16,6 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -49,7 +46,6 @@ interface Props {
 type CombinedProps = Props &
   StateProps &
   DispatchProps &
-  FeatureFlagConsumerProps &
   WithStyles<ClassNames> & { theme: Theme };
 
 class ProfileSettings extends React.Component<CombinedProps, State> {
@@ -65,7 +61,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, status, flags, toggleTheme } = this.props;
+    const { classes, status, toggleTheme } = this.props;
 
     const preferenceEditorMode =
       getQueryParam(window.location.search, 'preferenceEditor') === 'true';
@@ -97,26 +93,24 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
             />
           )}
         </Paper>
-        {flags.cmr ? (
-          <Paper className={classes.root}>
-            <Typography variant="h2" className={classes.title}>
-              Dark Mode
-            </Typography>
-            <Grid container alignItems="center">
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<ThemeToggle toggleTheme={toggleTheme} />}
-                  label={`
+        <Paper className={classes.root}>
+          <Typography variant="h2" className={classes.title}>
+            Dark Mode
+          </Typography>
+          <Grid container alignItems="center">
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<ThemeToggle toggleTheme={toggleTheme} />}
+                label={`
                 Dark mode is ${
                   this.props.theme.name === 'darkTheme' ? 'enabled' : 'disabled'
                 }
               `}
-                  disabled={this.state.submitting}
-                />
-              </Grid>
+                disabled={this.state.submitting}
+              />
             </Grid>
-          </Paper>
-        ) : null}
+          </Grid>
+        </Paper>
       </>
     );
   }
@@ -157,11 +151,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withFeatureFlags,
-  withTheme,
-  connected
-);
+const enhanced = compose<CombinedProps, Props>(styled, withTheme, connected);
 
 export default enhanced(ProfileSettings);
