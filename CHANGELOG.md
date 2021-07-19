@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-07-19] - v1.45.0
+
+### Added:
+- Google Pay support
+- Analytics for Image Uploads
+- Ability to retry an Image upload
+
+### Changed:
+- Communicate account balances differently depending on whether balance is past due or not
+- Updated font-logos and added Rocky Linux icon in map
+- Remove remaining CMR flag dependency and clean up Accordion
+- Referrals, ActionMenu CMR, and Linode Settings cleanup
+- Copy for High Memory plans
+- UI tweaks for LKE Detail page
+- Remove "Other Entities" from Monthly Network Transfer section of Network tab
+- Never display payments in Payment Activity table as negative
+- Expand all Linode Settings accordions by default
+- Table consistency across app
+- Use new status page URL for system status
+
+### Fixed:
+- Visibility of Block Device errors in Linode Config dialog
+- staticContext console warning
+- Nodebalancer table console error regarding children with the same key
+- Formatting error when showing rDNS error
+- Referral link showing for customers who have not met the $25 min payment threshold
+- Kubernetes navigation link showing as inactive on /kubernetes/create
+- Typecheck error in FileUploader by importing Dispatch type
+- Image uploads not working on some systems
+
 ## [2021-07-01] - v1.44.1
 
 ### Fixed:
