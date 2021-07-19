@@ -308,10 +308,6 @@ const darkThemeOptions = {
           backgroundColor: '#454b54',
           color: '#5c6470',
         },
-        '&Miu-disabled': {
-          backgroundColor: '#454b54',
-          color: '#5c6470',
-        },
         '&.loading': {
           color: primaryColors.text,
         },
@@ -327,10 +323,6 @@ const darkThemeOptions = {
         },
         '&:active': {
           backgroundColor: primaryColors.dark,
-        },
-        '&Miu-disabled': {
-          backgroundColor: '#454b54',
-          color: '#5c6470',
         },
         '&$disabled': {
           backgroundColor: '#454b54',
