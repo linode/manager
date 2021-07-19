@@ -305,10 +305,6 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          // color: '#888',
-          // opacity: 0.5,
-          // backgroundColor: '#454b54',
-          // color: '#5c6470'
           backgroundColor: '#454b54',
           color: '#5c6470',
         },
@@ -337,8 +333,6 @@ const darkThemeOptions = {
           color: '#5c6470',
         },
         '&$disabled': {
-          // backgroundColor: cmrBorderColors.borderTable,
-          // color: cmrBorderColors.divider,
           backgroundColor: '#454b54',
           color: '#5c6470',
         },
