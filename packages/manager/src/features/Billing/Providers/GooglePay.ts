@@ -9,6 +9,7 @@ import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
+import { reportException } from 'src/exceptionReporting';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
   merchantId: GPAY_MERCHANT_ID || '',
@@ -61,6 +62,9 @@ export const gPay = async (
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
     });
   } catch (error) {
+    reportException('Unable to open Google Pay.', {
+      error,
+    });
     return setMessage('Unable to open Google Pay.', 'error');
   }
 
@@ -146,13 +150,15 @@ export const gPay = async (
     if (error.message && (error.message as string).includes('User closed')) {
       return;
     }
-    // @TODO log to Sentry
+
+    const errorMsg = isOneTimePayment
+      ? 'Unable to complete Google Pay payment'
+      : 'Unable to add payment method';
+
+    reportException(errorMsg, {
+      error,
+    });
     // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
-    setMessage(
-      isOneTimePayment
-        ? 'Unable to complete Google Pay payment'
-        : 'Unable to add payment method',
-      'error'
-    );
+    setMessage(errorMsg, 'error');
   }
 };
