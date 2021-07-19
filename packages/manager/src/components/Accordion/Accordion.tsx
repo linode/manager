@@ -49,14 +49,6 @@ type CombinedProps = Props;
 export const Accordion: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState<boolean | undefined>(
-    props.defaultExpanded
-  );
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
   const {
     summaryProps,
     detailProps,
@@ -65,14 +57,21 @@ export const Accordion: React.FC<CombinedProps> = (props) => {
     success,
     warning,
     error,
+    defaultExpanded,
     headingNumberCount,
     ...accordionProps
   } = props;
 
+  const [open, setOpen] = React.useState<boolean | undefined>(defaultExpanded);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   const notice = success || warning || error || null;
 
   return (
-    <_Accordion {...accordionProps} data-qa-panel>
+    <_Accordion defaultExpanded {...accordionProps} data-qa-panel>
       <AccordionSummary
         onClick={handleClick}
         expandIcon={<KeyboardArrowDown className="caret" />}
@@ -82,9 +81,9 @@ export const Accordion: React.FC<CombinedProps> = (props) => {
         <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
           {props.heading}
         </Typography>
-        {headingNumberCount && headingNumberCount > 0 && (
+        {headingNumberCount && headingNumberCount > 0 ? (
           <span className={classes.itemCount}>{headingNumberCount}</span>
-        )}
+        ) : null}
       </AccordionSummary>
       <AccordionDetails {...detailProps} data-qa-panel-details>
         <Grid container>
