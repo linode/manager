@@ -1,51 +1,43 @@
 import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { makeStyles } from '@material-ui/styles';
+import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import withProfile from 'src/containers/profile.container';
-import withImages, {
-  ImagesDispatch,
-} from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ImagesPricingCopy from './ImagesPricingCopy';
+import withImages, {
+  ImagesDispatch,
+} from 'src/containers/withImages.container';
 
-type ClassNames = 'root' | 'helperText' | 'container';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    helperText: {
-      paddingTop: theme.spacing(1) / 2,
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  helperText: {
+    paddingTop: theme.spacing(1) / 2,
+  },
+  container: {
+    padding: theme.spacing(3),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(),
+    '& .MuiFormHelperText-root': {
+      marginBottom: theme.spacing(2),
     },
-    container: {
-      padding: theme.spacing(3),
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(),
-      '& .MuiFormHelperText-root': {
-        marginBottom: theme.spacing(2),
-      },
-    },
-  });
+  },
+}));
 
 export interface Props {
   label?: string;
@@ -53,115 +45,89 @@ export interface Props {
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-interface State {
-  selectedLinode: number;
-  selectedDisk: string | null;
-  disks: Disk[];
-  notice?: string;
-  errors?: APIError[];
-  submitting: boolean;
-}
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{}> &
-  WithSnackbarProps &
-  ProfileProps &
-  ImagesDispatch;
+export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
+  const {
+    label,
+    description,
+    changeLabel,
+    changeDescription,
+    createImage,
+  } = props;
 
-class CreateImageTab extends React.Component<CombinedProps, State> {
-  mounted: boolean = false;
-  state = {
-    selectedLinode: 0,
-    selectedDisk: '',
-    disks: [],
-    errors: undefined,
-    notice: undefined,
-    submitting: false,
-  };
+  const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+  const { push } = useHistory();
 
-  componentDidMount() {
-    this.mounted = true;
-  }
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+  const [selectedLinode, setSelectedLinode] = React.useState<number>(0);
+  const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
+  const [disks, setDisks] = React.useState<Disk[]>([]);
+  const [notice, setNotice] = React.useState<string | undefined>();
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-  fetchLinodeDisksOnLinodeChange = (selectedLinode: number) => {
-    this.setState({
-      selectedDisk: '',
-    });
+  const canCreateImage =
+    Boolean(!profile?.restricted) || Boolean(grants?.global.add_images);
+
+  const availableLinodesToImagize = profile?.restricted
+    ? grants?.linode
+        .filter((thisGrant) => thisGrant.permissions === 'read_write')
+        .map((thisGrant) => thisGrant.id) ?? []
+    : null;
+
+  const fetchLinodeDisksOnLinodeChange = (selectedLinode: number) => {
+    setSelectedDisk('');
 
     getLinodeDisks(selectedLinode)
       .then((response) => {
-        if (!this.mounted) {
-          return;
-        }
-
         const filteredDisks = response.data.filter(
           (disk) => disk.filesystem !== 'swap'
         );
-        if (!equals(this.state.disks, filteredDisks)) {
-          this.setState({ disks: filteredDisks });
+
+        if (!equals(disks, filteredDisks)) {
+          setDisks(filteredDisks);
         }
       })
       .catch((_) => {
-        if (!this.mounted) {
-          return;
-        }
-
-        if (this.mounted) {
-          this.setState({
-            errors: [
-              {
-                field: 'disk_id',
-                reason: 'Could not retrieve disks for this Linode.',
-              },
-            ],
-          });
-        }
+        setErrors([
+          {
+            field: 'disk_id',
+            reason: 'Could not retrieve disks for this Linode.',
+          },
+        ]);
       });
   };
 
-  changeSelectedLinode = (linodeId: number | null) => {
+  const changeSelectedLinode = (linodeId: number | null) => {
     const linodeID = linodeId ?? 0;
-    this.fetchLinodeDisksOnLinodeChange(linodeID);
-    this.setState({
-      selectedLinode: linodeID,
-    });
+    fetchLinodeDisksOnLinodeChange(linodeID);
+    setSelectedLinode(linodeID);
   };
 
-  handleLinodeChange = (linodeID: number) => {
+  const handleLinodeChange = (linodeID: number) => {
     // Clear any errors
-    this.setState({ errors: undefined });
-    this.changeSelectedLinode(linodeID);
+    setErrors(undefined);
+    changeSelectedLinode(linodeID);
   };
 
-  changeSelectedDisk = (disk: string | null) => {
-    this.setState({
-      selectedDisk: disk,
-    });
+  const changeSelectedDisk = (disk: string | null) => {
+    setSelectedDisk(disk);
   };
 
-  handleDiskChange = (diskID: string | null) => {
+  const handleDiskChange = (diskID: string | null) => {
     // Clear any errors
-    this.setState({ errors: undefined });
-    this.changeSelectedDisk(diskID);
+    setErrors(undefined);
+    changeSelectedDisk(diskID);
   };
 
-  onSubmit = () => {
-    const {
-      history,
-      createImage,
-      enqueueSnackbar,
-      label,
-      description,
-    } = this.props;
+  const onSubmit = () => {
+    setErrors(undefined);
+    setNotice(undefined);
+    setSubmitting(true);
 
-    const { selectedDisk } = this.state;
-
-    this.setState({ errors: undefined, notice: undefined, submitting: true });
     const safeDescription = description ?? '';
 
     createImage({
@@ -170,200 +136,143 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
       description: safeDescription,
     })
       .then((_) => {
-        if (!this.mounted) {
-          return;
-        }
-
         resetEventsPolling();
 
-        this.setState({
-          submitting: false,
-        });
+        setSubmitting(false);
 
         enqueueSnackbar('Image scheduled for creation.', {
           variant: 'info',
         });
 
-        history.push('/images');
+        push('/images');
       })
       .catch((errorResponse) => {
-        if (!this.mounted) {
-          return;
-        }
-
-        this.setState({
-          submitting: false,
-          errors: getAPIErrorOrDefault(
+        setSubmitting(false);
+        setErrors(
+          getAPIErrorOrDefault(
             errorResponse,
             'There was an error creating the image.'
-          ),
-        });
+          )
+        );
       });
   };
 
-  checkRequirements = () => {
+  const checkRequirements = () => {
     // When creating an image, disable the submit button until a Linode and
     // disk are selected.
-    const { selectedDisk, selectedLinode } = this.state;
-
     const isDiskSelected = Boolean(selectedDisk);
 
     return !(isDiskSelected && selectedLinode);
   };
 
-  render() {
-    const {
-      availableLinodesToImagize,
-      canCreateImage,
-      classes,
-      label,
-      description,
-      changeLabel,
-      changeDescription,
-    } = this.props;
-    const {
-      disks,
-      errors,
-      notice,
-      submitting,
-      selectedLinode,
-      selectedDisk,
-    } = this.state;
+  const requirementsMet = checkRequirements();
 
-    const requirementsMet = this.checkRequirements();
+  const hasErrorFor = getAPIErrorFor(
+    {
+      linode_id: 'Linode',
+      disk_id: 'Disk',
+      region: 'Region',
+      size: 'Size',
+      label: 'Label',
+    },
+    errors
+  );
 
-    const hasErrorFor = getAPIErrorFor(
-      {
-        linode_id: 'Linode',
-        disk_id: 'Disk',
-        region: 'Region',
-        size: 'Size',
-        label: 'Label',
-      },
-      errors
-    );
-    const labelError = hasErrorFor('label');
-    const descriptionError = hasErrorFor('description');
-    const generalError = hasErrorFor('none');
-    const linodeError = hasErrorFor('linode_id');
-    const diskError = hasErrorFor('disk_id');
+  const labelError = hasErrorFor('label');
+  const descriptionError = hasErrorFor('description');
+  const generalError = hasErrorFor('none');
+  const linodeError = hasErrorFor('linode_id');
+  const diskError = hasErrorFor('disk_id');
 
-    return (
-      <Paper className={classes.container}>
-        {!canCreateImage ? (
-          <Notice
-            error
-            text="You don't have permissions to create a new Image. Please contact an account administrator for details."
-          />
-        ) : null}
-        {generalError && <Notice error text={generalError} data-qa-notice />}
+  return (
+    <Paper className={classes.container}>
+      {!canCreateImage ? (
+        <Notice
+          error
+          text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+        />
+      ) : null}
+      {generalError && <Notice error text={generalError} data-qa-notice />}
 
-        {notice && <Notice success text={notice} data-qa-notice />}
+      {notice && <Notice success text={notice} data-qa-notice />}
 
-        <ImagesPricingCopy type="captureImage" />
+      <ImagesPricingCopy type="captureImage" />
 
-        <LinodeSelect
-          selectedLinode={selectedLinode}
-          linodeError={linodeError}
+      <LinodeSelect
+        selectedLinode={selectedLinode}
+        linodeError={linodeError}
+        disabled={!canCreateImage}
+        handleChange={(linode) => handleLinodeChange(linode.id)}
+        filterCondition={(linode) =>
+          availableLinodesToImagize
+            ? availableLinodesToImagize.includes(linode.id)
+            : true
+        }
+        updateFor={[
+          selectedLinode,
+          linodeError,
+          classes,
+          canCreateImage,
+          availableLinodesToImagize,
+        ]}
+      />
+
+      <>
+        <DiskSelect
+          selectedDisk={selectedDisk}
+          disks={disks}
+          diskError={diskError}
+          handleChange={handleDiskChange}
+          updateFor={[disks, selectedDisk, diskError, classes]}
           disabled={!canCreateImage}
-          handleChange={(linode) => this.handleLinodeChange(linode.id)}
-          filterCondition={(linode) =>
-            availableLinodesToImagize
-              ? availableLinodesToImagize.includes(linode.id)
-              : true
-          }
-          updateFor={[
-            selectedLinode,
-            linodeError,
-            classes,
-            canCreateImage,
-            availableLinodesToImagize,
-          ]}
+          data-qa-disk-select
+        />
+        <Typography className={classes.helperText} variant="body1">
+          Linode Images cannot be created if you are using raw disks or disks
+          that have been formatted using custom filesystems.
+        </Typography>
+      </>
+
+      <>
+        <TextField
+          label="Label"
+          value={label}
+          onChange={changeLabel}
+          error={Boolean(labelError)}
+          errorText={labelError}
+          disabled={!canCreateImage}
+          data-qa-image-label
         />
 
-        <>
-          <DiskSelect
-            selectedDisk={selectedDisk}
-            disks={disks}
-            diskError={diskError}
-            handleChange={this.handleDiskChange}
-            updateFor={[disks, selectedDisk, diskError, classes]}
-            disabled={!canCreateImage}
-            data-qa-disk-select
-          />
-          <Typography className={classes.helperText} variant="body1">
-            Linode Images cannot be created if you are using raw disks or disks
-            that have been formatted using custom filesystems.
-          </Typography>
-        </>
+        <TextField
+          label="Description"
+          multiline
+          rows={4}
+          value={description}
+          onChange={changeDescription}
+          error={Boolean(descriptionError)}
+          errorText={descriptionError}
+          disabled={!canCreateImage}
+          data-qa-image-description
+        />
+      </>
 
-        <>
-          <TextField
-            label="Label"
-            value={label}
-            onChange={changeLabel}
-            error={Boolean(labelError)}
-            errorText={labelError}
-            disabled={!canCreateImage}
-            data-qa-image-label
-          />
-
-          <TextField
-            label="Description"
-            multiline
-            rows={4}
-            value={description}
-            onChange={changeDescription}
-            error={Boolean(descriptionError)}
-            errorText={descriptionError}
-            disabled={!canCreateImage}
-            data-qa-image-description
-          />
-        </>
-
-        <ActionsPanel
-          style={{ marginTop: 16 }}
-          updateFor={[requirementsMet, classes, submitting]}
+      <ActionsPanel
+        style={{ marginTop: 16 }}
+        updateFor={[requirementsMet, classes, submitting]}
+      >
+        <Button
+          onClick={onSubmit}
+          disabled={requirementsMet || !canCreateImage}
+          loading={submitting}
+          buttonType="primary"
+          data-qa-submit
         >
-          <Button
-            onClick={this.onSubmit}
-            disabled={requirementsMet || !canCreateImage}
-            loading={submitting}
-            buttonType="primary"
-            data-qa-submit
-          >
-            Create Image
-          </Button>
-        </ActionsPanel>
-      </Paper>
-    );
-  }
-}
+          Create Image
+        </Button>
+      </ActionsPanel>
+    </Paper>
+  );
+};
 
-const styled = withStyles(styles);
-
-interface ProfileProps {
-  canCreateImage: boolean;
-  availableLinodesToImagize: number[] | null;
-}
-
-export default compose<CombinedProps, Props>(
-  styled,
-  withRouter,
-  withImages(),
-  withSnackbar,
-  SectionErrorBoundary,
-  withProfile<ProfileProps, {}>((undefined, { profileData: profile }) => ({
-    canCreateImage:
-      Boolean(!profile?.restricted) ||
-      Boolean(profile?.grants?.global.add_images),
-    // Unrestricted users can create Images from any disk;
-    // Restricted users need read_write on the Linode they're trying to Imagize
-    // (in addition to the global add_images grant).
-    availableLinodesToImagize: profile?.restricted
-      ? profile?.grants?.linode
-          .filter((thisGrant) => thisGrant.permissions === 'read_write')
-          .map((thisGrant) => thisGrant.id) ?? []
-      : null,
-  }))
-)(CreateImageTab);
+export default compose(withImages())(CreateImageTab);

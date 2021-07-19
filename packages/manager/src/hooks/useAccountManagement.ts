@@ -1,13 +1,14 @@
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import { State as ProfileState } from 'src/store/profile/profile.reducer';
 import { State as AccountSettingsState } from 'src/store/accountSettings/accountSettings.reducer';
 import { Account, GlobalGrantTypes } from '@linode/api-v4/lib/account';
 import { useAccount } from 'src/queries/account';
+import { Profile } from '@linode/api-v4/lib/profile';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 export interface AccountManagementProps {
   account: Account;
-  profile: ProfileState;
+  profile: Profile;
   accountSettings: AccountSettingsState;
   _isRestrictedUser: boolean;
   _hasGrant: (grant: GlobalGrantTypes) => boolean;
@@ -18,10 +19,8 @@ export interface AccountManagementProps {
 
 export const useAccountManagement = () => {
   const { data: account } = useAccount();
-
-  const profile = useSelector(
-    (state: ApplicationState) => state.__resources.profile
-  );
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const accountSettings = useSelector(
     (state: ApplicationState) => state.__resources.accountSettings
@@ -32,10 +31,10 @@ export const useAccountManagement = () => {
       state.__resources.accountManagement.isLargeAccount
   );
 
-  const _isRestrictedUser = profile.data?.restricted ?? false;
+  const _isRestrictedUser = profile?.restricted ?? false;
 
   const _hasGrant = (grant: GlobalGrantTypes) =>
-    profile.data?.grants?.global?.[grant] ?? false;
+    grants?.global?.[grant] ?? false;
 
   const _hasAccountAccess = !_isRestrictedUser || _hasGrant('account_access');
 

@@ -23,7 +23,6 @@ import withSettings, {
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
-import withProfile from 'src/containers/profile.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -35,8 +34,7 @@ type CombinedProps = LongviewProps &
   RouteComponentProps<{}> &
   WithSnackbarProps &
   // We need this to know if the account is managed
-  SettingsProps &
-  GrantsProps;
+  SettingsProps;
 
 export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   props
@@ -183,24 +181,8 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   );
 };
 
-interface GrantsProps {
-  userCanCreateClient: boolean;
-}
-
 export default compose<CombinedProps, {} & RouteComponentProps>(
   withLongviewClients(),
-  withProfile<GrantsProps, {}>((ownProps, { profileData }) => {
-    const isRestrictedUser = (profileData || {}).restricted;
-    const hasAddLongviewGrant = pathOr<boolean>(
-      false,
-      ['grants', 'global', 'add_longview'],
-      profileData
-    );
-    return {
-      userCanCreateClient:
-        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser),
-    };
-  }),
   withSettings(),
   withSnackbar
 )(LongviewLanding);

@@ -24,13 +24,13 @@ import withLongviewClients, {
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
-import withProfile from 'src/containers/profile.container';
 import { get } from 'src/features/Longview/request';
 import {
   LongviewPortsResponse,
   LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { useProfile } from 'src/queries/profile';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import Apache from './DetailTabs/Apache';
 import MySQLLanding from './DetailTabs/MySQL';
@@ -62,7 +62,6 @@ const Disks = React.lazy(() => import('./DetailTabs/Disks'));
 export type CombinedProps = RouteComponentProps<{ id: string }> &
   Props &
   LVDataProps &
-  ProfileProps &
   DispatchProps;
 
 export const LongviewDetail: React.FC<CombinedProps> = (props) => {
@@ -72,8 +71,11 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
     longviewClientsLoading,
     longviewClientsError,
     longviewClientData,
-    timezone,
   } = props;
+
+  const { data: profile } = useProfile();
+
+  const timezone = profile?.timezone || 'US/Eastern';
 
   const classes = useStyles();
 
@@ -287,7 +289,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
                 lastUpdated={lastUpdated}
                 clientLastUpdated={lastUpdated}
                 lastUpdatedError={lastUpdatedError}
-                timezone={props.timezone}
+                timezone={timezone}
               />
             </SafeTabPanel>
 
@@ -341,18 +343,11 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface ProfileProps {
-  timezone: string;
-}
-
 export default compose<CombinedProps, {}>(
   React.memo,
   withClientStats<RouteComponentProps<{ id: string }>>((ownProps) => {
     return +pathOr<string>('', ['match', 'params', 'id'], ownProps);
   }),
-  withProfile<ProfileProps, {}>((own, { profileData }) => ({
-    timezone: (profileData || {}).timezone || 'GMT',
-  })),
   withLongviewClients<Props, RouteComponentProps<{ id: string }>>(
     (
       own,

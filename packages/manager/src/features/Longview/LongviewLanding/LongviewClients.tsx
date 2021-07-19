@@ -21,7 +21,7 @@ import withSettings, {
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
-import withProfile from 'src/containers/profile.container';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
@@ -83,13 +83,21 @@ export type CombinedProps = Props &
   WithSnackbarProps &
   StateProps &
   // we need this to know if the account is managed
-  SettingsProps &
-  GrantsProps;
+  SettingsProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = (props) => {
   const { getLongviewClients } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const isRestrictedUser = Boolean(profile?.restricted);
+  const hasAddLongviewGrant = Boolean(grants?.global.add_longview);
+
+  const userCanCreateClient =
+    !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser);
 
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
@@ -195,7 +203,6 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
     accountSettings,
     activeSubscription,
     deleteLongviewClient,
-    userCanCreateClient,
     handleAddClient,
     newClientLoading,
   } = props;
@@ -329,25 +336,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-interface GrantsProps {
-  userCanCreateClient: boolean;
-}
-
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   connected,
-  withProfile<GrantsProps, {}>((ownProps, { profileData }) => {
-    const isRestrictedUser = (profileData || {}).restricted;
-    const hasAddLongviewGrant = pathOr<boolean>(
-      false,
-      ['grants', 'global', 'add_longview'],
-      profileData
-    );
-    return {
-      userCanCreateClient:
-        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser),
-    };
-  }),
   withLongviewClients(),
   withSettings(),
   withSnackbar
