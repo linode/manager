@@ -9,6 +9,7 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
+import HelpIcon from 'src/components/HelpIcon';
 
 interface Props {
   open: boolean;
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     height: 5,
   },
+  tooltip: {
+    padding: '0 0 0 4px',
+  },
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
@@ -58,6 +62,10 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     (method: PaymentMethod) => method.type === 'credit_card'
   ).length;
 
+  const isGPayAlreadyAdded = paymentMethods?.some(
+    (method: PaymentMethod) => method.type === 'google_pay'
+  );
+
   return (
     <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
@@ -65,9 +73,24 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
       <Grid className={classes.root} container>
         <Grid item xs={8} md={9}>
           <Typography variant="h3">Google Pay</Typography>
-          <Typography>
-            You&apos;ll be taken to Google Pay to complete sign up.
-          </Typography>
+          {isGPayAlreadyAdded ? (
+            <Typography>
+              Currently, you may only have one Google Pay payment method on your
+              account.
+              <HelpIcon
+                data-qa-tooltip-icon
+                text={
+                  'Adding another will replace your current Google Pay Payment Method.'
+                }
+                tooltipPosition="bottom"
+                className={classes.tooltip}
+              />
+            </Typography>
+          ) : (
+            <Typography>
+              You&apos;ll be taken to Google Pay to complete sign up.
+            </Typography>
+          )}
         </Grid>
         <Grid
           container
