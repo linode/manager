@@ -22,7 +22,6 @@ import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import withImages, {
   ImagesDispatch,
 } from 'src/containers/withImages.container';
-import withProfile from 'src/containers/profile.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';

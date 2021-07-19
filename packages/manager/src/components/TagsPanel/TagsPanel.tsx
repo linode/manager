@@ -14,9 +14,7 @@ import {
 } from 'src/components/core/styles';
 import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import withProfile, {
-  Props as ProfileActionsProps,
-} from 'src/containers/profile.container';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import TagsPanelItem from './TagsPanelItem';
 
@@ -157,11 +155,7 @@ export interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props &
-  ProfileActionsProps &
-  StateProps &
-  WithStyles<ClassNames> &
-  WithSnackbarProps;
+type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 
 class TagsPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -174,7 +168,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    const { tags, isRestrictedUser } = this.props;
+    const { tags } = this.props;
     if (!isRestrictedUser) {
       getTags()
         .then((response) => {
@@ -432,16 +426,6 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   }
 }
 
-interface StateProps {
-  isRestrictedUser: boolean;
-}
-
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
-    isRestrictedUser: data?.restricted ?? false,
-  })),
-  styled,
-  withSnackbar
-)(TagsPanel);
+export default compose<CombinedProps, Props>(styled, withSnackbar)(TagsPanel);
