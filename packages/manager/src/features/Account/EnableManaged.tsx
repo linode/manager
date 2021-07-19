@@ -88,7 +88,6 @@ export const EnableManaged: React.FC<CombinedProps> = (props) => {
       .then(() => {
         handleClose();
         updateAccountSettingsData({ managed: true });
-        // push('/managed');
       })
       .catch(handleError);
   };
