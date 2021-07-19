@@ -23,6 +23,7 @@ const cmrBGColors = {
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',
   bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
+  bgGooglePay: '#fff',
   bgTableRow: 'rgba(0, 0, 0, 0.1)',
   bgReferralsImage: '#83868C',
 };
@@ -34,6 +35,7 @@ const cmrTextColors = {
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
   secondaryButton: '#fff',
+  textGooglePay: '#616161',
 };
 
 const cmrBorderColors = {

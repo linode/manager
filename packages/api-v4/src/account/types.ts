@@ -74,9 +74,21 @@ export type PromotionServiceType =
   | 'objectstorage'
   | 'transfer_tx';
 
-interface CreditCard {
+export type ThirdPartyPayment = 'google_pay' | 'paypal';
+
+export type CardType =
+  | 'Visa'
+  | 'MasterCard'
+  | 'American Express'
+  | 'Discover'
+  | 'JCB';
+
+export type PaymentType = 'credit_card' | ThirdPartyPayment;
+
+export interface CreditCard {
   expiry: string | null;
   last_four: string | null;
+  card_type?: CardType;
 }
 
 export interface Invoice {
@@ -372,4 +384,29 @@ export interface AccountMaintenance {
     type: string;
     url: string;
   };
+}
+
+export interface PaymentMethod {
+  id: number;
+  type: PaymentType;
+  is_default: boolean;
+  created: string;
+  data: CreditCard;
+}
+
+export interface ClientToken {
+  client_token: string;
+}
+
+export interface PaymentMethodData {
+  type: 'credit_card' | 'payment_method_nonce';
+  data: SaveCreditCardData | { nonce: string };
+  is_default: boolean;
+}
+
+export interface MakePaymentData {
+  usd: string;
+  cvv?: string;
+  nonce?: string;
+  payment_method_id?: number;
 }

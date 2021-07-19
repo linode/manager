@@ -1,166 +1,112 @@
 import * as React from 'react';
-import CreditCard from 'src/assets/icons/credit-card.svg';
-import Amex from 'src/assets/icons/payment/amex.svg';
-import Discover from 'src/assets/icons/payment/discover.svg';
-import GooglePay from 'src/assets/icons/payment/googlePay.svg';
-import JCB from 'src/assets/icons/payment/jcb.svg';
-import Mastercard from 'src/assets/icons/payment/mastercard.svg';
-import PayPal from 'src/assets/icons/payment/payPal.svg';
-import Visa from 'src/assets/icons/payment/visa.svg';
-import ActionMenu, { Action } from 'src/components/ActionMenu';
-import Chip from 'src/components/core/Chip';
-import Paper from 'src/components/core/Paper';
+import { useHistory } from 'react-router-dom';
+import {
+  PaymentMethod,
+  ThirdPartyPayment as ThirdPartyPaymentTypes,
+} from '@linode/api-v4/lib/account/types';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+import Chip from 'src/components/core/Chip';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import ThirdPartyPayment from './ThirdPartyPayment';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
+import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
+import { useSnackbar } from 'notistack';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(),
-  },
-  expiry: {
-    marginLeft: theme.spacing(),
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: 0,
-    },
-  },
-  expired: {
-    color: theme.color.red,
+    padding: 0,
   },
   actions: {
     marginLeft: 'auto',
-  },
-  card: {
-    display: 'flex',
-    [theme.breakpoints.down('xs')]: {
-      display: 'grid',
-    },
   },
   item: {
     display: 'flex',
     alignItems: 'center',
   },
-  icon: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: 45,
-  },
-  paymentText: {
-    fontWeight: 'bold',
-  },
-  payPal: {
-    border: `1px solid ${theme.color.grey2}`,
-    padding: '5px 8px',
-  },
   chip: {
     fontSize: '0.625rem',
+  },
+  container: {
+    flexWrap: 'nowrap',
   },
 }));
 
 interface Props {
-  lastFour?: string;
-  expiry?: string;
-  isDefault: boolean;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
+  onEdit?: () => void;
 }
 
-type CombinedProps = Props;
-
-const PaymentMethodRow: React.FC<CombinedProps> = (props) => {
-  const { expiry, lastFour, isDefault, paymentMethod } = props;
+const PaymentMethodRow: React.FC<Props> = (props) => {
+  const { paymentMethod, onEdit } = props;
+  const { data: creditCard, type, is_default } = paymentMethod;
   const classes = useStyles();
-  const isCardExpired = expiry && isCreditCardExpired(expiry);
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const paymentIcon = (): any => {
-    switch (paymentMethod) {
-      case 'Visa':
-        return <Visa />;
-      case 'Mastercard':
-        return <Mastercard />;
-      case 'Amex':
-        return <Amex />;
-      case 'Discover':
-        return <Discover />;
-      case 'GooglePay':
-        return <GooglePay />;
-      case 'PayPal':
-        return <PayPal className={classes.payPal} />;
-      case 'JCB':
-        return <JCB />;
-      default:
-        return <CreditCard />;
+  const makeDefault = async (id: number) => {
+    try {
+      await makeDefaultPaymentMethod(id);
+      queryClient.invalidateQueries(`${queryKey}-all`);
+    } catch (errors) {
+      enqueueSnackbar(
+        errors[0]?.reason || `Unable to change your default payment method.`,
+        { variant: 'error' }
+      );
     }
   };
-
-  const paymentText =
-    paymentMethod && ['GooglePay', 'PayPal'].includes(paymentMethod) ? (
-      <Grid item>
-        <Typography className={classes.paymentText}>
-          &nbsp;{paymentMethod === 'GooglePay' ? 'Google Pay' : paymentMethod}
-        </Typography>
-      </Grid>
-    ) : (
-      <Grid item className={classes.card}>
-        <Typography className={classes.paymentText}>
-          &nbsp;{paymentMethod} ****{lastFour}
-        </Typography>
-        <Typography className={classes.expiry}>
-          {isCardExpired ? (
-            <span className={classes.expired}>&nbsp;{`Expired ${expiry}`}</span>
-          ) : (
-            <span>&nbsp;{`Expires ${expiry}`}</span>
-          )}
-        </Typography>
-      </Grid>
-    );
 
   const actions: Action[] = [
     {
       title: 'Make a Payment',
       onClick: () => {
-        ('');
+        history.replace('/account/billing/make-payment');
       },
     },
     {
       title: 'Make Default',
-      disabled: isDefault,
-      onClick: () => {
-        ('');
-      },
+      disabled: paymentMethod.is_default,
+      tooltip: paymentMethod.is_default
+        ? 'This is already your default payment method'
+        : undefined,
+      onClick: () => makeDefault(paymentMethod.id),
     },
-    {
-      title: 'Edit',
-      onClick: () => {
-        ('');
-      },
-    },
-    {
-      title: 'Remove',
-      onClick: () => {
-        ('');
-      },
-    },
+    ...(onEdit
+      ? [
+          {
+            title: 'Edit',
+            onClick: onEdit,
+          },
+        ]
+      : []),
   ];
 
   return (
     <Paper className={classes.root} variant="outlined">
-      <Grid container>
+      <Grid container className={classes.container}>
         <Grid item className={classes.item}>
-          <span className={classes.icon}>{paymentIcon()}</span>
-          {paymentText}
+          {paymentMethod.type === 'credit_card' ? (
+            <CreditCard creditCard={creditCard} />
+          ) : (
+            <ThirdPartyPayment
+              thirdPartyPayment={type as ThirdPartyPaymentTypes}
+              creditCard={creditCard}
+            />
+          )}
         </Grid>
-        <Grid item className={classes.item}>
-          {isDefault && (
+        <Grid item className={classes.item} style={{ paddingRight: 0 }}>
+          {is_default && (
             <Chip className={classes.chip} label="DEFAULT" component="span" />
           )}
         </Grid>
         <Grid item className={classes.actions}>
           <ActionMenu
             actionsList={actions}
-            ariaLabel={`Action menu for ${
-              lastFour ? `card ending in ${lastFour}` : paymentMethod
-            }`}
+            ariaLabel={`Action menu for card ending in ${creditCard?.last_four}`}
           />
         </Grid>
       </Grid>

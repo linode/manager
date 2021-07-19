@@ -2,6 +2,7 @@ import {
   ActivePromotion,
   PromotionServiceType,
 } from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4';
 import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import * as classnames from 'classnames';
@@ -78,6 +79,7 @@ const serviceTypeMap: Partial<Record<PromotionServiceType, string>> = {
 // =============================================================================
 interface BillingSummaryProps {
   promotions?: ActivePromotion[];
+  paymentMethods: PaymentMethod[] | undefined;
   balanceUninvoiced: number;
   balance: number;
 }
@@ -93,7 +95,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
       notification.severity === 'critical'
   );
 
-  const { promotions, balanceUninvoiced, balance } = props;
+  const { promotions, paymentMethods, balanceUninvoiced, balance } = props;
 
   //
   // Payment Drawer
@@ -234,7 +236,11 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
           </Paper>
         </Grid>
       </Grid>
-      <PaymentDrawer open={paymentDrawerOpen} onClose={closePaymentDrawer} />
+      <PaymentDrawer
+        paymentMethods={paymentMethods}
+        open={paymentDrawerOpen}
+        onClose={closePaymentDrawer}
+      />
     </>
   );
 };
