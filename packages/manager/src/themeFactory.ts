@@ -861,7 +861,7 @@ const themeDefaults: ThemeDefaults = () => {
         root: {
           color: '#555',
           fontFamily: primaryFonts.bold,
-          fontSize: '.9rem',
+          fontSize: '.875rem',
           marginBottom: 8,
           '&$focused': {
             color: '#555',
