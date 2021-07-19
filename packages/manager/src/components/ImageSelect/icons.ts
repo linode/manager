@@ -8,6 +8,7 @@ export const distroIcons = {
   Fedora: 'fedora',
   Gentoo: 'gentoo',
   openSUSE: 'opensuse',
+  Rocky: 'rocky-linux',
   Slackware: 'slackware',
   Ubuntu: 'ubuntu',
 };

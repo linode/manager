@@ -36,7 +36,7 @@ const accountData = {
 const newAccountData = {
   company: 'New company_name',
   email: 'new_test_email@linode.com',
-  first_name: 'New first name',
+  first_name: 'NewFirstName',
   last_name: 'New Last Name',
   address_1: 'new terrible address address for test',
   address_2: 'new Very long address for test Very long address for test Ve ',
@@ -136,7 +136,7 @@ describe('Billing Contact', () => {
       .type(newAccountData['tax_id']);
     getClick('[data-qa-save-contact-info="true"]').then(() => {
       cy.wait('@createAccount').then((xhr) => {
-        expect(xhr.request.body).to.eql(newAccountData);
+        expect(xhr.response?.body).to.eql(newAccountData);
       });
     });
   });

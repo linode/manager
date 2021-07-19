@@ -3,12 +3,12 @@ import CheckBox from 'src/components/CheckBox';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import DebouncedSearchTextField from 'src/components/DebouncedSearchTextField';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

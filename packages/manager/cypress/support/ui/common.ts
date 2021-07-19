@@ -1,3 +1,17 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
+import { deleteAllTestDomains } from '../api/domains';
+import { deleteAllTestFirewalls } from '../api/firewalls';
+import { deleteAllTestImages } from '../api/images';
+import { deleteAllTestLinodes } from '../api/linodes';
+import { deleteAllTestClients } from '../api/longview';
+import { deleteAllTestNodeBalancers } from '../api/nodebalancers';
+import {
+  deleteAllTestAccessKeys,
+  deleteAllTestBuckets,
+} from '../api/objectStorage';
+import { deleteAllTestStackscripts } from '../api/stackscripts';
+import { deleteAllTestVolumes } from '../api/volumes';
+
 const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
   cy.log(`Attempts remaining: ${attemptsRemaining}`);
   if (attemptsRemaining <= 1) {
@@ -6,8 +20,6 @@ const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
   try {
     return fn();
   } catch (err) {
-    // wait purpusefully here
-    /* eslint-disable-next-line cypress/no-unnecessary-waiting*/
     cy.wait(delayBetweenAttemptsMs);
     return attempt(fn, attemptsRemaining - 1, delayBetweenAttemptsMs);
   }
@@ -21,8 +33,6 @@ export const defensiveDo = (
   waitBeforeTryMs = 300,
   delayBetweenAttemptsMs = 300
 ) => {
-  // wait purpusefully here
-  /* eslint-disable-next-line cypress/no-unnecessary-waiting*/
   cy.wait(waitBeforeTryMs);
   attempt(getFunction, attemptsNumber, delayBetweenAttemptsMs);
 };
@@ -42,4 +52,17 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.wait('@getProfilePreferences');
   cy.wait('@getProfile');
   cy.wait('@getNotifications');
+};
+
+export const deleteAllTestData = () => {
+  deleteAllTestLinodes();
+  deleteAllTestNodeBalancers();
+  deleteAllTestVolumes();
+  deleteAllTestImages();
+  deleteAllTestClients();
+  deleteAllTestAccessKeys();
+  deleteAllTestBuckets();
+  deleteAllTestFirewalls();
+  deleteAllTestStackscripts();
+  deleteAllTestDomains();
 };

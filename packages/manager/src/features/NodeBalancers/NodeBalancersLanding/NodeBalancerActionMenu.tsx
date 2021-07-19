@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, {
-  Action,
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';

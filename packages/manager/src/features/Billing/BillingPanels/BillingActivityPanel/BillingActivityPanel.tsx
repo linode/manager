@@ -1,14 +1,11 @@
+import * as React from 'react';
 import {
   getInvoiceItems,
-  getInvoices,
-  getPayments,
   Invoice,
   InvoiceItem,
   Payment,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -30,14 +27,17 @@ import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
-import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
+import { useAccount } from 'src/queries/account';
 import { isAfter, parseAPIDate } from 'src/utilities/date';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import { getAll, getAllWithArguments } from 'src/utilities/getAll';
+import { getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
+import {
+  useAllAccountInvoices,
+  useAllAccountPayments,
+} from 'src/queries/accountBilling';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -168,14 +168,10 @@ export interface Props {
 export const BillingActivityPanel: React.FC<Props> = (props) => {
   const { accountActiveSince } = props;
 
+  const { data: account } = useAccount();
+
   const classes = useStyles();
   const flags = useFlags();
-  const { account } = useAccount();
-
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<APIError[] | undefined>();
-  const [invoices, setInvoices] = React.useState<Invoice[]>([]);
-  const [payments, setPayments] = React.useState<Payment[]>([]);
 
   const pdfErrors = useSet();
   const pdfLoading = useSet();
@@ -190,49 +186,34 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     setSelectedTransactionDate,
   ] = React.useState<DateRange>(defaultDateRange);
 
-  const requestAllInvoicesAndPayments = React.useCallback(
-    (endDate?: string) => {
-      const filter = makeFilter(endDate);
-
-      setLoading(true);
-      setError(undefined);
-
-      Promise.all([getAllInvoices({}, filter), getAllPayments({}, filter)])
-        .then(([invoices, payments]) => {
-          setLoading(false);
-          setInvoices(invoices.data);
-          setPayments(payments.data);
-        })
-        .catch((_error) => {
-          setError(
-            getAPIErrorOrDefault(
-              _error,
-              'There was an error retrieving your billing activity.'
-            )
-          );
-          setLoading(false);
-        });
-    },
-    []
+  const {
+    data: payments,
+    isLoading: accountPaymentsLoading,
+    error: accountPaymentsError,
+  } = useAllAccountPayments(
+    {},
+    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
   );
 
-  // Request all invoices and payments when component mounts.
-  React.useEffect(() => {
-    const defaultDateCutoff = getCutoffFromDateRange(defaultDateRange);
-    requestAllInvoicesAndPayments(defaultDateCutoff);
-    // eslint-disable-next-line
-  }, []);
+  const {
+    data: invoices,
+    isLoading: accountInvoicesLoading,
+    error: accountInvoicesError,
+  } = useAllAccountInvoices(
+    {},
+    makeFilter(getCutoffFromDateRange(selectedTransactionDate))
+  );
 
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
-      const invoice = invoices.find(
+      const invoice = invoices?.find(
         (thisInvoice) => thisInvoice.id === invoiceId
       );
 
       const id = `invoice-${invoiceId}`;
 
       // TS Safeguard.
-      if (!account.data || !invoice) {
+      if (!account || !invoice) {
         pdfErrors.add(id);
         return;
       }
@@ -246,7 +227,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
 
           const invoiceItems = response.data;
           const result = printInvoice(
-            account.data!,
+            account!,
             invoice,
             invoiceItems,
             flags.taxBanner
@@ -261,19 +242,19 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           pdfErrors.add(id);
         });
     },
-    [account.data, flags.taxBanner, invoices, pdfErrors, pdfLoading]
+    [account, flags.taxBanner, invoices, pdfErrors, pdfLoading]
   );
 
   const downloadPaymentPDF = React.useCallback(
     (paymentId: number) => {
-      const payment = payments.find(
+      const payment = payments?.find(
         (thisPayment) => thisPayment.id === paymentId
       );
 
       const id = `payment-${paymentId}`;
 
       // TS Safeguard.
-      if (!account.data || !payment) {
+      if (!account || !payment) {
         pdfErrors.add(id);
         return;
       }
@@ -286,13 +267,13 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         taxBanner?.date,
         taxBanner?.linode_tax_id
       );
-      const result = printPayment(account.data, payment, taxId);
+      const result = printPayment(account, payment, taxId);
 
       if (result.status === 'error') {
         pdfErrors.add(id);
       }
     },
-    [payments, flags.taxBanner, account.data, pdfErrors]
+    [payments, flags.taxBanner, account, pdfErrors]
   );
 
   // Handlers for <Select /> components.
@@ -304,39 +285,21 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     },
     [pdfErrors, pdfLoading]
   );
+
   const handleTransactionDateChange = React.useCallback(
     (item: Item<DateRange>) => {
       setSelectedTransactionDate(item.value);
       pdfErrors.clear();
       pdfLoading.clear();
-
-      const earliestInvoiceDate =
-        invoices[invoices.length - 1]?.date ||
-        DateTime.utc().toFormat(ISO_DATETIME_NO_TZ_FORMAT);
-      const earliestPaymentDate =
-        payments[payments.length - 1]?.date ||
-        DateTime.utc().toFormat(ISO_DATETIME_NO_TZ_FORMAT);
-      const dateCutoff = getCutoffFromDateRange(item.value);
-
-      // If the data we already have falls within the selected date range,
-      // no need to request more data.
-      if (
-        isAfter(dateCutoff, earliestInvoiceDate) &&
-        isAfter(dateCutoff, earliestPaymentDate)
-      ) {
-        return;
-      }
-
-      requestAllInvoicesAndPayments(dateCutoff);
     },
-    [requestAllInvoicesAndPayments, invoices, payments, pdfErrors, pdfLoading]
+    [pdfErrors, pdfLoading]
   );
 
   // Combine Invoices and Payments
   const combinedData = React.useMemo(
     () => [
-      ...invoices.map(invoiceToActivityFeedItem),
-      ...payments.map(paymentToActivityFeedItem),
+      ...(invoices?.map(invoiceToActivityFeedItem) ?? []),
+      ...(payments?.map(paymentToActivityFeedItem) ?? []),
     ],
     [invoices, payments]
   );
@@ -441,8 +404,19 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                     <TableBody>
                       <TableContentWrapper
                         length={paginatedAndOrderedData.length}
-                        loading={loading}
-                        error={error}
+                        loading={
+                          accountPaymentsLoading || accountInvoicesLoading
+                        }
+                        error={
+                          accountPaymentsError || accountInvoicesError
+                            ? [
+                                {
+                                  reason:
+                                    'There was an error retrieving your billing activity.',
+                                },
+                              ]
+                            : undefined
+                        }
                       >
                         {paginatedAndOrderedData.map((thisItem) => {
                           return (
@@ -483,8 +457,10 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             classes.dateColumn,
             classes.totalColumn,
             classes.pdfDownloadColumn,
-            loading,
-            error,
+            accountPaymentsLoading,
+            accountInvoicesLoading,
+            accountPaymentsError,
+            accountInvoicesError,
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,
@@ -566,8 +542,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
 // =============================================================================
 // Utilities
 // =============================================================================
-const getAllInvoices = getAll<Invoice>(getInvoices);
-const getAllPayments = getAll<Payment>(getPayments);
 const getAllInvoiceItems = getAllWithArguments<InvoiceItem>(getInvoiceItems);
 
 export const invoiceToActivityFeedItem = (
@@ -586,10 +560,7 @@ export const paymentToActivityFeedItem = (
   // Refunds are issued as negative payments.
   const label = usd < 0 ? 'Refund' : `Payment #${payment.id}`;
 
-  // Note: this is confusing.
-  // We flip the polarity here, since we display a positive payment as e.g. "-($5.00)"
-  // and a negative payment (i.e. refund) as e.g. "$5.00"
-  const total = usd <= 0 ? Math.abs(usd) : -usd;
+  const total = Math.abs(usd);
 
   return {
     label,

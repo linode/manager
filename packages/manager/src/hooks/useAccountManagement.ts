@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State as ProfileState } from 'src/store/profile/profile.reducer';
-import { State as AccountState } from 'src/store/account/account.reducer';
 import { State as AccountSettingsState } from 'src/store/accountSettings/accountSettings.reducer';
-import { GlobalGrantTypes } from '@linode/api-v4/lib/account';
+import { Account, GlobalGrantTypes } from '@linode/api-v4/lib/account';
+import { useAccount } from 'src/queries/account';
 
 export interface AccountManagementProps {
-  account: AccountState;
+  account: Account;
   profile: ProfileState;
   accountSettings: AccountSettingsState;
   _isRestrictedUser: boolean;
@@ -17,12 +17,10 @@ export interface AccountManagementProps {
 }
 
 export const useAccountManagement = () => {
+  const { data: account } = useAccount();
+
   const profile = useSelector(
     (state: ApplicationState) => state.__resources.profile
-  );
-
-  const account = useSelector(
-    (state: ApplicationState) => state.__resources.account
   );
 
   const accountSettings = useSelector(

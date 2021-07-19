@@ -1,6 +1,6 @@
 import { ManagedContact } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import { Action } from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import { Action } from 'src/components/ActionMenu';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {

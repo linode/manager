@@ -14,7 +14,8 @@ class AsyncContentExample extends React.Component {
   handleToggleExpand = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
       this.setState({ loading: true });
-      const myPromise = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
+      const myPromise = () =>
+        new Promise<void>((resolve) => setTimeout(() => resolve(), 2000));
       myPromise().then(() =>
         this.setState({
           data: 'Your patience has been rewarded',
@@ -26,9 +27,15 @@ class AsyncContentExample extends React.Component {
 
   renderContent = () => {
     if (this.state.loading) {
-      return <div style={{ textAlign: 'center', padding: '1em' }}>Loading...</div>;
+      return (
+        <div style={{ textAlign: 'center', padding: '1em' }}>Loading...</div>
+      );
     }
-    return <div style={{ textAlign: 'center', padding: '1em' }}>{this.state.data}</div>;
+    return (
+      <div style={{ textAlign: 'center', padding: '1em' }}>
+        {this.state.data}
+      </div>
+    );
   };
 
   render() {
@@ -65,7 +72,11 @@ export const Interactive = () => (
 export const Success = () => (
   <Provider store={store}>
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <Accordion success="You did it!" heading="Why is Linode the best?" actions={renderActions}>
+      <Accordion
+        success="You did it!"
+        heading="Why is Linode the best?"
+        actions={renderActions}
+      >
         <p>Customer service!</p>
       </Accordion>
     </div>
@@ -79,7 +90,11 @@ Success.story = {
 export const Warning = () => (
   <Provider store={store}>
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <Accordion warning="Careful now..." heading="This is a warning" actions={renderActions}>
+      <Accordion
+        warning="Careful now..."
+        heading="This is a warning"
+        actions={renderActions}
+      >
         <p>Customer service!</p>
       </Accordion>
     </div>

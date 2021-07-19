@@ -38,8 +38,6 @@ describe('clone linode', () => {
           assert.equal(xhr.response?.statusCode, 200);
           assertToast(`Your Linode ${newLinodeLabel} is being created.`);
           containsVisible(newLinodeLabel);
-          deleteLinodeById(linode.id);
-          deleteLinodeById(newLinodeId);
         });
       }
     });

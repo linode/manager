@@ -11,7 +11,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& th': {
       backgroundColor: theme.cmrBGColors.bgTableHeader,
-      border: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
+      borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,
       fontFamily: theme.font.bold,
       height: 40,
       padding: '10px 15px',

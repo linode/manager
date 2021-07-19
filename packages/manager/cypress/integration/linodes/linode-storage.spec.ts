@@ -69,7 +69,6 @@ describe('linode storage tab', () => {
       deleteDisk(diskName, true);
       cy.get('button[title="Add a Disk"]').should('be.disabled');
     });
-    deleteAllTestLinodes();
   });
 
   // create with empty disk then delete disk
@@ -92,7 +91,6 @@ describe('linode storage tab', () => {
       cy.get('button[title="Add a Disk"]').should('be.enabled');
       cy.contains(diskName).should('not.exist');
     });
-    deleteAllTestLinodes();
   });
 
   // create with empty disk then add disk
@@ -107,7 +105,6 @@ describe('linode storage tab', () => {
       fbtVisible(diskName);
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
     });
-    deleteAllTestLinodes();
   });
 
   // resize disk
@@ -138,6 +135,5 @@ describe('linode storage tab', () => {
         cy.wait('@resizeDisk').its('response.statusCode').should('eq', 200);
       }
     });
-    deleteAllTestLinodes();
   });
 });
