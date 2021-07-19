@@ -11,7 +11,7 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import StatusIndicator from 'src/components/StatusIndicator';
+import StatusIcon from 'src/components/StatusIcon';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
@@ -25,6 +25,10 @@ import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinod
 import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  table: {
+    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+  },
   labelCell: {
     ...theme.applyTableHeaderStyles,
     width: '35%',
@@ -39,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   error: {
     color: theme.color.red,
+  },
+  statusIconAndText: {
+    whiteSpace: 'nowrap',
   },
 }));
 
@@ -77,7 +84,10 @@ export const NodeTable: React.FC<Props> = (props) => {
             pageSize,
           }) => (
             <>
-              <Table aria-label="List of Your Cluster Nodes">
+              <Table
+                aria-label="List of Your Cluster Nodes"
+                className={classes.table}
+              >
                 <TableHead>
                   <TableRow>
                     <TableSortCell
@@ -195,9 +205,12 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
 
   const recentEvent = useRecentEventForLinode(instanceId ?? -1);
 
-  const rowLink = instanceId ? `/linodes/${instanceId}` : undefined;
-  const statusIndicator =
-    nodeStatus === 'ready' && instanceStatus === 'running' ? 'active' : 'other';
+  const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
+
+  const nodeReadyAndInstanceRunning =
+    nodeStatus === 'ready' && instanceStatus === 'running';
+  const iconStatus = nodeReadyAndInstanceRunning ? 'active' : 'inactive';
+
   const displayLabel = label ?? typeLabel;
   const displayStatus =
     nodeStatus === 'not_ready'
@@ -211,12 +224,9 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
-            <StatusIndicator status={statusIndicator} />
-          </Grid>
-          <Grid item>
-            <Typography variant="h3">
-              {rowLink ? (
-                <Link to={rowLink}>{displayLabel}</Link>
+            <Typography>
+              {linodeLink ? (
+                <Link to={linodeLink}>{displayLabel}</Link>
               ) : (
                 displayLabel
               )}
@@ -230,7 +240,12 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
             Error retrieving status
           </Typography>
         ) : (
-          displayStatus
+          <Grid container alignItems="center">
+            <Grid item className={classes.statusIconAndText}>
+              <StatusIcon status={iconStatus} />
+              {displayStatus}
+            </Grid>
+          </Grid>
         )}
       </TableCell>
       <TableCell>
@@ -268,6 +283,7 @@ export const nodeToRow = (
 
   return {
     nodeId: node.id,
+    instanceId: node.instance_id || undefined,
     label: foundLinode?.label,
     instanceStatus: foundLinode?.status,
     ip: foundLinode?.ipv4[0],

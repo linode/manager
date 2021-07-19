@@ -40,9 +40,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader/PromiseLoader';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   withNodeBalancerConfigActions,
   WithNodeBalancerConfigActions,
@@ -129,8 +126,7 @@ type CombinedProps = Props &
   WithNodeBalancerConfigActions &
   RouteProps &
   WithStyles<ClassNames> &
-  PreloadedProps &
-  FeatureFlagConsumerProps;
+  PreloadedProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -1100,7 +1096,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, nodeBalancerLabel, flags } = this.props;
+    const { classes, nodeBalancerLabel } = this.props;
     const {
       configs,
       configErrors,
@@ -1124,7 +1120,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
             <Button
               buttonType="secondary"
               onClick={() => this.addNodeBalancerConfig()}
-              className={flags.cmr ? classes.cmrSpacing : ''}
+              className={classes.cmrSpacing}
               outline
               data-qa-add-config
             >
@@ -1173,8 +1169,7 @@ const enhanced = composeC<CombinedProps, Props>(
   styled,
   withRouter,
   preloaded,
-  withNodeBalancerConfigActions,
-  withFeatureFlags
+  withNodeBalancerConfigActions
 );
 
 export default enhanced(NodeBalancerConfigurations);

@@ -422,31 +422,6 @@ const darkThemeOptions = {
         boxShadow: '0 0 5px #222',
       },
     },
-    MuiAccordion: {
-      root: {
-        '& table': {
-          border: `1px solid ${primaryColors.divider}`,
-        },
-      },
-    },
-    MuiAccordionDetails: {
-      root: {
-        backgroundColor: '#32363c',
-      },
-    },
-    MuiAccordionSummary: {
-      root: {
-        backgroundColor: '#32363c',
-        '&:hover': {
-          '& h3': {
-            color: primaryColors.light,
-          },
-        },
-        '&$focused': {
-          backgroundColor: '#111111',
-        },
-      },
-    },
     MuiFormControl: {
       root: {
         '&.copy > div': {

@@ -3,7 +3,6 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import useFlags from 'src/hooks/useFlags';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
@@ -47,9 +46,9 @@ export type CombinedProps = Props;
 
 export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
+
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     start: 0,
     end: 0,
@@ -75,14 +74,11 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
     <Grid item>
       <Grid item className={classes.headerOuter}>
         <Grid item>
-          <Typography
-            variant="h2"
-            className={flags.cmr ? classes.cmrSpacing : ''}
-          >
+          <Typography variant="h2" className={classes.cmrSpacing}>
             Resource Allocation History
           </Typography>
         </Grid>
-        <Grid item className={flags.cmr ? classes.cmrSpacing : ''}>
+        <Grid item className={classes.cmrSpacing}>
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
             defaultValue={'Past 30 Minutes'}

@@ -1,47 +1,38 @@
 import * as React from 'react';
-import {
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter,
-} from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const KubernetesLanding = React.lazy(() => import('./KubernetesLanding'));
-
 const ClusterCreate = React.lazy(() => import('./CreateCluster'));
-
 const ClusterDetail = React.lazy(() => import('./KubernetesClusterDetail'));
 
-type Props = RouteComponentProps<{}>;
-
-class Kubernetes extends React.Component<Props> {
-  render() {
-    const {
-      match: { path },
-    } = this.props;
-
-    return (
+const Kubernetes: React.FC = () => {
+  return (
+    <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={ClusterCreate} exact path={`${path}/create`} />
+        <Route component={ClusterCreate} path={`/kubernetes/create`} />
         <Route
           component={ClusterDetail}
           exact
-          path={`${path}/clusters/:clusterID/summary`}
+          path={`/kubernetes/clusters/:clusterID/summary`}
         />
         <Route
-          path={`${path}/clusters/:clusterID`}
+          path={`/kubernetes/clusters/:clusterID`}
           render={(props) => (
             <Redirect
-              to={`${path}/clusters/${props.match.params.clusterID}/summary`}
+              to={`/kubernetes/clusters/${props.match.params.clusterID}/summary`}
             />
           )}
         />
-        <Route component={KubernetesLanding} exact path={`${path}/clusters`} />
+        <Route
+          component={KubernetesLanding}
+          exact
+          path={`/kubernetes/clusters`}
+        />
         <Redirect to={'/kubernetes/clusters'} />
       </Switch>
-    );
-  }
-}
+    </React.Suspense>
+  );
+};
 
-export default withRouter(Kubernetes);
+export default Kubernetes;

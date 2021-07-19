@@ -22,7 +22,6 @@ export interface Flags {
   firewalls: boolean;
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
-  cmr: boolean;
   mainContentBanner: MainContentBanner;
   changelog: Changelog;
   vlans: boolean;
