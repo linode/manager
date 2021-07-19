@@ -48,6 +48,7 @@ import {
   promoFactory,
   staticObjects,
   makeObjectsPage,
+  paymentMethodFactory,
   accountMaintenanceFactory,
 } from 'src/factories';
 
@@ -474,6 +475,15 @@ export const handlers = [
     }
 
     return res(ctx.json(makeResourcePage(accountMaintenance)));
+  }),
+  rest.get('*/account/payment-methods', (req, res, ctx) => {
+    const defaultPaymentMethod = paymentMethodFactory.build({
+      is_default: true,
+    });
+    const otherPaymentMethods = paymentMethodFactory.buildList(5);
+    return res(
+      ctx.json(makeResourcePage([defaultPaymentMethod, ...otherPaymentMethods]))
+    );
   }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {

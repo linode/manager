@@ -13,26 +13,32 @@ const accountBalanceValue = 'account-balance-value';
 
 describe('BillingSummary', () => {
   it('displays appropriate helper text and value when there is no balance', () => {
-    renderWithTheme(<BillingSummary balance={0} balanceUninvoiced={5} />);
+    renderWithTheme(
+      <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+    );
     within(screen.getByTestId(accountBalanceText)).getByText(/no balance/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$0.00');
   });
 
   it('displays a credit when there is a negative balance', () => {
-    renderWithTheme(<BillingSummary balance={-10} balanceUninvoiced={5} />);
+    renderWithTheme(
+      <BillingSummary balance={-10} balanceUninvoiced={5} paymentMethods={[]} />
+    );
     within(screen.getByTestId(accountBalanceText)).getByText(/credit/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
   });
 
   it('displays the balance when there is a positive balance that is not yet past due', () => {
-    renderWithTheme(<BillingSummary balance={10} balanceUninvoiced={5} />);
+    renderWithTheme(
+      <BillingSummary balance={10} balanceUninvoiced={5} paymentMethods={[]} />
+    );
     within(screen.getByTestId(accountBalanceText)).getByText(/Balance/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
   });
 
   it('does not display the promotions section unless there are promos', async () => {
     const { rerender } = renderWithTheme(
-      <BillingSummary balance={0} balanceUninvoiced={5} />
+      <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
     );
     expect(screen.queryByText('Promotions')).not.toBeInTheDocument();
     rerender(
@@ -41,6 +47,7 @@ describe('BillingSummary', () => {
           balance={0}
           balanceUninvoiced={5}
           promotions={promoFactory.buildList(1)}
+          paymentMethods={[]}
         />
       )
     );
@@ -52,6 +59,7 @@ describe('BillingSummary', () => {
       <BillingSummary
         balance={0}
         balanceUninvoiced={5}
+        paymentMethods={[]}
         promotions={promoFactory.buildList(1, {
           summary: 'MY_PROMO_CODE',
           credit_remaining: '15.50',
@@ -77,6 +85,7 @@ describe('BillingSummary', () => {
         balance={0}
         balanceUninvoiced={5}
         promotions={promotions}
+        paymentMethods={[]}
       />
     );
     expect(screen.queryByText('Applies to: All')).not.toBeInTheDocument();
@@ -84,7 +93,9 @@ describe('BillingSummary', () => {
   });
 
   it('displays accrued charges', () => {
-    renderWithTheme(<BillingSummary balance={0} balanceUninvoiced={5} />);
+    renderWithTheme(
+      <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+    );
     within(screen.getByTestId('accrued-charges-value')).getByText('$5.00');
   });
 });

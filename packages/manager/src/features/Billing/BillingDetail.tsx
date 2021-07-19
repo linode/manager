@@ -14,6 +14,7 @@ import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingAc
 import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
+import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -31,6 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
 export const BillingDetail: React.FC<CombinedProps> = (props) => {
+  const {
+    data: paymentMethods,
+    isLoading: paymentMethodsLoading,
+    error: paymentMethodsError,
+  } = useAllPaymentMethodsQuery();
+
   const {
     data: account,
     error: accountError,
@@ -62,6 +69,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
         <Grid container>
           <Grid item xs={12} md={12} lg={12} className={classes.main}>
             <BillingSummary
+              paymentMethods={paymentMethods}
               balance={account?.balance ?? 0}
               promotions={account?.active_promotions}
               balanceUninvoiced={account?.balance_uninvoiced ?? 0}
@@ -82,13 +90,9 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 taxId={account.tax_id}
               />
               <PaymentInformation
-                balance={account?.balance ?? 0}
-                balanceUninvoiced={account?.balance_uninvoiced ?? 0}
-                expiry={account?.credit_card?.expiry ?? ''}
-                lastFour={account?.credit_card?.last_four ?? ''}
-                promoCredit={
-                  account?.active_promotions?.[0]?.this_month_credit_remaining
-                }
+                loading={paymentMethodsLoading}
+                error={paymentMethodsError}
+                paymentMethods={paymentMethods}
               />
             </Grid>
             <BillingActivityPanel accountActiveSince={account?.active_since} />
