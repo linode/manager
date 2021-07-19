@@ -25,6 +25,8 @@ import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { useSnackbar } from 'notistack';
+import { PaymentMethod } from '@linode/api-v4/lib/account';
+import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -63,6 +65,8 @@ export interface Props {
 }
 
 export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
+  const { data: paymentMethods } = useAllPaymentMethodsQuery();
+
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesXSDown = useMediaQuery(theme.breakpoints.down('xs'));
@@ -124,9 +128,24 @@ export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
       return;
     }
 
+    /**
+     * Make the user's credit card default if
+     * - They have no payment methods
+     * - Their previous default payment method was a credit card
+     *
+     * We determined this to make sure a user's payment method
+     * does not abruptly switch after "Editing" it.
+     * @TODO remove this logic when user can have more payment methods
+     */
+    const shouldBecomeDefault =
+      paymentMethods?.length === 0 ||
+      paymentMethods?.find(
+        (method: PaymentMethod) => method.is_default === true
+      )?.type === 'credit_card';
+
     addPaymentMethod({
       type: 'credit_card',
-      is_default: true,
+      is_default: shouldBecomeDefault,
       data: {
         card_number: cardNumber,
         expiry_month: expMonth,

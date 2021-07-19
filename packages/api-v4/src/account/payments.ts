@@ -198,8 +198,8 @@ export const getClientToken = () => {
  *
  * @param data { object }
  * @param data.type { string } 'credit_card' or 'payment_method_nonce'
- * @param data.is_default { boolean } whether of not this payment method should
- * @param data.data { object } this will be data containting a nonce or credit card info
+ * @param data.is_default { boolean } whether or not this payment method should be considered the default
+ * @param data.data { object } this will be data containing a nonce or credit card info
  * @param data.data.nonce { string } the nonce for the payment method to be added
  * @param data.data.card_number { string } a credit card number
  * @param data.data.expiry_year { number } credit card's expiry year

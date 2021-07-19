@@ -8,6 +8,7 @@ import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
+import { PaymentMethod } from '@linode/api-v4/lib/account';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
   merchantId: GPAY_MERCHANT_ID || '',
@@ -106,10 +107,29 @@ export const gPay = async (
       });
       queryClient.invalidateQueries(`${accountBillingKey}-payments`);
     } else {
+      const paymentMethods = queryClient.getQueryData<PaymentMethod[]>(
+        `${accountPaymentKey}-all`
+      );
+
+      /**
+       * Make Google Pay default if
+       * - They have no payment methods
+       * - Their previous default payment method was Google Pay
+       *
+       * We determined this to make sure a user's payment method
+       * does not abruptly switch after "Editing" it.
+       * @TODO remove this logic when user can have more payment methods
+       */
+      const shouldBecomeDefault =
+        paymentMethods?.length === 0 ||
+        paymentMethods?.find(
+          (method: PaymentMethod) => method.is_default === true
+        )?.type === 'google_pay';
+
       await addPaymentMethod({
         type: 'payment_method_nonce',
         data: { nonce },
-        is_default: false,
+        is_default: shouldBecomeDefault,
       });
       queryClient.invalidateQueries(`${accountPaymentKey}-all`);
     }
