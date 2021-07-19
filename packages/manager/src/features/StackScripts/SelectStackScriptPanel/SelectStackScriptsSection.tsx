@@ -2,29 +2,21 @@ import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
+import TableRow from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
-type ClassNames = 'root' | 'loadingWrapper';
-
-const styles = () =>
-  createStyles({
-    root: {},
-    loadingWrapper: {
-      border: 0,
-      paddingTop: 100,
-    },
-  });
+const useStyles = makeStyles(() => ({
+  loadingWrapper: {
+    border: 0,
+    paddingTop: 100,
+  },
+}));
 
 export interface Props {
   onSelect: (s: StackScript) => void;
@@ -36,10 +28,11 @@ export interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
-  const { onSelect, selectedId, data, isSorting, classes, disabled } = props;
+export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const { onSelect, selectedId, data, isSorting, disabled } = props;
 
   const selectStackScript = (s: StackScript) => (
     <StackScriptSelectionRow
@@ -73,6 +66,4 @@ const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(SelectStackScriptsSection) as React.FC<Props>;
+export default SelectStackScriptsSection as React.FC<Props>;

@@ -93,7 +93,6 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       color: theme.color.red,
-      height: 34,
       top: 42,
       left: 5,
       width: '100%',

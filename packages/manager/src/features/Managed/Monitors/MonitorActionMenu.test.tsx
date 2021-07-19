@@ -1,13 +1,7 @@
-import { render } from '@testing-library/react';
 import * as React from 'react';
-import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
+import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import {
-  CombinedProps,
-  MonitorActionMenu as ActionMenu,
-} from './MonitorActionMenu';
-
-jest.mock('src/components/ActionMenu/ActionMenu');
+import { CombinedProps, MonitorActionMenu } from './MonitorActionMenu';
 
 const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
@@ -27,27 +21,27 @@ const props: CombinedProps = {
   ...reactRouterProps,
 };
 
-describe('Volume action menu', () => {
+describe('Monitor action menu', () => {
   it('should include basic Monitor actions', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<ActionMenu {...props} status={'disabled'} />)
+    const { queryByText } = renderWithTheme(
+      <MonitorActionMenu {...props} status="disabled" />
     );
-    includesActions(['Edit', 'View Issue History', 'Delete'], queryByText);
+    includesActions(['View Issue History', 'Edit', 'Delete'], queryByText);
   });
 
   it('should include Enable if the monitor is disabled', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<ActionMenu {...props} status={'disabled'} />)
+    const { queryByText } = renderWithTheme(
+      <MonitorActionMenu {...props} status="disabled" />
     );
-    expect(queryByText('Enable')).toBeInTheDocument();
-    expect(queryByText('Disable')).not.toBeInTheDocument();
+    includesActions(['Enable'], queryByText);
+    expect(queryByText('Disable')).toBeNull();
   });
 
   it('should include Disable if the monitor is enabled', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<ActionMenu {...props} status={'ok'} />)
+    const { queryByText } = renderWithTheme(
+      <MonitorActionMenu {...props} status="ok" />
     );
-    expect(queryByText('Disable')).toBeInTheDocument();
-    expect(queryByText('Enable')).not.toBeInTheDocument();
+    includesActions(['Disable'], queryByText);
+    expect(queryByText('Enable')).toBeNull();
   });
 });

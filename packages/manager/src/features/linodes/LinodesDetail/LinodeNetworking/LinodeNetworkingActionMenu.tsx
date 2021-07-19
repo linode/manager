@@ -2,7 +2,7 @@ import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, { Action } from 'src/components/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import {
   makeStyles,
   Theme,
@@ -12,7 +12,7 @@ import {
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { IPTypes } from './types';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   emptyCell: {
     height: 40,
   },
@@ -63,32 +63,28 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
       : null,
   ].filter(Boolean) as Action[];
 
-  return (
+  return !isEmpty(actions) ? (
     <>
-      {!isEmpty(actions) ? (
-        <>
-          {!matchesMdDown &&
-            actions.map((action) => {
-              return (
-                <InlineMenuAction
-                  key={action.title}
-                  actionText={action.title}
-                  disabled={readOnly}
-                  onClick={action.onClick}
-                />
-              );
-            })}
-          {matchesMdDown && (
-            <ActionMenu
-              actionsList={actions}
-              ariaLabel={`Action menu for IP Address ${props.ipAddress}`}
+      {!matchesMdDown &&
+        actions.map((action) => {
+          return (
+            <InlineMenuAction
+              key={action.title}
+              actionText={action.title}
+              disabled={readOnly}
+              onClick={action.onClick}
             />
-          )}
-        </>
-      ) : (
-        <span className={classes.emptyCell}></span>
+          );
+        })}
+      {matchesMdDown && (
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={`Action menu for IP Address ${props.ipAddress}`}
+        />
       )}
     </>
+  ) : (
+    <span className={classes.emptyCell}></span>
   );
 };
 

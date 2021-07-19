@@ -16,6 +16,7 @@ interface Props {
   standAlone?: boolean;
   ariaLabel?: string;
   displayText?: string;
+  onClickCallback?: () => void;
 }
 
 interface State {
@@ -100,6 +101,9 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
     copy(this.props.text);
+    if (this.props.onClickCallback) {
+      this.props.onClickCallback();
+    }
   };
 
   render() {

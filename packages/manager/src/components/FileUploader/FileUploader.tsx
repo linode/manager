@@ -4,6 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { useDispatch } from 'react-redux';
+import { Dispatch } from 'src/hooks/types';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -19,11 +20,11 @@ import {
   MAX_PARALLEL_UPLOADS,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
-import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';
 import { uploadImage } from 'src/store/image/image.requests';
 import { setPendingUpload } from 'src/store/pendingUpload';
+import { sendImageUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -185,7 +186,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   // This function will be called when the user drops non-.gz files, more than one file at a time, or files that are over the max size.
   const onDropRejected = (files: FileRejection[]) => {
-    const wrongFileType = files[0].file.type !== 'application/x-gzip';
+    const wrongFileType = !files[0].file.type.match(/gzip/gi);
     const fileTypeErrorMessage =
       'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
 
@@ -261,6 +262,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
         dispatchAction(setPendingUpload(false));
 
+        recordImageAnalytics('success', file);
+
         // EDGE CASE:
         // The upload has finished, but the user's token has expired.
         // Show the toast, then redirect them to /images, passing them through
@@ -308,6 +311,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
               data: { status: 'IN_PROGRESS' },
             });
 
+            recordImageAnalytics('start', file);
+
             const { request, cancel } = uploadImageFile(
               response.upload_to,
               file,
@@ -327,6 +332,8 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             setErrors(e);
           });
       } else {
+        recordImageAnalytics('start', file);
+
         // Overwrite any file that was previously uploaded to the upload_to URL.
         const { request, cancel } = uploadImageFile(
           uploadToURL,
@@ -340,6 +347,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           .then(() => handleSuccess())
           .catch(() => {
             handleError();
+            recordImageAnalytics('fail', file);
             dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
           });
       }
@@ -461,3 +469,11 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 const enhanced = compose<CombinedProps, Props>(withSnackbar, React.memo);
 
 export default enhanced(FileUploader);
+
+const recordImageAnalytics = (
+  action: 'start' | 'success' | 'fail',
+  file: File
+) => {
+  const readableFileSize = readableBytes(file.size).formatted;
+  sendImageUploadEvent(action, readableFileSize);
+};

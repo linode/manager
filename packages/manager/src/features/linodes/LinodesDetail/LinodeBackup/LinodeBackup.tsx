@@ -34,7 +34,6 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -45,6 +44,7 @@ import PromiseLoader, {
 } from 'src/components/PromiseLoader';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { events$ } from 'src/events';
 import { resetEventsPolling } from 'src/eventsPolling';

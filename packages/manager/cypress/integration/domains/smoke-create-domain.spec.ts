@@ -1,12 +1,7 @@
-import {
-  deleteAllTestDomains,
-  makeDomainLabel,
-} from '../../support/api/domains';
+import { makeDomainLabel } from '../../support/api/domains';
 import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 
 describe('Create a Domain', () => {
-  before(deleteAllTestDomains);
-
   it('Creates first Domain', () => {
     // modify incoming response
     cy.intercept('GET', 'v4/domains*', (req) => {

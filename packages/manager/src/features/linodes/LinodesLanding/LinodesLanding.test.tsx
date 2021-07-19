@@ -23,7 +23,6 @@ describe('ListLinodes', () => {
     toggleButton: '',
     clearFilters: '',
     cmrSpacing: '',
-    cmrCSVlink: '',
   };
 
   it('renders without error', () => {
@@ -50,8 +49,6 @@ describe('ListLinodes', () => {
           backupsCTA={false}
           deleteLinode={jest.fn()}
           {...reactRouterProps}
-          ldClient={{} as any}
-          flags={{}}
           linodesInTransition={new Set<number>()}
         />
       )

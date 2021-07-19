@@ -1,12 +1,14 @@
-import { Meta, Story, Canvas } from '@storybook/addon-docs/blocks';
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
 import Button from 'src/components/Button';
 
 <Meta title="Button" component={Button} />
 
 # Button
 
+With `MDX`, we can define a story for `Button` right in the middle of our Markdown documentation.
+
 <Canvas>
-  <Story>
+  <Story name="Button">
     <Button buttonType="primary" data-qa-button="primary">
       Primary
     </Button>

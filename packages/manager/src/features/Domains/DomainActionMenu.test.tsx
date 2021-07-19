@@ -1,11 +1,8 @@
 import { DomainStatus } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
+import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { DomainActionMenu } from './DomainActionMenu';
-
-import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
-
-jest.mock('src/components/ActionMenu/ActionMenu');
 
 const props = {
   onClone: jest.fn(),
@@ -20,7 +17,7 @@ const props = {
 };
 
 describe('Domain action menu', () => {
-  it('should include standard Domain actions', () => {
+  it('should include basic Domain actions', () => {
     const { queryByText } = renderWithTheme(<DomainActionMenu {...props} />);
     includesActions(['Edit', 'Clone', 'Delete'], queryByText);
   });

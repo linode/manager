@@ -67,7 +67,7 @@ export const Detail = () => (
       title="My-linode-12345"
       parentLink="/linodes"
       parentText="Linodes"
-      actions={<ActionMenu ariaLabel="linode-detail" createActions={() => []} />}
+      actions={<ActionMenu ariaLabel="linode-detail" actionsList={[]} />}
       body={
         <Chip
           style={{

@@ -7,10 +7,10 @@ import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
+const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 const LinodesCreate = React.lazy(
   () => import('./LinodesCreate/LinodeCreateContainer')
 );
-const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 
 const LinodesRoutes: React.FC = () => {
   return (

@@ -8,91 +8,69 @@ interface Props {
 type CombinedProps = Props;
 
 class StoryActionMenu extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
-    return [
-      {
-        title: 'First Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        },
-      },
-      {
-        title: 'Action 1',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        },
-      },
-      {
-        title: 'Action 3',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        },
-      },
-      {
-        title: 'Last Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        },
-      },
-    ];
-  };
+  actions: Action[] = [
+    {
+      title: 'First Action',
+      onClick: () => null,
+    },
+    {
+      title: 'Action 1',
+      onClick: () => null,
+    },
+    {
+      title: 'Action 3',
+      onClick: () => null,
+    },
+    {
+      title: 'Last Action',
+      onClick: () => null,
+    },
+  ];
 
   render() {
-    return <ActionMenu createActions={this.createActions()} ariaLabel="label" />;
+    return <ActionMenu actionsList={this.actions} ariaLabel="label" />;
   }
 }
 
 class StoryActionMenuWithTooltip extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
-    return [
-      {
-        title: 'First Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        },
-      },
-      {
-        title: 'Another Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        },
-      },
-      {
-        title: 'Disabled Action',
-        disabled: true,
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          closeMenu();
-          e.preventDefault();
-        },
-        tooltip: 'An explanation as to why this item is disabled',
-      },
-    ];
-  };
+  actions: Action[] = [
+    {
+      title: 'First Action',
+      onClick: () => null,
+    },
+    {
+      title: 'Another Action',
+      onClick: () => null,
+    },
+    {
+      title: 'Disabled Action',
+      disabled: true,
+      onClick: () => null,
+      tooltip: 'An explanation as to why this item is disabled',
+    },
+  ];
 
   render() {
-    return <ActionMenu createActions={this.createActions()} ariaLabel="label" />;
+    return <ActionMenu actionsList={this.actions} ariaLabel="label" />;
   }
 }
 
-class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
-  createActions = () => (closeMenu: Function): Action[] => {
-    return [
-      {
-        title: 'Single Action',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-        },
-      },
-    ];
-  };
+class StoryActionMenuWithInlineLabel extends React.Component<CombinedProps> {
+  actions: Action[] = [
+    {
+      title: 'Single Action',
+      onClick: () => null,
+    },
+  ];
+
   render() {
-    return <ActionMenu createActions={this.createActions()} ariaLabel="label" />;
+    return (
+      <ActionMenu
+        actionsList={this.actions}
+        ariaLabel="label"
+        inlineLabel="More Actions"
+      />
+    );
   }
 }
 
@@ -101,13 +79,13 @@ export default {
 };
 
 export const _ActionMenu = () => (
-  <div style={{ float: 'left' }}>
+  <div style={{ display: 'inline-block' }}>
     <StoryActionMenu />
   </div>
 );
 
 export const ActionMenuWithDisabledMenuItemTooltip = () => (
-  <div style={{ float: 'left' }}>
+  <div style={{ display: 'inline-block' }}>
     <StoryActionMenuWithTooltip />
   </div>
 );
@@ -116,12 +94,12 @@ ActionMenuWithDisabledMenuItemTooltip.story = {
   name: 'Action Menu with disabled menu item & tooltip',
 };
 
-export const ActionMenuWithOneMenuItem = () => (
-  <div style={{ float: 'left' }}>
-    <StoryActionMenuWithOneAction />
+export const ActionMenuWithInlineLabel = () => (
+  <div style={{ display: 'inline-block' }}>
+    <StoryActionMenuWithInlineLabel />
   </div>
 );
 
-ActionMenuWithOneMenuItem.story = {
-  name: 'Action Menu with one menu item',
+ActionMenuWithInlineLabel.story = {
+  name: 'Action Menu with inline label',
 };
