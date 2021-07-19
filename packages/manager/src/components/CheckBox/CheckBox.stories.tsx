@@ -79,7 +79,7 @@ class InteractiveCheckboxes extends React.Component {
 }
 
 export default {
-  title: 'UI Elements/CheckBox',
+  title: 'UI Elements/Check Box',
 };
 
 export const Interactive = () => <InteractiveCheckboxes />;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Breadcrumb from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import Grid from 'src/components/Grid';
 import ImageCreate from './ImageCreate';
 
@@ -31,7 +31,7 @@ export const ImagesCreateContainer: React.FC = () => {
           />
         </Grid>
         <Grid item className="p0">
-          <DocumentationButton href="https://www.linode.com/docs/products/tools/images/" />
+          <DocsLink href="https://www.linode.com/docs/products/tools/images/" />
         </Grid>
       </Grid>
       <Grid item className="p0" xs={12}>

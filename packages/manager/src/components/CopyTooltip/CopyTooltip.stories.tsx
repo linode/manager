@@ -17,7 +17,7 @@ class Example extends React.Component {
 }
 
 export default {
-  title: 'Copy Tooltip',
+  title: 'UI Elements/Tooltip/Copy Tooltip',
 };
 
 export const _CopyTooltip = () => <Example />;

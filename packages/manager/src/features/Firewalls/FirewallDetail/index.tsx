@@ -6,7 +6,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -119,7 +119,7 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item className="p0" style={{ marginTop: 14 }}>
-          <DocumentationButton href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
+          <DocsLink href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
         </Grid>
       </Grid>
       <Tabs

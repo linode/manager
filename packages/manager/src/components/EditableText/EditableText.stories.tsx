@@ -26,13 +26,17 @@ class InteractiveEditableText extends React.Component {
 
   render() {
     return (
-      <EditableText text={this.state.text} onEdit={this.editText} onCancel={this.cancelEdit} />
+      <EditableText
+        text={this.state.text}
+        onEdit={this.editText}
+        onCancel={this.cancelEdit}
+      />
     );
   }
 }
 
 export default {
-  title: 'Editable Text',
+  title: 'UI Elements/Editable Text',
 };
 
 export const HeadlineTitle = () => <InteractiveEditableText />;

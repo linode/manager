@@ -3,11 +3,13 @@ import * as React from 'react';
 import Tags from './Tags';
 
 export default {
-  title: 'Tags',
+  title: 'UI Elements/Tags',
 };
 
 export const TagsListWithoutShowMore = () => {
-  return <Tags tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']} />;
+  return (
+    <Tags tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']} />
+  );
 };
 
 TagsListWithoutShowMore.story = {
@@ -15,7 +17,17 @@ TagsListWithoutShowMore.story = {
 };
 
 export const TagsListWithShowMore = () => {
-  return <Tags tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123', 'Tag1', 'Tag2']} />;
+  return (
+    <Tags
+      tags={[
+        'tagOne',
+        'tagTwo',
+        'someStrangeLongTagWithNumber123',
+        'Tag1',
+        'Tag2',
+      ]}
+    />
+  );
 };
 
 TagsListWithShowMore.story = {

@@ -6,7 +6,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import EntityHeader from './EntityHeader';
 
 export default {
-  title: 'EntityHeader',
+  title: 'UI Elements/Entity Header',
 };
 
 export const Landing = () => (

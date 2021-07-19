@@ -37,7 +37,7 @@ class InteractiveIconTextLink extends React.Component {
 }
 
 export default {
-  title: 'IconTextLink',
+  title: 'UI Elements/Link/Icon Text Link',
 };
 
 export const Interactive = () => <InteractiveIconTextLink />;

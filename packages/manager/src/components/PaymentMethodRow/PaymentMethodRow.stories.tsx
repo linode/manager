@@ -2,7 +2,7 @@ import * as React from 'react';
 import PaymentMethodRow from './PaymentMethodRow';
 
 export default {
-  title: 'Payment Method Row',
+  title: 'Components/Payment Method Row',
 };
 
 const card = (cardName: string) => {

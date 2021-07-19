@@ -4,7 +4,7 @@ import * as React from 'react';
 import Tag from './Tag';
 
 export default {
-  title: 'Tags',
+  title: 'UI Elements/Tags',
 };
 
 export const Primary = () => <Tag label="tag" />;
@@ -67,7 +67,9 @@ LightYellow.story = {
   name: 'lightYellow',
 };
 
-export const Editable = () => <Tag label="delete-tag" onDelete={action('click')} />;
+export const Editable = () => (
+  <Tag label="delete-tag" onDelete={action('click')} />
+);
 
 Editable.story = {
   name: 'editable',

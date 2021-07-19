@@ -5,7 +5,7 @@ import Tile from './Tile';
 import Chat from 'src/assets/icons/chat.svg';
 
 export default {
-  title: 'Tile',
+  title: 'UI Elements/Tile',
 };
 
 export const Internal = () => (

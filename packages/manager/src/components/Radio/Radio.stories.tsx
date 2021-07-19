@@ -18,17 +18,29 @@ class Example extends React.Component<{}, { value?: string }> {
         value={this.state.value}
         onChange={this.handleChange}
       >
-        <FormControlLabel value="Disabled" label="Disabled" control={<Radio disabled />} />
+        <FormControlLabel
+          value="Disabled"
+          label="Disabled"
+          control={<Radio disabled />}
+        />
         <FormControlLabel value="D" label="Default" control={<Radio />} />
-        <FormControlLabel value="B" label="Warning" control={<Radio variant="warning" />} />
-        <FormControlLabel value="A" label="Error" control={<Radio variant="error" />} />
+        <FormControlLabel
+          value="B"
+          label="Warning"
+          control={<Radio variant="warning" />}
+        />
+        <FormControlLabel
+          value="A"
+          label="Error"
+          control={<Radio variant="error" />}
+        />
       </RadioGroup>
     );
   }
 }
 
 export default {
-  title: 'Radio',
+  title: 'UI Elements/Radio',
 };
 
 export const Interactive = () => <Example />;

@@ -12,7 +12,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
@@ -178,7 +178,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item className={`${classes.cta} p0`}>
-          <DocumentationButton href="https://www.linode.com/docs/platform/stackscripts" />
+          <DocsLink href="https://www.linode.com/docs/platform/stackscripts" />
           <Button
             buttonType="primary"
             className={classes.button}

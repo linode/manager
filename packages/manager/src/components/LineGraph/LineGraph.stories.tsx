@@ -24,15 +24,23 @@ const mockData = [
 ];
 
 export default {
-  title: 'Line Graph',
+  title: 'UI Elements/Analytics & Graphs/Line Graph',
 };
 
 export const CurrentDay = () => (
-  <LineGraph showToday={true} data={mockData} timezone={'America/Los_Angeles'} />
+  <LineGraph
+    showToday={true}
+    data={mockData}
+    timezone={'America/Los_Angeles'}
+  />
 );
 
 export const MultipleDays = () => (
-  <LineGraph showToday={false} data={mockData} timezone={'America/Los_Angeles'} />
+  <LineGraph
+    showToday={false}
+    data={mockData}
+    timezone={'America/Los_Angeles'}
+  />
 );
 
 export const FixedMaxYAxis = () => (
@@ -45,7 +53,12 @@ export const FixedMaxYAxis = () => (
 );
 
 export const UsingTheChartJsNativeLegendFunctionality = () => (
-  <LineGraph nativeLegend showToday={false} data={mockData} timezone={'America/Los_Angeles'} />
+  <LineGraph
+    nativeLegend
+    showToday={false}
+    data={mockData}
+    timezone={'America/Los_Angeles'}
+  />
 );
 
 UsingTheChartJsNativeLegendFunctionality.story = {

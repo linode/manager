@@ -25,7 +25,7 @@ import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
@@ -393,7 +393,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item className="p0">
-          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
+          <DocsLink href="https://www.linode.com/docs/guides/dns-manager/" />
         </Grid>
       </Grid>
 

@@ -18,7 +18,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import DeletionDialog from 'src/components/DeletionDialog';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import EntityDetail from 'src/components/EntityDetail';
 import EntityHeader from 'src/components/EntityHeader';
 import Grid from 'src/components/Grid';
@@ -190,7 +190,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           />
         </Grid>
         <Grid item className="px0">
-          <DocumentationButton href="https://www.linode.com/" />
+          <DocsLink href="https://www.linode.com/" />
         </Grid>
       </Grid>
       <EntityHeader
