@@ -92,6 +92,8 @@ const cmrBGColors = {
   bgBillingSummary: '#f5f9ff',
   bgAccessRow: '#fafafa',
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
+  bgTableRow: '#fbfbfb',
+  bgReferralsImage: '#EDEDF4',
 };
 
 const cmrTextColors = {
@@ -859,7 +861,7 @@ const themeDefaults: ThemeDefaults = () => {
         root: {
           color: '#555',
           fontFamily: primaryFonts.bold,
-          fontSize: '.9rem',
+          fontSize: '.875rem',
           marginBottom: 8,
           '&$focused': {
             color: '#555',

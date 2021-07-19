@@ -39,8 +39,8 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import useAccount from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
@@ -233,15 +233,17 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
   const regions = useRegionsQuery().data ?? [];
-  const { account } = useAccount();
+
+  const { data: account } = useAccount();
   const [deviceCounter, setDeviceCounter] = React.useState(
     deviceCounterDefault
   );
+
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
-  const capabilities = account?.data?.capabilities ?? [];
+  const capabilities = account?.capabilities ?? [];
   const regionHasVLANS = regions.some(
     (thisRegion) =>
       thisRegion.id === linodeRegion &&

@@ -8,37 +8,36 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import { parseAPIDate } from 'src/utilities/date';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
-import Link from 'src/components/Link';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import InlineMenuAction from 'src/components/InlineMenuAction';
+import Link from 'src/components/Link';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableContentWrapper from 'src/components/TableContentWrapper/TableContentWrapper_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableContentWrapper from 'src/components/TableContentWrapper';
+import TableRow from 'src/components/TableRow';
+import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import {
   printInvoice,
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
-import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
-import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { useSet } from 'src/hooks/useSet';
-import { isAfter } from 'src/utilities/date';
+import { useAccount } from 'src/queries/account';
+import { isAfter, parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getAll, getAllWithArguments } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
-import InlineMenuAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -169,9 +168,10 @@ export interface Props {
 export const BillingActivityPanel: React.FC<Props> = (props) => {
   const { accountActiveSince } = props;
 
+  const { data: account } = useAccount();
+
   const classes = useStyles();
   const flags = useFlags();
-  const { account } = useAccount();
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>();
@@ -233,7 +233,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       const id = `invoice-${invoiceId}`;
 
       // TS Safeguard.
-      if (!account.data || !invoice) {
+      if (!account || !invoice) {
         pdfErrors.add(id);
         return;
       }
@@ -247,7 +247,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
 
           const invoiceItems = response.data;
           const result = printInvoice(
-            account.data!,
+            account!,
             invoice,
             invoiceItems,
             flags.taxBanner
@@ -262,7 +262,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           pdfErrors.add(id);
         });
     },
-    [account.data, flags.taxBanner, invoices, pdfErrors, pdfLoading]
+    [account, flags.taxBanner, invoices, pdfErrors, pdfLoading]
   );
 
   const downloadPaymentPDF = React.useCallback(
@@ -274,7 +274,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       const id = `payment-${paymentId}`;
 
       // TS Safeguard.
-      if (!account.data || !payment) {
+      if (!account || !payment) {
         pdfErrors.add(id);
         return;
       }
@@ -287,13 +287,13 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         taxBanner?.date,
         taxBanner?.linode_tax_id
       );
-      const result = printPayment(account.data, payment, taxId);
+      const result = printPayment(account, payment, taxId);
 
       if (result.status === 'error') {
         pdfErrors.add(id);
       }
     },
-    [payments, flags.taxBanner, account.data, pdfErrors]
+    [payments, flags.taxBanner, account, pdfErrors]
   );
 
   // Handlers for <Select /> components.
@@ -357,6 +357,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       return matchesType && matchesDate;
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
+
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
@@ -519,10 +520,6 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
       hasError,
       isLoading,
     } = props;
-    const rowProps = { rowLink: '' };
-    if (type === 'invoice' && !isLoading) {
-      rowProps.rowLink = `/account/billing/invoices/${id}`;
-    }
 
     const handleClick = React.useCallback(
       (e: React.MouseEvent) => {
@@ -540,7 +537,7 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
     };
 
     return (
-      <TableRow {...rowProps} data-testid={`${type}-${id}`}>
+      <TableRow data-testid={`${type}-${id}`}>
         <TableCell>
           {type === 'invoice' ? (
             <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
@@ -590,10 +587,7 @@ export const paymentToActivityFeedItem = (
   // Refunds are issued as negative payments.
   const label = usd < 0 ? 'Refund' : `Payment #${payment.id}`;
 
-  // Note: this is confusing.
-  // We flip the polarity here, since we display a positive payment as e.g. "-($5.00)"
-  // and a negative payment (i.e. refund) as e.g. "$5.00"
-  const total = usd <= 0 ? Math.abs(usd) : -usd;
+  const total = Math.abs(usd);
 
   return {
     label,

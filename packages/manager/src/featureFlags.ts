@@ -22,7 +22,6 @@ export interface Flags {
   firewalls: boolean;
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
-  thirdPartyAuth: boolean;
   cmr: boolean;
   mainContentBanner: MainContentBanner;
   changelog: Changelog;

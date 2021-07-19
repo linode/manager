@@ -9,7 +9,6 @@ import {
   LongviewPortsResponse,
   LongviewTopProcesses,
 } from 'src/features/Longview/request.types';
-import useFlags from 'src/hooks/useFlags';
 import LongviewPackageDrawer from '../../LongviewPackageDrawer';
 import ActiveConnections from './ActiveConnections';
 import GaugesSection from './GaugesSection';
@@ -52,8 +51,6 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
     lastUpdatedError,
     timezone,
   } = props;
-
-  const flags = useFlags();
 
   /**
    * Package drawer open/close logic
@@ -101,7 +98,6 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
                 topProcessesLoading={topProcessesLoading}
                 topProcessesError={topProcessesError}
                 lastUpdatedError={lastUpdatedError}
-                cmrFlag={flags.cmr}
               />
             </Grid>
           </Paper>
@@ -117,13 +113,11 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
             servicesLoading={listeningPortsLoading && !lastUpdated}
             servicesError={portsError}
-            cmrFlag={flags.cmr}
           />
           <ActiveConnections
             connections={pathOr([], ['Ports', 'active'], listeningPortsData)}
             connectionsLoading={listeningPortsLoading && !lastUpdated}
             connectionsError={portsError}
-            cmrFlag={flags.cmr}
           />
         </Grid>
       </Grid>

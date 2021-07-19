@@ -12,9 +12,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import ActionMenu, {
-  Action,
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import {
   makeStyles,
   Theme,

@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import EntityTable from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
 import {
   useCreateFirewall,

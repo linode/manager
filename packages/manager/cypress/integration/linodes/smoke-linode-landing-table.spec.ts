@@ -29,7 +29,6 @@ describe('linode landing', () => {
         // https://github.com/linode/manager/pull/6627
         // the second delete would crash the UI
         cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');
-        deleteLinodeFromActionMenu(linodeB.label);
       });
     });
   });

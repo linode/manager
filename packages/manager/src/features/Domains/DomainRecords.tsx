@@ -32,7 +32,6 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -41,6 +40,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
@@ -54,7 +54,7 @@ import { storage } from 'src/utilities/storage';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames = 'root' | 'cells' | 'linkContainer' | 'addNewLink';
+type ClassNames = 'root' | 'cells' | 'linkContainer';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -81,6 +81,10 @@ const styles = (theme: Theme) =>
         [theme.breakpoints.up('md')]: {
           maxWidth: 750,
         },
+      },
+      '&:last-of-type': {
+        display: 'flex',
+        justifyContent: 'flex-end',
       },
     },
     linkContainer: {

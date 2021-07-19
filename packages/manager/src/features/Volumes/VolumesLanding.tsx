@@ -11,7 +11,7 @@ import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable_CMR from 'src/components/EntityTable/EntityTable_CMR';
+import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
 import Loading from 'src/components/LandingLoading';
 import Link from 'src/components/Link';
@@ -360,7 +360,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
                 onAddNew={() => props.history.push('/volumes/create')}
                 docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
               />
-              <EntityTable_CMR
+              <EntityTable
                 entity="volume"
                 headers={volumeHeaders}
                 isGroupedByTag={volumesAreGrouped}

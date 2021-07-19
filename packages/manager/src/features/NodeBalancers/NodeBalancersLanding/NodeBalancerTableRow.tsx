@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   actionCell: {
-    // @todo: remove action cell duplication (this is from DomainTableRow_CMR)
+    // @todo: remove action cell duplication (this is from DomainTableRow)
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -113,7 +113,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
         <TableCell data-qa-ports>
           {configs.length === 0 && 'None'}
           {configs.map(({ port, id: configId }, i) => (
-            <React.Fragment key={id}>
+            <React.Fragment key={configId}>
               <Link
                 to={`/nodebalancers/${id}/configurations/${configId}`}
                 className={classes.portLink}

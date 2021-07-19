@@ -48,12 +48,12 @@ import {
   promoFactory,
   staticObjects,
   makeObjectsPage,
+  accountMaintenanceFactory,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import cachedTypes from 'src/cachedData/types.json';
-import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
 
 export const makeResourcePage = (
   e: any[],
@@ -69,11 +69,11 @@ export const makeResourcePage = (
 });
 
 const statusPage = [
-  rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
+  rest.get('*/api/v2/incidents*', (req, res, ctx) => {
     const response = incidentResponseFactory.build();
     return res(ctx.json(response));
   }),
-  rest.get('*statuspage.io/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+  rest.get('*/api/v2/scheduled_maintenances*', (req, res, ctx) => {
     const response = maintenanceResponseFactory.build();
     return res(ctx.json(response));
   }),
@@ -428,7 +428,51 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(invoices)));
   }),
   rest.get('*/account/maintenance', (req, res, ctx) => {
-    const accountMaintenance = accountMaintenanceFactory.buildList(2);
+    accountMaintenanceFactory.resetSequenceNumber();
+    const page = Number(req.url.searchParams.get('page') || 1);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+
+    const accountMaintenance = [
+      ...accountMaintenanceFactory.buildList(1, {
+        entity: { label: 'very-long-name-for-a-linode-for-testing' },
+        when: new Date(Date.now() + 5000).toISOString(),
+      }),
+      ...accountMaintenanceFactory.buildList(27, { status: 'pending' }),
+      ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
+    ];
+
+    if (req.headers.get('x-filter')) {
+      const sort = JSON.parse(req.headers.get('x-filter') || '{}');
+
+      accountMaintenance.sort((a, b) => {
+        const statusA = a[sort['+order_by']];
+        const statusB = b[sort['+order_by']];
+
+        if (statusA < statusB) {
+          return -1;
+        }
+        if (statusA > statusB) {
+          return 1;
+        }
+        return 0;
+      });
+
+      if (sort['+order'] == 'desc') {
+        accountMaintenance.reverse();
+      }
+      return res(
+        ctx.json({
+          data: accountMaintenance.slice(
+            (page - 1) * pageSize,
+            (page - 1) * pageSize + pageSize
+          ),
+          page,
+          pages: accountMaintenance.length / pageSize,
+          results: accountMaintenance.length,
+        })
+      );
+    }
+
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/events', (req, res, ctx) => {

@@ -23,6 +23,8 @@ const cmrBGColors = {
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',
   bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
+  bgTableRow: 'rgba(0, 0, 0, 0.1)',
+  bgReferralsImage: '#83868C',
 };
 
 const cmrTextColors = {
@@ -112,6 +114,15 @@ const genericStatusPillStyle = {
   },
   [breakpoints.down('sm')]: {
     fontSize: 14,
+  },
+};
+
+const genericTableHeaderStyle = {
+  '&:hover': {
+    cursor: 'pointer',
+    '& span': {
+      color: cmrTextColors.linkActiveLight,
+    },
   },
 };
 
@@ -267,6 +278,9 @@ const darkThemeOptions = {
   applyStatusPillStyles: {
     ...genericStatusPillStyle,
   },
+  applyTableHeaderStyles: {
+    ...genericTableHeaderStyle,
+  },
   overrides: {
     MuiAppBar: {
       colorDefault: {
@@ -378,6 +392,11 @@ const darkThemeOptions = {
       root: {
         color: primaryColors.text,
         backgroundColor: primaryColors.main,
+      },
+      clickable: {
+        '&:hover': {
+          background: '#226dc3',
+        },
       },
     },
     MuiCardActions: {

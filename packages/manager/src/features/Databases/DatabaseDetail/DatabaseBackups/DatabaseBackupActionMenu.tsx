@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import ActionMenu from 'src/components/ActionMenu_CMR';
-import Hidden from 'src/components/core/Hidden';
-import InlineAction from 'src/components/InlineMenuAction';
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
+import * as React from 'react';
+import ActionMenu from 'src/components/ActionMenu';
+import Hidden from 'src/components/core/Hidden';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import InlineAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles((theme: Theme) => ({
   inlineActions: {

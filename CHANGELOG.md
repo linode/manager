@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-07-01] - v1.44.1
+
+### Fixed:
+- Referral link is not hidden properly
+
+## [2021-06-28] - v1.44.0
+
+### Added:
+- Dedicated Maintenance Table at `/account/maintenance`
+- Use React Query query to populate account network transfer
+
+### Changed:
+- Referral page changes
+- Update Virtualmin and Webmin Marketplace links
+- EntityTables and Tables CMR cleanup
+
+### Fixed:
+- Console warning for Divider custom props
+- Object Storage landing table UI bugs
+- Ability to access /dev/sdh Block Device in Configuration modal
+
 ## [2021-06-17] - v1.43.1
 
 ### Added:

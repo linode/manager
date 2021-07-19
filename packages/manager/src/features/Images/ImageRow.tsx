@@ -4,8 +4,8 @@ import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
-import TableRow from 'src/components/TableRow/TableRow_CMR';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
@@ -35,8 +35,12 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
     label,
     size,
     status,
+    onRetry,
+    onCancelFailed,
     ...rest
   } = props;
+
+  const isFailed = status === 'pending_upload' && event?.status === 'failed';
 
   const getStatusForImage = (status: string) => {
     switch (status) {
@@ -50,7 +54,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
       case 'available':
         return 'Ready';
       case 'pending_upload':
-        return event?.status === 'failed' ? 'Failed' : 'Pending Upload';
+        return isFailed ? 'Failed' : 'Processing';
       default:
         return capitalizeAllWords(status.replace('_', ' '));
     }
@@ -63,7 +67,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
   ) => {
     if (status === 'available' || eventStatus === 'finished') {
       return `${size} MB`;
-    } else if (status === 'pending_upload' && eventStatus === 'failed') {
+    } else if (isFailed) {
       return 'N/A';
     } else {
       return 'Pending';
@@ -94,7 +98,17 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
             status={status}
             {...rest}
           />
-        ) : null}
+        ) : (
+          <ActionMenu
+            id={id}
+            label={label}
+            description={description}
+            status={status}
+            event={event}
+            onRetry={onRetry}
+            onCancelFailed={onCancelFailed}
+          />
+        )}
       </TableCell>
     </TableRow>
   );

@@ -31,7 +31,8 @@ export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
-export const LINODE_STATUS_PAGE_ID = process.env.REACT_APP_STATUS_PAGE_ID || '';
+export const LINODE_STATUS_PAGE_URL =
+  process.env.REACT_APP_STATUS_PAGE_URL || 'https://status.linode.com/api/v2';
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.

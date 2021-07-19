@@ -11,15 +11,15 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Table from 'src/components/Table/Table_CMR';
-import TableCell from 'src/components/TableCell/TableCell_CMR';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';

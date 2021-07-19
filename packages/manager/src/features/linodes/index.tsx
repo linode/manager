@@ -3,14 +3,14 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
-import { useAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
+import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
+const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 const LinodesCreate = React.lazy(
   () => import('./LinodesCreate/LinodeCreateContainer')
 );
-const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
 
 const LinodesRoutes: React.FC = () => {
   return (
@@ -33,7 +33,7 @@ export default LinodesRoutes;
 // I needed a Function Component. It seemed safer to do it this way instead of
 // refactoring LinodesLanding.
 const LinodesLandingWrapper: React.FC = React.memo(() => {
-  const { data: accountMaintenanceData } = useAccountMaintenanceQuery();
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery();
   const { linodes } = useLinodes();
   const { typesMap } = useTypes();
 

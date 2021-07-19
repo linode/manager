@@ -1,4 +1,3 @@
-import { getNetworkUtilization } from '@linode/api-v4/lib/account';
 import { getLinodeTransfer } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
@@ -9,6 +8,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { useAccountTransfer } from 'src/queries/accountTransfer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -39,11 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#5ad865',
     },
   },
-  lightGreen: {
-    '&:before': {
-      backgroundColor: '#99ec79',
-    },
-  },
   grey: {
     '&:before': {
       backgroundColor: theme.color.grey2,
@@ -66,20 +61,20 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
     [linodeID]
   );
 
-  const accountTransfer = useAPIRequest(
-    getNetworkUtilization,
-    { used: 0, quota: 0, billable: 0 },
-    []
-  );
+  const {
+    data: accountTransfer,
+    isLoading: accountTransferLoading,
+    error: accountTransferError,
+  } = useAccountTransfer();
 
   const linodeUsedInGB = readableBytes(linodeTransfer.data.used, {
     unit: 'GB',
   }).value;
-  const totalUsedInGB = accountTransfer.data.used;
-  const accountQuotaInGB = accountTransfer.data.quota;
+  const totalUsedInGB = accountTransfer?.used || 0;
+  const accountQuotaInGB = accountTransfer?.quota || 0;
 
-  const error = Boolean(linodeTransfer.error || accountTransfer.error);
-  const loading = linodeTransfer.loading || accountTransfer.loading;
+  const error = Boolean(linodeTransfer.error || accountTransferError);
+  const loading = linodeTransfer.loading || accountTransferLoading;
 
   return (
     <div>
@@ -91,7 +86,7 @@ export const NetworkTransfer: React.FC<Props> = (props) => {
         linodeUsedInGB={linodeUsedInGB}
         totalUsedInGB={totalUsedInGB}
         accountQuotaInGB={accountQuotaInGB}
-        accountBillableInGB={accountTransfer.data.billable}
+        accountBillableInGB={accountTransfer?.billable || 0}
         linodeLabel={linodeLabel}
         error={error}
         loading={loading}
@@ -126,15 +121,11 @@ const TransferContent: React.FC<ContentProps> = (props) => {
   const classes = useStyles();
 
   /**
-   * In this component we display four pieces of information:
+   * In this component we display three pieces of information:
    *
    * 1. Account-level transfer quota for this month
    * 2. The amount of transfer THIS Linode has used this month
-   * 3. The amount of transfer OTHER things on your account have used this month
-   * 4. The remaining transfer on your account this month
-   *
-   * The value for #3 comes from subtracting the transfer THIS Linode has used from the TOTAL
-   * transfer used on the account.
+   * 3. The remaining transfer on your account this month
    */
 
   const linodeUsagePercent = calculatePercentageWithCeiling(
@@ -147,7 +138,6 @@ const TransferContent: React.FC<ContentProps> = (props) => {
     accountQuotaInGB
   );
 
-  const otherEntitiesUsedInGB = Math.max(totalUsedInGB - linodeUsedInGB, 0);
   const remainingInGB = Math.max(accountQuotaInGB - totalUsedInGB, 0);
 
   if (error) {
@@ -185,11 +175,6 @@ const TransferContent: React.FC<ContentProps> = (props) => {
       <Typography className={`${classes.legendItem} ${classes.darkGreen}`}>
         {linodeLabel} ({linodeUsedInGB} GB)
       </Typography>
-      {otherEntitiesUsedInGB > 0 && (
-        <Typography className={`${classes.legendItem} ${classes.lightGreen}`}>
-          Other entities ({otherEntitiesUsedInGB} GB)
-        </Typography>
-      )}
       <Typography className={`${classes.legendItem} ${classes.grey}`}>
         Remaining ({remainingInGB} GB)
       </Typography>
