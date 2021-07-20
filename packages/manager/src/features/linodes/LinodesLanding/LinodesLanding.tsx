@@ -313,7 +313,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             userProfileLoading={this.props.userProfileLoading}
           />
         )}
-        <Grid container className={classes.cmrSpacing}>
+        <Grid container className={classes.root}>
           <Grid item xs={12}>
             <DocumentTitleSegment segment="Linodes" />
             <PreferenceToggle<boolean>

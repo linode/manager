@@ -37,12 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0,
     },
   },
-  cmrSpacing: {
+  delete: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
-  tagPanel: {},
 }));
 
 interface Props {
@@ -78,15 +77,13 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <div className={hookClasses.tagPanel}>
-            <TagsPanelRedesigned
-              align="left"
-              tags={domain.tags}
-              updateTags={handleUpdateTags}
-            />
-          </div>
+          <TagsPanelRedesigned
+            align="left"
+            tags={domain.tags}
+            updateTags={handleUpdateTags}
+          />
         </Paper>
-        <div className={`${hookClasses.tagPanel} ${hookClasses.cmrSpacing}`}>
+        <div className={hookClasses.delete}>
           <DeleteDomain
             domainId={domain.id}
             domainLabel={domain.domain}

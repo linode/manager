@@ -75,10 +75,9 @@ type ClassNames =
   | 'snapshotFormControl'
   | 'snapshotGeneralError'
   | 'scheduleAction'
-  | 'chooseTime'
   | 'chooseDay'
   | 'cancelButton'
-  | 'cmrSpacing';
+  | 'cancelCopy';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -115,7 +114,6 @@ const styles = (theme: Theme) =>
         marginTop: theme.spacing(2),
       },
     },
-    chooseTime: {},
     chooseDay: {
       marginRight: theme.spacing(2),
       minWidth: 150,
@@ -130,17 +128,17 @@ const styles = (theme: Theme) =>
         marginRight: theme.spacing(),
       },
     },
+    cancelCopy: {
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing(),
+      },
+    },
     snapshotNameField: {
       minWidth: 275,
     },
     snapshotGeneralError: {
       minWidth: '100%',
-    },
-    cmrSpacing: {
-      [theme.breakpoints.down('sm')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
     },
   });
 
@@ -669,7 +667,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             noMarginTop
           />
         </FormControl>
-        <FormControl className={classes.chooseTime}>
+        <FormControl>
           <Select
             textFieldProps={{
               dataAttrs: {
@@ -751,7 +749,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           Cancel Backups
         </Button>
         <Typography
-          className={classes.cmrSpacing}
+          className={classes.cancelCopy}
           variant="body1"
           data-qa-cancel-desc
         >
