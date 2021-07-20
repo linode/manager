@@ -5,7 +5,6 @@ import { compose } from 'recompose';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import ProductNotification from 'src/components/ProductNotification';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
-import { useProfile } from 'src/queries/profile';
 import { Maintenance } from 'src/store/linodes/linodes.helpers';
 import { withNotifications } from 'src/store/notification/notification.containers';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -22,11 +21,6 @@ const Notifications: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery();
-  const {
-    data: profile,
-    isLoading: profileLoading,
-    error: profileError,
-  } = useProfile();
 
   const maintenanceForThisLinode = accountMaintenanceData?.find(
     (thisMaintenance) =>
@@ -77,9 +71,6 @@ const Notifications: React.FC<CombinedProps> = (props) => {
       })}
       {maintenanceForThisLinode ? (
         <MaintenanceBanner
-          userTimezone={profile?.timezone}
-          userProfileLoading={profileLoading}
-          userProfileError={profileError}
           maintenanceStart={maintenanceForThisLinode.when}
           type={maintenanceForThisLinode.type}
         />

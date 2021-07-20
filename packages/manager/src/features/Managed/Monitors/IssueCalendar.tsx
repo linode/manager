@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
-import useTimezone from 'src/utilities/useTimezone';
 import IssueDay from './IssueDay';
 import { parseAPIDate } from 'src/utilities/date';
+import { useProfile } from 'src/queries/profile';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 const TOTAL_DAYS = 10;
 
@@ -58,7 +59,8 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
 
 export const IssueCalendar: React.FC<Props> = (props) => {
   const { issues } = props;
-  const timezone = useTimezone();
+  const { data: profile } = useProfile();
+  const timezone = getUserTimezone(profile);
 
   const days = generateCalendar(timezone, issues);
 

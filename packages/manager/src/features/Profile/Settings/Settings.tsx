@@ -26,12 +26,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   toggleTheme: () => void;
-  theme: Theme;
 }
 
 type CombinedProps = Props & FeatureFlagConsumerProps;
 
-const ProfileSettings: React.FC<CombinedProps> = (props) => {
+const ProfileSettings: React.FC<CombinedProps & { theme: Theme }> = (props) => {
   const classes = useStyles();
   const { toggleTheme, theme } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);

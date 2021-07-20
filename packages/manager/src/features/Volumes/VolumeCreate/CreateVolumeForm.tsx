@@ -22,10 +22,7 @@ import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';

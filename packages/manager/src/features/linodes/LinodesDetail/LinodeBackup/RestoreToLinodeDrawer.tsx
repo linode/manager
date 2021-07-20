@@ -1,5 +1,4 @@
 import { restoreBackup } from '@linode/api-v4/lib/linodes';
-import { Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -16,11 +15,12 @@ import Notice from 'src/components/Notice';
 import withLinodes, {
   Props as LinodeProps,
 } from 'src/containers/withLinodes.container';
-import { useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { Grants } from '@linode/api-v4/lib';
 
 interface Props {
   open: boolean;
@@ -34,8 +34,11 @@ interface Props {
 
 export type CombinedProps = Props & LinodeProps;
 
-const canEditLinode = (profile: Profile | null, linodeId: number): boolean => {
-  return getPermissionsForLinode(profile, linodeId) === 'read_only';
+const canEditLinode = (
+  grants: Grants | undefined,
+  linodeId: number
+): boolean => {
+  return getPermissionsForLinode(grants, linodeId) === 'read_only';
 };
 
 export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
@@ -49,7 +52,7 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
     linodeRegion,
   } = props;
 
-  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const [overwrite, setOverwrite] = React.useState<boolean>(false);
   const [selectedLinode, setSelectedLinode] = React.useState<string>('none');
@@ -105,7 +108,7 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
   const overwriteError = hasErrorFor('overwrite');
   const generalError = hasErrorFor('none');
 
-  const readOnly = canEditLinode(profile || null, Number(selectedLinode));
+  const readOnly = canEditLinode(grants, Number(selectedLinode));
   const selectError = Boolean(linodeError) || readOnly;
 
   const linodeOptions = linodesData
@@ -187,7 +190,7 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
       </ActionsPanel>
     </Drawer>
   );
-}
+};
 
 const enhanced = compose<CombinedProps, Props>(withLinodes());
 

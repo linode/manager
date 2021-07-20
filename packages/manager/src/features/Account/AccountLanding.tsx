@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

@@ -31,6 +31,7 @@ import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { getGrantData } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
@@ -444,7 +445,6 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
 
   const linode = state.__resources.linodes.itemsById[linodeId];
   const linodeDisks = state.__resources.linodeDisks;
-  const profile = state.__resources.profile;
 
   if (!linode) {
     return {};
@@ -455,7 +455,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
     linodeType: linode.type,
     linodeStatus: linode.status,
     linodeLabel: linode.label,
-    permissions: getPermissionsForLinode(profile.data ?? null, linodeId),
+    permissions: getPermissionsForLinode(getGrantData, linodeId),
     linodeDisks: getLinodeDisksForLinode(linodeDisks, linodeId),
     linodeDisksError: linodeDisks[linodeId]?.error,
   };

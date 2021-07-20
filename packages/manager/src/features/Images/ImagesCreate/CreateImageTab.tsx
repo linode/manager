@@ -275,4 +275,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   );
 };
 
-export default compose(withImages())(CreateImageTab);
+export default compose<Props & ImagesDispatch, Props>(withImages())(
+  CreateImageTab
+);

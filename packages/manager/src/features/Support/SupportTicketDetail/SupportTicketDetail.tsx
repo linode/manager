@@ -7,7 +7,7 @@ import {
   SupportTicket,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
-import { compose, isEmpty, path, pathOr } from 'ramda';
+import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -40,6 +40,7 @@ import TicketAttachmentList from '../TicketAttachmentList';
 import { ExtendedReply, ExtendedTicket } from '../types';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
+import { getProfileData } from 'src/queries/profile';
 
 export type ClassNames =
   | 'title'
@@ -476,8 +477,8 @@ const styled = withStyles(styles);
 interface StateProps {
   profileUsername?: string;
 }
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, {}> = () => ({
+  profileUsername: getProfileData?.username,
 });
 
 const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (

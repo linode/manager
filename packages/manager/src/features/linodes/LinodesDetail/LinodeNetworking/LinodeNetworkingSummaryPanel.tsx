@@ -1,14 +1,13 @@
 import { ZoneName } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
-import { MapState } from 'src/store/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,8 +39,6 @@ interface Props {
   sshIPAddress?: string;
 }
 
-type CombinedProps = Props & StateProps;
-
 interface SummaryProps {
   title: string;
   renderValue: (args: any) => JSX.Element;
@@ -69,9 +66,12 @@ const SummarySection: React.FC<SummaryProps> = (props) => {
 
 const StyledSummarySection = SummarySection;
 
-const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
-  const { sshIPAddress, username, linodeRegion, linodeLabel, zoneName } = props;
+const LinodeNetworkingSummaryPanel: React.FC<Props> = (props) => {
+  const { sshIPAddress, linodeRegion, linodeLabel, zoneName } = props;
   const classes = useStyles();
+  const { data: profile } = useProfile();
+
+  const username = profile?.username || '';
 
   const regions = useRegionsQuery().data ?? [];
   const currentRegion = regions.find(
@@ -134,19 +134,7 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface StateProps {
-  username?: string;
-}
-
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  username: state.__resources?.profile?.data?.username,
-});
-
-const connected = connect(mapStateToProps);
-
-export default connected(
-  LinodeNetworkingSummaryPanel
-) as React.ComponentType<Props>;
+export default LinodeNetworkingSummaryPanel as React.ComponentType<Props>;
 
 const renderDNSResolvers = (ips: string[]) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>

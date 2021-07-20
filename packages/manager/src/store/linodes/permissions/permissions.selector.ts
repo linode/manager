@@ -1,10 +1,10 @@
 import { Grant, GrantLevel, Grants } from '@linode/api-v4/lib/account';
 
 export const getPermissionsForLinode = (
-  grants: Grants | null,
+  grants: Grants | null | undefined,
   linodeId: number
 ): GrantLevel => {
-  if (grants === null) {
+  if (!grants) {
     return 'read_write';
   } // Default to write access
   const linodesGrants = grants.linode;

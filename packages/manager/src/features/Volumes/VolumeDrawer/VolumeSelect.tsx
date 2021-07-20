@@ -1,13 +1,15 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { getVolumes, Volume } from '@linode/api-v4/lib/volumes';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { getGrants, isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import {
+  getGrants,
+  isRestrictedUser,
+} from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { debounce } from 'throttle-debounce';
 

@@ -11,7 +11,7 @@ import { ApplicationState } from 'src/store';
 import withNotifications, {
   WithNotifications,
 } from 'src/store/notification/notification.containers';
-import useTimezone from 'src/utilities/useTimezone';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { v4 } from 'uuid';
 import TimezoneForm from './TimezoneForm';
 
@@ -27,7 +27,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: profile, refetch: requestProfile } = useProfile();
 
-  const timezone = useTimezone();
+  const timezone = getUserTimezone();
   const loggedInAsCustomer = useSelector(
     (state: ApplicationState) => state.authentication.loggedInAsCustomer
   );

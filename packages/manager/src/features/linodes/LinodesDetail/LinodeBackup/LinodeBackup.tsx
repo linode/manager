@@ -13,7 +13,6 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -58,6 +57,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendBackupsDisabledEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { initWindows } from 'src/utilities/initWindows';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -855,8 +855,8 @@ interface StateProps {
   timezone: string;
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, CombinedProps> = () => ({
+  timezone: getUserTimezone(),
 });
 
 const connected = connect(mapStateToProps);

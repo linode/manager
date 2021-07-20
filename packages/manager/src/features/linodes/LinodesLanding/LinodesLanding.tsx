@@ -3,7 +3,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
-import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -38,7 +37,6 @@ import {
   sendLinodesViewEvent,
 } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import getUserTimezone from 'src/utilities/getUserTimezone';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';

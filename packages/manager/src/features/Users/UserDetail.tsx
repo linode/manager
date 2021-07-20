@@ -20,7 +20,6 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
@@ -37,7 +36,6 @@ const UserDetail: React.FC = () => {
   const [createdUsername, setCreatedUsername] = React.useState<
     string | undefined
   >();
-  const [gravatarUrl, setGravatarUrl] = React.useState<string | undefined>();
   const [originalUsername, setOriginalUsername] = React.useState<
     string | undefined
   >();
@@ -62,25 +60,22 @@ const UserDetail: React.FC = () => {
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'User Profile',
-      routeName: `${match?.url}/profile`,
+      routeName: `/account/users/${usernameParam}/profile`,
     },
     {
       title: 'User Permissions',
-      routeName: `${match?.url}/permissions`,
+      routeName: `/account/users/${usernameParam}/permissions`,
     },
   ];
 
   React.useEffect(() => {
     getUser(usernameParam)
       .then((user) => {
-        getGravatarUrl(user.email).then((url) => {
-          setGravatarUrl(url);
-          setOriginalUsername(user.username);
-          setUsername(user.username);
-          setOriginalEmail(user.email);
-          setEmail(user.email);
-          setRestricted(user.restricted);
-        });
+        setOriginalUsername(user.username);
+        setUsername(user.username);
+        setOriginalEmail(user.email);
+        setEmail(user.email);
+        setRestricted(user.restricted);
       })
       .catch((errorResponse) => {
         setError(
@@ -103,18 +98,8 @@ const UserDetail: React.FC = () => {
     setCreatedUsername(undefined);
   };
 
-  const visitUsers = () => {
-    history.push('/account/users');
-  };
-
   const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
-  };
-
-  const onReset = () => {
-    setUsername(originalUsername ? originalUsername : '');
-    setProfileErrors([]);
-    setProfileSuccess(false);
   };
 
   const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {

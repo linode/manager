@@ -51,7 +51,6 @@ describe('EmailBounceNotificationSection', () => {
             notifications: {
               data: [notificationFactory.build({ type: 'user_email_bounce' })],
             },
-            profile: { data: { email: 'profile@example.com' } as any },
           },
         },
       }

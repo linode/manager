@@ -437,7 +437,7 @@ interface WithTypesProps {
 
 const withTypes = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: getUserTimezone(state),
+  timezone: getUserTimezone(),
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
   mostRecentEventTime: state.events.mostRecentEventTime,

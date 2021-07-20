@@ -1,26 +1,17 @@
-import { Grant } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import {
-  getGrants,
-  hasGrant,
-  isRestrictedUser as _isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import { getGrants, hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
   canUserModifyAccountStackScript,
   StackScriptCategory,
 } from 'src/features/StackScripts/stackScriptUtils';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
 import StackScriptRow from './StackScriptRow';
