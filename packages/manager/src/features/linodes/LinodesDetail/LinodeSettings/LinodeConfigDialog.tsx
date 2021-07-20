@@ -215,6 +215,9 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
       ) as Interface[]);
 };
 
+const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+const deviceCounterDefault = 1;
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
@@ -230,8 +233,12 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
   const regions = useRegionsQuery().data ?? [];
+
   const { data: account } = useAccount();
-  const [deviceCounter, setDeviceCounter] = React.useState(1);
+  const [deviceCounter, setDeviceCounter] = React.useState(
+    deviceCounterDefault
+  );
+
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
@@ -339,8 +346,22 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     const handleError = (error: APIError[]) => {
       const mapErrorToStatus = (generalError: string) =>
         formik.setStatus({ generalError });
+
+      // override 'disk_id' and 'volume_id' value for 'field' key with 'devices' to map and surface errors appropriately
+      const overrideFieldForDevices = (error: APIError[]) => {
+        error.forEach((err) => {
+          if (err.field && ['disk_id', 'volume_id'].includes(err.field)) {
+            err.field = 'devices';
+          }
+        });
+      };
+
       formik.setSubmitting(false);
+
+      overrideFieldForDevices(error);
+
       handleFieldErrors(formik.setErrors, error);
+
       handleGeneralErrors(
         mapErrorToStatus,
         error,
@@ -373,8 +394,22 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
        */
       if (config) {
         const devices = createStringsFromDevices(config.devices);
-        const initialCounter = Object.keys(devices).length;
-        setDeviceCounter(initialCounter);
+
+        /*
+        If device slots are populated out of sequential order (e.g. sda and sdb are assigned
+        but no others are until sdf), ascertain the last assigned slot to determine how many
+        device slots to display initially.
+        */
+        const assignedDevices = Object.keys(devices);
+        const lastAssignedDeviceSlot =
+          assignedDevices[assignedDevices.length - 1];
+
+        const positionInSequentialSlots = deviceSlots.indexOf(
+          lastAssignedDeviceSlot
+        );
+
+        setDeviceCounter(positionInSequentialSlots);
+
         setUseCustomRoot(
           !pathsOptions.some(
             (thisOption) => thisOption.value === config?.root_device
@@ -401,6 +436,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         // Create mode; make sure loading/error states are cleared.
         resetForm({ values: defaultFieldsValues });
         setUseCustomRoot(false);
+        setDeviceCounter(deviceCounterDefault);
       }
     }
   }, [open, config, resetForm]);
@@ -413,8 +449,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     disks: props.disks,
     volumes: props.volumes,
   };
-
-  const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 
   /**
    * Form change handlers
@@ -431,8 +465,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const handleDevicesChanges = React.useCallback(
     (slot: string, value: string) => {
       setFieldValue(`devices[${slot}]`, value);
+      formik.setFieldError('devices', '');
     },
-    [setFieldValue]
+    [setFieldValue, formik]
   );
 
   const handleInterfaceChange = React.useCallback(
@@ -681,7 +716,16 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
             <Divider className={classes.divider} />
 
-            <Grid item xs={12}>
+            <Grid
+              item
+              xs={12}
+              updateFor={[
+                deviceCounter,
+                values.devices,
+                values.useCustomRoot,
+                formik.errors.devices,
+              ]}
+            >
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
                 counter={deviceCounter}
@@ -689,6 +733,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 devices={availableDevices}
                 onChange={handleDevicesChanges}
                 getSelected={(slot) => pathOr('', [slot], values.devices)}
+                errorText={formik.errors.devices as string}
                 disabled={readOnly}
               />
               <Button

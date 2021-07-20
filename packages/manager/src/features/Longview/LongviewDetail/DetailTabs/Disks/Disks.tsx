@@ -1,19 +1,16 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import LandingLoading from 'src/components/LandingLoading';
 import Placeholder from 'src/components/Placeholder';
-import useFlags from 'src/hooks/useFlags';
-import TimeRangeSelect from '../../../shared/TimeRangeSelect';
-import DiskGraph from './DiskGraph';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-
 import { WithStartAndEnd } from '../../../request.types';
+import TimeRangeSelect from '../../../shared/TimeRangeSelect';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
+import DiskGraph from './DiskGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,7 +37,6 @@ type CombinedProps = Props;
 
 const Disks: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     lastUpdated,
@@ -120,7 +116,7 @@ const Disks: React.FC<CombinedProps> = (props) => {
     <div>
       <DocumentTitleSegment segment="Disks" />
       <Box
-        className={flags.cmr ? classes.cmrSpacing : ''}
+        className={classes.cmrSpacing}
         display="flex"
         flexDirection="row"
         justifyContent="flex-end"

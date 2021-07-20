@@ -1,11 +1,11 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { lensPath, pathOr, set } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
+import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -17,105 +17,84 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-interface State {
-  initialValue: string;
-  updatedValue: string;
-  submitting: boolean;
-  success?: string;
-  errors?: APIError[];
-}
-
 type CombinedProps = ContextProps;
 
-class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    initialValue: this.props.linodeLabel,
-    updatedValue: this.props.linodeLabel,
-    submitting: false,
-  };
+export const LinodeSettingsLabelPanel: React.FC<CombinedProps> = (props) => {
+  const { linodeLabel, permissions, updateLinode } = props;
 
-  changeLabel = () => {
-    const { updateLinode } = this.props;
-    this.setState({
-      submitting: true,
-      success: undefined,
-      errors: undefined,
-    });
+  const [initialValue, setInitialValue] = React.useState<string>(linodeLabel);
+  const [updatedValue, setUpdatedValue] = React.useState<string>(linodeLabel);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<string | undefined>(undefined);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-    updateLinode({ label: this.state.updatedValue })
-      .then((linode) => {
-        this.setState({
-          success: 'Linode label changed successfully.',
-          submitting: false,
-        });
+  const changeLabel = () => {
+    setInitialValue(updatedValue);
+    setSubmitting(true);
+    setSuccess(undefined);
+    setErrors(undefined);
+
+    updateLinode({ label: updatedValue })
+      .then(() => {
+        setSuccess('Linode label changed successfully.');
+        setSubmitting(false);
       })
       .catch((error) => {
-        this.setState(
-          {
-            submitting: false,
-            errors: getAPIErrorOrDefault(
-              error,
-              'An error occured while updating label'
-            ),
-          },
-          () => {
-            scrollErrorIntoView('linode-settings-label');
-          }
+        setSubmitting(false);
+        setErrors(
+          getAPIErrorOrDefault(error, 'An error occurred while updating label')
         );
+        scrollErrorIntoView('linode-settings-label');
       });
   };
 
-  render() {
-    const hasErrorFor = getAPIErrorFor({}, this.state.errors);
-    const labelError = hasErrorFor('label');
-    const { submitting } = this.state;
-    const { permissions } = this.props;
-    const disabled = permissions === 'read_only';
-    const genericError =
-      this.state.errors &&
-      !labelError &&
-      pathOr(
-        'An error occured while updating label',
-        [0, 'reason'],
-        this.state.errors
-      );
+  const hasErrorFor = getAPIErrorFor({}, errors);
+  const labelError = hasErrorFor('label');
+  const disabled = permissions === 'read_only';
+  const genericError =
+    errors &&
+    !labelError &&
+    pathOr('An error occurred while updating label', [0, 'reason'], errors);
 
-    return (
-      <Accordion
-        heading="Linode Label"
-        success={this.state.success}
-        defaultExpanded
-        actions={() => (
-          <ActionsPanel>
-            <Button
-              onClick={this.changeLabel}
-              buttonType="primary"
-              disabled={disabled || (submitting && !labelError)}
-              loading={submitting && !labelError}
-              data-qa-label-save
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        )}
-      >
-        {genericError && <Notice error text={genericError} />}
-        <TextField
-          label="Label"
-          value={this.state.updatedValue}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            this.setState(set(lensPath(['updatedValue']), e.target.value))
-          }
-          errorText={labelError}
-          errorGroup="linode-settings-label"
-          error={Boolean(labelError)}
-          data-qa-label
-          disabled={disabled}
-        />
-      </Accordion>
-    );
-  }
-}
+  return (
+    <Accordion
+      defaultExpanded
+      heading="Linode Label"
+      success={success}
+      actions={() => (
+        <ActionsPanel>
+          <Button
+            buttonType="primary"
+            disabled={
+              disabled ||
+              (submitting && !labelError) ||
+              initialValue === updatedValue
+            }
+            loading={submitting && !labelError}
+            onClick={changeLabel}
+            data-qa-label-save
+          >
+            Save
+          </Button>
+        </ActionsPanel>
+      )}
+    >
+      {genericError && <Notice error text={genericError} />}
+      <TextField
+        label="Label"
+        disabled={disabled}
+        errorText={labelError}
+        errorGroup="linode-settings-label"
+        error={Boolean(labelError)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setUpdatedValue(e.target.value)
+        }
+        value={updatedValue}
+        data-qa-label
+      />
+    </Accordion>
+  );
+};
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 

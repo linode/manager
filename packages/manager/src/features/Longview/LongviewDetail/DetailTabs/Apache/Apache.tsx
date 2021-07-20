@@ -7,7 +7,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import useFlags from 'src/hooks/useFlags';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import { WithStartAndEnd } from '../../../request.types';
 import TimeRangeSelect from '../../../shared/TimeRangeSelect';
@@ -36,7 +35,6 @@ interface Props {
 export const Apache: React.FC<Props> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
-  const flags = useFlags();
   const [version, setVersion] = React.useState<string | undefined>();
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
@@ -104,10 +102,7 @@ export const Apache: React.FC<Props> = (props) => {
           alignItems="center"
         >
           <div>
-            <Typography
-              className={flags.cmr ? classes.cmrSpacing : ''}
-              variant="h2"
-            >
+            <Typography className={classes.cmrSpacing} variant="h2">
               {'Apache'}
             </Typography>
             {version && <Typography variant="body1">{version}</Typography>}

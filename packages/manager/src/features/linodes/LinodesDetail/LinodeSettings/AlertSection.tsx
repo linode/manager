@@ -3,74 +3,69 @@ import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 
-type ClassNames = 'root' | 'switch' | 'copy' | 'usage' | 'usageWrapper';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 1,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
     },
-    root: {
-      position: 'relative',
-      padding: `${theme.spacing(2)}px 0`,
-      '&:last-of-type + hr': {
-        display: 'none',
+    to: {
+      opacity: 1,
+    },
+  },
+  root: {
+    marginBottom: theme.spacing(2),
+    paddingTop: theme.spacing(0.5),
+    '&:last-of-type': {
+      marginBottom: 0,
+    },
+    '&:last-of-type + hr': {
+      display: 'none',
+    },
+  },
+  switch: {
+    display: 'flex',
+    marginLeft: -12,
+    width: 240,
+    '& .toggleLabel': {
+      display: 'flex',
+      flexDirection: 'row',
+      '& > span:first-child': {
+        marginTop: -6,
       },
-      '& .toggleLabel > span:last-child': {
-        position: 'absolute',
-        left: `calc(58px + ${theme.spacing(2)}px)`,
-        top: theme.spacing(3) + 16,
+      '& > span:last-child': {
         ...theme.typography.h3,
-        [theme.breakpoints.up('md')]: {
-          top: theme.spacing(3) + 8,
-          left: `calc(58px + ${theme.spacing(4)}px)`,
-        },
       },
     },
-    switch: {
-      width: 50,
-      padding: '2px 0 !important',
+  },
+  copy: {
+    marginTop: 40,
+    marginLeft: -160,
+    width: 600,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: -28,
+      marginLeft: 70,
+      width: '100%',
     },
-    copy: {
-      [theme.breakpoints.down('sm')]: {
-        flexBasis: '100%',
-      },
-      [theme.breakpoints.up('md')]: {
-        margin: `24px ${theme.spacing(3) + 8}px 0`,
-      },
-      [theme.breakpoints.up('lg')]: {
-        width: 600,
-      },
+  },
+  usageWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 70,
+      width: '100%',
     },
-    usageWrapper: {
-      [theme.breakpoints.down('md')]: {
-        width: '100%',
-        marginTop: theme.spacing(2),
-      },
-    },
-    usage: {
-      animation: '$fadeIn .3s ease-in-out forwards',
-      marginTop: 0,
-      maxWidth: 150,
-    },
-  });
+  },
+  usage: {
+    animation: '$fadeIn .3s ease-in-out forwards',
+    marginTop: 0,
+    maxWidth: 150,
+  },
+}));
 
 interface Props {
   title: string;
@@ -87,65 +82,71 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
-class AlertSection extends React.Component<CombinedProps> {
-  render() {
-    const { classes, readOnly } = this.props;
+export const AlertSection: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const {
+    title,
+    textTitle,
+    copy,
+    state,
+    value,
+    onStateChange,
+    onValueChange,
+    error,
+    endAdornment,
+    readOnly,
+  } = props;
 
-    return (
-      <React.Fragment>
-        <Grid
-          container
-          alignItems="flex-start"
-          className={classes.root}
-          data-qa-alerts-panel
-        >
-          <Grid item className={classes.switch}>
-            <FormControlLabel
-              className="toggleLabel"
-              control={
-                <Toggle
-                  checked={this.props.state}
-                  onChange={this.props.onStateChange}
-                  disabled={readOnly}
-                />
-              }
-              label={this.props.title}
-              data-qa-alert={this.props.title}
-            />
-          </Grid>
-          <Grid item className={classes.copy}>
-            <Typography>{this.props.copy}</Typography>
-          </Grid>
-          <Grid item className={`${classes.usageWrapper} py0`}>
-            <TextField
-              label={this.props.textTitle}
-              type="number"
-              value={this.props.value}
-              min={0}
-              max={Infinity}
-              disabled={!this.props.state || readOnly}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {this.props.endAdornment}
-                  </InputAdornment>
-                ),
-              }}
-              error={Boolean(this.props.error)}
-              errorText={this.props.error}
-              onChange={this.props.onValueChange}
-              className={classes.usage}
-            />
-          </Grid>
+  return (
+    <>
+      <Grid
+        container
+        alignItems="flex-start"
+        className={classes.root}
+        data-qa-alerts-panel
+      >
+        <Grid item className={classes.switch}>
+          <FormControlLabel
+            className="toggleLabel"
+            control={
+              <Toggle
+                checked={state}
+                disabled={readOnly}
+                onChange={onStateChange}
+              />
+            }
+            label={title}
+            data-qa-alert={title}
+          />
         </Grid>
-        <Divider />
-      </React.Fragment>
-    );
-  }
-}
+        <Grid item className={classes.copy}>
+          <Typography>{copy}</Typography>
+        </Grid>
+        <Grid item className={`${classes.usageWrapper} py0`}>
+          <TextField
+            className={classes.usage}
+            disabled={!state || readOnly}
+            error={Boolean(error)}
+            errorText={error}
+            label={textTitle}
+            min={0}
+            max={Infinity}
+            onChange={onValueChange}
+            type="number"
+            value={value}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">{endAdornment}</InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
+      <Divider />
+    </>
+  );
+};
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, any>(RenderGuard, styled)(AlertSection);
+export default compose<CombinedProps, any>(RenderGuard)(AlertSection);

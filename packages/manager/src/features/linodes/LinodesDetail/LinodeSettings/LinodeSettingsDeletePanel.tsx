@@ -22,102 +22,88 @@ interface Props {
   linodeLabel: string;
 }
 
-interface State {
-  open: boolean;
-  errors?: APIError[];
-}
-
 type CombinedProps = Props &
   ContextProps &
   LinodeActionsProps &
   RouteComponentProps<{}>;
 
-class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    open: false,
-  };
+export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
+  const {
+    linodeId,
+    linodeLabel,
+    linodeActions: { deleteLinode },
+    readOnly,
+  } = props;
 
-  deleteLinode = () => {
-    const {
-      linodeActions: { deleteLinode },
-    } = this.props;
-    this.setState(set(lensPath(['submitting']), true));
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-    deleteLinode({ linodeId: this.props.linodeId })
-      .then((response) => {
+  const _deleteLinode = () => {
+    setSubmitting(true);
+
+    deleteLinode({ linodeId })
+      .then(() => {
         resetEventsPolling();
-        this.props.history.push('/linodes');
+        props.history.push('/linodes');
       })
       .catch((error: APIError[]) => {
-        this.setState(set(lensPath(['errors']), error), () => {
-          scrollErrorIntoView();
-        });
+        setErrors(set(lensPath(['errors']), error));
+        scrollErrorIntoView();
       });
   };
 
-  openDeleteDialog = () => {
-    this.setState({ open: true });
-  };
-
-  closeDeleteDialog = () => {
-    this.setState({ open: false });
-  };
-
-  render() {
-    const { readOnly } = this.props;
-    const { errors } = this.state;
-
-    return (
-      <React.Fragment>
-        <Accordion heading="Delete Linode" defaultExpanded>
-          <Button
-            buttonType="primary"
-            onClick={this.openDeleteDialog}
-            disabled={readOnly}
-            style={{ marginBottom: 8 }}
-            data-qa-delete-linode
-          >
-            Delete
-          </Button>
-          <Typography variant="body1">
-            Deleting a Linode will result in permanent data loss.
-          </Typography>
-        </Accordion>
-        <ConfirmationDialog
-          title={`Delete ${this.props.linodeLabel}?`}
-          actions={this.renderConfirmationActions}
-          open={this.state.open}
-          onClose={this.closeDeleteDialog}
-          error={errors ? errors[0].reason : undefined}
-        >
-          <Typography>
-            Are you sure you want to delete this Linode? This will result in
-            permanent data loss.
-          </Typography>
-        </ConfirmationDialog>
-      </React.Fragment>
-    );
-  }
-
-  renderConfirmationActions = () => (
-    <ActionsPanel style={{ padding: 0 }}>
+  const renderConfirmationActions = () => (
+    <ActionsPanel>
       <Button
         buttonType="secondary"
-        onClick={this.closeDeleteDialog}
+        onClick={() => setOpen(false)}
         data-qa-cancel-delete
       >
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={this.deleteLinode}
+        loading={submitting}
+        onClick={_deleteLinode}
         data-qa-confirm-delete
       >
         Delete
       </Button>
     </ActionsPanel>
   );
-}
+
+  return (
+    <React.Fragment>
+      <Accordion heading="Delete Linode" defaultExpanded>
+        <Button
+          buttonType="primary"
+          disabled={readOnly}
+          onClick={() => setOpen(true)}
+          style={{ marginBottom: 8 }}
+          data-qa-delete-linode
+        >
+          Delete
+        </Button>
+        <Typography variant="body1">
+          Deleting a Linode will result in permanent data loss.
+        </Typography>
+      </Accordion>
+      <ConfirmationDialog
+        title={`Delete ${linodeLabel}?`}
+        actions={renderConfirmationActions}
+        open={open}
+        onClose={() => setOpen(false)}
+        error={errors ? errors[0].reason : undefined}
+      >
+        <Typography>
+          Are you sure you want to delete this Linode? This will result in
+          permanent data loss.
+        </Typography>
+      </ConfirmationDialog>
+    </React.Fragment>
+  );
+};
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
