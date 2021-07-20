@@ -21,10 +21,8 @@ import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { MapState } from 'src/store/types';
 import {
   openForAttaching,
@@ -82,9 +80,14 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     linodeRegion,
     actions,
     createVolume,
-    disabled,
     origin,
   } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  // disabled if the profile is restricted and doesn't have add_volumes grant
+  const disabled = profile?.restricted && !hasGrant(grants, 'add_volumes');
 
   return (
     <Formik
@@ -304,13 +307,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 });
 
 interface StateProps {
-  disabled: boolean;
   origin?: VolumeDrawerOrigin;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  // disabled if the profile is restricted and doesn't have add_volumes grant
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
   origin: state.volumeDrawer.origin,
 });
 

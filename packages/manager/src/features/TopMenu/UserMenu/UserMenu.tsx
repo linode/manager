@@ -17,6 +17,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
+import { useGrants } from 'src/queries/profile';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
@@ -252,9 +253,10 @@ export const UserMenu: React.FC<{}> = () => {
     _isRestrictedUser,
   } = useAccountManagement();
 
+  const { data: grants } = useGrants();
+
   const hasFullAccountAccess =
-    profile.data?.grants?.global?.account_access === 'read_write' ||
-    !_isRestrictedUser;
+    grants?.global?.account_access === 'read_write' || !_isRestrictedUser;
 
   const accountLinks: MenuLink[] = React.useMemo(
     () => [
@@ -288,8 +290,8 @@ export const UserMenu: React.FC<{}> = () => {
     [hasFullAccountAccess, _isRestrictedUser, flags]
   );
 
-  const userEmail = profile.data?.email;
-  const userName = profile.data?.username ?? '';
+  const userEmail = profile?.email;
+  const userName = profile?.username ?? '';
 
   React.useEffect(() => {
     if (userEmail) {

@@ -8,7 +8,7 @@ import {
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { equals, path } from 'ramda';
+import { equals } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -34,6 +34,7 @@ import Notice from 'src/components/Notice';
 import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
 import {
+  getGrants,
   hasGrant,
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
@@ -45,6 +46,8 @@ import { storage } from 'src/utilities/storage';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { debounce } from 'throttle-debounce';
 import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/profile';
+import { Profile } from '../../../../../api-v4/lib/profile';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -534,19 +537,18 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 ) => {
   const stackScriptID = ownProps.match.params.stackScriptID;
 
-  const stackScriptGrants =
-    state.__resources.profile.data?.grants?.stackscript ?? [];
+  const stackScriptGrants = getGrants(undefined, 'stackscript');
 
   const grantsForThisStackScript = stackScriptGrants.find(
     (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
   );
 
   return {
-    username: path(['data', 'username'], state.__resources.profile),
+    username: queryClient.getQueryData<Profile>(queryKey)?.username,
     userCannotCreateStackScripts:
-      isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
+      isRestrictedUser && !hasGrant(undefined, 'add_stackscripts'),
     userCannotModifyStackScript:
-      isRestrictedUser(state) &&
+      isRestrictedUser &&
       grantsForThisStackScript?.permissions !== 'read_write',
   };
 };

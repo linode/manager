@@ -47,10 +47,8 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
   } = props;
   const classes = useStyles();
 
-  const restricted = isRestrictedUser();
-
   if (
-    restricted ||
+    isRestrictedUser ||
     managed ||
     (linodesWithoutBackups && isEmpty(linodesWithoutBackups))
   ) {

@@ -147,13 +147,10 @@ export class App extends React.Component<CombinedProps, State> {
       typesError,
       imagesError,
       notificationsError,
-      profileError,
       volumesError,
       settingsError,
       bucketsError,
       nodeBalancersError,
-      userId,
-      username,
     } = this.props;
 
     if (hasError) {
@@ -173,7 +170,6 @@ export class App extends React.Component<CombinedProps, State> {
         imagesError,
         notificationsError,
         volumesError,
-        profileError,
         settingsError,
         bucketsError,
         nodeBalancersError
@@ -197,7 +193,7 @@ export class App extends React.Component<CombinedProps, State> {
         </div>
         <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
         {/** Update the LD client with the user's id as soon as we know it */}
-        <IdentifyUser userID={userId} username={username} />
+        <IdentifyUser />
         <DocumentTitleSegment segment="Linode Manager" />
         {this.props.featureFlagsLoading ? null : (
           <MainContent
@@ -206,7 +202,6 @@ export class App extends React.Component<CombinedProps, State> {
             toggleTheme={toggleTheme}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-            username={username}
           />
         )}
       </React.Fragment>
@@ -215,13 +210,10 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
-  /** Profile */
   linodes: Linode[];
   images?: Image[];
   types?: string[];
   regions?: Region[];
-  userId?: number;
-  username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
@@ -233,7 +225,6 @@ interface StateProps {
   domainsError?: APIError[];
   imagesError?: APIError[];
   bucketsError?: APIError[];
-  profileError?: APIError[];
   settingsError?: APIError[];
   notificationsError?: APIError[];
   typesError?: APIError[];
@@ -244,8 +235,6 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  /** Profile */
-  profileError: path(['read'], state.__resources.profile.error),
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
@@ -253,8 +242,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   notificationsError: state.__resources.notifications.error,
   settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
-  userId: path(['data', 'uid'], state.__resources.profile),
-  username: pathOr('', ['data', 'username'], state.__resources.profile),
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
@@ -274,7 +261,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading,
   featureFlagsLoading: state.featureFlagsLoad.featureFlagsLoading,
-  euuid: state.__resources.profile.data?._euuidFromHttpHeader,
 });
 
 export const connected = connect(mapStateToProps);

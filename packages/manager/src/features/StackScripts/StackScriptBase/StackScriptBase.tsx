@@ -618,9 +618,9 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     }
   }
 
-  const mapStateToProps: MapState<StoreProps, CombinedProps> = (state) => ({
+  const mapStateToProps: MapState<StoreProps, CombinedProps> = () => ({
     userCannotCreateStackScripts:
-      isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts'),
+      isRestrictedUser && !hasGrant(undefined, 'add_stackscripts'),
   });
 
   const connected = connect(mapStateToProps);

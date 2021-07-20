@@ -1,7 +1,6 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { getLinodeConfigs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -19,7 +18,10 @@ import withVolumesRequests, {
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import {
+  getGrants,
+  isRestrictedUser,
+} from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -246,18 +248,14 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
-  const volumesPermissions = pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'volume'],
-    state
-  );
+  const volumesPermissions = getGrants(undefined, 'volume');
   const volumePermissions = volumesPermissions.find(
     (v: Grant) => v.id === ownProps.volumeId
   );
 
   return {
     readOnly:
-      isRestrictedUser(state) &&
+      isRestrictedUser &&
       volumePermissions &&
       volumePermissions.permissions === 'read_only',
   };

@@ -6,7 +6,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
@@ -26,12 +25,9 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import accountSettingsContainer, {
   Props as AccountSettingsProps,
 } from 'src/containers/accountSettings.container';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
-import { MapState } from 'src/store/types';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -125,7 +121,7 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props & AccountSettingsProps & ReduxStateProps;
+export type CombinedProps = Props & AccountSettingsProps;
 
 export const managedText = (
   <span>
@@ -141,14 +137,17 @@ export const managedText = (
 );
 
 export const LongviewPlans: React.FC<CombinedProps> = (props) => {
+  const { accountSettings, subscriptionRequestHook: subscriptions } = props;
   const classes = useStyles();
   const mounted = React.useRef<boolean>(false);
 
-  const {
-    accountSettings,
-    subscriptionRequestHook: subscriptions,
-    mayUserModifyLVSubscription,
-  } = props;
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const mayUserModifyLVSubscription =
+    profile?.restricted ||
+    (hasGrant(grants, 'longview_subscription') &&
+      hasGrant(grants, 'account_access') === 'read_write');
 
   const [currentSubscription, setCurrentSubscription] = React.useState<
     string | undefined
@@ -313,27 +312,8 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface ReduxStateProps {
-  mayUserViewAccountSettings: boolean;
-  mayUserModifyLVSubscription: boolean;
-}
-
-const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = (state) => ({
-  mayUserViewAccountSettings:
-    !isRestrictedUser(state) ||
-    hasGrant(state, 'account_access') === 'read_only' ||
-    hasGrant(state, 'account_access') === 'read_write',
-  mayUserModifyLVSubscription:
-    !isRestrictedUser(state) ||
-    (hasGrant(state, 'longview_subscription') &&
-      hasGrant(state, 'account_access') === 'read_write'),
-});
-
-const connected = connect(mapStateToProps);
-
 const enhanced = compose<CombinedProps, Props>(
   React.memo,
-  connected,
   accountSettingsContainer()
 );
 

@@ -127,7 +127,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
 
   const queryString = stringify({ query: `username:${username}` });
   const link =
-    profile.data?.username === username
+    profile?.username === username
       ? '/stackscripts/account'
       : `/stackscripts/community?${queryString}`;
 

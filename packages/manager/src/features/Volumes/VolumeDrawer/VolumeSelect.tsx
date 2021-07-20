@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { getGrants, isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { debounce } from 'throttle-debounce';
 
@@ -190,14 +190,8 @@ interface StateProps {
   volumeGrants?: Grant[];
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  volumeGrants: isRestrictedUser(state)
-    ? pathOr(
-        undefined,
-        ['__resources', 'profile', 'data', 'grants', 'volume'],
-        state
-      )
-    : undefined,
+const mapStateToProps: MapState<StateProps, CombinedProps> = () => ({
+  volumeGrants: isRestrictedUser ? getGrants(undefined, 'volume') : undefined,
 });
 
 const connected = connect(mapStateToProps);

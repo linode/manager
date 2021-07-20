@@ -124,10 +124,6 @@ import nodeBalancerConfigs, {
   defaultState as defaultNodeBalancerConfigState,
   State as NodeBalancerConfigsState,
 } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
-import profile, {
-  defaultState as defaultProfileState,
-  State as ProfileState,
-} from 'src/store/profile/profile.reducer';
 import stackScriptDialog, {
   defaultState as stackScriptDialogDefaultState,
   State as StackScriptDialogState,
@@ -203,7 +199,6 @@ const __resourcesDefaultState = {
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
-  profile: defaultProfileState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
   buckets: defaultBucketsState,
@@ -228,7 +223,6 @@ export interface ResourcesState {
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
-  profile: ProfileState;
   types: TypesState;
   volumes: VolumesState;
   buckets: BucketsState;
@@ -304,7 +298,6 @@ const __resources = combineReducers({
   nodeBalancers,
   nodeBalancerConfigs,
   notifications,
-  profile,
   types,
   volumes,
   buckets,

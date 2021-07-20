@@ -11,6 +11,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import {
+  getGrants,
   hasGrant,
   isRestrictedUser as _isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
@@ -18,6 +19,7 @@ import {
   canUserModifyAccountStackScript,
   StackScriptCategory,
 } from 'src/features/StackScripts/stackScriptUtils';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
@@ -44,20 +46,17 @@ export interface Props {
   category: StackScriptCategory | string;
 }
 
-type CombinedProps = Props & StateProps;
-
-const StackScriptsSection: React.FC<CombinedProps> = (props) => {
+const StackScriptsSection: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const {
-    data,
-    isSorting,
-    triggerDelete,
-    triggerMakePublic,
-    isRestrictedUser,
-    stackScriptGrants,
-    category,
-    userCannotAddLinodes,
-  } = props;
+  const { data, isSorting, triggerDelete, triggerMakePublic, category } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const isRestrictedUser = Boolean(profile?.restricted);
+  const stackScriptGrants = getGrants(grants, 'stackscript');
+  const userCannotAddLinodes =
+    isRestrictedUser && !hasGrant(grants, 'add_linodes');
 
   const listStackScript = (s: StackScript) => (
     <StackScriptRow
@@ -97,25 +96,4 @@ const StackScriptsSection: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface StateProps {
-  isRestrictedUser: boolean;
-  stackScriptGrants: Grant[];
-  userCannotAddLinodes: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  isRestrictedUser: _isRestrictedUser(state),
-  stackScriptGrants: pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
-    state
-  ),
-  userCannotAddLinodes:
-    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
-});
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, Props>(connected);
-
-export default enhanced(StackScriptsSection);
+export default StackScriptsSection;

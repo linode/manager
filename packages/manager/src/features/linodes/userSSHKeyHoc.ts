@@ -1,10 +1,9 @@
 import { getUsers } from '@linode/api-v4/lib/account';
 import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
-import { assoc, clone, equals, map, path, pathOr } from 'ramda';
+import { assoc, clone, equals, map } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
-import { MapState } from 'src/store/types';
+import { useProfile } from 'src/queries/profile';
 import { getAll } from 'src/utilities/getAll';
 import { getEmailHash } from 'src/utilities/gravatar';
 
@@ -28,16 +27,24 @@ const resetKeys = (key: UserSSHKeyObject) => {
 };
 
 export default (Component: React.ComponentType<any>) => {
-  class WrappedComponent extends React.PureComponent<StateProps, State> {
-    resetSSHKeys = () => {
-      const { userSSHKeys } = this.state;
+  return (props: any) => {
+    const { data: profile } = useProfile();
+
+    const username = profile?.username;
+    const userEmailAddress = profile?.email;
+    const isRestricted = profile?.restricted;
+
+    const [userSSHKeys, setUserSSHKeys] = React.useState<UserSSHKeyObject[]>(
+      []
+    );
+    const [sshError, setSshError] = React.useState<string | undefined>();
+
+    const resetSSHKeys = () => {
       const newKeys = map(resetKeys, userSSHKeys);
-      this.setState({ userSSHKeys: newKeys });
+      setUserSSHKeys(newKeys);
     };
 
-    requestKeys = () => {
-      const { isRestricted, username, userEmailAddress } = this.props;
-      const { userSSHKeys } = this.state;
+    const requestKeys = () => {
       /**
        * We need a copy of the keys to track what was selected before requesting keys.
        * This will be an empty array on the initial request.
@@ -53,99 +60,60 @@ export default (Component: React.ComponentType<any>) => {
        */
 
       if (isRestricted) {
-        const isCurrentUserSelected = this.isUserSelected(username, oldKeys);
+        const isCurrentUserSelected = isUserSelected(username, oldKeys);
         getAllSSHKeys()
           .then((response) => {
             const keys = response.data;
-            if (!this.mounted || !keys || keys.length === 0) {
+            if (!keys || keys.length === 0) {
               return;
             }
-            this.setState({
-              sshError: undefined,
-              userSSHKeys: [
-                this.createUserObject(
-                  username,
-                  userEmailAddress,
-                  keys.map((k) => k.label),
-                  isCurrentUserSelected
-                ),
-              ],
-            });
+            setSshError(undefined);
+            setUserSSHKeys([
+              createUserObject(
+                username,
+                userEmailAddress,
+                keys.map((k) => k.label),
+                isCurrentUserSelected
+              ),
+            ]);
           })
           .catch(() => {
-            this.setState({ sshError: 'Unable to load SSH keys' });
+            setSshError('Unable to load SSH keys');
           });
       } else {
         getUsers()
           .then((response) => {
             const users = response.data;
-            if (!this.mounted || !users || users.length === 0) {
+            if (!users || users.length === 0) {
               return;
             }
+            setSshError(undefined);
+            setUserSSHKeys([
+              ...users.reduce((cleanedUsers, user) => {
+                const keys = user.ssh_keys;
+                const isSelected = isUserSelected(user.username, oldKeys, keys);
 
-            this.setState({
-              sshError: undefined,
-              userSSHKeys: [
-                ...users.reduce((cleanedUsers, user) => {
-                  const keys = user.ssh_keys;
-                  const isSelected = this.isUserSelected(
-                    user.username,
-                    oldKeys,
-                    keys
-                  );
-
-                  return [
-                    ...cleanedUsers,
-                    this.createUserObject(
-                      user.username,
-                      user.email,
-                      keys,
-                      isSelected
-                    ),
-                  ];
-                }, []),
-              ],
-            });
+                return [
+                  ...cleanedUsers,
+                  createUserObject(user.username, user.email, keys, isSelected),
+                ];
+              }, []),
+            ]);
           })
           .catch(() => {
-            this.setState({ sshError: 'Unable to load SSH keys' });
+            setSshError('Unable to load SSH keys');
           });
       }
     };
 
-    state: State = {
-      userSSHKeys: [],
-      resetSSHKeys: this.resetSSHKeys,
-      requestKeys: this.requestKeys,
-    };
-
-    mounted: boolean = false;
-
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    componentDidMount() {
-      this.mounted = true;
-      this.requestKeys();
-    }
-
-    render() {
-      return React.createElement(Component, {
-        ...this.props,
-        ...this.state,
-      });
-    }
-
-    toggleSSHUserKeys = (username: string, result: boolean) =>
-      this.setState((state) => ({
-        ...state,
-        userSSHKeys: state.userSSHKeys.map((user) =>
+    const toggleSSHUserKeys = (username: string, result: boolean) =>
+      setUserSSHKeys(
+        userSSHKeys.map((user) =>
           username === user.username ? { ...user, selected: result } : user
-        ),
-      }));
+        )
+      );
 
-    createUserObject = (
+    const createUserObject = (
       username: string,
       email: string,
       keys: string[],
@@ -158,10 +126,10 @@ export default (Component: React.ComponentType<any>) => {
       )}?d=mp&s=24`,
       selected,
       onSSHKeyChange: (_: any, result: boolean) =>
-        this.toggleSSHUserKeys(username, result),
+        toggleSSHUserKeys(username, result),
     });
 
-    isUserSelected = (
+    const isUserSelected = (
       username: string,
       keys: UserSSHKeyObject[],
       newKeys?: string[]
@@ -185,20 +153,17 @@ export default (Component: React.ComponentType<any>) => {
         ? currentUserKeys.selected || !equals(currentUserKeys.keys, newKeys)
         : false;
     };
-  }
 
-  return connected(WrappedComponent);
+    React.useEffect(() => {
+      requestKeys();
+    }, []);
+
+    return React.createElement(Component, {
+      ...props,
+      userSSHKeys,
+      sshError,
+      resetSSHKeys,
+      requestKeys,
+    });
+  };
 };
-
-interface StateProps {
-  username?: string;
-  userEmailAddress?: string;
-  isRestricted: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  username: path<string>(['data', 'username'], state.__resources.profile),
-  userEmailAddress: path<string>(['data', 'email'], state.__resources.profile),
-  isRestricted: pathOr(false, ['restricted'], state.__resources.profile.data),
-});
-const connected = connect(mapStateToProps);

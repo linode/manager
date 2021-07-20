@@ -4,14 +4,12 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
-import useProfile from 'src/hooks/useProfile';
-import useReduxLoad from 'src/hooks/useReduxLoad';
+import { useProfile } from 'src/queries/profile';
 
 interface Props {
   open: boolean;
@@ -37,8 +35,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const history = useHistory();
-  const { profile } = useProfile();
-  useReduxLoad(['profile']);
+  const { data: profile } = useProfile();
 
   React.useEffect(() => {
     if (props.open) {
@@ -57,12 +54,12 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
    * username correctly
    */
   React.useEffect(() => {
-    if (inputtedUsername === profile.data?.username) {
+    if (inputtedUsername === profile?.username) {
       setCanSubmit(true);
     } else {
       setCanSubmit(false);
     }
-  }, [inputtedUsername]);
+  }, [inputtedUsername, profile]);
 
   const inputRef = React.useCallback(
     (node) => {
@@ -96,7 +93,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  if (!profile.data?.username) {
+  if (!profile?.username) {
     return null;
   }
 
@@ -121,7 +118,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         etc will be lost and may not be able to be restored.
       </Typography>
       <TextField
-        label={`Please enter your username (${profile.data?.username}) to confirm.`}
+        label={`Please enter your username (${profile.username}) to confirm.`}
         placeholder="Username"
         aria-label="username field"
         value={inputtedUsername}

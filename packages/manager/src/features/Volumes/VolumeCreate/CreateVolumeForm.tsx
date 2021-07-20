@@ -45,6 +45,7 @@ import LabelField from '../VolumeDrawer/LabelField';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
@@ -88,7 +89,12 @@ type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { onSuccess, createVolume, disabled, origin, history, regions } = props;
+  const { onSuccess, createVolume, origin, history, regions } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const disabled = profile?.restricted && !hasGrant(grants, 'add_volumes');
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
 
@@ -376,12 +382,10 @@ const initialValues: FormState = {
 };
 
 interface StateProps {
-  disabled: boolean;
   origin?: VolumeDrawerOrigin;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
   origin: state.volumeDrawer.origin,
 });
 

@@ -1,11 +1,9 @@
-import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
 import CopyableTextField from 'src/components/CopyableTextField';
+import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -13,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { MapState } from 'src/store/types';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -87,12 +85,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = StateProps;
-
-export const Referrals: React.FC<CombinedProps> = (props) => {
+export const Referrals: React.FC<{}> = () => {
   const classes = useStyles();
+  const { data: profile, isLoading: profileLoading } = useProfile();
 
-  const { profileLoading, url, total, completed, pending, credit } = props;
+  if (!profile) {
+    return <CircularProgress />;
+  }
+
+  const { url, total, completed, pending, credit } = profile?.referrals;
 
   const allowReferral = Boolean(url);
 
@@ -203,32 +204,4 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface StateProps {
-  profileLoading: boolean;
-  code?: string;
-  url?: string;
-  total?: number;
-  completed?: number;
-  pending?: number;
-  credit?: number;
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state) => {
-  const { profile } = state.__resources;
-
-  return {
-    profileLoading: profile.loading,
-    code: path(['data', 'referrals', 'code'], profile),
-    url: path(['data', 'referrals', 'url'], profile),
-    total: path(['data', 'referrals', 'total'], profile),
-    completed: path(['data', 'referrals', 'completed'], profile),
-    pending: path(['data', 'referrals', 'pending'], profile),
-    credit: path(['data', 'referrals', 'credit'], profile),
-  };
-};
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, {}>(connected);
-
-export default enhanced(Referrals);
+export default Referrals;

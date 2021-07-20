@@ -211,7 +211,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     volumePath,
     message,
     readOnly:
-      isRestrictedUser(state) &&
+      isRestrictedUser &&
       volumePermissions &&
       volumePermissions.permissions === 'read_only',
   };

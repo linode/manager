@@ -1,15 +1,13 @@
-import { Grant, GrantLevel } from '@linode/api-v4/lib/account';
-import { Profile } from '@linode/api-v4/lib/profile';
-import { pathOr } from 'ramda';
+import { Grant, GrantLevel, Grants } from '@linode/api-v4/lib/account';
 
 export const getPermissionsForLinode = (
-  profile: Profile | null,
+  grants: Grants | null,
   linodeId: number
 ): GrantLevel => {
-  if (profile === null) {
+  if (grants === null) {
     return 'read_write';
   } // Default to write access
-  const linodesGrants = pathOr([], ['grants', 'linode'], profile);
+  const linodesGrants = grants.linode;
   const linodeGrants = linodesGrants.find(
     (grant: Grant) => grant.id === linodeId
   );

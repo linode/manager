@@ -1,4 +1,4 @@
-import { getTFAToken, Profile } from '@linode/api-v4/lib/profile';
+import { getTFAToken } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
@@ -9,7 +9,7 @@ import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
 import { queryClient } from 'src/queries/base';
-import { queryKey, useProfile } from 'src/queries/profile';
+import { queryKey } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -46,18 +46,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  username?: string;
+  twoFactor?: boolean;
   clearState: () => void;
   disabled?: boolean;
 }
 
 export const TwoFactor: React.FC<Props> = (props) => {
-  const { data: profile } = useProfile();
-
-  const twoFactor = profile?.two_factor_auth;
-
   const classes = useStyles();
 
-  const { clearState, disabled } = props;
+  const { clearState, disabled, twoFactor, username } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -66,10 +64,10 @@ export const TwoFactor: React.FC<Props> = (props) => {
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [twoFactorEnabled, setTwoFactorEnabled] = React.useState<
     boolean | undefined
-  >(profile?.two_factor_auth);
+  >(twoFactor);
   const [twoFactorConfirmed, setTwoFactorConfirmed] = React.useState<
     boolean | undefined
-  >(profile?.two_factor_auth);
+  >(twoFactor);
   const [scratchCode, setScratchCode] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -216,11 +214,11 @@ export const TwoFactor: React.FC<Props> = (props) => {
                 )}
                 {twoFactorEnabled &&
                   showQRCode &&
-                  profile?.username &&
+                  username &&
                   twoFactorConfirmed !== undefined && (
                     <EnableTwoFactorForm
                       secret={secret}
-                      username={profile.username}
+                      username={username}
                       loading={loading}
                       onSuccess={handleEnableSuccess}
                       onCancel={handleCancel}

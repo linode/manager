@@ -37,7 +37,6 @@ import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import {
   hasGrant,
-  isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import {
@@ -61,6 +60,7 @@ import {
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -165,7 +165,12 @@ export const generateDefaultDomainRecords = (
 export const CreateDomain: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { disabled, domainActions, origin } = props;
+  const { domainActions, origin } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const disabled = profile?.restricted && !hasGrant(grants, 'add_domains')
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   // Errors for selecting Linode/NB for default records aren't part
@@ -593,7 +598,6 @@ interface StateProps {
   domain?: string;
   domainProps?: Domain;
   id?: number;
-  disabled: boolean;
   origin: DomainDrawerOrigin;
 }
 
@@ -605,8 +609,6 @@ const mapStateToProps = (state: ApplicationState) => {
     domain: path(['domainDrawer', 'domain'], state),
     domainProps,
     id,
-    // Disabled if the profile is restricted and doesn't have add_domains grant
-    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
     origin: state.domainDrawer.origin,
   };
 };

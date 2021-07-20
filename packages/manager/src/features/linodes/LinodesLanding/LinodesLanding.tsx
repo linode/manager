@@ -307,11 +307,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         />
 
         {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner
-            userTimezone={this.props.userTimezone}
-            userProfileError={this.props.userProfileError}
-            userProfileLoading={this.props.userProfileLoading}
-          />
+          <MaintenanceBanner />
         )}
         <Grid container className={classes.cmrSpacing}>
           <Grid item xs={12}>
@@ -549,9 +545,6 @@ const sendGroupByAnalytic = (value: boolean) => {
 interface StateProps {
   managed: boolean;
   linodesCount: number;
-  userTimezone: string;
-  userProfileLoading: boolean;
-  userProfileError?: APIError[];
   linodesInTransition: Set<number>;
 }
 
@@ -559,12 +552,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
     managed: state.__resources.accountSettings.data?.managed ?? false,
     linodesCount: state.__resources.linodes.results,
-    userTimezone: getUserTimezone(state),
-    userProfileLoading: state.__resources.profile.loading,
-    userProfileError: path<APIError[]>(
-      ['read'],
-      state.__resources.profile.error
-    ),
     linodesInTransition: _linodesInTransition(state.events.events),
   };
 };
