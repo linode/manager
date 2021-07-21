@@ -4,34 +4,36 @@ import Button from 'src/components/Button';
 <Meta
   title="UI Elements/Button"
   component={Button}
-  decorators={[(Story) => <div style={{ display: 'flex', justifyContent: 'space-evenly', width: '100%' }}><Story/></div>]}
+  decorators={[
+    (Story) => (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          width: '100%',
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ]}
   argTypes={{
     buttonType: {
       description: 'The variant to use.',
-      <!-- Keeping this as an example for labelling a prop as required: -->
-      <!-- type: { required: true }, -->
     },
     compact: {
-      description: 'Removes the spacing to the left and right of the text for secondary buttons only.',
-      table: { defaultValue: { summary: false } },
+      description:
+        'Removes the spacing to the left and right of the text for secondary buttons only.',
     },
     disabled: {
-      description: 'A button should remain disabled until all required data has been entered in a form or data has been changed in an edit state.',
-      table: { defaultValue: { summary: false } },
-    },
-    disableRipple: {
-      table: { defaultValue: { summary: false } },
-    },
-    fullWidth: {
-      table: { defaultValue: { summary: false } },
+      description:
+        'A button should remain disabled until all required data has been entered in a form or data has been changed in an edit state.',
     },
     loading: {
       description: 'Used to depict a loading state.',
-      table: { defaultValue: { summary: false } },
     },
     tooltipText: {
       description: 'Displays informative text when users hover over the icon.',
-      table: { defaultValue: { summary: false } },
     },
   }}
 />
@@ -129,7 +131,20 @@ export const Template = (args) => (
 );
 
 <Canvas>
-  <Story name="Default">{Template.bind({})}</Story>
+  <Story
+    name="Default"
+    args={{
+      buttonType: 'primary',
+      compact: false,
+      disabled: false,
+      disableRipple: false,
+      fullWidth: false,
+      loading: false,
+      tooltipText: '',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
 </Canvas>
 
 <ArgsTable
