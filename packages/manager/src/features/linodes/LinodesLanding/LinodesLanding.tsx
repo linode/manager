@@ -42,7 +42,7 @@ import getUserTimezone from 'src/utilities/getUserTimezone';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
-import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
+import LinodeResize from '../LinodesDetail/LinodeResize';
 import MigrateLinode from '../MigrateLanding/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
@@ -275,7 +275,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <LinodeResize_CMR
+        <LinodeResize
           open={this.state.linodeResizeOpen}
           onClose={this.closeDialogs}
           linodeId={this.state.selectedLinodeID}
