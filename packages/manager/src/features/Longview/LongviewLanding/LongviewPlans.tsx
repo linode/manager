@@ -9,6 +9,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
+import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -145,7 +146,7 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   const { data: grants } = useGrants();
 
   const mayUserModifyLVSubscription =
-    profile?.restricted ||
+    !(profile?.restricted || false) ||
     (hasGrant(grants, 'longview_subscription') &&
       hasGrant(grants, 'account_access') === 'read_write');
 
@@ -238,6 +239,10 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
     Boolean(subscriptions.error) ||
     currentSubscription === selectedSub ||
     !mayUserModifyLVSubscription;
+
+  if (!profile) {
+    return <CircularProgress data-testid="loading" />;
+  }
 
   return (
     <>

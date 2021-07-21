@@ -17,9 +17,11 @@ describe('RestoreToLinodeDrawer', () => {
     linodesResults: 0,
   };
 
-  renderWithTheme(<RestoreToLinodeDrawer {...props} />);
+  it('renders without crashing', async () => {
+    const { findByText } = renderWithTheme(
+      <RestoreToLinodeDrawer {...props} />
+    );
 
-  it('renders without crashing', () => {
-    expect(screen).toHaveLength(1);
+    await findByText(/Restore Backup from/);
   });
 });

@@ -1,4 +1,8 @@
-import { screen, within } from '@testing-library/react';
+import {
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 import * as React from 'react';
 import { accountSettings } from 'src/__data__/account';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -10,8 +14,22 @@ import {
   LONGVIEW_FREE_ID,
   LongviewPlans,
 } from './LongviewPlans';
+import { rest, server } from 'src/mocks/testServer';
+import { profileFactory } from 'src/factories/profile';
+import { QueryClient } from 'react-query';
+import { queryPresets } from 'src/queries/base';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: queryPresets.oneTimeFetch },
+});
+
+afterEach(() => {
+  server.resetHandlers();
+  queryClient.clear();
+});
+afterAll(() => server.close());
 
 const props: CombinedProps = {
   accountSettingsError: {},
@@ -51,7 +69,13 @@ const testRow = (
 describe('LongviewPlans', () => {
   it('sets the document title to "Plan Details"', async () => {
     const WrappedComponent = withDocumentTitleProvider(LongviewPlans);
+
     renderWithTheme(<WrappedComponent {...props} />);
+
+    await waitForElementToBeRemoved(screen.getByTestId('loading'), {
+      timeout: 5000,
+    });
+
     expect(document.title).toMatch(/^Plan Details/);
   });
 
@@ -87,8 +111,28 @@ describe('LongviewPlans', () => {
     await screen.findByTestId('current-plan-longview-3');
   });
 
-  it('displays a notice if the user does not have permissions to modify', () => {
-    const { getByText } = renderWithTheme(<LongviewPlans {...props} />);
-    getByText(/don't have permission/gi);
+  it('displays a notice if the user does not have permissions to modify', async () => {
+    // Build a restricted user's profile so we get a permission error
+    server.use(
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            profileFactory.build({
+              restricted: true,
+            })
+          )
+        );
+      })
+    );
+
+    renderWithTheme(<LongviewPlans {...props} />, {
+      queryClient,
+    });
+
+    await waitForElementToBeRemoved(screen.getByTestId('loading'), {
+      timeout: 5000,
+    });
+
+    screen.getByText(/don't have permission/gi);
   });
 });
