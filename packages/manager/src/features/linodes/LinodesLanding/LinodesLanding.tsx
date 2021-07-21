@@ -21,9 +21,7 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
+import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
@@ -94,8 +92,7 @@ type CombinedProps = Props &
   RouteProps &
   StyleProps &
   SetDocsProps &
-  WithSnackbarProps &
-  FeatureFlagConsumerProps;
+  WithSnackbarProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {

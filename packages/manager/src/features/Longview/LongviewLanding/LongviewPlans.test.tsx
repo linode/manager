@@ -1,7 +1,9 @@
 import { screen, within } from '@testing-library/react';
 import * as React from 'react';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
+import { accountSettingsFactory } from 'src/factories';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
+import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
@@ -42,6 +44,12 @@ const testRow = (
   );
   within(screen.getByTestId(`price-cell-${id}`)).getByText(price);
 };
+
+server.use(
+  rest.get('*/account/settings', (req, res, ctx) => {
+    return res(ctx.json(accountSettingsFactory.build({ managed: false })));
+  })
+);
 
 describe('LongviewPlans', () => {
   it('sets the document title to "Plan Details"', async () => {
