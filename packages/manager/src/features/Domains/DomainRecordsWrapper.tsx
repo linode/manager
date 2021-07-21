@@ -6,7 +6,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
+import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
   StyleProps,
 } from 'src/containers/SummaryPanels.styles';
@@ -77,7 +77,7 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <TagsPanelRedesigned
+          <TagsPanel
             align="left"
             tags={domain.tags}
             updateTags={handleUpdateTags}
