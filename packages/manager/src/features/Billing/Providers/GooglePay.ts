@@ -62,8 +62,8 @@ export const gPay = async (
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
     });
   } catch (error) {
-    reportException('Unable to open Google Pay.', {
-      error,
+    reportException(error, {
+      message: 'Unable to open Google Pay.',
     });
     return setMessage('Unable to open Google Pay.', 'error');
   }
@@ -81,7 +81,7 @@ export const gPay = async (
     allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
   });
   if (!isReadyToPay) {
-    return setMessage('Your device does not support Google Pay.', 'warning');
+    return setMessage('Your device does not support Google Pay.', 'error');
   }
 
   const isOneTimePayment = action === 'one-time-payment';
@@ -155,8 +155,8 @@ export const gPay = async (
       ? 'Unable to complete Google Pay payment'
       : 'Unable to add payment method';
 
-    reportException(errorMsg, {
-      error,
+    reportException(error, {
+      message: errorMsg,
     });
     // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
     setMessage(errorMsg, 'error');

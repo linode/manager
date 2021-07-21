@@ -104,8 +104,8 @@ export const GooglePayButton: React.FC<Props> = (props) => {
         try {
           await initGooglePaymentInstance(data.client_token as string);
         } catch (error) {
-          reportException('Error initializing Google Pay.', {
-            error,
+          reportException(error, {
+            message: 'Error initializing Google Pay.',
           });
           setInitializationError(true);
         }
