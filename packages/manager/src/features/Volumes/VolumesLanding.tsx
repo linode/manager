@@ -8,8 +8,9 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
@@ -30,6 +31,7 @@ import withLinodes, {
   Props as WithLinodesProps,
 } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import {
   LinodeOptions,
@@ -134,7 +136,16 @@ const volumeHeaders = [
   },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
+  banner: {
+    borderLeft: `solid 6px ${theme.color.green}`,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  bannerMessage: {
+    fontSize: '1rem',
+    marginLeft: theme.spacing(),
+  },
   empty: {
     '& svg': {
       transform: 'scale(0.75)',
@@ -144,6 +155,7 @@ const useStyles = makeStyles(() => ({
 
 export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const {
     volumesLoading,
@@ -284,6 +296,23 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       });
   };
 
+  const Banner = () => {
+    return flags.blockStorageAvailability ? (
+      <DismissibleBanner
+        className={classes.banner}
+        preferenceKey="block-storage-available-atlanta"
+      >
+        <Typography className={classes.bannerMessage}>
+          Atlanta is the first data center with our new high-performance{' '}
+          <Link to="https://www.linode.com/products/block-storage/">
+            NVMe Block Storage
+          </Link>
+          . Create a volume <Link to="/volumes/create">now.</Link>
+        </Typography>
+      </DismissibleBanner>
+    ) : null;
+  };
+
   if (_loading) {
     return <Loading />;
   }
@@ -296,6 +325,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     return (
       <>
         <DocumentTitleSegment segment="Volumes" />
+        <Banner />
         <Placeholder
           title="Volumes"
           className={classes.empty}
@@ -354,6 +384,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
         }: ToggleProps<boolean>) => {
           return (
             <>
+              <Banner />
               <LandingHeader
                 title="Volumes"
                 entity="Volume"

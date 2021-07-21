@@ -1,8 +1,12 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
+import Link from 'src/components/Link';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
@@ -10,11 +14,13 @@ import PowerDialogOrDrawer, {
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useFlags from 'src/hooks/useFlags';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
+import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
@@ -26,10 +32,9 @@ import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
 import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
 import HostMaintenance from './HostMaintenance';
+import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
-import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
-import { parseQueryParams } from 'src/utilities/queryParams';
 
 interface Props {
   numVolumes: number;
@@ -58,7 +63,22 @@ interface DialogProps {
 
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
+const useStyles = makeStyles((theme: Theme) => ({
+  banner: {
+    borderLeft: `solid 6px ${theme.color.green}`,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+  },
+  bannerMessage: {
+    fontSize: '1rem',
+    marginLeft: theme.spacing(),
+  },
+}));
+
 const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const flags = useFlags();
+
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
@@ -263,6 +283,20 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
+      {flags.blockStorageAvailability && linode.region === 'us-southeast' ? (
+        <DismissibleBanner
+          className={classes.banner}
+          preferenceKey="block-storage-available-atlanta"
+        >
+          <Typography className={classes.bannerMessage}>
+            Take advantage of high-performance{' '}
+            <Link to="https://www.linode.com/products/block-storage/">
+              NVMe Block Storage
+            </Link>
+            . Attach a volume <Link to="/volumes/create">now.</Link>
+          </Typography>
+        </DismissibleBanner>
+      ) : null}
       <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"

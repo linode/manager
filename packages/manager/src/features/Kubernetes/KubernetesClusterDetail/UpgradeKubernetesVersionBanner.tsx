@@ -10,12 +10,10 @@ import UpgradeVersionModal from '../UpgradeVersionModal';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    fontSize: '1rem',
     borderLeft: `solid 6px ${theme.color.green}`,
-    padding: theme.spacing(1),
-    marginBottom: theme.spacing(),
   },
   upgradeMessage: {
+    fontSize: '1rem',
     marginLeft: theme.spacing(),
   },
   upgradeButton: {
