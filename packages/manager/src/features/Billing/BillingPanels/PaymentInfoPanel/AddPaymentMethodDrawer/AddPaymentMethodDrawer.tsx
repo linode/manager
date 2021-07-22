@@ -73,7 +73,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   );
 
   return (
-    <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
+    <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
       {isGooglePayEnabled ? (
         <React.Fragment>
