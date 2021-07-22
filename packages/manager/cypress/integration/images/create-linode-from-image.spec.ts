@@ -43,8 +43,10 @@ const createLinodeWithImageMock = () => {
   cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
     containsClick('Choose an image');
   });
-  getVisible('span[class="fl-tux"]');
-  fbtClick(imageLabel);
+  cy.get(`[data-qa-image-select-item="${imageId}"]`).within(() => {
+    cy.get('span').should('have.class', 'fl-tux');
+    fbtClick(imageLabel);
+  });
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
