@@ -5,7 +5,7 @@ import Page from '../page';
 
 export class SshKeys extends Page {
   get addKeyButton() {
-    return this.addIcon('Add a SSH Key');
+    return this.addIcon('Add an SSH Key');
   }
 
   get drawerKeyLabel() {
