@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { hasExpirationPassedFor } from './isCreditCardExpired';
+import { formatExpiry, hasExpirationPassedFor } from './creditCard';
 
 describe('isCreditCardExpired', () => {
   describe('give today is 01/01/2019', () => {
@@ -37,6 +37,21 @@ describe('isCreditCardExpired', () => {
         it(`should return ${result}`, () => {
           expect(isCreditCardExpired(expiration)).toBe(result);
         });
+      });
+    });
+  });
+});
+
+describe('formatExpiry', () => {
+  [
+    ['01/2018', '01/18'],
+    ['05/2024', '05/24'],
+    ['01/18', '01/18'],
+    ['12/22', '12/22'],
+  ].forEach(([expiry, result]: [string, string]) => {
+    describe(`Expiry date of ${expiry}`, () => {
+      it(`should return ${result}`, () => {
+        expect(formatExpiry(expiry)).toBe(result);
       });
     });
   });
