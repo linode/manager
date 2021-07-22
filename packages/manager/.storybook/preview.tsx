@@ -1,7 +1,6 @@
 // .storybook/preview.js
 import { select, withKnobs } from '@storybook/addon-knobs';
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { configure } from '@storybook/react';
 import React from 'react';
 import '../public/fonts/fonts.css';
 import CssBaseline from '../src/components/core/CssBaseline';
@@ -14,8 +13,6 @@ const options = {
   dark,
   light,
 };
-
-configure(require.context('../src', true, /\.stories\.mdx$/), module);
 
 export const decorators = [
   withKnobs,

@@ -17,25 +17,6 @@ import Button from 'src/components/Button';
       </div>
     ),
   ]}
-  argTypes={{
-    buttonType: {
-      description: 'The variant to use.',
-    },
-    compact: {
-      description:
-        'Removes the spacing to the left and right of the text for secondary buttons only.',
-    },
-    disabled: {
-      description:
-        'A button should remain disabled until all required data has been entered in a form or data has been changed in an edit state.',
-    },
-    loading: {
-      description: 'Used to depict a loading state.',
-    },
-    tooltipText: {
-      description: 'Displays informative text when users hover over the icon.',
-    },
-  }}
 />
 
 # Button
@@ -141,6 +122,26 @@ export const Template = (args) => (
       fullWidth: false,
       loading: false,
       tooltipText: '',
+    }}
+    argTypes={{
+      buttonType: {
+        description: 'The variant to use.',
+      },
+      compact: {
+        description:
+          'Removes the spacing to the left and right of the text for secondary buttons only.',
+      },
+      disabled: {
+        description:
+          'A button should remain disabled until all required data has been entered in a form or data has been changed in an edit state.',
+      },
+      loading: {
+        description: 'Used to depict a loading state.',
+      },
+      tooltipText: {
+        description:
+          'Displays informative text when users hover over the icon.',
+      },
     }}
   >
     {Template.bind({})}
