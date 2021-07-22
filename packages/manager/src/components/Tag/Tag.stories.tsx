@@ -4,7 +4,7 @@ import * as React from 'react';
 import Tag from './Tag';
 
 export default {
-  title: 'UI Elements/Tags',
+  title: 'UI Elements/Tag',
 };
 
 export const Primary = () => <Tag label="tag" />;

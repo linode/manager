@@ -45,6 +45,11 @@ MINIMAL_VIEWPORTS.mobile1.styles = {
 };
 
 export const parameters = {
+  options: {
+    storySort: {
+      order: ['Guidelines', 'Components', 'UI Elements', 'Core'],
+    },
+  },
   viewport: {
     viewports: MINIMAL_VIEWPORTS,
   },

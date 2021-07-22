@@ -2,7 +2,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Snackbar from 'src/components/SnackBar';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 
 interface Props {
   onClick: (variant: string) => void;
@@ -35,6 +34,7 @@ class Example extends React.PureComponent<WithSnackbarProps, {}> {
       );
 
     return (
+      // eslint-disable-next-line react/jsx-no-useless-fragment
       <React.Fragment>
         {variants.map((eachVariant) => {
           // map over each variant and show a button for each
@@ -55,7 +55,6 @@ const Enhanced = withSnackbar(Example);
 
 export default {
   title: 'UI Elements/Notification/Toast',
-  decorators: [ThemeDecorator],
 };
 
 export const Default = () => (
