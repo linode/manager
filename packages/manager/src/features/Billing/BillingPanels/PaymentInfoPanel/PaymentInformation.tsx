@@ -121,13 +121,13 @@ const PaymentInformation: React.FC<Props> = (props) => {
           <Typography variant="h3" className={classes.title}>
             Payment Methods
           </Typography>
-
-          {isGooglePayEnabled ? (
+          {isGooglePayEnabled ||
+          (!isGooglePayEnabled && paymentMethods?.length === 0) ? (
             <Button
               className={classes.edit}
               onClick={() => replace(drawerLink)}
             >
-              Add Payment Method
+              Add {isGooglePayEnabled ? 'Payment Method' : 'a Credit Card'}
             </Button>
           ) : null}
         </div>
