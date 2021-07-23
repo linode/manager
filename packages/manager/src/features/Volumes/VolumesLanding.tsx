@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -136,16 +136,7 @@ const volumeHeaders = [
   },
 ];
 
-const useStyles = makeStyles((theme: Theme) => ({
-  banner: {
-    borderLeft: `solid 6px ${theme.color.green}`,
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-  bannerMessage: {
-    fontSize: '1rem',
-    marginLeft: theme.spacing(),
-  },
+export const useStyles = makeStyles(() => ({
   empty: {
     '& svg': {
       transform: 'scale(0.75)',
@@ -298,16 +289,13 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
 
   const Banner = () => {
     return flags.blockStorageAvailability ? (
-      <DismissibleBanner
-        className={classes.banner}
-        preferenceKey="block-storage-available-atlanta"
-      >
-        <Typography className={classes.bannerMessage}>
+      <DismissibleBanner preferenceKey="block-storage-available-atlanta" green>
+        <Typography>
           Atlanta is the first data center with our new high-performance{' '}
           <Link to="https://www.linode.com/products/block-storage/">
             NVMe Block Storage
           </Link>
-          . Create a volume <Link to="/volumes/create">now.</Link>
+          . Create a Volume <Link to="/volumes/create">now</Link>.
         </Typography>
       </DismissibleBanner>
     ) : null;

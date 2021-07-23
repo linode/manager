@@ -9,13 +9,6 @@ import { getNextVersion } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    borderLeft: `solid 6px ${theme.color.green}`,
-  },
-  upgradeMessage: {
-    fontSize: '1rem',
-    marginLeft: theme.spacing(),
-  },
   upgradeButton: {
     marginRight: theme.spacing(),
   },
@@ -41,8 +34,8 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
     <>
       {nextVersion ? (
         <DismissibleBanner
-          className={classes.root}
           preferenceKey={`${clusterID}-${currentVersion}`}
+          green
         >
           <Grid
             container
@@ -51,7 +44,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
             justify="space-between"
           >
             <Grid item>
-              <Typography className={classes.upgradeMessage}>
+              <Typography>
                 A new version of Kubernetes is available ({nextVersion}).
               </Typography>
             </Grid>

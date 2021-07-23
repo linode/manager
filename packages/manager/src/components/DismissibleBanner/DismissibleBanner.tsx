@@ -1,4 +1,5 @@
 import Close from '@material-ui/icons/Close';
+import * as classnames from 'classnames';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -6,20 +7,25 @@ import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    display: 'flex',
+    alignItems: 'center',
+    flexFlow: 'row nowrap',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(),
+    minHeight: 50,
     padding: theme.spacing(),
     paddingLeft: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    marginBottom: theme.spacing(),
+    '& p': {
+      fontSize: '1rem',
+      marginLeft: theme.spacing(),
+    },
   },
   button: {
     ...theme.applyLinkStyles,
     display: 'flex',
   },
-  text: {
-    fontSize: '1rem',
+  green: {
+    borderLeft: `solid 6px ${theme.color.green}`,
   },
 }));
 
@@ -27,10 +33,11 @@ interface Props {
   preferenceKey: string;
   children: JSX.Element;
   className?: string;
+  green?: boolean;
 }
 
 export const DismissibleBanner: React.FC<Props> = (props) => {
-  const { className, preferenceKey } = props;
+  const { className, preferenceKey, green } = props;
   const {
     dismissNotifications,
     hasDismissedNotifications,
@@ -46,7 +53,15 @@ export const DismissibleBanner: React.FC<Props> = (props) => {
   };
 
   return (
-    <Paper className={`${classes.root} ${className || ''}`}>
+    <Paper
+      className={classnames(
+        {
+          [classes.root]: true,
+          [classes.green]: green,
+        },
+        className
+      )}
+    >
       {props.children}
       <button
         aria-label={`Dismiss ${preferenceKey} banner`}

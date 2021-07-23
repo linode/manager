@@ -1,7 +1,9 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
+import { bindActionCreators, Dispatch } from 'redux';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -20,6 +22,12 @@ import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
+import {
+  LinodeOptions,
+  openForAttaching,
+  openForCreating,
+  Origin as VolumeDrawerOrigin,
+} from 'src/store/volumeForm';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
@@ -35,6 +43,12 @@ import HostMaintenance from './HostMaintenance';
 import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  button: {
+    ...theme.applyLinkStyles,
+  },
+}));
 
 interface Props {
   numVolumes: number;
@@ -61,19 +75,22 @@ interface DialogProps {
   linodeID: number;
 }
 
-type CombinedProps = Props & LinodeDetailContext & LinodeContext;
+interface DispatchProps {
+  openForCreating: (
+    origin: VolumeDrawerOrigin,
+    linodeOptions?: LinodeOptions
+  ) => void;
+  openForAttaching: (
+    linodeId: number,
+    linodeRegion: string,
+    linodeLabel: string
+  ) => void;
+}
 
-const useStyles = makeStyles((theme: Theme) => ({
-  banner: {
-    borderLeft: `solid 6px ${theme.color.green}`,
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-  bannerMessage: {
-    fontSize: '1rem',
-    marginLeft: theme.spacing(),
-  },
-}));
+type CombinedProps = Props &
+  LinodeDetailContext &
+  LinodeContext &
+  DispatchProps;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -95,7 +112,14 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const notificationContext = React.useContext(_notificationContext);
 
-  const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
+  const {
+    linode,
+    linodeStatus,
+    linodeDisks,
+    linodeConfigs,
+    openForCreating,
+    openForAttaching,
+  } = props;
 
   const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
     open: false,
@@ -278,22 +302,72 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     return deleteLinode(linodeId);
   };
 
+  // @todo: Update to us-southeast after testing
+  const region = 'ca-central';
+  const showVolumesBanner =
+    flags.blockStorageAvailability &&
+    linode.region === region &&
+    getVolumesByLinode(linode.id) === 0;
+
+  // Check to make sure:
+  //    1. there are no Volumes currently attached
+  //    2. the Volume is unattached
+  //    3. the Volume is in the right region
+  const allVolumes = Object.values(volumes.itemsById).filter(
+    (thisVolume) =>
+      getVolumesByLinode(linode.id) === 0 &&
+      thisVolume.linode_id === null &&
+      thisVolume.region === region
+  );
+
+  const isCreateMode = allVolumes.length === 0 ? true : false;
+  const volumesBannerAction = isCreateMode ? 'Create' : 'Attach';
+
+  const openCreateVolumeDrawer = (e: any) => {
+    e.preventDefault();
+
+    if (linode.id && linode.label && linode.region) {
+      return openForCreating('Created from Linode Details', {
+        linodeId: linode.id,
+        linodeLabel: linode.label,
+        linodeRegion: linode.region,
+      });
+    }
+  };
+
+  const openAttachVolumeDrawer = (e: any) => {
+    e.preventDefault();
+
+    if (linode.id && linode.label && linode.region) {
+      return openForAttaching(linode.id, linode.region, linode.label);
+    }
+  };
+
   return (
     <>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
-      {flags.blockStorageAvailability && linode.region === 'us-southeast' ? (
+      {showVolumesBanner ? (
         <DismissibleBanner
-          className={classes.banner}
           preferenceKey="block-storage-available-atlanta"
+          green
         >
-          <Typography className={classes.bannerMessage}>
+          <Typography>
             Take advantage of high-performance{' '}
             <Link to="https://www.linode.com/products/block-storage/">
               NVMe Block Storage
             </Link>
-            . Attach a volume <Link to="/volumes/create">now.</Link>
+            . {volumesBannerAction} a Volume{' '}
+            <button
+              className={classes.button}
+              onClick={
+                isCreateMode ? openCreateVolumeDrawer : openAttachVolumeDrawer
+              }
+            >
+              now
+            </button>
+            .
           </Typography>
         </DismissibleBanner>
       ) : null}
@@ -363,12 +437,24 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   );
 };
 
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      openForCreating,
+      openForAttaching,
+    },
+    dispatch
+  );
+
 interface LinodeContext {
   linodeStatus: LinodeStatus;
   linodeDisks: Disk[];
 }
 
+const connected = connect(undefined, mapDispatchToProps);
+
 export default compose<CombinedProps, {}>(
+  connected,
   withLinodeDetailContext<LinodeContext>(({ linode }) => ({
     linode,
     linodeStatus: linode.status,
