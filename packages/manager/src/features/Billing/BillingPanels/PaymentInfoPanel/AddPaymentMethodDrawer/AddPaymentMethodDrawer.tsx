@@ -37,7 +37,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 5,
   },
   tooltip: {
+    color: theme.color.grey1,
     padding: '0 0 0 4px',
+    '& svg': {
+      height: 20,
+      width: 20,
+    },
   },
 }));
 
@@ -88,7 +93,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
                   <HelpIcon
                     data-qa-tooltip-icon
                     text={
-                      'Adding another will replace your current Google Pay Payment Method.'
+                      'Adding another will replace your current Google Pay payment method.'
                     }
                     tooltipPosition="bottom"
                     className={classes.tooltip}
