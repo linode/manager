@@ -138,7 +138,7 @@ const getEntityLinks = (
     case 'ticket_abuse':
       return `/support/tickets/${id}`;
     case 'payment_due':
-      return '/account/billing';
+      return '/account/billing/make-payment';
     default:
       break;
   }
