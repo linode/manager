@@ -93,7 +93,7 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
     return (
       <ActionsPanel>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.props.closeDialog}
           data-qa-cancel
         >
@@ -101,8 +101,8 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
         </Button>
         <Button
           buttonType="primary"
-          loading={this.props.loading}
           onClick={this.handleSubmit}
+          loading={this.props.loading}
           data-qa-submit
         >
           Revoke Device

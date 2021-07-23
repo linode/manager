@@ -137,7 +137,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   const actions = () => (
     <ActionsPanel>
       <Button
-        buttonType="cancel"
+        buttonType="secondary"
         onClick={closeRemoveBucketConfirmationDialog}
         data-qa-cancel
       >
@@ -145,13 +145,12 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       </Button>
       <Button
         buttonType="primary"
-        destructive
         onClick={removeBucket}
-        data-qa-submit-rebuild
-        loading={isLoading}
         disabled={
           bucketToRemove ? confirmBucketName !== bucketToRemove.label : true
         }
+        loading={isLoading}
+        data-qa-submit-rebuild
       >
         Delete Bucket
       </Button>

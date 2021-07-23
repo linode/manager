@@ -1,7 +1,7 @@
 import {
+  FirewallPolicyType,
   FirewallRules,
   FirewallRuleType,
-  FirewallPolicyType,
 } from '@linode/api-v4/lib/firewalls';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
@@ -17,6 +17,7 @@ import Prompt from 'src/components/Prompt';
 import withFirewalls, {
   DispatchProps,
 } from 'src/containers/firewalls.container';
+import { updateFirewallRules } from 'src/queries/firewalls';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
@@ -29,7 +30,6 @@ import curriedFirewallRuleEditorReducer, {
 } from './firewallRuleEditor';
 import FirewallRuleTable from './FirewallRuleTable';
 import { Category, parseFirewallRuleError } from './shared';
-import { updateFirewallRules } from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -289,7 +289,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
               title="Discard Firewall changes?"
               actions={() => (
                 <ActionsPanel>
-                  <Button buttonType="cancel" onClick={handleConfirm}>
+                  <Button buttonType="secondary" onClick={handleConfirm}>
                     Leave and discard changes
                   </Button>
 
@@ -363,17 +363,17 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
       />
       <ActionsPanel className={classes.actions}>
         <Button
-          buttonType="cancel"
-          disabled={!hasUnsavedChanges}
+          buttonType="secondary"
           onClick={() => setDiscardChangesModalOpen(true)}
+          disabled={!hasUnsavedChanges}
         >
           Discard Changes
         </Button>
         <Button
           buttonType="primary"
           onClick={applyChanges}
-          loading={submitting}
           disabled={!hasUnsavedChanges}
+          loading={submitting}
         >
           Save Changes
         </Button>
@@ -414,7 +414,7 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
     const actions = React.useCallback(
       () => (
         <ActionsPanel>
-          <Button buttonType="cancel" onClick={handleDiscard}>
+          <Button buttonType="secondary" onClick={handleDiscard}>
             Discard changes
           </Button>
 

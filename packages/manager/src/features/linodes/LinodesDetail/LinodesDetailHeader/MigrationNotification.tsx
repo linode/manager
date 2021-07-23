@@ -1,5 +1,6 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
+import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -10,7 +11,6 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useDialog } from 'src/hooks/useDialog';
 import { capitalize } from 'src/utilities/capitalize';
-import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
@@ -74,7 +74,7 @@ const MigrationNotification: React.FC<Props> = (props) => {
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel>
+      <Button buttonType="secondary" onClick={closeDialog} data-qa-cancel>
         Cancel
       </Button>
       <Button

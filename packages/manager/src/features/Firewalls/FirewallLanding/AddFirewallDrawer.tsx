@@ -1,7 +1,7 @@
-import { Formik, FormikBag } from 'formik';
 import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
-import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
+import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
+import { Formik, FormikBag } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -179,16 +179,16 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 <Button
                   buttonType="primary"
                   onClick={() => handleSubmit()}
+                  disabled={_isRestrictedUser}
+                  loading={isSubmitting}
                   data-qa-submit
                   data-testid="create-firewall-submit"
-                  loading={isSubmitting}
-                  disabled={_isRestrictedUser}
                 >
                   Create Firewall
                 </Button>
                 <Button
+                  buttonType="secondary"
                   onClick={onClose}
-                  buttonType="cancel"
                   disabled={_isRestrictedUser}
                   data-qa-cancel
                 >

@@ -35,7 +35,7 @@ class UserDeleteConfirmationDialog extends React.PureComponent<
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.props.onCancel}
           data-qa-cancel-delete
         >
@@ -43,7 +43,6 @@ class UserDeleteConfirmationDialog extends React.PureComponent<
         </Button>
         <Button
           buttonType="primary"
-          destructive
           onClick={this.deleteUser}
           data-qa-confirm-delete
         >

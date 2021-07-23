@@ -6,8 +6,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { capitalize } from 'src/utilities/capitalize';
 import { titlecase } from 'src/features/linodes/presentation';
+import { capitalize } from 'src/utilities/capitalize';
 
 interface Props {
   open: boolean;
@@ -44,15 +44,14 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
   const [confirmationText, setConfirmationText] = React.useState('');
   const renderActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        destructive
         onClick={onDelete}
-        loading={loading}
         disabled={typeToConfirm && confirmationText !== label}
+        loading={loading}
         data-qa-confirm
         data-testid="delete-btn"
       >

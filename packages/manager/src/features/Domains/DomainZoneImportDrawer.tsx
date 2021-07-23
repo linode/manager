@@ -63,13 +63,13 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button
             buttonType="primary"
-            loading={submitting}
             onClick={this.onSubmit}
             disabled={!requirementsMet}
+            loading={submitting}
           >
             Save
           </Button>
-          <Button buttonType="cancel" onClick={this.onClose}>
+          <Button buttonType="secondary" onClick={this.onClose}>
             Cancel
           </Button>
         </ActionsPanel>

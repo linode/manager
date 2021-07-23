@@ -6,9 +6,9 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import InputLabel from 'src/components/core/InputLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import HelpIcon from 'src/components/HelpIcon';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ExtendedIP } from 'src/utilities/ipUtils';
@@ -184,9 +184,9 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
       ))}
       <Button
         buttonType="secondary"
-        superCompact
         onClick={addNewInput}
         className={classes.addIP}
+        compact
       >
         Add an IP
       </Button>

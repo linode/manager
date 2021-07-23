@@ -56,7 +56,7 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
   const renderConfirmationActions = () => (
     <ActionsPanel>
       <Button
-        buttonType="cancel"
+        buttonType="secondary"
         onClick={() => setOpen(false)}
         data-qa-cancel-delete
       >

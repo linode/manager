@@ -1,24 +1,24 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import {
-  getSSLCert,
   deleteSSLCert,
+  getSSLCert,
   uploadSSLCert,
 } from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getErrorMap } from 'src/utilities/errorUtils';
-import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -227,17 +227,16 @@ export const RemoveCertForm: React.FC<FormProps> = (props) => {
   const createActions = () => (
     <ActionsPanel>
       <Button
-        disabled={submittingDialog}
+        buttonType="secondary"
         onClick={() => setOpen(false)}
-        buttonType="cancel"
+        disabled={submittingDialog}
       >
         Cancel
       </Button>
       <Button
-        loading={submittingDialog}
-        onClick={removeCertificate}
-        destructive
         buttonType="primary"
+        onClick={removeCertificate}
+        loading={submittingDialog}
       >
         Remove certificate
       </Button>
@@ -249,7 +248,7 @@ export const RemoveCertForm: React.FC<FormProps> = (props) => {
         A TLS certificate has already been uploaded for this Bucket. To upload a
         new certificate, remove the current certificate.{` `}
       </Notice>
-      <Button destructive onClick={() => setOpen(true)} buttonType="primary">
+      <Button buttonType="primary" onClick={() => setOpen(true)}>
         Remove Certificate
       </Button>
       <ConfirmationDialog

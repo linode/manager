@@ -495,7 +495,7 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
                 actions={() => (
                   <ActionsPanel>
                     <Button
-                      buttonType="cancel"
+                      buttonType="secondary"
                       onClick={this.closeDeleteObjectDialog}
                       data-qa-cancel
                     >
@@ -503,10 +503,9 @@ export class BucketDetail extends React.Component<CombinedProps, State> {
                     </Button>
                     <Button
                       buttonType="primary"
-                      destructive
                       onClick={this.deleteObject}
-                      data-qa-submit-rebuild
                       loading={deleteObjectLoading}
+                      data-qa-submit-rebuild
                     >
                       Delete
                     </Button>

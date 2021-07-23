@@ -38,13 +38,13 @@ import {
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
+import { queryClient } from 'src/queries/base';
+import { filterImagesByType } from 'src/store/image/image.helpers';
 import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
-import { filterImagesByType } from 'src/store/image/image.helpers';
 import { debounce } from 'throttle-debounce';
-import { queryClient } from 'src/queries/base';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -373,7 +373,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.handleCloseDialog}
           data-qa-cancel-cancel
         >
@@ -381,7 +381,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           buttonType="primary"
-          destructive
           onClick={() => this.resetAllFields(this.state.apiResponse)}
           data-qa-confirm-cancel
         >

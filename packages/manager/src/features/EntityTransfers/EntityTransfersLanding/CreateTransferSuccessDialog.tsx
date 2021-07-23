@@ -119,13 +119,12 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <ToolTip open={tooltipOpen[0]} title="Copied!">
           <div className={classes.copyButton}>
             <Button
-              buttonType="secondary"
+              buttonType="outlined"
               onClick={() => {
                 // @analytics
                 debouncedSendEntityTransferCopyTokenEvent();
                 handleCopy(0, transfer.token);
               }}
-              outline
             >
               Copy Token
             </Button>
