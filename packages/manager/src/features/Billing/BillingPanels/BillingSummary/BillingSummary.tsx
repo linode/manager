@@ -1,13 +1,14 @@
+import { PaymentMethod } from '@linode/api-v4';
 import {
   ActivePromotion,
   PromotionServiceType,
 } from '@linode/api-v4/lib/account/types';
-import { PaymentMethod } from '@linode/api-v4';
 import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -17,6 +18,7 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
+import { defaultCreateButtonWidth } from 'src/components/LandingHeader/LandingHeader';
 import useNotifications from 'src/hooks/useNotifications';
 import PaymentDrawer from './PaymentDrawer';
 
@@ -29,6 +31,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: `15px 20px`,
     height: '100%',
+  },
+  button: {
+    padding: 0,
+    margin: '1rem 0 0 0',
+    width: defaultCreateButtonWidth,
   },
   helpIcon: {
     padding: `0px 8px`,
@@ -151,17 +158,34 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
     promotions && promotions.length > 0 ? { xs: 12, md: 4 } : { xs: 12, sm: 6 };
 
+  const openMakePaymentDrawer = () => {
+    replace(routeForMakePayment);
+  };
+
+  const makePaymentButton = (
+    <Button
+      buttonType="primary"
+      className={classes.button}
+      onClick={openMakePaymentDrawer}
+    >
+      Make a Payment
+    </Button>
+  );
+
   const balanceJSX =
     balance > 0 ? (
-      <Typography style={{ marginTop: 16 }}>
-        <button
-          className={classes.makeAPaymentButton}
-          onClick={() => replace(routeForMakePayment)}
-        >
-          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
-        </button>
-        {pastDueBalance ? `${' '}to avoid service disruption.` : null}
-      </Typography>
+      <>
+        {makePaymentButton}
+        <Typography style={{ marginTop: 16 }}>
+          <button
+            className={classes.makeAPaymentButton}
+            onClick={openMakePaymentDrawer}
+          >
+            {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
+          </button>
+          {pastDueBalance ? `${' '}to avoid service disruption.` : null}
+        </Typography>
+      </>
     ) : null;
 
   return (

@@ -25,6 +25,7 @@ export interface Props extends Omit<HeaderProps, 'actions'> {
   breadcrumbProps?: BreadcrumbProps;
 }
 
+export const defaultCreateButtonWidth = 152;
 /**
  * This component is essentially a variant of the more abstract EntityHeader
  * component, included as its own component because it will be used in
@@ -44,8 +45,6 @@ export const LandingHeader: React.FC<Props> = (props) => {
     loading,
     breadcrumbProps,
   } = props;
-
-  const defaultCreateButtonWidth = 152;
 
   const actions = React.useMemo(
     () => (
