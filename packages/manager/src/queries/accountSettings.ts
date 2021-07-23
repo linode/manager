@@ -7,7 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { queryClient, queryPresets } from './base';
 
-const queryKey = 'account-settings';
+export const queryKey = 'account-settings';
 
 export const useAccountSettings = () =>
   useQuery<AccountSettings, APIError[]>(
@@ -26,11 +26,11 @@ export const useMutateAccountSettings = () => {
 };
 
 export const isManaged = Boolean(
-  queryClient.getQueryData<AccountSettings>('account-settings')?.managed
+  queryClient.getQueryData<AccountSettings>(queryKey)?.managed
 );
 
 export const accountBackupsEnabled = Boolean(
-  queryClient.getQueryData<AccountSettings>('account-settings')?.backups_enabled
+  queryClient.getQueryData<AccountSettings>(queryKey)?.backups_enabled
 );
 
 /**

@@ -9,9 +9,12 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
 import {
-  useAccountSettings,
-  useMutateAccountSettings,
+  accountBackupsEnabled,
+  queryKey,
+  updateAccountSettingsData,
 } from 'src/queries/accountSettings';
+import { queryClient } from 'src/queries/base';
+import { updateAccountSettings } from '@linode/api-v4/lib';
 
 export interface BackupError {
   linodeId: number;
@@ -297,28 +300,32 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
   const state = getState();
   const { backups } = state;
   const shouldEnableBackups = Boolean(backups.autoEnroll);
-  const { data: accountSettings } = useAccountSettings();
-  const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
 
   /** If the selected toggle setting matches the setting already on the user's account,
    * don't bother the API.
    */
-  if (accountSettings?.backups_enabled === shouldEnableBackups) {
+  if (accountBackupsEnabled === shouldEnableBackups) {
     dispatch(enableAllBackups());
     return;
   }
 
   dispatch(handleAutoEnroll());
-  updateAccountSettings({ backups_enabled: shouldEnableBackups })
-    .then((_) => {
+
+  queryClient.executeMutation({
+    mutationFn: updateAccountSettings,
+    mutationKey: queryKey,
+    variables: { backups_enabled: shouldEnableBackups },
+    onSuccess: (data) => {
+      updateAccountSettingsData(data);
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());
-    })
-    .catch((errors) => {
+    },
+    onError: (errors: APIError[]) => {
       const finalError = getErrorStringOrDefault(
         errors,
         'Your account settings could not be updated. Please try again.'
       );
       dispatch(handleAutoEnrollError(finalError));
-    });
+    },
+  });
 };
