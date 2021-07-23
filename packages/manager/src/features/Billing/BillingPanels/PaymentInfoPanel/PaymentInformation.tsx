@@ -84,6 +84,14 @@ const PaymentInformation: React.FC<Props> = (props) => {
     'google_pay'
   );
 
+  const showAddPaymentMethodButton =
+    paymentMethods?.length === 0 ||
+    isGooglePayEnabled ||
+    (!isGooglePayEnabled &&
+      !paymentMethods?.some(
+        (method: PaymentMethod) => method.type === 'credit_card'
+      ));
+
   const showGooglePayAvailableNotice =
     isGooglePayEnabled &&
     !paymentMethods?.some(
@@ -121,8 +129,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
           <Typography variant="h3" className={classes.title}>
             Payment Methods
           </Typography>
-
-          {isGooglePayEnabled ? (
+          {showAddPaymentMethodButton ? (
             <Button
               className={classes.edit}
               onClick={() => replace(drawerLink)}
