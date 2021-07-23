@@ -9,12 +9,19 @@ import {
 } from './common';
 
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes/types';
+import { linodeFactory } from '@src/factories';
 
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
 
 export const makeRandomId = () => Math.floor(Math.random() * 99999999);
 export const makeLinodeLabel = makeTestLabel;
+
+export const createMockLinode = (data?) => {
+  return linodeFactory.build({
+    ...data,
+  });
+};
 
 const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
   type: 'g6-standard-2',

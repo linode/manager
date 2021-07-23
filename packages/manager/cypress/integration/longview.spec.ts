@@ -15,7 +15,7 @@ describe('longview', () => {
     const clientLabel = makeClientLabel();
     cy.visitWithLogin('/dashboard');
     createLinode({ root_pass: linodePassword }).then((linode) => {
-      createClient(undefined, clientLabel).then((client) => {
+      createClient(undefined, clientLabel).then((client: any) => {
         const linodeIp = linode['ipv4'][0];
         const clientLabel = client.label;
         cy.visit('/longview');
