@@ -17,9 +17,9 @@
     "url": "https://github.com/linode/manager/tree/develop/packages/validation"
   },
   "dependencies": {
-    "@types/yup": "^0.26.22",
+    "@types/yup": "^0.29.13",
     "ipaddr.js": "^2.0.0",
-    "yup": "^0.27.0"
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",

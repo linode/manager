@@ -22,11 +22,11 @@
   "unpkg": "./index.js",
   "dependencies": {
     "@linode/validation": "0.3.2",
-    "@types/yup": "^0.26.22",
+    "@types/yup": "^0.29.13",
     "axios": "~0.21.1",
     "ipaddr.js": "^2.0.0",
     "querystring": "^0.2.0",
-    "yup": "^0.27.0"
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
