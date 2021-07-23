@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     flexFlow: 'row nowrap',
     justifyContent: 'space-between',
+    borderRadius: 1,
     marginBottom: theme.spacing(),
     minHeight: 50,
     padding: theme.spacing(),

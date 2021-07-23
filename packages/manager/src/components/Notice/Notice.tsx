@@ -24,18 +24,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   root: {
-    marginBottom: theme.spacing(2),
-    position: 'relative',
-    padding: '4px 16px',
-    maxWidth: '100%',
     display: 'flex',
     alignItems: 'center',
+    borderRadius: 1,
+    marginBottom: theme.spacing(2),
+    maxWidth: '100%',
+    padding: '4px 16px',
+    position: 'relative',
     '& + .notice': {
-      marginTop: `${theme.spacing(1)}px !important`,
+      marginTop: `${theme.spacing()}px !important`,
     },
-  },
-  cmr: {
-    borderRadius: 3,
     '& $important': {
       backgroundColor: theme.cmrBGColors.bgPaper,
     },
@@ -49,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   important: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     padding: theme.spacing(2),
+    paddingRight: theme.spacing(),
     '& $noticeText': {
       fontFamily: theme.font.normal,
     },
@@ -59,10 +58,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: -25, // This value must be static regardless of theme selection
   },
   closeIcon: {
-    paddingLeft: theme.spacing(1),
+    ...theme.applyLinkStyles,
+    display: 'flex',
   },
   inner: {
     width: '100%',
+    '& p': {
+      fontSize: '1rem',
+    },
   },
   breakWords: {
     '& $noticeText': {
@@ -215,7 +218,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
         [classes.warningList]: warning && notificationList,
-        [classes.cmr]: true,
         notice: true,
         ...(className && { [className]: true }),
       })}
