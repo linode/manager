@@ -227,12 +227,16 @@ const interceptNotification = (
     return notification;
   }
 
-  if (
-    notification.type === 'payment_due' &&
-    notification.severity !== 'critical'
-  ) {
-    // A critical severity indicates the user's balance is past due; temper the messaging a bit outside of that case by replacing the exclamation point.
-    notification.message = notification.message.replace('!', '.');
+  if (notification.type === 'payment_due') {
+    if (notification.severity !== 'critical') {
+      // A critical severity indicates the user's balance is past due; temper the messaging a bit outside of that case by replacing the exclamation point.
+      notification.message = notification.message.replace('!', '.');
+    }
+
+    return {
+      ...notification,
+      message: `${notification.message} ${' '} Click to make a payment now.`,
+    };
   }
 
   /* If the notification is not of any of the types above, return the notification object without modification. In this case, logic in <RenderNotification />
