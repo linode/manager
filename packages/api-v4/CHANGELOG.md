@@ -1,8 +1,12 @@
+## [2021-07-19] - v0.55.0
+
+### Added:
+- Types and endpoint support for new payment methods
+
 ## [2021-06-28] - v0.54.0
 
 ### Changed:
 - Removed ‘ready’ and ‘completed’ statuses from AccountMaintenance interface in account/types.ts
-
 
 ## [2021-05-18] - v0.53.0
 
@@ -46,7 +50,7 @@
 
 ### Changed:
 - Added metal to LinodeTypeClass type and removed LinodeInterface from linodes/types.ts
-- Added interfaces for IPAssignment, IPSharingPayload and IPAssignmentPayload in networking/types.ts 
+- Added interfaces for IPAssignment, IPSharingPayload and IPAssignmentPayload in networking/types.ts
 - Added Bare Metal to Capabilities type in regions/types.ts
 
 
