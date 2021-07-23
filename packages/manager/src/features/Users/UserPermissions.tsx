@@ -501,13 +501,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <ActionsPanel className={classes.section}>
         <Button
           buttonType="primary"
-          loading={loading}
           onClick={onConfirm}
+          loading={loading}
           data-qa-submit
         >
           Save
         </Button>
-        <Button buttonType="cancel" onClick={onCancel} data-qa-cancel>
+        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
           Cancel
         </Button>
       </ActionsPanel>

@@ -34,17 +34,20 @@ class DestructiveSnapshotDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button buttonType="cancel" onClick={this.props.onClose} data-qa-cancel>
+        <Button
+          buttonType="secondary"
+          onClick={this.props.onClose}
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button
           buttonType="primary"
-          destructive
           onClick={this.props.onSnapshot}
-          data-qa-confirm
           loading={this.props.loading}
+          data-qa-confirm
         >
-          {'Take Snapshot'}
+          Take Snapshot
         </Button>
       </ActionsPanel>
     );
