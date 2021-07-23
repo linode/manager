@@ -11,6 +11,7 @@ import {
 import CircleProgress from 'src/components/CircleProgress';
 import HelpIcon from 'src/components/HelpIcon';
 import classNames from 'classnames';
+import { reportException } from 'src/exceptionReporting';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -66,7 +67,9 @@ export const GooglePayChip: React.FC<Props> = (props) => {
         try {
           await initGooglePaymentInstance(data.client_token as string);
         } catch (error) {
-          // maybe log to Sentry or something
+          reportException(error, {
+            message: 'Error initializing Google Pay.',
+          });
           setInitializationError(true);
         }
       }
