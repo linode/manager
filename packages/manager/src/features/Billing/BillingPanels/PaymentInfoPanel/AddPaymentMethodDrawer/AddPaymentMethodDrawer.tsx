@@ -10,6 +10,7 @@ import LinearProgress from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
 import HelpIcon from 'src/components/HelpIcon';
+import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   open: boolean;
@@ -36,13 +37,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 5,
   },
   tooltip: {
+    color: theme.color.grey1,
     padding: '0 0 0 4px',
+    '& svg': {
+      height: 20,
+      width: 20,
+    },
   },
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   const { onClose, open, paymentMethods } = props;
   const classes = useStyles();
+  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
 
@@ -66,49 +73,57 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     (method: PaymentMethod) => method.type === 'google_pay'
   );
 
+  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
+    'google_pay'
+  );
+
   return (
-    <Drawer title="Add a Payment Method" open={open} onClose={onClose}>
+    <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
-      <Divider />
-      <Grid className={classes.root} container>
-        <Grid item xs={8} md={9}>
-          <Typography variant="h3">Google Pay</Typography>
-          {isGPayAlreadyAdded ? (
-            <Typography>
-              Currently, you may only have one Google Pay payment method on your
-              account.
-              <HelpIcon
-                data-qa-tooltip-icon
-                text={
-                  'Adding another will replace your current Google Pay Payment Method.'
-                }
-                tooltipPosition="bottom"
-                className={classes.tooltip}
+      {isGooglePayEnabled ? (
+        <React.Fragment>
+          <Divider />
+          <Grid className={classes.root} container>
+            <Grid item xs={8} md={9}>
+              <Typography variant="h3">Google Pay</Typography>
+              {isGPayAlreadyAdded ? (
+                <Typography>
+                  Currently, you may only have one Google Pay payment method on
+                  your account.
+                  <HelpIcon
+                    data-qa-tooltip-icon
+                    text={
+                      'Adding another will replace your current Google Pay payment method.'
+                    }
+                    tooltipPosition="bottom"
+                    className={classes.tooltip}
+                  />
+                </Typography>
+              ) : (
+                <Typography>
+                  You&apos;ll be taken to Google Pay to complete sign up.
+                </Typography>
+              )}
+            </Grid>
+            <Grid
+              container
+              item
+              className={classes.gpay}
+              xs={4}
+              md={3}
+              justify="flex-end"
+              alignContent="center"
+            >
+              <GooglePayChip
+                disabled={isProcessing}
+                makeToast={makeToast}
+                onClose={onClose}
+                setProcessing={setIsProcessing}
               />
-            </Typography>
-          ) : (
-            <Typography>
-              You&apos;ll be taken to Google Pay to complete sign up.
-            </Typography>
-          )}
-        </Grid>
-        <Grid
-          container
-          item
-          className={classes.gpay}
-          xs={4}
-          md={3}
-          justify="flex-end"
-          alignContent="center"
-        >
-          <GooglePayChip
-            disabled={isProcessing}
-            makeToast={makeToast}
-            onClose={onClose}
-            setProcessing={setIsProcessing}
-          />
-        </Grid>
-      </Grid>
+            </Grid>
+          </Grid>
+        </React.Fragment>
+      ) : null}
       {numberOfCreditCards === 0 ? (
         <React.Fragment>
           <Divider spacingBottom={16} spacingTop={16} />
