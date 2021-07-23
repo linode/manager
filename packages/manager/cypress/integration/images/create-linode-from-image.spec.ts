@@ -64,7 +64,7 @@ const createLinodeWithImageMock = () => {
 };
 
 describe('create linode from image, mocked data', () => {
-  it.skip('creates linode from image on images tab', () => {
+  it('creates linode from image on images tab', () => {
     createLinodeWithImageMock();
   });
 
