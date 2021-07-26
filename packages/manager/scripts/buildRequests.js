@@ -57,10 +57,6 @@ const cachedRequests = [
     endpoint: 'linode/types-legacy',
     filename: 'typesLegacy.json',
   },
-  {
-    endpoint: 'linode/types',
-    filename: 'types.json',
-  },
   // Only used for testing purposes, never for displaying data to users
   {
     endpoint: 'linode/kernels',
