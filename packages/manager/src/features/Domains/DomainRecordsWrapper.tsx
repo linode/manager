@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     marginLeft: 0,
     marginRight: 0,
+    marginBottom: theme.spacing(3),
   },
   main: {
     '&.MuiGrid-item': {
