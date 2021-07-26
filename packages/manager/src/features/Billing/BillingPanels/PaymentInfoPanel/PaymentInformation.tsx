@@ -40,11 +40,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
   },
   googlePayNoticeContainer: {
+    alignItems: 'flex-start',
     marginTop: theme.spacing(2),
     padding: `8px 0px`,
+    '& button': {
+      marginLeft: theme.spacing(),
+    },
   },
   googlePayIcon: {
-    marginLeft: -6,
+    flexShrink: 0,
+    height: 22,
+    marginRight: theme.spacing(),
+  },
+  googlePayCopy: {
+    marginTop: 2,
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -173,9 +182,9 @@ const PaymentInformation: React.FC<Props> = (props) => {
             className={classes.googlePayNoticeContainer}
             preferenceKey="google-pay-available-notification"
           >
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="flex-start">
               <GooglePayIcon className={classes.googlePayIcon} />
-              <Typography>
+              <Typography className={classes.googlePayCopy}>
                 Google Pay is now available for recurring payments.{' '}
                 <Link to="#" onClick={() => replace(drawerLink)}>
                   Add Google Pay
