@@ -49,6 +49,7 @@ const styles = (theme: Theme) =>
     },
     drawerHeader: {
       marginBottom: theme.spacing(2),
+      flexWrap: 'nowrap',
     },
     drawerContent: {},
     button: {
