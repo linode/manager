@@ -81,7 +81,10 @@ const PaymentInformation: React.FC<Props> = (props) => {
   );
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
-  const [deleteId, setDeleteId] = React.useState<number>(-1);
+  const [
+    deletePaymentMethodSelection,
+    setDeletePaymentMethodSelection,
+  ] = React.useState<PaymentMethod | undefined>();
 
   const classes = useStyles();
   const flags = useFlags();
@@ -102,7 +105,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
 
   const doDelete = () => {
     setDeleteLoading(true);
-    deletePaymentMethod(deleteId)
+    deletePaymentMethod(deletePaymentMethodSelection!.id)
       .then(() => {
         setDeleteLoading(false);
         queryClient.invalidateQueries(`${queryKey}-all`);
@@ -130,8 +133,9 @@ const PaymentInformation: React.FC<Props> = (props) => {
     setEditDrawerOpen(false);
   };
 
-  const openDeleteDialog = (id: number) => {
-    setDeleteId(id);
+  const openDeleteDialog = (method: PaymentMethod) => {
+    setDeleteError(undefined);
+    setDeletePaymentMethodSelection(method);
     setDeleteDialogOpen(true);
   };
 
@@ -192,7 +196,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
                   ? openEditDrawer
                   : undefined
               }
-              onDelete={() => openDeleteDialog(paymentMethod.id)}
+              onDelete={() => openDeleteDialog(paymentMethod)}
             />
           ))
         )}
@@ -225,7 +229,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
           open={deleteDialogOpen}
           onClose={closeDeleteDialog}
           onDelete={doDelete}
-          id={deleteId}
+          paymentMethod={deletePaymentMethodSelection}
           loading={deleteLoading}
           error={deleteError}
         />

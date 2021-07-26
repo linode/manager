@@ -2,18 +2,38 @@ import * as React from 'react';
 import ActionsPanel from '../ActionsPanel';
 import Button from '../Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import {
+  PaymentMethod,
+  ThirdPartyPayment as ThirdPartyPaymentTypes,
+} from '@linode/api-v4/lib/account/types';
+import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import ThirdPartyPayment from './ThirdPartyPayment';
+import Grid from '../Grid';
+import { makeStyles, Theme } from '../core/styles';
+
+export const useStyles = makeStyles((theme: Theme) => ({
+  item: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  container: {
+    flexWrap: 'nowrap',
+    marginTop: theme.spacing(1),
+  },
+}));
 
 interface Props {
-  id: number;
   open: boolean;
   onClose: () => void;
   onDelete: () => void;
   loading: boolean;
   error: string | undefined;
+  paymentMethod: PaymentMethod | undefined;
 }
 
 export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
-  const { open, onClose, loading, onDelete, error } = props;
+  const { open, onClose, loading, onDelete, error, paymentMethod } = props;
+  const classes = useStyles();
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
@@ -41,6 +61,18 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
       actions={actions}
     >
       Are you sure you want to delete this payment method?
+      <Grid container className={classes.container}>
+        <Grid item className={classes.item} style={{ padding: 0 }}>
+          {paymentMethod && paymentMethod.type === 'credit_card' ? (
+            <CreditCard creditCard={paymentMethod.data} />
+          ) : paymentMethod ? (
+            <ThirdPartyPayment
+              thirdPartyPayment={paymentMethod.type as ThirdPartyPaymentTypes}
+              creditCard={paymentMethod.data}
+            />
+          ) : null}
+        </Grid>
+      </Grid>
     </Dialog>
   );
 };

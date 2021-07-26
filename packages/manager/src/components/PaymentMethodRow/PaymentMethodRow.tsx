@@ -16,7 +16,7 @@ import { useSnackbar } from 'notistack';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(),
     padding: 0,
