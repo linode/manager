@@ -295,6 +295,30 @@ const darkThemeOptions = {
       },
     },
     MuiButton: {
+      label: {
+        position: 'relative',
+      },
+      root: {
+        color: primaryColors.main,
+        '&:hover': {
+          backgroundColor: '#000',
+        },
+        '&[aria-expanded="true"]': {
+          backgroundColor: primaryColors.dark,
+        },
+        '&$disabled': {
+          backgroundColor: '#454b54',
+          color: '#5c6470',
+        },
+        '&.loading': {
+          color: primaryColors.text,
+        },
+      },
+      // text: {
+      //   '&:hover': {
+      //     backgroundColor: 'transparent'
+      //   }
+      // },
       containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: '#226dc3',
@@ -303,8 +327,8 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.divider,
+          backgroundColor: '#454b54',
+          color: '#5c6470',
         },
       },
       outlined: {
@@ -314,6 +338,10 @@ const darkThemeOptions = {
           border: '1px solid #fff',
           color: '#fff',
         },
+      },
+      '&$disabled': {
+        color: '#5c6470',
+        backgroundColor: '#454b54',
       },
     },
     MuiButtonBase: {
