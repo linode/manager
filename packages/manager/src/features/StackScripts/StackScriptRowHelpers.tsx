@@ -19,7 +19,7 @@ export type ClassNames =
 export const styles = (theme: Theme) =>
   createStyles({
     row: {
-      height: 44,
+      height: 46,
     },
     link: {
       color: theme.cmrTextColors.tableStatic,

@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
       borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,
       fontFamily: theme.font.bold,
-      height: 40,
       padding: '10px 15px',
       '&:first-of-type': {
         borderLeft: 'none',
@@ -26,9 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         ...theme.applyTableHeaderStyles,
       },
     },
-  },
-  tr: {
-    height: 44,
   },
   tableHead: {
     color: theme.cmrTextColors.tableHeader,
@@ -142,7 +138,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
 
   return (
     <TableHead className={classes.root}>
-      <TableRow className={classes.tr}>
+      <TableRow>
         {/* The column width jumps in the Linode Create flow when the user
             clicks on the table header. This is currently also happening in
             production and might be related to the difference in width between
