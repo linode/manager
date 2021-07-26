@@ -6,10 +6,15 @@ export default {
   title: 'Payment Method Row',
 };
 
+const onDelete = () => {
+  // ...
+};
+
 const render = (paymentMethodType: PaymentType, cardType: CardType) => {
   return (
     <>
       <PaymentMethodRow
+        onDelete={onDelete}
         paymentMethod={{
           type: paymentMethodType,
           id: 0,
@@ -23,6 +28,7 @@ const render = (paymentMethodType: PaymentType, cardType: CardType) => {
         }}
       />
       <PaymentMethodRow
+        onDelete={onDelete}
         paymentMethod={{
           type: paymentMethodType,
           id: 1,

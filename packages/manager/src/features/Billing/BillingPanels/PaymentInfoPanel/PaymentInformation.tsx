@@ -1,4 +1,4 @@
-import { PaymentMethod } from '@linode/api-v4';
+import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -18,6 +18,9 @@ import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
+import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -73,6 +76,13 @@ const PaymentInformation: React.FC<Props> = (props) => {
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
   const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
+    false
+  );
+  const [deleteError, setDeleteError] = React.useState<string | undefined>();
+  const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
+  const [deleteId, setDeleteId] = React.useState<number>(-1);
+
   const classes = useStyles();
   const flags = useFlags();
   const { replace } = useHistory();
@@ -90,6 +100,21 @@ const PaymentInformation: React.FC<Props> = (props) => {
       (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
     );
 
+  const doDelete = () => {
+    setDeleteLoading(true);
+    deletePaymentMethod(deleteId)
+      .then(() => {
+        setDeleteLoading(false);
+        queryClient.invalidateQueries(`${queryKey}-all`);
+      })
+      .catch((e) => {
+        setDeleteLoading(false);
+        setDeleteError(
+          getAPIErrorOrDefault(e, 'Error deleting domain.')[0].reason
+        );
+      });
+  };
+
   const openAddDrawer = React.useCallback(() => setAddDrawerOpen(true), []);
 
   const closeAddDrawer = React.useCallback(() => {
@@ -103,6 +128,15 @@ const PaymentInformation: React.FC<Props> = (props) => {
 
   const closeEditDrawer = () => {
     setEditDrawerOpen(false);
+  };
+
+  const openDeleteDialog = (id: number) => {
+    setDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setDeleteDialogOpen(false);
   };
 
   React.useEffect(() => {
@@ -158,6 +192,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
                   ? openEditDrawer
                   : undefined
               }
+              onDelete={() => openDeleteDialog(paymentMethod.id)}
             />
           ))
         )}
@@ -185,6 +220,14 @@ const PaymentInformation: React.FC<Props> = (props) => {
           open={addDrawerOpen}
           onClose={closeAddDrawer}
           paymentMethods={paymentMethods}
+        />
+        <DeletePaymentMethodDialog
+          open={deleteDialogOpen}
+          onClose={closeDeleteDialog}
+          onDelete={doDelete}
+          id={deleteId}
+          loading={deleteLoading}
+          error={deleteError}
         />
       </Paper>
     </Grid>
