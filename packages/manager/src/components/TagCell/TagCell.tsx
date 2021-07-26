@@ -6,7 +6,7 @@ import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
-import Tag from 'src/components/Tag/Tag_CMR';
+import Tag from 'src/components/Tag';
 import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -64,9 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: '#ffff',
     },
-  },
-  tagInput: {
-    overflow: 'visible !important',
   },
   addTagButton: {
     display: 'flex',

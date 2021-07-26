@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   graphWrap: {
     marginTop: theme.spacing(3),
   },
-  cmrSpacing: {
+  title: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
@@ -110,7 +110,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Typography variant="h2" className={classes.cmrSpacing}>
+      <Typography variant="h2" className={classes.title}>
         Process History{name && `: ${name}`}
       </Typography>
       <Paper className={classes.root}>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import Tag from 'src/components/Tag/Tag_CMR';
+import Tag from 'src/components/Tag';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddTag from './AddTag';
 
@@ -10,7 +10,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   addTag: {
     marginTop: theme.spacing(),
   },
-  tag: {},
 }));
 
 export type OpenTagDrawer = (id: number, label: string, tags: string[]) => void;
@@ -67,7 +66,6 @@ export const TagDrawer: React.FC<Props> = (props) => {
       {tagError && <Notice error text={tagError} />}
       {tags.map((thisTag) => (
         <Tag
-          className={classes.tag}
           key={`tag-item-${thisTag}`}
           colorVariant="lightBlue"
           label={thisTag}

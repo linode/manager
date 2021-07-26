@@ -7,6 +7,7 @@ import { ListLinodes } from './LinodesLanding';
 
 describe('ListLinodes', () => {
   const classes = {
+    root: '',
     title: '',
     tagGroup: '',
     CSVlinkContainer: '',
@@ -22,7 +23,6 @@ describe('ListLinodes', () => {
     controlHeader: '',
     toggleButton: '',
     clearFilters: '',
-    cmrSpacing: '',
   };
 
   it('renders without error', () => {

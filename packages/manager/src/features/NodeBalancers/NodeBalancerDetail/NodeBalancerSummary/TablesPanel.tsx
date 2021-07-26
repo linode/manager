@@ -28,25 +28,17 @@ import { initAll } from 'src/utilities/initAll';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
 type ClassNames =
+  | 'header'
   | 'chart'
   | 'bottomLegend'
   | 'graphControls'
-  | 'header'
   | 'title'
-  | 'panel'
-  | 'cmrSpacing';
+  | 'panel';
 
 const styles = (theme: Theme) =>
   createStyles({
     header: {
       padding: theme.spacing(2),
-    },
-    panel: {
-      padding: theme.spacing(2),
-      marginTop: theme.spacing(2),
-    },
-    title: {
-      marginBottom: theme.spacing(2),
     },
     chart: {
       position: 'relative',
@@ -70,10 +62,14 @@ const styles = (theme: Theme) =>
         margin: `${theme.spacing(2)}px 0`,
       },
     },
-    cmrSpacing: {
+    title: {
       [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
       },
+    },
+    panel: {
+      padding: theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
   });
 
@@ -319,7 +315,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.graphControls}>
-          <Typography className={classes.cmrSpacing} variant="h2">
+          <Typography className={classes.title} variant="h2">
             Graphs
           </Typography>
         </div>

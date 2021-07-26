@@ -60,11 +60,10 @@ import {
   transformConfigsForRequest,
 } from '../utils';
 
-type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses' | 'cmrSpacing';
+type ClassNames = 'title' | 'port' | 'nbStatuses' | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     title: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(2),
@@ -78,7 +77,7 @@ const styles = (theme: Theme) =>
         display: 'inline',
       },
     },
-    cmrSpacing: {
+    button: {
       [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
       },
@@ -1118,7 +1117,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           <Grid item style={{ marginTop: 16 }}>
             <Button
               buttonType="outlined"
-              className={classes.cmrSpacing}
+              className={classes.button}
               onClick={() => this.addNodeBalancerConfig()}
               data-qa-add-config
             >

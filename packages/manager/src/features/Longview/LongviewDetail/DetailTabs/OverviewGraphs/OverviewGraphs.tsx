@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginBottom: theme.spacing(1) + 2,
   },
-  cmrSpacing: {
+  spacing: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
@@ -74,11 +74,11 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
     <Grid item>
       <Grid item className={classes.headerOuter}>
         <Grid item>
-          <Typography variant="h2" className={classes.cmrSpacing}>
+          <Typography variant="h2" className={classes.spacing}>
             Resource Allocation History
           </Typography>
         </Grid>
-        <Grid item className={classes.cmrSpacing}>
+        <Grid item className={classes.spacing}>
           <TimeRangeSelect
             handleStatsChange={handleStatsChange}
             defaultValue={'Past 30 Minutes'}

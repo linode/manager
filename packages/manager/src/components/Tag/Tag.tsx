@@ -3,7 +3,6 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Button from 'src/components/core/Button';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import {
   createStyles,
@@ -11,6 +10,7 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
+import { truncateEnd } from 'src/utilities/truncate';
 
 type Variants =
   | 'white'
@@ -27,14 +27,63 @@ type CSSClasses = 'label' | 'root' | 'deleteButton' | Variants;
 
 const styles = (theme: Theme) =>
   createStyles({
-    label: {},
+    label: {
+      maxWidth: 350,
+    },
     root: {
-      '&:last-child': {
-        marginRight: 8,
+      height: 30,
+      paddingLeft: 0,
+      paddingRight: 0,
+      // Overrides MUI chip default styles so these appear as separate elements.
+      '&:hover': {
+        backgroundColor: theme.color.tagButton,
+        '& $deleteButton': {
+          color: theme.color.tagIcon,
+        },
+      },
+      '&:focus': {
+        backgroundColor: theme.color.tagButton,
+        '& $deleteButton': {
+          color: theme.color.tagIcon,
+        },
+      },
+      // Targets first span (tag label)
+      '& > span': {
+        padding: '7px 10px',
+        fontSize: 14,
+        color: theme.color.tagText,
+        borderRadius: 3,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+        borderRight: `1px solid ${theme.color.tagBorder}`,
       },
     },
     deleteButton: {
-      minWidth: 'auto',
+      ...theme.applyLinkStyles,
+      borderRadius: 0,
+      borderTopRightRadius: 3,
+      borderBottomRightRadius: 3,
+      height: 30,
+      minWidth: 30,
+      margin: 0,
+      padding: theme.spacing(),
+      '& svg': {
+        borderRadius: 0,
+        width: 15,
+        height: 15,
+        color: theme.color.tagIcon,
+      },
+      '&:hover': {
+        backgroundColor: `${theme.palette.primary.main} !important`,
+        color: 'white !important',
+        '& svg': {
+          color: 'white',
+        },
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue,
+        color: theme.color.black,
+      },
     },
     white: {
       backgroundColor: theme.color.white,
@@ -64,14 +113,16 @@ const styles = (theme: Theme) =>
       },
     },
     lightBlue: {
-      backgroundColor: theme.bg.lightBlue,
-      '&:hover': {
-        backgroundColor: theme.palette.primary.main,
-        color: 'white',
-      },
-      '&:focus': {
-        backgroundColor: theme.bg.lightBlue,
-        color: theme.color.black,
+      backgroundColor: theme.color.tagButton,
+      '& > span': {
+        '&:hover': {
+          backgroundColor: theme.palette.primary.main,
+          color: 'white',
+        },
+        '&:focus': {
+          backgroundColor: theme.color.tagButton,
+          color: theme.color.black,
+        },
       },
     },
     green: {
@@ -107,6 +158,7 @@ export interface Props extends ChipProps {
   asSuggestion?: boolean;
   closeMenu?: any;
   component?: string;
+  maxLength?: number;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
@@ -131,18 +183,22 @@ class Tag extends React.Component<CombinedProps, {}> {
       colorVariant,
       classes,
       className,
-      history,
-      location,
+      label,
+      maxLength,
+      // Defining `staticContext` here to prevent `...rest` from containing it
+      // since it leads to a console warning
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       staticContext,
-      match, // Don't pass route props to the Chip component
-      asSuggestion,
-      closeMenu,
       ...chipProps
     } = this.props;
+
+    // If maxWidth is set, truncate display to that length.
+    const _label = maxLength ? truncateEnd(label, maxLength) : label;
 
     return (
       <Chip
         {...chipProps}
+        label={_label}
         className={classNames({
           ...(className && { [className]: true }),
           [classes[colorVariant!]]: true,
@@ -150,13 +206,14 @@ class Tag extends React.Component<CombinedProps, {}> {
         })}
         deleteIcon={
           chipProps.onDelete ? (
-            <Button
+            <button
               data-qa-delete-tag
               className={classes.deleteButton}
+              title="Delete tag"
               aria-label={`Delete Tag "${this.props.label}"`}
             >
               <Close />
-            </Button>
+            </button>
           ) : undefined
         }
         classes={{ label: classes.label, deletable: classes[colorVariant!] }}

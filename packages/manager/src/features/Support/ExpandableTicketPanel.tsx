@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     position: 'relative',
     top: -2,
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+    },
     [theme.breakpoints.up('sm')]: {
       marginRight: theme.spacing(1),
       width: 40,
@@ -77,12 +80,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   expert: {
     marginRight: 4,
     whiteSpace: 'nowrap',
-  },
-  isCurrentUser: {},
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
   },
 }));
 
@@ -156,11 +153,11 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
 
   const renderAvatar = (url: string) => {
     return url !== 'not found' ? (
-      <div className={`${classes.userWrapper} ${classes.cmrSpacing}`}>
+      <div className={classes.userWrapper}>
         <img src={url} className={classes.leftIcon} alt="Gravatar" />
       </div>
     ) : (
-      <div className={`${classes.userWrapper} ${classes.cmrSpacing}`}>
+      <div className={classes.userWrapper}>
         <UserIcon className={classes.leftIcon} />
       </div>
     );
