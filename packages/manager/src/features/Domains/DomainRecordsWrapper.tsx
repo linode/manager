@@ -6,7 +6,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanelRedesigned from 'src/components/TagsPanel/TagsPanelRedesigned';
+import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
   StyleProps,
 } from 'src/containers/SummaryPanels.styles';
@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     marginLeft: 0,
     marginRight: 0,
+    marginBottom: theme.spacing(3),
   },
   main: {
     '&.MuiGrid-item': {
@@ -37,12 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0,
     },
   },
-  cmrSpacing: {
+  delete: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
-  tagPanel: {},
 }));
 
 interface Props {
@@ -78,15 +78,13 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <div className={hookClasses.tagPanel}>
-            <TagsPanelRedesigned
-              align="left"
-              tags={domain.tags}
-              updateTags={handleUpdateTags}
-            />
-          </div>
+          <TagsPanel
+            align="left"
+            tags={domain.tags}
+            updateTags={handleUpdateTags}
+          />
         </Paper>
-        <div className={`${hookClasses.tagPanel} ${hookClasses.cmrSpacing}`}>
+        <div className={hookClasses.delete}>
           <DeleteDomain
             domainId={domain.id}
             domainLabel={domain.domain}
