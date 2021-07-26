@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { extDisk, swapDisk } from 'src/__data__/disks';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { extendedTypes } from 'src/__data__/ExtendedType';
 import { mockMatchMedia } from 'src/utilities/testHelpers';
+import { extDisk, swapDisk } from 'src/__data__/disks';
+import { extendedTypes } from 'src/__data__/ExtendedType';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
   isSmallerThanCurrentPlan,
   LinodeResize,
@@ -18,28 +18,26 @@ describe('LinodeResize', () => {
   const component = shallow(
     <LinodeResize
       closeSnackbar={jest.fn()}
-      linodeDisks={[]}
       enqueueSnackbar={jest.fn()}
       {...reactRouterProps}
       classes={{
         root: '',
         title: '',
         subTitle: '',
+        toolTip: '',
         currentPlanContainer: '',
         resizeTitle: '',
-        toolTip: '',
-        checkbox: '',
         currentHeaderEmptyCell: '',
-        actions: '',
-        errorLink: '',
+        selectPlanPanel: '',
       }}
       linodeId={12}
-      permissions={{} as any}
+      linodeLabel=""
+      open={false}
+      onClose={jest.fn()}
+      getLinodeDisks={jest.fn()}
       updateLinode={jest.fn()}
-      linodeType={null}
       typesData={extendedTypes}
       typesLoading={false}
-      linodeLabel=""
     />
   );
 

@@ -6,6 +6,7 @@ import {
 } from 'src/components/core/styles';
 
 type ClassNames =
+  | 'root'
   | 'title'
   | 'tagGroup'
   | 'CSVlinkContainer'
@@ -18,11 +19,18 @@ type ClassNames =
   | 'chipRunning'
   | 'chipPending'
   | 'chipOffline'
-  | 'clearFilters'
-  | 'cmrSpacing';
+  | 'clearFilters';
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {
+      margin: 0,
+      width: '100%',
+      '& > .MuiGrid-item': {
+        paddingLeft: 0,
+        paddingRight: 0,
+      },
+    },
     title: {
       flex: 1,
     },
@@ -93,14 +101,6 @@ const styles = (theme: Theme) =>
         '& svg': {
           color: `${theme.palette.primary.main} !important`,
         },
-      },
-    },
-    cmrSpacing: {
-      margin: 0,
-      width: '100%',
-      '& > .MuiGrid-item': {
-        paddingLeft: 0,
-        paddingRight: 0,
       },
     },
   });

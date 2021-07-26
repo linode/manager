@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: 250,
   },
-  cmrSpacing: {
+  title: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
@@ -114,7 +114,7 @@ export const NGINX: React.FC<Props> = (props) => {
           alignItems="center"
         >
           <div>
-            <Typography className={classes.cmrSpacing} variant="h2">
+            <Typography className={classes.title} variant="h2">
               NGINX
             </Typography>
             {version && <Typography variant="body1">{version}</Typography>}
