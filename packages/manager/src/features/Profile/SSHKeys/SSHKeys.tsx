@@ -133,7 +133,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid className={classes.addNewWrapper} item>
             <AddNewLink
-              label="Add a SSH Key"
+              label="Add an SSH Key"
               onClick={this.openCreationDrawer}
             />
           </Grid>

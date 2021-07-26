@@ -1,9 +1,9 @@
+import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import RescueDescription from './RescueDescription';
@@ -50,7 +50,7 @@ export const BareMetalRescue: React.FC<Props> = (props) => {
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
         Cancel
       </Button>
       <Button buttonType="primary" onClick={handleSubmit} loading={loading}>

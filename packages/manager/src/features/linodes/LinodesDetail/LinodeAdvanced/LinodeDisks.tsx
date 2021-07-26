@@ -333,14 +333,13 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const { submitting } = this.state.confirmDelete;
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button buttonType="cancel" onClick={onClose} data-qa-cancel-delete>
+        <Button buttonType="secondary" onClick={onClose} data-qa-cancel-delete>
           Cancel
         </Button>
         <Button
           buttonType="primary"
-          destructive
-          loading={submitting}
           onClick={this.deleteDisk}
+          loading={submitting}
           data-qa-confirm-delete
         >
           Delete

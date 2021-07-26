@@ -145,7 +145,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
           <Button
             buttonType="secondary"
             onClick={() => setDeviceDrawerOpen(true)}
-            superCompact
+            compact
           >
             Add Linodes to Firewall
           </Button>
