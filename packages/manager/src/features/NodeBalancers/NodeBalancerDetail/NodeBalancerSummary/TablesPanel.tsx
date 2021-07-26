@@ -21,9 +21,6 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
 import { ApplicationState } from 'src/store';
@@ -34,14 +31,9 @@ type ClassNames =
   | 'chart'
   | 'bottomLegend'
   | 'graphControls'
-  | 'blue'
-  | 'green'
-  | 'red'
-  | 'yellow'
   | 'header'
   | 'title'
   | 'panel'
-  | 'graphWrapper'
   | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
@@ -51,9 +43,6 @@ const styles = (theme: Theme) =>
     },
     panel: {
       padding: theme.spacing(2),
-      marginTop: theme.spacing(2),
-    },
-    graphWrapper: {
       marginTop: theme.spacing(2),
     },
     title: {
@@ -81,26 +70,6 @@ const styles = (theme: Theme) =>
         margin: `${theme.spacing(2)}px 0`,
       },
     },
-    blue: {
-      '&:before': {
-        backgroundColor: theme.palette.primary.main,
-      },
-    },
-    green: {
-      '&:before': {
-        backgroundColor: theme.color.green,
-      },
-    },
-    red: {
-      '&:before': {
-        backgroundColor: theme.color.red,
-      },
-    },
-    yellow: {
-      '&:before': {
-        backgroundColor: theme.color.yellow,
-      },
-    },
     cmrSpacing: {
       [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
@@ -119,11 +88,7 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = Props &
-  WithTheme &
-  StateProps &
-  WithStyles<ClassNames> &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & WithTheme & StateProps & WithStyles<ClassNames>;
 
 const statsFetchInterval = 30000;
 
@@ -349,15 +314,12 @@ class TablesPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, flags } = this.props;
+    const { classes } = this.props;
     const { statsError, loadingStats } = this.state;
     return (
       <React.Fragment>
         <div className={classes.graphControls}>
-          <Typography
-            className={flags.cmr ? classes.cmrSpacing : ''}
-            variant="h2"
-          >
+          <Typography className={classes.cmrSpacing} variant="h2">
             Graphs
           </Typography>
         </div>
@@ -386,11 +348,6 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  withTimezone,
-  styled,
-  withFeatureFlags
-);
+const enhanced = compose<CombinedProps, Props>(withTheme, withTimezone, styled);
 
 export default enhanced(TablesPanel);

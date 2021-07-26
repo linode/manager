@@ -293,18 +293,17 @@ export class NodeBalancersLanding extends React.Component<
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.closeConfirmationDialog}
           data-qa-cancel-cancel
         >
           Cancel
         </Button>
         <Button
-          data-qa-confirm-cancel
-          onClick={this.onSubmitDelete}
           buttonType="primary"
-          destructive
+          onClick={this.onSubmitDelete}
           loading={this.state.deleteConfirmDialog.submitting}
+          data-qa-confirm-cancel
         >
           Delete NodeBalancer
         </Button>

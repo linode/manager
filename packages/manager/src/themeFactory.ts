@@ -92,6 +92,7 @@ const cmrBGColors = {
   bgBillingSummary: '#f5f9ff',
   bgAccessRow: '#fafafa',
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
+  bgGooglePay: '#000',
   bgTableRow: '#fbfbfb',
   bgReferralsImage: '#EDEDF4',
 };
@@ -103,6 +104,7 @@ const cmrTextColors = {
   tableStatic: '#606469',
   textAccessTable: '#606469',
   secondaryButton: '#2575d0',
+  textGooglePay: '#fff',
 };
 
 const cmrBorderColors = {
@@ -516,49 +518,22 @@ const themeDefaults: ThemeDefaults = () => {
         },
       },
       MuiButton: {
-        label: {
-          position: 'relative',
-        },
         root: {
-          textTransform: 'inherit',
-          fontSize: '1rem',
-          lineHeight: 1,
-          fontFamily: primaryFonts.bold,
-          // backgroundColor: primaryColors.main,
-          // color: '#fff',
-          // padding: `2px 20px`,
-          // maxHeight: 34,
-          // position: 'relative',
-          // minHeight: `34px`,
-          cursor: 'pointer',
           border: 'none',
-          [breakpoints.down('sm')]: {
-            marginLeft: 8,
-            maxHeight: 34,
-            minWidth: 100,
-          },
-          '&:hover': {
-            backgroundColor: primaryColors.light,
-            color: '#fff',
-          },
-          '&[aria-expanded="true"]': {
-            backgroundColor: primaryColors.light,
-          },
-          '&$disabled': {
-            color: '#bbb',
-          },
-          '&.loading': {
-            color: primaryColors.text,
-          },
+          cursor: 'pointer',
+          fontFamily: primaryFonts.bold,
+          fontSize: '1rem',
+          minHeight: 34,
+          minWidth: 105,
+          lineHeight: 1,
+          textTransform: 'inherit',
+          transition: 'none',
         },
         containedPrimary: {
           backgroundColor: primaryColors.main,
           borderRadius: 1,
           color: '#fff',
-          padding: `2px 20px`,
-          maxHeight: 34,
-          position: 'relative',
-          minHeight: 34,
+          padding: '2px 20px',
           '&:hover, &:focus': {
             backgroundColor: '#226dc3',
           },
@@ -570,11 +545,6 @@ const themeDefaults: ThemeDefaults = () => {
           },
           '&.loading': {
             backgroundColor: primaryColors.text,
-          },
-          '&.cancel': {
-            '&:hover, &:focus': {
-              borderColor: '#222',
-            },
           },
         },
         containedSecondary: {
@@ -594,38 +564,20 @@ const themeDefaults: ThemeDefaults = () => {
             borderColor: '#c9cacb',
             color: '#c9cacb',
           },
-          // '&.cancel': {
-          //   borderColor: 'transparent',
-          //   '&:hover, &:focus': {
-          //     borderColor: primaryColors.light,
-          //     backgroundColor: 'transparent'
-          //   }
-          // },
-          // '&.destructive': {
-          //   backgroundColor: primaryColors.main,
-          //   color: '#fff',
-          //   '&:hover, &:focus': {
-          //     color: '#fff',
-          //     backgroundColor: primaryColors.light
-          //   },
-          //   '&:active': {
-          //     color: '#963530',
-          //     borderColor: '#963530'
-          //   },
-          //   '&$disabled': {
-          //     borderColor: '#c9cacb',
-          //     backgroundColor: 'transparent',
-          //     color: '#c9cacb'
-          //   }
-          // },
           '&.loading': {
-            borderColor: primaryColors.text,
             color: primaryColors.text,
-            minWidth: 100,
-            '& svg': {
-              width: 22,
-              height: 22,
-            },
+          },
+        },
+        outlined: {
+          backgroundColor: 'transparent',
+          border: `1px solid ${primaryColors.main}`,
+          borderRadius: 1,
+          color: cmrTextColors.linkActiveLight,
+          minHeight: 34,
+          '&:hover, &:focus': {
+            backgroundColor: `${cmrBGColors.bgSecondaryButton} !important`,
+            border: `1px solid ${cmrBorderColors.borderSecondaryButton}`,
+            color: cmrTextColors.secondaryButton,
           },
         },
       },
@@ -764,69 +716,64 @@ const themeDefaults: ThemeDefaults = () => {
       },
       MuiAccordion: {
         root: {
+          flexBasis: '100%',
+          width: '100%',
           '& .actionPanel': {
+            paddingBottom: 12,
             paddingLeft: 16,
-            paddingRight: 16,
           },
-          '& table': {
-            border: `1px solid ${primaryColors.divider}`,
-            borderBottom: 0,
-          },
-        },
-      },
-      MuiAccordionDetails: {
-        root: {
-          padding: 16,
-          backgroundColor: 'white',
         },
       },
       MuiAccordionSummary: {
         root: {
-          justifyContent: 'flex-start',
-          backgroundColor: '#fbfbfb',
-          minHeight: 48,
-          padding: '0 18px',
-          '& h3': {
-            transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-          },
+          justifyContent: 'space-between',
+          backgroundColor: 'transparent',
+          paddingRight: 2,
+          paddingLeft: 16,
           '&:hover': {
             '& h3': {
               color: primaryColors.light,
             },
-          },
-          '&:focus': {
-            outline: '1px dotted #999',
-            zIndex: 2,
+            '& svg': {
+              fill: '#2575d0',
+              stroke: '#2575d0',
+            },
           },
           '&$expanded': {
-            minHeight: 48,
             margin: 0,
+            minHeight: 48,
+            '& .caret': {
+              transform: 'rotate(0deg)',
+            },
           },
-          '&$focused': {
-            backgroundColor: '#fbfbfb',
+          '& h3': {
+            transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           },
         },
         content: {
-          flexGrow: 0,
-          order: 2,
-          margin: '12px 0',
           '&$expanded': {
             margin: '12px 0',
           },
         },
         expandIcon: {
-          display: 'flex',
-          marginLeft: -16,
+          '&$expanded': {
+            transform: 'rotate(180deg)',
+          },
           '& svg': {
-            fill: cmrTextColors.tableHeader,
+            fill: '#2575d0',
+            stroke: '#2575d0',
             height: 22,
             width: 22,
             transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
             ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
           },
-          '&$expanded': {
-            transform: 'rotate(180deg)',
-          },
+        },
+      },
+      MuiAccordionDetails: {
+        root: {
+          backgroundColor: 'transparent',
+          padding: 16,
+          paddingTop: 0,
         },
       },
       MuiFormControl: {
@@ -861,7 +808,7 @@ const themeDefaults: ThemeDefaults = () => {
         root: {
           color: '#555',
           fontFamily: primaryFonts.bold,
-          fontSize: '.9rem',
+          fontSize: '.875rem',
           marginBottom: 8,
           '&$focused': {
             color: '#555',
@@ -1331,10 +1278,8 @@ const themeDefaults: ThemeDefaults = () => {
         },
         head: {
           fontSize: '.9rem',
+          height: 46,
           lineHeight: 1.1,
-          '&.emptyCell': {
-            height: 48,
-          },
         },
         body: {
           fontSize: '.9rem',
@@ -1390,7 +1335,7 @@ const themeDefaults: ThemeDefaults = () => {
           backfaceVisibility: 'hidden',
           position: 'relative',
           zIndex: 1,
-          height: 41,
+          height: 40,
           '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
