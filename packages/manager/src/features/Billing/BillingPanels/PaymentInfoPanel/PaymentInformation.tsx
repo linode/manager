@@ -2,7 +2,7 @@ import { PaymentMethod } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import GooglePay from 'src/assets/icons/providers/google-logo.svg';
+import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
     padding: `8px 0px`,
   },
-  googlePayNotice: {
-    marginLeft: theme.spacing(),
+  googlePayIcon: {
+    marginLeft: -6,
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -174,8 +174,8 @@ const PaymentInformation: React.FC<Props> = (props) => {
             preferenceKey="google-pay-available-notification"
           >
             <Box display="flex" alignItems="center">
-              <GooglePay width={16} height={16} />
-              <Typography className={classes.googlePayNotice}>
+              <GooglePayIcon className={classes.googlePayIcon} />
+              <Typography>
                 Google Pay is now available for recurring payments.{' '}
                 <Link to="#" onClick={() => replace(drawerLink)}>
                   Add Google Pay
