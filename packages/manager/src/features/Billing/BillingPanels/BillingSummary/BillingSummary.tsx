@@ -190,8 +190,9 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     balance > 0 ? (
       <div className={classes.balanceBlurbAndButton}>
         <Typography className={classes.blurb}>
-          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
-          {pastDueBalance ? `${' '}to avoid service disruption.` : null}
+          {pastDueBalance
+            ? 'Make a payment immediately to avoid service disruption.'
+            : null}
         </Typography>
         {makePaymentButton}
       </div>
