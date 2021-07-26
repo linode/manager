@@ -29,6 +29,7 @@ describe('APITokens', () => {
           addNewLink: '',
           labelCell: '',
           actionMenu: '',
+          noticeText: '',
         }}
         title="Personal Access Tokens"
         type="Personal Access Token"

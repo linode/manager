@@ -4,8 +4,11 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import CopyableTextField from 'src/components/CopyableTextField';
+import Box from 'src/components/core/Box';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Dialog from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 
 interface Props {
@@ -27,9 +30,12 @@ const useStyles = makeStyles(() => ({
   key: {
     wordBreak: 'break-word',
   },
-  dialog: {
-    '& > div > div': {
-      maxWidth: 800,
+  noticeText: {
+    '& .noticeText': {
+      color: 'inherit',
+      lineHeight: 'inherit',
+      fontFamily: 'inherit',
+      fontSize: '0.875rem',
     },
   },
 }));
@@ -41,26 +47,29 @@ const Modals: React.FC<CombinedProps> = (props) => {
   const { modalErrors, label, resetClient, isResetting, closeDialogs } = props;
 
   return (
-    <React.Fragment>
-      <ConfirmationDialog
+    <>
+      <Dialog
         title="Client Secret"
-        actions={clientSecretActions({
-          closeDialogs,
-        })}
         open={props.secretSuccessOpen}
         onClose={props.closeDialogs}
-        className={classes.dialog}
+        disableBackdropClick
+        disableEscapeKeyDown
+        maxWidth="sm"
       >
-        <Typography>
-          {`Here is your client secret! Store it securely, as it won't be shown again.`}
-        </Typography>
         <Notice
+          spacingTop={16}
           warning
-          text={props.secret}
-          spacingTop={24}
-          className={classes.key}
+          className={classes.noticeText}
+          text={`For security purposes, we can only display your client secret once, after which it can't be recovered. Be sure to keep it in a safe place.`}
         />
-      </ConfirmationDialog>
+        <Box marginBottom="16px">
+          <CopyableTextField
+            expand
+            label="Client Secret"
+            value={props.secret || ''}
+          />
+        </Box>
+      </Dialog>
 
       <ConfirmationDialog
         error={modalErrors ? modalErrors[0].reason : undefined}
@@ -93,7 +102,7 @@ const Modals: React.FC<CombinedProps> = (props) => {
           Are you sure you want to permanently reset the secret for this app?
         </Typography>
       </ConfirmationDialog>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -162,13 +171,3 @@ const deleteDialogActions = ({
     </ActionsPanel>
   );
 };
-
-const clientSecretActions = (props: { closeDialogs: () => void }) => (
-  <Button
-    buttonType="primary"
-    onClick={props.closeDialogs}
-    data-qa-close-dialog
-  >
-    Got it!
-  </Button>
-);

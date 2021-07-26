@@ -1,29 +1,10 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { compose } from 'recompose';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { makeStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'helperText' | 'confirmationDialog';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    helperText: {
-      marginBottom: theme.spacing(3),
-    },
-    confirmationDialog: {
-      paddingBottom: 0,
-      marginBottom: 0,
-    },
-  });
+import Dialog from 'src/components/Dialog';
+import CopyableTextField from 'src/components/CopyableTextField';
+import Box from 'src/components/core/Box';
 
 interface Props {
   objectStorageKey: ObjectStorageKey | null;
@@ -31,10 +12,22 @@ interface Props {
   close: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+const useStyles = makeStyles(() => ({
+  noticeText: {
+    '& .noticeText': {
+      color: 'inherit',
+      lineHeight: 'inherit',
+      fontFamily: 'inherit',
+      fontSize: '0.875rem',
+    },
+  },
+}));
+
+type CombinedProps = Props;
 
 export const AccessKeyDisplayDialog: React.FC<CombinedProps> = (props) => {
-  const { classes, objectStorageKey, isOpen, close } = props;
+  const classes = useStyles();
+  const { objectStorageKey, isOpen, close } = props;
 
   // This should never happen, but just in case.
   if (!objectStorageKey) {
@@ -42,50 +35,36 @@ export const AccessKeyDisplayDialog: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <ConfirmationDialog
+    <Dialog
       title="Access Keys"
-      actions={
-        <Button buttonType="secondary" onClick={close} data-qa-close-dialog>
-          OK
-        </Button>
-      }
       open={isOpen}
       onClose={close}
-      className={classes.confirmationDialog}
+      disableBackdropClick
+      disableEscapeKeyDown
+      maxWidth="sm"
     >
-      <Typography variant="body1" className={classes.helperText}>
-        Your keys have been generated. For security purposes, we can only
-        display your Secret Key once, after which it can’t be recovered.{' '}
-        <strong>Be sure to keep it in a safe place.</strong>
-      </Typography>
-
-      <Typography>
-        <b>Access Key:</b>
-      </Typography>
       <Notice
         spacingTop={16}
-        typeProps={{ variant: 'body1' }}
         warning
-        text={objectStorageKey.access_key}
-        breakWords
+        className={classes.noticeText}
+        text={`For security purposes, we can only display your Secret Key once, after which it can't be recovered. Be sure to keep it in a safe place.`}
       />
-
-      <Typography>
-        <b>Secret Key:</b>
-      </Typography>
-      <Notice
-        spacingTop={16}
-        typeProps={{ variant: 'body1' }}
-        warning
-        text={objectStorageKey.secret_key}
-        breakWords
-      />
-    </ConfirmationDialog>
+      <Box marginBottom="16px">
+        <CopyableTextField
+          expand
+          label="Access Key"
+          value={objectStorageKey.access_key || ''}
+        />
+      </Box>
+      <Box marginBottom="16px">
+        <CopyableTextField
+          expand
+          label="Secret Key"
+          value={objectStorageKey.secret_key || ''}
+        />
+      </Box>
+    </Dialog>
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(styled);
-
-export default enhanced(AccessKeyDisplayDialog);
+export default AccessKeyDisplayDialog;

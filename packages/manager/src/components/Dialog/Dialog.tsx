@@ -8,12 +8,14 @@ import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { convertForAria } from 'src/components/TabLink/TabLink';
+import Notice from 'src/components/Notice';
 
 export interface DialogProps extends _DialogProps {
   className?: string;
   title: string;
   fullHeight?: boolean;
   titleBottomBorder?: boolean;
+  error?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -81,6 +83,10 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: '-2em 8px 0px 8px',
       border: 'none',
     },
+    error: {
+      color: theme.color.red,
+      marginTop: theme.spacing(2),
+    },
   })
 );
 
@@ -91,6 +97,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
     fullHeight,
     titleBottomBorder,
     children,
+    error,
     ...rest
   } = props;
 
@@ -140,6 +147,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
         <Grid container>
           <div className={className ? className : classes.dialogContent}>
+            {error && <Notice text={error} error />}
             {children}
           </div>
         </Grid>
