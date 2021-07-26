@@ -108,6 +108,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
     deletePaymentMethod(deletePaymentMethodSelection!.id)
       .then(() => {
         setDeleteLoading(false);
+        closeDeleteDialog();
         queryClient.invalidateQueries(`${queryKey}-all`);
       })
       .catch((e) => {
