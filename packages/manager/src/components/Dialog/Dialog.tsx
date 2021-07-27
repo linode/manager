@@ -1,5 +1,5 @@
-import Close from '@material-ui/icons/Close';
 import * as React from 'react';
+import Close from '@material-ui/icons/Close';
 import Button from 'src/components/Button';
 import MUIDialog, {
   DialogProps as _DialogProps,

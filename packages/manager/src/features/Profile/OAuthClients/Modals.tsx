@@ -1,15 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
+import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import CopyableTextField from 'src/components/CopyableTextField';
-import Box from 'src/components/core/Box';
-import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
-import Notice from 'src/components/Notice';
 
 interface Props {
   secretID?: string;
@@ -26,50 +22,19 @@ interface Props {
   isDeleting: boolean;
 }
 
-const useStyles = makeStyles(() => ({
-  key: {
-    wordBreak: 'break-word',
-  },
-  noticeText: {
-    '& .noticeText': {
-      color: 'inherit',
-      lineHeight: 'inherit',
-      fontFamily: 'inherit',
-      fontSize: '0.875rem',
-    },
-  },
-}));
-
 type CombinedProps = Props;
 
 const Modals: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
   const { modalErrors, label, resetClient, isResetting, closeDialogs } = props;
 
   return (
     <>
-      <Dialog
+      <SecretTokenDialog
         title="Client Secret"
         open={props.secretSuccessOpen}
         onClose={props.closeDialogs}
-        disableBackdropClick
-        disableEscapeKeyDown
-        maxWidth="sm"
-      >
-        <Notice
-          spacingTop={16}
-          warning
-          className={classes.noticeText}
-          text={`For security purposes, we can only display your client secret once, after which it can't be recovered. Be sure to keep it in a safe place.`}
-        />
-        <Box marginBottom="16px">
-          <CopyableTextField
-            expand
-            label="Client Secret"
-            value={props.secret || ''}
-          />
-        </Box>
-      </Dialog>
+        value={props.secret}
+      />
 
       <ConfirmationDialog
         error={modalErrors ? modalErrors[0].reason : undefined}

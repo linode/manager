@@ -7,10 +7,12 @@ import {
   Token,
   updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
+import { Account } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { compose } from 'recompose';
+import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -25,9 +27,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Dialog from 'src/components/Dialog';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -41,12 +41,9 @@ import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Account } from '@linode/api-v4/lib';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 import { basePermNameMap, basePerms } from './utils';
-import CopyableTextField from 'src/components/CopyableTextField';
-import Box from 'src/components/core/Box';
 
 type ClassNames =
   | 'root'
@@ -661,31 +658,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Typography>
         </ConfirmationDialog>
 
-        <Dialog
+        <SecretTokenDialog
           title="Personal Access Token"
-          error={(this.state.dialog.errors || [])
-            .map((e) => e.reason)
-            .join(',')}
           open={Boolean(this.state.token && this.state.token.open)}
           onClose={this.closeTokenDialog}
-          disableBackdropClick
-          disableEscapeKeyDown
-          maxWidth="sm"
-        >
-          <Notice
-            spacingTop={16}
-            warning
-            className={classes.noticeText}
-            text={`For security purposes, we can only display your personal access token once, after which it can't be recovered. Be sure to keep it in a safe place.`}
-          />
-          <Box marginBottom="16px">
-            <CopyableTextField
-              expand
-              label="Personal Access Token"
-              value={this.state.token?.value || ''}
-            />
-          </Box>
-        </Dialog>
+          value={this.state.token?.value}
+        />
       </React.Fragment>
     );
   }
