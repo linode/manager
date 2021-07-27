@@ -72,6 +72,7 @@ export const baseApps = {
   '741207': 'Yacht',
   '741208': 'Zabbix',
   '774829': 'ServerWand',
+  '781317': 'Valheim',
   '804143': 'Peppermint',
   '804144': 'Ant Media Server',
   '804172': 'Owncast',
