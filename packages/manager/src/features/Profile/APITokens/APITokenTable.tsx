@@ -52,8 +52,7 @@ type ClassNames =
   | 'addNewWrapper'
   | 'addNewLink'
   | 'labelCell'
-  | 'actionMenu'
-  | 'noticeText';
+  | 'actionMenu';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -82,14 +81,6 @@ const styles = (theme: Theme) =>
     actionMenu: {
       display: 'flex',
       justifyContent: 'flex-end',
-    },
-    noticeText: {
-      '& .noticeText': {
-        color: 'inherit',
-        lineHeight: 'inherit',
-        fontFamily: 'inherit',
-        fontSize: '0.875rem',
-      },
     },
   });
 

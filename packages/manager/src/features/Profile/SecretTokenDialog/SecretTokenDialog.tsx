@@ -41,11 +41,11 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
       maxWidth="sm"
     >
       <Notice
-        spacingTop={16}
+        spacingTop={8}
         warning
         className={classes.noticeText}
         text={`For security purposes, we can only display your ${
-          objectStorageKey ? 'Secret Key' : title
+          objectStorageKey ? 'secret key' : title.toLowerCase()
         } once, after which it can't be recovered. Be sure to keep it in a safe place.`}
       />
       {objectStorageKey ? (
