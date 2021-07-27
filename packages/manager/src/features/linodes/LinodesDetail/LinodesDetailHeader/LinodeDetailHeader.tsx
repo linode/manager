@@ -1,9 +1,8 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -22,12 +21,7 @@ import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
-import {
-  LinodeOptions,
-  openForAttaching,
-  openForCreating,
-  Origin as VolumeDrawerOrigin,
-} from 'src/store/volumeForm';
+import { openForAttaching, openForCreating } from 'src/store/volumeForm';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
@@ -75,26 +69,12 @@ interface DialogProps {
   linodeID: number;
 }
 
-interface DispatchProps {
-  openForCreating: (
-    origin: VolumeDrawerOrigin,
-    linodeOptions?: LinodeOptions
-  ) => void;
-  openForAttaching: (
-    linodeId: number,
-    linodeRegion: string,
-    linodeLabel: string
-  ) => void;
-}
-
-type CombinedProps = Props &
-  LinodeDetailContext &
-  LinodeContext &
-  DispatchProps;
+type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
+  const dispatch = useDispatch();
 
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
@@ -112,14 +92,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const notificationContext = React.useContext(_notificationContext);
 
-  const {
-    linode,
-    linodeStatus,
-    linodeDisks,
-    linodeConfigs,
-    openForCreating,
-    openForAttaching,
-  } = props;
+  const { linode, linodeStatus, linodeDisks, linodeConfigs } = props;
 
   const [powerDialog, setPowerDialog] = React.useState<PowerDialogProps>({
     open: false,
@@ -297,6 +270,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   const getVolumesByLinode = (linodeId: number) =>
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
+  const numAttachedVolumes = getVolumesByLinode(linode.id);
+
   const handleDeleteLinode = (linodeId: number) => {
     history.push('/linodes');
     return deleteLinode(linodeId);
@@ -307,31 +282,33 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   const showVolumesBanner =
     flags.blockStorageAvailability &&
     linode.region === region &&
-    getVolumesByLinode(linode.id) === 0;
+    numAttachedVolumes === 0;
 
   // Check to make sure:
   //    1. there are no Volumes currently attached
   //    2. the Volume is unattached
   //    3. the Volume is in the right region
-  const allVolumes = Object.values(volumes.itemsById).filter(
+  const allUnattachedAtlantaVolumes = Object.values(volumes.itemsById).filter(
     (thisVolume) =>
-      getVolumesByLinode(linode.id) === 0 &&
-      thisVolume.linode_id === null &&
-      thisVolume.region === region
+      thisVolume.linode_id === null && thisVolume.region === region
   );
 
-  const isCreateMode = allVolumes.length === 0 ? true : false;
+  const isCreateMode =
+    numAttachedVolumes === 0 && allUnattachedAtlantaVolumes.length === 0;
+
   const volumesBannerAction = isCreateMode ? 'Create' : 'Attach';
 
   const openCreateVolumeDrawer = (e: any) => {
     e.preventDefault();
 
     if (linode.id && linode.label && linode.region) {
-      return openForCreating('Created from Linode Details', {
-        linodeId: linode.id,
-        linodeLabel: linode.label,
-        linodeRegion: linode.region,
-      });
+      dispatch(
+        openForCreating('Created from Linode Details', {
+          linodeId: linode.id,
+          linodeLabel: linode.label,
+          linodeRegion: linode.region,
+        })
+      );
     }
   };
 
@@ -339,7 +316,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     e.preventDefault();
 
     if (linode.id && linode.label && linode.region) {
-      return openForAttaching(linode.id, linode.region, linode.label);
+      dispatch(openForAttaching(linode.id, linode.region, linode.label));
     }
   };
 
@@ -376,7 +353,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         variant="details"
         id={linode.id}
         linode={linode}
-        numVolumes={getVolumesByLinode(linode.id)}
+        numVolumes={numAttachedVolumes}
         username={profile.data?.username}
         linodeConfigs={linodeConfigs}
         backups={linode.backups}
@@ -437,24 +414,12 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      openForCreating,
-      openForAttaching,
-    },
-    dispatch
-  );
-
 interface LinodeContext {
   linodeStatus: LinodeStatus;
   linodeDisks: Disk[];
 }
 
-const connected = connect(undefined, mapDispatchToProps);
-
 export default compose<CombinedProps, {}>(
-  connected,
   withLinodeDetailContext<LinodeContext>(({ linode }) => ({
     linode,
     linodeStatus: linode.status,
