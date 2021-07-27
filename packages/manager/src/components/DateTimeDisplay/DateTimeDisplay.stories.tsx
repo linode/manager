@@ -32,7 +32,10 @@ class Example extends React.Component<{}, State> {
         </p>
         <p>
           {'You have been on this page since: '}
-          <DateTimeDisplay value={this.state.time} humanizeCutoff={this.state.cutoff} />
+          <DateTimeDisplay
+            value={this.state.time}
+            humanizeCutoff={this.state.cutoff}
+          />
         </p>
         <p>
           {'You last checked Slack: '}
@@ -44,14 +47,20 @@ class Example extends React.Component<{}, State> {
         <p>
           {'Last Thursday was: '}
           <DateTimeDisplay
-            value={DateTime.local().minus({ weeks: 1 }).set({ weekday: 4 }).toISO()}
+            value={DateTime.local()
+              .minus({ weeks: 1 })
+              .set({ weekday: 4 })
+              .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
         <p>
           {'Three Wednesdays ago was: '}
           <DateTimeDisplay
-            value={DateTime.local().minus({ weeks: 3 }).set({ weekday: 3 }).toISO()}
+            value={DateTime.local()
+              .minus({ weeks: 3 })
+              .set({ weekday: 3 })
+              .toISO()}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -88,7 +97,7 @@ class Example extends React.Component<{}, State> {
 }
 
 export default {
-  title: 'DateTimeDisplay',
+  title: 'Core/Typography/Date Time Display',
 };
 
 export const _Example = () => <Example />;

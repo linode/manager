@@ -32,7 +32,7 @@ class Example extends React.Component<{}, {}> {
 }
 
 export default {
-  title: 'Currency',
+  title: 'Core/Typography/Currency',
 };
 
 export const _Example = () => <Example />;

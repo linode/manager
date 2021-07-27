@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from './TextField';
 
 export default {
-  title: 'TextField',
+  title: 'Components/Forms/Text Fields',
 };
 
 export const Normal = () => (
@@ -18,7 +18,7 @@ export const Small = () => (
 );
 
 export const Active = () => (
-  <TextField label="Input Label" placeholder="Active State" autoFocus>
+  <TextField label="Input Label" placeholder="Active State">
     Active State
   </TextField>
 );

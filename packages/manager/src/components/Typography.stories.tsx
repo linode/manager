@@ -8,7 +8,7 @@ const Divider = () => (
 );
 
 export default {
-  title: 'Typography',
+  title: 'Core/Typography',
 };
 
 export const Headings = () => (

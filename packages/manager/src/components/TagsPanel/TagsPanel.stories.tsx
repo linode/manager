@@ -49,7 +49,7 @@ class TagsPanelDemo extends React.Component<Props, {}> {
 }
 
 export default {
-  title: 'Tags Panel',
+  title: 'UI Elements/Tags Panel',
 
   decorators: [
     (story: any) => {

@@ -54,7 +54,7 @@ const Example: React.FC<{}> = (props) => {
 };
 
 export default {
-  title: 'Gauge Percent',
+  title: 'UI Elements/Analytics & Graphs/Gauge Percent',
 };
 
 export const _Example = () => <Example />;

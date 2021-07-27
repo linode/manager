@@ -3,7 +3,7 @@ import PaymentMethodRow from './PaymentMethodRow';
 import { PaymentType, CardType } from '@linode/api-v4/lib/account/types';
 
 export default {
-  title: 'Payment Method Row',
+  title: 'Components/Payment Method Row',
 };
 
 const render = (paymentMethodType: PaymentType, cardType: CardType) => {

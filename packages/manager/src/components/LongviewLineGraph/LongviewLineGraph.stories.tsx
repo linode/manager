@@ -54,7 +54,7 @@ const Example: React.FC<{}> = () => {
 };
 
 export default {
-  title: 'Longview Line Graph',
+  title: 'UI Elements/Analytics & Graphs/Longview Line Graph',
 };
 
 export const _Example = () => <Example />;

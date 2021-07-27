@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const DocumentationButton: React.FC<CombinedProps> = (props) => {
+export const DocsLink: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const { href, label } = props;
@@ -51,4 +51,4 @@ export const DocumentationButton: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default DocumentationButton;
+export default DocsLink;

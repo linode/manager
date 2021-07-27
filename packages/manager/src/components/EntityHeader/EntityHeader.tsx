@@ -4,7 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
-import DocumentationButton from '../DocumentationButton';
+import DocsLink from '../DocsLink';
 import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
@@ -147,9 +147,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
             sm={8}
           >
             {props.children}
-            {docsLink ? (
-              <DocumentationButton href={docsLink} label={docsLabel} />
-            ) : null}
+            {docsLink ? <DocsLink href={docsLink} label={docsLabel} /> : null}
             <div className={classes.actions}>{actions}</div>
           </Grid>
         </Grid>

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
-import { linodeFactory, linodeBackupsFactory } from 'src/factories/linodes';
 import { Provider } from 'react-redux';
-import store from 'src/store';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
+import { linodeBackupsFactory, linodeFactory } from 'src/factories/linodes';
+import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
+import store from 'src/store';
 
 export default {
-  title: 'EntityDetail',
+  title: 'Components/Entity Detail',
 };
 
 export const Linode = () => (

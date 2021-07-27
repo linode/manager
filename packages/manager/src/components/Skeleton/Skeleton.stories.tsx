@@ -23,7 +23,7 @@ const renderTableHead = (
 );
 
 export default {
-  title: 'Skeleton',
+  title: 'Components/Table/Skeleton',
 };
 
 export const DefaultTable = () => (

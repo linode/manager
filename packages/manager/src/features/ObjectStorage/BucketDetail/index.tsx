@@ -6,7 +6,7 @@ import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
@@ -87,7 +87,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
           ]}
           labelOptions={{ noCap: true }}
         />
-        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
+        <DocsLink href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
 
       <Tabs index={index} onChange={handleTabChange}>

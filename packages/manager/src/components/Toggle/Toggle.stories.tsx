@@ -12,7 +12,11 @@ class Example extends React.Component<{}, { value?: string }> {
   render() {
     return (
       <>
-        <FormControlLabel className="toggleLabel" control={<Toggle />} label="Example Label" />
+        <FormControlLabel
+          className="toggleLabel"
+          control={<Toggle />}
+          label="Example Label"
+        />
         <Toggle checked={true} />
       </>
     );
@@ -20,7 +24,7 @@ class Example extends React.Component<{}, { value?: string }> {
 }
 
 export default {
-  title: 'Toggle',
+  title: 'UI Elements/Toggle',
 };
 
 export const Interactive = () => <Example />;

@@ -19,7 +19,7 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -309,7 +309,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               />
             </Grid>
             <Grid item className="p0" style={{ marginTop: 14 }}>
-              <DocumentationButton href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
+              <DocsLink href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
             </Grid>
           </Grid>
           {errorMap.none && <Notice error text={errorMap.none} />}

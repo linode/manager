@@ -3,10 +3,12 @@ import Grid from 'src/components/Grid';
 import HelpIcon from './HelpIcon';
 
 export default {
-  title: 'HelpIcon',
+  title: 'UI Elements/Tooltip/Help Icon',
 };
 
-export const Default = () => <HelpIcon text="There is some help text! Yada, yada, yada..." />;
+export const Default = () => (
+  <HelpIcon text="There is some help text! Yada, yada, yada..." />
+);
 
 Default.story = {
   name: 'default',

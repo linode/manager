@@ -27,7 +27,7 @@ class TagsInputDemo extends React.Component<{}, {}> {
 }
 
 export default {
-  title: 'Tags Input',
+  title: 'UI Elements/Tags Input',
 };
 
 export const _TagsInput = () => {
