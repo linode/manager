@@ -16,6 +16,26 @@ export interface Doc {
 
 export const oneClickApps: OCA[] = [
   {
+    name: 'aaPanel',
+    description: `Feature-rich alternative control panel for users who need critical control panel functionality but don’t need to pay for more niche premium features. aaPanel is open source and consistently maintained with weekly updates.`,
+    summary:
+      'Popular open source free control panel with robust features and a mobile app.',
+    related_guides: [
+      {
+        title: 'Deploy Aapanel With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-aaPanel-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.aapanel.com/reference.html',
+        href: 'https://www.aapanel.com/reference.html',
+      },
+    ],
+    logo_url: 'assets/aapanel_color.svg',
+  },
+  {
     name: 'Ant Media Server',
     description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
     summary: 'A reliable, flexible and scalable video streaming solution.',
@@ -76,6 +96,26 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/azuracast.svg',
+  },
+  {
+    name: 'Chevereto',
+    description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
+    summary:
+      'Self-host your own open source image library to easily upload, collaborate, and share images on your terms.',
+    related_guides: [
+      {
+        title: 'Deploy Chevereto With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-chevereto-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://v3-docs.chevereto.com/',
+        href: 'https://v3-docs.chevereto.com/',
+      },
+    ],
+    logo_url: 'assets/chevereto_color.svg',
   },
   {
     name: 'cPanel',
@@ -415,6 +455,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/jenkins_color.svg',
   },
   {
+    name: 'JetBackup',
+    description: `Powerful and customizable backups for several websites and data all in the same interface. JetBackup integrates with any control panel via API, and has native support for cPanel and DirectAdmin. Easily backup your data to storage you already use, including Linode’s S3-compatible Object Storage.`,
+    summary:
+      'Advanced customizable backups to integrate with your preferred control panel.',
+    related_guides: [
+      {
+        title: 'Deploy JetBackup With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-jetbackup-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.jetapps.com/',
+        href: 'https://docs.jetapps.com/',
+      },
+    ],
+    logo_url: 'assets/jetbackup_color.svg',
+  },
+  {
     name: 'Jitsi',
     description: `Secure, stable, and free alternative to popular video conferencing services. Use built-in features to limit meeting access with passwords or stream on YouTube so anyone can attend.`,
     summary: 'Free, open source video conferencing and communication platform',
@@ -472,6 +532,46 @@ export const oneClickApps: OCA[] = [
     ],
     logo_url: 'assets/lamp_flame_color.svg',
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
+  },
+  {
+    name: 'MagicSpam',
+    description: `MagicSpam stops inbound spam from entering your server right at the SMTP layer to lower bandwidth and overhead, as well as secure mailboxes on your server from being compromised and used to send outbound spam. MagicSpam installs directly onto the email server without any need to change A/MX records to protect unlimited users and domains, and integrates natively with your control panel interface.`,
+    summary:
+      'Powerful anti-spam and email security solution for control panels (including cPanel and Plesk).',
+    related_guides: [
+      {
+        title: 'Deploy MagicSpam With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-magicspam-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.magicspam.com/anti-spam-features.php',
+        href: 'https://www.magicspam.com/anti-spam-features.php',
+      },
+    ],
+    logo_url: 'assets/magicspam_color.svg',
+  },
+  {
+    name: 'Moodle',
+    description: `Robust open-source learning platform enabling online education for more than 200 million users around the world. Create personalized learning environments within a secure and integrated system built for all education levels with an intuitive interface, drag-and-drop features, and accessible documentation.`,
+    summary:
+      'World’s most popular learning management system built and maintained by an active developer community.',
+    related_guides: [
+      {
+        title: 'Deploy Moodle With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-moodle-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.moodle.org/',
+        href: 'https://docs.moodle.org/',
+      },
+    ],
+    logo_url: 'assets/moodle_color.svg',
   },
   {
     name: 'MongoDB',
@@ -588,6 +688,26 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/nextcloud_color.svg',
+  },
+  {
+    name: 'Nirvashare',
+    description: `Securely share and collaborate Linode S3 object storage files/folders with your internal or external users such as customers, partners, vendors, etc with fine access control and a simple interface. Nirvashare easily integrates with many external identity providers such as Active Directory, GSuite, AWS SSO, KeyClock, etc.`,
+    summary:
+      'Secure file sharing for better collaboration with employees, partners, vendors, and more.',
+    related_guides: [
+      {
+        title: 'Deploy Nirvashare With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-nirvashare-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://nirvashare.com/setup-guide/',
+        href: 'https://nirvashare.com/setup-guide/',
+      },
+    ],
+    logo_url: 'assets/nirvashare_color.svg',
   },
   {
     name: 'OpenLiteSpeed WordPress',
@@ -858,6 +978,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/secureyourserver_color.svg',
   },
   {
+    name: 'Severalnines',
+    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, MongoDB, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
+    summary:
+      'All-in-one database deployment, management, and monitoring system.',
+    related_guides: [
+      {
+        title: 'Deploy Severalnines With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-severalnines-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.severalnines.com/docs/clustercontrol/',
+        href: 'https://docs.severalnines.com/docs/clustercontrol/',
+      },
+    ],
+    logo_url: 'assets/severalnines_color.svg',
+  },
+  {
     name: 'ServerWand',
     description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
     summary:
@@ -913,6 +1053,26 @@ export const oneClickApps: OCA[] = [
       `- set <b>Password</b> that was specified on configuration`,
     ],
     logo_url: 'assets/shadowsocks_color.svg',
+  },
+  {
+    name: 'Splunk',
+    description: `Popular data-to-everything platform with advanced security, observability, and automation features for machine learning and AI.`,
+    summary:
+      'All-in-one database deployment, management, and monitoring system.',
+    related_guides: [
+      {
+        title: 'Deploy Splunk With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploy-splunk-with-marketplace-apps',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.splunk.com/Documentation/Splunk',
+        href: 'https://docs.splunk.com/Documentation/Splunk',
+      },
+    ],
+    logo_url: 'assets/splunk_color.svg',
   },
   {
     name: 'Terraria',
