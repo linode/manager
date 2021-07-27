@@ -140,7 +140,7 @@ export const gPay = async (
 
     setMessage(
       isOneTimePayment
-        ? `Payment for $${transactionInfo.totalPrice} successfully submitted`
+        ? `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`
         : 'Successfully added Google Pay',
       'success'
     );
