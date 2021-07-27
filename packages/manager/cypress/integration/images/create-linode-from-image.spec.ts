@@ -5,7 +5,6 @@ import {
   fbtClick,
   fbtVisible,
   getClick,
-  getVisible,
 } from 'cypress/support/helpers';
 import strings from '../../support/cypresshelpers';
 
@@ -39,7 +38,7 @@ const createLinodeWithImageMock = () => {
   }).as('mockLinodeResponse');
 
   cy.visitWithLogin('/linodes/create?type=Images');
-  cy.wait('@mockImage');
+  cy.wait('@mockImage'), { timeout: 100000 };
   cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
     containsClick('Choose an image');
   });
