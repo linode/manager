@@ -10,8 +10,6 @@ import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { useTypes } from 'src/hooks/useTypes';
-import { useImages } from 'src/hooks/useImages';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -22,6 +20,8 @@ import {
 } from 'src/store/selectors/getSearchEntities';
 
 import { emptyResults, separateResultsByEntity } from './utils';
+import store from 'src/store';
+import { listToItemsByID, queryClient } from 'src/queries/base';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
@@ -29,8 +29,7 @@ interface Search {
 
 export const useAPISearch = (): Search => {
   const { _isRestrictedUser } = useAccountManagement();
-  const { images } = useImages('public');
-  const { types } = useTypes();
+
   const searchAPI = useCallback(
     (searchText: string) => {
       if (!searchText || searchText === '') {
@@ -40,20 +39,26 @@ export const useAPISearch = (): Search => {
         });
       }
 
-      return requestEntities(
-        searchText,
-        types.entities,
-        images.itemsById,
-        _isRestrictedUser
-      ).then((results) => {
-        const combinedResults = refinedSearch(searchText, results);
-        return {
-          combinedResults,
-          searchResultsByEntity: separateResultsByEntity(combinedResults),
-        };
-      });
+      // Pull Linode types directly from the Redux store
+      // In the future, we can use React Query for this
+      const types = store.getState().__resources.types.entities as LinodeType[];
+
+      // Pull all Images from the React Query store
+      const images = listToItemsByID(
+        queryClient.getQueryData<Image[]>('images') || []
+      );
+
+      return requestEntities(searchText, types, images, _isRestrictedUser).then(
+        (results) => {
+          const combinedResults = refinedSearch(searchText, results);
+          return {
+            combinedResults,
+            searchResultsByEntity: separateResultsByEntity(combinedResults),
+          };
+        }
+      );
     },
-    [images.itemsById, types.entities, _isRestrictedUser]
+    [_isRestrictedUser]
   );
 
   return { searchAPI };

@@ -18,6 +18,7 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { listToItemsByID, queryClient } from 'src/queries/base';
 
 type State = ApplicationState['__resources'];
 
@@ -55,7 +56,7 @@ export const formatLinode = (
       linode.specs.memory,
       linode.specs.disk,
       linode.specs.vcpus,
-      linode.image!,
+      linode.image,
       images
     ),
     icon: 'linode',
@@ -173,7 +174,6 @@ const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
 const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const imageSelector = (state: State) => state.images.itemsById || {};
 const domainSelector = (state: State) =>
   Object.values(state.domains.itemsById) || [];
 const typesSelector = (state: State) => state.types.entities;
@@ -186,7 +186,6 @@ export default createSelector<
   State,
   Linode[],
   Volume[],
-  { [key: string]: Image },
   Domain[],
   NodeBalancer[],
   LinodeType[],
@@ -197,7 +196,6 @@ export default createSelector<
 >(
   linodeSelector,
   volumeSelector,
-  imageSelector,
   domainSelector,
   nodebalSelector,
   typesSelector,
@@ -207,7 +205,6 @@ export default createSelector<
   (
     linodes,
     volumes,
-    images,
     domains,
     nodebalancers,
     types,
@@ -215,9 +212,13 @@ export default createSelector<
     nodePools,
     buckets
   ) => {
-    const arrOfImages = Object.values(images);
+    const arrOfImages = queryClient.getQueryData<Image[]>('images') || [];
     const searchableLinodes = linodes.map((linode) =>
-      formatLinode(linode, types, images)
+      formatLinode(
+        linode,
+        types,
+        listToItemsByID(arrOfImages) as Record<string, Image>
+      )
     );
     const searchableVolumes = volumes.map(volumeToSearchableItem);
     const searchableImages = arrOfImages.reduce(imageReducer, []);
