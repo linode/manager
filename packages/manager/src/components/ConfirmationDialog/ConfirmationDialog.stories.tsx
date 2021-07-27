@@ -21,16 +21,14 @@ class Example extends React.Component {
 
   renderActions = () => {
     return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button onClick={this.decline} data-qa-dialog-cancel>
-            Cancel
-          </Button>
-          <Button onClick={this.confirm} data-qa-dialog-confirm>
-            Continue
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
+      <ActionsPanel>
+        <Button onClick={this.decline} data-qa-dialog-cancel>
+          Cancel
+        </Button>
+        <Button onClick={this.confirm} data-qa-dialog-confirm>
+          Continue
+        </Button>
+      </ActionsPanel>
     );
   };
 
@@ -62,7 +60,7 @@ class Example extends React.Component {
 }
 
 export default {
-  title: 'Confirmation Dialogs',
+  title: 'Components/Modals/Confirmation Dialogs',
 };
 
 export const SimpleConfirmation = () => <Example />;

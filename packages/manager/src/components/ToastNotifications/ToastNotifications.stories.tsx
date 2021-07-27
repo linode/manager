@@ -2,7 +2,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Snackbar from 'src/components/SnackBar';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 
 interface Props {
   onClick: (variant: string) => void;
@@ -27,15 +26,25 @@ class Example extends React.PureComponent<WithSnackbarProps, {}> {
 
     // enqueueSnackbar comes from the notistack library and triggers the toast to appear
     const showToast = (variant: any) =>
-      enqueueSnackbar('Toast message. This will auto destruct after four seconds.', {
-        variant,
-      });
+      enqueueSnackbar(
+        'Toast message. This will auto destruct after four seconds.',
+        {
+          variant,
+        }
+      );
 
     return (
+      // eslint-disable-next-line react/jsx-no-useless-fragment
       <React.Fragment>
         {variants.map((eachVariant) => {
           // map over each variant and show a button for each
-          return <MyButton key={eachVariant} variant={eachVariant} onClick={showToast} />;
+          return (
+            <MyButton
+              key={eachVariant}
+              variant={eachVariant}
+              onClick={showToast}
+            />
+          );
         })}
       </React.Fragment>
     );
@@ -45,8 +54,7 @@ class Example extends React.PureComponent<WithSnackbarProps, {}> {
 const Enhanced = withSnackbar(Example);
 
 export default {
-  title: 'Toast Notification',
-  decorators: [ThemeDecorator],
+  title: 'UI Elements/Notification/Toast',
 };
 
 export const Default = () => (
