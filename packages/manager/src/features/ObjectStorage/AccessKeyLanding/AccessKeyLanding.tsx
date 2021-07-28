@@ -14,6 +14,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -27,7 +28,6 @@ import {
   sendEditAccessKeyEvent,
   sendRevokeAccessKeyEvent,
 } from 'src/utilities/ga';
-import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
@@ -288,10 +288,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
         onClose={viewPermissionsDrawer.close}
         objectStorageKey={keyToEdit}
       />
-      <AccessKeyDisplayDialog
+      <SecretTokenDialog
+        title="Access Keys"
+        open={displayKeysDialog.isOpen}
+        onClose={displayKeysDialog.close}
         objectStorageKey={keyToDisplay}
-        isOpen={displayKeysDialog.isOpen}
-        close={displayKeysDialog.close}
       />
       <RevokeAccessKeyDialog
         isOpen={revokeKeysDialog.isOpen}

@@ -7,10 +7,12 @@ import {
   Token,
   updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
+import { Account } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { compose } from 'recompose';
+import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -26,7 +28,6 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -40,7 +41,6 @@ import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Account } from '@linode/api-v4/lib';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 import { basePermNameMap, basePerms } from './utils';
@@ -649,28 +649,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Typography>
         </ConfirmationDialog>
 
-        <ConfirmationDialog
+        <SecretTokenDialog
           title="Personal Access Token"
-          error={(this.state.dialog.errors || [])
-            .map((e) => e.reason)
-            .join(',')}
-          actions={this.renderPersonalAccessTokenDisplayActions}
           open={Boolean(this.state.token && this.state.token.open)}
           onClose={this.closeTokenDialog}
-          maxWidth="md"
-        >
-          <Typography variant="body1">
-            {`Your personal access token has been created.
-              Store this secret. It won't be shown again.`}
-          </Typography>
-          <Notice
-            spacingTop={16}
-            typeProps={{ variant: 'body1' }}
-            warning
-            text={this.state.token && this.state.token.value!}
-            breakWords
-          />
-        </ConfirmationDialog>
+          value={this.state.token?.value}
+        />
       </React.Fragment>
     );
   }
@@ -705,16 +689,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       </ActionsPanel>
     );
   };
-
-  renderPersonalAccessTokenDisplayActions = () => (
-    <Button
-      buttonType="secondary"
-      onClick={this.closeTokenDialog}
-      data-qa-close-dialog
-    >
-      OK
-    </Button>
-  );
 }
 
 /**
