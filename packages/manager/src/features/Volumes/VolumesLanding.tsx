@@ -289,7 +289,10 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
 
   const Banner = () => {
     return flags.blockStorageAvailability ? (
-      <DismissibleBanner preferenceKey="block-storage-available-atlanta" green>
+      <DismissibleBanner
+        preferenceKey="block-storage-available-atlanta"
+        productInformationIndicator
+      >
         <Typography>
           Take advantage of high-performance{' '}
           <Link to="https://www.linode.com/products/block-storage/">

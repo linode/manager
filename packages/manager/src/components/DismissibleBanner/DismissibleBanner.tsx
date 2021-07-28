@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.tableStatic,
     marginLeft: 20,
   },
-  green: {
+  productInformationIndicator: {
     borderLeft: `solid 6px ${theme.color.green}`,
   },
 }));
@@ -34,11 +34,11 @@ interface Props {
   preferenceKey: string;
   children: JSX.Element;
   className?: string;
-  green?: boolean;
+  productInformationIndicator?: boolean;
 }
 
 export const DismissibleBanner: React.FC<Props> = (props) => {
-  const { className, preferenceKey, green } = props;
+  const { className, preferenceKey, productInformationIndicator } = props;
   const {
     dismissNotifications,
     hasDismissedNotifications,
@@ -58,7 +58,7 @@ export const DismissibleBanner: React.FC<Props> = (props) => {
       className={classnames(
         {
           [classes.root]: true,
-          [classes.green]: green,
+          [classes.productInformationIndicator]: productInformationIndicator,
         },
         className
       )}

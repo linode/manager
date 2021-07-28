@@ -27,7 +27,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
       {nextVersion ? (
         <DismissibleBanner
           preferenceKey={`${clusterID}-${currentVersion}`}
-          green
+          productInformationIndicator
         >
           <Grid
             container

@@ -322,7 +322,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       {showVolumesBanner ? (
         <DismissibleBanner
           preferenceKey="block-storage-available-atlanta"
-          green
+          productInformationIndicator
         >
           <Grid
             container
