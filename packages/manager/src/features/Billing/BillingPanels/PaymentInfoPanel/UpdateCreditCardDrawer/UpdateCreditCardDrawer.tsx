@@ -182,7 +182,9 @@ export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
   );
   const generalError = hasErrorFor.none;
 
-  const cvvLabel = flags.cvvRequired ? 'CVV' : 'CVV (optional)';
+  const cvvLabel = flags.cvvRequired
+    ? 'Security Code'
+    : 'Security Code (optional)';
 
   return (
     <Drawer title="Edit Credit Card" open={open} onClose={onClose}>

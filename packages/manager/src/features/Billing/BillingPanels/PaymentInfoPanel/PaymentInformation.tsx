@@ -2,7 +2,7 @@ import { PaymentMethod } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import GooglePay from 'src/assets/icons/providers/google-logo.svg';
+import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
@@ -42,9 +42,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   googlePayNoticeContainer: {
     marginTop: theme.spacing(2),
     padding: `8px 0px`,
+    '& button': {
+      marginLeft: theme.spacing(),
+    },
   },
-  googlePayNotice: {
-    marginLeft: theme.spacing(),
+  googlePayIcon: {
+    flexShrink: 0,
+    height: 20,
+    marginRight: theme.spacing(),
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -84,6 +89,14 @@ const PaymentInformation: React.FC<Props> = (props) => {
     'google_pay'
   );
 
+  const showAddPaymentMethodButton =
+    paymentMethods?.length === 0 ||
+    isGooglePayEnabled ||
+    (!isGooglePayEnabled &&
+      !paymentMethods?.some(
+        (method: PaymentMethod) => method.type === 'credit_card'
+      ));
+
   const showGooglePayAvailableNotice =
     isGooglePayEnabled &&
     !paymentMethods?.some(
@@ -121,8 +134,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
           <Typography variant="h3" className={classes.title}>
             Payment Methods
           </Typography>
-
-          {isGooglePayEnabled ? (
+          {showAddPaymentMethodButton ? (
             <Button
               className={classes.edit}
               onClick={() => replace(drawerLink)}
@@ -167,8 +179,8 @@ const PaymentInformation: React.FC<Props> = (props) => {
             preferenceKey="google-pay-available-notification"
           >
             <Box display="flex" alignItems="center">
-              <GooglePay width={16} height={16} />
-              <Typography className={classes.googlePayNotice}>
+              <GooglePayIcon className={classes.googlePayIcon} />
+              <Typography>
                 Google Pay is now available for recurring payments.{' '}
                 <Link to="#" onClick={() => replace(drawerLink)}>
                   Add Google Pay

@@ -54,7 +54,6 @@ import {
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
-import cachedTypes from 'src/cachedData/types.json';
 
 export const makeResourcePage = (
   e: any[],
@@ -144,9 +143,6 @@ export const handlers = [
         }))
       )
     );
-  }),
-  rest.get('*/linode/types', async (req, res, ctx) => {
-    return res(ctx.json(cachedTypes));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {

@@ -11,12 +11,14 @@ import {
 import CircleProgress from 'src/components/CircleProgress';
 import HelpIcon from 'src/components/HelpIcon';
 import classNames from 'classnames';
+import { reportException } from 'src/exceptionReporting';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     border: 0,
     padding: 0,
     marginTop: 10,
+    marginRight: -8,
     backgroundColor: 'transparent',
     cursor: 'pointer',
     '&:hover': {
@@ -31,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   errorIcon: {
+    marginRight: -16,
     color: theme.color.red,
     '&:hover': {
       color: theme.color.red,
@@ -66,7 +69,9 @@ export const GooglePayChip: React.FC<Props> = (props) => {
         try {
           await initGooglePaymentInstance(data.client_token as string);
         } catch (error) {
-          // maybe log to Sentry or something
+          reportException(error, {
+            message: 'Error initializing Google Pay.',
+          });
           setInitializationError(true);
         }
       }
@@ -120,7 +125,7 @@ export const GooglePayChip: React.FC<Props> = (props) => {
       onClick={handlePay}
       disabled={disabledDueToProcessing}
     >
-      <GooglePayIcon height="48px" />
+      <GooglePayIcon height="26px" />
     </button>
   );
 };

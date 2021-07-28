@@ -133,7 +133,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
     paymentWasMade = false,
     warnings = undefined
   ) => {
-    if (paymentWasMade) {
+    if (paymentWasMade && !warnings) {
       enqueueSnackbar(message, {
         variant: 'success',
       });
@@ -277,7 +277,7 @@ const Warning: React.FC<WarningProps> = (props) => {
   /** The most common API warning includes "please open a Support ticket",
    * which we'd like to be a link.
    */
-  const ticketLink = warning.detail.match(/open a support ticket\./i) ? (
+  const ticketLink = warning.detail?.match(/open a support ticket\./i) ? (
     <>
       {warning.detail.replace(/open a support ticket\./i, '')}
       <SupportLink
@@ -287,7 +287,7 @@ const Warning: React.FC<WarningProps> = (props) => {
       .
     </>
   ) : (
-    warning.detail
+    warning.detail ?? ''
   );
   const message = (
     <>
