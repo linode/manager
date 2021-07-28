@@ -45,7 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
   },
   expPanelSummary: {
-    backgroundColor: theme.bg.offWhite,
+    backgroundColor:
+      theme.name === 'darkTheme' ? theme.bg.main : theme.bg.white,
+    paddingTop: theme.spacing(1),
     borderTop: `1px solid ${theme.bg.main}`,
   },
   innerReply: {
