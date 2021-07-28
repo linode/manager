@@ -21,7 +21,6 @@ const styles = (theme: Theme) =>
         theme.name === 'darkTheme' ? theme.bg.white : theme.bg.offWhite,
       margin: `${theme.spacing(2)}px 0`,
       padding: theme.spacing(2),
-      // border: `1px solid ${theme.color.border2}`
     },
   });
 
