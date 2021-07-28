@@ -26,11 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: 4,
   },
-  gpay: {
-    '& button': {
-      marginRight: -theme.spacing(2),
-    },
-  },
   progress: {
     marginBottom: 18,
     width: '100%',
@@ -108,7 +103,6 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
             <Grid
               container
               item
-              className={classes.gpay}
               xs={4}
               md={3}
               justify="flex-end"

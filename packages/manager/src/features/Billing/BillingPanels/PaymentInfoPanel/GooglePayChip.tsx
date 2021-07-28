@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 0,
     padding: 0,
     marginTop: 10,
+    marginRight: -8,
     backgroundColor: 'transparent',
     cursor: 'pointer',
     '&:hover': {
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   errorIcon: {
+    marginRight: -16,
     color: theme.color.red,
     '&:hover': {
       color: theme.color.red,
@@ -123,7 +125,7 @@ export const GooglePayChip: React.FC<Props> = (props) => {
       onClick={handlePay}
       disabled={disabledDueToProcessing}
     >
-      <GooglePayIcon height="48px" />
+      <GooglePayIcon height="26px" />
     </button>
   );
 };
