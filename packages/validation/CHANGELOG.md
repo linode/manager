@@ -1,4 +1,4 @@
-## [2021-07-19] - v0.4.0
+## [2021-07-29] - v0.4.0
 
 ### Added:
 - Schemas for new payment methods

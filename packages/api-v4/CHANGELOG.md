@@ -1,4 +1,4 @@
-## [2021-07-19] - v0.55.0
+## [2021-07-29] - v0.55.0
 
 ### Added:
 - Types and endpoint support for new payment methods
