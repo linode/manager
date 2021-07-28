@@ -26,23 +26,21 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'title' | 'inner' | 'expPanelButton';
+type ClassNames = 'inner' | 'panel' | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      padding: theme.spacing(3),
-    },
-    title: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2),
-    },
     inner: {
-      paddingBottom: theme.spacing(3),
+      paddingBottom: theme.spacing(2),
+      '& label': {
+        marginTop: 4,
+      },
     },
-    expPanelButton: {
+    panel: {
       padding: 0,
-      marginTop: theme.spacing(2),
+    },
+    button: {
+      margin: 0,
     },
   });
 
@@ -142,7 +140,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     return (
       <div>
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
-        <Paper className={classes.root}>
+        <Paper>
           <Grid item xs={12}>
             {generalError && <Notice error text={generalError} />}
             {success && <Notice success text={success} />}
@@ -177,11 +175,12 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               IP to this number per second. 0 to disable.
             </FormHelperText>
           </div>
-          <ActionsPanel className={classes.expPanelButton}>
+          <ActionsPanel className={classes.panel}>
             <Button
-              onClick={this.onSubmitUpdateNodeBalancer}
               buttonType="primary"
+              className={classes.button}
               disabled={isSubmitting}
+              onClick={this.onSubmitUpdateNodeBalancer}
               data-qa-label-save
             >
               Save Changes
