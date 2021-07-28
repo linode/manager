@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: 0,
     '&.checked .innerGrid': {
       borderColor: theme.palette.primary.main,
-      backgroundColor: theme.palette.grey[200],
+      backgroundColor: theme.bg.main,
       '& span': {
         color: theme.palette.primary.main,
       },
@@ -49,22 +49,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     '& svg, & span': {
-      fontSize: '32px',
+      fontSize: 32,
       color: '#939598',
     },
     '& img': {
-      maxHeight: '32px',
-      maxWidth: '32px',
+      maxHeight: 32,
+      maxWidth: 32,
     },
   },
   checked: {
     display: 'flex',
     animation: '$fadeIn 225ms ease-in-out forwards 10ms',
     '& svg': {
-      borderRadius: '16px',
-      border: '1px solid',
-      borderColor: theme.palette.primary.main,
-      fontSize: '16px',
+      borderRadius: 16,
+      border: `1px solid ${theme.palette.primary.main}`,
+      fontSize: 16,
       color: theme.palette.primary.main,
     },
   },
@@ -95,7 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     minHeight: 70,
     backgroundColor: theme.bg.offWhiteDT,
-    border: '1px solid ' + `${theme.bg.main}`,
+    border: `1px solid ${theme.bg.main}`,
     margin: 0,
     padding: '0 !important',
     transition: `
