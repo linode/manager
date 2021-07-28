@@ -291,11 +291,11 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     return flags.blockStorageAvailability ? (
       <DismissibleBanner preferenceKey="block-storage-available-atlanta" green>
         <Typography>
-          Atlanta is the first data center with our new high-performance{' '}
+          Take advantage of high-performance{' '}
           <Link to="https://www.linode.com/products/block-storage/">
             NVMe Block Storage
           </Link>
-          . Create a Volume <Link to="/volumes/create">now</Link>.
+          .
         </Typography>
       </DismissibleBanner>
     ) : null;

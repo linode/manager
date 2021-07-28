@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     maxWidth: '100%',
     padding: '4px 16px',
+    paddingRight: 18,
     position: 'relative',
     '& + .notice': {
       marginTop: `${theme.spacing()}px !important`,
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   important: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     padding: theme.spacing(2),
-    paddingRight: theme.spacing(),
+    paddingRight: 18,
     '& $noticeText': {
       fontFamily: theme.font.normal,
     },
@@ -60,6 +61,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   closeIcon: {
     ...theme.applyLinkStyles,
     display: 'flex',
+    color: theme.cmrTextColors.tableStatic,
+    marginLeft: 20,
   },
   inner: {
     width: '100%',

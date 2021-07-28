@@ -13,9 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     borderRadius: 1,
     marginBottom: theme.spacing(),
-    minHeight: 50,
-    padding: theme.spacing(),
-    paddingLeft: theme.spacing(2),
+    padding: '12px 18px',
     '& p': {
       fontSize: '1rem',
       marginLeft: theme.spacing(),
@@ -24,6 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
     display: 'flex',
+    color: theme.cmrTextColors.tableStatic,
+    marginLeft: 20,
   },
   green: {
     borderLeft: `solid 6px ${theme.color.green}`,

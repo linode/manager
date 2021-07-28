@@ -3,10 +3,11 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
+import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
@@ -38,12 +39,6 @@ import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    ...theme.applyLinkStyles,
-  },
-}));
-
 interface Props {
   numVolumes: number;
   username: string;
@@ -72,7 +67,6 @@ interface DialogProps {
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
   const flags = useFlags();
   const dispatch = useDispatch();
 
@@ -330,22 +324,32 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           preferenceKey="block-storage-available-atlanta"
           green
         >
-          <Typography>
-            Take advantage of high-performance{' '}
-            <Link to="https://www.linode.com/products/block-storage/">
-              NVMe Block Storage
-            </Link>
-            . {volumesBannerAction} a Volume{' '}
-            <button
-              className={classes.button}
-              onClick={
-                isCreateMode ? openCreateVolumeDrawer : openAttachVolumeDrawer
-              }
-            >
-              now
-            </button>
-            .
-          </Typography>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+          >
+            <Grid item>
+              <Typography>
+                Take advantage of high-performance{' '}
+                <Link to="https://www.linode.com/products/block-storage/">
+                  NVMe Block Storage
+                </Link>
+                .
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                buttonType="primary"
+                onClick={
+                  isCreateMode ? openCreateVolumeDrawer : openAttachVolumeDrawer
+                }
+              >
+                {volumesBannerAction} a Volume
+              </Button>
+            </Grid>
+          </Grid>
         </DismissibleBanner>
       ) : null}
       <LinodeDetailsBreadcrumb />
