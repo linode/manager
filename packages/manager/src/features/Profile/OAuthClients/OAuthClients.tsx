@@ -418,18 +418,18 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         </Table>
 
         <Modals
-          deleteModalOpen={this.state.deleteModalOpen}
-          secretModalOpen={this.state.secretModalOpen}
-          secretSuccessOpen={this.state.secretModalSuccessOpen}
-          resetClient={this.resetSecret}
-          closeDialogs={this.closeModals}
           secret={this.state.secret}
           secretID={this.state.clientID}
           label={this.state.clientLabel}
-          isDeleting={this.state.isDeleting}
-          isResetting={this.state.isResetting}
-          deleteClient={this.deleteClient}
           modalErrors={this.state.modalErrors}
+          secretModalOpen={this.state.secretModalOpen}
+          deleteModalOpen={this.state.deleteModalOpen}
+          secretSuccessOpen={this.state.secretModalSuccessOpen}
+          isResetting={this.state.isResetting}
+          isDeleting={this.state.isDeleting}
+          closeDialogs={this.closeModals}
+          resetClient={this.resetSecret}
+          deleteClient={this.deleteClient}
         />
 
         <OAuthFormDrawer

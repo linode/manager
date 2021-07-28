@@ -15,37 +15,50 @@ interface Props {
   secretModalOpen: boolean;
   deleteModalOpen: boolean;
   secretSuccessOpen: boolean;
+  isResetting: boolean;
+  isDeleting: boolean;
   closeDialogs: () => void;
   resetClient: (id?: string) => void;
   deleteClient: (id?: string) => void;
-  isResetting: boolean;
-  isDeleting: boolean;
 }
 
 type CombinedProps = Props;
 
 const Modals: React.FC<CombinedProps> = (props) => {
-  const { modalErrors, label, resetClient, isResetting, closeDialogs } = props;
+  const {
+    secretID,
+    secret,
+    label,
+    modalErrors,
+    secretModalOpen,
+    deleteModalOpen,
+    secretSuccessOpen,
+    isResetting,
+    isDeleting,
+    closeDialogs,
+    resetClient,
+    deleteClient,
+  } = props;
 
   return (
     <>
       <SecretTokenDialog
         title="Client Secret"
-        open={props.secretSuccessOpen}
-        onClose={props.closeDialogs}
-        value={props.secret}
+        open={secretSuccessOpen}
+        onClose={closeDialogs}
+        value={secret}
       />
 
       <ConfirmationDialog
         error={modalErrors ? modalErrors[0].reason : undefined}
         title={`Delete ${label}?`}
-        open={props.deleteModalOpen}
+        open={deleteModalOpen}
         actions={deleteDialogActions({
-          loading: props.isDeleting,
-          deleteSecret: () => props.deleteClient(props.secretID),
+          loading: isDeleting,
+          deleteSecret: () => deleteClient(secretID),
           closeDialogs,
         })}
-        onClose={props.closeDialogs}
+        onClose={closeDialogs}
       >
         <Typography>
           Are you sure you want to permanently delete this app?
@@ -55,13 +68,13 @@ const Modals: React.FC<CombinedProps> = (props) => {
       <ConfirmationDialog
         error={modalErrors ? modalErrors[0].reason : undefined}
         title={`Reset secret for ${label}?`}
-        open={props.secretModalOpen}
+        open={secretModalOpen}
         actions={resetDialogActions({
           closeDialogs,
-          resetSecret: () => resetClient(props.secretID),
+          resetSecret: () => resetClient(secretID),
           loading: isResetting,
         })}
-        onClose={props.closeDialogs}
+        onClose={closeDialogs}
       >
         <Typography>
           Are you sure you want to permanently reset the secret for this app?
