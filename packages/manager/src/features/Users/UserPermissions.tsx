@@ -35,6 +35,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import Toggle from 'src/components/Toggle';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -385,8 +386,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           });
         })
         .then(() => {
-          /* unconditionally sets this.state.loadingGrants to false */
+          // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
+          // refresh the data on /account/users so it is accurate
+          queryClient.invalidateQueries('account-users');
         })
         .catch((errResponse) => {
           this.setState({
