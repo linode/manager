@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { APIWarning } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { VariantType } from 'notistack';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -114,11 +115,15 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     init();
   }, [status, data]);
 
-  const handleMessage = (message: string, variant: VariantType) => {
+  const handleMessage = (
+    message: string,
+    variant: VariantType,
+    warning?: APIWarning[]
+  ) => {
     if (variant === 'error') {
       setError(message);
     } else if (variant === 'success') {
-      setSuccess(message, true);
+      setSuccess(message, true, warning);
     }
   };
 

@@ -3,6 +3,7 @@ import {
   addPaymentMethod,
   makePayment,
 } from '@linode/api-v4/lib/account/payments';
+import { APIWarning } from '@linode/api-v4/lib/types';
 import { VariantType } from 'notistack';
 import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
@@ -45,7 +46,11 @@ export const gPay = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
-  setMessage: (message: string, variant: VariantType) => void,
+  setMessage: (
+    message: string,
+    variant: VariantType,
+    warnings?: APIWarning[]
+  ) => void,
   setProcessing: (processing: boolean) => void
 ) => {
   if (!googlePaymentInstance) {
@@ -105,11 +110,16 @@ export const gPay = async (
     setProcessing(true);
 
     if (isOneTimePayment) {
-      await makePayment({
+      const response = await makePayment({
         nonce,
         usd: transactionInfo.totalPrice as string,
       });
       queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+      setMessage(
+        `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
+        'success',
+        response.warnings
+      );
     } else {
       const paymentMethods = queryClient.getQueryData<PaymentMethod[]>(
         `${accountPaymentKey}-all`
@@ -136,14 +146,9 @@ export const gPay = async (
         is_default: shouldBecomeDefault,
       });
       queryClient.invalidateQueries(`${accountPaymentKey}-all`);
+      setMessage('Successfully added Google Pay', 'success');
     }
 
-    setMessage(
-      isOneTimePayment
-        ? `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`
-        : 'Successfully added Google Pay',
-      'success'
-    );
     setProcessing(false);
   } catch (error) {
     setProcessing(false);
