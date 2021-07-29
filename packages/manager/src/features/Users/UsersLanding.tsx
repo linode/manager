@@ -11,28 +11,24 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PaginationFooter from 'src/components/PaginationFooter';
-import usePagination from 'src/hooks/usePagination';
-import { useAccountUsers } from 'src/queries/accountUsers';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import usePagination from 'src/hooks/usePagination';
+import { useAccountUsers } from 'src/queries/accountUsers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white,
-  },
   userLandingHeader: {
     margin: 0,
     width: '100%',
@@ -46,10 +42,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   addNewWrapper: {
     [theme.breakpoints.down('xs')]: {
       marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      padding: 5,
     },
     '&.MuiGrid-item': {
-      padding: 5,
+      paddingRight: 0,
     },
   },
   '@keyframes fadeIn': {
@@ -234,45 +229,38 @@ const UsersLanding: React.FC<Props> = (props) => {
           text={`Error when deleting user, please try again later`}
         />
       )}
-      <div className={classes.root}>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          className={classes.userLandingHeader}
-        >
-          <Grid item className="p0">
-            <Typography variant="h3" data-qa-title className={classes.headline}>
-              Users
-            </Typography>
-          </Grid>
-          <Grid item className={classes.addNewWrapper}>
-            <AddNewLink
-              disabled={props.isRestrictedUser}
-              disabledReason={
-                props.isRestrictedUser
-                  ? 'You cannot create other users as a restricted user.'
-                  : undefined
-              }
-              onClick={openForCreate}
-              label="Add a User"
-            />
-          </Grid>
+      <Grid
+        container
+        alignItems="flex-end"
+        justify="flex-end"
+        className={classes.userLandingHeader}
+      >
+        <Grid item className={classes.addNewWrapper}>
+          <AddNewLink
+            disabled={props.isRestrictedUser}
+            disabledReason={
+              props.isRestrictedUser
+                ? 'You cannot create other users as a restricted user.'
+                : undefined
+            }
+            onClick={openForCreate}
+            label="Add a User"
+          />
         </Grid>
-        <Table aria-label="List of Users">
-          <TableHead>
-            <TableRow>
-              <TableCell data-qa-username-column>Username</TableCell>
-              {!matchesSmDown && (
-                <TableCell data-qa-email-column>Email Address</TableCell>
-              )}
-              <TableCell data-qa-restriction-column>Account Access</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderTableContent()}</TableBody>
-        </Table>
-      </div>
+      </Grid>
+      <Table aria-label="List of Users">
+        <TableHead>
+          <TableRow>
+            <TableCell data-qa-username-column>Username</TableCell>
+            {!matchesSmDown && (
+              <TableCell data-qa-email-column>Email Address</TableCell>
+            )}
+            <TableCell data-qa-restriction-column>Account Access</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderTableContent()}</TableBody>
+      </Table>
       <PaginationFooter
         count={users?.results || 0}
         page={pagination.page}
