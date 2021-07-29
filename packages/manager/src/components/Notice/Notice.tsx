@@ -64,6 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inner: {
     width: '100%',
+    '& p': {
+      fontSize: '1rem',
+    },
   },
   breakWords: {
     '& $noticeText': {
