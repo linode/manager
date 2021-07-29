@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Button from 'src/components/Button';
 import Accordion from 'src/components/Accordion';
+import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import CloseAccountDialog from './CloseAccountDialog';
 
@@ -12,11 +12,7 @@ const CloseAccountSetting: React.FC<{}> = () => {
       <Accordion heading="Close Account" defaultExpanded={true}>
         <Grid container direction="column">
           <Grid item>
-            <Button
-              buttonType="primary"
-              destructive
-              onClick={() => setDialogOpen(true)}
-            >
+            <Button buttonType="primary" onClick={() => setDialogOpen(true)}>
               Close Account
             </Button>
           </Grid>

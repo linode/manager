@@ -58,7 +58,7 @@ class AsyncContentExample extends React.Component {
 }
 
 export default {
-  title: 'Accordion',
+  title: 'UI Elements/Accordion',
 };
 
 export const Interactive = () => (

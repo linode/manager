@@ -14,7 +14,7 @@ const list = [
 ];
 
 export default {
-  title: 'Debounced Search',
+  title: 'Components/Search',
 };
 
 export const TextField = () => <TextFieldExample list={list} />;
