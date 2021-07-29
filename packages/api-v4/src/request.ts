@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ObjectSchema, ValidationError } from 'yup';
+import { ValidationError, AnySchema } from 'yup';
 import { APIError } from './types';
 
 interface RequestConfig extends AxiosRequestConfig {
@@ -70,7 +70,7 @@ export const setData = (
    * If a schema is provided, execute its validate method. If the validation fails, the
    * errors will be set at L.validationError's path.
    */
-  schema?: ObjectSchema<any>,
+  schema?: AnySchema,
   /**
    * postValidationTransform will be applied to the data just before it's set on the configuration
    * object, after the validation has happened. Use with caution: It was created as a trap door for
