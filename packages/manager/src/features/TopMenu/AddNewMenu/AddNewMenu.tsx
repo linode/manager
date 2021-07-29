@@ -1,4 +1,4 @@
-import { AccountCapability } from '@linode/api-v4/lib/account';
+import { Account, AccountCapability } from '@linode/api-v4/lib/account';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu,
@@ -9,7 +9,6 @@ import {
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -30,7 +29,7 @@ import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
 import { dbaasContext } from 'src/context';
-import { MapState } from 'src/store/types';
+import { queryClient } from 'src/queries/base';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem from './AddNewMenuItem';
 
@@ -148,12 +147,13 @@ const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps> {
   render() {
-    const { accountCapabilities, classes, flags } = this.props;
+    const { classes, flags } = this.props;
+    const account = queryClient.getQueryData<Account>('account');
 
     const showFirewalls = isFeatureEnabled(
       'Cloud Firewall',
       Boolean(flags.firewalls),
-      accountCapabilities ?? []
+      account?.capabilities ?? []
     );
 
     return (
@@ -281,16 +281,7 @@ interface StateProps {
   accountCapabilities: AccountCapability[];
 }
 
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => {
-  return {
-    accountCapabilities: state?.__resources?.account?.data?.capabilities ?? [],
-  };
-};
-
-const connected = connect(mapStateToProps);
-
 const enhanced = compose<CombinedProps, {}>(
-  connected,
   withRouter,
   withFeatureFlags,
   styled

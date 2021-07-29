@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { takeLast } from 'ramda';
 /**
  * Expiration is the beginning of the day of the first day of the month.
  * Expiration: yyyy-MM-01 00:00:00
@@ -20,6 +21,18 @@ export const hasExpirationPassedFor = (today: DateTime = DateTime.local()) => (
   expDate: string /** MM/YYYY */
 ) => {
   return today > expirationDateFromString(expDate);
+};
+
+/**
+ * Converts an expiry date in MM/YYYY to MM/YY.
+ * @param expiry expiry date in form <mm/yyyy> or <mm/yy>
+ * @returns that same expiry date in form <mm/yy>
+ */
+export const formatExpiry = (expiry: string): string => {
+  const expiryData = expiry.split('/');
+  return expiryData[1].length > 2
+    ? `${expiryData[0]}/${takeLast(2, expiryData[1])}`
+    : expiry;
 };
 
 export default hasExpirationPassedFor();

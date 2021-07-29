@@ -1,12 +1,11 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import cachedTypes from 'src/cachedData/types.json';
-import OrderBy from 'src/components/OrderBy';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+import OrderBy from 'src/components/OrderBy';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { linodeFactory } from 'src/factories/linodes';
 import LinodeRow from 'src/features/linodes/LinodesLanding/LinodeRow';
 import SortableTableHead from 'src/features/linodes/LinodesLanding/SortableTableHead';
@@ -65,7 +64,7 @@ class StoryTable extends React.Component {
                     mostRecentBackup={linode.backups.last_successful}
                     tags={linode.tags}
                     openTagDrawer={() => null}
-                    type={cachedTypes[0]}
+                    type={linode.type}
                     vcpus={linode.specs.vcpus}
                     openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
@@ -123,8 +122,8 @@ export const Default = () => (
   </TableWrapper>
 );
 
-export const CmrSorted = () => <StoryTable />;
+export const Sorted = () => <StoryTable />;
 
-CmrSorted.story = {
-  name: 'CMR - Sorted',
+Sorted.story = {
+  name: 'Sorted',
 };

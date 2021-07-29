@@ -1,12 +1,10 @@
-import { saveCreditCard } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 // eslint-disable-next-line no-restricted-imports
 import { InputBaseComponentProps } from '@material-ui/core';
-import { take, takeLast } from 'ramda';
+import { take } from 'ramda';
 import * as React from 'react';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 // import AcceptedCards from 'src/assets/icons/accepted-cards.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,12 +19,14 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import accountContainer, {
-  Props as AccountContainerProps,
-} from 'src/containers/account.container';
 import { cleanCVV } from 'src/features/Billing/billingUtils';
 import useFlags from 'src/hooks/useFlags';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
+import { useSnackbar } from 'notistack';
+import { PaymentMethod } from '@linode/api-v4/lib/account';
+import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,17 +44,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+export const CreditCardAddressMessage: React.FC<{}> = () => (
+  <Typography>
+    The address affiliated with this credit card must match the{' '}
+    <Link
+      to={{
+        pathname: '/account/billing',
+        state: { contactDrawerOpen: true },
+      }}
+    >
+      contact information
+    </Link>{' '}
+    active on this account.
+  </Typography>
+);
+
 export interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-type CombinedProps = Props & AccountContainerProps;
+export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
+  const { data: paymentMethods } = useAllPaymentMethodsQuery();
 
-export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesXSDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const { enqueueSnackbar } = useSnackbar();
 
   const { onClose, open } = props;
 
@@ -112,21 +128,36 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
       return;
     }
 
-    saveCreditCard({
-      card_number: cardNumber,
-      expiry_month: expMonth,
-      expiry_year: expYear,
-      cvv,
+    /**
+     * Make the user's credit card default if
+     * - They have no payment methods
+     * - Their previous default payment method was a credit card
+     *
+     * We determined this to make sure a user's payment method
+     * does not abruptly switch after "Editing" it.
+     * @TODO remove this logic when user can have more payment methods
+     */
+    const shouldBecomeDefault =
+      paymentMethods?.length === 0 ||
+      paymentMethods?.find(
+        (method: PaymentMethod) => method.is_default === true
+      )?.type === 'credit_card';
+
+    addPaymentMethod({
+      type: 'credit_card',
+      is_default: shouldBecomeDefault,
+      data: {
+        card_number: cardNumber,
+        expiry_month: expMonth,
+        expiry_year: expYear,
+        cvv,
+      },
     })
       .then(() => {
-        const credit_card = {
-          last_four: takeLast(4, cardNumber),
-          expiry: `${String(expMonth).padStart(2, '0')}/${expYear}`,
-          cvv,
-        };
-        // Update Redux store so subscribed components will display updated
-        // information.
-        props.saveCreditCard(credit_card);
+        queryClient.invalidateQueries('account-payment-methods-all');
+        enqueueSnackbar('Successfully updated your credit card.', {
+          variant: 'success',
+        });
         resetForm(true);
         setSubmitting(false);
         onClose();
@@ -151,7 +182,9 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
   );
   const generalError = hasErrorFor.none;
 
-  const cvvLabel = flags.cvvRequired ? 'CVV' : 'CVV (optional)';
+  const cvvLabel = flags.cvvRequired
+    ? 'Security Code'
+    : 'Security Code (optional)';
 
   return (
     <Drawer title="Edit Credit Card" open={open} onClose={onClose}>
@@ -196,18 +229,7 @@ export const UpdateCreditCardDrawer: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography>
-            The address affiliated with this credit card must match the{' '}
-            <Link
-              to={{
-                pathname: '/account/billing',
-                state: { contactDrawerOpen: true },
-              }}
-            >
-              contact information
-            </Link>{' '}
-            active on this account.
-          </Typography>
+          <CreditCardAddressMessage />
         </Grid>
       </Grid>
       <ActionsPanel className={classes.actions}>
@@ -237,7 +259,7 @@ export interface CreditCardFormProps extends NumberFormatProps {
 type CombinedCreditCardFormProps = CreditCardFormProps &
   InputBaseComponentProps;
 
-const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
+export const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
   inputRef,
   onChange,
   ...other
@@ -258,6 +280,4 @@ const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(accountContainer());
-
-export default enhanced(UpdateCreditCardDrawer);
+export default UpdateCreditCardDrawer;

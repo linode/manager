@@ -4,13 +4,13 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `1px solid ${theme.cmrBorderColors.borderTable}`,
     '& thead th': {
       borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      '&:last-of-type': {
+        paddingRight: 15,
+      },
     },
   },
 }));

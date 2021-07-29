@@ -3,9 +3,7 @@ import { ImageStatus } from '@linode/api-v4/lib/images/types';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import ActionMenu, {
-  Action,
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
@@ -14,6 +12,8 @@ export interface Handlers {
   onDeploy: (imageID: string) => void;
   onEdit: (label: string, description: string, imageID: string) => void;
   onDelete: (label: string, imageID: string, status?: ImageStatus) => void;
+  onRetry: (imageID: string, label: string, description: string) => void;
+  onCancelFailed: (imageID: string) => void;
   [index: string]: any;
 }
 
@@ -36,28 +36,41 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
     id,
     label,
     status,
+    event,
     onRestore,
     onDeploy,
     onEdit,
     onDelete,
+    onRetry,
+    onCancelFailed,
   } = props;
 
   const actions: Action[] = React.useMemo(() => {
-    // @todo remove first half of this conditional when Machine Images is GA
     const isDisabled = status && status !== 'available';
-    return status === 'pending_upload'
+    const isAvailable = !isDisabled;
+    const isFailed = event?.status === 'failed';
+    return isFailed
       ? [
-          // Cancelling a pending upload is functionally equivalent to deleting it
           {
-            title: 'Cancel Upload',
+            title: 'Retry',
             onClick: () => {
-              onDelete(label, id, status);
+              onRetry(id, label, description);
+            },
+          },
+          {
+            title: 'Cancel',
+            onClick: () => {
+              onCancelFailed(id);
             },
           },
         ]
       : [
           {
             title: 'Edit',
+            disabled: isDisabled,
+            tooltip: isDisabled
+              ? 'Image is not yet available for use.'
+              : undefined,
             onClick: () => {
               onEdit(label, description ?? ' ', id);
             },
@@ -83,13 +96,25 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
             },
           },
           {
-            title: 'Delete',
+            title: isAvailable ? 'Delete' : 'Cancel Upload',
             onClick: () => {
               onDelete(label, id, status);
             },
           },
         ];
-  }, [status, description, id, label, onDelete, onRestore, onDeploy, onEdit]);
+  }, [
+    status,
+    description,
+    id,
+    label,
+    onDelete,
+    onRestore,
+    onDeploy,
+    onEdit,
+    onRetry,
+    onCancelFailed,
+    event,
+  ]);
 
   /**
    * Moving all actions to the dropdown menu to prevent visual mismatches
@@ -111,6 +136,7 @@ export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
               actionText={action.title}
               onClick={action.onClick}
               disabled={action.disabled}
+              tooltip={action.tooltip}
             />
           );
         })}

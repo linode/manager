@@ -1,8 +1,6 @@
 import { Token } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
-import ActionMenu, {
-  Action,
-} from 'src/components/ActionMenu_CMR/ActionMenu_CMR';
+import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 

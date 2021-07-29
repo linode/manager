@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import { typeFactory } from 'src/factories/types';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 
-const types = require('src/cachedData/types.json');
-
 const pools = nodePoolFactory.buildList(5, { count: 3 });
+const types = typeFactory.buildList(5);
 
 const props: Props = {
   pools,
@@ -13,7 +14,7 @@ const props: Props = {
   updatePool: jest.fn(),
   removePool: jest.fn(),
   createCluster: jest.fn(),
-  typesData: types.data,
+  typesData: types as ExtendedType[],
 };
 
 const renderComponent = (_props: Props) =>

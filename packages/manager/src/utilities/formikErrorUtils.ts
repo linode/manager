@@ -40,3 +40,26 @@ export const handleGeneralErrors = (
     return callback(generalError);
   }
 };
+
+export const handleAPIErrors = (
+  errors: APIError[],
+  setFieldError: (field: string, message: string) => void,
+  setError: (message: string) => void
+) => {
+  errors.forEach((error: APIError) => {
+    if (error.field) {
+      /**
+       * The line below gets the field name because the API returns something like this...
+       * {"errors": [{"reason": "Invalid credit card number", "field": "data.card_number"}]}
+       * It takes 'data.card_number' and translates it to 'card_number'
+       */
+      const key = error.field.split('.')[error.field.split('.').length - 1];
+      if (key) {
+        setFieldError(key, error.reason);
+      }
+    } else {
+      // Put any general API errors into a <Notice />
+      setError(error.reason);
+    }
+  });
+};

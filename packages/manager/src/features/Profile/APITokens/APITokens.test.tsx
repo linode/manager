@@ -20,7 +20,6 @@ describe('APITokens', () => {
     const component = shallow<APITokenTable>(
       <APITokenTable
         {...pageyProps}
-        accountCapabilities={[]}
         count={4}
         classes={{
           root: '',
