@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import Grid from 'src/components/Grid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -103,7 +103,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
         />
       </Grid>
       <Grid item className="px0" style={{ marginTop: 4 }}>
-        <DocumentationButton href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
+        <DocsLink href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
       </Grid>
     </Grid>
   );

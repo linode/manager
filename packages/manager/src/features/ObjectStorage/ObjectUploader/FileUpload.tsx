@@ -91,12 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     '& button': {
-      padding: theme.spacing(),
       marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
-    '& button:last-child': {
-      marginRight: 0,
     },
   },
 }));
@@ -207,10 +202,10 @@ const FileUpload: React.FC<Props> = (props) => {
             This file already exists. Are you sure you want to overwrite it?
           </Typography>
           <div className={classes.actions}>
-            <Button buttonType="cancel" superCompact onClick={cancelOverwrite}>
+            <Button buttonType="secondary" onClick={cancelOverwrite}>
               Cancel
             </Button>
-            <Button buttonType="primary" superCompact onClick={resumeUpload}>
+            <Button buttonType="primary" onClick={resumeUpload}>
               Replace
             </Button>
           </div>

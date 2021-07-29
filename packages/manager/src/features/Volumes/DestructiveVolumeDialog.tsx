@@ -49,15 +49,14 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
 
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button buttonType="cancel" onClick={this.props.onClose} data-qa-cancel>
+        <Button
+          buttonType="secondary"
+          onClick={this.props.onClose}
+          data-qa-cancel
+        >
           Cancel
         </Button>
-        <Button
-          buttonType="primary"
-          destructive
-          onClick={method}
-          data-qa-confirm
-        >
+        <Button buttonType="primary" onClick={method} data-qa-confirm>
           {action} Volume
         </Button>
       </ActionsPanel>

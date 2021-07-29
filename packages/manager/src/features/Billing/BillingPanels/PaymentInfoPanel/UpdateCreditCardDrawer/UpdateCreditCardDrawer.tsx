@@ -234,7 +234,7 @@ export const UpdateCreditCardDrawer: React.FC<Props> = (props) => {
       </Grid>
       <ActionsPanel className={classes.actions}>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           compact={matchesXSDown}
           onClick={() => {
             resetForm(undefined);

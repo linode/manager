@@ -33,7 +33,7 @@ import {
 } from '../linodeDetailContext';
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
-import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
+import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
 import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
@@ -380,7 +380,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         linodeLabel={deleteDialog.linodeLabel}
         handleDelete={handleDeleteLinode}
       />
-      <LinodeResize_CMR
+      <LinodeResize
         open={resizeDialog.open}
         onClose={closeDialogs}
         linodeId={resizeDialog.linodeID}

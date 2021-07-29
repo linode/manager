@@ -307,8 +307,8 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#888',
-          opacity: 0.5,
+          backgroundColor: '#454b54',
+          color: '#5c6470',
         },
         '&.loading': {
           color: primaryColors.text,
@@ -327,57 +327,21 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.divider,
-        },
-        '&.loading': {
-          backgroundColor: primaryColors.text,
-        },
-        '&.cancel': {
-          '&:hover, &:focus': {
-            borderColor: '#fff',
-          },
+          backgroundColor: '#454b54',
+          color: '#5c6470',
         },
       },
-      containedSecondary: {
+      outlined: {
         color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
-          color: cmrTextColors.linkActiveLight,
+          backgroundColor: 'transparent !important',
+          border: '1px solid #fff',
+          color: '#fff',
         },
-        '&:active': {
-          color: primaryColors.dark,
-          borderColor: primaryColors.dark,
-        },
-        '&$disabled': {
-          color: '#c9cacb',
-        },
-        '&.cancel': {
-          borderColor: 'transparent',
-          '&:hover, &:focus': {
-            borderColor: primaryColors.light,
-          },
-        },
-        // '&.destructive': {
-        //   borderColor: '#c44742',
-        //   color: '#c44742',
-        //   '&:hover, &:focus': {
-        //     color: '#df6560',
-        //     borderColor: '#df6560',
-        //     backgroundColor: 'transparent'
-        //   },
-        //   '&:active': {
-        //     color: '#963530',
-        //     borderColor: '#963530'
-        //   }
-        // },
-        '&.loading': {
-          color: primaryColors.text,
-          minWidth: 100,
-          '& svg': {
-            width: 22,
-            height: 22,
-          },
-        },
+      },
+      '&$disabled': {
+        color: '#5c6470',
+        backgroundColor: '#454b54',
       },
     },
     MuiButtonBase: {
