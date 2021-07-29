@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     outline: 0,
     '&.checked .innerGrid': {
       borderColor: theme.palette.primary.main,
-      backgroundColor: theme.bg.main,
+      backgroundColor: theme.cmrBGColors.bgCopyButton,
       '& span': {
         color: theme.palette.primary.main,
       },
