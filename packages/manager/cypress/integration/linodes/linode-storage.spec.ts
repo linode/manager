@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { Linode } from '../../../../api-v4/lib/linodes/types';
 import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
 import {
   containsVisible,
@@ -74,7 +75,7 @@ describe('linode storage tab', () => {
   // create with empty disk then delete disk
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode({ image: null }).then((linode: any) => {
+    createLinode({ image: null }).then((linode: Linode) => {
       cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
@@ -96,7 +97,7 @@ describe('linode storage tab', () => {
   // create with empty disk then add disk
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
-    createLinode({ image: null }).then((linode: any) => {
+    createLinode({ image: null }).then((linode: Linode) => {
       cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );
@@ -110,7 +111,7 @@ describe('linode storage tab', () => {
   // resize disk
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
-    createLinode({ image: null }).then((linode: any) => {
+    createLinode({ image: null }).then((linode: Linode) => {
       cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );

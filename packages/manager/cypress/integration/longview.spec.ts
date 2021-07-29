@@ -8,6 +8,8 @@ import {
 import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
 import { waitForAppLoad } from '../support/ui/common';
 import strings from '../support/cypresshelpers';
+import { ClientRequest } from 'http';
+import { LongviewClient } from '../../../api-v4/lib';
 
 describe('longview', () => {
   it('tests longview', () => {
@@ -15,7 +17,7 @@ describe('longview', () => {
     const clientLabel = makeClientLabel();
     cy.visitWithLogin('/dashboard');
     createLinode({ root_pass: linodePassword }).then((linode) => {
-      createClient(undefined, clientLabel).then((client: any) => {
+      createClient(undefined, clientLabel).then((client: LongviewClient) => {
         const linodeIp = linode['ipv4'][0];
         const clientLabel = client.label;
         cy.visit('/longview');

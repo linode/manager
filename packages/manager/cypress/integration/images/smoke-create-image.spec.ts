@@ -1,3 +1,4 @@
+import { Linode } from '../../../../api-v4/lib/linodes/types';
 import { makeImageLabel } from '../../support/api/images';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import {
@@ -21,7 +22,7 @@ describe('create image', () => {
     cy.intercept('POST', '*/images', (req) => {
       req.reply(200);
     }).as('postImages');
-    createLinode().then((linode: any) => {
+    createLinode().then((linode: Linode) => {
       // stub incoming disks response
       cy.intercept(`*/linode/instances/${linode.id}/disks*`, {
         results: 2,
