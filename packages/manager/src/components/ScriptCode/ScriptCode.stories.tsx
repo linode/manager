@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import ScriptCode from './ScriptCode';
 
 const code = `#!/usr/bin/env python
@@ -106,11 +105,11 @@ if __name__ == "__main__":
     sys.exit(main())`;
 
 export default {
-  title: 'ScriptCode',
+  title: 'UI Elements/Script Code',
 };
 
-export const ScriptCodeWithSomeStackScriptCode = () => <ScriptCode script={code} />;
+export const Default = () => <ScriptCode script={code} />;
 
-ScriptCodeWithSomeStackScriptCode.story = {
-  name: 'ScriptCode with some stackScript code',
+Default.story = {
+  name: 'Default',
 };

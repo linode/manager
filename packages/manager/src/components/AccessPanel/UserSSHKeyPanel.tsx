@@ -161,6 +161,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
       <Button
         buttonType="secondary"
         onClick={handleOpenDrawer}
+        compact
         disabled={disabled}
       >
         Add an SSH Key

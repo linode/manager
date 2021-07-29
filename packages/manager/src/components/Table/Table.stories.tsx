@@ -1,7 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import cachedTypes from 'src/cachedData/types.json';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
@@ -65,7 +64,7 @@ class StoryTable extends React.Component {
                     mostRecentBackup={linode.backups.last_successful}
                     tags={linode.tags}
                     openTagDrawer={() => null}
-                    type={cachedTypes[0]}
+                    type={linode.type}
                     vcpus={linode.specs.vcpus}
                     openDialog={this.handleDialog}
                     openPowerActionDialog={this.handlePowerActionDialog}
@@ -82,7 +81,7 @@ class StoryTable extends React.Component {
 }
 
 export default {
-  title: 'Table',
+  title: 'Components/Table',
 };
 
 export const Default = () => (
