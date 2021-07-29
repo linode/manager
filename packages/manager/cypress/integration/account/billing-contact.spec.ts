@@ -58,7 +58,9 @@ const checkAccountContactDisplay = (data) => {
   cy.contains(data['address_2']);
   cy.findByText(data['state'], { exact: false });
   cy.findByText(data['zip'], { exact: false });
-  cy.findByText(data['email']);
+  cy.get('[data-qa-contact-email="true"]').within(() => {
+    cy.findByText(data['email']);
+  });
   cy.findByText(data['phone']);
 };
 
