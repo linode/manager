@@ -9,7 +9,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -428,7 +427,6 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
       price,
       onRowSelect,
       onRadioSelect,
-      currentSubscriptionOnAccount,
       isSelected,
       disabled,
     } = props;
@@ -464,13 +462,6 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
               disabled={disabled}
             />
             {plan}
-            {currentSubscriptionOnAccount === id && (
-              <Chip
-                data-testid={`current-plan-${id}`}
-                label="Current Plan"
-                className={styles.chip}
-              />
-            )}
           </div>
         </TableCell>
         <TableCell
