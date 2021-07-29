@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     borderRadius: 1,
+    fontSize: '1rem',
     marginBottom: theme.spacing(2),
     maxWidth: '100%',
     padding: '4px 16px',
@@ -37,9 +38,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& $important': {
       backgroundColor: theme.cmrBGColors.bgPaper,
-    },
-    '& $noticeText': {
-      color: theme.cmrTextColors.headlineStatic,
     },
     '& $error': {
       borderLeftColor: theme.cmrIconColors.iRed,
@@ -66,9 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   inner: {
     width: '100%',
-    '& p': {
-      fontSize: '1rem',
-    },
   },
   breakWords: {
     '& $noticeText': {
@@ -76,17 +71,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   noticeText: {
-    color: theme.palette.text.primary,
+    fontFamily: theme.font.bold,
     fontSize: '1rem',
-    lineHeight: `20px`,
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
-    '& p': {
-      fontSize: '1rem',
-    },
+    lineHeight: '20px',
   },
   error: {
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
     animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -95,8 +86,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `5px solid ${theme.palette.status.errorDark}`,
   },
   warning: {
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -108,8 +99,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `5px solid ${theme.palette.status.warningDark}`,
   },
   success: {
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
     animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.color.green}`,
     '&$important': {
       borderLeftWidth: 32,
     },
