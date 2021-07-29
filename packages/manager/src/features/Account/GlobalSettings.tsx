@@ -108,9 +108,7 @@ const GlobalSettings: React.FC<CombinedProps> = (props) => {
   };
 
   const toggleNetworkHelper = () => {
-    return updateAccount({ network_helper: !network_helper }).catch(
-      displayError
-    );
+    updateAccount({ network_helper: !network_helper }).catch(displayError);
   };
 
   return (
