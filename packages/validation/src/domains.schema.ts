@@ -36,7 +36,7 @@ export const createDomainSchema = domainSchemaBase.shape({
   type: mixed().required().oneOf(['master', 'slave']),
   soa_email: string()
     .when('type', {
-      is: (type) => type === 'master',
+      is: 'master',
       then: string().required('SOA Email is required.'),
       otherwise: string(),
     })
@@ -44,7 +44,7 @@ export const createDomainSchema = domainSchemaBase.shape({
   master_ips: array()
     .of(string())
     .when('type', {
-      is: (type) => type === 'slave',
+      is: 'slave',
       then: array()
         .of(string())
         .compact()

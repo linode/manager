@@ -1,7 +1,7 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 import { parseCIDR } from 'ipaddr.js';
 
-const validateIP = (ipAddress: string | null) => {
+const validateIP = (ipAddress?: string | null) => {
   if (!ipAddress) {
     return true;
   }
@@ -27,7 +27,7 @@ export const linodeInterfaceSchema = array()
       ),
       label: string()
         .when('purpose', {
-          is: (value) => value === 'vlan',
+          is: 'vlan',
           then: string()
             .required('VLAN label is required.')
             .min(1, 'VLAN label must be between 1 and 64 characters.')
@@ -49,7 +49,7 @@ export const linodeInterfaceSchema = array()
   .test(
     'unique-public-interface',
     'Only one public interface per config is allowed.',
-    (list: any[]) => {
+    (list?: any[] | null) => {
       if (!list) {
         return true;
       }
@@ -96,7 +96,7 @@ export const CreateLinodeSchema = object({
   private_ip: boolean().notRequired(),
   authorized_users: array().of(string()).notRequired(),
   root_pass: string().when('image', {
-    is: (value) => Boolean(value),
+    is: (value: any) => Boolean(value),
     then: string().required(
       'You must provide a root password when deploying from an image.'
     ),
@@ -270,7 +270,7 @@ export const CreateLinodeDiskSchema = object({
   authorized_keys: array().of(string()),
   authorized_users: array().of(string()),
   root_pass: string().when('image', {
-    is: (value) => Boolean(value),
+    is: (value: any) => Boolean(value),
     then: string().required(
       'You must provide a root password when deploying from an image.'
     ),
