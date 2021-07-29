@@ -299,7 +299,6 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
           checked,
           [classes.disabled]: disabled,
           [classes.showCursor]: onClick && !disabled,
-          selectionCard: true,
         },
         className
       )}
