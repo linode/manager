@@ -271,8 +271,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     return deleteLinode(linodeId);
   };
 
-  // @todo: Update to us-southeast after testing
-  const region = 'ca-central';
+  const region = 'us-southeast';
   const showVolumesBanner =
     flags.blockStorageAvailability &&
     linode.region === region &&
@@ -332,7 +331,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           >
             <Grid item>
               <Typography>
-                Take advantage of high-performance{' '}
+                Atlanta is the first data center with our new high-performance{' '}
                 <Link to="https://www.linode.com/products/block-storage/">
                   NVMe Block Storage
                 </Link>
