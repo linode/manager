@@ -14,7 +14,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanel from 'src/components/TagsPanel/TagsPanelRedesigned';
+import TagsPanel from 'src/components/TagsPanel';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
@@ -51,15 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     marginBottom: `${theme.spacing(1) - 3}px`,
   },
-  column: {},
-  iconsSharedStyling: {
-    height: 24,
-    width: 24,
-    objectFit: 'contain',
-  },
-  kubeconfigSection: {
-    marginTop: `${theme.spacing() + 2}px`,
-  },
   kubeconfigElements: {
     display: 'flex',
     alignItems: 'center',
@@ -77,18 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 16,
     margin: `0 ${theme.spacing(1)}px`,
     objectFit: 'contain',
-  },
-  tagsSection: {
-    display: 'flex',
-    height: '100%',
-    [theme.breakpoints.up('lg')]: {
-      justifyContent: 'flex-end',
-      textAlign: 'right',
-    },
-  },
-  iconSharedOuter: {
-    flexBasis: '28%',
-    textAlign: 'center',
   },
   iconTextOuter: {
     flexBasis: '72%',
@@ -314,7 +293,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
           className={classes.mainGridContainer}
         >
           <Grid item container direction="row" xs={12} lg={4}>
-            <Grid item className={classes.column}>
+            <Grid item>
               <Grid
                 container
                 item
@@ -354,7 +333,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               </Grid>
             </Grid>
 
-            <Grid item className={classes.column}>
+            <Grid item>
               <Grid
                 container
                 item
@@ -409,9 +388,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
 
           <Button
             buttonType="secondary"
-            className={classes.deleteButton}
             onClick={() => openDialog(cluster.id)}
-            superCompact
+            className={classes.deleteButton}
+            compact
           >
             Delete Cluster
           </Button>

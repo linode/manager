@@ -17,7 +17,7 @@ import { LongviewService } from 'src/features/Longview/request.types';
 import LongviewServiceRow from './LongviewServiceRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  cmrSpacing: {
+  title: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
@@ -37,7 +37,7 @@ export const ListeningServices: React.FC<TableProps> = (props) => {
 
   return (
     <Grid item xs={12} md={8}>
-      <Typography variant="h2" className={classes.cmrSpacing}>
+      <Typography variant="h2" className={classes.title}>
         Listening Services
       </Typography>
       <ServicesTable

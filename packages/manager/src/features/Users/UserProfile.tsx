@@ -258,11 +258,10 @@ class UserProfile extends React.Component<CombinedProps> {
           />
         )}
         <Button
-          disabled={profileUsername === toDeleteUsername}
-          className={classes.topMargin}
           buttonType="primary"
-          destructive
           onClick={this.onDelete}
+          className={classes.topMargin}
+          disabled={profileUsername === toDeleteUsername}
           data-qa-confirm-delete
         >
           Delete

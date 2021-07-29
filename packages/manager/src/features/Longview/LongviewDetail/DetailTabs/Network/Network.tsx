@@ -15,12 +15,12 @@ import NetworkGraphs from './NetworkGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 250,
-  },
-  cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
+  },
+  select: {
+    width: 250,
   },
 }));
 
@@ -69,11 +69,11 @@ export const NetworkLanding: React.FC<Props> = (props) => {
           flexDirection="row"
           justifyContent="flex-end"
           alignItems="center"
-          className={classes.cmrSpacing}
+          className={classes.root}
         >
           <TimeRangeSelect
             small
-            className={classes.root}
+            className={classes.select}
             handleStatsChange={handleStatsChange}
             defaultValue="Past 30 Minutes"
             label="Select Time Range"

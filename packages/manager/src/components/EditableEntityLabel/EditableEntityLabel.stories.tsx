@@ -4,7 +4,7 @@ import Grid from 'src/components/Grid';
 import EditableEntityLabel from './EditableEntityLabel';
 
 export default {
-  title: 'EditableEntityLabel',
+  title: 'UI Elements/Editable Entity Label',
 };
 
 export const Default = () => {

@@ -2,21 +2,16 @@ import * as classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
-import Button, { ButtonProps } from 'src/components/core/Button';
+import _Button, { ButtonProps } from 'src/components/core/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 export interface Props extends ButtonProps {
-  loading?: boolean;
-  destructive?: boolean;
-  buttonType?: 'primary' | 'secondary' | 'cancel' | 'remove';
+  buttonType?: 'primary' | 'secondary' | 'outlined';
   className?: string;
-  tooltipText?: string;
   compact?: boolean;
-  outline?: boolean;
-  superCompact?: boolean;
-  deleteText?: string;
-  loadingText?: string;
+  loading?: boolean;
+  tooltipText?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,40 +23,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       transform: 'rotate(360deg)',
     },
   },
-  root: {
-    minWidth: '105px',
-    transition: 'none',
-  },
   loading: {
     '& svg': {
-      margin: '0 auto',
-      width: `${theme.spacing(1) + 8}px !important`,
-      height: `${theme.spacing(1) + 8}px !important`,
       animation: '$rotate 2s linear infinite',
+      margin: '0 auto',
+      height: `${theme.spacing(2)}px !important`,
+      width: `${theme.spacing(2)}px !important`,
     },
-  },
-  loadingText: {
-    marginRight: 8,
   },
   compact: {
-    paddingLeft: theme.spacing(2) - 2,
-    paddingRight: theme.spacing(2) - 2,
-    minWidth: '75px',
-  },
-  superCompact: {
-    paddingLeft: 0,
+    minWidth: 50,
     paddingRight: 0,
-    minWidth: '50px',
-  },
-  outline: {
-    border: `1px solid ${theme.palette.primary.main}`,
-    borderRadius: 1,
-    minHeight: 34,
-    '&:hover, &:focus': {
-      backgroundColor: `${theme.cmrBGColors.bgSecondaryButton} !important`,
-      border: `1px solid ${theme.cmrBorderColors.borderSecondaryButton}`,
-      color: theme.cmrTextColors.secondaryButton,
-    },
+    paddingLeft: 0,
   },
   reg: {
     display: 'flex',
@@ -74,59 +47,45 @@ type CombinedProps = Props;
 const getVariant = cond([
   [propEq('buttonType', 'primary'), always('contained')],
   [propEq('buttonType', 'secondary'), always('contained')],
-  [propEq('buttonType', 'remove'), always('contained')],
-  [propEq('buttonType', 'cancel'), always('contained')],
+  [propEq('buttonType', 'outlined'), always('outlined')],
   [() => true, always(undefined)],
 ]);
 
 const getColor = cond([
   [propEq('buttonType', 'primary'), always('primary')],
   [propEq('buttonType', 'secondary'), always('secondary')],
-  [propEq('buttonType', 'remove'), always('primary')],
-  [propEq('buttonType', 'destructive'), always('primary')],
-  [propEq('buttonType', 'cancel'), always('secondary')],
   [() => true, always(undefined)],
 ]);
 
-// Add invariant warning if loading destructive cancel
-// Add invariant warning if destructive cancel
-
-const WrappedButton: React.FC<CombinedProps> = (props) => {
+export const Button: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const {
-    loading,
-    deleteText,
-    tooltipText,
-    loadingText,
     buttonType,
-    compact,
-    superCompact,
-    outline,
     className,
+    compact,
+    loading,
+    tooltipText,
     ...rest
   } = props;
 
   return (
     <React.Fragment>
-      <Button
+      <_Button
         {...rest}
-        variant={getVariant(props)}
-        disabled={props.disabled || loading}
-        color={getColor(props)}
         className={classNames(
           buttonType,
           {
-            [classes.root]: true,
+            [classes.compact]: buttonType === 'secondary' ? compact : false,
             [classes.loading]: loading,
-            loading,
-            [classes.compact]: compact,
-            [classes.superCompact]: superCompact,
-            [classes.outline]: outline,
             disabled: props.disabled,
+            loading,
           },
           className
         )}
+        color={getColor(props)}
+        disabled={props.disabled || loading}
+        variant={getVariant(props)}
       >
         <span
           className={classNames({
@@ -134,29 +93,12 @@ const WrappedButton: React.FC<CombinedProps> = (props) => {
           })}
           data-qa-loading={loading}
         >
-          {loading ? (
-            loadingText ? (
-              /*
-                The recommendation here is to not use loadingText that
-                will create a large width for the button. Keep
-                your loading text strings short.
-              */
-              <React.Fragment>
-                <span className={classes.loadingText}>{loadingText}</span>
-                <Reload />
-              </React.Fragment>
-            ) : (
-              <Reload />
-            )
-          ) : (
-            props.children
-          )}
+          {loading ? <Reload /> : props.children}
         </span>
-        {buttonType === 'remove' && (deleteText ? deleteText : 'Remove')}
-      </Button>
+      </_Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>
   );
 };
 
-export default WrappedButton;
+export default Button;

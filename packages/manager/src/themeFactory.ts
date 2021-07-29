@@ -518,49 +518,22 @@ const themeDefaults: ThemeDefaults = () => {
         },
       },
       MuiButton: {
-        label: {
-          position: 'relative',
-        },
         root: {
-          textTransform: 'inherit',
-          fontSize: '1rem',
-          lineHeight: 1,
-          fontFamily: primaryFonts.bold,
-          // backgroundColor: primaryColors.main,
-          // color: '#fff',
-          // padding: `2px 20px`,
-          // maxHeight: 34,
-          // position: 'relative',
-          // minHeight: `34px`,
-          cursor: 'pointer',
           border: 'none',
-          [breakpoints.down('sm')]: {
-            marginLeft: 8,
-            maxHeight: 34,
-            minWidth: 100,
-          },
-          '&:hover': {
-            backgroundColor: primaryColors.light,
-            color: '#fff',
-          },
-          '&[aria-expanded="true"]': {
-            backgroundColor: primaryColors.light,
-          },
-          '&$disabled': {
-            color: '#bbb',
-          },
-          '&.loading': {
-            color: primaryColors.text,
-          },
+          cursor: 'pointer',
+          fontFamily: primaryFonts.bold,
+          fontSize: '1rem',
+          minHeight: 34,
+          minWidth: 105,
+          lineHeight: 1,
+          textTransform: 'inherit',
+          transition: 'none',
         },
         containedPrimary: {
           backgroundColor: primaryColors.main,
           borderRadius: 1,
           color: '#fff',
-          padding: `2px 20px`,
-          maxHeight: 34,
-          position: 'relative',
-          minHeight: 34,
+          padding: '2px 20px',
           '&:hover, &:focus': {
             backgroundColor: '#226dc3',
           },
@@ -572,11 +545,6 @@ const themeDefaults: ThemeDefaults = () => {
           },
           '&.loading': {
             backgroundColor: primaryColors.text,
-          },
-          '&.cancel': {
-            '&:hover, &:focus': {
-              borderColor: '#222',
-            },
           },
         },
         containedSecondary: {
@@ -596,38 +564,20 @@ const themeDefaults: ThemeDefaults = () => {
             borderColor: '#c9cacb',
             color: '#c9cacb',
           },
-          // '&.cancel': {
-          //   borderColor: 'transparent',
-          //   '&:hover, &:focus': {
-          //     borderColor: primaryColors.light,
-          //     backgroundColor: 'transparent'
-          //   }
-          // },
-          // '&.destructive': {
-          //   backgroundColor: primaryColors.main,
-          //   color: '#fff',
-          //   '&:hover, &:focus': {
-          //     color: '#fff',
-          //     backgroundColor: primaryColors.light
-          //   },
-          //   '&:active': {
-          //     color: '#963530',
-          //     borderColor: '#963530'
-          //   },
-          //   '&$disabled': {
-          //     borderColor: '#c9cacb',
-          //     backgroundColor: 'transparent',
-          //     color: '#c9cacb'
-          //   }
-          // },
           '&.loading': {
-            borderColor: primaryColors.text,
             color: primaryColors.text,
-            minWidth: 100,
-            '& svg': {
-              width: 22,
-              height: 22,
-            },
+          },
+        },
+        outlined: {
+          backgroundColor: 'transparent',
+          border: `1px solid ${primaryColors.main}`,
+          borderRadius: 1,
+          color: cmrTextColors.linkActiveLight,
+          minHeight: 34,
+          '&:hover, &:focus': {
+            backgroundColor: `${cmrBGColors.bgSecondaryButton} !important`,
+            border: `1px solid ${cmrBorderColors.borderSecondaryButton}`,
+            color: cmrTextColors.secondaryButton,
           },
         },
       },
@@ -1328,10 +1278,8 @@ const themeDefaults: ThemeDefaults = () => {
         },
         head: {
           fontSize: '.9rem',
+          height: 46,
           lineHeight: 1.1,
-          '&.emptyCell': {
-            height: 48,
-          },
         },
         body: {
           fontSize: '.9rem',
@@ -1387,7 +1335,7 @@ const themeDefaults: ThemeDefaults = () => {
           backfaceVisibility: 'hidden',
           position: 'relative',
           zIndex: 1,
-          height: 41,
+          height: 40,
           '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',

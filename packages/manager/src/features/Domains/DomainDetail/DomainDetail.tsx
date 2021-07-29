@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Loading from 'src/components/LandingLoading';
@@ -125,7 +125,7 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item className="p0" style={{ marginTop: 14 }}>
-          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
+          <DocsLink href="https://www.linode.com/docs/guides/dns-manager/" />
         </Grid>
       </Grid>
       {props.location.state && props.location.state.recordError && (

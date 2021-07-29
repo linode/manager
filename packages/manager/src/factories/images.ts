@@ -11,7 +11,7 @@ export const imageFactory = Factory.Sync.makeFactory<Image>({
   created_by: 'prod-test-004',
   is_public: false,
   size: 1500,
-  type: 'image',
+  type: 'manual',
   vendor: null,
   expiry: null,
   status: 'available',

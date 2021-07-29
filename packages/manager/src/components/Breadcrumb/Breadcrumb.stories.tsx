@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
-import Breadcrumb from './Breadcrumb';
-import { Provider } from 'react-redux';
 import store from 'src/store';
+import Breadcrumb from './Breadcrumb';
 
 interface Props {
   labelLink?: string;
@@ -45,7 +45,7 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
 }
 
 export default {
-  title: 'Breadcrumb',
+  title: 'UI Elements/Breadcrumb',
 };
 
 export const BasicBreadcrumb = () => (
