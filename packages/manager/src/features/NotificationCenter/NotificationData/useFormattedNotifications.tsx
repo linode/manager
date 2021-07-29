@@ -241,13 +241,13 @@ const interceptNotification = (
     const jsx = (
       <Typography>
         <Link
-          to={'/account/billing'}
+          to="/account/billing"
           onClick={onClose}
           className={criticalSeverity ? classes.redLink : classes.greyLink}
         >
           {notification.message}
         </Link>{' '}
-        <Link to={'/account/billing/make-payment'} onClick={onClose}>
+        <Link to="/account/billing/make-payment" onClick={onClose}>
           Make a payment now.
         </Link>
       </Typography>
