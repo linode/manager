@@ -217,19 +217,6 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const content = () => {
-    return (
-      <CardBase
-        heading={heading}
-        renderIcon={renderIcon}
-        subheadings={subheadings}
-        fullWidth={variant === 'quantityCheck' || variant === 'selectable'}
-      >
-        {renderVariant()}
-      </CardBase>
-    );
-  };
-
   const renderVariant = () => {
     switch (variant) {
       case 'info':
@@ -262,14 +249,11 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
             )}
           </Grid>
         );
-      case 'selectable':
-        return null;
       /**
        * The vast majority of these components use the check variant, so
        * keep that as the default case.
        */
       case 'check':
-      default:
         return (
           <Grid
             item
@@ -284,10 +268,24 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
             )}
           </Grid>
         );
+      case 'selectable':
+      default:
+        return null;
     }
   };
 
-  const cardGrid = () => (
+  const content = (
+    <CardBase
+      heading={heading}
+      renderIcon={renderIcon}
+      subheadings={subheadings}
+      fullWidth={variant === 'quantityCheck' || variant === 'selectable'}
+    >
+      {renderVariant()}
+    </CardBase>
+  );
+
+  const cardGrid = (
     <Grid
       item
       xs={12}
@@ -298,8 +296,8 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
       className={classNames(
         {
           [classes.root]: true,
-          checked: checked === true,
-          [classes.disabled]: disabled === true,
+          checked,
+          [classes.disabled]: disabled,
           [classes.showCursor]: onClick && !disabled,
           selectionCard: true,
         },
@@ -309,17 +307,19 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
       onKeyPress={handleKeyPress}
       data-qa-selection-card
     >
-      {content()}
+      {content}
     </Grid>
   );
 
-  return tooltip ? (
-    <Tooltip title={tooltip} placement={'top'}>
-      {cardGrid()}
-    </Tooltip>
-  ) : (
-    cardGrid()
-  );
+  if (tooltip) {
+    return (
+      <Tooltip title={tooltip} placement="top">
+        {cardGrid}
+      </Tooltip>
+    );
+  }
+
+  return cardGrid;
 };
 
 export default React.memo(SelectionCard);
