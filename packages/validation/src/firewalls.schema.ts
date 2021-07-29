@@ -4,7 +4,10 @@ import { array, mixed, number, object, string } from 'yup';
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
 
-export const validateIP = (ipAddress: string): boolean => {
+export const validateIP = (ipAddress?: string | null): boolean => {
+  if (!ipAddress) {
+    return false;
+  }
   // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
   // methods for each, so we check for a netmask to decide the method to use.
   const [, mask] = ipAddress.split('/');
@@ -46,7 +49,7 @@ export const FirewallRuleTypeSchema = object().shape({
     .oneOf(validFirewallRuleProtocol)
     .required('Protocol is required.'),
   ports: string().when('protocol', {
-    is: (val) => val !== 'ICMP',
+    is: (val: any) => val !== 'ICMP',
     then: validateFirewallPorts,
     // Workaround to get the test to fail if ports is defined when protocol === ICMP
     otherwise: string().test({

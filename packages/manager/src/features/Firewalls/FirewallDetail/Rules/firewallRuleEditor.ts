@@ -24,7 +24,7 @@
 // words, one instance of the reducer manages "inbound" rules, and another
 // instance manages "outbound" rules.
 
-import produce from 'immer';
+import produce, { Draft, Immutable, castDraft } from 'immer';
 import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
 import { compose, last, omit } from 'ramda';
 import { FirewallRuleError } from './shared';
@@ -42,7 +42,7 @@ export interface ExtendedFirewallRule extends FirewallRuleType {
   originalIndex: number;
 }
 
-export type RuleEditorState = ExtendedFirewallRule[][];
+export type RuleEditorState = Immutable<ExtendedFirewallRule[][]>;
 
 export type RuleEditorAction =
   | {
@@ -85,7 +85,7 @@ export type RuleEditorAction =
     };
 
 const ruleEditorReducer = (
-  draft: RuleEditorState,
+  draft: Draft<RuleEditorState>,
   action: RuleEditorAction
 ) => {
   switch (action.type) {
@@ -195,7 +195,7 @@ const ruleEditorReducer = (
       return;
 
     case 'DISCARD_CHANGES':
-      const original: RuleEditorState = [];
+      const original: Draft<RuleEditorState> = [];
       draft.forEach((thisRevisionList) => {
         const head = thisRevisionList[0];
         if (head.status === 'NOT_MODIFIED') {
@@ -227,7 +227,8 @@ export const initRuleEditorState = (
 export const editorStateToRules = (
   state: RuleEditorState
 ): ExtendedFirewallRule[] =>
-  state.map((revisionList) => revisionList[revisionList.length - 1]);
+  // Cast the results of the Immer state to a mutable data structure.
+  castDraft(state.map((revisionList) => revisionList[revisionList.length - 1]));
 
 // Remove fields we use internally.
 export const stripExtendedFields = (

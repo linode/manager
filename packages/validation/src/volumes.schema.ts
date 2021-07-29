@@ -19,7 +19,7 @@ const createSizeValidation = (minSize: number = 10) =>
 
 export const CreateVolumeSchema = object({
   region: string().when('linode_id', {
-    is: (id) => id === undefined || id === '',
+    is: (id: any) => id === undefined || id === '',
     then: string().required('Must provide a region or a Linode ID.'),
   }),
   linode_id: number(),

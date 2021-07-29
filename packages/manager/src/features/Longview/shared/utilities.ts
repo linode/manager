@@ -1,4 +1,3 @@
-import produce from 'immer';
 import { pathOr } from 'ramda';
 import { LVClientData } from 'src/containers/longview.stats.container';
 import { pluralize } from 'src/utilities/pluralize';
@@ -249,17 +248,16 @@ export const sumStatsObject = <T>(
   }
   return Object.values(data).reduce(
     (accum, thisObject) => {
-      return produce(accum, (draft) => {
-        if (thisObject && typeof thisObject === 'object') {
-          Object.keys(thisObject).forEach((thisKey) => {
-            if (thisKey in accum) {
-              draft[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
-            } else {
-              draft[thisKey] = thisObject[thisKey];
-            }
-          });
-        }
-      });
+      if (thisObject && typeof thisObject === 'object') {
+        Object.keys(thisObject).forEach((thisKey) => {
+          if (thisKey in accum) {
+            accum[thisKey] = appendStats(accum[thisKey], thisObject[thisKey]);
+          } else {
+            accum[thisKey] = thisObject[thisKey];
+          }
+        });
+      }
+      return accum;
     },
     { ...emptyState }
   );
