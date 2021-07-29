@@ -8,7 +8,6 @@ import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import Grid from 'src/components/core/Grid';
 
 const options: { label: string; flag: keyof Flags }[] = [
-  { label: 'CMR', flag: 'cmr' },
   { label: 'Databases', flag: 'databases' },
   { label: 'Bare Metal', flag: 'bareMetal' },
   { label: 'Machine Images', flag: 'machineImages' },

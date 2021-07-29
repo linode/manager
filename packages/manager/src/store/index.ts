@@ -1,9 +1,5 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import account, {
-  defaultState as defaultAccountState,
-  State as AccountState,
-} from 'src/store/account/account.reducer';
 import accountManagement, {
   defaultState as defaultAccountManagementState,
   State as AccountManagementState,
@@ -191,7 +187,6 @@ initReselectDevtools();
  * Default State
  */
 const __resourcesDefaultState = {
-  account: defaultAccountState,
   accountManagement: defaultAccountManagementState,
   accountSettings: defaultAccountSettingsState,
   databases: defaultDatabasesState,
@@ -217,7 +212,6 @@ const __resourcesDefaultState = {
 };
 
 export interface ResourcesState {
-  account: AccountState;
   accountManagement: AccountManagementState;
   accountSettings: AccountSettingsState;
   databases: DatabasesState;
@@ -294,7 +288,6 @@ export const defaultState: ApplicationState = {
  * Reducers
  */
 const __resources = combineReducers({
-  account,
   accountManagement,
   accountSettings,
   databases,

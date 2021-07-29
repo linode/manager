@@ -4,21 +4,17 @@ import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
 import { makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Grid from 'src/components/Grid';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { DiskSelection } from './utilities';
 
 const useStyles = makeStyles(() => ({
-  tableCell: {
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
   labelCol: {
     width: '65%',
   },
@@ -83,7 +79,7 @@ export const Disks: React.FC<Props> = (props) => {
 
                         return (
                           <TableRow key={disk.id} data-qa-disk={disk.label}>
-                            <TableCell className={classes.tableCell}>
+                            <TableCell>
                               <CheckBox
                                 text={disk.label}
                                 checked={isDiskSelected || isConfigSelected}

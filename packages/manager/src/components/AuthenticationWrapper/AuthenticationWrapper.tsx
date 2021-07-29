@@ -1,6 +1,6 @@
 import {
-  Account,
   AccountSettings,
+  getAccountInfo,
   Notification,
 } from '@linode/api-v4/lib/account';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
@@ -12,9 +12,9 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { startEventsInterval } from 'src/events';
+import { queryClient } from 'src/queries/base';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
-import { requestAccount } from 'src/store/account/account.requests';
 import { checkAccountSize } from 'src/store/accountManagement/accountManagement.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
@@ -60,8 +60,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
-      // Grants/what a user has permission to view
-      this.props.requestAccount(),
+      queryClient.prefetchQuery({
+        queryFn: getAccountInfo,
+        queryKey: 'account',
+      }),
 
       // Username and whether a user is restricted
       this.props.requestProfile(),
@@ -218,7 +220,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => ({
 interface DispatchProps {
   initSession: () => void;
   checkAccountSize: () => Promise<null>;
-  requestAccount: () => Promise<Account>;
   requestLinodes: () => Promise<GetAllData<Linode>>;
   requestNotifications: () => Promise<GetAllData<Notification>>;
   requestSettings: () => Promise<AccountSettings>;
@@ -234,7 +235,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => ({
   initSession: () => dispatch(handleInitTokens()),
   checkAccountSize: () => dispatch(checkAccountSize()),
-  requestAccount: () => dispatch(requestAccount()),
   requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
   requestSettings: () => dispatch(requestAccountSettings()),

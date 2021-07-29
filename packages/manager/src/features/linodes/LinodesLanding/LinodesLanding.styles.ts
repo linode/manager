@@ -19,8 +19,7 @@ type ClassNames =
   | 'chipPending'
   | 'chipOffline'
   | 'clearFilters'
-  | 'cmrSpacing'
-  | 'cmrCSVlink';
+  | 'cmrSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -35,6 +34,9 @@ const styles = (theme: Theme) =>
       fontSize: '.9rem',
       '&:hover': {
         textDecoration: 'underline',
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginRight: theme.spacing(),
       },
     },
     CSVlinkContainer: {
@@ -99,11 +101,6 @@ const styles = (theme: Theme) =>
       '& > .MuiGrid-item': {
         paddingLeft: 0,
         paddingRight: 0,
-      },
-    },
-    cmrCSVlink: {
-      [theme.breakpoints.down('sm')]: {
-        marginRight: theme.spacing(),
       },
     },
   });

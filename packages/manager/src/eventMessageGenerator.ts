@@ -556,6 +556,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   payment_submitted: {
     notification: (e) => `A payment was successfully submitted.`,
   },
+  payment_method_add: {
+    notification: (e) => `A payment method was added.`,
+  },
   stackscript_create: {
     notification: (e) => `StackScript ${e.entity!.label} has been created.`,
   },

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import ActionMenu from 'src/components/ActionMenu_CMR';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import ActionMenu from 'src/components/ActionMenu';
 import {
   makeStyles,
   Theme,
   useMediaQuery,
   useTheme,
 } from 'src/components/core/styles';
+import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
   nodeId?: string;

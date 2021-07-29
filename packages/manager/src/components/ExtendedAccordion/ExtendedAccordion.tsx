@@ -1,10 +1,7 @@
 import * as React from 'react';
-
+import Accordion, { AccordionProps } from 'src/components/Accordion';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import Accordion, { AccordionProps } from 'src/components/Accordion';
-import { useFlags } from 'src/hooks/useFlags';
-import AccordionCMR from '../Accordion/AccordionCMR';
 
 interface Props extends Omit<AccordionProps, 'children'> {
   height?: number;
@@ -60,34 +57,15 @@ const ExtendedAccordion: React.FC<Props> = (props) => {
     renderMainContent,
     headingNumberCount,
   } = props;
-  const flags = useFlags();
 
   return (
-    <React.Fragment>
-      {flags.cmr ? (
-        <AccordionCMR
-          heading={heading}
-          onChange={onChange}
-          headingNumberCount={headingNumberCount}
-        >
-          {renderContent(
-            error,
-            Boolean(loading),
-            height || 300,
-            renderMainContent
-          )}
-        </AccordionCMR>
-      ) : (
-        <Accordion heading={heading} onChange={onChange}>
-          {renderContent(
-            error,
-            Boolean(loading),
-            height || 300,
-            renderMainContent
-          )}
-        </Accordion>
-      )}
-    </React.Fragment>
+    <Accordion
+      heading={heading}
+      onChange={onChange}
+      headingNumberCount={headingNumberCount}
+    >
+      {renderContent(error, Boolean(loading), height || 300, renderMainContent)}
+    </Accordion>
   );
 };
 

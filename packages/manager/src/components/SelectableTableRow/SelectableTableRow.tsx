@@ -1,9 +1,8 @@
 import * as React from 'react';
-
-import { makeStyles } from 'src/components/core/styles';
-import TableRow from 'src/components/core/TableRow';
-import TableCell from 'src/components/TableCell';
 import CheckBox from 'src/components/CheckBox';
+import { makeStyles } from 'src/components/core/styles';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 const useStyles = makeStyles(() => ({
   root: {

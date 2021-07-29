@@ -13,6 +13,5 @@
     },
     "types": ["cypress", "cypress-file-upload"]
   },
-  "include": ["../cypress/**/*.ts", "**/*.*"],
-  "exclude": ["./plugins/*"]
+  "include": ["../cypress/**/*.ts", "**/*.*"]
 }

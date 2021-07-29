@@ -20,7 +20,6 @@ import { debounce } from 'throttle-debounce';
  */
 export const useOrder = (initial: OrderSet, preferenceKey?: string) => {
   const { preferences, updatePreferences } = usePreferences();
-
   const location = useLocation();
   const history = useHistory();
   const params = getParamsFromUrl(location.search);

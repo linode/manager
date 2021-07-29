@@ -29,7 +29,7 @@ export const ImagesRoutes: React.FC<Props> = (props) => {
   const machineImagesEnabled = isFeatureEnabled(
     'Machine Images',
     Boolean(flags.machineImages),
-    account.data?.capabilities ?? []
+    account?.capabilities ?? []
   );
 
   return (

@@ -15,31 +15,18 @@
 
 // Import commands.js using ES2015 syntax:
 import chaiString from 'chai-string';
+import { deleteAllTestData } from './ui/common';
 
 // chai is a global exposed by Cypress which means
 // we can just simply extend it
 chai.use(chaiString);
 
 import './commands';
-import { deleteAllTestLinodes } from './api/linodes';
-import { deleteAllTestNodeBalancers } from './api/nodebalancers';
-import { deleteAllTestVolumes } from './api/volumes';
-import { deleteAllTestImages } from './api/images';
-import { deleteAllTestClients } from './api/longview';
-import { deleteAllTestStackscripts } from './api/stackscripts';
-import {
-  deleteAllTestAccessKeys,
-  deleteAllTestBuckets,
-} from './api/objectStorage';
-import { deleteAllTestFirewalls } from './api/firewalls';
-it('Delete All Test Entities before anything happens', () => {
-  deleteAllTestLinodes();
-  deleteAllTestNodeBalancers();
-  deleteAllTestVolumes();
-  deleteAllTestImages();
-  deleteAllTestClients();
-  deleteAllTestAccessKeys();
-  deleteAllTestBuckets();
-  deleteAllTestFirewalls();
-  deleteAllTestStackscripts();
+
+before(() => {
+  deleteAllTestData();
+});
+
+after(() => {
+  deleteAllTestData();
 });
