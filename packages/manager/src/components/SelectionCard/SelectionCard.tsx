@@ -3,170 +3,152 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Fade from 'src/components/core/Fade';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
-
 import CardBase from './CardBase';
-
 import Info from 'src/assets/icons/info.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
-type CSSClasses =
-  | 'root'
-  | 'icon'
-  | 'info'
-  | 'checked'
-  | 'disabled'
-  | 'showCursor'
-  | 'enhancedInputOuter'
-  | 'enhancedInputButton';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 1,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
     },
-    root: {
-      minWidth: 200,
-      padding: theme.spacing(2),
-      justifyContent: 'center',
-      alignItems: 'center',
-      display: 'flex',
-      outline: 0,
-      '&.checked .innerGrid': {
-        borderColor: theme.palette.primary.main,
-        '& span': {
-          color: theme.palette.primary.main,
-        },
-      },
-      '&:focus .innerGrid': {
-        outline: `1px dotted ${theme.color.focusBorder}`,
-      },
-      '& .disabledInnerGrid': {
-        width: '100%',
-        backgroundColor: theme.bg.offWhiteDT,
-        border: '1px solid ' + `${theme.color.grey1}`,
-      },
-      '& [class^="fl-"]': {
-        transition: 'color 225ms ease-in-out',
-      },
+    to: {
+      opacity: 1,
     },
-    icon: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      '& svg, & span': {
-        fontSize: '32px',
-        color: '#939598',
-      },
-      '& img': {
-        maxHeight: '32px',
-        maxWidth: '32px',
-      },
-    },
-    checked: {
-      display: 'flex',
-      animation: '$fadeIn 225ms ease-in-out forwards 10ms',
-      '& svg': {
-        borderRadius: '16px',
-        border: '1px solid',
-        borderColor: theme.palette.primary.main,
-        fontSize: '16px',
+  },
+  root: {
+    minWidth: 200,
+    padding: theme.spacing(2),
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    outline: 0,
+    '&.checked .innerGrid': {
+      borderColor: theme.palette.primary.main,
+      backgroundColor: theme.cmrBGColors.bgCopyButton,
+      '& span': {
         color: theme.palette.primary.main,
       },
     },
-
     '&:focus .innerGrid': {
       outline: `1px dotted ${theme.color.focusBorder}`,
     },
-    showCursor: {
-      cursor: 'pointer',
-    },
-    disabled: {
-      cursor: 'not-allowed',
-      '& > div': {
-        opacity: 0.4,
-      },
-    },
-    heading: {
-      fontFamily: theme.font.bold,
-      fontSize: '1rem',
-      color: theme.color.headline,
-    },
-    subheading: {
-      fontSize: '0.875rem',
-      color: theme.palette.text.primary,
-    },
-    innerGrid: {
+    '& .disabledInnerGrid': {
       width: '100%',
-      height: '100%',
-      minHeight: 70,
       backgroundColor: theme.bg.offWhiteDT,
-      border: '1px solid ' + `${theme.bg.main}`,
-      margin: 0,
-      padding: '0 !important',
-      transition: `
+      border: '1px solid ' + `${theme.color.grey1}`,
+    },
+    '& [class^="fl-"]': {
+      transition: 'color 225ms ease-in-out',
+    },
+  },
+  icon: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    '& svg, & span': {
+      fontSize: 32,
+      color: '#939598',
+    },
+    '& img': {
+      maxHeight: 32,
+      maxWidth: 32,
+    },
+  },
+  checked: {
+    display: 'flex',
+    animation: '$fadeIn 225ms ease-in-out forwards 10ms',
+    '& svg': {
+      borderRadius: 16,
+      border: `1px solid ${theme.palette.primary.main}`,
+      fontSize: 16,
+      color: theme.palette.primary.main,
+    },
+  },
+
+  '&:focus .innerGrid': {
+    outline: `1px dotted ${theme.color.focusBorder}`,
+  },
+  showCursor: {
+    cursor: 'pointer',
+  },
+  disabled: {
+    cursor: 'not-allowed',
+    '& > div': {
+      opacity: 0.4,
+    },
+  },
+  heading: {
+    fontFamily: theme.font.bold,
+    fontSize: '1rem',
+    color: theme.color.headline,
+  },
+  subheading: {
+    fontSize: '0.875rem',
+    color: theme.palette.text.primary,
+  },
+  innerGrid: {
+    width: '100%',
+    height: '100%',
+    minHeight: 70,
+    backgroundColor: theme.bg.offWhiteDT,
+    border: `1px solid ${theme.bg.main}`,
+    margin: 0,
+    padding: '0 !important',
+    transition: `
       ${'background-color 225ms ease-in-out, '}
       ${'border-color 225ms ease-in-out'}
     `,
-      '&:hover': {
-        backgroundColor: theme.bg.main,
-        borderColor: theme.color.border2,
-      },
+    '&:hover': {
+      backgroundColor: theme.bg.main,
+      borderColor: theme.color.border2,
     },
-    info: {
-      display: 'flex',
-      justifyContent: 'flex-end',
+  },
+  info: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    color: theme.palette.primary.main,
+    maxWidth: 40,
+    '& .circle': {
+      transition: theme.transitions.create('fill'),
+    },
+    '& .path': {
+      transition: theme.transitions.create('stroke'),
+    },
+    '&:hover': {
       color: theme.palette.primary.main,
-      maxWidth: 40,
       '& .circle': {
-        transition: theme.transitions.create('fill'),
+        fill: theme.palette.primary.main,
       },
       '& .path': {
-        transition: theme.transitions.create('stroke'),
-      },
-      '&:hover': {
-        color: theme.palette.primary.main,
-        '& .circle': {
-          fill: theme.palette.primary.main,
-        },
-        '& .path': {
-          color: 'white',
-        },
+        color: 'white',
       },
     },
-    flex: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-around',
-      '&> div': {
-        lineHeight: 1.3,
-      },
+  },
+  flex: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    '&> div': {
+      lineHeight: 1.3,
     },
-    enhancedInputOuter: {
-      display: 'flex',
-      alignItems: 'center',
+  },
+  enhancedInputOuter: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  enhancedInputButton: {
+    marginLeft: 10,
+    minWidth: 80,
+    paddingTop: 12,
+    paddingBottom: 12,
+    '& span': {
+      color: '#fff !important',
     },
-    enhancedInputButton: {
-      marginLeft: 10,
-      minWidth: 80,
-      paddingTop: 12,
-      paddingBottom: 12,
-      '& span': {
-        color: '#fff !important',
-      },
-    },
-  });
+  },
+}));
 
 export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
@@ -178,7 +160,7 @@ export interface Props {
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
-  variant?: 'check' | 'info' | 'quantityCheck';
+  variant?: 'check' | 'info' | 'quantityCheck' | 'selectable';
   className?: string;
   inputValue?: number;
   setInputValue?: (value: number) => void;
@@ -191,26 +173,43 @@ interface WithTooltipProps {
   title?: string;
 }
 
-type CombinedProps = Props & WithTooltipProps & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithTooltipProps;
 
-class SelectionCard extends React.PureComponent<CombinedProps, {}> {
-  handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
-    const { onClick, disabled } = this.props;
+const SelectionCard: React.FC<CombinedProps> = (props) => {
+  const {
+    onClick,
+    disabled,
+    onClickInfo,
+    heading,
+    renderIcon,
+    subheadings,
+    variant,
+    checked,
+    inputValue,
+    setInputValue,
+    submitForm,
+    buttonDisabled,
+    displayButton,
+    tooltip,
+    className,
+  } = props;
+
+  const classes = useStyles();
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
     if (onClick && !disabled) {
       e.preventDefault();
       onClick(e);
     }
   };
 
-  handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    const { onClick, disabled } = this.props;
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (onClick && !disabled) {
       onClick(e);
     }
   };
 
-  handleInfoClick = (e: React.MouseEvent<any>) => {
-    const { onClickInfo } = this.props;
+  const handleInfoClick = (e: React.MouseEvent<any>) => {
     if (onClickInfo) {
       e.stopPropagation();
       e.preventDefault();
@@ -218,37 +217,12 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
     }
   };
 
-  content = () => {
-    const { heading, renderIcon, subheadings, variant } = this.props;
-
-    return (
-      <CardBase
-        heading={heading}
-        renderIcon={renderIcon}
-        subheadings={subheadings}
-        fullWidth={variant === 'quantityCheck'}
-      >
-        {this.renderVariant()}
-      </CardBase>
-    );
-  };
-
-  renderVariant = () => {
-    const {
-      classes,
-      checked,
-      variant,
-      inputValue,
-      setInputValue,
-      submitForm,
-      buttonDisabled,
-      displayButton,
-    } = this.props;
+  const renderVariant = () => {
     switch (variant) {
       case 'info':
         return (
           <Grid item className={`${classes.info} cardBaseInfo`} xs={2}>
-            <Info onClick={this.handleInfoClick} />
+            <Info onClick={handleInfoClick} />
           </Grid>
         );
       case 'quantityCheck':
@@ -275,12 +249,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
             )}
           </Grid>
         );
-      /**
-       * The vast majority of these components use the check variant, so
-       * keep that as the default case.
-       */
       case 'check':
-      default:
         return (
           <Grid
             item
@@ -295,55 +264,57 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
             )}
           </Grid>
         );
+      case 'selectable':
+      default:
+        return null;
     }
   };
 
-  render() {
-    const {
-      checked,
-      classes,
-      disabled,
-      onClick,
-      tooltip,
-      className,
-    } = this.props;
+  const content = (
+    <CardBase
+      heading={heading}
+      renderIcon={renderIcon}
+      subheadings={subheadings}
+      fullWidth={variant === 'quantityCheck' || variant === 'selectable'}
+    >
+      {renderVariant()}
+    </CardBase>
+  );
 
-    const cardGrid = () => (
-      <Grid
-        item
-        xs={12}
-        sm={6}
-        lg={4}
-        xl={3}
-        tabIndex={0}
-        className={classNames(
-          {
-            [classes.root]: true,
-            checked: checked === true,
-            [classes.disabled]: disabled === true,
-            [classes.showCursor]: onClick && !disabled,
-            selectionCard: true,
-          },
-          className
-        )}
-        onClick={this.handleClick}
-        onKeyPress={this.handleKeyPress}
-        data-qa-selection-card
-      >
-        {this.content()}
-      </Grid>
-    );
+  const cardGrid = (
+    <Grid
+      item
+      xs={12}
+      sm={6}
+      lg={4}
+      xl={3}
+      tabIndex={0}
+      className={classNames(
+        {
+          [classes.root]: true,
+          checked,
+          [classes.disabled]: disabled,
+          [classes.showCursor]: onClick && !disabled,
+        },
+        className
+      )}
+      onClick={handleClick}
+      onKeyPress={handleKeyPress}
+      data-qa-selection-card
+    >
+      {content}
+    </Grid>
+  );
 
-    return tooltip ? (
-      <Tooltip title={tooltip} placement={'top'}>
-        {cardGrid()}
+  if (tooltip) {
+    return (
+      <Tooltip title={tooltip} placement="top">
+        {cardGrid}
       </Tooltip>
-    ) : (
-      cardGrid()
     );
   }
-}
 
-const styled = withStyles(styles);
+  return cardGrid;
+};
 
-export default styled(SelectionCard) as React.ComponentType<Props>;
+export default React.memo(SelectionCard);

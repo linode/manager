@@ -271,7 +271,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
             tooltip={tooltip}
-            variant={'check'}
+            variant="selectable"
           />
         </Hidden>
       </React.Fragment>
