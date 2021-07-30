@@ -4,10 +4,6 @@ import accountManagement, {
   defaultState as defaultAccountManagementState,
   State as AccountManagementState,
 } from 'src/store/accountManagement/accountManagement.reducer';
-import accountSettings, {
-  defaultState as defaultAccountSettingsState,
-  State as AccountSettingsState,
-} from 'src/store/accountSettings/accountSettings.reducer';
 import { State as AuthState } from 'src/store/authentication';
 import authentication, {
   defaultState as authenticationDefaultState,
@@ -188,7 +184,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  accountSettings: defaultAccountSettingsState,
   databases: defaultDatabasesState,
   databaseTypes: defaultDatabaseTypesState,
   domains: defaultDomainsState,
@@ -213,7 +208,6 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  accountSettings: AccountSettingsState;
   databases: DatabasesState;
   databaseTypes: DatabaseTypesState;
   domains: DomainsState;
@@ -289,7 +283,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  accountSettings,
   databases,
   databaseTypes,
   domains,

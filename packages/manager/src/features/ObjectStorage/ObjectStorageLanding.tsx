@@ -156,7 +156,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets.lastUpdated > 0 &&
     !objectStorageBuckets.bucketErrors &&
     objectStorageBuckets.data.length === 0 &&
-    accountSettings.data?.object_storage === 'active';
+    accountSettings?.object_storage === 'active';
 
   const matchesAccessKeys = Boolean(
     matchPath(props.location.pathname, {
