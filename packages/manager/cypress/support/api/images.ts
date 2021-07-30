@@ -8,9 +8,10 @@ export const getImages = (page: number = 1) => getAll(`images?page=${page}`);
 
 export const createMockImage = (
   label = 'cy-test-image',
-  id = 'private/99999999'
+  id = 'private/99999999',
+  data?
 ) => {
-  return makeResourcePage(imageFactory.buildList(1, { label, id }));
+  return makeResourcePage(imageFactory.buildList(1, { label, id, ...data }));
 };
 
 export const deleteImageById = (imageId: number) =>
