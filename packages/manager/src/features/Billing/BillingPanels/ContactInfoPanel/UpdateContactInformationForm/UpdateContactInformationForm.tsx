@@ -89,7 +89,10 @@ class UpdateContactInformationForm extends React.Component<
   async componentDidMount() {
     const account = queryClient.getQueryData<Account>('account');
 
-    const cleanAccount = pick(
+    // 'account' has all data returned form the /v4/account endpoint.
+    // We need to pick only editable fields and fields we want to
+    // display in the form.
+    const editableContactInformationFields = pick(
       [
         'first_name',
         'last_name',
@@ -108,7 +111,7 @@ class UpdateContactInformationForm extends React.Component<
     );
 
     if (account) {
-      this.setState({ fields: cleanAccount });
+      this.setState({ fields: editableContactInformationFields });
     }
 
     // Auto-focus the "Email" field if appropriate (if the user is here via
