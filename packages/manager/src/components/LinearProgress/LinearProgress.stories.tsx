@@ -3,7 +3,7 @@ import * as React from 'react';
 import LinearProgress from './LinearProgress';
 
 export default {
-  title: 'Linear Progress Indicator',
+  title: 'UI Elements/Loading/Linear Progress Indicator',
 };
 
 export const Indefinite = () => <LinearProgress />;

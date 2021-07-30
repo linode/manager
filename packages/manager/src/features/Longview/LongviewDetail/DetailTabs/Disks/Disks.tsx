@@ -14,13 +14,13 @@ import DiskGraph from './DiskGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 250,
-    marginBottom: theme.spacing(),
-  },
-  cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
+  },
+  select: {
+    width: 250,
+    marginBottom: theme.spacing(),
   },
 }));
 
@@ -116,14 +116,14 @@ const Disks: React.FC<CombinedProps> = (props) => {
     <div>
       <DocumentTitleSegment segment="Disks" />
       <Box
-        className={classes.cmrSpacing}
+        className={classes.root}
         display="flex"
         flexDirection="row"
         justifyContent="flex-end"
       >
         <TimeRangeSelect
           small
-          className={classes.root}
+          className={classes.select}
           handleStatsChange={handleStatsChange}
           defaultValue="Past 30 Minutes"
           label="Select Time Range"

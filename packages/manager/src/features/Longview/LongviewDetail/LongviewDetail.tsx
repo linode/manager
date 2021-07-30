@@ -9,7 +9,7 @@ import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
@@ -220,7 +220,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item className="p0">
-          <DocumentationButton
+          <DocsLink
             href={'https://www.linode.com/docs/platform/longview/longview/'}
           />
         </Grid>
