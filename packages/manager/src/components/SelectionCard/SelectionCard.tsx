@@ -249,10 +249,6 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
             )}
           </Grid>
         );
-      /**
-       * The vast majority of these components use the check variant, so
-       * keep that as the default case.
-       */
       case 'check':
         return (
           <Grid
