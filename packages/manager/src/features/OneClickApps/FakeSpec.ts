@@ -22,7 +22,7 @@ export const oneClickApps: OCA[] = [
       'Popular open source free control panel with robust features and a mobile app.',
     related_guides: [
       {
-        title: 'Deploy Aapanel With Marketplace Apps',
+        title: 'Deploy aaPanel With Marketplace Apps',
         href:
           'https://www.linode.com/docs/guides/deploy-aaPanel-with-marketplace-apps',
       },
@@ -690,13 +690,13 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/nextcloud_color.svg',
   },
   {
-    name: 'Nirvashare',
+    name: 'NirvaShare',
     description: `Securely share and collaborate Linode S3 object storage files/folders with your internal or external users such as customers, partners, vendors, etc with fine access control and a simple interface. Nirvashare easily integrates with many external identity providers such as Active Directory, GSuite, AWS SSO, KeyClock, etc.`,
     summary:
       'Secure file sharing for better collaboration with employees, partners, vendors, and more.',
     related_guides: [
       {
-        title: 'Deploy Nirvashare With Marketplace Apps',
+        title: 'Deploy NirvaShare With Marketplace Apps',
         href:
           'https://www.linode.com/docs/guides/deploy-nirvashare-with-marketplace-apps',
       },
