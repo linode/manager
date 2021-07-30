@@ -21,9 +21,7 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
-import withBackupCta, {
-  BackupCTAProps,
-} from 'src/containers/withBackupCTA.container';
+import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
@@ -94,8 +92,7 @@ type CombinedProps = Props &
   RouteProps &
   StyleProps &
   SetDocsProps &
-  WithSnackbarProps &
-  BackupCTAProps;
+  WithSnackbarProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -547,7 +544,6 @@ const sendGroupByAnalytic = (value: boolean) => {
 };
 
 interface StateProps {
-  managed: boolean;
   linodesCount: number;
   userTimezone: string;
   userProfileLoading: boolean;
@@ -557,7 +553,6 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
-    managed: state.__resources.accountSettings.data?.managed ?? false,
     linodesCount: state.__resources.linodes.results,
     userTimezone: getUserTimezone(state),
     userProfileLoading: state.__resources.profile.loading,
@@ -592,8 +587,8 @@ export const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
   connected,
   withImages(),
-  withBackupCta,
-  styled
+  styled,
+  withFeatureFlagConsumer
 );
 
 export default enhanced(ListLinodes);

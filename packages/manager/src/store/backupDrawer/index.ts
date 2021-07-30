@@ -1,14 +1,20 @@
 import * as Bluebird from 'bluebird';
 import { enableBackups, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import { Reducer } from 'redux';
-import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
+import {
+  accountBackupsEnabled,
+  queryKey,
+  updateAccountSettingsData,
+} from 'src/queries/accountSettings';
+import { queryClient } from 'src/queries/base';
+import { updateAccountSettings } from '@linode/api-v4/lib';
 
 export interface BackupError {
   linodeId: number;
@@ -293,32 +299,33 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
 ) => {
   const state = getState();
   const { backups } = state;
-  const hasBackupsEnabled = pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'backups_enabled'],
-    state
-  );
   const shouldEnableBackups = Boolean(backups.autoEnroll);
 
   /** If the selected toggle setting matches the setting already on the user's account,
    * don't bother the API.
    */
-  if (hasBackupsEnabled === shouldEnableBackups) {
+  if (accountBackupsEnabled === shouldEnableBackups) {
     dispatch(enableAllBackups());
     return;
   }
 
   dispatch(handleAutoEnroll());
-  dispatch(updateAccountSettings({ backups_enabled: shouldEnableBackups }))
-    .then((_) => {
+
+  queryClient.executeMutation({
+    mutationFn: updateAccountSettings,
+    mutationKey: queryKey,
+    variables: { backups_enabled: shouldEnableBackups },
+    onSuccess: (data) => {
+      updateAccountSettingsData(data);
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());
-    })
-    .catch((errors) => {
+    },
+    onError: (errors: APIError[]) => {
       const finalError = getErrorStringOrDefault(
         errors,
         'Your account settings could not be updated. Please try again.'
       );
       dispatch(handleAutoEnrollError(finalError));
-    });
+    },
+  });
 };

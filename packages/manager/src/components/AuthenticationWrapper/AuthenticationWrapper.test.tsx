@@ -14,7 +14,6 @@ const component = shallow<AuthenticationWrapper>(
     requestNotifications={jest.fn()}
     requestProfile={jest.fn()}
     requestRegions={jest.fn()}
-    requestSettings={jest.fn()}
     markAppAsDoneLoading={jest.fn()}
     requestLinodeType={jest.fn()}
     checkAccountSize={jest.fn()}

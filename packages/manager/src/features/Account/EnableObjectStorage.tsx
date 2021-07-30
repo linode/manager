@@ -10,9 +10,9 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import { updateAccountSettingsData } from 'src/queries/accountSettings';
 
 interface Props {
-  update: (data: Partial<AccountSettings>) => void;
   object_storage: AccountSettings['object_storage'];
 }
 
@@ -69,7 +69,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
 };
 
 export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
-  const { object_storage, update } = props;
+  const { object_storage } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -89,7 +89,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
     setError(undefined);
     cancelObjectStorage()
       .then(() => {
-        update({ object_storage: 'disabled' });
+        updateAccountSettingsData({ object_storage: 'disabled' });
         handleClose();
       })
       .catch(handleError);

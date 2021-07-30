@@ -108,6 +108,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = (props) => {
       aria-label="List of Object Storage Access Keys"
       rowCount={data && data.length}
       colCount={2}
+      data-testid="data-qa-access-key-table"
     >
       <TableHead>
         <TableRow data-qa-table-head>
