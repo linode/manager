@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     display: 'flex',
     justifyContent: 'center',
+    paddingRight: 4,
+    paddingLeft: theme.spacing(),
     width: 45,
   },
   paymentTextContainer: {

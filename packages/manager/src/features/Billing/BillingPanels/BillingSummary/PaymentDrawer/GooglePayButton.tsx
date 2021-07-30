@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { APIWarning } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { VariantType } from 'notistack';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -14,6 +15,7 @@ import Notice from 'src/components/Notice';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
+import { reportException } from 'src/exceptionReporting';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -103,7 +105,9 @@ export const GooglePayButton: React.FC<Props> = (props) => {
         try {
           await initGooglePaymentInstance(data.client_token as string);
         } catch (error) {
-          // maybe log to Sentry or something
+          reportException(error, {
+            message: 'Error initializing Google Pay.',
+          });
           setInitializationError(true);
         }
       }
@@ -111,11 +115,15 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     init();
   }, [status, data]);
 
-  const handleMessage = (message: string, variant: VariantType) => {
+  const handleMessage = (
+    message: string,
+    variant: VariantType,
+    warning?: APIWarning[]
+  ) => {
     if (variant === 'error') {
       setError(message);
     } else if (variant === 'success') {
-      setSuccess(message, true);
+      setSuccess(message, true, warning);
     }
   };
 
