@@ -9,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import { handleOpen } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { MapState } from 'src/store/types';
@@ -42,14 +43,15 @@ type CombinedProps = StateProps & DispatchProps;
 const BackupsCTA: React.FC<CombinedProps> = (props) => {
   const {
     linodesWithoutBackups,
-    managed,
     actions: { openBackupsDrawer },
   } = props;
   const classes = useStyles();
 
+  const { data: accountSettings } = useAccountSettings();
+
   if (
     isRestrictedUser ||
-    managed ||
+    accountSettings?.managed ||
     (linodesWithoutBackups && isEmpty(linodesWithoutBackups))
   ) {
     return null;
@@ -93,7 +95,6 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
 
 interface StateProps {
   linodesWithoutBackups: Linode[];
-  managed: boolean;
 }
 
 interface DispatchProps {
@@ -104,7 +105,6 @@ interface DispatchProps {
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
-  managed: state?.__resources?.accountSettings?.data?.managed ?? false,
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (

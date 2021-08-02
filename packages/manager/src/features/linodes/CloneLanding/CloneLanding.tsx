@@ -1,3 +1,4 @@
+import { castDraft } from 'immer';
 import { Event } from '@linode/api-v4/lib/account';
 import {
   cloneLinode,
@@ -281,7 +282,8 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const errorMap = getErrorMap(['disk_size'], state.errors);
+  // Cast the results of the Immer state to a mutable data structure.
+  const errorMap = getErrorMap(['disk_size'], castDraft(state.errors));
 
   const selectedLinode = linodesData.find(
     (eachLinode) => eachLinode.id === state.selectedLinodeId
@@ -323,7 +325,8 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
                   <div className={classes.outerContainer}>
                     <Configs
                       configs={configsInState}
-                      configSelection={state.configSelection}
+                      // Cast the results of the Immer state to a mutable data structure.
+                      configSelection={castDraft(state.configSelection)}
                       handleSelect={toggleConfig}
                     />
                   </div>
@@ -340,7 +343,8 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
                     <div className={classes.diskContainer}>
                       <Disks
                         disks={disksInState}
-                        diskSelection={state.diskSelection}
+                        // Cast the results of the Immer state to a mutable data structure.
+                        diskSelection={castDraft(state.diskSelection)}
                         selectedConfigIds={selectedConfigIds}
                         handleSelect={toggleDisk}
                       />

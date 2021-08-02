@@ -48,7 +48,7 @@ const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
             subheadings={[config.kernel]}
             onClick={() => onSelectConfig(config.id)}
             checked={selectedConfigID === config.id}
-            variant="check"
+            variant="selectable"
           />
         ))}
       </Grid>

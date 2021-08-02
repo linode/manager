@@ -18,7 +18,7 @@ const Input: React.FC<{}> = (props) => {
 };
 
 export default {
-  title: 'Password Input',
+  title: 'UI Elements/Password Input',
 };
 
 export const Example = () => <Input />;

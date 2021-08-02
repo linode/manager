@@ -154,15 +154,14 @@ interface ActionsProps {
 const Actions: React.FC<ActionsProps> = (props) => {
   return (
     <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="cancel">
+      <Button buttonType="secondary" onClick={props.onClose}>
         Cancel
       </Button>
       <Button
-        disabled={props.disabled}
-        onClick={props.onSubmit}
-        loading={props.isCancelling}
-        destructive
         buttonType="primary"
+        onClick={props.onSubmit}
+        disabled={props.disabled}
+        loading={props.isCancelling}
       >
         Close Account
       </Button>

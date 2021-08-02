@@ -7,6 +7,7 @@ import { ListLinodes } from './LinodesLanding';
 
 describe('ListLinodes', () => {
   const classes = {
+    root: '',
     title: '',
     tagGroup: '',
     CSVlinkContainer: '',
@@ -22,7 +23,6 @@ describe('ListLinodes', () => {
     controlHeader: '',
     toggleButton: '',
     clearFilters: '',
-    cmrSpacing: '',
   };
 
   it('renders without error', () => {
@@ -41,10 +41,8 @@ describe('ListLinodes', () => {
           linodesCount={0}
           linodesRequestError={undefined}
           linodesRequestLoading={false}
-          managed={false}
           closeSnackbar={jest.fn()}
           setDocs={setDocs}
-          backupsCTA={false}
           deleteLinode={jest.fn()}
           {...reactRouterProps}
           linodesInTransition={new Set<number>()}

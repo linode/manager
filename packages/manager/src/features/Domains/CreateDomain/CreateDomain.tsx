@@ -25,7 +25,7 @@ import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocumentationButton from 'src/components/DocumentationButton';
+import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
@@ -35,9 +35,7 @@ import TextField from 'src/components/TextField';
 import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
-import {
-  hasGrant,
-} from 'src/features/Profile/permissionsHelpers';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import {
   Origin as DomainDrawerOrigin,
@@ -170,7 +168,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const disabled = profile?.restricted && !hasGrant(grants, 'add_domains')
+  const disabled = profile?.restricted && !hasGrant(grants, 'add_domains');
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   // Errors for selecting Linode/NB for default records aren't part
@@ -398,7 +396,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
         <Grid item className="p0">
-          <DocumentationButton href="https://www.linode.com/docs/guides/dns-manager/" />
+          <DocsLink href="https://www.linode.com/docs/guides/dns-manager/" />
         </Grid>
       </Grid>
 

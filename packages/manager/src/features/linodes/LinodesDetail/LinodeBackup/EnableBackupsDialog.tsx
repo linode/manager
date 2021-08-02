@@ -3,8 +3,8 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -67,13 +67,13 @@ export const EnableBackupsDialog: React.FC<Props> = (props) => {
   const actions = React.useMemo(() => {
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button buttonType="cancel" onClick={onClose} data-qa-cancel-cancel>
+        <Button buttonType="secondary" onClick={onClose} data-qa-cancel-cancel>
           Close
         </Button>
         <Button
           buttonType="primary"
-          loading={submitting}
           onClick={handleEnableBackups}
+          loading={submitting}
           data-qa-confirm-enable-backups
         >
           Enable Backups

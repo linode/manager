@@ -76,7 +76,7 @@ export const PaymentMethodSchema = object({
     'Type must be credit_card or payment_method_nonce.'
   ),
   data: object().when('type', {
-    is: (value) => value === 'credit_card',
+    is: 'credit_card',
     then: CreditCardSchema,
     otherwise: object({
       nonce: string().required('Payment nonce is required.'),

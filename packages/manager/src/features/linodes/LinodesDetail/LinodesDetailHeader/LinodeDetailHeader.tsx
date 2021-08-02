@@ -1,6 +1,6 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
@@ -23,7 +23,7 @@ import {
 } from '../linodeDetailContext';
 import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
-import LinodeResize_CMR from '../LinodeResize/LinodeResize_CMR';
+import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
@@ -292,7 +292,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         linodeLabel={deleteDialog.linodeLabel}
         handleDelete={handleDeleteLinode}
       />
-      <LinodeResize_CMR
+      <LinodeResize
         open={resizeDialog.open}
         onClose={closeDialogs}
         linodeId={resizeDialog.linodeID}

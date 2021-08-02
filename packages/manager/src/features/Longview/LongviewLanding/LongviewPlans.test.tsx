@@ -4,8 +4,8 @@ import {
   within,
 } from '@testing-library/react';
 import * as React from 'react';
-import { accountSettings } from 'src/__data__/account';
 import { withDocumentTitleProvider } from 'src/components/DocumentTitle';
+import { accountSettingsFactory } from 'src/factories';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
@@ -32,12 +32,6 @@ afterEach(() => {
 afterAll(() => server.close());
 
 const props: CombinedProps = {
-  accountSettingsError: {},
-  accountSettingsLastUpdated: 0,
-  accountSettingsLoading: false,
-  requestAccountSettings: jest.fn(),
-  updateAccountSettings: jest.fn(),
-  updateAccountSettingsInStore: jest.fn(),
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,
@@ -65,6 +59,12 @@ const testRow = (
   );
   within(screen.getByTestId(`price-cell-${id}`)).getByText(price);
 };
+
+server.use(
+  rest.get('*/account/settings', (req, res, ctx) => {
+    return res(ctx.json(accountSettingsFactory.build({ managed: false })));
+  })
+);
 
 describe('LongviewPlans', () => {
   it('sets the document title to "Plan Details"', async () => {
@@ -104,9 +104,7 @@ describe('LongviewPlans', () => {
   });
 
   it('highlights the LV subscription currently on the account', async () => {
-    renderWithTheme(
-      <LongviewPlans accountSettings={accountSettings} {...props} />
-    );
+    renderWithTheme(<LongviewPlans {...props} />);
 
     await screen.findByTestId('current-plan-longview-3');
   });

@@ -129,9 +129,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingLeft: theme.spacing(),
       },
     },
-    '&:hover, &:focus': {
-      backgroundColor: theme.cmrBGColors.bgApp,
-    },
   },
   gravatar: {
     height: 30,
@@ -200,16 +197,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignItems: 'center',
       color: theme.cmrTextColors.linkActiveLight,
       cursor: 'pointer',
-      fontSize: '1rem',
+      fontSize: '0.875rem',
       padding: '8px 24px',
       '&:focus, &:hover': {
-        backgroundColor: theme.cmrBGColors.bgApp,
-        color: theme.palette.primary.main,
+        backgroundColor: 'transparent',
+        color: theme.cmrTextColors.linkActiveLight,
       },
-    },
-    '&[data-reach-menu-item][data-selected]': {
-      backgroundColor: theme.cmrBGColors.bgApp,
-      color: theme.cmrTextColors.linkActiveLight,
+      '&[data-reach-menu-item][data-selected]:not(:hover)': {
+        backgroundColor: 'transparent',
+        color: theme.cmrTextColors.linkActiveLight,
+        outline: 'dotted 1px #c1c1c0',
+      },
     },
   },
   userName: {

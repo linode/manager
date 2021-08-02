@@ -142,7 +142,7 @@ export const pages = [
   {
     name: 'Profile/SSH Keys',
     url: `${routes.profile}/keys`,
-    assertIsLoaded: () => cy.findByText('Add a SSH Key').should('be.visible'),
+    assertIsLoaded: () => cy.findByText('Add an SSH Key').should('be.visible'),
     goWithUI: [
       {
         name: 'Tab',

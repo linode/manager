@@ -20,17 +20,17 @@ import { Process } from './types';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+      marginRight: theme.spacing(),
+    },
+  },
   filterInput: {
     width: 300,
   },
   selectTimeRange: {
     width: 200,
-  },
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-      marginRight: theme.spacing(),
-    },
   },
 }));
 
@@ -132,7 +132,7 @@ const ProcessesLanding: React.FC<Props> = (props) => {
           <Box
             display="flex"
             justifyContent="space-between"
-            className={classes.cmrSpacing}
+            className={classes.root}
           >
             <TextField
               className={classes.filterInput}

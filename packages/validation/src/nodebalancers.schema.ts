@@ -1,8 +1,5 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
-interface NodeBalancerConfig {
-  port: number;
-}
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
 
@@ -41,7 +38,7 @@ export const createNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number(),
   check_body: string().when('check', {
-    is: (check) => check === 'http_body',
+    is: 'http_body',
     then: string().required(),
   }),
   check_interval: number().typeError('Check interval must be a number.'),
@@ -49,11 +46,11 @@ export const createNodeBalancerConfigSchema = object({
   check_path: string()
     .matches(/\/.*/)
     .when('check', {
-      is: (check) => check === 'http',
+      is: 'http',
       then: string().required(),
     })
     .when('check', {
-      is: (check) => check === 'http_body',
+      is: 'http_body',
       then: string().required(),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
@@ -67,11 +64,11 @@ export const createNodeBalancerConfigSchema = object({
     .max(65535, PORT_WARNING),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
-    is: (protocol) => protocol === 'https',
+    is: 'https',
     then: string().required('SSL key is required when using HTTPS.'),
   }),
   ssl_cert: string().when('protocol', {
-    is: (protocol) => protocol === 'https',
+    is: 'https',
     then: string().required('SSL certificate is required when using HTTPS.'),
   }),
   stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
@@ -85,7 +82,7 @@ export const UpdateNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number(),
   check_body: string().when('check', {
-    is: (check) => check === 'http_body',
+    is: 'http_body',
     then: string().required(),
   }),
   check_interval: number().typeError('Check interval must be a number.'),
@@ -93,11 +90,11 @@ export const UpdateNodeBalancerConfigSchema = object({
   check_path: string()
     .matches(/\/.*/)
     .when('check', {
-      is: (check) => check === 'http',
+      is: 'http',
       then: string().required(),
     })
     .when('check', {
-      is: (check) => check === 'http_body',
+      is: 'http_body',
       then: string().required(),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
@@ -111,11 +108,11 @@ export const UpdateNodeBalancerConfigSchema = object({
     .max(65535, PORT_WARNING),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
-    is: (protocol) => protocol === 'https',
+    is: 'https',
     then: string().required(),
   }),
   ssl_cert: string().when('protocol', {
-    is: (protocol) => protocol === 'https',
+    is: 'https',
     then: string().required(),
   }),
   stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
@@ -138,39 +135,35 @@ export const NodeBalancerSchema = object({
   configs: array()
     .of(createNodeBalancerConfigSchema)
     /* @todo there must be an easier way */
-    .test(
-      'unique',
-      'Port must be unique.',
-      function (values: NodeBalancerConfig[]) {
-        if (!values) {
-          return true;
-        }
-        const ports: number[] = [];
-        const configs = values.reduce(
-          (prev: number[], value: NodeBalancerConfig, idx: number) => {
-            if (!value.port) {
-              return prev;
-            }
-            if (!ports.includes(value.port)) {
-              ports.push(value.port);
-              return prev;
-            }
-            return [...prev, idx];
-          },
-          []
-        );
-        if (configs.length === 0) {
-          return true;
-        } // No ports were duplicates
-        const configStrings = configs.map(
-          (config: number) => `configs[${config}].port`
-        );
-        throw this.createError({
-          path: configStrings.join('|'),
-          message: 'Port must be unique.',
-        });
+    .test('unique', 'Port must be unique.', function (value?: any[] | null) {
+      if (!value) {
+        return true;
       }
-    ),
+      const ports: number[] = [];
+      const configs = value.reduce(
+        (prev: number[], value: any, idx: number) => {
+          if (!value.port) {
+            return prev;
+          }
+          if (!ports.includes(value.port)) {
+            ports.push(value.port);
+            return prev;
+          }
+          return [...prev, idx];
+        },
+        []
+      );
+      if (configs.length === 0) {
+        return true;
+      } // No ports were duplicates
+      const configStrings = configs.map(
+        (config: number) => `configs[${config}].port`
+      );
+      throw this.createError({
+        path: configStrings.join('|'),
+        message: 'Port must be unique.',
+      });
+    }),
 });
 
 export const UpdateNodeBalancerSchema = object({

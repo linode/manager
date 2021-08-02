@@ -230,7 +230,6 @@ const UserProfile: React.FC<Props> = (props) => {
           disabled={profile?.username === username}
           className={classes.topMargin}
           buttonType="primary"
-          destructive
           onClick={onDelete}
           data-qa-confirm-delete
         >

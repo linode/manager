@@ -20,9 +20,7 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
-import withBackupCta, {
-  BackupCTAProps,
-} from 'src/containers/withBackupCTA.container';
+import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
@@ -40,7 +38,7 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
-import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
+import LinodeResize from '../LinodesDetail/LinodeResize';
 import MigrateLinode from '../MigrateLanding/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
@@ -92,8 +90,7 @@ type CombinedProps = Props &
   RouteProps &
   StyleProps &
   SetDocsProps &
-  WithSnackbarProps &
-  BackupCTAProps;
+  WithSnackbarProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -273,7 +270,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <LinodeResize_CMR
+        <LinodeResize
           open={this.state.linodeResizeOpen}
           onClose={this.closeDialogs}
           linodeId={this.state.selectedLinodeID}
@@ -307,7 +304,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}
-        <Grid container className={classes.cmrSpacing}>
+        <Grid container className={classes.root}>
           <Grid item xs={12}>
             <DocumentTitleSegment segment="Linodes" />
             <PreferenceToggle<boolean>
@@ -541,14 +538,12 @@ const sendGroupByAnalytic = (value: boolean) => {
 };
 
 interface StateProps {
-  managed: boolean;
   linodesCount: number;
   linodesInTransition: Set<number>;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
-    managed: state.__resources.accountSettings.data?.managed ?? false,
     linodesCount: state.__resources.linodes.results,
     linodesInTransition: _linodesInTransition(state.events.events),
   };
@@ -577,8 +572,8 @@ export const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
   connected,
   withImages(),
-  withBackupCta,
-  styled
+  styled,
+  withFeatureFlagConsumer
 );
 
 export default enhanced(ListLinodes);

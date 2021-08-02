@@ -6,7 +6,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import CircularProgress from 'src/components/core/CircularProgress';
@@ -23,12 +22,10 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import accountSettingsContainer, {
-  Props as AccountSettingsProps,
-} from 'src/containers/accountSettings.container';
+import { isManaged } from 'src/queries/accountSettings';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
-import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -122,7 +119,7 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props & AccountSettingsProps;
+export type CombinedProps = Props;
 
 export const managedText = (
   <span>
@@ -138,7 +135,7 @@ export const managedText = (
 );
 
 export const LongviewPlans: React.FC<CombinedProps> = (props) => {
-  const { accountSettings, subscriptionRequestHook: subscriptions } = props;
+  const { subscriptionRequestHook: subscriptions } = props;
   const classes = useStyles();
   const mounted = React.useRef<boolean>(false);
 
@@ -225,8 +222,6 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
       setSelectedSub(e.currentTarget.value),
     []
   );
-
-  const isManaged = accountSettings ? accountSettings.managed : false;
 
   // Hide table if current plan is not being displayed
   // ie. Users with no access to Longview
@@ -317,12 +312,7 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  accountSettingsContainer()
-);
-
-export default enhanced(LongviewPlans);
+export default React.memo(LongviewPlans);
 
 // =============================================================================
 // LongviewPlansTableBody

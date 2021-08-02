@@ -1,13 +1,7 @@
 import { Formik } from 'formik';
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { CreateBucketSchema } from '@linode/validation/lib/buckets.schema';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import Form from 'src/components/core/Form';
 import {
   createStyles,
@@ -25,8 +19,6 @@ import bucketRequestsContainer, {
 } from 'src/containers/bucketRequests.container';
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
-import { ApplicationState } from 'src/store';
-import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -35,6 +27,8 @@ import { sendCreateBucketEvent } from 'src/utilities/ga';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import ClusterSelect from './ClusterSelect';
+import { useAccountSettings } from 'src/queries/accountSettings';
+import { compose } from 'recompose';
 
 type ClassNames = 'root' | 'textWrapper';
 const styles = (theme: Theme) =>
@@ -51,20 +45,10 @@ interface Props {
   onSuccess: (bucketLabel: string) => void;
 }
 
-interface ReduxStateProps {
-  object_storage: AccountSettings['object_storage'];
-}
-
-interface DispatchProps {
-  requestSettings: () => Promise<AccountSettings>;
-}
-
 type CombinedProps = Props &
   BucketContainerProps &
   BucketsRequests &
-  WithStyles<ClassNames> &
-  ReduxStateProps &
-  DispatchProps;
+  WithStyles<ClassNames>;
 
 export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
   const {
@@ -76,6 +60,11 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
+
+  const {
+    data: accountSettings,
+    refetch: requestAccountSettings,
+  } = useAccountSettings();
 
   return (
     <Formik
@@ -114,8 +103,8 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
             // of this bucket. In that case, update the Redux Store so that
             // subsequently created buckets don't need to go through the
             // confirmation flow.
-            if (props.object_storage === 'disabled') {
-              props.requestSettings();
+            if (accountSettings?.object_storage === 'disabled') {
+              requestAccountSettings();
             }
 
             // @analytics
@@ -124,8 +113,8 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
           .catch((errorResponse) => {
             // We also need to refresh account settings on failure, since, depending
             // on the error, Object Storage service might have actually been enabled.
-            if (props.object_storage === 'disabled') {
-              props.requestSettings();
+            if (accountSettings?.object_storage === 'disabled') {
+              requestAccountSettings();
             }
 
             const defaultMessage = `Unable to create a Bucket. Please try again later.`;
@@ -145,7 +134,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
       {(formikProps) => {
         const beforeSubmit = () => {
           confirmObjectStorage<FormState>(
-            props.object_storage,
+            accountSettings?.object_storage || 'active',
             formikProps,
             () => setDialogOpen(true)
           );
@@ -188,6 +177,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                 onChange={handleChange}
                 value={values.label}
                 disabled={isRestrictedUser}
+                data-testid="label"
               />
 
               <ClusterSelect
@@ -232,33 +222,12 @@ const initialValues: FormState = {
   cluster: '',
 };
 
-const mapStateToProps = (state: ApplicationState) => {
-  return {
-    object_storage: pathOr<AccountSettings['object_storage']>(
-      'disabled',
-      ['data', 'object_storage'],
-      state.__resources.accountSettings
-    ),
-  };
-};
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => {
-  return {
-    requestSettings: () => dispatch(requestAccountSettings()),
-  };
-};
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
   bucketRequestsContainer,
-  bucketContainer,
-  connected
+  bucketContainer
 );
 
 export default enhanced(CreateBucketForm);

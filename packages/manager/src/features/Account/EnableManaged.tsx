@@ -1,12 +1,11 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Accordion from 'src/components/Accordion';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import SupportLink from 'src/components/SupportLink';
@@ -14,10 +13,10 @@ import withLinodes, {
   DispatchProps,
 } from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
+import { updateAccountSettingsData } from 'src/queries/accountSettings';
 
 interface Props {
   isManaged: boolean;
-  update: (data: Partial<AccountSettings>) => void;
 }
 
 interface StateProps {
@@ -67,7 +66,7 @@ export const ManagedContent: React.FC<ContentProps> = (props) => {
 };
 
 export const EnableManaged: React.FC<CombinedProps> = (props) => {
-  const { isManaged, linodeCount, update } = props;
+  const { isManaged, linodeCount } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -88,22 +87,21 @@ export const EnableManaged: React.FC<CombinedProps> = (props) => {
     enableManaged()
       .then(() => {
         handleClose();
-        update({ managed: true });
-        //push('/managed');
+        updateAccountSettingsData({ managed: true });
       })
       .catch(handleError);
   };
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="cancel" onClick={handleClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
         Cancel
       </Button>
       <Button
         buttonType="primary"
         onClick={handleSubmit}
-        data-qa-submit-managed-enrollment
         loading={isLoading}
+        data-qa-submit-managed-enrollment
       >
         Add Linode Managed
       </Button>

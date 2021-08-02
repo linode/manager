@@ -108,7 +108,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
         }}
         heading={backupInfo_.heading}
         subheadings={[backupInfo_.subheading]}
-        variant="check"
+        variant="selectable"
       />
     );
   }

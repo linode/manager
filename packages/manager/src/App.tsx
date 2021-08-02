@@ -148,7 +148,6 @@ export class App extends React.Component<CombinedProps, State> {
       imagesError,
       notificationsError,
       volumesError,
-      settingsError,
       bucketsError,
       nodeBalancersError,
     } = this.props;
@@ -170,7 +169,6 @@ export class App extends React.Component<CombinedProps, State> {
         imagesError,
         notificationsError,
         volumesError,
-        settingsError,
         bucketsError,
         nodeBalancersError
       )
@@ -217,15 +215,12 @@ interface StateProps {
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
-  accountSettingsLoading: boolean;
-  accountSettingsError?: APIError[];
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
   domainsError?: APIError[];
   imagesError?: APIError[];
   bucketsError?: APIError[];
-  settingsError?: APIError[];
   notificationsError?: APIError[];
   typesError?: APIError[];
   regionsError?: APIError[];
@@ -240,21 +235,11 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
   notificationsError: state.__resources.notifications.error,
-  settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
     ['authentication', 'loggedInAsCustomer'],
-    state
-  ),
-  accountSettingsLoading: pathOr(
-    true,
-    ['__resources', 'accountSettings', 'loading'],
-    state
-  ),
-  accountSettingsError: path(
-    ['__resources', 'accountSettings', 'error', 'read'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,

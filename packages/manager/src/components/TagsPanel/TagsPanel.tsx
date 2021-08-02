@@ -4,7 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AddNewLink from 'src/components/AddNewLink';
+import Plus from 'src/assets/icons/plusSign.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -12,11 +12,11 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import TagsPanelItem from './TagsPanelItem';
 
 type ClassNames =
   | 'root'
@@ -24,7 +24,7 @@ type ClassNames =
   | 'addButtonWrapper'
   | 'hasError'
   | 'errorNotice'
-  | 'addButton'
+  | 'addTagButton'
   | 'tagsPanelItemWrapper'
   | 'selectTag'
   | 'progress'
@@ -40,86 +40,89 @@ const styles = (theme: Theme) =>
         opacity: 1,
       },
     },
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-    },
     tag: {
       marginTop: theme.spacing(1) / 2,
-      marginRight: theme.spacing(1),
-      [theme.breakpoints.down('xs')]: {
-        marginRight: theme.spacing(2),
-      },
+      marginRight: 4,
     },
     addButtonWrapper: {
+      display: 'flex',
+      justifyContent: 'flex-start',
       width: '100%',
-      marginTop: theme.spacing(2) - 1,
-      marginBottom: theme.spacing(2) + 1,
     },
     hasError: {
       marginTop: 0,
     },
     errorNotice: {
+      animation: '$fadeIn 225ms linear forwards',
+      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       '& .noticeText': {
         ...theme.typography.body1,
         fontFamily: '"LatoWeb", sans-serif',
       },
+      marginTop: 20,
+      paddingLeft: 10,
+      textAlign: 'left',
     },
-    addButton: {
-      padding: 0,
-      position: 'relative',
-      top: 2,
+    addTagButton: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.color.tagButton,
+      border: 'none',
+      borderRadius: 3,
+      color: theme.cmrTextColors.linkActiveLight,
+      cursor: 'pointer',
+      fontFamily: theme.font.normal,
+      fontSize: '0.875rem',
+      fontWeight: 'bold',
+      padding: '7px 10px',
+      whiteSpace: 'nowrap',
       '& svg': {
-        marginRight: theme.spacing(1),
-      },
-      '&:hover': {
-        '& p': {
-          color: theme.palette.primary.main,
-        },
+        color: theme.color.tagIcon,
+        marginLeft: 10,
+        height: 10,
+        width: 10,
       },
     },
     tagsPanelItemWrapper: {
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(),
       position: 'relative',
     },
     selectTag: {
-      marginTop: theme.spacing(1),
-      width: '100%',
-      position: 'relative',
-      zIndex: 3,
       animation: '$fadeIn .3s ease-in-out forwards',
-      maxWidth: 275,
-      '& > div > div': {
-        marginTop: 0,
-      },
+      marginTop: -3.5,
+      minWidth: 275,
+      position: 'relative',
+      textAlign: 'left',
+      width: '100%',
+      zIndex: 3,
       '& .error-for-scroll > div': {
         flexDirection: 'row',
         flexWrap: 'wrap-reverse',
       },
       '& .input': {
         '& p': {
-          fontSize: '.9rem',
           color: theme.color.grey1,
           borderLeft: 'none',
+          fontSize: '.9rem',
         },
       },
       '& .react-select__input': {
-        fontSize: '.9rem',
-        color: theme.palette.text.primary,
         backgroundColor: 'transparent',
+        color: theme.palette.text.primary,
+        fontSize: '.9rem',
       },
       '& .react-select__value-container': {
         padding: '6px',
       },
     },
     progress: {
-      position: 'absolute',
-      height: '100%',
-      width: '100%',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
       zIndex: 2,
     },
     loading: {
@@ -150,6 +153,7 @@ interface State {
 }
 
 export interface Props {
+  align?: 'left' | 'right';
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
@@ -178,18 +182,18 @@ class TagsPanel extends React.Component<CombinedProps, State> {
            * tags that are already applied because there cannot
            * be duplicates.
            */
-          const filteredTags = response.data.filter((eachTag: Tag) => {
+          const filteredTags = response.data.filter((thisTag: Tag) => {
             return !tags.some((alreadyAppliedTag: string) => {
-              return alreadyAppliedTag === eachTag.label;
+              return alreadyAppliedTag === thisTag.label;
             });
           });
           /*
            * reshaping them for the purposes of being passed to the Select component
            */
-          const reshapedTags = filteredTags.map((eachTag: Tag) => {
+          const reshapedTags = filteredTags.map((thisTag: Tag) => {
             return {
-              label: eachTag.label,
-              value: eachTag.label,
+              label: thisTag.label,
+              value: thisTag.label,
             };
           });
           this.setState({ tagsToSuggest: reshapedTags });
@@ -223,9 +227,10 @@ class TagsPanel extends React.Component<CombinedProps, State> {
          * with the deleted tag filtered out). It's important to note that the Tag is *not*
          * being deleted here - it's just being removed from the list
          */
-        const tagsWithoutDeletedTag = tags.filter((eachTag: string) => {
-          return this.state.listDeletingTags.indexOf(eachTag) === -1;
+        const tagsWithoutDeletedTag = tags.filter((thisTag: string) => {
+          return this.state.listDeletingTags.indexOf(thisTag) === -1;
         });
+
         updateTags(tagsWithoutDeletedTag)
           .then(() => {
             /*
@@ -241,13 +246,13 @@ class TagsPanel extends React.Component<CombinedProps, State> {
                 ...cloneTagSuggestions,
               ],
               listDeletingTags: this.state.listDeletingTags.filter(
-                (eachTag) => eachTag !== label
+                (thisTag) => thisTag !== label
               ),
               loading: false,
               tagError: '',
             });
           })
-          .catch((e) => {
+          .catch((_) => {
             this.props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
               variant: 'error',
             });
@@ -256,7 +261,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
              */
             this.setState({
               listDeletingTags: this.state.listDeletingTags.filter(
-                (eachTag) => eachTag !== label
+                (thisTag) => thisTag !== label
               ),
               loading: false,
             });
@@ -311,8 +316,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
            * since we can't attach this tag anymore
            */
           const cloneTagSuggestions = clone(tagsToSuggest) || [];
-          const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
-            return eachTag.label !== value.label;
+          const filteredTags = cloneTagSuggestions.filter((thisTag: Item) => {
+            return thisTag.label !== value.label;
           });
           this.setState({
             tagsToSuggest: filteredTags,
@@ -334,7 +339,6 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
     const {
       isCreatingTag,
-      listDeletingTags,
       tagsToSuggest,
       tagInputValue,
       tagError,
@@ -342,55 +346,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <div
-        className={classNames({
-          [classes.root]: true,
-        })}
-      >
-        <div
-          className={classNames({
-            [classes.tagsPanelItemWrapper]: true,
-          })}
-        >
-          {loading && (
-            <div className={classes.progress}>
-              <CircleProgress mini />
-            </div>
-          )}
-          <div
-            className={classNames({
-              [classes.loading]: loading,
-            })}
-          >
-            {tags.map((eachTag) => {
-              return (
-                <TagsPanelItem
-                  key={eachTag}
-                  label={eachTag}
-                  tagLabel={eachTag}
-                  onDelete={disabled ? undefined : this.handleDeleteTag}
-                  className={classes.tag}
-                  loading={listDeletingTags.some((inProgressTag) => {
-                    /*
-                     * The tag is getting deleted if it appears in the state
-                     * which holds the list of tags queued for deletion
-                     */
-                    return eachTag === inProgressTag;
-                  })}
-                />
-              );
-            })}
-          </div>
-          {tagError && (
-            <Notice
-              text={tagError}
-              error
-              spacingBottom={0}
-              spacingTop={16}
-              className={classes.errorNotice}
-            />
-          )}
-        </div>
+      <>
         {isCreatingTag ? (
           <Select
             onChange={this.handleCreateTag}
@@ -403,8 +359,10 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             value={tagInputValue}
             createOptionPosition="first"
             className={classes.selectTag}
-            blurInputOnSelect={false}
-            menuIsOpen={!loading && !tagError}
+            escapeClearsValue
+            blurInputOnSelect
+            // eslint-disable-next-line
+            autoFocus
           />
         ) : (
           <div
@@ -413,15 +371,45 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               [classes.hasError]: tagError,
             })}
           >
-            <AddNewLink
-              label="Add New Tag"
-              disabled={loading || disabled}
+            <button
+              className={classes.addTagButton}
+              title="Add a tag"
               onClick={this.toggleTagInput}
-              className={classes.addButton}
-            />
+            >
+              Add a tag
+              <Plus />
+            </button>
           </div>
         )}
-      </div>
+
+        <div className={classes.tagsPanelItemWrapper}>
+          {loading && (
+            <div className={classes.progress}>
+              <CircleProgress mini />
+            </div>
+          )}
+          {tags.map((thisTag) => {
+            return (
+              <Tag
+                key={`tag-item-${thisTag}`}
+                className={classNames({
+                  [classes.tag]: true,
+                  [classes.loading]: loading,
+                })}
+                colorVariant="lightBlue"
+                label={thisTag}
+                maxLength={30}
+                onDelete={
+                  disabled ? undefined : () => this.handleDeleteTag(thisTag)
+                }
+              />
+            );
+          })}
+          {tagError && (
+            <Typography className={classes.errorNotice}>{tagError}</Typography>
+          )}
+        </div>
+      </>
     );
   }
 }

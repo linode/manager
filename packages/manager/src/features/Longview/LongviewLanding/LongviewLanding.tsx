@@ -7,7 +7,7 @@ import {
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -17,13 +17,11 @@ import LandingHeader from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
-import withSettings, {
-  Props as SettingsProps,
-} from 'src/containers/accountSettings.container';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { isManaged } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import SubscriptionDialog from './SubscriptionDialog';
 
@@ -32,9 +30,7 @@ const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
 type CombinedProps = LongviewProps &
   RouteComponentProps<{}> &
-  WithSnackbarProps &
-  // We need this to know if the account is managed
-  SettingsProps;
+  WithSnackbarProps;
 
 export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   props
@@ -48,7 +44,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
     []
   );
 
-  const { accountSettings, createLongviewClient } = props;
+  const { createLongviewClient } = props;
 
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
@@ -57,8 +53,6 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
     subscriptionDialogOpen,
     setSubscriptionDialogOpen,
   ] = React.useState<boolean>(false);
-
-  const isManaged = pathOr(false, ['managed'], accountSettings);
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -183,6 +177,5 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
 
 export default compose<CombinedProps, {} & RouteComponentProps>(
   withLongviewClients(),
-  withSettings(),
   withSnackbar
 )(LongviewLanding);

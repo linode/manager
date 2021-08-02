@@ -17,15 +17,14 @@ export const RebuildDialog: React.FC<RebuildDialogProps> = (props) => {
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="cancel" onClick={handleClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        destructive
         onClick={handleSubmit}
-        data-qa-submit-rebuild
         loading={isLoading}
+        data-qa-submit-rebuild
       >
         Rebuild
       </Button>

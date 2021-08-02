@@ -10,7 +10,6 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -70,6 +69,7 @@ import {
   WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { accountBackupsEnabled } from 'src/queries/accountSettings';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -724,11 +724,7 @@ interface CreateType {
 const mapStateToProps: MapState<ReduxStateProps & CreateType, CombinedProps> = (
   state
 ) => ({
-  accountBackupsEnabled: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'backups_enabled'],
-    state
-  ),
+  accountBackupsEnabled,
   /**
    * user cannot create Linodes if they are a restricted user
    * and do not have the "add_linodes" grant

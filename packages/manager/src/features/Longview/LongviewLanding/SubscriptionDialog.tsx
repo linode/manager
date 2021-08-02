@@ -1,10 +1,8 @@
 import * as React from 'react';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-
 import { managedText } from './LongviewPlans';
 
 interface Props {
@@ -20,7 +18,7 @@ export const SubscriptionDialog: React.FC<Props> = (props) => {
 
   const actions = () => (
     <ActionsPanel>
-      <Button buttonType="cancel" onClick={onClose}>
+      <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
 
