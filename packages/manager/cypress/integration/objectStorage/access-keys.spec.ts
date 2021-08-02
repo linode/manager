@@ -1,9 +1,5 @@
 import { makeTestLabel } from '../../support/api/common';
-import {
-  createBucket,
-  deleteAllTestAccessKeys,
-  deleteBucketByLabel,
-} from '../../support/api/objectStorage';
+import { createBucket } from '../../support/api/objectStorage';
 import {
   containsVisible,
   fbtClick,
@@ -33,9 +29,9 @@ describe('access keys', () => {
       fbtClick('Submit');
       cy.wait('@createAccessKey');
       fbtVisible(
-        'Your keys have been generated. For security purposes, we can only display your Secret Key once, after which it can’t be recovered.'
+        "For security purposes, we can only display your secret key once, after which it can't be recovered. Be sure to keep it in a safe place."
       );
-      getClick('[data-qa-close-dialog="true"]');
+      getClick('[data-qa-close-drawer="true"]');
       fbtVisible(accessKeyLabel);
     });
   });
