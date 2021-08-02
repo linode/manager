@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   success: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.color.green}`,
+    borderLeft: `5px solid ${theme.palette.status.successDark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
