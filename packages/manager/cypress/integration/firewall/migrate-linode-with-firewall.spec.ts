@@ -137,7 +137,7 @@ describe('Migrate Linode With Firewall', () => {
     }).as('getLinodes');
 
     // modify incoming response
-    cy.intercept(`*/linode/instances/${fakeLinodeId}/migrate`, (req) => {
+    cy.intercept('GET', `*/linode/instances/${fakeLinodeId}/migrate`, (req) => {
       req.reply((res) => {
         res.send(fakeLinodeData);
       });
