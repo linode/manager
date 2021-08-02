@@ -15,7 +15,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import RootRef from 'src/components/core/RootRef';
 import {
   createStyles,
   Theme,
@@ -179,18 +178,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     const { classes, readOnly } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <Grid
           container
           alignItems="flex-end"
-          justify="space-between"
+          justify="flex-end"
           className={classes.root}
         >
-          <RootRef rootRef={this.configsPanel}>
-            <Grid item className="p0">
-              <Typography variant="h3" />
-            </Grid>
-          </RootRef>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
@@ -235,7 +229,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             ?&quot;
           </Typography>
         </ConfirmationDialog>
-      </React.Fragment>
+      </>
     );
   }
 
