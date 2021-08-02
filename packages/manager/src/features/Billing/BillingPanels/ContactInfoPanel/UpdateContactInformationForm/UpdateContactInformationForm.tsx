@@ -2,7 +2,7 @@ import { updateAccountInfo } from '@linode/api-v4';
 import { Account } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import countryData from 'country-region-data';
-import { defaultTo, lensPath, set } from 'ramda';
+import { defaultTo, lensPath, pick, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -89,13 +89,29 @@ class UpdateContactInformationForm extends React.Component<
   async componentDidMount() {
     const account = queryClient.getQueryData<Account>('account');
 
-    const accountWithoutCard: Partial<Account> = {
-      ...account,
-      credit_card: undefined,
-    };
+    // 'account' has all data returned form the /v4/account endpoint.
+    // We need to pick only editable fields and fields we want to
+    // display in the form.
+    const editableContactInformationFields = pick(
+      [
+        'first_name',
+        'last_name',
+        'company',
+        'address_1',
+        'address_2',
+        'city',
+        'state',
+        'zip',
+        'country',
+        'email',
+        'phone',
+        'tax_id',
+      ],
+      account
+    );
 
     if (account) {
-      this.setState({ fields: accountWithoutCard });
+      this.setState({ fields: editableContactInformationFields });
     }
 
     // Auto-focus the "Email" field if appropriate (if the user is here via
