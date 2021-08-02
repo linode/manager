@@ -149,7 +149,6 @@ export class App extends React.Component<CombinedProps, State> {
       notificationsError,
       profileError,
       volumesError,
-      settingsError,
       bucketsError,
       nodeBalancersError,
       userId,
@@ -174,7 +173,6 @@ export class App extends React.Component<CombinedProps, State> {
         notificationsError,
         volumesError,
         profileError,
-        settingsError,
         bucketsError,
         nodeBalancersError
       )
@@ -225,8 +223,6 @@ interface StateProps {
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   linodesLoading: boolean;
-  accountSettingsLoading: boolean;
-  accountSettingsError?: APIError[];
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
@@ -234,7 +230,6 @@ interface StateProps {
   imagesError?: APIError[];
   bucketsError?: APIError[];
   profileError?: APIError[];
-  settingsError?: APIError[];
   notificationsError?: APIError[];
   typesError?: APIError[];
   regionsError?: APIError[];
@@ -251,7 +246,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
   notificationsError: state.__resources.notifications.error,
-  settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
@@ -259,15 +253,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   isLoggedInAsCustomer: pathOr(
     false,
     ['authentication', 'loggedInAsCustomer'],
-    state
-  ),
-  accountSettingsLoading: pathOr(
-    true,
-    ['__resources', 'accountSettings', 'loading'],
-    state
-  ),
-  accountSettingsError: path(
-    ['__resources', 'accountSettings', 'error', 'read'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,

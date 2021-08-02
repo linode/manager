@@ -41,7 +41,7 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
         [classes.focused]: props.isFocused,
       })}
       value={data.value}
-      attrs={{ ['data-qa-region-select-item']: data.value }}
+      attrs={{ ['data-qa-image-select-item']: data.value }}
       {...props}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">

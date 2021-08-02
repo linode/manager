@@ -1,8 +1,7 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { isEmpty, path, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -14,11 +13,6 @@ import ErrorState from 'src/components/ErrorState';
 import TagImportDrawer from 'src/features/TagImport';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
-import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
-import {
-  requestAccountSettings,
-  updateAccountSettings,
-} from 'src/store/accountSettings/accountSettings.requests';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
   GroupedEntitiesForImport,
@@ -34,26 +28,20 @@ import EnableObjectStorage from './EnableObjectStorage';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
 import CloseAccountSetting from './CloseAccountSetting';
+import {
+  useAccountSettings,
+  useMutateAccountSettings,
+} from 'src/queries/accountSettings';
 
 interface StateProps {
-  loading: boolean;
-  backups_enabled: boolean;
-  error?: Error;
   linodesWithoutBackups: Linode[];
-  updateError?: APIError[];
-  networkHelperEnabled: boolean;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
-  isManaged: boolean;
-  object_storage: AccountSettings['object_storage'];
 }
 
 interface DispatchProps {
   actions: {
-    updateAccount: (data: Partial<AccountSettings>) => Promise<AccountSettings>;
-    updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
-    requestSettings: () => Promise<AccountSettings>;
   };
 }
 
@@ -64,30 +52,20 @@ type CombinedProps = StateProps &
 
 const GlobalSettings: React.FC<CombinedProps> = (props) => {
   const {
-    actions: { openBackupsDrawer, openImportDrawer, updateAccount },
-    backups_enabled,
-    networkHelperEnabled,
-    error,
-    loading,
+    actions: { openBackupsDrawer, openImportDrawer },
     linodesWithoutBackups,
     entitiesWithGroupsToImport,
-    isManaged,
-    object_storage,
   } = props;
 
-  const { _loading } = useReduxLoad(['accountSettings', 'domains', 'linodes']);
+  const {
+    data: accountSettings,
+    isLoading: accountSettingsLoading,
+    error: accountSettingsError,
+  } = useAccountSettings();
 
-  const toggleAutomaticBackups = () => {
-    return updateAccount({ backups_enabled: !backups_enabled }).catch(
-      displayError
-    );
-  };
+  const { mutateAsync: updateAccount } = useMutateAccountSettings();
 
-  const toggleNetworkHelper = () => {
-    return updateAccount({ network_helper: !networkHelperEnabled }).catch(
-      displayError
-    );
-  };
+  const { _loading } = useReduxLoad(['domains', 'linodes']);
 
   const displayError = (errors: APIError[] | undefined) => {
     if (!errors) {
@@ -103,10 +81,10 @@ const GlobalSettings: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  if (loading || _loading) {
+  if (accountSettingsLoading || _loading) {
     return <CircleProgress />;
   }
-  if (error) {
+  if (accountSettingsError) {
     return (
       <ErrorState
         errorText={'There was an error retrieving your account data.'}
@@ -114,10 +92,29 @@ const GlobalSettings: React.FC<CombinedProps> = (props) => {
     );
   }
 
+  if (!accountSettings) {
+    return null;
+  }
+
+  const {
+    backups_enabled,
+    managed,
+    network_helper,
+    object_storage,
+  } = accountSettings;
+
+  const toggleAutomaticBackups = () => {
+    updateAccount({ backups_enabled: !backups_enabled }).catch(displayError);
+  };
+
+  const toggleNetworkHelper = () => {
+    updateAccount({ network_helper: !network_helper }).catch(displayError);
+  };
+
   return (
     <div>
       <AutoBackups
-        isManagedCustomer={isManaged}
+        isManagedCustomer={managed}
         backups_enabled={backups_enabled}
         onChange={toggleAutomaticBackups}
         openBackupsDrawer={openBackupsDrawer}
@@ -125,16 +122,10 @@ const GlobalSettings: React.FC<CombinedProps> = (props) => {
       />
       <NetworkHelper
         onChange={toggleNetworkHelper}
-        networkHelperEnabled={networkHelperEnabled}
+        networkHelperEnabled={network_helper}
       />
-      <EnableObjectStorage
-        object_storage={object_storage}
-        update={props.actions.updateAccountSettingsInStore}
-      />
-      <EnableManaged
-        isManaged={isManaged}
-        update={props.actions.updateAccountSettingsInStore}
-      />
+      <EnableObjectStorage object_storage={object_storage} />
+      <EnableManaged isManaged={managed} />
       {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
         <ImportGroupsAsTags openDrawer={openImportDrawer} />
       )}
@@ -145,48 +136,16 @@ const GlobalSettings: React.FC<CombinedProps> = (props) => {
   );
 };
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  loading: pathOr(false, ['__resources', 'accountSettings', 'loading'], state),
-
-  backups_enabled: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'backups_enabled'],
-    state
-  ),
-  error: path(['__resources', 'accountSettings', 'error', 'read'], state),
-  updateError: path(
-    ['__resources', 'accountSettings', 'error', 'update'],
-    state
-  ),
   linodesWithoutBackups: getLinodesWithoutBackups(state.__resources),
-  networkHelperEnabled: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'network_helper'],
-    state
-  ),
   entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state),
-  isManaged: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'managed'],
-    state
-  ),
-  object_storage: pathOr(
-    'disabled',
-    ['__resources', 'accountSettings', 'data', 'object_storage'],
-    state
-  ),
 });
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {
     actions: {
-      updateAccount: (data: Partial<AccountSettings>) =>
-        dispatch(updateAccountSettings(data)),
       openBackupsDrawer: () => dispatch(handleOpen()),
       openImportDrawer: () => dispatch(openGroupDrawer()),
-      updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-        dispatch(updateSettingsInStore(data)),
-      requestSettings: () => dispatch(requestAccountSettings()),
     },
   };
 };

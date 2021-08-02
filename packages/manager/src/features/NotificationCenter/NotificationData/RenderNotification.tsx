@@ -11,7 +11,7 @@ import { Link } from 'src/components/Link';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { ExtendedNotification } from './useFormattedNotifications';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     paddingTop: 2,
     paddingBottom: 2,
@@ -29,11 +29,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.red,
   },
   redLink: {
+    color: theme.color.red,
     '&:hover': {
       textDecoration: `${theme.color.red} underline`,
     },
   },
   greyLink: {
+    color: theme.palette.text.primary,
     '&:hover': {
       textDecoration: `${theme.palette.text.primary} underline`,
     },
@@ -134,14 +136,10 @@ const getEntityLinks = (
   id?: number
 ) => {
   // Handle specific notification types ()
-  switch (notificationType) {
-    case 'ticket_abuse':
-      return `/support/tickets/${id}`;
-    case 'payment_due':
-      return '/account/billing';
-    default:
-      break;
+  if (notificationType === 'ticket_abuse') {
+    return `/support/tickets/${id}`;
   }
+
   // The only entity.type we currently expect and can handle for is "linode."
   return entityType === 'linode' ? `/linodes/${id}` : null;
 };

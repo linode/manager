@@ -23,14 +23,12 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import accountSettingsContainer, {
-  Props as AccountSettingsProps,
-} from 'src/containers/accountSettings.container';
 import {
   hasGrant,
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -125,7 +123,7 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props & AccountSettingsProps & ReduxStateProps;
+export type CombinedProps = Props & ReduxStateProps;
 
 export const managedText = (
   <span>
@@ -144,8 +142,9 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const mounted = React.useRef<boolean>(false);
 
+  const { data: accountSettings } = useAccountSettings();
+
   const {
-    accountSettings,
     subscriptionRequestHook: subscriptions,
     mayUserModifyLVSubscription,
   } = props;
@@ -331,11 +330,7 @@ const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  connected,
-  accountSettingsContainer()
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, connected);
 
 export default enhanced(LongviewPlans);
 

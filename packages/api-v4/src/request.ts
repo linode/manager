@@ -1,5 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ObjectSchema, ValidationError } from 'yup';
+import { ValidationError, AnySchema } from 'yup';
 import { APIError } from './types';
 
 interface RequestConfig extends AxiosRequestConfig {
@@ -63,20 +63,21 @@ export const setHeaders = (newHeaders: any = {}) => (object: any) => {
 /**
  * Validate and set data in the request configuration object.
  */
-export const setData = <T extends {}>(
-  data: T,
+export const setData = (
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  data: any,
   /**
    * If a schema is provided, execute its validate method. If the validation fails, the
    * errors will be set at L.validationError's path.
    */
-  schema?: ObjectSchema<T>,
+  schema?: AnySchema,
   /**
    * postValidationTransform will be applied to the data just before it's set on the configuration
    * object, after the validation has happened. Use with caution: It was created as a trap door for
    * merging IPv4 addresses and ports in the NodeBalancer creation flow.
    */
-  postValidationTransform?: (v: any) => any
-) => {
+  postValidationTransform?: (_: any) => any
+): any => {
   if (!schema) {
     return set('data', data);
   }
