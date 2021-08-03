@@ -105,8 +105,8 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
       <Paper>
         <Grid item xs={12}>
-          {generalError && <Notice error text={generalError} />}
-          {success && <Notice success text={success} />}
+          {generalError ? <Notice error text={generalError} /> : null}
+          {success ? <Notice success text={success} /> : null}
         </Grid>
         <div className={classes.inner}>
           <TextField
