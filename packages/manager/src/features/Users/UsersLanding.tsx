@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   addNewWrapper: {
     '&.MuiGrid-item': {
+      paddingTop: 0,
       paddingRight: 0,
     },
     [theme.breakpoints.down('sm')]: {
