@@ -1,15 +1,17 @@
+import {
+  CardType,
+  CreditCard as CreditCardType,
+} from '@linode/api-v4/lib/account/types';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { CardType } from '@linode/api-v4/lib/account/types';
-import Typography from 'src/components/core/Typography';
-import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
-import VisaIcon from 'src/assets/icons/payment/visa.svg';
-import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
+import GenericCardIcon from 'src/assets/icons/credit-card.svg';
 import AmexIcon from 'src/assets/icons/payment/amex.svg';
 import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
-import GenericCardIcon from 'src/assets/icons/credit-card.svg';
-import { CreditCard as CreditCardType } from '@linode/api-v4/lib/account/types';
+import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
+import VisaIcon from 'src/assets/icons/payment/visa.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,13 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   card: {
     display: 'flex',
-    marginLeft: 2,
     [theme.breakpoints.down('xs')]: {
-      display: 'grid',
+      flexDirection: 'column',
     },
   },
   cardInfo: {
-    fontWeight: 'bold',
+    fontFamily: theme.font.bold,
     marginRight: 10,
     [theme.breakpoints.down('xs')]: {
       marginRight: 0,

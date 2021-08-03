@@ -1,5 +1,11 @@
-import * as React from 'react';
+import {
+  CreditCard as CreditCardType,
+  ThirdPartyPayment as ThirdPartyPaymentType,
+} from '@linode/api-v4/lib/account/types';
 import * as classNames from 'classnames';
+import * as React from 'react';
+import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
+import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import {
   makeStyles,
   Theme,
@@ -7,29 +13,31 @@ import {
   useTheme,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
-import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
-import {
-  CreditCard as CreditCardType,
-  ThirdPartyPayment as ThirdPartyPaymentType,
-} from '@linode/api-v4/lib/account/types';
+import Grid from 'src/components/Grid';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     display: 'flex',
+    // Safari's default setting for `alignItems` is `stretch` so defining it as
+    // `flex-start` fixes the issue
+    // https://stackoverflow.com/questions/57516373/image-stretching-in-flexbox-in-safari
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingRight: 4,
-    paddingLeft: theme.spacing(),
+    paddingLeft: 6,
+    paddingRight: 6,
     width: 45,
+    '& svg': {
+      // Safari needs the height/width defined in order to render the image
+      width: 33,
+    },
   },
   paymentTextContainer: {
     display: 'flex',
   },
   paymentMethodLabel: {
-    fontWeight: 'bold',
-    marginRight: 8,
-    marginLeft: 3,
+    fontFamily: theme.font.bold,
+    marginRight: theme.spacing(),
   },
   payPal: {
     border: `1px solid ${theme.color.grey2}`,
@@ -71,21 +79,21 @@ export const TPP: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <span className={classes.icon}>
+      <Grid item className={classes.icon}>
         <Icon
           className={classNames({
             [classes.payPal]: thirdPartyPayment === 'paypal',
           })}
         />
-      </span>
-      <div className={classes.paymentTextContainer}>
+      </Grid>
+      <Grid item className={classes.paymentTextContainer}>
         {!matchesSmDown ? (
           <Typography className={classes.paymentMethodLabel}>
             {thirdPartyPaymentMap[thirdPartyPayment].label}
           </Typography>
         ) : null}
         <CreditCard creditCard={creditCard} showIcon={false} />
-      </div>
+      </Grid>
     </>
   );
 };
