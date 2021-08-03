@@ -17,11 +17,13 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { MBpsIntraDC } from 'src/constants';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import MutateDrawer from '../MutateDrawer';
@@ -29,18 +31,12 @@ import withMutationDrawerState, {
   MutationDrawerProps,
 } from './mutationDrawerState';
 
-import { MBpsIntraDC } from 'src/constants';
-
 type ClassNames = 'pendingMutationLink';
 
 const styles = (theme: Theme) =>
   createStyles({
     pendingMutationLink: {
-      color: theme.palette.primary.main,
-      cursor: 'pointer',
-      '&:hover': {
-        textDecoration: 'underline',
-      },
+      ...theme.applyLinkStyles,
     },
   });
 
@@ -150,27 +146,30 @@ const MutationNotification: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Notice important warning>
-        You have a pending upgrade. The estimated time to complete this upgrade
-        is
-        {` ` +
-          (estimatedTimeToUpgradeInMins < 1
-            ? '< 1'
-            : estimatedTimeToUpgradeInMins)}
-        {estimatedTimeToUpgradeInMins < 1 ? ` minute` : ` minutes`}. To learn
-        more,&nbsp;
-        <span
-          className={classes.pendingMutationLink}
-          onClick={openMutationDrawer}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              openMutationDrawer();
-            }
-          }}
-          role="button"
-          tabIndex={0}
-        >
-          click here.
-        </span>
+        <Typography>
+          You have a pending upgrade. The estimated time to complete this
+          upgrade is
+          {` ` +
+            (estimatedTimeToUpgradeInMins < 1
+              ? '< 1'
+              : estimatedTimeToUpgradeInMins)}
+          {estimatedTimeToUpgradeInMins < 1 ? ` minute` : ` minutes`}. To learn
+          more,&nbsp;
+          <span
+            className={classes.pendingMutationLink}
+            onClick={openMutationDrawer}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                openMutationDrawer();
+              }
+            }}
+            role="button"
+            tabIndex={0}
+          >
+            click here
+          </span>
+          .
+        </Typography>
       </Notice>
       <MutateDrawer
         estimatedTimeToUpgradeInMins={estimatedTimeToUpgradeInMins}
