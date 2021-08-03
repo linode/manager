@@ -179,7 +179,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     balance <= 0 &&
     !_isRestrictedUser &&
     createdWithin90Days(account?.active_since) &&
-    account?.active_promotions.length === 0 ? (
+    promotions?.length === 0 ? (
       <Typography>
         <button
           className={classes.makeAPaymentButton}
