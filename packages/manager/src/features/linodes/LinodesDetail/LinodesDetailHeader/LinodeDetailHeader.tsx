@@ -1,8 +1,14 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
+import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
@@ -10,10 +16,12 @@ import PowerDialogOrDrawer, {
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
+import useFlags from 'src/hooks/useFlags';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
+import { openForAttaching, openForCreating } from 'src/store/volumeForm';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
@@ -59,6 +67,9 @@ interface DialogProps {
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
 const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
+  const flags = useFlags();
+  const dispatch = useDispatch();
+
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect
@@ -253,9 +264,53 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   const getVolumesByLinode = (linodeId: number) =>
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
+  const numAttachedVolumes = getVolumesByLinode(linode.id);
+
   const handleDeleteLinode = (linodeId: number) => {
     history.push('/linodes');
     return deleteLinode(linodeId);
+  };
+
+  const region = 'us-southeast';
+  const showVolumesBanner =
+    flags.blockStorageAvailability &&
+    linode.region === region &&
+    numAttachedVolumes === 0;
+
+  // Check to make sure:
+  //    1. there are no Volumes currently attached
+  //    2. the Volume is unattached
+  //    3. the Volume is in the right region
+  const allUnattachedAtlantaVolumes = Object.values(volumes.itemsById).filter(
+    (thisVolume) =>
+      thisVolume.linode_id === null && thisVolume.region === region
+  );
+
+  const isCreateMode =
+    numAttachedVolumes === 0 && allUnattachedAtlantaVolumes.length === 0;
+
+  const volumesBannerAction = isCreateMode ? 'Create' : 'Attach';
+
+  const openCreateVolumeDrawer = (e: any) => {
+    e.preventDefault();
+
+    if (linode.id && linode.label && linode.region) {
+      dispatch(
+        openForCreating('Created from Linode Details', {
+          linodeId: linode.id,
+          linodeLabel: linode.label,
+          linodeRegion: linode.region,
+        })
+      );
+    }
+  };
+
+  const openAttachVolumeDrawer = (e: any) => {
+    e.preventDefault();
+
+    if (linode.id && linode.label && linode.region) {
+      dispatch(openForAttaching(linode.id, linode.region, linode.label));
+    }
   };
 
   return (
@@ -263,6 +318,39 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
+      {showVolumesBanner ? (
+        <DismissibleBanner
+          preferenceKey="block-storage-available-atlanta"
+          productInformationIndicator
+        >
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+          >
+            <Grid item>
+              <Typography>
+                Atlanta is the first data center with our new high-performance{' '}
+                <Link to="https://www.linode.com/products/block-storage/">
+                  NVMe Block Storage
+                </Link>
+                .
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                buttonType="primary"
+                onClick={
+                  isCreateMode ? openCreateVolumeDrawer : openAttachVolumeDrawer
+                }
+              >
+                {volumesBannerAction} a Volume
+              </Button>
+            </Grid>
+          </Grid>
+        </DismissibleBanner>
+      ) : null}
       <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"

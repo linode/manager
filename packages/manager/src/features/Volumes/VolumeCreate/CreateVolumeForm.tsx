@@ -39,10 +39,11 @@ import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 import { useGrants, useProfile } from 'src/queries/profile';
+import useFlags from 'src/hooks/useFlags';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
@@ -86,6 +87,7 @@ type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
   const { onSuccess, createVolume, origin, history, regions } = props;
 
   const { data: profile } = useProfile();
@@ -230,6 +232,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             <Grid container>
               <Grid item className="mlMain">
                 <Paper className={classes.container}>
+                  {flags.blockStorageAvailability ? (
+                    <Notice success>
+                      High-performance NVMe block storage is currently available
+                      in Atlanta, Georgia.
+                    </Notice>
+                  ) : null}
                   <Typography variant="body1" data-qa-volume-size-help>
                     A single Volume can range from 10 to {MAX_VOLUME_SIZE}{' '}
                     gibibytes in size and costs $0.10/GiB per month. Up to eight
