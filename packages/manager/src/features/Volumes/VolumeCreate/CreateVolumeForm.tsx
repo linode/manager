@@ -54,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(3),
   },
+  notice: {
+    borderColor: theme.color.green,
+  },
   button: {
     marginTop: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
@@ -190,7 +193,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               <Grid item className={classes.root}>
                 <Paper>
                   {flags.blockStorageAvailability ? (
-                    <Notice success>
+                    <Notice success className={classes.notice}>
                       High-performance NVMe block storage is currently available
                       in Atlanta, Georgia.
                     </Notice>

@@ -49,7 +49,9 @@ const SizeField: React.FC<CombinedProps> = ({
         value={value}
         {...rest}
       />
-      <FormHelperText>${price}/month</FormHelperText>
+      <FormHelperText>
+        {resize ? 'The size of the new volume in GiB.' : `${price}/month`}
+      </FormHelperText>
     </>
   );
 };
