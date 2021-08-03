@@ -27,6 +27,7 @@ import {
   hasGrant,
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
@@ -75,6 +76,7 @@ type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
   const { onSuccess, createVolume, disabled, origin, history, regions } = props;
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
@@ -187,6 +189,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             <Grid container direction="column">
               <Grid item className={classes.root}>
                 <Paper>
+                  {flags.blockStorageAvailability ? (
+                    <Notice success>
+                      High-performance NVMe block storage is currently available
+                      in Atlanta, Georgia.
+                    </Notice>
+                  ) : null}
                   <Typography variant="body1" data-qa-volume-size-help>
                     A single Volume can range from 10 to {MAX_VOLUME_SIZE}{' '}
                     gibibytes in size and costs $0.10/GiB per month. Up to eight

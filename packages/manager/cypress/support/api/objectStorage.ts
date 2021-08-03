@@ -1,9 +1,21 @@
+import { imageFactory, objectStorageBucketFactory } from '@src/factories';
+import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { apiCheckErrors, deleteById, getAll, isTestEntity } from './common';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 
 export const getAccessKeys = () => getAll('object-storage/keys');
 export const getBuckets = () => getAll('object-storage/buckets');
+
+export const createMockBucket = (
+  data?,
+  cluster = 'eu-central-1',
+  label = 'cy-test-bucket'
+) => {
+  return makeResourcePage(
+    objectStorageBucketFactory.buildList(1, { cluster, label, ...data })
+  );
+};
 
 const makeBucketCreateReq = (
   label: string,
