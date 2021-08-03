@@ -29,6 +29,8 @@ const SizeField: React.FC<CombinedProps> = ({
     ? `This volume can range from ${resize} GiB to ${MAX_VOLUME_SIZE} GiB in size.`
     : undefined;
 
+  const price = (value / 10).toFixed(2);
+
   return (
     <>
       <TextField
@@ -47,7 +49,7 @@ const SizeField: React.FC<CombinedProps> = ({
         value={value}
         {...rest}
       />
-      <FormHelperText>The size of the new volume in GiB</FormHelperText>
+      <FormHelperText>${price}/month</FormHelperText>
     </>
   );
 };
