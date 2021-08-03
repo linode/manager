@@ -5,26 +5,30 @@ import TextField from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 
 interface Props {
-  error?: string;
+  name: string;
+  value: number;
   onBlur: (e: any) => void;
   onChange: (e: React.ChangeEvent<any>) => void;
-  value: number;
-  name: string;
-  resize?: number;
   disabled?: boolean;
+  error?: string;
+  isFromLinode?: boolean;
+  resize?: number;
 }
 
 type CombinedProps = Props;
 
-const SizeField: React.FC<CombinedProps> = ({
-  error,
-  onBlur,
-  onChange,
-  value,
-  name,
-  resize,
-  ...rest
-}) => {
+const SizeField: React.FC<CombinedProps> = (props) => {
+  const {
+    name,
+    value,
+    onBlur,
+    onChange,
+    error,
+    isFromLinode,
+    resize,
+    ...rest
+  } = props;
+
   const helperText = resize
     ? `This volume can range from ${resize} GiB to ${MAX_VOLUME_SIZE} GiB in size.`
     : undefined;
@@ -50,7 +54,9 @@ const SizeField: React.FC<CombinedProps> = ({
         {...rest}
       />
       <FormHelperText>
-        {resize ? 'The size of the new volume in GiB.' : `${price}/month`}
+        {resize || isFromLinode
+          ? 'The size of the new volume in GiB.'
+          : `${price}/month`}
       </FormHelperText>
     </>
   );

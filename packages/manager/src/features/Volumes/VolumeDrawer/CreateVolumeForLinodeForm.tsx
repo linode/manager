@@ -207,12 +207,13 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             />
 
             <SizeField
-              error={touched.size ? errors.size : undefined}
               name="size"
+              value={values.size}
               onBlur={handleBlur}
               onChange={handleChange}
-              value={values.size}
               disabled={disabled}
+              error={touched.size ? errors.size : undefined}
+              isFromLinode
             />
 
             <ConfigSelect
