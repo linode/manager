@@ -6,6 +6,10 @@ import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { addPromotion } from '@linode/api-v4/lib';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/account';
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -22,8 +26,33 @@ interface Props {
 const PromoDialog: React.FC<Props> = (props) => {
   const { open, onClose } = props;
   const classes = useStyles();
-  const [promoCode, setPromoCode] = React.useState<string>();
+  const [promoCode, setPromoCode] = React.useState<string>('');
   const [error, setError] = React.useState<string>();
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (open) {
+      setPromoCode('');
+      setLoading(false);
+      setError(undefined);
+    }
+  }, [open]);
+
+  const addPromo = () => {
+    setLoading(true);
+    addPromotion(promoCode)
+      .then(() => {
+        setLoading(false);
+        queryClient.invalidateQueries(queryKey);
+        onClose();
+      })
+      .catch((error) => {
+        setLoading(false);
+        setError(
+          getAPIErrorOrDefault(error, 'Unable to add promo code')[0].reason
+        );
+      });
+  };
 
   const actions = () => (
     <ActionsPanel>
@@ -32,9 +61,9 @@ const PromoDialog: React.FC<Props> = (props) => {
       </Button>
       <Button
         buttonType="primary"
-        // onClick={onAdd}
-        // disabled={}
-        // loading={loading}
+        onClick={addPromo}
+        loading={loading}
+        disabled={!promoCode}
       >
         Apply Promo Code
       </Button>

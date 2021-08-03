@@ -20,6 +20,8 @@ import HelpIcon from 'src/components/HelpIcon';
 import useNotifications from 'src/hooks/useNotifications';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -88,6 +90,7 @@ interface BillingSummaryProps {
 export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const classes = useStyles();
   const notifications = useNotifications();
+  const { account, _isRestrictedUser } = useAccountManagement();
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
     false
@@ -172,6 +175,21 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
       </Typography>
     ) : null;
 
+  const addPromoJSX =
+    balance <= 0 &&
+    !_isRestrictedUser &&
+    createdWithin90Days(account?.active_since) &&
+    account?.active_promotions.length === 0 ? (
+      <Typography>
+        <button
+          className={classes.makeAPaymentButton}
+          onClick={openPromoDialog}
+        >
+          Add a promo code
+        </button>
+      </Typography>
+    ) : null;
+
   return (
     <>
       <Grid container spacing={2} className={classes.root}>
@@ -201,16 +219,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
               </Typography>
             </Box>
             {balanceJSX}
-            {balance <= 0 ? (
-              <Typography>
-                <button
-                  className={classes.makeAPaymentButton}
-                  onClick={openPromoDialog}
-                >
-                  Add a promo code
-                </button>
-              </Typography>
-            ) : null}
+            {addPromoJSX}
           </Paper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
@@ -265,6 +274,20 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
 };
 
 export default React.memo(BillingSummary);
+
+const createdWithin90Days = (accountCreatedDate?: string) => {
+  if (!accountCreatedDate) {
+    return true;
+  }
+
+  const date = new Date(accountCreatedDate).getTime();
+  const ninetyDaysAgo = DateTime.local()
+    .minus({ days: 90 })
+    .toJSDate()
+    .getTime();
+
+  return date - ninetyDaysAgo > 0;
+};
 
 // =============================================================================
 // PromoDisplay
