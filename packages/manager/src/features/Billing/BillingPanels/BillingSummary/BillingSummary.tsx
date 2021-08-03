@@ -19,6 +19,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
 import useNotifications from 'src/hooks/useNotifications';
 import PaymentDrawer from './PaymentDrawer';
+import PromoDialog from './PromoDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -88,6 +89,10 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const classes = useStyles();
   const notifications = useNotifications();
 
+  const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
+    false
+  );
+
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
   const isBalanceOutsideGracePeriod = notifications.some(
     (notification) =>
@@ -120,6 +125,9 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     setPaymentDrawerOpen(false);
     replace('/account/billing');
   }, [replace]);
+
+  const openPromoDialog = () => setIsPromoDialogOpen(true);
+  const closePromoDialog = () => setIsPromoDialogOpen(false);
 
   React.useEffect(() => {
     if (makePaymentRouteMatch) {
@@ -160,7 +168,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
         >
           {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
         </button>
-        {pastDueBalance ? `${' '}to avoid service disruption.` : null}
+        {pastDueBalance ? ` to avoid service disruption.` : null}
       </Typography>
     ) : null;
 
@@ -193,6 +201,16 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
               </Typography>
             </Box>
             {balanceJSX}
+            {balance <= 0 ? (
+              <Typography>
+                <button
+                  className={classes.makeAPaymentButton}
+                  onClick={openPromoDialog}
+                >
+                  Add a promo code
+                </button>
+              </Typography>
+            ) : null}
           </Paper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
@@ -241,6 +259,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
         open={paymentDrawerOpen}
         onClose={closePaymentDrawer}
       />
+      <PromoDialog open={isPromoDialogOpen} onClose={closePromoDialog} />
     </>
   );
 };
