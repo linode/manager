@@ -79,7 +79,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
       const labelIndex = errorMsg.indexOf(label);
       errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
       return (
-        <>
+        <Notice error>
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
@@ -92,7 +92,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
               .
             </>
           ) : null}
-        </>
+        </Notice>
       );
     } else {
       return <Notice error text={errorMessage} />;
