@@ -4,6 +4,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
+import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { dcDisplayNames } from 'src/constants';
@@ -16,21 +17,21 @@ interface Props {
   open: boolean;
   error?: APIError[];
   isSubmitting: boolean;
-  firewallLabel: string;
   currentDevices: number[];
+  firewallLabel: string;
   onClose: () => void;
   addDevice: (selectedLinodes: number[]) => void;
 }
 
 export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const {
-    addDevice,
-    currentDevices,
+    open,
     error,
     isSubmitting,
+    currentDevices,
     firewallLabel,
     onClose,
-    open,
+    addDevice,
   } = props;
 
   const regions = useRegionsQuery().data ?? [];
@@ -64,6 +65,26 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
     ? getAPIErrorOrDefault(error, 'Error adding Linode')[0].reason
     : undefined;
 
+  // @todo update regex once error messaging updates
+  const errorNotice = (errorMsg: string) => {
+    // match something like: Linode <linode_label> (ID <linode_id>)
+    const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
+    if (linode) {
+      const [, label, id] = linode;
+      const labelIndex = errorMsg.indexOf(label);
+      errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
+      return (
+        <>
+          {errorMsg.substring(0, labelIndex)}
+          <Link to={`/linodes/${id}`}>{label}</Link>
+          {errorMsg.substring(labelIndex + label.length)}
+        </>
+      );
+    } else {
+      return <Notice error text={errorMessage} />;
+    }
+  };
+
   return (
     <Drawer
       title={`Add Linode to Firewall: ${firewallLabel}`}
@@ -76,7 +97,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           handleSubmit();
         }}
       >
-        {errorMessage && <Notice error text={errorMessage} />}
+        {errorMessage ? errorNotice(errorMessage) : null}
         <LinodeMultiSelect
           key={key}
           allowedRegions={regionsWithFirewalls}
