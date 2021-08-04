@@ -16,6 +16,8 @@ const upload = 'testImage.gz';
 
 describe('upload machine image, mocked', () => {
   it('uploads machine image', () => {
+    
+    // TODO: M3-5367
     // cy.intercept('POST', '*/images/upload', (req) => {
     //   req.reply({
     //     upload_to: uploadTo,
