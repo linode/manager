@@ -10,6 +10,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { addPromotion } from '@linode/api-v4/lib';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/account';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -26,6 +27,7 @@ interface Props {
 const PromoDialog: React.FC<Props> = (props) => {
   const { open, onClose } = props;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [promoCode, setPromoCode] = React.useState<string>('');
   const [error, setError] = React.useState<string>();
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -43,6 +45,9 @@ const PromoDialog: React.FC<Props> = (props) => {
     addPromotion(promoCode)
       .then(() => {
         setLoading(false);
+        enqueueSnackbar('Successfully added promotion to your account.', {
+          variant: 'success',
+        });
         queryClient.invalidateQueries(queryKey);
         onClose();
       })
@@ -54,7 +59,7 @@ const PromoDialog: React.FC<Props> = (props) => {
       });
   };
 
-  const actions = () => (
+  const actions = (
     <ActionsPanel>
       <Button buttonType="secondary" onClick={onClose}>
         Cancel
