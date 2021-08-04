@@ -156,6 +156,10 @@ export const gPay = async (
       return;
     }
 
+    if (error.statusCode === 'CANCELED') {
+      return;
+    }
+
     const errorMsg = isOneTimePayment
       ? 'Unable to complete Google Pay payment'
       : 'Unable to add payment method';
