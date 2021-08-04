@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withTheme } from 'src/components/core/styles';
@@ -7,9 +6,6 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
@@ -28,9 +24,7 @@ interface Props {
   toggleTheme: () => void;
 }
 
-type CombinedProps = Props & FeatureFlagConsumerProps;
-
-const ProfileSettings: React.FC<CombinedProps & { theme: Theme }> = (props) => {
+const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
   const classes = useStyles();
   const { toggleTheme, theme } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -115,6 +109,4 @@ const ProfileSettings: React.FC<CombinedProps & { theme: Theme }> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withFeatureFlags, withTheme);
-
-export default enhanced(ProfileSettings);
+export default withTheme(ProfileSettings);

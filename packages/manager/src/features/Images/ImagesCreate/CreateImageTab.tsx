@@ -187,12 +187,11 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           text="You don't have permissions to create a new Image. Please contact an account administrator for details."
         />
       ) : null}
-      {generalError && <Notice error text={generalError} data-qa-notice />}
-
-      {notice && <Notice success text={notice} data-qa-notice />}
-
+      {generalError ? (
+        <Notice error text={generalError} data-qa-notice />
+      ) : null}
+      {notice ? <Notice success text={notice} data-qa-notice /> : null}
       <ImagesPricingCopy type="captureImage" />
-
       <LinodeSelect
         selectedLinode={selectedLinode}
         linodeError={linodeError}
