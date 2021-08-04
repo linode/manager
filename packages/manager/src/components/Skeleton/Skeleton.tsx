@@ -7,8 +7,8 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    width: '100%',
     marginTop: theme.spacing(1),
-    marginBottom: 10,
   },
   oneLine: {
     marginBottom: 0,
@@ -109,39 +109,37 @@ const _Skeleton: React.FC<combinedProps> = (props) => {
     );
   }
 
-  return (
-    <>
-      {table ? (
-        <>
-          <Grid
-            container
-            className={classNames({
-              [classes.root]: true,
-              [classes.oneLine]: oneLine,
-              [classes.hasEntityIcon]: hasEntityIcon,
-            })}
-            data-testid={'tableSkeleton'}
-            aria-label="Table Content Loading"
-            tabIndex={0}
-          >
-            {hasEntityIcon && (
-              <Grid item className={classes.skeletonIconContainer}>
-                <Skeleton variant="circle" className={classes.skeletonIcon} />
-              </Grid>
-            )}
-            {columns}
+  if (table) {
+    return (
+      <Grid
+        container
+        className={classNames({
+          [classes.root]: true,
+          [classes.oneLine]: oneLine,
+          [classes.hasEntityIcon]: hasEntityIcon,
+        })}
+        data-testid="tableSkeleton"
+        aria-label="Table Content Loading"
+        tabIndex={0}
+      >
+        {hasEntityIcon && (
+          <Grid item className={classes.skeletonIconContainer}>
+            <Skeleton variant="circle" className={classes.skeletonIcon} />
           </Grid>
-        </>
-      ) : (
-        <Skeleton
-          {...props}
-          className={classes.root}
-          data-testid={'basicSkeleton'}
-          aria-label="Table Content Loading"
-          tabIndex={0}
-        />
-      )}
-    </>
+        )}
+        {columns}
+      </Grid>
+    );
+  }
+
+  return (
+    <Skeleton
+      {...props}
+      className={classes.root}
+      data-testid="basicSkeleton"
+      aria-label="Table Content Loading"
+      tabIndex={0}
+    />
   );
 };
 
