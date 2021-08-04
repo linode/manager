@@ -25,7 +25,6 @@ import withImages, {
 } from 'src/containers/withImages.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   helperText: {
     paddingTop: theme.spacing(1) / 2,
   },
@@ -70,7 +69,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   const canCreateImage =
-    Boolean(!profile?.restricted) || Boolean(grants?.global.add_images);
+    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
 
   const availableLinodesToImagize = profile?.restricted
     ? grants?.linode
@@ -113,14 +112,10 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     changeSelectedLinode(linodeID);
   };
 
-  const changeSelectedDisk = (disk: string | null) => {
-    setSelectedDisk(disk);
-  };
-
   const handleDiskChange = (diskID: string | null) => {
     // Clear any errors
     setErrors(undefined);
-    changeSelectedDisk(diskID);
+    setSelectedDisk(diskID);
   };
 
   const onSubmit = () => {

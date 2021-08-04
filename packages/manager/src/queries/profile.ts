@@ -41,7 +41,6 @@ export const useGrants = () =>
     queryPresets.oneTimeFetch
   );
 
-export const getProfileData = queryClient.getQueryData<Profile>(queryKey);
-export const getGrantData = queryClient.getQueryData<Grants>(
-  `${queryKey}-grants`
-);
+export const getProfileData = () => queryClient.getQueryData<Profile>(queryKey);
+export const getGrantData = () =>
+  queryClient.getQueryData<Grants>(`${queryKey}-grants`);

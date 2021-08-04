@@ -35,7 +35,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import SelectDBPlanPanel from './SelectDBPlanPanel';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-import { useProfile } from 'src/queries/profile';
 
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
@@ -77,8 +76,7 @@ export const CreateDatabaseDialog: React.FC<{}> = (_) => {
   const classes = useStyles();
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
-  const { data: profile } = useProfile();
-  const timezone = getUserTimezone(profile);
+  const timezone = getUserTimezone();
   const { createDatabase } = useDatabases();
 
   const regionsWithDatabases: ExtendedRegion[] = React.useMemo(() => {

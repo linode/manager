@@ -478,7 +478,7 @@ interface StateProps {
   profileUsername?: string;
 }
 const mapStateToProps: MapState<StateProps, {}> = () => ({
-  profileUsername: getProfileData?.username,
+  profileUsername: getProfileData()?.username,
 });
 
 const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (

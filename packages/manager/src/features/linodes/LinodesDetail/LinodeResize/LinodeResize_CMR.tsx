@@ -455,7 +455,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
     linodeType: linode.type,
     linodeStatus: linode.status,
     linodeLabel: linode.label,
-    permissions: getPermissionsForLinode(getGrantData, linodeId),
+    permissions: getPermissionsForLinode(getGrantData(), linodeId),
     linodeDisks: getLinodeDisksForLinode(linodeDisks, linodeId),
     linodeDisksError: linodeDisks[linodeId]?.error,
   };

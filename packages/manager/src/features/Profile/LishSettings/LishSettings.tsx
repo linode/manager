@@ -164,7 +164,7 @@ const LishSettings: React.FC<{}> = () => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <DocumentTitleSegment segment="LISH Console Settings" />
       <Paper className={classes.root}>
         <Typography variant="h2" className={classes.title} data-qa-title>
@@ -178,7 +178,7 @@ const LishSettings: React.FC<{}> = () => {
           the Lish console servers.
         </Typography>
         {isLoading ? null : (
-          <React.Fragment>
+          <>
             <FormControl className={classes.modeControl}>
               <Select
                 textFieldProps={{
@@ -227,7 +227,7 @@ const LishSettings: React.FC<{}> = () => {
             <button onClick={addSSHPublicKeyField} className={classes.addNew}>
               Add SSH Public Key
             </button>
-          </React.Fragment>
+          </>
         )}
         <ActionsPanel>
           <Button
@@ -245,7 +245,7 @@ const LishSettings: React.FC<{}> = () => {
           </Button>
         </ActionsPanel>
       </Paper>
-    </React.Fragment>
+    </>
   );
 };
 

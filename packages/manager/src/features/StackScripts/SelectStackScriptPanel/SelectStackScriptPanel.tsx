@@ -216,7 +216,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               onSelect={this.props.onSelect}
               resetStackScriptSelection={this.props.resetSelectedStackScript}
               publicImages={this.props.publicImages}
-              currentUser={getProfileData?.username || ''}
+              currentUser={getProfileData()?.username || ''}
               request={request}
               key={category + '-tab'}
               category={category}

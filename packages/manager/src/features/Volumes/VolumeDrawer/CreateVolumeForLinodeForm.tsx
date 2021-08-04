@@ -86,7 +86,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  // disabled if the profile is restricted and doesn't have add_volumes grant
   const disabled = profile?.restricted && !hasGrant(grants, 'add_volumes');
 
   return (
