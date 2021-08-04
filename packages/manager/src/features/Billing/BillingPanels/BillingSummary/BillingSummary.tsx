@@ -21,7 +21,7 @@ import useNotifications from 'src/hooks/useNotifications';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { DateTime } from 'luxon';
+import { createdWithinDays } from 'src/utilities/date';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -175,20 +175,11 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
       </Typography>
     ) : null;
 
-  const addPromoJSX =
+  const showAddPromoLink =
     balance <= 0 &&
     !_isRestrictedUser &&
-    createdWithin90Days(account?.active_since) &&
-    promotions?.length === 0 ? (
-      <Typography>
-        <button
-          className={classes.makeAPaymentButton}
-          onClick={openPromoDialog}
-        >
-          Add a promo code
-        </button>
-      </Typography>
-    ) : null;
+    createdWithinDays(90, account?.active_since) &&
+    promotions?.length === 0;
 
   return (
     <>
@@ -219,7 +210,16 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
               </Typography>
             </Box>
             {balanceJSX}
-            {addPromoJSX}
+            {showAddPromoLink ? (
+              <Typography>
+                <button
+                  className={classes.makeAPaymentButton}
+                  onClick={openPromoDialog}
+                >
+                  Add a promo code
+                </button>
+              </Typography>
+            ) : null}
           </Paper>
         </Grid>
         {promotions && promotions?.length > 0 ? (
@@ -274,20 +274,6 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
 };
 
 export default React.memo(BillingSummary);
-
-const createdWithin90Days = (accountCreatedDate?: string) => {
-  if (!accountCreatedDate) {
-    return true;
-  }
-
-  const date = new Date(accountCreatedDate).getTime();
-  const ninetyDaysAgo = DateTime.local()
-    .minus({ days: 90 })
-    .toJSDate()
-    .getTime();
-
-  return date - ninetyDaysAgo > 0;
-};
 
 // =============================================================================
 // PromoDisplay
