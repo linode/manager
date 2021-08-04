@@ -1,11 +1,8 @@
-import { shallow, ShallowWrapper } from 'enzyme';
 import { OAuthClient } from '@linode/api-v4/lib/account';
+import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-
-import { pageyProps } from 'src/__data__/pageyProps';
-
 import { clearDocs, setDocs } from 'src/store/documentation';
-
+import { pageyProps } from 'src/__data__/pageyProps';
 import { OAuthClients } from './OAuthClients';
 
 describe('OAuth Clients', () => {
@@ -40,7 +37,7 @@ describe('OAuth Clients', () => {
   beforeEach(() => {
     wrapper = shallow(
       <OAuthClients
-        classes={{ root: '', headline: '', addNewWrapper: '', actionCell: '' }}
+        classes={{ root: '', addNewWrapper: '', actionCell: '' }}
         {...pageyProps}
         data={mockData}
         setDocs={setDocs}

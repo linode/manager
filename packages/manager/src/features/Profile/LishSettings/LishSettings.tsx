@@ -28,35 +28,19 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames =
-  | 'root'
-  | 'title'
   | 'intro'
   | 'modeControl'
   | 'sshWrap'
   | 'keyTextarea'
-  | 'image'
-  | 'addNew'
-  | 'remove'
-  | 'button';
+  | 'addNew';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      padding: theme.spacing(3),
-      paddingBottom: theme.spacing(3),
-    },
-    title: {
-      marginBottom: theme.spacing(2),
-    },
     intro: {
       marginBottom: theme.spacing(2),
     },
     modeControl: {
       display: 'flex',
-    },
-    image: {
-      display: 'flex',
-      flexWrap: 'wrap',
     },
     addNew: {
       ...theme.applyLinkStyles,
@@ -69,13 +53,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         minWidth: 415,
       },
-    },
-    remove: {
-      ...theme.applyLinkStyles,
-    },
-    button: {
-      margin: 0,
-      padding: 0,
     },
   });
 
@@ -154,21 +131,20 @@ class LishSettings extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <React.Fragment>
+      <>
         <DocumentTitleSegment segment="LISH Console Settings" />
-        <Paper className={classes.root}>
-          <Typography variant="h2" className={classes.title} data-qa-title>
-            LISH Console Settings
-          </Typography>
-          {success && <Notice success text={success} />}
-          {authorizedKeysError && <Notice error text={authorizedKeysError} />}
-          {generalError && <Notice error text={generalError} />}
+        <Paper>
+          {success ? <Notice success text={success} /> : null}
+          {authorizedKeysError ? (
+            <Notice error text={authorizedKeysError} />
+          ) : null}
+          {generalError ? <Notice error text={generalError} /> : null}
           <Typography className={classes.intro}>
             This controls what authentication methods are allowed to connect to
             the Lish console servers.
           </Typography>
           {loading ? null : (
-            <React.Fragment>
+            <>
               <FormControl className={classes.modeControl}>
                 <Select
                   textFieldProps={{
@@ -199,47 +175,48 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     className={classes.keyTextarea}
                     data-qa-public-key
                   />
-                  {((idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
-                    idx > 0) && (
-                    <button
+                  {(idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
+                  idx > 0 ? (
+                    <Button
+                      buttonType="secondary"
+                      compact
                       onClick={this.onPublicKeyRemove(idx)}
-                      className={classes.remove}
                       data-qa-remove
                     >
                       Remove
-                    </button>
-                  )}
+                    </Button>
+                  ) : null}
                 </div>
               ))}
               <Typography style={{ paddingTop: 2 }}>
                 Place your SSH public keys here for use with Lish console
                 access.
               </Typography>
-              <button
+              <Button
+                buttonType="secondary"
+                compact
                 onClick={this.addSSHPublicKeyField}
-                className={classes.addNew}
               >
                 Add SSH Public Key
-              </button>
-            </React.Fragment>
+              </Button>
+            </>
           )}
           <ActionsPanel>
             <Button
-              className={classes.button}
               buttonType="primary"
-              onClick={this.onSubmit}
-              loading={this.state.submitting}
               disabled={
                 this.state.lishAuthMethod === this.props.lishAuthMethod &&
                 equals(this.state.authorizedKeys, this.props.authorizedKeys)
               }
+              loading={this.state.submitting}
+              onClick={this.onSubmit}
               data-qa-save
             >
               Save
             </Button>
           </ActionsPanel>
         </Paper>
-      </React.Fragment>
+      </>
     );
   }
 
