@@ -3,9 +3,7 @@ import * as React from 'react';
 import { LinodeActivity } from './LinodeActivity';
 
 describe('LinodeActivity', () => {
-  const wrapper = shallow(
-    <LinodeActivity classes={{ root: '', title: '' }} linodeID={123} />
-  );
+  const wrapper = shallow(<LinodeActivity linodeID={123} />);
 
   it('should return an EventsLanding component', () => {
     expect(wrapper.find('[data-qa-events-landing-for-linode]')).toHaveLength(1);

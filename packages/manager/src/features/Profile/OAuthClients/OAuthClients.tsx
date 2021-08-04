@@ -19,7 +19,6 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -39,20 +38,20 @@ import Modals from './Modals';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 
-type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'actionCell';
+type ClassNames = 'root' | 'addNewWrapper' | 'actionCell';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.color.white,
       width: '100%',
-    },
-    headline: {
-      marginLeft: 15,
     },
     addNewWrapper: {
       '&.MuiGrid-item': {
-        padding: 5,
+        paddingTop: 0,
+        paddingRight: 0,
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginRight: theme.spacing(),
       },
     },
     actionCell: {
@@ -373,21 +372,12 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           className={`${classes.root} m0`}
           container
           alignItems="center"
-          justify="space-between"
+          justify="flex-end"
         >
-          <Grid className="p0" item>
-            <Typography
-              className={classes.headline}
-              variant="h3"
-              data-qa-table={classes.headline}
-            >
-              OAuth Apps
-            </Typography>
-          </Grid>
           <Grid className={classes.addNewWrapper} item>
             <AddNewLink
-              onClick={() => this.openDrawer()(false)}
               label="Add an OAuth App"
+              onClick={() => this.openDrawer()(false)}
               data-qa-oauth-create
             />
           </Grid>

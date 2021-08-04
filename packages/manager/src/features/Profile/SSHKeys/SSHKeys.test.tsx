@@ -1,8 +1,8 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { pageyProps } from 'src/__data__/pageyProps';
 import { SSHKeys } from './SSHKeys';
 
-import { pageyProps } from 'src/__data__/pageyProps';
 /**
  * Displays a table
  * Table has 4 columns
@@ -15,9 +15,7 @@ describe('SSHKeys', () => {
       <SSHKeys
         {...pageyProps}
         classes={{
-          root: '',
           sshKeysHeader: '',
-          headline: '',
           addNewWrapper: '',
           createdCell: '',
           actionCell: '',
@@ -59,9 +57,7 @@ describe('SSHKeys', () => {
       <SSHKeys
         {...pageyProps}
         classes={{
-          root: '',
           sshKeysHeader: '',
-          headline: '',
           addNewWrapper: '',
           createdCell: '',
           actionCell: '',
@@ -80,9 +76,7 @@ describe('SSHKeys', () => {
       <SSHKeys
         {...pageyProps}
         classes={{
-          root: '',
           sshKeysHeader: '',
-          headline: '',
           addNewWrapper: '',
           createdCell: '',
           actionCell: '',
@@ -101,9 +95,7 @@ describe('SSHKeys', () => {
       <SSHKeys
         {...pageyProps}
         classes={{
-          root: '',
           sshKeysHeader: '',
-          headline: '',
           addNewWrapper: '',
           createdCell: '',
           actionCell: '',
