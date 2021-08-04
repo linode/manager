@@ -4,7 +4,7 @@ import * as React from 'react';
 import { StackScriptCreate } from './StackScriptCreate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { imageFactory, normalizeEntities } from 'src/factories';
+import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
 
 const images = normalizeEntities(imageFactory.buildList(10));
 
@@ -19,7 +19,7 @@ describe('StackScriptCreate', () => {
       }}
       imagesData={images}
       imagesLoading={false}
-      username="someguy"
+      profile={profileFactory.build()}
       setDocs={jest.fn()}
       clearDocs={jest.fn()}
       userCannotCreateStackScripts={false}

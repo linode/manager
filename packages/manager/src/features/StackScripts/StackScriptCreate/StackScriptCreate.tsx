@@ -293,11 +293,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   handleCreateStackScript = (payload: StackScriptPayload) => {
-    const { history } = this.props;
+    const { history, profile } = this.props;
     createStackScript(payload)
       .then((stackScript: StackScript) => {
         if (!this.mounted) {
           return;
+        }
+        if (profile?.restricted) {
+          queryClient.invalidateQueries(`${queryKey}-grants`);
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();
@@ -412,7 +415,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      username,
+      profile,
       userCannotCreateStackScripts,
       userCannotModifyStackScript,
       classes,
@@ -445,7 +448,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       (mode === 'edit' && userCannotModifyStackScript) ||
       (mode === 'create' && userCannotCreateStackScripts);
 
-    if (!username) {
+    if (!profile?.username) {
       return (
         <ErrorState errorText="An error has occurred. Please try again." />
       );
@@ -489,7 +492,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           />
         )}
         <ScriptForm
-          currentUser={username}
+          currentUser={profile?.username}
           disableSubmit={!hasUnsavedChanges}
           disabled={shouldDisable}
           mode={mode}
@@ -526,7 +529,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
-  username?: string;
+  profile: Profile | undefined;
   userCannotCreateStackScripts: boolean;
   userCannotModifyStackScript: boolean;
 }
@@ -543,7 +546,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
   );
 
   return {
-    username: queryClient.getQueryData<Profile>(queryKey)?.username,
+    profile: queryClient.getQueryData<Profile>(queryKey),
     userCannotCreateStackScripts:
       isRestrictedUser && !hasGrant(undefined, 'add_stackscripts'),
     userCannotModifyStackScript:
