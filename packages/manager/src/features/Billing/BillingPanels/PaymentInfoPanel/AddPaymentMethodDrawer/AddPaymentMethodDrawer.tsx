@@ -11,11 +11,13 @@ import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
 import HelpIcon from 'src/components/HelpIcon';
 import useFlags from 'src/hooks/useFlags';
+import Paper from 'src/components/core/Paper';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   paymentMethods: PaymentMethod[] | undefined;
+  openEditCreditCardDrawer: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -39,10 +41,21 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
     },
   },
+  notice: {
+    borderLeft: `solid 6px ${theme.color.green}`,
+    marginBottom: theme.spacing(2),
+    padding: '8px 16px',
+    '& p': {
+      fontSize: '0.95em',
+    },
+  },
+  link: {
+    ...theme.applyLinkStyles,
+  },
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
-  const { onClose, open, paymentMethods } = props;
+  const { onClose, open, paymentMethods, openEditCreditCardDrawer } = props;
   const classes = useStyles();
   const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
@@ -75,6 +88,18 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   return (
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
+      <Paper className={classes.notice}>
+        <Typography>
+          The option to add additonal credit cards is coming soon.
+        </Typography>
+        <Typography>
+          To edit your current credit card,{' '}
+          <button className={classes.link} onClick={openEditCreditCardDrawer}>
+            click here
+          </button>
+          .
+        </Typography>
+      </Paper>
       {isGooglePayEnabled ? (
         <React.Fragment>
           <Divider />
