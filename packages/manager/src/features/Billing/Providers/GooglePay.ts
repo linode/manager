@@ -152,9 +152,6 @@ export const gPay = async (
     setProcessing(false);
   } catch (error) {
     setProcessing(false);
-    if (error.message && (error.message as string).includes('User closed')) {
-      return;
-    }
 
     if (error.statusCode === 'CANCELED') {
       return;
