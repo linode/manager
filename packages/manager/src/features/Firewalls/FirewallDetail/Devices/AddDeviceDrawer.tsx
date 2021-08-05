@@ -1,18 +1,18 @@
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import v4 from 'uuid';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
+import { useStyles } from 'src/components/Notice/Notice';
 import { dcDisplayNames } from 'src/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import v4 from 'uuid';
-
 interface Props {
   open: boolean;
   error?: APIError[];
@@ -34,6 +34,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
     addDevice,
   } = props;
 
+  const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];
 
   const regionsWithFirewalls = regions
@@ -77,7 +78,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
       const labelIndex = errorMsg.indexOf(label);
       errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
       return (
-        <Notice error>
+        <Notice error className={classes.noticeText}>
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
