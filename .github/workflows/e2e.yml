@@ -7,7 +7,7 @@ env:
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
 on:
   schedule:
-    - cron: '0 13 * * 1-5'
+    - cron: "0 13 * * 1-5"
   push:
     branches:
       - develop
@@ -18,12 +18,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        user: ['USER_1', 'USER_2', 'USER_3', 'USER_4']
+        user: ["USER_1", "USER_2", "USER_3", "USER_4"]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: '14.15.4'
+          node-version: "14.17.4"
       - uses: actions/cache@v2
         with:
           path: |
@@ -54,7 +54,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: packages/manager
-          wait-on: 'http://localhost:3000'
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 1000
           install: false
           browser: chrome
