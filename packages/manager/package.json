@@ -2,10 +2,10 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.45.0",
+  "version": "1.45.1",
   "private": true,
   "engines": {
-    "node": ">= 14.15.4"
+    "node": ">= 14.17.4"
   },
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"

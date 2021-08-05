@@ -39,6 +39,7 @@ import {
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
+import { array, object, string } from 'yup';
 import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
@@ -75,6 +76,18 @@ interface Props {
   ) => void;
 }
 
+// The original schema expects tags to be an array of strings, but Formik treats
+// tags as _Tag[], so we extend the schema to transform tags before validation.
+const extendedCreateVolumeSchema = CreateVolumeSchema.concat(
+  object({
+    tags: array()
+      .transform((tagItems: _Tag[]) =>
+        tagItems.map((thisTagItem) => thisTagItem.value)
+      )
+      .of(string()),
+  })
+);
+
 type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
@@ -100,7 +113,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={CreateVolumeSchema}
+      validationSchema={extendedCreateVolumeSchema}
       onSubmit={(
         values,
         { resetForm, setSubmitting, setStatus, setErrors }
