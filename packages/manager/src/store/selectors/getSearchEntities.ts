@@ -18,7 +18,6 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { listToItemsByID, queryClient } from 'src/queries/base';
 
 type State = ApplicationState['__resources'];
 
@@ -172,6 +171,7 @@ export const bucketToSearchableItem = (
 
 const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
 const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
+const imageSelector = (state: State) => state.images.itemsById || {};
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 const domainSelector = (state: State) =>
@@ -186,6 +186,7 @@ export default createSelector<
   State,
   Linode[],
   Volume[],
+  { [key: string]: Image },
   Domain[],
   NodeBalancer[],
   LinodeType[],
@@ -196,6 +197,7 @@ export default createSelector<
 >(
   linodeSelector,
   volumeSelector,
+  imageSelector,
   domainSelector,
   nodebalSelector,
   typesSelector,
@@ -205,6 +207,7 @@ export default createSelector<
   (
     linodes,
     volumes,
+    images,
     domains,
     nodebalancers,
     types,
@@ -212,13 +215,9 @@ export default createSelector<
     nodePools,
     buckets
   ) => {
-    const arrOfImages = queryClient.getQueryData<Image[]>('images') || [];
+    const arrOfImages = Object.values(images);
     const searchableLinodes = linodes.map((linode) =>
-      formatLinode(
-        linode,
-        types,
-        listToItemsByID(arrOfImages) as Record<string, Image>
-      )
+      formatLinode(linode, types, images)
     );
     const searchableVolumes = volumes.map(volumeToSearchableItem);
     const searchableImages = arrOfImages.reduce(imageReducer, []);

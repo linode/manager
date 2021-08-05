@@ -10,6 +10,8 @@ import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { emptyResults, separateResultsByEntity } from './utils';
+import store from 'src/store';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -18,10 +20,6 @@ import {
   nodeBalToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
-
-import { emptyResults, separateResultsByEntity } from './utils';
-import store from 'src/store';
-import { listToItemsByID, queryClient } from 'src/queries/base';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
@@ -39,14 +37,8 @@ export const useAPISearch = (): Search => {
         });
       }
 
-      // Pull Linode types directly from the Redux store
-      // In the future, we can use React Query for this
       const types = store.getState().__resources.types.entities as LinodeType[];
-
-      // Pull all Images from the React Query store
-      const images = listToItemsByID(
-        queryClient.getQueryData<Image[]>('images') || []
-      );
+      const images = store.getState().__resources.images.itemsById;
 
       return requestEntities(searchText, types, images, _isRestrictedUser).then(
         (results) => {

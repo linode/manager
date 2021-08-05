@@ -130,7 +130,11 @@ export const ImageSelect: React.FC<Props> = (props) => {
   const filteredImages = images.filter((thisImage) => {
     switch (variant) {
       case 'public':
-        return thisImage.is_public && thisImage.status === 'available';
+        return (
+          thisImage.is_public &&
+          thisImage.status === 'available' &&
+          !thisImage.label.match(/kube/i)
+        );
       case 'private':
         return !thisImage.is_public && thisImage.status === 'available';
       case 'all':
