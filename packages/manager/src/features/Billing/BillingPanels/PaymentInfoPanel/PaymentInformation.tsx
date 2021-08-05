@@ -4,15 +4,15 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
-import DismissibleBanner from 'src/components/DismissibleBanner';
-import CircleProgress from 'src/components/CircleProgress';
 import styled from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -40,10 +40,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
   },
   googlePayNoticeContainer: {
+    fontSize: '0.875rem',
     marginTop: theme.spacing(2),
     padding: `8px 0px`,
     '& button': {
       marginLeft: theme.spacing(),
+    },
+    '& p': {
+      fontSize: '0.875rem',
+      marginLeft: 0,
     },
   },
   googlePayIcon: {
