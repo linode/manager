@@ -87,7 +87,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       title: 'Delete',
       disabled: paymentMethod.is_default,
       tooltip: paymentMethod.is_default
-        ? 'You cannot remove your default payment method without setting a new default first.'
+        ? 'You cannot delete your default payment method'
         : undefined,
       onClick: onDelete,
     },
