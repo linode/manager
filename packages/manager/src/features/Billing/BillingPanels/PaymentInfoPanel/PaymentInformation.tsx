@@ -114,7 +114,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
       .catch((e) => {
         setDeleteLoading(false);
         setDeleteError(
-          getAPIErrorOrDefault(e, 'Error deleting domain.')[0].reason
+          getAPIErrorOrDefault(e, 'Unable to delete payment method.')[0].reason
         );
       });
   };
