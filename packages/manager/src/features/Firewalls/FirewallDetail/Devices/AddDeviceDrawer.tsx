@@ -7,7 +7,6 @@ import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
-import SupportLink from 'src/components/SupportLink';
 import { dcDisplayNames } from 'src/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
@@ -70,9 +69,8 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const errorNotice = (errorMsg: string) => {
     // match something like: Linode <linode_label> (ID <linode_id>)
     const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
-    const openTicket = errorMsg.match(/open a support ticket\./i);
-    if (openTicket) {
-      errorMsg = errorMsg.replace(/open a support ticket\./i, '');
+    if (errorMsg.match(/ or open a support ticket/i)) {
+      errorMsg = errorMsg.replace(/ or open a support ticket/i, '');
     }
     if (linode) {
       const [, label, id] = linode;
@@ -83,15 +81,6 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
-          {openTicket ? (
-            <>
-              <SupportLink
-                text="open a Support ticket"
-                title={`Re: ${errorMessage}`}
-              />
-              .
-            </>
-          ) : null}
         </Notice>
       );
     } else {
