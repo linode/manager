@@ -15,7 +15,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import RootRef from 'src/components/core/RootRef';
 import {
   createStyles,
   Theme,
@@ -29,7 +28,6 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
@@ -51,7 +49,6 @@ import ConfigRow from './ConfigRow';
 
 type ClassNames =
   | 'root'
-  | 'headline'
   | 'addNewWrapper'
   | 'tableCell'
   | 'labelColumn'
@@ -62,22 +59,17 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      backgroundColor: theme.color.white,
       margin: 0,
       width: '100%',
     },
-    headline: {
-      marginTop: 8,
-      marginBottom: 8,
-      marginLeft: 15,
-      lineHeight: '1.5rem',
-    },
     addNewWrapper: {
-      [theme.breakpoints.down('xs')]: {
-        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-        marginTop: -theme.spacing(1),
+      '&.MuiGrid-item': {
+        paddingTop: 0,
+        paddingRight: 0,
       },
-      padding: '5px !important',
+      [theme.breakpoints.down('sm')]: {
+        marginRight: theme.spacing(),
+      },
     },
     tableCell: {
       borderRight: `1px solid ${theme.palette.divider}`,
@@ -187,20 +179,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     const { classes, readOnly } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <Grid
           container
-          justify="space-between"
           alignItems="flex-end"
+          justify="flex-end"
           className={classes.root}
         >
-          <RootRef rootRef={this.configsPanel}>
-            <Grid item className="p0">
-              <Typography variant="h3" className={classes.headline}>
-                Configurations
-              </Typography>
-            </Grid>
-          </RootRef>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
@@ -245,7 +230,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             ?&quot;
           </Typography>
         </ConfirmationDialog>
-      </React.Fragment>
+      </>
     );
   }
 
@@ -529,10 +514,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const errorBoundary = PanelErrorBoundary({
-  heading: 'Advanced Configurations',
-});
-
 interface LinodeContext {
   linodeHypervisor: 'kvm' | 'xen';
   linodeId: number;
@@ -592,7 +573,6 @@ const enhanced = compose<CombinedProps, {}>(
   withFeatureFlags,
   connected,
   styled,
-  errorBoundary,
   withSnackbar
 );
 

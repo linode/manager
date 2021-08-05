@@ -196,6 +196,18 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     this.statsInterval = window.setInterval(this.getStats, statsFetchInterval);
   }
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    /*
+    If the user navigates to a different Linode via the search bar,
+    this component wouldn't unmount. Stats wouldn't be fetched immediately,
+    leading to a period of up to 30 seconds where the previous Linode's chart
+    data would show.
+    */
+    if (prevProps.linodeId !== this.props.linodeId) {
+      this.getStats();
+    }
+  }
+
   componentWillUnmount() {
     this.mounted = false;
     window.clearInterval(this.statsInterval as number);

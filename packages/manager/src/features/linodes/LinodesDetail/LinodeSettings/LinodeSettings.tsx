@@ -1,11 +1,4 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { LinodeDetailContextConsumer } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
@@ -14,27 +7,14 @@ import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
 import LinodeWatchdogPanel from './LinodeWatchdogPanel';
 
-type ClassNames = 'root' | 'title';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    title: {
-      marginBottom: theme.spacing(2),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(1),
-      },
-    },
-  });
-
 interface Props {
   isBareMetalInstance: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const LinodeSettings: React.FC<CombinedProps> = (props) => {
-  const { classes, isBareMetalInstance } = props;
+  const { isBareMetalInstance } = props;
 
   return (
     <LinodeDetailContextConsumer>
@@ -49,15 +29,8 @@ const LinodeSettings: React.FC<CombinedProps> = (props) => {
           ) : null;
 
         return (
-          <div>
+          <>
             {permissionsError}
-            <Typography
-              variant="h2"
-              className={classes.title}
-              data-qa-settings-header
-            >
-              Settings
-            </Typography>
             <LinodeSettingsLabelPanel />
             <LinodeSettingsPasswordPanel
               isBareMetalInstance={isBareMetalInstance}
@@ -78,13 +51,11 @@ const LinodeSettings: React.FC<CombinedProps> = (props) => {
               linodeId={linode.id}
               linodeLabel={linode.label}
             />
-          </div>
+          </>
         );
       }}
     </LinodeDetailContextConsumer>
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(LinodeSettings);
+export default LinodeSettings;
