@@ -67,7 +67,6 @@ import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
   | 'paper'
-  | 'title'
   | 'subTitle'
   | 'snapshotNameField'
   | 'snapshotFormControl'
@@ -81,13 +80,6 @@ const styles = (theme: Theme) =>
   createStyles({
     paper: {
       marginBottom: theme.spacing(3),
-    },
-    title: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(1),
-      },
     },
     subTitle: {
       marginBottom: theme.spacing(1),
@@ -714,15 +706,6 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {disabled && <LinodePermissionsError />}
-        <Typography
-          aria-level={2}
-          role="heading"
-          variant="h2"
-          className={classes.title}
-          data-qa-title
-        >
-          Backups
-        </Typography>
         {backups.length ? (
           <this.Table backups={backups} />
         ) : (

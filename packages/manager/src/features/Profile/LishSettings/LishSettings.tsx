@@ -22,26 +22,11 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-  },
-  title: {
-    marginBottom: theme.spacing(2),
-  },
   intro: {
     marginBottom: theme.spacing(2),
   },
   modeControl: {
     display: 'flex',
-  },
-  image: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  addNew: {
-    ...theme.applyLinkStyles,
-    marginTop: theme.spacing(2),
   },
   sshWrap: {
     margin: `${theme.spacing(1)}px 0`,
@@ -51,16 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 415,
     },
   },
-  remove: {
-    ...theme.applyLinkStyles,
-  },
-  button: {
-    margin: 0,
-    padding: 0,
-  },
 }));
 
-const LishSettings: React.FC<{}> = () => {
+const LishSettings: React.FC = () => {
   const classes = useStyles();
   const { data: profile, isLoading } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
@@ -166,10 +144,7 @@ const LishSettings: React.FC<{}> = () => {
   return (
     <>
       <DocumentTitleSegment segment="LISH Console Settings" />
-      <Paper className={classes.root}>
-        <Typography variant="h2" className={classes.title} data-qa-title>
-          LISH Console Settings
-        </Typography>
+      <Paper>
         {success && <Notice success text={success} />}
         {authorizedKeysError && <Notice error text={authorizedKeysError} />}
         {generalError && <Notice error text={generalError} />}
@@ -209,29 +184,33 @@ const LishSettings: React.FC<{}> = () => {
                   className={classes.keyTextarea}
                   data-qa-public-key
                 />
-                {((idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
-                  idx > 0) && (
-                  <button
+                {(idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
+                idx > 0 ? (
+                  <Button
+                    buttonType="secondary"
+                    compact
                     onClick={onPublicKeyRemove(idx)}
-                    className={classes.remove}
                     data-qa-remove
                   >
                     Remove
-                  </button>
-                )}
+                  </Button>
+                ) : null}
               </div>
             ))}
             <Typography style={{ paddingTop: 2 }}>
               Place your SSH public keys here for use with Lish console access.
             </Typography>
-            <button onClick={addSSHPublicKeyField} className={classes.addNew}>
+            <Button
+              onClick={addSSHPublicKeyField}
+              buttonType="secondary"
+              compact
+            >
               Add SSH Public Key
-            </button>
+            </Button>
           </>
         )}
         <ActionsPanel>
           <Button
-            className={classes.button}
             buttonType="primary"
             onClick={onSubmit}
             loading={submitting}

@@ -24,6 +24,7 @@ type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      width: '100%',
       padding: theme.spacing(10),
     },
     compact: {
