@@ -11,9 +11,7 @@ import { ActivePromotion } from './types';
  * - The user is unrestricted
  * - The account is fewer than 90 days old
  * - No promotions are currently active on the account
- * - The code is a valid expiring credit (it has not expired and has a
- *   credit_months field, after which it will expire)
- *
+ * - The code is a valid expiring credit (it has not expired, but will at some point)
  */
 export const addPromotion = (code: string) =>
   Request<ActivePromotion>(
