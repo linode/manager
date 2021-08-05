@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     fontWeight: 700,
     marginBottom: theme.spacing(2),
+    minHeight: 0,
     minWidth: 'auto',
     padding: 0,
     '&:hover, &:focus': {
