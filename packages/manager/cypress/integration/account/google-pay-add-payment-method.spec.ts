@@ -44,18 +44,18 @@ const getPaymentMethodDataWithoutGpay = {
   ],
   page: 1,
   pages: 1,
-  results: 2,
+  results: 1,
 };
 
 const getPaymentURL = '*/account/payment-methods*';
 const braintreeURL = 'https://client-analytics.braintreegateway.com/*';
 
-beforeEach(() => {
-  cy.visitWithLogin('/account/billing');
-});
-
 describe('Google Pay', () => {
-  it('update google pay ui', () => {
+  beforeEach(() => {
+    cy.visitWithLogin('/account/billing');
+  });
+
+  it('update payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -66,7 +66,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('add google pay ui', () => {
+  it('add google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithoutGpay);
@@ -77,7 +77,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('make payment ui', () => {
+  it('make payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -110,13 +110,3 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 });
-
-// cy.intercept('POST', '*/account/payment-methods', (req) => {
-//     req.reply({
-//       type: 'payment_method_nonce',
-//       data: {
-//         nonce: '1891fdc9-1acf-1c50-6b40-c72415e2e921',
-//       },
-//       is_default: false,
-//     });
-//   }).as('changePaymentMethod');
