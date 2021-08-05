@@ -42,7 +42,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
     ? `This volume can range from ${resize} GiB to ${MAX_VOLUME_SIZE} GiB in size.`
     : undefined;
 
-  const price = (value / 10).toFixed(2);
+  const price = value >= 10 ? (value / 10).toFixed(2) : '0.00';
 
   return (
     <>
