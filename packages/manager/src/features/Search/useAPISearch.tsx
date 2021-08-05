@@ -36,9 +36,10 @@ export const useAPISearch = (): Search => {
           combinedResults: [],
         });
       }
+      const resources = store.getState().__resources;
 
-      const types = store.getState().__resources.types.entities as LinodeType[];
-      const images = store.getState().__resources.images.itemsById;
+      const types = resources.types.entities as LinodeType[];
+      const images = resources.images.itemsById;
 
       return requestEntities(searchText, types, images, _isRestrictedUser).then(
         (results) => {
