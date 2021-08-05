@@ -3,6 +3,13 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import TextField from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import { makeStyles } from 'src/components/core/styles';
+
+const useStyles = makeStyles(() => ({
+  helper: {
+    marginTop: 4,
+  },
+}));
 
 interface Props {
   name: string;
@@ -18,6 +25,8 @@ interface Props {
 type CombinedProps = Props;
 
 const SizeField: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
     name,
     value,
@@ -54,9 +63,11 @@ const SizeField: React.FC<CombinedProps> = (props) => {
         {...rest}
       />
       <FormHelperText>
-        {resize || isFromLinode
-          ? 'The size of the new volume in GiB.'
-          : `${price}/month`}
+        {resize || isFromLinode ? (
+          'The size of the new volume in GiB.'
+        ) : (
+          <div className={classes.helper}>${price}/month</div>
+        )}
       </FormHelperText>
     </>
   );
