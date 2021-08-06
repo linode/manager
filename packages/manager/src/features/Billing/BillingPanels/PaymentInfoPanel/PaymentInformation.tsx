@@ -98,6 +98,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
       ));
 
   const showGooglePayAvailableNotice =
+    !loading &&
     isGooglePayEnabled &&
     !paymentMethods?.some(
       (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
