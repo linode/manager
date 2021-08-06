@@ -142,12 +142,18 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
   const selectedRegion = regions.find(
     (thisRegion) => thisRegion.id === regionID
   );
-  /** This approach is fine for just GPUs, which is all we have capability info for at this time.
-   *  Refactor to a switch or .map() if additional support is needed.
-   */
-  return selectedRegion?.capabilities.includes('GPU Linodes')
-    ? []
-    : (['gpu'] as LinodeTypeClass[]);
+
+  const disabledClasses: LinodeTypeClass[] = [];
+
+  if (!selectedRegion?.capabilities.includes('GPU Linodes')) {
+    disabledClasses.push('gpu');
+  }
+
+  if (!selectedRegion?.capabilities.includes('Bare Metal')) {
+    disabledClasses.push('metal');
+  }
+
+  return disabledClasses;
 };
 
 const trimOneClickFromLabel = (script: StackScript) => {
