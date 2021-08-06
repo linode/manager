@@ -24,7 +24,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy aaPanel With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-aaPanel-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-aapanel-marketplace-app',
       },
     ],
     related_info: [
@@ -106,7 +106,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Chevereto With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-chevereto-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-chevereto-marketplace-app',
       },
     ],
     related_info: [
@@ -463,7 +463,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy JetBackup With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-jetbackup-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-jetbackup-marketplace-app',
       },
     ],
     related_info: [
@@ -542,7 +542,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy MagicSpam With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-magicspam-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-magicspam-marketplace-app',
       },
     ],
     related_info: [
@@ -562,7 +562,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Moodle With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-moodle-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-moodle-marketplace-app',
       },
     ],
     related_info: [
@@ -698,7 +698,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy NirvaShare With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-nirvashare-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-nirvashare-marketplace-app',
       },
     ],
     related_info: [
@@ -986,7 +986,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Severalnines With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-severalnines-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-severalnines-marketplace-app',
       },
     ],
     related_info: [
@@ -1063,7 +1063,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploy Splunk With Marketplace Apps',
         href:
-          'https://www.linode.com/docs/guides/deploy-splunk-with-marketplace-apps',
+          'https://www.linode.com/docs/guides/deploying-splunk-marketplace-app',
       },
     ],
     related_info: [
