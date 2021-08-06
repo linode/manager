@@ -31,6 +31,7 @@ import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import { getGrantData } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
@@ -39,7 +40,6 @@ import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissio
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { EntityError } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getGrantData } from 'src/queries/profile';
 import { GetAllData } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import HostMaintenanceError from '../HostMaintenanceError';

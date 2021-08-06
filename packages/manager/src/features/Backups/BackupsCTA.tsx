@@ -50,7 +50,7 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
   const { data: accountSettings } = useAccountSettings();
 
   if (
-    isRestrictedUser ||
+    isRestrictedUser() ||
     accountSettings?.managed ||
     (linodesWithoutBackups && isEmpty(linodesWithoutBackups))
   ) {

@@ -729,8 +729,7 @@ const mapStateToProps: MapState<ReduxStateProps & CreateType, CombinedProps> = (
    * user cannot create Linodes if they are a restricted user
    * and do not have the "add_linodes" grant
    */
-  userCannotCreateLinode:
-    isRestrictedUser && !hasGrant(undefined, 'add_linodes'),
+  userCannotCreateLinode: isRestrictedUser() && !hasGrant('add_linodes'),
   createType: state.createLinode.type,
 });
 

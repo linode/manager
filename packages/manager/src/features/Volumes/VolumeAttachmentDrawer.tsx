@@ -259,7 +259,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
   return {
     readOnly:
-      isRestrictedUser &&
+      isRestrictedUser() &&
       volumePermissions &&
       volumePermissions.permissions === 'read_only',
   };

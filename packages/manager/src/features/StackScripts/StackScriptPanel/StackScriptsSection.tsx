@@ -47,7 +47,7 @@ const StackScriptsSection: React.FC<Props> = (props) => {
   const isRestrictedUser = Boolean(profile?.restricted);
   const stackScriptGrants = getGrants(grants, 'stackscript');
   const userCannotAddLinodes =
-    isRestrictedUser && !hasGrant(grants, 'add_linodes');
+    isRestrictedUser && !hasGrant('add_linodes', grants);
 
   const listStackScript = (s: StackScript) => (
     <StackScriptRow

@@ -83,16 +83,7 @@ const UserProfile: React.FC<Props> = (props) => {
     deleteConfirmDialogOpen,
     setDeleteConfirmDialogOpen,
   ] = React.useState<boolean>(false);
-  const [toDeleteUsername, setToDeleteUsername] = React.useState<
-    string | undefined
-  >(props.username);
   const [userDeleteError, setUserDeleteError] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    if (props.username && !toDeleteUsername) {
-      setToDeleteUsername(props.username);
-    }
-  }, [profile]);
 
   const renderProfileSection = () => {
     const hasAccountErrorFor = getAPIErrorsFor(
@@ -257,7 +248,7 @@ const UserProfile: React.FC<Props> = (props) => {
           {renderProfileSection()}
           {renderDeleteSection()}
           <UserDeleteConfirmationDialog
-            username={toDeleteUsername || ''}
+            username={username}
             open={deleteConfirmDialogOpen}
             onDelete={onDeleteConfirm}
             onCancel={onDeleteCancel}

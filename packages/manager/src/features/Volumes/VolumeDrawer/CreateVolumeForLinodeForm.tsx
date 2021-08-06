@@ -86,7 +86,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const disabled = profile?.restricted && !hasGrant(grants, 'add_volumes');
+  const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
 
   return (
     <Formik

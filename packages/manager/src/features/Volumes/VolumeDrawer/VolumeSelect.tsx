@@ -193,7 +193,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = () => ({
-  volumeGrants: isRestrictedUser ? getGrants(undefined, 'volume') : undefined,
+  volumeGrants: isRestrictedUser() ? getGrants(undefined, 'volume') : undefined,
 });
 
 const connected = connect(mapStateToProps);

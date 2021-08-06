@@ -811,7 +811,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = () => ({
-  disabled: isRestrictedUser && !hasGrant(undefined, 'add_nodebalancers'),
+  disabled: isRestrictedUser() && !hasGrant('add_nodebalancers'),
 });
 
 const connected = connect(mapStateToProps);

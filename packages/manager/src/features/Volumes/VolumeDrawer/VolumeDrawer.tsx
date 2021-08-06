@@ -1,9 +1,11 @@
 import { Grant } from '@linode/api-v4/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import {
+  getGrants,
+  isRestrictedUser,
+} from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import {
@@ -187,11 +189,8 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     message,
   } = state.volumeDrawer;
 
-  const volumesPermissions = pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'volume'],
-    state
-  );
+  const volumesPermissions = getGrants(undefined, 'volume');
+
   const volumePermissions = volumesPermissions.find(
     (v: Grant) => v.id === volumeId
   );
@@ -211,7 +210,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     volumePath,
     message,
     readOnly:
-      isRestrictedUser &&
+      isRestrictedUser() &&
       volumePermissions &&
       volumePermissions.permissions === 'read_only',
   };

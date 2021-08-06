@@ -107,8 +107,8 @@ export default (Component: React.ComponentType<any>) => {
     };
 
     const toggleSSHUserKeys = (username: string, result: boolean) =>
-      setUserSSHKeys(
-        userSSHKeys.map((user) =>
+      setUserSSHKeys((prevUserSSHKeys) =>
+        prevUserSSHKeys.map((user) =>
           username === user.username ? { ...user, selected: result } : user
         )
       );

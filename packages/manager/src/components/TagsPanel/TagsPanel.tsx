@@ -173,7 +173,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { tags } = this.props;
-    if (!isRestrictedUser) {
+    if (!isRestrictedUser()) {
       getTags()
         .then((response) => {
           /*

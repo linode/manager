@@ -89,7 +89,7 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
   };
 
   const handleToggleOverwrite = () => {
-    setOverwrite(!overwrite);
+    setOverwrite((prevOverwrite) => !prevOverwrite);
   };
 
   const handleCloseDrawer = () => {

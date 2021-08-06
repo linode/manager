@@ -144,8 +144,8 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
 
   const mayUserModifyLVSubscription =
     !(profile?.restricted || false) ||
-    (hasGrant(grants, 'longview_subscription') &&
-      hasGrant(grants, 'account_access') === 'read_write');
+    (hasGrant('longview_subscription', grants) &&
+      hasGrant('account_access', grants) === 'read_write');
 
   const [currentSubscription, setCurrentSubscription] = React.useState<
     string | undefined

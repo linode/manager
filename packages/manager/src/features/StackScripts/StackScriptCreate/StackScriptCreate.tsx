@@ -46,7 +46,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
 import { queryClient } from 'src/queries/base';
-import { queryKey } from 'src/queries/profile';
+import { getProfileData, queryKey } from 'src/queries/profile';
 import { Profile } from '../../../../../api-v4/lib/profile';
 
 type ClassNames = 'backButton' | 'createTitle';
@@ -546,11 +546,11 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
   );
 
   return {
-    profile: queryClient.getQueryData<Profile>(queryKey),
+    profile: getProfileData(),
     userCannotCreateStackScripts:
-      isRestrictedUser && !hasGrant(undefined, 'add_stackscripts'),
+      isRestrictedUser() && !hasGrant('add_stackscripts'),
     userCannotModifyStackScript:
-      isRestrictedUser &&
+      isRestrictedUser() &&
       grantsForThisStackScript?.permissions !== 'read_write',
   };
 };

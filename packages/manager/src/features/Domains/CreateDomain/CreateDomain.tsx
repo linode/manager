@@ -168,7 +168,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const disabled = profile?.restricted && !hasGrant(grants, 'add_domains');
+  const disabled = profile?.restricted && !hasGrant('add_domains', grants);
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   // Errors for selecting Linode/NB for default records aren't part
