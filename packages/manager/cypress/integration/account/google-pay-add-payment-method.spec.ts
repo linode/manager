@@ -2,9 +2,11 @@
 import {
   containsVisible,
   fbtClick,
+  fbtVisible,
   getClick,
   getVisible,
 } from 'cypress/support/helpers';
+import { contains } from 'cypress/types/jquery';
 
 const getPaymentMethodDataWithGpay = {
   data: [
@@ -69,6 +71,7 @@ const getPaymentMethodDataWithGpayExpired = {
   results: 2,
 };
 
+const pastDueExpiry = 'Expired 07/20';
 const getPaymentURL = '*/account/payment-methods*';
 const braintreeURL = 'https://client-analytics.braintreegateway.com/*';
 
@@ -77,7 +80,7 @@ describe('Google Pay', () => {
     cy.visitWithLogin('/account/billing');
   });
 
-  it.skip('update payment flow - google pay', () => {
+  it('update payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -88,7 +91,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it.skip('add google pay method', () => {
+  it('add google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithoutGpay);
@@ -99,7 +102,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it.skip('make payment flow - google pay', () => {
+  it('make payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -132,11 +135,15 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('payment flow with expired card - gpay'),
-    () => {
-      cy.intercept(braintreeURL).as('braintree');
-      cy.intercept('GET', getPaymentURL, (req) => {
-        req.reply(getPaymentMethodDataWithGpayExpired);
-      }).as('getPaymentMethod');
-    };
+  it('payment flow with expired card - google pay', () => {
+    cy.intercept(braintreeURL).as('braintree');
+    cy.intercept('GET', getPaymentURL, (req) => {
+      req.reply(getPaymentMethodDataWithGpayExpired);
+    }).as('getPaymentMethod');
+    getVisible('[data-qa-contact-cc-exp-date="true"]').within(() => {
+      containsVisible(pastDueExpiry);
+    });
+  });
+
+  // TODO: add test with only gpay, no cc
 });
