@@ -54,7 +54,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       .then(() => queryClient.invalidateQueries(`${queryKey}-all`))
       .catch((errors) =>
         enqueueSnackbar(
-          errors[0]?.reason || `Unable to change your default payment method.`,
+          errors[0]?.reason || 'Unable to change your default payment method.',
           { variant: 'error' }
         )
       );
@@ -71,7 +71,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       title: 'Make Default',
       disabled: paymentMethod.is_default,
       tooltip: paymentMethod.is_default
-        ? 'This is already your default payment method'
+        ? 'This is already your default payment method.'
         : undefined,
       onClick: () => makeDefault(paymentMethod.id),
     },
@@ -87,7 +87,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       title: 'Delete',
       disabled: paymentMethod.is_default,
       tooltip: paymentMethod.is_default
-        ? 'You cannot delete your default payment method'
+        ? 'You cannot remove this payment method without setting a new default first.'
         : undefined,
       onClick: onDelete,
     },

@@ -111,7 +111,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
         closeDeleteDialog();
         queryClient.invalidateQueries(`${queryKey}-all`);
       })
-      .catch((e) => {
+      .catch((e: APIError[]) => {
         setDeleteLoading(false);
         setDeleteError(
           getAPIErrorOrDefault(e, 'Unable to delete payment method.')[0].reason
