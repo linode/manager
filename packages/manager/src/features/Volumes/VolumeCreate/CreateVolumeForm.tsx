@@ -222,7 +222,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     data-qa-volume-help
                   >
                     Volumes must be created in a particular region. You can
-                    choose to create a volume in a region and attach it later to
+                    choose to create a Volume in a region and attach it later to
                     a Linode in the same region. If you select a Linode from the
                     field below, the Volume will be automatically created in
                     that Linode&apos;s region and attached upon creation.
