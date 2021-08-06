@@ -14,7 +14,7 @@ import {
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
