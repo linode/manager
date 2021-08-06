@@ -34,7 +34,7 @@ const expectedResults = [
 describe('isWithinDays', () => {
   expectedResults.forEach(({ days, date, result }) => {
     it(`should return ${String(result)} since date ${date} ${
-      !result ? 'is not' : 'is'
+      result ? 'is' : 'is not'
     } within timeframe of ${days} days`, () => {
       expect(isWithinDays(days, date)).toBe(result);
     });
