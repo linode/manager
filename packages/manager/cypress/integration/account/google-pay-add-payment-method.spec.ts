@@ -47,6 +47,28 @@ const getPaymentMethodDataWithoutGpay = {
   results: 1,
 };
 
+const getPaymentMethodDataWithGpayExpired = {
+  data: [
+    {
+      id: 420330,
+      type: 'credit_card',
+      is_default: true,
+      created: '2021-07-27T14:37:43',
+      data: { card_type: 'AMEX', last_four: '2222', expiry: '07/2025' },
+    },
+    {
+      id: 434357,
+      type: 'google_pay',
+      is_default: false,
+      created: '2021-08-04T18:29:01',
+      data: { card_type: 'Visa', last_four: '2045', expiry: '07/2020' },
+    },
+  ],
+  page: 1,
+  pages: 1,
+  results: 2,
+};
+
 const getPaymentURL = '*/account/payment-methods*';
 const braintreeURL = 'https://client-analytics.braintreegateway.com/*';
 
@@ -55,7 +77,7 @@ describe('Google Pay', () => {
     cy.visitWithLogin('/account/billing');
   });
 
-  it('update payment flow - google pay', () => {
+  it.skip('update payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -66,7 +88,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('add google pay method', () => {
+  it.skip('add google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithoutGpay);
@@ -77,7 +99,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('make payment flow - google pay', () => {
+  it.skip('make payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -109,4 +131,12 @@ describe('Google Pay', () => {
 
     cy.wait('@braintree');
   });
+
+  it('payment flow with expired card - gpay'),
+    () => {
+      cy.intercept(braintreeURL).as('braintree');
+      cy.intercept('GET', getPaymentURL, (req) => {
+        req.reply(getPaymentMethodDataWithGpayExpired);
+      }).as('getPaymentMethod');
+    };
 });
