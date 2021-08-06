@@ -21,7 +21,7 @@ import useNotifications from 'src/hooks/useNotifications';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { createdWithinDays } from 'src/utilities/date';
+import { isWithinDays } from 'src/utilities/date';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   accruedCharges: {
     color: theme.palette.text.primary,
+  },
+  promo: {
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -178,7 +181,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const showAddPromoLink =
     balance <= 0 &&
     !_isRestrictedUser &&
-    createdWithinDays(90, account?.active_since) &&
+    isWithinDays(90, account?.active_since) &&
     promotions?.length === 0;
 
   return (
@@ -211,7 +214,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
             </Box>
             {balanceJSX}
             {showAddPromoLink ? (
-              <Typography>
+              <Typography className={classes.promo}>
                 <button
                   className={classes.makeAPaymentButton}
                   onClick={openPromoDialog}

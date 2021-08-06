@@ -1,9 +1,24 @@
 import { DateTime } from 'luxon';
-import { createdWithinDays } from './date';
+import { isWithinDays } from './date';
 
 const expectedResults = [
-  { days: 20, date: '2021-06-10T18:26:54', result: false },
-  { days: 365, date: '2021-06-10T18:26:54', result: true },
+  {
+    days: 20,
+    date: DateTime.local().minus({ days: 20 }).toISODate(),
+    result: false,
+  },
+  {
+    days: 20,
+    date: DateTime.local()
+      .minus({ days: 365 * 2 })
+      .toISODate(),
+    result: false,
+  },
+  {
+    days: 365,
+    date: DateTime.local().minus({ days: 20 }).toISODate(),
+    result: true,
+  },
   {
     days: 90,
     date: DateTime.local().minus({ days: 89 }).toISODate(),
@@ -16,12 +31,12 @@ const expectedResults = [
   },
 ];
 
-describe('createdWithinDays', () => {
+describe('isWithinDays', () => {
   expectedResults.forEach(({ days, date, result }) => {
-    it(`should return ${String(result)} since date is ${
-      !result && 'not'
-    } within timeframe`, () => {
-      expect(createdWithinDays(days, date)).toBe(result);
+    it(`should return ${String(result)} since date ${date} ${
+      !result ? 'is not' : 'is'
+    } within timeframe of ${days} days`, () => {
+      expect(isWithinDays(days, date)).toBe(result);
     });
   });
 });

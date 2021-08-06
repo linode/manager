@@ -42,6 +42,7 @@ const PromoDialog: React.FC<Props> = (props) => {
 
   const addPromo = () => {
     setLoading(true);
+    setError(undefined);
     addPromotion(promoCode)
       .then(() => {
         setLoading(false);
@@ -84,7 +85,7 @@ const PromoDialog: React.FC<Props> = (props) => {
     >
       {error && <Notice error text={error} />}
       <Typography>
-        Paste the promo code in the field below. You will see promo details in
+        Enter the promo code in the field below. You will see promo details in
         the Promotions panel on the Billing Info tab.
       </Typography>
       <TextField

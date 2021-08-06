@@ -33,20 +33,20 @@ export const isAfter = (d1: string, d2: string) => {
 };
 
 /**
- * Determines whether or not a date has occoured wthin the last
+ * Determines whether or not a date has occurred within the last
  * some number of days.
  * @param days number of days
  * @param date date to check for. This is a string because it expects
  * a date as a string returned by the Linode API.
  * @returns {boolean} true if date has occoured within the last x days
  */
-export const createdWithinDays = (days: number, date?: string): boolean => {
+export const isWithinDays = (days: number, date?: string): boolean => {
   if (!date) {
     return true;
   }
 
-  const dateToCheck = new Date(date).getTime();
-  const daysAgo = DateTime.local().minus({ days }).toJSDate().getTime();
+  const dateToCheck = DateTime.fromISO(date);
+  const daysAgo = DateTime.local().minus({ days });
 
-  return dateToCheck - daysAgo > 0;
+  return dateToCheck.diff(daysAgo).milliseconds > 0;
 };
