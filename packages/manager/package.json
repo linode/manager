@@ -206,7 +206,7 @@
     "coveralls": "^3.0.2",
     "css-loader": "^3.5.2",
     "csstype": "^2.5.5",
-    "cypress": "^7.7.0",
+    "cypress": "^8.2.0",
     "cypress-axe": "^0.8.1",
     "cypress-file-upload": "^5.0.7",
     "dotenv": "^6.2.0",
