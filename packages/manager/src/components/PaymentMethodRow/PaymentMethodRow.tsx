@@ -16,7 +16,7 @@ import { useSnackbar } from 'notistack';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(),
     padding: 0,
@@ -39,25 +39,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   paymentMethod: PaymentMethod;
   onEdit?: () => void;
+  onDelete: () => void;
 }
 
 const PaymentMethodRow: React.FC<Props> = (props) => {
-  const { paymentMethod, onEdit } = props;
+  const { paymentMethod, onEdit, onDelete } = props;
   const { data: creditCard, type, is_default } = paymentMethod;
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const makeDefault = async (id: number) => {
-    try {
-      await makeDefaultPaymentMethod(id);
-      queryClient.invalidateQueries(`${queryKey}-all`);
-    } catch (errors) {
-      enqueueSnackbar(
-        errors[0]?.reason || `Unable to change your default payment method.`,
-        { variant: 'error' }
+  const makeDefault = (id: number) => {
+    makeDefaultPaymentMethod(id)
+      .then(() => queryClient.invalidateQueries(`${queryKey}-all`))
+      .catch((errors) =>
+        enqueueSnackbar(
+          errors[0]?.reason || 'Unable to change your default payment method.',
+          { variant: 'error' }
+        )
       );
-    }
   };
 
   const actions: Action[] = [
@@ -71,7 +71,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       title: 'Make Default',
       disabled: paymentMethod.is_default,
       tooltip: paymentMethod.is_default
-        ? 'This is already your default payment method'
+        ? 'This is already your default payment method.'
         : undefined,
       onClick: () => makeDefault(paymentMethod.id),
     },
@@ -83,6 +83,14 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
           },
         ]
       : []),
+    {
+      title: 'Delete',
+      disabled: paymentMethod.is_default,
+      tooltip: paymentMethod.is_default
+        ? 'You cannot remove this payment method without setting a new default first.'
+        : undefined,
+      onClick: onDelete,
+    },
   ];
 
   return (

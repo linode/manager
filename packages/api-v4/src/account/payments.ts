@@ -228,3 +228,17 @@ export const makeDefaultPaymentMethod = (id: number) => {
     setMethod('POST')
   );
 };
+
+/**
+ * deletePaymentMethod
+ *
+ * Delete the specifed payment method.
+ *
+ * @param id {number} The id of the payment method to delete.
+ */
+export const deletePaymentMethod = (id: number) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/account/payment-methods/${id}`),
+    setMethod('DELETE')
+  );
+};
