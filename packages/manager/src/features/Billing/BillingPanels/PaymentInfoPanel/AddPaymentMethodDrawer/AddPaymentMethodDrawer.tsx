@@ -73,9 +73,10 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     });
   };
 
-  const numberOfCreditCards = paymentMethods?.filter(
-    (method: PaymentMethod) => method.type === 'credit_card'
-  ).length;
+  const numberOfCreditCards =
+    paymentMethods?.filter(
+      (method: PaymentMethod) => method.type === 'credit_card'
+    ).length || 0;
 
   const isGPayAlreadyAdded = paymentMethods?.some(
     (method: PaymentMethod) => method.type === 'google_pay'
@@ -88,18 +89,20 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   return (
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
-      <Paper className={classes.notice}>
-        <Typography>
-          The option to add additonal credit cards is coming soon.
-        </Typography>
-        <Typography>
-          To edit your current credit card,{' '}
-          <button className={classes.link} onClick={openEditCreditCardDrawer}>
-            click here
-          </button>
-          .
-        </Typography>
-      </Paper>
+      {numberOfCreditCards > 0 ? (
+        <Paper className={classes.notice}>
+          <Typography>
+            The option to add additonal credit cards is coming soon.
+          </Typography>
+          <Typography>
+            To edit your current credit card,{' '}
+            <button className={classes.link} onClick={openEditCreditCardDrawer}>
+              click here
+            </button>
+            .
+          </Typography>
+        </Paper>
+      ) : null}
       {isGooglePayEnabled ? (
         <React.Fragment>
           <Divider />
