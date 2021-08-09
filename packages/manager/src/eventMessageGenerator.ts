@@ -560,7 +560,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `A payment method was added.`,
   },
   account_promo_apply: {
-    notification: (e) => `A promo code was added.`,
+    notification: (e) => `A promo code was applied to your account.`,
   },
   stackscript_create: {
     notification: (e) => `StackScript ${e.entity!.label} has been created.`,

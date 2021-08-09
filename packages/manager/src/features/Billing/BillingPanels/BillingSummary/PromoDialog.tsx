@@ -11,6 +11,7 @@ import { addPromotion } from '@linode/api-v4/lib';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/account';
 import { useSnackbar } from 'notistack';
+import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles(() => ({
   input: {
@@ -46,13 +47,13 @@ const PromoDialog: React.FC<Props> = (props) => {
     addPromotion(promoCode)
       .then(() => {
         setLoading(false);
-        enqueueSnackbar('Successfully added promotion to your account.', {
+        enqueueSnackbar('Successfully applied promo to your account.', {
           variant: 'success',
         });
         queryClient.invalidateQueries(queryKey);
         onClose();
       })
-      .catch((error) => {
+      .catch((error: APIError[]) => {
         setLoading(false);
         setError(
           getAPIErrorOrDefault(error, 'Unable to add promo code')[0].reason
