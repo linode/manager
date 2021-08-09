@@ -4,15 +4,15 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
-import DismissibleBanner from 'src/components/DismissibleBanner';
-import CircleProgress from 'src/components/CircleProgress';
 import styled from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -24,9 +24,6 @@ import { queryKey } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
-  root: {
-    display: 'flex',
-  },
   summarySectionHeight: {
     flex: '0 1 auto',
     width: '100%',
@@ -36,17 +33,29 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
   },
   container: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    flex: 1,
+    maxWidth: '100%',
+    position: 'relative',
+    '&.mlMain': {
+      [theme.breakpoints.up('lg')]: {
+        maxWidth: '78.8%',
+      },
+    },
   },
   billingGroup: {
     marginBottom: theme.spacing(3),
   },
   googlePayNoticeContainer: {
+    fontSize: '0.875rem',
     marginTop: theme.spacing(2),
     padding: `8px 0px`,
     '& button': {
       marginLeft: theme.spacing(),
+    },
+    '& p': {
+      // Overwrites the default styling from the banner
+      fontSize: '0.875rem',
+      marginLeft: 0,
     },
   },
   googlePayIcon: {
@@ -59,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.normal,
     fontSize: '.875rem',
     fontWeight: 700,
-    marginBottom: theme.spacing(2),
+    minHeight: 'unset',
     minWidth: 'auto',
     padding: 0,
     '&:hover, &:focus': {
@@ -165,24 +174,25 @@ const PaymentInformation: React.FC<Props> = (props) => {
   }, [addPaymentMethodRouteMatch, openAddDrawer]);
 
   return (
-    <Grid className={classes.root} item xs={12} md={6}>
-      <Paper
-        className={`${classes.summarySection} ${classes.summarySectionHeight}`}
-        data-qa-billing-summary
-      >
-        <div className={classes.container}>
-          <Typography variant="h3" className={classes.title}>
-            Payment Methods
-          </Typography>
+    <Grid item xs={12} md={6}>
+      <Paper className={classes.summarySection} data-qa-billing-summary>
+        <Grid container spacing={2}>
+          <Grid item className={classes.container}>
+            <Typography variant="h3" className={classes.title}>
+              Payment Methods
+            </Typography>
+          </Grid>
           {showAddPaymentMethodButton ? (
-            <Button
-              className={classes.edit}
-              onClick={() => replace(drawerLink)}
-            >
-              Add Payment Method
-            </Button>
+            <Grid item>
+              <Button
+                className={classes.edit}
+                onClick={() => replace(drawerLink)}
+              >
+                Add Payment Method
+              </Button>
+            </Grid>
           ) : null}
-        </div>
+        </Grid>
         {loading ? (
           <Grid className={classes.loading}>
             <CircleProgress mini />
