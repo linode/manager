@@ -22,7 +22,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
-import { getProfileData } from 'src/queries/profile';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import stripImageName from 'src/utilities/stripImageName';
@@ -104,7 +104,10 @@ interface Props extends RenderGuardProps {
   isOnCreate?: boolean;
 }
 
-type CombinedProps = Props & RenderGuardProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  RenderGuardProps &
+  WithStyles<ClassNames> &
+  ProfileProps;
 
 interface State {
   stackScript?: StackScript;
@@ -152,7 +155,14 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { category, classes, request, selectedId, error } = this.props;
+    const {
+      category,
+      classes,
+      request,
+      selectedId,
+      error,
+      profile,
+    } = this.props;
     const { stackScript, stackScriptLoading, stackScriptError } = this.state;
 
     if (selectedId) {
@@ -216,7 +226,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               onSelect={this.props.onSelect}
               resetStackScriptSelection={this.props.resetSelectedStackScript}
               publicImages={this.props.publicImages}
-              currentUser={getProfileData()?.username || ''}
+              currentUser={profile.data?.username || ''}
               request={request}
               key={category + '-tab'}
               category={category}
@@ -234,5 +244,6 @@ const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
   RenderGuard,
-  styled
+  styled,
+  withProfile
 )(SelectStackScriptPanel);

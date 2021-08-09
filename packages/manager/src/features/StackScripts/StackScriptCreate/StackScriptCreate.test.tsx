@@ -5,6 +5,9 @@ import { StackScriptCreate } from './StackScriptCreate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
+import { UseQueryResult } from 'react-query';
+import { Grants, Profile } from '@linode/api-v4/lib';
+import { APIError } from '@linode/api-v4/lib/types';
 
 const images = normalizeEntities(imageFactory.buildList(10));
 
@@ -19,11 +22,12 @@ describe('StackScriptCreate', () => {
       }}
       imagesData={images}
       imagesLoading={false}
-      profile={profileFactory.build()}
+      profile={
+        { data: profileFactory.build() } as UseQueryResult<Profile, APIError[]>
+      }
+      grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
       setDocs={jest.fn()}
       clearDocs={jest.fn()}
-      userCannotCreateStackScripts={false}
-      userCannotModifyStackScript={false}
     />
   );
   xit('should render a title that reads "Create StackScript', () => {

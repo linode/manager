@@ -47,7 +47,7 @@ export const formatDate = (
   date: string | number,
   options: FormatDateOptions = {}
 ): string => {
-  /** get the timezone from redux and use it as the timezone */
+  // Get the timezone from React Query and use it as the timezone
   const userTimezone = getUserTimezone();
   const time = parseAPIDate(date).setZone(userTimezone);
   // Default to including time in the output. Hide the time if options.displayTime === false

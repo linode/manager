@@ -10,7 +10,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -40,14 +39,13 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
 import { queryClient } from 'src/queries/base';
-import { getProfileData, queryKey } from 'src/queries/profile';
-import { Profile } from '../../../../../api-v4/lib/profile';
+import { queryKey } from 'src/queries/profile';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 
 type ClassNames = 'backButton' | 'createTitle';
 
@@ -84,7 +82,7 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  StateProps &
+  ProfileProps &
   WithImagesProps &
   SetDocsProps &
   WithStyles<ClassNames> &
@@ -299,7 +297,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        if (profile?.restricted) {
+        if (profile.data?.restricted) {
           queryClient.invalidateQueries(`${queryKey}-grants`);
         }
         this.setState({ isSubmitting: false });
@@ -415,13 +413,15 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      profile,
-      userCannotCreateStackScripts,
-      userCannotModifyStackScript,
       classes,
       location,
       imagesData,
       mode,
+      grants,
+      profile,
+      match: {
+        params: { stackScriptID },
+      },
     } = this.props;
     const {
       images,
@@ -444,11 +444,23 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       (thisImage) => !this.state.images.includes(thisImage.id)
     );
 
+    const stackScriptGrants = getGrants(grants.data, 'stackscript');
+
+    const grantsForThisStackScript = stackScriptGrants.find(
+      (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
+    );
+
+    const userCannotCreateStackScripts =
+      isRestrictedUser() && !hasGrant('add_stackscripts');
+    const userCannotModifyStackScript =
+      isRestrictedUser() &&
+      grantsForThisStackScript?.permissions !== 'read_write';
+
     const shouldDisable =
       (mode === 'edit' && userCannotModifyStackScript) ||
       (mode === 'create' && userCannotCreateStackScripts);
 
-    if (!profile?.username) {
+    if (!profile.data?.username) {
       return (
         <ErrorState errorText="An error has occurred. Please try again." />
       );
@@ -492,7 +504,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           />
         )}
         <ScriptForm
-          currentUser={profile?.username}
+          currentUser={profile.data?.username || ''}
           disableSubmit={!hasUnsavedChanges}
           disabled={shouldDisable}
           mode={mode}
@@ -528,35 +540,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-interface StateProps {
-  profile: Profile | undefined;
-  userCannotCreateStackScripts: boolean;
-  userCannotModifyStackScript: boolean;
-}
-const mapStateToProps: MapState<StateProps, CombinedProps> = (
-  state,
-  ownProps
-) => {
-  const stackScriptID = ownProps.match.params.stackScriptID;
-
-  const stackScriptGrants = getGrants(undefined, 'stackscript');
-
-  const grantsForThisStackScript = stackScriptGrants.find(
-    (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
-  );
-
-  return {
-    profile: getProfileData(),
-    userCannotCreateStackScripts:
-      isRestrictedUser() && !hasGrant('add_stackscripts'),
-    userCannotModifyStackScript:
-      isRestrictedUser() &&
-      grantsForThisStackScript?.permissions !== 'read_write',
-  };
-};
-
-const connected = connect(mapStateToProps);
-
 const styled = withStyles(styles);
 
 interface WithImagesProps {
@@ -575,7 +558,7 @@ const enhanced = compose<CombinedProps, Props>(
   })),
   styled,
   withRouter,
-  connected
+  withProfile
 );
 
 export default enhanced(StackScriptCreate);

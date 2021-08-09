@@ -258,7 +258,6 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
-    /* TODO: use the timezone from the user's profile */
     this.windows = initWindows(getUserTimezone(), true);
 
     this.days = [

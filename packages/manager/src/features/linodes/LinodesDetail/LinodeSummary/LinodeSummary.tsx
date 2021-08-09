@@ -128,6 +128,7 @@ const statsFetchInterval = 30000;
 export class LinodeSummary extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
   mounted: boolean = false;
+  timezone: string = getUserTimezone();
 
   state: State = {
     stats: undefined,
@@ -290,7 +291,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
-    const { timezone, theme } = this.props;
+    const { theme } = this.props;
 
     const data = pathOr([], ['data', 'cpu'], stats);
 
@@ -299,7 +300,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <LineGraph
-        timezone={timezone}
+        timezone={this.timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}
         data={[
@@ -323,7 +324,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderDiskIOChart = () => {
-    const { timezone, theme } = this.props;
+    const { theme } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -335,7 +336,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <LineGraph
-        timezone={timezone}
+        timezone={this.timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}
         data={[
@@ -377,7 +378,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       error: statsError,
       height: chartHeight,
       isTooEarlyForGraphData: Boolean(isTooEarlyForGraphData),
-      timezone: this.props.timezone,
+      timezone: this.timezone,
       rangeSelection: this.state.rangeSelection,
     };
 
@@ -449,7 +450,6 @@ interface WithTypesProps {
 
 const withTypes = connect((state: ApplicationState, _ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: getUserTimezone(),
   inProgressEvents: state.events.inProgressEvents,
   events: state.events.events,
   mostRecentEventTime: state.events.mostRecentEventTime,

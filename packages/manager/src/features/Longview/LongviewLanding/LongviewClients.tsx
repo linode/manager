@@ -164,7 +164,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       history: { push },
     } = props;
 
-    if (isManaged) {
+    if (isManaged()) {
       push({
         pathname: '/support/tickets',
         state: {
@@ -292,7 +292,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       />
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
-        isManaged={isManaged}
+        isManaged={isManaged()}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={

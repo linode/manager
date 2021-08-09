@@ -1,11 +1,10 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
-import {
-  getGrants,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
+import { getGrants } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import {
@@ -22,7 +21,7 @@ import ResizeVolumeForm from './ResizeVolumeForm';
 import ResizeVolumesInstruction from './ResizeVolumesInstruction';
 import VolumeConfigForm from './VolumeConfigForm';
 
-type CombinedProps = StateProps & DispatchProps;
+type CombinedProps = StateProps & DispatchProps & ProfileProps;
 
 class VolumeDrawer extends React.PureComponent<CombinedProps> {
   render() {
@@ -41,8 +40,19 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeTags,
       volumePath,
       message,
-      readOnly,
+      profile,
+      grants,
     } = this.props;
+
+    const volumesPermissions = getGrants(grants.data, 'volume');
+
+    const volumePermissions = volumesPermissions.find(
+      (v: Grant) => v.id === volumeId
+    );
+    const readOnly =
+      Boolean(profile.data?.restricted) &&
+      volumePermissions &&
+      volumePermissions.permissions === 'read_only';
 
     return (
       <Drawer open={isOpen} title={drawerTitle} onClose={actions.closeDrawer}>
@@ -171,7 +181,6 @@ interface StateProps {
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
-  readOnly?: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => {
@@ -189,12 +198,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     message,
   } = state.volumeDrawer;
 
-  const volumesPermissions = getGrants(undefined, 'volume');
-
-  const volumePermissions = volumesPermissions.find(
-    (v: Grant) => v.id === volumeId
-  );
-
   return {
     drawerTitle: titleFromState(state.volumeDrawer),
     isOpen: mode !== modes.CLOSED,
@@ -209,10 +212,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     volumeTags,
     volumePath,
     message,
-    readOnly:
-      isRestrictedUser() &&
-      volumePermissions &&
-      volumePermissions.permissions === 'read_only',
   };
 };
 
@@ -248,4 +247,4 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default connected(VolumeDrawer);
+export default compose(connected, withProfile)(VolumeDrawer);

@@ -106,7 +106,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
       history: { push },
     } = props;
 
-    if (isManaged) {
+    if (isManaged()) {
       push({
         pathname: '/support/tickets',
         state: {
@@ -161,7 +161,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
       </Tabs>
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
-        isManaged={isManaged}
+        isManaged={isManaged()}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={

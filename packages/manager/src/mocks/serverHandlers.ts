@@ -54,6 +54,7 @@ import {
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
+import { grantsFactory } from 'src/factories/grants';
 
 export const makeResourcePage = (
   e: any[],
@@ -131,71 +132,7 @@ export const handlers = [
     return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
   }),
   rest.get('*/profile/grants', (req, res, ctx) => {
-    return res(
-      ctx.json({
-        domain: [
-          {
-            id: 123,
-            label: 'example-entity',
-            permissions: 'read_only',
-          },
-        ],
-        global: {
-          account_access: 'read_only',
-          add_domains: true,
-          add_images: true,
-          add_linodes: true,
-          add_longview: true,
-          add_nodebalancers: true,
-          add_stackscripts: true,
-          add_volumes: true,
-          cancel_account: false,
-          longview_subscription: true,
-        },
-        image: [
-          {
-            id: 123,
-            label: 'example-entity',
-            permissions: 'read_only',
-          },
-        ],
-        linode: [
-          {
-            id: 123,
-            label: 'example-entity',
-            permissions: 'read_only',
-          },
-        ],
-        longview: [
-          {
-            id: 123,
-            label: 'example-entity',
-            permissions: 'read_only',
-          },
-        ],
-        nodebalancer: [
-          {
-            id: 123,
-            label: 'example-entity',
-            permissions: 'read_only',
-          },
-        ],
-        stackscript: [
-          {
-            id: 123,
-            label: 'example-entity',
-            permissions: 'read_only',
-          },
-        ],
-        volume: [
-          {
-            id: 123,
-            label: 'example-entity',
-            permissions: 'read_only',
-          },
-        ],
-      })
-    );
+    return res(ctx.json(grantsFactory.build()));
   }),
   rest.get('*/profile/apps', (req, res, ctx) => {
     const tokens = appTokenFactory.buildList(5);

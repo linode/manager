@@ -242,7 +242,7 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Plan Details" />
-      {isManaged ? (
+      {isManaged() ? (
         <Paper className={`${classes.root} ${classes.collapsedTable}`}>
           {updateErrorMsg && <Notice error text={updateErrorMsg} />}
           {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}

@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
@@ -18,11 +17,8 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
-import { MapState } from 'src/store/types';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
@@ -67,14 +63,9 @@ export interface State {
   successMessage: string;
 }
 
-interface StoreProps {
-  userCannotCreateStackScripts: boolean;
-  isOnCreate?: boolean;
-}
-
 type CombinedProps = StyleProps &
   RouteComponentProps &
-  StoreProps & {
+  ProfileProps & {
     publicImages: Record<string, Image>;
     category: string;
     request: StackScriptsRequest;
@@ -420,7 +411,11 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         getMoreStackScriptsFailed,
       } = this.state;
 
-      const { classes, userCannotCreateStackScripts } = this.props;
+      const { classes, profile, grants } = this.props;
+
+      const userCannotCreateStackScripts =
+        Boolean(profile.data?.restricted) &&
+        !hasGrant('add_stackscripts', grants.data);
 
       if (error) {
         return (
@@ -618,14 +613,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
     }
   }
 
-  const mapStateToProps: MapState<StoreProps, CombinedProps> = () => ({
-    userCannotCreateStackScripts:
-      isRestrictedUser() && !hasGrant('add_stackscripts'),
-  });
-
-  const connected = connect(mapStateToProps);
-
-  return compose(withRouter, connected, withStyles)(EnhancedComponent);
+  return compose(withRouter, withProfile, withStyles)(EnhancedComponent);
 };
 
 export default withStackScriptBase;

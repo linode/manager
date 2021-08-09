@@ -27,11 +27,11 @@ import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import { getGrantData } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
@@ -110,7 +110,8 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   DispatchProps &
   WithSnackbarProps &
-  StateProps;
+  StateProps &
+  ProfileProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -250,18 +251,20 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const {
       typesData,
       linodeType,
-      permissions,
       classes,
       linodeDisks,
       linodeStatus,
       linodeDisksError,
       linodeLabel,
+      linodeId,
+      grants,
     } = this.props;
     const { confirmationText, submissionError } = this.state;
     const type = typesData.find((t) => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
-    const unauthorized = permissions === 'read_only';
+    const unauthorized =
+      getPermissionsForLinode(grants.data, linodeId || 0) === 'read_only';
     const disksError = linodeDisksError?.read;
 
     const tableDisabled =
@@ -455,7 +458,6 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
     linodeType: linode.type,
     linodeStatus: linode.status,
     linodeLabel: linode.label,
-    permissions: getPermissionsForLinode(getGrantData(), linodeId),
     linodeDisks: getLinodeDisksForLinode(linodeDisks, linodeId),
     linodeDisksError: linodeDisks[linodeId]?.error,
   };
@@ -521,5 +523,6 @@ export default compose<CombinedProps, Props>(
   withTypes,
   styled,
   withSnackbar,
-  connected
+  connected,
+  withProfile
 )(LinodeResize);
