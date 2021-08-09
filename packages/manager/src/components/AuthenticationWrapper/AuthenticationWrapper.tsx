@@ -12,6 +12,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { startEventsInterval } from 'src/events';
+import { queryKey as accountQueryKey } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
@@ -58,9 +59,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
     // Initial Requests: Things we need immediately (before rendering the app)
     const dataFetchingPromises: Promise<any>[] = [
+      // Fetch user's account information
       queryClient.prefetchQuery({
         queryFn: getAccountInfo,
-        queryKey: 'account',
+        queryKey: accountQueryKey,
       }),
 
       // Username and whether a user is restricted

@@ -39,12 +39,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignSelf: 'end',
     },
   },
-  editBtn: {
-    fontFamily: theme.font.normal,
+  edit: {
     color: theme.cmrTextColors.linkActiveLight,
+    fontFamily: theme.font.normal,
     fontSize: '.875rem',
     fontWeight: 700,
-    marginBottom: theme.spacing(2),
+    minHeight: 'unset',
     minWidth: 'auto',
     padding: 0,
     '&:hover, &:focus': {
@@ -123,9 +123,8 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
               Billing Contact
             </Typography>
           </Grid>
-
           <Grid item>
-            <Button className={classes.editBtn} onClick={handleEditDrawerOpen}>
+            <Button className={classes.edit} onClick={handleEditDrawerOpen}>
               Edit
             </Button>
           </Grid>
