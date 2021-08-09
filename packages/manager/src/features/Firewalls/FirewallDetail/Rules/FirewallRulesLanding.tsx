@@ -53,8 +53,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  rules: FirewallRules;
   firewallID: number;
+  rules: FirewallRules;
+  disabled: boolean;
 }
 
 interface Drawer {
@@ -68,7 +69,7 @@ type CombinedProps = Props & DispatchProps & RouteComponentProps;
 
 const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { firewallID, rules } = props;
+  const { firewallID, rules, disabled } = props;
 
   /**
    * inbound and outbound policy aren't part of any particular rule
@@ -309,6 +310,16 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
         }}
       </Prompt>
 
+      {disabled ? (
+        <Notice
+          text={
+            "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
+          }
+          error={true}
+          important
+        />
+      ) : null}
+
       {generalErrors?.length === 1 && (
         <Notice spacingTop={8} error text={generalErrors[0].reason} />
       )}
@@ -317,6 +328,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
         <FirewallRuleTable
           category="inbound"
           policy={policy.inbound}
+          disabled={disabled}
           handlePolicyChange={handlePolicyChange}
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('inbound', idx)
@@ -337,6 +349,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
         <FirewallRuleTable
           category="outbound"
           policy={policy.outbound}
+          disabled={disabled}
           handlePolicyChange={handlePolicyChange}
           triggerCloneFirewallRule={(idx: number) =>
             handleCloneRule('outbound', idx)
@@ -364,16 +377,16 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
       <ActionsPanel className={classes.actions}>
         <Button
           buttonType="secondary"
+          disabled={!hasUnsavedChanges || disabled}
           onClick={() => setDiscardChangesModalOpen(true)}
-          disabled={!hasUnsavedChanges}
         >
           Discard Changes
         </Button>
         <Button
           buttonType="primary"
           onClick={applyChanges}
-          disabled={!hasUnsavedChanges}
           loading={submitting}
+          disabled={!hasUnsavedChanges || disabled}
         >
           Save Changes
         </Button>
