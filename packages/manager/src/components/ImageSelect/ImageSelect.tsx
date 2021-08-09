@@ -130,6 +130,11 @@ export const ImageSelect: React.FC<Props> = (props) => {
   const filteredImages = images.filter((thisImage) => {
     switch (variant) {
       case 'public':
+        /*
+         * Get all public images but exclude any Kubernetes images.
+         * We don't want them to show up as a selectable image to deploy since
+         * the Kubernetes images are used behind the scenes with LKE.
+         */
         return (
           thisImage.is_public &&
           thisImage.status === 'available' &&
