@@ -65,11 +65,13 @@ export const Breadcrumb: React.FC<CombinedProps> = (props) => {
 
   return (
     <div
-      className={classNames({
-        [classes.root]: true,
-        [classes.hasError]: hasError,
-        className,
-      })}
+      className={classNames(
+        {
+          [classes.root]: true,
+          [classes.hasError]: hasError,
+        },
+        className
+      )}
     >
       <div
         className={classNames({
