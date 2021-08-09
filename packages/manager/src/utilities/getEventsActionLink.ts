@@ -84,7 +84,7 @@ export default (
       return `/domains/${id}`;
 
     case 'entity_transfer':
-      return `/account/entity-transfers`;
+      return `/account/service-transfers`;
 
     case 'volume':
       return `/volumes`;
