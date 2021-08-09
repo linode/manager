@@ -171,6 +171,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   entity_transfer_accept: {
     notification: (_) => `A service transfer has been accepted.`,
   },
+  entity_transfer_accept_recipient: {
+    notification: (_) => `You have accepted a service transfer.`,
+  },
   entity_transfer_cancel: {
     notification: (_) => `A service transfer has been cancelled.`,
   },
