@@ -1,4 +1,9 @@
-import { containsClick } from '../helpers';
+import {
+  containsClick,
+  containsVisible,
+  fbtVisible,
+  getVisible,
+} from '../helpers';
 import { waitForAppLoad } from './common';
 
 export const loadAppNoLogin = (path) => waitForAppLoad(path, false);
@@ -105,7 +110,10 @@ export const pages = [
         go: () => {
           const url = `${routes.profile}/auth`;
           loadAppNoLogin(url);
-          cy.findByText('Password Reset').should('be.visible');
+          getVisible('[data-qa-header="My Profile"]');
+          containsVisible(
+            'How to Enable Third Party Authentication on Your Linode Account'
+          );
           waitDoubleRerender();
           cy.contains('Display').should('be.visible').click();
         },
