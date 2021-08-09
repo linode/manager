@@ -7,7 +7,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { mutationHandlers, queryPresets } from './base';
 
-const queryKey = 'account';
+export const queryKey = 'account';
 
 export const useAccount = () =>
   useQuery<Account, APIError[]>(

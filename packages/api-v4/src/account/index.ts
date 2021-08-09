@@ -10,4 +10,6 @@ export * from './users';
 
 export * from './oauth';
 
+export * from './promos';
+
 export * from './types';

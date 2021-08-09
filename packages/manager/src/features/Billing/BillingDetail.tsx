@@ -17,7 +17,6 @@ import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   main: {
     [theme.breakpoints.up('md')]: {
       order: 1,
