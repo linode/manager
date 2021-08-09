@@ -37,16 +37,10 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+      <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
-      <Button
-        buttonType="primary"
-        destructive
-        onClick={onDelete}
-        loading={loading}
-        data-qa-confirm
-      >
+      <Button buttonType="primary" onClick={onDelete} loading={loading}>
         Delete
       </Button>
     </ActionsPanel>
@@ -62,7 +56,11 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
     >
       Are you sure you want to delete this payment method?
       <Grid container className={classes.container}>
-        <Grid item className={classes.item} style={{ padding: 0 }}>
+        <Grid
+          item
+          className={classes.item}
+          style={{ paddingLeft: 0, paddingBottom: 0 }}
+        >
           {paymentMethod && paymentMethod.type === 'credit_card' ? (
             <CreditCard creditCard={paymentMethod.data} />
           ) : paymentMethod ? (
