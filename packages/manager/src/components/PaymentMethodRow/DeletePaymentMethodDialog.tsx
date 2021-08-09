@@ -40,12 +40,7 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
       <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
-      <Button
-        buttonType="primary"
-        onClick={onDelete}
-        loading={loading}
-        data-qa-confirm
-      >
+      <Button buttonType="primary" onClick={onDelete} loading={loading}>
         Delete
       </Button>
     </ActionsPanel>
