@@ -53,10 +53,10 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
   const devices = Object.values(itemsById);
 
   React.useEffect(() => {
-    if (lastUpdated === 0 && !loading) {
+    if (lastUpdated === 0 && !(loading || error)) {
       requestDevices();
     }
-  }, [lastUpdated, loading, requestDevices]);
+  }, [error, lastUpdated, loading, requestDevices]);
 
   const count = getCountOfRules(rules);
 

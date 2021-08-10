@@ -60,10 +60,16 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
 
   const deviceList = Object.values(devices.itemsById ?? {}); // Gives the devices as an array or [] if nothing is found
   React.useEffect(() => {
-    if (devices.lastUpdated === 0 && !devices.loading) {
+    if (devices.lastUpdated === 0 && !(devices.loading || devices.error)) {
       requestDevices();
     }
-  }, [devices.lastUpdated, devices.loading, firewallID, requestDevices]);
+  }, [
+    devices.error,
+    devices.lastUpdated,
+    devices.loading,
+    firewallID,
+    requestDevices,
+  ]);
 
   const {
     dialog,
