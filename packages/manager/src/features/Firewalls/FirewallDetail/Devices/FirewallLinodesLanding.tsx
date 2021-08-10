@@ -141,7 +141,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
           text={
             "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
           }
-          error={true}
+          error
           important
         />
       ) : null}
