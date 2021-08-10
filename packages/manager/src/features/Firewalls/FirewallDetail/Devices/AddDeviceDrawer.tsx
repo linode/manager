@@ -1,6 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import v4 from 'uuid';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -8,7 +9,7 @@ import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { useStyles } from 'src/components/Notice/Notice';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import SupportLink from 'src/components/SupportLink';
 interface Props {
   open: boolean;
   error?: APIError[];
@@ -59,8 +60,9 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const errorNotice = (errorMsg: string) => {
     // match something like: Linode <linode_label> (ID <linode_id>)
     const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
-    if (errorMsg.match(/ or open a support ticket/i)) {
-      errorMsg = errorMsg.replace(/ or open a support ticket/i, '');
+    const openTicket = errorMsg.match(/open a support ticket/i);
+    if (openTicket) {
+      errorMsg = errorMsg.replace(/open a support ticket/i, '');
     }
     if (linode) {
       const [, label, id] = linode;
@@ -71,6 +73,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
+          {openTicket ? <SupportLink text="open a Support ticket" /> : null}
         </Notice>
       );
     } else {
