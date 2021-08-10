@@ -4,7 +4,6 @@ import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import useFlags from 'src/hooks/useFlags';
 import { isToday as _isToday } from 'src/utilities/isToday';
 import {
   LongviewNetworkInterface,
@@ -16,12 +15,12 @@ import NetworkGraphs from './NetworkGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: 250,
-  },
-  cmrSpacing: {
     [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
+  },
+  select: {
+    width: 250,
   },
 }));
 
@@ -34,7 +33,6 @@ interface Props {
 
 export const NetworkLanding: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
 
@@ -71,11 +69,11 @@ export const NetworkLanding: React.FC<Props> = (props) => {
           flexDirection="row"
           justifyContent="flex-end"
           alignItems="center"
-          className={flags.cmr ? classes.cmrSpacing : ''}
+          className={classes.root}
         >
           <TimeRangeSelect
             small
-            className={classes.root}
+            className={classes.select}
             handleStatsChange={handleStatsChange}
             defaultValue="Past 30 Minutes"
             label="Select Time Range"

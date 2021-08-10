@@ -877,10 +877,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 }
               >
                 <Button
-                  buttonType="secondary"
+                  buttonType="outlined"
                   disabled={disabled}
                   onClick={this.addNode}
-                  outline
                 >
                   Add a Node
                 </Button>
@@ -903,11 +902,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <ActionsPanel className={classes.actionsPanel}>
                 {(forEdit || configIdx !== 0) && (
                   <Button
-                    onClick={this.props.onDelete}
                     buttonType="secondary"
-                    destructive
-                    data-qa-delete-config
+                    onClick={this.props.onDelete}
                     disabled={disabled}
+                    data-qa-delete-config
                   >
                     Delete
                   </Button>
@@ -916,9 +914,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <Button
                     buttonType="primary"
                     onClick={this.onSave}
+                    disabled={disabled}
                     loading={submitting}
                     data-qa-save-config
-                    disabled={disabled}
                   >
                     Save
                   </Button>

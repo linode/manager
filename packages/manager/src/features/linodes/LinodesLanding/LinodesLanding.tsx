@@ -20,12 +20,8 @@ import LandingHeader from 'src/components/LandingHeader';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import withBackupCta, {
-  BackupCTAProps,
-} from 'src/containers/withBackupCTA.container';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
+import TransferDisplay from 'src/components/TransferDisplay';
+import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
@@ -44,7 +40,7 @@ import getUserTimezone from 'src/utilities/getUserTimezone';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
-import LinodeResize_CMR from '../LinodesDetail/LinodeResize/LinodeResize_CMR';
+import LinodeResize from '../LinodesDetail/LinodeResize';
 import MigrateLinode from '../MigrateLanding/MigrateLinode';
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import { linodesInTransition as _linodesInTransition } from '../transitions';
@@ -55,7 +51,6 @@ import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
-import TransferDisplay from 'src/components/TransferDisplay';
 import { ExtendedStatus, statusToPriority } from './utils';
 
 interface State {
@@ -97,9 +92,7 @@ type CombinedProps = Props &
   RouteProps &
   StyleProps &
   SetDocsProps &
-  WithSnackbarProps &
-  BackupCTAProps &
-  FeatureFlagConsumerProps;
+  WithSnackbarProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   state: State = {
@@ -279,7 +272,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <LinodeResize_CMR
+        <LinodeResize
           open={this.state.linodeResizeOpen}
           onClose={this.closeDialogs}
           linodeId={this.state.selectedLinodeID}
@@ -317,10 +310,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             userProfileLoading={this.props.userProfileLoading}
           />
         )}
-        <Grid
-          container
-          className={this.props.flags.cmr ? classes.cmrSpacing : ''}
-        >
+        <Grid container className={classes.root}>
           <Grid item xs={12}>
             <DocumentTitleSegment segment="Linodes" />
             <PreferenceToggle<boolean>
@@ -506,9 +496,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   filename={`linodes-${formatDate(
                                     DateTime.local().toISO()
                                   )}.csv`}
-                                  className={`${classes.CSVlink} ${
-                                    this.props.flags.cmr && classes.cmrCSVlink
-                                  }`}
+                                  className={classes.CSVlink}
                                 >
                                   Download CSV
                                 </CSVLink>
@@ -556,7 +544,6 @@ const sendGroupByAnalytic = (value: boolean) => {
 };
 
 interface StateProps {
-  managed: boolean;
   linodesCount: number;
   userTimezone: string;
   userProfileLoading: boolean;
@@ -566,7 +553,6 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
-    managed: state.__resources.accountSettings.data?.managed ?? false,
     linodesCount: state.__resources.linodes.results,
     userTimezone: getUserTimezone(state),
     userProfileLoading: state.__resources.profile.loading,
@@ -601,7 +587,6 @@ export const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
   connected,
   withImages(),
-  withBackupCta,
   styled,
   withFeatureFlagConsumer
 );

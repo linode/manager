@@ -2,7 +2,7 @@ import * as React from 'react';
 import EntityIcon from './EntityIcon';
 
 export default {
-  title: 'Entity Icon',
+  title: 'Core/Icons/Entity Icons',
 };
 
 export const Icons = () => (

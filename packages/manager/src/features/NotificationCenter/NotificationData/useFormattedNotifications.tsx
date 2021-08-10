@@ -6,13 +6,14 @@ import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import { useStyles } from 'src/features/NotificationCenter/NotificationData/RenderNotification';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
+import { formatDate } from 'src/utilities/formatDate';
 import { notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
-import { formatDate } from 'src/utilities/formatDate';
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
@@ -26,6 +27,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
   } = useDismissibleNotifications();
 
   const notifications = useNotifications();
+  const classes = useStyles();
 
   const dayOfMonth = DateTime.local().day;
 
@@ -47,7 +49,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
     })
     .map((notification, idx) =>
       formatNotificationForDisplay(
-        interceptNotification(notification, handleClose),
+        interceptNotification(notification, handleClose, classes),
         idx,
         handleClose,
         !hasDismissedNotifications([notification], 'notificationDrawer')
@@ -66,7 +68,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
  */
 const interceptNotification = (
   notification: Notification,
-  onClose: () => void
+  onClose: () => void,
+  classes: any
 ): ExtendedNotification => {
   // Ticket interceptions
   if (notification.type === 'ticket_abuse') {
@@ -225,6 +228,35 @@ const interceptNotification = (
     }
 
     return notification;
+  }
+
+  if (notification.type === 'payment_due') {
+    const criticalSeverity = notification.severity === 'critical';
+
+    if (!criticalSeverity) {
+      // A critical severity indicates the user's balance is past due; temper the messaging a bit outside of that case by replacing the exclamation point.
+      notification.message = notification.message.replace('!', '.');
+    }
+
+    const jsx = (
+      <Typography>
+        <Link
+          to="/account/billing"
+          onClick={onClose}
+          className={criticalSeverity ? classes.redLink : classes.greyLink}
+        >
+          {notification.message}
+        </Link>{' '}
+        <Link to="/account/billing/make-payment" onClick={onClose}>
+          Make a payment now.
+        </Link>
+      </Typography>
+    );
+
+    return {
+      ...notification,
+      jsx,
+    };
   }
 
   /* If the notification is not of any of the types above, return the notification object without modification. In this case, logic in <RenderNotification />

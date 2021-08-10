@@ -1,4 +1,3 @@
-import { AccountCapability } from '@linode/api-v4/lib/account';
 import {
   createPersonalAccessToken,
   deleteAppToken,
@@ -8,11 +7,12 @@ import {
   Token,
   updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
+import { Account } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -28,7 +28,6 @@ import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -38,7 +37,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import withAccount from 'src/containers/account.container';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -128,10 +127,7 @@ interface State {
   submitting: boolean;
 }
 
-type CombinedProps = Props &
-  PaginationProps<Token> &
-  WithStyles<ClassNames> &
-  AccountStateProps;
+type CombinedProps = Props & PaginationProps<Token> & WithStyles<ClassNames>;
 
 export class APITokenTable extends React.Component<CombinedProps, State> {
   static defaultState: State = {
@@ -536,6 +532,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   render() {
     const { classes, type, title } = this.props;
     const { form, dialog, submitting } = this.state;
+    const account = queryClient.getQueryData<Account>('account');
 
     const basePermsWithLKE = [...basePerms];
     basePermsWithLKE.splice(5, 0, 'lke');
@@ -620,12 +617,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           scopes={form.values.scopes}
           expiry={form.values.expiry}
           perms={
-            !this.props.accountCapabilities.includes('Kubernetes')
+            !account?.capabilities.includes('Kubernetes')
               ? basePerms
               : basePermsWithLKE
           }
           permNameMap={
-            !this.props.accountCapabilities.includes('Kubernetes')
+            !account?.capabilities.includes('Kubernetes')
               ? basePermNameMap
               : {
                   ...basePermNameMap,
@@ -652,28 +649,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           </Typography>
         </ConfirmationDialog>
 
-        <ConfirmationDialog
+        <SecretTokenDialog
           title="Personal Access Token"
-          error={(this.state.dialog.errors || [])
-            .map((e) => e.reason)
-            .join(',')}
-          actions={this.renderPersonalAccessTokenDisplayActions}
           open={Boolean(this.state.token && this.state.token.open)}
           onClose={this.closeTokenDialog}
-          maxWidth="md"
-        >
-          <Typography variant="body1">
-            {`Your personal access token has been created.
-              Store this secret. It won't be shown again.`}
-          </Typography>
-          <Notice
-            spacingTop={16}
-            typeProps={{ variant: 'body1' }}
-            warning
-            text={this.state.token && this.state.token.value!}
-            breakWords
-          />
-        </ConfirmationDialog>
+          value={this.state.token?.value}
+        />
       </React.Fragment>
     );
   }
@@ -691,7 +672,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.closeRevokeDialog}
           data-qa-button-cancel
         >
@@ -699,9 +680,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           buttonType="primary"
-          loading={this.state.dialog.submittingDialog}
-          destructive
           onClick={this.revokeAction}
+          loading={this.state.dialog.submittingDialog}
           data-qa-button-confirm
         >
           Revoke
@@ -709,16 +689,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       </ActionsPanel>
     );
   };
-
-  renderPersonalAccessTokenDisplayActions = () => (
-    <Button
-      buttonType="secondary"
-      onClick={this.closeTokenDialog}
-      data-qa-close-dialog
-    >
-      OK
-    </Button>
-  );
 }
 
 /**
@@ -741,16 +711,6 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-interface AccountStateProps {
-  accountCapabilities: AccountCapability[];
-}
-
-const enhanced = compose<CombinedProps, Props>(
-  withAccount<AccountStateProps, {}>((_, { accountData }) => ({
-    accountCapabilities: pathOr([], ['capabilities'], accountData),
-  })),
-  paginated,
-  styled
-);
+const enhanced = compose<CombinedProps, Props>(paginated, styled);
 
 export default enhanced(APITokenTable);

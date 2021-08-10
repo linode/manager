@@ -171,6 +171,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   entity_transfer_accept: {
     notification: (_) => `A service transfer has been accepted.`,
   },
+  entity_transfer_accept_recipient: {
+    notification: (_) => `You have accepted a service transfer.`,
+  },
   entity_transfer_cancel: {
     notification: (_) => `A service transfer has been cancelled.`,
   },
@@ -555,6 +558,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   payment_submitted: {
     notification: (e) => `A payment was successfully submitted.`,
+  },
+  payment_method_add: {
+    notification: (e) => `A payment method was added.`,
+  },
+  account_promo_apply: {
+    notification: (e) => `A promo code was applied to your account.`,
   },
   stackscript_create: {
     notification: (e) => `StackScript ${e.entity!.label} has been created.`,

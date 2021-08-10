@@ -145,7 +145,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
           <Button
             buttonType="secondary"
             onClick={() => setDeviceDrawerOpen(true)}
-            superCompact
+            compact
           >
             Add Linodes to Firewall
           </Button>
@@ -161,11 +161,11 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
       <AddDeviceDrawer
         open={addDeviceDrawerOpen}
         error={addDeviceError}
-        onClose={handleClose}
-        addDevice={handleAddDevice}
         isSubmitting={deviceSubmitting}
         currentDevices={deviceList.map((thisDevice) => thisDevice.entity.id)}
         firewallLabel={firewallLabel}
+        onClose={handleClose}
+        addDevice={handleAddDevice}
       />
       <RemoveDeviceDialog
         open={dialog.isOpen}

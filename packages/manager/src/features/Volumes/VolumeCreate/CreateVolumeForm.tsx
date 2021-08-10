@@ -7,7 +7,8 @@ import * as React from 'react';
 import { connect, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
+import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import Form from 'src/components/core/Form';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
@@ -16,16 +17,17 @@ import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Tag from 'src/components/Tag';
 import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import {
   hasGrant,
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
@@ -35,42 +37,32 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
-import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
+import { array, object, string } from 'yup';
 import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
 import LabelField from '../VolumeDrawer/LabelField';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  form: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  container: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(4),
-    '& .MuiFormHelperText-root': {
-      marginBottom: theme.spacing(2),
-    },
-  },
-  sidebar: {
-    [theme.breakpoints.down('sm')]: {
-      marginTop: `0 !important`,
-    },
-    '& > div': {
-      [theme.breakpoints.up('md')]: {
-        padding: `${theme.spacing(1)}px`,
-      },
-    },
+  root: {
+    maxWidth: 960,
   },
   copy: {
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(),
     marginBottom: theme.spacing(3),
+  },
+  notice: {
+    borderColor: theme.color.green,
+  },
+  button: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+    },
   },
 }));
 
@@ -84,10 +76,23 @@ interface Props {
   ) => void;
 }
 
+// The original schema expects tags to be an array of strings, but Formik treats
+// tags as _Tag[], so we extend the schema to transform tags before validation.
+const extendedCreateVolumeSchema = CreateVolumeSchema.concat(
+  object({
+    tags: array()
+      .transform((tagItems: _Tag[]) =>
+        tagItems.map((thisTagItem) => thisTagItem.value)
+      )
+      .of(string()),
+  })
+);
+
 type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
   const { onSuccess, createVolume, disabled, origin, history, regions } = props;
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
@@ -98,7 +103,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   });
 
   const configErrorMessage = configsError?.read
-    ? 'Unable to load Configs for this Linode.' // More specific than the API error message
+    ? 'Unable to load configs for this Linode.' // More specific than the API error message
     : undefined;
 
   const regionsWithBlockStorage = regions
@@ -108,7 +113,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={CreateVolumeSchema}
+      validationSchema={extendedCreateVolumeSchema}
       onSubmit={(
         values,
         { resetForm, setSubmitting, setStatus, setErrors }
@@ -174,7 +179,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         values,
         touched,
       }) => {
-        const { region, linode_id, tags, config_id } = values;
+        const { linode_id, config_id } = values;
 
         const linodeError = touched.linode_id ? errors.linode_id : undefined;
 
@@ -184,38 +189,11 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           ? errors.config_id
           : undefined;
 
-        const displaySections = [];
-        if (region) {
-          displaySections.push({
-            title: props.regions
-              .filter((c) => c.id === region)
-              .map((eachRegion) => eachRegion.country.toUpperCase())
-              .join(),
-            details: props.regions
-              .filter((c) => c.id === region)
-              .map((eachRegion) => dcDisplayNames[eachRegion.id])
-              .join(),
-          });
-        }
-        if (linode_id !== initialValueDefaultId) {
-          const linodeObject: any = getEntityByIDFromStore('linode', linode_id);
-          displaySections.push({
-            title: 'Attach To',
-            details: linodeObject ? linodeObject.label : null,
-          });
-        }
-        if (tags.length !== 0) {
-          displaySections.push({
-            title: 'Tags',
-            details: tags.map((tag, i) => <Tag key={i} label={tag.label} />),
-          });
-        }
-
         return (
-          <Form className={classes.form}>
-            {generalError && <NoticePanel error={generalError} />}
-            {status && <NoticePanel success={status.success} />}
-            {disabled && (
+          <Form>
+            {generalError ? <NoticePanel error={generalError} /> : null}
+            {status ? <NoticePanel success={status.success} /> : null}
+            {disabled ? (
               <Notice
                 text={
                   "You don't have permissions to create a new Volume. Please contact an account administrator for details."
@@ -223,14 +201,20 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 error={true}
                 important
               />
-            )}
-            <Grid container>
-              <Grid item className="mlMain">
-                <Paper className={classes.container}>
+            ) : null}
+            <Grid container direction="column">
+              <Grid item className={classes.root}>
+                <Paper>
+                  {flags.blockStorageAvailability ? (
+                    <Notice success className={classes.notice}>
+                      High-performance NVMe block storage is currently available
+                      in Atlanta, Georgia.
+                    </Notice>
+                  ) : null}
                   <Typography variant="body1" data-qa-volume-size-help>
                     A single Volume can range from 10 to {MAX_VOLUME_SIZE}{' '}
-                    gibibytes in size and costs $0.10/GiB per month. Up to eight
-                    volumes can be attached to a single Linode.
+                    gibibytes in size and costs <b>$0.10/GiB per month</b>. Up
+                    to eight volumes can be attached to a single Linode.
                   </Typography>
                   <Typography
                     variant="body1"
@@ -238,30 +222,37 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     data-qa-volume-help
                   >
                     Volumes must be created in a particular region. You can
-                    choose to create a volume in a region and attach it later to
+                    choose to create a Volume in a region and attach it later to
                     a Linode in the same region. If you select a Linode from the
                     field below, the Volume will be automatically created in
-                    that Linode’s region and attached upon creation.
+                    that Linode&apos;s region and attached upon creation.
                   </Typography>
                   <LabelField
-                    error={touched.label ? errors.label : undefined}
                     name="label"
+                    disabled={disabled}
+                    error={touched.label ? errors.label : undefined}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.label}
-                    disabled={disabled}
                   />
                   <SizeField
-                    error={touched.size ? errors.size : undefined}
                     name="size"
+                    disabled={disabled}
+                    error={touched.size ? errors.size : undefined}
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.size}
-                    disabled={disabled}
                   />
                   <RegionSelect
-                    isClearable
+                    name="region"
+                    disabled={disabled}
                     errorText={touched.region ? errors.region : undefined}
+                    handleSelection={(value) => {
+                      setFieldValue('region', value);
+                      setFieldValue('linode_id', initialValueDefaultId);
+                    }}
+                    isClearable
+                    onBlur={handleBlur}
                     regions={props.regions
                       .filter((eachRegion) =>
                         eachRegion.capabilities.some((eachCape) =>
@@ -272,52 +263,43 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                         ...eachRegion,
                         display: dcDisplayNames[eachRegion.id],
                       }))}
-                    name="region"
-                    onBlur={handleBlur}
                     selectedID={values.region}
-                    handleSelection={(value) => {
-                      setFieldValue('region', value);
-                      setFieldValue('linode_id', initialValueDefaultId);
-                    }}
-                    disabled={disabled}
-                    styles={{
-                      /** altering styles for mobile-view */
-                      menuList: (base: any) => ({
-                        ...base,
-                        maxHeight: `250px !important`,
-                      }),
-                    }}
                   />
                   <FormHelperText data-qa-volume-region>
                     The datacenter where the new volume should be created. Only
                     regions supporting block storage are displayed.
                   </FormHelperText>
                   <LinodeSelect
-                    linodeError={linodeError || configErrorMessage}
                     name="linodeId"
-                    onBlur={handleBlur}
+                    disabled={disabled}
+                    filterCondition={(linode: Linode) =>
+                      regionsWithBlockStorage.includes(linode.region)
+                    }
                     handleChange={(linode: Linode) => {
                       setFieldValue('linode_id', linode.id);
                       setFieldValue('region', linode.region);
                       setLinodeId(linode.id);
                     }}
+                    linodeError={linodeError || configErrorMessage}
+                    onBlur={handleBlur}
                     selectedLinode={values.linode_id}
                     region={values.region}
-                    filterCondition={(linode: Linode) =>
-                      regionsWithBlockStorage.includes(linode.region)
-                    }
-                    disabled={disabled}
                   />
                   <ConfigSelect
+                    name="configId"
+                    disabled={disabled}
                     error={touched.config_id ? errors.config_id : undefined}
                     linodeId={linode_id}
-                    name="configId"
                     onBlur={handleBlur}
                     onChange={(id: number) => setFieldValue('config_id', id)}
                     value={config_id}
-                    disabled={disabled}
                   />
                   <TagsInput
+                    name="tags"
+                    disabled={disabled}
+                    label="Tags"
+                    menuPlacement="top"
+                    onChange={(selected) => setFieldValue('tags', selected)}
                     tagError={
                       touched.tags
                         ? errors.tags
@@ -328,26 +310,24 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                           : undefined
                         : undefined
                     }
-                    name="tags"
-                    label="Tags"
-                    disabled={disabled}
-                    onChange={(selected) => setFieldValue('tags', selected)}
                     value={values.tags}
-                    menuPlacement="top"
                   />
                 </Paper>
-              </Grid>
-              <Grid item className={`${classes.sidebar} mlSidebar`}>
-                <CheckoutBar
-                  heading={`${values.label || 'Volume'} Summary`}
-                  onDeploy={handleSubmit}
-                  calculatedPrice={values.size / 10}
-                  disabled={disabled}
-                  isMakingRequest={isSubmitting}
-                  submitText="Create Volume"
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  className={classes.button}
                 >
-                  <DisplaySectionList displaySections={displaySections} />
-                </CheckoutBar>
+                  <Button
+                    buttonType="primary"
+                    disabled={disabled}
+                    loading={isSubmitting}
+                    onClick={() => handleSubmit()}
+                    data-qa-deploy-linode
+                  >
+                    Create Volume
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </Form>

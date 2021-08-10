@@ -38,6 +38,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 50,
       padding: '6px 16px',
       textDecoration: 'none',
+      '&:focus': {
+        backgroundColor: theme.cmrBGColors.bgTableHeader,
+      },
+      '&:hover': {
+        backgroundColor: theme.cmrBGColors.bgTableHeader,
+        color: theme.color.blue,
+      },
     },
     '&[data-reach-tab][data-selected]': {
       borderBottom: `3px solid ${theme.cmrTextColors.linkActiveLight}`,

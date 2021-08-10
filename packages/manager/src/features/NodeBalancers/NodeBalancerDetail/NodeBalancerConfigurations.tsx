@@ -40,9 +40,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse,
 } from 'src/components/PromiseLoader/PromiseLoader';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 import {
   withNodeBalancerConfigActions,
   WithNodeBalancerConfigActions,
@@ -63,11 +60,10 @@ import {
   transformConfigsForRequest,
 } from '../utils';
 
-type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses' | 'cmrSpacing';
+type ClassNames = 'title' | 'port' | 'nbStatuses' | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     title: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(2),
@@ -81,7 +77,7 @@ const styles = (theme: Theme) =>
         display: 'inline',
       },
     },
-    cmrSpacing: {
+    button: {
       [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
       },
@@ -129,8 +125,7 @@ type CombinedProps = Props &
   WithNodeBalancerConfigActions &
   RouteProps &
   WithStyles<ClassNames> &
-  PreloadedProps &
-  FeatureFlagConsumerProps;
+  PreloadedProps;
 
 const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
@@ -1080,19 +1075,18 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   renderConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
+        buttonType="secondary"
         onClick={onClose}
-        buttonType="cancel"
         className="cancel"
         data-qa-cancel-cancel
       >
         Cancel
       </Button>
       <Button
-        data-qa-confirm-cancel
-        onClick={this.deleteConfig}
         buttonType="primary"
-        destructive
+        onClick={this.deleteConfig}
         loading={this.state.deleteConfigConfirmDialog.submitting}
+        data-qa-confirm-cancel
       >
         Delete
       </Button>
@@ -1100,7 +1094,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, nodeBalancerLabel, flags } = this.props;
+    const { classes, nodeBalancerLabel } = this.props;
     const {
       configs,
       configErrors,
@@ -1122,10 +1116,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         {!hasUnsavedConfig && (
           <Grid item style={{ marginTop: 16 }}>
             <Button
-              buttonType="secondary"
+              buttonType="outlined"
+              className={classes.button}
               onClick={() => this.addNodeBalancerConfig()}
-              className={flags.cmr ? classes.cmrSpacing : ''}
-              outline
               data-qa-add-config
             >
               {configs.length === 0
@@ -1173,8 +1166,7 @@ const enhanced = composeC<CombinedProps, Props>(
   styled,
   withRouter,
   preloaded,
-  withNodeBalancerConfigActions,
-  withFeatureFlags
+  withNodeBalancerConfigActions
 );
 
 export default enhanced(NodeBalancerConfigurations);

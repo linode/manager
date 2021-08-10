@@ -69,28 +69,19 @@ import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
   | 'paper'
-  | 'title'
   | 'subTitle'
   | 'snapshotNameField'
   | 'snapshotFormControl'
   | 'snapshotGeneralError'
   | 'scheduleAction'
-  | 'chooseTime'
   | 'chooseDay'
   | 'cancelButton'
-  | 'cmrSpacing';
+  | 'cancelCopy';
 
 const styles = (theme: Theme) =>
   createStyles({
     paper: {
       marginBottom: theme.spacing(3),
-    },
-    title: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2),
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(1),
-      },
     },
     subTitle: {
       marginBottom: theme.spacing(1),
@@ -115,7 +106,6 @@ const styles = (theme: Theme) =>
         marginTop: theme.spacing(2),
       },
     },
-    chooseTime: {},
     chooseDay: {
       marginRight: theme.spacing(2),
       minWidth: 150,
@@ -130,17 +120,17 @@ const styles = (theme: Theme) =>
         marginRight: theme.spacing(),
       },
     },
+    cancelCopy: {
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing(),
+      },
+    },
     snapshotNameField: {
       minWidth: 275,
     },
     snapshotGeneralError: {
       minWidth: '100%',
-    },
-    cmrSpacing: {
-      [theme.breakpoints.down('sm')]: {
-        marginLeft: theme.spacing(),
-        marginRight: theme.spacing(),
-      },
     },
   });
 
@@ -669,7 +659,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             noMarginTop
           />
         </FormControl>
-        <FormControl className={classes.chooseTime}>
+        <FormControl>
           <Select
             textFieldProps={{
               dataAttrs: {
@@ -719,15 +709,6 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {disabled && <LinodePermissionsError />}
-        <Typography
-          aria-level={2}
-          role="heading"
-          variant="h2"
-          className={classes.title}
-          data-qa-title
-        >
-          Backups
-        </Typography>
         {backups.length ? (
           <this.Table backups={backups} />
         ) : (
@@ -740,18 +721,16 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          buttonType="secondary"
-          destructive
+          buttonType="outlined"
           className={classes.cancelButton}
+          disabled={disabled}
           onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
-          disabled={disabled}
-          outline
         >
           Cancel Backups
         </Button>
         <Typography
-          className={classes.cmrSpacing}
+          className={classes.cancelCopy}
           variant="body1"
           data-qa-cancel-desc
         >
@@ -791,7 +770,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          buttonType="cancel"
+          buttonType="secondary"
           onClick={this.handleCloseBackupsAlert}
           data-qa-cancel-cancel
         >
@@ -799,7 +778,6 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           buttonType="primary"
-          destructive
           onClick={this.cancelBackups}
           data-qa-confirm-cancel
         >

@@ -208,7 +208,7 @@ export const SelectDBPlanPanel: React.FC<CombinedProps> = (props) => {
             onClick={selectPlan(type.id)}
             heading={type.label}
             subheadings={type.subHeadings}
-            variant={'check'}
+            variant="selectable"
           />
         </Hidden>
       </React.Fragment>

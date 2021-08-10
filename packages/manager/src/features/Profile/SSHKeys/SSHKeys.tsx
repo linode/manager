@@ -30,31 +30,24 @@ import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
 type ClassNames =
-  | 'root'
   | 'sshKeysHeader'
-  | 'headline'
   | 'addNewWrapper'
   | 'createdCell'
   | 'actionCell';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      backgroundColor: theme.color.white,
-    },
     sshKeysHeader: {
       margin: 0,
       width: '100%',
     },
-    headline: {
-      marginTop: 8,
-      marginBottom: 8,
-      marginLeft: 15,
-      lineHeight: '1.5rem',
-    },
     addNewWrapper: {
       '&.MuiGrid-item': {
-        padding: 5,
+        paddingTop: 0,
+        paddingRight: 0,
+      },
+      [theme.breakpoints.down('sm')]: {
+        marginRight: theme.spacing(),
       },
     },
     createdCell: {
@@ -118,22 +111,17 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
+      <>
         <DocumentTitleSegment segment="SSH Keys" />
         <Grid
-          className={classes.sshKeysHeader}
           container
           alignItems="flex-end"
-          justify="space-between"
+          justify="flex-end"
+          className={classes.sshKeysHeader}
         >
-          <Grid className="p0" item>
-            <Typography variant="h3" className={classes.headline}>
-              SSH Keys
-            </Typography>
-          </Grid>
           <Grid className={classes.addNewWrapper} item>
             <AddNewLink
-              label="Add a SSH Key"
+              label="Add an SSH Key"
               onClick={this.openCreationDrawer}
             />
           </Grid>
@@ -171,7 +159,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
           onSuccess={this.handleSuccessfulCreation}
           onCancel={this.closeCreationDrawer}
         />
-      </div>
+      </>
     );
   }
 

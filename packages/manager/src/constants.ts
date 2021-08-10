@@ -31,7 +31,8 @@ export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
-export const LINODE_STATUS_PAGE_ID = process.env.REACT_APP_STATUS_PAGE_ID || '';
+export const LINODE_STATUS_PAGE_URL =
+  process.env.REACT_APP_STATUS_PAGE_URL || 'https://status.linode.com/api/v2';
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
@@ -46,6 +47,12 @@ export const LARGE_ACCOUNT_THRESHOLD = API_MAX_PAGE_SIZE;
 // Sets Paypal Environment, valid values: 'sandbox|production'
 export const PAYPAL_CLIENT_ENV =
   process.env.REACT_APP_PAYPAL_ENV || 'production';
+
+// Google Pay Merchant ID
+export const GPAY_MERCHANT_ID = process.env.REACT_APP_GPAY_MERCHANT_ID;
+
+// Google Pay Environment: 'TEST|PRODUCTION'
+export const GPAY_CLIENT_ENV = process.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
 
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 

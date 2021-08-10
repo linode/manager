@@ -48,12 +48,12 @@ import {
   promoFactory,
   staticObjects,
   makeObjectsPage,
+  paymentMethodFactory,
   accountMaintenanceFactory,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
-import cachedTypes from 'src/cachedData/types.json';
 
 export const makeResourcePage = (
   e: any[],
@@ -69,11 +69,11 @@ export const makeResourcePage = (
 });
 
 const statusPage = [
-  rest.get('*statuspage.io/api/v2/incidents*', (req, res, ctx) => {
+  rest.get('*/api/v2/incidents*', (req, res, ctx) => {
     const response = incidentResponseFactory.build();
     return res(ctx.json(response));
   }),
-  rest.get('*statuspage.io/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+  rest.get('*/api/v2/scheduled_maintenances*', (req, res, ctx) => {
     const response = maintenanceResponseFactory.build();
     return res(ctx.json(response));
   }),
@@ -143,9 +143,6 @@ export const handlers = [
         }))
       )
     );
-  }),
-  rest.get('*/linode/types', async (req, res, ctx) => {
-    return res(ctx.json(cachedTypes));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {
@@ -475,6 +472,15 @@ export const handlers = [
 
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
+  rest.get('*/account/payment-methods', (req, res, ctx) => {
+    const defaultPaymentMethod = paymentMethodFactory.build({
+      is_default: true,
+    });
+    const otherPaymentMethods = paymentMethodFactory.buildList(5);
+    return res(
+      ctx.json(makeResourcePage([defaultPaymentMethod, ...otherPaymentMethods]))
+    );
+  }),
   rest.get('*/events', (req, res, ctx) => {
     const events = eventFactory.buildList(1, {
       action: 'lke_node_create',
@@ -530,6 +536,17 @@ export const handlers = [
   }),
   rest.post('*/backups/enable/*', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+  rest.get('*/account/settings', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        backups_enabled: true,
+        longview_subscription: 'longview-100',
+        managed: true,
+        network_helper: true,
+        object_storage: 'active',
+      })
+    );
   }),
   rest.put('*/account/settings/*', (req, res, ctx) => {
     return res(ctx.json({}));

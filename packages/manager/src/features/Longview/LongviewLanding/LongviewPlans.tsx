@@ -23,120 +23,95 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import accountSettingsContainer, {
-  Props as AccountSettingsProps,
-} from 'src/containers/accountSettings.container';
 import {
   hasGrant,
   isRestrictedUser,
 } from 'src/features/Profile/permissionsHelpers';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles((theme: Theme) => {
-  const border = `1px solid ${theme.bg.main}`;
-
-  return {
-    root: {
-      padding: theme.spacing(3),
-      paddingBottom: 0,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      // These values represent the table size with 5 elements in compact
-      // and normal mode. It's brittle, I know, but I'm not sure of another way.
-      minHeight: 419,
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    paddingBottom: 4,
+  },
+  collapsedTable: {
+    minHeight: 0,
+  },
+  table: {
+    border: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    '& td': {
+      whiteSpace: 'nowrap',
     },
-    collapsedTable: {
-      minHeight: 0,
+    '& tbody tr': {
+      cursor: 'pointer',
     },
-    table: {
-      borderTop: border,
-      borderRight: border,
-      borderLeft: border,
-      '& td': {
-        whiteSpace: 'nowrap',
-        borderBottom: border,
-      },
-      '& tbody tr': {
-        cursor: 'pointer',
-      },
-      '& th, thead > tr:first-child:before': {
-        borderBottom: border,
-      },
-      '& tr:before': {
-        borderBottom: border,
-      },
+  },
+  radio: {
+    marginLeft: -theme.spacing(0.5),
+    marginRight: theme.spacing(2),
+    padding: 2,
+  },
+  currentSubscriptionLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 2,
+    paddingRight: theme.spacing(3),
+    [theme.breakpoints.down('md')]: {
+      paddingRight: 0,
     },
-    radio: {
-      marginLeft: -(theme.spacing(1) / 2),
-      marginRight: theme.spacing(2) - 1,
-      padding: 2,
+  },
+  chip: {
+    borderRadius: 1,
+    fontSize: '0.65rem',
+    marginLeft: theme.spacing(2),
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+    textTransform: 'uppercase',
+  },
+  planCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '40%',
     },
-    currentSubscriptionLabel: {
-      display: 'flex',
-      alignItems: 'center',
-      marginLeft: 2,
-      paddingRight: theme.spacing(3),
-      [theme.breakpoints.down('md')]: {
-        paddingRight: 0,
-      },
+  },
+  clientCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '10%',
     },
-    chip: {
-      backgroundColor: theme.color.green,
-      color: '#fff',
-      textTransform: 'uppercase',
-      minHeight: theme.spacing(2) + 11,
-      paddingLeft: theme.spacing(0.5),
-      paddingRight: theme.spacing(0.5),
-      marginTop: 0,
-      marginBottom: 0,
-      marginLeft: theme.spacing(2),
+  },
+  dataRetentionCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
     },
-    planCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '40%',
-      },
+  },
+  dataResolutionCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
     },
-    clientCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '10%',
-      },
+  },
+  priceCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
     },
-    dataRetentionCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '15%',
-      },
+  },
+  submitButton: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+  },
+  disabledTableRow: {
+    cursor: 'not-allowed !important',
+  },
+  link: {
+    '& a': {
+      color: theme.cmrTextColors.linkActiveLight,
     },
-    dataResolutionCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '15%',
-      },
+    '& a:hover': {
+      color: theme.palette.primary.main,
     },
-    priceCell: {
-      [theme.breakpoints.up('md')]: {
-        width: '15%',
-      },
-    },
-    submitButton: {
-      alignSelf: 'flex-start',
-      marginTop: theme.spacing(4) - 2,
-      marginBottom: theme.spacing(4) - 2,
-    },
-    disabledTableRow: {
-      cursor: 'not-allowed !important',
-    },
-    link: {
-      '& a': {
-        color: theme.cmrTextColors.linkActiveLight,
-      },
-      '& a:hover': {
-        color: theme.palette.primary.main,
-      },
-    },
-  };
-});
+  },
+}));
 
 // If an account has the "free" Longview plan,
 // longview_subscription will be {}. We'd rather use
@@ -148,7 +123,7 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props & AccountSettingsProps & ReduxStateProps;
+export type CombinedProps = Props & ReduxStateProps;
 
 export const managedText = (
   <span>
@@ -164,13 +139,15 @@ export const managedText = (
 );
 
 export const LongviewPlans: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const mounted = React.useRef<boolean>(false);
+
+  const { data: accountSettings } = useAccountSettings();
+
   const {
-    accountSettings,
     subscriptionRequestHook: subscriptions,
     mayUserModifyLVSubscription,
   } = props;
-  const styles = useStyles();
-  const mounted = React.useRef<boolean>(false);
 
   const [currentSubscription, setCurrentSubscription] = React.useState<
     string | undefined
@@ -250,6 +227,13 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
 
   const isManaged = accountSettings ? accountSettings.managed : false;
 
+  // Hide table if current plan is not being displayed
+  // ie. Users with no access to Longview
+  const isTableDisplayed =
+    Boolean(subscriptions.error) ||
+    currentSubscription === selectedSub ||
+    mayUserModifyLVSubscription;
+
   const isButtonDisabled =
     Boolean(subscriptions.error) ||
     currentSubscription === selectedSub ||
@@ -258,68 +242,72 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Plan Details" />
-      <Paper
-        className={classnames({
-          [styles.root]: true,
-          [styles.collapsedTable]: isManaged,
-        })}
-      >
-        {updateErrorMsg && <Notice error text={updateErrorMsg} />}
-        {!mayUserModifyLVSubscription && !isManaged && (
-          <Notice
-            error
-            important
-            text="You don't have permissions to change the Longview plan. Please contact an account administrator for details."
-          />
-        )}
-        {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
-        {isManaged && (
-          <Notice className={styles.link} success>
+      {isManaged ? (
+        <Paper className={`${classes.root} ${classes.collapsedTable}`}>
+          {updateErrorMsg && <Notice error text={updateErrorMsg} />}
+          {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
+          <Notice className={classes.link} success>
             {managedText}
           </Notice>
-        )}
-        {!isManaged && (
-          <>
-            <Table className={styles.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell className={styles.planCell}>Plan</TableCell>
-                  <TableCell className={styles.clientCell}>Clients</TableCell>
-                  <TableCell className={styles.dataRetentionCell}>
-                    Data Retention
-                  </TableCell>
-                  <TableCell className={styles.dataResolutionCell}>
-                    Data Resolution
-                  </TableCell>
-                  <TableCell className={styles.priceCell}>Price</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <LongviewPlansTableBody
-                  loading={subscriptions.loading}
-                  error={subscriptions.error}
-                  subscriptions={subscriptions.data}
-                  onRadioSelect={onRadioSelect}
-                  onRowSelect={setSelectedSub}
-                  currentSubscriptionOnAccount={currentSubscription}
-                  selectedSub={selectedSub}
-                  disabled={!mayUserModifyLVSubscription}
-                />
-              </TableBody>
-            </Table>
-            <Button
-              className={styles.submitButton}
-              buttonType="primary"
-              onClick={onSubmit}
-              loading={updateLoading}
-              disabled={isButtonDisabled}
-              data-testid="submit-button"
-            >
-              Change Plan
-            </Button>
-          </>
-        )}
-      </Paper>
+        </Paper>
+      ) : (
+        <>
+          {mayUserModifyLVSubscription && updateErrorMsg && (
+            <Notice error text={updateErrorMsg} />
+          )}
+          {!mayUserModifyLVSubscription && (
+            <Notice
+              error
+              important
+              text="You don't have permissions to change the Longview plan. Please contact an account administrator for details."
+            />
+          )}
+          {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
+          {isTableDisplayed && (
+            <>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className={classes.planCell}>Plan</TableCell>
+                    <TableCell className={classes.clientCell}>
+                      Clients
+                    </TableCell>
+                    <TableCell className={classes.dataRetentionCell}>
+                      Data Retention
+                    </TableCell>
+                    <TableCell className={classes.dataResolutionCell}>
+                      Data Resolution
+                    </TableCell>
+                    <TableCell className={classes.priceCell}>Price</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <LongviewPlansTableBody
+                    loading={subscriptions.loading}
+                    error={subscriptions.error}
+                    subscriptions={subscriptions.data}
+                    onRadioSelect={onRadioSelect}
+                    onRowSelect={setSelectedSub}
+                    currentSubscriptionOnAccount={currentSubscription}
+                    selectedSub={selectedSub}
+                    disabled={!mayUserModifyLVSubscription}
+                  />
+                </TableBody>
+              </Table>
+              <Button
+                buttonType="primary"
+                onClick={onSubmit}
+                className={classes.submitButton}
+                disabled={isButtonDisabled}
+                loading={updateLoading}
+                data-testid="submit-button"
+              >
+                Change Plan
+              </Button>
+            </>
+          )}
+        </>
+      )}
     </>
   );
 };
@@ -342,11 +330,7 @@ const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  React.memo,
-  connected,
-  accountSettingsContainer()
-);
+const enhanced = compose<CombinedProps, Props>(React.memo, connected);
 
 export default enhanced(LongviewPlans);
 

@@ -6,7 +6,7 @@ import LandingHeader from 'src/components/LandingHeader';
 import EntityHeader from './EntityHeader';
 
 export default {
-  title: 'EntityHeader',
+  title: 'UI Elements/Entity Header',
 };
 
 export const Landing = () => (
@@ -67,7 +67,7 @@ export const Detail = () => (
       title="My-linode-12345"
       parentLink="/linodes"
       parentText="Linodes"
-      actions={<ActionMenu ariaLabel="linode-detail" createActions={() => []} />}
+      actions={<ActionMenu ariaLabel="linode-detail" actionsList={[]} />}
       body={
         <Chip
           style={{

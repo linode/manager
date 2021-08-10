@@ -7,7 +7,15 @@ import TableRow from 'src/components/TableRow';
 import TagCell from './TagCell';
 import TagDrawer from './TagDrawer';
 
-const tags = ['tag1', 'tag2', 'tag2.5', 'tag3', 'tagtagtagtagtagtag', 'tag4', 'tagggg'];
+const tags = [
+  'tag1',
+  'tag2',
+  'tag2.5',
+  'tag3',
+  'tagtagtagtagtagtag',
+  'tag4',
+  'tagggg',
+];
 
 const TagTableCellStory: React.FC<{ tags: string[] }> = (props) => {
   const [_tags, setTags] = React.useState<string[]>(props.tags);
@@ -58,10 +66,12 @@ const TagTableCellStory: React.FC<{ tags: string[] }> = (props) => {
 };
 
 export default {
-  title: 'TagCell',
+  title: 'UI Elements/Tag Cell',
 };
 
-export const LargeNumberOfTagsOverflowState = () => <TagTableCellStory tags={tags} />;
+export const LargeNumberOfTagsOverflowState = () => (
+  <TagTableCellStory tags={tags} />
+);
 
 LargeNumberOfTagsOverflowState.story = {
   name: 'Large number of tags (overflow state)',

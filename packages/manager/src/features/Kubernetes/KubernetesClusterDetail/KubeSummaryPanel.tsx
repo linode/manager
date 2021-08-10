@@ -8,19 +8,13 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
-import CPUIcon from 'src/assets/icons/cpu-icon.svg';
-import DiskIcon from 'src/assets/icons/disk.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import MapPin from 'src/assets/icons/map-pin-icon.svg';
-import MiniKube from 'src/assets/icons/mini-kube.svg';
-import PriceIcon from 'src/assets/icons/price-icon.svg';
-import RamIcon from 'src/assets/icons/ram-sticks.svg';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import TagsPanel from 'src/components/TagsPanel/TagsPanelRedesigned';
+import TagsPanel from 'src/components/TagsPanel';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
@@ -57,15 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     marginBottom: `${theme.spacing(1) - 3}px`,
   },
-  column: {},
-  iconsSharedStyling: {
-    height: 24,
-    width: 24,
-    objectFit: 'contain',
-  },
-  kubeconfigSection: {
-    marginTop: `${theme.spacing() + 2}px`,
-  },
   kubeconfigElements: {
     display: 'flex',
     alignItems: 'center',
@@ -83,18 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 16,
     margin: `0 ${theme.spacing(1)}px`,
     objectFit: 'contain',
-  },
-  tagsSection: {
-    display: 'flex',
-    height: '100%',
-    [theme.breakpoints.up('lg')]: {
-      justifyContent: 'flex-end',
-      textAlign: 'right',
-    },
-  },
-  iconSharedOuter: {
-    flexBasis: '28%',
-    textAlign: 'center',
   },
   iconTextOuter: {
     flexBasis: '72%',
@@ -320,7 +293,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
           className={classes.mainGridContainer}
         >
           <Grid item container direction="row" xs={12} lg={4}>
-            <Grid item className={classes.column}>
+            <Grid item>
               <Grid
                 container
                 item
@@ -328,10 +301,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 alignItems="center"
                 className={classes.item}
               >
-                <Grid item className={classes.iconSharedOuter}>
-                  <MiniKube className={classes.iconsSharedStyling} />
-                </Grid>
-
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>Version {cluster.k8s_version}</Typography>
                 </Grid>
@@ -344,10 +313,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 alignItems="center"
                 className={classes.item}
               >
-                <Grid item className={classes.iconSharedOuter}>
-                  <MapPin className={classes.iconsSharedStyling} />
-                </Grid>
-
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>{region}</Typography>
                 </Grid>
@@ -360,10 +325,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 alignItems="center"
                 className={classes.item}
               >
-                <Grid item className={classes.iconSharedOuter}>
-                  <PriceIcon className={classes.iconsSharedStyling} />
-                </Grid>
-
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>
                     {`$${getTotalClusterPrice(cluster.node_pools)}/month`}
@@ -372,7 +333,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               </Grid>
             </Grid>
 
-            <Grid item className={classes.column}>
+            <Grid item>
               <Grid
                 container
                 item
@@ -380,10 +341,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 alignItems="center"
                 className={classes.item}
               >
-                <Grid item className={classes.iconSharedOuter}>
-                  <CPUIcon className={classes.iconsSharedStyling} />
-                </Grid>
-
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>
                     {pluralize('CPU Core', 'CPU Cores', cluster.totalCPU)}
@@ -398,10 +355,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 alignItems="center"
                 className={classes.item}
               >
-                <Grid item className={classes.iconSharedOuter}>
-                  <RamIcon className={classes.iconsSharedStyling} />
-                </Grid>
-
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>{cluster.totalMemory / 1024} GB RAM</Typography>
                 </Grid>
@@ -414,10 +367,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 alignItems="center"
                 className={classes.item}
               >
-                <Grid item className={classes.iconSharedOuter}>
-                  <DiskIcon width={19} height={24} object-fit="contain" />
-                </Grid>
-
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>
                     {Math.floor(cluster.totalStorage / 1024)} GB Storage
@@ -439,9 +388,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
 
           <Button
             buttonType="secondary"
-            className={classes.deleteButton}
             onClick={() => openDialog(cluster.id)}
-            superCompact
+            className={classes.deleteButton}
+            compact
           >
             Delete Cluster
           </Button>

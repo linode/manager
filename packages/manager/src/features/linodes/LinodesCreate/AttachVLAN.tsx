@@ -10,9 +10,9 @@ import { ExtendedRegion, useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
-  doesRegionSupportVLANs,
-  regionsWithVLANs,
-} from 'src/utilities/doesRegionSupportVLANs';
+  doesRegionSupportFeature,
+  regionsWithFeature,
+} from 'src/utilities/doesRegionSupportFeature';
 import InterfaceSelect from '../LinodesDetail/LinodeSettings/InterfaceSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -61,9 +61,13 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   const regions = useRegionsQuery().data ?? [];
   const selectedRegion = region || '';
 
-  const regionSupportsVLANs = doesRegionSupportVLANs(selectedRegion, regions);
+  const regionSupportsVLANs = doesRegionSupportFeature(
+    selectedRegion,
+    regions,
+    'Vlans'
+  );
 
-  const regionsThatSupportVLANs = regionsWithVLANs(regions).map(
+  const regionsThatSupportVLANs = regionsWithFeature(regions, 'Vlans').map(
     (region: ExtendedRegion) => region.display
   );
 

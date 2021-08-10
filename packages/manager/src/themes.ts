@@ -23,6 +23,7 @@ const cmrBGColors = {
   bgBillingSummary: '#2d3d53',
   bgAccessRow: '#454b54',
   bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
+  bgGooglePay: '#fff',
   bgTableRow: 'rgba(0, 0, 0, 0.1)',
   bgReferralsImage: '#83868C',
 };
@@ -34,6 +35,7 @@ const cmrTextColors = {
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
   secondaryButton: '#fff',
+  textGooglePay: '#616161',
 };
 
 const cmrBorderColors = {
@@ -305,8 +307,8 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          color: '#888',
-          opacity: 0.5,
+          backgroundColor: '#454b54',
+          color: '#5c6470',
         },
         '&.loading': {
           color: primaryColors.text,
@@ -325,57 +327,21 @@ const darkThemeOptions = {
           backgroundColor: primaryColors.dark,
         },
         '&$disabled': {
-          backgroundColor: cmrBorderColors.borderTable,
-          color: cmrBorderColors.divider,
-        },
-        '&.loading': {
-          backgroundColor: primaryColors.text,
-        },
-        '&.cancel': {
-          '&:hover, &:focus': {
-            borderColor: '#fff',
-          },
+          backgroundColor: '#454b54',
+          color: '#5c6470',
         },
       },
-      containedSecondary: {
+      outlined: {
         color: cmrTextColors.linkActiveLight,
         '&:hover, &:focus': {
-          color: cmrTextColors.linkActiveLight,
+          backgroundColor: 'transparent !important',
+          border: '1px solid #fff',
+          color: '#fff',
         },
-        '&:active': {
-          color: primaryColors.dark,
-          borderColor: primaryColors.dark,
-        },
-        '&$disabled': {
-          color: '#c9cacb',
-        },
-        '&.cancel': {
-          borderColor: 'transparent',
-          '&:hover, &:focus': {
-            borderColor: primaryColors.light,
-          },
-        },
-        // '&.destructive': {
-        //   borderColor: '#c44742',
-        //   color: '#c44742',
-        //   '&:hover, &:focus': {
-        //     color: '#df6560',
-        //     borderColor: '#df6560',
-        //     backgroundColor: 'transparent'
-        //   },
-        //   '&:active': {
-        //     color: '#963530',
-        //     borderColor: '#963530'
-        //   }
-        // },
-        '&.loading': {
-          color: primaryColors.text,
-          minWidth: 100,
-          '& svg': {
-            width: 22,
-            height: 22,
-          },
-        },
+      },
+      '&$disabled': {
+        color: '#5c6470',
+        backgroundColor: '#454b54',
       },
     },
     MuiButtonBase: {
@@ -420,31 +386,6 @@ const darkThemeOptions = {
     MuiDrawer: {
       paper: {
         boxShadow: '0 0 5px #222',
-      },
-    },
-    MuiAccordion: {
-      root: {
-        '& table': {
-          border: `1px solid ${primaryColors.divider}`,
-        },
-      },
-    },
-    MuiAccordionDetails: {
-      root: {
-        backgroundColor: '#32363c',
-      },
-    },
-    MuiAccordionSummary: {
-      root: {
-        backgroundColor: '#32363c',
-        '&:hover': {
-          '& h3': {
-            color: primaryColors.light,
-          },
-        },
-        '&$focused': {
-          backgroundColor: '#111111',
-        },
       },
     },
     MuiFormControl: {

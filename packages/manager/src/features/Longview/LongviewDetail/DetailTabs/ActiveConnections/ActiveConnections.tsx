@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(3),
     },
   },
-  cmrSpacing: {
+  title: {
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
@@ -42,7 +42,7 @@ export const ActiveConnections: React.FC<TableProps> = (props) => {
 
   return (
     <Grid item xs={12} md={4} className={classes.container}>
-      <Typography className={classes.cmrSpacing} variant="h2">
+      <Typography className={classes.title} variant="h2">
         Active Connections
       </Typography>
       <ConnectionsTable

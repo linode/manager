@@ -2,6 +2,7 @@ import {
   ActivePromotion,
   PromotionServiceType,
 } from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4';
 import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import * as classnames from 'classnames';
@@ -16,7 +17,11 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
+import useNotifications from 'src/hooks/useNotifications';
 import PaymentDrawer from './PaymentDrawer';
+import PromoDialog from './PromoDialog';
+import useAccountManagement from 'src/hooks/useAccountManagement';
+import { isWithinDays } from 'src/utilities/date';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -36,10 +41,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
     },
   },
-  noBalance: {
+  noBalanceOrNotDue: {
     color: theme.palette.text.primary,
   },
-  positiveBalance: {
+  pastDueBalance: {
     color: theme.cmrIconColors.iRed,
   },
   credit: {
@@ -53,6 +58,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   accruedCharges: {
     color: theme.palette.text.primary,
+  },
+  promo: {
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -77,23 +85,36 @@ const serviceTypeMap: Partial<Record<PromotionServiceType, string>> = {
 // =============================================================================
 interface BillingSummaryProps {
   promotions?: ActivePromotion[];
+  paymentMethods: PaymentMethod[] | undefined;
   balanceUninvoiced: number;
   balance: number;
 }
 
 export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const classes = useStyles();
+  const notifications = useNotifications();
+  const { account, _isRestrictedUser } = useAccountManagement();
 
-  const { promotions, balanceUninvoiced, balance } = props;
+  const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
+    false
+  );
+
+  // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
+  const isBalanceOutsideGracePeriod = notifications.some(
+    (notification) =>
+      notification.type === 'payment_due' &&
+      notification.severity === 'critical'
+  );
+
+  const { promotions, paymentMethods, balanceUninvoiced, balance } = props;
 
   //
   // Payment Drawer
   //
 
   // On-the-fly route matching so this component can open the drawer itself.
-  const makePaymentRouteMatch = Boolean(
-    useRouteMatch('/account/billing/make-payment')
-  );
+  const routeForMakePayment = '/account/billing/make-payment';
+  const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
 
   const { replace } = useHistory();
 
@@ -111,6 +132,9 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     replace('/account/billing');
   }, [replace]);
 
+  const openPromoDialog = () => setIsPromoDialogOpen(true);
+  const closePromoDialog = () => setIsPromoDialogOpen(false);
+
   React.useEffect(() => {
     if (makePaymentRouteMatch) {
       openPaymentDrawer();
@@ -120,24 +144,45 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   //
   // Account Balance logic
   //
-  let accountBalanceText = 'You have no balance at this time.';
-  // @todo: In the future make this account for grace period, etc.
-  if (balance > 0) {
-    accountBalanceText = 'Payment Due';
-  }
-  if (balance < 0) {
-    accountBalanceText = 'Credit';
-  }
+  const pastDueBalance = balance > 0 && isBalanceOutsideGracePeriod;
+
+  const accountBalanceText = pastDueBalance
+    ? 'Payment Due'
+    : balance > 0
+    ? 'Balance'
+    : balance < 0
+    ? 'Credit'
+    : 'You have no balance at this time.';
 
   const accountBalanceClassnames = classnames({
-    [classes.noBalance]: balance === 0,
-    [classes.positiveBalance]: balance > 0,
+    [classes.noBalanceOrNotDue]:
+      balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod),
+    [classes.pastDueBalance]: pastDueBalance,
     [classes.credit]: balance < 0,
   });
 
   // The layout changes if there are promotions.
   const gridDimensions: Partial<Record<Breakpoint, GridSize>> =
     promotions && promotions.length > 0 ? { xs: 12, md: 4 } : { xs: 12, sm: 6 };
+
+  const balanceJSX =
+    balance > 0 ? (
+      <Typography style={{ marginTop: 16 }}>
+        <button
+          className={classes.makeAPaymentButton}
+          onClick={() => replace(routeForMakePayment)}
+        >
+          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
+        </button>
+        {pastDueBalance ? ` to avoid service disruption.` : null}
+      </Typography>
+    ) : null;
+
+  const showAddPromoLink =
+    balance <= 0 &&
+    !_isRestrictedUser &&
+    isWithinDays(90, account?.active_since) &&
+    promotions?.length === 0;
 
   return (
     <>
@@ -167,15 +212,15 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
                 />
               </Typography>
             </Box>
-            {balance > 0 ? (
-              <Typography style={{ marginTop: 16 }}>
+            {balanceJSX}
+            {showAddPromoLink ? (
+              <Typography className={classes.promo}>
                 <button
                   className={classes.makeAPaymentButton}
-                  onClick={() => replace('/account/billing/make-payment')}
+                  onClick={openPromoDialog}
                 >
-                  Make a payment immediately
-                </button>{' '}
-                to avoid service disruption.
+                  Add a promo code
+                </button>
               </Typography>
             ) : null}
           </Paper>
@@ -221,7 +266,12 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
           </Paper>
         </Grid>
       </Grid>
-      <PaymentDrawer open={paymentDrawerOpen} onClose={closePaymentDrawer} />
+      <PaymentDrawer
+        paymentMethods={paymentMethods}
+        open={paymentDrawerOpen}
+        onClose={closePaymentDrawer}
+      />
+      <PromoDialog open={isPromoDialogOpen} onClose={closePromoDialog} />
     </>
   );
 };

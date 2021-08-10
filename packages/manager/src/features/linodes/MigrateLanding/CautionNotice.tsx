@@ -6,8 +6,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { useAccount } from 'src/hooks/useAccount';
 import useFlags from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -53,11 +53,11 @@ type CombinedProps = Props;
 const CautionNotice: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { vlans } = useFlags();
-  const { account } = useAccount();
+  const { data: account } = useAccount();
   const vlansEnabled = isFeatureEnabled(
     'Vlans',
     Boolean(vlans),
-    account?.data?.capabilities ?? []
+    account?.capabilities ?? []
   );
 
   const amountOfAttachedVolumes = props.linodeVolumes.length;

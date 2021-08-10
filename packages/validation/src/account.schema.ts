@@ -56,16 +56,35 @@ export const CreditCardSchema = object({
     .max(23, 'Credit card number must be between 13 and 23 characters.'),
   expiry_year: number()
     .required('Expiration year is required.')
+    .typeError('Expiration year must be a number.')
     .min(new Date().getFullYear(), 'Expiration year must not be in the past.')
     .max(new Date().getFullYear() + 20, 'Expiry too far in the future.'),
   expiry_month: number()
     .required('Expiration month is required.')
+    .typeError('Expiration month must be a number.')
     .min(1, 'Expiration month must be a number from 1 to 12.')
     .max(12, 'Expiration month must be a number from 1 to 12.'),
   cvv: string()
-    .required('CVV is required.')
-    .min(3, 'CVV code must be between 3 and 4 characters.')
-    .max(4, 'CVV code must be between 3 and 4 characters.'),
+    .required('Security code is required.')
+    .min(3, 'Security code must be between 3 and 4 characters.')
+    .max(4, 'Security code must be between 3 and 4 characters.'),
+});
+
+export const PaymentMethodSchema = object({
+  type: mixed().oneOf(
+    ['credit_card', 'payment_method_nonce'],
+    'Type must be credit_card or payment_method_nonce.'
+  ),
+  data: object().when('type', {
+    is: 'credit_card',
+    then: CreditCardSchema,
+    otherwise: object({
+      nonce: string().required('Payment nonce is required.'),
+    }),
+  }),
+  is_default: boolean().required(
+    'You must indicate if this should be your default method of payment.'
+  ),
 });
 
 export const CreateUserSchema = object({
@@ -112,4 +131,11 @@ export const UpdateAccountSettingsSchema = object({
   network_helper: boolean(),
   backups_enabled: boolean(),
   managed: boolean(),
+});
+
+export const PromoCodeSchema = object({
+  promo_code: string()
+    .required('Promo code is required.')
+    .min(1, 'Promo code must be between 1 and 32 characters.')
+    .max(32, 'Promo code must be between 1 and 32 characters.'),
 });

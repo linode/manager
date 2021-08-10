@@ -1,5 +1,6 @@
-import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
+import HelpOutline from '@material-ui/icons/HelpOutline';
+import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 
@@ -8,6 +9,8 @@ interface Props
   text: string | JSX.Element;
   className?: string;
   interactive?: boolean;
+  isError?: boolean;
+  size?: number;
   classes?: any;
   leaveDelay?: boolean;
   tooltipPosition?:
@@ -33,6 +36,8 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
     className,
     tooltipPosition,
     interactive,
+    isError,
+    size = 24,
     leaveDelay,
     classes,
   } = props;
@@ -49,7 +54,15 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
       classes={classes}
     >
       <IconButton className={className} data-qa-help-button>
-        <HelpOutline />
+        {isError ? (
+          <ErrorOutline
+            style={{
+              fontSize: size,
+            }}
+          />
+        ) : (
+          <HelpOutline />
+        )}
       </IconButton>
     </Tooltip>
   );

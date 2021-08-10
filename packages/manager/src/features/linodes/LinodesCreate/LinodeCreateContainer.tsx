@@ -10,7 +10,6 @@ import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -70,6 +69,7 @@ import {
   WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { accountBackupsEnabled } from 'src/queries/accountSettings';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -142,12 +142,18 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
   const selectedRegion = regions.find(
     (thisRegion) => thisRegion.id === regionID
   );
-  /** This approach is fine for just GPUs, which is all we have capability info for at this time.
-   *  Refactor to a switch or .map() if additional support is needed.
-   */
-  return selectedRegion?.capabilities.includes('GPU Linodes')
-    ? []
-    : (['gpu'] as LinodeTypeClass[]);
+
+  const disabledClasses: LinodeTypeClass[] = [];
+
+  if (!selectedRegion?.capabilities.includes('GPU Linodes')) {
+    disabledClasses.push('gpu');
+  }
+
+  if (!selectedRegion?.capabilities.includes('Bare Metal')) {
+    disabledClasses.push('metal');
+  }
+
+  return disabledClasses;
 };
 
 const trimOneClickFromLabel = (script: StackScript) => {
@@ -724,11 +730,7 @@ interface CreateType {
 const mapStateToProps: MapState<ReduxStateProps & CreateType, CombinedProps> = (
   state
 ) => ({
-  accountBackupsEnabled: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'backups_enabled'],
-    state
-  ),
+  accountBackupsEnabled,
   /**
    * user cannot create Linodes if they are a restricted user
    * and do not have the "add_linodes" grant

@@ -14,7 +14,7 @@ import {
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -24,23 +24,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   root: {
-    marginBottom: theme.spacing(2),
-    position: 'relative',
-    padding: '4px 16px',
-    maxWidth: '100%',
     display: 'flex',
     alignItems: 'center',
+    borderRadius: 1,
+    fontSize: '1rem',
+    marginBottom: theme.spacing(2),
+    maxWidth: '100%',
+    padding: '4px 16px',
+    paddingRight: 18,
+    position: 'relative',
     '& + .notice': {
-      marginTop: `${theme.spacing(1)}px !important`,
+      marginTop: `${theme.spacing()}px !important`,
     },
-  },
-  cmr: {
-    borderRadius: 3,
     '& $important': {
       backgroundColor: theme.cmrBGColors.bgPaper,
-    },
-    '& $noticeText': {
-      color: theme.cmrTextColors.headlineStatic,
     },
     '& $error': {
       borderLeftColor: theme.cmrIconColors.iRed,
@@ -49,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   important: {
     backgroundColor: theme.cmrBGColors.bgPaper,
     padding: theme.spacing(2),
+    paddingRight: 18,
     '& $noticeText': {
       fontFamily: theme.font.normal,
     },
@@ -59,10 +57,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: -25, // This value must be static regardless of theme selection
   },
   closeIcon: {
-    paddingLeft: theme.spacing(1),
+    ...theme.applyLinkStyles,
+    display: 'flex',
+    color: theme.cmrTextColors.tableStatic,
+    marginLeft: 20,
   },
   inner: {
     width: '100%',
+    '& p': {
+      fontSize: '1rem',
+    },
   },
   breakWords: {
     '& $noticeText': {
@@ -70,17 +74,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   noticeText: {
-    color: theme.palette.text.primary,
+    fontFamily: theme.font.bold,
     fontSize: '1rem',
-    lineHeight: `20px`,
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
-    '& p': {
-      fontSize: '1rem',
-    },
+    lineHeight: '20px',
   },
   error: {
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
     animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -89,8 +89,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `5px solid ${theme.palette.status.errorDark}`,
   },
   warning: {
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -102,8 +102,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `5px solid ${theme.palette.status.warningDark}`,
   },
   success: {
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
     animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.status.successDark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -215,7 +215,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
         [classes.warningList]: warning && notificationList,
-        [classes.cmr]: true,
         notice: true,
         ...(className && { [className]: true }),
       })}

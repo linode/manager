@@ -1,7 +1,8 @@
+import { updateAccountInfo } from '@linode/api-v4';
 import { Account } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import countryData from 'country-region-data';
-import { defaultTo, lensPath, set } from 'ramda';
+import { defaultTo, lensPath, pick, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,9 +16,7 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import AccountContainer, {
-  Props as AccountProps,
-} from 'src/containers/account.container';
+import { queryClient } from 'src/queries/base';
 import withNotifications, {
   WithNotifications,
 } from 'src/store/notification/notification.containers';
@@ -48,27 +47,11 @@ interface Props {
 interface State {
   submitting: boolean;
   success?: string;
-  fields: {
-    address_1?: string;
-    address_2?: string;
-    city?: string;
-    company?: string;
-    email?: string;
-    first_name?: string;
-    last_name?: string;
-    phone?: string;
-    tax_id?: string;
-    zip?: string;
-    state?: string;
-    country?: string;
-  };
+  fields: Partial<Account>;
   errResponse: APIError[] | undefined;
 }
 
-type CombinedProps = AccountProps &
-  Props &
-  WithStyles<ClassNames> &
-  WithNotifications;
+type CombinedProps = Props & WithStyles<ClassNames> & WithNotifications;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -103,10 +86,32 @@ class UpdateContactInformationForm extends React.Component<
 
   emailRef = React.createRef<HTMLInputElement>();
 
-  componentDidMount() {
-    const { accountData: account } = this.props;
+  async componentDidMount() {
+    const account = queryClient.getQueryData<Account>('account');
+
+    // 'account' has all data returned form the /v4/account endpoint.
+    // We need to pick only editable fields and fields we want to
+    // display in the form.
+    const editableContactInformationFields = pick(
+      [
+        'first_name',
+        'last_name',
+        'company',
+        'address_1',
+        'address_2',
+        'city',
+        'state',
+        'zip',
+        'country',
+        'email',
+        'phone',
+        'tax_id',
+      ],
+      account
+    );
+
     if (account) {
-      this.setState({ fields: { state: account.state } });
+      this.setState({ fields: editableContactInformationFields });
     }
 
     // Auto-focus the "Email" field if appropriate (if the user is here via
@@ -123,28 +128,14 @@ class UpdateContactInformationForm extends React.Component<
     }
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    const { open } = this.props;
-
-    if (prevProps.open !== open) {
-      this.setState({
-        fields: {
-          state: this.props.accountData?.state,
-        },
-      });
-    }
-  }
-
   render() {
-    const { accountData: account } = this.props;
-
-    if (!account) {
+    if (!this.state.fields) {
       return null;
     }
 
     return (
       <form>
-        {this.renderForm(account)}
+        {this.renderForm(this.state.fields as Account)}
         {this.renderFormActions()}
       </form>
     );
@@ -494,16 +485,7 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   renderFormActions = () => {
-    const {
-      accountLoading,
-      accountLastUpdated,
-      accountError,
-      classes,
-    } = this.props;
-
-    if ((accountLoading && accountLastUpdated === 0) || accountError.read) {
-      return null;
-    }
+    const { classes } = this.props;
 
     return (
       <ActionsPanel className={classes.actions}>
@@ -588,9 +570,11 @@ class UpdateContactInformationForm extends React.Component<
       submitting: true,
     });
 
-    this.props
-      .updateAccount(this.state.fields)
-      .then((_) => {
+    queryClient.executeMutation({
+      variables: this.state.fields,
+      mutationFn: updateAccountInfo,
+      mutationKey: 'account',
+      onSuccess: (data) => {
         // If there's a "billing_email_bounce" notification on the account, and
         // the user has just updated their email, re-request notifications to
         // potentially clear the email bounce notification.
@@ -601,32 +585,34 @@ class UpdateContactInformationForm extends React.Component<
           this.props.requestNotifications();
         }
 
+        // If we refactor this component to a functional component,
+        // this is something we would look into cleaning up
+        queryClient.setQueryData('account', (oldData: Account) => ({
+          ...oldData,
+          ...data,
+        }));
+
         this.setState({
           success: 'Account information updated.',
           submitting: false,
           errResponse: undefined,
         });
         this.props.onClose();
-      })
-      .catch((errResponse) => {
+      },
+      onError: (error: APIError[]) => {
         this.setState({
           submitting: false,
           success: undefined,
-          errResponse,
+          errResponse: error,
         });
         scrollErrorIntoView();
-      });
+      },
+    });
   };
 }
 
 const styled = withStyles(styles);
 
-const withAccount = AccountContainer();
-
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withAccount,
-  withNotifications()
-);
+const enhanced = compose<CombinedProps, Props>(styled, withNotifications());
 
 export default enhanced(UpdateContactInformationForm);

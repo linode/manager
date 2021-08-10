@@ -133,7 +133,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
               title="Leave this page?"
               actions={() => (
                 <ActionsPanel>
-                  <Button buttonType="cancel" onClick={handleCancel}>
+                  <Button buttonType="secondary" onClick={handleCancel}>
                     Cancel
                   </Button>
 
@@ -223,6 +223,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
         command={linodeCLICommand}
+        analyticsKey="Image Upload"
       />
     </>
   );

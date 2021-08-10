@@ -5,12 +5,10 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import useFlags from 'src/hooks/useFlags';
-
-import { ExtendedReply, ExtendedTicket } from './types';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
+import { ExtendedReply, ExtendedTicket } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -37,6 +35,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     position: 'relative',
     top: -2,
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
+    },
     [theme.breakpoints.up('sm')]: {
       marginRight: theme.spacing(1),
       width: 40,
@@ -80,12 +81,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 4,
     whiteSpace: 'nowrap',
   },
-  isCurrentUser: {},
-  cmrSpacing: {
-    [theme.breakpoints.down('md')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
 }));
 
 export interface Props {
@@ -113,7 +108,6 @@ interface Data {
 
 export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     // isCurrentUser,
@@ -159,15 +153,11 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
 
   const renderAvatar = (url: string) => {
     return url !== 'not found' ? (
-      <div
-        className={`${classes.userWrapper} ${flags.cmr && classes.cmrSpacing}`}
-      >
+      <div className={classes.userWrapper}>
         <img src={url} className={classes.leftIcon} alt="Gravatar" />
       </div>
     ) : (
-      <div
-        className={`${classes.userWrapper} ${flags.cmr && classes.cmrSpacing}`}
-      >
+      <div className={classes.userWrapper}>
         <UserIcon className={classes.leftIcon} />
       </div>
     );
