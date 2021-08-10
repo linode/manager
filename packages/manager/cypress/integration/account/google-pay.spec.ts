@@ -80,7 +80,7 @@ describe('Google Pay', () => {
     cy.visitWithLogin('/account/billing');
   });
 
-  it('update payment flow - google pay', () => {
+  it('updates payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -91,7 +91,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('add google pay method', () => {
+  it('adds google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithoutGpay);
@@ -102,7 +102,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('make payment flow - google pay', () => {
+  it('makes payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -135,7 +135,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('payment flow with expired card - google pay', () => {
+  it('tests payment flow with expired card - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpayExpired);
