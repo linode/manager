@@ -94,7 +94,11 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
   ];
 
   return (
-    <Paper className={classes.root} variant="outlined">
+    <Paper
+      className={classes.root}
+      variant="outlined"
+      data-qa-payment-row={type}
+    >
       <Grid container className={classes.container}>
         <Grid item className={classes.item}>
           {paymentMethod.type === 'credit_card' ? (
