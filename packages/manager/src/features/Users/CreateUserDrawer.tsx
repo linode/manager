@@ -149,16 +149,16 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           />
         </div>
         <ActionsPanel>
+          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+            Cancel
+          </Button>
           <Button
             buttonType="primary"
             onClick={this.onSubmit}
             loading={submitting}
             data-qa-submit
           >
-            Submit
-          </Button>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Cancel
+            Add User
           </Button>
         </ActionsPanel>
       </Drawer>

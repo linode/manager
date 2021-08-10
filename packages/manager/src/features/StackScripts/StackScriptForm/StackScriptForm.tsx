@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   revisionTextarea: {
     maxWidth: '100%',
   },
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 }));
 
 interface TextFieldHandler {
@@ -201,16 +205,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         disabled={disabled}
         data-qa-stackscript-revision
       />
-      <ActionsPanel style={{ paddingBottom: 0 }}>
-        <Button
-          onClick={onSubmit}
-          buttonType="primary"
-          loading={isSubmitting}
-          disabled={disabled || disableSubmit}
-          data-qa-save
-        >
-          {mode === 'edit' ? 'Save Changes' : 'Create StackScript'}
-        </Button>
+      <ActionsPanel style={{ paddingBottom: 0 }} className={classes.actions}>
         <Button
           onClick={onCancel}
           buttonType="secondary"
@@ -219,6 +214,15 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
           data-qa-cancel
         >
           Reset
+        </Button>
+        <Button
+          onClick={onSubmit}
+          buttonType="primary"
+          loading={isSubmitting}
+          disabled={disabled || disableSubmit}
+          data-qa-save
+        >
+          {mode === 'edit' ? 'Save Changes' : 'Create StackScript'}
         </Button>
       </ActionsPanel>
     </Paper>

@@ -204,11 +204,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
       <div className={classes.header}>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           onClick={openDrawerForCreating}
           className={classes.button}
           disabled={disabled}
-          compact
         >
           Add an {capitalize(category)} Rule
         </Button>
