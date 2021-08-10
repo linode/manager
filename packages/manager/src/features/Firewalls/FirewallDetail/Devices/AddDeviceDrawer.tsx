@@ -60,9 +60,9 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const errorNotice = (errorMsg: string) => {
     // match something like: Linode <linode_label> (ID <linode_id>)
     const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
-    const openTicket = errorMsg.match(/open a support ticket/i);
+    const openTicket = errorMsg.match(/open a support ticket\./i);
     if (openTicket) {
-      errorMsg = errorMsg.replace(/open a support ticket/i, '');
+      errorMsg = errorMsg.replace(/open a support ticket\./i, '');
     }
     if (linode) {
       const [, label, id] = linode;
@@ -73,7 +73,11 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
-          {openTicket ? <SupportLink text="open a Support ticket" /> : null}
+          {openTicket ? (
+            <>
+              <SupportLink text="open a Support ticket" />.
+            </>
+          ) : null}
         </Notice>
       );
     } else {
