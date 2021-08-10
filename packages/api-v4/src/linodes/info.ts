@@ -108,8 +108,12 @@ export const getLinodeKernel = (kernelId: string) =>
  * Return a paginated list of available Linode types.
  * This endpoint does not require authentication.
  */
-export const getLinodeTypes = () =>
-  Request<Page<Type>>(setURL(`${API_ROOT}/linode/types`), setMethod('GET'));
+export const getLinodeTypes = (params?: any) =>
+  Request<Page<Type>>(
+    setURL(`${API_ROOT}/linode/types`),
+    setMethod('GET'),
+    setParams(params)
+  );
 
 /**
  * getType
