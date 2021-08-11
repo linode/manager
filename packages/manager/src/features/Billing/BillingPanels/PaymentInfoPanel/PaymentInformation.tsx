@@ -203,7 +203,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
         ) : (
           paymentMethods.map((paymentMethod: PaymentMethod) => (
             <PaymentMethodRow
-              key={paymentMethod.type}
+              key={paymentMethod.id}
               paymentMethod={paymentMethod}
               onDelete={() => openDeleteDialog(paymentMethod)}
             />
