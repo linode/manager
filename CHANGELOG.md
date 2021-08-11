@@ -6,10 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2021-08-11] - v1.46.1
 
+### Fixed:
+
+- Inability to add Firewall rules that use ICMP protocol
+- Root Device bugs in Linode Config dialog
+- UI bugs for action buttons in dark mode
+
 ### Changed:
 
-- Fix adding ICMP protocol to Firewall rules
-- Fix root device bugs in Linode Config
+- Copy in Create Firewall and Add Linode to Firewall drawers
 
 ## [2021-08-09] - v1.46.0
 
