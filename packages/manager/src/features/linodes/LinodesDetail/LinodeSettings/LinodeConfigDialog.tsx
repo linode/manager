@@ -722,6 +722,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               updateFor={[
                 deviceCounter,
                 values.devices,
+                values.root_device,
+                useCustomRoot,
                 values.useCustomRoot,
                 formik.errors.devices,
               ]}

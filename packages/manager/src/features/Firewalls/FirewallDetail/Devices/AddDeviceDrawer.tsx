@@ -1,7 +1,7 @@
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import v4 from 'uuid';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -9,10 +9,7 @@ import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { useStyles } from 'src/components/Notice/Notice';
-import { dcDisplayNames } from 'src/constants';
-import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import SupportLink from 'src/components/SupportLink';
 interface Props {
   open: boolean;
   error?: APIError[];
@@ -35,13 +32,6 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
   } = props;
 
   const classes = useStyles();
-  const regions = useRegionsQuery().data ?? [];
-
-  const regionsWithFirewalls = regions
-    .filter((thisRegion) =>
-      thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
-    )
-    .map((thisRegion) => thisRegion.id);
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
@@ -70,8 +60,9 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const errorNotice = (errorMsg: string) => {
     // match something like: Linode <linode_label> (ID <linode_id>)
     const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
-    if (errorMsg.match(/ or open a support ticket/i)) {
-      errorMsg = errorMsg.replace(/ or open a support ticket/i, '');
+    const openTicket = errorMsg.match(/open a support ticket\./i);
+    if (openTicket) {
+      errorMsg = errorMsg.replace(/open a support ticket\./i, '');
     }
     if (linode) {
       const [, label, id] = linode;
@@ -82,6 +73,11 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           {errorMsg.substring(0, labelIndex)}
           <Link to={`/linodes/${id}`}>{label}</Link>
           {errorMsg.substring(labelIndex + label.length)}
+          {openTicket ? (
+            <>
+              <SupportLink text="open a Support ticket" />.
+            </>
+          ) : null}
         </Notice>
       );
     } else {
@@ -104,12 +100,8 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
         {errorMessage ? errorNotice(errorMessage) : null}
         <LinodeMultiSelect
           key={key}
-          allowedRegions={regionsWithFirewalls}
           handleChange={(selected) => setSelectedLinodes(selected)}
-          helperText={`You can assign one or more Linodes to this Firewall. Only Linodes
-          in regions that currently support Firewalls (${arrayToList(
-            regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId])
-          )}) will be displayed as options. Each Linode can only be assigned to a single Firewall.`}
+          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
           filteredLinodes={currentDevices}
         />
         <ActionsPanel>
