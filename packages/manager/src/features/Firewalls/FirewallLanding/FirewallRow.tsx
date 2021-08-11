@@ -141,12 +141,12 @@ const getLinodesCellString = (
     return 'Loading...';
   }
 
-  if (data.length === 0) {
-    return 'None assigned';
-  }
-
   if (error) {
     return 'Error retrieving Linodes';
+  }
+
+  if (data.length === 0) {
+    return 'None assigned';
   }
 
   return getDeviceLinks(data);
