@@ -173,6 +173,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
         })}
         disabled={disabledDueToPrice || disabledDueToProcessing}
         onClick={handlePay}
+        data-qa-button="gpayButton"
       >
         <GooglePayIcon />
       </button>

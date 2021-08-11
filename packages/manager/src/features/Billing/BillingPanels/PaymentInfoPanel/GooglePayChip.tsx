@@ -124,6 +124,7 @@ export const GooglePayChip: React.FC<Props> = (props) => {
       })}
       onClick={handlePay}
       disabled={disabledDueToProcessing}
+      data-qa-button="gpayChip"
     >
       <GooglePayIcon height="26px" />
     </button>
