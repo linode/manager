@@ -17,6 +17,7 @@ import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
@@ -49,19 +50,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   label: string;
   description: string;
-  canCreateImage?: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ImageUpload: React.FC<Props> = (props) => {
-  const {
-    canCreateImage,
-    label,
-    description,
-    changeLabel,
-    changeDescription,
-  } = props;
+  const { label, description, changeLabel, changeDescription } = props;
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
   const classes = useStyles();
   const { push } = useHistory();
   const [region, setRegion] = React.useState<string>('');
@@ -87,6 +83,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
   // one after a long upload (if their session has expired).
   const currentToken = useCurrentToken();
 
+  const canCreateImage =
+    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
+
   // Called after a user confirms they want to navigate to another part of
   // Cloud during a pending upload. When we have refresh tokens this won't be
   // necessary; the user will be able to navigate to other components and we
@@ -109,7 +108,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
     }
   };
 
-  const uploadingDisabled = !label || !region;
+  const uploadingDisabled = !label || !region || !canCreateImage;
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
@@ -154,6 +153,12 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
       <Paper className={classes.container}>
         {errorMap.none ? <Notice error text={errorMap.none} /> : null}
+        {!canCreateImage ? (
+          <Notice
+            error
+            text="You don't have permissions to create a new Image. Please contact an account administrator for details."
+          />
+        ) : null}
 
         <ImagesPricingCopy type="uploadImage" />
 
@@ -182,6 +187,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             handleSelection={setRegion}
             regions={regions}
             selectedID={region}
+            disabled={!canCreateImage}
           />
 
           <Typography className={classes.helperText}>

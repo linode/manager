@@ -18,6 +18,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'none',
     },
     '&[disabled]': {
+      // Override disabled background color defined for dark mode
+      backgroundColor: 'transparent',
       color: '#cdd0d5',
       cursor: 'default',
       '&:hover': {

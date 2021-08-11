@@ -10,34 +10,12 @@ import US from 'flag-icon-css/flags/4x3/us.svg';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType,
 } from 'src/components/EnhancedSelect/Select';
-import Link from 'src/components/Link';
 import RegionOption, { RegionItem } from './RegionOption';
-
-/**
- * We are deprecating the Atlanta region. The API doesn't support this
- * in its region.status, and it's unclear how situation-specific this
- * will end up being (e.g., will the linked blog post name Atlanta specifically)?
- *
- * For these reasons, we're doing a hard-coded, manual solution rather than try
- * to come up with something more abstract/general.
- */
-const atlantaDisabledMessage = (
-  <Typography>
-    The Atlanta datacenter is currently sold out as we prepare for a move to an
-    upgraded facility. Please see{' '}
-    <Link to="https://www.linode.com/blog/linode/atlanta-data-center-update/">
-      this blog post
-    </Link>
-    {` `}
-    for more information.
-  </Typography>
-);
 
 export interface ExtendedRegion extends Region {
   display: string;
@@ -122,9 +100,6 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
               flag:
                 flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),
               country: thisRegion.country,
-              disabledMessage: thisRegion.disabled
-                ? atlantaDisabledMessage
-                : undefined,
             }))
 
             .sort(sortRegions),

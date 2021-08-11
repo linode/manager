@@ -19,8 +19,6 @@ it('renders without crashing.', () => {
           <App
             {...reactRouterProps}
             linodes={[]}
-            profileError={undefined}
-            username=""
             isLoggedInAsCustomer={false}
             closeSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
@@ -30,7 +28,6 @@ it('renders without crashing.', () => {
               search: '',
               state: {},
             }}
-            userId={123456}
             documentation={[]}
             appIsLoading={false}
             toggleTheme={jest.fn()}

@@ -18,7 +18,7 @@ import Grid from 'src/components/Grid';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
-import withProfile from 'src/containers/profile.container';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { isManaged } from 'src/queries/accountSettings';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
@@ -79,13 +79,21 @@ export type CombinedProps = Props &
   RouteComponentProps &
   LongviewProps &
   WithSnackbarProps &
-  StateProps &
-  GrantsProps;
+  StateProps;
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
 export const LongviewClients: React.FC<CombinedProps> = (props) => {
   const { getLongviewClients } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const isRestrictedUser = Boolean(profile?.restricted);
+  const hasAddLongviewGrant = Boolean(grants?.global?.add_longview);
+
+  const userCanCreateClient =
+    !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser);
 
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
@@ -156,7 +164,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       history: { push },
     } = props;
 
-    if (isManaged) {
+    if (isManaged()) {
       push({
         pathname: '/support/tickets',
         state: {
@@ -190,7 +198,6 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
     lvClientData,
     activeSubscription,
     deleteLongviewClient,
-    userCanCreateClient,
     handleAddClient,
     newClientLoading,
   } = props;
@@ -212,7 +219,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
    * Do the actual sorting & filtering
    */
 
-  const clients = Object.values(longviewClientsData);
+  const clients: LongviewClient[] = Object.values(longviewClientsData);
   const filteredList = filterLongviewClientsByQuery(
     query,
     clients,
@@ -285,7 +292,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       />
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
-        isManaged={isManaged}
+        isManaged={isManaged()}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={
@@ -322,25 +329,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-interface GrantsProps {
-  userCanCreateClient: boolean;
-}
-
 export default compose<CombinedProps, Props & RouteComponentProps>(
   React.memo,
   connected,
-  withProfile<GrantsProps, {}>((ownProps, { profileData }) => {
-    const isRestrictedUser = (profileData || {}).restricted;
-    const hasAddLongviewGrant = pathOr<boolean>(
-      false,
-      ['grants', 'global', 'add_longview'],
-      profileData
-    );
-    return {
-      userCanCreateClient:
-        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser),
-    };
-  }),
   withLongviewClients(),
   withSnackbar
 )(LongviewClients);
