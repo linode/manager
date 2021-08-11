@@ -9,15 +9,13 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
-import HelpIcon from 'src/components/HelpIcon';
 import useFlags from 'src/hooks/useFlags';
-import Paper from 'src/components/core/Paper';
+import Notice from 'src/components/Notice';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   paymentMethods: PaymentMethod[] | undefined;
-  openEditCreditCardDrawer: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -55,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
-  const { onClose, open, paymentMethods, openEditCreditCardDrawer } = props;
+  const { onClose, open, paymentMethods } = props;
   const classes = useStyles();
   const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
@@ -73,14 +71,10 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     });
   };
 
-  const numberOfCreditCards =
-    paymentMethods?.filter(
-      (method: PaymentMethod) => method.type === 'credit_card'
-    ).length || 0;
-
-  const isGPayAlreadyAdded = paymentMethods?.some(
-    (method: PaymentMethod) => method.type === 'google_pay'
-  );
+  // @TODO: Use env varible or feature flag?
+  const hasMaxPaymentMethods = paymentMethods
+    ? paymentMethods.length >= 6
+    : false;
 
   const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
     'google_pay'
@@ -89,19 +83,11 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   return (
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
-      {numberOfCreditCards > 0 ? (
-        <Paper className={classes.notice}>
-          <Typography>
-            The option to add additonal credit cards is coming soon.
-          </Typography>
-          <Typography>
-            To edit your current credit card,{' '}
-            <button className={classes.link} onClick={openEditCreditCardDrawer}>
-              click here
-            </button>
-            .
-          </Typography>
-        </Paper>
+      {hasMaxPaymentMethods ? (
+        <Notice
+          warning
+          text="You have the max amount of payment methods on your account. Delete an existing payment method to add a new one."
+        />
       ) : null}
       {isGooglePayEnabled ? (
         <React.Fragment>
@@ -109,24 +95,9 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           <Grid className={classes.root} container>
             <Grid item xs={8} md={9}>
               <Typography variant="h3">Google Pay</Typography>
-              {isGPayAlreadyAdded ? (
-                <Typography>
-                  Currently, you may only have one Google Pay payment method on
-                  your account.
-                  <HelpIcon
-                    data-qa-tooltip-icon
-                    text={
-                      'Adding another will replace your current Google Pay payment method.'
-                    }
-                    tooltipPosition="bottom"
-                    className={classes.tooltip}
-                  />
-                </Typography>
-              ) : (
-                <Typography>
-                  You&apos;ll be taken to Google Pay to complete sign up.
-                </Typography>
-              )}
+              <Typography>
+                You&apos;ll be taken to Google Pay to complete sign up.
+              </Typography>
             </Grid>
             <Grid
               container
@@ -137,7 +108,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
               alignContent="center"
             >
               <GooglePayChip
-                disabled={isProcessing}
+                disabled={isProcessing || hasMaxPaymentMethods}
                 makeToast={makeToast}
                 onClose={onClose}
                 setProcessing={setIsProcessing}
@@ -146,13 +117,15 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           </Grid>
         </React.Fragment>
       ) : null}
-      {numberOfCreditCards === 0 ? (
-        <React.Fragment>
-          <Divider spacingBottom={16} spacingTop={16} />
-          <Typography variant="h3">Credit Card</Typography>
-          <AddCreditCardForm onClose={onClose} />
-        </React.Fragment>
-      ) : null}
+      <React.Fragment>
+        <Divider spacingBottom={16} spacingTop={16} />
+        <Typography variant="h3">Credit Card</Typography>
+        <AddCreditCardForm
+          hasNoPaymentMethods={paymentMethods?.length === 0}
+          disabled={isProcessing || hasMaxPaymentMethods}
+          onClose={onClose}
+        />
+      </React.Fragment>
     </Drawer>
   );
 };

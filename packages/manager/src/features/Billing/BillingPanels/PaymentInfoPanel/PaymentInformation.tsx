@@ -17,7 +17,6 @@ import styled from 'src/containers/SummaryPanels.styles';
 import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
-import UpdateCreditCardDrawer from './UpdateCreditCardDrawer';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';
@@ -88,7 +87,6 @@ interface Props {
 const PaymentInformation: React.FC<Props> = (props) => {
   const { loading, error, paymentMethods } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
-  const [editDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
     false
@@ -149,14 +147,6 @@ const PaymentInformation: React.FC<Props> = (props) => {
     replace('/account/billing');
   }, [replace]);
 
-  const openEditDrawer = () => {
-    setEditDrawerOpen(true);
-  };
-
-  const closeEditDrawer = () => {
-    setEditDrawerOpen(false);
-  };
-
   const openDeleteDialog = (method: PaymentMethod) => {
     setDeleteError(undefined);
     setDeletePaymentMethodSelection(method);
@@ -215,11 +205,6 @@ const PaymentInformation: React.FC<Props> = (props) => {
             <PaymentMethodRow
               key={paymentMethod.type}
               paymentMethod={paymentMethod}
-              onEdit={
-                paymentMethod.type === 'credit_card'
-                  ? openEditDrawer
-                  : undefined
-              }
               onDelete={() => openDeleteDialog(paymentMethod)}
             />
           ))
@@ -240,15 +225,10 @@ const PaymentInformation: React.FC<Props> = (props) => {
             </Box>
           </DismissibleBanner>
         ) : null}
-        <UpdateCreditCardDrawer
-          open={editDrawerOpen}
-          onClose={closeEditDrawer}
-        />
         <AddPaymentMethodDrawer
           open={addDrawerOpen}
           onClose={closeAddDrawer}
           paymentMethods={paymentMethods}
-          openEditCreditCardDrawer={openEditDrawer}
         />
         <DeletePaymentMethodDialog
           open={deleteDialogOpen}
