@@ -1,3 +1,25 @@
+## [2021-08-09] - v0.56.0
+### Added:
+deletePaymentMethod
+addPromotion
+
+### Changed:
+getLinodeTypes
+
+## Validation Package
+
+### Changed:
+PaymentMethodSchema
+PromoCodeSchema
+createDomainSchema
+FirewallRuleTypeSchema
+linodeInterfaceSchema
+createNodeBalancerConfigSchema
+UpdateNodeBalancerConfigSchema
+CreateVolumeSchema
+
+
+
 ## [2021-07-29] - v0.55.0
 
 ### Added:
