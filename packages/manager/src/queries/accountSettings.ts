@@ -25,13 +25,11 @@ export const useMutateAccountSettings = () => {
   );
 };
 
-export const isManaged = Boolean(
-  queryClient.getQueryData<AccountSettings>(queryKey)?.managed
-);
+export const isManaged = () =>
+  Boolean(queryClient.getQueryData<AccountSettings>(queryKey)?.managed);
 
-export const accountBackupsEnabled = Boolean(
-  queryClient.getQueryData<AccountSettings>(queryKey)?.backups_enabled
-);
+export const accountBackupsEnabled = () =>
+  Boolean(queryClient.getQueryData<AccountSettings>(queryKey)?.backups_enabled);
 
 /**
  * updateAccountSettingsData is a function that we can use to directly update

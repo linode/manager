@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -11,12 +10,10 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
-import withProfile, {
-  Props as ProfileActionsProps,
-} from 'src/containers/profile.container';
 import useFlags from 'src/hooks/useFlags';
+import { useProfile } from 'src/queries/profile';
 
-type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
+type Props = RouteComponentProps<{}>;
 
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
@@ -32,6 +29,7 @@ const AccountLanding: React.FC<Props> = (props) => {
   const { location } = props;
   const flags = useFlags();
   const history = useHistory();
+  const { data: profile } = useProfile();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -109,7 +107,7 @@ const AccountLanding: React.FC<Props> = (props) => {
               <Billing />
             </SafeTabPanel>
             <SafeTabPanel index={++idx}>
-              <Users isRestrictedUser={props.isRestrictedUser} />
+              <Users isRestrictedUser={profile?.restricted || false} />
             </SafeTabPanel>
             {flags.entityTransfers ? (
               <SafeTabPanel index={++idx}>
@@ -129,12 +127,4 @@ const AccountLanding: React.FC<Props> = (props) => {
   );
 };
 
-interface StateProps {
-  isRestrictedUser: boolean;
-}
-
-export default compose<Props, {}>(
-  withProfile<StateProps, {}>((ownProps, { profileData: data }) => ({
-    isRestrictedUser: data?.restricted ?? false,
-  }))
-)(AccountLanding);
+export default AccountLanding;

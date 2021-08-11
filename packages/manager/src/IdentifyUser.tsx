@@ -1,4 +1,4 @@
-import * as md5 from 'md5';
+import md5 from 'md5';
 import * as React from 'react';
 import { LAUNCH_DARKLY_API_KEY } from 'src/constants';
 import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
@@ -6,11 +6,7 @@ import { initGTMUser } from './analytics';
 import { configureErrorReportingUser } from './exceptionReporting';
 import useFeatureFlagsLoad from './hooks/useFeatureFlagLoad';
 import { useAccount } from './queries/account';
-
-interface Props {
-  userID?: number;
-  username?: string;
-}
+import { useProfile } from './queries/profile';
 
 /**
  * This has to be a FC rather than just a function
@@ -19,14 +15,17 @@ interface Props {
  * and this is a good side-effect usage of useEffect().
  */
 
-export const IdentifyUser: React.FC<Props> = (props) => {
+export const IdentifyUser: React.FC<{}> = () => {
   const { data: account, error: accountError } = useAccount();
-  const { userID, username } = props;
+  const { data: profile } = useProfile();
+
   const client = useLDClient();
 
   const { setFeatureFlagsLoaded } = useFeatureFlagsLoad();
 
   const euuid = account?.euuid;
+  const userID = profile?.uid;
+  const username = profile?.username;
 
   // Configure user for error reporting once we have the info we need.
   React.useEffect(() => {

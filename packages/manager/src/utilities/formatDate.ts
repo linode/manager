@@ -3,7 +3,6 @@ import { reportException } from 'src/exceptionReporting';
 import { DATETIME_DISPLAY_FORMAT, ISO_DATE_FORMAT } from 'src/constants';
 import { parseAPIDate } from 'src/utilities/date';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-import store from '../store';
 
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
@@ -48,8 +47,8 @@ export const formatDate = (
   date: string | number,
   options: FormatDateOptions = {}
 ): string => {
-  /** get the timezone from redux and use it as the timezone */
-  const userTimezone = getUserTimezone(store.getState());
+  // Get the timezone from React Query and use it as the timezone
+  const userTimezone = getUserTimezone();
   const time = parseAPIDate(date).setZone(userTimezone);
   // Default to including time in the output. Hide the time if options.displayTime === false
   const defaultFormat =

@@ -1,52 +1,52 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-
+import { QueryClient } from 'react-query';
+import { profileFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { queryPresets } from 'src/queries/base';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-
-import {
-  AuthenticationSettings,
-  CombinedProps,
-} from './AuthenticationSettings';
+import { AuthenticationSettings } from './AuthenticationSettings';
 
 const ALLOWLIST = 'allowlisting-form';
 
-const props: CombinedProps = {
-  loading: false,
-  authType: 'password',
-  ipAllowlisting: true,
-  twoFactor: true,
-  username: 'username',
-  updateProfile: jest.fn(),
-};
+const queryClient = new QueryClient({
+  defaultOptions: { queries: queryPresets.oneTimeFetch },
+});
+
+afterEach(() => {
+  server.resetHandlers();
+  queryClient.clear();
+});
+afterAll(() => server.close());
 
 describe('Authentication settings profile tab', () => {
-  it('should render', async () => {
-    const { findByTestId } = render(
-      wrapWithTheme(<AuthenticationSettings {...props} />)
-    );
-    expect(await findByTestId('authSettings')).toBeInTheDocument();
-  });
-
   it('should not render the allowlisting form when loading', () => {
-    const { getByTestId, queryAllByTestId, rerender } = render(
-      wrapWithTheme(<AuthenticationSettings {...props} />)
-    );
-    getByTestId(ALLOWLIST);
-    rerender(
-      wrapWithTheme(<AuthenticationSettings {...props} loading={true} />)
+    const { queryAllByTestId } = render(
+      wrapWithTheme(<AuthenticationSettings />)
     );
     expect(queryAllByTestId(ALLOWLIST)).toHaveLength(0);
   });
 
+  it('should render', async () => {
+    const { findByTestId } = render(wrapWithTheme(<AuthenticationSettings />));
+    expect(await findByTestId('authSettings')).toBeInTheDocument();
+  });
+
   it('should not render the allowlisting form if the user does not have this setting enabled', async () => {
-    const { findByTestId, queryAllByTestId, rerender } = render(
-      wrapWithTheme(<AuthenticationSettings {...props} />)
+    server.use(
+      rest.get('*/profile', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            profileFactory.build({
+              ip_whitelist_enabled: false,
+            })
+          )
+        );
+      })
     );
-    await findByTestId(ALLOWLIST);
-    rerender(
-      wrapWithTheme(
-        <AuthenticationSettings {...props} ipAllowlisting={false} />
-      )
+
+    const { queryAllByTestId } = render(
+      wrapWithTheme(<AuthenticationSettings />)
     );
     expect(queryAllByTestId(ALLOWLIST)).toHaveLength(0);
   });

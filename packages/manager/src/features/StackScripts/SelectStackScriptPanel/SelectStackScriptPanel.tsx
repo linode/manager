@@ -7,9 +7,7 @@ import {
   UserDefinedField,
 } from '@linode/api-v4/lib/stackscripts';
 import { ResourcePage } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -24,7 +22,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
-import { MapState } from 'src/store/types';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import stripImageName from 'src/utilities/stripImageName';
@@ -107,9 +105,9 @@ interface Props extends RenderGuardProps {
 }
 
 type CombinedProps = Props &
-  StateProps &
   RenderGuardProps &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  ProfileProps;
 
 interface State {
   stackScript?: StackScript;
@@ -157,7 +155,14 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { category, classes, request, selectedId, error } = this.props;
+    const {
+      category,
+      classes,
+      request,
+      selectedId,
+      error,
+      profile,
+    } = this.props;
     const { stackScript, stackScriptLoading, stackScriptError } = this.state;
 
     if (selectedId) {
@@ -221,7 +226,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               onSelect={this.props.onSelect}
               resetStackScriptSelection={this.props.resetSelectedStackScript}
               publicImages={this.props.publicImages}
-              currentUser={this.props.username}
+              currentUser={profile.data?.username || ''}
               request={request}
               key={category + '-tab'}
               category={category}
@@ -235,20 +240,10 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   }
 }
 
-interface StateProps {
-  username: string;
-}
-
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  username: pathOr('', ['data', 'username'], state.__resources.profile),
-});
-
-const connected = connect(mapStateToProps);
-
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
-  connected,
   RenderGuard,
-  styled
+  styled,
+  withProfile
 )(SelectStackScriptPanel);

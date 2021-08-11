@@ -3,7 +3,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
-import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -36,7 +35,6 @@ import {
   sendLinodesViewEvent,
 } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import getUserTimezone from 'src/utilities/getUserTimezone';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
@@ -304,11 +302,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         />
 
         {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner
-            userTimezone={this.props.userTimezone}
-            userProfileError={this.props.userProfileError}
-            userProfileLoading={this.props.userProfileLoading}
-          />
+          <MaintenanceBanner />
         )}
         <Grid container className={classes.root}>
           <Grid item xs={12}>
@@ -545,21 +539,12 @@ const sendGroupByAnalytic = (value: boolean) => {
 
 interface StateProps {
   linodesCount: number;
-  userTimezone: string;
-  userProfileLoading: boolean;
-  userProfileError?: APIError[];
   linodesInTransition: Set<number>;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state) => {
   return {
     linodesCount: state.__resources.linodes.results,
-    userTimezone: getUserTimezone(state),
-    userProfileLoading: state.__resources.profile.loading,
-    userProfileError: path<APIError[]>(
-      ['read'],
-      state.__resources.profile.error
-    ),
     linodesInTransition: _linodesInTransition(state.events.events),
   };
 };

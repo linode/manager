@@ -3,6 +3,7 @@ import { Config, Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { useSelector } from 'react-redux';
+import { useGrants } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { eventsForLinode } from 'src/store/events/event.selectors';
 import { getLinodeConfigsForLinode } from 'src/store/linodes/config/config.selectors';
@@ -25,6 +26,8 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
 }
 
 export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
+  const { data: grants } = useGrants();
+
   return useSelector((state: ApplicationState) => {
     const { events, __resources } = state;
     const {
@@ -33,8 +36,8 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
       types,
       linodeConfigs,
       linodeDisks,
-      profile,
     } = __resources;
+
     const linode = state.__resources.linodes.itemsById[linodeId];
     if (!linode) {
       return null;
@@ -51,7 +54,7 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
       _events: eventsForLinode(events, linodeId),
       _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
       _disks: getLinodeDisksForLinode(linodeDisks, linodeId),
-      _permissions: getPermissionsForLinode(profile.data ?? null, linodeId),
+      _permissions: getPermissionsForLinode(grants ?? null, linodeId),
     };
   });
 };

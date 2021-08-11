@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import useProfile from 'src/hooks/useProfile';
+import { useProfile } from 'src/queries/profile';
 
 interface Props {
   username: string;
@@ -18,8 +18,8 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { onDelete, username } = props;
-  const { profile } = useProfile();
-  const profileUsername = profile.data?.username;
+  const { data: profile } = useProfile();
+  const profileUsername = profile?.username;
 
   const actions: Action[] = [
     {

@@ -54,6 +54,7 @@ import {
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
+import { grantsFactory } from 'src/factories/grants';
 
 export const makeResourcePage = (
   e: any[],
@@ -129,6 +130,9 @@ export const handlers = [
   }),
   rest.put('*/profile', (req, res, ctx) => {
     return res(ctx.json({ ...profileFactory.build(), ...(req.body as any) }));
+  }),
+  rest.get('*/profile/grants', (req, res, ctx) => {
+    return res(ctx.json(grantsFactory.build()));
   }),
   rest.get('*/profile/apps', (req, res, ctx) => {
     const tokens = appTokenFactory.buildList(5);

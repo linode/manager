@@ -43,7 +43,6 @@ const props: CombinedProps = {
   closeSnackbar: jest.fn(),
   activeSubscription: longviewSubscriptionFactory.build(),
   lvClientData: {},
-  userCanCreateClient: true,
   handleAddClient: jest.fn(),
   newClientLoading: false,
   ...reactRouterProps,
