@@ -3,7 +3,7 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import useProfile from 'src/hooks/useProfile';
+import { useProfile, useGrants } from 'src/queries/profile';
 
 export interface ActionHandlers {
   triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
@@ -23,9 +23,8 @@ type CombinedProps = Props;
 const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const {
-    profile: { data: profile },
-  } = useProfile();
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const {
     firewallID,
@@ -38,7 +37,7 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
 
   const userCanModifyFirewall =
     !profile?.restricted ||
-    profile?.grants?.firewall?.find((firewall) => firewall.id === firewallID)
+    grants?.firewall?.find((firewall) => firewall.id === firewallID)
       ?.permissions === 'read_write';
 
   const noPermissionTooltipText =

@@ -16,7 +16,7 @@ import TabLinkList from 'src/components/TabLinkList';
 import withFirewalls, {
   Props as WithFirewallsProps,
 } from 'src/containers/firewalls.container';
-import { useProfile } from 'src/hooks/useProfile';
+import { useProfile, useGrants } from 'src/queries/profile';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -38,17 +38,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const {
-    profile: { data: profile },
-  } = useProfile();
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
   const userCanModifyFirewall =
     !profile?.restricted ||
-    profile?.grants?.firewall?.find(
-      (firewall) => firewall.id === +thisFirewallId
-    )?.permissions === 'read_write';
+    grants?.firewall?.find((firewall) => firewall.id === +thisFirewallId)
+      ?.permissions === 'read_write';
 
   const URL = props.match.url;
 
