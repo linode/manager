@@ -96,7 +96,7 @@ const OAuthCreationDrawer: React.FC<CombinedProps> = (props) => {
           loading={loading}
           data-qa-submit
         >
-          Submit
+          {edit ? 'Save Changes' : 'Create'}
         </Button>
       </ActionsPanel>
     </Drawer>
