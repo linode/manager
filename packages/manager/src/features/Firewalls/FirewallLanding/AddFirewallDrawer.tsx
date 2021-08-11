@@ -1,5 +1,4 @@
 import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { Formik, FormikBag } from 'formik';
 import * as React from 'react';
@@ -9,10 +8,7 @@ import Drawer, { DrawerProps } from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { dcDisplayNames } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -46,17 +42,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
    * grant here too, but it doesn't exist yet.
    */
   const { _isRestrictedUser } = useAccountManagement();
-
-  const regions = useRegionsQuery().data ?? [];
-
-  const regionsWithFirewalls = regions
-    .filter((thisRegion) =>
-      thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
-    )
-    .map((thisRegion) => thisRegion.id);
-
-  const allRegionsHaveFirewalls =
-    regionsWithFirewalls.length === regions.length;
 
   const submitForm = (
     values: CreateFirewallPayload,
@@ -100,15 +85,8 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  let firewallHelperText = `Assign one or more Linodes to this firewall. You can add
+  const firewallHelperText = `Assign one or more Linodes to this firewall. You can add
   Linodes later if you want to customize your rules first.`;
-
-  if (!allRegionsHaveFirewalls) {
-    firewallHelperText += ` Only Linodes in regions that support Firewalls (${arrayToList(
-      regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId]),
-      ';'
-    )}) will be displayed as options.`;
-  }
 
   return (
     <Drawer {...restOfDrawerProps} onClose={onClose}>
@@ -167,7 +145,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
               <LinodeMultiSelect
                 showAllOption
                 disabled={_isRestrictedUser}
-                allowedRegions={regionsWithFirewalls}
                 helperText={firewallHelperText}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>
