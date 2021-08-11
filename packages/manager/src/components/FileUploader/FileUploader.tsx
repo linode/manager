@@ -61,7 +61,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     // When the dropzone is disabled
     borderColor: '#888',
     '& $uploadButton': {
-      backgroundColor: theme.color.grey6,
       '&:hover': {
         cursor: 'default',
       },
