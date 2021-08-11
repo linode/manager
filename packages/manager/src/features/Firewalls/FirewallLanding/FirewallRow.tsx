@@ -53,7 +53,7 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
   const devices = Object.values(itemsById);
 
   React.useEffect(() => {
-    if (lastUpdated === 0 && !(loading || error)) {
+    if (lastUpdated === 0 && !(loading || error.read)) {
       requestDevices();
     }
   }, [error, lastUpdated, loading, requestDevices]);
