@@ -127,6 +127,8 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
     validationSchema: CreditCardSchema,
   });
 
+  const disableInput = isSubmitting || disabled;
+
   return (
     <form onSubmit={handleSubmit}>
       {error && (
@@ -143,7 +145,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             label="Credit Card Number"
             error={touched.card_number && Boolean(errors.card_number)}
             errorText={touched.card_number ? errors.card_number : undefined}
-            disabled={isSubmitting || disabled}
+            disabled={disableInput}
             InputProps={{
               inputComponent: creditCardField,
             }}
@@ -173,7 +175,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
                 ? errors.expiry_month || errors.expiry_year
                 : undefined
             }
-            disabled={isSubmitting || disabled}
+            disabled={disableInput}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -184,7 +186,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             label="Security Code"
             error={touched.cvv && Boolean(errors.cvv)}
             errorText={touched.cvv ? errors.cvv : undefined}
-            disabled={isSubmitting || disabled}
+            disabled={disableInput}
           />
         </Grid>
         <Grid item xs={12}>
@@ -259,7 +261,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             text="Make Default?"
             checked={values.is_default}
             onChange={() => setFieldValue('is_default', !values.is_default)}
-            disabled={isSubmitting || disabled || hasNoPaymentMethods}
+            disabled={disableInput || hasNoPaymentMethods}
           />
         </Grid>
       </Grid>

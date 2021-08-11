@@ -80,6 +80,8 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     'google_pay'
   );
 
+  const disabled = isProcessing || hasMaxPaymentMethods;
+
   return (
     <Drawer title="Add Payment Method" open={open} onClose={onClose}>
       {isProcessing ? <LinearProgress className={classes.progress} /> : null}
@@ -96,7 +98,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
             <Grid item xs={8} md={9}>
               <Typography variant="h3">Google Pay</Typography>
               <Typography>
-                You&apos;ll be taken to Google Pay to complete sign up.
+                You’ll be taken to Google Pay to complete sign up.
               </Typography>
             </Grid>
             <Grid
@@ -108,7 +110,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
               alignContent="center"
             >
               <GooglePayChip
-                disabled={isProcessing || hasMaxPaymentMethods}
+                disabled={disabled}
                 makeToast={makeToast}
                 onClose={onClose}
                 setProcessing={setIsProcessing}
@@ -122,7 +124,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
         <Typography variant="h3">Credit Card</Typography>
         <AddCreditCardForm
           hasNoPaymentMethods={paymentMethods?.length === 0}
-          disabled={isProcessing || hasMaxPaymentMethods}
+          disabled={disabled}
           onClose={onClose}
         />
       </React.Fragment>
