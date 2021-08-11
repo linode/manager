@@ -566,7 +566,7 @@ const mapStateToProps = (state: ApplicationState) => {
     domainProps,
     id,
     // Disabled if the profile is restricted and doesn't have add_domains grant
-    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
+    disabled: isRestrictedUser() && !hasGrant('add_domains'),
     origin: state.domainDrawer.origin,
   };
 };

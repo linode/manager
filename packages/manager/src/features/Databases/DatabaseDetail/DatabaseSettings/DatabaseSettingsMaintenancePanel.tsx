@@ -12,7 +12,8 @@ import Notice from 'src/components/Notice';
 import useDatabases from 'src/hooks/useDatabases';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { initWindows } from 'src/utilities/initWindows';
-import useTimezone from 'src/utilities/useTimezone';
+import { useProfile } from 'src/queries/profile';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   maintenanceWrapper: {
@@ -43,7 +44,8 @@ export const DatabaseSettingsMaintenancePanel: React.FC<CombinedProps> = (
   props
 ) => {
   const classes = useStyles();
-  const timezone = useTimezone();
+  const { data: profile } = useProfile();
+  const timezone = getUserTimezone(profile);
   const { updateDatabase } = useDatabases();
 
   const { databaseID, databaseMaintenanceSchedule } = props;
