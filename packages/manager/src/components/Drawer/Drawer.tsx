@@ -35,7 +35,9 @@ const styles = (theme: Theme) =>
         padding: theme.spacing(4),
       },
       '& .actionPanel': {
-        marginTop: theme.spacing(2),
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginTop: theme.spacing(),
       },
       '& .selectionCard': {
         maxWidth: '100%',

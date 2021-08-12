@@ -18,11 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipv6: {
     marginTop: theme.spacing(4),
   },
-  actionPanel: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: theme.spacing(),
-  },
 }));
 
 type IPType = 'v4Public' | 'v4Private';
@@ -152,7 +147,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
             {explainerCopy[selected]}
           </Typography>
         )}
-        <ActionsPanel className={classes.actionPanel}>
+        <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
             Close
           </Button>
