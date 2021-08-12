@@ -308,17 +308,11 @@ const darkThemeOptions = {
         },
         '&$disabled': {
           backgroundColor: '#454b54',
-          color: '#5c6470',
         },
         '&.loading': {
           color: primaryColors.text,
         },
       },
-      // text: {
-      //   '&:hover': {
-      //     backgroundColor: 'transparent'
-      //   }
-      // },
       containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: '#226dc3',
@@ -328,7 +322,6 @@ const darkThemeOptions = {
         },
         '&$disabled': {
           backgroundColor: '#454b54',
-          color: '#5c6470',
         },
       },
       outlined: {
