@@ -427,7 +427,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
           {(mode === 'create' || mode === 'edit') && [
             <Button
               buttonType="secondary"
-              className="cancel"
               key="cancel"
               onClick={closeDrawer}
               data-qa-cancel

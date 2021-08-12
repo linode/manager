@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
+    paddingBottom: 0,
   },
 }));
 
@@ -205,7 +206,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
         disabled={disabled}
         data-qa-stackscript-revision
       />
-      <ActionsPanel style={{ paddingBottom: 0 }} className={classes.actions}>
+      <ActionsPanel className={classes.actions}>
         <Button
           onClick={onCancel}
           buttonType="secondary"
