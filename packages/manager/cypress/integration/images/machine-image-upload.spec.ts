@@ -30,7 +30,7 @@ const uploadImage = () => {
 };
 
 describe('machine image', () => {
-  it('uploads machine image', () => {
+  it.skip('uploads machine image', () => {
     cy.intercept('POST', '*/images/upload').as('imageUpload');
     uploadImage();
     cy.wait('@imageUpload');
@@ -39,27 +39,37 @@ describe('machine image', () => {
   });
 
   it('uploads machine image, mock failed event', () => {
+    cy.intercept('POST', '*/images/upload').as('imageUpload');
     uploadImage();
-    cy.intercept('GET', '*/account/events*', (req) => {
-      req.reply(
-        makeResourcePage(
-          eventFactory.buildList(1, {
-            action: 'image_upload',
-            entity: {
-              label: imageLabel,
-              id: 99999999,
-              type: 'image',
-              url: `/v4/images/${imageId}`,
-            },
-            status: 'failed',
-            message: 'Forced Fail Via Mock',
-          })
-        )
+    cy.wait('@imageUpload').then((xhr) => {
+      const actualId = xhr.response?.body.image.id;
+      cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
+        fbtVisible(imageLabel);
+        fbtVisible('Pending');
+      });
+      cy.intercept('GET', '*/account/events*', (req) => {
+        req.reply(
+          makeResourcePage(
+            eventFactory.buildList(1, {
+              action: 'image_upload',
+              entity: {
+                label: imageLabel,
+                id: actualId,
+                type: 'image',
+                url: `/v4/images/${imageId}`,
+              },
+              status: 'failed',
+              message: 'Forced Fail Via Mock',
+            })
+          )
+        );
+      }).as('getEvent');
+      cy.intercept('GET', '*/account/events*').as('resetEvent');
+      cy.wait('@getEvent');
+      assertToast(
+        'There was a problem processing image cy-test-image: Forced Fail Via Mock'
       );
-    }).as('getEvent');
-    cy.wait('@getEvent');
-    assertToast(
-      'There was a problem processing image cy-test-image: Forced Fail Via Mock'
-    );
+      cy.wait('@getEvent');
+    });
   });
 });
