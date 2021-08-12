@@ -72,6 +72,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+  actionPanel: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 }));
 
 interface Props {
@@ -492,23 +496,23 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           </>
         )}
       </Grid>
-      <ActionsPanel style={{ paddingBottom: 0 }}>
+      <ActionsPanel className={classes.actionPanel}>
         <Button
+          buttonType="secondary"
+          disabled={submitting || linodes.length === 0}
+          onClick={onReset}
+          data-qa-ip-transfer-reset
+        >
+          Reset Form
+        </Button>
+        <Button
+          buttonType="primary"
           loading={submitting}
           onClick={onSubmit}
-          buttonType="primary"
           disabled={readOnly || linodes.length === 0}
           data-qa-ip-transfer-save
         >
           Save
-        </Button>
-        <Button
-          disabled={submitting || linodes.length === 0}
-          onClick={onReset}
-          buttonType="secondary"
-          data-qa-ip-transfer-reset
-        >
-          Reset Form
         </Button>
       </ActionsPanel>
     </Dialog>

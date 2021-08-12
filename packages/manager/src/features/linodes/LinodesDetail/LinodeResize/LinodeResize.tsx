@@ -45,14 +45,14 @@ import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 
 type ClassNames =
-  | 'root'
   | 'title'
   | 'subTitle'
   | 'toolTip'
   | 'currentPlanContainer'
   | 'resizeTitle'
   | 'currentHeaderEmptyCell'
-  | 'selectPlanPanel';
+  | 'selectPlanPanel'
+  | 'actionPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -84,6 +84,13 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(3),
       '& > div': {
         padding: 0,
+      },
+    },
+    actionPanel: {
+      display: 'flex',
+      flexDirection: 'column',
+      '& button': {
+        alignSelf: 'flex-end',
       },
     },
   });
@@ -371,7 +378,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           }
         />
 
-        <ActionsPanel>
+        <ActionsPanel className={classes.actionPanel}>
           <Typography variant="h2">Confirm</Typography>
           <Typography style={{ marginBottom: 8 }}>
             To confirm these changes, type the label of the Linode{' '}

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -11,12 +11,17 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   copy: {
-    marginTop: 16,
+    marginTop: theme.spacing(2),
   },
   ipv6: {
-    marginTop: 32,
+    marginTop: theme.spacing(4),
+  },
+  actionPanel: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -147,7 +152,10 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
             {explainerCopy[selected]}
           </Typography>
         )}
-        <ActionsPanel style={{ marginTop: 8 }}>
+        <ActionsPanel className={classes.actionPanel}>
+          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+            Close
+          </Button>
           {_tooltipCopy ? (
             <Tooltip title={_tooltipCopy}>
               <div style={{ display: 'inline' }}>{AllocateButton}</div>
@@ -155,9 +163,6 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
           ) : (
             AllocateButton
           )}
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Close
-          </Button>
         </ActionsPanel>
         <Typography variant="h2" className={classes.ipv6}>
           IPv6

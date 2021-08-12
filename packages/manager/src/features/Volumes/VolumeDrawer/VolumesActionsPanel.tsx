@@ -1,6 +1,15 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  actionPanel: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: theme.spacing(2),
+  },
+}));
 
 interface Props {
   isSubmitting: boolean;
@@ -19,22 +28,24 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
   disabled,
   submitText,
 }) => {
+  const classes = useStyles();
+
   return (
-    <ActionsPanel style={{ marginTop: 16 }}>
-      {onSubmit && (
-        <Button
-          buttonType="primary"
-          onClick={onSubmit}
-          disabled={disabled}
-          loading={isSubmitting}
-          data-qa-submit
-        >
-          {submitText ?? 'Submit'}
-        </Button>
-      )}
+    <ActionsPanel className={classes.actionPanel}>
       {onCancel && (
         <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
           Cancel
+        </Button>
+      )}
+      {onSubmit && (
+        <Button
+          buttonType="primary"
+          disabled={disabled}
+          loading={isSubmitting}
+          onClick={onSubmit}
+          data-qa-submit
+        >
+          {submitText ?? 'Submit'}
         </Button>
       )}
     </ActionsPanel>

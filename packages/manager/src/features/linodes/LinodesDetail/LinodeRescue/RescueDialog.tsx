@@ -40,6 +40,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     marginTop: theme.spacing(),
   },
+  actionPanel: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 }));
 
 interface StateProps {
@@ -234,11 +238,11 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
             >
               Add Disk
             </Button>
-            <ActionsPanel>
+            <ActionsPanel className={classes.actionPanel}>
               <Button
                 buttonType="primary"
-                onClick={onSubmit}
                 disabled={disabled}
+                onClick={onSubmit}
                 data-qa-submit
               >
                 Reboot into Rescue Mode

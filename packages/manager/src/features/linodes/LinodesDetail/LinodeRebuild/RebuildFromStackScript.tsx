@@ -54,6 +54,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
     padding: `${theme.spacing(1)}px 0`,
   },
+  actionPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    '& button': {
+      alignSelf: 'flex-end',
+    },
+  },
 }));
 
 interface Props {
@@ -346,7 +353,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                 data-qa-access-panel
                 passwordHelperText={passwordHelperText}
               />
-              <ActionsPanel>
+              <ActionsPanel className={classes.actionPanel}>
                 <Typography variant="h2">Confirm</Typography>
                 <Typography style={{ marginBottom: 8 }}>
                   To confirm these changes, type the label of the Linode{' '}
@@ -359,9 +366,8 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                   style={{ marginBottom: 16 }}
                 />
                 <Button
-                  disabled={submitButtonDisabled}
                   buttonType="primary"
-                  className="destructive"
+                  disabled={submitButtonDisabled}
                   onClick={handleRebuildButtonClick}
                   data-qa-rebuild
                   data-testid="rebuild-button"
