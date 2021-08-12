@@ -82,7 +82,8 @@ export interface ObjectStorageObjectURLOptions {
 export type ObjectStorageClusterID =
   | 'us-east-1'
   | 'eu-central-1'
-  | 'ap-south-1';
+  | 'ap-south-1'
+  | 'us-southeast-1';
 
 export interface ObjectStorageCluster {
   region: string;
