@@ -18,6 +18,7 @@ interface Props {
   devices: FirewallDevice[];
   error?: APIError[];
   loading: boolean;
+  disabled: boolean;
   lastUpdated: number;
   triggerRemoveDevice: (deviceID: number, deviceLabel: string) => void;
 }
@@ -25,7 +26,14 @@ interface Props {
 type CombinedProps = Props;
 
 const FirewallTable: React.FC<CombinedProps> = (props) => {
-  const { devices, error, lastUpdated, loading, triggerRemoveDevice } = props;
+  const {
+    devices,
+    error,
+    lastUpdated,
+    loading,
+    disabled,
+    triggerRemoveDevice,
+  } = props;
 
   const _error =
     error && lastUpdated === 0
@@ -73,7 +81,8 @@ const FirewallTable: React.FC<CombinedProps> = (props) => {
                         key={`device-row-${thisDevice.id}`}
                         deviceLabel={thisDevice.entity.label}
                         deviceID={thisDevice.id}
-                        entityID={thisDevice.entity.id}
+                        deviceEntityID={thisDevice.entity.id}
+                        disabled={disabled}
                         triggerRemoveDevice={triggerRemoveDevice}
                       />
                     ))}

@@ -174,11 +174,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'add_stackscripts',
     'add_images',
     'add_volumes',
+    'add_firewalls',
     'cancel_account',
   ];
 
   entityPerms = [
     'linode',
+    'firewall',
     'stackscript',
     'image',
     'volume',
@@ -422,6 +424,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_stackscripts: 'Can create StackScripts under this account',
       add_images: 'Can create frozen Images under this account',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
+      add_firewalls: 'Can add Firewalls to this account',
       cancel_account: 'Can cancel the entire account',
     };
     return (
@@ -610,6 +613,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       nodebalancer: 'NodeBalancers',
       domain: 'Domains',
       longview: 'Longview Clients',
+      firewall: 'Firewalls',
     };
 
     return (

@@ -143,7 +143,8 @@ export type GlobalGrantTypes =
   | 'add_stackscripts'
   | 'add_nodebalancers'
   | 'add_images'
-  | 'add_volumes';
+  | 'add_volumes'
+  | 'add_firewalls';
 
 export interface GlobalGrants {
   global: Record<GlobalGrantTypes, boolean | GrantLevel>;
@@ -156,7 +157,8 @@ export type GrantType =
   | 'image'
   | 'longview'
   | 'stackscript'
-  | 'volume';
+  | 'volume'
+  | 'firewall';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 

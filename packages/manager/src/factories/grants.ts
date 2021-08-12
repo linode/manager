@@ -12,6 +12,7 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
   global: {
     account_access: 'read_only',
     add_domains: true,
+    add_firewalls: true,
     add_images: true,
     add_linodes: true,
     add_longview: true,
@@ -21,6 +22,13 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     cancel_account: false,
     longview_subscription: true,
   },
+  firewall: [
+    {
+      id: 123,
+      label: 'example-entity',
+      permissions: 'read_only',
+    },
+  ],
   image: [
     {
       id: 123,

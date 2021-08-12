@@ -5,6 +5,7 @@ import InlineMenuAction from 'src/components/InlineMenuAction';
 
 export interface Props extends Partial<ActionMenuProps> {
   idx: number;
+  disabled: boolean;
   triggerCloneFirewallRule: (idx: number) => void;
   triggerDeleteFirewallRule: (idx: number) => void;
   triggerOpenRuleDrawerForEditing: (idx: number) => void;
@@ -18,6 +19,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
 
   const {
     idx,
+    disabled,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
@@ -27,18 +29,21 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
   const actions: Action[] = [
     {
       title: 'Edit',
+      disabled,
       onClick: () => {
         triggerOpenRuleDrawerForEditing(idx);
       },
     },
     {
       title: 'Clone',
+      disabled,
       onClick: () => {
         triggerCloneFirewallRule(idx);
       },
     },
     {
       title: 'Delete',
+      disabled,
       onClick: () => {
         triggerDeleteFirewallRule(idx);
       },
@@ -51,6 +56,7 @@ const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
+              disabled={action.disabled}
               key={action.title}
               actionText={action.title}
               onClick={action.onClick}

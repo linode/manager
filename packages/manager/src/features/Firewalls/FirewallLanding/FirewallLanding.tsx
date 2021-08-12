@@ -34,11 +34,14 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
     addFirewallDrawerOpen,
     toggleAddFirewallDrawer,
   ] = React.useState<boolean>(false);
+
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
   const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
+
   const [selectedFirewallID, setSelectedFirewallID] = React.useState<
     number | undefined
   >(undefined);
+
   const [
     selectedFirewallLabel,
     setSelectedFirewallLabel,
