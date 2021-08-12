@@ -14,25 +14,28 @@ const regionSelect = 'Frankfurt, DE';
 
 describe('create bucket flow, mocked data', () => {
   it('creates bucket', () => {
-    cy.intercept('*/object-storage/buckets*', (req) => {
+    cy.intercept('POST', '*/object-storage/buckets*', (req) => {
       req.reply(mockBucket);
     }).as('mockBucket');
-    cy.intercept('GET', `*/object-storage/buckets/${bucketCluster}*`, (req) => {
-      req.reply(mockBucket);
-    }).as('getBuckets');
 
     cy.visitWithLogin('/object-storage/buckets');
     fbtClick('Create Bucket');
     getClick('[data-qa-cluster-label="true"]').type(bucketLabel);
     getClick('[data-qa-enhanced-select="Select a Region"]');
-    fbtClick(regionSelect);
+    getClick('[data-qa-region-select-item="eu-central-1"]');
     getVisible('[data-qa-submit="true"]').within(() => {
       fbtClick('Create Bucket');
     });
     cy.wait('@mockBucket');
+    cy.intercept('GET', `*/object-storage/buckets/${bucketCluster}*`, (req) => {
+      req.reply(mockBucket);
+    }).as('getBuckets');
+    cy.reload();
     cy.wait('@getBuckets');
-    fbtVisible(bucketLabel);
-    fbtVisible(hostname);
-    fbtVisible(regionSelect);
+    cy.get('[data-qa-bucket-cell="cy-test-bucket"]').within(() => {
+      fbtVisible(bucketLabel);
+      fbtVisible(hostname);
+      fbtVisible(regionSelect);
+    });
   });
 });

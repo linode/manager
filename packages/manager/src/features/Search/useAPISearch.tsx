@@ -10,8 +10,8 @@ import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { useTypes } from 'src/hooks/useTypes';
-import { useImages } from 'src/hooks/useImages';
+import { emptyResults, separateResultsByEntity } from './utils';
+import store from 'src/store';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -21,16 +21,13 @@ import {
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 
-import { emptyResults, separateResultsByEntity } from './utils';
-
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
 }
 
 export const useAPISearch = (): Search => {
   const { _isRestrictedUser } = useAccountManagement();
-  const { images } = useImages('public');
-  const { types } = useTypes();
+
   const searchAPI = useCallback(
     (searchText: string) => {
       if (!searchText || searchText === '') {
@@ -39,21 +36,22 @@ export const useAPISearch = (): Search => {
           combinedResults: [],
         });
       }
+      const resources = store.getState().__resources;
 
-      return requestEntities(
-        searchText,
-        types.entities,
-        images.itemsById,
-        _isRestrictedUser
-      ).then((results) => {
-        const combinedResults = refinedSearch(searchText, results);
-        return {
-          combinedResults,
-          searchResultsByEntity: separateResultsByEntity(combinedResults),
-        };
-      });
+      const types = resources.types.entities as LinodeType[];
+      const images = resources.images.itemsById;
+
+      return requestEntities(searchText, types, images, _isRestrictedUser).then(
+        (results) => {
+          const combinedResults = refinedSearch(searchText, results);
+          return {
+            combinedResults,
+            searchResultsByEntity: separateResultsByEntity(combinedResults),
+          };
+        }
+      );
     },
-    [images.itemsById, types.entities, _isRestrictedUser]
+    [_isRestrictedUser]
   );
 
   return { searchAPI };

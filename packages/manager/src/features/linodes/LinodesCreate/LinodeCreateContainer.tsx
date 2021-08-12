@@ -18,6 +18,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
@@ -36,14 +37,12 @@ import withLabelGenerator, {
 import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
   baseApps,
   getOneClickApps,
 } from 'src/features/StackScripts/stackScriptUtils';
+import { accountBackupsEnabled } from 'src/queries/accountSettings';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
@@ -58,18 +57,16 @@ import { getParamsFromUrl } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
+import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
 import {
   HandleSubmit,
   Info,
-  ReduxStateProps,
-  ReduxStatePropsAndSSHKeys,
   TypeInfo,
   WithLinodesProps,
   WithRegionsProps,
   WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
-import { accountBackupsEnabled } from 'src/queries/accountSettings';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -109,11 +106,12 @@ type CombinedProps = WithSnackbarProps &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
-  ReduxStatePropsAndSSHKeys &
+  userSSHKeysProps &
   DispatchProps &
   LabelProps &
   FeatureFlagConsumerProps &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  ProfileProps;
 
 const defaultState: State = {
   privateIPEnabled: false,
@@ -142,12 +140,18 @@ const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
   const selectedRegion = regions.find(
     (thisRegion) => thisRegion.id === regionID
   );
-  /** This approach is fine for just GPUs, which is all we have capability info for at this time.
-   *  Refactor to a switch or .map() if additional support is needed.
-   */
-  return selectedRegion?.capabilities.includes('GPU Linodes')
-    ? []
-    : (['gpu'] as LinodeTypeClass[]);
+
+  const disabledClasses: LinodeTypeClass[] = [];
+
+  if (!selectedRegion?.capabilities.includes('GPU Linodes')) {
+    disabledClasses.push('gpu');
+  }
+
+  if (!selectedRegion?.capabilities.includes('Bare Metal')) {
+    disabledClasses.push('metal');
+  }
+
+  return disabledClasses;
 };
 
 const trimOneClickFromLabel = (script: StackScript) => {
@@ -643,6 +647,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   render() {
     const {
+      profile,
+      grants,
       enqueueSnackbar,
       closeSnackbar,
       regionsData,
@@ -650,6 +656,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       ...restOfProps
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
+
+    const userCannotCreateLinode =
+      Boolean(profile.data?.restricted) &&
+      !hasGrant('add_linodes', grants.data);
 
     // If the selected type is a GPU plan, only display region
     // options that support GPUs.
@@ -708,6 +718,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
+            userCannotCreateLinode={userCannotCreateLinode}
+            accountBackupsEnabled={accountBackupsEnabled()}
             {...restOfProps}
             {...restOfState}
           />
@@ -721,16 +733,7 @@ interface CreateType {
   createType: CreateTypes;
 }
 
-const mapStateToProps: MapState<ReduxStateProps & CreateType, CombinedProps> = (
-  state
-) => ({
-  accountBackupsEnabled,
-  /**
-   * user cannot create Linodes if they are a restricted user
-   * and do not have the "add_linodes" grant
-   */
-  userCannotCreateLinode:
-    isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
+const mapStateToProps: MapState<CreateType, CombinedProps> = (state) => ({
   createType: state.createLinode.type,
 });
 
@@ -759,7 +762,8 @@ export default recompose<CombinedProps, {}>(
   withSnackbar,
   userSSHKeyHoc,
   withLabelGenerator,
-  withFlags
+  withFlags,
+  withProfile
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {

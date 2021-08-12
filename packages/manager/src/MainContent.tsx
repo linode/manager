@@ -136,7 +136,6 @@ interface Props {
   history: RouteComponentProps['history'];
   appIsLoading: boolean;
   toggleTheme: () => void;
-  username: string;
   isLoggedInAsCustomer: boolean;
 }
 
@@ -184,7 +183,9 @@ const MainContent: React.FC<CombinedProps> = (props) => {
   const dbaasContextValue = useDialogContext();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
-  const { account, _isManagedAccount } = useAccountManagement();
+  const { account, profile, _isManagedAccount } = useAccountManagement();
+
+  const username = profile?.username || '';
 
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
@@ -309,7 +310,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                     openSideMenu={() => toggleMenu(true)}
                     desktopMenuToggle={desktopMenuToggle}
                     isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-                    username={props.username}
+                    username={username}
                   />
                   <main
                     className={classes.cmrWrapper}

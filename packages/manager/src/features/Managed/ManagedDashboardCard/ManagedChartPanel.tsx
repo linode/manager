@@ -16,7 +16,8 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import useTimezone from 'src/utilities/useTimezone';
+import { useProfile } from 'src/queries/profile';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -210,7 +211,8 @@ const createTabs = (
 export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   const { data, error, loading, theme } = props;
   const classes = useStyles();
-  const timezone = useTimezone();
+  const { data: profile } = useProfile();
+  const timezone = getUserTimezone(profile);
 
   if (error) {
     return <ErrorState errorText={error} />;

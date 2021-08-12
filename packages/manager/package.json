@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.45.1",
+  "version": "1.46.1",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -16,7 +16,7 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.55.0",
+    "@linode/api-v4": "^0.56.0",
     "@linode/validation": "0.4.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -206,7 +206,7 @@
     "coveralls": "^3.0.2",
     "css-loader": "^3.5.2",
     "csstype": "^2.5.5",
-    "cypress": "^7.7.0",
+    "cypress": "^8.2.0",
     "cypress-axe": "^0.8.1",
     "cypress-file-upload": "^5.0.7",
     "dotenv": "^6.2.0",
@@ -266,7 +266,6 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "^2.2.0",
-    "workbox-webpack-plugin": "^6.1.5",
     "yargs": "^11.0.0"
   },
   "jest": {

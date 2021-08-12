@@ -1,4 +1,3 @@
-import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -11,7 +10,7 @@ import {
   useTheme,
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import withProfile from 'src/containers/profile.container';
+import { useProfile } from 'src/queries/profile';
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
 const useStyles = makeStyles(() => ({
@@ -39,16 +38,13 @@ interface Props {
   isHeader?: boolean;
 }
 
-interface ProfileProps {
-  username?: string;
-}
-
-type CombinedProps = Props & RouteComponentProps<{}> & ProfileProps;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
 const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const { data: profile } = useProfile();
 
   const {
     stackScriptID,
@@ -59,7 +55,6 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
     stackScriptLabel,
     canModify,
     isPublic,
-    username,
     category,
     canAddLinodes,
   } = props;
@@ -94,7 +89,11 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
         : undefined,
       onClick: () => {
         history.push(
-          getStackScriptUrl(stackScriptUsername, stackScriptID, username)
+          getStackScriptUrl(
+            stackScriptUsername,
+            stackScriptID,
+            profile?.username
+          )
         );
       },
     },
@@ -143,13 +142,6 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
-    return {
-      username: path(['data', 'username'], profile),
-    };
-  })
-);
+const enhanced = compose<CombinedProps, Props>(withRouter);
 
 export default enhanced(StackScriptActionMenu);

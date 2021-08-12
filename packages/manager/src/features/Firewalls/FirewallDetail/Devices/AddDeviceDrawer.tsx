@@ -1,45 +1,37 @@
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import v4 from 'uuid';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
+import Link from 'src/components/Link';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
-import { dcDisplayNames } from 'src/constants';
-import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import v4 from 'uuid';
-
+import { useStyles } from 'src/components/Notice/Notice';
+import SupportLink from 'src/components/SupportLink';
 interface Props {
   open: boolean;
   error?: APIError[];
   isSubmitting: boolean;
-  firewallLabel: string;
   currentDevices: number[];
+  firewallLabel: string;
   onClose: () => void;
   addDevice: (selectedLinodes: number[]) => void;
 }
 
 export const AddDeviceDrawer: React.FC<Props> = (props) => {
   const {
-    addDevice,
-    currentDevices,
+    open,
     error,
     isSubmitting,
+    currentDevices,
     firewallLabel,
     onClose,
-    open,
+    addDevice,
   } = props;
 
-  const regions = useRegionsQuery().data ?? [];
-
-  const regionsWithFirewalls = regions
-    .filter((thisRegion) =>
-      thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
-    )
-    .map((thisRegion) => thisRegion.id);
+  const classes = useStyles();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
@@ -64,6 +56,35 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
     ? getAPIErrorOrDefault(error, 'Error adding Linode')[0].reason
     : undefined;
 
+  // @todo update regex once error messaging updates
+  const errorNotice = (errorMsg: string) => {
+    // match something like: Linode <linode_label> (ID <linode_id>)
+    const linode = /linode (.+?) \(id ([^()]*)\)/i.exec(errorMsg);
+    const openTicket = errorMsg.match(/open a support ticket\./i);
+    if (openTicket) {
+      errorMsg = errorMsg.replace(/open a support ticket\./i, '');
+    }
+    if (linode) {
+      const [, label, id] = linode;
+      const labelIndex = errorMsg.indexOf(label);
+      errorMsg = errorMsg.replace(/\(id ([^()]*)\)/i, '');
+      return (
+        <Notice error className={classes.noticeText}>
+          {errorMsg.substring(0, labelIndex)}
+          <Link to={`/linodes/${id}`}>{label}</Link>
+          {errorMsg.substring(labelIndex + label.length)}
+          {openTicket ? (
+            <>
+              <SupportLink text="open a Support ticket" />.
+            </>
+          ) : null}
+        </Notice>
+      );
+    } else {
+      return <Notice error text={errorMessage} />;
+    }
+  };
+
   return (
     <Drawer
       title={`Add Linode to Firewall: ${firewallLabel}`}
@@ -76,15 +97,11 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           handleSubmit();
         }}
       >
-        {errorMessage && <Notice error text={errorMessage} />}
+        {errorMessage ? errorNotice(errorMessage) : null}
         <LinodeMultiSelect
           key={key}
-          allowedRegions={regionsWithFirewalls}
           handleChange={(selected) => setSelectedLinodes(selected)}
-          helperText={`You can assign one or more Linodes to this Firewall. Only Linodes
-          in regions that currently support Firewalls (${arrayToList(
-            regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId])
-          )}) will be displayed as options. Each Linode can only be assigned to a single Firewall.`}
+          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
           filteredLinodes={currentDevices}
         />
         <ActionsPanel>

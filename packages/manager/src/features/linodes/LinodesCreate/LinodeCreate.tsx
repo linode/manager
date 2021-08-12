@@ -41,7 +41,7 @@ import {
   handleChangeCreateType,
 } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
-import { doesRegionSupportVLANs } from 'src/utilities/doesRegionSupportVLANs';
+import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
@@ -305,9 +305,10 @@ export class LinodeCreate extends React.PureComponent<
 
   createLinode = () => {
     const selectedRegion = this.props.selectedRegionID || '';
-    const regionSupportsVLANs = doesRegionSupportVLANs(
+    const regionSupportsVLANs = doesRegionSupportFeature(
       selectedRegion,
-      this.props.regionsData
+      this.props.regionsData,
+      'Vlans'
     );
 
     const payload = {
