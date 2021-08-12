@@ -156,12 +156,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 onBlur={handleBlur}
               />
               <ActionsPanel>
-                <Button
-                  buttonType="secondary"
-                  onClick={onClose}
-                  disabled={_isRestrictedUser}
-                  data-qa-cancel
-                >
+                <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
                   Cancel
                 </Button>
                 <Button
