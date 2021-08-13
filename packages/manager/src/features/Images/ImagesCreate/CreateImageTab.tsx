@@ -124,7 +124,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     setSubmitting(true);
 
     const safeDescription = description ?? '';
-
     createImage({
       diskID: Number(selectedDisk),
       label,
@@ -253,7 +252,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
       <ActionsPanel
         style={{ marginTop: 16 }}
-        updateFor={[requirementsMet, classes, submitting]}
+        updateFor={[label, description, requirementsMet, classes, submitting]}
       >
         <Button
           onClick={onSubmit}
