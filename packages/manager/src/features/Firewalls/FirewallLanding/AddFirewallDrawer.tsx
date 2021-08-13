@@ -1,5 +1,4 @@
 import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
 import { Formik, FormikBag } from 'formik';
 import * as React from 'react';
@@ -9,10 +8,7 @@ import Drawer, { DrawerProps } from 'src/components/Drawer';
 import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { dcDisplayNames } from 'src/constants';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useRegionsQuery } from 'src/queries/regions';
-import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -45,18 +41,10 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
    * We'll eventually want to check the read_write firewall
    * grant here too, but it doesn't exist yet.
    */
-  const { _isRestrictedUser } = useAccountManagement();
+  const { _isRestrictedUser, _hasGrant } = useAccountManagement();
 
-  const regions = useRegionsQuery().data ?? [];
-
-  const regionsWithFirewalls = regions
-    .filter((thisRegion) =>
-      thisRegion.capabilities.includes('Cloud Firewall' as Capabilities)
-    )
-    .map((thisRegion) => thisRegion.id);
-
-  const allRegionsHaveFirewalls =
-    regionsWithFirewalls.length === regions.length;
+  const userCannotAddFirewall =
+    _isRestrictedUser && !_hasGrant('add_firewalls');
 
   const submitForm = (
     values: CreateFirewallPayload,
@@ -100,15 +88,8 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  let firewallHelperText = `Assign one or more Linodes to this firewall. You can add
+  const firewallHelperText = `Assign one or more Linodes to this firewall. You can add
   Linodes later if you want to customize your rules first.`;
-
-  if (!allRegionsHaveFirewalls) {
-    firewallHelperText += ` Only Linodes in regions that support Firewalls (${arrayToList(
-      regionsWithFirewalls.map((thisId) => dcDisplayNames[thisId]),
-      ';'
-    )}) will be displayed as options.`;
-  }
 
   return (
     <Drawer {...restOfDrawerProps} onClose={onClose}>
@@ -137,7 +118,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
 
           return (
             <form onSubmit={handleSubmit}>
-              {_isRestrictedUser ? (
+              {userCannotAddFirewall ? (
                 <Notice
                   error
                   text="You don't have permissions to create a new Firewall. Please contact an account administrator for details."
@@ -154,7 +135,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
               <TextField
                 aria-label="Label for your new Firewall"
                 label="Label"
-                disabled={_isRestrictedUser}
+                disabled={userCannotAddFirewall}
                 name="label"
                 value={values.label}
                 onChange={handleChange}
@@ -166,8 +147,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
               />
               <LinodeMultiSelect
                 showAllOption
-                disabled={_isRestrictedUser}
-                allowedRegions={regionsWithFirewalls}
+                disabled={userCannotAddFirewall}
                 helperText={firewallHelperText}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>
@@ -176,23 +156,18 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 onBlur={handleBlur}
               />
               <ActionsPanel>
+                <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+                  Cancel
+                </Button>
                 <Button
                   buttonType="primary"
                   onClick={() => handleSubmit()}
-                  disabled={_isRestrictedUser}
+                  disabled={userCannotAddFirewall}
                   loading={isSubmitting}
                   data-qa-submit
                   data-testid="create-firewall-submit"
                 >
                   Create Firewall
-                </Button>
-                <Button
-                  buttonType="secondary"
-                  onClick={onClose}
-                  disabled={_isRestrictedUser}
-                  data-qa-cancel
-                >
-                  Cancel
                 </Button>
               </ActionsPanel>
             </form>

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import CopyableTextField from 'src/components/CopyableTextField';
 import {
   createStyles,
@@ -34,7 +32,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const VolumeConfigDrawer: React.FC<CombinedProps> = (props) => {
-  const { classes, message, onClose } = props;
+  const { classes, message } = props;
 
   return (
     <React.Fragment>
@@ -94,11 +92,6 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = (props) => {
           hideLabel
         />
       </div>
-      <ActionsPanel>
-        <Button onClick={onClose} buttonType="primary">
-          Close
-        </Button>
-      </ActionsPanel>
     </React.Fragment>
   );
 };

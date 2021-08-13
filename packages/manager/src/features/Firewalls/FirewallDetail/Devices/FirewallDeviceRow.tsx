@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -15,15 +14,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface Props {
-  entityID: number;
-}
-
-export type CombinedProps = Props & ActionProps;
-
-export const FirewallDeviceRow: React.FC<CombinedProps> = (props) => {
+export const FirewallDeviceRow: React.FC<ActionProps> = (props) => {
   const classes = useStyles();
-  const { deviceLabel, deviceID, entityID } = props;
+  const { deviceLabel, deviceID, deviceEntityID } = props;
 
   return (
     <TableRow
@@ -31,7 +24,7 @@ export const FirewallDeviceRow: React.FC<CombinedProps> = (props) => {
       ariaLabel={`Device ${deviceLabel}`}
     >
       <TableCell>
-        <Link to={`/linodes/${entityID}`} tabIndex={0}>
+        <Link to={`/linodes/${deviceEntityID}`} tabIndex={0}>
           {deviceLabel}
         </Link>
       </TableCell>
@@ -42,6 +35,4 @@ export const FirewallDeviceRow: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, CombinedProps>(React.memo)(
-  FirewallDeviceRow
-);
+export default React.memo(FirewallDeviceRow);
