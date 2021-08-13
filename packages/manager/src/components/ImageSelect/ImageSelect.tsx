@@ -143,8 +143,13 @@ export const ImageSelect: React.FC<Props> = (props) => {
       case 'private':
         return !thisImage.is_public && thisImage.status === 'available';
       case 'all':
-        // Even if all images are requested, we don't want to expose the Kubernetes images
-        return !thisImage.label.match(/kube/i);
+        /*
+         * Even if all images are requested, we don't want to expose the Kubernetes images
+         * We keep images that don't have kube in the name that are created by Linode
+         */
+        return !(
+          thisImage.label.match(/kube/i) && thisImage.created_by === 'linode'
+        );
       default:
         return true;
     }
