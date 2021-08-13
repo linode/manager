@@ -233,8 +233,14 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
             )}
           </FormControl>
         )}
-
         <ActionsPanel>
+          <Button
+            buttonType="secondary"
+            onClick={this.handleClose}
+            data-qa-cancel
+          >
+            Cancel
+          </Button>
           <Button
             buttonType="primary"
             onClick={this.attachToLinode}
@@ -242,13 +248,6 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
             data-qa-submit
           >
             Save
-          </Button>
-          <Button
-            buttonType="secondary"
-            onClick={this.handleClose}
-            data-qa-cancel
-          >
-            Cancel
           </Button>
         </ActionsPanel>
       </Drawer>

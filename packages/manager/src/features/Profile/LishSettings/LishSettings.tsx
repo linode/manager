@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       minWidth: 415,
     },
   },
+  sshKeyButton: {
+    marginTop: theme.spacing(),
+  },
 }));
 
 const LishSettings: React.FC = () => {
@@ -187,7 +190,8 @@ const LishSettings: React.FC = () => {
                 {(idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||
                 idx > 0 ? (
                   <Button
-                    buttonType="secondary"
+                    buttonType="outlined"
+                    className={classes.sshKeyButton}
                     compact
                     onClick={onPublicKeyRemove(idx)}
                     data-qa-remove
@@ -202,7 +206,8 @@ const LishSettings: React.FC = () => {
             </Typography>
             <Button
               onClick={addSSHPublicKeyField}
-              buttonType="secondary"
+              className={classes.sshKeyButton}
+              buttonType="outlined"
               compact
             >
               Add SSH Public Key
