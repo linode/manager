@@ -17,7 +17,8 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
-  "main": "./index.js",
+  "main": "./index.node.js",
+  "browser": "./index.js",
   "types": "./lib/index.d.ts",
   "unpkg": "./index.js",
   "dependencies": {
