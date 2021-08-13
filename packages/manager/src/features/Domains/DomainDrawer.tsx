@@ -15,7 +15,6 @@ import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
@@ -331,30 +330,24 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           />
         )}
         <ActionsPanel>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            style={{ marginRight: 0 }}
+          <Button
+            buttonType="secondary"
+            onClick={this.closeDrawer}
+            style={{ marginRight: 8 }}
+            data-qa-cancel
           >
-            <Button
-              buttonType="secondary"
-              onClick={this.closeDrawer}
-              style={{ marginRight: 8 }}
-              data-qa-cancel
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              disabled={disabled}
-              loading={submitting}
-              onClick={this.submit}
-              data-qa-submit
-              data-testid="create-domain-submit"
-            >
-              {mode === EDITING ? 'Save Changes' : 'Create Domain'}
-            </Button>
-          </Box>
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            disabled={disabled}
+            loading={submitting}
+            onClick={this.submit}
+            data-qa-submit
+            data-testid="create-domain-submit"
+          >
+            {mode === EDITING ? 'Save Changes' : 'Create Domain'}
+          </Button>
         </ActionsPanel>
         {mode === EDITING && this.props.id && this.props.domain && (
           <>

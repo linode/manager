@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
   },
   actionPanel: {
-    display: 'flex',
     flexDirection: 'column',
     '& button': {
       alignSelf: 'flex-end',

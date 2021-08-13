@@ -72,10 +72,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
-  actionPanel: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
 }));
 
 interface Props {
@@ -496,7 +492,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           </>
         )}
       </Grid>
-      <ActionsPanel className={classes.actionPanel}>
+      <ActionsPanel>
         <Button
           buttonType="secondary"
           disabled={submitting || linodes.length === 0}

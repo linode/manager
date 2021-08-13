@@ -40,10 +40,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     marginTop: theme.spacing(),
   },
-  actionPanel: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
 }));
 
 interface StateProps {
@@ -238,7 +234,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
             >
               Add Disk
             </Button>
-            <ActionsPanel className={classes.actionPanel}>
+            <ActionsPanel>
               <Button
                 buttonType="primary"
                 disabled={disabled}

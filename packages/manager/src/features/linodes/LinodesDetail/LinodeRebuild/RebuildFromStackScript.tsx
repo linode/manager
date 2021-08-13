@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(1)}px 0`,
   },
   actionPanel: {
-    display: 'flex',
     flexDirection: 'column',
     '& button': {
       alignSelf: 'flex-end',

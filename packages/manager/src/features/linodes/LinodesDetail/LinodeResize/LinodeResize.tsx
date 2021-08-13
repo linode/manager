@@ -88,7 +88,6 @@ const styles = (theme: Theme) =>
       },
     },
     actionPanel: {
-      display: 'flex',
       flexDirection: 'column',
       '& button': {
         alignSelf: 'flex-end',
