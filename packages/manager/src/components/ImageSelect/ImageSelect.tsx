@@ -143,6 +143,8 @@ export const ImageSelect: React.FC<Props> = (props) => {
       case 'private':
         return !thisImage.is_public && thisImage.status === 'available';
       case 'all':
+        // Even if all images are requested, we don't want to expose the Kubernetes images
+        return !thisImage.label.match(/kube/i);
       default:
         return true;
     }
