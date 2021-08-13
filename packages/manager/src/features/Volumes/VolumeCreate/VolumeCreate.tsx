@@ -1,12 +1,9 @@
-import { Grant } from '@linode/api-v4/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import BreadCrumb from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { useRegionsQuery } from 'src/queries/regions';
 import { MapState } from 'src/store/types';
 import { openForConfig, viewResizeInstructions } from 'src/store/volumeForm';
@@ -32,7 +29,6 @@ interface StateProps {
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
-  readOnly?: boolean;
 }
 
 interface DispatchProps {
@@ -100,15 +96,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     message,
   } = state.volumeDrawer;
 
-  const volumesPermissions = pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'volume'],
-    state
-  );
-  const volumePermissions = volumesPermissions.find(
-    (v: Grant) => v.id === volumeId
-  );
-
   return {
     linode_id: linodeId,
     linodeLabel,
@@ -121,10 +108,6 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     volumeTags,
     volumePath,
     message,
-    readOnly:
-      isRestrictedUser(state) &&
-      volumePermissions &&
-      volumePermissions.permissions === 'read_only',
   };
 };
 

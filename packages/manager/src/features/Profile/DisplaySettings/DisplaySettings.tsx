@@ -6,13 +6,12 @@ import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import useProfile from 'src/hooks/useProfile';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import withNotifications, {
   WithNotifications,
 } from 'src/store/notification/notification.containers';
-import useTimezone from 'src/utilities/useTimezone';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { v4 } from 'uuid';
 import TimezoneForm from './TimezoneForm';
 
@@ -25,9 +24,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   const classes = useStyles();
 
-  const { updateProfile, requestProfile } = useProfile();
-  const { profile, _isRestrictedUser } = useAccountManagement();
-  const timezone = useTimezone();
+  const { mutateAsync: updateProfile } = useMutateProfile();
+  const { data: profile, refetch: requestProfile } = useProfile();
+
+  const timezone = getUserTimezone();
   const loggedInAsCustomer = useSelector(
     (state: ApplicationState) => state.authentication.loggedInAsCustomer
   );
@@ -51,7 +51,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
     setEmailResetToken(v4());
     setTimezoneResetToken(v4());
     // Default to empty string... but I don't believe this is possible.
-    return updateUser(profile?.data?.username ?? '', {
+    return updateUser(profile?.username ?? '', {
       username: newUsername,
     });
   };
@@ -75,10 +75,10 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
           key={usernameResetToken}
           label="Username"
           submitForm={updateUsername}
-          initialValue={profile?.data?.username}
-          disabled={_isRestrictedUser}
+          initialValue={profile?.username}
+          disabled={profile?.restricted}
           tooltipText={
-            _isRestrictedUser
+            profile?.restricted
               ? 'Restricted users cannot update their username. Please contact an account administrator.'
               : undefined
           }
@@ -91,7 +91,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
           key={emailResetToken}
           label="Email"
           submitForm={updateEmail}
-          initialValue={profile?.data?.email}
+          initialValue={profile?.email}
           successCallback={() => {
             // If there's a "user_email_bounce" notification for this user, and
             // the user has just updated their email, re-request notifications to

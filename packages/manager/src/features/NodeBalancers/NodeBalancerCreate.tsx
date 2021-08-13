@@ -12,7 +12,6 @@ import {
   view,
 } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -36,17 +35,14 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { dcDisplayCountry } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
-import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -80,7 +76,7 @@ const styles = (theme: Theme) =>
   });
 
 type CombinedProps = WithNodeBalancerActions &
-  StateProps &
+  ProfileProps &
   WithRegions &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
@@ -131,8 +127,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     ),
   };
 
+  disabled =
+    Boolean(this.props.profile.data?.restricted) &&
+    !hasGrant('add_nodebalancers', this.props.grants.data);
+
   addNodeBalancer = () => {
-    if (this.props.disabled) {
+    if (this.disabled) {
       return;
     }
     this.setState({
@@ -472,7 +472,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, regionsData, disabled } = this.props;
+    const { classes, regionsData } = this.props;
     const { nodeBalancerFields } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -506,12 +506,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               pathname="/NodeBalancers/Create"
               data-qa-create-nodebalancer-header
             />
-            {generalError && !disabled && (
+            {generalError && !this.disabled && (
               <Notice spacingTop={8} error>
                 {generalError}
               </Notice>
             )}
-            {disabled && (
+            {this.disabled && (
               <Notice
                 text={
                   "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
@@ -528,7 +528,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 label: 'NodeBalancer Label',
                 onChange: this.labelChange,
                 value: nodeBalancerFields.label || '',
-                disabled,
+                disabled: this.disabled,
               }}
               tagsInputProps={{
                 value: nodeBalancerFields.tags
@@ -539,7 +539,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   : [],
                 onChange: this.tagsChange,
                 tagError: hasErrorFor('tags'),
-                disabled,
+                disabled: this.disabled,
               }}
             />
             <SelectRegionPanel
@@ -547,7 +547,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('region')}
               selectedID={nodeBalancerFields.region}
               handleSelection={this.regionChange}
-              disabled={disabled}
+              disabled={this.disabled}
             />
             <Grid item xs={12}>
               <Typography variant="h2" className={classes.title}>
@@ -678,7 +678,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                           this.onNodeWeightChange(idx, nodeIndex, value)
                         }
                         onDelete={this.onDeleteConfig(idx)}
-                        disabled={disabled}
+                        disabled={this.disabled}
                       />
                     </Paper>
                   );
@@ -689,7 +689,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   buttonType="secondary"
                   onClick={this.addNodeBalancer}
                   data-qa-add-config
-                  disabled={disabled}
+                  disabled={this.disabled}
                 >
                   Add another Configuration
                 </Button>
@@ -703,7 +703,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               } Summary`}
               onDeploy={this.createNodeBalancer}
               calculatedPrice={10}
-              disabled={this.state.submitting || disabled}
+              disabled={this.state.submitting || this.disabled}
               submitText="Create NodeBalancer"
             >
               <DisplaySectionList displaySections={displaySections} />
@@ -806,20 +806,10 @@ interface WithRegions {
   regionsError: APIError[];
 }
 
-interface StateProps {
-  disabled: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_nodebalancers'),
-});
-
-const connected = connect(mapStateToProps);
-
 export default recompose<CombinedProps, {}>(
-  connected,
   withRegions,
   withNodeBalancerActions,
   styled,
-  withRouter
+  withRouter,
+  withProfile
 )(NodeBalancerCreate);

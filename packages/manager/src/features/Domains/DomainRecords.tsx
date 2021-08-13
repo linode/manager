@@ -829,6 +829,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 const msToReadable = (v: number): null | string =>
   pathOr(null, [v], {
     0: 'Default',
+    30: '30 seconds',
+    120: '2 minutes',
     300: '5 minutes',
     3600: '1 hour',
     7200: '2 hours',

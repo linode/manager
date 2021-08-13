@@ -1,11 +1,9 @@
-import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import Step1 from 'src/assets/referrals/step-1.svg';
 import Step2 from 'src/assets/referrals/step-2.svg';
 import Step3 from 'src/assets/referrals/step-3.svg';
 import CopyableTextField from 'src/components/CopyableTextField';
+import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -13,7 +11,8 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { MapState } from 'src/store/types';
+import { useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -87,12 +86,33 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = StateProps;
-
-export const Referrals: React.FC<CombinedProps> = (props) => {
+export const Referrals: React.FC<{}> = () => {
   const classes = useStyles();
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    error: profileError,
+  } = useProfile();
 
-  const { profileLoading, url, total, completed, pending, credit } = props;
+  if (profileError) {
+    return (
+      <Notice
+        error
+        text={
+          getAPIErrorOrDefault(
+            profileError,
+            'Unable to load referral information.'
+          )[0].reason
+        }
+      />
+    );
+  }
+
+  if (profileLoading || !profile) {
+    return <CircularProgress />;
+  }
+
+  const { url, total, completed, pending, credit } = profile?.referrals;
 
   const allowReferral = Boolean(url);
 
@@ -117,118 +137,86 @@ export const Referrals: React.FC<CombinedProps> = (props) => {
             .
           </Typography>
         </Grid>
-        {profileLoading ? (
-          <div />
-        ) : (
-          <>
-            <Grid item xs={12} className={classes.link}>
-              {allowReferral ? (
-                <CopyableTextField
-                  expand
-                  label="Your personal referral link"
-                  value={url}
-                />
-              ) : null}
-            </Grid>
-            {allowReferral && total !== undefined && total > 0 ? (
-              <div className={classes.resultsWrapper}>
-                {pending !== undefined && pending > 0 ? (
-                  <Grid
-                    container
-                    justify="space-between"
-                    className={classes.referrals}
-                  >
-                    <Grid item>Pending referrals</Grid>
-                    <Grid item>{pending}</Grid>
-                  </Grid>
-                ) : null}
+        <>
+          <Grid item xs={12} className={classes.link}>
+            {allowReferral ? (
+              <CopyableTextField
+                expand
+                label="Your personal referral link"
+                value={url}
+              />
+            ) : null}
+          </Grid>
+          {allowReferral && total !== undefined && total > 0 ? (
+            <div className={classes.resultsWrapper}>
+              {pending !== undefined && pending > 0 ? (
                 <Grid
                   container
                   justify="space-between"
                   className={classes.referrals}
                 >
-                  <Grid item>Completed referrals</Grid>
-                  <Grid item>{completed}</Grid>
+                  <Grid item>Pending referrals</Grid>
+                  <Grid item>{pending}</Grid>
                 </Grid>
-                <Grid
-                  container
-                  justify="space-between"
-                  className={classes.earned}
-                >
-                  <Grid item>Credit earned</Grid>
-                  <Grid item>${credit}</Grid>
-                </Grid>
-              </div>
-            ) : null}
-            {!allowReferral ? (
-              <Notice
-                warning
-                className={classes.limitNotice}
-                spacingTop={8}
-                spacingBottom={0}
+              ) : null}
+              <Grid
+                container
+                justify="space-between"
+                className={classes.referrals}
               >
-                Spend $25 with Linode to activate your personal referral link
-              </Notice>
-            ) : null}
-            <Grid
-              container
-              direction="row"
-              justify="space-between"
-              wrap="nowrap"
-              className={classes.images}
+                <Grid item>Completed referrals</Grid>
+                <Grid item>{completed}</Grid>
+              </Grid>
+              <Grid
+                container
+                justify="space-between"
+                className={classes.earned}
+              >
+                <Grid item>Credit earned</Grid>
+                <Grid item>${credit}</Grid>
+              </Grid>
+            </div>
+          ) : null}
+          {!allowReferral ? (
+            <Notice
+              warning
+              className={classes.limitNotice}
+              spacingTop={8}
+              spacingBottom={0}
             >
-              <Grid item className={classes.image}>
-                <Step1 />
-                <Typography variant="body1" className={classes.imageCopy}>
-                  Share your referral link with friends and colleagues
-                </Typography>
-              </Grid>
-              <Grid item className={classes.image}>
-                <Step2 />
-                <Typography variant="body1" className={classes.imageCopy}>
-                  They sign up and receive a $100, 60-day credit
-                </Typography>
-              </Grid>
-              <Grid item className={classes.image}>
-                <Step3 />
-                <Typography variant="body1" className={classes.imageCopy}>
-                  You earn $25 after they make their first payment of $25
-                </Typography>
-              </Grid>
+              Spend $25 with Linode to activate your personal referral link
+            </Notice>
+          ) : null}
+          <Grid
+            container
+            direction="row"
+            justify="space-between"
+            wrap="nowrap"
+            className={classes.images}
+          >
+            <Grid item className={classes.image}>
+              <Step1 />
+              <Typography variant="body1" className={classes.imageCopy}>
+                Share your referral link with friends and colleagues
+              </Typography>
             </Grid>
-          </>
-        )}
+            <Grid item className={classes.image}>
+              <Step2 />
+              <Typography variant="body1" className={classes.imageCopy}>
+                They sign up and receive a $100, 60-day credit
+              </Typography>
+            </Grid>
+            <Grid item className={classes.image}>
+              <Step3 />
+              <Typography variant="body1" className={classes.imageCopy}>
+                You earn $25 after they make their first payment of $25
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
       </Grid>
     </Paper>
   );
 };
 
-interface StateProps {
-  profileLoading: boolean;
-  code?: string;
-  url?: string;
-  total?: number;
-  completed?: number;
-  pending?: number;
-  credit?: number;
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state) => {
-  const { profile } = state.__resources;
-
-  return {
-    profileLoading: profile.loading,
-    code: path(['data', 'referrals', 'code'], profile),
-    url: path(['data', 'referrals', 'url'], profile),
-    total: path(['data', 'referrals', 'total'], profile),
-    completed: path(['data', 'referrals', 'completed'], profile),
-    pending: path(['data', 'referrals', 'pending'], profile),
-    credit: path(['data', 'referrals', 'credit'], profile),
-  };
-};
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, {}>(connected);
-
-export default enhanced(Referrals);
+export default Referrals;
