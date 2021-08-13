@@ -23,6 +23,9 @@ const styles = (theme: Theme) =>
         marginRight: theme.spacing(),
         marginLeft: 0,
       },
+      '& > :only-child': {
+        marginRight: 0,
+      },
     },
   });
 

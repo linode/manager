@@ -12,7 +12,7 @@ const CloseAccountSetting: React.FC<{}> = () => {
       <Accordion heading="Close Account" defaultExpanded={true}>
         <Grid container direction="column">
           <Grid item>
-            <Button buttonType="primary" onClick={() => setDialogOpen(true)}>
+            <Button buttonType="outlined" onClick={() => setDialogOpen(true)}>
               Close Account
             </Button>
           </Grid>

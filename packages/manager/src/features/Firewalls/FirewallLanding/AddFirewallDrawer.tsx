@@ -156,6 +156,9 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 onBlur={handleBlur}
               />
               <ActionsPanel>
+                <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+                  Cancel
+                </Button>
                 <Button
                   buttonType="primary"
                   onClick={() => handleSubmit()}
@@ -165,9 +168,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                   data-testid="create-firewall-submit"
                 >
                   Create Firewall
-                </Button>
-                <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-                  Cancel
                 </Button>
               </ActionsPanel>
             </form>
