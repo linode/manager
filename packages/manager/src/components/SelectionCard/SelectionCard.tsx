@@ -1,25 +1,18 @@
 import Check from '@material-ui/icons/Check';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import Info from 'src/assets/icons/info.svg';
 import Button from 'src/components/Button';
+import Chip from 'src/components/core/Chip';
 import Fade from 'src/components/core/Fade';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Grid from 'src/components/Grid';
+import { useStyles as useCardBaseStyles } from 'src/components/SelectionCard/CardBase';
 import CardBase from './CardBase';
-import Info from 'src/assets/icons/info.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Chip from 'src/components/core/Chip';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0,
-    },
-    to: {
-      opacity: 1,
-    },
-  },
   root: {
     minWidth: 200,
     padding: theme.spacing(2),
@@ -46,21 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       transition: 'color 225ms ease-in-out',
     },
   },
-  icon: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    '& svg, & span': {
-      fontSize: 32,
-      color: '#939598',
-    },
-    '& img': {
-      maxHeight: 32,
-      maxWidth: 32,
-    },
-  },
   checked: {
     display: 'flex',
-    animation: '$fadeIn 225ms ease-in-out forwards 10ms',
+    animation: 'fadeIn 225ms ease-in-out forwards 10ms',
     '& svg': {
       borderRadius: 16,
       border: `1px solid ${theme.palette.primary.main}`,
@@ -86,32 +67,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0.4,
     },
   },
-  heading: {
-    fontFamily: theme.font.bold,
-    fontSize: '1rem',
-    color: theme.color.headline,
-  },
-  subheading: {
-    fontSize: '0.875rem',
-    color: theme.palette.text.primary,
-  },
-  innerGrid: {
-    width: '100%',
-    height: '100%',
-    minHeight: 70,
-    backgroundColor: theme.bg.offWhiteDT,
-    border: `1px solid ${theme.bg.main}`,
-    margin: 0,
-    padding: '0 !important',
-    transition: `
-      ${'background-color 225ms ease-in-out, '}
-      ${'border-color 225ms ease-in-out'}
-    `,
-    '&:hover': {
-      backgroundColor: theme.bg.main,
-      borderColor: theme.color.border2,
-    },
-  },
   info: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -131,14 +86,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& .path': {
         color: 'white',
       },
-    },
-  },
-  flex: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    '&> div': {
-      lineHeight: 1.3,
     },
   },
   enhancedInputOuter: {
@@ -203,6 +150,7 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const cardBaseClasses = useCardBaseStyles();
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
     if (onClick && !disabled) {
@@ -261,7 +209,7 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
         return (
           <Grid
             item
-            className={`${classes.icon} ${classes.checked}`}
+            className={`${cardBaseClasses.icon} ${classes.checked}`}
             data-qa-checked={checked}
             xs={2}
           >
