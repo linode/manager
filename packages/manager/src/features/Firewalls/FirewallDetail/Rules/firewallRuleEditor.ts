@@ -224,11 +224,15 @@ export const initRuleEditorState = (
   );
 };
 
-export const editorStateToRules = (
-  state: RuleEditorState
-): ExtendedFirewallRule[] =>
+export const editorStateToRules = (state: RuleEditorState) => {
   // Cast the results of the Immer state to a mutable data structure.
-  castDraft(state.map((revisionList) => revisionList[revisionList.length - 1]));
+  return castDraft(
+    state.map((revisionList) =>
+      // Make a mutable copy of the object since Immer state objects are frozen.
+      Object.assign({}, revisionList[revisionList.length - 1])
+    )
+  );
+};
 
 // Remove fields we use internally.
 export const stripExtendedFields = (

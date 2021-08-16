@@ -20,7 +20,6 @@ import { requestManagedIssues } from 'src/store/managed/issues.requests';
 import { requestManagedServices } from 'src/store/managed/managed.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
-import { requestProfile } from 'src/store/profile/profile.requests';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 
@@ -39,7 +38,6 @@ export type ReduxEntity =
   | 'managedIssues'
   | 'nodeBalancers'
   | 'notifications'
-  | 'profile'
   | 'types'
   | 'events'
   | 'longview'
@@ -59,7 +57,6 @@ const requestMap: RequestMap = {
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
   events: getEvents,
-  profile: requestProfile,
   types: requestTypes,
   notifications: requestNotifications,
   managed: requestManagedServices,

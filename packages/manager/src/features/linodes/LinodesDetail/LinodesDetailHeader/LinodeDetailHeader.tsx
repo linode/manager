@@ -18,12 +18,10 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import { openForAttaching, openForCreating } from 'src/store/volumeForm';
-import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
@@ -35,9 +33,11 @@ import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
-import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
+import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
+import { parseQueryParams } from 'src/utilities/queryParams';
+import { useProfile } from 'src/queries/profile';
 
 interface Props {
   numVolumes: number;
@@ -249,11 +249,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags: _tags }));
     });
   };
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
 
-  if (!profile.data?.username) {
+  if (!profile?.username) {
     return null;
   }
 
@@ -356,8 +356,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         variant="details"
         id={linode.id}
         linode={linode}
-        numVolumes={numAttachedVolumes}
-        username={profile.data?.username}
+        numVolumes={getVolumesByLinode(linode.id)}
+        username={profile?.username}
         linodeConfigs={linodeConfigs}
         backups={linode.backups}
         openTagDrawer={openTagDrawer}

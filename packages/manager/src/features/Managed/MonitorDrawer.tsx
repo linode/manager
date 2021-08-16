@@ -282,20 +282,20 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
               />
               <ActionsPanel>
                 <Button
-                  buttonType="primary"
-                  onClick={() => handleSubmit()}
-                  loading={isSubmitting}
-                  data-qa-submit
-                >
-                  {mode === 'create' ? 'Add Monitor' : 'Save Changes'}
-                </Button>
-                <Button
                   onClick={onClose}
                   data-qa-cancel
                   buttonType="secondary"
                   className="cancel"
                 >
                   Cancel
+                </Button>
+                <Button
+                  buttonType="primary"
+                  onClick={() => handleSubmit()}
+                  loading={isSubmitting}
+                  data-qa-submit
+                >
+                  {mode === 'create' ? 'Add Monitor' : 'Save Changes'}
                 </Button>
               </ActionsPanel>
             </form>

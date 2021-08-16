@@ -3,6 +3,7 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useProfile, useGrants } from 'src/queries/profile';
 
 export interface ActionHandlers {
   triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
@@ -22,6 +23,8 @@ type CombinedProps = Props;
 const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const {
     firewallID,
@@ -32,6 +35,21 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
     triggerDeleteFirewall,
   } = props;
 
+  const userCanModifyFirewall =
+    !profile?.restricted ||
+    grants?.firewall?.find((firewall) => firewall.id === firewallID)
+      ?.permissions === 'read_write';
+
+  const noPermissionTooltipText =
+    "You don't have permissions to modify this Firewall.";
+
+  const disabledProps = !userCanModifyFirewall
+    ? {
+        disabled: true,
+        tooltip: noPermissionTooltipText,
+      }
+    : {};
+
   const actions: Action[] = [
     {
       title:
@@ -39,12 +57,14 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
       onClick: () => {
         handleEnableDisable();
       },
+      ...disabledProps,
     },
     {
       title: 'Delete',
       onClick: () => {
         triggerDeleteFirewall(firewallID, firewallLabel);
       },
+      ...disabledProps,
     },
   ];
 
@@ -64,7 +84,9 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
             <InlineMenuAction
               key={action.title}
               actionText={action.title}
+              disabled={action.disabled}
               onClick={action.onClick}
+              tooltip={action.tooltip}
             />
           );
         })}

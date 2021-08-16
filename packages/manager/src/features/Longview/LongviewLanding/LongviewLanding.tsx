@@ -7,7 +7,7 @@ import {
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -20,7 +20,6 @@ import TabLinkList from 'src/components/TabLinkList';
 import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
-import withProfile from 'src/containers/profile.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { isManaged } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -31,8 +30,7 @@ const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
 type CombinedProps = LongviewProps &
   RouteComponentProps<{}> &
-  WithSnackbarProps &
-  GrantsProps;
+  WithSnackbarProps;
 
 export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   props
@@ -108,7 +106,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
       history: { push },
     } = props;
 
-    if (isManaged) {
+    if (isManaged()) {
       push({
         pathname: '/support/tickets',
         state: {
@@ -163,7 +161,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
       </Tabs>
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
-        isManaged={isManaged}
+        isManaged={isManaged()}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={
@@ -177,23 +175,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   );
 };
 
-interface GrantsProps {
-  userCanCreateClient: boolean;
-}
-
 export default compose<CombinedProps, {} & RouteComponentProps>(
   withLongviewClients(),
-  withProfile<GrantsProps, {}>((ownProps, { profileData }) => {
-    const isRestrictedUser = (profileData || {}).restricted;
-    const hasAddLongviewGrant = pathOr<boolean>(
-      false,
-      ['grants', 'global', 'add_longview'],
-      profileData
-    );
-    return {
-      userCanCreateClient:
-        !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser),
-    };
-  }),
   withSnackbar
 )(LongviewLanding);

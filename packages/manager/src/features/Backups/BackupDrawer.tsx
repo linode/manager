@@ -208,8 +208,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch: ThunkDispatch,
-  ownProps
+  dispatch: ThunkDispatch
 ) => {
   return {
     actions: {
@@ -268,7 +267,7 @@ const mapStateToProps: MapStateToProps<
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = getLinodesWithoutBackups(state.__resources);
   return {
-    accountBackups: accountBackupsEnabled,
+    accountBackups: accountBackupsEnabled(),
     backupLoadError: pathOr('', ['backups', 'error'], state),
     backupsLoading: pathOr(false, ['backups', 'loading'], state),
     enableErrors,
@@ -294,7 +293,7 @@ interface WithTypesProps {
   typesData: LinodeType[];
 }
 
-const withTypes = connect((state: ApplicationState, ownProps) => ({
+const withTypes = connect((state: ApplicationState) => ({
   typesData: state.__resources.types.entities,
 }));
 
