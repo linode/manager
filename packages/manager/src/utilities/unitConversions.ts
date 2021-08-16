@@ -189,3 +189,34 @@ export const convertBytesToTarget = (unit: StorageSymbol, value: number) => {
       return value / 1024 / 1024 / 1024 / 1024;
   }
 };
+
+export enum StorageUnitExponents {
+  B = 0,
+  KB = 1,
+  MB = 2,
+  GB = 3,
+  TB = 4,
+}
+
+type StorageUnitExponentKey = keyof typeof StorageUnitExponents;
+
+export const convertStorageUnit = (
+  sourceUnit: StorageUnitExponentKey,
+  sourceQuantity: number | undefined,
+  targetUnit: StorageUnitExponentKey
+) => {
+  if (sourceQuantity === undefined) {
+    return 0;
+  }
+
+  if (sourceUnit === targetUnit) {
+    return sourceQuantity;
+  }
+
+  const BASE = 1024;
+
+  const exponent =
+    StorageUnitExponents[sourceUnit] - StorageUnitExponents[targetUnit];
+  const result = sourceQuantity * Math.pow(BASE, exponent);
+  return result;
+};

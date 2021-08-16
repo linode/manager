@@ -26,6 +26,8 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import unitPriceCalculator from 'src/utilities/unitPriceCalculator';
+import { convertStorageUnit } from 'src/utilities/unitConversions';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ImagesPricingCopy from './ImagesPricingCopy';
 
@@ -74,7 +76,7 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
   state = {
     selectedLinode: 0,
     selectedDisk: '',
-    disks: [],
+    disks: [] as Disk[],
     errors: undefined,
     notice: undefined,
     submitting: false,
@@ -230,6 +232,15 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
       selectedDisk,
     } = this.state;
 
+    const selectedDiskData: Disk | undefined = disks.find(
+      (d) => `${d.id}` === selectedDisk
+    );
+    const selectedDiskSizeInMB = convertStorageUnit(
+      'MB',
+      selectedDiskData?.size,
+      'GB'
+    );
+
     const requirementsMet = this.checkRequirements();
 
     const hasErrorFor = getAPIErrorFor(
@@ -291,6 +302,9 @@ class CreateImageTab extends React.Component<CombinedProps, State> {
             disabled={!canCreateImage}
             data-qa-disk-select
           />
+          <Typography className={classes.helperText} variant="body1">
+            {`${unitPriceCalculator(0.1, selectedDiskSizeInMB)}/month`}
+          </Typography>
           <Typography className={classes.helperText} variant="body1">
             Linode Images cannot be created if you are using raw disks or disks
             that have been formatted using custom filesystems.
