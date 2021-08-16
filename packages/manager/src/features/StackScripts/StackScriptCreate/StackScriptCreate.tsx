@@ -441,7 +441,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
     const availableImages = Object.values(imagesData).filter(
-      (thisImage) => !this.state.images.includes(thisImage.id)
+      (thisImage) =>
+        !this.state.images.includes(thisImage.id) &&
+        !thisImage.label.match(/kube/i)
     );
 
     const stackScriptGrants = getGrants(grants.data, 'stackscript');
