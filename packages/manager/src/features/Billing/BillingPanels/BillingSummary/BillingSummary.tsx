@@ -113,8 +113,10 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   //
 
   // On-the-fly route matching so this component can open the drawer itself.
-  const routeForMakePayment = '/account/billing/make-payment';
-  const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
+  const routeForMakePayment = '/account/billing/make-payment/:id?';
+  const makePaymentRouteMatch = useRouteMatch<{ id: string | undefined }>(
+    routeForMakePayment
+  );
 
   const { replace } = useHistory();
 
@@ -122,13 +124,21 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     false
   );
 
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState<
+    number | undefined
+  >(undefined);
+
   const openPaymentDrawer = React.useCallback(
-    () => setPaymentDrawerOpen(true),
+    (selectedPaymentMethodId: number | undefined) => {
+      setPaymentDrawerOpen(true);
+      setSelectedPaymentMethodId(selectedPaymentMethodId);
+    },
     []
   );
 
   const closePaymentDrawer = React.useCallback(() => {
     setPaymentDrawerOpen(false);
+    setSelectedPaymentMethodId(undefined);
     replace('/account/billing');
   }, [replace]);
 
@@ -136,10 +146,26 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const closePromoDialog = () => setIsPromoDialogOpen(false);
 
   React.useEffect(() => {
-    if (makePaymentRouteMatch) {
-      openPaymentDrawer();
+    if (!Boolean(makePaymentRouteMatch)) {
+      return;
     }
-  }, [makePaymentRouteMatch, openPaymentDrawer]);
+
+    const paymentMethodMatch = paymentMethods?.find(
+      (paymentMethod) =>
+        paymentMethod.id === +(makePaymentRouteMatch?.params?.id ?? -1)
+    );
+
+    let defaultPaymentMethod;
+    if (!paymentMethodMatch) {
+      defaultPaymentMethod = paymentMethods?.find(
+        (paymentMethod) => paymentMethod.is_default
+      );
+    }
+
+    openPaymentDrawer(
+      paymentMethodMatch?.id ?? defaultPaymentMethod?.id ?? undefined
+    );
+  }, [makePaymentRouteMatch, paymentMethods, openPaymentDrawer]);
 
   //
   // Account Balance logic
@@ -268,6 +294,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
       </Grid>
       <PaymentDrawer
         paymentMethods={paymentMethods}
+        selectedPaymentMethodId={selectedPaymentMethodId}
         open={paymentDrawerOpen}
         onClose={closePaymentDrawer}
       />

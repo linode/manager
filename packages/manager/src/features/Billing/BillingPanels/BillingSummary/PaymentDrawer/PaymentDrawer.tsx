@@ -96,6 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   open: boolean;
   paymentMethods: PaymentMethod[] | undefined;
+  selectedPaymentMethodId?: number;
   onClose: () => void;
 }
 
@@ -116,7 +117,7 @@ export const getMinimumPayment = (balance: number | false) => {
 const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
 
 export const PaymentDrawer: React.FC<Props> = (props) => {
-  const { paymentMethods, open, onClose } = props;
+  const { paymentMethods, selectedPaymentMethodId, open, onClose } = props;
 
   const {
     data: account,
@@ -130,10 +131,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
 
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
-  /**
-   * @TODO: If a user has multiple credit cards and clicks 'Make a Payment' through the
-   * payment method actions dropdown, auto select that credit card instead of the default one
-   */
   const creditCard = paymentMethods?.filter(
     (paymentMethod) => paymentMethod.type === 'credit_card'
   )[0];
@@ -178,11 +175,10 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   }, [open, paymentMethods]);
 
   React.useEffect(() => {
-    const defaultPaymentMethod = paymentMethods?.find(
-      (paymentMethod) => paymentMethod.is_default
-    );
-    setPaymentMethodId(defaultPaymentMethod?.id ?? -1);
-  }, [paymentMethods]);
+    if (selectedPaymentMethodId) {
+      setPaymentMethodId(selectedPaymentMethodId);
+    }
+  }, [selectedPaymentMethodId]);
 
   const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUSD(e.target.value || '');
