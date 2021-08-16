@@ -9,6 +9,7 @@ import Grid from 'src/components/Grid';
 import CardBase from './CardBase';
 import Info from 'src/assets/icons/info.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Chip from 'src/components/core/Chip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -67,7 +68,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.palette.primary.main,
     },
   },
-
+  chip: {
+    '& span': {
+      color: 'inherit !important',
+      fontSize: '0.625rem',
+    },
+  },
   '&:focus .innerGrid': {
     outline: `1px dotted ${theme.color.focusBorder}`,
   },
@@ -158,9 +164,10 @@ export interface Props {
   heading: string;
   subheadings: (string | undefined)[];
   checked?: boolean;
+  isDefault?: boolean;
   disabled?: boolean;
   tooltip?: string;
-  variant?: 'check' | 'info' | 'quantityCheck' | 'selectable';
+  variant?: 'check' | 'info' | 'quantityCheck' | 'default' | 'selectable';
   className?: string;
   inputValue?: number;
   setInputValue?: (value: number) => void;
@@ -185,6 +192,7 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
     subheadings,
     variant,
     checked,
+    isDefault,
     inputValue,
     setInputValue,
     submitForm,
@@ -264,6 +272,12 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
             )}
           </Grid>
         );
+      case 'default':
+        return isDefault ? (
+          <Grid item className={`${classes.chip}`} xs={3}>
+            <Chip label="DEFAULT" component="span" />
+          </Grid>
+        ) : null;
       case 'selectable':
       default:
         return null;
@@ -275,7 +289,7 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
       heading={heading}
       renderIcon={renderIcon}
       subheadings={subheadings}
-      fullWidth={variant === 'quantityCheck' || variant === 'selectable'}
+      variant={variant}
     >
       {renderVariant()}
     </CardBase>

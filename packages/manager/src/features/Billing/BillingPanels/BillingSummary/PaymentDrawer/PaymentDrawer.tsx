@@ -1,27 +1,40 @@
-import { APIWarning } from '@linode/api-v4/lib/types';
 import { PaymentMethod } from '@linode/api-v4';
+import { makePayment } from '@linode/api-v4/lib/account';
+import { APIWarning } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
 import { v4 } from 'uuid';
 import { useSnackbar } from 'notistack';
+import { cleanCVV } from 'src/features/Billing/billingUtils';
+import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Button from 'src/components/Button';
 import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import {
+  thirdPartyPaymentMap,
+  getIcon as getTPPIcon,
+} from 'src/components/PaymentMethodRow/ThirdPartyPayment';
+import SelectionCard from 'src/components/SelectionCard';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import LinearProgress from 'src/components/LinearProgress';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import CreditCardPayment from './CreditCardPayment';
-import PayPal, { paypalScriptSrc } from './Paypal';
+import { queryKey } from 'src/queries/accountBilling';
+import { queryClient } from 'src/queries/base';
+import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { SetSuccess } from './types';
 import GooglePayButton from './GooglePayButton';
+import CreditCardDialog from './PaymentBits/CreditCardDialog';
+import PayPal, { paypalScriptSrc } from './Paypal';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,6 +54,42 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 18,
     width: '100%',
     height: 5,
+  },
+  input: {
+    display: 'flex',
+  },
+  button: {
+    alignSelf: 'flex-end',
+    marginLeft: 'auto',
+    marginTop: theme.spacing(2),
+  },
+  cvvField: {
+    width: 100,
+  },
+  cardSection: {
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flexFlow: 'column nowrap',
+  },
+  cardSectionNew: {
+    marginLeft: -7,
+  },
+  cardText: {
+    padding: '1px',
+    lineHeight: '1.5rem',
+  },
+  cvvFieldWrapper: {
+    '& label': {
+      fontSize: 12,
+    },
+  },
+  paymentMethod: {
+    display: 'contents',
+    marginBottom: theme.spacing(),
+  },
+  chip: {
+    fontSize: '0.625rem',
   },
 }));
 
@@ -82,23 +131,29 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
   /**
-   * Show actual credit card instead of Google Pay card
-   *
    * @TODO: If a user has multiple credit cards and clicks 'Make a Payment' through the
-   * payment method actions dropdown, display that credit card instead of the first one
+   * payment method actions dropdown, auto select that credit card instead of the default one
    */
   const creditCard = paymentMethods?.filter(
-    (payment) => payment.type === 'credit_card'
-  )[0]?.data;
+    (paymentMethod) => paymentMethod.type === 'credit_card'
+  )[0];
 
   const [usd, setUSD] = React.useState<string>(
     getMinimumPayment(account?.balance || 0)
   );
 
+  const isCardExpired = Boolean(
+    creditCard?.data.expiry && isCreditCardExpired(creditCard?.data.expiry)
+  );
+
+  const [cvv, setCVV] = React.useState<string>('');
+  const [paymentMethodId, setPaymentMethodId] = React.useState<number>(-1);
+  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
-  const [creditCardKey, setCreditCardKey] = React.useState<string>(v4());
   const [payPalKey, setPayPalKey] = React.useState<string>(v4());
   const [
     isPaypalScriptLoaded,
@@ -106,6 +161,9 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   ] = React.useState<boolean>(false);
 
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
+
+  const minimumPayment = getMinimumPayment(account?.balance || 0);
+  const paymentTooLow = +usd < +minimumPayment;
 
   React.useEffect(() => {
     setUSD(getMinimumPayment(account?.balance || 0));
@@ -117,7 +175,14 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       setErrorMessage(null);
       setIsProcessing(false);
     }
-  }, [open]);
+  }, [open, paymentMethods]);
+
+  React.useEffect(() => {
+    const defaultPaymentMethod = paymentMethods?.find(
+      (paymentMethod) => paymentMethod.is_default
+    );
+    setPaymentMethodId(defaultPaymentMethod?.id ?? -1);
+  }, [paymentMethods]);
 
   const handleUSDChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUSD(e.target.value || '');
@@ -126,6 +191,63 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   const handleOnBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const formattedUSD = Number(e.target.value).toFixed(2) || '';
     setUSD(formattedUSD);
+  };
+
+  const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const _cvv = cleanCVV(e.target.value);
+    setCVV(_cvv);
+  };
+
+  const handlePaymentMethodChange = (id: number) => {
+    setPaymentMethodId(id);
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleOpenDialog = () => {
+    setDialogOpen(true);
+    setErrorMessage(null);
+  };
+
+  const confirmCardPayment = () => {
+    setSubmitting(true);
+    setSuccess(null);
+    setErrorMessage(null);
+
+    const makePaymentData = showGooglePay
+      ? {
+          usd: (+usd).toFixed(2),
+          payment_method_id: paymentMethodId,
+        }
+      : {
+          usd: (+usd).toFixed(2),
+          cvv,
+        };
+
+    makePayment({
+      ...makePaymentData,
+    })
+      .then((response) => {
+        setSubmitting(false);
+        setDialogOpen(false);
+        setSuccess(
+          `Payment for $${usd} successfully submitted`,
+          true,
+          response.warnings
+        );
+        queryClient.invalidateQueries(`${queryKey}-payments`);
+      })
+      .catch((errorResponse) => {
+        setSubmitting(false);
+        setErrorMessage(
+          getAPIErrorOrDefault(
+            errorResponse,
+            'Unable to make a payment at this time.'
+          )[0].reason
+        );
+      });
   };
 
   const setSuccess: SetSuccess = (
@@ -139,7 +261,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       });
       // Reset everything
       setUSD('0.00');
-      setCreditCardKey(v4());
       setPayPalKey(v4());
       accountRefetch();
       onClose();
@@ -148,8 +269,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       setWarning(warnings[0]);
     }
   };
-
-  const minimumPayment = getMinimumPayment(account?.balance || 0);
 
   if (!accountLoading && account?.balance === undefined) {
     return (
@@ -203,21 +322,120 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
-          {creditCard ? (
-            <CreditCardPayment
-              key={creditCardKey}
-              creditCard={creditCard}
-              disabled={isProcessing}
-              usd={usd}
-              minimumPayment={minimumPayment}
-              setSuccess={setSuccess}
-            />
+          {showGooglePay ? (
+            <Grid container direction="column">
+              <Grid item>
+                <Typography
+                  variant="h3"
+                  className={classes.header}
+                  style={{ marginBottom: 16 }}
+                >
+                  <strong>Payment Methods</strong>
+                </Typography>
+              </Grid>
+              {paymentMethods && paymentMethods?.length > 0 ? (
+                paymentMethods?.map((paymentMethod: PaymentMethod) => {
+                  const heading = `${
+                    paymentMethod.type !== 'credit_card'
+                      ? thirdPartyPaymentMap[paymentMethod.type].label
+                      : ''
+                  } ${paymentMethod.data.card_type} ****${
+                    paymentMethod.data.last_four
+                  }`;
+
+                  const renderIcon = () => {
+                    const Icon =
+                      paymentMethod.type !== 'credit_card'
+                        ? getTPPIcon(paymentMethod.type)
+                        : getCreditCardIcon(paymentMethod.data.card_type);
+                    return <Icon />;
+                  };
+
+                  return (
+                    <Grid key={paymentMethod.id} style={{ marginBottom: 8 }}>
+                      <SelectionCard
+                        className={classes.paymentMethod}
+                        checked={paymentMethod.id === paymentMethodId}
+                        isDefault={paymentMethod.is_default}
+                        onClick={() =>
+                          handlePaymentMethodChange(paymentMethod.id)
+                        }
+                        renderIcon={renderIcon}
+                        heading={heading}
+                        subheadings={[
+                          `Expires ${formatExpiry(
+                            paymentMethod.data.expiry ?? ''
+                          )}`,
+                        ]}
+                        variant="default"
+                      />
+                    </Grid>
+                  );
+                })
+              ) : (
+                <Grid item>
+                  <Typography>No payment methods on file.</Typography>
+                </Grid>
+              )}
+            </Grid>
+          ) : creditCard ? (
+            <Grid item>
+              <Grid container direction="row" wrap="nowrap" alignItems="center">
+                <Grid item className={classes.cardSection}>
+                  <Typography className={classes.cardText}>
+                    Card ending in {creditCard.data.last_four}
+                  </Typography>
+                  {Boolean(creditCard.data.expiry) && (
+                    <Typography className={classes.cardText}>
+                      Expires {formatExpiry(creditCard.data.expiry ?? '')}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item className={classes.cvvFieldWrapper}>
+                  <TextField
+                    label="CVV (optional)"
+                    small
+                    onChange={handleCVVChange}
+                    value={cvv}
+                    type="text"
+                    inputProps={{ id: 'paymentCVV' }}
+                    className={classes.cvvField}
+                    hasAbsoluteError
+                    noMarginTop
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
           ) : (
             <Grid item>
               <Typography>No credit card on file.</Typography>
             </Grid>
           )}
-          <Divider spacingTop={32} spacingBottom={16} />
+          <Grid item className={classes.input}>
+            <Grid item className={classes.button}>
+              <Button
+                buttonType="primary"
+                onClick={handleOpenDialog}
+                disabled={paymentTooLow || isCardExpired}
+                tooltipText={
+                  paymentTooLow
+                    ? `Payment amount must be at least ${minimumPayment}.`
+                    : undefined
+                }
+              >
+                Pay Now
+              </Button>
+            </Grid>
+          </Grid>
+          <CreditCardDialog
+            error={errorMessage}
+            isMakingPayment={submitting}
+            cancel={handleClose}
+            executePayment={confirmCardPayment}
+            open={dialogOpen}
+            usd={usd}
+          />
+          <Divider spacingTop={28} spacingBottom={16} />
           {showGooglePay ? (
             <>
               <Grid item>

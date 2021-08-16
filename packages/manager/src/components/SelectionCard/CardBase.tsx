@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as classNames from 'classnames';
 import {
   createStyles,
   Theme,
@@ -27,6 +28,7 @@ const styles = (theme: Theme) =>
     },
     icon: {
       display: 'flex',
+      alignItems: 'flex-end',
       justifyContent: 'flex-end',
       '& svg, & span': {
         fontSize: '32px',
@@ -106,19 +108,19 @@ export interface Props {
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
-  fullWidth?: boolean;
+  variant?: 'check' | 'info' | 'quantityCheck' | 'default' | 'selectable';
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
 export class CardBase extends React.Component<CombinedProps> {
   render() {
-    const { classes, heading, renderIcon, subheadings, fullWidth } = this.props;
+    const { classes, heading, renderIcon, subheadings, variant } = this.props;
+    const fullWidth = ['quantityCheck', 'selectable'].includes(variant ?? '');
     return (
       <Grid
         container
         alignItems="center"
-        justify="space-between"
         wrap={fullWidth ? 'wrap' : 'nowrap'}
         className={`${classes.innerGrid} innerGrid`}
       >
@@ -127,7 +129,12 @@ export class CardBase extends React.Component<CombinedProps> {
             {renderIcon()}
           </Grid>
         )}
-        <Grid item xs={fullWidth ? 12 : 10} className={classes.flex}>
+        <Grid
+          item
+          className={classNames({
+            [classes.flex]: variant !== 'default',
+          })}
+        >
           <div
             className={classes.heading}
             data-qa-select-card-heading={heading}
