@@ -12,6 +12,7 @@ import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
+import Chip from 'src/components/core/Chip';
 import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
@@ -38,7 +39,6 @@ import PayPal, { paypalScriptSrc } from './Paypal';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   currentBalance: {
     fontSize: '1.1rem',
     marginBottom: theme.spacing(4),
@@ -84,12 +84,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: 12,
     },
   },
-  paymentMethod: {
+  selectionCard: {
     display: 'contents',
     marginBottom: theme.spacing(),
+    '& .innerGrid': {
+      flexWrap: 'nowrap',
+    },
+    '& .cardBaseIcon': {
+      width: 45,
+      padding: 0,
+      justifyContent: 'center',
+    },
   },
   chip: {
-    fontSize: '0.625rem',
+    '& span': {
+      color: 'inherit !important',
+      fontSize: '0.625rem',
+    },
   },
 }));
 
@@ -347,23 +358,32 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                     return <Icon />;
                   };
 
+                  const renderVariant = () => {
+                    return paymentMethod.is_default ? (
+                      <Grid item className={`${classes.chip}`} xs={3}>
+                        <Chip label="DEFAULT" component="span" />
+                      </Grid>
+                    ) : (
+                      <Grid />
+                    );
+                  };
+
                   return (
                     <Grid key={paymentMethod.id} style={{ marginBottom: 8 }}>
                       <SelectionCard
-                        className={classes.paymentMethod}
+                        className={classes.selectionCard}
                         checked={paymentMethod.id === paymentMethodId}
-                        isDefault={paymentMethod.is_default}
                         onClick={() =>
                           handlePaymentMethodChange(paymentMethod.id)
                         }
                         renderIcon={renderIcon}
+                        renderVariant={renderVariant}
                         heading={heading}
                         subheadings={[
                           `Expires ${formatExpiry(
                             paymentMethod.data.expiry ?? ''
                           )}`,
                         ]}
-                        variant="default"
                       />
                     </Grid>
                   );

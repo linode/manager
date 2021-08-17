@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
-export const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -75,26 +75,23 @@ export const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
+  renderIcon?: () => JSX.Element;
   heading: string;
   subheadings: (string | undefined)[];
-  variant?: 'check' | 'info' | 'quantityCheck' | 'default' | 'selectable';
-  renderIcon?: () => JSX.Element;
+  renderVariant?: () => JSX.Element;
 }
 
 type CombinedProps = Props;
 
 const CardBase: React.FC<CombinedProps> = (props) => {
-  const { heading, subheadings, variant, renderIcon } = props;
+  const { renderIcon, heading, subheadings, renderVariant } = props;
 
   const classes = useStyles();
-
-  const fullWidth = ['quantityCheck', 'selectable'].includes(variant ?? '');
 
   return (
     <Grid
       container
       alignItems="center"
-      wrap={fullWidth ? 'wrap' : 'nowrap'}
       className={`${classes.innerGrid} innerGrid`}
     >
       {renderIcon && (
@@ -104,8 +101,8 @@ const CardBase: React.FC<CombinedProps> = (props) => {
       )}
       <Grid
         item
-        className={classNames({
-          [classes.flex]: variant !== 'default',
+        className={classNames('cardBaseHeadings', {
+          [classes.flex]: true,
         })}
       >
         <div className={classes.heading} data-qa-select-card-heading={heading}>
@@ -123,7 +120,7 @@ const CardBase: React.FC<CombinedProps> = (props) => {
           );
         })}
       </Grid>
-      {props.children}
+      {renderVariant ? renderVariant() : null}
     </Grid>
   );
 };
