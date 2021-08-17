@@ -88,7 +88,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   selectionCard: {
-    display: 'contents',
+    minWidth: '100%',
+    padding: 0,
     marginBottom: theme.spacing(),
     '& .innerGrid': {
       flexWrap: 'nowrap',
@@ -339,65 +340,67 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 <Typography
                   variant="h3"
                   className={classes.header}
-                  style={{ marginBottom: 16 }}
+                  style={{ marginBottom: 8 }}
                 >
                   <strong>Payment Methods:</strong>
                 </Typography>
               </Grid>
-              {paymentMethods && paymentMethods?.length > 0 ? (
-                paymentMethods?.map((paymentMethod: PaymentMethod) => {
-                  const heading = `${
-                    paymentMethod.type !== 'credit_card'
-                      ? thirdPartyPaymentMap[paymentMethod.type].label
-                      : ''
-                  } ${paymentMethod.data.card_type} ****${
-                    paymentMethod.data.last_four
-                  }`;
-
-                  const renderIcon = () => {
-                    const Icon =
+              <Grid item>
+                {paymentMethods && paymentMethods?.length > 0 ? (
+                  paymentMethods?.map((paymentMethod: PaymentMethod) => {
+                    const heading = `${
                       paymentMethod.type !== 'credit_card'
-                        ? getTPPIcon(paymentMethod.type)
-                        : getCreditCardIcon(paymentMethod.data.card_type);
-                    return <Icon />;
-                  };
+                        ? thirdPartyPaymentMap[paymentMethod.type].label
+                        : ''
+                    } ${paymentMethod.data.card_type} ****${
+                      paymentMethod.data.last_four
+                    }`;
 
-                  const renderVariant = () => {
-                    return paymentMethod.is_default ? (
-                      <Grid item className={`${classes.chip}`} xs={3} md={2}>
-                        <Chip label="DEFAULT" component="span" />
+                    const renderIcon = () => {
+                      const Icon =
+                        paymentMethod.type !== 'credit_card'
+                          ? getTPPIcon(paymentMethod.type)
+                          : getCreditCardIcon(paymentMethod.data.card_type);
+                      return <Icon />;
+                    };
+
+                    const renderVariant = () => {
+                      return paymentMethod.is_default ? (
+                        <Grid item className={`${classes.chip}`} xs={3} md={2}>
+                          <Chip label="DEFAULT" component="span" />
+                        </Grid>
+                      ) : null;
+                    };
+
+                    return (
+                      <Grid
+                        key={paymentMethod.id}
+                        className={classes.paymentMethod}
+                      >
+                        <SelectionCard
+                          className={classes.selectionCard}
+                          checked={paymentMethod.id === paymentMethodId}
+                          onClick={() =>
+                            handlePaymentMethodChange(paymentMethod.id)
+                          }
+                          renderIcon={renderIcon}
+                          renderVariant={renderVariant}
+                          heading={heading}
+                          subheadings={[
+                            `Expires ${formatExpiry(
+                              paymentMethod.data.expiry ?? ''
+                            )}`,
+                          ]}
+                        />
                       </Grid>
-                    ) : null;
-                  };
-
-                  return (
-                    <Grid
-                      key={paymentMethod.id}
-                      className={classes.paymentMethod}
-                    >
-                      <SelectionCard
-                        className={classes.selectionCard}
-                        checked={paymentMethod.id === paymentMethodId}
-                        onClick={() =>
-                          handlePaymentMethodChange(paymentMethod.id)
-                        }
-                        renderIcon={renderIcon}
-                        renderVariant={renderVariant}
-                        heading={heading}
-                        subheadings={[
-                          `Expires ${formatExpiry(
-                            paymentMethod.data.expiry ?? ''
-                          )}`,
-                        ]}
-                      />
-                    </Grid>
-                  );
-                })
-              ) : (
-                <Grid item>
-                  <Typography>No payment methods on file.</Typography>
-                </Grid>
-              )}
+                    );
+                  })
+                ) : (
+                  <Grid item>
+                    <Typography>No payment methods on file.</Typography>
+                  </Grid>
+                )}
+              </Grid>
             </Grid>
           ) : creditCard ? (
             <Grid item>
