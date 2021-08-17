@@ -1,12 +1,10 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import {
   attachment1,
   attachment2,
   attachment3,
 } from 'src/__data__/fileAttachments';
-
 import { AttachFileListItem } from './AttachFileListItem';
 
 const props = {
@@ -15,13 +13,6 @@ const props = {
   fileIdx: 1,
   removeFile: jest.fn(),
   onClick: jest.fn(),
-  classes: {
-    root: '',
-    attachmentField: '',
-    attachmentsContainer: '',
-    closeIcon: '',
-    uploadProgress: '',
-  },
 };
 
 const component = shallow(<AttachFileListItem {...props} />);
@@ -35,9 +26,7 @@ describe('AttachFileListItem component', () => {
   });
   it('should render a delete icon when inlineDisplay is true', () => {
     component.setProps({ inlineDisplay: true });
-    const textfield = component
-      .find('WithStyles(LinodeTextField)')
-      .first() as any;
+    const textfield = component.find('LinodeTextField').first() as any;
     expect(textfield.props().InputProps).toBeDefined();
     expect(component.find('[data-qa-delte-button]')).toHaveLength(0);
   });

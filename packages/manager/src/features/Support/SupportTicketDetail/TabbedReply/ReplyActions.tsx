@@ -30,8 +30,14 @@ const ReplyActions: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <React.Fragment>
-      <ActionsPanel style={{ marginTop: 16 }}>
+    <>
+      {closable && (
+        <CloseTicketLink
+          ticketId={ticketId}
+          closeTicketSuccess={closeTicketSuccess}
+        />
+      )}
+      <ActionsPanel style={{ marginTop: 8 }}>
         <Button
           buttonType="primary"
           loading={isSubmitting}
@@ -40,13 +46,7 @@ const ReplyActions: React.FC<CombinedProps> = (props) => {
           Add Update
         </Button>
       </ActionsPanel>
-      {closable && (
-        <CloseTicketLink
-          ticketId={ticketId}
-          closeTicketSuccess={closeTicketSuccess}
-        />
-      )}
-    </React.Fragment>
+    </>
   );
 };
 
