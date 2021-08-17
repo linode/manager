@@ -8,7 +8,6 @@ import RegionSelect, {
   flags,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { dcDisplayNames } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   formatRegion,
   getHumanReadableCountry,
@@ -16,33 +15,24 @@ import {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(4),
-    '& > p:first-of-type': {
-      marginTop: theme.spacing(4),
-      marginBottom: theme.spacing(1.5),
-      fontSize: theme.spacing(2),
-      fontFamily: theme.font.bold,
-    },
-  },
-  rootCMR: {
+    marginTop: theme.spacing(4),
     padding: 0,
     '& > p:first-of-type': {
-      marginTop: theme.spacing(4),
-      marginBottom: theme.spacing(1.5),
-      fontSize: theme.spacing(2),
+      color: theme.color.label,
       fontFamily: theme.font.bold,
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(),
     },
   },
   currentRegion: {
     display: 'flex',
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: theme.spacing(4),
     '& svg': {
       marginRight: theme.spacing(),
+      marginLeft: 14,
     },
-  },
-  select: {
-    marginTop: theme.spacing(2),
   },
 }));
 
@@ -58,18 +48,17 @@ interface Props {
 type CombinedProps = Props;
 
 const ConfigureForm: React.FC<CombinedProps> = (props) => {
-  const { allRegions, currentRegion } = props;
   const classes = useStyles();
-  const { cmr } = useFlags();
+  const { allRegions, currentRegion } = props;
 
   const country =
     allRegions.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
 
   return (
-    <Paper className={cmr ? classes.rootCMR : classes.root}>
+    <Paper className={classes.root}>
       <Typography variant="h3">Configure Migration</Typography>
-      <Typography>Current Region:</Typography>
+      <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
         {pathOr(() => null, [country], flags)()}
         <Typography>{`${getHumanReadableCountry(
@@ -77,7 +66,6 @@ const ConfigureForm: React.FC<CombinedProps> = (props) => {
         )}: ${formatRegion(currentRegion)}`}</Typography>
       </div>
       <RegionSelect
-        className={classes.select}
         regions={props.allRegions
           .filter((eachRegion) => eachRegion.id !== props.currentRegion)
           .map((eachRegion) => ({

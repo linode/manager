@@ -33,6 +33,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   error: {
     marginTop: theme.spacing(2),
   },
+  actionPanel: {
+    flexDirection: 'column',
+    '& button': {
+      alignSelf: 'flex-end',
+    },
+  },
 }));
 
 interface Props {
@@ -196,7 +202,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 disabled={disabled}
                 passwordHelperText={passwordHelperText}
               />
-              <ActionsPanel>
+              <ActionsPanel className={classes.actionPanel}>
                 <Typography variant="h2">Confirm</Typography>
                 <Typography style={{ marginBottom: 8 }}>
                   To confirm these changes, type the label of the Linode{' '}
@@ -211,7 +217,6 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 <Button
                   disabled={submitButtonDisabled || disabled}
                   buttonType="primary"
-                  className="destructive"
                   onClick={handleRebuildButtonClick}
                   data-testid="rebuild-button"
                 >

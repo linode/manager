@@ -2,6 +2,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
+import { makeStyles } from 'src/components/core/styles';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { useDialog } from 'src/hooks/useDialog';
 import {
@@ -17,9 +18,17 @@ interface Props {
   onSuccess?: () => void;
 }
 
+const useStyles = makeStyles(() => ({
+  button: {
+    float: 'right',
+  },
+}));
+
 export type CombinedProps = Props & WithSnackbarProps & DomainActionsProps;
 
 export const DeleteDomain: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
     dialog,
     openDialog,
@@ -48,6 +57,7 @@ export const DeleteDomain: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <Button
+        className={classes.button}
         buttonType="outlined"
         onClick={() => openDialog(props.domainId, props.domainLabel)}
       >

@@ -12,7 +12,6 @@ import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderRadius: 3,
     marginTop: 24,
     marginBottom: theme.spacing(2),
     padding: '4px 16px',
@@ -21,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& ul:first-of-type': {
       fontFamily: theme.font.normal,
       '& li': {
+        fontSize: '0.875rem',
         marginBottom: theme.spacing(),
       },
     },

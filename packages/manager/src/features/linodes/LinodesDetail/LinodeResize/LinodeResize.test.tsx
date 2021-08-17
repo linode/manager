@@ -32,7 +32,6 @@ describe('LinodeResize', () => {
       enqueueSnackbar={jest.fn()}
       {...reactRouterProps}
       classes={{
-        root: '',
         title: '',
         subTitle: '',
         toolTip: '',
@@ -40,6 +39,7 @@ describe('LinodeResize', () => {
         resizeTitle: '',
         currentHeaderEmptyCell: '',
         selectPlanPanel: '',
+        actionPanel: '',
       }}
       linodeId={12}
       linodeLabel=""
