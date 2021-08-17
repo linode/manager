@@ -84,6 +84,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: 12,
     },
   },
+  paymentMethod: {
+    marginBottom: theme.spacing(),
+  },
   selectionCard: {
     display: 'contents',
     marginBottom: theme.spacing(),
@@ -94,6 +97,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 45,
       padding: 0,
       justifyContent: 'center',
+    },
+    '& .cardBaseHeadings': {
+      flex: 'inherit',
     },
   },
   chip: {
@@ -233,9 +239,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           cvv,
         };
 
-    makePayment({
-      ...makePaymentData,
-    })
+    makePayment(makePaymentData)
       .then((response) => {
         setSubmitting(false);
         setDialogOpen(false);
@@ -337,7 +341,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                   className={classes.header}
                   style={{ marginBottom: 16 }}
                 >
-                  <strong>Payment Methods</strong>
+                  <strong>Payment Methods:</strong>
                 </Typography>
               </Grid>
               {paymentMethods && paymentMethods?.length > 0 ? (
@@ -360,16 +364,17 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
 
                   const renderVariant = () => {
                     return paymentMethod.is_default ? (
-                      <Grid item className={`${classes.chip}`} xs={3}>
+                      <Grid item className={`${classes.chip}`} xs={3} md={2}>
                         <Chip label="DEFAULT" component="span" />
                       </Grid>
-                    ) : (
-                      <Grid />
-                    );
+                    ) : null;
                   };
 
                   return (
-                    <Grid key={paymentMethod.id} style={{ marginBottom: 8 }}>
+                    <Grid
+                      key={paymentMethod.id}
+                      className={classes.paymentMethod}
+                    >
                       <SelectionCard
                         className={classes.selectionCard}
                         checked={paymentMethod.id === paymentMethodId}

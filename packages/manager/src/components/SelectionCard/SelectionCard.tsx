@@ -55,7 +55,7 @@ export interface Props {
   className?: string;
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
-  renderVariant?: () => JSX.Element;
+  renderVariant?: () => any;
 }
 
 interface WithTooltipProps {
