@@ -143,6 +143,10 @@ export const ImageSelect: React.FC<Props> = (props) => {
       case 'private':
         return !thisImage.is_public && thisImage.status === 'available';
       case 'all':
+        // We don't show images with 'kube' in the label that are created by Linode
+        return !(
+          thisImage.label.match(/kube/i) && thisImage.created_by === 'linode'
+        );
       default:
         return true;
     }
