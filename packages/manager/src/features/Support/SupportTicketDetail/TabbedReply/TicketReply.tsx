@@ -11,7 +11,6 @@ type ClassNames = 'replyField';
 const styles = () =>
   createStyles({
     replyField: {
-      height: 320,
       marginTop: 0,
       '& > div': {
         maxWidth: '100% !important',
