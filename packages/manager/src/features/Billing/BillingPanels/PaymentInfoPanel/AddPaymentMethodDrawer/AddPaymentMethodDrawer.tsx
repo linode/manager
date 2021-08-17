@@ -88,11 +88,11 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
       {hasMaxPaymentMethods ? (
         <Notice
           warning
-          text="You have the max amount of payment methods on your account. Delete an existing payment method to add a new one."
+          text="You reached the maximum number of payment methods on your account. Delete an existing payment method to add a new one."
         />
       ) : null}
       {isGooglePayEnabled ? (
-        <React.Fragment>
+        <>
           <Divider />
           <Grid className={classes.root} container>
             <Grid item xs={8} md={9}>
@@ -117,9 +117,9 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
               />
             </Grid>
           </Grid>
-        </React.Fragment>
+        </>
       ) : null}
-      <React.Fragment>
+      <>
         <Divider spacingBottom={16} spacingTop={16} />
         <Typography variant="h3">Credit Card</Typography>
         <AddCreditCardForm
@@ -127,7 +127,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           disabled={disabled}
           onClose={onClose}
         />
-      </React.Fragment>
+      </>
     </Drawer>
   );
 };

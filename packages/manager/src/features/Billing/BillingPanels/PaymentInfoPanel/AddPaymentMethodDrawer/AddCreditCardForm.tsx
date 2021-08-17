@@ -258,7 +258,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             />
             */}
           <CheckBox
-            text="Make Default?"
+            text="Make Default"
             checked={values.is_default}
             onChange={() => setFieldValue('is_default', !values.is_default)}
             disabled={disableInput || hasNoPaymentMethods}
