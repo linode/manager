@@ -39,7 +39,7 @@ const interceptOnce = (method, url, response) => {
 };
 
 describe('machine image', () => {
-  it.skip('uploads machine image', () => {
+  it('uploads machine image', () => {
     cy.intercept('POST', '*/images/upload').as('imageUpload');
     uploadImage();
     cy.wait('@imageUpload');
@@ -47,7 +47,7 @@ describe('machine image', () => {
     fbtVisible(imageLabel);
   });
 
-  it.skip('uploads machine image, mock failed event', () => {
+  it('uploads machine image, mock failed event', () => {
     const failureMessage = 'Forced Fail Via Mock';
     cy.intercept('POST', '*/images/upload').as('imageUpload');
     uploadImage();
@@ -81,7 +81,7 @@ describe('machine image', () => {
         `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
       );
       assertToast(
-        `There was a problem processing image cy-test-image: ${failureMessage}`,
+        `There was a problem processing image ${imageLabel}: ${failureMessage}`,
         2
       );
       cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
@@ -92,12 +92,15 @@ describe('machine image', () => {
     });
   });
 
-  it('uploads machine image, mock finished event', () => {
+  it.only('uploads machine image, mock finished event', () => {
     const finishedMessage = 'finished message';
     cy.intercept('POST', '*/images/upload').as('imageUpload');
     uploadImage();
     cy.wait('@imageUpload').then((xhr) => {
       const actualId = xhr.response?.body.image.id;
+      assertToast(
+        `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
+      );
       cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
         fbtVisible(imageLabel);
         fbtVisible('Pending');
@@ -109,7 +112,6 @@ describe('machine image', () => {
         makeResourcePage(
           eventFactory.buildList(1, {
             action: 'image_upload',
-            username: 'some-test-account',
             entity: {
               label: imageLabel,
               id: actualId,
@@ -123,10 +125,7 @@ describe('machine image', () => {
         )
       ).as('getEvent');
       cy.wait('@getEvent');
-      assertToast(
-        `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
-      );
-      assertToast(`Image cy-test-image is now availabe`);
+      assertToast(`Image ${imageLabel} is now available.`, 2);
       cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
         fbtVisible(imageLabel);
         fbtVisible('Ready');
@@ -171,7 +170,7 @@ describe('machine image', () => {
       assertToast(
         `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
       );
-      assertToast(`Image cy-test-image is now availabe`, 2);
+      assertToast(`Image cy-test-image is now availabe`);
       cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
         fbtVisible(imageLabel);
         fbtVisible('Failed');
