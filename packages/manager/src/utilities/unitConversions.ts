@@ -176,17 +176,11 @@ const determineDecimalPlaces = (
 export const convertBytesToTarget = (unit: StorageSymbol, value: number) => {
   switch (unit) {
     case 'byte':
-      return value;
     case 'bytes':
+    case 'B':
       return value;
-    case 'KB':
-      return value / 1024;
-    case 'MB':
-      return value / 1024 / 1024;
-    case 'GB':
-      return value / 1024 / 1024 / 1024;
-    case 'TB':
-      return value / 1024 / 1024 / 1024 / 1024;
+    default:
+      return convertStorageUnit('B', value, unit);
   }
 };
 
