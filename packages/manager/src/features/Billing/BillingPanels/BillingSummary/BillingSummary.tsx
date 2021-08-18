@@ -7,7 +7,7 @@ import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -113,12 +113,11 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   //
 
   // On-the-fly route matching so this component can open the drawer itself.
-  const routeForMakePayment = '/account/billing/make-payment/:id?';
-  const makePaymentRouteMatch = useRouteMatch<{ id: string | undefined }>(
-    routeForMakePayment
-  );
+  const routeForMakePayment = '/account/billing/make-payment';
+  const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
 
   const { replace } = useHistory();
+  const location = useLocation();
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
@@ -146,26 +145,22 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const closePromoDialog = () => setIsPromoDialogOpen(false);
 
   React.useEffect(() => {
-    if (!Boolean(makePaymentRouteMatch)) {
+    if (!makePaymentRouteMatch) {
       return;
     }
 
-    const paymentMethodMatch = paymentMethods?.find(
-      (paymentMethod) =>
-        paymentMethod.id === +(makePaymentRouteMatch?.params?.id ?? -1)
-    );
+    const paymentMethodId =
+      location?.state?.id ??
+      paymentMethods?.find((paymentMethod) => paymentMethod.is_default)?.id ??
+      undefined;
 
-    let defaultPaymentMethod;
-    if (!paymentMethodMatch) {
-      defaultPaymentMethod = paymentMethods?.find(
-        (paymentMethod) => paymentMethod.is_default
-      );
-    }
-
-    openPaymentDrawer(
-      paymentMethodMatch?.id ?? defaultPaymentMethod?.id ?? undefined
-    );
-  }, [makePaymentRouteMatch, paymentMethods, openPaymentDrawer]);
+    openPaymentDrawer(paymentMethodId);
+  }, [
+    paymentMethods,
+    openPaymentDrawer,
+    makePaymentRouteMatch,
+    location.state,
+  ]);
 
   //
   // Account Balance logic
