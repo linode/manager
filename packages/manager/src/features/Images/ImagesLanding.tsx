@@ -68,7 +68,7 @@ const getHeaders = (
       label: 'Image',
       dataColumn: 'label',
       sortable: true,
-      widthPercent: flagEnabled ? 20 : 25,
+      widthPercent: flagEnabled ? 30 : 35,
     },
     flagEnabled
       ? {
