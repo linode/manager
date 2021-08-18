@@ -76,6 +76,7 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
                 onClick={onClick}
                 position="end"
                 className={classes.closeIcon}
+                data-testid="inline-delete-icon"
                 data-qa-inline-delete
               >
                 <Close />
@@ -85,11 +86,17 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
           label="File Attached"
           aria-label="Disabled Text Field"
           hideLabel
+          data-testid="attached-file"
         />
       </Grid>
       {!inlineDisplay && (
         <Grid item>
-          <Button buttonType="outlined" onClick={onClick} data-qa-delete-button>
+          <Button
+            buttonType="outlined"
+            onClick={onClick}
+            data-testid="delete-button"
+            data-qa-delete-button
+          >
             Delete
           </Button>
         </Grid>
