@@ -11,6 +11,7 @@ import GooglePayChip from '../GooglePayChip';
 import AddCreditCardForm from './AddCreditCardForm';
 import useFlags from 'src/hooks/useFlags';
 import Notice from 'src/components/Notice';
+import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 
 interface Props {
   open: boolean;
@@ -71,9 +72,8 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     });
   };
 
-  // @TODO: Use env varible or feature flag?
   const hasMaxPaymentMethods = paymentMethods
-    ? paymentMethods.length >= 6
+    ? paymentMethods.length >= MAXIMUM_PAYMENT_METHODS
     : false;
 
   const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(

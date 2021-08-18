@@ -17,13 +17,6 @@ import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { InputBaseComponentProps } from '@material-ui/core/InputBase/InputBase';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  // We can remove the next four lines when the changes
-  // from  https://github.com/linode/manager/pull/7846
-  // are in.
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
   error: {
     marginTop: theme.spacing(2),
   },
@@ -265,7 +258,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
           />
         </Grid>
       </Grid>
-      <ActionsPanel className={classes.actions} style={{ marginTop: 0 }}>
+      <ActionsPanel style={{ marginTop: 0 }}>
         <Button onClick={onClose} buttonType="secondary" disabled={disabled}>
           Cancel
         </Button>
