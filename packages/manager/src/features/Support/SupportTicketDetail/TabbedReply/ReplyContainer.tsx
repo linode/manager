@@ -8,12 +8,7 @@ import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -26,7 +21,7 @@ import TabbedReply from './TabbedReply';
 const useStyles = makeStyles((theme: Theme) => ({
   replyContainer: {
     paddingLeft: theme.spacing(8),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       paddingLeft: theme.spacing(6),
     },
   },
@@ -66,8 +61,6 @@ type CombinedProps = Props;
 
 const ReplyContainer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { onSuccess, reloadAttachments, ...rest } = props;
 
@@ -161,7 +154,7 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
       <Grid item style={{ marginTop: 8 }}>
         <Accordion
           heading="Formatting Tips"
-          expanded={!matchesSmDown}
+          defaultExpanded={false}
           detailProps={{ className: classes.expPanelSummary }}
         >
           <Reference isReply rootClass={classes.referenceRoot} />

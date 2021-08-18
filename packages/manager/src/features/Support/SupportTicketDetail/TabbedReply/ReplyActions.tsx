@@ -1,8 +1,15 @@
 import * as React from 'react';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CloseTicketLink from '../CloseTicketLink';
+import { makeStyles } from 'src/components/core/styles';
+
+const useStyles = makeStyles(() => ({
+  actions: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+}));
 
 interface Props {
   isSubmitting: boolean;
@@ -16,6 +23,8 @@ interface Props {
 type CombinedProps = Props;
 
 const ReplyActions: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
   const {
     isSubmitting,
     submitForm,
@@ -37,7 +46,7 @@ const ReplyActions: React.FC<CombinedProps> = (props) => {
           closeTicketSuccess={closeTicketSuccess}
         />
       )}
-      <ActionsPanel style={{ marginTop: 8 }}>
+      <ActionsPanel className={classes.actions}>
         <Button
           buttonType="primary"
           loading={isSubmitting}
