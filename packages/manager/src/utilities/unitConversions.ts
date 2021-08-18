@@ -200,6 +200,13 @@ export enum StorageUnitExponents {
 
 type StorageUnitExponentKey = keyof typeof StorageUnitExponents;
 
+/**
+ * Converts from one storage unit to another.
+ *
+ * @param sourceUnit - The storage unit to convert the quantity from
+ * @param sourceQuantity - The quantity to covert
+ * @param targetUnit - The storage unit to convert the quantity to
+ */
 export const convertStorageUnit = (
   sourceUnit: StorageUnitExponentKey,
   sourceQuantity: number | undefined,

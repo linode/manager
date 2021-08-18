@@ -18,7 +18,7 @@ import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import unitPriceCalculator from 'src/utilities/unitPriceCalculator';
+import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
 import { convertStorageUnit } from 'src/utilities/unitConversions';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ImagesPricingCopy from './ImagesPricingCopy';
@@ -233,7 +233,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           data-qa-disk-select
         />
         <Typography className={classes.helperText} variant="body1">
-          {`${unitPriceCalculator(0.1, selectedDiskSizeInMB)}/month`}
+          {`${calculateCostFromUnitPrice(0.1, selectedDiskSizeInMB)}/month`}
         </Typography>
         <Typography className={classes.helperText} variant="body1">
           Linode Images cannot be created if you are using raw disks or disks
