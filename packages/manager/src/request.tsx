@@ -16,7 +16,6 @@ const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
 ) => {
   if (!!response.headers['x-maintenance-mode']) {
-    store.dispatch(handleLogout());
     Promise.reject(response);
   }
 
@@ -24,22 +23,34 @@ const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
 };
 
 export const handleError = (error: AxiosError) => {
-  if (
-    !!error.config?.headers['x-maintenance-mode'] ||
-    (error.response && error.response.status === 401)
-  ) {
+  if (error.response && error.response.status === 401) {
     /**
      * this will blow out redux state and the componentDidUpdate in the
      * AuthenticationWrapper.tsx will be responsible for redirecting to Login
      */
     store.dispatch(handleLogout());
   }
+
   const config = error.response?.config ?? {};
   const url = config.url ?? '';
   const status: number = error.response?.status ?? 0;
   const errors: APIError[] = error.response?.data?.errors ?? [
     { reason: DEFAULT_ERROR_MESSAGE },
   ];
+
+  const apiInMaintenanceMode =
+    !!error.config?.headers['x-maintenance-mode'] ||
+    errors.some((err) => {
+      return Boolean(err.reason.match(/maintenance mode/i));
+    });
+
+  if (apiInMaintenanceMode) {
+    store.dispatch(
+      setErrors({
+        api_maintenance_mode: true,
+      })
+    );
+  }
 
   /** AxiosError contains the original POST data as stringified JSON */
   let requestData;
