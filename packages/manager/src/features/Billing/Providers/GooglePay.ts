@@ -125,25 +125,11 @@ export const gPay = async (
         `${accountPaymentKey}-all`
       );
 
-      /**
-       * Make Google Pay default if
-       * - They have no payment methods
-       * - Their previous default payment method was Google Pay
-       *
-       * We determined this to make sure a user's payment method
-       * does not abruptly switch after "Editing" it.
-       * @TODO remove this logic when user can have more payment methods
-       */
-      const shouldBecomeDefault =
-        paymentMethods?.length === 0 ||
-        paymentMethods?.find(
-          (method: PaymentMethod) => method.is_default === true
-        )?.type === 'google_pay';
-
       await addPaymentMethod({
         type: 'payment_method_nonce',
         data: { nonce },
-        is_default: shouldBecomeDefault,
+        // Make Google Pay default if they have no payment methods upon add
+        is_default: paymentMethods?.length === 0,
       });
       queryClient.invalidateQueries(`${accountPaymentKey}-all`);
       setMessage('Successfully added Google Pay', 'success');

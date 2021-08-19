@@ -9,19 +9,14 @@ import { addPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
-import {
-  CreditCardAddressMessage,
-  creditCardField,
-} from '../UpdateCreditCardDrawer/UpdateCreditCardDrawer';
 import { CreditCardSchema } from '@linode/validation';
 import { take } from 'ramda';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import CheckBox from 'src/components/CheckBox';
+import NumberFormat, { NumberFormatProps } from 'react-number-format';
+import { InputBaseComponentProps } from '@material-ui/core/InputBase/InputBase';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  actions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
   error: {
     marginTop: theme.spacing(2),
   },
@@ -32,6 +27,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   onClose: () => void;
+  disabled: boolean;
+  hasNoPaymentMethods: boolean;
 }
 
 interface Values {
@@ -48,9 +45,9 @@ interface Values {
   country: string;
 }
 
-const AddCreditCardForm = (props: Props) => {
+const AddCreditCardForm: React.FC<Props> = (props) => {
+  const { onClose, disabled, hasNoPaymentMethods } = props;
   const [error, setError] = React.useState<string>();
-  const { onClose } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -123,6 +120,8 @@ const AddCreditCardForm = (props: Props) => {
     validationSchema: CreditCardSchema,
   });
 
+  const disableInput = isSubmitting || disabled;
+
   return (
     <form onSubmit={handleSubmit}>
       {error && (
@@ -139,7 +138,7 @@ const AddCreditCardForm = (props: Props) => {
             label="Credit Card Number"
             error={touched.card_number && Boolean(errors.card_number)}
             errorText={touched.card_number ? errors.card_number : undefined}
-            disabled={isSubmitting}
+            disabled={disableInput}
             InputProps={{
               inputComponent: creditCardField,
             }}
@@ -148,7 +147,6 @@ const AddCreditCardForm = (props: Props) => {
         <Grid item xs={12} sm={6}>
           <TextField
             name="expiry"
-            // value={values.expiry}
             onChange={(e) => {
               const value: string[] = e.target.value.split('/');
               setFieldValue('expiry_month', value[0]);
@@ -170,7 +168,7 @@ const AddCreditCardForm = (props: Props) => {
                 ? errors.expiry_month || errors.expiry_year
                 : undefined
             }
-            disabled={isSubmitting}
+            disabled={disableInput}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -181,10 +179,11 @@ const AddCreditCardForm = (props: Props) => {
             label="Security Code"
             error={touched.cvv && Boolean(errors.cvv)}
             errorText={touched.cvv ? errors.cvv : undefined}
-            disabled={isSubmitting}
+            disabled={disableInput}
           />
         </Grid>
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
+          {/*
           <TextField
             name="address"
             value={values.address}
@@ -249,27 +248,59 @@ const AddCreditCardForm = (props: Props) => {
             )}
             error={Boolean(errors.country)}
             errorText={errors.country}
+            />
+            */}
+          <CheckBox
+            text="Make Default"
+            checked={values.is_default}
+            onChange={() => setFieldValue('is_default', !values.is_default)}
+            disabled={disableInput || hasNoPaymentMethods}
           />
         </Grid>
       </Grid>
-      <CheckBox
-        text="Make default?"
-        checked={values.is_default}
-        onChange={() => setFieldValue('is_default', !values.is_default)}
-      /> */}
-      </Grid>
-      <div className={classes.notice}>
-        <CreditCardAddressMessage />
-      </div>
-      <ActionsPanel className={classes.actions}>
-        <Button onClick={onClose} buttonType="secondary">
+      <ActionsPanel style={{ marginTop: 0 }}>
+        <Button onClick={onClose} buttonType="secondary" disabled={disabled}>
           Cancel
         </Button>
-        <Button type="submit" buttonType="primary" loading={isSubmitting}>
+        <Button
+          type="submit"
+          buttonType="primary"
+          loading={isSubmitting}
+          disabled={disabled}
+        >
           Add Credit Card
         </Button>
       </ActionsPanel>
     </form>
+  );
+};
+
+export interface CreditCardFormProps extends NumberFormatProps {
+  inputRef: React.Ref<any>;
+  onChange: any;
+}
+
+type CombinedCreditCardFormProps = CreditCardFormProps &
+  InputBaseComponentProps;
+
+const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
+  inputRef,
+  onChange,
+  ...other
+}) => {
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            value: values.value,
+          },
+        });
+      }}
+      format="#### #### #### #######"
+    />
   );
 };
 
