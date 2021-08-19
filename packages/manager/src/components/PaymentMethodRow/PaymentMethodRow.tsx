@@ -38,12 +38,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   paymentMethod: PaymentMethod;
-  onEdit?: () => void;
   onDelete: () => void;
 }
 
 const PaymentMethodRow: React.FC<Props> = (props) => {
-  const { paymentMethod, onEdit, onDelete } = props;
+  const { paymentMethod, onDelete } = props;
   const { data: creditCard, type, is_default } = paymentMethod;
   const classes = useStyles();
   const history = useHistory();
@@ -78,14 +77,6 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
         : undefined,
       onClick: () => makeDefault(paymentMethod.id),
     },
-    ...(onEdit
-      ? [
-          {
-            title: 'Edit',
-            onClick: onEdit,
-          },
-        ]
-      : []),
     {
       title: 'Delete',
       disabled: paymentMethod.is_default,
@@ -97,7 +88,11 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
   ];
 
   return (
-    <Paper className={classes.root} variant="outlined">
+    <Paper
+      className={classes.root}
+      variant="outlined"
+      data-qa-payment-row={type}
+    >
       <Grid container className={classes.container}>
         <Grid item className={classes.item}>
           {paymentMethod.type === 'credit_card' ? (
