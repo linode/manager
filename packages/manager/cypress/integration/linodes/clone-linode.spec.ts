@@ -1,13 +1,9 @@
-import {
-  createLinode,
-  deleteLinodeById,
-  deleteLinodeByLabel,
-} from '../../support/api/linodes';
+import { createLinode } from '../../support/api/linodes';
 import {
   containsClick,
   containsVisible,
+  fbtClick,
   getClick,
-  getVisible,
 } from '../../support/helpers';
 import { assertToast } from '../../support/ui/events';
 
@@ -27,19 +23,13 @@ describe('clone linode', () => {
         containsClick('Clone');
         containsClick('Select a Region');
         containsClick('Newark, NJ');
-        getVisible('[data-qa-details]').within(() => {
-          containsVisible(linode.label);
-        });
         getClick('[id="g6-nanode-1"]');
-        getClick('[data-qa-deploy-linode="true"]');
+        fbtClick('Create Linode');
         cy.wait('@cloneLinode').then((xhr) => {
           const newLinodeLabel = xhr.response?.body?.label;
-          const newLinodeId = xhr.response?.body?.id;
           assert.equal(xhr.response?.statusCode, 200);
           assertToast(`Your Linode ${newLinodeLabel} is being created.`);
           containsVisible(newLinodeLabel);
-          deleteLinodeById(linode.id);
-          deleteLinodeById(newLinodeId);
         });
       }
     });
