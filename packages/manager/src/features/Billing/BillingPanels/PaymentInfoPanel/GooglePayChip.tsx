@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     border: 0,
     padding: 0,
-    marginTop: 10,
     marginRight: -8,
     backgroundColor: 'transparent',
     cursor: 'pointer',
@@ -126,7 +125,7 @@ export const GooglePayChip: React.FC<Props> = (props) => {
       disabled={disabledDueToProcessing}
       data-qa-button="gpayChip"
     >
-      <GooglePayIcon height="26px" />
+      <GooglePayIcon width="49" height="26" />
     </button>
   );
 };
