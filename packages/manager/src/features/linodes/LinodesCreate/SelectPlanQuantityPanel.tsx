@@ -78,6 +78,9 @@ const styles = (theme: Theme) =>
     enhancedInputOuter: {
       display: 'flex',
       justifyContent: 'flex-end',
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'flex-start',
+      },
       alignItems: 'center',
     },
     enhancedInputButton: {
@@ -85,6 +88,14 @@ const styles = (theme: Theme) =>
       minWidth: 85,
       paddingTop: 7,
       paddingBottom: 7,
+      [theme.breakpoints.down('sm')]: {
+        minWidth: 80,
+        paddingTop: 12,
+        paddingBottom: 12,
+        '& span': {
+          color: '#fff !important',
+        },
+      },
     },
   });
 
@@ -139,6 +150,28 @@ export class SelectPlanPanel extends React.Component<
       isOnCreate,
       updatePlanCount,
     } = this.props;
+
+    const renderVariant = () => (
+      <Grid item xs={12}>
+        <div className={classes.enhancedInputOuter}>
+          <EnhancedNumberInput
+            value={type.count}
+            setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
+            small
+          />
+          {isOnCreate && (
+            <Button
+              buttonType="primary"
+              onClick={() => submitForm!(type.id, type.count)}
+              disabled={type.count < 1}
+              className={classes.enhancedInputButton}
+            >
+              Add
+            </Button>
+          )}
+        </div>
+      </Grid>
+    );
 
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -203,14 +236,7 @@ export class SelectPlanPanel extends React.Component<
             heading={type.heading}
             subheadings={type.subHeadings}
             disabled={disabled}
-            inputValue={type.count}
-            setInputValue={(newCount: number) =>
-              updatePlanCount(type.id, newCount)
-            }
-            displayButton={isOnCreate}
-            submitForm={() => submitForm!(type.id, type.count)}
-            buttonDisabled={type.count < 1}
-            variant="quantityCheck"
+            renderVariant={renderVariant}
           />
         </Hidden>
       </React.Fragment>

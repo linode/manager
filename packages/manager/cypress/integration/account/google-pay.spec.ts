@@ -80,7 +80,7 @@ describe('Google Pay', () => {
     cy.visitWithLogin('/account/billing');
   });
 
-  it('updates payment flow - google pay', () => {
+  it('tests update payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -102,7 +102,7 @@ describe('Google Pay', () => {
     cy.wait('@braintree');
   });
 
-  it('makes payment flow - google pay', () => {
+  it('tests make payment flow - google pay', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
@@ -124,10 +124,11 @@ describe('Google Pay', () => {
       });
     cy.get('[data-testid="drawer"]').within(() => {
       getVisible('[data-qa-drawer-title="Make a Payment"]');
-      getVisible('[data-qa-textfield-label="Security Code (optional)"]');
-      getVisible('[data-qa-contact-cc="true"]');
       containsVisible(
         `${getPaymentMethodDataWithGpay.data[0].data.card_type} ****${getPaymentMethodDataWithGpay.data[0].data.last_four}`
+      );
+      containsVisible(
+        `${getPaymentMethodDataWithGpay.data[1].data.card_type} ****${getPaymentMethodDataWithGpay.data[1].data.last_four}`
       );
       getClick('[data-qa-button="gpayButton"]');
     });

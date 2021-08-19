@@ -7,7 +7,7 @@ import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -117,18 +117,27 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
 
   const { replace } = useHistory();
+  const location = useLocation();
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
   );
 
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState<
+    number | undefined
+  >(undefined);
+
   const openPaymentDrawer = React.useCallback(
-    () => setPaymentDrawerOpen(true),
+    (selectedPaymentMethodId: number | undefined) => {
+      setPaymentDrawerOpen(true);
+      setSelectedPaymentMethodId(selectedPaymentMethodId);
+    },
     []
   );
 
   const closePaymentDrawer = React.useCallback(() => {
     setPaymentDrawerOpen(false);
+    setSelectedPaymentMethodId(undefined);
     replace('/account/billing');
   }, [replace]);
 
@@ -136,10 +145,22 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const closePromoDialog = () => setIsPromoDialogOpen(false);
 
   React.useEffect(() => {
-    if (makePaymentRouteMatch) {
-      openPaymentDrawer();
+    if (!makePaymentRouteMatch) {
+      return;
     }
-  }, [makePaymentRouteMatch, openPaymentDrawer]);
+
+    const paymentMethodId =
+      location?.state?.id ??
+      paymentMethods?.find((paymentMethod) => paymentMethod.is_default)?.id ??
+      undefined;
+
+    openPaymentDrawer(paymentMethodId);
+  }, [
+    paymentMethods,
+    openPaymentDrawer,
+    makePaymentRouteMatch,
+    location.state,
+  ]);
 
   //
   // Account Balance logic
@@ -268,6 +289,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
       </Grid>
       <PaymentDrawer
         paymentMethods={paymentMethods}
+        selectedPaymentMethodId={selectedPaymentMethodId}
         open={paymentDrawerOpen}
         onClose={closePaymentDrawer}
       />

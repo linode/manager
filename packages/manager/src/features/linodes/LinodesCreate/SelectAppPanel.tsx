@@ -2,6 +2,7 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { decode } from 'he';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Info from 'src/assets/icons/info.svg';
 import {
   createStyles,
   Theme,
@@ -21,7 +22,8 @@ type ClassNames =
   | 'flatImagePanelSelections'
   | 'panel'
   | 'loading'
-  | 'selectionCard';
+  | 'selectionCard'
+  | 'info';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -42,11 +44,30 @@ const styles = (theme: Theme) =>
         paddingRight: 0,
         justifyContent: 'flex-start',
       },
-      '& .cardBaseInfo': {
-        paddingLeft: 0,
-        '& svg': {
-          width: 28,
-          height: 28,
+    },
+    info: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      color: theme.palette.primary.main,
+      paddingLeft: 0,
+      maxWidth: 40,
+      '& svg': {
+        width: 28,
+        height: 28,
+      },
+      '& .circle': {
+        transition: theme.transitions.create('fill'),
+      },
+      '& .path': {
+        transition: theme.transitions.create('stroke'),
+      },
+      '&:hover': {
+        color: theme.palette.primary.main,
+        '& .circle': {
+          fill: theme.palette.primary.main,
+        },
+        '& .path': {
+          color: 'white',
         },
       },
     },
@@ -213,6 +234,12 @@ class SelectionCardWrapper extends React.PureComponent<
     openDrawer(label);
   };
 
+  handleInfoClick = (e: React.MouseEvent<any>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    this.handleOpenDrawer();
+  };
+
   render() {
     const { iconUrl, id, checked, label, disabled, classes } = this.props;
     /**
@@ -225,18 +252,23 @@ class SelectionCardWrapper extends React.PureComponent<
         ? () => <span className="fl-tux" />
         : () => <img src={`${APP_ROOT}/${iconUrl}`} alt={`${label} logo`} />;
 
+    const renderVariant = () => (
+      <Grid item className={classes.info} xs={2}>
+        <Info onClick={this.handleInfoClick} />
+      </Grid>
+    );
+
     return (
       <SelectionCard
         key={id}
         checked={checked}
         onClick={this.handleSelectApp}
-        onClickInfo={this.handleOpenDrawer}
         renderIcon={renderIcon}
+        renderVariant={renderVariant}
         heading={label}
         subheadings={['']}
         data-qa-selection-card
         disabled={disabled}
-        variant="info"
         className={classes.selectionCard}
       />
     );
