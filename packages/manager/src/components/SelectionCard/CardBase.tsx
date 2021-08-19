@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
@@ -35,13 +34,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.875rem',
     color: theme.palette.text.primary,
   },
-  innerGrid: {
+  cardBaseGrid: {
     position: 'relative',
     width: '100%',
     height: '100%',
     minHeight: 60,
     backgroundColor: theme.bg.offWhiteDT,
-    border: '1px solid ' + `${theme.bg.main}`,
+    border: `1px solid ${theme.bg.main}`,
     margin: 0,
     padding: `0 ${theme.spacing(1)}px !important`,
     transition: `
@@ -78,7 +77,7 @@ export interface Props {
   renderIcon?: () => JSX.Element;
   heading: string;
   subheadings: (string | undefined)[];
-  renderVariant?: () => JSX.Element;
+  renderVariant?: () => JSX.Element | null;
 }
 
 type CombinedProps = Props;
@@ -92,19 +91,14 @@ const CardBase: React.FC<CombinedProps> = (props) => {
     <Grid
       container
       alignItems="center"
-      className={`${classes.innerGrid} innerGrid`}
+      className={`${classes.cardBaseGrid} cardBaseGrid`}
     >
       {renderIcon && (
         <Grid item className={`${classes.icon} cardBaseIcon`}>
           {renderIcon()}
         </Grid>
       )}
-      <Grid
-        item
-        className={classNames('cardBaseHeadings', {
-          [classes.flex]: true,
-        })}
-      >
+      <Grid item className={`${classes.flex} cardBaseHeadings`}>
         <div className={classes.heading} data-qa-select-card-heading={heading}>
           {heading}
         </div>

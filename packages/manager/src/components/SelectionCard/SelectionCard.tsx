@@ -13,27 +13,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     display: 'flex',
     outline: 0,
-    '&.checked .innerGrid': {
+    '&.checked .cardBaseGrid': {
       borderColor: theme.palette.primary.main,
       backgroundColor: theme.cmrBGColors.bgCopyButton,
       '& span': {
         color: theme.palette.primary.main,
       },
     },
-    '&:focus .innerGrid': {
+    '&:focus .cardBaseGrid': {
       outline: `1px dotted ${theme.color.focusBorder}`,
-    },
-    '& .disabledInnerGrid': {
-      width: '100%',
-      backgroundColor: theme.bg.offWhiteDT,
-      border: `1px solid ${theme.color.grey1}`,
     },
     '& [class^="fl-"]': {
       transition: 'color 225ms ease-in-out',
     },
-  },
-  '&:focus .innerGrid': {
-    outline: `1px dotted ${theme.color.focusBorder}`,
   },
   showCursor: {
     cursor: 'pointer',
@@ -55,7 +47,7 @@ export interface Props {
   className?: string;
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
-  renderVariant?: () => any;
+  renderVariant?: () => JSX.Element | null;
 }
 
 interface WithTooltipProps {

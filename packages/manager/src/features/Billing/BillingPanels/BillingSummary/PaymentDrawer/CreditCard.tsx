@@ -55,7 +55,7 @@ interface Props {
 }
 
 export const getIcon = (type: CardType | undefined) => {
-  return iconMap[type!] ?? GenericCardIcon;
+  return !type ? GenericCardIcon : iconMap[type];
 };
 
 export type CombinedProps = Props;

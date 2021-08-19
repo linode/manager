@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: '100%',
     padding: 0,
     marginBottom: theme.spacing(),
-    '& .innerGrid': {
+    '& .cardBaseGrid': {
       flexWrap: 'nowrap',
     },
     '& .cardBaseIcon': {

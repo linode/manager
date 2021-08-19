@@ -44,19 +44,17 @@ const styles = (theme: Theme) =>
         paddingRight: 0,
         justifyContent: 'flex-start',
       },
-      '& .cardBaseInfo': {
-        paddingLeft: 0,
-        '& svg': {
-          width: 28,
-          height: 28,
-        },
-      },
     },
     info: {
       display: 'flex',
       justifyContent: 'flex-end',
       color: theme.palette.primary.main,
+      paddingLeft: 0,
       maxWidth: 40,
+      '& svg': {
+        width: 28,
+        height: 28,
+      },
       '& .circle': {
         transition: theme.transitions.create('fill'),
       },
@@ -255,7 +253,7 @@ class SelectionCardWrapper extends React.PureComponent<
         : () => <img src={`${APP_ROOT}/${iconUrl}`} alt={`${label} logo`} />;
 
     const renderVariant = () => (
-      <Grid item className={`${classes.info} cardBaseInfo`} xs={2}>
+      <Grid item className={classes.info} xs={2}>
         <Info onClick={this.handleInfoClick} />
       </Grid>
     );
