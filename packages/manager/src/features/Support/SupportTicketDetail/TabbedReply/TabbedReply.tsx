@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     padding: 0,
     '& div[role="tablist"]': {
+      marginTop: theme.spacing(),
       marginBottom: theme.spacing(),
     },
   },
