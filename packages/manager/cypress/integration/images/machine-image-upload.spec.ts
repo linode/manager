@@ -1,19 +1,54 @@
-import { createMockImage } from '../../support/api/images';
+import { createMockImage, deleteAllTestImages } from '../../support/api/images';
 import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 import 'cypress-file-upload';
 import { assertToast } from 'cypress/support/ui/events';
 import { DateTime } from 'luxon';
-import { eventFactory } from '@src/factories';
+import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 
-const mockImage = createMockImage().data[0];
-const imageLabel = mockImage.label;
-const imageId = mockImage.id;
-const regionSelect = 'Fremont, CA';
-const upload = 'testImage.gz';
-const createdDate = DateTime.local().minus({ days: 1 }).toISO();
+const imageLabel = 'cy-test-image';
 
-const uploadImage = () => {
+const interceptOnce = (method, url, response) => {
+  let count = 0;
+  return cy.intercept(method, url, (req) => {
+    count += 1;
+    if (count < 3) {
+      req.reply(response);
+    }
+  });
+};
+
+const getIntercepts = (id, status, message?, created?) => {
+  interceptOnce(
+    'GET',
+    '*/account/events*',
+    makeResourcePage(
+      eventFactory.buildList(1, {
+        created: created ? created : DateTime.local().toISO(),
+        action: 'image_upload',
+        entity: {
+          label: imageLabel,
+          id,
+          type: 'image',
+          url: `/v4/images/private/${id}`,
+        },
+        status,
+        message: message ? message : '',
+      })
+    )
+  ).as('getEvent');
+  cy.intercept('GET', `*/images*`, (req) => {
+    req.reply(createMockImage({ label: imageLabel, id }));
+  }).as('getImage');
+};
+
+const uploadImage = (status?) => {
+  const regionSelect = 'Fremont, CA';
+  const upload = 'testImage.gz';
+  const image = createMockImage(
+    status ? { status, label: imageLabel } : { label: imageLabel }
+  ).data[0];
+
   cy.visitWithLogin('/images/create/upload');
   getClick('[id="label-(required)"]').type(imageLabel);
   getClick('[id="description"]').type('This is a machine image upload test');
@@ -26,155 +61,114 @@ const uploadImage = () => {
       mimeType: 'application/x-gzip',
     });
   });
-};
-
-const interceptOnce = (method, url, response) => {
-  let count = 0;
-  return cy.intercept(method, url, (req) => {
-    count += 1;
-    if (count < 3) {
-      req.reply(response);
-    }
-  });
+  cy.intercept('POST', '*/images/upload', (req) => {
+    req.continue(() => {
+      {
+        image;
+      }
+    });
+  }).as('imageUpload');
 };
 
 describe('machine image', () => {
+  beforeEach(() => {
+    deleteAllTestImages();
+  });
+
   it('uploads machine image', () => {
-    cy.intercept('POST', '*/images/upload').as('imageUpload');
     uploadImage();
     cy.wait('@imageUpload');
     fbtVisible('testImage');
     fbtVisible(imageLabel);
   });
 
-  it('uploads machine image, mock failed event', () => {
-    const failureMessage = 'Forced Fail Via Mock';
-    cy.intercept('POST', '*/images/upload').as('imageUpload');
-    uploadImage();
-    cy.wait('@imageUpload').then((xhr) => {
-      const actualId = xhr.response?.body.image.id;
-      cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
-        fbtVisible(imageLabel);
-        fbtVisible('Pending');
-      });
+  it.only('uploads machine image, mock finished event', () => {
+    const status = 'finished';
 
-      interceptOnce(
-        'GET',
-        '*/account/events*',
-        makeResourcePage(
-          eventFactory.buildList(1, {
-            action: 'image_upload',
-            entity: {
-              label: imageLabel,
-              id: actualId,
-              type: 'image',
-              url: `/v4/images/${actualId}`,
-            },
-            status: 'failed',
-            secondary_entity: null,
-            message: failureMessage,
-          })
-        )
-      ).as('getEvent');
+    uploadImage('pending_upload');
+    cy.wait('@imageUpload').then((xhr) => {
+      const imageId = xhr.response?.body.image.id;
+      getIntercepts(imageId, status);
       cy.wait('@getEvent');
+      cy.wait('@getImage');
       assertToast(
         `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
       );
-      assertToast(
-        `There was a problem processing image ${imageLabel}: ${failureMessage}`,
-        2
-      );
-      cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
+      assertToast(`Image ${imageLabel} is now available.`, 2);
+      cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(imageLabel);
-        fbtVisible('Failed');
-        fbtVisible('N/A');
+        fbtVisible('Ready');
       });
     });
   });
 
-  it.only('uploads machine image, mock finished event', () => {
-    const finishedMessage = 'finished message';
-    cy.intercept('POST', '*/images/upload').as('imageUpload');
-    uploadImage();
+  it('uploads machine image, mock upload cancelled failed event', () => {
+    const status = 'failed';
+    const message = 'Upload cancelled.';
+
+    uploadImage('pending_upload');
     cy.wait('@imageUpload').then((xhr) => {
-      const actualId = xhr.response?.body.image.id;
+      const imageId = xhr.response?.body.image.id;
+      getIntercepts(imageId, status, message);
+      cy.wait('@getEvent');
+      cy.wait('@getImage');
       assertToast(
         `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
       );
-      cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
-        fbtVisible(imageLabel);
-        fbtVisible('Pending');
-      });
+      assertToast(
+        `There was a problem processing image ${imageLabel}: ${message}`,
+        2
+      );
+      cy.url().should(
+        'eq',
+        `${Cypress.env('REACT_APP_APP_ROOT')}/images/create/upload`
+      );
+    });
+  });
 
-      interceptOnce(
-        'GET',
-        '*/account/events*',
-        makeResourcePage(
-          eventFactory.buildList(1, {
-            action: 'image_upload',
-            entity: {
-              label: imageLabel,
-              id: actualId,
-              type: 'image',
-              url: `/v4/images/${actualId}`,
-            },
-            status: 'finished',
-            secondary_entity: null,
-            message: finishedMessage,
-          })
-        )
-      ).as('getEvent');
+  it('uploads machine image, mock failed to decompress failed event', () => {
+    const status = 'failed';
+    const message = 'Failed to decompress image';
+
+    uploadImage('pending_upload');
+    cy.wait('@imageUpload').then((xhr) => {
+      const imageId = xhr.response?.body.image.id;
+      getIntercepts(imageId, status, message);
       cy.wait('@getEvent');
-      assertToast(`Image ${imageLabel} is now available.`, 2);
-      cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
+      cy.wait('@getImage');
+      assertToast(
+        `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
+      );
+      assertToast(
+        `There was a problem processing image ${imageLabel}: ${message}`,
+        2
+      );
+      cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(imageLabel);
-        fbtVisible('Ready');
-        // fbtVisible('N/A');
+        fbtVisible('Failed');
+        fbtVisible('N/A');
       });
     });
   });
 
   it('uploads machine image, mock expired upload event', () => {
-    const createdDate = DateTime.local().minus({ days: 1 }).toISO();
-    const finishedMessage = 'finished message';
-    cy.intercept('POST', '*/images/upload').as('imageUpload');
-    uploadImage();
-    cy.wait('@imageUpload').then((xhr) => {
-      const actualId = xhr.response?.body.image.id;
-      cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
-        fbtVisible(imageLabel);
-        fbtVisible('Pending');
-      });
+    const status = 'failed';
+    const message = 'Upload window expired';
+    const expiredDate = DateTime.local().minus({ days: 1 }).toISO();
 
-      interceptOnce(
-        'GET',
-        '*/account/events*',
-        makeResourcePage(
-          eventFactory.buildList(1, {
-            created: createdDate,
-            action: 'image_upload',
-            username: 'some-test-account',
-            entity: {
-              label: imageLabel,
-              id: actualId,
-              type: 'image',
-              url: `/v4/images/${actualId}`,
-            },
-            status: 'failed',
-            secondary_entity: null,
-            message: finishedMessage,
-          })
-        )
-      ).as('getEvent');
+    uploadImage('pending_upload');
+    cy.wait('@imageUpload').then((xhr) => {
+      const imageId = xhr.response?.body.image.id;
+      getIntercepts(imageId, status, message, expiredDate);
       cy.wait('@getEvent');
+      cy.wait('@getImage');
       assertToast(
         `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
       );
-      assertToast(`Image cy-test-image is now availabe`);
-      cy.get(`[data-qa-image-cell="${actualId}"]`).within(() => {
+      assertToast(`Image ${imageLabel} is now available.`, 2);
+      cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(imageLabel);
-        fbtVisible('Failed');
-        fbtVisible('N/A');
+        fbtVisible('Ready');
       });
     });
   });
