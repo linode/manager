@@ -12,7 +12,7 @@ interface Props {
   ) => void;
 }
 
-const AgreementCheckbox: React.FC<Props> = (props) => {
+const EUAgreementCheckbox: React.FC<Props> = (props) => {
   const { checked, onChange } = props;
 
   return (
@@ -42,4 +42,4 @@ const AgreementCheckbox: React.FC<Props> = (props) => {
   );
 };
 
-export default AgreementCheckbox;
+export default EUAgreementCheckbox;
