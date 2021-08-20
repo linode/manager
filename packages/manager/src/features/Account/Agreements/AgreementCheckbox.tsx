@@ -26,18 +26,16 @@ const AgreementCheckbox: React.FC<Props> = (props) => {
       </Box>
       <Box>
         <Typography>
-          <React.Fragment>
-            I have read and agree to the{' '}
-            <Link to="https://www.linode.com/legal-privacy/">
-              Linode Privacy Policy
-            </Link>{' '}
-            and{' '}
-            <Link to="https://www.linode.com/eu-model/">
-              EU Standard Contractual Clauses
-            </Link>
-            , which govern the cross border transfer of data relating to the
-            European Economic Area. click here.
-          </React.Fragment>
+          I have read and agree to the{' '}
+          <Link to="https://www.linode.com/legal-privacy/">
+            Linode Privacy Policy
+          </Link>{' '}
+          and{' '}
+          <Link to="https://www.linode.com/eu-model/">
+            EU Standard Contractual Clauses
+          </Link>
+          , which govern the cross border transfer of data relating to the
+          European Economic Area. click here.
         </Typography>
       </Box>
     </Box>
