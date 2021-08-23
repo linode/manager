@@ -353,7 +353,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         render: () => {
           return (
             <>
-              <Typography data-qa-dedicated className={classes.copy}>
+              <Typography data-qa-standard className={classes.copy}>
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
@@ -371,7 +371,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
         render: () => {
           return (
             <>
-              <Typography data-qa-standard className={classes.copy}>
+              <Typography data-qa-shared className={classes.copy}>
                 Shared CPU instances are good for medium-duty workloads and are
                 a good mix of performance, resources, and price.
               </Typography>
