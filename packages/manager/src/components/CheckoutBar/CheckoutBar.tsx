@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import useStyles from './styles';
 
 interface Props {
@@ -53,8 +52,6 @@ const CheckoutBar: React.FC<CombinedProps> = (props) => {
           )}
         </div>
       }
-
-      <EUAgreementCheckbox checked={false} onChange={() => null} />
 
       <div className={classes.checkoutSection}>
         <Button
