@@ -38,11 +38,7 @@ export const handleError = (error: AxiosError) => {
     { reason: DEFAULT_ERROR_MESSAGE },
   ];
 
-  const apiInMaintenanceMode =
-    !!error.config?.headers['x-maintenance-mode'] ||
-    errors.some((err) => {
-      return Boolean(err.reason.match(/maintenance mode/i));
-    });
+  const apiInMaintenanceMode = !!error.response?.headers['x-maintenance-mode'];
 
   if (apiInMaintenanceMode) {
     store.dispatch(
@@ -132,9 +128,9 @@ baseRequest.interceptors.request.use((config) => {
 });
 
 /*
-Interceptor that initiates re-authentication if:
-  * The response is HTTP 401 "Unauthorized"
-  * The API is in Maintenance mode
+Interceptor that:
+  * initiates re-authentication if the response is HTTP 401 "Unauthorized"
+  * displays a Maintenance view if the API is in Maintenance mode
 Also rejects non-error responses if the API is in Maintenance mode
 */
 baseRequest.interceptors.response.use(handleSuccess, handleError);
