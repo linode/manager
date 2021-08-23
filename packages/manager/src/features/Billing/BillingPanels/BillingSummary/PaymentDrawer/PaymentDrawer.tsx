@@ -153,14 +153,15 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
     (paymentMethod) => paymentMethod.type === 'credit_card'
   )[0];
 
-  const [usd, setUSD] = React.useState<string>(
-    getMinimumPayment(account?.balance || 0)
-  );
-
   const isCardExpired = Boolean(
     creditCard?.data.expiry && isCreditCardExpired(creditCard?.data.expiry)
   );
 
+  const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
+
+  const [usd, setUSD] = React.useState<string>(
+    getMinimumPayment(account?.balance || 0)
+  );
   const [cvv, setCVV] = React.useState<string>('');
   const [paymentMethodId, setPaymentMethodId] = React.useState<number>(-1);
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -346,7 +347,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 </Typography>
               </Grid>
               <Grid item>
-                {paymentMethods && paymentMethods?.length > 0 ? (
+                {hasPaymentMethods ? (
                   paymentMethods?.map((paymentMethod: PaymentMethod) => {
                     const heading = `${
                       paymentMethod.type !== 'credit_card'
@@ -435,22 +436,24 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
               <Typography>No credit card on file.</Typography>
             </Grid>
           )}
-          <Grid item className={classes.input}>
-            <Grid item className={classes.button}>
-              <Button
-                buttonType="primary"
-                onClick={handleOpenDialog}
-                disabled={paymentTooLow || isCardExpired}
-                tooltipText={
-                  paymentTooLow
-                    ? `Payment amount must be at least ${minimumPayment}.`
-                    : undefined
-                }
-              >
-                Pay Now
-              </Button>
+          {hasPaymentMethods ? (
+            <Grid item className={classes.input}>
+              <Grid item className={classes.button}>
+                <Button
+                  buttonType="primary"
+                  onClick={handleOpenDialog}
+                  disabled={paymentTooLow || isCardExpired}
+                  tooltipText={
+                    paymentTooLow
+                      ? `Payment amount must be at least ${minimumPayment}.`
+                      : undefined
+                  }
+                >
+                  Pay Now
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          ) : null}
           <CreditCardDialog
             error={errorMessage}
             isMakingPayment={submitting}
