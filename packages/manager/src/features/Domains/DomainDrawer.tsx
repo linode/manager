@@ -15,7 +15,6 @@ import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Drawer from 'src/components/Drawer';
@@ -47,7 +46,6 @@ import {
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import DeleteDomain from './DeleteDomain';
 import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
@@ -349,16 +347,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             {mode === EDITING ? 'Save Changes' : 'Create Domain'}
           </Button>
         </ActionsPanel>
-        {mode === EDITING && this.props.id && this.props.domain && (
-          <>
-            <Divider spacingTop={28} spacingBottom={22} />
-            <DeleteDomain
-              domainId={this.props.id}
-              domainLabel={this.props.domain}
-              onSuccess={this.closeDrawer}
-            />
-          </>
-        )}
       </Drawer>
     );
   }
