@@ -173,7 +173,7 @@ const determineDecimalPlaces = (
   }
 };
 
-export const convertBytesToTarget = (unit: StorageSymbol, value: number) => {
+export const convertBytesToTarget = (unit: StorageSymbol | StorageUnitExponentKey, value: number) => {
   switch (unit) {
     case 'byte':
     case 'bytes':

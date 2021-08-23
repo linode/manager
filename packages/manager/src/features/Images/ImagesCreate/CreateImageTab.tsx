@@ -167,7 +167,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const selectedDiskData: Disk | undefined = disks.find(
     (d) => `${d.id}` === selectedDisk
   );
-  const selectedDiskSizeInMB = convertStorageUnit(
+  const selectedDiskSizeInGB = convertStorageUnit(
     'MB',
     selectedDiskData?.size,
     'GB'
@@ -233,7 +233,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           data-qa-disk-select
         />
         <Typography className={classes.helperText} variant="body1">
-          { `Estimated: ${calculateCostFromUnitPrice(0.1, selectedDiskSizeInMB)}/month` }
+          { `Estimated: ${calculateCostFromUnitPrice(0.1, selectedDiskSizeInGB)}/month` }
         </Typography>
         <Typography className={classes.helperText} variant="body1">
           Linode Images cannot be created if you are using raw disks or disks
