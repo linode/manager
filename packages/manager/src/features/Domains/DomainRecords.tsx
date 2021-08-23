@@ -60,8 +60,16 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: 0,
+      marginTop: theme.spacing(2),
+      width: '100%',
       '& .MuiGrid-item': {
         paddingLeft: 0,
+        paddingRight: 0,
+      },
+      '& .domain-btn': {
+        [theme.breakpoints.down('md')]: {
+          marginRight: theme.spacing(),
+        },
       },
       [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
@@ -136,7 +144,7 @@ interface IType {
 }
 
 const createLink = (title: string, handler: () => void) => (
-  <Button buttonType="secondary" onClick={handler}>
+  <Button buttonType="primary" className="domain-btn" onClick={handler}>
     {title}
   </Button>
 );
