@@ -381,7 +381,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             ),
         },
       ],
-      link: () => createLink('Add a NS Record', this.openForCreateNSRecord),
+      link: () => createLink('Add an NS Record', this.openForCreateNSRecord),
     },
 
     /** MX Record */
@@ -592,7 +592,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           ),
         },
       ],
-      link: () => createLink('Add a SRV Record', this.openForCreateSRVRecord),
+      link: () => createLink('Add an SRV Record', this.openForCreateSRVRecord),
     },
 
     /** CAA Record */
