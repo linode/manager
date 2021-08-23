@@ -34,8 +34,8 @@ const EUAgreementCheckbox: React.FC<Props> = (props) => {
           <Link to="https://www.linode.com/eu-model/">
             EU Standard Contractual Clauses
           </Link>
-          , which govern the cross border transfer of data relating to the
-          European Economic Area. click here.
+          , which govern the cross-border transfer of data relating to the
+          European Economic Area.
         </Typography>
       </Box>
     </Box>
