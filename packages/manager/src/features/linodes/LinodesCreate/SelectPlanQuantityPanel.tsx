@@ -307,7 +307,7 @@ export class SelectPlanPanel extends React.Component<
         },
         title: 'Dedicated CPU',
       });
-      tabOrder.push('standard');
+      tabOrder.push('dedicated');
     }
 
     if (!isEmpty(shared)) {
@@ -325,7 +325,7 @@ export class SelectPlanPanel extends React.Component<
         },
         title: 'Shared CPU',
       });
-      tabOrder.push('shared');
+      tabOrder.push('standard');
     }
 
     if (!isEmpty(highmem)) {
