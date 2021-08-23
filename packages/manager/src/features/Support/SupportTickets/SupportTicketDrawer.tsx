@@ -530,11 +530,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
           >
             <Reference />
           </Accordion>
-          <AttachFileForm
-            inlineDisplay
-            files={files}
-            updateFiles={updateFiles}
-          />
+          <AttachFileForm files={files} updateFiles={updateFiles} />
           <ActionsPanel>
             <Button
               buttonType="secondary"

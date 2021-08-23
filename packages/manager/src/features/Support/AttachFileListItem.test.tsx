@@ -17,24 +17,18 @@ const props = {
 describe('AttachFileListItem component', () => {
   it('should render', () => {
     expect(
-      renderWithTheme(
-        <AttachFileListItem
-          file={attachment1}
-          inlineDisplay={false}
-          {...props}
-        />
-      )
+      renderWithTheme(<AttachFileListItem file={attachment1} {...props} />)
     ).toBeDefined();
   });
-  it('should render a delete icon when inlineDisplay is true', () => {
+  it('should render a delete icon', () => {
     const { queryAllByTestId } = renderWithTheme(
-      <AttachFileListItem file={attachment1} inlineDisplay={true} {...props} />
+      <AttachFileListItem file={attachment1} {...props} />
     );
-    expect(queryAllByTestId('inline-delete-icon')).toHaveLength(1);
+    expect(queryAllByTestId('delete-button')).toHaveLength(1);
   });
-  it('should render a button when inlineDisplay is false and call the removeFile method when the delete button is clicked', () => {
+  it('should call the removeFile method when the delete button is clicked', () => {
     const { queryAllByTestId, getByTestId } = renderWithTheme(
-      <AttachFileListItem file={attachment1} inlineDisplay={false} {...props} />
+      <AttachFileListItem file={attachment1} {...props} />
     );
 
     fireEvent.click(getByTestId('delete-button'));
@@ -43,14 +37,14 @@ describe('AttachFileListItem component', () => {
   });
   it('should render a progress bar when a file is uploading', () => {
     const { queryAllByTestId } = renderWithTheme(
-      <AttachFileListItem file={attachment2} inlineDisplay={false} {...props} />
+      <AttachFileListItem file={attachment2} {...props} />
     );
     expect(queryAllByTestId('linear-progress')).toHaveLength(1);
   });
   // Currently allows uploading the same file in production
   it.skip('should return null if the file has already been uploaded', () => {
     const { getByTestId } = renderWithTheme(
-      <AttachFileListItem file={attachment3} inlineDisplay={true} {...props} />
+      <AttachFileListItem file={attachment3} {...props} />
     );
     expect(getByTestId('attached-file')).not.toBeInTheDocument();
   });

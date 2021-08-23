@@ -26,7 +26,6 @@ const styles = (theme: Theme) =>
 interface Props {
   files: FileAttachment[];
   updateFiles: any;
-  inlineDisplay?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -75,7 +74,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes, files, inlineDisplay } = this.props;
+    const { classes, files } = this.props;
     return (
       <React.Fragment>
         <input
@@ -98,7 +97,6 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
         {files.map((file, idx) => (
           <AttachFileListItem
             key={idx}
-            inlineDisplay={Boolean(inlineDisplay)}
             file={file}
             fileIdx={idx}
             removeFile={this.removeFile}

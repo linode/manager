@@ -2,7 +2,6 @@ import Close from '@material-ui/icons/Close';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import * as React from 'react';
 import { compose, withHandlers } from 'recompose';
-import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -18,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 165,
     },
     '& > div ': {
-      backgroundColor: theme.bg.main,
+      backgroundColor: 'transparent',
       border: 0,
     },
     '& svg': {
@@ -40,7 +39,6 @@ interface HandlerProps {
 }
 
 interface Props {
-  inlineDisplay: boolean;
   file: FileAttachment;
   fileIdx: number;
   removeFile: (fileIdx: number) => void;
@@ -51,7 +49,7 @@ type CombinedProps = Props & HandlerProps;
 export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { file, inlineDisplay, onClick } = props;
+  const { file, onClick } = props;
   if (file.uploaded) {
     return null;
   }
@@ -71,12 +69,12 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
                 <CloudUpload />
               </InputAdornment>
             ),
-            endAdornment: inlineDisplay && (
+            endAdornment: (
               <InputAdornment
                 onClick={onClick}
                 position="end"
                 className={classes.closeIcon}
-                data-testid="inline-delete-icon"
+                data-testid="delete-button"
                 data-qa-inline-delete
               >
                 <Close />
@@ -89,18 +87,6 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
           data-testid="attached-file"
         />
       </Grid>
-      {!inlineDisplay && (
-        <Grid item>
-          <Button
-            buttonType="outlined"
-            onClick={onClick}
-            data-testid="delete-button"
-            data-qa-delete-button
-          >
-            Delete
-          </Button>
-        </Grid>
-      )}
       {file.uploading && (
         <Grid item xs={12}>
           <LinearProgress

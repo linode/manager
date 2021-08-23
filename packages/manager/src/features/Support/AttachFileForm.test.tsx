@@ -7,7 +7,6 @@ const props = {
   files: [attachment1, attachment2],
   handleFileSelected: jest.fn(),
   updateFiles: jest.fn(),
-  inlineDisplay: true,
   classes: {
     attachFileButton: '',
   },
