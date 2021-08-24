@@ -16,28 +16,24 @@ const EUAgreementCheckbox: React.FC<Props> = (props) => {
   const { checked, onChange } = props;
 
   return (
-    <Box display="flex" flexDirection="row">
-      <Box>
-        <CheckBox
-          checked={checked}
-          onChange={onChange}
-          style={{ paddingLeft: 0 }}
-        />
-      </Box>
-      <Box>
-        <Typography>
-          I have read and agree to the{' '}
-          <Link to="https://www.linode.com/legal-privacy/">
-            Linode Privacy Policy
-          </Link>{' '}
-          and{' '}
-          <Link to="https://www.linode.com/eu-model/">
-            EU Standard Contractual Clauses
-          </Link>
-          , which govern the cross-border transfer of data relating to the
-          European Economic Area.
-        </Typography>
-      </Box>
+    <Box display="flex" flexDirection="row" alignItems="flex-start">
+      <CheckBox
+        checked={checked}
+        onChange={onChange}
+        style={{ marginLeft: -8 }}
+      />
+      <Typography>
+        I have read and agree to the{' '}
+        <Link to="https://www.linode.com/legal-privacy/">
+          Linode Privacy Policy
+        </Link>{' '}
+        and{' '}
+        <Link to="https://www.linode.com/eu-model/">
+          EU Standard Contractual Clauses
+        </Link>
+        , which govern the cross-border transfer of data relating to the
+        European Economic Area.
+      </Typography>
     </Box>
   );
 };
