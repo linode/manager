@@ -56,10 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const getHeaders = (
-  tableType: 'automatic' | 'manual',
-  flagEnabled: boolean = true
-): HeaderCell[] =>
+const getHeaders = (tableType: 'automatic' | 'manual'): HeaderCell[] =>
   [
     {
       label: 'Image',
@@ -67,15 +64,13 @@ const getHeaders = (
       sortable: true,
       widthPercent: 30,
     },
-    flagEnabled
-      ? {
-          label: 'Status',
-          dataColumn: 'status',
-          sortable: true,
-          widthPercent: 15,
-          hideOnMobile: true,
-        }
-      : null,
+    {
+      label: 'Status',
+      dataColumn: 'status',
+      sortable: true,
+      widthPercent: 15,
+      hideOnMobile: true,
+    },
     {
       label: 'Created',
       dataColumn: 'created',
@@ -385,8 +380,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     thisImage.hasOwnProperty('status')
   );
 
-  const manualHeaders = getHeaders('manual', machineImagesEnabled);
-  const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
+  const manualHeaders = getHeaders('manual');
+  const automaticHeaders = getHeaders('automatic');
 
   const initialOrder = {
     order: 'asc' as Order,
