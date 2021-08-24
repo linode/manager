@@ -44,9 +44,11 @@ import {
   WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -705,6 +707,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               calculatedPrice={10}
               disabled={this.state.submitting || this.disabled}
               submitText="Create NodeBalancer"
+              agreement={
+                isEURegion(nodeBalancerFields.region) ? (
+                  <EUAgreementCheckbox checked={false} onChange={() => null} />
+                ) : undefined
+              }
             >
               <DisplaySectionList displaySections={displaySections} />
             </CheckoutBar>

@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
@@ -13,6 +14,7 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
@@ -21,6 +23,7 @@ import { useTypes } from 'src/hooks/useTypes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -39,6 +42,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   vlanHelperText: {
     marginTop: theme.spacing() / 2,
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
+    },
+  },
+  agreement: {
+    maxWidth: '70%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'unset',
+    },
+  },
+  button: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(2),
+    },
   },
 }));
 
@@ -193,17 +213,33 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
       />
-      <div className={classes.actionWrapper}>
+      <Box
+        display="flex"
+        justifyContent={
+          isEURegion(selectedRegion) ? 'space-between' : 'flex-end'
+        }
+        alignItems="center"
+        className={classes.buttonGroup}
+      >
+        {isEURegion(selectedRegion) ? (
+          <EUAgreementCheckbox
+            checked={false}
+            onChange={() => null}
+            className={classes.agreement}
+            centerCheckbox
+          />
+        ) : null}
         <Button
           buttonType="primary"
           disabled={!!disabledText || !hasConfirmed}
           loading={isLoading}
           onClick={handleMigrate}
+          className={classes.button}
         >
           Enter Migration Queue
         </Button>
         {!!disabledText && <HelpIcon text={disabledText} />}
-      </div>
+      </Box>
     </Dialog>
   );
 };

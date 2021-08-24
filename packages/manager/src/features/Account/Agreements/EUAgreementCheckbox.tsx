@@ -5,6 +5,8 @@ import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 
 interface Props {
+  className?: string;
+  centerCheckbox?: boolean;
   checked: boolean;
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -13,10 +15,15 @@ interface Props {
 }
 
 const EUAgreementCheckbox: React.FC<Props> = (props) => {
-  const { checked, onChange } = props;
+  const { checked, onChange, className, centerCheckbox } = props;
 
   return (
-    <Box display="flex" flexDirection="row" alignItems="flex-start">
+    <Box
+      display="flex"
+      flexDirection="row"
+      alignItems={centerCheckbox ? 'center' : 'flex-start'}
+      className={className}
+    >
       <CheckBox
         checked={checked}
         onChange={onChange}

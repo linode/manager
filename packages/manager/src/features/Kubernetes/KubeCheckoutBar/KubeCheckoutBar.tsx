@@ -2,7 +2,9 @@ import * as React from 'react';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
@@ -14,6 +16,7 @@ export interface Props {
   createCluster: () => void;
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   removePool: (poolIdx: number) => void;
+  region: string | undefined;
 }
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
@@ -24,6 +27,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     removePool,
     typesData,
     updatePool,
+    region,
   } = props;
 
   // Show a warning if any of the pools have fewer than 3 nodes
@@ -38,6 +42,11 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       disabled={pools.length < 1}
       onDeploy={createCluster}
       submitText={'Create Cluster'}
+      agreement={
+        isEURegion(region) ? (
+          <EUAgreementCheckbox checked={false} onChange={() => null} />
+        ) : undefined
+      }
     >
       <>
         {pools.map((thisPool, idx) => (

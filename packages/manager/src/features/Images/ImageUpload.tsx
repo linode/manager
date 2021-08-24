@@ -23,7 +23,9 @@ import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -45,6 +47,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   cliModalButton: {
     ...theme.applyLinkStyles,
     fontWeight: 700,
+  },
+  agreement: {
+    marginTop: theme.spacing(),
   },
 }));
 export interface Props {
@@ -189,6 +194,15 @@ export const ImageUpload: React.FC<Props> = (props) => {
             selectedID={region}
             disabled={!canCreateImage}
           />
+
+          {isEURegion(region) ? (
+            <EUAgreementCheckbox
+              checked={false}
+              onChange={() => null}
+              centerCheckbox
+              className={classes.agreement}
+            />
+          ) : null}
 
           <Typography className={classes.helperText}>
             For fastest initial upload, select the region that is geographically

@@ -1,4 +1,4 @@
-import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
+import { Disk, getLinodeDisks, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { makeStyles } from '@material-ui/styles';
 import { useSnackbar } from 'notistack';
@@ -6,7 +6,6 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { Theme } from 'src/components/core/styles';
@@ -23,6 +22,9 @@ import ImagesPricingCopy from './ImagesPricingCopy';
 import withImages, {
   ImagesDispatch,
 } from 'src/containers/withImages.container';
+import Box from 'src/components/core/Box';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { isEURegion } from 'src/utilities/formatRegion';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
@@ -35,6 +37,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
     },
+  },
+  agreement: {
+    maxWidth: '80%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'unset',
+    },
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2),
   },
 }));
 
@@ -61,7 +73,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const [selectedLinode, setSelectedLinode] = React.useState<number>(0);
+  const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
   const [disks, setDisks] = React.useState<Disk[]>([]);
   const [notice, setNotice] = React.useState<string | undefined>();
@@ -100,16 +112,15 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       });
   };
 
-  const changeSelectedLinode = (linodeId: number | null) => {
-    const linodeID = linodeId ?? 0;
-    fetchLinodeDisksOnLinodeChange(linodeID);
-    setSelectedLinode(linodeID);
+  const changeSelectedLinode = (linode: Linode) => {
+    fetchLinodeDisksOnLinodeChange(linode.id);
+    setSelectedLinode(linode);
   };
 
-  const handleLinodeChange = (linodeID: number) => {
+  const handleLinodeChange = (linode: Linode) => {
     // Clear any errors
     setErrors(undefined);
-    changeSelectedLinode(linodeID);
+    changeSelectedLinode(linode);
   };
 
   const handleDiskChange = (diskID: string | null) => {
@@ -192,10 +203,10 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       {notice ? <Notice success text={notice} data-qa-notice /> : null}
       <ImagesPricingCopy type="captureImage" />
       <LinodeSelect
-        selectedLinode={selectedLinode}
+        selectedLinode={selectedLinode?.id || null}
         linodeError={linodeError}
         disabled={!canCreateImage}
-        handleChange={(linode) => handleLinodeChange(linode.id)}
+        handleChange={(linode) => handleLinodeChange(linode)}
         filterCondition={(linode) =>
           availableLinodesToImagize
             ? availableLinodesToImagize.includes(linode.id)
@@ -210,50 +221,56 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         ]}
       />
 
-      <>
-        <DiskSelect
-          selectedDisk={selectedDisk}
-          disks={disks}
-          diskError={diskError}
-          handleChange={handleDiskChange}
-          updateFor={[disks, selectedDisk, diskError, classes]}
-          disabled={!canCreateImage}
-          data-qa-disk-select
-        />
-        <Typography className={classes.helperText} variant="body1">
-          Linode Images cannot be created if you are using raw disks or disks
-          that have been formatted using custom filesystems.
-        </Typography>
-      </>
-
-      <>
-        <TextField
-          label="Label"
-          value={label}
-          onChange={changeLabel}
-          error={Boolean(labelError)}
-          errorText={labelError}
-          disabled={!canCreateImage}
-          data-qa-image-label
-        />
-
-        <TextField
-          label="Description"
-          multiline
-          rows={4}
-          value={description}
-          onChange={changeDescription}
-          error={Boolean(descriptionError)}
-          errorText={descriptionError}
-          disabled={!canCreateImage}
-          data-qa-image-description
-        />
-      </>
-
-      <ActionsPanel
-        style={{ marginTop: 16 }}
-        updateFor={[label, description, requirementsMet, classes, submitting]}
+      <DiskSelect
+        selectedDisk={selectedDisk}
+        disks={disks}
+        diskError={diskError}
+        handleChange={handleDiskChange}
+        updateFor={[disks, selectedDisk, diskError, classes]}
+        disabled={!canCreateImage}
+        data-qa-disk-select
+      />
+      <Typography className={classes.helperText} variant="body1">
+        Linode Images cannot be created if you are using raw disks or disks that
+        have been formatted using custom filesystems.
+      </Typography>
+      <TextField
+        label="Label"
+        value={label}
+        onChange={changeLabel}
+        error={Boolean(labelError)}
+        errorText={labelError}
+        disabled={!canCreateImage}
+        data-qa-image-label
+      />
+      <TextField
+        label="Description"
+        multiline
+        rows={4}
+        value={description}
+        onChange={changeDescription}
+        error={Boolean(descriptionError)}
+        errorText={descriptionError}
+        disabled={!canCreateImage}
+        data-qa-image-description
+      />
+      <Box
+        display="flex"
+        justifyContent={
+          isEURegion(selectedLinode?.region) ? 'space-between' : 'flex-end'
+        }
+        alignItems="center"
+        flexWrap="wrap"
+        className={classes.buttonGroup}
       >
+        {isEURegion(selectedLinode?.region) ? (
+          <EUAgreementCheckbox
+            checked={false}
+            onChange={() => null}
+            className={classes.agreement}
+            centerCheckbox
+          />
+        ) : null}
         <Button
           onClick={onSubmit}
           disabled={requirementsMet || !canCreateImage}
@@ -263,7 +280,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         >
           Create Image
         </Button>
-      </ActionsPanel>
+      </Box>
     </Paper>
   );
 };
