@@ -2,35 +2,30 @@ import AttachFile from '@material-ui/icons/AttachFile';
 import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-
-import Button from 'src/components/Button';
-
 import AttachFileListItem from './AttachFileListItem';
 import { FileAttachment } from './index';
 import { reshapeFiles } from './ticketUtils';
 
-type ClassNames = 'root' | 'attachFileButton';
+type ClassNames = 'attachFileButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     attachFileButton: {
-      padding: '4px 8px 4px 4px',
       marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
+      marginBottom: 4,
     },
   });
 
 interface Props {
   files: FileAttachment[];
   updateFiles: any;
-  inlineDisplay?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -79,7 +74,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes, files, inlineDisplay } = this.props;
+    const { classes, files } = this.props;
     return (
       <React.Fragment>
         <input
@@ -93,6 +88,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
         <Button
           className={classes.attachFileButton}
           buttonType="secondary"
+          compact
           onClick={this.clickAttachButton}
         >
           <AttachFile />
@@ -101,7 +97,6 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
         {files.map((file, idx) => (
           <AttachFileListItem
             key={idx}
-            inlineDisplay={Boolean(inlineDisplay)}
             file={file}
             fileIdx={idx}
             removeFile={this.removeFile}

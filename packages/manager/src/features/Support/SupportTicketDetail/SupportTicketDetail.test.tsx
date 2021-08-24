@@ -17,8 +17,6 @@ import { Grants, Profile } from '@linode/api-v4/lib';
 
 const classes: Record<ClassNames, string> = {
   title: '',
-  backButton: '',
-  listParent: '',
   label: '',
   labelIcon: '',
   status: '',

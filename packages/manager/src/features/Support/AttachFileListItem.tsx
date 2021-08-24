@@ -2,69 +2,54 @@ import Close from '@material-ui/icons/Close';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import * as React from 'react';
 import { compose, withHandlers } from 'recompose';
-import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TextField from 'src/components/TextField';
 import { FileAttachment } from './index';
 
-type ClassNames =
-  | 'root'
-  | 'attachmentField'
-  | 'attachmentsContainer'
-  | 'closeIcon'
-  | 'uploadProgress';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    attachmentsContainer: {},
-    attachmentField: {
-      marginTop: 0,
-      width: 415,
-      [theme.breakpoints.down('xs')]: {
-        width: 165,
-      },
-      '& > div ': {
-        backgroundColor: theme.bg.main,
-        border: 0,
-      },
-      '& svg': {
-        color: theme.palette.text.primary,
-        width: 24,
-        fontSize: 22,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  attachmentField: {
+    marginTop: 0,
+    width: 415,
+    [theme.breakpoints.down('xs')]: {
+      width: 165,
     },
-    closeIcon: {
-      cursor: 'pointer',
+    '& > div ': {
+      backgroundColor: 'transparent',
+      border: 0,
     },
-    uploadProgress: {
-      maxWidth: 415,
+    '& svg': {
+      color: theme.palette.text.primary,
+      width: 24,
+      fontSize: 22,
     },
-  });
+  },
+  closeIcon: {
+    cursor: 'pointer',
+  },
+  uploadProgress: {
+    maxWidth: 415,
+  },
+}));
 
 interface HandlerProps {
   onClick: () => void;
 }
 
 interface Props {
-  inlineDisplay: boolean;
   file: FileAttachment;
   fileIdx: number;
   removeFile: (fileIdx: number) => void;
 }
 
-type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
+type CombinedProps = Props & HandlerProps;
 
 export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
-  const { classes, file, inlineDisplay, onClick } = props;
+  const classes = useStyles();
+
+  const { file, onClick } = props;
   if (file.uploaded) {
     return null;
   }
@@ -72,7 +57,7 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
     file.errors && file.errors.length ? file.errors[0].reason : undefined;
 
   return (
-    <Grid container className={classes.attachmentsContainer}>
+    <Grid container>
       <Grid item>
         <TextField
           className={classes.attachmentField}
@@ -84,11 +69,12 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
                 <CloudUpload />
               </InputAdornment>
             ),
-            endAdornment: inlineDisplay && (
+            endAdornment: (
               <InputAdornment
                 onClick={onClick}
                 position="end"
                 className={classes.closeIcon}
+                data-testid="delete-button"
                 data-qa-inline-delete
               >
                 <Close />
@@ -98,17 +84,9 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
           label="File Attached"
           aria-label="Disabled Text Field"
           hideLabel
+          data-testid="attached-file"
         />
       </Grid>
-      {!inlineDisplay && (
-        <Grid item>
-          <Button
-            buttonType="primary"
-            onClick={onClick}
-            data-qa-delete-button
-          />
-        </Grid>
-      )}
       {file.uploading && (
         <Grid item xs={12}>
           <LinearProgress
@@ -121,14 +99,11 @@ export const AttachFileListItem: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
   withHandlers({
     onClick: (props: Props) => () => {
       props.removeFile(props.fileIdx);
     },
-  }),
-  styled
+  })
 )(AttachFileListItem);
 export default enhanced;
