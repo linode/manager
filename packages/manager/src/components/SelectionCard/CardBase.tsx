@@ -106,7 +106,7 @@ const CardBase: React.FC<CombinedProps> = (props) => {
           return (
             <div
               key={idx}
-              className={classes.subheading}
+              className={`${classes.subheading} cardBaseSubHeading`}
               data-qa-select-card-subheading={subheading}
             >
               {subheading}
