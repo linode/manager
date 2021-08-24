@@ -18,6 +18,8 @@ import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
+import { convertStorageUnit } from 'src/utilities/unitConversions';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ImagesPricingCopy from './ImagesPricingCopy';
 import withImages, {
@@ -161,6 +163,15 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const requirementsMet = checkRequirements();
 
+  const selectedDiskData: Disk | undefined = disks.find(
+    (d) => `${d.id}` === selectedDisk
+  );
+  const selectedDiskSizeInGB = convertStorageUnit(
+    'MB',
+    selectedDiskData?.size,
+    'GB'
+  );
+
   const hasErrorFor = getAPIErrorFor(
     {
       linode_id: 'Linode',
@@ -221,6 +232,9 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           data-qa-disk-select
         />
         <Typography className={classes.helperText} variant="body1">
+          { `Estimated: ${calculateCostFromUnitPrice(0.1, selectedDiskSizeInGB)}/month` }
+        </Typography>
+        <Typography className={classes.helperText} variant="body1">
           Linode Images cannot be created if you are using raw disks or disks
           that have been formatted using custom filesystems.
         </Typography>
@@ -236,7 +250,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           disabled={!canCreateImage}
           data-qa-image-label
         />
-
         <TextField
           label="Description"
           multiline
