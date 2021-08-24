@@ -456,6 +456,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (!(grants && grants.global)) {
       return null;
     }
+
     return (
       <div className={classes.section}>
         <Grid container className={classes.section} data-qa-billing-section>
@@ -471,7 +472,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             subheadings={['The user cannot view any billing information.']}
             checked={grants.global.account_access === null}
             onClick={this.billingPermOnClick(null)}
-            variant="check"
             data-qa-billing-access="None"
           />
           <SelectionCard
@@ -479,7 +479,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             subheadings={['Can view invoices and billing info.']}
             checked={grants.global.account_access === 'read_only'}
             onClick={this.billingPermOnClick('read_only')}
-            variant="check"
             data-qa-billing-access="Read Only"
           />
           <SelectionCard
@@ -489,7 +488,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ]}
             checked={grants.global.account_access === 'read_write'}
             onClick={this.billingPermOnClick('read_write')}
-            variant="check"
             data-qa-billing-access="Read-Write"
           />
         </Grid>

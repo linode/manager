@@ -6,6 +6,7 @@ import {
 import {
   containsClick,
   containsVisible,
+  fbtClick,
   getClick,
   getVisible,
 } from '../../support/helpers';
@@ -30,6 +31,7 @@ describe('clone linode', () => {
         getVisible('[data-qa-details]').within(() => {
           containsVisible(linode.label);
         });
+        fbtClick('Shared CPU');
         getClick('[id="g6-nanode-1"]');
         getClick('[data-qa-deploy-linode="true"]');
         cy.wait('@cloneLinode').then((xhr) => {

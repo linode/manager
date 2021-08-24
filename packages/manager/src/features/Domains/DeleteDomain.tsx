@@ -2,7 +2,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DeletionDialog from 'src/components/DeletionDialog';
 import { useDialog } from 'src/hooks/useDialog';
 import {
@@ -18,9 +18,12 @@ interface Props {
   onSuccess?: () => void;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   button: {
     float: 'right',
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
   },
 }));
 

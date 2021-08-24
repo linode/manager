@@ -815,15 +815,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         {fields.map((field: any, idx: number) => field(idx))}
 
         <ActionsPanel>
-          <Button {...buttonProps} data-qa-record-save />
           <Button
             buttonType="secondary"
-            className="cancel"
             onClick={this.onClose}
             data-qa-record-cancel
           >
             Cancel
           </Button>
+          <Button {...buttonProps} data-qa-record-save />
         </ActionsPanel>
       </Drawer>
     );
