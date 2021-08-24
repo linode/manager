@@ -1,10 +1,7 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { getLinodeConfigs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
@@ -13,17 +10,18 @@ import InputLabel from 'src/components/core/InputLabel';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import { MapState } from 'src/store/types';
+import { getGrants } from 'src/features/Profile/permissionsHelpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { compose } from 'recompose';
 
 interface Props {
   open: boolean;
@@ -45,7 +43,7 @@ interface LinodesProps {
   linodesError?: boolean;
 }
 
-type CombinedProps = Props & VolumesRequests & LinodesProps & StateProps;
+type CombinedProps = Props & VolumesRequests & LinodesProps & ProfileProps;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
@@ -149,9 +147,22 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       disabled,
       linodesError,
       linodeRegion,
-      readOnly,
+      volumeId,
+      profile,
+      grants,
     } = this.props;
+
     const { configs, selectedLinode, selectedConfig, errors } = this.state;
+
+    const volumesPermissions = getGrants(grants.data, 'volume');
+    const volumePermissions = volumesPermissions.find(
+      (v: Grant) => v.id === volumeId
+    );
+
+    const readOnly =
+      Boolean(profile.data?.restricted) &&
+      volumePermissions &&
+      volumePermissions.permissions === 'read_only';
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
     const linodeError = hasErrorFor('linode_id');
@@ -222,8 +233,14 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
             )}
           </FormControl>
         )}
-
         <ActionsPanel>
+          <Button
+            buttonType="secondary"
+            onClick={this.handleClose}
+            data-qa-cancel
+          >
+            Cancel
+          </Button>
           <Button
             buttonType="primary"
             onClick={this.attachToLinode}
@@ -232,49 +249,18 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           >
             Save
           </Button>
-          <Button
-            buttonType="secondary"
-            onClick={this.handleClose}
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
         </ActionsPanel>
       </Drawer>
     );
   }
 }
 
-interface StateProps {
-  readOnly?: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
-  const volumesPermissions = pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'volume'],
-    state
-  );
-  const volumePermissions = volumesPermissions.find(
-    (v: Grant) => v.id === ownProps.volumeId
-  );
-
-  return {
-    readOnly:
-      isRestrictedUser(state) &&
-      volumePermissions &&
-      volumePermissions.permissions === 'read_only',
-  };
-};
-
-const connected = connect(mapStateToProps);
-
 const enhanced = compose<CombinedProps, Props>(
   withVolumesRequests,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesError,
   })),
-  connected
+  withProfile
 );
 
 export default enhanced(VolumeAttachmentDrawer);

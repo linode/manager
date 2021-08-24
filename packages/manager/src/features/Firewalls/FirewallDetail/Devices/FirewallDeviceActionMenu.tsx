@@ -8,17 +8,20 @@ export interface ActionHandlers {
 export interface Props extends ActionHandlers {
   deviceID: number;
   deviceLabel: string;
+  deviceEntityID: string;
+  disabled: boolean;
 }
 
 type CombinedProps = Props;
 
 const FirewallDeviceActionMenu: React.FC<CombinedProps> = (props) => {
-  const { deviceID, deviceLabel, triggerRemoveDevice } = props;
+  const { deviceID, deviceLabel, disabled, triggerRemoveDevice } = props;
 
   return (
     <InlineMenuAction
       key="Remove"
       actionText="Remove"
+      disabled={disabled}
       onClick={() => triggerRemoveDevice(deviceID, deviceLabel)}
     />
   );

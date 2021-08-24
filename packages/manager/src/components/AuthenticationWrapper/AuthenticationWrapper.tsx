@@ -4,7 +4,7 @@ import {
   Notification,
 } from '@linode/api-v4/lib/account';
 import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
-import { Profile } from '@linode/api-v4/lib/profile';
+import { getProfile } from '@linode/api-v4/lib/profile';
 import { Region } from '@linode/api-v4/lib/regions';
 import { difference, uniqBy } from 'ramda';
 import * as React from 'react';
@@ -27,7 +27,6 @@ import {
 } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { State as PendingUploadState } from 'src/store/pendingUpload';
-import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { MapState } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
@@ -67,7 +66,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       }),
 
       // Username and whether a user is restricted
-      this.props.requestProfile(),
+      queryClient.prefetchQuery({
+        queryFn: getProfile,
+        queryKey: 'profile',
+      }),
 
       // Is a user managed
       queryClient.prefetchQuery({
@@ -228,7 +230,6 @@ interface DispatchProps {
   requestNotifications: () => Promise<GetAllData<Notification>>;
   requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Region[]>;
-  requestProfile: () => Promise<Profile>;
   markAppAsDoneLoading: () => void;
   requestLinodeType: (params: GetLinodeTypeParams) => void;
 }
@@ -242,7 +243,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestNotifications: () => dispatch(requestNotifications()),
   requestTypes: () => dispatch(requestTypes()),
   requestRegions: () => dispatch(requestRegions()),
-  requestProfile: () => dispatch(requestProfile()),
   markAppAsDoneLoading: () => dispatch(handleLoadingDone()),
   requestLinodeType: (options) => dispatch(requestLinodeType(options)),
 });

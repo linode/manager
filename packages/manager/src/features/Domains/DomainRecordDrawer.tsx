@@ -324,6 +324,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   }) => {
     const MSSelectOptions = [
       { label: 'Default', value: 0 },
+      { label: '30 seconds', value: 30 },
+      { label: '2 minutes', value: 120 },
       { label: '5 minutes', value: 300 },
       { label: '1 hour', value: 3600 },
       { label: '2 hours', value: 7200 },
@@ -813,15 +815,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         {fields.map((field: any, idx: number) => field(idx))}
 
         <ActionsPanel>
-          <Button {...buttonProps} data-qa-record-save />
           <Button
             buttonType="secondary"
-            className="cancel"
             onClick={this.onClose}
             data-qa-record-cancel
           >
             Cancel
           </Button>
+          <Button {...buttonProps} data-qa-record-save />
         </ActionsPanel>
       </Drawer>
     );

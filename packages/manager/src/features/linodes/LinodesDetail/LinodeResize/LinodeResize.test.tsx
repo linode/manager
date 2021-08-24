@@ -1,14 +1,19 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { UseQueryResult } from 'react-query';
+import { profileFactory } from 'src/factories';
 import { mockMatchMedia } from 'src/utilities/testHelpers';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { Grants, Profile } from '@linode/api-v4/lib';
+import { APIError } from '@linode/api-v4/lib/types';
 import {
   isSmallerThanCurrentPlan,
   LinodeResize,
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize';
+import { grantsFactory } from 'src/factories/grants';
 
 beforeAll(() => {
   mockMatchMedia();
@@ -17,11 +22,16 @@ beforeAll(() => {
 describe('LinodeResize', () => {
   const component = shallow(
     <LinodeResize
+      profile={
+        { data: profileFactory.build() } as UseQueryResult<Profile, APIError[]>
+      }
+      grants={
+        { data: grantsFactory.build() } as UseQueryResult<Grants, APIError[]>
+      }
       closeSnackbar={jest.fn()}
       enqueueSnackbar={jest.fn()}
       {...reactRouterProps}
       classes={{
-        root: '',
         title: '',
         subTitle: '',
         toolTip: '',
@@ -29,6 +39,7 @@ describe('LinodeResize', () => {
         resizeTitle: '',
         currentHeaderEmptyCell: '',
         selectPlanPanel: '',
+        actionPanel: '',
       }}
       linodeId={12}
       linodeLabel=""

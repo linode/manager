@@ -15,6 +15,7 @@ const LinearProgressComponent: React.FC<CombinedProps> = (props) => {
         {...props}
         value={value}
         variant={variant}
+        data-testid="linear-progress"
         data-qa-linear-progress
       />
     </div>

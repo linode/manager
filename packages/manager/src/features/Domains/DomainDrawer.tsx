@@ -15,7 +15,6 @@ import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Drawer from 'src/components/Drawer';
@@ -47,7 +46,6 @@ import {
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import DeleteDomain from './DeleteDomain';
 import { getInitialIPs, transferHelperText as helperText } from './domainUtils';
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
@@ -331,33 +329,24 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         )}
         <ActionsPanel>
           <Button
+            buttonType="secondary"
+            onClick={this.closeDrawer}
+            style={{ marginRight: 8 }}
+            data-qa-cancel
+          >
+            Cancel
+          </Button>
+          <Button
             buttonType="primary"
-            onClick={this.submit}
             disabled={disabled}
             loading={submitting}
+            onClick={this.submit}
             data-qa-submit
             data-testid="create-domain-submit"
           >
             {mode === EDITING ? 'Save Changes' : 'Create Domain'}
           </Button>
-          <Button
-            buttonType="secondary"
-            onClick={this.closeDrawer}
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
         </ActionsPanel>
-        {mode === EDITING && this.props.id && this.props.domain && (
-          <>
-            <Divider spacingTop={28} spacingBottom={22} />
-            <DeleteDomain
-              domainId={this.props.id}
-              domainLabel={this.props.domain}
-              onSuccess={this.closeDrawer}
-            />
-          </>
-        )}
       </Drawer>
     );
   }
@@ -566,7 +555,7 @@ const mapStateToProps = (state: ApplicationState) => {
     domainProps,
     id,
     // Disabled if the profile is restricted and doesn't have add_domains grant
-    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
+    disabled: isRestrictedUser() && !hasGrant('add_domains'),
     origin: state.domainDrawer.origin,
   };
 };

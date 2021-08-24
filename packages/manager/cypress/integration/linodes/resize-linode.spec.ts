@@ -1,4 +1,4 @@
-import { createLinode, deleteLinodeById } from '../../support/api/linodes';
+import { createLinode } from '../../support/api/linodes';
 import { containsVisible, fbtVisible, getClick } from '../../support/helpers';
 
 describe('resize linode', () => {
@@ -8,6 +8,7 @@ describe('resize linode', () => {
         'linodeResize'
       );
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
+      cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 2 GB');
       getClick('[id="g6-standard-4"]');
       cy.get('[data-testid="textfield-input"]').type(linode.label);

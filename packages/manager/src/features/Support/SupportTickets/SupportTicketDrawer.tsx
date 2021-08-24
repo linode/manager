@@ -1,14 +1,13 @@
-import * as Bluebird from 'bluebird';
 import {
   createSupportTicket,
   uploadAttachment,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
+import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
-import { debounce } from 'throttle-debounce';
-
+import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -16,7 +15,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -26,24 +24,16 @@ import {
   getErrorMap,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
+import { debounce } from 'throttle-debounce';
 import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  suffix: {
-    fontSize: '.9rem',
-    marginRight: theme.spacing(1),
-  },
-  actionPanel: {
-    marginTop: theme.spacing(2),
-  },
   expPanelSummary: {
     backgroundColor:
       theme.name === 'darkTheme' ? theme.bg.main : theme.bg.white,
@@ -52,15 +42,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   innerReply: {
     padding: 0,
+    '& div[role="tablist"]': {
+      marginTop: theme.spacing(),
+      marginBottom: theme.spacing(),
+    },
   },
   rootReply: {
-    padding: 0,
     marginBottom: theme.spacing(2),
-  },
-  reference: {
-    '& > p': {
-      marginBottom: theme.spacing(1),
-    },
+    padding: 0,
   },
 }));
 
@@ -535,37 +524,31 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
               "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
             }
           />
-          {/* <TicketAttachmentList attachments={attachments} /> */}
           <Accordion
             heading="Formatting Tips"
             detailProps={{ className: classes.expPanelSummary }}
           >
-            <Reference rootClass={classes.reference} />
+            <Reference />
           </Accordion>
-          <AttachFileForm
-            inlineDisplay
-            files={files}
-            updateFiles={updateFiles}
-          />
-          <ActionsPanel style={{ marginTop: 16 }}>
+          <AttachFileForm files={files} updateFiles={updateFiles} />
+          <ActionsPanel>
             <Button
-              onClick={onSubmit}
-              disabled={!requirementsMet}
-              loading={submitting}
-              buttonType="primary"
-              data-qa-submit
-              data-testid="submit"
-            >
-              Open Ticket
-            </Button>
-            <Button
-              onClick={onCancel}
               buttonType="secondary"
-              className="cancel"
+              onClick={onCancel}
               data-qa-cancel
               data-testid="cancel"
             >
               Cancel
+            </Button>
+            <Button
+              buttonType="primary"
+              disabled={!requirementsMet}
+              loading={submitting}
+              onClick={onSubmit}
+              data-qa-submit
+              data-testid="submit"
+            >
+              Open Ticket
             </Button>
           </ActionsPanel>
         </React.Fragment>
