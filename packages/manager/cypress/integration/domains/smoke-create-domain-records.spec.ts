@@ -59,7 +59,7 @@ const createRecords = () => [
     ],
   },
   {
-    name: 'Add a SRV Record',
+    name: 'Add an SRV Record',
     tableAriaLabel: 'List of Domains SRV Record',
     fields: [
       {
