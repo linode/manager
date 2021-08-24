@@ -39,6 +39,7 @@ import usePreferences from 'src/hooks/usePreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { FlagSet } from './featureFlags';
 import { UserPreferences } from './store/preferences/preferences.actions';
+import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -254,6 +255,11 @@ const MainContent: React.FC<CombinedProps> = (props) => {
         </div>
       </div>
     );
+  }
+
+  // If the API is in maintenance mode, return a Maintenance screen
+  if (props.globalErrors.api_maintenance_mode) {
+    return <MaintenanceScreen />;
   }
 
   /**
