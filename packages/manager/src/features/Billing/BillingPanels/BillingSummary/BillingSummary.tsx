@@ -123,21 +123,21 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     false
   );
 
-  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = React.useState<
-    number | undefined
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<
+    PaymentMethod | undefined
   >(undefined);
 
   const openPaymentDrawer = React.useCallback(
-    (selectedPaymentMethodId: number | undefined) => {
+    (selectedPaymentMethod: PaymentMethod) => {
       setPaymentDrawerOpen(true);
-      setSelectedPaymentMethodId(selectedPaymentMethodId);
+      setSelectedPaymentMethod(selectedPaymentMethod);
     },
     []
   );
 
   const closePaymentDrawer = React.useCallback(() => {
     setPaymentDrawerOpen(false);
-    setSelectedPaymentMethodId(undefined);
+    setSelectedPaymentMethod(undefined);
     replace('/account/billing');
   }, [replace]);
 
@@ -149,12 +149,12 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
       return;
     }
 
-    const paymentMethodId =
-      location?.state?.id ??
-      paymentMethods?.find((paymentMethod) => paymentMethod.is_default)?.id ??
+    const selectedPaymentMethod =
+      location?.state?.paymentMethod ??
+      paymentMethods?.find((payment) => payment.is_default) ??
       undefined;
 
-    openPaymentDrawer(paymentMethodId);
+    openPaymentDrawer(selectedPaymentMethod);
   }, [
     paymentMethods,
     openPaymentDrawer,
@@ -289,7 +289,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
       </Grid>
       <PaymentDrawer
         paymentMethods={paymentMethods}
-        selectedPaymentMethodId={selectedPaymentMethodId}
+        selectedPaymentMethod={selectedPaymentMethod}
         open={paymentDrawerOpen}
         onClose={closePaymentDrawer}
       />

@@ -4,6 +4,7 @@ import { assertToast } from '../../support/ui/events';
 import {
   containsClick,
   containsVisible,
+  fbtClick,
   fbtVisible,
   getClick,
 } from '../../support/helpers';
@@ -19,6 +20,7 @@ describe('create linode', () => {
     cy.intercept('POST', '*/linode/instances').as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     containsClick(selectRegionString).type('new {enter}');
+    fbtClick('Shared CPU');
     getClick('[id="g6-nanode-1"]');
     getClick('#linode-label').clear().type(linodeLabel);
     cy.get('#root-password').type(rootpass);

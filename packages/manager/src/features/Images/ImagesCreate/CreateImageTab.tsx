@@ -17,6 +17,8 @@ import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+// import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
+// import { convertStorageUnit } from 'src/utilities/unitConversions';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import ImagesPricingCopy from './ImagesPricingCopy';
 import withImages, {
@@ -171,6 +173,15 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   };
 
   const requirementsMet = checkRequirements();
+  // TODO: uncomment for billing on 9/1
+  /* const selectedDiskData: Disk | undefined = disks.find(
+   *   (d) => `${d.id}` === selectedDisk
+   * );
+   * const selectedDiskSizeInGB = convertStorageUnit(
+   *   'MB',
+   *   selectedDiskData?.size,
+   *   'GB'
+   * ); */
 
   const hasErrorFor = getAPIErrorFor(
     {
