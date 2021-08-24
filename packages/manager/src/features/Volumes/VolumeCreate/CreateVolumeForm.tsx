@@ -22,12 +22,7 @@ import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
-import useFlags from 'src/hooks/useFlags';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
@@ -46,6 +41,9 @@ import ConfigSelect, {
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
+import { useGrants, useProfile } from 'src/queries/profile';
+import useFlags from 'src/hooks/useFlags';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -93,7 +91,12 @@ type CombinedProps = Props & VolumesRequests & StateProps;
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
-  const { onSuccess, createVolume, disabled, origin, history, regions } = props;
+  const { onSuccess, createVolume, origin, history, regions } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
 
@@ -356,12 +359,10 @@ const initialValues: FormState = {
 };
 
 interface StateProps {
-  disabled: boolean;
   origin?: VolumeDrawerOrigin;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
   origin: state.volumeDrawer.origin,
 });
 

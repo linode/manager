@@ -59,7 +59,7 @@ const createBasicVolume = (linodeLabel?: string) => {
 const validateBasicVolume = (volLabel: string, volId: string) => {
   containsVisible('Volume Configuration');
   cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
-  containsClick('Close');
+  getClick('[data-qa-close-drawer="true"]');
   // assertToast(`Volume ${volLabel} successfully created.`);
   fbtVisible(volLabel);
   cy.get(`[data-qa-volume-cell="${volId}"]`).within(() => {

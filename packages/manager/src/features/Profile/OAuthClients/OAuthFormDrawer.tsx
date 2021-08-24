@@ -83,20 +83,20 @@ const OAuthCreationDrawer: React.FC<CombinedProps> = (props) => {
       </FormControl>
       <ActionsPanel>
         <Button
-          buttonType="primary"
-          onClick={onSubmit}
-          loading={loading}
-          data-qa-submit
-        >
-          Submit
-        </Button>
-        <Button
           onClick={onClose}
           data-qa-cancel
           buttonType="secondary"
           className="cancel"
         >
           Cancel
+        </Button>
+        <Button
+          buttonType="primary"
+          onClick={onSubmit}
+          loading={loading}
+          data-qa-submit
+        >
+          {edit ? 'Save Changes' : 'Create'}
         </Button>
       </ActionsPanel>
     </Drawer>

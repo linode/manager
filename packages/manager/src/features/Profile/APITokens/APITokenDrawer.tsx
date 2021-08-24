@@ -424,16 +424,15 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
           <FormHelperText error>{errorMap.scopes}</FormHelperText>
         )}
         <ActionsPanel>
-          {mode === 'view' && (
-            <Button
-              buttonType="primary"
-              onClick={closeDrawer}
-              data-qa-close-drawer
-            >
-              Done
-            </Button>
-          )}
           {(mode === 'create' || mode === 'edit') && [
+            <Button
+              buttonType="secondary"
+              key="cancel"
+              onClick={closeDrawer}
+              data-qa-cancel
+            >
+              Cancel
+            </Button>,
             <Button
               key="create"
               buttonType="primary"
@@ -452,15 +451,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               data-qa-submit
             >
               {(mode as string) === 'create' ? 'Create Token' : 'Save Token'}
-            </Button>,
-            <Button
-              buttonType="secondary"
-              className="cancel"
-              key="cancel"
-              onClick={closeDrawer}
-              data-qa-cancel
-            >
-              Cancel
             </Button>,
           ]}
         </ActionsPanel>

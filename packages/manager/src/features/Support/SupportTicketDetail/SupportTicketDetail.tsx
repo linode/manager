@@ -1,5 +1,3 @@
-import * as Bluebird from 'bluebird';
-import * as classNames from 'classnames';
 import {
   getTicket,
   getTicketReplies,
@@ -7,9 +5,10 @@ import {
   SupportTicket,
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
-import { compose, isEmpty, path, pathOr } from 'ramda';
+import * as Bluebird from 'bluebird';
+import * as classNames from 'classnames';
+import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -30,7 +29,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { MapState } from 'src/store/types';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
@@ -44,8 +43,6 @@ import Reply from './TabbedReply';
 export type ClassNames =
   | 'title'
   | 'breadcrumbs'
-  | 'backButton'
-  | 'listParent'
   | 'label'
   | 'labelIcon'
   | 'status'
@@ -62,14 +59,9 @@ const styles = (theme: Theme) =>
     breadcrumbs: {
       marginBottom: theme.spacing(2),
       marginTop: theme.spacing(1),
-    },
-    backButton: {
-      margin: '-6px 0 0 -16px',
-      '& svg': {
-        width: 34,
-        height: 34,
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: theme.spacing(),
       },
-      padding: 0,
     },
     label: {
       marginLeft: 32,
@@ -97,7 +89,6 @@ const styles = (theme: Theme) =>
         stroke: theme.bg.main,
       },
     },
-    listParent: {},
     status: {
       marginTop: 5,
       marginLeft: theme.spacing(1),
@@ -127,7 +118,7 @@ interface State {
   ticketCloseSuccess: boolean;
 }
 
-export type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
+export type CombinedProps = RouteProps & ProfileProps & WithStyles<ClassNames>;
 
 export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -321,14 +312,16 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
             open={idx === replies.length - 1}
             parentTicket={ticket ? ticket.id : undefined}
             ticketUpdated={ticket ? ticket.updated : ''}
-            isCurrentUser={this.props.profileUsername === reply.created_by}
+            isCurrentUser={
+              this.props.profile.data?.username === reply.created_by
+            }
           />
         );
       });
   };
 
   render() {
-    const { classes, profileUsername, location } = this.props;
+    const { classes, profile, location } = this.props;
     const {
       attachmentErrors,
       errors,
@@ -427,14 +420,14 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <Notice success text={'Ticket has been closed.'} />
         )}
 
-        <Grid container className={classes.listParent}>
+        <Grid container>
           <Grid item xs={12}>
             {/* If the ticket isn't blank, display it, followed by replies (if any). */}
             {ticket.description && (
               <ExpandableTicketPanel
                 key={ticket.id}
                 ticket={ticket}
-                isCurrentUser={profileUsername === ticket.opened_by}
+                isCurrentUser={profile.data?.username === ticket.opened_by}
               />
             )}
             {replies && this.renderReplies(replies)}
@@ -473,13 +466,6 @@ const requestAndMapGravatar = (acc: any, id: string) => {
 
 const styled = withStyles(styles);
 
-interface StateProps {
-  profileUsername?: string;
-}
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile),
-});
-
 const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (
   reply: SupportReply
 ): ExtendedReply => ({
@@ -487,10 +473,8 @@ const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (
   gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap),
 });
 
-export const connected = connect(mapStateToProps);
-
 export default compose<any, any, any, any>(
   setDocs(SupportTicketDetail.docs),
-  connected,
+  withProfile,
   styled
 )(SupportTicketDetail);

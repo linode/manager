@@ -10,11 +10,13 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { supportTicketFactory } from 'src/factories/support';
 import { rest, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { profileFactory } from 'src/factories';
+import { UseQueryResult } from 'react-query';
+import { APIError } from '@linode/api-v4/lib/types';
+import { Grants, Profile } from '@linode/api-v4/lib';
 
 const classes: Record<ClassNames, string> = {
   title: '',
-  backButton: '',
-  listParent: '',
   label: '',
   labelIcon: '',
   status: '',
@@ -26,7 +28,11 @@ const classes: Record<ClassNames, string> = {
 
 const props: CombinedProps = {
   classes,
-  profileUsername: 'username',
+  profile: { data: profileFactory.build() } as UseQueryResult<
+    Profile,
+    APIError[]
+  >,
+  grants: { data: {} } as UseQueryResult<Grants, APIError[]>,
   ...reactRouterProps,
 };
 

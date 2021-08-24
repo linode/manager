@@ -14,9 +14,9 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import useProfile from 'src/hooks/useProfile';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
+import { useProfile } from 'src/queries/profile';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 
@@ -62,7 +62,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
   const notificationContext = React.useContext(_notificationContext);
 
   const { updateLinode } = useLinodeActions();
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
   const { _loading } = useReduxLoad(['volumes']);
   const { volumes } = useVolumes();
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
@@ -108,7 +108,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
     linodeID,
   } = props;
 
-  if (!profile.data?.username) {
+  if (!profile?.username) {
     return null;
   }
 
@@ -139,7 +139,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
                 linode={linode}
                 isDetailLanding
                 numVolumes={getVolumesByLinode(linode.id)}
-                username={profile.data?.username}
+                username={profile?.username}
                 linodeConfigs={linodeConfigs}
                 backups={linode.backups}
                 openTagDrawer={openTagDrawer}

@@ -12,8 +12,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import useNotifications from 'src/hooks/useNotifications';
-import useProfile from 'src/hooks/useProfile';
 import { useAccount, useMutateAccount } from 'src/queries/account';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
 
 // =============================================================================
 // <EmailBounceNotificationSection />
@@ -21,7 +21,8 @@ import { useAccount, useMutateAccount } from 'src/queries/account';
 export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
   const { data: account } = useAccount();
   const { mutateAsync: updateAccount } = useMutateAccount();
-  const { profile, updateProfile } = useProfile();
+  const { data: profile } = useProfile();
+  const { mutateAsync: updateProfile } = useMutateProfile();
   const notifications = useNotifications();
   const history = useHistory();
 
@@ -29,7 +30,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
   // used the raw Redux values, when the user updated their email, the text of
   // this banner would change briefly before disappearing.
   const accountEmailRef = React.useRef(account?.email);
-  const profileEmailRef = React.useRef(profile.data?.email);
+  const profileEmailRef = React.useRef(profile?.email);
 
   const billingEmailBounceNotification = notifications.find(
     (thisNotification) => thisNotification.type === 'billing_email_bounce'

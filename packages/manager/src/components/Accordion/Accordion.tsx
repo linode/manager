@@ -71,7 +71,11 @@ export const Accordion: React.FC<CombinedProps> = (props) => {
   const notice = success || warning || error || null;
 
   return (
-    <_Accordion defaultExpanded {...accordionProps} data-qa-panel>
+    <_Accordion
+      defaultExpanded={defaultExpanded}
+      {...accordionProps}
+      data-qa-panel
+    >
       <AccordionSummary
         onClick={handleClick}
         expandIcon={<KeyboardArrowDown className="caret" />}

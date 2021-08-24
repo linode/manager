@@ -237,8 +237,8 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
             <ActionsPanel>
               <Button
                 buttonType="primary"
-                onClick={onSubmit}
                 disabled={disabled}
+                onClick={onSubmit}
                 data-qa-submit
               >
                 Reboot into Rescue Mode

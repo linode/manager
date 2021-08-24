@@ -18,6 +18,7 @@ import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useGrants } from 'src/queries/profile';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   canUserModifyAccountStackScript,
@@ -61,6 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();
+  const { data: grants } = useGrants();
   const { history } = props;
   const { stackScriptId } = props.match.params;
 
@@ -71,11 +73,11 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
     undefined
   );
 
-  const username = profile.data?.username;
+  const username = profile?.username;
   const userCannotAddLinodes = _isRestrictedUser && !_hasGrant('add_linodes');
 
-  const isRestrictedUser = profile?.data?.restricted ?? false;
-  const stackScriptGrants = profile?.data?.grants?.stackscript ?? [];
+  const isRestrictedUser = profile?.restricted ?? false;
+  const stackScriptGrants = grants?.stackscript ?? [];
 
   const userCanModify = Boolean(
     stackScript?.mine &&

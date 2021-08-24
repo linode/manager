@@ -7,64 +7,47 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Accordion from 'src/components/Accordion';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
 import Reference from './MarkdownReference';
 import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
 
-type ClassNames =
-  | 'replyContainer'
-  | 'reference'
-  | 'expPanelSummary'
-  | 'referenceRoot'
-  | 'inner';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    inner: {
-      padding: 0,
+const useStyles = makeStyles((theme: Theme) => ({
+  replyContainer: {
+    paddingLeft: theme.spacing(8),
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing(6),
     },
-    replyContainer: {
-      paddingLeft: `calc(32px + ${theme.spacing(1)}px)`,
-      [theme.breakpoints.up('sm')]: {
-        paddingLeft: `calc(40px + ${theme.spacing(2)}px)`,
-      },
+  },
+  expPanelSummary: {
+    backgroundColor:
+      theme.name === 'darkTheme' ? theme.bg.main : theme.bg.white,
+    borderTop: `1px solid ${theme.bg.main}`,
+    paddingTop: theme.spacing(),
+  },
+  referenceRoot: {
+    '& > p': {
+      marginBottom: theme.spacing(),
     },
-    expPanelSummary: {
-      backgroundColor:
-        theme.name === 'darkTheme' ? theme.bg.main : theme.bg.white,
-      paddingTop: theme.spacing(1),
-      borderTop: `1px solid ${theme.bg.main}`,
+  },
+  reference: {
+    [theme.breakpoints.up('sm')]: {
+      marginTop: theme.spacing(7),
+      marginRight: 4,
+      marginLeft: 4,
+      padding: `0 !important`,
     },
-    referenceRoot: {
-      '& > p': {
-        marginBottom: theme.spacing(1),
-      },
+    [theme.breakpoints.down('xs')]: {
+      padding: `${theme.spacing(2)}px !important`,
     },
-    reference: {
-      [theme.breakpoints.up('sm')]: {
-        marginTop: theme.spacing(7),
-        marginRight: theme.spacing(1) / 2,
-        marginLeft: theme.spacing(1) / 2,
-        padding: `0 !important`,
-      },
-      [theme.breakpoints.down('xs')]: {
-        padding: `${theme.spacing(2)}px !important`,
-      },
-    },
-  });
+  },
+}));
 
 interface Props {
   closable: boolean;
@@ -74,10 +57,12 @@ interface Props {
   closeTicketSuccess: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const ReplyContainer: React.FC<CombinedProps> = (props) => {
-  const { classes, onSuccess, reloadAttachments, ...rest } = props;
+  const classes = useStyles();
+
+  const { onSuccess, reloadAttachments, ...rest } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [value, setValue] = React.useState<string>('');
@@ -162,7 +147,6 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
         <TabbedReply
           error={errorMap.description}
           handleChange={setValue}
-          innerClass={classes.inner}
           isReply
           value={value}
         />
@@ -170,6 +154,7 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
       <Grid item style={{ marginTop: 8 }}>
         <Accordion
           heading="Formatting Tips"
+          defaultExpanded={false}
           detailProps={{ className: classes.expPanelSummary }}
         >
           <Reference isReply rootClass={classes.referenceRoot} />
@@ -193,9 +178,4 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(ReplyContainer);
+export default compose<CombinedProps, Props>(React.memo)(ReplyContainer);

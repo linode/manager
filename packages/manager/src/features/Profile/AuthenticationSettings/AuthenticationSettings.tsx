@@ -1,7 +1,4 @@
-import { Profile, TPAProvider } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -10,8 +7,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
-import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
-import { MapState } from 'src/store/types';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
 import TPAProviders from './TPAProviders';
@@ -29,18 +25,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export type CombinedProps = StateProps & DispatchProps;
-
-export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
+export const AuthenticationSettings: React.FC<{}> = () => {
   const classes = useStyles();
+  const { data: profile, isLoading: profileLoading } = useProfile();
   const {
-    loading,
-    authType,
-    ipAllowlisting,
-    twoFactor,
-    username,
-    updateProfile,
-  } = props;
+    mutateAsync: updateProfile,
+    error: profileUpdateError,
+  } = useMutateProfile();
+
+  const authType = profile?.authentication_type ?? 'password';
+  const ipAllowlisting = profile?.ip_whitelist_enabled ?? false;
+  const twoFactor = Boolean(profile?.two_factor_auth);
+  const username = profile?.username;
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
 
@@ -58,7 +54,7 @@ export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment segment={`Login & Authentication`} />
       {/* Remove when logic above is cleared */}
       {success && <Notice success text={success} />}
-      {!loading && (
+      {!profileLoading && (
         <>
           <TPAProviders authType={authType} />
 
@@ -72,14 +68,13 @@ export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
                 twoFactor={twoFactor}
                 username={username}
                 clearState={clearState}
-                updateProfile={updateProfile}
               />
               <TrustedDevices />
               {ipAllowlisting && (
                 <SecuritySettings
                   updateProfile={updateProfile}
                   onSuccess={onAllowlistingDisable}
-                  updateProfileError={props.profileUpdateError}
+                  updateProfileError={profileUpdateError || undefined}
                   ipAllowlistingEnabled={ipAllowlisting}
                   data-qa-allowlisting-form
                 />
@@ -94,40 +89,6 @@ export const AuthenticationSettings: React.FC<CombinedProps> = (props) => {
 
 const docs = [AccountsAndPasswords, SecurityControls];
 
-interface StateProps {
-  loading: boolean;
-  authType: TPAProvider;
-  ipAllowlisting: boolean;
-  twoFactor?: boolean;
-  username?: string;
-  profileUpdateError?: APIError[];
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state) => {
-  const { profile } = state.__resources;
-
-  return {
-    loading: profile.loading,
-    authType: profile?.data?.authentication_type ?? 'password',
-    ipAllowlisting: profile?.data?.ip_whitelist_enabled ?? false,
-    twoFactor: profile?.data?.two_factor_auth,
-    username: profile?.data?.username,
-    profileUpdateError: profile.error?.update,
-  };
-};
-
-interface DispatchProps {
-  updateProfile: (v: Partial<Profile>) => Promise<Profile>;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch
-) => ({
-  updateProfile: (v: Partial<Profile>) => dispatch(_updateProfile(v) as any),
-});
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-const enhanced = compose<CombinedProps, {}>(connected, setDocs(docs));
+const enhanced = compose(setDocs(docs));
 
 export default enhanced(AuthenticationSettings);

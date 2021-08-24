@@ -6,10 +6,9 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
+import CircularProgress from 'src/components/core/CircularProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -23,13 +22,10 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import {
-  hasGrant,
-  isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
+import { isManaged } from 'src/queries/accountSettings';
+import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
-import { useAccountSettings } from 'src/queries/accountSettings';
-import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -123,7 +119,7 @@ interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
 
-export type CombinedProps = Props & ReduxStateProps;
+export type CombinedProps = Props;
 
 export const managedText = (
   <span>
@@ -139,15 +135,17 @@ export const managedText = (
 );
 
 export const LongviewPlans: React.FC<CombinedProps> = (props) => {
+  const { subscriptionRequestHook: subscriptions } = props;
   const classes = useStyles();
   const mounted = React.useRef<boolean>(false);
 
-  const { data: accountSettings } = useAccountSettings();
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
-  const {
-    subscriptionRequestHook: subscriptions,
-    mayUserModifyLVSubscription,
-  } = props;
+  const mayUserModifyLVSubscription =
+    !(profile?.restricted || false) ||
+    (hasGrant('longview_subscription', grants) &&
+      hasGrant('account_access', grants) === 'read_write');
 
   const [currentSubscription, setCurrentSubscription] = React.useState<
     string | undefined
@@ -225,8 +223,6 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
     []
   );
 
-  const isManaged = accountSettings ? accountSettings.managed : false;
-
   // Hide table if current plan is not being displayed
   // ie. Users with no access to Longview
   const isTableDisplayed =
@@ -239,10 +235,14 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
     currentSubscription === selectedSub ||
     !mayUserModifyLVSubscription;
 
+  if (!profile) {
+    return <CircularProgress data-testid="loading" />;
+  }
+
   return (
     <>
       <DocumentTitleSegment segment="Plan Details" />
-      {isManaged ? (
+      {isManaged() ? (
         <Paper className={`${classes.root} ${classes.collapsedTable}`}>
           {updateErrorMsg && <Notice error text={updateErrorMsg} />}
           {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}
@@ -312,27 +312,7 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface ReduxStateProps {
-  mayUserViewAccountSettings: boolean;
-  mayUserModifyLVSubscription: boolean;
-}
-
-const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = (state) => ({
-  mayUserViewAccountSettings:
-    !isRestrictedUser(state) ||
-    hasGrant(state, 'account_access') === 'read_only' ||
-    hasGrant(state, 'account_access') === 'read_write',
-  mayUserModifyLVSubscription:
-    !isRestrictedUser(state) ||
-    (hasGrant(state, 'longview_subscription') &&
-      hasGrant(state, 'account_access') === 'read_write'),
-});
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, Props>(React.memo, connected);
-
-export default enhanced(LongviewPlans);
+export default React.memo(LongviewPlans);
 
 // =============================================================================
 // LongviewPlansTableBody

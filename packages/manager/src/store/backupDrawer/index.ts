@@ -304,7 +304,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
   /** If the selected toggle setting matches the setting already on the user's account,
    * don't bother the API.
    */
-  if (accountBackupsEnabled === shouldEnableBackups) {
+  if (accountBackupsEnabled() === shouldEnableBackups) {
     dispatch(enableAllBackups());
     return;
   }

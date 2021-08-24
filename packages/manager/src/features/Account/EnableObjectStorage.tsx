@@ -44,7 +44,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button buttonType="primary" onClick={openConfirmationModal}>
+          <Button buttonType="outlined" onClick={openConfirmationModal}>
             Cancel Object Storage
           </Button>
         </Grid>

@@ -1,5 +1,4 @@
 import { restoreBackup } from '@linode/api-v4/lib/linodes';
-import { Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -13,14 +12,15 @@ import InputLabel from 'src/components/core/InputLabel';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import withProfile from 'src/containers/profile.container';
 import withLinodes, {
   Props as LinodeProps,
 } from 'src/containers/withLinodes.container';
-import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
+import { useGrants } from 'src/queries/profile';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { Grants } from '@linode/api-v4/lib';
 
 interface Props {
   open: boolean;
@@ -32,207 +32,166 @@ interface Props {
   onSubmit: () => void;
 }
 
-interface State {
-  overwrite: boolean;
-  selectedLinode?: string;
-  errors?: APIError[];
-}
+export type CombinedProps = Props & LinodeProps;
 
-interface ProfileProps {
-  profile?: Profile;
-}
-
-export type CombinedProps = Props & ProfileProps & LinodeProps;
-
-const canEditLinode = (profile: Profile | null, linodeId: number): boolean => {
-  return getPermissionsForLinode(profile, linodeId) === 'read_only';
+const canEditLinode = (
+  grants: Grants | undefined,
+  linodeId: number
+): boolean => {
+  return getPermissionsForLinode(grants, linodeId) === 'read_only';
 };
-export class RestoreToLinodeDrawer extends React.Component<
-  CombinedProps,
-  State
-> {
-  defaultState = {
-    overwrite: false,
-    selectedLinode: 'none',
-    errors: [],
+
+export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
+  const {
+    onSubmit,
+    linodeID,
+    backupID,
+    open,
+    backupCreated,
+    linodesData,
+    linodeRegion,
+  } = props;
+
+  const { data: grants } = useGrants();
+
+  const [overwrite, setOverwrite] = React.useState<boolean>(false);
+  const [selectedLinode, setSelectedLinode] = React.useState<string>('none');
+  const [errors, setErrors] = React.useState<APIError[]>([]);
+
+  const reset = () => {
+    setOverwrite(false);
+    setSelectedLinode('none');
+    setErrors([]);
   };
 
-  mounted: boolean = false;
-
-  state: State = this.defaultState;
-
-  reset = () => {
-    if (!this.mounted) {
-      return;
-    }
-    this.setState({ ...this.defaultState });
-  };
-
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  restoreToLinode = () => {
-    const { onSubmit, linodeID, backupID } = this.props;
-    const { selectedLinode, overwrite } = this.state;
-    if (!this.mounted) {
-      return;
-    }
+  const restoreToLinode = () => {
     if (!selectedLinode || selectedLinode === 'none') {
-      this.setState(
-        {
-          errors: [
-            ...(this.state.errors || []),
-            { field: 'linode_id', reason: 'You must select a Linode' },
-          ],
-        },
-        () => {
-          scrollErrorIntoView();
-        }
-      );
+      setErrors([
+        ...errors,
+        ...[{ field: 'linode_id', reason: 'You must select a Linode' }],
+      ]);
+      scrollErrorIntoView();
       return;
     }
     restoreBackup(linodeID, Number(backupID), Number(selectedLinode), overwrite)
       .then(() => {
-        this.reset();
+        reset();
         onSubmit();
       })
       .catch((errResponse) => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({ errors: getAPIErrorOrDefault(errResponse) }, () => {
-          scrollErrorIntoView();
-        });
+        setErrors(getAPIErrorOrDefault(errResponse));
+        scrollErrorIntoView();
       });
   };
 
-  handleSelectLinode = (e: Item<string>) => {
-    this.setState({ selectedLinode: e.value });
+  const handleSelectLinode = (e: Item<string>) => {
+    setSelectedLinode(e.value);
   };
 
-  handleToggleOverwrite = () => {
-    this.setState({ overwrite: !this.state.overwrite });
+  const handleToggleOverwrite = () => {
+    setOverwrite((prevOverwrite) => !prevOverwrite);
   };
 
-  handleCloseDrawer = () => {
-    this.reset();
-    this.props.onClose();
+  const handleCloseDrawer = () => {
+    reset();
+    props.onClose();
   };
 
-  errorResources = {
+  const errorResources = {
     linode_id: 'Linode',
     overwrite: 'Overwrite',
   };
 
-  render() {
-    const { open, backupCreated, profile } = this.props;
-    const { selectedLinode, overwrite, errors } = this.state;
+  const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
-    const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
-    const linodeError = hasErrorFor('linode_id');
-    const overwriteError = hasErrorFor('overwrite');
-    const generalError = hasErrorFor('none');
+  const linodeError = hasErrorFor('linode_id');
+  const overwriteError = hasErrorFor('overwrite');
+  const generalError = hasErrorFor('none');
 
-    const readOnly = canEditLinode(profile || null, Number(selectedLinode));
-    const selectError = Boolean(linodeError) || readOnly;
+  const readOnly = canEditLinode(grants, Number(selectedLinode));
+  const selectError = Boolean(linodeError) || readOnly;
 
-    const linodeOptions = this.props.linodesData
-      .filter((linode) => linode.region === this.props.linodeRegion)
-      .map(({ label, id }) => {
-        return { label, value: id };
-      });
+  const linodeOptions = linodesData
+    .filter((linode) => linode.region === linodeRegion)
+    .map(({ label, id }) => {
+      return { label, value: id };
+    });
 
-    return (
-      <Drawer
-        open={open}
-        onClose={this.handleCloseDrawer}
-        title={`Restore Backup from ${backupCreated}`}
-      >
-        <FormControl fullWidth>
-          <InputLabel
-            htmlFor="linode"
-            disableAnimation
-            shrink={true}
-            error={Boolean(linodeError)}
-          >
-            Linode
-          </InputLabel>
-          <Select
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-select-linode': true,
-              },
-            }}
-            defaultValue={selectedLinode || ''}
-            options={linodeOptions}
-            onChange={this.handleSelectLinode}
-            errorText={linodeError}
-            placeholder="Select a Linode"
-            isClearable={false}
-            label="Select a Linode"
-            hideLabel
-          />
-          {selectError && (
-            <FormHelperText error>
-              {linodeError || "You don't have permission to edit this Linode."}
-            </FormHelperText>
-          )}
-        </FormControl>
-        <FormControlLabel
-          control={
-            <CheckBox
-              checked={overwrite}
-              onChange={this.handleToggleOverwrite}
-            />
-          }
-          label="Overwrite Linode"
+  return (
+    <Drawer
+      open={open}
+      onClose={handleCloseDrawer}
+      title={`Restore Backup from ${backupCreated}`}
+    >
+      <FormControl fullWidth>
+        <InputLabel
+          htmlFor="linode"
+          disableAnimation
+          shrink={true}
+          error={Boolean(linodeError)}
+        >
+          Linode
+        </InputLabel>
+        <Select
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-select-linode': true,
+            },
+          }}
+          defaultValue={selectedLinode || ''}
+          options={linodeOptions}
+          onChange={handleSelectLinode}
+          errorText={linodeError}
+          placeholder="Select a Linode"
+          isClearable={false}
+          label="Select a Linode"
+          hideLabel
         />
-        {overwrite && (
-          <Notice
-            warning
-            text="This will delete all disks and configs on this Linode"
-          />
+        {selectError && (
+          <FormHelperText error>
+            {linodeError || "You don't have permission to edit this Linode."}
+          </FormHelperText>
         )}
-        {Boolean(overwriteError) && (
-          <FormHelperText error>{overwriteError}</FormHelperText>
-        )}
-        {Boolean(generalError) && (
-          <FormHelperText error>{generalError}</FormHelperText>
-        )}
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            onClick={this.restoreToLinode}
-            data-qa-restore-submit
-            disabled={readOnly}
-          >
-            Restore
-          </Button>
-          <Button
-            buttonType="secondary"
-            onClick={this.handleCloseDrawer}
-            data-qa-restore-cancel
-          >
-            Cancel
-          </Button>
-        </ActionsPanel>
-      </Drawer>
-    );
-  }
-}
+      </FormControl>
+      <FormControlLabel
+        control={
+          <CheckBox checked={overwrite} onChange={handleToggleOverwrite} />
+        }
+        label="Overwrite Linode"
+      />
+      {overwrite && (
+        <Notice
+          warning
+          text="This will delete all disks and configs on this Linode"
+        />
+      )}
+      {Boolean(overwriteError) && (
+        <FormHelperText error>{overwriteError}</FormHelperText>
+      )}
+      {Boolean(generalError) && (
+        <FormHelperText error>{generalError}</FormHelperText>
+      )}
+      <ActionsPanel>
+        <Button
+          buttonType="primary"
+          onClick={restoreToLinode}
+          data-qa-restore-submit
+          disabled={readOnly}
+        >
+          Restore
+        </Button>
+        <Button
+          buttonType="secondary"
+          onClick={handleCloseDrawer}
+          data-qa-restore-cancel
+        >
+          Cancel
+        </Button>
+      </ActionsPanel>
+    </Drawer>
+  );
+};
 
-const enhanced = compose<CombinedProps, Props>(
-  withProfile<ProfileProps, Props>((ownProps, { profileData: profile }) => {
-    return {
-      profile,
-    };
-  }),
-  withLinodes()
-);
+const enhanced = compose<CombinedProps, Props>(withLinodes());
 
 export default enhanced(RestoreToLinodeDrawer);

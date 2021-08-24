@@ -1,14 +1,12 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { getVolumes, Volume } from '@linode/api-v4/lib/volumes';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import { MapState } from 'src/store/types';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
+import { getGrants } from 'src/features/Profile/permissionsHelpers';
 import { debounce } from 'throttle-debounce';
 
 interface Props {
@@ -27,7 +25,7 @@ interface State {
   selectedVolumeId?: number;
 }
 
-type CombinedProps = Props & StateProps;
+type CombinedProps = Props & ProfileProps;
 
 class VolumeSelect extends React.Component<CombinedProps, State> {
   state: State = {
@@ -74,7 +72,11 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
       return [];
     }
 
-    const { volumeGrants } = this.props;
+    const { grants, profile } = this.props;
+
+    const volumeGrants = Boolean(profile.data?.restricted)
+      ? getGrants(grants.data, 'volume')
+      : undefined;
 
     let volumeOptions = [];
 
@@ -186,20 +188,4 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-interface StateProps {
-  volumeGrants?: Grant[];
-}
-
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  volumeGrants: isRestrictedUser(state)
-    ? pathOr(
-        undefined,
-        ['__resources', 'profile', 'data', 'grants', 'volume'],
-        state
-      )
-    : undefined,
-});
-
-const connected = connect(mapStateToProps);
-
-export default compose<CombinedProps, Props>(connected)(VolumeSelect);
+export default compose<CombinedProps, Props>(withProfile)(VolumeSelect);

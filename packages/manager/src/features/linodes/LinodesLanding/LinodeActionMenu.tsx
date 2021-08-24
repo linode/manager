@@ -7,11 +7,9 @@ import {
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { stringify } from 'qs';
-import { pathOr, splitAt } from 'ramda';
+import { splitAt } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import {
   makeStyles,
@@ -24,10 +22,10 @@ import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrD
 import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useTypes } from 'src/hooks/useTypes';
+import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import { MapState } from 'src/store/types';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
@@ -74,8 +72,6 @@ export interface Props {
   inTableContext?: boolean;
 }
 
-export type CombinedProps = Props & StateProps;
-
 // When we clone a Linode from the action menu, we pass in several query string
 // params so everything is selected for us when we get to the Create flow.
 export const buildQueryStringForLinodeClone = (
@@ -103,7 +99,7 @@ export const buildQueryStringForLinodeClone = (
   return stringify(params);
 };
 
-export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
+export const LinodeActionMenu: React.FC<Props> = (props) => {
   const {
     linodeId,
     linodeLabel,
@@ -114,7 +110,6 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
     inlineLabel,
     inTableContext,
     openDialog,
-    readOnly,
   } = props;
   const classes = useStyles();
   const theme = useTheme<Theme>();
@@ -125,6 +120,10 @@ export const LinodeActionMenu: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
+
+  const { data: grants } = useGrants();
+
+  const readOnly = getPermissionsForLinode(grants, linodeId) === 'read_only';
 
   const [configs, setConfigs] = React.useState<Config[]>([]);
   const [configsError, setConfigsError] = React.useState<
@@ -332,23 +331,4 @@ interface ExtendedAction extends Action {
   className?: string;
 }
 
-interface StateProps {
-  readOnly: boolean;
-}
-
-const mapStateToProps: MapState<StateProps, CombinedProps> = (
-  state,
-  ownProps
-) => ({
-  readOnly:
-    getPermissionsForLinode(
-      pathOr(null, ['__resources', 'profile', 'data'], state),
-      ownProps.linodeId
-    ) === 'read_only',
-});
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose<CombinedProps, Props>(connected);
-
-export default enhanced(LinodeActionMenu);
+export default LinodeActionMenu;

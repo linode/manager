@@ -1,9 +1,6 @@
-import { getTFAToken, Profile } from '@linode/api-v4/lib/profile';
+import { getTFAToken } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { path } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -11,8 +8,8 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
-import { requestProfile } from 'src/store/profile/profile.requests';
-import { MapState } from 'src/store/types';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -49,16 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  clearState: () => void;
-  twoFactor?: boolean;
   username?: string;
-  updateProfile: (profile: Partial<Profile>) => Promise<Profile>;
+  twoFactor?: boolean;
+  clearState: () => void;
   disabled?: boolean;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps;
-
-export const TwoFactor: React.FC<CombinedProps> = (props) => {
+export const TwoFactor: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { clearState, disabled, twoFactor, username } = props;
@@ -70,10 +64,10 @@ export const TwoFactor: React.FC<CombinedProps> = (props) => {
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
   const [twoFactorEnabled, setTwoFactorEnabled] = React.useState<
     boolean | undefined
-  >(props.twoFactor);
+  >(twoFactor);
   const [twoFactorConfirmed, setTwoFactorConfirmed] = React.useState<
     boolean | undefined
-  >(props.twoFactor);
+  >(twoFactor);
   const [scratchCode, setScratchCode] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -88,13 +82,8 @@ export const TwoFactor: React.FC<CombinedProps> = (props) => {
    * success when TFA is enabled
    */
   const handleEnableSuccess = (scratchCode: string) => {
-    /**
-     * have redux re-request profile
-     *
-     * we need to do this because we just got a 200 from /profile/tfa
-     * so we need to update the Redux profile state
-     */
-    props.refreshProfile();
+    // Refetch Profile with React Query so profile is up to date
+    queryClient.invalidateQueries(queryKey);
     setSuccess('Two-factor authentication has been enabled.');
     setShowQRCode(false);
     setTwoFactorEnabled(true);
@@ -106,13 +95,8 @@ export const TwoFactor: React.FC<CombinedProps> = (props) => {
    * success when TFA is disabled
    */
   const handleDisableSuccess = () => {
-    /**
-     * have redux re-request profile
-     *
-     * we need to do this because we just got a 200 from /profile/tfa
-     * so we need to update the Redux profile state
-     */
-    props.refreshProfile();
+    // Refetch Profile with React Query so profile is up to date
+    queryClient.invalidateQueries(queryKey);
     setSuccess('Two-factor authentication has been disabled.');
     setTwoFactorEnabled(false);
     setTwoFactorConfirmed(false);
@@ -261,29 +245,7 @@ export const TwoFactor: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface StateProps {
-  twoFactor?: boolean;
-  username?: string;
-}
-
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  twoFactor: path(['data', 'two_factor_auth'], state.__resources.profile),
-  username: path(['data', 'username'], state.__resources.profile),
-});
-
-interface DispatchProps {
-  refreshProfile: () => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch
-) => ({
-  refreshProfile: () => dispatch(requestProfile() as any),
-});
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-export default compose<CombinedProps, Props>(connected)(TwoFactor);
+export default TwoFactor;
 
 interface ToggleProps {
   toggleDisableDialog: () => void;

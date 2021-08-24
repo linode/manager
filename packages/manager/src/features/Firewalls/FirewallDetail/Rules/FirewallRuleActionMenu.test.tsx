@@ -7,6 +7,7 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 
 const props: Props = {
   idx: 1,
+  disabled: false,
   triggerCloneFirewallRule: jest.fn(),
   triggerDeleteFirewallRule: jest.fn(),
   triggerOpenRuleDrawerForEditing: jest.fn(),

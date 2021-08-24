@@ -154,6 +154,7 @@ interface Props extends RowActionHandlers {
   ) => void;
   openRuleDrawer: (category: Category, mode: Mode) => void;
   rulesWithStatus: ExtendedFirewallRule[];
+  disabled: boolean;
 }
 
 type CombinedProps = Props;
@@ -165,6 +166,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     policy,
     handlePolicyChange,
     rulesWithStatus,
+    disabled,
     triggerCloneFirewallRule,
     triggerDeleteFirewallRule,
     triggerOpenRuleDrawerForEditing,
@@ -202,10 +204,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
       <div className={classes.header}>
         <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
         <Button
-          buttonType="secondary"
+          buttonType="primary"
           onClick={openDrawerForCreating}
           className={classes.button}
-          compact
+          disabled={disabled}
         >
           Add an {capitalize(category)} Rule
         </Button>
@@ -234,7 +236,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           </TableRow>
         </TableHead>
         <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable">
+          <Droppable droppableId="droppable" isDropDisabled={disabled}>
             {(provided) => (
               <TableBody
                 {...provided.droppableProps}
@@ -254,6 +256,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                         return (
                           <FirewallRuleTableRow
                             isDragging={snapshot.isDragging}
+                            disabled={disabled}
                             key={thisRuleRow.id}
                             {...thisRuleRow}
                             triggerCloneFirewallRule={triggerCloneFirewallRule}
@@ -282,6 +285,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           <PolicyRow
             category={category}
             policy={policy}
+            disabled={disabled}
             handlePolicyChange={onPolicyChange}
           />
         </TableFooter>
@@ -299,6 +303,7 @@ type FirewallRuleTableRowProps = RuleRow &
   Omit<RowActionHandlers, 'triggerReorder'> & {
     innerRef: any;
     isDragging: boolean;
+    disabled: boolean;
   };
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
@@ -321,12 +326,14 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       errors,
       innerRef,
       isDragging,
+      disabled,
       originalIndex,
       ...rest
     } = props;
 
     const actionMenuProps = {
       idx: id,
+      disabled: status === 'PENDING_DELETION' || disabled,
       triggerCloneFirewallRule,
       triggerDeleteFirewallRule,
       triggerOpenRuleDrawerForEditing,
@@ -341,7 +348,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           // that the rule has been moved.
           status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
         }
-        disabled={status === 'PENDING_DELETION'}
+        disabled={status === 'PENDING_DELETION' || disabled}
         domRef={innerRef}
         className={isDragging ? classes.dragging : ''}
         {...rest}
@@ -351,7 +358,9 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           {label || (
             <button
               className={classes.addLabelButton}
+              style={{ color: disabled ? 'inherit' : '' }}
               onClick={() => triggerOpenRuleDrawerForEditing(id)}
+              disabled={disabled}
             >
               Add a label
             </button>
@@ -385,13 +394,11 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
                 })}
                 onClick={() => triggerUndo(id)}
                 aria-label="Undo change to Firewall Rule"
+                disabled={disabled}
               >
                 <Undo />
               </button>
-              <FirewallRuleActionMenu
-                {...actionMenuProps}
-                disabled={status === 'PENDING_DELETION'}
-              />
+              <FirewallRuleActionMenu {...actionMenuProps} />
             </div>
           ) : (
             <FirewallRuleActionMenu {...actionMenuProps} />
@@ -405,6 +412,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
 interface PolicyRowProps {
   category: Category;
   policy: FirewallPolicyType;
+  disabled: boolean;
   handlePolicyChange: (newPolicy: FirewallPolicyType) => void;
 }
 
@@ -414,7 +422,7 @@ const policyOptions: Item<FirewallPolicyType>[] = [
 ];
 
 export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
-  const { category, policy, handlePolicyChange } = props;
+  const { category, policy, disabled, handlePolicyChange } = props;
   const classes = useStyles();
 
   // Calculate how many cells the text should span so that the Select lines up
@@ -449,6 +457,7 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
             (thisOption) => thisOption.value === policy
           )}
           options={policyOptions}
+          disabled={disabled}
           onChange={(selected: Item<FirewallPolicyType>) =>
             handlePolicyChange(selected.value)
           }

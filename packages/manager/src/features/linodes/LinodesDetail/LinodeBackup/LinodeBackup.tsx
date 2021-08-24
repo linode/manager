@@ -13,9 +13,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
@@ -53,11 +51,11 @@ import {
   LinodeActionsProps,
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
-import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendBackupsDisabledEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { initWindows } from 'src/utilities/initWindows';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -176,7 +174,6 @@ interface State {
 
 type CombinedProps = PreloadedProps &
   LinodeActionsProps &
-  StateProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   ContextProps &
@@ -261,8 +258,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
-    /* TODO: use the timezone from the user's profile */
-    this.windows = initWindows(this.props.timezone, true);
+    this.windows = initWindows(getUserTimezone(), true);
 
     this.days = [
       ['Choose a day', 'Scheduling'],
@@ -677,7 +673,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             noMarginTop
           />
           <FormHelperText>
-            Time displayed in {this.props.timezone.replace('_', ' ')}
+            Time displayed in {getUserTimezone().replace('_', ' ')}
           </FormHelperText>
         </FormControl>
         <ActionsPanel className={classes.scheduleAction}>
@@ -829,16 +825,6 @@ const preloaded = PromiseLoader<ContextProps>({
 
 const styled = withStyles(styles);
 
-interface StateProps {
-  timezone: string;
-}
-
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
-});
-
-const connected = connect(mapStateToProps);
-
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   backupsEnabled: linode.backups.enabled,
   backupsSchedule: linode.backups.schedule,
@@ -855,7 +841,6 @@ export default compose<CombinedProps, {}>(
   preloaded,
   styled,
   withRouter,
-  connected,
   withSnackbar,
   withLinodeActions
 )(_LinodeBackup);

@@ -15,7 +15,7 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useLinodeNetworkInfo } from 'src/hooks/useLinodeNetworkInfo';
-import useProfile from 'src/hooks/useProfile';
+import { useProfile } from 'src/queries/profile';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -53,7 +53,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
   const classes = useStyles();
 
   // Needed to see the user's timezone.
-  const { profile } = useProfile();
+  const { data: profile } = useProfile();
 
   // Offset used by the date picker. The number `0` represents the current month,
   // `-1` represents the previous month, etc. This value should not be greater than `0`.
@@ -186,7 +186,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
         <ErrorState errorText={errorMessage} compact />
       ) : (
         <LineGraph
-          timezone={profile.data?.timezone ?? 'UTC'}
+          timezone={profile?.timezone ?? 'UTC'}
           chartHeight={190}
           unit={`/s`}
           formatData={convertNetworkData}

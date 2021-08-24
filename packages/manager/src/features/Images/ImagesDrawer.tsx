@@ -22,12 +22,12 @@ import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import withImages, {
   ImagesDispatch,
 } from 'src/containers/withImages.container';
-import withProfile from 'src/containers/profile.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getGrantData, getProfileData } from 'src/queries/profile';
 
 type ClassNames = 'root' | 'suffix' | 'actionPanel' | 'helperText';
 
@@ -74,7 +74,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   WithSnackbarProps &
-  ProfileProps &
   ImagesDispatch;
 
 export type DrawerMode = 'closed' | 'create' | 'imagize' | 'restore' | 'edit';
@@ -97,6 +96,9 @@ const buttonTextMap: Record<DrawerMode, string> = {
 
 class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
+  canCreateImage: boolean;
+  availableImages: number[] | null = null;
+
   state = {
     disks: [],
     errors: undefined,
@@ -106,6 +108,21 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+
+    const profile = getProfileData();
+    const grants = getGrantData();
+
+    this.canCreateImage =
+      Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
+
+    // Unrestricted users can create Images from any disk;
+    // Restricted users need read_write on the Linode they're trying to Imagize
+    // (in addition to the global add_images grant).
+    this.availableImages = profile?.restricted
+      ? grants?.linode
+          .filter((thisGrant) => thisGrant.permissions === 'read_write')
+          .map((thisGrant) => thisGrant.id) ?? []
+      : null;
 
     if (this.props.disks) {
       // for the 'imagizing' mode
@@ -311,13 +328,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      availableImages,
       label,
       description,
       selectedDisk,
       selectedLinode,
       mode,
-      canCreateImage,
       changeLabel,
       changeDescription,
       classes,
@@ -348,7 +363,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         onClose={this.props.onClose}
         title={titleMap[mode]}
       >
-        {!canCreateImage ? (
+        {!this.canCreateImage ? (
           <Notice
             error
             text="You don't have permissions to create a new Image. Please contact an account administrator for details."
@@ -362,17 +377,19 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <LinodeSelect
             selectedLinode={selectedLinode}
             linodeError={linodeError}
-            disabled={!canCreateImage}
+            disabled={!this.canCreateImage}
             handleChange={(linode) => this.handleLinodeChange(linode.id)}
             filterCondition={(linode) =>
-              availableImages ? availableImages.includes(linode.id) : true
+              this.availableImages
+                ? this.availableImages.includes(linode.id)
+                : true
             }
             updateFor={[
               selectedLinode,
               linodeError,
               classes,
-              canCreateImage,
-              availableImages,
+              this.canCreateImage,
+              this.availableImages,
             ]}
           />
         )}
@@ -385,7 +402,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               diskError={diskError}
               handleChange={this.handleDiskChange}
               updateFor={[disks, selectedDisk, diskError, classes]}
-              disabled={mode === 'imagize' || !canCreateImage}
+              disabled={mode === 'imagize' || !this.canCreateImage}
               data-qa-disk-select
             />
             <Typography className={classes.helperText} variant="body1">
@@ -407,7 +424,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               onChange={changeLabel}
               error={Boolean(labelError)}
               errorText={labelError}
-              disabled={!canCreateImage}
+              disabled={!this.canCreateImage}
               data-qa-image-label
             />
 
@@ -419,7 +436,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               onChange={changeDescription}
               error={Boolean(descriptionError)}
               errorText={descriptionError}
-              disabled={!canCreateImage}
+              disabled={!this.canCreateImage}
               data-qa-image-description
             />
           </React.Fragment>
@@ -431,7 +448,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         >
           <Button
             onClick={this.onSubmit}
-            disabled={requirementsMet || !canCreateImage}
+            disabled={requirementsMet || !this.canCreateImage}
             loading={submitting}
             buttonType="primary"
             data-qa-submit
@@ -442,7 +459,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             onClick={this.close}
             buttonType="secondary"
             className="cancel"
-            disabled={!canCreateImage}
+            disabled={!this.canCreateImage}
             data-qa-cancel
           >
             Cancel
@@ -455,28 +472,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-interface ProfileProps {
-  canCreateImage: boolean;
-  availableImages: number[] | null;
-}
-
 export default compose<CombinedProps, Props>(
   styled,
   withRouter,
   withImages(),
   withSnackbar,
-  SectionErrorBoundary,
-  withProfile<ProfileProps, {}>((undefined, { profileData: profile }) => ({
-    canCreateImage:
-      Boolean(!profile?.restricted) ||
-      Boolean(profile?.grants?.global.add_images),
-    // Unrestricted users can create Images from any disk;
-    // Restricted users need read_write on the Linode they're trying to Imagize
-    // (in addition to the global add_images grant).
-    availableImages: profile?.restricted
-      ? profile?.grants?.linode
-          .filter((thisGrant) => thisGrant.permissions === 'read_write')
-          .map((thisGrant) => thisGrant.id) ?? []
-      : null,
-  }))
+  SectionErrorBoundary
 )(ImageDrawer);

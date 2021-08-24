@@ -20,17 +20,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     display: 'flex',
     // Safari's default setting for `alignItems` is `stretch` so defining it as
-    // `flex-start` fixes the issue
+    // `center` fixes the issue
     // https://stackoverflow.com/questions/57516373/image-stretching-in-flexbox-in-safari
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: 6,
     paddingRight: 6,
     width: 45,
-    '& svg': {
-      // Safari needs the height/width defined in order to render the image
-      width: 33,
-    },
   },
   paymentTextContainer: {
     display: 'flex',
@@ -62,7 +58,7 @@ interface Props {
   creditCard: CreditCardType;
 }
 
-const getIcon = (paymentMethod: ThirdPartyPaymentType) => {
+export const getIcon = (paymentMethod: ThirdPartyPaymentType) => {
   return thirdPartyPaymentMap[paymentMethod].icon;
 };
 

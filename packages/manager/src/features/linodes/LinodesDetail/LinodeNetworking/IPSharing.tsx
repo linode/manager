@@ -263,24 +263,24 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid item>
+            <Grid container item justify="flex-end" className="m0">
               <ActionsPanel>
                 <Button
-                  loading={submitting}
-                  disabled={readOnly || noChoices}
-                  onClick={onSubmit}
-                  buttonType="primary"
-                  data-qa-submit
-                >
-                  Save
-                </Button>
-                <Button
+                  buttonType="secondary"
                   disabled={submitting || noChoices}
                   onClick={onReset}
-                  buttonType="secondary"
                   data-qa-reset
                 >
                   Reset Form
+                </Button>
+                <Button
+                  buttonType="primary"
+                  disabled={readOnly || noChoices}
+                  loading={submitting}
+                  onClick={onSubmit}
+                  data-qa-submit
+                >
+                  Save
                 </Button>
               </ActionsPanel>
             </Grid>

@@ -36,29 +36,24 @@ import CredentialTableContent from './CredentialTableContent';
 import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.color.white,
-  },
-  subHeader: {
-    marginBottom: theme.spacing(4),
+  copy: {
+    marginBottom: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
   },
-  credentialListHeader: {
+  header: {
     margin: 0,
     width: '100%',
   },
-  headline: {
-    marginTop: 8,
-    marginBottom: 8,
-    marginLeft: 15,
-    lineHeight: '1.5rem',
-  },
   addNewWrapper: {
     '&.MuiGrid-item': {
-      padding: 5,
+      paddingTop: 0,
+      paddingRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
     },
   },
   actionCell: {
@@ -221,94 +216,87 @@ export const CredentialList: React.FC<CombinedProps> = (props) => {
   return (
     <div>
       <DocumentTitleSegment segment="Credentials" />
-      <Typography variant="subtitle1" className={classes.subHeader}>
+      <Typography variant="subtitle1" className={classes.copy}>
         Please share any credentials our support team may need when responding
         to a service issue.
         <br /> Credentials are stored encrypted and all decryption attempts are
         logged. You can revoke credentials at any time by deleting them.
       </Typography>
-      <div className={classes.root}>
-        <Grid
-          className={classes.credentialListHeader}
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          updateFor={[credentials, error, loading]}
-        >
-          <Grid className="p0" item>
-            <Typography variant="h3" className={classes.headline}>
-              Credentials
-            </Typography>
-          </Grid>
-          <Grid className={classes.addNewWrapper} item>
-            <AddNewLink
-              label="Add Credential"
-              onClick={() => setDrawerOpen(true)}
-            />
-          </Grid>
+      <Grid
+        className={classes.header}
+        container
+        alignItems="center"
+        justify="flex-end"
+        updateFor={[credentials, error, loading]}
+      >
+        <Grid className={classes.addNewWrapper} item>
+          <AddNewLink
+            label="Add Credential"
+            onClick={() => setDrawerOpen(true)}
+          />
         </Grid>
-        <OrderBy data={credentials} orderBy={'label'} order={'asc'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-            <Paginate data={orderedData}>
-              {({
-                data,
-                count,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => (
-                <>
-                  <Table aria-label="List of Your Managed Credentials">
-                    <TableHead>
-                      <TableRow>
-                        <TableSortCell
-                          active={orderBy === 'label'}
-                          label={'label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-credential-label-header
-                          style={{ width: '30%' }}
-                        >
-                          Credential
-                        </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'last_decrypted'}
-                          label={'last_decrypted'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-credential-decrypted-header
-                          style={{ width: '60%' }}
-                        >
-                          Last Decrypted
-                        </TableSortCell>
-                        <TableCell className={classes.actionCell} />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <CredentialTableContent
-                        credentials={data}
-                        loading={loading}
-                        error={error}
-                        openDialog={openDialog}
-                        openForEdit={openForEdit}
-                      />
-                    </TableBody>
-                  </Table>
-                  <PaginationFooter
-                    count={count}
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                    eventCategory="managed credential table"
-                  />
-                </>
-              )}
-            </Paginate>
-          )}
-        </OrderBy>
-      </div>
+      </Grid>
+      <OrderBy data={credentials} orderBy={'label'} order={'asc'}>
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+          <Paginate data={orderedData}>
+            {({
+              data,
+              count,
+              handlePageChange,
+              handlePageSizeChange,
+              page,
+              pageSize,
+            }) => (
+              <>
+                <Table aria-label="List of Your Managed Credentials">
+                  <TableHead>
+                    <TableRow>
+                      <TableSortCell
+                        active={orderBy === 'label'}
+                        label={'label'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        data-qa-credential-label-header
+                        style={{ width: '30%' }}
+                      >
+                        Credential
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'last_decrypted'}
+                        label={'last_decrypted'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        data-qa-credential-decrypted-header
+                        style={{ width: '60%' }}
+                      >
+                        Last Decrypted
+                      </TableSortCell>
+                      <TableCell className={classes.actionCell} />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <CredentialTableContent
+                      credentials={data}
+                      loading={loading}
+                      error={error}
+                      openDialog={openDialog}
+                      openForEdit={openForEdit}
+                    />
+                  </TableBody>
+                </Table>
+                <PaginationFooter
+                  count={count}
+                  handlePageChange={handlePageChange}
+                  handleSizeChange={handlePageSizeChange}
+                  page={page}
+                  pageSize={pageSize}
+                  eventCategory="managed credential table"
+                />
+              </>
+            )}
+          </Paginate>
+        )}
+      </OrderBy>
       <DeletionDialog
         open={dialog.isOpen}
         entity="credential"

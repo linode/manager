@@ -1,5 +1,4 @@
 import { Grant } from '@linode/api-v4/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -11,7 +10,7 @@ import withLongviewClients, {
 import withClientStats, {
   Props as LVDataProps,
 } from 'src/containers/longview.stats.container';
-import withProfile from 'src/containers/profile.container';
+import { useGrants } from 'src/queries/profile';
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import CPUGauge from './Gauges/CPU';
 import LoadGauge from './Gauges/Load';
@@ -59,7 +58,6 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
     clientInstallKey,
     openPackageDrawer,
     updateLongviewClient,
-    userCanModifyClient,
   } = props;
 
   const {
@@ -69,6 +67,18 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
   } = useClientLastUpdated(clientAPIKey, (_lastUpdated) =>
     props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
   );
+
+  const { data: grants } = useGrants();
+
+  const longviewPermissions = grants?.longview || [];
+
+  const thisPermission = (longviewPermissions as Grant[]).find(
+    (r) => r.id === clientID
+  );
+
+  const userCanModifyClient = thisPermission
+    ? thisPermission.permissions === 'read_write'
+    : true;
 
   /**
    * We want to show a "waiting for data" state
@@ -178,22 +188,5 @@ export default compose<CombinedProps, Props>(
   React.memo,
   withClientStats<Props>((ownProps) => ownProps.clientID),
   /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({})),
-  withProfile<GrantProps, Props>((ownProps, { profileData }) => {
-    const longviewPermissions = pathOr<Grant[]>(
-      [],
-      ['grants', 'longview'],
-      profileData
-    );
-
-    const thisPermission = (longviewPermissions as Grant[]).find(
-      (r) => r.id === ownProps.clientID
-    );
-
-    return {
-      userCanModifyClient: thisPermission
-        ? thisPermission.permissions === 'read_write'
-        : true,
-    };
-  })
+  withLongviewClients(() => ({}))
 )(LongviewClientRow);

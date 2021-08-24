@@ -156,6 +156,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/cloudron_color.svg',
   },
   {
+    name: 'ClusterControl',
+    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, MongoDB, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
+    summary:
+      'All-in-one database deployment, management, and monitoring system.',
+    related_guides: [
+      {
+        title: 'Deploy ClusterControl With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-clustercontrol-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.severalnines.com/docs/clustercontrol/',
+        href: 'https://docs.severalnines.com/docs/clustercontrol/',
+      },
+    ],
+    logo_url: 'assets/clustercontrol_color.svg',
+  },
+  {
     name: 'CS:GO',
     description: `In CS:GO there are two teams: Terrorists and Counter-Terrorists.
     The teams compete against each other to complete objectives or to eliminate the opposing team.
@@ -976,26 +996,6 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/secureyourserver_color.svg',
-  },
-  {
-    name: 'Severalnines',
-    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, MongoDB, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
-    summary:
-      'All-in-one database deployment, management, and monitoring system.',
-    related_guides: [
-      {
-        title: 'Deploy Severalnines With Marketplace Apps',
-        href:
-          'https://www.linode.com/docs/guides/deploying-severalnines-marketplace-app',
-      },
-    ],
-    related_info: [
-      {
-        title: 'https://docs.severalnines.com/docs/clustercontrol/',
-        href: 'https://docs.severalnines.com/docs/clustercontrol/',
-      },
-    ],
-    logo_url: 'assets/severalnines_color.svg',
   },
   {
     name: 'ServerWand',

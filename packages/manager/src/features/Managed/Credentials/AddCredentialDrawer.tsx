@@ -96,20 +96,20 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
               </React.Suspense>
               <ActionsPanel>
                 <Button
-                  buttonType="primary"
-                  onClick={() => handleSubmit()}
-                  loading={isSubmitting}
-                  data-qa-submit
-                >
-                  Add Credential
-                </Button>
-                <Button
                   onClick={onClose}
                   data-qa-cancel
                   buttonType="secondary"
                   className="cancel"
                 >
                   Cancel
+                </Button>
+                <Button
+                  buttonType="primary"
+                  onClick={() => handleSubmit()}
+                  loading={isSubmitting}
+                  data-qa-submit
+                >
+                  Add Credential
                 </Button>
               </ActionsPanel>
             </form>

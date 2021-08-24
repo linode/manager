@@ -1,5 +1,4 @@
 import { AccountMaintenance } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -11,6 +10,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';
 
@@ -36,38 +36,33 @@ interface Props {
   /** please keep in mind here that it's possible the start time can be in the past */
   maintenanceStart?: string | null;
   maintenanceEnd?: string | null;
-  userTimezone?: string;
-  userProfileLoading: boolean;
-  userProfileError?: APIError[];
   type?: AccountMaintenance['type'];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
+  const { type, maintenanceEnd, maintenanceStart } = props;
   const {
-    type,
-    maintenanceEnd,
-    maintenanceStart,
-    userTimezone,
-    userProfileError,
-    userProfileLoading,
-  } = props;
+    data: profile,
+    isLoading: profileLoading,
+    error: profileError,
+  } = useProfile();
 
   const timezoneMsg = () => {
-    if (userProfileLoading) {
+    if (profileLoading) {
       return 'Fetching timezone...';
     }
 
-    if (userProfileError) {
+    if (profileError) {
       return 'Error retrieving timezone.';
     }
 
-    if (!userTimezone) {
+    if (!profile?.timezone) {
       return null;
     }
 
-    return userTimezone;
+    return profile.timezone;
   };
 
   /**

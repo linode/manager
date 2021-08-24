@@ -26,7 +26,3 @@ import './commands';
 before(() => {
   deleteAllTestData();
 });
-
-after(() => {
-  deleteAllTestData();
-});

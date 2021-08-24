@@ -32,6 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2),
   },
   actionWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-end',
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
@@ -193,10 +195,10 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
       />
       <div className={classes.actionWrapper}>
         <Button
-          disabled={!!disabledText || !hasConfirmed}
           buttonType="primary"
-          onClick={handleMigrate}
+          disabled={!!disabledText || !hasConfirmed}
           loading={isLoading}
+          onClick={handleMigrate}
         >
           Enter Migration Queue
         </Button>

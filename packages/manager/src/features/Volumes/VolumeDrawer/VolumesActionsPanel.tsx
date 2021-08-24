@@ -20,21 +20,21 @@ const VolumesActionsPanel: React.FC<CombinedProps> = ({
   submitText,
 }) => {
   return (
-    <ActionsPanel style={{ marginTop: 16 }}>
-      {onSubmit && (
-        <Button
-          buttonType="primary"
-          onClick={onSubmit}
-          disabled={disabled}
-          loading={isSubmitting}
-          data-qa-submit
-        >
-          {submitText ?? 'Submit'}
-        </Button>
-      )}
+    <ActionsPanel>
       {onCancel && (
         <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
           Cancel
+        </Button>
+      )}
+      {onSubmit && (
+        <Button
+          buttonType="primary"
+          disabled={disabled}
+          loading={isSubmitting}
+          onClick={onSubmit}
+          data-qa-submit
+        >
+          {submitText ?? 'Submit'}
         </Button>
       )}
     </ActionsPanel>

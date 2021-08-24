@@ -367,19 +367,21 @@ const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
 
   return (
     <Notice warning important>
-      There was an error loading buckets in{' '}
-      {moreThanOneRegionAffected
-        ? 'the following regions:'
-        : `${regionsAffected[0]}.`}
-      <ul>
-        {moreThanOneRegionAffected &&
-          regionsAffected.map((thisRegion) => (
-            <li key={thisRegion}>{thisRegion}</li>
-          ))}
-      </ul>
-      If you have buckets in{' '}
-      {moreThanOneRegionAffected ? 'these regions' : regionsAffected[0]}, you
-      may not see them listed below.
+      <Typography component="div" style={{ fontSize: '1rem' }}>
+        There was an error loading buckets in{' '}
+        {moreThanOneRegionAffected
+          ? 'the following regions:'
+          : `${regionsAffected[0]}.`}
+        <ul>
+          {moreThanOneRegionAffected &&
+            regionsAffected.map((thisRegion) => (
+              <li key={thisRegion}>{thisRegion}</li>
+            ))}
+        </ul>
+        If you have buckets in{' '}
+        {moreThanOneRegionAffected ? 'these regions' : regionsAffected[0]}, you
+        may not see them listed below.
+      </Typography>
     </Notice>
   );
 });

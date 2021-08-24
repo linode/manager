@@ -1,29 +1,21 @@
 import { Notification } from '@linode/api-v4/lib/account';
 import { LinodeStatus } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import ProductNotification from 'src/components/ProductNotification';
-import withProfile from 'src/containers/profile.container';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { Maintenance } from 'src/store/linodes/linodes.helpers';
 import { withNotifications } from 'src/store/notification/notification.containers';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import MigrationNotification from './MigrationNotification';
 
-type CombinedProps = ProfileProps &
-  ContextProps & {
-    requestNotifications: () => void;
-  };
+type CombinedProps = ContextProps & { requestNotifications: () => void };
 
 const Notifications: React.FC<CombinedProps> = (props) => {
   const {
     requestNotifications,
     linodeNotifications,
-    userTimezone,
-    userProfileError,
-    userProfileLoading,
     linodeId,
     linodeStatus,
   } = props;
@@ -79,9 +71,6 @@ const Notifications: React.FC<CombinedProps> = (props) => {
       })}
       {maintenanceForThisLinode ? (
         <MaintenanceBanner
-          userTimezone={userTimezone}
-          userProfileLoading={userProfileLoading}
-          userProfileError={userProfileError}
           maintenanceStart={maintenanceForThisLinode.when}
           type={maintenanceForThisLinode.type}
         />
@@ -97,12 +86,6 @@ interface ContextProps {
   maintenance: Maintenance;
 }
 
-interface ProfileProps {
-  userProfileLoading: boolean;
-  userProfileError?: APIError[];
-  userTimezone?: string;
-}
-
 const enhanced = compose<CombinedProps, {}>(
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeNotifications: linode._notifications,
@@ -112,16 +95,7 @@ const enhanced = compose<CombinedProps, {}>(
   })),
   withNotifications(undefined, ({ requestNotifications }) => ({
     requestNotifications,
-  })),
-  withProfile<ProfileProps, {}>(
-    (undefined, { profileData: profile, profileLoading, profileError }) => {
-      return {
-        userTimezone: profile?.timezone,
-        userProfileError: profileError?.read,
-        userProfileLoading: profileLoading,
-      };
-    }
-  )
+  }))
 );
 
 export default enhanced(Notifications);

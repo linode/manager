@@ -41,7 +41,10 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
    * We'll eventually want to check the read_write firewall
    * grant here too, but it doesn't exist yet.
    */
-  const { _isRestrictedUser } = useAccountManagement();
+  const { _isRestrictedUser, _hasGrant } = useAccountManagement();
+
+  const userCannotAddFirewall =
+    _isRestrictedUser && !_hasGrant('add_firewalls');
 
   const submitForm = (
     values: CreateFirewallPayload,
@@ -115,7 +118,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
 
           return (
             <form onSubmit={handleSubmit}>
-              {_isRestrictedUser ? (
+              {userCannotAddFirewall ? (
                 <Notice
                   error
                   text="You don't have permissions to create a new Firewall. Please contact an account administrator for details."
@@ -132,7 +135,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
               <TextField
                 aria-label="Label for your new Firewall"
                 label="Label"
-                disabled={_isRestrictedUser}
+                disabled={userCannotAddFirewall}
                 name="label"
                 value={values.label}
                 onChange={handleChange}
@@ -144,7 +147,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
               />
               <LinodeMultiSelect
                 showAllOption
-                disabled={_isRestrictedUser}
+                disabled={userCannotAddFirewall}
                 helperText={firewallHelperText}
                 errorText={errors['devices.linodes']}
                 handleChange={(selected: number[]) =>
@@ -153,23 +156,18 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 onBlur={handleBlur}
               />
               <ActionsPanel>
+                <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+                  Cancel
+                </Button>
                 <Button
                   buttonType="primary"
                   onClick={() => handleSubmit()}
-                  disabled={_isRestrictedUser}
+                  disabled={userCannotAddFirewall}
                   loading={isSubmitting}
                   data-qa-submit
                   data-testid="create-firewall-submit"
                 >
                   Create Firewall
-                </Button>
-                <Button
-                  buttonType="secondary"
-                  onClick={onClose}
-                  disabled={_isRestrictedUser}
-                  data-qa-cancel
-                >
-                  Cancel
                 </Button>
               </ActionsPanel>
             </form>

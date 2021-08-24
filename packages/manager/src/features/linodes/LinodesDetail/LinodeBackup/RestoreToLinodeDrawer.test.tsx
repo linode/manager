@@ -1,5 +1,5 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 
 describe('RestoreToLinodeDrawer', () => {
@@ -17,11 +17,11 @@ describe('RestoreToLinodeDrawer', () => {
     linodesResults: 0,
   };
 
-  const wrapper = shallow<RestoreToLinodeDrawer>(
-    <RestoreToLinodeDrawer {...props} />
-  );
+  it('renders without crashing', async () => {
+    const { findByText } = renderWithTheme(
+      <RestoreToLinodeDrawer {...props} />
+    );
 
-  it('renders without crashing', () => {
-    expect(wrapper).toHaveLength(1);
+    await findByText(/Restore Backup from/);
   });
 });

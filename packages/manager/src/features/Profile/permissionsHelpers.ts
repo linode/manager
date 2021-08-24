@@ -1,11 +1,30 @@
-import { GlobalGrantTypes } from '@linode/api-v4/lib/account';
-import store, { ApplicationState } from 'src/store';
+import {
+  GlobalGrantTypes,
+  Grants,
+  GrantType,
+} from '@linode/api-v4/lib/account';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/profile';
+import { Profile } from '@linode/api-v4/lib/profile';
 
-export const isRestrictedUser = (_state?: ApplicationState) => {
-  const state = _state ?? store.getState();
-  return state?.__resources?.profile?.data?.restricted ?? false;
+export const isRestrictedUser = () =>
+  queryClient.getQueryData<Profile>(queryKey)?.restricted || false;
+
+export const hasGrant = (grant: GlobalGrantTypes, grants?: Grants) => {
+  if (!grants) {
+    return (
+      queryClient.getQueryData<Grants>(`${queryKey}-grants`)?.global?.[grant] ||
+      false
+    );
+  }
+  return grants.global?.[grant] || false;
 };
 
-export const hasGrant = (state: ApplicationState, grant: GlobalGrantTypes) => {
-  return state?.__resources?.profile?.data?.grants?.global?.[grant] ?? false;
+export const getGrants = (grants: Grants | undefined, grant: GrantType) => {
+  if (!grants) {
+    return (
+      queryClient.getQueryData<Grants>(`${queryKey}-grants`)?.[grant] || []
+    );
+  }
+  return grants?.[grant] || [];
 };

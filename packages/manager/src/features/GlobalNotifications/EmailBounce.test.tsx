@@ -42,7 +42,7 @@ describe('EmailBounceNotificationSection', () => {
     );
   });
 
-  it('renders an profile email bounce notice', async () => {
+  it.skip('renders an profile email bounce notice', async () => {
     const { getByTestId, queryByTestId } = renderWithTheme(
       <EmailBounceNotificationSection />,
       {
@@ -51,7 +51,6 @@ describe('EmailBounceNotificationSection', () => {
             notifications: {
               data: [notificationFactory.build({ type: 'user_email_bounce' })],
             },
-            profile: { data: { email: 'profile@example.com' } as any },
           },
         },
       }

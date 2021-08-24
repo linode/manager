@@ -7,6 +7,7 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import withLinodes, {
   Props as LinodesProps,
 } from 'src/containers/withLinodes.container';
@@ -42,12 +43,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   firewallID: number;
   firewallLabel: string;
+  disabled: boolean;
 }
 
 type CombinedProps = RouteComponentProps & Props & LinodesProps;
 
 const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
-  const { firewallID, firewallLabel } = props;
+  const { firewallID, firewallLabel, disabled } = props;
   const classes = useStyles();
   const {
     devices,
@@ -58,10 +60,16 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
 
   const deviceList = Object.values(devices.itemsById ?? {}); // Gives the devices as an array or [] if nothing is found
   React.useEffect(() => {
-    if (devices.lastUpdated === 0 && !devices.loading) {
+    if (devices.lastUpdated === 0 && !(devices.loading || devices.error.read)) {
       requestDevices();
     }
-  }, [devices.lastUpdated, devices.loading, firewallID, requestDevices]);
+  }, [
+    devices.error,
+    devices.lastUpdated,
+    devices.loading,
+    firewallID,
+    requestDevices,
+  ]);
 
   const {
     dialog,
@@ -134,6 +142,15 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
+      {disabled ? (
+        <Notice
+          text={
+            "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
+          }
+          error
+          important
+        />
+      ) : null}
       <Grid container direction="column">
         <Grid item style={{ paddingBottom: 0 }}>
           <Typography className={classes.copy}>
@@ -144,6 +161,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
         <Grid item className={classes.actions}>
           <Button
             buttonType="secondary"
+            disabled={disabled}
             onClick={() => setDeviceDrawerOpen(true)}
             compact
           >
@@ -156,6 +174,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
         error={devices.error.read}
         lastUpdated={devices.lastUpdated}
         loading={devices.loading}
+        disabled={disabled}
         triggerRemoveDevice={_openDialog}
       />
       <AddDeviceDrawer

@@ -14,6 +14,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -172,31 +173,33 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { tags } = this.props;
-    getTags()
-      .then((response) => {
-        /*
-         * The end goal is to display to the user a list of auto-suggestions
-         * when they start typing in a new tag, but we don't want to display
-         * tags that are already applied because there cannot
-         * be duplicates.
-         */
-        const filteredTags = response.data.filter((thisTag: Tag) => {
-          return !tags.some((alreadyAppliedTag: string) => {
-            return alreadyAppliedTag === thisTag.label;
+    if (!isRestrictedUser()) {
+      getTags()
+        .then((response) => {
+          /*
+           * The end goal is to display to the user a list of auto-suggestions
+           * when they start typing in a new tag, but we don't want to display
+           * tags that are already applied because there cannot
+           * be duplicates.
+           */
+          const filteredTags = response.data.filter((thisTag: Tag) => {
+            return !tags.some((alreadyAppliedTag: string) => {
+              return alreadyAppliedTag === thisTag.label;
+            });
           });
-        });
-        /*
-         * reshaping them for the purposes of being passed to the Select component
-         */
-        const reshapedTags = filteredTags.map((thisTag: Tag) => {
-          return {
-            label: thisTag.label,
-            value: thisTag.label,
-          };
-        });
-        this.setState({ tagsToSuggest: reshapedTags });
-      })
-      .catch((e) => e);
+          /*
+           * reshaping them for the purposes of being passed to the Select component
+           */
+          const reshapedTags = filteredTags.map((thisTag: Tag) => {
+            return {
+              label: thisTag.label,
+              value: thisTag.label,
+            };
+          });
+          this.setState({ tagsToSuggest: reshapedTags });
+        })
+        .catch((e) => e);
+    }
   }
 
   toggleTagInput = () => {

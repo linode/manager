@@ -60,8 +60,16 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       margin: 0,
+      marginTop: theme.spacing(2),
+      width: '100%',
       '& .MuiGrid-item': {
         paddingLeft: 0,
+        paddingRight: 0,
+      },
+      '& .domain-btn': {
+        [theme.breakpoints.down('md')]: {
+          marginRight: theme.spacing(),
+        },
       },
       [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
@@ -136,7 +144,7 @@ interface IType {
 }
 
 const createLink = (title: string, handler: () => void) => (
-  <Button buttonType="secondary" onClick={handler}>
+  <Button buttonType="primary" className="domain-btn" onClick={handler}>
     {title}
   </Button>
 );
@@ -373,7 +381,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             ),
         },
       ],
-      link: () => createLink('Add a NS Record', this.openForCreateNSRecord),
+      link: () => createLink('Add an NS Record', this.openForCreateNSRecord),
     },
 
     /** MX Record */
@@ -584,7 +592,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           ),
         },
       ],
-      link: () => createLink('Add a SRV Record', this.openForCreateSRVRecord),
+      link: () => createLink('Add an SRV Record', this.openForCreateSRVRecord),
     },
 
     /** CAA Record */
@@ -829,6 +837,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 const msToReadable = (v: number): null | string =>
   pathOr(null, [v], {
     0: 'Default',
+    30: '30 seconds',
+    120: '2 minutes',
     300: '5 minutes',
     3600: '1 hour',
     7200: '2 hours',

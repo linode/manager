@@ -1,4 +1,5 @@
-import { Entity } from 'src/account/types';
+import { Entity } from '../account/types';
+
 export interface SupportTicket {
   opened: string;
   id: number;
