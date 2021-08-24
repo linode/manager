@@ -1,21 +1,14 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
-import { AttachFileForm } from './AttachFileForm';
-
 import { attachment1, attachment2 } from 'src/__data__/fileAttachments';
+import { AttachFileForm } from './AttachFileForm';
 
 const props = {
   files: [attachment1, attachment2],
   handleFileSelected: jest.fn(),
   updateFiles: jest.fn(),
-  inlineDisplay: true,
   classes: {
-    root: '',
     attachFileButton: '',
-    attachmentsContainer: '',
-    attachmentField: '',
-    uploadProgress: '',
   },
 };
 
