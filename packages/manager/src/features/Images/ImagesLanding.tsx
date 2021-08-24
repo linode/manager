@@ -56,9 +56,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-/**
- * @todo remove conditional cell sizes when we're no longer relying on a flag here.
- */
 const getHeaders = (
   tableType: 'automatic' | 'manual',
   flagEnabled: boolean = true
@@ -68,7 +65,7 @@ const getHeaders = (
       label: 'Image',
       dataColumn: 'label',
       sortable: true,
-      widthPercent: flagEnabled ? 30 : 35,
+      widthPercent: 30,
     },
     flagEnabled
       ? {
@@ -83,21 +80,21 @@ const getHeaders = (
       label: 'Created',
       dataColumn: 'created',
       sortable: false,
-      widthPercent: flagEnabled ? 15 : 20,
+      widthPercent: 20,
       hideOnMobile: true,
     },
     {
       label: 'Size',
       dataColumn: 'size',
       sortable: true,
-      widthPercent: flagEnabled ? 15 : 20,
+      widthPercent: 15,
     },
     tableType === 'automatic'
       ? {
           label: 'Expires',
           dataColumn: 'expires',
           sortable: false,
-          widthPercent: 15,
+          widthPercent: 20,
           hideOnMobile: true,
         }
       : null,
@@ -106,7 +103,7 @@ const getHeaders = (
       visuallyHidden: true,
       dataColumn: '',
       sortable: false,
-      widthPercent: 35,
+      widthPercent: 15,
     },
   ].filter(Boolean) as HeaderCell[];
 
