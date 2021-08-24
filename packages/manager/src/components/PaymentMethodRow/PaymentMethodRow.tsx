@@ -65,7 +65,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       onClick: () => {
         history.push({
           pathname: '/account/billing/make-payment/',
-          state: { id: paymentMethod.id },
+          state: { paymentMethod },
         });
       },
     },
