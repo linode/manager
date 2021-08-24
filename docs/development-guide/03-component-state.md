@@ -35,7 +35,7 @@ Class components use the traditional React `this.state` and `this.setState` patt
 
 ## Global State
 
-Two options are currently in use for managing state that a lot of components need to care about: Redux and Context.
+Two options are currently in use for managing state that many different components care about: Redux and Context.
 
 ### Redux
 
@@ -46,7 +46,7 @@ Currently, some API data is still stored in Redux, but data fetching in general 
 - Redux code lives in `src/store`.
 - Each slice of state has its own directory in `src/store` which includes actions and the reducer.
 - Reducers are combined via `combineReducers` in `src/store/index`.
-- Components consume Redux state by using the standard react-redux `connect` HOC, though it's common to write a custom, reusable container HOC in `src/containers`.for each state slice in
+- Components consume Redux state by using the standard react-redux `connect` HOC, though it's common to write a custom, reusable container HOC in `src/containers` for each state slice in the store.
 
 ### Context
 

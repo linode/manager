@@ -19,8 +19,8 @@ The application code for the api-v4 package lives in `/src`. From there, each se
 Each subdirectory typically has:
 
 - A file with the API request methods (e.g. `account.ts`)
-- A file defining the associated TypeScript types and interfaces, called `types.ts`.
-- An `index.ts` file that exports everything defined in the subdirectory.
+- A file defining the associated TypeScript types and interfaces, called `types.ts`
+- An `index.ts` file that exports everything defined in the subdirectory
 
 If there are multiple resource types in one section of the API, there may be multiple files containing API requests methods, for example, in `/src/linodes/`:
 
@@ -35,7 +35,7 @@ There are also a few key files in the /src directory of the api-v4 package:
 - constants.ts (package-wide constants, like API_ROOT)
 - index.ts (exports everything from the package)
 - request.ts (the nuts and bolts of making an API request, utilizing axios for XHR requests)
-- types.ts (package-wide TypeScript types and interfaces, like APIError.
+- types.ts (package-wide TypeScript types and interfaces, like APIError)
 
 The TypeScript files are compiled to the `/lib` directory, and compiled + minified to the root level `index.js`.
 
@@ -43,7 +43,7 @@ The TypeScript files are compiled to the `/lib` directory, and compiled + minifi
 
 The validation package contains Yup schemas for validating requests made through the api-v4 package. Its structure is similar to api-v4, though it is smaller.
 
-The `/src` directory is flat and contains many “<resource_type>.schema.ts” files, as well as an index file that exports everything, and a `constants` file with package-wide constants.
+The `/src` directory is flat and contains many "<resource_type>.schema.ts" files, as well as an index file that exports everything, and a `constants` file with package-wide constants.
 
 Like api-v4, TypeScript files are compiled to /lib and compiled + minified to index.ts.
 
@@ -79,11 +79,11 @@ In `/src` there are several important files on the directory root:
 - **featureFlags.ts**
   - TypeScript types and interfaces corresponding to the feature flags we expect from LaunchDarkly (our third-party feature flagging service)
 - **index.tsx**
-  - the entry point for the React app. Uses `ReactDOM.render()` to render the app to ./public/index.html.
+  - the entry point for the React app; uses `ReactDOM.render()` to render the app to `./public/index.html`
 - **MainContent.tsx**
   - routes for major sections of the app
 - **request.tsx**
-  - base-level request methods, responsible for injecting a user’s access token to all API requests and intercepting errors
+  - base-level request methods, responsible for injecting a user's access token to all API requests and intercepting errors
 - **session.ts**
   - methods for handling session management
 - **themeFactory.ts and themes.ts**
@@ -91,7 +91,7 @@ In `/src` there are several important files on the directory root:
 
 The /src directory has several subdirectories:
 
-- **/**data****
+- **/**data\*\*\*\*
   - static mocked data for unit tests, not used as much anymore since we introduced dynamic factories
 - **/assets**
   - icons, svgs, etc
@@ -100,7 +100,7 @@ The /src directory has several subdirectories:
 - **/components**
   - reusable React components
 - **/containers**
-  - higher-order components that wrap other components with data, often using react-redux’s `connect()`. Not - used as much anymore since we’ve been moving to React Query for data fetching.
+  - higher-order components that wrap other components with data, often using react-redux's `connect()`. Not used as much anymore since we've been moving to React Query for data fetching.
 - **/dev-tools**
   - custom Cloud Manager dev tools, usefully during development
 - **/factories**
@@ -120,43 +120,43 @@ The /src directory has several subdirectories:
 - **/types**
   - miscellaneous type declarations
 - **/utilities**
-  - miscellaneous reusable utility functions, e.g. “capitalize.ts”.
+  - miscellaneous reusable utility functions, e.g. `capitalize.ts`
 
 ## Where to go for common tasks
 
 ### "I want to…"
 
-**“... consume data from a new API endpoint”**
+**"... consume data from a new API endpoint"**
 
 1. Add the request handler and types in `/packages/api-v4`
 2. If appropriate, add the schema to `/packages/validation`
-3. Add a React Query hook in `/packages/manager/src/queries`.
+3. Add a React Query hook in `/packages/manager/src/queries`
 4. Use the new hook in a function component
 
-**“... create a new, reusable component”**
+**"... create a new, reusable component"**
 
-1. Add a new directory (upper camel case) in `/packages/manager/src/components`.
+1. Add a new directory (upper camel case) in `/packages/manager/src/components`
 2. Author the React component, unit tests, and Storybook stories across four files:
    a. `<ComponentName>.tsx` (React component code)
    b. `<ComponentName>.test.tsx` (unit tests for the React component)
    c. `<ComponentName>.stories.tsx` (Storybook stories for the React component
    d. `index.ts` (export the React component)
 
-**“...implement a new feature in an existing section of the app”**
+**"... implement a new feature in an existing section of the app"**
 
 1. Find the appropriate code in `/packages/manager/src/features`
 2. Modify existing components, add new components, etc.
 
-**“...create an entirely new section of the app”**
+**"... create an entirely new section of the app"**
 
-1. Add a <Route /> in `src/MainContenxt.tsx`
+1. Add a `<Route />` in `src/MainContent.tsx`
 2. Add new section to the Primary Nav in `src/components/PrimaryNav`
 3. Add a directory (upper camel case) in /packages/manager/src/features`
 4. Add new feature components and corresponding tests
 
-**“...change the styling of a specific feature component”**
+**"... change the styling of a specific feature component"**
 
 1. Find where the styles are defined for the component you want to modify
-   a. They are likely defined in the feature component’s file, e.g. `src/features/<MyFeature>/<SomeComponent>.tsx`.
-2. Avoid making changes in `src/index.css`, `src/themeactory.ts`, and `src/themes.ts` unless you are intentionally making a global styling change.
+   a. They are likely defined in the feature component's file, e.g. `src/features/<MyFeature>/<SomeComponent>.tsx`.
+2. Avoid making changes in `src/index.css`, `src/themeFactory.ts`, and `src/themes.ts` unless you are intentionally making a global styling change.
 3. Avoid making changes in `src/components/<ComponentName>` unless you are intentionally making a global styling change, or if the change cannot be made in the feature component file and the change can be controlled through props or composition.
