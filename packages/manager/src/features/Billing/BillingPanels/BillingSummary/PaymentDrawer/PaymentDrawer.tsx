@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     alignSelf: 'flex-end',
     marginLeft: 'auto',
-    marginTop: theme.spacing(2),
   },
   cvvField: {
     width: 100,
@@ -434,7 +433,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
               </Grid>
               {hasPaymentMethods ? (
                 <Grid item className={classes.input}>
-                  <Grid item className={classes.button}>
+                  <Grid className={classes.button}>
                     {paymentTooLow || selectedCardExpired ? (
                       <HelpIcon
                         className={classes.helpIcon}
@@ -495,7 +494,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 </Grid>
               </Grid>
               <Grid item className={classes.input}>
-                <Grid item className={classes.button}>
+                <Grid className={classes.button}>
                   {paymentTooLow || selectedCardExpired ? (
                     <HelpIcon
                       className={classes.helpIcon}
