@@ -290,24 +290,6 @@ export class SelectPlanPanel extends React.Component<
 
     const shared = [...nanodes, ...standards];
 
-    if (!isEmpty(shared)) {
-      tabs.push({
-        render: () => {
-          return (
-            <>
-              <Typography data-qa-standard className={classes.copy}>
-                Shared CPU instances are good for medium-duty workloads and are
-                a good mix of performance, resources, and price.
-              </Typography>
-              {this.renderPlanContainer(shared)}
-            </>
-          );
-        },
-        title: 'Shared CPU',
-      });
-      tabOrder.push('standard');
-    }
-
     if (!isEmpty(dedicated)) {
       tabs.push({
         render: () => {
@@ -326,6 +308,24 @@ export class SelectPlanPanel extends React.Component<
         title: 'Dedicated CPU',
       });
       tabOrder.push('dedicated');
+    }
+
+    if (!isEmpty(shared)) {
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Typography data-qa-standard className={classes.copy}>
+                Shared CPU instances are good for medium-duty workloads and are
+                a good mix of performance, resources, and price.
+              </Typography>
+              {this.renderPlanContainer(shared)}
+            </>
+          );
+        },
+        title: 'Shared CPU',
+      });
+      tabOrder.push('standard');
     }
 
     if (!isEmpty(highmem)) {

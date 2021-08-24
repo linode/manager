@@ -48,7 +48,7 @@ describe('LKE Create Cluster', () => {
       .type(makeTestLabel());
     containsClick(selectRegionString).type('Newar{enter}');
     cy.get('[id="kubernetes-version"]').type('{enter}');
-
+    fbtClick('Shared CPU');
     addNodes('Linode 2 GB');
 
     // wait for change to reflect on Checkout bar
