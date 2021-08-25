@@ -10,14 +10,16 @@ getLinodes().then({ data } => {
 });
 ```
 
-The **api-v4** package uses Axios for data fetching. Cloud Manager makes use of an Axios feature called "interceptors" for authentication and error shaping:
+The **api-v4** package also exposes a `baseRequest`, which is the [Axios](https://axios-http.com/docs/intro) instance used for individual API methods.
 
-_packages/manager/src/request.tsx_ (simplified)
+The `baseRequest` is used by Cloud Manager for authentication and error shaping:
 
 ```ts
+// packages/manager/src/request.tsx (simplified)
+
 import { baseRequest } from "@linode/api-v4/lib/request";
 
-// Adds the bearer token from local storage to each request
+// Adds the bearer token from local storage to each request, using an interceptor
 baseRequest.interceptors.request.use((config) => {
   return {
     ...config,
