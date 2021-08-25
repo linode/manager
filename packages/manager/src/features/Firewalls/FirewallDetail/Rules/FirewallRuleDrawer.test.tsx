@@ -137,6 +137,13 @@ describe('utilities', () => {
               'Label must include only ASCII letters, numbers, underscores, periods, and dashes.',
           },
         },
+        {
+          value: 'b&a$e#c@!%^*()+=[]{}?/,<>~',
+          result: {
+            label:
+              'Label must include only ASCII letters, numbers, underscores, periods, and dashes.',
+          },
+        },
       ];
       expectedResults.forEach(({ value, result }) => {
         expect(validateForm('TCP', '80', value)).toEqual(result);
