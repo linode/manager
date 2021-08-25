@@ -17,6 +17,10 @@ interface Props {
 const EUAgreementCheckbox: React.FC<Props> = (props) => {
   const { checked, onChange, className, centerCheckbox } = props;
 
+  const checkboxStyle = centerCheckbox
+    ? { marginLeft: -8 }
+    : { marginLeft: -8, marginTop: -5 };
+
   return (
     <Box
       display="flex"
@@ -24,11 +28,7 @@ const EUAgreementCheckbox: React.FC<Props> = (props) => {
       alignItems={centerCheckbox ? 'center' : 'flex-start'}
       className={className}
     >
-      <CheckBox
-        checked={checked}
-        onChange={onChange}
-        style={{ marginLeft: -8 }}
-      />
+      <CheckBox checked={checked} onChange={onChange} style={checkboxStyle} />
       <Typography>
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">

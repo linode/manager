@@ -60,16 +60,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonGroup: {
     marginTop: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'flex-end',
+    },
   },
   agreement: {
-    maxWidth: '80%',
-    [theme.breakpoints.down('sm')]: {
+    maxWidth: '70%',
+    [theme.breakpoints.down('xs')]: {
       maxWidth: 'unset',
     },
   },
   button: {
     maxHeight: 34,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       marginTop: theme.spacing(2),
     },
   },

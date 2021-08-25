@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonGroup: {
     marginTop: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-end',
       flexWrap: 'wrap',
     },
   },
@@ -231,7 +232,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
         ) : null}
         <Button
           buttonType="primary"
-          disabled={!!disabledText || !hasConfirmed}
+          disabled={!!disabledText || !hasConfirmed || !selectedRegion}
           loading={isLoading}
           onClick={handleMigrate}
           className={classes.button}
