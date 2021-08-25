@@ -10,6 +10,7 @@ export const loadAppNoLogin = (path) => waitForAppLoad(path, false);
 
 /* eslint-disable sonarjs/no-duplicate-string */
 export const routes = {
+  linodeLanding: '/linodes',
   createLinode: '/linodes/create',
   createLinodeOCA: '/linodes/create?type=One-Click',
   support: '/support',
