@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginTop: theme.spacing(2),
     width: '80%',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   browseFilesButton: {
     marginLeft: '1rem',
@@ -47,9 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   cliModalButton: {
     ...theme.applyLinkStyles,
     fontWeight: 700,
-  },
-  agreement: {
-    marginTop: theme.spacing(),
   },
 }));
 export interface Props {
@@ -200,7 +200,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
               checked={false}
               onChange={() => null}
               centerCheckbox
-              className={classes.agreement}
+              className={classes.helperText}
             />
           ) : null}
 
