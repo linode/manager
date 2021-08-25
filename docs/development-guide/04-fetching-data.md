@@ -1,7 +1,5 @@
 # Fetching Data
 
-## Cloud Manager
-
 Cloud Manager makes requests of the Linode API using the methods imported from the **api-v4** package:
 
 ```ts
@@ -33,11 +31,12 @@ baseRequest.interceptors.request.use((config) => {
 
 ### Fetching data in a component
 
-The basic way to fetch data in a component is to use an api-v4 method directly:
+The basic way to fetch data in a component is to use an **api-v4** method directly:
 
 ```tsx
 import * as React from 'react';
 import { getProfile } from '@linode/api-v4/lib/profile';
+// ... other imports
 
 const UsernameDisplay: React.FC<> = () => {
   const [loading, setLoading] = React.useState(false);
@@ -91,13 +90,13 @@ export const useProfile = () =>
   useQuery<Profile, APIError[]>(queryKey, getProfile);
 ```
 
-The results of the query will be cached in memory. The first time `useProfile()` is called, the data is fetched from the API. On subsequent calls, the data is retrieved from the in-memory cache.
+The first time `useProfile()` is called, the data is fetched from the API. On subsequent calls, the data is retrieved from the in-memory cache.
 
-`useQuery` accepts a third "options" parameter, which can be used to specify cache time (among others things). For example, to specify that the cache should never expire:
+`useQuery` accepts a third "options" parameter, which can be used to specify cache time (among others things). For example, to specify that the cache should never expire for this query:
 
 ```ts
-// ...other imports
 import { queryPresets } from "src/queries/base";
+// ...other imports
 
 export const useProfile = () =>
   useQuery<Profile, APIError[]>(
@@ -107,7 +106,7 @@ export const useProfile = () =>
   );
 ```
 
-Loading and error states are managed by React Query. The example above becomes greatly simplified:
+Loading and error states are managed by React Query. The earlier username display example becomes greatly simplified:
 
 ```tsx
 import * as React from "react";
