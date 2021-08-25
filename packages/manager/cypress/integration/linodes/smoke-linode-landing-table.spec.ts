@@ -7,6 +7,9 @@ import { routes } from 'cypress/support/ui/constants';
 
 const appRoot = Cypress.env('REACT_APP_APP_ROOT');
 const mockLinodes = makeResourcePage(linodeFactory.buildList(5));
+const linodeLabel = (number) => {
+  return mockLinodes.data[number - 1].label;
+};
 
 const deleteLinodeFromActionMenu = (linodeLabel) => {
   getClick(`[aria-label="Action menu for Linode ${linodeLabel}"]`);
@@ -85,6 +88,82 @@ describe('linode landing checks', () => {
     getVisible('h1[data-qa-header="Linodes"]');
     getVisible('button[title="Docs"][data-qa-icon-text-link="Docs"]');
     fbtVisible('Create Linode');
+  });
+
+  it('checks the create menu dropdown items', () => {
+    getClick('[data-qa-add-new-menu-button="true"]');
+    getVisible(
+      '[data-valuetext="LinodeHigh performance SSD Linux servers"][href="/linodes/create"]'
+    );
+    getVisible(
+      '[data-valuetext="VolumeAttach additional storage to your Linode"][href="/volumes/create"]'
+    );
+    getVisible(
+      '[data-valuetext="NodeBalancerEnsure your services are highly available"][href="/nodebalancers/create"]'
+    );
+    getVisible(
+      '[data-valuetext="FirewallControl network access to your Linodes"][href="/firewalls/create"]'
+    );
+    getVisible(
+      '[data-valuetext="DomainManage your DNS records"][href="/domains/create"]'
+    );
+    getVisible(
+      '[data-valuetext="KubernetesHighly available container workloads"][href="/kubernetes/create"]'
+    );
+    getVisible(
+      '[data-valuetext="BucketS3-compatible object storage"][href="/object-storage/buckets/create"]'
+    );
+    getVisible(
+      '[data-valuetext="MarketplaceDeploy applications with ease"][href="/linodes/create?type=One-Click"]'
+    );
+  });
+
+  it('checks the table and action menu buttons/labels', () => {
+    const label = linodeLabel(1);
+    const ip = mockLinodes.data[0].ipv4[0];
+    getVisible('[aria-label="Sort by label"]').within(() => {
+      fbtVisible('Label');
+    });
+    getVisible('[aria-label="Sort by _statusPriority"]').within(() => {
+      fbtVisible('Status');
+    });
+    getVisible('[aria-label="Sort by type"]').within(() => {
+      fbtVisible('Plan');
+    });
+    getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
+      fbtVisible('IP Address');
+    });
+    getVisible(
+      '[aria-label="Toggle display"][aria-describedby="displayViewDescription"][title="Summary view"]'
+    );
+    getVisible(
+      '[aria-label="Toggle group by tag"][aria-describedby="groupByDescription"][title="Group by tag"]'
+    );
+
+    getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
+      cy.get(`[aria-label="Copy ${ip} to clipboard"]`)
+        .realHover()
+        .then(() => {
+          getVisible(`[aria-label="Copy ${ip} to clipboard"]`);
+        });
+      getVisible(`[aria-label="Action menu for Linode ${label}"]`);
+    });
+  });
+
+  it('checks the action menu items', () => {
+    const label = linodeLabel(1);
+    getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
+      fbtVisible('Power Off');
+      fbtVisible('Reboot');
+      getClick(`[aria-label="Action menu for Linode ${label}"]`);
+    });
+    getVisible('[data-qa-action-menu-item="Launch LISH Console"]');
+    getVisible('[data-qa-action-menu-item="Clone"]');
+    getVisible('[data-qa-action-menu-item="Resize"]');
+    getVisible('[data-qa-action-menu-item="Rebuild"]');
+    getVisible('[data-qa-action-menu-item="Rescue"]');
+    getVisible('[data-qa-action-menu-item="Migrate"]');
+    getVisible('[data-qa-action-menu-item="Delete"]');
   });
 });
 
