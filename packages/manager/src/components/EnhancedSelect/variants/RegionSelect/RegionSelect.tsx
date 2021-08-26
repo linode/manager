@@ -57,7 +57,6 @@ export const selectStyles = {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
-      // marginTop: 2,
       '& g': {
         // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
         clipPath: 'none !important' as 'none',
