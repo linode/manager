@@ -11,6 +11,7 @@ const createLinode = () => {
   const password = strings.randomPass();
   fbtClick('Select a Region');
   fbtClick('Newark, NJ');
+  fbtClick('Shared CPU');
   getClick('[id="g6-nanode-1"]');
   getClick('[id="root-password"]').type(password);
   getClick('[data-qa-deploy-linode]');
