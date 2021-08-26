@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-08-26] - v1.47.1
+
+### Added:
+- Display maintenance view when API is in maintenance mode
+
+### Fixed:
+- Crash in account/billing for certain accounts
+
 ## [2021-08-24] - v1.47.0
 
 ### Added:
