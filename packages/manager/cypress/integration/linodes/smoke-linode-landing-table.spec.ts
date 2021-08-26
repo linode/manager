@@ -141,7 +141,7 @@ describe('linode landing checks', () => {
     );
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
-      cy.get(`[aria-label="Copy ${ip} to clipboard"]`)
+      cy.get(`[data-qa-ip-main]`)
         .realHover()
         .then(() => {
           getVisible(`[aria-label="Copy ${ip} to clipboard"]`);
