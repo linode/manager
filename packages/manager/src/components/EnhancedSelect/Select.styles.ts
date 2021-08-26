@@ -129,7 +129,6 @@ export const styles = (theme: Theme) =>
       '& .react-select__single-value': {
         color: theme.palette.text.primary,
         overflow: 'hidden',
-        paddingBottom: 1,
       },
       '& .react-select__indicator-separator': {
         display: 'none',
@@ -458,7 +457,6 @@ export const reactSelectStyles = (theme: Theme) => ({
     ...base,
     color: theme.palette.text.primary,
     overflow: 'hidden',
-    paddingBottom: 1,
   }),
   indicatorSeparator: (base: any) => ({
     ...base,
