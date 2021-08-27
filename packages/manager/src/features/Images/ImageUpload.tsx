@@ -164,11 +164,12 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
         <div style={{ width: '100%' }}>
           <TextField
-            label="Label (required)"
+            label="Label"
             value={label}
             onChange={changeLabel}
             errorText={errorMap.label}
             disabled={!canCreateImage}
+            required
           />
 
           <TextField
@@ -182,12 +183,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
           />
 
           <RegionSelect
-            label={'Region (required)'}
+            label="Region"
             errorText={errorMap.region}
             handleSelection={setRegion}
             regions={regions}
             selectedID={region}
             disabled={!canCreateImage}
+            required
           />
 
           <Typography className={classes.helperText}>

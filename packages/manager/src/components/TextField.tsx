@@ -33,7 +33,8 @@ type ClassNames =
   | 'wrapper'
   | 'tiny'
   | 'absolute'
-  | 'helpIcon';
+  | 'helpIcon'
+  | 'required';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -110,6 +111,9 @@ const styles = (theme: Theme) =>
     },
     noMarginTop: {
       marginTop: 0,
+    },
+    required: {
+      fontFamily: theme.font.normal,
     },
   });
 
@@ -260,14 +264,12 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
         : `error-for-scroll`;
     }
 
-    const maybeRequiredLabel = !!this.props.required
-      ? `${label} (required)`
-      : label;
     const validInputId =
       inputId ||
       (this.props.label
         ? convertToKebabCase(`${this.props.label}`)
         : undefined);
+
     return (
       <div
         className={classNames({
@@ -275,19 +277,21 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           [errorScrollClassName]: !!errorText,
         })}
       >
-        {maybeRequiredLabel && (
-          <InputLabel
-            data-qa-textfield-label={label}
-            className={classNames({
-              [classes.wrapper]: noMarginTop ? false : true,
-              [classes.noTransform]: true,
-              'visually-hidden': hideLabel,
-            })}
-            htmlFor={validInputId}
-          >
-            {maybeRequiredLabel}
-          </InputLabel>
-        )}
+        <InputLabel
+          data-qa-textfield-label={label}
+          className={classNames({
+            [classes.wrapper]: noMarginTop ? false : true,
+            [classes.noTransform]: true,
+            'visually-hidden': hideLabel,
+          })}
+          htmlFor={validInputId}
+        >
+          {label}
+          {this.props.required ? (
+            <span className={classes.required}> (required)</span>
+          ) : null}
+        </InputLabel>
+
         {helperText && helperTextPosition === 'top' && (
           <FormHelperText
             data-qa-textfield-helper-text
