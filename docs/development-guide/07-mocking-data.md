@@ -4,7 +4,68 @@ This guide covers various methods of mocking data while developing or testing Cl
 
 ## Mocking APIv4
 
-_Coming soon: tutorial on factories and intercepting network requests._
+Often when developing a feature you'll need your account or resources to be in a specific state. In other words, you'll need to be receiving specific data from the API.
+
+The best way to do this is to _mock the API_. This is made simple using **factories** and the **mock service worker**.
+
+**Factories**
+We use [factory.ts](https://www.npmjs.com/package/factory.ts) to generate mock data. With factory.ts you define a base "factory" for a given type, then use the factory to generate real TypeScript objects:
+
+```ts
+import * as Factory from "factory.ts";
+
+// Create a Linode factory:
+export const linodeFactory = Factory.Sync.makeFactory<Linode>({
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `linode-${i}`),
+  region: "us-east",
+  // ... all other "Linode" fields
+});
+
+// Using the factory:
+
+// Create a Linode...
+const linode = linodeFactory.build();
+// { id: 0, label: 'linode-0', region: 'us-east', ... }
+
+// Create another Linode (the ID auto-increments)...
+const anotherLinode = linodeFactory.build();
+// { id: 1, label: 'linode-1', region: 'us-east', ... }
+
+// Specify a region...
+const londonLinode = linodeFactory.build({ region: "eu-west" });
+// { id: 2, label: 'linode-2', region: 'eu-west', ... }
+
+// Create an array of Linodes in London:
+const linodeList = linodeFactory.buildList(10, { region: "eu-west" });
+// [{ id: 3, label: 'linode-3', region: 'eu-west' }, ...9 more ]
+```
+
+**Mock Service Worker**
+The [Mock Service Worker](https://mswjs.io/) package intercepts requests at the network level and returns the response you define.
+
+To enable the MSW, open the Local Dev Tools and check the "Mock Service Worker" checkbox. Request handlers are defined in `packages/manager/src/mocks/serverHandlers.ts`. Here's an example request handler:
+
+```ts
+// packages/manager/src/mocks/serverHandlers.ts
+
+import { rest } from "msw";
+
+const handlers = [
+  rest.get("*/profile", (req, res, ctx) => {
+    //
+    const profile = profileFactory.build({ restricted: true });
+    return res(ctx.json(profile));
+  }),
+  // ... other handlers
+];
+```
+
+When the MSW is enabled, any GET request that matches `*/profile` will be intercepted, and the response will be the `profile` JSON object we gave to the `res()` function.
+
+The great thing about this is that the application treats these as _real_ network requests and will behave as though this data is coming from the actual API.
+
+Another advantage is that server handler code can easily be shared with code reviewers (either by checking it into source control or providing the diff).
 
 ## Mocking feature flags
 

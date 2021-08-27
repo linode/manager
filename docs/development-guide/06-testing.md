@@ -4,9 +4,7 @@
 
 The unit tests for Cloud Manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with either `.test.tsx` or `.test.ts` file extensions and can be found throughout the codebase.
 
-To run tests:
-
-**You must have built the JS SDK**
+To run tests, first build the **api-v4** package:
 
 ```
 yarn install:all && yarn workspace @linode/api-v4 build
@@ -31,8 +29,7 @@ yarn test myFile.test.tsx
 yarn test src/some-folder
 ```
 
-Jest has built-in pattern matching, so you can also do things like run all tests whose filename
-contains "Linode" with:
+Jest has built-in pattern matching, so you can also do things like run all tests whose filename contains "Linode" with:
 
 ```
 yarn test linode
@@ -141,19 +138,10 @@ const { getByTestId } = renderWithTheme(<MyComponent />, {
 
 #### Mocking with Service Worker
 
-We now support mocking API requests both in test suites and the browser using the [msw](https://www.npmjs.com/package/msw) library.
-The handlers for this setup are stored in src/serverHandlers.ts. To add an API endpoint to this list, use the established format:
+We support mocking API requests both in test suites and the browser using the [msw](https://www.npmjs.com/package/msw) library. See [07-mocking-data](07-mocking-data.md) for more details.
 
-```js
-rest.get("*/profile/preferences", (req, res, ctx) => {
-  return res(ctx.json({}));
-});
-```
-
-Any API call to /profile/preferences while the worker is active will return an empty object without actually making a network request.
 These mocks are automatically enabled for tests (using `beforeAll` and `afterAll` in src/setupTests.ts, which is run when setting up
-the Jest environment). To use these same handlers while working locally in the browser, run the app
-with `REACT_APP_MOCK_SERVICE_WORKER=true` in your `.env` file.
+the Jest environment).
 
 ## End-to-End tests
 
@@ -166,68 +154,3 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 3. In one terminal window, run the app with `yarn up`.
 4. In another terminal window, run the tests with `yarn cy:e2e`.
 5. Alternatively, use the interactive interface with `yarn cy:debug`.
-
-## TODO: Rewrite the rest of this guide (it's out of date)
-
-### Run Storybook UI Components e2e tests
-
-#### dependencies
-
-Run `yarn install:all && yarn selenium:install`.
-When running `yarn selenium:install` will check that selenium is installed.
-We do not need to take care of Selenium more after this, storybook will take care of launching it.
-
-#### How to run locally without docker
-
-Run:
-
-- `yarn storybook` in one terminal
-- In a **new terminal** `yarn run wait-on http://localhost:6006 && yarn storybook:e2e`
-
-`yarn run wait-on` will simply wait for the storybook server on 6006 to be ready.
-
-#### How to run with docker
-
-Check docker is installed.
-Run `yarn docker:sb` or `docker build -t cloudsb -f Dockerfile-storybook . && docker run --rm cloudsb`
-
-### Testing React Storybook Components
-
-In addition to the Cloud Manager E2E tests, there are also UI tests for components in.
-The components are tested via [Storybook](https://github.com/storybooks/storybook) and the test specs
-live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config lives in `e2e/config/wdio.storybook.conf.js`
-
-#### Dependencies
-
-```bash
-brew cask uninstall java
-brew tap caskroom/versions
-brew cask install java
-
-brew install node@10
-brew cask install google-chrome
-brew install yarn
-```
-
-#### Run Suite
-
-```bash
-# Starts storybook
-
-yarn storybook
-
-# you do not need to start selenium for this, this will be started by wdio automatically
-
-## New shell
-## Executes specs matching src/components/**/*.spec.js
-
-yarn storybook:e2e
-```
-
-#### Run a Single Test
-
-```bash
-# Executes spec matching src/components/StoryName/StoryName.spec.js
-
-yarn storybook:e2e --story StoryName
-```
