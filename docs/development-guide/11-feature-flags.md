@@ -11,7 +11,7 @@ Feature flags are served by [LaunchDarkly](https://launchdarkly.com/). On app lo
 
 Feature flag values themselves can be booleans (most common), strings, numbers, or JSON (also common).
 
-## Creating a Feature Flag
+## Creating a feature flag
 
 Feature flags are created in the LaunchDarkly dashboard. Give your flag a name (like "Images Pricing Banner") and key (like "imagesPricingBanner") and select the flag type (boolean, etc). Configure the desired variations and targeting options.
 
@@ -24,7 +24,7 @@ export interface Flags {
 }
 ```
 
-## Consuming a Feature Flag
+## Consuming a feature flag
 
 To consume a feature flag from a function component, use the `useFlags` hook:
 
@@ -65,7 +65,7 @@ class ImagesPricingBanner extends React.Component<
 }
 ```
 
-## How it Works
+## How this works
 
 Cloud Manager uses the official LaunchDarkly [React SDK](https://docs.launchdarkly.com/sdk/client-side/react). The LaunchDarkly ID is given as an env variable, `REACT_APP_LAUNCH_DARKLY_ID`.
 

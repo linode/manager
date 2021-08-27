@@ -108,7 +108,7 @@ Some components, such as our ActionMenu, don't lend themselves well to unit test
 
 Any `<ActionMenu>`s rendered by the test will be simplified versions that are easier to work with.
 
-#### Mocking Redux State
+#### Mocking Redux state
 
 The `wrapWithTheme` and `renderWithTheme` helper functions take a `customStore` option, used as follows:
 
@@ -124,7 +124,7 @@ The `customStore` prop is of type `DeepPartial<ApplicationState>`, so only the f
 
 Several helpers are available in `src/utilities/testHelpersStore.ts` to simulate common scenarios (withManaged, withRestrictedUser, etc).
 
-#### Mocking Feature Flags
+#### Mocking feature flags
 
 Another option the `wrapWithTheme` and `renderWithTheme` helper functions expose is `flags`, to supply custom feature flags:
 
@@ -136,7 +136,7 @@ const { getByTestId } = renderWithTheme(<MyComponent />, {
 });
 ```
 
-#### Mocking with Service Worker
+#### Mocking with Mock Service Worker
 
 We support mocking API requests both in test suites and the browser using the [msw](https://www.npmjs.com/package/msw) library. See [07-mocking-data](07-mocking-data.md) for more details.
 
