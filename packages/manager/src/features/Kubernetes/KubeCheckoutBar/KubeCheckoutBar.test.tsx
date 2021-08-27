@@ -15,6 +15,7 @@ const props: Props = {
   removePool: jest.fn(),
   createCluster: jest.fn(),
   typesData: types as ExtendedType[],
+  region: undefined,
 };
 
 const renderComponent = (_props: Props) =>

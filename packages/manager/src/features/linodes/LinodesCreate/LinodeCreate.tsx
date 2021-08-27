@@ -68,6 +68,8 @@ import {
   WithTypesProps,
   WithTypesRegionsAndImages,
 } from './types';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { isEURegion } from 'src/utilities/formatRegion';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -672,6 +674,11 @@ export class LinodeCreate extends React.PureComponent<
               <SMTPRestrictionText>
                 {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
               </SMTPRestrictionText>
+            }
+            agreement={
+              isEURegion(this.props.selectedRegionID) ? (
+                <EUAgreementCheckbox checked={false} onChange={() => null} />
+              ) : undefined
             }
           >
             <DisplaySectionList displaySections={displaySections} />

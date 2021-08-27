@@ -44,6 +44,8 @@ import SizeField from '../VolumeDrawer/SizeField';
 import { useGrants, useProfile } from 'src/queries/profile';
 import useFlags from 'src/hooks/useFlags';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { isEURegion } from 'src/utilities/formatRegion';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -56,10 +58,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   notice: {
     borderColor: theme.color.green,
   },
-  button: {
+  buttonGroup: {
     marginTop: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
-      marginRight: theme.spacing(),
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'flex-end',
+    },
+  },
+  agreement: {
+    maxWidth: '70%',
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 'unset',
+    },
+  },
+  button: {
+    maxHeight: 34,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing(2),
     },
   },
 }));
@@ -315,22 +329,35 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     }
                     value={values.tags}
                   />
-                </Paper>
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  className={classes.button}
-                >
-                  <Button
-                    buttonType="primary"
-                    disabled={disabled}
-                    loading={isSubmitting}
-                    onClick={() => handleSubmit()}
-                    data-qa-deploy-linode
+                  <Box
+                    display="flex"
+                    justifyContent={
+                      isEURegion(values.region) ? 'space-between' : 'flex-end'
+                    }
+                    alignItems="center"
+                    flexWrap="wrap"
+                    className={classes.buttonGroup}
                   >
-                    Create Volume
-                  </Button>
-                </Box>
+                    {isEURegion(values.region) ? (
+                      <EUAgreementCheckbox
+                        checked={false}
+                        onChange={() => null}
+                        className={classes.agreement}
+                        centerCheckbox
+                      />
+                    ) : null}
+                    <Button
+                      buttonType="primary"
+                      disabled={disabled}
+                      loading={isSubmitting}
+                      onClick={() => handleSubmit()}
+                      data-qa-deploy-linode
+                      className={classes.button}
+                    >
+                      Create Volume
+                    </Button>
+                  </Box>
+                </Paper>
               </Grid>
             </Grid>
           </Form>

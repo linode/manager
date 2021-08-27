@@ -340,7 +340,9 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
           updatePool={updatePool}
           removePool={removePool}
           typesData={typesData || []}
+          region={selectedRegion}
           updateFor={[
+            selectedRegion,
             nodePools,
             submitting,
             typesData,

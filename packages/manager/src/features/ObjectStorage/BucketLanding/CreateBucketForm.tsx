@@ -3,12 +3,7 @@ import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { CreateBucketSchema } from '@linode/validation/lib/buckets.schema';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import bucketContainer, {
@@ -29,15 +24,18 @@ import { confirmObjectStorage } from '../utilities';
 import ClusterSelect from './ClusterSelect';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { compose } from 'recompose';
+import { isEURegion } from 'src/utilities/formatRegion';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 
-type ClassNames = 'root' | 'textWrapper';
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    textWrapper: {
-      marginBottom: theme.spacing(1) + 2,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  textWrapper: {
+    marginBottom: theme.spacing(1) + 2,
+  },
+  agreement: {
+    marginTop: theme.spacing(3),
+    marginButton: theme.spacing(3),
+  },
+}));
 
 interface Props {
   isRestrictedUser: boolean;
@@ -45,10 +43,7 @@ interface Props {
   onSuccess: (bucketLabel: string) => void;
 }
 
-type CombinedProps = Props &
-  BucketContainerProps &
-  BucketsRequests &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & BucketContainerProps & BucketsRequests;
 
 export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
   const {
@@ -58,6 +53,8 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
     createBucket,
     bucketsData,
   } = props;
+
+  const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
@@ -189,6 +186,14 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                 disabled={isRestrictedUser}
               />
 
+              {isEURegion(values.cluster) ? (
+                <EUAgreementCheckbox
+                  className={classes.agreement}
+                  checked={false}
+                  onChange={() => null}
+                />
+              ) : null}
+
               <BucketsActionPanel
                 data-qa-bucket-actions-panel
                 isSubmitting={isSubmitting}
@@ -222,10 +227,7 @@ const initialValues: FormState = {
   cluster: '',
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   bucketRequestsContainer,
   bucketContainer
 );
