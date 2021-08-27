@@ -112,7 +112,7 @@ export const getLinodeTypes = (params?: any) =>
   Request<Page<Type>>(
     setURL(`${API_ROOT}/linode/types`),
     setMethod('GET'),
-    setParams(params)
+    setParams({ ...params, page_size: 100 })
   );
 
 /**

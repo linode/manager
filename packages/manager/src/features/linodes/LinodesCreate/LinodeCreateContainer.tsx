@@ -1,3 +1,4 @@
+import { signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -19,6 +20,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
+import withAgreements, {
+  AgreementsProps,
+} from 'src/features/Account/Agreements/withAgreements';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
@@ -111,7 +115,8 @@ type CombinedProps = WithSnackbarProps &
   LabelProps &
   FeatureFlagConsumerProps &
   RouteComponentProps<{}> &
-  ProfileProps;
+  ProfileProps &
+  AgreementsProps;
 
 const defaultState: State = {
   privateIPEnabled: false,
@@ -440,6 +445,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   submitForm: HandleSubmit = (_payload, linodeID?: number) => {
+    signAgreement({
+      eu_model: !this.props.agreements.data?.eu_model,
+    }).then(err => console.log(err));
+    return;
     const { createType } = this.props;
     const payload = { ..._payload };
     /**
@@ -649,6 +658,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const {
       profile,
       grants,
+      agreements,
       enqueueSnackbar,
       closeSnackbar,
       regionsData,
@@ -656,6 +666,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       ...restOfProps
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
+    console.log(agreements.data)
 
     const userCannotCreateLinode =
       Boolean(profile.data?.restricted) &&
@@ -763,7 +774,8 @@ export default recompose<CombinedProps, {}>(
   userSSHKeyHoc,
   withLabelGenerator,
   withFlags,
-  withProfile
+  withProfile,
+  withAgreements
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {
