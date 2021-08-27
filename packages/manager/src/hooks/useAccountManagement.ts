@@ -1,12 +1,16 @@
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { Profile } from '@linode/api-v4/lib/profile';
+import { Agreements } from '@linode/api-v4/lib/account';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { Account, GlobalGrantTypes } from '@linode/api-v4/lib/account';
 import { useAccount } from 'src/queries/account';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import { useAccountAgreements } from 'src/queries/accountAgreements';
+
 export interface AccountManagementProps {
   account: Account;
+  agreements: Agreements;
   profile: Profile;
   _isRestrictedUser: boolean;
   _hasGrant: (grant: GlobalGrantTypes) => boolean;
@@ -17,6 +21,7 @@ export interface AccountManagementProps {
 
 export const useAccountManagement = () => {
   const { data: account } = useAccount();
+  const { data: accountAgreements } = useAccountAgreements();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
@@ -38,6 +43,7 @@ export const useAccountManagement = () => {
   return {
     account,
     accountSettings,
+    accountAgreements,
     profile,
     _isRestrictedUser,
     _hasGrant,
