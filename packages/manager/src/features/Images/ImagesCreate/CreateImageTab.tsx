@@ -165,7 +165,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const requirementsMet = checkRequirements();
 
   const flags = useFlags();
-  const isImagePricingEnabled = !Boolean(flags.imagesPricingInfo);
+  const isImagePricingEnabled = Boolean(flags.imagesPriceInfo);
   const selectedDiskData: Disk | undefined = disks.find(
     (d) => `${d.id}` === selectedDisk
   );
