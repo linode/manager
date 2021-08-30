@@ -1,3 +1,4 @@
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
 import * as React from 'react';
 import {
   RouteComponentProps,
@@ -14,6 +15,8 @@ import {
   useFirewallQuery,
   useMutateFirewall,
 } from 'src/queries/firewalls';
+import { queryClient } from 'src/queries/base';
+import { useProfile, queryKey } from 'src/queries/profile';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
@@ -23,12 +26,13 @@ import FirewallRow from './FirewallRow';
 type CombinedProps = RouteComponentProps<{}>;
 
 const FirewallLanding: React.FC<CombinedProps> = () => {
+  const { data: profile } = useProfile();
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
   // @TODO: Refactor so these are combined?
   const { mutateAsync: updateFirewall } = useMutateFirewall();
   const { mutateAsync: _deleteFirewall } = useDeleteFirewall();
-  const { mutateAsync: createFirewall } = useCreateFirewall();
+  const { mutateAsync: _createFirewall } = useCreateFirewall();
 
   const [
     addFirewallDrawerOpen,
@@ -53,6 +57,16 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
 
   const disableFirewall = (id: number) => {
     return updateFirewall({ id, payload: { status: 'disabled' } });
+  };
+
+  const createFirewall = (
+    payload: CreateFirewallPayload
+  ): Promise<void | Firewall> => {
+    return _createFirewall(payload).then(() => {
+      if (profile?.restricted) {
+        queryClient.invalidateQueries(`${queryKey}-grants`);
+      }
+    });
   };
 
   const deleteFirewall = (id: number) => {

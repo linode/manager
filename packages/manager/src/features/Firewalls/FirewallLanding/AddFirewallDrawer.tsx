@@ -16,7 +16,7 @@ import {
 
 export interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
-  onSubmit: (payload: CreateFirewallPayload) => Promise<Firewall>;
+  onSubmit: (payload: CreateFirewallPayload) => Promise<void | Firewall>;
 }
 
 export type FormikProps = FormikBag<CombinedProps, CreateFirewallPayload>;
