@@ -212,8 +212,8 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         handleChange={(linode) => handleLinodeChange(linode.id)}
         filterCondition={(linode) =>
           availableLinodesToImagize
-          ? availableLinodesToImagize.includes(linode.id)
-          : true
+            ? availableLinodesToImagize.includes(linode.id)
+            : true
         }
         updateFor={[
           selectedLinode,
@@ -234,11 +234,14 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           disabled={!canCreateImage}
           data-qa-disk-select
         />
-        { isImagePricingEnabled &&
+        {isImagePricingEnabled ? (
           <Typography className={classes.helperText} variant="body1">
-            { `Estimated: ${calculateCostFromUnitPrice(0.1, selectedDiskSizeInGB)}/month` }
+            {`Estimated: ${calculateCostFromUnitPrice(
+              0.1,
+              selectedDiskSizeInGB
+            )}/month`}
           </Typography>
-        }
+        ) : undefined}
         <Typography className={classes.helperText} variant="body1">
           Linode Images cannot be created if you are using raw disks or disks
           that have been formatted using custom filesystems.
