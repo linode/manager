@@ -182,6 +182,13 @@ export interface CancelAccountPayload {
   comments: string;
 }
 
+export type AgreementType = 'eu_model' | 'privacy_policy';
+
+export interface Agreements {
+  eu_model: boolean;
+  privacy_policy: boolean;
+}
+
 export type NotificationType =
   | 'billing_email_bounce'
   | 'migration_scheduled'

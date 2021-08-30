@@ -5,6 +5,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { Account, GlobalGrantTypes } from '@linode/api-v4/lib/account';
 import { useAccount } from 'src/queries/account';
 import { useAccountSettings } from 'src/queries/accountSettings';
+
 export interface AccountManagementProps {
   account: Account;
   profile: Profile;
