@@ -29,6 +29,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   label?: string;
   helperText?: string;
   isClearable?: boolean;
+  required?: boolean;
 }
 
 export const flags = {
@@ -149,6 +150,7 @@ const SelectRegionPanel: React.FC<Props> = (props) => {
     regions,
     selectedID,
     styles,
+    required,
     ...restOfReactSelectProps
   } = props;
 
@@ -190,6 +192,7 @@ const SelectRegionPanel: React.FC<Props> = (props) => {
         textFieldProps={{
           tooltipText: helperText,
         }}
+        required={required}
         {...restOfReactSelectProps}
       />
     </div>
