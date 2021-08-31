@@ -735,9 +735,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               disabled={
                 this.state.submitting ||
                 this.disabled ||
-                (showAgreement &&
-                  !this.state.agree &&
-                  !profile.data?.restricted)
+                (showAgreement && !this.state.agree)
               }
               submitText="Create NodeBalancer"
               agreement={
