@@ -48,7 +48,11 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { signAgreement } from '@linode/api-v4/lib/account';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
+import withAgreements, {
+  AgreementsProps,
+} from '../Account/Agreements/withAgreements';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -81,7 +85,8 @@ type CombinedProps = WithNodeBalancerActions &
   ProfileProps &
   WithRegions &
   RouteComponentProps<{}> &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  AgreementsProps;
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -91,6 +96,7 @@ interface NodeBalancerFieldsState {
 }
 
 interface State {
+  agree: boolean;
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
   errors?: APIError[];
@@ -122,6 +128,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
+    agree: false,
     submitting: false,
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
     deleteConfigConfirmDialog: clone(
@@ -312,6 +319,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /* Clear config errors */
     this.setState({ submitting: true, errors: undefined });
 
+    signAgreement({ eu_model: true });
+
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
@@ -474,10 +483,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   );
 
   render() {
-    const { classes, regionsData } = this.props;
+    const { classes, regionsData, agreements, profile } = this.props;
     const { nodeBalancerFields } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
+
+    const showAgreement = Boolean(
+      isEURegion(nodeBalancerFields.region) &&
+        agreements.data?.eu_model === false
+    );
 
     const { region } = this.state.nodeBalancerFields;
     let displaySections;
@@ -705,11 +719,22 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               } Summary`}
               onDeploy={this.createNodeBalancer}
               calculatedPrice={10}
-              disabled={this.state.submitting || this.disabled}
+              disabled={
+                this.state.submitting ||
+                this.disabled ||
+                (showAgreement &&
+                  !this.state.agree &&
+                  !profile.data?.restricted)
+              }
               submitText="Create NodeBalancer"
               agreement={
-                isEURegion(nodeBalancerFields.region) ? (
-                  <EUAgreementCheckbox checked={false} onChange={() => null} />
+                showAgreement ? (
+                  <EUAgreementCheckbox
+                    checked={this.state.agree}
+                    onChange={(e) => this.setState({ agree: e.target.checked })}
+                    disabled={profile.data?.restricted}
+                    tooltip="Contact an account administrator to agree and create a NodeBalancer."
+                  />
                 ) : undefined
               }
             >
@@ -818,5 +843,6 @@ export default recompose<CombinedProps, {}>(
   withNodeBalancerActions,
   styled,
   withRouter,
-  withProfile
+  withProfile,
+  withAgreements
 )(NodeBalancerCreate);

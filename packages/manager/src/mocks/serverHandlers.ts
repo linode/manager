@@ -105,6 +105,14 @@ const entityTransfers = [
     const transfer = entityTransferFactory.build();
     return res(ctx.json(transfer));
   }),
+  rest.get('*/account/agreements', (req, res, ctx) =>
+    res(
+      ctx.json({
+        eu_model: false,
+        privacy_policy: true,
+      })
+    )
+  ),
   rest.post('*/account/entity-transfers', (req, res, ctx) => {
     const payload = req.body as any;
     const newTransfer = entityTransferFactory.build({
@@ -125,7 +133,7 @@ const entityTransfers = [
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
-    const profile = profileFactory.build();
+    const profile = profileFactory.build({ restricted: false });
     return res(ctx.json(profile));
   }),
   rest.put('*/profile', (req, res, ctx) => {
