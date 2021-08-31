@@ -69,7 +69,6 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { isEURegion } from 'src/utilities/formatRegion';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -140,6 +139,9 @@ interface Props {
   vlanLabel: string | null;
   ipamAddress: string | null;
   handleVLANChange: (updatedInterface: Interface) => void;
+  showAgreement: boolean;
+  handleAgreementChange: () => void;
+  signedAgreement: boolean;
 }
 
 const errorMap = [
@@ -361,6 +363,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const {
       classes,
+      formIsSubmitting,
       linodesData,
       linodesLoading,
       linodesError,
@@ -389,6 +392,9 @@ export class LinodeCreate extends React.PureComponent<
       userCannotCreateLinode,
       accountBackupsEnabled,
       showGeneralError,
+      showAgreement,
+      handleAgreementChange,
+      signedAgreement,
       ...rest
     } = this.props;
 
@@ -666,8 +672,12 @@ export class LinodeCreate extends React.PureComponent<
             data-qa-checkout-bar
             heading="Linode Summary"
             calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+            isMakingRequest={formIsSubmitting}
+            disabled={
+              formIsSubmitting ||
+              userCannotCreateLinode ||
+              (showAgreement && !signedAgreement)
+            }
             onDeploy={this.createLinode}
             submitText="Create Linode"
             footer={
@@ -676,8 +686,11 @@ export class LinodeCreate extends React.PureComponent<
               </SMTPRestrictionText>
             }
             agreement={
-              isEURegion(this.props.selectedRegionID) ? (
-                <EUAgreementCheckbox checked={false} onChange={() => null} />
+              showAgreement ? (
+                <EUAgreementCheckbox
+                  checked={signedAgreement}
+                  onChange={handleAgreementChange}
+                />
               ) : undefined
             }
           >

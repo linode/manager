@@ -1,3 +1,4 @@
+import { signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -19,6 +20,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
+import withAgreements, {
+  AgreementsProps,
+} from 'src/features/Account/Agreements/withAgreements';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
@@ -43,6 +47,8 @@ import {
   getOneClickApps,
 } from 'src/features/StackScripts/stackScriptUtils';
 import { accountBackupsEnabled } from 'src/queries/accountSettings';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountAgreements';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
@@ -67,6 +73,7 @@ import {
   WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { isEURegion } from 'src/utilities/formatRegion';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -89,6 +96,8 @@ interface State {
   udfs?: any;
   tags?: Tag[];
   errors?: APIError[];
+  showAgreement: boolean;
+  signedAgreement: boolean;
   formIsSubmitting: boolean;
   appInstances?: StackScript[];
   appInstancesLoading: boolean;
@@ -111,7 +120,8 @@ type CombinedProps = WithSnackbarProps &
   LabelProps &
   FeatureFlagConsumerProps &
   RouteComponentProps<{}> &
-  ProfileProps;
+  ProfileProps &
+  AgreementsProps;
 
 const defaultState: State = {
   privateIPEnabled: false,
@@ -129,6 +139,8 @@ const defaultState: State = {
   selectedTypeID: undefined,
   tags: [],
   udfs: undefined,
+  showAgreement: false,
+  signedAgreement: false,
   formIsSubmitting: false,
   errors: undefined,
   appInstancesLoading: false,
@@ -185,6 +197,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
       : +this.params.backupID,
+    showAgreement: Boolean(
+      !this.props.profile.data?.restricted &&
+        isEURegion(this.params.regionID) &&
+        !this.props.agreements?.data?.eu_model
+    ),
+    signedAgreement: Boolean(this.props.agreements.data?.eu_model),
     disabledClasses: [],
   };
 
@@ -268,7 +286,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setRegionID = (id: string) => {
     const disabledClasses = getDisabledClasses(id, this.props.regionsData);
-    this.setState({ selectedRegionID: id, disabledClasses });
+    this.setState({
+      selectedRegionID: id,
+      showAgreement: Boolean(
+        !this.props.profile.data?.restricted &&
+          isEURegion(id) &&
+          !this.props.agreements?.data?.eu_model
+      ),
+      disabledClasses,
+    });
   };
 
   setTypeID = (id: string) => {
@@ -367,6 +393,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     });
   };
 
+  handleAgreementChange = () => {
+    this.setState((prevState) => ({
+      signedAgreement: !prevState.signedAgreement,
+    }));
+  };
+
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
@@ -439,7 +471,23 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = (_payload, linodeID?: number) => {
+  submitForm: HandleSubmit = async (_payload, linodeID?: number) => {
+    if (this.state.showAgreement) {
+      try {
+        await signAgreement({
+          eu_model: true,
+        });
+        queryClient.invalidateQueries(queryKey);
+        this.setState({
+          showAgreement: false,
+        });
+      } catch (err) {
+        return this.props.enqueueSnackbar('Error signing agreement.', {
+          variant: 'error',
+        });
+      }
+    }
+
     const { createType } = this.props;
     const payload = { ..._payload };
     /**
@@ -718,6 +766,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
+            handleAgreementChange={this.handleAgreementChange}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={accountBackupsEnabled()}
             {...restOfProps}
@@ -763,7 +812,8 @@ export default recompose<CombinedProps, {}>(
   userSSHKeyHoc,
   withLabelGenerator,
   withFlags,
-  withProfile
+  withProfile,
+  withAgreements
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {
