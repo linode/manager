@@ -476,6 +476,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       try {
         await signAgreement({
           eu_model: true,
+          privacy_policy: true,
         });
         queryClient.invalidateQueries(queryKey);
         this.setState({
