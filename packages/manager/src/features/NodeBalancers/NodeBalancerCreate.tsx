@@ -65,6 +65,7 @@ import {
   queryKey,
   updateAccountAgreementsData,
 } from 'src/queries/accountAgreements';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -91,7 +92,8 @@ type CombinedProps = WithNodeBalancerActions &
   WithRegions &
   RouteComponentProps<{}> &
   WithStyles<ClassNames> &
-  AgreementsProps;
+  AgreementsProps &
+  WithSnackbarProps;
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -306,8 +308,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     });
   };
 
-  createNodeBalancer = () => {
+  createNodeBalancer = async () => {
     const {
+      enqueueSnackbar,
       nodeBalancerActions: { createNodeBalancer },
     } = this.props;
     const { nodeBalancerFields } = this.state;
@@ -325,12 +328,20 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true, errors: undefined });
 
     if (this.state.agree) {
-      queryClient.executeMutation({
-        variables: { eu_model: true, privacy_policy: true },
-        mutationFn: signAgreement,
-        mutationKey: queryKey,
-        onSuccess: updateAccountAgreementsData,
-      });
+      try {
+        await queryClient.executeMutation({
+          variables: { eu_model: true, privacy_policy: true },
+          mutationFn: signAgreement,
+          mutationKey: queryKey,
+          onSuccess: updateAccountAgreementsData,
+        });
+      } catch (error) {
+        this.setState({ submitting: false });
+        enqueueSnackbar('Error signing agreement.', {
+          variant: 'error',
+        });
+        return;
+      }
     }
 
     createNodeBalancer(nodeBalancerRequestData)
@@ -503,7 +514,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const showAgreement = Boolean(
       isEURegion(nodeBalancerFields.region) &&
         !profile.data?.restricted &&
-        agreements.data?.eu_model === false
+        !agreements.data?.eu_model
     );
 
     const { region } = this.state.nodeBalancerFields;
@@ -853,5 +864,6 @@ export default recompose<CombinedProps, {}>(
   styled,
   withRouter,
   withProfile,
-  withAgreements
+  withAgreements,
+  withSnackbar
 )(NodeBalancerCreate);
