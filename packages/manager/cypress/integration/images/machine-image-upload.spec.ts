@@ -75,7 +75,7 @@ const uploadImage = () => {
   const regionSelect = 'Fremont, CA';
   const upload = 'testImage.gz';
   cy.visitWithLogin('/images/create/upload');
-  getClick('[id="label-(required)"]').type(imageLabel);
+  getClick('[id="label"][data-testid="textfield-input"]').type(imageLabel);
   getClick('[id="description"]').type('This is a machine image upload test');
   fbtClick('Select a Region');
   fbtClick(regionSelect);
