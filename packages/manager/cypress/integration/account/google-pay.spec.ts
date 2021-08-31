@@ -15,7 +15,11 @@ const getPaymentMethodDataWithGpay = {
       type: 'credit_card',
       is_default: true,
       created: '2021-07-27T14:37:43',
-      data: { card_type: 'AMEX', last_four: '2222', expiry: '07/2025' },
+      data: {
+        card_type: 'American Express',
+        last_four: '2222',
+        expiry: '07/2025',
+      },
     },
     {
       id: 434357,
@@ -56,7 +60,11 @@ const getPaymentMethodDataWithGpayExpired = {
       type: 'credit_card',
       is_default: true,
       created: '2021-07-27T14:37:43',
-      data: { card_type: 'AMEX', last_four: '2222', expiry: '07/2025' },
+      data: {
+        card_type: 'American Express',
+        last_four: '2222',
+        expiry: '07/2025',
+      },
     },
     {
       id: 434357,

@@ -19,12 +19,11 @@ type ClassNames = 'root' | 'attachmentPaperWrapper';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginLeft: 32,
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
-      },
-      [theme.breakpoints.up('md')]: {
-        maxWidth: 600,
+      marginLeft: theme.spacing(7),
+      maxWidth: 600,
+      [theme.breakpoints.down('xs')]: {
+        marginLeft: theme.spacing(5),
+        width: 'calc(100% - 32px)',
       },
     },
     attachmentPaperWrapper: {
@@ -49,10 +48,8 @@ export const addIconsToAttachments = (attachments: string[] = []) => {
     // try to find a file extension
     const lastDotIndex = attachment.lastIndexOf('.');
     const ext = attachment.slice(lastDotIndex + 1);
-    if (ext) {
-      if (extensions.includes(ext.toLowerCase())) {
-        return <InsertPhoto key={idx} />;
-      }
+    if (ext && extensions.includes(ext.toLowerCase())) {
+      return <InsertPhoto key={idx} />;
     }
     return <InsertDriveFile key={idx} />;
   });
@@ -76,11 +73,13 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
           icons={icons}
         />
         {attachments.length > 5 && (
+          // eslint-disable-next-line jsx-a11y/click-events-have-key-events
           <div
             onClick={toggle}
             style={{ display: 'inline-block' }}
             data-qa-attachment-toggle
             role="button"
+            tabIndex={0}
           >
             <ShowMoreExpansion
               name={

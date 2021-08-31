@@ -1,3 +1,11 @@
+## [2021-08-24] - v0.57.0
+
+### Changed:
+- Added firewalls to grants
+
+### Fixed:
+- Entity import in account/types
+
 ## [2021-08-09] - v0.56.0
 ### Added:
 deletePaymentMethod

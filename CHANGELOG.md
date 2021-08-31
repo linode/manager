@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-08-26] - v1.47.1
+
+### Added:
+- Display maintenance view when API is in maintenance mode
+
+### Fixed:
+- Crash in account/billing for certain accounts
+
+## [2021-08-24] - v1.47.0
+
+### Added:
+- Support for multiple payment methods in “Make a Payment” drawer
+- Support for multiple payment methods in “Add a Payment” drawer
+- New minimum TTL values for domains
+- Restricted user support for Firewalls
+
+### Changed:
+- Swap order of Shared and Dedicated CPU tabs
+- Button Placements and Styles (includes Migration modal fixes)
+- Marketplace app name from Severalnines to ClusterControl
+- Tighten spacing for Support Ticket Details
+- Remove data center verbiage from Firewalls
+- Remove redundant headers for Managed
+
+### Fixed:
+- Support ticket input with different font sizes
+- Kubernetes Debian images showing up in the Rebuild and Stackscript Dialogs
+- Warning styles
+- Primary button loading state in dark mode
+- Users unable to specify a Label and Description when capturing an Image
+
 ## [2021-08-11] - v1.46.1
 
 ### Fixed:

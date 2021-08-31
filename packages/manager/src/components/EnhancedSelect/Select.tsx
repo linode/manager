@@ -123,6 +123,7 @@ export interface BaseSelectProps
   errorGroup?: string;
   guidance?: string | React.ReactNode;
   inputId?: any;
+  required?: boolean;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {}
@@ -180,6 +181,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       inputId,
       overflowPortal,
       theme,
+      required,
       ...restOfProps
     } = this.props;
 
@@ -251,6 +253,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
             },
             className
           ),
+          required,
         }}
         /**
          * react-select wants you to pass "null" to clear out the value
