@@ -37,6 +37,7 @@ export interface Flags {
   imagesPricingCopy: ImagesPricingCopy;
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
+  imagesPriceInfo: boolean;
 }
 
 type PromotionalOfferFeature =

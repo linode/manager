@@ -66,7 +66,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
         {resize || isFromLinode ? (
           'The size of the new volume in GiB.'
         ) : (
-          <div className={classes.helper}>${price}/month</div>
+          <span className={classes.helper}>${price}/month</span>
         )}
       </FormHelperText>
     </>

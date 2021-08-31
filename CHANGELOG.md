@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-08-31] - v1.48.0
+
+### Added:
+- Copy for Images pricing on the Create Image page
+- Price estimation for captured images
+
+### Changed:
+- Labels’ “(required)” substring adjusted to normal weight
+
 ## [2021-08-26] - v1.47.1
 
 ### Added:
