@@ -241,7 +241,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
               selectedDiskSizeInGB
             )}/month`}
           </Typography>
-        ) : undefined}
+        ) : null}
         <Typography className={classes.helperText} variant="body1">
           Linode Images cannot be created if you are using raw disks or disks
           that have been formatted using custom filesystems.
