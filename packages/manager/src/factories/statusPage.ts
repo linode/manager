@@ -57,10 +57,6 @@ export const incidentFactory = Factory.Sync.makeFactory<Incident>({
   incident_updates: incidentUpdateFactory.buildList(5),
 });
 
-export const maintenanceFactory = incidentFactory.extend({
-  status: 'scheduled' as any,
-});
-
 export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse>(
   {
     page: pageFactory.build(),
@@ -80,11 +76,46 @@ export const incidentResponseFactory = Factory.Sync.makeFactory<IncidentResponse
   }
 );
 
+export const maintenanceFactory = Factory.Sync.makeFactory<Maintenance>({
+  id: Factory.each((i) => String(i)),
+  name: 'Scheduled Network Maintenance - US-East (Newark)',
+  status: 'scheduled',
+  created_at: DATE,
+  updated_at: DATE,
+  monitoring_at: DATE,
+  resolved_at: DATE,
+  impact: 'maintenance' as any,
+  shortlink: 'https://stspg.io/0plrpbwg6h64',
+  started_at: DATE,
+  page_id: '8dn0wstr1chc',
+  incident_updates: incidentUpdateFactory.buildList(2),
+});
+
 export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceResponse>(
   {
     page: pageFactory.build(),
-    scheduled_maintenances: (maintenanceFactory.buildList(
-      5
-    ) as unknown) as Maintenance[],
+    scheduled_maintenances: [
+      maintenanceFactory.build(),
+      maintenanceFactory.build({
+        id: 'test001',
+        name: 'Linode Database Infrastructure Maintenance',
+        incident_updates: [
+          incidentUpdateFactory.build({
+            body:
+              'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on September 19th 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). We expect this maintenance to take approximately 3 hours. During this maintenance, running Linodes will not be impacted but customers will not be able to perform tasks such as creating, removing, booting, backups, or shutting down Linodes, or other tasks involving interacting with the Cloud Manager or Linode API.',
+          }),
+        ],
+      }),
+      maintenanceFactory.build({
+        id: 'test002',
+        name: 'Linode Database Infrastructure Maintenance',
+        incident_updates: [
+          incidentUpdateFactory.build({
+            body:
+              'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on December 19th 2021. We expect this maintenance to take approximately 24 hours.',
+          }),
+        ],
+      }),
+    ],
   }
 );

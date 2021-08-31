@@ -38,6 +38,7 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
+  apiMaintenance: string[];
 }
 
 type PromotionalOfferFeature =
