@@ -9,7 +9,7 @@ import {
 } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'rightAlign';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,23 +27,29 @@ const styles = (theme: Theme) =>
         marginRight: 0,
       },
     },
+    rightAlign: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
   });
 
 interface Props {
   className?: string;
   style?: any;
+  rightAlign?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ActionPanel: React.FC<CombinedProps> = (props) => {
-  const { classes, className, style } = props;
+  const { classes, className, style, rightAlign } = props;
 
   return (
     <div
       data-qa-buttons
       className={classNames({
         [classes.root]: true,
+        [classes.rightAlign]: rightAlign,
         ...(className && { [className]: true }),
         actionPanel: true,
       })}
