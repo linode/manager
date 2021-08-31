@@ -60,6 +60,11 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest,
 } from './utils';
+import { queryClient } from 'src/queries/base';
+import {
+  queryKey,
+  updateAccountAgreementsData,
+} from 'src/queries/accountAgreements';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -319,7 +324,14 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /* Clear config errors */
     this.setState({ submitting: true, errors: undefined });
 
-    signAgreement({ eu_model: true });
+    if (this.state.agree) {
+      queryClient.executeMutation({
+        variables: { eu_model: true, privacy_policy: true },
+        mutationFn: signAgreement,
+        mutationKey: queryKey,
+        onSuccess: updateAccountAgreementsData,
+      });
+    }
 
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
@@ -490,6 +502,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
     const showAgreement = Boolean(
       isEURegion(nodeBalancerFields.region) &&
+        !profile.data?.restricted &&
         agreements.data?.eu_model === false
     );
 
@@ -732,8 +745,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   <EUAgreementCheckbox
                     checked={this.state.agree}
                     onChange={(e) => this.setState({ agree: e.target.checked })}
-                    disabled={profile.data?.restricted}
-                    tooltip="Contact an account administrator to agree and create a NodeBalancer."
                   />
                 ) : undefined
               }

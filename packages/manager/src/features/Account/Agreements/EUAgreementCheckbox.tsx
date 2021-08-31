@@ -1,14 +1,11 @@
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
-import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 
 interface Props {
   className?: string;
-  disabled?: boolean;
-  tooltip?: string;
   centerCheckbox?: boolean;
   checked: boolean;
   onChange: (
@@ -18,14 +15,7 @@ interface Props {
 }
 
 const EUAgreementCheckbox: React.FC<Props> = (props) => {
-  const {
-    checked,
-    onChange,
-    className,
-    centerCheckbox,
-    tooltip,
-    disabled,
-  } = props;
+  const { checked, onChange, className, centerCheckbox } = props;
 
   const checkboxStyle = centerCheckbox
     ? { marginLeft: -8 }
@@ -38,25 +28,7 @@ const EUAgreementCheckbox: React.FC<Props> = (props) => {
       alignItems={centerCheckbox ? 'center' : 'flex-start'}
       className={className}
     >
-      {disabled && tooltip ? (
-        <Tooltip title={tooltip}>
-          <div>
-            <CheckBox
-              checked={checked}
-              onChange={onChange}
-              disabled={disabled}
-              style={checkboxStyle}
-            />
-          </div>
-        </Tooltip>
-      ) : (
-        <CheckBox
-          checked={checked}
-          onChange={onChange}
-          disabled={disabled}
-          style={checkboxStyle}
-        />
-      )}
+      <CheckBox checked={checked} onChange={onChange} style={checkboxStyle} />
       <Typography>
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">
