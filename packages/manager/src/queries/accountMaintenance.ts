@@ -21,7 +21,7 @@ const getAllAccountMaintenance = (
 export const useAllAccountMaintenanceQuery = (
   params: any = {},
   filter: any = {},
-  enabled: boolean = false
+  enabled: boolean = true
 ) => {
   return useQuery<AccountMaintenance[], APIError[]>(
     queryKey,
