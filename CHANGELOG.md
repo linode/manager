@@ -13,6 +13,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed:
 - Labels’ “(required)” substring adjusted to normal weight
 
+### Fixed:
+- Populating all Linode maintenance events
+
 ## [2021-08-26] - v1.47.1
 
 ### Added:
