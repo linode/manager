@@ -307,7 +307,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   createNodeBalancer = async () => {
     const {
-      enqueueSnackbar,
       nodeBalancerActions: { createNodeBalancer },
     } = this.props;
     const { nodeBalancerFields, signedAgreement } = this.state;
@@ -324,23 +323,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /* Clear config errors */
     this.setState({ submitting: true, errors: undefined });
 
-    if (signedAgreement) {
-      try {
-        await queryClient.executeMutation({
-          variables: { eu_model: true, privacy_policy: true },
-          mutationFn: signAgreement,
-          mutationKey: queryKey,
-          ...simpleMutationHandlers(queryKey),
-        });
-      } catch (error) {
-        this.setState({ submitting: false });
-        enqueueSnackbar('There was an error creating your NodeBalancer.', {
-          variant: 'error',
-        });
-        return;
-      }
-    }
-
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
@@ -348,6 +330,14 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         sendCreateNodeBalancerEvent(
           `${nodeBalancer.label}: ${nodeBalancer.region}`
         );
+        if (signedAgreement) {
+          queryClient.executeMutation({
+            variables: { eu_model: true, privacy_policy: true },
+            mutationFn: signAgreement,
+            mutationKey: queryKey,
+            ...simpleMutationHandlers(queryKey),
+          });
+        }
       })
       .catch((errorResponse) => {
         const errors = getAPIErrorOrDefault(errorResponse);
