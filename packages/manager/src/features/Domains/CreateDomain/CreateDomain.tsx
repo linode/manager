@@ -4,10 +4,10 @@ import {
   Domain,
   DomainType,
 } from '@linode/api-v4/lib/domains';
-import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
+import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { useFormik } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
@@ -36,6 +36,7 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import {
   Origin as DomainDrawerOrigin,
@@ -58,7 +59,6 @@ import {
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { useGrants, useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -70,7 +70,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& label': {
       color: theme.color.headline,
-      fontWeight: 600,
       lineHeight: '1.33rem',
       letterSpacing: '0.25px',
       margin: 0,
