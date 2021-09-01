@@ -7,20 +7,19 @@ import { assertToast } from 'cypress/support/ui/events';
 import { DateTime } from 'luxon';
 import { eventFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
+import { interceptOnce } from 'cypress/support/ui/common';
+import { RecPartial } from 'factory.ts';
+import { EventStatus } from '../../../../api-v4/lib/account/types';
+import { ImageStatus } from '../../../../api-v4/lib/images/types';
 
 const imageLabel = 'cy-test-image';
 
-const interceptOnce = (method, url, response) => {
-  let count = 0;
-  return cy.intercept(method, url, (req) => {
-    count += 1;
-    if (count < 2) {
-      req.reply(response);
-    }
-  });
-};
-
-const eventIntercept = (id, status, message?, created?) => {
+const eventIntercept = (
+  id: number,
+  status: RecPartial<EventStatus>,
+  message?: string,
+  created?: string
+) => {
   interceptOnce(
     'GET',
     '*/account/events*',
@@ -42,13 +41,13 @@ const eventIntercept = (id, status, message?, created?) => {
   ).as('getEvent');
 };
 
-const imageIntercept = (id, status) => {
+const imageIntercept = (id: number, status: ImageStatus) => {
   cy.intercept('GET', `*/images*`, (req) => {
     req.reply(createMockImage({ label: imageLabel, id, status }));
   }).as('getImage');
 };
 
-const assertFailed = (imageId, message) => {
+const assertFailed = (imageId: number, message: string) => {
   assertToast(
     `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
   );
@@ -63,7 +62,7 @@ const assertFailed = (imageId, message) => {
   });
 };
 
-const assertProcessing = (imageId) => {
+const assertProcessing = (imageId: number) => {
   cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
     fbtVisible(imageLabel);
     fbtVisible('Processing');
