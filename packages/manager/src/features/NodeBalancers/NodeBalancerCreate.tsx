@@ -62,7 +62,6 @@ import {
 } from './utils';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountAgreements';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -89,8 +88,7 @@ type CombinedProps = WithNodeBalancerActions &
   WithRegions &
   RouteComponentProps<{}> &
   WithStyles<ClassNames> &
-  AgreementsProps &
-  WithSnackbarProps;
+  AgreementsProps;
 
 interface NodeBalancerFieldsState {
   label?: string;
@@ -853,6 +851,5 @@ export default recompose<CombinedProps, {}>(
   styled,
   withRouter,
   withProfile,
-  withAgreements,
-  withSnackbar
+  withAgreements
 )(NodeBalancerCreate);
