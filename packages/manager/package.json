@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.47.1",
+  "version": "1.48.0",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -209,6 +209,7 @@
     "cypress": "^8.2.0",
     "cypress-axe": "^0.8.1",
     "cypress-file-upload": "^5.0.7",
+    "cypress-real-events": "^1.5.1",
     "dotenv": "^6.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",

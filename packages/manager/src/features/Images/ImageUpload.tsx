@@ -25,6 +25,7 @@ import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
 import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
+import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -56,10 +57,13 @@ export interface Props {
 
 export const ImageUpload: React.FC<Props> = (props) => {
   const { label, description, changeLabel, changeDescription } = props;
+
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const classes = useStyles();
   const { push } = useHistory();
+  const flags = useFlags();
+
   const [region, setRegion] = React.useState<string>('');
   const dispatch: Dispatch = useDispatch();
   const regions = useRegionsQuery().data ?? [];
@@ -164,11 +168,12 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
         <div style={{ width: '100%' }}>
           <TextField
-            label="Label (required)"
+            label="Label"
             value={label}
             onChange={changeLabel}
             errorText={errorMap.label}
             disabled={!canCreateImage}
+            required
           />
 
           <TextField
@@ -182,12 +187,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
           />
 
           <RegionSelect
-            label={'Region (required)'}
+            label="Region"
             errorText={errorMap.region}
             handleSelection={setRegion}
             regions={regions}
             selectedID={region}
             disabled={!canCreateImage}
+            required
           />
 
           <Typography className={classes.helperText}>
@@ -196,6 +202,14 @@ export const ImageUpload: React.FC<Props> = (props) => {
             to other regions. Image files must be raw disk images (.img)
             compressed using gzip (.gz). The maximum file size is 5 GB
             (compressed).
+            {flags.imagesPriceInfo ? (
+              <>
+                <br />
+                <br />
+                Custom Images are billed at $0.10/GB per month based on the
+                uncompressed image size.
+              </>
+            ) : null}
           </Typography>
 
           <FileUploader
