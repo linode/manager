@@ -202,7 +202,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         isEURegion(this.params.regionID) &&
         !this.props.agreements?.data?.eu_model
     ),
-    signedAgreement: Boolean(this.props.agreements.data?.eu_model),
+    signedAgreement: false,
     disabledClasses: [],
   };
 
@@ -472,7 +472,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   submitForm: HandleSubmit = async (_payload, linodeID?: number) => {
-    if (this.state.showAgreement) {
+    const { createType } = this.props;
+    const { signedAgreement } = this.state;
+
+    this.setState({ formIsSubmitting: true, errors: [] });
+
+    if (signedAgreement) {
       try {
         await signAgreement({
           eu_model: true,
@@ -480,17 +485,23 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         });
         queryClient.invalidateQueries(queryKey);
         this.setState({
+          formIsSubmitting: false,
           showAgreement: false,
         });
       } catch (err) {
-        return this.props.enqueueSnackbar('Error signing agreement.', {
-          variant: 'error',
+        return this.setState({
+          formIsSubmitting: false,
+          errors: [
+            {
+              reason: 'Unable to create Linode.',
+            },
+          ],
         });
       }
     }
 
-    const { createType } = this.props;
     const payload = { ..._payload };
+
     /**
      * Do manual password validation (someday we'll use Formik and
      * not need this). Only run this check if a password is present
@@ -506,14 +517,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       const passwordError = validatePassword(payload.root_pass);
 
       if (passwordError) {
-        this.setState({
-          errors: [
-            {
-              field: 'root_pass',
-              reason: passwordError,
-            },
-          ],
-        });
+        this.setState(
+          {
+            formIsSubmitting: false,
+            errors: [
+              {
+                field: 'root_pass',
+                reason: passwordError,
+              },
+            ],
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
         return;
       }
     }
@@ -526,6 +543,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (createType === 'fromLinode' && !linodeID) {
       return this.setState(
         () => ({
+          formIsSubmitting: false,
           errors: [
             {
               reason: 'You must select a Linode to clone from',
@@ -541,6 +559,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       /* a backup selection is also required */
       this.setState(
         {
+          formIsSubmitting: false,
           errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
         },
         () => {
@@ -553,6 +572,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
+          formIsSubmitting: false,
           errors: [
             {
               reason: 'You must select a StackScript.',
@@ -567,6 +587,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (createType === 'fromApp' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
+          formIsSubmitting: false,
           errors: [
             {
               reason: 'You must select a Marketplace App.',
@@ -582,8 +603,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       createType === 'fromLinode'
         ? () => cloneLinode(linodeID!, payload)
         : () => this.props.linodeActions.createLinode(payload);
-
-    this.setState({ formIsSubmitting: true });
 
     return request()
       .then((response: Linode) => {
