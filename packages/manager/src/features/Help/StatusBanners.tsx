@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   text: {
     fontSize: '0.875rem',
-    lineHeight: '1.125rem',
+    lineHeight: '1rem',
   },
   header: {
     fontSize: '1rem',
@@ -94,7 +94,7 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
     <Notice
       important
       warning={
-        ['major', 'minor', 'maintenance', 'none'].includes(impact) ||
+        ['major', 'minor', 'none'].includes(impact) ||
         ['monitoring', 'resolved'].includes(status)
       }
       error={
