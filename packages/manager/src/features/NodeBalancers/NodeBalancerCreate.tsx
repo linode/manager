@@ -60,11 +60,8 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest,
 } from './utils';
-import { queryClient } from 'src/queries/base';
-import {
-  queryKey,
-  updateAccountAgreementsData,
-} from 'src/queries/accountAgreements';
+import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountAgreements';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 type ClassNames = 'title' | 'sidebar';
@@ -103,7 +100,7 @@ interface NodeBalancerFieldsState {
 }
 
 interface State {
-  agree: boolean;
+  signedAgreement: boolean;
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
   errors?: APIError[];
@@ -135,7 +132,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
-    agree: false,
+    signedAgreement: false,
     submitting: false,
     nodeBalancerFields: NodeBalancerCreate.defaultFieldsStates,
     deleteConfigConfirmDialog: clone(
@@ -313,7 +310,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       enqueueSnackbar,
       nodeBalancerActions: { createNodeBalancer },
     } = this.props;
-    const { nodeBalancerFields } = this.state;
+    const { nodeBalancerFields, signedAgreement } = this.state;
 
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
@@ -327,17 +324,17 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /* Clear config errors */
     this.setState({ submitting: true, errors: undefined });
 
-    if (this.state.agree) {
+    if (signedAgreement) {
       try {
         await queryClient.executeMutation({
           variables: { eu_model: true, privacy_policy: true },
           mutationFn: signAgreement,
           mutationKey: queryKey,
-          onSuccess: updateAccountAgreementsData,
+          ...simpleMutationHandlers(queryKey),
         });
       } catch (error) {
         this.setState({ submitting: false });
-        enqueueSnackbar('Error signing agreement.', {
+        enqueueSnackbar('There was an error creating your NodeBalancer.', {
           variant: 'error',
         });
         return;
@@ -507,7 +504,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, regionsData, agreements, profile } = this.props;
-    const { nodeBalancerFields } = this.state;
+    const { nodeBalancerFields, signedAgreement } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
 
@@ -746,14 +743,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               disabled={
                 this.state.submitting ||
                 this.disabled ||
-                (showAgreement && !this.state.agree)
+                (showAgreement && !signedAgreement)
               }
               submitText="Create NodeBalancer"
               agreement={
                 showAgreement ? (
                   <EUAgreementCheckbox
-                    checked={this.state.agree}
-                    onChange={(e) => this.setState({ agree: e.target.checked })}
+                    checked={signedAgreement}
+                    onChange={(e) =>
+                      this.setState({ signedAgreement: e.target.checked })
+                    }
                   />
                 ) : undefined
               }

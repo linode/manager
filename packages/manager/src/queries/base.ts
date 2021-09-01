@@ -1,5 +1,6 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { QueryClient, UseMutationOptions, UseQueryOptions } from 'react-query';
+import { isEmpty } from '@linode/api-v4/lib/request';
 
 // =============================================================================
 // Config
@@ -68,6 +69,19 @@ export const mutationHandlers = <T, V, E = APIError[]>(
       queryClient.setQueryData<ItemsByID<T>>(queryKey, (oldData) => ({
         ...oldData,
         [variables[indexer]]: updatedEntity,
+      }));
+    },
+  };
+};
+
+export const simpleMutationHandlers = <T, V, E = APIError[]>(
+  queryKey: string
+): UseMutationOptions<T, E, V, () => void> => {
+  return {
+    onSuccess: (updatedEntity, variables: V) => {
+      queryClient.setQueryData<T>(queryKey, (oldData: T) => ({
+        ...oldData,
+        ...(isEmpty(updatedEntity) ? variables : updatedEntity),
       }));
     },
   };
