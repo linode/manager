@@ -305,7 +305,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     });
   };
 
-  createNodeBalancer = async () => {
+  createNodeBalancer = () => {
     const {
       nodeBalancerActions: { createNodeBalancer },
     } = this.props;
