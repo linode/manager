@@ -9,10 +9,15 @@ import TableRow from 'src/components/TableRow';
 import capitalize from 'src/utilities/capitalize';
 import { parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
+import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 
 const useStyles = makeStyles(() => ({
   capitalize: {
     textTransform: 'capitalize',
+  },
+  padding: {
+    padding: 8,
+    paddingLeft: 0,
   },
 }));
 
@@ -50,7 +55,9 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
         </TableCell>
       </Hidden>
       <Hidden mdDown>
-        <TableCell>{reason}</TableCell>
+        <TableCell className={classes.padding}>
+          <HighlightedMarkdown textOrMarkdown={reason} />
+        </TableCell>
       </Hidden>
     </TableRow>
   );
