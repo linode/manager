@@ -122,6 +122,7 @@ interface Props {
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
   // Send a function for cancelling the upload back to the parent.
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
+  onSuccess?: () => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
@@ -134,6 +135,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     dropzoneDisabled,
     apiError,
     setErrors,
+    onSuccess,
   } = props;
 
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
@@ -243,6 +245,10 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
       const handleSuccess = () => {
+        if (onSuccess) {
+          onSuccess();
+        }
+
         dispatch({
           type: 'UPDATE_FILES',
           filesToUpdate: [path],

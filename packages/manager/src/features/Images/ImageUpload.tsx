@@ -17,6 +17,10 @@ import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';
@@ -61,17 +65,26 @@ export interface Props {
 
 export const ImageUpload: React.FC<Props> = (props) => {
   const { label, description, changeLabel, changeDescription } = props;
+
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { data: agreements } = useAccountAgreements();
+  const { mutate: signAgreement } = useMutateAccountAgreements();
+
   const classes = useStyles();
-  const { push } = useHistory();
-  const [region, setRegion] = React.useState<string>('');
-  const dispatch: Dispatch = useDispatch();
   const regions = useRegionsQuery().data ?? [];
-  // @todo replace this with React-query
+  const dispatch: Dispatch = useDispatch();
+  const { push } = useHistory();
+
+  const [signedAgreement, setSignedAgreement] = React.useState<boolean>(false);
+  const [region, setRegion] = React.useState<string>('');
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
+  );
+
+  const showAgreement = Boolean(
+    !profile?.restricted && !agreements?.eu_model && isEURegion(region)
   );
 
   //  This holds a "cancel function" from the Axios instance that handles image
@@ -113,7 +126,14 @@ export const ImageUpload: React.FC<Props> = (props) => {
     }
   };
 
-  const uploadingDisabled = !label || !region || !canCreateImage;
+  const onSuccess = () => {
+    if (signedAgreement) {
+      signAgreement({ eu_model: true, privacy_policy: true });
+    }
+  };
+
+  const uploadingDisabled =
+    !label || !region || !canCreateImage || (showAgreement && !signedAgreement);
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
@@ -195,10 +215,10 @@ export const ImageUpload: React.FC<Props> = (props) => {
             disabled={!canCreateImage}
           />
 
-          {isEURegion(region) ? (
+          {showAgreement ? (
             <EUAgreementCheckbox
-              checked={false}
-              onChange={() => null}
+              checked={signedAgreement}
+              onChange={(e) => setSignedAgreement(e.target.checked)}
               centerCheckbox
               className={classes.helperText}
             />
@@ -220,6 +240,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             setErrors={setErrors}
             setCancelFn={setCancelFn}
+            onSuccess={onSuccess}
           />
           <ActionsPanel>
             <Typography>
