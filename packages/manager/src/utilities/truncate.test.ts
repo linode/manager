@@ -14,11 +14,11 @@ describe('truncate', () => {
     140
   );
 
-  it('string over 140 + 3 chars should contain an ellipses as last 3 chars', () => {
+  it('string over 140 + 4 chars should contain an ellipses as last 3 chars', () => {
     expect(stringOver140.substr(stringOver140.length - 3)).toBe('...');
   });
 
-  it('string under 140 + 3 chars should not contain an ellipses as last 3 chars', () => {
+  it('string under 140 + 4 chars should not contain an ellipses as last 3 chars', () => {
     expect(stringUnder140.substr(stringUnder140.length - 3)).not.toBe('...');
   });
 });

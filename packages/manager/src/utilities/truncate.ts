@@ -3,7 +3,7 @@
  * text ends on a word rather than mid-word.
  */
 export const truncate = (str: string, maxLength: number) => {
-  if (str.length > maxLength + 3) {
+  if (str.length > maxLength + 4) {
     const beginningText = str.substring(0, maxLength + 1);
     const charsAfterMax = str.substring(maxLength + 1);
     const result = [beginningText];
@@ -20,7 +20,7 @@ export const truncate = (str: string, maxLength: number) => {
       }
       result.push(letter);
     }
-    return `${result.join('')}...`;
+    return `${result.join('')} ...`;
   }
 
   return str;
