@@ -102,20 +102,20 @@ export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceRe
         incident_updates: [
           incidentUpdateFactory.build({
             body:
-              'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on September 19th 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). We expect this maintenance to take approximately 3 hours. During this maintenance, running Linodes will not be impacted but customers will not be able to perform tasks such as creating, removing, booting, backups, or shutting down Linodes, or other tasks involving interacting with the Cloud Manager or Linode API.',
+              'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on September 19th 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). During this time, running Linodes will not be impacted but customers will not be able to perform tasks in the Cloud Manager or Linode API.',
           }),
         ],
       }),
-      maintenanceFactory.build({
-        id: 'test002',
-        name: 'Linode Database Infrastructure Maintenance',
-        incident_updates: [
-          incidentUpdateFactory.build({
-            body:
-              'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on December 19th 2021. We expect this maintenance to take approximately 24 hours.',
-          }),
-        ],
-      }),
+      // maintenanceFactory.build({
+      //   id: 'test002',
+      //   name: 'Linode Database Infrastructure Maintenance',
+      //   incident_updates: [
+      //     incidentUpdateFactory.build({
+      //       body:
+      //         'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on December 19th 2021. We expect this maintenance to take approximately 24 hours.',
+      //     }),
+      //   ],
+      // }),
     ],
   }
 );
