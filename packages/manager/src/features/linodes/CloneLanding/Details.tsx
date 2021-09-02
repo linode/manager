@@ -9,9 +9,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { formatRegion } from 'src/utilities';
-import { isEURegion } from 'src/utilities/formatRegion';
 import LinodeSelect from '../LinodeSelect';
 import {
   EstimatedCloneTimeMode,
@@ -69,9 +67,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'underline',
       color: theme.color.red,
     },
-  },
-  agreement: {
-    marginTop: theme.spacing(2),
   },
 }));
 
@@ -294,14 +289,6 @@ export const Configs: React.FC<Props> = (props) => {
           </a>
         </Typography>
       )}
-
-      {isEURegion(selectedLinodeRegion) ? (
-        <EUAgreementCheckbox
-          className={classes.agreement}
-          checked={false}
-          onChange={() => null}
-        />
-      ) : null}
 
       <Button
         className={classes.submitButton}
