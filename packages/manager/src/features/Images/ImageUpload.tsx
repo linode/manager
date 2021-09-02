@@ -84,7 +84,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   );
 
   const showAgreement = Boolean(
-    !profile?.restricted && !agreements?.eu_model && isEURegion(region)
+    !profile?.restricted && agreements?.eu_model === false && isEURegion(region)
   );
 
   //  This holds a "cancel function" from the Axios instance that handles image

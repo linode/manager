@@ -104,7 +104,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const showAgreement = Boolean(
     !profile?.restricted &&
-      !agreements?.eu_model &&
+      agreements?.eu_model === false &&
       isEURegion(selectedLinode?.region)
   );
 
