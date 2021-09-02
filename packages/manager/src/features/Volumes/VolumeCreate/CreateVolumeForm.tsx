@@ -22,11 +22,21 @@ import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import useFlags from 'src/hooks/useFlags';
+import {
+  reportAgreementSigningError,
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -41,11 +51,6 @@ import ConfigSelect, {
 import LabelField from '../VolumeDrawer/LabelField';
 import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
-import { useGrants, useProfile } from 'src/queries/profile';
-import useFlags from 'src/hooks/useFlags';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { isEURegion } from 'src/utilities/formatRegion';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -110,9 +115,11 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
-
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
+
+  const { data: accountAgreements } = useAccountAgreements();
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   // This is to keep track of this linodeId's errors so we can select it from the Redux store for the error message.
   const { error: configsError } = useSelector((state: ApplicationState) => {
@@ -126,6 +133,9 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const regionsWithBlockStorage = regions
     .filter((thisRegion) => thisRegion.capabilities.includes('Block Storage'))
     .map((thisRegion) => thisRegion.id);
+
+  const doesNotHavePermission =
+    profile?.restricted && !hasGrant('add_volumes', grants);
 
   return (
     <Formik
@@ -158,6 +168,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           tags: tags.map((v) => v.value),
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
+            if (hasSignedAgreement) {
+              updateAccountAgreements({ eu_model: true }).catch((err) => {
+                reportAgreementSigningError(err);
+              });
+            }
+
             resetForm({ values: initialValues });
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
@@ -206,11 +222,20 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           ? errors.config_id
           : undefined;
 
+        const showAgreement =
+          isEURegion(values.region) &&
+          !profile?.restricted &&
+          accountAgreements?.eu_model === false;
+
+        const disabled = Boolean(
+          doesNotHavePermission || (showAgreement && !hasSignedAgreement)
+        );
+
         return (
           <Form>
             {generalError ? <NoticePanel error={generalError} /> : null}
             {status ? <NoticePanel success={status.success} /> : null}
-            {disabled ? (
+            {doesNotHavePermission ? (
               <Notice
                 text={
                   "You don't have permissions to create a new Volume. Please contact an account administrator for details."
@@ -246,7 +271,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   </Typography>
                   <LabelField
                     name="label"
-                    disabled={disabled}
+                    disabled={doesNotHavePermission}
                     error={touched.label ? errors.label : undefined}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -254,7 +279,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   />
                   <SizeField
                     name="size"
-                    disabled={disabled}
+                    disabled={doesNotHavePermission}
                     error={touched.size ? errors.size : undefined}
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -262,7 +287,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   />
                   <RegionSelect
                     name="region"
-                    disabled={disabled}
+                    disabled={doesNotHavePermission}
                     errorText={touched.region ? errors.region : undefined}
                     handleSelection={(value) => {
                       setFieldValue('region', value);
@@ -288,7 +313,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   </FormHelperText>
                   <LinodeSelect
                     name="linodeId"
-                    disabled={disabled}
+                    disabled={doesNotHavePermission}
                     filterCondition={(linode: Linode) =>
                       regionsWithBlockStorage.includes(linode.region)
                     }
@@ -304,7 +329,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   />
                   <ConfigSelect
                     name="configId"
-                    disabled={disabled}
+                    disabled={doesNotHavePermission}
                     error={touched.config_id ? errors.config_id : undefined}
                     linodeId={linode_id}
                     onBlur={handleBlur}
@@ -313,7 +338,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   />
                   <TagsInput
                     name="tags"
-                    disabled={disabled}
+                    disabled={doesNotHavePermission}
                     label="Tags"
                     menuPlacement="top"
                     onChange={(selected) => setFieldValue('tags', selected)}
@@ -332,16 +357,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   <Box
                     display="flex"
                     justifyContent={
-                      isEURegion(values.region) ? 'space-between' : 'flex-end'
+                      showAgreement ? 'space-between' : 'flex-end'
                     }
                     alignItems="center"
                     flexWrap="wrap"
                     className={classes.buttonGroup}
                   >
-                    {isEURegion(values.region) ? (
+                    {showAgreement ? (
                       <EUAgreementCheckbox
-                        checked={false}
-                        onChange={() => null}
+                        checked={hasSignedAgreement}
+                        onChange={(e) =>
+                          setHasSignedAgreement(e.target.checked)
+                        }
                         className={classes.agreement}
                         centerCheckbox
                       />
