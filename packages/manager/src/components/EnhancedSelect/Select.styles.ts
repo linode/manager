@@ -111,6 +111,9 @@ export const styles = (theme: Theme) =>
         cursor: 'pointer',
         padding: '10px',
         fontSize: '0.9rem',
+        '& svg': {
+          marginTop: 2,
+        },
       },
       '& .react-select__option--is-focused': {
         backgroundColor: theme.palette.primary.main,
