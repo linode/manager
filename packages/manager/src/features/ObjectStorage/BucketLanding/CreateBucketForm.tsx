@@ -220,7 +220,12 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                   resetForm();
                   onClose();
                 }}
-                disabled={isRestrictedUser}
+                disabled={
+                  isRestrictedUser ||
+                  !values.label ||
+                  !values.cluster ||
+                  (showAgreement && !signedAgreement)
+                }
                 submitText="Create Bucket"
               />
             </Form>
