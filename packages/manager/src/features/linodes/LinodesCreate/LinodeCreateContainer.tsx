@@ -472,9 +472,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   submitForm: HandleSubmit = async (_payload, linodeID?: number) => {
     const { createType } = this.props;
     const { signedAgreement } = this.state;
-
-    this.setState({ formIsSubmitting: true, errors: [] });
-
     const payload = { ..._payload };
 
     /**
@@ -494,7 +491,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       if (passwordError) {
         this.setState(
           {
-            formIsSubmitting: false,
             errors: [
               {
                 field: 'root_pass',
@@ -518,7 +514,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (createType === 'fromLinode' && !linodeID) {
       return this.setState(
         () => ({
-          formIsSubmitting: false,
           errors: [
             {
               reason: 'You must select a Linode to clone from',
@@ -534,7 +529,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       /* a backup selection is also required */
       this.setState(
         {
-          formIsSubmitting: false,
           errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }],
         },
         () => {
@@ -547,7 +541,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
-          formIsSubmitting: false,
           errors: [
             {
               reason: 'You must select a StackScript.',
@@ -562,7 +555,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (createType === 'fromApp' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
-          formIsSubmitting: false,
           errors: [
             {
               reason: 'You must select a Marketplace App.',
@@ -578,6 +570,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       createType === 'fromLinode'
         ? () => cloneLinode(linodeID!, payload)
         : () => this.props.linodeActions.createLinode(payload);
+
+    this.setState({ formIsSubmitting: true });
 
     return request()
       .then((response: Linode) => {
