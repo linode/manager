@@ -50,6 +50,7 @@ import {
   makeObjectsPage,
   paymentMethodFactory,
   accountMaintenanceFactory,
+  gdprComplianceNotification,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -597,6 +598,8 @@ export const handlers = [
     //   body: null
     // });
 
+    const gdprNotification = gdprComplianceNotification.build();
+
     const generalGlobalNotice = {
       type: 'notice',
       entity: null,
@@ -672,6 +675,7 @@ export const handlers = [
         makeResourcePage([
           // pastDueBalance,
           ...notificationFactory.buildList(1),
+          gdprNotification,
           generalGlobalNotice,
           outageNotification,
           minorSeverityNotification,

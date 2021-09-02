@@ -13,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import MainContentBanner from 'src/components/MainContentBanner';
+import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import NotFound from 'src/components/NotFound';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SideMenu from 'src/components/SideMenu';
@@ -37,9 +38,9 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePreferences from 'src/hooks/usePreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
 import { UserPreferences } from './store/preferences/preferences.actions';
-import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -183,6 +184,9 @@ const MainContent: React.FC<CombinedProps> = (props) => {
   const DbaasContextProvider = dbaasContext.Provider;
   const dbaasContextValue = useDialogContext();
 
+  const ComplianceUpdateProvider = complianceUpdateContext.Provider;
+  const complianceUpdateContextValue = useDialogContext();
+
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
   const { account, profile, _isManagedAccount } = useAccountManagement();
 
@@ -284,24 +288,25 @@ const MainContent: React.FC<CombinedProps> = (props) => {
           togglePreference: desktopMenuToggle,
         }: ToggleProps<boolean>) => (
           <DbaasContextProvider value={dbaasContextValue}>
-            <NotificationProvider value={contextValue}>
-              <>
-                {shouldDisplayMainContentBanner && (
-                  <MainContentBanner
-                    bannerText={flags.mainContentBanner?.text ?? ''}
-                    url={flags.mainContentBanner?.link?.url ?? ''}
-                    linkText={flags.mainContentBanner?.link?.text ?? ''}
-                    bannerKey={flags.mainContentBanner?.key ?? ''}
-                    onClose={() => setBannerDismissed(true)}
+            <ComplianceUpdateProvider value={complianceUpdateContextValue}>
+              <NotificationProvider value={contextValue}>
+                <>
+                  {shouldDisplayMainContentBanner && (
+                    <MainContentBanner
+                      bannerText={flags.mainContentBanner?.text ?? ''}
+                      url={flags.mainContentBanner?.link?.url ?? ''}
+                      linkText={flags.mainContentBanner?.link?.text ?? ''}
+                      bannerKey={flags.mainContentBanner?.key ?? ''}
+                      onClose={() => setBannerDismissed(true)}
+                    />
+                  )}
+                  <SideMenu
+                    open={menuIsOpen}
+                    desktopOpen={desktopMenuIsOpen || false}
+                    closeMenu={() => toggleMenu(false)}
                   />
-                )}
-                <SideMenu
-                  open={menuIsOpen}
-                  desktopOpen={desktopMenuIsOpen || false}
-                  closeMenu={() => toggleMenu(false)}
-                />
-                <div
-                  className={`
+                  <div
+                    className={`
                       ${classes.content}
                       ${
                         desktopMenuIsOpen ||
@@ -310,82 +315,95 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                           : ''
                       }
                     `}
-                >
-                  <TopMenu
-                    isSideMenuOpen={!desktopMenuIsOpen}
-                    openSideMenu={() => toggleMenu(true)}
-                    desktopMenuToggle={desktopMenuToggle}
-                    isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-                    username={username}
-                  />
-                  <main
-                    className={classes.cmrWrapper}
-                    id="main-content"
-                    role="main"
                   >
-                    <Grid container spacing={0} className={classes.grid}>
-                      <Grid item className={`${classes.switchWrapper} p0`}>
-                        <GlobalNotifications />
-                        <React.Suspense fallback={<SuspenseLoader />}>
-                          <Switch>
-                            <Route path="/linodes" component={LinodesRoutes} />
-                            <Route path="/volumes" component={Volumes} />
-                            <Redirect path="/volumes*" to="/volumes" />
-                            <Route
-                              path="/nodebalancers"
-                              component={NodeBalancers}
-                            />
-                            <Route path="/domains" component={Domains} />
-                            <Route path="/managed" component={Managed} />
-                            <Route path="/longview" component={Longview} />
-                            <Route path="/images" component={Images} />
-                            <Route
-                              path="/stackscripts"
-                              component={StackScripts}
-                            />
-                            <Route
-                              path="/object-storage"
-                              component={ObjectStorage}
-                            />
-                            <Route path="/kubernetes" component={Kubernetes} />
-                            <Route path="/account" component={Account} />
+                    <TopMenu
+                      isSideMenuOpen={!desktopMenuIsOpen}
+                      openSideMenu={() => toggleMenu(true)}
+                      desktopMenuToggle={desktopMenuToggle}
+                      isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+                      username={username}
+                    />
+                    <main
+                      className={classes.cmrWrapper}
+                      id="main-content"
+                      role="main"
+                    >
+                      <Grid container spacing={0} className={classes.grid}>
+                        <Grid item className={`${classes.switchWrapper} p0`}>
+                          <GlobalNotifications />
+                          <React.Suspense fallback={<SuspenseLoader />}>
+                            <Switch>
+                              <Route
+                                path="/linodes"
+                                component={LinodesRoutes}
+                              />
+                              <Route path="/volumes" component={Volumes} />
+                              <Redirect path="/volumes*" to="/volumes" />
+                              <Route
+                                path="/nodebalancers"
+                                component={NodeBalancers}
+                              />
+                              <Route path="/domains" component={Domains} />
+                              <Route path="/managed" component={Managed} />
+                              <Route path="/longview" component={Longview} />
+                              <Route path="/images" component={Images} />
+                              <Route
+                                path="/stackscripts"
+                                component={StackScripts}
+                              />
+                              <Route
+                                path="/object-storage"
+                                component={ObjectStorage}
+                              />
+                              <Route
+                                path="/kubernetes"
+                                component={Kubernetes}
+                              />
+                              <Route path="/account" component={Account} />
 
-                            <Route
-                              path="/profile"
-                              render={(routeProps) => (
-                                <Profile
-                                  {...routeProps}
-                                  toggleTheme={props.toggleTheme}
+                              <Route
+                                path="/profile"
+                                render={(routeProps) => (
+                                  <Profile
+                                    {...routeProps}
+                                    toggleTheme={props.toggleTheme}
+                                  />
+                                )}
+                              />
+                              <Route path="/support" component={Help} />
+                              <Route path="/search" component={SearchLanding} />
+                              <Route path="/events" component={EventsLanding} />
+                              {showFirewalls && (
+                                <Route
+                                  path="/firewalls"
+                                  component={Firewalls}
                                 />
                               )}
-                            />
-                            <Route path="/support" component={Help} />
-                            <Route path="/search" component={SearchLanding} />
-                            <Route path="/events" component={EventsLanding} />
-                            {showFirewalls && (
-                              <Route path="/firewalls" component={Firewalls} />
-                            )}
-                            {flags.databases && (
-                              <Route path="/databases" component={Databases} />
-                            )}
-                            <Redirect exact from="/" to={defaultRoot} />
-                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                            <Redirect from="/dashboard" to={defaultRoot} />
-                            <Route component={NotFound} />
-                          </Switch>
-                        </React.Suspense>
+                              {flags.databases && (
+                                <Route
+                                  path="/databases"
+                                  component={Databases}
+                                />
+                              )}
+                              <Redirect exact from="/" to={defaultRoot} />
+                              {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                              <Redirect from="/dashboard" to={defaultRoot} />
+                              <Route component={NotFound} />
+                            </Switch>
+                          </React.Suspense>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  </main>
-                </div>
-              </>
-            </NotificationProvider>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-            <ToastNotifications />
-            <DomainDrawer />
-            <VolumeDrawer />
-            <BackupDrawer />
-            <CreateDatabaseDialog />
+                    </main>
+                  </div>
+                </>
+              </NotificationProvider>
+              <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+              <ToastNotifications />
+              <DomainDrawer />
+              <VolumeDrawer />
+              <BackupDrawer />
+              <CreateDatabaseDialog />
+            </ComplianceUpdateProvider>
           </DbaasContextProvider>
         )}
       </PreferenceToggle>

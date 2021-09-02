@@ -34,3 +34,14 @@ export const abuseTicketNotificationFactory = notificationFactory.extend({
   until: null,
   body: null,
 });
+
+export const gdprComplianceNotification = notificationFactory.extend({
+  type: 'notice',
+  entity: null,
+  when: null,
+  label: 'EU Contract Compliance Update',
+  severity: 'major',
+  until: null,
+  message:
+    'Please review the compliance update for guidance regarding the EU Standard Contractual Clauses and its application to user deployments in Linode’s London and Frankfurt data centers.',
+});

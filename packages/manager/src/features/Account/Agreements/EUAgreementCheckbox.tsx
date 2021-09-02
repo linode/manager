@@ -29,7 +29,7 @@ const EUAgreementCheckbox: React.FC<Props> = (props) => {
       className={className}
     >
       <CheckBox checked={checked} onChange={onChange} style={checkboxStyle} />
-      <Typography>
+      <Typography style={{ marginLeft: 4 }}>
         I have read and agree to the{' '}
         <Link to="https://www.linode.com/legal-privacy/">
           Linode Privacy Policy

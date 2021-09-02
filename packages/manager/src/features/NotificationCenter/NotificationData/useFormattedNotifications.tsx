@@ -2,9 +2,12 @@ import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
+import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
+import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useStyles } from 'src/features/NotificationCenter/NotificationData/RenderNotification';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
@@ -259,8 +262,21 @@ const interceptNotification = (
     };
   }
 
+  if (
+    notification.type === 'notice' &&
+    notification.message.match(/compliance update/gi)
+  ) {
+    // This needs to be its own component so it can use hooks.
+    const jsx = <ComplianceNotification />;
+
+    return {
+      ...notification,
+      jsx,
+    };
+  }
+
   /* If the notification is not of any of the types above, return the notification object without modification. In this case, logic in <RenderNotification />
-  will either linkify notifcation.message or render it plainly.
+  will either linkify notification.message or render it plainly.
   */
   return notification;
 };
@@ -289,3 +305,29 @@ export const adjustSeverity = ({
 };
 
 export default useFormattedNotifications;
+
+const useComplianceNotificationStyles = makeStyles((theme: Theme) => ({
+  reviewUpdateButton: {
+    ...theme.applyLinkStyles,
+    minHeight: 0,
+  },
+}));
+
+const ComplianceNotification: React.FC<{}> = () => {
+  const classes = useComplianceNotificationStyles();
+  const complianceModelContext = React.useContext(complianceUpdateContext);
+
+  return (
+    <Typography>
+      Please review the compliance update for guidance regarding the EU Standard
+      Contractual Clauses and its application to user deployments in Linode’s
+      London and Frankfurt data centers.{' '}
+      <Button
+        className={classes.reviewUpdateButton}
+        onClick={() => complianceModelContext.open()}
+      >
+        Review compliance update.
+      </Button>
+    </Typography>
+  );
+};
