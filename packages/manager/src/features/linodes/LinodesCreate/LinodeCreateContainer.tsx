@@ -469,7 +469,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = async (_payload, linodeID?: number) => {
+  submitForm: HandleSubmit = (_payload, linodeID?: number) => {
     const { createType } = this.props;
     const { signedAgreement } = this.state;
     const payload = { ..._payload };
