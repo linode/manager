@@ -20,6 +20,11 @@ import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useImages } from 'src/hooks/useImages';
 import { useTypes } from 'src/hooks/useTypes';
+import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
@@ -80,6 +85,9 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
+  const { data: profile } = useProfile();
+  const { data: agreements } = useAccountAgreements();
+  const { mutate: signAgreement } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -89,6 +97,13 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const [APIError, setAPIError] = React.useState<string>('');
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [signedAgreement, setSignedAgreement] = React.useState<boolean>(false);
+
+  const showAgreement = Boolean(
+    !profile?.restricted &&
+      agreements?.eu_model === false &&
+      isEURegion(selectedRegion)
+  );
 
   React.useEffect(() => {
     scrollErrorIntoView();
@@ -146,6 +161,9 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
           'Your Linode has entered the migration queue and will begin migration shortly.',
           { variant: 'success' }
         );
+        if (signedAgreement) {
+          signAgreement({ eu_model: true, privacy_policy: true });
+        }
         onClose();
       })
       .catch((e: APIErrorType[]) => {
@@ -216,23 +234,26 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
       />
       <Box
         display="flex"
-        justifyContent={
-          isEURegion(selectedRegion) ? 'space-between' : 'flex-end'
-        }
+        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
         alignItems="center"
         className={classes.buttonGroup}
       >
-        {isEURegion(selectedRegion) ? (
+        {showAgreement ? (
           <EUAgreementCheckbox
-            checked={false}
-            onChange={() => null}
+            checked={signedAgreement}
+            onChange={(e) => setSignedAgreement(e.target.checked)}
             className={classes.agreement}
             centerCheckbox
           />
         ) : null}
         <Button
           buttonType="primary"
-          disabled={!!disabledText || !hasConfirmed || !selectedRegion}
+          disabled={
+            !!disabledText ||
+            !hasConfirmed ||
+            !selectedRegion ||
+            (showAgreement && !signedAgreement)
+          }
           loading={isLoading}
           onClick={handleMigrate}
           className={classes.button}
