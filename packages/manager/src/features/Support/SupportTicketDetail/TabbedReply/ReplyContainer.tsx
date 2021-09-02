@@ -17,6 +17,8 @@ import { FileAttachment } from '../../index';
 import Reference from './MarkdownReference';
 import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
+import { storage } from 'src/utilities/storage';
+import { debounce } from 'throttle-debounce';
 
 const useStyles = makeStyles((theme: Theme) => ({
   replyContainer: {
@@ -64,10 +66,28 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
 
   const { onSuccess, reloadAttachments, ...rest } = props;
 
+  const textFromStorage = storage.ticketReply.get();
+  const isTextFromStorageForCurrentTicket = textFromStorage.ticketId === props.ticketId;
+
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
-  const [value, setValue] = React.useState<string>('');
+  const [value, setValue] = React.useState<string>(
+    isTextFromStorageForCurrentTicket ? textFromStorage.text : ''
+  );
+
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
+
+  const saveText = (_text: string, _ticketId: number) => {
+    storage.ticketReply.set({ text: _text, ticketId: _ticketId });
+  };
+
+  const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
+
+  React.useEffect(() => {
+    if (value.length > 0) {
+      debouncedSave(value, props.ticketId);
+    }
+  }, [value, props.ticketId]);
 
   const submitForm = () => {
     setSubmitting(true);
