@@ -219,6 +219,10 @@ export const handlers = [
         backups: { enabled: false },
         tags: ['test1', 'test2', 'test3'],
       }),
+      linodeFactory.build({
+        label: 'eu-linode',
+        region: 'eu-west',
+      }),
       eventLinode,
       multipleIPLinode,
     ];
