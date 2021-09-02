@@ -299,6 +299,9 @@ export const handlers = [
     });
     return res(ctx.json(firewall));
   }),
+  // rest.post('*/account/agreements', (req, res, ctx) => {
+  //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
+  // }),
   rest.post('*/firewalls', (req, res, ctx) => {
     const payload = req.body as any;
     const newFirewall = firewallFactory.build({
@@ -391,6 +394,10 @@ export const handlers = [
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(0);
     return res(ctx.json(makeResourcePage(volumes)));
+  }),
+  rest.post('*/volumes', (req, res, ctx) => {
+    const volume = volumeFactory.build();
+    return res(ctx.json(volume));
   }),
   rest.get('*/vlans', (req, res, ctx) => {
     const vlans = VLANFactory.buildList(2);
