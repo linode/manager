@@ -47,8 +47,6 @@ import {
   getOneClickApps,
 } from 'src/features/StackScripts/stackScriptUtils';
 import { accountBackupsEnabled } from 'src/queries/accountSettings';
-import { queryClient } from 'src/queries/base';
-import { queryKey } from 'src/queries/accountAgreements';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
@@ -477,29 +475,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     this.setState({ formIsSubmitting: true, errors: [] });
 
-    if (signedAgreement) {
-      try {
-        await signAgreement({
-          eu_model: true,
-          privacy_policy: true,
-        });
-        queryClient.invalidateQueries(queryKey);
-        this.setState({
-          formIsSubmitting: false,
-          showAgreement: false,
-        });
-      } catch (err) {
-        return this.setState({
-          formIsSubmitting: false,
-          errors: [
-            {
-              reason: 'Unable to create Linode.',
-            },
-          ],
-        });
-      }
-    }
-
     const payload = { ..._payload };
 
     /**
@@ -607,6 +582,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return request()
       .then((response: Linode) => {
         this.setState({ formIsSubmitting: false });
+
+        if (signedAgreement) {
+          // @TODO Use React Query Mutation
+          signAgreement({
+            eu_model: true,
+            privacy_policy: true,
+          });
+        }
 
         /** if cloning a Linode, upsert Linode in redux */
         if (createType === 'fromLinode') {
