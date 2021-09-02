@@ -72,6 +72,8 @@ import {
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 import { isEURegion } from 'src/utilities/formatRegion';
+import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountAgreements';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -578,10 +580,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         if (signedAgreement) {
-          // @TODO Use React Query Mutation
-          signAgreement({
-            eu_model: true,
-            privacy_policy: true,
+          queryClient.executeMutation({
+            variables: { eu_model: true, privacy_policy: true },
+            mutationFn: signAgreement,
+            mutationKey: queryKey,
+            ...simpleMutationHandlers(queryKey),
           });
         }
 
