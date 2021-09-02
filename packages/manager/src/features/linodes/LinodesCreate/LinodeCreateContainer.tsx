@@ -1,3 +1,4 @@
+import { signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -19,6 +20,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
+import withAgreements, {
+  AgreementsProps,
+} from 'src/features/Account/Agreements/withAgreements';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
@@ -67,6 +71,9 @@ import {
   WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { isEURegion } from 'src/utilities/formatRegion';
+import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { queryKey } from 'src/queries/accountAgreements';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -89,6 +96,8 @@ interface State {
   udfs?: any;
   tags?: Tag[];
   errors?: APIError[];
+  showAgreement: boolean;
+  signedAgreement: boolean;
   formIsSubmitting: boolean;
   appInstances?: StackScript[];
   appInstancesLoading: boolean;
@@ -111,7 +120,8 @@ type CombinedProps = WithSnackbarProps &
   LabelProps &
   FeatureFlagConsumerProps &
   RouteComponentProps<{}> &
-  ProfileProps;
+  ProfileProps &
+  AgreementsProps;
 
 const defaultState: State = {
   privateIPEnabled: false,
@@ -129,6 +139,8 @@ const defaultState: State = {
   selectedTypeID: undefined,
   tags: [],
   udfs: undefined,
+  showAgreement: false,
+  signedAgreement: false,
   formIsSubmitting: false,
   errors: undefined,
   appInstancesLoading: false,
@@ -185,6 +197,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     selectedBackupID: isNaN(+this.params.backupID)
       ? undefined
       : +this.params.backupID,
+    showAgreement: Boolean(
+      !this.props.profile.data?.restricted &&
+        isEURegion(this.params.regionID) &&
+        !this.props.agreements?.data?.eu_model
+    ),
+    signedAgreement: false,
     disabledClasses: [],
   };
 
@@ -268,7 +286,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setRegionID = (id: string) => {
     const disabledClasses = getDisabledClasses(id, this.props.regionsData);
-    this.setState({ selectedRegionID: id, disabledClasses });
+    this.setState({
+      selectedRegionID: id,
+      showAgreement: Boolean(
+        !this.props.profile.data?.restricted &&
+          isEURegion(id) &&
+          !this.props.agreements?.data?.eu_model
+      ),
+      disabledClasses,
+    });
   };
 
   setTypeID = (id: string) => {
@@ -367,6 +393,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     });
   };
 
+  handleAgreementChange = () => {
+    this.setState((prevState) => ({
+      signedAgreement: !prevState.signedAgreement,
+    }));
+  };
+
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
@@ -441,7 +473,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   submitForm: HandleSubmit = (_payload, linodeID?: number) => {
     const { createType } = this.props;
+    const { signedAgreement } = this.state;
     const payload = { ..._payload };
+
     /**
      * Do manual password validation (someday we'll use Formik and
      * not need this). Only run this check if a password is present
@@ -457,14 +491,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       const passwordError = validatePassword(payload.root_pass);
 
       if (passwordError) {
-        this.setState({
-          errors: [
-            {
-              field: 'root_pass',
-              reason: passwordError,
-            },
-          ],
-        });
+        this.setState(
+          {
+            errors: [
+              {
+                field: 'root_pass',
+                reason: passwordError,
+              },
+            ],
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
         return;
       }
     }
@@ -539,6 +578,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return request()
       .then((response: Linode) => {
         this.setState({ formIsSubmitting: false });
+
+        if (signedAgreement) {
+          queryClient.executeMutation({
+            variables: { eu_model: true, privacy_policy: true },
+            mutationFn: signAgreement,
+            mutationKey: queryKey,
+            ...simpleMutationHandlers(queryKey),
+          });
+        }
 
         /** if cloning a Linode, upsert Linode in redux */
         if (createType === 'fromLinode') {
@@ -718,6 +766,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
+            handleAgreementChange={this.handleAgreementChange}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={accountBackupsEnabled()}
             {...restOfProps}
@@ -763,7 +812,8 @@ export default recompose<CombinedProps, {}>(
   userSSHKeyHoc,
   withLabelGenerator,
   withFlags,
-  withProfile
+  withProfile,
+  withAgreements
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {
