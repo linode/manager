@@ -164,7 +164,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
 
         const showAgreement = Boolean(
           !profile?.restricted &&
-            !agreements?.eu_model &&
+            agreements?.eu_model === false &&
             isEURegion(values.cluster)
         );
 
