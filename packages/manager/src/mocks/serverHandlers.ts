@@ -55,6 +55,7 @@ import {
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
+import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 
 export const makeResourcePage = (
   e: any[],
@@ -105,6 +106,9 @@ const entityTransfers = [
     const transfer = entityTransferFactory.build();
     return res(ctx.json(transfer));
   }),
+  rest.get('*/account/agreements', (req, res, ctx) =>
+    res(ctx.json(accountAgreementsFactory.build()))
+  ),
   rest.post('*/account/entity-transfers', (req, res, ctx) => {
     const payload = req.body as any;
     const newTransfer = entityTransferFactory.build({
@@ -125,7 +129,7 @@ const entityTransfers = [
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
-    const profile = profileFactory.build();
+    const profile = profileFactory.build({ restricted: false });
     return res(ctx.json(profile));
   }),
   rest.put('*/profile', (req, res, ctx) => {
