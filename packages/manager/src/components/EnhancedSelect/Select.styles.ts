@@ -111,6 +111,9 @@ export const styles = (theme: Theme) =>
         cursor: 'pointer',
         padding: '10px',
         fontSize: '0.9rem',
+        '& svg': {
+          marginTop: 2,
+        },
       },
       '& .react-select__option--is-focused': {
         backgroundColor: theme.palette.primary.main,
@@ -129,7 +132,6 @@ export const styles = (theme: Theme) =>
       '& .react-select__single-value': {
         color: theme.palette.text.primary,
         overflow: 'hidden',
-        paddingBottom: 1,
       },
       '& .react-select__indicator-separator': {
         display: 'none',
@@ -458,7 +460,6 @@ export const reactSelectStyles = (theme: Theme) => ({
     ...base,
     color: theme.palette.text.primary,
     overflow: 'hidden',
-    paddingBottom: 1,
   }),
   indicatorSeparator: (base: any) => ({
     ...base,

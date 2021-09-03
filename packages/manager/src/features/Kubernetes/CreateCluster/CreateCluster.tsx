@@ -81,7 +81,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontWeight: 500,
       lineHeight: '1.43rem',
       margin: 0,
-      marginBottom: 4,
       maxWidth: '100%',
     },
     '& .MuiInput-root': {

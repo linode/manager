@@ -3,7 +3,7 @@ import Link from 'src/components/Link';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Box from 'src/components/core/Box';
-import Logo from 'src/assets/logo/logo-text.svg';
+import Logo from 'src/assets/logo/logo.svg';
 import ErrorState from 'src/components/ErrorState';
 import BuildIcon from '@material-ui/icons/Build';
 
@@ -58,7 +58,7 @@ export const MaintenanceScreen: React.FC<{}> = () => {
             display: 'flex',
           }}
         >
-          <Logo width={150} height={87} className={classes.logo} />
+          <Logo width={115} height={43} className={classes.logo} />
         </Box>
 
         <ErrorState

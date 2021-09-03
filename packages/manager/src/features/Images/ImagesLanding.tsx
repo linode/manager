@@ -56,48 +56,40 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-/**
- * @todo remove conditional cell sizes when we're no longer relying on a flag here.
- */
-const getHeaders = (
-  tableType: 'automatic' | 'manual',
-  flagEnabled: boolean = true
-): HeaderCell[] =>
+const getHeaders = (tableType: 'automatic' | 'manual'): HeaderCell[] =>
   [
     {
       label: 'Image',
       dataColumn: 'label',
       sortable: true,
-      widthPercent: flagEnabled ? 20 : 25,
+      widthPercent: 30,
     },
-    flagEnabled
-      ? {
-          label: 'Status',
-          dataColumn: 'status',
-          sortable: true,
-          widthPercent: 15,
-          hideOnMobile: true,
-        }
-      : null,
+    {
+      label: 'Status',
+      dataColumn: 'status',
+      sortable: true,
+      widthPercent: 15,
+      hideOnMobile: true,
+    },
     {
       label: 'Created',
       dataColumn: 'created',
       sortable: false,
-      widthPercent: flagEnabled ? 15 : 20,
+      widthPercent: 20,
       hideOnMobile: true,
     },
     {
       label: 'Size',
       dataColumn: 'size',
       sortable: true,
-      widthPercent: flagEnabled ? 15 : 20,
+      widthPercent: 15,
     },
     tableType === 'automatic'
       ? {
           label: 'Expires',
           dataColumn: 'expires',
           sortable: false,
-          widthPercent: 15,
+          widthPercent: 20,
           hideOnMobile: true,
         }
       : null,
@@ -106,7 +98,7 @@ const getHeaders = (
       visuallyHidden: true,
       dataColumn: '',
       sortable: false,
-      widthPercent: 35,
+      widthPercent: 15,
     },
   ].filter(Boolean) as HeaderCell[];
 
@@ -388,8 +380,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     thisImage.hasOwnProperty('status')
   );
 
-  const manualHeaders = getHeaders('manual', machineImagesEnabled);
-  const automaticHeaders = getHeaders('automatic', machineImagesEnabled);
+  const manualHeaders = getHeaders('manual');
+  const automaticHeaders = getHeaders('automatic');
 
   const initialOrder = {
     order: 'asc' as Order,
