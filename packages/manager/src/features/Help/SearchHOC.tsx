@@ -1,7 +1,6 @@
 import * as Algolia from 'algoliasearch';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
 import { Item } from 'src/components/EnhancedSelect/Select';
 import {
   ALGOLIA_APPLICATION_ID,
@@ -9,7 +8,7 @@ import {
   COMMUNITY_BASE_URL,
   DOCS_BASE_URL,
 } from 'src/constants';
-import truncate from 'src/utilities/truncateText';
+import { truncate } from 'src/utilities/truncate';
 
 interface SearchHit {
   title?: string;
