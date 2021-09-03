@@ -38,6 +38,7 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
+  productInformationBanners: ProductInformationBanner[];
 }
 
 type PromotionalOfferFeature =
@@ -109,4 +110,15 @@ interface ReferralBannerText {
     text: string;
     url: string;
   };
+}
+
+export type ProductInformationBannerLocation = 'Object Storage';
+
+export interface ProductInformationBanner {
+  // `key` should be unique across product information banners
+  key: string;
+  // `message` is rendered as Markdown (to support links)
+  message: string;
+  // `bannerLocation` is the location where the banner will be rendered
+  bannerLocation: ProductInformationBannerLocation;
 }
