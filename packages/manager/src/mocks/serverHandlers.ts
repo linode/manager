@@ -674,16 +674,16 @@ export const handlers = [
       ctx.json(
         makeResourcePage([
           // pastDueBalance,
-          ...notificationFactory.buildList(1),
+          // ...notificationFactory.buildList(1),
           gdprNotification,
-          generalGlobalNotice,
-          outageNotification,
-          minorSeverityNotification,
-          criticalSeverityNotification,
-          abuseTicket,
+          // generalGlobalNotice,
+          // outageNotification,
+          // minorSeverityNotification,
+          // criticalSeverityNotification,
+          // abuseTicket,
           // emailBounce,
-          migrationNotification,
-          balanceNotification,
+          // migrationNotification,
+          // balanceNotification,
         ])
       )
     );
