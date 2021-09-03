@@ -4,7 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import IconButton from 'src/components/IconButton';
-import truncateText from 'src/utilities/truncateText';
+import { truncate } from 'src/utilities/truncate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,7 +44,7 @@ const TicketDetailText: React.FC<Props> = (props) => {
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);
   const { text } = props;
 
-  const truncatedText = truncateText(text, 175);
+  const truncatedText = truncate(text, 175);
   const ticketReplyBody = panelOpen ? text : truncatedText;
 
   return (
