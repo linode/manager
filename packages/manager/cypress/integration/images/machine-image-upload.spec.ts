@@ -102,9 +102,6 @@ describe('machine image', () => {
       eventIntercept(imageId, status);
       cy.wait('@getImage');
       cy.wait('@getEvent');
-      assertToast(
-        `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
-      );
       assertToast(`Image ${imageLabel} is now available.`, 2);
       cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(imageLabel);
