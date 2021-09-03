@@ -140,6 +140,7 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 errorText={errors.username}
                 onBlur={handleBlur}
                 onChange={handleChange}
+                optional
                 value={values.username}
                 data-qa-add-username
               />

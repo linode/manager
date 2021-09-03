@@ -62,7 +62,6 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 errorText={errors.label}
                 onBlur={handleBlur}
                 onChange={handleChange}
-                required
                 value={values.label}
                 data-qa-add-label
               />
@@ -74,6 +73,7 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                 errorText={errors.username}
                 onBlur={handleBlur}
                 onChange={handleChange}
+                optional
                 value={values.username}
                 data-qa-add-username
               />
@@ -88,7 +88,6 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
                   hideValidation
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  required
                   type="password"
                   value={values.password}
                   data-qa-add-password
