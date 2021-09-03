@@ -38,15 +38,15 @@ export const MaintenanceScreen: React.FC<{}> = () => {
 
   const maintenanceCopy = (
     <Typography variant="h2" className={classes.errorHeading}>
-      We are currently undergoing scheduled maintenance.
+      We are undergoing scheduled maintenance.
     </Typography>
   );
 
   const statusPageCopy = (
     <Typography className={classes.subheading}>
-      To stay updated on the status of the Linode Cloud Manager and API, you may
-      visit{' '}
-      <Link to="https://status.linode.com/">https://status.linode.com</Link>.
+      Visit{' '}
+      <Link to="https://status.linode.com/">https://status.linode.com</Link> for
+      status updates on the Linode Cloud Manager and API.
     </Typography>
   );
 
