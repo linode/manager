@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { ProductInformationBannerLocation } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 import DismissibleBanner from '../DismissibleBanner';
