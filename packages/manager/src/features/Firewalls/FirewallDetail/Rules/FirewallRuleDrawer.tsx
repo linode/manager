@@ -827,6 +827,21 @@ export const validateForm = (
 ) => {
   const errors: Partial<Form> = {};
 
+  if (!label) {
+    errors.label = 'Label is required.';
+  } else if (label.length < 3 || label.length > 32) {
+    errors.label = 'Label must be 3-32 characters.';
+  } else if (/^[^a-z]/i.test(label)) {
+    errors.label = 'Label must begin with a letter.';
+  } else if (/[^0-9a-z._-]+/i.test(label)) {
+    errors.label =
+      'Label must include only ASCII letters, numbers, underscores, periods, and dashes.';
+  }
+
+  if (description && description.length > 100) {
+    errors.description = 'Description must be 1-100 characters.';
+  }
+
   if (!protocol) {
     // eslint-disable-next-line
     errors.protocol = 'Protocol is required.';
@@ -834,20 +849,9 @@ export const validateForm = (
 
   if (protocol === 'ICMP' && ports) {
     errors.ports = 'Ports are not allowed for ICMP protocols.';
-    return errors;
-  }
-
-  if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
+  } else if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
     errors.ports =
       'Ports must be an integer, range of integers, or a comma-separated list of integers.';
-  }
-
-  if (description && description.length > 100) {
-    errors.description = 'Description must be 1-100 characters.';
-  }
-
-  if (label && (label.length < 3 || label.length > 32)) {
-    errors.label = 'Label must be 3-32 characters.';
   }
 
   return errors;
