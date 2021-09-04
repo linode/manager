@@ -1,13 +1,15 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog, {
   ConfirmationDialogProps,
 } from 'src/components/ConfirmationDialog';
-import Button from 'src/components/Button';
-
-import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Typography from 'src/components/core/Typography';
+import { Dispatch } from 'src/hooks/types';
+import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
+import { requestNotifications } from 'src/store/notification/notification.requests';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 
 type Props = Omit<ConfirmationDialogProps, 'title'>;
@@ -15,6 +17,7 @@ type Props = Omit<ConfirmationDialogProps, 'title'>;
 const ComplianceUpdateModal: React.FC<Props> = (props) => {
   const [error, setError] = React.useState('');
   const [checked, setChecked] = React.useState(false);
+  const dispatch: Dispatch = useDispatch();
 
   const {
     mutateAsync: updateAccountAgreements,
@@ -26,6 +29,8 @@ const ComplianceUpdateModal: React.FC<Props> = (props) => {
     updateAccountAgreements({ eu_model: true })
       .then(() => {
         props.onClose();
+        // Re-request notifications so the GDPR notification goes away.
+        dispatch(requestNotifications());
       })
       .catch((err) => {
         const errorMessage = getErrorStringOrDefault(
