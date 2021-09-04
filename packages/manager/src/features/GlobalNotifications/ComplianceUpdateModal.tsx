@@ -63,7 +63,7 @@ const ComplianceUpdateModal: React.FC<Props> = (props) => {
             loading={isLoading}
             disabled={!checked}
           >
-            Return to Cloud Manager
+            Agree
           </Button>
         </ActionsPanel>
       )}
