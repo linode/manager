@@ -8,8 +8,7 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-// import { signAgreement } from '';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -19,12 +18,8 @@ export interface Props {
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   removePool: (poolIdx: number) => void;
   region: string | undefined;
-}
-
-type SetAgreed = (hasAgreed: boolean) => void;
-
-const toggleAgreed = (hasAgreed: boolean, setAgreed: SetAgreed) => {
-  setAgreed(!hasAgreed);
+  hasAgreed: boolean;
+  toggleHasAgreed: () => void;
 }
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
@@ -36,6 +31,8 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     typesData,
     updatePool,
     region,
+    hasAgreed,
+    toggleHasAgreed,
   } = props;
 
   // Show a warning if any of the pools have fewer than 3 nodes
@@ -43,20 +40,18 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   const { _isRestrictedUser: isRestrictedUser } = useAccountManagement();
 
-  const [hasAgreed, setAgreed] = React.useState(false);
-
   return (
     <CheckoutBar
       data-qa-checkout-bar
       heading="Cluster Summary"
       calculatedPrice={getTotalClusterPrice(pools)}
       isMakingRequest={submitting}
-      disabled={pools.length < 1}
+      disabled={pools.length < 1 || !hasAgreed}
       onDeploy={createCluster}
       submitText={'Create Cluster'}
       agreement={
         isEURegion(region) && !isRestrictedUser ? (
-          <EUAgreementCheckbox checked={hasAgreed} onChange={() => {toggleAgreed(hasAgreed, setAgreed)}} />
+          <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
         ) : undefined
       }
     >

@@ -16,6 +16,8 @@ const props: Props = {
   createCluster: jest.fn(),
   typesData: types as ExtendedType[],
   region: undefined,
+  hasAgreed: false,
+  toggleHasAgreed: jest.fn(),
 };
 
 const renderComponent = (_props: Props) =>

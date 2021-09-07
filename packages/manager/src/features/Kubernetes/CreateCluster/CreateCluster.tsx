@@ -28,6 +28,7 @@ import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
+import { signAgreement } from '@linode/api-v4/lib/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -138,6 +139,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const [version, setVersion] = React.useState<Item<string> | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [hasAgreed, setAgreed] = React.useState<boolean>(false);
   const {
     data: versionData,
     isError: versionLoadError,
@@ -179,11 +181,18 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
 
     createKubernetesCluster(payload)
       .then((cluster) => push(`/kubernetes/clusters/${cluster.id}`))
+      .then(() => {
+        signAgreement({ eu_model: hasAgreed });
+      })
       .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
         setSubmitting(false);
         scrollErrorIntoView();
       });
+  };
+
+  const toggleHasAgreed = () => {
+    setAgreed(!hasAgreed);
   };
 
   const addPool = (pool: PoolNodeWithPrice) => {
@@ -351,6 +360,8 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
             createCluster,
             classes,
           ]}
+          hasAgreed={hasAgreed}
+          toggleHasAgreed={toggleHasAgreed}
         />
       </Grid>
     </Grid>
