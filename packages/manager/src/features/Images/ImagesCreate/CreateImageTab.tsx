@@ -25,8 +25,6 @@ import withImages, {
   ImagesDispatch,
 } from 'src/containers/withImages.container';
 import Box from 'src/components/core/Box';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { isEURegion } from 'src/utilities/formatRegion';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
@@ -38,13 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
-    },
-  },
-  agreement: {
-    maxWidth: '70%',
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: 'unset',
-      marginBottom: theme.spacing(1),
     },
   },
   buttonGroup: {
@@ -271,21 +262,11 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       />
       <Box
         display="flex"
-        justifyContent={
-          isEURegion(selectedLinode?.region) ? 'space-between' : 'flex-end'
-        }
+        justifyContent="flex-end"
         alignItems="center"
         flexWrap="wrap"
         className={classes.buttonGroup}
       >
-        {isEURegion(selectedLinode?.region) ? (
-          <EUAgreementCheckbox
-            checked={false}
-            onChange={() => null}
-            className={classes.agreement}
-            centerCheckbox
-          />
-        ) : null}
         <Button
           onClick={onSubmit}
           disabled={requirementsMet || !canCreateImage}
