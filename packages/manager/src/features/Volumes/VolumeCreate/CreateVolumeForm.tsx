@@ -169,9 +169,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
             if (hasSignedAgreement) {
-              updateAccountAgreements({ eu_model: true }).catch((err) => {
-                reportAgreementSigningError(err);
-              });
+              updateAccountAgreements({
+                eu_model: true,
+                privacy_policy: true,
+              }).catch(reportAgreementSigningError);
             }
 
             resetForm({ values: initialValues });

@@ -73,7 +73,10 @@ import {
 import { getRegionIDFromLinodeID } from './utilities';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
-import { queryKey } from 'src/queries/accountAgreements';
+import {
+  queryKey,
+  reportAgreementSigningError,
+} from 'src/queries/accountAgreements';
 
 const DEFAULT_IMAGE = 'linode/debian10';
 
@@ -584,6 +587,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
             mutationKey: queryKey,
+            onError: reportAgreementSigningError,
             ...simpleMutationHandlers(queryKey),
           });
         }

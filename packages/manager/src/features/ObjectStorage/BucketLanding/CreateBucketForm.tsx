@@ -27,6 +27,7 @@ import { compose } from 'recompose';
 import { isEURegion } from 'src/utilities/formatRegion';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
+  reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
@@ -66,9 +67,11 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
-  const [signedAgreement, setSignedAgreement] = React.useState<boolean>(false);
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
   const { data: agreements } = useAccountAgreements();
-  const { mutate: signAgreement } = useMutateAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: profile } = useProfile();
 
   return (
@@ -103,8 +106,11 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
             setSubmitting(false);
             onSuccess(bucketLabel);
 
-            if (signedAgreement) {
-              signAgreement({ eu_model: true, privacy_policy: true });
+            if (hasSignedAgreement) {
+              updateAccountAgreements({
+                eu_model: true,
+                privacy_policy: true,
+              }).catch(reportAgreementSigningError);
             }
 
             // If our Redux Store says that the user doesn't have OBJ enabled,
@@ -207,8 +213,8 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
               {showAgreement ? (
                 <EUAgreementCheckbox
                   className={classes.agreement}
-                  checked={signedAgreement}
-                  onChange={(e) => setSignedAgreement(e.target.checked)}
+                  checked={hasSignedAgreement}
+                  onChange={(e) => setHasSignedAgreement(e.target.checked)}
                 />
               ) : null}
 
@@ -224,7 +230,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                   isRestrictedUser ||
                   !values.label ||
                   !values.cluster ||
-                  (showAgreement && !signedAgreement)
+                  (showAgreement && !hasSignedAgreement)
                 }
                 submitText="Create Bucket"
               />
