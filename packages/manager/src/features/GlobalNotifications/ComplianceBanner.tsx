@@ -13,7 +13,7 @@ const ComplianceBanner: React.FC<{}> = () => {
 
   const hasComplianceNotification =
     notifications.filter((thisNotification) => {
-      return thisNotification.message.match(/compliance update/gi);
+      return thisNotification.message.match(/eu-model/gi);
     }).length > 0;
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
