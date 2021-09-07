@@ -126,9 +126,9 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         inputRef={inputRef}
       />
       <Typography className={classes.dontgo}>
-        We&apos;d hate to see you go. Please let us know what we could be doing
+        We’d hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is closed,
-        you&apos;ll be directed to a quick survey so we can better gauge your
+        you’ll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
       <TextField
