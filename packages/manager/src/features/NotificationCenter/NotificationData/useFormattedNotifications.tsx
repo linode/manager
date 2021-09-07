@@ -262,10 +262,7 @@ const interceptNotification = (
     };
   }
 
-  if (
-    notification.type === 'notice' &&
-    notification.message.match(/eu-model/gi)
-  ) {
+  if (isEUModelContractNotification(notification)) {
     // This needs to be its own component so it can use hooks.
     const jsx = <ComplianceNotification />;
 
@@ -329,5 +326,11 @@ const ComplianceNotification: React.FC<{}> = () => {
         Review compliance update.
       </Button>
     </Typography>
+  );
+};
+
+export const isEUModelContractNotification = (notification: Notification) => {
+  return Boolean(
+    notification.type === 'notice' && notification.message.match(/eu-model/gi)
   );
 };

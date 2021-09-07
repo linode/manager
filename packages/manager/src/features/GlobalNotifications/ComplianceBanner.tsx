@@ -6,15 +6,15 @@ import { useDismissibleBanner } from 'src/components/DismissibleBanner/Dismissib
 import Notice from 'src/components/Notice';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import useNotifications from 'src/hooks/useNotifications';
+import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
 
 const ComplianceBanner: React.FC<{}> = () => {
   const context = React.useContext(complianceUpdateContext);
   const notifications = useNotifications();
 
-  const hasComplianceNotification =
-    notifications.filter((thisNotification) => {
-      return thisNotification.message.match(/eu-model/gi);
-    }).length > 0;
+  const hasComplianceNotification = notifications.some((thisNotification) =>
+    isEUModelContractNotification(thisNotification)
+  );
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
     'gdpr-compliance'
