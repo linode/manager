@@ -34,18 +34,15 @@ const validateBasicVolume = (
 ) => {
   let attached = 'Unattached';
   if (isAttached) {
-    attached = 'Attached';
+    attached = linodeLabel;
   }
   containsVisible('Volume Configuration');
   cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
   getClick('[data-qa-close-drawer="true"]');
-  // assertToast(`Volume ${volLabel} successfully created.`);
-  fbtVisible(volLabel);
-  cy.get(`[data-qa-volume-cell="${volId}"]`).within(() => {
-    fbtVisible(region);
-  });
-  cy.get(`[data-qa-volume-cell="${volId}"]`).within(() => {
-    fbtVisible(attached);
+  cy.get('[aria-label="View Details"]').within(() => {
+    getVisible(`[data-qa-volume-cell-label="${volLabel}"]`);
+    containsVisible(region);
+    containsVisible(attached);
   });
 };
 
@@ -83,17 +80,14 @@ const getIntercepts = () => {
   cy.intercept('GET', `*/tags`, (req) => {
     req.reply(tagList);
   }).as('getTags');
-  cy.intercept('GET', '*/volumes', (req) => {
-    req.reply(volumeList);
-  }).as('getVolumes');
-  cy.intercept('POST', `*/volumes`, (req) => {
-    req.reply(attachedVolume);
-  }).as('createVolume');
 };
 
 describe('volumes', () => {
   it('creates a volume with tag but without linode from volumes page', () => {
     getIntercepts();
+    cy.intercept('POST', `*/volumes`, (req) => {
+      req.reply(volume);
+    }).as('createVolume');
     cy.visitWithLogin('/volumes');
     fbtClick('Create Volume');
     cy.wait('@getTags');
@@ -114,6 +108,9 @@ describe('volumes', () => {
   });
 
   it('creates volume with tag from linode with block storage support (Atlanta)', () => {
+    cy.intercept('POST', `*/volumes`, (req) => {
+      req.reply(attachedVolume);
+    }).as('createVolume');
     cy.intercept('GET', '*/linode/instances/*', (req) => {
       req.reply(linodeList);
     }).as('getLinodes');
@@ -130,7 +127,7 @@ describe('volumes', () => {
     ).within(() => {
       fbtVisible('NVMe Block Storage');
     });
-    fbtClick('Create a Volume');
+    fbtClick('Attach a Volume');
     cy.wait('@getTags');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
     getClick('[data-qa-volume-label="true"]').type('cy-test-volume');
