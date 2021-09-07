@@ -39,7 +39,7 @@ export const createNodeBalancerConfigSchema = object({
   check_attempts: number(),
   check_body: string().when('check', {
     is: 'http_body',
-    then: string().required('An HTTP Body RegEx is required'),
+    then: string().required('An HTTP body regex is required.'),
   }),
   check_interval: number().typeError('Check interval must be a number.'),
   check_passive: boolean(),
@@ -47,11 +47,11 @@ export const createNodeBalancerConfigSchema = object({
     .matches(/\/.*/)
     .when('check', {
       is: 'http',
-      then: string().required('An HTTP Path is required'),
+      then: string().required('An HTTP path is required.'),
     })
     .when('check', {
       is: 'http_body',
-      then: string().required('An HTTP Path is required'),
+      then: string().required('An HTTP path is required.'),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number().typeError('Timeout must be a number.').integer(),
@@ -83,7 +83,7 @@ export const UpdateNodeBalancerConfigSchema = object({
   check_attempts: number(),
   check_body: string().when('check', {
     is: 'http_body',
-    then: string().required('An HTTP Body RegEx is required'),
+    then: string().required('An HTTP body regex is required.'),
   }),
   check_interval: number().typeError('Check interval must be a number.'),
   check_passive: boolean(),
@@ -91,11 +91,11 @@ export const UpdateNodeBalancerConfigSchema = object({
     .matches(/\/.*/)
     .when('check', {
       is: 'http',
-      then: string().required('An HTTP Path is required'),
+      then: string().required('An HTTP path is required.'),
     })
     .when('check', {
       is: 'http_body',
-      then: string().required('An HTTP Path is required'),
+      then: string().required('An HTTP path is required.'),
     }),
   proxy_protocol: string().oneOf(['none', 'v1', 'v2']),
   check_timeout: number().typeError('Timeout must be a number.').integer(),
