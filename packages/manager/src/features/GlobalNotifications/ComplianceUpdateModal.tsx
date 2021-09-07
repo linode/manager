@@ -6,6 +6,7 @@ import ConfirmationDialog, {
   ConfirmationDialogProps,
 } from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import SupportLink from 'src/components/SupportLink';
 import { Dispatch } from 'src/hooks/types';
 import { useMutateAccountAgreements } from 'src/queries/accountAgreements';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -76,8 +77,16 @@ const ComplianceUpdateModal: React.FC<Props> = (props) => {
       </Typography>
       <Typography style={{ marginTop: 16 }}>
         After your review, please click the box below if the agreement is
-        acceptable, or contact us at support@linode.com if you have any
-        questions.
+        acceptable, or{' '}
+        <SupportLink
+          text="contact us"
+          onClick={() => {
+            setChecked(false);
+            props.onClose();
+          }}
+          title="Updates to the new EU Model Contact"
+        />{' '}
+        if you have any questions.
       </Typography>
       <div style={{ marginTop: 24 }}>
         <EUAgreementCheckbox
