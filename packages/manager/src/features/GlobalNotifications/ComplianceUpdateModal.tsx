@@ -26,7 +26,7 @@ const ComplianceUpdateModal: React.FC<Props> = (props) => {
 
   const handleClick = () => {
     setError('');
-    updateAccountAgreements({ eu_model: true })
+    updateAccountAgreements({ eu_model: true, privacy_policy: true })
       .then(() => {
         props.onClose();
         // Re-request notifications so the GDPR notification goes away.
