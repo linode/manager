@@ -42,7 +42,14 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const showGDPRCheckbox =
-    isEURegion(region) && !profile?.restricted && !agreements?.eu_model;
+    isEURegion(region) &&
+    !profile?.restricted &&
+    agreements?.eu_model === false;
+
+  const needsAPool = pools.length < 1;
+  const disableCheckout = Boolean(
+    needsAPool || (!hasAgreed && showGDPRCheckbox)
+  );
 
   return (
     <CheckoutBar
@@ -50,7 +57,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       heading="Cluster Summary"
       calculatedPrice={getTotalClusterPrice(pools)}
       isMakingRequest={submitting}
-      disabled={pools.length < 1 || !hasAgreed}
+      disabled={disableCheckout}
       onDeploy={createCluster}
       submitText={'Create Cluster'}
       agreement={
