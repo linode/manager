@@ -96,6 +96,53 @@ describe('utilities', () => {
       );
       expect(validateForm('TCP', 'invalid-port')).toHaveProperty('ports');
     });
+    it('validates label', () => {
+      const expectedResults = [
+        {
+          value: 'test',
+          result: {},
+        },
+        {
+          value: 'accept-inbound-HTTP',
+          result: {},
+        },
+        {
+          value: 'ab',
+          result: {
+            label: 'Label must be 3-32 characters.',
+          },
+        },
+        {
+          value: 'qwertyuiopasdfghjklzxcvbnm1234567890',
+          result: {
+            label: 'Label must be 3-32 characters.',
+          },
+        },
+        {
+          value: ' test',
+          result: {
+            label: 'Label must begin with a letter.',
+          },
+        },
+        {
+          value: 'test ',
+          result: {
+            label:
+              'Label must include only ASCII letters, numbers, underscores, periods, and dashes.',
+          },
+        },
+        {
+          value: 'b&a$e#c@!%^*()+=[]{}?/,<>~',
+          result: {
+            label:
+              'Label must include only ASCII letters, numbers, underscores, periods, and dashes.',
+          },
+        },
+      ];
+      expectedResults.forEach(({ value, result }) => {
+        expect(validateForm('TCP', '80', value)).toEqual(result);
+      });
+    });
     it('accepts a valid form', () => {
       expect(validateForm('TCP', '22')).toEqual({});
     });

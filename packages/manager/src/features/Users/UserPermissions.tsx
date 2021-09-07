@@ -422,7 +422,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         "Can modify this account's Longview subscription ($)",
       add_domains: 'Can add Domains using the DNS Manager',
       add_stackscripts: 'Can create StackScripts under this account',
-      add_images: 'Can create frozen Images under this account',
+      add_images: 'Can create frozen Images under this account ($)',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
       add_firewalls: 'Can add Firewalls to this account',
       cancel_account: 'Can cancel the entire account',

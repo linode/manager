@@ -74,7 +74,7 @@ const statusPage = [
     const response = incidentResponseFactory.build();
     return res(ctx.json(response));
   }),
-  rest.get('*/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+  rest.get('*/api/v2/scheduled-maintenances*', (req, res, ctx) => {
     const response = maintenanceResponseFactory.build();
     return res(ctx.json(response));
   }),
@@ -438,7 +438,7 @@ export const handlers = [
         entity: { label: 'very-long-name-for-a-linode-for-testing' },
         when: new Date(Date.now() + 5000).toISOString(),
       }),
-      ...accountMaintenanceFactory.buildList(27, { status: 'pending' }),
+      ...accountMaintenanceFactory.buildList(5, { status: 'pending' }),
       ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
     ];
 
