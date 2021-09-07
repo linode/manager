@@ -37,6 +37,7 @@ import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
+    fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
@@ -214,9 +215,9 @@ export const CredentialList: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <div>
+    <>
       <DocumentTitleSegment segment="Credentials" />
-      <Typography variant="subtitle1" className={classes.copy}>
+      <Typography className={classes.copy}>
         Please share any credentials our support team may need when responding
         to a service issue.
         <br /> Credentials are stored encrypted and all decryption attempts are
@@ -318,7 +319,7 @@ export const CredentialList: React.FC<CombinedProps> = (props) => {
         onSubmitLabel={handleUpdateLabel}
         onSubmitPassword={handleUpdatePassword}
       />
-    </div>
+    </>
   );
 };
 
