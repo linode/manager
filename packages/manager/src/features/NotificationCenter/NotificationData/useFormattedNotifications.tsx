@@ -330,7 +330,7 @@ const ComplianceNotification: React.FC<{}> = () => {
 };
 
 export const isEUModelContractNotification = (notification: Notification) => {
-  return Boolean(
-    notification.type === 'notice' && notification.message.match(/eu-model/gi)
+  return (
+    notification.type === 'notice' && /eu-model/gi.test(notification.message)
   );
 };

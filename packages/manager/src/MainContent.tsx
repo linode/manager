@@ -291,7 +291,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
             <ComplianceUpdateProvider value={complianceUpdateContextValue}>
               <NotificationProvider value={contextValue}>
                 <>
-                  {shouldDisplayMainContentBanner && (
+                  {shouldDisplayMainContentBanner ? (
                     <MainContentBanner
                       bannerText={flags.mainContentBanner?.text ?? ''}
                       url={flags.mainContentBanner?.link?.url ?? ''}
@@ -299,7 +299,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                       bannerKey={flags.mainContentBanner?.key ?? ''}
                       onClose={() => setBannerDismissed(true)}
                     />
-                  )}
+                  ) : null}
                   <SideMenu
                     open={menuIsOpen}
                     desktopOpen={desktopMenuIsOpen || false}
@@ -379,12 +379,12 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                                   component={Firewalls}
                                 />
                               )}
-                              {flags.databases && (
+                              {flags.databases ? (
                                 <Route
                                   path="/databases"
                                   component={Databases}
                                 />
-                              )}
+                              ) : null}
                               <Redirect exact from="/" to={defaultRoot} />
                               {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                               <Redirect from="/dashboard" to={defaultRoot} />
