@@ -87,7 +87,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { images } = useImages();
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
-  const { mutate: signAgreement } = useMutateAccountAgreements();
+  const { mutateAsync: signAgreement } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
