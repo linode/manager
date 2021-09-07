@@ -107,12 +107,6 @@ describe('utilities', () => {
           result: {},
         },
         {
-          value: '',
-          result: {
-            label: 'Label is required.',
-          },
-        },
-        {
           value: 'ab',
           result: {
             label: 'Label must be 3-32 characters.',
@@ -150,7 +144,7 @@ describe('utilities', () => {
       });
     });
     it('accepts a valid form', () => {
-      expect(validateForm('TCP', '22', 'accept-inbound-HTTP')).toEqual({});
+      expect(validateForm('TCP', '22')).toEqual({});
     });
   });
 
