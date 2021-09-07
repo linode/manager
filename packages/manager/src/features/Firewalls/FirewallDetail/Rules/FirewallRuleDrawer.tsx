@@ -827,15 +827,15 @@ export const validateForm = (
 ) => {
   const errors: Partial<Form> = {};
 
-  if (!label) {
-    errors.label = 'Label is required.';
-  } else if (label.length < 3 || label.length > 32) {
-    errors.label = 'Label must be 3-32 characters.';
-  } else if (/^[^a-z]/i.test(label)) {
-    errors.label = 'Label must begin with a letter.';
-  } else if (/[^0-9a-z._-]+/i.test(label)) {
-    errors.label =
-      'Label must include only ASCII letters, numbers, underscores, periods, and dashes.';
+  if (label) {
+    if (label.length < 3 || label.length > 32) {
+      errors.label = 'Label must be 3-32 characters.';
+    } else if (/^[^a-z]/i.test(label)) {
+      errors.label = 'Label must begin with a letter.';
+    } else if (/[^0-9a-z._-]+/i.test(label)) {
+      errors.label =
+        'Label must include only ASCII letters, numbers, underscores, periods, and dashes.';
+    }
   }
 
   if (description && description.length > 100) {
