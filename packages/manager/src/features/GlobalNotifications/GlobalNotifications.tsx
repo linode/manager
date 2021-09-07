@@ -17,7 +17,9 @@ const GlobalNotifications: React.FC<{}> = () => {
       <EmailBounceNotificationSection />
       <RegionStatusBanner regions={regions} />
       <AbuseTicketBanner />
-      <APIMaintenanceBanner apiMaintenanceIds={apiMaintenanceIds} />
+      {apiMaintenanceIds.length > 0 ? (
+        <APIMaintenanceBanner apiMaintenanceIds={apiMaintenanceIds} />
+      ) : null}
     </>
   );
 };
