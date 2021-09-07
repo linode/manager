@@ -11,21 +11,10 @@ import {
   getVisible,
 } from '../../support/helpers';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { eventFactory, tagFactory, volumeFactory } from '@src/factories';
-import { Method } from 'axios';
-import { RouteMatcher } from 'cypress/types/net-stubbing';
+import { tagFactory, volumeFactory } from '@src/factories';
+import { getRandomNumber, interceptOnce } from 'cypress/support/ui/common';
 
 const region = 'Newark, NJ';
-
-const clickDetach = () => {
-  getClick('[data-qa-action-menu-item="Detach"]:visible');
-};
-
-function getRandomNumber(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 const validateBasicVolume = (
   volLabel: string,
@@ -67,27 +56,14 @@ const attachedVolume = attachedVolumeList.data[0];
 const attachedVolumeLabel = attachedVolume.label;
 const attachedVolumeId = attachedVolume.id;
 
-const interceptOnce = (method: Method, url: RouteMatcher, response: {}) => {
-  let count = 0;
-  return cy.intercept(method, url, (req) => {
-    count += 1;
-    if (count < 2) {
-      req.reply(response);
-    }
-  });
-};
-const getIntercepts = () => {
-  cy.intercept('GET', `*/tags`, (req) => {
-    req.reply(tagList);
-  }).as('getTags');
-};
-
 describe('volumes', () => {
   it('creates a volume with tag but without linode from volumes page', () => {
-    getIntercepts();
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(volume);
     }).as('createVolume');
+    cy.intercept('GET', `*/tags`, (req) => {
+      req.reply(tagList);
+    }).as('getTags');
     cy.visitWithLogin('/volumes');
     fbtClick('Create Volume');
     cy.wait('@getTags');
@@ -117,7 +93,9 @@ describe('volumes', () => {
     cy.intercept('GET', `*/linode/instances/${linodeId}*`, (req) => {
       req.reply(linode);
     }).as('getLinodeDetail');
-    getIntercepts();
+    cy.intercept('GET', `*/tags`, (req) => {
+      req.reply(tagList);
+    }).as('getTags');
     cy.visitWithLogin('/linodes');
     cy.wait('@getLinodes');
     fbtClick(linodeLabel);
@@ -128,6 +106,7 @@ describe('volumes', () => {
       fbtVisible('NVMe Block Storage');
     });
     fbtClick('Attach a Volume');
+    getClick('[value="creating_for_linode"]');
     cy.wait('@getTags');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
     getClick('[data-qa-volume-label="true"]').type('cy-test-volume');
@@ -148,7 +127,6 @@ describe('volumes', () => {
     cy.intercept('GET', '*/linode/instances/*', (req) => {
       req.reply(linodeList);
     }).as('getLinodes');
-    getIntercepts();
     cy.visitWithLogin('/volumes');
     cy.wait('@getLinodes');
     cy.wait('@getAttachedVolumes');
@@ -158,7 +136,7 @@ describe('volumes', () => {
     containsVisible(linodeLabel);
     containsVisible(attachedVolumeLabel);
     clickVolumeActionMenu(attachedVolumeLabel);
-    clickDetach();
+    getClick('[data-qa-action-menu-item="Detach"]:visible');
     cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
     getClick('[data-qa-confirm="true"]');
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
