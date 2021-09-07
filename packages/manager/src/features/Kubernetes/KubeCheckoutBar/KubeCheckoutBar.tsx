@@ -8,7 +8,8 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useProfile } from 'src/queries/profile';
+import { useAccountAgreements } from 'src/queries/accountAgreements';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -38,7 +39,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
-  const { _isRestrictedUser: isRestrictedUser } = useAccountManagement();
+  const { profile } = useProfile();
+  const { agreements } = useAccountAgreements();
+  const showGDPRCheckbox = isEURegion(region) && !profile?.restricted && !agreements?.eu_model;
 
   return (
     <CheckoutBar
@@ -50,7 +53,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       onDeploy={createCluster}
       submitText={'Create Cluster'}
       agreement={
-        isEURegion(region) && !isRestrictedUser ? (
+        showGDPRCheckbox ? (
           <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
         ) : undefined
       }
