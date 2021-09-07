@@ -46,7 +46,7 @@ export const MaintenanceScreen: React.FC<{}> = () => {
     <Typography className={classes.subheading}>
       Visit{' '}
       <Link to="https://status.linode.com/">https://status.linode.com</Link> for
-      status updates on the Linode Cloud Manager and API.
+      updates on the Linode Cloud Manager and API.
     </Typography>
   );
 
