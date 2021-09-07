@@ -95,7 +95,6 @@ export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceRe
   {
     page: pageFactory.build(),
     scheduled_maintenances: [
-      maintenanceFactory.build(),
       maintenanceFactory.build({
         id: 'test001',
         name: 'Linode Database Infrastructure Maintenance',
@@ -106,16 +105,6 @@ export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceRe
           }),
         ],
       }),
-      // maintenanceFactory.build({
-      //   id: 'test002',
-      //   name: 'Linode Database Infrastructure Maintenance',
-      //   incident_updates: [
-      //     incidentUpdateFactory.build({
-      //       body:
-      //         'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on December 19th 2021. We expect this maintenance to take approximately 24 hours.',
-      //     }),
-      //   ],
-      // }),
     ],
   }
 );
