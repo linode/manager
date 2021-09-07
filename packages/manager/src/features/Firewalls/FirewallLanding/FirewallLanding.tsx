@@ -61,11 +61,12 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
 
   const createFirewall = (
     payload: CreateFirewallPayload
-  ): Promise<void | Firewall> => {
-    return _createFirewall(payload).then(() => {
+  ): Promise<Firewall> => {
+    return _createFirewall(payload).then((firewall) => {
       if (profile?.restricted) {
         queryClient.invalidateQueries(`${queryKey}-grants`);
       }
+      return firewall;
     });
   };
 
