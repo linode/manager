@@ -60,6 +60,15 @@ const volumeList = makeResourcePage(volumeFactory.buildList(2));
 const volume = volumeList.data[1];
 const volumeLabel = volume.label;
 const volumeId = volume.id;
+const attachedVolumeList = makeResourcePage(
+  volumeFactory.buildList(1, {
+    label: volumeLabel,
+    linode_id: linodeId,
+  })
+);
+const attachedVolume = attachedVolumeList.data[0];
+const attachedVolumeLabel = attachedVolume.label;
+const attachedVolumeId = attachedVolume.id;
 
 const interceptOnce = (method: Method, url: RouteMatcher, response: {}) => {
   let count = 0;
@@ -74,11 +83,11 @@ const getIntercepts = () => {
   cy.intercept('GET', `*/tags`, (req) => {
     req.reply(tagList);
   }).as('getTags');
-  // cy.intercept('GET', '*/volumes', (req) => {
-  //   req.reply(volumeList);
-  // }).as('getVolumes');
+  cy.intercept('GET', '*/volumes', (req) => {
+    req.reply(volumeList);
+  }).as('getVolumes');
   cy.intercept('POST', `*/volumes`, (req) => {
-    req.reply(volume);
+    req.reply(attachedVolume);
   }).as('createVolume');
 };
 
@@ -131,41 +140,17 @@ describe('volumes', () => {
     cy.wait('@createVolume');
     containsVisible('Volume Configuration');
     cy.findByDisplayValue(`mkdir "/mnt/${volumeLabel}"`);
+    getClick('[data-qa-close-drawer="true"][aria-label="Close drawer"]');
+    fbtVisible('1 Volume');
   });
 
   it('Detaches attached volume', () => {
-    const attachedVolumeList = makeResourcePage(
-      volumeFactory.buildList(2, { linode_id: linodeId })
-    );
-    const attachedVolume = attachedVolumeList.data[1];
-    const attachedVolumeLabel = attachedVolume.label;
-    const attachedVolumeId = attachedVolume.id;
     interceptOnce('GET', `*/volumes*`, attachedVolumeList).as(
       'getAttachedVolumes'
     );
     cy.intercept('GET', '*/linode/instances/*', (req) => {
       req.reply(linodeList);
     }).as('getLinodes');
-    interceptOnce(
-      'GET',
-      '*/account/events*',
-      makeResourcePage(
-        eventFactory.buildList(1, {
-          action: 'volume_detach',
-          percent_complete: 100,
-          entity: {
-            label: attachedVolumeLabel,
-            id: attachedVolumeId,
-            type: 'volume',
-            url: `/v4/volumes/${attachedVolumeId}`,
-          },
-          status: 'finished',
-          secondary_entity: null,
-          message: '',
-        })
-      )
-    ).as('getEvent');
-
     getIntercepts();
     cy.visitWithLogin('/volumes');
     cy.wait('@getLinodes');
@@ -180,8 +165,6 @@ describe('volumes', () => {
     cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
     getClick('[data-qa-confirm="true"]');
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
-    cy.wait('@getEvent');
     assertToast('Volume detachment started', 2);
-    // fbtVisible('Unnattached');
   });
 });
