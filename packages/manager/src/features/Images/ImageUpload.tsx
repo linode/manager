@@ -69,7 +69,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: agreements } = useAccountAgreements();
-  const { mutate: signAgreement } = useMutateAccountAgreements();
+  const { mutateAsync: signAgreement } = useMutateAccountAgreements();
 
   const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];

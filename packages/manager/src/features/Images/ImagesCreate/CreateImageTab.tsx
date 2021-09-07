@@ -25,12 +25,6 @@ import withImages, {
   ImagesDispatch,
 } from 'src/containers/withImages.container';
 import Box from 'src/components/core/Box';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { isEURegion } from 'src/utilities/formatRegion';
-import {
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
@@ -42,13 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
-    },
-  },
-  agreement: {
-    maxWidth: '70%',
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: 'unset',
-      marginBottom: theme.spacing(1),
     },
   },
   buttonGroup: {
@@ -82,8 +69,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: agreements } = useAccountAgreements();
-  const { mutate: signAgreement } = useMutateAccountAgreements();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
@@ -91,7 +76,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const [notice, setNotice] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [signedAgreement, setSignedAgreement] = React.useState<boolean>(false);
 
   const canCreateImage =
     Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
@@ -101,12 +85,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         .filter((thisGrant) => thisGrant.permissions === 'read_write')
         .map((thisGrant) => thisGrant.id) ?? []
     : null;
-
-  const showAgreement = Boolean(
-    !profile?.restricted &&
-      agreements?.eu_model === false &&
-      isEURegion(selectedLinode?.region)
-  );
 
   const fetchLinodeDisksOnLinodeChange = (selectedLinode: number) => {
     setSelectedDisk('');
@@ -163,10 +141,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         resetEventsPolling();
 
         setSubmitting(false);
-
-        if (signedAgreement) {
-          signAgreement({ eu_model: true, privacy_policy: true });
-        }
 
         enqueueSnackbar('Image scheduled for creation.', {
           variant: 'info',
@@ -288,26 +262,14 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       />
       <Box
         display="flex"
-        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+        justifyContent="flex-end"
         alignItems="center"
         flexWrap="wrap"
         className={classes.buttonGroup}
       >
-        {showAgreement ? (
-          <EUAgreementCheckbox
-            checked={signedAgreement}
-            onChange={(e) => setSignedAgreement(e.target.checked)}
-            className={classes.agreement}
-            centerCheckbox
-          />
-        ) : null}
         <Button
           onClick={onSubmit}
-          disabled={
-            requirementsMet ||
-            !canCreateImage ||
-            (showAgreement && !signedAgreement)
-          }
+          disabled={requirementsMet || !canCreateImage}
           loading={submitting}
           buttonType="primary"
           data-qa-submit
