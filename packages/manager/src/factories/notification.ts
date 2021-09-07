@@ -39,9 +39,10 @@ export const gdprComplianceNotification = notificationFactory.extend({
   type: 'notice',
   entity: null,
   when: null,
-  label: 'EU Contract Compliance Update',
+  label: "We've updated our policies",
   severity: 'major',
   until: null,
+  // safe
   message:
-    'Please review the compliance update for guidance regarding the EU Standard Contractual Clauses and its application to user deployments in Linode’s London and Frankfurt data centers.',
+    "We've updated our policies. See <a href='https://www.linode.com/eu-model/'>https://www.linode.com/eu-model/</a> for more information.",
 });

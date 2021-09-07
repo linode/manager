@@ -264,7 +264,7 @@ const interceptNotification = (
 
   if (
     notification.type === 'notice' &&
-    notification.message.match(/compliance update/gi)
+    notification.message.match(/eu-model/gi)
   ) {
     // This needs to be its own component so it can use hooks.
     const jsx = <ComplianceNotification />;
