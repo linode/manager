@@ -1,5 +1,10 @@
 import { DateTime } from 'luxon';
-import { formatExpiry, hasExpirationPassedFor } from './creditCard';
+import { take } from 'ramda';
+import {
+  formatExpiry,
+  hasExpirationPassedFor,
+  parseExpiryYear,
+} from './creditCard';
 
 describe('isCreditCardExpired', () => {
   describe('give today is 01/01/2019', () => {
@@ -52,6 +57,25 @@ describe('formatExpiry', () => {
     describe(`Expiry date of ${expiry}`, () => {
       it(`should return ${result}`, () => {
         expect(formatExpiry(expiry)).toBe(result);
+      });
+    });
+  });
+});
+
+describe('parseExpiryYear', () => {
+  const currentYearFirstTwoDigits = take(2, String(new Date().getFullYear()));
+
+  [
+    [undefined, undefined],
+    ['2024', '2024'],
+    ['24', `${currentYearFirstTwoDigits}24`],
+    ['2', `${currentYearFirstTwoDigits}2`],
+    ['196', '196'],
+    ['9879', '9879'],
+  ].forEach(([expiry, result]) => {
+    describe(`Expiry year of ${expiry}`, () => {
+      it(`should return ${result}`, () => {
+        expect(parseExpiryYear(expiry)).toBe(result);
       });
     });
   });
