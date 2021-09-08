@@ -5,6 +5,8 @@ import useFlags from 'src/hooks/useFlags';
 import DismissibleBanner from '../DismissibleBanner';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 // import { productInformationBannerFactory } from 'src/factories/featureFlags';
+import { isAfter } from 'src/utilities/date';
+import { reportException } from 'src/exceptionReporting';
 
 interface Props {
   bannerLocation: ProductInformationBannerLocation;
@@ -14,7 +16,8 @@ const ProductInformationBanner: React.FC<Props> = (props) => {
   const { productInformationBanners } = useFlags();
 
   // const productInformationBanners = productInformationBannerFactory.buildList(
-  //   1
+  //   1,
+  //   { expirationDate: '2021-10-01' }
   // );
 
   const thisBanner = (productInformationBanners ?? []).find(
@@ -22,6 +25,20 @@ const ProductInformationBanner: React.FC<Props> = (props) => {
   );
 
   if (!thisBanner) {
+    return null;
+  }
+
+  let hasBannerExpired = true;
+  try {
+    hasBannerExpired = isAfter(
+      new Date().toISOString(),
+      thisBanner?.expirationDate
+    );
+  } catch (err) {
+    reportException(err);
+  }
+
+  if (hasBannerExpired) {
     return null;
   }
 
