@@ -2,41 +2,41 @@ import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
 import * as classnames from 'classnames';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
-import { v4 } from 'uuid';
-import { useSnackbar } from 'notistack';
-import { cleanCVV } from 'src/features/Billing/billingUtils';
-import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import Button from 'src/components/Button';
+import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Button from 'src/components/Button';
-import Chip from 'src/components/core/Chip';
 import Currency from 'src/components/Currency';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import {
-  thirdPartyPaymentMap,
   getIcon as getTPPIcon,
+  thirdPartyPaymentMap,
 } from 'src/components/PaymentMethodRow/ThirdPartyPayment';
 import SelectionCard from 'src/components/SelectionCard';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
-import LinearProgress from 'src/components/LinearProgress';
+import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import { cleanCVV } from 'src/features/Billing/billingUtils';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
 import { queryClient } from 'src/queries/base';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { SetSuccess } from './types';
+import { v4 } from 'uuid';
 import GooglePayButton from './GooglePayButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import PayPal, { paypalScriptSrc } from './Paypal';
+import { SetSuccess } from './types';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
 const useStyles = makeStyles((theme: Theme) => ({
@@ -480,15 +480,16 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                   </Grid>
                   <Grid item className={classes.cvvFieldWrapper}>
                     <TextField
-                      label="CVV (optional)"
-                      small
-                      onChange={handleCVVChange}
-                      value={cvv}
-                      type="text"
-                      inputProps={{ id: 'paymentCVV' }}
                       className={classes.cvvField}
                       hasAbsoluteError
+                      inputProps={{ id: 'paymentCVV' }}
+                      label="Security Code"
+                      onChange={handleCVVChange}
                       noMarginTop
+                      optional
+                      small
+                      type="text"
+                      value={cvv}
                     />
                   </Grid>
                 </Grid>

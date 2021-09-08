@@ -3,10 +3,10 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
@@ -126,19 +126,20 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         inputRef={inputRef}
       />
       <Typography className={classes.dontgo}>
-        We'd hate to see you go. Please let us know what we could be doing
+        We’d hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is closed,
-        you'll be directed to a quick survey so we can better gauge your
+        you’ll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
       <TextField
+        label="Comments"
         multiline
+        onChange={(e) => setComments(e.target.value)}
+        optional
+        placeholder="Provide Feedback"
+        rows={2}
         value={comments}
         aria-label="Optional comments field"
-        rows={2}
-        label="Comments (optional)"
-        placeholder="Provide Feedback"
-        onChange={(e) => setComments(e.target.value)}
       />
     </Dialog>
   );
