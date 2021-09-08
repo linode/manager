@@ -200,9 +200,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const toggleHasAgreed = () => {
-    setAgreed(!hasAgreed);
-  };
+  const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 
   const addPool = (pool: PoolNodeWithPrice) => {
     setNodePools([...nodePools, pool]);
