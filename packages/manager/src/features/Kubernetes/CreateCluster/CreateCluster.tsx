@@ -28,6 +28,10 @@ import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
+import {
+  reportAgreementSigningError,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -138,6 +142,8 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const [version, setVersion] = React.useState<Item<string> | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [hasAgreed, setAgreed] = React.useState<boolean>(false);
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const {
     data: versionData,
     isError: versionLoadError,
@@ -178,13 +184,23 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     };
 
     createKubernetesCluster(payload)
-      .then((cluster) => push(`/kubernetes/clusters/${cluster.id}`))
+      .then((cluster) => {
+        push(`/kubernetes/clusters/${cluster.id}`);
+        if (hasAgreed) {
+          updateAccountAgreements({
+            eu_model: true,
+            privacy_policy: true,
+          }).catch(reportAgreementSigningError);
+        }
+      })
       .catch((err) => {
         setErrors(getAPIErrorOrDefault(err, 'Error creating your cluster'));
         setSubmitting(false);
         scrollErrorIntoView();
       });
   };
+
+  const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 
   const addPool = (pool: PoolNodeWithPrice) => {
     setNodePools([...nodePools, pool]);
@@ -351,6 +367,8 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
             createCluster,
             classes,
           ]}
+          hasAgreed={hasAgreed}
+          toggleHasAgreed={toggleHasAgreed}
         />
       </Grid>
     </Grid>
