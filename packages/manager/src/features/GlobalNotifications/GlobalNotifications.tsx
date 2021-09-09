@@ -5,10 +5,11 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import RegionStatusBanner from './RegionStatusBanner';
+import { isEmpty } from 'ramda';
 
 const GlobalNotifications: React.FC<{}> = () => {
   const flags = useFlags();
-  const apiMaintenanceIds = flags.apiMaintenance ?? [];
+  const suppliedMaintenance = flags.apiMaintenance; // The data (ID, and sometimes the title and body) we supply regarding a maintenance event in LD.
 
   const regions = useRegionsQuery().data ?? [];
 
@@ -17,8 +18,8 @@ const GlobalNotifications: React.FC<{}> = () => {
       <EmailBounceNotificationSection />
       <RegionStatusBanner regions={regions} />
       <AbuseTicketBanner />
-      {apiMaintenanceIds.length > 0 ? (
-        <APIMaintenanceBanner apiMaintenanceIds={apiMaintenanceIds} />
+      {!isEmpty(suppliedMaintenance) ? (
+        <APIMaintenanceBanner apiMaintenanceEvent={suppliedMaintenance} />
       ) : null}
     </>
   );

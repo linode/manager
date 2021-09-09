@@ -2,16 +2,17 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import { APIMaintenance } from 'src/featureFlags';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
-import { capitalize } from 'src/utilities/capitalize';
+import { useMaintenanceQuery } from 'src/queries/statusPage';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 interface Props {
-  apiMaintenanceIds: string[];
+  apiMaintenanceEvent: APIMaintenance | undefined;
 }
 
 export const APIMaintenanceBanner: React.FC<Props> = (props) => {
-  const { apiMaintenanceIds } = props;
+  const { apiMaintenanceEvent } = props;
 
   const {
     dismissNotifications,
@@ -21,57 +22,55 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
   const { data: maintenancesData } = useMaintenanceQuery();
   const maintenances = maintenancesData?.scheduled_maintenances ?? [];
 
-  const scheduledAPIMaintenances = maintenances.filter(
+  if (!maintenances || maintenances.length === 0 || !apiMaintenanceEvent) {
+    return null;
+  }
+
+  const scheduledAPIMaintenance = maintenances.find(
     (maintenance) =>
-      apiMaintenanceIds.includes(maintenance.id) &&
+      maintenance.id === apiMaintenanceEvent?.id &&
       maintenance.status === 'scheduled'
   );
 
-  if (!maintenances || maintenances.length === 0) {
+  if (!scheduledAPIMaintenance) {
     return null;
   }
 
-  if (!scheduledAPIMaintenances) {
-    return null;
-  }
-
-  if (hasDismissedNotifications(scheduledAPIMaintenances)) {
+  if (hasDismissedNotifications([apiMaintenanceEvent])) {
     return null;
   }
 
   const onDismiss = () => {
-    dismissNotifications(scheduledAPIMaintenances);
+    dismissNotifications([apiMaintenanceEvent]);
   };
 
-  const renderBanner = (apiMaintenance: Maintenance) => {
-    const mostRecentUpdate = apiMaintenance.incident_updates.filter(
-      (thisUpdate) => thisUpdate.status !== 'postmortem'
-    )[0];
+  const bannerTitle =
+    apiMaintenanceEvent.title !== undefined && apiMaintenanceEvent.title !== ''
+      ? apiMaintenanceEvent.title
+      : scheduledAPIMaintenance.name;
 
-    return (
-      <Notice important warning dismissible onClose={onDismiss}>
-        <Typography data-testid="scheduled-maintenance-banner">
-          <Link to={apiMaintenance.shortlink}>
-            <strong data-testid="scheduled-maintenance-status">
-              {apiMaintenance.name}
-              {apiMaintenance.status
-                ? `: ${capitalize(apiMaintenance.status)}`
-                : ''}
-            </strong>
-          </Link>
-        </Typography>
-        <Typography>{mostRecentUpdate.body}</Typography>
-      </Notice>
-    );
-  };
+  const mostRecentUpdate = scheduledAPIMaintenance.incident_updates.filter(
+    (thisUpdate) => thisUpdate.status !== 'postmortem'
+  )[0];
+
+  const bannerBody =
+    apiMaintenanceEvent.body !== undefined && apiMaintenanceEvent.body !== ''
+      ? apiMaintenanceEvent.body
+      : mostRecentUpdate.body;
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      {scheduledAPIMaintenances.map((scheduledAPIMaintenance) =>
-        renderBanner(scheduledAPIMaintenance)
-      )}
-    </>
+    <Notice important warning dismissible onClose={onDismiss}>
+      <Typography data-testid="scheduled-maintenance-banner">
+        <Link to={scheduledAPIMaintenance.shortlink}>
+          <strong data-testid="scheduled-maintenance-status">
+            {bannerTitle}
+          </strong>
+        </Link>
+      </Typography>
+      <Typography
+        dangerouslySetInnerHTML={{ __html: sanitizeHTML(bannerBody) }}
+      />
+    </Notice>
   );
 };
 

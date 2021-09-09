@@ -38,7 +38,7 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
-  apiMaintenance: string[];
+  apiMaintenance: APIMaintenance;
 }
 
 type PromotionalOfferFeature =
@@ -110,4 +110,10 @@ interface ReferralBannerText {
     text: string;
     url: string;
   };
+}
+
+export interface APIMaintenance {
+  id: string;
+  title?: string;
+  body?: string;
 }
