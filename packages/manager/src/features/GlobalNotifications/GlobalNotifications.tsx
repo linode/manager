@@ -14,9 +14,14 @@ const GlobalNotifications: React.FC<{}> = () => {
 
   const { hasDismissedNotifications } = useDismissibleNotifications();
 
+  const _hasDismissedNotifications = React.useCallback(
+    hasDismissedNotifications,
+    []
+  );
+
   const hasDismissedMaintenances = React.useMemo(
-    () => hasDismissedNotifications(suppliedMaintenances ?? []),
-    [hasDismissedNotifications, suppliedMaintenances]
+    () => _hasDismissedNotifications(suppliedMaintenances ?? []),
+    [_hasDismissedNotifications, suppliedMaintenances]
   );
 
   const regions = useRegionsQuery().data ?? [];
