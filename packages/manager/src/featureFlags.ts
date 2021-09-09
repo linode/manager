@@ -39,7 +39,7 @@ export interface Flags {
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
-  apiMaintenance: string[];
+  apiMaintenance: APIMaintenance;
 }
 
 type PromotionalOfferFeature =
@@ -124,4 +124,13 @@ export interface ProductInformationBannerFlag {
   bannerLocation: ProductInformationBannerLocation;
   // The date where the banner should no longer be displayed.
   expirationDate: string;
+}
+
+export interface SuppliedMaintenanceData {
+  id: string;
+  title?: string;
+  body?: string;
+}
+export interface APIMaintenance {
+  maintenances: SuppliedMaintenanceData[];
 }
