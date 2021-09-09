@@ -151,7 +151,8 @@ describe('volumes', () => {
     containsVisible(linodeLabel);
     containsVisible(attachedVolumeLabel);
     clickVolumeActionMenu(attachedVolumeLabel);
-    getClick('[data-qa-action-menu-item="Detach"]:visible');
+    getVisible('[data-qa-action-menu-item="Detach"]');
+    getClick('[data-qa-action-menu-item="Detach"]');
     cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
     getClick('[data-qa-confirm="true"]');
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
