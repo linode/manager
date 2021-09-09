@@ -89,7 +89,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
   }, [open]);
 
   const title =
-    mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key Label';
+    mode === 'creating' ? 'Create Access Key' : 'Edit Access Key Label';
 
   const initialLabelValue =
     mode !== 'creating' && objectStorageKey ? objectStorageKey.label : '';
@@ -217,15 +217,12 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
                 ) : null}
                 <ActionsPanel>
                   <Button
-                    buttonType="secondary"
-                    onClick={onClose}
-                    data-qa-cancel
-                  >
-                    Cancel
-                  </Button>
-                  <Button
                     buttonType="primary"
-                    disabled={isRestrictedUser}
+                    disabled={
+                      isRestrictedUser ||
+                      (mode !== 'creating' &&
+                        values.label === initialLabelValue)
+                    }
                     loading={isSubmitting}
                     onClick={beforeSubmit}
                     data-qa-submit
