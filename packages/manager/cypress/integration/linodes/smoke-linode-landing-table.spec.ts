@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { createLinode } from '../../support/api/linodes';
 import {
   containsVisible,
@@ -9,19 +10,19 @@ import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'cypress/support/ui/constants';
-import * as Factory from 'factory.ts';
-import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { interceptOnce } from 'cypress/support/ui/common';
 
-const regions: string[] = [
-  'us-east',
-  'us-west',
-  'us-central',
-  'us-southeast',
-  'ca-east',
-];
+const regions = {
+  'us-west': 'Fremont, CA',
+  'us-southeast': 'Atlanta, GA',
+  'us-east': 'Newark, NJ',
+  'us-central': 'Dallas, TX',
+  'ca-east': 'Toronto, ON',
+};
 const mockLinodes = makeResourcePage(linodeFactory.buildList(5));
-mockLinodes.data.forEach((linode, index) => (linode.region = regions[index]));
+mockLinodes.data.forEach(
+  (linode, index) => (linode.region = Object.keys(regions)[index])
+);
 
 const appRoot = Cypress.env('REACT_APP_APP_ROOT');
 const linodeLabel = (number) => {
@@ -44,14 +45,13 @@ describe('linode landing checks', () => {
     });
 
     interceptOnce('GET', '*/profile/preferences*', {
-      linodes_view_style: 'grid',
-      linodes_group_by_tag: true,
+      linodes_view_style: 'list',
+      linodes_group_by_tag: false,
       volumes_group_by_tag: false,
       desktop_sidebar_open: false,
-      is_large_account: true,
       sortKeys: {
-        'linodes-landing': { order: 'desc', orderBy: 'label' },
-        volume: { order: 'desc', orderBy: 'label' },
+        'linodes-landing': { order: 'asc', orderBy: 'label' },
+        volume: { order: 'asc', orderBy: 'label' },
       },
     }).as('getProfilePreferences');
 
@@ -63,6 +63,7 @@ describe('linode landing checks', () => {
       req.reply(mockLinodes);
     }).as('getLinodes');
     cy.visitWithLogin('/');
+    cy.wait('@getProfilePreferences');
     cy.wait('@getAccountSettings');
     cy.wait('@getLinodes');
     cy.url().should('eq', `${appRoot}${routes.linodeLanding}`);
@@ -119,10 +120,11 @@ describe('linode landing checks', () => {
     fbtVisible('Create Linode');
   });
 
-  it.only('checks sorting behavior for linode table', () => {
-    // sort by label
+  it.only('checks label and region sorting behavior for linode table', () => {
     const firstLinodeLabel = mockLinodes.data[0].label;
     const lastLinodeLabel = mockLinodes.data[4].label;
+    const firstRegionLabel = Object.values(regions)[0];
+    const lastRegionLabel = Object.values(regions)[4];
 
     const checkFirstRow = (linodeLabel) => {
       getVisible('tr[data-qa-loading="true"]')
@@ -144,6 +146,12 @@ describe('linode landing checks', () => {
     getClick('[aria-label="Sort by label"]');
     checkFirstRow(lastLinodeLabel);
     checkLastRow(firstLinodeLabel);
+
+    checkFirstRow(lastRegionLabel);
+    checkLastRow(firstRegionLabel);
+    getClick('[aria-label="Sort by region"]').click();
+    checkFirstRow(firstRegionLabel);
+    checkLastRow(lastRegionLabel);
   });
 
   it('checks the create menu dropdown items', () => {
