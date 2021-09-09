@@ -39,6 +39,7 @@ export interface Flags {
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
+  apiMaintenance: string[];
 }
 
 type PromotionalOfferFeature =

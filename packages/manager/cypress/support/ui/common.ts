@@ -1,4 +1,6 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
+import { Method } from 'axios';
+import { RouteHandler, RouteMatcher } from 'cypress/types/net-stubbing';
 import { deleteAllTestDomains } from '../api/domains';
 import { deleteAllTestFirewalls } from '../api/firewalls';
 import { deleteAllTestImages } from '../api/images';
@@ -52,6 +54,20 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.wait('@getProfilePreferences');
   cy.wait('@getProfile');
   cy.wait('@getNotifications');
+};
+
+export const interceptOnce = (
+  method: Method,
+  url: RouteMatcher,
+  response: {}
+) => {
+  let count = 0;
+  return cy.intercept(method, url, (req) => {
+    count += 1;
+    if (count < 2) {
+      req.reply(response);
+    }
+  });
 };
 
 export const deleteAllTestData = () => {

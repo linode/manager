@@ -10,9 +10,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: `45px !important`,
   },
   icon: {
-    marginLeft: theme.spacing(1) - 2,
-    marginRight: theme.spacing(1),
     fontSize: '1.8em',
+    height: 24,
+    marginLeft: 6,
+    marginRight: theme.spacing(),
     position: 'absolute',
   },
 }));
