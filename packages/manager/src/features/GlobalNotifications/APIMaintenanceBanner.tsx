@@ -65,19 +65,19 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
     );
 
     const bannerTitle =
-      correspondingSuppliedMaintenance?.title !== undefined &&
-      correspondingSuppliedMaintenance?.title !== ''
-        ? correspondingSuppliedMaintenance.title
-        : scheduledAPIMaintenance.name;
+      correspondingSuppliedMaintenance?.title || scheduledAPIMaintenance.name;
 
     const bannerBody =
-      correspondingSuppliedMaintenance?.body !== undefined &&
-      correspondingSuppliedMaintenance?.body !== ''
-        ? correspondingSuppliedMaintenance?.body
-        : mostRecentUpdate.body;
+      correspondingSuppliedMaintenance?.body || mostRecentUpdate.body;
 
     return (
-      <Notice important warning dismissible onClose={onDismiss}>
+      <Notice
+        important
+        warning
+        dismissible
+        onClose={onDismiss}
+        key={scheduledAPIMaintenance.id}
+      >
         <Typography data-testid="scheduled-maintenance-banner">
           <Link to={scheduledAPIMaintenance.shortlink}>
             <strong data-testid="scheduled-maintenance-status">
