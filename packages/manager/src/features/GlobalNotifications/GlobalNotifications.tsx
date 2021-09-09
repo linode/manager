@@ -9,7 +9,7 @@ import { isEmpty } from 'ramda';
 
 const GlobalNotifications: React.FC<{}> = () => {
   const flags = useFlags();
-  const suppliedMaintenance = flags.apiMaintenance; // The data (ID, and sometimes the title and body) we supply regarding a maintenance event in LD.
+  const suppliedMaintenances = flags.apiMaintenance?.maintenances; // The data (ID, and sometimes the title and body) we supply regarding maintenance events in LD.
 
   const regions = useRegionsQuery().data ?? [];
 
@@ -18,8 +18,8 @@ const GlobalNotifications: React.FC<{}> = () => {
       <EmailBounceNotificationSection />
       <RegionStatusBanner regions={regions} />
       <AbuseTicketBanner />
-      {!isEmpty(suppliedMaintenance) ? (
-        <APIMaintenanceBanner apiMaintenanceEvent={suppliedMaintenance} />
+      {!isEmpty(suppliedMaintenances) ? (
+        <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
       ) : null}
     </>
   );

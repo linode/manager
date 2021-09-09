@@ -97,14 +97,28 @@ export const maintenanceResponseFactory = Factory.Sync.makeFactory<MaintenanceRe
     scheduled_maintenances: [
       maintenanceFactory.build({
         id: 'test001',
-        name: 'Linode Database Infrastructure Maintenance',
+        name:
+          'Cloud Manager and API Downtime on September 23, 2021 for 3-hour window',
         incident_updates: [
           incidentUpdateFactory.build({
+            // eslint-disable-next-line xss/no-mixed-html
             body:
-              'A maintenance window has been scheduled for upgrades to the Linode database infrastructure on September 19th 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). During this time, running Linodes will not be impacted but customers will not be able to perform tasks in the Cloud Manager or Linode API.',
+              'The Linode Cloud Manager, API, and CLI will be offline for internal upgrades and maintenance on Thursday, September 23rd, 2021, from 7PM until 10PM EDT (23:00 to 02:00 UTC). During this window, running Linodes and related services will <b>not</b> be disrupted, but account management access and support tickets will be unavailable.',
           }),
         ],
       }),
+      // maintenanceFactory.build({
+      //   id: 'test002',
+      //   name:
+      //     'Cloud Manager and API Downtime on December 23, 2021 for 5-hour window',
+      //   incident_updates: [
+      //     incidentUpdateFactory.build({
+      //       // eslint-disable-next-line xss/no-mixed-html
+      //       body:
+      //         'The Linode Cloud Manager, API, and CLI will be offline for internal upgrades and maintenance on December 23rd, 2021, from 6PM until 11PM EDT. During this window, running Linodes and related services will <b>not</b> be disrupted, but account management access and support tickets will be unavailable.',
+      //     }),
+      //   ],
+      // }),
     ],
   }
 );

@@ -2,17 +2,17 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { APIMaintenance } from 'src/featureFlags';
+import { SuppliedMaintenanceData } from 'src/featureFlags';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import { useMaintenanceQuery } from 'src/queries/statusPage';
+import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 interface Props {
-  apiMaintenanceEvent: APIMaintenance | undefined;
+  suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
 }
 
 export const APIMaintenanceBanner: React.FC<Props> = (props) => {
-  const { apiMaintenanceEvent } = props;
+  const { suppliedMaintenances } = props;
 
   const {
     dismissNotifications,
@@ -22,55 +22,83 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
   const { data: maintenancesData } = useMaintenanceQuery();
   const maintenances = maintenancesData?.scheduled_maintenances ?? [];
 
-  if (!maintenances || maintenances.length === 0 || !apiMaintenanceEvent) {
+  if (
+    !maintenances ||
+    maintenances.length === 0 ||
+    !suppliedMaintenances ||
+    suppliedMaintenances.length === 0
+  ) {
     return null;
   }
 
-  const scheduledAPIMaintenance = maintenances.find(
+  const suppliedMaintenanceEventIDs = suppliedMaintenances.map(
+    (maintenance) => maintenance.id
+  );
+
+  // Find the maintenances we want (supplied via feature flag) within the ones that Statuspage returns.
+  const scheduledAPIMaintenances = maintenances.filter(
     (maintenance) =>
-      maintenance.id === apiMaintenanceEvent?.id &&
+      suppliedMaintenanceEventIDs.includes(maintenance.id) &&
       maintenance.status === 'scheduled'
   );
 
-  if (!scheduledAPIMaintenance) {
+  if (scheduledAPIMaintenances.length === 0) {
     return null;
   }
 
-  if (hasDismissedNotifications([apiMaintenanceEvent])) {
+  if (hasDismissedNotifications(scheduledAPIMaintenances)) {
     return null;
   }
 
   const onDismiss = () => {
-    dismissNotifications([apiMaintenanceEvent]);
+    dismissNotifications(scheduledAPIMaintenances);
   };
 
-  const bannerTitle =
-    apiMaintenanceEvent.title !== undefined && apiMaintenanceEvent.title !== ''
-      ? apiMaintenanceEvent.title
-      : scheduledAPIMaintenance.name;
+  const renderBanner = (scheduledAPIMaintenance: Maintenance) => {
+    const mostRecentUpdate = scheduledAPIMaintenance.incident_updates.filter(
+      (thisUpdate) => thisUpdate.status !== 'postmortem'
+    )[0];
 
-  const mostRecentUpdate = scheduledAPIMaintenance.incident_updates.filter(
-    (thisUpdate) => thisUpdate.status !== 'postmortem'
-  )[0];
+    const correspondingSuppliedMaintenance = suppliedMaintenances.find(
+      (apiMaintenanceEvent) =>
+        apiMaintenanceEvent.id === scheduledAPIMaintenance.id
+    );
 
-  const bannerBody =
-    apiMaintenanceEvent.body !== undefined && apiMaintenanceEvent.body !== ''
-      ? apiMaintenanceEvent.body
-      : mostRecentUpdate.body;
+    const bannerTitle =
+      correspondingSuppliedMaintenance?.title !== undefined &&
+      correspondingSuppliedMaintenance?.title !== ''
+        ? correspondingSuppliedMaintenance.title
+        : scheduledAPIMaintenance.name;
+
+    const bannerBody =
+      correspondingSuppliedMaintenance?.body !== undefined &&
+      correspondingSuppliedMaintenance?.body !== ''
+        ? correspondingSuppliedMaintenance?.body
+        : mostRecentUpdate.body;
+
+    return (
+      <Notice important warning dismissible onClose={onDismiss}>
+        <Typography data-testid="scheduled-maintenance-banner">
+          <Link to={scheduledAPIMaintenance.shortlink}>
+            <strong data-testid="scheduled-maintenance-status">
+              {bannerTitle}
+            </strong>
+          </Link>
+        </Typography>
+        <Typography
+          dangerouslySetInnerHTML={{ __html: sanitizeHTML(bannerBody) }}
+        />
+      </Notice>
+    );
+  };
 
   return (
-    <Notice important warning dismissible onClose={onDismiss}>
-      <Typography data-testid="scheduled-maintenance-banner">
-        <Link to={scheduledAPIMaintenance.shortlink}>
-          <strong data-testid="scheduled-maintenance-status">
-            {bannerTitle}
-          </strong>
-        </Link>
-      </Typography>
-      <Typography
-        dangerouslySetInnerHTML={{ __html: sanitizeHTML(bannerBody) }}
-      />
-    </Notice>
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {scheduledAPIMaintenances.map((scheduledAPIMaintenance) =>
+        renderBanner(scheduledAPIMaintenance)
+      )}
+    </>
   );
 };
 

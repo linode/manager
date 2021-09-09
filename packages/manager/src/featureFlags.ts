@@ -112,8 +112,11 @@ interface ReferralBannerText {
   };
 }
 
-export interface APIMaintenance {
+export interface SuppliedMaintenanceData {
   id: string;
   title?: string;
   body?: string;
+}
+export interface APIMaintenance {
+  maintenances: SuppliedMaintenanceData[];
 }
