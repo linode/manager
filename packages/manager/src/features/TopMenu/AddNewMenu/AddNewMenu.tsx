@@ -245,7 +245,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                   >
                     <AddNewMenuItem
                       title="Bucket"
-                      body="S3-compatible object storage "
+                      body="S3-compatible object storage"
                       ItemIcon={BucketIcon} // to be replaced with database icon
                     />
                   </MenuLink>

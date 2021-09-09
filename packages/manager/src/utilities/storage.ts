@@ -47,6 +47,7 @@ const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 const SUPPORT = 'support';
+const TICKET = 'ticket';
 const STACKSCRIPT = 'stackscript';
 const DEV_TOOLS_ENV = 'devTools/env';
 
@@ -60,6 +61,11 @@ interface AuthGetAndSet {
 interface SupportText {
   title: string;
   description: string;
+}
+
+interface TicketReply {
+  text: string;
+  ticketId: number;
 }
 
 interface StackScriptData extends StackScriptPayload {
@@ -95,6 +101,10 @@ export interface Storage {
   supportText: {
     get: () => SupportText;
     set: (v: SupportText) => void;
+  };
+  ticketReply: {
+    get: () => TicketReply;
+    set: (v: TicketReply) => void;
   };
   stackScriptInProgress: {
     get: () => StackScriptData;
@@ -152,6 +162,10 @@ export const storage: Storage = {
     get: () => getStorage(SUPPORT, { title: '', description: '' }),
     set: (v) => setStorage(SUPPORT, JSON.stringify(v)),
   },
+  ticketReply: {
+    get: () => getStorage(TICKET, { text: '' }),
+    set: (v) => setStorage(TICKET, JSON.stringify(v)),
+  },
   stackScriptInProgress: {
     get: () =>
       getStorage(STACKSCRIPT, {
@@ -177,6 +191,7 @@ export const {
   BackupsCtaDismissed,
   stackScriptInProgress,
   supportText,
+  ticketReply,
 } = storage;
 
 // Only return these if the dev tools are enabled and we're in development mode.

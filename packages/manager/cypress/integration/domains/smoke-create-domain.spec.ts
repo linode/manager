@@ -1,5 +1,10 @@
 import { makeDomainLabel } from '../../support/api/domains';
-import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
+import {
+  fbtClick,
+  fbtVisible,
+  getClick,
+  getVisible,
+} from '../../support/helpers';
 
 describe('Create a Domain', () => {
   it('Creates first Domain', () => {
@@ -20,8 +25,10 @@ describe('Create a Domain', () => {
     cy.wait('@getDomains');
     fbtClick('Create Domain');
     const label = makeDomainLabel();
-    fbtVisible('Domain (required)').type(label);
-    fbtVisible('SOA Email Address (required)').type('devs@linode.com');
+    getVisible('[id="domain"][data-testid="textfield-input"]').type(label);
+    getVisible('[id="soa-email-address"][data-testid="textfield-input"]').type(
+      'devs@linode.com'
+    );
     getClick('[data-testid="create-domain-submit"]');
     cy.wait('@createDomain');
     cy.get('[data-qa-header]').should('contain', label);

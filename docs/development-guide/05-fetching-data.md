@@ -168,7 +168,11 @@ Components making API requests generally expect to work with an array of Linode 
 { field: 'field-name', reason: 'why this error occurred' }
 ```
 
+<<<<<<< HEAD:docs/development-guide/05-fetching-data.md
 We have added an interceptor to our Axios instance that essentially guarantees that any error from an API function will have this shape. For example, if you block network requests using Chrome Dev Tools, there is no response from the API. But if you `.catch()` this error, you'll find that it has the above shape, with a default message ("An unexpected error occurred.")
+=======
+We have added an interceptor to our Axios instance that essentially guarantees that any error from an API function will have this shape. For example, if you block network requests using Chrome Dev Tools, there is no response from the API. But if you `.catch()` this error, you'll find that it has the above shape, with a default message ("An unexpected error occurred.").
+>>>>>>> develop:docs/development-guide/04-fetching-data.md
 
 This makes it easy to work with errors, but the default message is not very situation specific. Often, what we want is to use a real error message from the API if it is available, and use a situation-specific fallback message otherwise. We have a helper in our utilities directory for this called `getAPIErrorOrDefault`.
 
