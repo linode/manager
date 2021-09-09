@@ -118,7 +118,7 @@ describe('linode landing checks', () => {
     fbtVisible('Create Linode');
   });
 
-  it.only('checks label and region sorting behavior for linode table', () => {
+  it('checks label and region sorting behavior for linode table', () => {
     const firstLinodeLabel = mockLinodes.data[0].label;
     const lastLinodeLabel = mockLinodes.data[4].label;
     const firstRegionLabel = Object.values(regions)[0];
