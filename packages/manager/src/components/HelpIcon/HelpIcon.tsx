@@ -53,7 +53,7 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
     tooltipPosition,
     interactive,
     isError,
-    size = 20,
+    size = 24,
     leaveDelay,
     classes,
   } = props;
