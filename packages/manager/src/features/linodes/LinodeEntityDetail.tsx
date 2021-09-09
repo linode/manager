@@ -117,9 +117,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     progress = getProgressOrDefault(recentEvent);
     transitionText = _transitionText(linode.status, linode.id, recentEvent);
   }
-  const trimmedIPv6 = linode.ipv6
-    ? linode.ipv6.replace('/128', '')
-    : linode.ipv6;
+  const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
 
   return (
     <EntityDetail
