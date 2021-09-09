@@ -1,12 +1,28 @@
 import { createLinode } from '../../support/api/linodes';
-import { fbtVisible, getClick, getVisible } from '../../support/helpers';
+import {
+  containsVisible,
+  fbtVisible,
+  getClick,
+  getVisible,
+} from '../../support/helpers';
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'cypress/support/ui/constants';
+import * as Factory from 'factory.ts';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
+
+const regions: string[] = [
+  'us-east',
+  'us-west',
+  'us-central',
+  'us-southeast',
+  'ca-east',
+];
+const mockLinodes = makeResourcePage(linodeFactory.buildList(5));
+mockLinodes.data.forEach((linode, index) => (linode.region = regions[index]));
 
 const appRoot = Cypress.env('REACT_APP_APP_ROOT');
-const mockLinodes = makeResourcePage(linodeFactory.buildList(5));
 
 const deleteLinodeFromActionMenu = (linodeLabel) => {
   getClick(`[aria-label="Action menu for Linode ${linodeLabel}"]`);
@@ -85,6 +101,33 @@ describe('linode landing checks', () => {
     getVisible('h1[data-qa-header="Linodes"]');
     getVisible('button[title="Docs"][data-qa-icon-text-link="Docs"]');
     fbtVisible('Create Linode');
+  });
+
+  it.only('checks sorting behavior for linode table', () => {
+    // sort by label
+    const firstLinodeLabel = mockLinodes.data[0].label;
+    const lastLinodeLabel = mockLinodes.data[4].label;
+
+    const checkFirstRow = (linodeLabel) => {
+      getVisible('tr[data-qa-loading="true"]')
+        .first()
+        .within(() => {
+          containsVisible(linodeLabel);
+        });
+    };
+    const checkLastRow = (linodeLabel) => {
+      getVisible('tr[data-qa-loading="true"]')
+        .last()
+        .within(() => {
+          containsVisible(linodeLabel);
+        });
+    };
+
+    checkFirstRow(firstLinodeLabel);
+    checkLastRow(lastLinodeLabel);
+    getClick('[aria-label="Sort by label"]');
+    checkFirstRow(lastLinodeLabel);
+    checkLastRow(firstLinodeLabel);
   });
 });
 
