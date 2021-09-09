@@ -4,7 +4,6 @@ import { ProductInformationBannerLocation } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 import DismissibleBanner from '../DismissibleBanner';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-// import { productInformationBannerFactory } from 'src/factories/featureFlags';
 import { isAfter } from 'src/utilities/date';
 import { reportException } from 'src/exceptionReporting';
 
@@ -14,11 +13,6 @@ interface Props {
 
 const ProductInformationBanner: React.FC<Props> = (props) => {
   const { productInformationBanners } = useFlags();
-
-  // const productInformationBanners = productInformationBannerFactory.buildList(
-  //   1,
-  //   { expirationDate: '2021-10-01' }
-  // );
 
   const thisBanner = (productInformationBanners ?? []).find(
     (thisBanner) => thisBanner.bannerLocation === props.bannerLocation

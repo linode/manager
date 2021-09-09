@@ -16,7 +16,7 @@ export const sanitizeHTML = (text: string) =>
     transformTags: {
       // This transformation function does the following to anchor tags:
       // 1. Turns the <a /> into a <span /> if the "href" is invalid
-      // 2. Adds `rel="noopener noreferrer" is _target is "blank" (for security)
+      // 2. Adds `rel="noopener noreferrer" if _target is "blank" (for security)
       // 3. Removes "target" attribute  if it's anything other than "_blank"
       // 4. Removes custom "rel" attributes
 
