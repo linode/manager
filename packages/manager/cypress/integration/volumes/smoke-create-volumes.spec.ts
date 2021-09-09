@@ -57,6 +57,28 @@ const attachedVolumeLabel = attachedVolume.label;
 const attachedVolumeId = attachedVolume.id;
 
 describe('volumes', () => {
+  beforeEach(() => {
+    interceptOnce('GET', '*/profile/preferences*', {
+      linodes_view_style: 'grid',
+      linodes_group_by_tag: true,
+      volumes_group_by_tag: false,
+      desktop_sidebar_open: false,
+      // theme: 'dark',
+      is_large_account: true,
+      // notification_drawer_view: 'grouped',
+      // dismissed_notifications: {
+      //   '63d7c84d3e425438aa50b2e40eb648cb': {
+      //     id: '63d7c84d3e425438aa50b2e40eb648cb',
+      //     created: '2021-07-23T14:29:57.551Z',
+      //   },
+      // },
+      sortKeys: {
+        'linodes-landing': { order: 'desc', orderBy: 'label' },
+        volume: { order: 'desc', orderBy: 'label' },
+      },
+    }).as('getProfilePreferences');
+  });
+
   it('creates a volume with tag but without linode from volumes page', () => {
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(volume);
@@ -65,6 +87,7 @@ describe('volumes', () => {
       req.reply(tagList);
     }).as('getTags');
     cy.visitWithLogin('/volumes');
+    cy.wait('@getProfilePreferences');
     fbtClick('Create Volume');
     cy.wait('@getTags');
     cy.findByText('volumes');
@@ -97,6 +120,7 @@ describe('volumes', () => {
       req.reply(tagList);
     }).as('getTags');
     cy.visitWithLogin('/linodes');
+    cy.wait('@getProfilePreferences');
     cy.wait('@getLinodes');
     fbtClick(linodeLabel);
     cy.wait('@getLinodeDetail');
@@ -128,6 +152,7 @@ describe('volumes', () => {
       req.reply(linodeList);
     }).as('getLinodes');
     cy.visitWithLogin('/volumes');
+    cy.wait('@getProfilePreferences');
     cy.wait('@getLinodes');
     cy.wait('@getAttachedVolumes');
     cy.intercept('POST', '*/volumes/' + attachedVolumeId + '/detach', (req) => {
