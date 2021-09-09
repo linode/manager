@@ -117,6 +117,9 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     progress = getProgressOrDefault(recentEvent);
     transitionText = _transitionText(linode.status, linode.id, recentEvent);
   }
+  const trimmedIPv6 = linode.ipv6
+    ? linode.ipv6.replace('/128', '')
+    : linode.ipv6;
 
   return (
     <EntityDetail
@@ -149,7 +152,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           gbStorage={linode.specs.disk / 1024}
           region={linode.region}
           ipv4={linode.ipv4}
-          ipv6={linode.ipv6}
+          ipv6={trimmedIPv6}
           linodeId={linode.id}
           username={username ? username : 'none'}
         />
