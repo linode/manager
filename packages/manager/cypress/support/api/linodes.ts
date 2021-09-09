@@ -10,6 +10,7 @@ import {
 
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes/types';
 import { linodeFactory } from '@src/factories';
+import { makeResourcePage } from '@src/mocks/serverHandlers';
 
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const testLinodeTag = testTag;
@@ -17,10 +18,12 @@ const testLinodeTag = testTag;
 export const makeRandomId = () => Math.floor(Math.random() * 99999999);
 export const makeLinodeLabel = makeTestLabel;
 
-export const createMockLinode = (data?) => {
-  return linodeFactory.build({
-    ...data,
-  });
+export const createMockLinode = (listNumber: number = 1, data?: {}) => {
+  return makeResourcePage(
+    linodeFactory.buildList(listNumber, {
+      ...data,
+    })
+  );
 };
 
 const defaultLinodeRequestBody: Partial<CreateLinodeRequest> = {
