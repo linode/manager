@@ -21,10 +21,7 @@ const validateBasicVolume = (
   volId: number,
   isAttached: boolean = false
 ) => {
-  let attached = 'Unattached';
-  if (isAttached) {
-    attached = linodeLabel;
-  }
+  const attached = isAttached ? linodeLabel : 'Unattached';
   containsVisible('Volume Configuration');
   cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
   getClick('[data-qa-close-drawer="true"]');
@@ -63,15 +60,7 @@ describe('volumes', () => {
       linodes_group_by_tag: true,
       volumes_group_by_tag: false,
       desktop_sidebar_open: false,
-      // theme: 'dark',
       is_large_account: true,
-      // notification_drawer_view: 'grouped',
-      // dismissed_notifications: {
-      //   '63d7c84d3e425438aa50b2e40eb648cb': {
-      //     id: '63d7c84d3e425438aa50b2e40eb648cb',
-      //     created: '2021-07-23T14:29:57.551Z',
-      //   },
-      // },
       sortKeys: {
         'linodes-landing': { order: 'desc', orderBy: 'label' },
         volume: { order: 'desc', orderBy: 'label' },
