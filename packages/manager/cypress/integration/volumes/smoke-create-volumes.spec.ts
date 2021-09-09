@@ -4,7 +4,6 @@ import { assertToast } from '../../support/ui/events';
 import { createMockLinode } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
-  containsClick,
   containsVisible,
   fbtClick,
   fbtVisible,
@@ -88,7 +87,7 @@ describe('volumes', () => {
     fbtClick(selectRegionString).type('new {enter}');
     getClick('[data-qa-multi-select="Type to choose or create a tag."]');
     fbtClick(tagLabel);
-    containsClick('Create Volume');
+    fbtClick('Create Volume');
     cy.wait('@createVolume');
     validateBasicVolume(volumeLabel, volumeId);
     clickVolumeActionMenu(volumeLabel);
