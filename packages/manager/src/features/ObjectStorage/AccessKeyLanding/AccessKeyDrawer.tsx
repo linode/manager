@@ -217,21 +217,20 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
                 ) : null}
                 <ActionsPanel>
                   <Button
-                    buttonType="primary"
-                    onClick={beforeSubmit}
-                    loading={isSubmitting}
-                    disabled={isRestrictedUser}
-                    data-qa-submit
-                  >
-                    Submit
-                  </Button>
-                  <Button
+                    buttonType="secondary"
                     onClick={onClose}
                     data-qa-cancel
-                    buttonType="secondary"
-                    className="cancel"
                   >
                     Cancel
+                  </Button>
+                  <Button
+                    buttonType="primary"
+                    disabled={isRestrictedUser}
+                    loading={isSubmitting}
+                    onClick={beforeSubmit}
+                    data-qa-submit
+                  >
+                    {mode === 'creating' ? 'Create Access Key' : 'Save Changes'}
                   </Button>
                 </ActionsPanel>
                 <EnableObjectStorageModal
