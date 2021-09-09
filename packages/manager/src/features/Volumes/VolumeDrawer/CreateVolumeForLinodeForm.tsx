@@ -15,7 +15,7 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import TagsInput, { Tag } from 'src/components/TagsInput';
+import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests,
@@ -35,6 +35,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
+import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
@@ -88,10 +89,22 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
   const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
 
+  // The original schema expects tags to be an array of strings, but Formik treats
+  // tags as _Tag[], so we extend the schema to transform tags before validation.
+  const extendedCreateVolumeSchema = CreateVolumeSchema.concat(
+    object({
+      tags: array()
+        .transform((tagItems: _Tag[]) =>
+          tagItems.map((thisTagItem) => thisTagItem.value)
+        )
+        .of(string()),
+    })
+  );
+
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={CreateVolumeSchema}
+      validationSchema={extendedCreateVolumeSchema}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         const { label, size, config_id, tags } = values;
 
@@ -270,7 +283,7 @@ interface FormState {
   region: string;
   linode_id: number;
   config_id: number;
-  tags: Tag[];
+  tags: _Tag[];
 }
 
 const initialValues: FormState = {
