@@ -1,4 +1,5 @@
 import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
+import { LKEPlan } from 'src';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
@@ -140,3 +141,24 @@ export const recycleClusterNodes = (clusterID: number) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/recycle`)
   );
+
+/**
+ * getLKETypes
+ *
+ * @returns a page of LKE plan types
+ */
+export const getLKETypes = (params?: any) =>
+  Request<Page<LKEPlan>>(
+    setMethod('GET'),
+    setParams(params),
+    setURL(`${API_ROOT}/lke/types`)
+  );
+
+/**
+ * getLKEType
+ *
+ * @param id {string} the id of a LKE plan
+ * @returns the information for the requested LKE plan
+ */
+export const getLKEType = (id: string) =>
+  Request<LKEPlan>(setMethod('GET'), setURL(`${API_ROOT}/lke/types/${id}`));

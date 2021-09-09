@@ -44,9 +44,13 @@ describe('helper functions', () => {
 
   describe('getTotalClusterPrice', () => {
     it('should calculate the total cluster price', () => {
-      expect(getTotalClusterPrice([mockNodePool, mockNodePool])).toBe(20);
+      expect(getTotalClusterPrice([mockNodePool, mockNodePool], false)).toBe(
+        20
+      );
     });
   });
+
+  // @TODO add test with HA enabled
 
   describe('Get total cluster memory/CPUs', () => {
     it('should sum up the total CPU cores of all nodes', () => {

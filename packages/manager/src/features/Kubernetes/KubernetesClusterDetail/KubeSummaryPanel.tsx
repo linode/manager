@@ -327,7 +327,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               >
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>
-                    {`$${getTotalClusterPrice(cluster.node_pools)}/month`}
+                    {`$${getTotalClusterPrice(
+                      cluster.node_pools,
+                      // We are making the assumption that a lke-standard plan has HA
+                      cluster.type === 'lke-standard'
+                    )}/month`}
                   </Typography>
                 </Grid>
               </Grid>
