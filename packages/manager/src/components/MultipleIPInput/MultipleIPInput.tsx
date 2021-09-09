@@ -49,9 +49,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
   },
-  infoIcon: {
-    marginTop: '-1.05rem',
-    color: '#888F91',
+  helpIcon: {
+    marginTop: -11,
+  },
+  required: {
+    fontFamily: theme.font.normal,
   },
 }));
 
@@ -66,6 +68,7 @@ export interface Props {
   onBlur?: (ips: ExtendedIP[]) => void;
   inputProps?: InputBaseProps;
   className?: string;
+  required?: boolean;
 }
 
 export const MultipleIPInput: React.FC<Props> = (props) => {
@@ -78,6 +81,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     helperText,
     tooltip,
     placeholder,
+    required,
   } = props;
   const classes = useStyles();
 
@@ -129,13 +133,18 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
           <HelpIcon
-            className={classes.infoIcon}
+            className={classes.helpIcon}
             text={tooltip}
             tooltipPosition="right"
           />
         </div>
       ) : (
-        <InputLabel>{title}</InputLabel>
+        <InputLabel>
+          {title}
+          {required ? (
+            <span className={classes.required}> (required)</span>
+          ) : null}
+        </InputLabel>
       )}
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>

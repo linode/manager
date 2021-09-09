@@ -14,10 +14,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     fill: theme.color.grey1,
   },
   backupScheduledOrNever: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(),
   },
   backupNotApplicable: {
-    marginRight: theme.spacing(2.2),
+    marginRight: theme.spacing(),
   },
   root: {},
   wrapper: {
@@ -28,13 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 275,
   },
   helpIcon: {
-    color: theme.color.grey1,
     padding: 0,
-    '& svg': {
-      fontSize: 0,
-      height: 20,
-      width: 20,
-    },
   },
   withHelpIcon: {
     display: 'flex',
