@@ -26,6 +26,34 @@ describe('sanitizeHTML', () => {
     // safe
     expect(sanitizeHTML('<span class="other-class" />')).not.toContain('class');
   });
+
+  it('should add a "rel" attribute when target="_blank" is included', () => {
+    // safe
+    expect(
+      sanitizeHTML('<a target="_blank" href="https://linode.com">click me</a>')
+    ).toContain('rel="noopener noreferrer"');
+  });
+
+  it('should not allow custom "rel" attribute', () => {
+    // safe
+    expect(
+      sanitizeHTML(
+        '<a rel="dns-prefetch" href="https://linode.com">click me</a>'
+      )
+    ).not.toContain('rel=');
+    // safe
+    expect(
+      sanitizeHTML(
+        '<a target="custom" rel="dns-prefetch" href="https://linode.com">click me</a>'
+      )
+    ).not.toContain('rel=');
+    // safe
+    expect(
+      sanitizeHTML(
+        '<a target="_blank" rel="dns-prefetch" href="https://linode.com">click me</a>'
+      )
+    ).not.toContain('rel="dns-prefetch"');
+  });
 });
 
 describe('isURLValid', () => {

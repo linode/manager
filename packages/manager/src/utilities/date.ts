@@ -38,7 +38,7 @@ export const isAfter = (d1: string, d2: string) => {
  * @param days number of days
  * @param date date to check for. This is a string because it expects
  * a date as a string returned by the Linode API.
- * @returns {boolean} true if date has occoured within the last x days
+ * @returns {boolean} true if date has occurred within the last x days
  */
 export const isWithinDays = (days: number, date?: string): boolean => {
   if (!date) {
