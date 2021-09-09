@@ -22,6 +22,10 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
   const { data: maintenancesData } = useMaintenanceQuery();
   const maintenances = maintenancesData?.scheduled_maintenances ?? [];
 
+  if (hasDismissedNotifications(suppliedMaintenances ?? [])) {
+    return null;
+  }
+
   if (
     !maintenances ||
     maintenances.length === 0 ||
@@ -46,12 +50,8 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
     return null;
   }
 
-  if (hasDismissedNotifications(scheduledAPIMaintenances)) {
-    return null;
-  }
-
   const onDismiss = () => {
-    dismissNotifications(scheduledAPIMaintenances);
+    dismissNotifications(suppliedMaintenances);
   };
 
   const renderBanner = (scheduledAPIMaintenance: Maintenance) => {
