@@ -4,6 +4,7 @@ import { assertToast } from '../../support/ui/events';
 import { createMockLinode } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
+  containsClick,
   containsVisible,
   fbtClick,
   fbtVisible,
@@ -56,13 +57,12 @@ const attachedVolumeId = attachedVolume.id;
 describe('volumes', () => {
   beforeEach(() => {
     interceptOnce('GET', '*/profile/preferences*', {
-      linodes_view_style: 'grid',
-      linodes_group_by_tag: true,
+      linodes_view_style: 'list',
+      linodes_group_by_tag: false,
       volumes_group_by_tag: false,
       desktop_sidebar_open: false,
-      is_large_account: true,
       sortKeys: {
-        'linodes-landing': { order: 'desc', orderBy: 'label' },
+        'linodes-landing': { order: 'asc', orderBy: 'label' },
         volume: { order: 'desc', orderBy: 'label' },
       },
     }).as('getProfilePreferences');
@@ -88,7 +88,7 @@ describe('volumes', () => {
     fbtClick(selectRegionString).type('new {enter}');
     getClick('[data-qa-multi-select="Type to choose or create a tag."]');
     fbtClick(tagLabel);
-    fbtClick('Create Volume');
+    containsClick('Create Volume');
     cy.wait('@createVolume');
     validateBasicVolume(volumeLabel, volumeId);
     clickVolumeActionMenu(volumeLabel);
@@ -96,6 +96,7 @@ describe('volumes', () => {
   });
 
   it('creates volume with tag from linode with block storage support (Atlanta)', () => {
+    interceptOnce('GET', '*/volumes*', volumeList).as('getVolumes');
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(attachedVolume);
     }).as('createVolume');
@@ -112,13 +113,14 @@ describe('volumes', () => {
     cy.wait('@getProfilePreferences');
     cy.wait('@getLinodes');
     fbtClick(linodeLabel);
+    cy.wait('@getVolumes');
     cy.wait('@getLinodeDetail');
     getVisible(
       '[href="https://www.linode.com/products/block-storage/"]'
     ).within(() => {
       fbtVisible('NVMe Block Storage');
     });
-    fbtClick('Attach a Volume');
+    fbtClick('Create a Volume');
     getClick('[value="creating_for_linode"]');
     cy.wait('@getTags');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
