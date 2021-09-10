@@ -17,9 +17,10 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
       - uses: actions/upload-artifact@v2
-        with:
           name: packages-validation-lib
-          path: packages/validation/lib
+          path: |
+            packages/validation/index.js
+            packages/validation/lib
 
   publish-validation:
     runs-on: ubuntu-latest
@@ -31,7 +32,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: packages-validation-lib
-          path: packages/validation/lib
+          path: packages/validation
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
@@ -66,7 +67,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: packages-validation-lib
-          path: packages/validation/lib
+          path: packages/validation
       - run: yarn workspace @linode/api-v4 run test
 
   build-sdk:
@@ -86,14 +87,17 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: packages-validation-lib
-          path: packages/validation/lib
+          path: packages/validation
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
       - run: yarn workspace @linode/api-v4 run build:node
       - uses: actions/upload-artifact@v2
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4/lib
+          path: |
+            packages/api-v4/index.js
+            packages/api-v4/index.node.js
+            packages/api-v4/lib
 
   test-manager:
     runs-on: ubuntu-latest
@@ -112,11 +116,11 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: packages-validation-lib
-          path: packages/validation/lib
+          path: packages/validation
       - uses: actions/download-artifact@v2
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4/lib
+          path: packages/api-v4
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
@@ -139,11 +143,11 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: packages-validation-lib
-          path: packages/validation/lib
+          path: packages/validation
       - uses: actions/download-artifact@v2
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4/lib
+          path: packages/api-v4
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
       - uses: actions/upload-artifact@v2
@@ -164,7 +168,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4/lib
+          path: packages/api-v4
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
