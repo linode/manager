@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   haPrice: number;
   checked: boolean;
   onChange: (
@@ -42,6 +42,7 @@ const HACheckbox: React.FC<Props> = (props) => {
           checked={checked}
           onChange={onChange}
           className={classes.checkbox}
+          data-testid="ha-checkbox"
         />
         <Box>
           <Typography className={classes.heading}>

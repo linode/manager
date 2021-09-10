@@ -50,7 +50,13 @@ describe('helper functions', () => {
     });
   });
 
-  // @TODO add test with HA enabled
+  describe('getTotalClusterPrice', () => {
+    it('should calculate the total cluster price with HA enabled', () => {
+      expect(
+        getTotalClusterPrice([mockNodePool, mockNodePool], true, 100)
+      ).toBe(120);
+    });
+  });
 
   describe('Get total cluster memory/CPUs', () => {
     it('should sum up the total CPU cores of all nodes', () => {
