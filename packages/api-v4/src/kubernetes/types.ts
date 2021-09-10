@@ -1,4 +1,4 @@
-import { PriceObject } from 'src';
+import { PriceObject } from 'src/linodes';
 
 export interface KubernetesCluster {
   created: string;

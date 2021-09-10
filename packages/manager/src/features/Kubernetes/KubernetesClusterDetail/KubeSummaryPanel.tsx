@@ -19,6 +19,10 @@ import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { useDialog } from 'src/hooks/useDialog';
+import {
+  getHAPrice,
+  useAllKubernetesTypesQuery,
+} from 'src/queries/kubernetesTypes';
 import { deleteCluster } from 'src/store/kubernetes/kubernetes.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { downloadFile } from 'src/utilities/downloadFile';
@@ -158,6 +162,14 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
+
+  // We are making the assumption that a lke-standard plan has HA
+  const isHA = cluster.type === 'lke-standard';
+
+  // We could query just the specifc cluster type, but chances are
+  // this is already cached and it should have only a few types in the
+  // response
+  const { data: kubernetesTypes } = useAllKubernetesTypesQuery(isHA);
 
   // Deletion handlers
   //
@@ -329,8 +341,8 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   <Typography>
                     {`$${getTotalClusterPrice(
                       cluster.node_pools,
-                      // We are making the assumption that a lke-standard plan has HA
-                      cluster.type === 'lke-standard'
+                      isHA,
+                      getHAPrice(kubernetesTypes)?.monthly || 0
                     )}/month`}
                   </Typography>
                 </Grid>

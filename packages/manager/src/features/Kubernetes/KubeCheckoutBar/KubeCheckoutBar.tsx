@@ -3,6 +3,10 @@ import CheckoutBar from 'src/components/CheckoutBar';
 import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
+import {
+  getHAPrice,
+  useAllKubernetesTypesQuery,
+} from 'src/queries/kubernetesTypes';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
@@ -32,6 +36,10 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     setHA,
   } = props;
 
+  const { data: kubernetesTypes } = useAllKubernetesTypesQuery();
+
+  const haPrice = getHAPrice(kubernetesTypes)?.monthly || 0;
+
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
@@ -39,7 +47,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     <CheckoutBar
       data-qa-checkout-bar
       heading="Cluster Summary"
-      calculatedPrice={getTotalClusterPrice(pools, ha)}
+      calculatedPrice={getTotalClusterPrice(pools, ha, haPrice)}
       isMakingRequest={submitting}
       disabled={pools.length < 1}
       onDeploy={createCluster}
@@ -62,7 +70,11 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
           />
         ))}
         <Divider spacingTop={16} />
-        <HACheckbox checked={ha} onChange={(e) => setHA(e.target.checked)} />
+        <HACheckbox
+          checked={ha}
+          onChange={(e) => setHA(e.target.checked)}
+          haPrice={haPrice}
+        />
         <Divider spacingTop={16} />
         {showWarning && (
           <Notice warning important text={nodeWarning} spacingTop={16} />

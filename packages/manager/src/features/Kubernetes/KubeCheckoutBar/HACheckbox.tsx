@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
+  haPrice: number;
   checked: boolean;
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -31,7 +32,7 @@ interface Props {
 }
 
 const HACheckbox: React.FC<Props> = (props) => {
-  const { checked, onChange } = props;
+  const { checked, onChange, haPrice } = props;
   const classes = useStyles();
 
   return (
@@ -57,7 +58,7 @@ const HACheckbox: React.FC<Props> = (props) => {
         </Box>
       </Box>
       <Box className={classes.price}>
-        <DisplayPrice price={100} fontSize="16px" interval="month" />
+        <DisplayPrice price={haPrice} fontSize="16px" interval="month" />
       </Box>
     </Box>
   );

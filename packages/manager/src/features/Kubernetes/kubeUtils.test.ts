@@ -44,9 +44,9 @@ describe('helper functions', () => {
 
   describe('getTotalClusterPrice', () => {
     it('should calculate the total cluster price', () => {
-      expect(getTotalClusterPrice([mockNodePool, mockNodePool], false)).toBe(
-        20
-      );
+      expect(
+        getTotalClusterPrice([mockNodePool, mockNodePool], false, 100)
+      ).toBe(20);
     });
   });
 

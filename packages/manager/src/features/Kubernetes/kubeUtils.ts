@@ -22,7 +22,8 @@ export const getMonthlyPrice = (
 
 export const getTotalClusterPrice = (
   pools: PoolNodeWithPrice[],
-  ha: boolean
+  ha: boolean,
+  haPrice: number
 ) => {
   const price = pools.reduce((accumulator, node) => {
     return node.queuedForDeletion
@@ -30,8 +31,7 @@ export const getTotalClusterPrice = (
       : accumulator + node.totalMonthlyPrice;
   }, 0);
 
-  // @TODO replace 100 with the actual HA price
-  return ha ? price + 100 : price;
+  return ha ? price + haPrice : price;
 };
 
 export const addPriceToNodePool = (
