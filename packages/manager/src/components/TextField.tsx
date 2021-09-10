@@ -34,7 +34,7 @@ type ClassNames =
   | 'tiny'
   | 'absolute'
   | 'helpIcon'
-  | 'required';
+  | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -112,7 +112,7 @@ const styles = (theme: Theme) =>
     noMarginTop: {
       marginTop: 0,
     },
-    required: {
+    label: {
       fontFamily: theme.font.normal,
     },
   });
@@ -141,6 +141,7 @@ interface BaseProps {
   hideLabel?: boolean;
   hasAbsoluteError?: boolean;
   inputId?: string;
+  optional?: boolean;
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
@@ -253,6 +254,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       loading,
       hasAbsoluteError,
       inputId,
+      optional,
       ...textFieldProps
     } = this.props;
 
@@ -288,7 +290,9 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
         >
           {label}
           {this.props.required ? (
-            <span className={classes.required}> (required)</span>
+            <span className={classes.label}> (required)</span>
+          ) : this.props.optional ? (
+            <span className={classes.label}> (optional)</span>
           ) : null}
         </InputLabel>
 

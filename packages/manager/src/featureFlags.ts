@@ -38,6 +38,8 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
+  productInformationBanners: ProductInformationBannerFlag[];
+  apiMaintenance: APIMaintenance;
 }
 
 type PromotionalOfferFeature =
@@ -109,4 +111,26 @@ interface ReferralBannerText {
     text: string;
     url: string;
   };
+}
+
+export type ProductInformationBannerLocation = 'Object Storage';
+
+export interface ProductInformationBannerFlag {
+  // `key` should be unique across product information banners
+  key: string;
+  // `message` is rendered as Markdown (to support links)
+  message: string;
+  // `bannerLocation` is the location where the banner will be rendered
+  bannerLocation: ProductInformationBannerLocation;
+  // The date where the banner should no longer be displayed.
+  expirationDate: string;
+}
+
+export interface SuppliedMaintenanceData {
+  id: string;
+  title?: string;
+  body?: string;
+}
+export interface APIMaintenance {
+  maintenances: SuppliedMaintenanceData[];
 }

@@ -1,16 +1,15 @@
-import { Formik } from 'formik';
 import { CredentialPayload } from '@linode/api-v4/lib/managed';
+import { Formik } from 'formik';
 import * as React from 'react';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TextField from 'src/components/TextField';
-
 import { creationSchema } from './credential.schema';
+
+const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 
 export interface Props {
   open: boolean;
@@ -57,56 +56,51 @@ const CredentialDrawer: React.FC<CombinedProps> = (props) => {
 
             <form onSubmit={handleSubmit}>
               <TextField
+                label="Label"
                 name="label"
-                label="Credential Label"
-                data-qa-add-label
-                value={values.label}
                 error={!!errors.label}
                 errorText={errors.label}
-                onChange={handleChange}
                 onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.label}
+                data-qa-add-label
               />
 
               <TextField
+                label="Username"
                 name="username"
-                label="Username (optional)"
-                data-qa-add-username
-                value={values.username}
                 error={!!errors.username}
                 errorText={errors.username}
-                onChange={handleChange}
                 onBlur={handleBlur}
+                onChange={handleChange}
+                optional
+                value={values.username}
+                data-qa-add-username
               />
 
               <React.Suspense fallback={<SuspenseLoader />}>
                 <PasswordInput
+                  label="Password"
                   name="password"
-                  label="Password / Passphrase"
-                  type="password"
-                  data-qa-add-password
-                  value={values.password}
                   error={!!errors.password}
                   errorText={errors.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
                   // This credential could be anything so might be counterproductive to validate strength
                   hideValidation
-                  required
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  value={values.password}
+                  data-qa-add-password
                 />
               </React.Suspense>
               <ActionsPanel>
-                <Button
-                  onClick={onClose}
-                  data-qa-cancel
-                  buttonType="secondary"
-                  className="cancel"
-                >
+                <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
                   Cancel
                 </Button>
                 <Button
                   buttonType="primary"
-                  onClick={() => handleSubmit()}
                   loading={isSubmitting}
+                  onClick={() => handleSubmit()}
                   data-qa-submit
                 >
                   Add Credential

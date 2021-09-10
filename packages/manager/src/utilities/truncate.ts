@@ -1,4 +1,32 @@
 /**
+ * Truncate a string and add an ellipsis at the end but ensures the
+ * text ends on a word rather than mid-word.
+ */
+export const truncate = (str: string, maxLength: number) => {
+  if (str.length > maxLength + 4) {
+    const beginningText = str.substring(0, maxLength + 1);
+    const charsAfterMax = str.substring(maxLength + 1);
+    const result = [beginningText];
+
+    // Now we that we have the initial text, we want to ensure that
+    // we're ending at the end of a word rather than at the middle,
+    // so we want to find the first occurrence of whitespace and end
+    // the string there
+    for (const letter of charsAfterMax) {
+      // A space means we're at the end of the word so break out of
+      // this loop
+      if (letter.match(/\W/)) {
+        break;
+      }
+      result.push(letter);
+    }
+    return `${result.join('')} ...`;
+  }
+
+  return str;
+};
+
+/**
  * Truncate a string and add an ellipsis in the middle.
  */
 export const truncateMiddle = (str: string, maxLength = 40) => {

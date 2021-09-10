@@ -91,7 +91,7 @@ In `/src` there are several important files on the directory root:
 
 The /src directory has several subdirectories:
 
-- **/**data\*\*\*\*
+- **/data**
   - static mocked data for unit tests, not used as much anymore since we introduced dynamic factories
 - **/assets**
   - icons, svgs, etc

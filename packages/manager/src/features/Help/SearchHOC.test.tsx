@@ -1,7 +1,12 @@
 import * as algoliasearch from 'algoliasearch';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import { COMMUNITY_BASE_URL, DOCS_BASE_URL } from 'src/constants';
+import {
+  community_answer,
+  community_question,
+  docs_result,
+} from 'src/__data__/searchResults';
 import withSearch, {
   cleanDescription,
   convertCommunityToItems,
@@ -10,13 +15,6 @@ import withSearch, {
   getCommunityUrl,
   getDocsResultLabel,
 } from './SearchHOC';
-
-import {
-  community_answer,
-  community_question,
-  docs_result,
-} from 'src/__data__/searchResults';
-import { COMMUNITY_BASE_URL, DOCS_BASE_URL } from 'src/constants';
 
 const HITS_PER_PAGE = 10;
 

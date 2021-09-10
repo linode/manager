@@ -1,4 +1,27 @@
-import { truncateEnd, truncateMiddle } from './truncate';
+import { truncate, truncateEnd, truncateMiddle } from './truncate';
+
+describe('truncate', () => {
+  const stringOver140 = truncate(
+    `hello world hello world hello world hello world hello world hello world hello world 
+    hello world hello world hello world hello world hello world hello world hello world 
+    hello world hello world hello world hello world hello world hello world hello world
+    hello world hello world hello world hello world hello world hello world hello world`,
+    140
+  );
+
+  const stringUnder140 = truncate(
+    'hello world hello world hello world hello world',
+    140
+  );
+
+  it('string over 140 + 4 chars should contain an ellipses as last 3 chars', () => {
+    expect(stringOver140.substr(stringOver140.length - 3)).toBe('...');
+  });
+
+  it('string under 140 + 4 chars should not contain an ellipses as last 3 chars', () => {
+    expect(stringUnder140.substr(stringUnder140.length - 3)).not.toBe('...');
+  });
+});
 
 describe('truncateMiddle', () => {
   it('returns strings under the max unchanged', () => {

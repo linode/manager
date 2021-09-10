@@ -131,30 +131,32 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
 
               <form onSubmit={handleSubmit}>
                 <TextField
-                  name="name"
                   label="Name"
-                  value={values.name}
+                  name="name"
                   error={!!errors.name}
                   errorText={errors.name}
-                  onChange={handleChange}
                   onBlur={handleBlur}
+                  onChange={handleChange}
+                  required
+                  value={values.name}
                 />
 
                 <TextField
-                  name="email"
                   label="E-mail"
-                  value={values.email}
+                  name="email"
                   error={!!errors.email}
                   errorText={errors.email}
-                  onChange={handleChange}
                   onBlur={handleBlur}
+                  onChange={handleChange}
+                  required
+                  value={values.email}
                 />
 
                 <Grid container>
                   <Grid item xs={12} md={6}>
                     <TextField
                       name="phone.primary"
-                      label="Primary Phone (optional)"
+                      label="Primary Phone"
                       value={pathOr('', ['phone', 'primary'], values)}
                       error={!!primaryPhoneError}
                       errorText={primaryPhoneError}
@@ -165,7 +167,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       name="phone.secondary"
-                      label="Secondary Phone (optional)"
+                      label="Secondary Phone"
                       value={pathOr('', ['phone', 'secondary'], values)}
                       error={!!secondaryPhoneError}
                       errorText={secondaryPhoneError}
@@ -177,7 +179,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
 
                 {/* @todo: This <Select /> should be clearable eventually, but isn't currently allowed by the API. */}
                 <Select
-                  label="Group (optional)"
+                  label="Group"
                   placeholder="Create or Select a Group"
                   variant="creatable"
                   isClearable={false}
@@ -202,8 +204,8 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                 <ActionsPanel>
                   <Button
                     buttonType="primary"
-                    onClick={() => handleSubmit()}
                     loading={isSubmitting}
+                    onClick={() => handleSubmit()}
                   >
                     {isEditing ? 'Save Changes' : 'Add Contact'}
                   </Button>

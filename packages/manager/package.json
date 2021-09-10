@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.48.0",
+  "version": "1.49.0",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -48,7 +48,7 @@
     "formik": "~2.1.3",
     "he": "^1.2.0",
     "highlight.js": "~10.4.1",
-    "immer": "^8.0.4",
+    "immer": "^9.0.6",
     "ipaddr.js": "^1.9.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",

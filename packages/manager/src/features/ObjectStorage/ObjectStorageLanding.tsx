@@ -11,11 +11,12 @@ import { Dispatch } from 'redux';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import Typography from 'src/components/core/Typography';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -183,6 +184,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
+      <ProductInformationBanner bannerLocation="Object Storage" />
       <LandingHeader
         title="Object Storage"
         entity="Object Storage"
