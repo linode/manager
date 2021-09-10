@@ -17,6 +17,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
       - uses: actions/upload-artifact@v2
+        with:
           name: packages-validation-lib
           path: |
             packages/validation/index.js
