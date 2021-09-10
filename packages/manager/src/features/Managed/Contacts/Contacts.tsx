@@ -28,6 +28,7 @@ import ContactTableContact from './ContactsTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
+    fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
@@ -127,7 +128,7 @@ const Contacts: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Contacts" />
-      <Typography className={classes.copy} variant="subtitle1">
+      <Typography className={classes.copy}>
         You can assign contact groups to monitors so we know who to talk to in
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).

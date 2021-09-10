@@ -74,7 +74,7 @@ const statusPage = [
     const response = incidentResponseFactory.build();
     return res(ctx.json(response));
   }),
-  rest.get('*/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+  rest.get('*/api/v2/scheduled-maintenances*', (req, res, ctx) => {
     const response = maintenanceResponseFactory.build();
     return res(ctx.json(response));
   }),

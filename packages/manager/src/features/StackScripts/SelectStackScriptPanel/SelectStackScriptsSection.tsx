@@ -8,7 +8,7 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
-import truncateText from 'src/utilities/truncateText';
+import { truncate } from 'src/utilities/truncate';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 const useStyles = makeStyles(() => ({
@@ -39,7 +39,7 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}
-      description={truncateText(s.description, 100)}
+      description={truncate(s.description, 100)}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, { displayTime: false })}

@@ -26,7 +26,7 @@ import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import stripImageName from 'src/utilities/stripImageName';
-import truncateText from 'src/utilities/truncateText';
+import { truncate } from 'src/utilities/truncate';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
@@ -36,47 +36,36 @@ export interface ExtendedLinode extends Linode {
   subHeadings: string[];
 }
 
-type ClassNames =
-  | 'root'
-  | 'table'
-  | 'link'
-  | 'selecting'
-  | 'panel'
-  | 'inner'
-  | 'header';
+type ClassNames = 'table' | 'selecting' | 'link' | 'panel' | 'inner';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      marginBottom: theme.spacing(3),
-    },
     table: {
+      backgroundColor: theme.color.white,
       flexGrow: 1,
       width: '100%',
-      backgroundColor: theme.color.white,
     },
     selecting: {
-      minHeight: '400px',
       maxHeight: '1000px',
+      minHeight: '400px',
       overflowY: 'scroll',
       paddingTop: 0,
     },
     link: {
       display: 'block',
-      textAlign: 'right',
       marginBottom: 24,
-      marginTop: theme.spacing(1),
+      marginTop: theme.spacing(),
+      textAlign: 'right',
     },
     panel: {
-      flexGrow: 1,
-      width: '100%',
       backgroundColor: theme.color.white,
+      flexGrow: 1,
       marginBottom: theme.spacing(3),
+      width: '100%',
     },
     inner: {
       padding: 0,
     },
-    header: {},
   });
 
 interface Props extends RenderGuardProps {
@@ -188,7 +177,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   label={stackScript.label}
                   stackScriptUsername={stackScript.username}
                   disabledCheckedSelect
-                  description={truncateText(stackScript.description, 100)}
+                  description={truncate(stackScript.description, 100)}
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, {
