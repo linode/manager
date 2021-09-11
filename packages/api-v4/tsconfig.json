@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "umd",
-    "emitDeclarationOnly": true,
+    "module": "esnext",
     "declaration": true,
     "outDir": "./lib",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "skipLibCheck":true,
+    "skipLibCheck": true,
     "strict": true,
     "baseUrl": ".",
     "noUnusedLocals": true
   },
+  "compileOnSave": true,
   "include": [
     "src"
   ],

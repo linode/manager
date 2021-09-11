@@ -29,9 +29,9 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
-    "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
-    "test": "jest --config jestconfig.json",
+    "start": "tsc -w",
+    "build": "tsc",
+    "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
@@ -45,29 +45,17 @@
     "README.md"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.10.1",
-    "@babel/core": "^7.10.2",
-    "@babel/plugin-proposal-class-properties": "^7.10.1",
-    "@babel/plugin-proposal-object-rest-spread": "^7.10.1",
-    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
-    "@babel/preset-env": "^7.10.2",
-    "@babel/preset-typescript": "^7.10.1",
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "axios-mock-adapter": "^1.18.1",
-    "babel-plugin-module-resolver": "^4.0.0",
     "concurrently": "^4.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "jest": "~26.4.2",
     "lint-staged": "^9.4.2",
-    "npm-dts-webpack-plugin": "^1.3.10",
     "prettier": "~2.2.1",
-    "ts-jest": "^24.1.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0"
+    "ts-jest": "^24.1.0"
   },
   "resolutions": {
     "handlebars": "^4.4.3"
@@ -80,6 +68,20 @@
     ],
     ".{ts,tsx}": [
       "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(t)sx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
     ]
   }
 }

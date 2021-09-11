@@ -4,8 +4,8 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter
-} from 'src/request';
+  setXFilter,
+} from '../request';
 import { ResourcePage as Page } from '../types';
 import { Tag, TagRequest } from './types';
 
