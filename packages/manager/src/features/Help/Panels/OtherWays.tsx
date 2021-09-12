@@ -1,8 +1,8 @@
 import * as React from 'react';
-import Chat from 'src/assets/icons/chat.svg';
-import Community from 'src/assets/icons/community.svg';
-import Documentation from 'src/assets/icons/document.svg';
-import Support from 'src/assets/icons/support.svg';
+import Chat from 'src/assets/icons/chat.svg?component';
+import Community from 'src/assets/icons/community.svg?component';
+import Documentation from 'src/assets/icons/document.svg?component';
+import Support from 'src/assets/icons/support.svg?component';
 import {
   createStyles,
   Theme,

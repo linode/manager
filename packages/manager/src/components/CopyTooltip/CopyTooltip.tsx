@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
-import FileCopy from 'src/assets/icons/copy.svg';
+import FileCopy from 'src/assets/icons/copy.svg?component';
 import {
   createStyles,
   Theme,

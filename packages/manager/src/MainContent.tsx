@@ -3,7 +3,7 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
-import Logo from 'src/assets/logo/logo-text.svg';
+import Logo from 'src/assets/logo/logo-text.svg?component';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,

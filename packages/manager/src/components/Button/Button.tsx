@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
-import Reload from 'src/assets/icons/reload.svg';
+import Reload from 'src/assets/icons/reload.svg?component';
 import _Button, { ButtonProps } from 'src/components/core/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';

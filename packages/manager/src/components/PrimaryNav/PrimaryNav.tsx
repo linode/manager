@@ -1,22 +1,22 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
-import Account from 'src/assets/icons/account.svg';
-import Storage from 'src/assets/icons/entityIcons/bucket.svg';
-import Database from 'src/assets/icons/entityIcons/database.svg';
-import Domain from 'src/assets/icons/entityIcons/domain.svg';
-import Firewall from 'src/assets/icons/entityIcons/firewall.svg';
-import Image from 'src/assets/icons/entityIcons/image.svg';
-import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg';
-import Linode from 'src/assets/icons/entityIcons/linode.svg';
-import Managed from 'src/assets/icons/entityIcons/managed.svg';
-import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
-import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
-import Volume from 'src/assets/icons/entityIcons/volume.svg';
-import HelpIcon from 'src/assets/icons/get_help.svg';
-import Longview from 'src/assets/icons/longview.svg';
-import Logo from 'src/assets/logo/logo.svg';
+import Account from 'src/assets/icons/account.svg?component';
+import Storage from 'src/assets/icons/entityIcons/bucket.svg?component';
+import Database from 'src/assets/icons/entityIcons/database.svg?component';
+import Domain from 'src/assets/icons/entityIcons/domain.svg?component';
+import Firewall from 'src/assets/icons/entityIcons/firewall.svg?component';
+import Image from 'src/assets/icons/entityIcons/image.svg?component';
+import Kubernetes from 'src/assets/icons/entityIcons/kubernetes.svg?component';
+import Linode from 'src/assets/icons/entityIcons/linode.svg?component';
+import Managed from 'src/assets/icons/entityIcons/managed.svg?component';
+import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg?component';
+import OCA from 'src/assets/icons/entityIcons/oneclick.svg?component';
+import StackScript from 'src/assets/icons/entityIcons/stackscript.svg?component';
+import Volume from 'src/assets/icons/entityIcons/volume.svg?component';
+import HelpIcon from 'src/assets/icons/get_help.svg?component';
+import Longview from 'src/assets/icons/longview.svg?component';
+import Logo from 'src/assets/logo/logo.svg?component';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -246,7 +246,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       className={classes.menuGrid}
       container
       alignItems="flex-start"
-      justify="flex-start"
+      justifyContent="flex-start"
       direction="column"
       wrap="nowrap"
       spacing={0}
@@ -265,7 +265,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             aria-label="Dashboard"
             title="Dashboard"
           >
-            <Logo width={115} height={43} />
+            <Logo />
           </Link>
         </div>
       </Grid>

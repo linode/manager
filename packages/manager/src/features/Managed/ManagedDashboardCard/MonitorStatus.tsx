@@ -2,8 +2,8 @@ import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
-import MonitorOK from 'src/assets/icons/monitor-ok.svg';
+import MonitorFailed from 'src/assets/icons/monitor-failed.svg?component';
+import MonitorOK from 'src/assets/icons/monitor-ok.svg?component';
 import {
   makeStyles,
   Theme,

@@ -8,8 +8,8 @@ import {
   Droppable,
   DropResult,
 } from 'react-beautiful-dnd';
-import DragIndicator from 'src/assets/icons/drag-indicator.svg';
-import Undo from 'src/assets/icons/undo.svg';
+import DragIndicator from 'src/assets/icons/drag-indicator.svg?component';
+import Undo from 'src/assets/icons/undo.svg?component';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import {

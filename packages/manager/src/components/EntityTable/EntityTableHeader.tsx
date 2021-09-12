@@ -1,5 +1,5 @@
 import * as React from 'react';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg?component';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';

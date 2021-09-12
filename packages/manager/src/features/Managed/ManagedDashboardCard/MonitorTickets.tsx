@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-
-import TicketIcon from 'src/assets/icons/ticket.svg';
+import TicketIcon from 'src/assets/icons/ticket.svg?component';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg?component';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';

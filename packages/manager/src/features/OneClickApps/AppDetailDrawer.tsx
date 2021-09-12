@@ -1,7 +1,7 @@
 import * as React from 'react';
-import LibraryBook from 'src/assets/icons/guides.svg';
-import Info from 'src/assets/icons/info.svg';
-import Link from 'src/assets/icons/moreInfo.svg';
+import LibraryBook from 'src/assets/icons/guides.svg?component';
+import Info from 'src/assets/icons/info.svg?component';
+import Link from 'src/assets/icons/moreInfo.svg?component';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import {

@@ -3,8 +3,8 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Download from 'src/assets/icons/download.svg';
-import View from 'src/assets/icons/view.svg';
+import Download from 'src/assets/icons/download.svg?component';
+import View from 'src/assets/icons/view.svg?component';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {

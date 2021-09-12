@@ -1,5 +1,5 @@
 import * as React from 'react';
-import GridView from 'src/assets/icons/grid-view.svg';
+import GridView from 'src/assets/icons/grid-view.svg?component';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';

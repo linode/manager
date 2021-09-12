@@ -1,7 +1,7 @@
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg?component';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';

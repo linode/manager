@@ -1,8 +1,6 @@
 import * as React from 'react';
-
 import Tile from './Tile';
-
-import Chat from 'src/assets/icons/chat.svg';
+import Chat from 'src/assets/icons/chat.svg?component';
 
 export default {
   title: 'UI Elements/Tile',

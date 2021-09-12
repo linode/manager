@@ -3,7 +3,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
-import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
+import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg?component';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

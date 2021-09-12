@@ -11,14 +11,14 @@ import '@reach/menu-button/styles.css';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg?component';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg?component';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg?component';
+import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg?component';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg?component';
+import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg?component';
+import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg?component';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg?component';
 import {
   createStyles,
   Theme,

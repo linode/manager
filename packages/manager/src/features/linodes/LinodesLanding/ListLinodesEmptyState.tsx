@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
+import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg?component';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';

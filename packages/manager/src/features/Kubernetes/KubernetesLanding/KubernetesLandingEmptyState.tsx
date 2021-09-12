@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-import KubernetesSvg from 'src/assets/icons/entityIcons/kubernetes.svg';
+import KubernetesSvg from 'src/assets/icons/entityIcons/kubernetes.svg?component';
 import Typography from 'src/components/core/Typography';
 import Placeholder from 'src/components/Placeholder';
 

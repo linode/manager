@@ -1,8 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import CautionIcon from 'src/assets/icons/caution.svg';
-import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
-import UploadPending from 'src/assets/icons/uploadPending.svg';
+import CautionIcon from 'src/assets/icons/caution.svg?component';
+import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg?component';
+import UploadPending from 'src/assets/icons/uploadPending.svg?component';
 import Button from 'src/components/Button';
 import LinearProgress from 'src/components/core/LinearProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';

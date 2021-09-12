@@ -1,5 +1,5 @@
 import * as React from 'react';
-import DocsIcon from 'src/assets/icons/docs.svg';
+import DocsIcon from 'src/assets/icons/docs.svg?component';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { sendHelpButtonClickEvent } from 'src/utilities/ga';
 import IconTextLink from '../IconTextLink';

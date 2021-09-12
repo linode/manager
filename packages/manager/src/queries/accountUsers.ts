@@ -4,7 +4,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { queryPresets } from './base';
 import { map as mapPromise } from 'bluebird';
-import * as memoize from 'memoizee';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 export const useAccountUsers = (params: any, withGravatar: boolean = false) =>
@@ -14,7 +13,7 @@ export const useAccountUsers = (params: any, withGravatar: boolean = false) =>
     queryPresets.oneTimeFetch
   );
 
-const memoizedGetGravatarURL = memoize(getGravatarUrl);
+const memoizedGetGravatarURL = getGravatarUrl;
 
 const getUsersWithGravatar = (params?: any, filters?: any) =>
   getUsers(params, filters).then(({ data, page, pages, results }) =>

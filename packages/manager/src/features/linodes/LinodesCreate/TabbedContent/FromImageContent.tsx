@@ -7,7 +7,7 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Placeholder from 'src/components/Placeholder';
 import { filterImagesByType } from 'src/store/image/image.helpers';
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg?component';
 import {
   BasicFromContentProps,
   ReduxStateProps,

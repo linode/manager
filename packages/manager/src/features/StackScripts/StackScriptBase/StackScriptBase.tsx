@@ -8,7 +8,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
-import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg';
+import StackScriptsIcon from 'src/assets/icons/entityIcons/stackscript.svg?component';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';

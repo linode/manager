@@ -1,10 +1,10 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
 import * as classnames from 'classnames';
 import * as React from 'react';
-import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
-import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
-import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
-import LinodeLogo from 'src/assets/logo/logo-footer.svg';
+import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg?component';
+import GitHubIcon from 'src/assets/icons/providers/github-logo.svg?component';
+import GoogleIcon from 'src/assets/icons/providers/google-logo.svg?component';
+import LinodeLogo from 'src/assets/logo/logo-footer.svg?component';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';

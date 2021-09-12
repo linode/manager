@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import AdaIcon from 'src/assets/icons/ada.svg';
+import AdaIcon from 'src/assets/icons/ada.svg?component';
 import {
   createStyles,
   Theme,

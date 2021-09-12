@@ -1,16 +1,16 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
-import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
-import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg?component';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg?component';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg?component';
+import FolderIcon from 'src/assets/icons/entityIcons/folder.svg?component';
+import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg?component';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg?component';
+import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg?component';
+import ObjectIcon from 'src/assets/icons/entityIcons/object.svg?component';
+import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg?component';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg?component';
 import {
   makeStyles,
   Theme,

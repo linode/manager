@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 import * as React from 'react';
-import Check from 'src/assets/icons/monitor-ok.svg';
+import Check from 'src/assets/icons/monitor-ok.svg?component';
 import Radio from 'src/components/Radio';
 import { makeStyles } from 'src/components/core/styles';
 

@@ -10,7 +10,7 @@ import {
   initGooglePaymentInstance,
   gPay,
 } from 'src/features/Billing/Providers/GooglePay';
-import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
+import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg?component';
 import Notice from 'src/components/Notice';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';

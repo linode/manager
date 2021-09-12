@@ -2,7 +2,7 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Error from 'src/assets/icons/error.svg';
+import Error from 'src/assets/icons/error.svg?component';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

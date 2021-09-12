@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg?component';
 
 interface Props {
   openAddFirewallDrawer: () => void;

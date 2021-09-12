@@ -1,6 +1,6 @@
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
-import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
+import SSHKeyIcon from 'src/assets/icons/ssh-key.svg?component';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';

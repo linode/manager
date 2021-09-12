@@ -9,7 +9,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg?component';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';

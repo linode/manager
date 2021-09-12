@@ -10,7 +10,8 @@
     "strict": true,
     "baseUrl": ".",
     "noUnusedLocals": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "incremental": true,
   },
   "compileOnSave": true,
   "include": [

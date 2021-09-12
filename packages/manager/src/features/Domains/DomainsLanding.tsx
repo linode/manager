@@ -5,7 +5,7 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg?component';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import {

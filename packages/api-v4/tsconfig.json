@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "strict": true,
     "baseUrl": ".",
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "incremental": true,
   },
   "compileOnSave": true,
   "include": [

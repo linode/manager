@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import UserIcon from 'src/assets/icons/user.svg';
+import UserIcon from 'src/assets/icons/user.svg?component';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';

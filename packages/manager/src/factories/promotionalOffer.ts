@@ -8,7 +8,7 @@ export const promotionalOfferFactory = Factory.Sync.makeFactory<PromotionalOffer
     body:
       'Sample promotional body. This offer is valid until January 1st. Try it out now.',
     footnote: 'Offer is inclusive of list price only.',
-    logo: 'heavenly-bucket.svg',
+    logo: 'heavenly-bucket.svg?component',
     alt: 'Promotional Offer',
     displayOnDashboard: true,
     buttons: [

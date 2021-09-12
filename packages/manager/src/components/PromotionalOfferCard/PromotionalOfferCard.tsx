@@ -1,7 +1,7 @@
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
+import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg?component';
 import Button from 'src/components/core/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -201,7 +201,7 @@ export const checkStringOrDefault = (maybeString: any, defaultVal?: string) => {
 };
 
 export const logoMap: Record<PromotionalOffer['logo'], any> = {
-  'heavenly-bucket.svg': HeavenlyBucketIcon,
+  'heavenly-bucket.svg?component': HeavenlyBucketIcon,
 };
 
 /**
