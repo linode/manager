@@ -19,6 +19,7 @@ import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
+import { Tab } from 'src/components/TabLinkList/TabLinkList';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -191,14 +192,6 @@ class Lish extends React.Component<CombinedProps, State> {
       });
   };
 
-  tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
-    {
-      title: 'Weblish',
-      routeName: `${this.props.match.url}/weblish`,
-    },
-  ];
-
   matches = (p: string) =>
     Boolean(matchPath(p, { path: this.props.location.pathname }));
 
@@ -208,22 +201,22 @@ class Lish extends React.Component<CombinedProps, State> {
 
     const isBareMetal = linode && linode.type && linode.type.includes('metal');
 
-    if (!isBareMetal) {
-      this.tabs = [
-        /* NB: These must correspond to the routes inside the Switch */
-        {
-          title: 'Weblish',
-          routeName: `${this.props.match.url}/weblish`,
-        },
-        {
-          title: 'Glish',
-          routeName: `${this.props.match.url}/glish`,
-        },
-      ];
-    }
+    const tabs = [
+      /* NB: These must correspond to the routes inside the Switch */
+      {
+        title: 'Weblish',
+        routeName: `${this.props.match.url}/weblish`,
+      },
+      !isBareMetal
+        ? {
+            title: 'Glish',
+            routeName: `${this.props.match.url}/glish`,
+          }
+        : null,
+    ].filter(Boolean) as Tab[];
 
     const navToURL = (index: number) => {
-      this.props.history.push(this.tabs[index].routeName);
+      this.props.history.push(tabs[index].routeName);
     };
 
     // If the window.close() logic above fails, we render an error state as a fallback
@@ -243,7 +236,7 @@ class Lish extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Tabs className={classes.tabs} onChange={navToURL}>
-          <TabLinkList className={classes.lish} tabs={this.tabs} />
+          <TabLinkList className={classes.lish} tabs={tabs} />
           <TabPanels>
             {linode && token && (
               <SafeTabPanel index={0} data-qa-tab="Weblish">
