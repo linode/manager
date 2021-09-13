@@ -49,9 +49,6 @@ const imageIntercept = (id: number, status: ImageStatus) => {
 
 const assertFailed = (imageId: number, message: string) => {
   assertToast(
-    `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
-  );
-  assertToast(
     `There was a problem processing image ${imageLabel}: ${message}`,
     2
   );
@@ -100,11 +97,11 @@ describe('machine image', () => {
       const imageId = xhr.response?.body.image.id;
       imageIntercept(imageId, 'available');
       eventIntercept(imageId, status);
-      cy.wait('@getImage');
-      cy.wait('@getEvent');
       assertToast(
         `Image ${imageLabel} uploaded successfully. It is being processed and will be available shortly.`
       );
+      cy.wait('@getImage');
+      cy.wait('@getEvent');
       assertToast(`Image ${imageLabel} is now available.`, 2);
       cy.get(`[data-qa-image-cell="${imageId}"]`).within(() => {
         fbtVisible(imageLabel);
