@@ -134,7 +134,7 @@ describe('volumes', () => {
     fbtVisible('1 Volume');
   });
 
-  it.only('Detaches attached volume', () => {
+  it('Detaches attached volume', () => {
     interceptOnce('GET', `*/volumes*`, attachedVolumeList).as(
       'getAttachedVolumes'
     );
