@@ -107,6 +107,7 @@ class Lish extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
+
         this.setState({
           linode,
           loading: false,
@@ -196,10 +197,6 @@ class Lish extends React.Component<CombinedProps, State> {
       title: 'Weblish',
       routeName: `${this.props.match.url}/weblish`,
     },
-    {
-      title: 'Glish',
-      routeName: `${this.props.match.url}/glish`,
-    },
   ];
 
   matches = (p: string) =>
@@ -208,6 +205,22 @@ class Lish extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const { authenticated, loading, linode, token } = this.state;
+
+    const isBareMetal = linode && linode.type && linode.type.includes('metal');
+
+    if (!isBareMetal) {
+      this.tabs = [
+        /* NB: These must correspond to the routes inside the Switch */
+        {
+          title: 'Weblish',
+          routeName: `${this.props.match.url}/weblish`,
+        },
+        {
+          title: 'Glish',
+          routeName: `${this.props.match.url}/glish`,
+        },
+      ];
+    }
 
     const navToURL = (index: number) => {
       this.props.history.push(this.tabs[index].routeName);
@@ -241,7 +254,7 @@ class Lish extends React.Component<CombinedProps, State> {
                 />
               </SafeTabPanel>
             )}
-            {linode && token && (
+            {linode && token && isBareMetal && (
               <SafeTabPanel index={1} data-qa-tab="Glish">
                 <Glish
                   token={token}
