@@ -56,13 +56,12 @@ const attachedVolumeId = attachedVolume.id;
 describe('volumes', () => {
   beforeEach(() => {
     interceptOnce('GET', '*/profile/preferences*', {
-      linodes_view_style: 'grid',
-      linodes_group_by_tag: true,
+      linodes_view_style: 'list',
+      linodes_group_by_tag: false,
       volumes_group_by_tag: false,
       desktop_sidebar_open: false,
-      is_large_account: true,
       sortKeys: {
-        'linodes-landing': { order: 'desc', orderBy: 'label' },
+        'linodes-landing': { order: 'asc', orderBy: 'label' },
         volume: { order: 'desc', orderBy: 'label' },
       },
     }).as('getProfilePreferences');
@@ -96,6 +95,7 @@ describe('volumes', () => {
   });
 
   it('creates volume with tag from linode with block storage support (Atlanta)', () => {
+    interceptOnce('GET', '*/volumes*', volumeList).as('getVolumes');
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(attachedVolume);
     }).as('createVolume');
@@ -112,13 +112,14 @@ describe('volumes', () => {
     cy.wait('@getProfilePreferences');
     cy.wait('@getLinodes');
     fbtClick(linodeLabel);
+    cy.wait('@getVolumes');
     cy.wait('@getLinodeDetail');
     getVisible(
       '[href="https://www.linode.com/products/block-storage/"]'
     ).within(() => {
       fbtVisible('NVMe Block Storage');
     });
-    fbtClick('Attach a Volume');
+    fbtClick('Create a Volume');
     getClick('[value="creating_for_linode"]');
     cy.wait('@getTags');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
@@ -150,7 +151,9 @@ describe('volumes', () => {
     containsVisible(linodeLabel);
     containsVisible(attachedVolumeLabel);
     clickVolumeActionMenu(attachedVolumeLabel);
-    getClick('[data-qa-action-menu-item="Detach"]:visible');
+    // getVisible('[data-qa-action-menu-item="Detach"]')
+    fbtClick('Detach');
+    fbtClick('Detach Volume');
     cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
     getClick('[data-qa-confirm="true"]');
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
