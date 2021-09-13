@@ -41,7 +41,7 @@ const styles = (theme: Theme) =>
       '& [role="tab"]': {
         backgroundColor: theme.bg.offWhite,
         color: theme.color.tableHeaderText,
-        flexBasis: '50%',
+        flex: 'auto',
         margin: 0,
         maxWidth: 'none !important',
         '&[aria-selected="true"]': {
