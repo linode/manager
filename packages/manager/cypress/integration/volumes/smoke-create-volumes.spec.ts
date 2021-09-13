@@ -134,7 +134,7 @@ describe('volumes', () => {
     fbtVisible('1 Volume');
   });
 
-  it('Detaches attached volume', () => {
+  it.only('Detaches attached volume', () => {
     interceptOnce('GET', `*/volumes*`, attachedVolumeList).as(
       'getAttachedVolumes'
     );
@@ -151,8 +151,9 @@ describe('volumes', () => {
     containsVisible(linodeLabel);
     containsVisible(attachedVolumeLabel);
     clickVolumeActionMenu(attachedVolumeLabel);
-    getVisible('[data-qa-action-menu-item="Detach"]');
-    getClick('[data-qa-action-menu-item="Detach"]');
+    // getVisible('[data-qa-action-menu-item="Detach"]')
+    fbtClick('Detach');
+    fbtClick('Detach Volume');
     cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
     getClick('[data-qa-confirm="true"]');
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
