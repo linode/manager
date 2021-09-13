@@ -254,7 +254,7 @@ class Lish extends React.Component<CombinedProps, State> {
                 />
               </SafeTabPanel>
             )}
-            {linode && token && isBareMetal && (
+            {linode && token && !isBareMetal && (
               <SafeTabPanel index={1} data-qa-tab="Glish">
                 <Glish
                   token={token}
