@@ -502,7 +502,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   ) => {
     const { classes } = this.props;
     return (
-      <ActionsPanel rightAlign className={classes.section}>
+      <ActionsPanel className={classes.section}>
         <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
           Cancel
         </Button>
