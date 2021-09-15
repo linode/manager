@@ -47,6 +47,7 @@ describe('rescue linode', () => {
         .its('response.statusCode')
         .should('eq', 400);
       fbtVisible('Linode busy.');
+      // another possible bug
     });
   });
 });
