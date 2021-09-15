@@ -57,7 +57,7 @@ export const ManagedContent: React.FC<ContentProps> = (props) => {
         </Typography>
       </Grid>
       <Grid item>
-        <Button buttonType="primary" onClick={openConfirmationModal}>
+        <Button buttonType="outlined" onClick={openConfirmationModal}>
           Add Linode Managed
         </Button>
       </Grid>

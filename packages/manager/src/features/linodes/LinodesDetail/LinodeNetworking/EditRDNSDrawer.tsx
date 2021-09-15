@@ -192,20 +192,20 @@ export const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
         )}
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
-            buttonType="primary"
-            onClick={save}
-            loading={loading}
-            data-qa-submit
-          >
-            Save
-          </Button>
-          <Button
             buttonType="secondary"
             className="cancel"
             onClick={onClose}
             data-qa-cancel
           >
             Close
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={save}
+            loading={loading}
+            data-qa-submit
+          >
+            Save
           </Button>
         </ActionsPanel>
         <Typography variant="body1">{delayText}</Typography>
