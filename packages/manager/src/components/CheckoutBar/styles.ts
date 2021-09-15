@@ -12,7 +12,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minHeight: '24px',
     minWidth: '24px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       position: 'relative !important' as 'relative',
       left: '0 !important' as '0',
       bottom: '0 !important' as '0',
@@ -28,6 +28,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
       '& button': {
         marginLeft: 0,
       },
+    },
+    [theme.breakpoints.down('md')]: {
+      paddingBottom: `0px !important`,
     },
   },
   sidebarTitle: {

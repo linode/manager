@@ -53,12 +53,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   sidebar: {
-    background: theme.color.white,
-    paddingTop: theme.spacing(),
-    [theme.breakpoints.up('lg')]: {
-      paddingTop: 0,
-      padding: `0px 0px ${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
-      background: 'none',
+    marginTop: '0px !important',
+    paddingTop: '0px !important',
+    background: 'none',
+    [theme.breakpoints.down('md')]: {
+      padding: `${theme.spacing(3)}px !important`,
+      marginTop: `${theme.spacing(3)}px !important`,
+      background: theme.color.white,
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: `${theme.spacing()}px !important`,
     },
   },
   inner: {
