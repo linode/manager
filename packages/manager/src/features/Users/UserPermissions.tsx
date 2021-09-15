@@ -503,9 +503,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     return (
       <ActionsPanel className={classes.section}>
-        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
-          Cancel
-        </Button>
         <Button
           buttonType="primary"
           onClick={onConfirm}
@@ -513,6 +510,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           data-qa-submit
         >
           Save
+        </Button>
+        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
+          Cancel
         </Button>
       </ActionsPanel>
     );
