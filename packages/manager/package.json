@@ -253,7 +253,7 @@
     "redux-mock-store": "^1.5.3",
     "reselect-tools": "^0.0.7",
     "selenium-standalone": "^6.13.0",
-    "set-value": "^3.0.1",
+    "set-value": "^4.0.1",
     "source-map-loader": "^1.0.0",
     "storybook-react-router": "~1.0.8",
     "style-loader": "^0.23.1",
