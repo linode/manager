@@ -141,6 +141,22 @@ describe('credit card expiry date parsing and validation', () => {
       },
       result: 'Expiration month must be a number from 1 to 12.',
     },
+    {
+      data: {
+        card_number: '1111111111111111',
+        expiry: '05/999',
+        cvv: '123',
+      },
+      result: 'Must be 2 for 4 digits.',
+    },
+    {
+      data: {
+        card_number: '1111111111111111',
+        expiry: '05/99999',
+        cvv: '123',
+      },
+      result: 'Must be 2 for 4 digits.',
+    },
   ].forEach(({ data, result }) => {
     describe(`Expiry year of ${data.expiry}`, () => {
       const message =
