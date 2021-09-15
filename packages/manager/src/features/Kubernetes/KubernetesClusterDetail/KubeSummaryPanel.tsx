@@ -164,12 +164,16 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
 
   // We are making the assumption that a lke-standard plan has HA
-  const isHA = cluster.type === 'lke-standard';
+  const isHighlyAvailable = cluster.type === 'lke-standard';
 
   // We could query just the specifc cluster type, but chances are
   // this is already cached and it should have only a few types in the
   // response
-  const { data: kubernetesTypes } = useAllKubernetesTypesQuery(isHA);
+  const { data: kubernetesTypes } = useAllKubernetesTypesQuery(
+    isHighlyAvailable
+  );
+
+  const haPrice = getHAPrice(kubernetesTypes)?.monthly;
 
   // Deletion handlers
   //
@@ -341,8 +345,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   <Typography>
                     {`$${getTotalClusterPrice(
                       cluster.node_pools,
-                      isHA,
-                      getHAPrice(kubernetesTypes)?.monthly || 0
+                      isHighlyAvailable ? haPrice : undefined
                     )}/month`}
                   </Typography>
                 </Grid>

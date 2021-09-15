@@ -1,5 +1,4 @@
 import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
-import { LKEPlan } from 'src';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
@@ -15,6 +14,7 @@ import {
   KubernetesCluster,
   KubernetesEndpointResponse,
   KubernetesVersion,
+  LKEPlan,
 } from './types';
 
 /**

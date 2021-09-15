@@ -12,7 +12,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minHeight: '24px',
     minWidth: '24px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       position: 'relative !important' as 'relative',
       left: '0 !important' as '0',
       bottom: '0 !important' as '0',

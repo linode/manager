@@ -54,8 +54,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sidebar: {
     background: theme.color.white,
-    padding: `0px 0px ${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
+    paddingTop: theme.spacing(),
     [theme.breakpoints.up('lg')]: {
+      paddingTop: 0,
+      padding: `0px 0px ${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
       background: 'none',
     },
   },
@@ -135,7 +137,9 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const [selectedRegion, setSelectedRegion] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<PoolNodeWithPrice[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
-  const [ha, setHA] = React.useState<boolean>(false);
+  const [highAvailability, setHighAvailability] = React.useState<boolean>(
+    false
+  );
   const [version, setVersion] = React.useState<Item<string> | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -173,7 +177,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     ) as PoolNodeRequest[];
 
     const payload: CreateKubeClusterPayload = {
-      type: ha ? 'lke-standard' : 'lke-basic',
+      type: highAvailability ? 'lke-standard' : 'lke-basic',
       region: selectedRegion,
       node_pools,
       label,
@@ -333,7 +337,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
       </Grid>
       <Grid
         item
-        className={`${classes.sidebar} mlSidebar`}
+        className={`mlSidebar ${classes.sidebar}`}
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
@@ -343,10 +347,10 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
           updatePool={updatePool}
           removePool={removePool}
           typesData={typesData || []}
-          ha={ha}
-          setHA={setHA}
+          highAvailability={highAvailability}
+          setHighAvailability={setHighAvailability}
           updateFor={[
-            ha,
+            highAvailability,
             nodePools,
             submitting,
             typesData,

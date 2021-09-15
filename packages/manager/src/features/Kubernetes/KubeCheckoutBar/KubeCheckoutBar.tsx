@@ -20,8 +20,8 @@ export interface Props {
   createCluster: () => void;
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   removePool: (poolIdx: number) => void;
-  ha: boolean;
-  setHA: (ha: boolean) => void;
+  highAvailability: boolean;
+  setHighAvailability: (ha: boolean) => void;
 }
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
@@ -32,13 +32,13 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     removePool,
     typesData,
     updatePool,
-    ha,
-    setHA,
+    highAvailability,
+    setHighAvailability,
   } = props;
 
   const { data: kubernetesTypes } = useAllKubernetesTypesQuery();
 
-  const haPrice = getHAPrice(kubernetesTypes)?.monthly || 0;
+  const haPrice = getHAPrice(kubernetesTypes)?.monthly;
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
@@ -47,7 +47,10 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     <CheckoutBar
       data-qa-checkout-bar
       heading="Cluster Summary"
-      calculatedPrice={getTotalClusterPrice(pools, ha, haPrice)}
+      calculatedPrice={getTotalClusterPrice(
+        pools,
+        highAvailability ? haPrice : undefined
+      )}
       isMakingRequest={submitting}
       disabled={pools.length < 1}
       onDeploy={createCluster}
@@ -71,9 +74,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
         ))}
         <Divider spacingTop={16} />
         <HACheckbox
-          checked={ha}
-          onChange={(e) => setHA(e.target.checked)}
-          haPrice={haPrice}
+          checked={highAvailability}
+          onChange={(e) => setHighAvailability(e.target.checked)}
+          haPrice={haPrice || 0}
         />
         <Divider spacingTop={16} />
         {showWarning && (
