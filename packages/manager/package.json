@@ -32,7 +32,7 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-router-hash-link": "^1.2.1",
     "algoliasearch": "^3.30.0",
-    "axios": "~0.21.2",
+    "axios": "~0.21.4",
     "axios-mock-adapter": "^1.15.0",
     "bluebird": "^3.5.1",
     "braintree-web": "^3.76.4",
