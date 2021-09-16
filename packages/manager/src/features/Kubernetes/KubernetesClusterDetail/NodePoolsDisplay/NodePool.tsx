@@ -7,6 +7,7 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import NodeTable from './NodeTable';
+import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   poolId: number;
@@ -33,6 +34,8 @@ const NodePool: React.FC<Props> = (props) => {
     poolId,
   } = props;
 
+  const flags = useFlags();
+
   return (
     <>
       <Grid
@@ -45,18 +48,20 @@ const NodePool: React.FC<Props> = (props) => {
           <Typography variant="h2">{typeLabel}</Typography>
         </Grid>
         <Grid item style={{ display: 'flex' }}>
-          <div style={{ display: 'flex' }}>
-            <Button
-              style={{ paddingRight: 10 }}
-              buttonType="secondary"
-              onClick={() => openAutoscalePoolDialog(poolId)}
-            >
-              Autoscale Pool
-            </Button>
-            <Typography style={{ alignSelf: 'center', paddingRight: 16 }}>
-              {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
-            </Typography>
-          </div>
+          {flags.autoscaler ? (
+            <div style={{ display: 'flex' }}>
+              <Button
+                style={{ paddingRight: 10 }}
+                buttonType="secondary"
+                onClick={() => openAutoscalePoolDialog(poolId)}
+              >
+                Autoscale Pool
+              </Button>
+              <Typography style={{ alignSelf: 'center', paddingRight: 16 }}>
+                {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
+              </Typography>
+            </div>
+          ) : null}
           <Button
             buttonType="secondary"
             onClick={() => handleClickResize(poolId)}
