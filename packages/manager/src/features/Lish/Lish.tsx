@@ -233,12 +233,22 @@ class Lish extends React.Component<CombinedProps, State> {
       );
     }
 
+    // if we're loading show circular spinner
+    if (loading) {
+      return <CircleProgress noInner className={classes.progress} />;
+    }
+
+    // Only show 404 component if we are missing _both_ linode and token
+    if (!loading && !linode && !token) {
+      return <NotFound className={classes.notFound} />;
+    }
+
     return (
       <React.Fragment>
-        <Tabs className={classes.tabs} onChange={navToURL}>
-          <TabLinkList className={classes.lish} tabs={tabs} />
-          <TabPanels>
-            {linode && token && (
+        {linode && token && (
+          <Tabs className={classes.tabs} onChange={navToURL}>
+            <TabLinkList className={classes.lish} tabs={tabs} />
+            <TabPanels>
               <SafeTabPanel index={0} data-qa-tab="Weblish">
                 <Weblish
                   token={token}
@@ -246,22 +256,17 @@ class Lish extends React.Component<CombinedProps, State> {
                   refreshToken={this.refreshToken}
                 />
               </SafeTabPanel>
-            )}
-            {linode && token && !isBareMetal && (
-              <SafeTabPanel index={1} data-qa-tab="Glish">
-                <Glish
-                  token={token}
-                  linode={linode}
-                  refreshToken={this.refreshToken}
-                />
-              </SafeTabPanel>
-            )}
-          </TabPanels>
-        </Tabs>
-        {loading && <CircleProgress noInner className={classes.progress} />}
-        {/* Only show 404 component if we are missing _both_ linode and token */}
-        {!loading && !linode && !token && (
-          <NotFound className={classes.notFound} />
+              {!isBareMetal && (
+                <SafeTabPanel index={1} data-qa-tab="Glish">
+                  <Glish
+                    token={token}
+                    linode={linode}
+                    refreshToken={this.refreshToken}
+                  />
+                </SafeTabPanel>
+              )}
+            </TabPanels>
+          </Tabs>
         )}
       </React.Fragment>
     );
