@@ -16,6 +16,7 @@ const props: Props = {
   recycleAllPoolNodes: jest.fn(),
   recycleAllClusterNodes: jest.fn(),
   recycleNode: jest.fn(),
+  clusterID: 123,
   clusterLabel: 'a cluster',
 };
 

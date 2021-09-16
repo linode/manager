@@ -14,6 +14,7 @@ export interface KubeNodePoolResponse {
   id: number;
   nodes: PoolNodeResponse[];
   type: string;
+  autoscaler: AutoscaleNodePool;
 }
 
 export interface PoolNodeResponse {
