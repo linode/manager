@@ -36,7 +36,7 @@ export const linodeInterfaceSchema = array()
               /[a-zA-Z0-9-]+/,
               'Must include only ASCII letters, numbers, and dashes'
             ),
-          otherwise: string().notRequired(),
+          otherwise: string().notRequired().nullable(true),
         })
         .nullable(true),
       ipam_address: string().nullable(true).test({

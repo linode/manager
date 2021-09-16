@@ -4,6 +4,7 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { SuppliedMaintenanceData } from 'src/featureFlags';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import { queryPresets } from 'src/queries/base';
 import { Maintenance, useMaintenanceQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
@@ -19,8 +20,14 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
     hasDismissedNotifications,
   } = useDismissibleNotifications();
 
-  const { data: maintenancesData } = useMaintenanceQuery();
+  const { data: maintenancesData } = useMaintenanceQuery({
+    ...queryPresets.oneTimeFetch,
+  });
   const maintenances = maintenancesData?.scheduled_maintenances ?? [];
+
+  if (hasDismissedNotifications(suppliedMaintenances ?? [])) {
+    return null;
+  }
 
   if (
     !maintenances ||
@@ -46,12 +53,8 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
     return null;
   }
 
-  if (hasDismissedNotifications(scheduledAPIMaintenances)) {
-    return null;
-  }
-
   const onDismiss = () => {
-    dismissNotifications(scheduledAPIMaintenances);
+    dismissNotifications(suppliedMaintenances);
   };
 
   const renderBanner = (scheduledAPIMaintenance: Maintenance) => {
