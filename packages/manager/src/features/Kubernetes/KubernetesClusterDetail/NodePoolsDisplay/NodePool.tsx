@@ -1,4 +1,7 @@
-import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
+import {
+  AutoscaleNodePool,
+  PoolNodeResponse,
+} from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -9,15 +12,19 @@ interface Props {
   poolId: number;
   typeLabel: string;
   nodes: PoolNodeResponse[];
+  autoscaler: AutoscaleNodePool;
+  handleClickResize: (poolId: number) => void;
+  openAutoscalePoolDialog: (poolId: number) => void;
   openDeletePoolDialog: (poolId: number) => void;
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
-  handleClickResize: (poolId: number) => void;
 }
 
 const NodePool: React.FC<Props> = (props) => {
   const {
+    autoscaler,
     handleClickResize,
+    openAutoscalePoolDialog,
     openDeletePoolDialog,
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
@@ -37,7 +44,19 @@ const NodePool: React.FC<Props> = (props) => {
         <Grid item>
           <Typography variant="h2">{typeLabel}</Typography>
         </Grid>
-        <Grid item>
+        <Grid item style={{ display: 'flex' }}>
+          <div style={{ display: 'flex' }}>
+            <Button
+              style={{ paddingRight: 10 }}
+              buttonType="secondary"
+              onClick={() => openAutoscalePoolDialog(poolId)}
+            >
+              Autoscale Pool
+            </Button>
+            <Typography style={{ alignSelf: 'center', paddingRight: 16 }}>
+              {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
+            </Typography>
+          </div>
           <Button
             buttonType="secondary"
             onClick={() => handleClickResize(poolId)}

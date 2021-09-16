@@ -294,6 +294,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
       </Grid>
       <Grid item xs={12}>
         <NodePoolsDisplay
+          clusterID={cluster.id}
           clusterLabel={cluster.label}
           pools={cluster.node_pools}
           types={props.typesData || []}

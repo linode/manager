@@ -27,6 +27,18 @@ export interface PoolNodeRequest {
   count: number;
 }
 
+export interface AutoscaleNodePool {
+  enabled: boolean;
+  min: number;
+  max: number;
+}
+
+export interface AutoscaleNodePoolRequest {
+  clusterID: number;
+  nodePoolID: number;
+  autoscaler: AutoscaleNodePool;
+}
+
 export interface KubeConfigResponse {
   kubeconfig: string;
 }

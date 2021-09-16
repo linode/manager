@@ -1,6 +1,7 @@
 import {
   KubernetesCluster,
   PoolNodeResponse,
+  AutoscaleNodePool,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 
@@ -17,6 +18,7 @@ export interface ExtendedPoolNode {
   type: string;
   clusterID?: number;
   nodes?: PoolNodeResponse[];
+  autoscaler: AutoscaleNodePool;
 }
 export interface ExtendedCluster extends KubernetesCluster {
   node_pools: PoolNodeWithPrice[];
