@@ -1,5 +1,5 @@
 import { createMockImage } from 'cypress/support/api/images';
-import { createMockLinode } from 'cypress/support/api/linodes';
+import { createMockLinodeList } from 'cypress/support/api/linodes';
 import {
   containsClick,
   fbtClick,
@@ -16,12 +16,14 @@ const region = 'us-west';
 const regionSelect = 'Fremont, CA';
 const imageId = mockImage.id;
 const type = 'g6-nanode-1';
-const mockLinode = createMockLinode({
+const mockLinodeList = createMockLinodeList({
   id: linodeId,
   label: `${imageLabel}-${region}`,
   region,
   type,
 });
+
+const mockLinode = mockLinodeList.data[0];
 
 const createLinodeWithImageMock = () => {
   cy.intercept('*/images*', (req) => {

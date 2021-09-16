@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { clickVolumeActionMenu } from '../../support/api/volumes';
 import { assertToast } from '../../support/ui/events';
-import { createMockLinode } from '../../support/api/linodes';
+import { createMockLinodeList } from '../../support/api/linodes';
 import { selectRegionString } from '../../support/ui/constants';
 import {
   containsVisible,
@@ -35,7 +35,7 @@ const validateBasicVolume = (
 const tagList = makeResourcePage(tagFactory.buildList(5));
 const tag = tagList.data[getRandomNumber(0, 4)];
 const tagLabel = tag.label;
-const linodeList = createMockLinode(3, { region: 'us-southeast' });
+const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
 const linode = linodeList.data[1];
 const linodeLabel = linode.label;
 const linodeId = linode.id;
