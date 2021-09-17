@@ -26,7 +26,7 @@ export const useMutateAccountAgreements = () => {
 
 export const reportAgreementSigningError = (err: any) => {
   let customErrorMessage =
-    'Excepted to sign the EU agreement, but the request resulted in an error';
+    'Expected to sign the EU agreement, but the request resulted in an error';
   const apiErrorMessage = err?.[0]?.reason;
 
   if (apiErrorMessage) {
