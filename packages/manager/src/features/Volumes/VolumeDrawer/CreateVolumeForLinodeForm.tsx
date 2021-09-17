@@ -130,7 +130,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               `Volume scheduled for creation.`
             );
             // GA Event
-            sendCreateVolumeEvent(`${label}: ${size}GiB`, origin);
+            sendCreateVolumeEvent(`${label}: ${size}GB`, origin);
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
@@ -207,8 +207,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
               className={props.classes.textWrapper}
               data-qa-volume-size-help
             >
-              A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes
-              in size and costs $0.10/GiB per month. Up to eight volumes can be
+              A single Volume can range from 10 to {MAX_VOLUME_SIZE} gigabytes
+              in size and costs $0.10/GB per month. Up to eight volumes can be
               attached to a single Linode.
             </Typography>
 

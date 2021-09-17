@@ -100,7 +100,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
         </Grid>
       </TableCell>
       {region && <TableCell data-qa-volume-region>{formattedRegion}</TableCell>}
-      <TableCell data-qa-volume-size>{size} GiB</TableCell>
+      <TableCell data-qa-volume-size>{size} GB</TableCell>
       <Hidden xsDown>
         <TableCell className={classes.volumePath} data-qa-fs-path>
           {filesystemPath}

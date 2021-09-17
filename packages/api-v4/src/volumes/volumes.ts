@@ -115,7 +115,7 @@ export const cloneVolume = (volumeId: number, data: CloneVolumePayload) =>
  * Resize an existing Volume on your Account. Volumes can only be resized up.
  *
  * @param volumeId { number } The Volume to be resized.
- * @param data { { size: number } } The size of the Volume (in GiB).
+ * @param data { { size: number } } The size of the Volume (in GB).
  *
  */
 export const resizeVolume = (volumeId: number, data: ResizeVolumePayload) =>

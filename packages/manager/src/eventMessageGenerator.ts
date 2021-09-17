@@ -24,6 +24,9 @@ export const safeSecondaryEntityLabel = (
 
 /** @see https://leo.stcloudstate.edu/grammar/tenses.html */
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
+  account_agreement_eu_model: {
+    notification: () => 'The EU Model Contract has been signed.',
+  },
   account_update: {
     notification: (e) => `Your account settings have been updated.`,
   },

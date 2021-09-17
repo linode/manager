@@ -7,9 +7,11 @@ import { map as mapPromise } from 'bluebird';
 import * as memoize from 'memoizee';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
+export const queryKey = 'account-users';
+
 export const useAccountUsers = (params: any, withGravatar: boolean = false) =>
   useQuery<ResourcePage<User>, APIError[]>(
-    ['account-users', params.page, params.page_size],
+    [queryKey, params.page, params.page_size],
     withGravatar ? () => getUsersWithGravatar(params) : () => getUsers(params),
     queryPresets.oneTimeFetch
   );
