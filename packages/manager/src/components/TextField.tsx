@@ -33,7 +33,8 @@ type ClassNames =
   | 'wrapper'
   | 'tiny'
   | 'absolute'
-  | 'helpIcon';
+  | 'helpIcon'
+  | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -111,6 +112,9 @@ const styles = (theme: Theme) =>
     noMarginTop: {
       marginTop: 0,
     },
+    label: {
+      fontFamily: theme.font.normal,
+    },
   });
 
 interface BaseProps {
@@ -137,6 +141,7 @@ interface BaseProps {
   hideLabel?: boolean;
   hasAbsoluteError?: boolean;
   inputId?: string;
+  optional?: boolean;
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
@@ -249,6 +254,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       loading,
       hasAbsoluteError,
       inputId,
+      optional,
       ...textFieldProps
     } = this.props;
 
@@ -260,14 +266,12 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
         : `error-for-scroll`;
     }
 
-    const maybeRequiredLabel = !!this.props.required
-      ? `${label} (required)`
-      : label;
     const validInputId =
       inputId ||
       (this.props.label
         ? convertToKebabCase(`${this.props.label}`)
         : undefined);
+
     return (
       <div
         className={classNames({
@@ -275,19 +279,23 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           [errorScrollClassName]: !!errorText,
         })}
       >
-        {maybeRequiredLabel && (
-          <InputLabel
-            data-qa-textfield-label={label}
-            className={classNames({
-              [classes.wrapper]: noMarginTop ? false : true,
-              [classes.noTransform]: true,
-              'visually-hidden': hideLabel,
-            })}
-            htmlFor={validInputId}
-          >
-            {maybeRequiredLabel}
-          </InputLabel>
-        )}
+        <InputLabel
+          data-qa-textfield-label={label}
+          className={classNames({
+            [classes.wrapper]: noMarginTop ? false : true,
+            [classes.noTransform]: true,
+            'visually-hidden': hideLabel,
+          })}
+          htmlFor={validInputId}
+        >
+          {label}
+          {this.props.required ? (
+            <span className={classes.label}> (required)</span>
+          ) : this.props.optional ? (
+            <span className={classes.label}> (optional)</span>
+          ) : null}
+        </InputLabel>
+
         {helperText && helperTextPosition === 'top' && (
           <FormHelperText
             data-qa-textfield-helper-text

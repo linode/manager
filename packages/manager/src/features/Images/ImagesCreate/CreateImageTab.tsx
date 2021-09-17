@@ -7,24 +7,25 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { resetEventsPolling } from 'src/eventsPolling';
-import DiskSelect from 'src/features/linodes/DiskSelect';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-// import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
-// import { convertStorageUnit } from 'src/utilities/unitConversions';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import ImagesPricingCopy from './ImagesPricingCopy';
 import withImages, {
   ImagesDispatch,
 } from 'src/containers/withImages.container';
-import Box from 'src/components/core/Box';
+import { resetEventsPolling } from 'src/eventsPolling';
+import DiskSelect from 'src/features/linodes/DiskSelect';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import useFlags from 'src/hooks/useFlags';
+import { useGrants, useProfile } from 'src/queries/profile';
+import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { convertStorageUnit } from 'src/utilities/unitConversions';
+import ImagesPricingCopy from './ImagesPricingCopy';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
@@ -168,15 +169,17 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   };
 
   const requirementsMet = checkRequirements();
-  // TODO: uncomment for billing on 9/1
-  /* const selectedDiskData: Disk | undefined = disks.find(
-   *   (d) => `${d.id}` === selectedDisk
-   * );
-   * const selectedDiskSizeInGB = convertStorageUnit(
-   *   'MB',
-   *   selectedDiskData?.size,
-   *   'GB'
-   * ); */
+
+  const flags = useFlags();
+  const isImagePricingEnabled = Boolean(flags.imagesPriceInfo);
+  const selectedDiskData: Disk | undefined = disks.find(
+    (d) => `${d.id}` === selectedDisk
+  );
+  const selectedDiskSizeInGB = convertStorageUnit(
+    'MB',
+    selectedDiskData?.size,
+    'GB'
+  );
 
   const hasErrorFor = getAPIErrorFor(
     {
@@ -227,39 +230,53 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         ]}
       />
 
-      <DiskSelect
-        selectedDisk={selectedDisk}
-        disks={disks}
-        diskError={diskError}
-        handleChange={handleDiskChange}
-        updateFor={[disks, selectedDisk, diskError, classes]}
-        disabled={!canCreateImage}
-        data-qa-disk-select
-      />
-      <Typography className={classes.helperText} variant="body1">
-        Linode Images cannot be created if you are using raw disks or disks that
-        have been formatted using custom filesystems.
-      </Typography>
-      <TextField
-        label="Label"
-        value={label}
-        onChange={changeLabel}
-        error={Boolean(labelError)}
-        errorText={labelError}
-        disabled={!canCreateImage}
-        data-qa-image-label
-      />
-      <TextField
-        label="Description"
-        multiline
-        rows={4}
-        value={description}
-        onChange={changeDescription}
-        error={Boolean(descriptionError)}
-        errorText={descriptionError}
-        disabled={!canCreateImage}
-        data-qa-image-description
-      />
+      <>
+        <DiskSelect
+          selectedDisk={selectedDisk}
+          disks={disks}
+          diskError={diskError}
+          handleChange={handleDiskChange}
+          updateFor={[disks, selectedDisk, diskError, classes]}
+          disabled={!canCreateImage}
+          data-qa-disk-select
+        />
+        {isImagePricingEnabled ? (
+          <Typography className={classes.helperText} variant="body1">
+            {`Estimated: ${calculateCostFromUnitPrice(
+              0.1,
+              selectedDiskSizeInGB
+            )}/month`}
+          </Typography>
+        ) : null}
+        <Typography className={classes.helperText} variant="body1">
+          Linode Images cannot be created if you are using raw disks or disks
+          that have been formatted using custom filesystems.
+        </Typography>
+      </>
+
+      <>
+        <TextField
+          label="Label"
+          value={label}
+          onChange={changeLabel}
+          error={Boolean(labelError)}
+          errorText={labelError}
+          disabled={!canCreateImage}
+          data-qa-image-label
+        />
+        <TextField
+          label="Description"
+          multiline
+          rows={4}
+          value={description}
+          onChange={changeDescription}
+          error={Boolean(descriptionError)}
+          errorText={descriptionError}
+          disabled={!canCreateImage}
+          data-qa-image-description
+        />
+      </>
+
       <Box
         display="flex"
         justifyContent="flex-end"

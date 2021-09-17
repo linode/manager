@@ -32,6 +32,7 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
+import { useFlags } from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -80,6 +81,8 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
     false
   );
+  const flags = useFlags();
+
   const [region, setRegion] = React.useState<string>('');
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
@@ -198,11 +201,12 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
         <div style={{ width: '100%' }}>
           <TextField
-            label="Label (required)"
+            label="Label"
             value={label}
             onChange={changeLabel}
             errorText={errorMap.label}
             disabled={!canCreateImage}
+            required
           />
 
           <TextField
@@ -216,12 +220,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
           />
 
           <RegionSelect
-            label={'Region (required)'}
+            label="Region"
             errorText={errorMap.region}
             handleSelection={setRegion}
             regions={regions}
             selectedID={region}
             disabled={!canCreateImage}
+            required
           />
 
           {showAgreement ? (
@@ -239,6 +244,14 @@ export const ImageUpload: React.FC<Props> = (props) => {
             to other regions. Image files must be raw disk images (.img)
             compressed using gzip (.gz). The maximum file size is 5 GB
             (compressed).
+            {flags.imagesPriceInfo ? (
+              <>
+                <br />
+                <br />
+                Custom Images are billed at $0.10/GB per month based on the
+                uncompressed image size.
+              </>
+            ) : null}
           </Typography>
 
           <FileUploader

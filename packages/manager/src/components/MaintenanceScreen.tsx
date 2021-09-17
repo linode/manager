@@ -3,7 +3,7 @@ import Link from 'src/components/Link';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Box from 'src/components/core/Box';
-import Logo from 'src/assets/logo/logo-text.svg';
+import Logo from 'src/assets/logo/logo.svg';
 import ErrorState from 'src/components/ErrorState';
 import BuildIcon from '@material-ui/icons/Build';
 
@@ -38,15 +38,15 @@ export const MaintenanceScreen: React.FC<{}> = () => {
 
   const maintenanceCopy = (
     <Typography variant="h2" className={classes.errorHeading}>
-      We are currently undergoing scheduled maintenance.
+      We are undergoing scheduled maintenance.
     </Typography>
   );
 
   const statusPageCopy = (
     <Typography className={classes.subheading}>
-      To stay updated on the status of the Linode Cloud Manager and API, you may
-      visit{' '}
-      <Link to="https://status.linode.com/">https://status.linode.com</Link>.
+      Visit{' '}
+      <Link to="https://status.linode.com/">https://status.linode.com</Link> for
+      updates on the Linode Cloud Manager and API.
     </Typography>
   );
 
@@ -58,7 +58,7 @@ export const MaintenanceScreen: React.FC<{}> = () => {
             display: 'flex',
           }}
         >
-          <Logo width={150} height={87} className={classes.logo} />
+          <Logo width={115} height={43} className={classes.logo} />
         </Box>
 
         <ErrorState

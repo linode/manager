@@ -157,3 +157,59 @@ const UsernameDisplay: React.FC<ProfileProps> = (props) => {
   return <span>Username: {profileData.username}</span>;
 };
 ```
+
+### Error Handling
+
+#### API Error arrays
+
+Components making API requests generally expect to work with an array of Linode API errors. These have the shape:
+
+```js
+{ field: 'field-name', reason: 'why this error occurred' }
+```
+
+We have added an interceptor to our Axios instance that essentially guarantees that any error from an API function will have this shape. For example, if you block network requests using Chrome Dev Tools, there is no response from the API. But if you `.catch()` this error, you'll find that it has the above shape, with a default message ("An unexpected error occurred.").
+
+This makes it easy to work with errors, but the default message is not very situation specific. Often, what we want is to use a real error message from the API if it is available, and use a situation-specific fallback message otherwise. We have a helper in our utilities directory for this called `getAPIErrorOrDefault`.
+
+```js
+import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
+
+apiRequest().catch((error) => {
+  const apiError = getAPIErrorOrDefault(
+    error, // If this is an array of API field errors, it will be returned unchanged.
+    "Your Linode is hopelessly broken.", // If no field errors are present, an array consisting of an error with this reason is returned.
+    "linode-id" // Optional. If you want the default field error to have a `field` property, this argument will be used.
+  );
+});
+```
+
+#### Error Maps
+
+The usual pattern is to map field errors to the appropriate field, showing a generalError for any errors that don't have a field. For example, a form might have an input for `region`, and that element will display any errors with `{ field: 'region', reason: 'whatever' }` inline. In some cases, however, we either aren't checking for every possible error field, or we aren't entirely sure what all of the possible fields the API is considering are. To make sure that we catch these and show them to the user, use the `getErrorMap` helper:
+
+```js
+import { getErrorMap } from "src/utilities/errorUtils";
+
+apiRequest().catch((error) => {
+  const errorMap = getErrorMap(
+    ["label", "region"], // Fields we want to check for
+    error
+  );
+  const labelError = errorMap.label;
+  const regionError = errorMap.region;
+  const generalError = errorMap.none;
+});
+```
+
+`errorMap` will be an object with one key for each of the fields we specified, and a `none` key that captures any errors (the first
+one it finds) that don't match the provided fields:
+
+```js
+console.log(errorMap);
+{
+  label: 'a label error',
+  region: 'a region error',
+  none: 'a linode_id error or similar'
+}
+```

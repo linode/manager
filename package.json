@@ -59,7 +59,8 @@
     "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
     "ws": "^7.4.6",
-    "browserslist": "^4.16.5"
+    "browserslist": "^4.16.5",
+    "set-value": "^4.0.1"
   },
   "workspaces": {
     "packages": [

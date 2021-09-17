@@ -76,7 +76,7 @@ const statusPage = [
     const response = incidentResponseFactory.build();
     return res(ctx.json(response));
   }),
-  rest.get('*/api/v2/scheduled_maintenances*', (req, res, ctx) => {
+  rest.get('*/api/v2/scheduled-maintenances*', (req, res, ctx) => {
     const response = maintenanceResponseFactory.build();
     return res(ctx.json(response));
   }),
@@ -183,7 +183,6 @@ export const handlers = [
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(17, {
       backups: { enabled: false },
-      type: 'g6-metal-alpha-1',
       ipv4: ['000.000.000.000'],
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
@@ -212,6 +211,11 @@ export const handlers = [
       linodeFactory.build({
         label: 'shadow-plan',
         type: 'g5-standard-20-s1',
+        backups: { enabled: false },
+      }),
+      linodeFactory.build({
+        label: 'bare-metal',
+        type: 'g1-metal-c2',
         backups: { enabled: false },
       }),
       linodeFactory.build({
@@ -454,7 +458,7 @@ export const handlers = [
         entity: { label: 'very-long-name-for-a-linode-for-testing' },
         when: new Date(Date.now() + 5000).toISOString(),
       }),
-      ...accountMaintenanceFactory.buildList(27, { status: 'pending' }),
+      ...accountMaintenanceFactory.buildList(5, { status: 'pending' }),
       ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
     ];
 
