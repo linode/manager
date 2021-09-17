@@ -68,6 +68,7 @@ import {
   WithTypesProps,
   WithTypesRegionsAndImages,
 } from './types';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 
 type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
 
@@ -138,6 +139,9 @@ interface Props {
   vlanLabel: string | null;
   ipamAddress: string | null;
   handleVLANChange: (updatedInterface: Interface) => void;
+  showAgreement: boolean;
+  handleAgreementChange: () => void;
+  signedAgreement: boolean;
 }
 
 const errorMap = [
@@ -359,6 +363,7 @@ export class LinodeCreate extends React.PureComponent<
 
     const {
       classes,
+      formIsSubmitting,
       linodesData,
       linodesLoading,
       linodesError,
@@ -387,6 +392,9 @@ export class LinodeCreate extends React.PureComponent<
       userCannotCreateLinode,
       accountBackupsEnabled,
       showGeneralError,
+      showAgreement,
+      handleAgreementChange,
+      signedAgreement,
       ...rest
     } = this.props;
 
@@ -664,14 +672,26 @@ export class LinodeCreate extends React.PureComponent<
             data-qa-checkout-bar
             heading="Linode Summary"
             calculatedPrice={calculatedPrice}
-            isMakingRequest={this.props.formIsSubmitting}
-            disabled={this.props.formIsSubmitting || userCannotCreateLinode}
+            isMakingRequest={formIsSubmitting}
+            disabled={
+              formIsSubmitting ||
+              userCannotCreateLinode ||
+              (showAgreement && !signedAgreement)
+            }
             onDeploy={this.createLinode}
             submitText="Create Linode"
             footer={
               <SMTPRestrictionText>
                 {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
               </SMTPRestrictionText>
+            }
+            agreement={
+              showAgreement ? (
+                <EUAgreementCheckbox
+                  checked={signedAgreement}
+                  onChange={handleAgreementChange}
+                />
+              ) : undefined
             }
           >
             <DisplaySectionList displaySections={displaySections} />

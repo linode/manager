@@ -39,19 +39,15 @@ interface Props {
 
 export const DismissibleBanner: React.FC<Props> = (props) => {
   const { className, preferenceKey, productInformationIndicator } = props;
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
   const classes = useStyles();
 
-  if (hasDismissedNotifications([preferenceKey])) {
+  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
+    preferenceKey
+  );
+
+  if (hasDismissedBanner) {
     return null;
   }
-
-  const handleDismiss = () => {
-    dismissNotifications([preferenceKey]);
-  };
 
   return (
     <Paper
@@ -76,3 +72,20 @@ export const DismissibleBanner: React.FC<Props> = (props) => {
 };
 
 export default DismissibleBanner;
+
+// Hook that contains the nuts-and-bolts of the DismissibleBanner component.
+// Extracted out as its own hook so other components can use it.
+export const useDismissibleBanner = (preferenceKey: string) => {
+  const {
+    dismissNotifications,
+    hasDismissedNotifications,
+  } = useDismissibleNotifications();
+
+  const hasDismissedBanner = hasDismissedNotifications([preferenceKey]);
+
+  const handleDismiss = () => {
+    dismissNotifications([preferenceKey]);
+  };
+
+  return { hasDismissedBanner, handleDismiss };
+};

@@ -49,3 +49,6 @@ export const getHumanReadableCountry = (regionSlug: string) => {
 
 export const formatObjectStorageCluster = (clusterId: string) =>
   objectStorageClusterDisplay[clusterId] || '';
+
+export const isEURegion = (region: string | null | undefined) =>
+  region?.match('^eu');
