@@ -107,7 +107,7 @@ describe('credit card expiry date parsing and validation', () => {
         // Credit Card expiry years can't be more than 20 years in the future.
         // We also use currentYear to make sure this test does not fail in many
         // years down the road.
-        // Using takeLast to similate a user entering the year in a 2 digit format.
+        // Using takeLast to simulate a user entering the year in a 2 digit format.
         expiry: `09/${takeLast(2, String(currentYear + 21))}`,
         cvv: '123',
       },
