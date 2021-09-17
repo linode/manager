@@ -71,9 +71,9 @@ const ComplianceUpdateModal: React.FC<{}> = () => {
       error={error}
     >
       <Typography>
-        Recent legal changes now require all users with deployments in Linode’s
-        London or Frankfurt data centers to be covered under the EU Standard
-        Contractual Clauses.
+        Recent legal changes now require users located in Europe, or with
+        deployments in Linode’s London or Frankfurt data centers, to be covered
+        under the revised EU Standard Contractual Clauses.
       </Typography>
       <Typography style={{ marginTop: 16 }}>
         After your review, please click the box below if the agreement is

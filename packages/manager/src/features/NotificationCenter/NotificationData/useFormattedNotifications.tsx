@@ -317,8 +317,8 @@ const ComplianceNotification: React.FC<{}> = () => {
   return (
     <Typography>
       Please review the compliance update for guidance regarding the EU Standard
-      Contractual Clauses and its application to user deployments in Linode’s
-      London and Frankfurt data centers.{' '}
+      Contractual Clauses and its application to users located in Europe as well
+      as deployments in Linode’s London and Frankfurt data centers
       <Button
         className={classes.reviewUpdateButton}
         onClick={() => complianceModelContext.open()}
