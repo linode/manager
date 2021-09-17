@@ -205,7 +205,7 @@ const formatDescription = (desc?: string) => {
    *    Linode 32GB - MyLinode (1234)
    *
    * 3. If it's a volume
-   *    Storage Volume - volume (1234) - 20 GiB
+   *    Storage Volume - volume (1234) - 20 GB
    */
 
   const isBackup = /^Backup/.test(desc);
