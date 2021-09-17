@@ -2,7 +2,7 @@ import {
   updateAccountSchema,
   UpdateAccountSettingsSchema,
 } from '@linode/validation/lib/account.schema';
-import { API_ROOT } from 'src/constants';
+import { API_ROOT, BETA_API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from 'src/request';
 import {
   Account,
@@ -10,6 +10,7 @@ import {
   CancelAccount,
   CancelAccountPayload,
   NetworkUtilization,
+  Agreements,
 } from './types';
 
 /**
@@ -81,6 +82,31 @@ export const updateAccountSettings = (data: Partial<AccountSettings>) =>
 export const cancelAccount = (data: CancelAccountPayload) => {
   return Request<CancelAccount>(
     setURL(`${API_ROOT}/account/cancel`),
+    setMethod('POST'),
+    setData(data)
+  );
+};
+
+/**
+ * getAccountAgreements
+ *
+ * Gets the state of all agreements (signed or unsigned).
+ *
+ */
+export const getAccountAgreements = () =>
+  Request<Agreements>(
+    setURL(`${BETA_API_ROOT}/account/agreements`),
+    setMethod('GET')
+  );
+
+/**
+ * signAgreement
+ *
+ * Sign one or more agreements
+ */
+export const signAgreement = (data: Partial<Agreements>) => {
+  return Request<{}>(
+    setURL(`${BETA_API_ROOT}/account/agreements`),
     setMethod('POST'),
     setData(data)
   );

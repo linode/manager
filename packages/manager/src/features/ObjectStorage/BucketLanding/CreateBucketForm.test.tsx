@@ -14,7 +14,6 @@ describe('CreateBucketForm', () => {
       getBucket={jest.fn()}
       bucketsData={[]}
       bucketsLoading={false}
-      classes={{ root: '', textWrapper: '' }}
       isRestrictedUser={false}
     />
   );

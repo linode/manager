@@ -67,7 +67,8 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
   const { onSuccess, reloadAttachments, ...rest } = props;
 
   const textFromStorage = storage.ticketReply.get();
-  const isTextFromStorageForCurrentTicket = textFromStorage.ticketId === props.ticketId;
+  const isTextFromStorageForCurrentTicket =
+    textFromStorage.ticketId === props.ticketId;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [value, setValue] = React.useState<string>(

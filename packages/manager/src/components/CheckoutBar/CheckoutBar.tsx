@@ -14,6 +14,7 @@ interface Props {
   submitText?: string;
   children?: JSX.Element;
   footer?: JSX.Element;
+  agreement?: JSX.Element;
 }
 
 type CombinedProps = Props;
@@ -30,6 +31,7 @@ const CheckoutBar: React.FC<CombinedProps> = (props) => {
     priceHelperText,
     submitText,
     footer,
+    agreement,
   } = props;
 
   const price = calculatedPrice ?? 0;
@@ -52,7 +54,7 @@ const CheckoutBar: React.FC<CombinedProps> = (props) => {
           )}
         </div>
       }
-
+      {agreement ? agreement : null}
       <div className={classes.checkoutSection}>
         <Button
           buttonType="primary"

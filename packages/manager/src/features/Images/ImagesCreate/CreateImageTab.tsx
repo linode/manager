@@ -1,4 +1,4 @@
-import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
+import { Disk, getLinodeDisks, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { makeStyles } from '@material-ui/styles';
 import { useSnackbar } from 'notistack';
@@ -6,26 +6,26 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { resetEventsPolling } from 'src/eventsPolling';
-import DiskSelect from 'src/features/linodes/DiskSelect';
-import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { useGrants, useProfile } from 'src/queries/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
-import { convertStorageUnit } from 'src/utilities/unitConversions';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import ImagesPricingCopy from './ImagesPricingCopy';
 import withImages, {
   ImagesDispatch,
 } from 'src/containers/withImages.container';
+import { resetEventsPolling } from 'src/eventsPolling';
+import DiskSelect from 'src/features/linodes/DiskSelect';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import useFlags from 'src/hooks/useFlags';
+import { useGrants, useProfile } from 'src/queries/profile';
+import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { convertStorageUnit } from 'src/utilities/unitConversions';
+import ImagesPricingCopy from './ImagesPricingCopy';
 
 const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
@@ -37,6 +37,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(),
     '& .MuiFormHelperText-root': {
       marginBottom: theme.spacing(2),
+    },
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'flex-end',
     },
   },
 }));
@@ -64,7 +71,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const [selectedLinode, setSelectedLinode] = React.useState<number>(0);
+  const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
   const [disks, setDisks] = React.useState<Disk[]>([]);
   const [notice, setNotice] = React.useState<string | undefined>();
@@ -103,16 +110,15 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       });
   };
 
-  const changeSelectedLinode = (linodeId: number | null) => {
-    const linodeID = linodeId ?? 0;
-    fetchLinodeDisksOnLinodeChange(linodeID);
-    setSelectedLinode(linodeID);
+  const changeSelectedLinode = (linode: Linode) => {
+    fetchLinodeDisksOnLinodeChange(linode.id);
+    setSelectedLinode(linode);
   };
 
-  const handleLinodeChange = (linodeID: number) => {
+  const handleLinodeChange = (linode: Linode) => {
     // Clear any errors
     setErrors(undefined);
-    changeSelectedLinode(linodeID);
+    changeSelectedLinode(linode);
   };
 
   const handleDiskChange = (diskID: string | null) => {
@@ -206,10 +212,10 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       {notice ? <Notice success text={notice} data-qa-notice /> : null}
       <ImagesPricingCopy type="captureImage" />
       <LinodeSelect
-        selectedLinode={selectedLinode}
+        selectedLinode={selectedLinode?.id || null}
         linodeError={linodeError}
         disabled={!canCreateImage}
-        handleChange={(linode) => handleLinodeChange(linode.id)}
+        handleChange={(linode) => handleLinodeChange(linode)}
         filterCondition={(linode) =>
           availableLinodesToImagize
             ? availableLinodesToImagize.includes(linode.id)
@@ -271,9 +277,12 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         />
       </>
 
-      <ActionsPanel
-        style={{ marginTop: 16 }}
-        updateFor={[label, description, requirementsMet, classes, submitting]}
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        alignItems="center"
+        flexWrap="wrap"
+        className={classes.buttonGroup}
       >
         <Button
           onClick={onSubmit}
@@ -284,7 +293,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         >
           Create Image
         </Button>
-      </ActionsPanel>
+      </Box>
     </Paper>
   );
 };

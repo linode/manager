@@ -2,10 +2,14 @@ import * as React from 'react';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import NodePoolSummary from './NodePoolSummary';
+import { useProfile } from 'src/queries/profile';
+import { useAccountAgreements } from 'src/queries/accountAgreements';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -14,6 +18,9 @@ export interface Props {
   createCluster: () => void;
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   removePool: (poolIdx: number) => void;
+  region: string | undefined;
+  hasAgreed: boolean;
+  toggleHasAgreed: () => void;
 }
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
@@ -24,10 +31,25 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     removePool,
     typesData,
     updatePool,
+    region,
+    hasAgreed,
+    toggleHasAgreed,
   } = props;
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
+
+  const { data: profile } = useProfile();
+  const { data: agreements } = useAccountAgreements();
+  const showGDPRCheckbox =
+    isEURegion(region) &&
+    !profile?.restricted &&
+    agreements?.eu_model === false;
+
+  const needsAPool = pools.length < 1;
+  const disableCheckout = Boolean(
+    needsAPool || (!hasAgreed && showGDPRCheckbox)
+  );
 
   return (
     <CheckoutBar
@@ -35,9 +57,14 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       heading="Cluster Summary"
       calculatedPrice={getTotalClusterPrice(pools)}
       isMakingRequest={submitting}
-      disabled={pools.length < 1}
+      disabled={disableCheckout}
       onDeploy={createCluster}
       submitText={'Create Cluster'}
+      agreement={
+        showGDPRCheckbox ? (
+          <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
+        ) : undefined
+      }
     >
       <>
         {pools.map((thisPool, idx) => (
