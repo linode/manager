@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router-dom';
 
 interface Props {
   title?: string;
   description?: string;
   text: string;
+  onClick?: LinkProps['onClick'];
 }
 
 type CombinedProps = Props;
 
 const SupportLink: React.FunctionComponent<CombinedProps> = (props) => {
-  const { description, text, title } = props;
+  const { description, text, title, onClick } = props;
   return (
     <Link
       to={{
@@ -21,6 +22,7 @@ const SupportLink: React.FunctionComponent<CombinedProps> = (props) => {
           description,
         },
       }}
+      onClick={onClick}
     >
       {text}
     </Link>

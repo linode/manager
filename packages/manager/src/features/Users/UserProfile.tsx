@@ -218,7 +218,7 @@ const UserProfile: React.FC<Props> = (props) => {
           />
         )}
         <Button
-          disabled={profile?.username === username}
+          disabled={profile?.username === originalUsername}
           buttonType="outlined"
           className={classes.topMargin}
           onClick={onDelete}
@@ -226,7 +226,7 @@ const UserProfile: React.FC<Props> = (props) => {
         >
           Delete
         </Button>
-        {profile?.username === username && (
+        {profile?.username === originalUsername && (
           <HelpIcon
             className={classes.topMargin}
             text="You can't delete the currently active user"

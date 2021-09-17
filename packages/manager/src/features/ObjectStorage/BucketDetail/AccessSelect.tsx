@@ -203,23 +203,25 @@ const AccessSelect: React.FC<CombinedProps> = (props) => {
         </Typography>
       ) : null}
 
-      <Button
-        className={classes.submitButton}
-        buttonType="primary"
-        onClick={() => {
-          // This isn't really a sane option: open a dialog for confirmation.
-          if (selectedACL === 'public-read-write') {
-            openDialog();
-          } else {
-            handleSubmit();
-          }
-        }}
-        //  Disabled if nothing has changed.
-        disabled={aclData === selectedACL && corsData === selectedCORSOption}
-        loading={updateAccessLoading}
-      >
-        Save
-      </Button>
+      <ActionsPanel style={{ padding: 0 }}>
+        <Button
+          className={classes.submitButton}
+          buttonType="primary"
+          onClick={() => {
+            // This isn't really a sane option: open a dialog for confirmation.
+            if (selectedACL === 'public-read-write') {
+              openDialog();
+            } else {
+              handleSubmit();
+            }
+          }}
+          //  Disabled if nothing has changed.
+          disabled={aclData === selectedACL && corsData === selectedCORSOption}
+          loading={updateAccessLoading}
+        >
+          Save
+        </Button>
+      </ActionsPanel>
 
       <ConfirmationDialog
         title={`Confirm ${label} Access`}

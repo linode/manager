@@ -17,7 +17,7 @@ export const clearUserInput = () => {
   // Support ticket title/description.
 
   supportText.set({ title: '', description: '' });
-  ticketReply.set({ ticketId: -1, text: ''});
+  ticketReply.set({ ticketId: -1, text: '' });
   stackScriptInProgress.set({
     id: '',
     label: '',
