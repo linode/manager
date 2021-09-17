@@ -80,7 +80,7 @@ const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
           <Form>
             <Typography variant="body1">
               The newly created volume will be an exact clone of{' '}
-              <b>{volumeLabel}</b>. It will have a size of {volumeSize} GiB and
+              <b>{volumeLabel}</b>. It will have a size of {volumeSize} GB and
               be available in {volumeRegion}.
             </Typography>
             {status && (
