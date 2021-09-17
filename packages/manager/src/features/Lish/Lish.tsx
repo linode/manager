@@ -239,6 +239,7 @@ class Lish extends React.Component<CombinedProps, State> {
     }
 
     // Only show 404 component if we are missing _both_ linode and token
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     if (!loading && !linode && !token) {
       return <NotFound className={classes.notFound} />;
     }
