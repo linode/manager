@@ -21,6 +21,7 @@ import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useImages } from 'src/hooks/useImages';
 import { useTypes } from 'src/hooks/useTypes';
 import {
+  reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
@@ -87,7 +88,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { images } = useImages();
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
-  const { mutateAsync: signAgreement } = useMutateAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -97,7 +98,9 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const [APIError, setAPIError] = React.useState<string>('');
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
-  const [signedAgreement, setSignedAgreement] = React.useState<boolean>(false);
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
 
   const showAgreement = Boolean(
     !profile?.restricted &&
@@ -161,8 +164,11 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
           'Your Linode has entered the migration queue and will begin migration shortly.',
           { variant: 'success' }
         );
-        if (signedAgreement) {
-          signAgreement({ eu_model: true, privacy_policy: true });
+        if (hasSignedAgreement) {
+          updateAccountAgreements({
+            eu_model: true,
+            privacy_policy: true,
+          }).catch(reportAgreementSigningError);
         }
         onClose();
       })
@@ -240,8 +246,8 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
       >
         {showAgreement ? (
           <EUAgreementCheckbox
-            checked={signedAgreement}
-            onChange={(e) => setSignedAgreement(e.target.checked)}
+            checked={hasSignedAgreement}
+            onChange={(e) => setHasSignedAgreement(e.target.checked)}
             className={classes.agreement}
             centerCheckbox
           />
@@ -252,7 +258,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
             !!disabledText ||
             !hasConfirmed ||
             !selectedRegion ||
-            (showAgreement && !signedAgreement)
+            (showAgreement && !hasSignedAgreement)
           }
           loading={isLoading}
           onClick={handleMigrate}

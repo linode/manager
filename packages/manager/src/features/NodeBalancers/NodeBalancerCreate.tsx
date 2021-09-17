@@ -61,7 +61,10 @@ import {
   transformConfigsForRequest,
 } from './utils';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
-import { queryKey } from 'src/queries/accountAgreements';
+import {
+  queryKey,
+  reportAgreementSigningError,
+} from 'src/queries/accountAgreements';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -333,6 +336,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
             mutationKey: queryKey,
+            onError: reportAgreementSigningError,
             ...simpleMutationHandlers(queryKey),
           });
         }

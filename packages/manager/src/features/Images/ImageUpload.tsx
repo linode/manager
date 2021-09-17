@@ -18,6 +18,7 @@ import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import {
+  reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
@@ -69,14 +70,16 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: agreements } = useAccountAgreements();
-  const { mutateAsync: signAgreement } = useMutateAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];
   const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
 
-  const [signedAgreement, setSignedAgreement] = React.useState<boolean>(false);
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
   const [region, setRegion] = React.useState<string>('');
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
@@ -127,13 +130,19 @@ export const ImageUpload: React.FC<Props> = (props) => {
   };
 
   const onSuccess = () => {
-    if (signedAgreement) {
-      signAgreement({ eu_model: true, privacy_policy: true });
+    if (hasSignedAgreement) {
+      updateAccountAgreements({
+        eu_model: true,
+        privacy_policy: true,
+      }).catch(reportAgreementSigningError);
     }
   };
 
   const uploadingDisabled =
-    !label || !region || !canCreateImage || (showAgreement && !signedAgreement);
+    !label ||
+    !region ||
+    !canCreateImage ||
+    (showAgreement && !hasSignedAgreement);
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
@@ -217,8 +226,8 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
           {showAgreement ? (
             <EUAgreementCheckbox
-              checked={signedAgreement}
-              onChange={(e) => setSignedAgreement(e.target.checked)}
+              checked={hasSignedAgreement}
+              onChange={(e) => setHasSignedAgreement(e.target.checked)}
               centerCheckbox
               className={classes.helperText}
             />
