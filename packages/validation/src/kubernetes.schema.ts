@@ -1,4 +1,4 @@
-import { array, number, object, string, boolean, ref } from 'yup';
+import { array, number, object, string, boolean } from 'yup';
 
 export const nodePoolSchema = object().shape({
   type: string(),
@@ -9,10 +9,22 @@ export const AutoscaleNodePoolSchema = object({
   enabled: boolean(),
   min: number().when('enabled', {
     is: true,
-    then: number()
-      .min(1, 'Minimum must be between 1 and 99 nodes.')
-      .max(99, 'Minimum must be between 1 and 99 nodes.')
-      .lessThan(ref('max'), 'Minimum cannot be greater than Maximum.'),
+    then: number().test(
+      'min',
+      'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.',
+      function (min) {
+        if (!min) {
+          return false;
+        }
+        if (min < 1 || min > 99) {
+          return false;
+        }
+        if (min > this.parent['max']) {
+          return false;
+        }
+        return true;
+      }
+    ),
   }),
   max: number().when('enabled', {
     is: true,
