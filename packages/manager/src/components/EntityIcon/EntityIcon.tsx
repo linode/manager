@@ -14,26 +14,12 @@ import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import LongviewIcon from 'src/assets/icons/longview.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     color: theme.color.grey1,
     position: 'relative',
-  },
-  storyItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: 125,
-    '& svg': {
-      color: '#333',
-    },
-  },
-  storyLabel: {
-    fontSize: '0.875rem',
-    margin: theme.spacing(),
   },
 }));
 
@@ -81,21 +67,6 @@ const iconMap = {
   object: ObjectIcon,
   folder: FolderIcon,
 };
-
-const variantList = [
-  { displayName: 'Managed', name: 'managed' },
-  { displayName: 'Linode', name: 'linode' },
-  { displayName: 'Volume', name: 'volume' },
-  { displayName: 'NodeBalancer', name: 'nodebalancer' },
-  { displayName: 'Firewall', name: 'firewall' },
-  { displayName: 'StackScript', name: 'stackscript' },
-  { displayName: 'Image', name: 'image' },
-  { displayName: 'Domain', name: 'domain' },
-  { displayName: 'Kubernetes', name: 'kube' },
-  { displayName: 'Object Storage', name: 'bucket' },
-  { displayName: 'Longview', name: 'longview' },
-  { displayName: 'Marketplace', name: 'oca' },
-];
 
 const getIcon = (variant: Variant) => {
   return iconMap[variant] ?? LinodeIcon;
@@ -159,20 +130,3 @@ const EntityIcon: React.FC<CombinedProps> = (props) => {
 };
 
 export default EntityIcon;
-
-export const EntityIconStory = () => {
-  const classes = useStyles();
-
-  return (
-    <Grid container>
-      {variantList.map((variant, idx) => {
-        return (
-          <Grid key={idx} item className={classes.storyItem}>
-            <EntityIcon variant={variant.name as Variant} />
-            <div className={classes.storyLabel}>{variant.displayName}</div>
-          </Grid>
-        );
-      })}
-    </Grid>
-  );
-};
