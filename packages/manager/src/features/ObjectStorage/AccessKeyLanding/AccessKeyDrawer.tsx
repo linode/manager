@@ -217,6 +217,13 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
                 ) : null}
                 <ActionsPanel>
                   <Button
+                    buttonType="secondary"
+                    onClick={onClose}
+                    data-qa-cancel
+                  >
+                    Cancel
+                  </Button>
+                  <Button
                     buttonType="primary"
                     disabled={
                       isRestrictedUser ||
