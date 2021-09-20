@@ -1,5 +1,8 @@
-import { adjustSeverity } from './useFormattedNotifications';
-import { notificationFactory } from 'src/factories';
+import { gdprComplianceNotification, notificationFactory } from 'src/factories';
+import {
+  adjustSeverity,
+  isEUModelContractNotification,
+} from './useFormattedNotifications';
 
 // Migration types are considered as types of maintenance notifications.
 const migrationScheduled = notificationFactory.build({
@@ -48,5 +51,15 @@ describe('Notification Severity', () => {
         migrationPending.severity
       );
     });
+  });
+});
+
+describe('EU Model Contract Notification', () => {
+  it('returns `true` only if the Notification is regarding the EU Model Contract', () => {
+    const gdprNotification = gdprComplianceNotification.build();
+    const otherNotification = notificationFactory.build();
+
+    expect(isEUModelContractNotification(gdprNotification)).toBe(true);
+    expect(isEUModelContractNotification(otherNotification)).toBe(false);
   });
 });
