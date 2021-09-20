@@ -1,3 +1,11 @@
+## [2021-09-17] - v0.58.0
+
+### Added:
+- Account Agreement types and methods
+
+### Changed:
+- GiB to GB in volumes.ts
+
 ## [2021-08-24] - v0.57.0
 
 ### Changed:
