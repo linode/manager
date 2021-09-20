@@ -2,6 +2,7 @@ import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -98,12 +99,19 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
       </TableCell>
-      {region && (
+      {region ? (
         <TableCell data-qa-volume-region noWrap>
           {formattedRegion}
         </TableCell>
-      )}
+      ) : null}
       <TableCell data-qa-volume-size>{size} GB</TableCell>
+      {!isVolumesLanding ? (
+        <Hidden xsDown>
+          <TableCell className={classes.volumePath} data-qa-fs-path>
+            {filesystemPath}
+          </TableCell>
+        </Hidden>
+      ) : null}
       {isVolumesLanding && (
         <TableCell data-qa-volume-cell-attachment={linodeLabel}>
           {linodeId ? (
