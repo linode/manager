@@ -3,6 +3,7 @@ import {
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -21,6 +22,23 @@ interface Props {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  slash: {
+    alignSelf: 'end',
+    padding: '0px !important',
+    '& p': {
+      fontSize: '1rem',
+      padding: `${theme.spacing(2)}px 0`,
+    },
+  },
+  container: {
+    display: 'flex',
+  },
+  button: {
+    paddingRight: 8,
+  },
+}));
+
 const NodePool: React.FC<Props> = (props) => {
   const {
     autoscaler,
@@ -34,6 +52,7 @@ const NodePool: React.FC<Props> = (props) => {
     poolId,
   } = props;
 
+  const classes = useStyles();
   const flags = useFlags();
 
   return (
@@ -47,19 +66,21 @@ const NodePool: React.FC<Props> = (props) => {
         <Grid item>
           <Typography variant="h2">{typeLabel}</Typography>
         </Grid>
-        <Grid item style={{ display: 'flex' }}>
+        <Grid item className={classes.container}>
           {flags.autoscaler ? (
-            <div style={{ display: 'flex' }}>
+            <div className={classes.container}>
               <Button
-                style={{ paddingRight: 10 }}
+                className={`${autoscaler.enabled ? classes.button : ''}`}
                 buttonType="secondary"
                 onClick={() => openAutoscalePoolDialog(poolId)}
               >
                 Autoscale Pool
               </Button>
-              <Typography style={{ alignSelf: 'center', paddingRight: 16 }}>
-                {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
-              </Typography>
+              {autoscaler.enabled ? (
+                <Typography style={{ alignSelf: 'center', paddingRight: 16 }}>
+                  {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
+                </Typography>
+              ) : null}
             </div>
           ) : null}
           <Button

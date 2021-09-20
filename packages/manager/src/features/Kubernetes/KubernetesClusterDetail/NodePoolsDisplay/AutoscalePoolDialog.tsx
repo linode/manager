@@ -35,6 +35,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: `${theme.spacing(2)}px 0`,
     },
   },
+  inputContainer: {
+    '& label': {
+      marginTop: 13,
+    }
+  },
   disabled: {
     opacity: 0.5,
   },
@@ -124,8 +129,9 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             disabled={isSubmitting}
           />
         }
+        style={{ marginTop: 12 }}
       />
-      <Grid container>
+      <Grid container className={classes.inputContainer}>
         <Grid item xs={3}>
           <TextField
             name="min"
