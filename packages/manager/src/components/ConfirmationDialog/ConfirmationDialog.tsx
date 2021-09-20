@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props extends DialogProps {
+export interface Props extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;
   error?: string | JSX.Element;
   onClose: () => void;

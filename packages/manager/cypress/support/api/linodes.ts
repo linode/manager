@@ -18,7 +18,7 @@ const testLinodeTag = testTag;
 export const makeRandomId = () => Math.floor(Math.random() * 99999999);
 export const makeLinodeLabel = makeTestLabel;
 
-export const createMockLinode = (listNumber: number = 1, data?: {}) => {
+export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   return makeResourcePage(
     linodeFactory.buildList(listNumber, {
       ...data,

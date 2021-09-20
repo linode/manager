@@ -3,12 +3,7 @@ import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { CreateBucketSchema } from '@linode/validation/lib/buckets.schema';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import bucketContainer, {
@@ -29,15 +24,24 @@ import { confirmObjectStorage } from '../utilities';
 import ClusterSelect from './ClusterSelect';
 import { useAccountSettings } from 'src/queries/accountSettings';
 import { compose } from 'recompose';
+import { isEURegion } from 'src/utilities/formatRegion';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import {
+  reportAgreementSigningError,
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
+import { useProfile } from 'src/queries/profile';
 
-type ClassNames = 'root' | 'textWrapper';
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    textWrapper: {
-      marginBottom: theme.spacing(1) + 2,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  textWrapper: {
+    marginBottom: theme.spacing(1) + 2,
+  },
+  agreement: {
+    marginTop: theme.spacing(3),
+    marginButton: theme.spacing(3),
+  },
+}));
 
 interface Props {
   isRestrictedUser: boolean;
@@ -45,10 +49,7 @@ interface Props {
   onSuccess: (bucketLabel: string) => void;
 }
 
-type CombinedProps = Props &
-  BucketContainerProps &
-  BucketsRequests &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & BucketContainerProps & BucketsRequests;
 
 export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
   const {
@@ -59,12 +60,19 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
     bucketsData,
   } = props;
 
-  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
-
   const {
     data: accountSettings,
     refetch: requestAccountSettings,
   } = useAccountSettings();
+
+  const classes = useStyles();
+  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
+  const { data: agreements } = useAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+  const { data: profile } = useProfile();
 
   return (
     <Formik
@@ -97,6 +105,13 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
             resetForm({ values: initialValues });
             setSubmitting(false);
             onSuccess(bucketLabel);
+
+            if (hasSignedAgreement) {
+              updateAccountAgreements({
+                eu_model: true,
+                privacy_policy: true,
+              }).catch(reportAgreementSigningError);
+            }
 
             // If our Redux Store says that the user doesn't have OBJ enabled,
             // it probably means they have just enabled it with the creation
@@ -153,6 +168,12 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
           values,
         } = formikProps;
 
+        const showAgreement = Boolean(
+          !profile?.restricted &&
+            agreements?.eu_model === false &&
+            isEURegion(values.cluster)
+        );
+
         return (
           <>
             <Form>
@@ -189,6 +210,14 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                 disabled={isRestrictedUser}
               />
 
+              {showAgreement ? (
+                <EUAgreementCheckbox
+                  className={classes.agreement}
+                  checked={hasSignedAgreement}
+                  onChange={(e) => setHasSignedAgreement(e.target.checked)}
+                />
+              ) : null}
+
               <BucketsActionPanel
                 data-qa-bucket-actions-panel
                 isSubmitting={isSubmitting}
@@ -197,7 +226,12 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
                   resetForm();
                   onClose();
                 }}
-                disabled={isRestrictedUser}
+                disabled={
+                  isRestrictedUser ||
+                  !values.label ||
+                  !values.cluster ||
+                  (showAgreement && !hasSignedAgreement)
+                }
                 submitText="Create Bucket"
               />
             </Form>
@@ -222,10 +256,7 @@ const initialValues: FormState = {
   cluster: '',
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   bucketRequestsContainer,
   bucketContainer
 );

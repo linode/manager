@@ -1,21 +1,37 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { createLinode } from '../../support/api/linodes';
-import { fbtVisible, getClick, getVisible } from '../../support/helpers';
+import {
+  containsVisible,
+  fbtVisible,
+  getClick,
+  getVisible,
+} from '../../support/helpers';
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'cypress/support/ui/constants';
+import { interceptOnce } from 'cypress/support/ui/common';
+
+const regions = {
+  'us-west': 'Fremont, CA',
+  'us-southeast': 'Atlanta, GA',
+  'us-east': 'Newark, NJ',
+  'us-central': 'Dallas, TX',
+  'ca-east': 'Toronto, ON',
+};
+const mockLinodes = makeResourcePage(linodeFactory.buildList(5));
+mockLinodes.data.forEach(
+  (linode, index) => (linode.region = Object.keys(regions)[index])
+);
 
 const appRoot = Cypress.env('REACT_APP_APP_ROOT');
-const mockLinodes = makeResourcePage(linodeFactory.buildList(5));
 const linodeLabel = (number) => {
   return mockLinodes.data[number - 1].label;
 };
 
 const deleteLinodeFromActionMenu = (linodeLabel) => {
   getClick(`[aria-label="Action menu for Linode ${linodeLabel}"]`);
-  // the visible filter is to ignore all closed action menus
   cy.get(`[data-qa-action-menu-item="Delete"]`).filter(`:visible`).click();
-  // There is 2 visible delete on the page, this is why i used this strategy
   cy.findAllByRole('button').filter(':contains("Delete")').click();
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
 };
@@ -26,6 +42,17 @@ describe('linode landing checks', () => {
       managed: false,
     });
 
+    interceptOnce('GET', '*/profile/preferences*', {
+      linodes_view_style: 'list',
+      linodes_group_by_tag: false,
+      volumes_group_by_tag: false,
+      desktop_sidebar_open: false,
+      sortKeys: {
+        'linodes-landing': { order: 'asc', orderBy: 'label' },
+        volume: { order: 'asc', orderBy: 'label' },
+      },
+    }).as('getProfilePreferences');
+
     cy.intercept('GET', '*/account/settings', (req) => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
@@ -34,6 +61,7 @@ describe('linode landing checks', () => {
       req.reply(mockLinodes);
     }).as('getLinodes');
     cy.visitWithLogin('/');
+    cy.wait('@getProfilePreferences');
     cy.wait('@getAccountSettings');
     cy.wait('@getLinodes');
     cy.url().should('eq', `${appRoot}${routes.linodeLanding}`);
@@ -88,6 +116,40 @@ describe('linode landing checks', () => {
     getVisible('h1[data-qa-header="Linodes"]');
     getVisible('button[title="Docs"][data-qa-icon-text-link="Docs"]');
     fbtVisible('Create Linode');
+  });
+
+  it('checks label and region sorting behavior for linode table', () => {
+    const firstLinodeLabel = mockLinodes.data[0].label;
+    const lastLinodeLabel = mockLinodes.data[4].label;
+    const firstRegionLabel = Object.values(regions)[0];
+    const lastRegionLabel = Object.values(regions)[4];
+
+    const checkFirstRow = (linodeLabel) => {
+      getVisible('tr[data-qa-loading="true"]')
+        .first()
+        .within(() => {
+          containsVisible(linodeLabel);
+        });
+    };
+    const checkLastRow = (linodeLabel) => {
+      getVisible('tr[data-qa-loading="true"]')
+        .last()
+        .within(() => {
+          containsVisible(linodeLabel);
+        });
+    };
+
+    checkFirstRow(firstLinodeLabel);
+    checkLastRow(lastLinodeLabel);
+    getClick('[aria-label="Sort by label"]');
+    checkFirstRow(lastLinodeLabel);
+    checkLastRow(firstLinodeLabel);
+
+    checkFirstRow(lastRegionLabel);
+    checkLastRow(firstRegionLabel);
+    getClick('[aria-label="Sort by region"]').click();
+    checkFirstRow(firstRegionLabel);
+    checkLastRow(lastRegionLabel);
   });
 
   it('checks the create menu dropdown items', () => {
@@ -168,13 +230,33 @@ describe('linode landing checks', () => {
 });
 
 describe('linode landing actions', () => {
-  it('deleting multiple linodes with action menu', () => {
+  it.only('deleting multiple linodes with action menu', () => {
+    const mockAccountSettings = accountSettingsFactory.build({
+      managed: false,
+    });
+
+    cy.intercept('GET', '*/account/settings', (req) => {
+      req.reply(mockAccountSettings);
+    }).as('getAccountSettings');
+
+    interceptOnce('GET', '*/profile/preferences*', {
+      linodes_view_style: 'list',
+      linodes_group_by_tag: false,
+      volumes_group_by_tag: false,
+      desktop_sidebar_open: false,
+      sortKeys: {
+        'linodes-landing': { order: 'asc', orderBy: 'label' },
+        volume: { order: 'asc', orderBy: 'label' },
+      },
+    }).as('getProfilePreferences');
     cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
     createLinode().then((linodeA) => {
       createLinode().then((linodeB) => {
         cy.visitWithLogin('/linodes');
+        cy.wait('@getAccountSettings');
+        cy.wait('@getProfilePreferences');
         getVisible('[data-qa-header="Linodes"]');
-        if (!cy.get('[data-qa-sort-label="asc"')) {
+        if (!cy.get('[data-qa-sort-label="asc"]')) {
           getClick('[aria-label="Sort by label"]');
         }
         deleteLinodeFromActionMenu(linodeA.label);

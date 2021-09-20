@@ -74,7 +74,7 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   entityType: 'volume',
   data: {
     tags: volume.tags,
-    description: volume.size + ' GiB',
+    description: volume.size + ' GB',
     icon: 'volume',
     path: `/volumes/${volume.id}`,
     created: volume.created,
