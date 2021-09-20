@@ -72,8 +72,13 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
   const autoscaler = getAutoscaler();
   const classes = useStyles();
 
-  const submitForm = (values: AutoscaleNodePool) => {
+  const submitForm = () => {
     onSubmit(values, setSubmitting);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setWarningMessage('');
   };
 
   const handleWarning = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,20 +107,20 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
     },
     enableReinitialize: true,
     validationSchema: AutoscaleNodePoolSchema,
-    onSubmit: (values) => submitForm(values),
+    onSubmit: submitForm,
   });
 
   return (
     <ConfirmationDialog
       open={open}
       title="Autoscale Pool"
-      onClose={onClose}
+      onClose={handleClose}
       actions={() => (
         <form onSubmit={handleSubmit}>
           <ActionsPanel style={{ padding: 0 }}>
             <Button
               buttonType="secondary"
-              onClick={onClose}
+              onClick={handleClose}
               data-qa-cancel
               data-testid="dialog-cancel"
             >
@@ -147,7 +152,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
               buttonType="secondary"
               compact
               onClick={() => {
-                onClose();
+                handleClose();
                 handleOpenResizeDrawer(poolID);
               }}
             >
