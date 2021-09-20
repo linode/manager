@@ -15,10 +15,12 @@ import Toggle from 'src/components/Toggle';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 interface Props {
+  poolID: number;
   open: boolean;
   loading: boolean;
   error?: string;
   getAutoscaler: () => AutoscaleNodePool | undefined;
+  handleOpenResizeDrawer: (poolId: number) => void;
   onClose: () => void;
   onSubmit: (
     values: AutoscaleNodePool,
@@ -46,15 +48,41 @@ const useStyles = makeStyles((theme: Theme) => ({
   errorText: {
     color: theme.color.red,
   },
+  resize: {
+    display: 'flex',
+    alignItems: 'baseline',
+  },
+  notice: {
+    fontFamily: theme.font.bold,
+  },
 }));
 
 const AutoscalePoolDialog: React.FC<Props> = (props) => {
-  const { error, loading, open, getAutoscaler, onClose, onSubmit } = props;
+  const {
+    poolID,
+    error,
+    loading,
+    open,
+    getAutoscaler,
+    handleOpenResizeDrawer,
+    onClose,
+    onSubmit,
+  } = props;
+  const [warningMessage, setWarningMessage] = React.useState('');
   const autoscaler = getAutoscaler();
   const classes = useStyles();
 
   const submitForm = (values: AutoscaleNodePool) => {
     onSubmit(values, setSubmitting);
+  };
+
+  const handleWarning = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (autoscaler && +e.target.value < autoscaler.max) {
+      return setWarningMessage(
+        'The Node Pool will only be scaled down if there are unneeded nodes.'
+      );
+    }
+    setWarningMessage('');
   };
 
   const {
@@ -111,6 +139,24 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
       )}
     >
       {error ? <Notice error text={error} /> : null}
+      {warningMessage ? (
+        <Notice warning className={classes.notice}>
+          {warningMessage}
+          <div className={classes.resize}>
+            <Button
+              buttonType="secondary"
+              compact
+              onClick={() => {
+                onClose();
+                handleOpenResizeDrawer(poolID);
+              }}
+            >
+              Resize
+            </Button>
+            to immediately scale your node pool up or down.
+          </div>
+        </Notice>
+      ) : null}
       <Typography>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis augue
         arcu, semper id diam vitae, ultrices aliquet est. Morbi mauris risus,
@@ -161,9 +207,10 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             label="Max"
             type="number"
             value={values.max}
-            onChange={(e) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFieldTouched('max', true);
               handleChange(e);
+              handleWarning(e);
             }}
             disabled={!values.enabled || isSubmitting}
             error={touched.max && Boolean(errors.max)}

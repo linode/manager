@@ -380,6 +380,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
             />
             <AutoscalePoolDialog
               getAutoscaler={getAutoscaler}
+              handleOpenResizeDrawer={handleOpenResizeDrawer}
               onSubmit={(
                 values: AutoscaleNodePoolValues,
                 setSubmitting: (isSubmitting: boolean) => void
@@ -388,6 +389,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
               open={autoscalePoolDialog.dialog.isOpen}
               error={autoscalePoolDialog.dialog.error}
               loading={autoscalePoolDialog.dialog.isLoading}
+              poolID={autoscalePoolDialog.dialog.entityID}
             />
             <RecycleAllPoolNodesDialog
               open={recycleAllPoolNodesDialog.dialog.isOpen}
