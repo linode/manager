@@ -96,7 +96,13 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.capabilities ?? [];
-  const showVlans = capabilities.includes('Vlans') && flags.vlans;
+
+  // The VLAN section is shown when, a user has the capability, the flag is on, and
+  // the user is not creating by cloning (cloning copys the network interfaces)
+  const showVlans =
+    capabilities.includes('Vlans') &&
+    flags.vlans &&
+    createType !== 'fromLinode';
 
   const isBareMetal = /metal/.test(selectedTypeID ?? '');
 
@@ -217,10 +223,9 @@ const getVlanDisabledReason = (
 ) => {
   if (isBareMetal) {
     return 'VLANs cannot be used with Bare Metal Linodes.';
-  } else if (
-    !selectedImage &&
-    !['fromLinode', 'fromBackup'].includes(createType)
-  ) {
+  } else if (createType === 'fromBackup') {
+    return 'You cannot attach a VLAN when restoring from a backup.';
+  } else if (!selectedImage) {
     return 'You must select an Image to attach a VLAN.';
   }
   return undefined;
