@@ -658,13 +658,13 @@ export class LinodeCreate extends React.PureComponent<
             disabled={userCannotCreateLinode}
             selectedImageID={this.props.selectedImageID}
             selectedTypeID={this.props.selectedTypeID}
-            hidePrivateIP={this.props.createType === 'fromLinode'}
             vlanLabel={this.props.vlanLabel || ''}
             ipamAddress={this.props.ipamAddress || ''}
             handleVLANChange={this.props.handleVLANChange}
             selectedRegionID={this.props.selectedRegionID}
             labelError={hasErrorFor['interfaces[1].label']}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
+            createType={this.props.createType}
           />
         </Grid>
         <Grid item className="mlSidebar">

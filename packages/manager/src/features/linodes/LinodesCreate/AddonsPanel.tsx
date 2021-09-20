@@ -12,6 +12,7 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -62,10 +63,10 @@ interface Props {
   disabled?: boolean;
   selectedImageID?: string;
   selectedTypeID?: string;
-  hidePrivateIP?: boolean;
   labelError?: string;
   ipamError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
+  createType: CreateTypes;
 }
 
 type CombinedProps = Props;
@@ -83,7 +84,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     selectedRegionID,
     selectedImageID,
     selectedTypeID,
+    createType,
   } = props;
+
+  const hidePrivateIP = createType === 'fromLinode';
 
   const classes = useStyles();
   const flags = useFlags();
@@ -98,6 +102,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 
   const vlanDisabledReason = getVlanDisabledReason(
     isBareMetal,
+    createType,
     selectedImageID
   );
 
@@ -180,7 +185,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         </Grid>
         {
           /** /v4/linodes/instances/clone does *not* support the private IP flag */
-          props.hidePrivateIP ? null : (
+          hidePrivateIP ? null : (
             <Grid container>
               <Grid item xs={12}>
                 <Divider />
@@ -207,11 +212,15 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 
 const getVlanDisabledReason = (
   isBareMetal: boolean,
+  createType: CreateTypes,
   selectedImage?: string
 ) => {
   if (isBareMetal) {
     return 'VLANs cannot be used with Bare Metal Linodes.';
-  } else if (!selectedImage) {
+  } else if (
+    !selectedImage &&
+    !['fromLinode', 'fromBackup'].includes(createType)
+  ) {
     return 'You must select an Image to attach a VLAN.';
   }
   return undefined;
