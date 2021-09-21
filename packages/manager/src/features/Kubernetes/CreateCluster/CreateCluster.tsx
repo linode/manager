@@ -181,7 +181,9 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     ) as PoolNodeRequest[];
 
     const payload: CreateKubeClusterPayload = {
-      type: highAvailability ? 'lke-standard' : 'lke-basic',
+      // Type is nullable so rather than passing 'lke-basic',
+      // we let the API use the basic ($0) default plan.
+      type: highAvailability ? 'lke-standard' : undefined,
       region: selectedRegion,
       node_pools,
       label,
@@ -239,7 +241,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
      * Otherwise, show an error state.
      */
 
-    return <ErrorState errorText={'An unexpected error occurred.'} />;
+    return <ErrorState errorText="An unexpected error occurred." />;
   }
 
   return (
@@ -288,16 +290,10 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
                 }
                 regions={filteredRegions}
                 selectedID={selectedID}
-                textFieldProps={
-                  // Only show the "Find out which region is best for you" message if there are
-                  // actually multiple regions to choose from.
-                  filteredRegions.length > 1
-                    ? {
-                        helperText: regionHelperText,
-                        helperTextPosition: 'top',
-                      }
-                    : undefined
-                }
+                textFieldProps={{
+                  helperText: regionHelperText,
+                  helperTextPosition: 'top',
+                }}
               />
             </Grid>
             <Grid item>

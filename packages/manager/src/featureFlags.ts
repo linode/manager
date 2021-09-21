@@ -39,6 +39,7 @@ export interface Flags {
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
   apiMaintenance: string[];
+  lkeHighAvailability: boolean;
 }
 
 type PromotionalOfferFeature =

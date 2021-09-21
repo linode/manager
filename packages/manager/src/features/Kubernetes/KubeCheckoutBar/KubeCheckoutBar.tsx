@@ -3,15 +3,16 @@ import CheckoutBar from 'src/components/CheckoutBar';
 import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
-import {
-  getHAPrice,
-  useAllKubernetesTypesQuery,
-} from 'src/queries/kubernetesTypes';
+import useFlags from 'src/hooks/useFlags';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
+import {
+  getHAPrice,
+  useAllKubernetesTypesQuery,
+} from 'src/queries/kubernetesTypes';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -36,7 +37,11 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     setHighAvailability,
   } = props;
 
-  const { data: kubernetesTypes } = useAllKubernetesTypesQuery();
+  const flags = useFlags();
+
+  const { data: kubernetesTypes } = useAllKubernetesTypesQuery(
+    flags.lkeHighAvailability
+  );
 
   const haPrice = getHAPrice(kubernetesTypes)?.monthly;
 
@@ -72,13 +77,17 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        <Divider spacingTop={16} />
-        <HACheckbox
-          checked={highAvailability}
-          onChange={(e) => setHighAvailability(e.target.checked)}
-          haPrice={haPrice || 0}
-        />
-        <Divider spacingTop={16} />
+        {flags.lkeHighAvailability && haPrice ? (
+          <>
+            <Divider spacingTop={16} />
+            <HACheckbox
+              checked={highAvailability}
+              onChange={(e) => setHighAvailability(e.target.checked)}
+              haPrice={haPrice}
+            />
+            <Divider spacingTop={16} />
+          </>
+        ) : null}
         {showWarning && (
           <Notice warning important text={nodeWarning} spacingTop={16} />
         )}
