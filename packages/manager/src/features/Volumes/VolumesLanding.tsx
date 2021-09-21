@@ -113,7 +113,7 @@ const volumeHeaders = [
     label: 'Region',
     dataColumn: 'region',
     sortable: true,
-    widthPercent: 10,
+    widthPercent: 15,
   },
   {
     label: 'Size',
