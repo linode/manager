@@ -447,15 +447,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           updateFor={[requirementsMet, classes, submitting, mode]}
         >
           <Button
-            onClick={this.onSubmit}
-            disabled={requirementsMet || !this.canCreateImage}
-            loading={submitting}
-            buttonType="primary"
-            data-qa-submit
-          >
-            {buttonTextMap[mode] ?? 'Submit'}
-          </Button>
-          <Button
             onClick={this.close}
             buttonType="secondary"
             className="cancel"
@@ -463,6 +454,15 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             data-qa-cancel
           >
             Cancel
+          </Button>
+          <Button
+            onClick={this.onSubmit}
+            disabled={requirementsMet || !this.canCreateImage}
+            loading={submitting}
+            buttonType="primary"
+            data-qa-submit
+          >
+            {buttonTextMap[mode] ?? 'Submit'}
           </Button>
         </ActionsPanel>
       </Drawer>

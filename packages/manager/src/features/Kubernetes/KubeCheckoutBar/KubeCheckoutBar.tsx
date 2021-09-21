@@ -4,7 +4,9 @@ import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import useFlags from 'src/hooks/useFlags';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import HACheckbox from './HACheckbox';
@@ -13,6 +15,8 @@ import {
   getHAPrice,
   useAllKubernetesTypesQuery,
 } from 'src/queries/kubernetesTypes';
+import { useProfile } from 'src/queries/profile';
+import { useAccountAgreements } from 'src/queries/accountAgreements';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -23,6 +27,9 @@ export interface Props {
   removePool: (poolIdx: number) => void;
   highAvailability: boolean;
   setHighAvailability: (ha: boolean) => void;
+  region: string | undefined;
+  hasAgreed: boolean;
+  toggleHasAgreed: () => void;
 }
 
 export const KubeCheckoutBar: React.FC<Props> = (props) => {
@@ -35,6 +42,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     updatePool,
     highAvailability,
     setHighAvailability,
+    region,
+    hasAgreed,
+    toggleHasAgreed,
   } = props;
 
   const flags = useFlags();
@@ -48,6 +58,18 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
+  const { data: profile } = useProfile();
+  const { data: agreements } = useAccountAgreements();
+  const showGDPRCheckbox =
+    isEURegion(region) &&
+    !profile?.restricted &&
+    agreements?.eu_model === false;
+
+  const needsAPool = pools.length < 1;
+  const disableCheckout = Boolean(
+    needsAPool || (!hasAgreed && showGDPRCheckbox)
+  );
+
   return (
     <CheckoutBar
       data-qa-checkout-bar
@@ -57,9 +79,14 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
         highAvailability ? haPrice : undefined
       )}
       isMakingRequest={submitting}
-      disabled={pools.length < 1}
+      disabled={disableCheckout}
       onDeploy={createCluster}
       submitText={'Create Cluster'}
+      agreement={
+        showGDPRCheckbox ? (
+          <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
+        ) : undefined
+      }
     >
       <>
         {pools.map((thisPool, idx) => (

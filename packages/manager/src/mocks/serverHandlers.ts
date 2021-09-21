@@ -1,7 +1,7 @@
 import { rest, RequestHandler } from 'msw';
 
 import {
-  abuseTicketNotificationFactory,
+  // abuseTicketNotificationFactory,
   accountFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
@@ -31,7 +31,7 @@ import {
   maintenanceResponseFactory,
   monitorFactory,
   nodeBalancerFactory,
-  notificationFactory,
+  // notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   profileFactory,
@@ -50,12 +50,14 @@ import {
   makeObjectsPage,
   paymentMethodFactory,
   accountMaintenanceFactory,
+  gdprComplianceNotification,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
 import { kubernetesTypeFactory } from 'src/factories/kubernetesTypes';
+import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 
 export const makeResourcePage = (
   e: any[],
@@ -106,6 +108,9 @@ const entityTransfers = [
     const transfer = entityTransferFactory.build();
     return res(ctx.json(transfer));
   }),
+  rest.get('*/account/agreements', (req, res, ctx) =>
+    res(ctx.json(accountAgreementsFactory.build()))
+  ),
   rest.post('*/account/entity-transfers', (req, res, ctx) => {
     const payload = req.body as any;
     const newTransfer = entityTransferFactory.build({
@@ -126,7 +131,7 @@ const entityTransfers = [
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
-    const profile = profileFactory.build();
+    const profile = profileFactory.build({ restricted: false });
     return res(ctx.json(profile));
   }),
   rest.put('*/profile', (req, res, ctx) => {
@@ -179,7 +184,6 @@ export const handlers = [
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(17, {
       backups: { enabled: false },
-      type: 'g6-metal-alpha-1',
       ipv4: ['000.000.000.000'],
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
@@ -211,10 +215,19 @@ export const handlers = [
         backups: { enabled: false },
       }),
       linodeFactory.build({
+        label: 'bare-metal',
+        type: 'g1-metal-c2',
+        backups: { enabled: false },
+      }),
+      linodeFactory.build({
         label: 'shadow-plan-with-tags',
         type: 'g5-standard-20-s1',
         backups: { enabled: false },
         tags: ['test1', 'test2', 'test3'],
+      }),
+      linodeFactory.build({
+        label: 'eu-linode',
+        region: 'eu-west',
       }),
       eventLinode,
       multipleIPLinode,
@@ -307,6 +320,9 @@ export const handlers = [
     });
     return res(ctx.json(firewall));
   }),
+  // rest.post('*/account/agreements', (req, res, ctx) => {
+  //   return res(ctx.status(500), ctx.json({ reason: 'Unknown error' }));
+  // }),
   rest.post('*/firewalls', (req, res, ctx) => {
     const payload = req.body as any;
     const newFirewall = firewallFactory.build({
@@ -399,6 +415,10 @@ export const handlers = [
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(0);
     return res(ctx.json(makeResourcePage(volumes)));
+  }),
+  rest.post('*/volumes', (req, res, ctx) => {
+    const volume = volumeFactory.build();
+    return res(ctx.json(volume));
   }),
   rest.get('*/vlans', (req, res, ctx) => {
     const vlans = VLANFactory.buildList(2);
@@ -605,35 +625,37 @@ export const handlers = [
     //   body: null
     // });
 
-    const generalGlobalNotice = {
-      type: 'notice',
-      entity: null,
-      when: null,
-      // eslint-disable-next-line xss/no-mixed-html
-      message:
-        "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
-      label: "We've updated our policies.",
-      severity: 'minor',
-      until: null,
-      body: null,
-    };
+    const gdprNotification = gdprComplianceNotification.build();
 
-    const outageNotification = {
-      type: 'outage',
-      entity: {
-        type: 'region',
-        label: null,
-        id: 'us-east',
-        url: '/regions/us-east',
-      },
-      when: null,
-      message:
-        'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
-      label: 'There is an issue affecting service in this facility',
-      severity: 'major',
-      until: null,
-      body: null,
-    };
+    // const generalGlobalNotice = {
+    //   type: 'notice',
+    //   entity: null,
+    //   when: null,
+    //   // eslint-disable-next-line xss/no-mixed-html
+    //   message:
+    //     "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
+    //   label: "We've updated our policies.",
+    //   severity: 'minor',
+    //   until: null,
+    //   body: null,
+    // };
+
+    // const outageNotification = {
+    //   type: 'outage',
+    //   entity: {
+    //     type: 'region',
+    //     label: null,
+    //     id: 'us-east',
+    //     url: '/regions/us-east',
+    //   },
+    //   when: null,
+    //   message:
+    //     'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
+    //   label: 'There is an issue affecting service in this facility',
+    //   severity: 'major',
+    //   until: null,
+    //   body: null,
+    // };
 
     // const emailBounce = notificationFactory.build({
     //   type: 'billing_email_bounce',
@@ -646,48 +668,49 @@ export const handlers = [
     //   body: null,
     // });
 
-    const abuseTicket = abuseTicketNotificationFactory.build();
+    // const abuseTicket = abuseTicketNotificationFactory.build();
 
-    const migrationNotification = notificationFactory.build({
-      type: 'migration_pending',
-      label: 'You have a migration pending!',
-      message:
-        'You have a migration pending! Your Linode must be offline before starting the migration.',
-      entity: { id: 0, type: 'linode', label: 'linode-0' },
-      severity: 'major',
-    });
+    // const migrationNotification = notificationFactory.build({
+    //   type: 'migration_pending',
+    //   label: 'You have a migration pending!',
+    //   message:
+    //     'You have a migration pending! Your Linode must be offline before starting the migration.',
+    //   entity: { id: 0, type: 'linode', label: 'linode-0' },
+    //   severity: 'major',
+    // });
 
-    const minorSeverityNotification = notificationFactory.build({
-      type: 'notice',
-      message: 'Testing for minor notification',
-      severity: 'minor',
-    });
+    // const minorSeverityNotification = notificationFactory.build({
+    //   type: 'notice',
+    //   message: 'Testing for minor notification',
+    //   severity: 'minor',
+    // });
 
-    const criticalSeverityNotification = notificationFactory.build({
-      type: 'notice',
-      message: 'Testing for critical notification',
-      severity: 'critical',
-    });
+    // const criticalSeverityNotification = notificationFactory.build({
+    //   type: 'notice',
+    //   message: 'Testing for critical notification',
+    //   severity: 'critical',
+    // });
 
-    const balanceNotification = notificationFactory.build({
-      type: 'payment_due',
-      message: 'You have an overdue balance!',
-      severity: 'major',
-    });
+    // const balanceNotification = notificationFactory.build({
+    //   type: 'payment_due',
+    //   message: 'You have an overdue balance!',
+    //   severity: 'major',
+    // });
 
     return res(
       ctx.json(
         makeResourcePage([
           // pastDueBalance,
-          ...notificationFactory.buildList(1),
-          generalGlobalNotice,
-          outageNotification,
-          minorSeverityNotification,
-          criticalSeverityNotification,
-          abuseTicket,
+          // ...notificationFactory.buildList(1),
+          gdprNotification,
+          // generalGlobalNotice,
+          // outageNotification,
+          // minorSeverityNotification,
+          // criticalSeverityNotification,
+          // abuseTicket,
           // emailBounce,
-          migrationNotification,
-          balanceNotification,
+          // migrationNotification,
+          // balanceNotification,
         ])
       )
     );
