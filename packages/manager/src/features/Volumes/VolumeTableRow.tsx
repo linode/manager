@@ -99,13 +99,19 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
       </TableCell>
-      {region && <TableCell data-qa-volume-region>{formattedRegion}</TableCell>}
-      <TableCell data-qa-volume-size>{size} GB</TableCell>
-      <Hidden xsDown>
-        <TableCell className={classes.volumePath} data-qa-fs-path>
-          {filesystemPath}
+      {region ? (
+        <TableCell data-qa-volume-region noWrap>
+          {formattedRegion}
         </TableCell>
-      </Hidden>
+      ) : null}
+      <TableCell data-qa-volume-size>{size} GB</TableCell>
+      {!isVolumesLanding ? (
+        <Hidden xsDown>
+          <TableCell className={classes.volumePath} data-qa-fs-path>
+            {filesystemPath}
+          </TableCell>
+        </Hidden>
+      ) : null}
       {isVolumesLanding && (
         <TableCell data-qa-volume-cell-attachment={linodeLabel}>
           {linodeId ? (
