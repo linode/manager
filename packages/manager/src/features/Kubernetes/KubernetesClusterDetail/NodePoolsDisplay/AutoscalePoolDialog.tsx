@@ -24,7 +24,8 @@ interface Props {
   onClose: () => void;
   onSubmit: (
     values: AutoscaleNodePool,
-    setSubmitting: (isSubmitting: boolean) => void
+    setSubmitting: (isSubmitting: boolean) => void,
+    setWarningMessage: (warning: string) => void
   ) => void;
 }
 
@@ -55,6 +56,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   notice: {
     fontFamily: theme.font.bold,
   },
+  input: {
+    minWidth: 'auto',
+    '& input': {
+      width: 70,
+    },
+  },
 }));
 
 const AutoscalePoolDialog: React.FC<Props> = (props) => {
@@ -73,12 +80,13 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const submitForm = () => {
-    onSubmit(values, setSubmitting);
+    onSubmit(values, setSubmitting, setWarningMessage);
   };
 
   const handleClose = () => {
     onClose();
     setWarningMessage('');
+    handleReset(values);
   };
 
   const handleWarning = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +105,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
     isSubmitting,
     handleChange,
     handleSubmit,
+    handleReset,
     setFieldTouched,
     setSubmitting,
   } = useFormik({
@@ -158,7 +167,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             >
               Resize
             </Button>
-            to immediately scale your node pool up or down.
+            to immediately scale your Node Pool up or down.
           </div>
         </Notice>
       ) : null}
@@ -183,7 +192,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
         style={{ marginTop: 12 }}
       />
       <Grid container className={classes.inputContainer}>
-        <Grid item xs={3}>
+        <Grid item>
           <TextField
             name="min"
             label="Min"
@@ -195,6 +204,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             }}
             disabled={!values.enabled || isSubmitting}
             error={touched.min && Boolean(errors.min)}
+            className={classes.input}
           />
         </Grid>
         <Grid
@@ -206,7 +216,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
         >
           <Typography>/</Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item>
           <TextField
             name="max"
             label="Max"
@@ -219,6 +229,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             }}
             disabled={!values.enabled || isSubmitting}
             error={touched.max && Boolean(errors.max)}
+            className={classes.input}
           />
         </Grid>
         {(touched.min && errors.min) || (touched.max && errors.max) ? (

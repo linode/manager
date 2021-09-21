@@ -201,7 +201,8 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
 
   const handleAutoscalePool = (
     values: AutoscaleNodePoolValues,
-    setSubmitting: (isSubmitting: boolean) => void
+    setSubmitting: (isSubmitting: boolean) => void,
+    setWarningMessage: (warning: string) => void
   ) => {
     const { dialog, submitDialog, handleError } = autoscalePoolDialog;
     if (!dialog.entityID) {
@@ -223,7 +224,10 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
           )[0].reason
         );
       })
-      .finally(() => setSubmitting(false));
+      .finally(() => {
+        setSubmitting(false);
+        setWarningMessage('');
+      });
   };
 
   const handleRecycleAllPoolNodes = () => {
@@ -383,8 +387,11 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
               handleOpenResizeDrawer={handleOpenResizeDrawer}
               onSubmit={(
                 values: AutoscaleNodePoolValues,
-                setSubmitting: (isSubmitting: boolean) => void
-              ) => handleAutoscalePool(values, setSubmitting)}
+                setSubmitting: (isSubmitting: boolean) => void,
+                setWarningMessage: (warning: string) => void
+              ) =>
+                handleAutoscalePool(values, setSubmitting, setWarningMessage)
+              }
               onClose={autoscalePoolDialog.closeDialog}
               open={autoscalePoolDialog.dialog.isOpen}
               error={autoscalePoolDialog.dialog.error}

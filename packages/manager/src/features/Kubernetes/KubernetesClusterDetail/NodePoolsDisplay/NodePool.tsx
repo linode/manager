@@ -37,6 +37,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     paddingRight: 8,
   },
+  text: {
+    alignSelf: 'center',
+    paddingRight: 16,
+  },
 }));
 
 const NodePool: React.FC<Props> = (props) => {
@@ -77,7 +81,7 @@ const NodePool: React.FC<Props> = (props) => {
                 Autoscale Pool
               </Button>
               {autoscaler.enabled ? (
-                <Typography style={{ alignSelf: 'center', paddingRight: 16 }}>
+                <Typography className={classes.text}>
                   {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
                 </Typography>
               ) : null}
