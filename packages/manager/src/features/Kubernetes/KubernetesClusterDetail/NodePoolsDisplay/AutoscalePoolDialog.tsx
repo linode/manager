@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     '& label': {
       marginTop: 13,
-    }
+    },
   },
   disabled: {
     opacity: 0.5,
@@ -50,8 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.red,
   },
   resize: {
-    display: 'flex',
-    alignItems: 'baseline',
+    marginTop: -4,
+    marginLeft: -2,
+    marginRight: 2,
+    minHeight: 0,
+    padding: 0,
   },
   notice: {
     fontFamily: theme.font.bold,
@@ -156,9 +159,10 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
       {warningMessage ? (
         <Notice warning className={classes.notice}>
           {warningMessage}
-          <div className={classes.resize}>
+          <div>
             <Button
               buttonType="secondary"
+              className={classes.resize}
               compact
               onClick={() => {
                 handleClose();
