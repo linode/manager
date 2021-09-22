@@ -97,8 +97,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.capabilities ?? [];
 
-  // The VLAN section is shown when, a user has the capability, the flag is on, and
-  // the user is not creating by cloning (cloning copys the network interfaces)
+  // The VLAN section is shown when:
+  // - the user has the capability
+  // - the flag is on
+  // - the user is not creating by cloning (cloning copies the network interfaces)
   const showVlans =
     capabilities.includes('Vlans') &&
     flags.vlans &&
@@ -224,7 +226,7 @@ const getVlanDisabledReason = (
   if (isBareMetal) {
     return 'VLANs cannot be used with Bare Metal Linodes.';
   } else if (createType === 'fromBackup') {
-    return 'You cannot attach a VLAN when restoring from a backup.';
+    return 'You cannot attach a VLAN when deploying to a new Linode from a backup.';
   } else if (!selectedImage) {
     return 'You must select an Image to attach a VLAN.';
   }
