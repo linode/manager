@@ -9,6 +9,7 @@ export interface Volume {
   updated: string;
   filesystem_path: string;
   tags: string[];
+  hardware_type: string;
 }
 
 export type VolumeStatus =

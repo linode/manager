@@ -2,8 +2,9 @@ import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
+import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
@@ -13,7 +14,7 @@ import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
     width: '35%',
     wordBreak: 'break-all',
@@ -28,6 +29,18 @@ const useStyles = makeStyles(() => ({
       We can remove once we make the full switch to CMR styling
       */
     paddingRight: '0 !important',
+  },
+  chip: {
+    fontSize: '0.65rem',
+    minHeight: theme.spacing(2),
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: theme.spacing(2),
+    borderRadius: '1px',
+    backgroundColor: 'transparent',
+    border: '1px solid #02B159',
   },
 }));
 
@@ -62,6 +75,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     size,
     recentEvent,
     region,
+    hardware_type: hardwareType,
     filesystem_path: filesystemPath,
     linodeLabel,
     linode_id: linodeId,
@@ -72,6 +86,8 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
+
+  const isNVMe = hardwareType === 'nvme';
 
   return isUpdating ? (
     <TableRow
@@ -93,10 +109,32 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   ) : (
     <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
       <TableCell data-qa-volume-cell-label={label}>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item>
-            <div>{label}</div>
-          </Grid>
+        <Grid
+          container
+          wrap="nowrap"
+          justify="space-between"
+          alignItems="flex-end"
+        >
+          {isVolumesLanding ? (
+            <>
+              <Grid item>
+                <div>{label}</div>
+              </Grid>
+              <Grid item>
+                {isNVMe ? (
+                  <Chip
+                    className={classes.chip}
+                    label="NVMe"
+                    data-testid="nvme-chip"
+                  />
+                ) : null}
+              </Grid>
+            </>
+          ) : (
+            <Grid item>
+              <div>{label}</div>
+            </Grid>
+          )}
         </Grid>
       </TableCell>
       {region ? (
