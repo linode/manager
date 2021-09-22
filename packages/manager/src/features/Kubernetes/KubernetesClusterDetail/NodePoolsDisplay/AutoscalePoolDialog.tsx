@@ -93,7 +93,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
   };
 
   const handleWarning = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (autoscaler && +e.target.value < autoscaler.max) {
+    if (autoscaler && autoscaler.max > 1 && +e.target.value < autoscaler.max) {
       return setWarningMessage(
         'The Node Pool will only be scaled down if there are unneeded nodes.'
       );
@@ -104,12 +104,9 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
   const {
     values,
     errors,
-    touched,
     isSubmitting,
     handleChange,
-    handleSubmit,
     handleReset,
-    setFieldTouched,
     setSubmitting,
   } = useFormik({
     initialValues: {
@@ -128,31 +125,31 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
       title="Autoscale Pool"
       onClose={handleClose}
       actions={() => (
-        <form onSubmit={handleSubmit}>
-          <ActionsPanel style={{ padding: 0 }}>
-            <Button
-              buttonType="secondary"
-              onClick={handleClose}
-              data-qa-cancel
-              data-testid="dialog-cancel"
-            >
-              Cancel
-            </Button>
-            <Button
-              buttonType="primary"
-              type="submit"
-              loading={loading || isSubmitting}
-              disabled={
-                !(touched.enabled || touched.min || touched.max) ||
-                Object.keys(errors).length !== 0
-              }
-              data-qa-confirm
-              data-testid="dialog-confirm"
-            >
-              Save Changes
-            </Button>
-          </ActionsPanel>
-        </form>
+        <ActionsPanel style={{ padding: 0 }}>
+          <Button
+            buttonType="secondary"
+            onClick={handleClose}
+            data-qa-cancel
+            data-testid="dialog-cancel"
+          >
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={submitForm}
+            loading={loading || isSubmitting}
+            disabled={
+              (values.enabled === autoscaler?.enabled &&
+                values.min === autoscaler?.min &&
+                values.max === autoscaler?.max) ||
+              Object.keys(errors).length !== 0
+            }
+            data-qa-confirm
+            data-testid="dialog-confirm"
+          >
+            Save Changes
+          </Button>
+        </ActionsPanel>
       )}
     >
       {error ? <Notice error text={error} /> : null}
@@ -186,10 +183,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
           <Toggle
             name="enabled"
             checked={values.enabled}
-            onChange={(e) => {
-              setFieldTouched('enabled', true);
-              handleChange(e);
-            }}
+            onChange={handleChange}
             disabled={isSubmitting}
           />
         }
@@ -202,12 +196,9 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             label="Min"
             type="number"
             value={values.min}
-            onChange={(e) => {
-              setFieldTouched('min', true);
-              handleChange(e);
-            }}
+            onChange={handleChange}
             disabled={!values.enabled || isSubmitting}
-            error={touched.min && Boolean(errors.min)}
+            error={Boolean(errors.min)}
             className={classes.input}
           />
         </Grid>
@@ -227,29 +218,22 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             type="number"
             value={values.max}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldTouched('max', true);
               handleChange(e);
               handleWarning(e);
             }}
             disabled={!values.enabled || isSubmitting}
-            error={touched.max && Boolean(errors.max)}
+            error={Boolean(errors.max)}
             className={classes.input}
           />
         </Grid>
-        {(touched.min && errors.min) || (touched.max && errors.max) ? (
-          <Grid item xs={12} style={{ padding: '0 8px' }}>
-            {errors.min ? (
-              <Typography className={classes.errorText}>
-                {errors.min}
-              </Typography>
-            ) : null}
-            {errors.max ? (
-              <Typography className={classes.errorText}>
-                {errors.max}
-              </Typography>
-            ) : null}
-          </Grid>
-        ) : null}
+        <Grid item xs={12} style={{ padding: '0 8px' }}>
+          {errors.min ? (
+            <Typography className={classes.errorText}>{errors.min}</Typography>
+          ) : null}
+          {errors.max ? (
+            <Typography className={classes.errorText}>{errors.max}</Typography>
+          ) : null}
+        </Grid>
       </Grid>
     </ConfirmationDialog>
   );

@@ -80,6 +80,7 @@ export interface Props {
   recycleAllClusterNodes: () => Promise<{}>;
   recycleAllPoolNodes: (poolID: number) => Promise<{}>;
   recycleNode: (nodeID: string) => Promise<{}>;
+  getNodePools: () => Promise<any>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = (props) => {
@@ -94,6 +95,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
     recycleAllClusterNodes,
     recycleAllPoolNodes,
     recycleNode,
+    getNodePools,
   } = props;
 
   const classes = useStyles();
@@ -215,6 +217,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
           `Autoscaling updated for Node Pool ${dialog.entityID}.`,
           { variant: 'success' }
         );
+        getNodePools();
       })
       .catch((err) => {
         handleError(

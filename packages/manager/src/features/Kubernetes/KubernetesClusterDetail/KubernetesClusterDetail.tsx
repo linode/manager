@@ -324,6 +324,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           }
           recycleNode={handleRecycleNode}
           recycleAllClusterNodes={handleRecycleAllClusterNodes}
+          getNodePools={() =>
+            props.requestNodePools(+props.match.params.clusterID)
+          }
         />
       </Grid>
     </>
