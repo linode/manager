@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
   },
   helpIcon: {
-    marginTop: -11,
+    marginTop: -15,
+    marginLeft: -4,
   },
   required: {
     fontFamily: theme.font.normal,

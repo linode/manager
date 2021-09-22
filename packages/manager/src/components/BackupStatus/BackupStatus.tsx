@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   backupNotApplicable: {
     marginRight: theme.spacing(),
   },
-  root: {},
   wrapper: {
     display: 'flex',
     alignContent: 'center',
