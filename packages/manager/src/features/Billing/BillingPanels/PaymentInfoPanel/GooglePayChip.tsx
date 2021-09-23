@@ -32,11 +32,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   errorIcon: {
-    marginRight: -16,
     color: theme.color.red,
+    marginRight: -18,
     '&:hover': {
       color: theme.color.red,
       opacity: 0.7,
+    },
+    '& svg': {
+      height: theme.spacing(3),
+      width: theme.spacing(3),
     },
   },
 }));
