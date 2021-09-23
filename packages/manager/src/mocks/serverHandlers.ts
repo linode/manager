@@ -400,6 +400,17 @@ export const handlers = [
     const record = domainRecordFactory.build();
     return res(ctx.json(record));
   }),
+  rest.post('*/volumes/migrate', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/regions/*/migration-queue', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        volumes: 953,
+        linodes: 8,
+      })
+    );
+  }),
   rest.get('*/volumes', (req, res, ctx) => {
     const volumes = volumeFactory.buildList(0);
     return res(ctx.json(makeResourcePage(volumes)));

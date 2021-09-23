@@ -19,7 +19,7 @@ export const useAccountAgreements = () =>
 
 export const useMutateAccountAgreements = () => {
   return useMutation<{}, APIError[], Partial<Agreements>>(
-    (data) => signAgreement(data),
+    signAgreement,
     simpleMutationHandlers<Agreements, Partial<Agreements>>(queryKey)
   );
 };

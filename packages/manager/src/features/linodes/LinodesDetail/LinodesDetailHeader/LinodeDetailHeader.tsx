@@ -38,6 +38,7 @@ import Notifications from './Notifications';
 import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { useProfile } from 'src/queries/profile';
+import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 interface Props {
   numVolumes: number;
@@ -125,6 +126,14 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     linodeID: 0,
   });
 
+  const [
+    upgradeVolumesDialog,
+    setUpgradeVolumesDialog,
+  ] = React.useState<DialogProps>({
+    open: false,
+    linodeID: 0,
+  });
+
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
@@ -201,6 +210,12 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           linodeID,
         }));
         break;
+      case 'upgrade_volumes':
+        setUpgradeVolumesDialog((upgradeVolumesDialog) => ({
+          ...upgradeVolumesDialog,
+          open: true,
+        }));
+        break;
     }
   };
 
@@ -223,6 +238,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     setRescueDialog((rescueDialog) => ({ ...rescueDialog, open: false }));
     setRebuildDialog((rebuildDialog) => ({ ...rebuildDialog, open: false }));
     setBackupsDialog((backupsDialog) => ({ ...backupsDialog, open: false }));
+    setUpgradeVolumesDialog((upgradeVolumesDialog) => ({
+      ...upgradeVolumesDialog,
+      open: false,
+    }));
   };
 
   const closeTagDrawer = () => {
@@ -318,6 +337,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
+      <Button onClick={() => openDialog('upgrade_volumes', linode.id)}>
+        Upgrade Volumes
+      </Button>
       {showVolumesBanner ? (
         <DismissibleBanner
           preferenceKey="block-storage-available-atlanta"
@@ -411,6 +433,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <EnableBackupDialog
         linodeId={backupsDialog.linodeID}
         open={backupsDialog.open}
+        onClose={closeDialogs}
+      />
+      <UpgradeVolumesDialog
+        open={upgradeVolumesDialog.open}
+        linode={linode}
         onClose={closeDialogs}
       />
     </>
