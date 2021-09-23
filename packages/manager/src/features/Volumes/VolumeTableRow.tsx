@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       */
     paddingRight: '0 !important',
   },
+  chipWrapper: {
+    alignSelf: 'center',
+  },
   chip: {
     fontSize: '0.65rem',
     minHeight: theme.spacing(2),
@@ -120,15 +123,15 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
               <Grid item>
                 <div>{label}</div>
               </Grid>
-              <Grid item>
-                {isNVMe ? (
+              {isNVMe ? (
+                <Grid item className={classes.chipWrapper}>
                   <Chip
                     className={classes.chip}
                     label="NVMe"
                     data-testid="nvme-chip"
                   />
-                ) : null}
-              </Grid>
+                </Grid>
+              ) : null}
             </>
           ) : (
             <Grid item>
