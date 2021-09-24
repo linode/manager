@@ -401,7 +401,14 @@ export const handlers = [
     return res(ctx.json(record));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
-    const volumes = volumeFactory.buildList(0);
+    const hddVolumes = volumeFactory.buildList(2, {
+      region: 'us-southeast',
+    });
+    const nvmeVolumes = volumeFactory.buildList(2, {
+      hardware_type: 'nvme',
+    });
+
+    const volumes = [...hddVolumes, ...nvmeVolumes];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
