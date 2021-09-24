@@ -31,7 +31,7 @@ import {
   maintenanceResponseFactory,
   monitorFactory,
   nodeBalancerFactory,
-  // notificationFactory,
+  notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   profileFactory,
@@ -50,7 +50,7 @@ import {
   makeObjectsPage,
   paymentMethodFactory,
   accountMaintenanceFactory,
-  gdprComplianceNotification,
+  // gdprComplianceNotification,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
@@ -401,14 +401,15 @@ export const handlers = [
     return res(ctx.json(record));
   }),
   rest.get('*/volumes', (req, res, ctx) => {
-    const hddVolumes = volumeFactory.buildList(2, {
+    const hddVolume = volumeFactory.build({
       region: 'us-southeast',
+      linode_id: 10,
     });
     const nvmeVolumes = volumeFactory.buildList(2, {
       hardware_type: 'nvme',
     });
 
-    const volumes = [...hddVolumes, ...nvmeVolumes];
+    const volumes = [...nvmeVolumes, hddVolume];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -620,7 +621,7 @@ export const handlers = [
     //   body: null
     // });
 
-    const gdprNotification = gdprComplianceNotification.build();
+    // const gdprNotification = gdprComplianceNotification.build();
 
     // const generalGlobalNotice = {
     //   type: 'notice',
@@ -692,12 +693,29 @@ export const handlers = [
     //   severity: 'major',
     // });
 
+    const blockStorageMigrationNotification = notificationFactory.build({
+      type: 'volume_migration_scheduled',
+      entity: {
+        type: 'volume',
+        label: 'volume-0',
+        id: 0,
+        url: '/volumes/0',
+      },
+      when: '2021-09-30T04:00:00',
+      message:
+        'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+      label: 'You have a scheduled Block Storage volume upgrade pending!',
+      severity: 'major',
+      until: '2021-10-16T04:00:00',
+      body: 'Your volumes in us-southeast will be upgraded to NVMe.',
+    });
+
     return res(
       ctx.json(
         makeResourcePage([
           // pastDueBalance,
           // ...notificationFactory.buildList(1),
-          gdprNotification,
+          // gdprNotification,
           // generalGlobalNotice,
           // outageNotification,
           // minorSeverityNotification,
@@ -706,6 +724,7 @@ export const handlers = [
           // emailBounce,
           // migrationNotification,
           // balanceNotification,
+          blockStorageMigrationNotification,
         ])
       )
     );
