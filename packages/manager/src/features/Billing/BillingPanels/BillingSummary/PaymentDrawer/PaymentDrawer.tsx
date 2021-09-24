@@ -116,11 +116,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpIcon: {
     padding: `0px 8px`,
-    color: '#888f91',
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
   },
 }));
 

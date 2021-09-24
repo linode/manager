@@ -58,7 +58,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     toolTip: {
-      paddingTop: theme.spacing(1),
+      marginLeft: -2,
     },
     title: {
       marginBottom: theme.spacing(2),
