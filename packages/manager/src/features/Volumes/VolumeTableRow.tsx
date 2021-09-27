@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event, NotificationType } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -98,7 +98,8 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const isNVMe = hardwareType === 'nvme';
 
   const scheduledVolumeMigrationNotifications = notifications.filter(
-    (notification) => notification.type === 'volume_migration_scheduled'
+    (notification) =>
+      notification.type === ('volume_migration_scheduled' as NotificationType)
   );
   const matchedNotification = scheduledVolumeMigrationNotifications.find(
     (notification) =>

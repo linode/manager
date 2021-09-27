@@ -57,6 +57,7 @@ import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
+import { NotificationType } from '@linode/api-v4';
 
 export const makeResourcePage = (
   e: any[],
@@ -694,7 +695,7 @@ export const handlers = [
     // });
 
     const blockStorageMigrationNotification = notificationFactory.build({
-      type: 'volume_migration_scheduled',
+      type: 'volume_migration_scheduled' as NotificationType,
       entity: {
         type: 'volume',
         label: 'volume-0',
