@@ -3,16 +3,17 @@ import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schem
 import { useFormik } from 'formik';
 import * as React from 'react';
 import * as classNames from 'classnames';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import { makeStyles, Theme } from 'src/components/core/styles';
 
 interface Props {
   poolID: number;
@@ -173,9 +174,12 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
         </Notice>
       ) : null}
       <Typography>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis augue
-        arcu, semper id diam vitae, ultrices aliquet est. Morbi mauris risus,
-        mattis non sodales at, ultrices et quam.
+        Set minimum and maximum node pool constraints for LKE to resize your
+        cluster based on demand and control cluster resource costs. Autoscaler
+        maximum limit is 100.{' '}
+        <Link to={'https://www.linode.com/docs/products/compute/kubernetes/'}>
+          Learn More.
+        </Link>
       </Typography>
       <FormControlLabel
         label="Autoscaler"
