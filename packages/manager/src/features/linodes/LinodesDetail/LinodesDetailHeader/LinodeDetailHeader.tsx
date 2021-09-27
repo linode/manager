@@ -18,6 +18,7 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
 import useLinodeActions from 'src/hooks/useLinodeActions';
+import useNotifications from 'src/hooks/useNotifications';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
@@ -83,6 +84,16 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   });
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
+
+  const notifications = useNotifications();
+
+  const showUpgradeVolumesBanner = notifications.some(
+    (notification) =>
+      notification?.entity?.id === matchedLinodeId &&
+      ['volume_migration_scheduled', 'volume_migration_imminent'].includes(
+        notification.type
+      )
+  );
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -346,6 +357,39 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
                 }
               >
                 {volumesBannerAction} a Volume
+              </Button>
+            </Grid>
+          </Grid>
+        </DismissibleBanner>
+      ) : null}
+      {showUpgradeVolumesBanner ? (
+        <DismissibleBanner
+          preferenceKey="upgradable-volumes-attached"
+          productInformationIndicator
+        >
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+          >
+            <Grid item>
+              <Typography>
+                Volume(s) attached to this Linode are eligible for a{' '}
+                <b>free upgrade</b> to high performance{' '}
+                <Link to="https://www.linode.com/products/block-storage/">
+                  NVMe Block Storage
+                </Link>
+                .
+              </Typography>
+              <Typography>
+                Upgrade this Linode to get up to 10x faster performance on the
+                attached Volume(s).
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button buttonType="primary" onClick={() => null}>
+                Upgrade Volume
               </Button>
             </Grid>
           </Grid>
