@@ -130,8 +130,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     upgradeVolumesDialog,
     setUpgradeVolumesDialog,
   ] = React.useState<DialogProps>({
-    open: false,
-    linodeID: 0,
+    open: queryParams.upgrade === 'true',
+    linodeID: matchedLinodeId,
   });
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
