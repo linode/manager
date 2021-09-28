@@ -1,4 +1,5 @@
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
@@ -86,14 +87,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
 
   const notifications = useNotifications();
-
-  const showUpgradeVolumesBanner = notifications.some(
-    (notification) =>
-      notification?.entity?.id === matchedLinodeId &&
-      ['volume_migration_scheduled', 'volume_migration_imminent'].includes(
-        notification.type
-      )
-  );
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -287,6 +280,16 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     flags.blockStorageAvailability &&
     linode.region === region &&
     numAttachedVolumes === 0;
+
+  const showUpgradeVolumesBanner = notifications.some(
+    (notification) =>
+      ['volume_migration_scheduled', 'volume_migration_imminent'].includes(
+        notification.type
+      ) &&
+      getVolumesForLinode(volumes.itemsById, linode.id).find(
+        (volume: Volume) => volume.id === notification?.entity?.id
+      )
+  );
 
   // Check to make sure:
   //    1. there are no Volumes currently attached
