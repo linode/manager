@@ -14,6 +14,7 @@ import useNotifications from 'src/hooks/useNotifications';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
+import useEvents from 'src/hooks/useEvents';
 
 const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
@@ -88,6 +89,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     linodeStatus,
   } = props;
 
+  const { events } = useEvents();
   const history = useHistory();
   const location = useLocation();
   const notifications = useNotifications();
@@ -103,13 +105,18 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   );
   const matchedNotification = scheduledVolumeMigrationNotifications.find(
     (notification) =>
-      notification.entity?.id === id && notification.body?.includes(region)
+      notification.entity?.id === id || notification.body?.includes(region)
   );
   const eligibleForUpgradeToNVMe = Boolean(matchedNotification);
 
   const goToAttachedLinode = () => {
     history.push(`/linodes/${linodeId}`);
   };
+
+  const nvmeUpgradeScheduled = events.some(
+    (event) =>
+      event.action === 'volume_migrate_scheduled' && event.entity?.id === id
+  );
 
   return isUpdating ? (
     <TableRow
@@ -150,11 +157,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                     data-testid="nvme-chip"
                   />
                 </Grid>
-              ) : eligibleForUpgradeToNVMe ? (
+              ) : eligibleForUpgradeToNVMe && !nvmeUpgradeScheduled ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
                     className={classes.chip}
-                    label="Upgrade to NVMe"
+                    label="UPGRADE TO NVMe"
                     onClick={goToAttachedLinode}
                     data-testid="upgrade-chip"
                   />
