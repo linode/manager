@@ -363,7 +363,3 @@ export const isEUModelContractNotification = (notification: Notification) => {
     notification.type === 'notice' && /eu-model/gi.test(notification.message)
   );
 };
-
-export const condensedVolumeMigrationScheduledNotification = () => {
-  return {};
-};
