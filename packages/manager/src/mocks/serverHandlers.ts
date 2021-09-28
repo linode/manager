@@ -57,6 +57,7 @@ import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
+import { NotificationType } from '@linode/api-v4';
 
 export const makeResourcePage = (
   e: any[],
@@ -693,12 +694,29 @@ export const handlers = [
     // });
 
     const blockStorageMigrationNotification = notificationFactory.build({
-      type: 'volume_migration_scheduled',
+      type: 'volume_migration_scheduled' as NotificationType,
       entity: {
         type: 'volume',
         label: 'volume-0',
         id: 0,
         url: '/volumes/0',
+      },
+      when: '2021-09-30T04:00:00',
+      message:
+        'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+      label: 'You have a scheduled Block Storage volume upgrade pending!',
+      severity: 'major',
+      until: '2021-10-16T04:00:00',
+      body: 'Your volumes in us-southeast will be upgraded to NVMe.',
+    });
+
+    const blockStorageMigrationNotification2 = notificationFactory.build({
+      type: 'volume_migration_scheduled' as NotificationType,
+      entity: {
+        type: 'volume1',
+        label: 'volume-1',
+        id: 1,
+        url: '/volumes/1',
       },
       when: '2021-09-30T04:00:00',
       message:
@@ -715,7 +733,6 @@ export const handlers = [
           // pastDueBalance,
           // ...notificationFactory.buildList(1),
           // gdprNotification,
-          blockStorageMigrationNotification,
           // generalGlobalNotice,
           // outageNotification,
           // minorSeverityNotification,
@@ -724,6 +741,8 @@ export const handlers = [
           // emailBounce,
           // migrationNotification,
           // balanceNotification,
+          blockStorageMigrationNotification,
+          blockStorageMigrationNotification2,
         ])
       )
     );
