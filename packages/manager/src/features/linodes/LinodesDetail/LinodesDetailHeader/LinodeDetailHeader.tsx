@@ -286,7 +286,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       ['volume_migration_scheduled', 'volume_migration_imminent'].includes(
         notification.type
       ) &&
-      getVolumesForLinode(volumes.itemsById, linode.id).find(
+      getVolumesForLinode(volumes.itemsById, linode.id).some(
         (volume: Volume) => volume.id === notification?.entity?.id
       )
   );
@@ -392,7 +392,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
             </Grid>
             <Grid item>
               <Button buttonType="primary" onClick={() => null}>
-                Upgrade Volume
+                Upgrade Volume(s)
               </Button>
             </Grid>
           </Grid>
