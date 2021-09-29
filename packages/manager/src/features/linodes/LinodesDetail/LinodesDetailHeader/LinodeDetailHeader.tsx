@@ -266,9 +266,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     return <CircleProgress />;
   }
 
-  const getVolumesByLinode = (linodeId: number) =>
-    getVolumesForLinode(volumes.itemsById, linodeId).length;
-
   const volumesForLinode = getVolumesForLinode(volumes.itemsById, linode.id);
   const numAttachedVolumes = volumesForLinode.length;
 
@@ -403,7 +400,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         variant="details"
         id={linode.id}
         linode={linode}
-        numVolumes={getVolumesByLinode(linode.id)}
+        numVolumes={numAttachedVolumes}
         username={profile?.username}
         linodeConfigs={linodeConfigs}
         backups={linode.backups}
