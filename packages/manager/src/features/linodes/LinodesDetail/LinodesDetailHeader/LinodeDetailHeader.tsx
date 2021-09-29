@@ -269,7 +269,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   const getVolumesByLinode = (linodeId: number) =>
     getVolumesForLinode(volumes.itemsById, linodeId).length;
 
-  const numAttachedVolumes = getVolumesByLinode(linode.id);
+  const volumesForLinode = getVolumesForLinode(volumes.itemsById, linode.id);
+  const numAttachedVolumes = volumesForLinode.length;
 
   const handleDeleteLinode = (linodeId: number) => {
     history.push('/linodes');
@@ -282,14 +283,14 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     linode.region === region &&
     numAttachedVolumes === 0;
 
-  const showUpgradeVolumesBanner = notifications.some(
+  const numUpgradeableVolumes = notifications.filter(
     (notification) =>
       notification.type ===
         ('volume_migration_scheduled' as NotificationType) &&
-      getVolumesForLinode(volumes.itemsById, linode.id).some(
+      volumesForLinode.some(
         (volume: Volume) => volume.id === notification?.entity?.id
       )
-  );
+  ).length;
 
   // Check to make sure:
   //    1. there are no Volumes currently attached
@@ -365,7 +366,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           </Grid>
         </DismissibleBanner>
       ) : null}
-      {showUpgradeVolumesBanner ? (
+      {numUpgradeableVolumes > 0 ? (
         <DismissibleBanner
           preferenceKey="upgradable-volumes-attached"
           productInformationIndicator
@@ -378,21 +379,20 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           >
             <Grid item>
               <Typography>
-                Volume(s) attached to this Linode are eligible for a{' '}
-                <b>free upgrade</b> to high performance{' '}
-                <Link to="https://www.linode.com/products/block-storage/">
-                  NVMe Block Storage
+                {numUpgradeableVolumes === 1
+                  ? 'A Volume attached to this Linode is '
+                  : 'Volumes attached to this Linode are '}
+                eligible for a <b>free upgrade</b> to high performance NVMe
+                Block Storage.{' '}
+                <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-now-available/">
+                  Learn More
                 </Link>
                 .
-              </Typography>
-              <Typography>
-                Upgrade this Linode to get up to 10x faster performance on the
-                attached Volume(s).
               </Typography>
             </Grid>
             <Grid item>
               <Button buttonType="primary" onClick={() => null}>
-                Upgrade Volume(s)
+                Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
               </Button>
             </Grid>
           </Grid>
