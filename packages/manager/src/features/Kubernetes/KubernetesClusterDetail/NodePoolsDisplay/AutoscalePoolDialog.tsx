@@ -175,9 +175,9 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
       ) : null}
       <Typography>
         Set minimum and maximum node pool constraints for LKE to resize your
-        cluster based on demand and control cluster resource costs. Autoscaler
-        maximum limit is 100.{' '}
-        <Link to={'https://www.linode.com/docs/products/compute/kubernetes/'}>
+        cluster automatically based on resource demand and overall usage.
+        Maximum limit is 100 nodes.{' '}
+        <Link to="https://www.linode.com/docs/products/compute/kubernetes/guides/enable-cluster-autoscaling">
           Learn More.
         </Link>
       </Typography>
