@@ -301,6 +301,27 @@ const interceptNotification = (
     };
   }
 
+  if (notification.type === 'volume_migration_scheduled') {
+    const jsx = (
+      <Typography>
+        You have volumes scheduled to be upgraded to NVMe. Please refer to the{' '}
+        <Link to={'/account/maintenance/'} onClick={onClose}>
+          Maintenance page
+        </Link>{' '}
+        for more details on their upgrade status. You have the option of{' '}
+        <Link to={'/volumes'} onClick={onClose}>
+          upgrading attached volumes
+        </Link>{' '}
+        sooner than their default scheduled date.
+      </Typography>
+    );
+
+    return {
+      ...notification,
+      jsx,
+    };
+  }
+
   /* If the notification is not of any of the types above, return the notification object without modification. In this case, logic in <RenderNotification />
   will either linkify notification.message or render it plainly.
   */
