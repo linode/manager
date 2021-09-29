@@ -11,12 +11,6 @@ export const Normal = () => (
   </TextField>
 );
 
-export const Small = () => (
-  <TextField label="Input Label" placeholder="Small Input" small>
-    Normal State | Small input
-  </TextField>
-);
-
 export const Active = () => (
   <TextField label="Input Label" placeholder="Active State">
     Active State
@@ -30,12 +24,6 @@ export const Error = () => (
     errorText="This input needs further attention"
   >
     Error State
-  </TextField>
-);
-
-export const Affirmative = () => (
-  <TextField label="Input Label" placeholder="Affirmative State" affirmative>
-    Affirmative State
   </TextField>
 );
 

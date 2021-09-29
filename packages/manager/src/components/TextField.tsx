@@ -27,11 +27,8 @@ type ClassNames =
   | 'errorText'
   | 'editable'
   | 'helperTextTop'
-  | 'small'
   | 'noTransform'
-  | 'selectSmall'
   | 'wrapper'
-  | 'tiny'
   | 'absolute'
   | 'helpIcon'
   | 'label';
@@ -68,27 +65,6 @@ const styles = (theme: Theme) =>
     expand: {
       maxWidth: '100%',
     },
-    small: {
-      minHeight: 32,
-      marginTop: 0,
-      '& input': {
-        minHeight: 32,
-        padding: theme.spacing(1),
-      },
-    },
-    selectSmall: {
-      padding: '8px 32px 0 8px',
-      minHeight: 32,
-      minWidth: 132,
-      '& svg': {
-        marginTop: 0,
-        width: 24,
-        height: 24,
-      },
-    },
-    tiny: {
-      width: '3.6em',
-    },
     errorText: {
       display: 'flex',
       alignItems: 'center',
@@ -119,15 +95,11 @@ const styles = (theme: Theme) =>
 interface BaseProps {
   errorText?: string;
   errorGroup?: string;
-  affirmative?: boolean;
   helperTextPosition?: 'top' | 'bottom';
   tooltipText?: string;
   className?: any;
   expand?: boolean;
-  small?: boolean;
   editable?: boolean;
-  // Currently only used for LKE node pool inputs
-  tiny?: boolean;
   /**
    * number amounts allowed in textfield
    * "type" prop must also be set to "number"
@@ -140,6 +112,7 @@ interface BaseProps {
   hideLabel?: boolean;
   hasAbsoluteError?: boolean;
   inputId?: string;
+  required?: boolean;
   optional?: boolean;
 }
 
@@ -227,7 +200,6 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       errorText,
       editable,
       errorGroup,
-      affirmative,
       classes,
       fullWidth,
       onChange,
@@ -236,8 +208,6 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       theme,
       className,
       expand,
-      small,
-      tiny,
       inputProps,
       helperText,
       helperTextPosition,
@@ -253,6 +223,7 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
       loading,
       hasAbsoluteError,
       inputId,
+      required,
       optional,
       ...textFieldProps
     } = this.props;
@@ -288,9 +259,9 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
           htmlFor={validInputId}
         >
           {label}
-          {this.props.required ? (
+          {required ? (
             <span className={classes.label}> (required)</span>
-          ) : this.props.optional ? (
+          ) : optional ? (
             <span className={classes.label}> (optional)</span>
           ) : null}
         </InputLabel>
@@ -347,9 +318,6 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
                 'input',
                 {
                   [classes.expand]: expand,
-                  [classes.small]: small,
-                  [classes.tiny]: tiny,
-                  affirmative: !!affirmative,
                 },
                 className
               ),
@@ -365,23 +333,17 @@ class LinodeTextField extends React.PureComponent<CombinedProps> {
                 MenuListProps: { className: 'selectMenuList' },
                 PaperProps: { className: 'selectMenuDropdown' },
               },
-              inputProps: {
-                className: classNames({
-                  [classes.selectSmall]: small,
-                }),
-              },
               ...SelectProps,
             }}
             className={classNames(
               {
                 [classes.helpWrapperTextField]: Boolean(tooltipText),
-                [classes.small]: small,
                 [classes.root]: true,
               },
               className
             )}
           >
-            {this.props.children}
+            {children}
           </TextField>
           {tooltipText && (
             <HelpIcon className={classes.helpIcon} text={tooltipText} />

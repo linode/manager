@@ -124,7 +124,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               errorText={nodesErrorMap.label}
               errorGroup={forEdit ? `${configIdx}` : undefined}
               data-qa-backend-ip-label
-              small
               disabled={disabled}
             />
           </Grid>
@@ -184,7 +183,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               errorText={nodesErrorMap.port}
               errorGroup={forEdit ? `${configIdx}` : undefined}
               data-qa-backend-ip-port
-              small
               noMarginTop
               disabled={disabled}
             />
@@ -199,7 +197,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               errorText={nodesErrorMap.weight}
               errorGroup={forEdit ? `${configIdx}` : undefined}
               data-qa-backend-ip-weight
-              small
               noMarginTop
               disabled={disabled}
             />
@@ -215,7 +212,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
                 onChange={onNodeModeChange}
                 errorText={nodesErrorMap.mode}
                 data-qa-backend-ip-mode
-                small
                 noMarginTop
                 disabled={disabled}
               >
