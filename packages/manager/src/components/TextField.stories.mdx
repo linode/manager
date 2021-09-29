@@ -1,0 +1,98 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import TextField from 'src/components/TextField';
+
+<Meta title="Components/Forms/Text Fields" component={TextField} />
+
+# Text Fields
+
+### Overview
+
+<hr />
+
+Text fields allow users to enter text into a UI.
+
+| Components               | Guidelines                                                                                                                                                                                                                                                                                                 |
+| :----------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Containers               | The size of the container should be proportional to the expected user input                                                                                                                                                                                                                                |
+| Label                    | Always try to write crisp and clear labels. Avoid long labels; use succinct, short and descriptive labels (a word or two) so users can quickly scan your form. Label text shouldn’t take up multiple lines                                                                                                 |
+| Placeholder / input text | Placeholder is the text that users see before they interact with a field. Input text is the text the user has entered into a text field. It’s important to select the right text for the placeholder. Don’t make the user guess what format they should use for the field. Tell this information up front. |
+| Helper text / error text | Optional element                                                                                                                                                                                                                                                                                           |
+
+### Usage
+
+<hr />
+
+- Input fields should be sized to the data being entered (example the entry for a street address should be wider than a zip code).
+- Ensure that the field can accommodate one more characters than the maximum number to be entered.
+- Balance this goal with the visual benefits of fields of the same length.
+  - A somewhat outsized input that aligns with the fields above and below it might be the best choice.
+
+<Canvas>
+  <Story name="Default">
+    <TextField label="Input Label" placeholder="Default State">
+      Default State
+    </TextField>
+  </Story>
+</Canvas>
+
+### Error
+
+<hr />
+
+Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix them.
+
+#### Main principles
+
+- Should be easy to notice and understand
+- Should be easy to locate
+- Users should not have to memorize instructions in order to fix error
+
+#### Inline validation
+
+As soon as the user has finished filling in a field, an indicator should appear nearby if the field contains an error.
+
+Use colors to differentiate error fields from normal ones. Red is the color most affiliated with errors. In most cases, avoid showing the error until the user has finished with the field and moved to the next field.
+
+<Canvas>
+  <Story name="Error">
+    <TextField
+      label="Input Label"
+      placeholder="Error State"
+      errorText="This input needs further attention!"
+    >
+      Error State
+    </TextField>
+  </Story>
+</Canvas>
+
+### Disabled
+
+<hr />
+
+<Canvas>
+  <Story name="Disabled">
+    <TextField label="Input Label" placeholder="Disabled State" disabled>
+      Disabled State
+    </TextField>
+  </Story>
+</Canvas>
+
+### Component API
+
+<hr />
+
+export const Template = (args) => (
+  <TextField
+    label="Input Label"
+    placeholder="I'm a text field, style me using the table below"
+    {...args}
+  >
+    Experimental State
+  </TextField>
+);
+
+<Canvas>
+  <Story name="Experiment">{Template.bind({})}</Story>
+</Canvas>
+
+<ArgsTable story="Experiment" sort="requiredFirst" />
