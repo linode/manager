@@ -1,4 +1,8 @@
-import { Event, NotificationType } from '@linode/api-v4/lib/account';
+import {
+  Event,
+  EventAction,
+  NotificationType,
+} from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -110,12 +114,13 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const eligibleForUpgradeToNVMe = Boolean(matchedNotification);
 
   const goToAttachedLinode = () => {
-    history.push(`/linodes/${linodeId}`);
+    history.push(`/linodes/${linodeId}/upgrade`);
   };
 
   const nvmeUpgradeScheduled = events.some(
     (event) =>
-      event.action === 'volume_migrate_scheduled' && event.entity?.id === id
+      event.action === ('volume_migrate_scheduled' as EventAction) &&
+      event.entity?.id === id
   );
 
   return isUpdating ? (
