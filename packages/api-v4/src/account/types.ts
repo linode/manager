@@ -201,7 +201,9 @@ export type NotificationType =
   | 'ticket_abuse'
   | 'notice'
   | 'promotion'
-  | 'user_email_bounce';
+  | 'user_email_bounce'
+  | 'volume_migration_scheduled'
+  | 'volume_migration_imminent';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
