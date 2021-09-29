@@ -65,18 +65,6 @@ Use colors to differentiate error fields from normal ones. Red is the color most
   </Story>
 </Canvas>
 
-### Disabled
-
-<hr />
-
-<Canvas>
-  <Story name="Disabled">
-    <TextField label="Input Label" placeholder="Disabled State" disabled>
-      Disabled State
-    </TextField>
-  </Story>
-</Canvas>
-
 ### Component API
 
 <hr />
@@ -92,7 +80,64 @@ export const Template = (args) => (
 );
 
 <Canvas>
-  <Story name="Experiment">{Template.bind({})}</Story>
+  <Story
+    name="Component API"
+    args={{
+      disabled: false,
+      editable: false,
+      expand: false,
+      hideLabel: false,
+      loading: false,
+      optional: false,
+      required: false,
+      tooltipText: '',
+    }}
+    argTypes={{
+      disabled: {
+        defaultValue: false,
+        description: 'A text field should be disabled if...',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+      loading: {
+        description: 'Used to depict a loading state.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      optional: {
+        description: 'If true, the label is displayed as optional.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      required: {
+        description: 'If true, the label is displayed as required.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      tooltipText: {
+        description:
+          'Displays informative text when users hover over the icon.',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
 </Canvas>
 
-<ArgsTable story="Experiment" sort="requiredFirst" />
+<ArgsTable
+  story="Component API"
+  sort="requiredFirst"
+  exclude={[
+    'className',
+    'dataAttrs',
+    'focused',
+    'hiddenLabel',
+    'inputId',
+    'ref',
+  ]}
+/>
