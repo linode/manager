@@ -1,3 +1,4 @@
+import { NotificationType } from '@linode/api-v4/lib/account';
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
@@ -283,9 +284,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const showUpgradeVolumesBanner = notifications.some(
     (notification) =>
-      ['volume_migration_scheduled', 'volume_migration_imminent'].includes(
-        notification.type
-      ) &&
+      notification.type ===
+        ('volume_migration_scheduled' as NotificationType) &&
       getVolumesForLinode(volumes.itemsById, linode.id).some(
         (volume: Volume) => volume.id === notification?.entity?.id
       )
