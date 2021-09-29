@@ -1,4 +1,6 @@
+import { NotificationType } from '@linode/api-v4/lib/account';
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
@@ -18,6 +20,7 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useFlags from 'src/hooks/useFlags';
 import useLinodeActions from 'src/hooks/useLinodeActions';
+import useNotifications from 'src/hooks/useNotifications';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
@@ -83,6 +86,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   });
 
   const matchedLinodeId = Number(match?.params?.linodeId ?? 0);
+
+  const notifications = useNotifications();
 
   const notificationContext = React.useContext(_notificationContext);
 
@@ -261,10 +266,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     return <CircleProgress />;
   }
 
-  const getVolumesByLinode = (linodeId: number) =>
-    getVolumesForLinode(volumes.itemsById, linodeId).length;
-
-  const numAttachedVolumes = getVolumesByLinode(linode.id);
+  const volumesForLinode = getVolumesForLinode(volumes.itemsById, linode.id);
+  const numAttachedVolumes = volumesForLinode.length;
 
   const handleDeleteLinode = (linodeId: number) => {
     history.push('/linodes');
@@ -276,6 +279,15 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     flags.blockStorageAvailability &&
     linode.region === region &&
     numAttachedVolumes === 0;
+
+  const numUpgradeableVolumes = notifications.filter(
+    (notification) =>
+      notification.type ===
+        ('volume_migration_scheduled' as NotificationType) &&
+      volumesForLinode.some(
+        (volume: Volume) => volume.id === notification?.entity?.id
+      )
+  ).length;
 
   // Check to make sure:
   //    1. there are no Volumes currently attached
@@ -351,12 +363,44 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           </Grid>
         </DismissibleBanner>
       ) : null}
+      {numUpgradeableVolumes > 0 ? (
+        <DismissibleBanner
+          preferenceKey="upgradable-volumes-attached"
+          productInformationIndicator
+        >
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+          >
+            <Grid item>
+              <Typography>
+                {numUpgradeableVolumes === 1
+                  ? 'A Volume attached to this Linode is '
+                  : 'Volumes attached to this Linode are '}
+                eligible for a <b>free upgrade</b> to high performance NVMe
+                Block Storage.{' '}
+                <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-now-available/">
+                  Learn More
+                </Link>
+                .
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button buttonType="primary" onClick={() => null}>
+                Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
+              </Button>
+            </Grid>
+          </Grid>
+        </DismissibleBanner>
+      ) : null}
       <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"
         id={linode.id}
         linode={linode}
-        numVolumes={getVolumesByLinode(linode.id)}
+        numVolumes={numAttachedVolumes}
         username={profile?.username}
         linodeConfigs={linodeConfigs}
         backups={linode.backups}
