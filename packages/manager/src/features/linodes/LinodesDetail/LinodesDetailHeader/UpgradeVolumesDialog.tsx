@@ -6,7 +6,6 @@ import Paper from 'src/components/core/Paper';
 import Link from 'src/components/Link';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { ExtendedLinode } from '../types';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useSnackbar } from 'notistack';
 import {
@@ -18,6 +17,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   linode: ExtendedLinode;
+  upgradeableVolumeIds: number[];
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,13 +30,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
-  const { open, onClose, linode } = props;
-  const classes = useStyles();
-  // @TODO make sure the extended Linode passed as a prop updates with fresh data if volumes were to change
-  const volumes = linode._volumes;
+  const { open, onClose, linode, upgradeableVolumeIds } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const classes = useStyles();
 
-  const { data: migrationQueue } = useVolumesMigrationQueueQuery(linode.region);
+  const { data: migrationQueue } = useVolumesMigrationQueueQuery(
+    linode.region,
+    open
+  );
+
   const {
     mutateAsync: migrateVolumes,
     isLoading,
@@ -44,14 +46,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
   } = useVolumesMigrateMutation();
 
   const onSubmit = () => {
-    // @TODO what Volume IDs will we want to pass? What filtering will we need to do?
-    const hddVolumes = volumes.filter(
-      // @ts-expect-error types will be ok after https://github.com/linode/manager/pull/7964 is intergrated
-      (volume: Volume) => volume.hardware_type === 'hdd'
-    );
-    const volumeIds = hddVolumes.map((volume: Volume) => volume.id);
-
-    migrateVolumes(volumeIds).then(() => {
+    migrateVolumes(upgradeableVolumeIds).then(() => {
       enqueueSnackbar(
         `Successfully added ${linode.label}'s volumes to the migration queue.`,
         { variant: 'success' }

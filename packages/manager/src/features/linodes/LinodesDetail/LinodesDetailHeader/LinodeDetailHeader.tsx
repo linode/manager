@@ -1,4 +1,3 @@
-import { NotificationType } from '@linode/api-v4/lib/account';
 import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
@@ -299,14 +298,18 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     linode.region === region &&
     numAttachedVolumes === 0;
 
-  const numUpgradeableVolumes = notifications.filter(
-    (notification) =>
-      notification.type ===
-        ('volume_migration_scheduled' as NotificationType) &&
-      volumesForLinode.some(
-        (volume: Volume) => volume.id === notification?.entity?.id
-      )
-  ).length;
+  const upgradeableVolumeIds = notifications
+    .filter(
+      (notification) =>
+        notification.type === 'volume_migration_scheduled' &&
+        volumesForLinode.some(
+          (volume: Volume) => volume.id === notification?.entity?.id
+        )
+    )
+    // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
+    .map((notification) => notification.entity!.id);
+
+  const numUpgradeableVolumes = upgradeableVolumeIds.length;
 
   // Check to make sure:
   //    1. there are no Volumes currently attached
@@ -349,9 +352,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
-      <Button onClick={() => openDialog('upgrade_volumes', linode.id)}>
-        Upgrade Volumes
-      </Button>
       {showVolumesBanner ? (
         <DismissibleBanner
           preferenceKey="block-storage-available-atlanta"
@@ -410,7 +410,10 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
               </Typography>
             </Grid>
             <Grid item>
-              <Button buttonType="primary" onClick={() => null}>
+              <Button
+                buttonType="primary"
+                onClick={() => openDialog('upgrade_volumes', linode.id)}
+              >
                 Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
               </Button>
             </Grid>
@@ -482,6 +485,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <UpgradeVolumesDialog
         open={upgradeVolumesDialog.open}
         linode={linode}
+        upgradeableVolumeIds={upgradeableVolumeIds}
         onClose={closeDialogs}
       />
     </>

@@ -9,11 +9,14 @@ import {
 
 const queryKey = 'volumes-migrations';
 
-export const useVolumesMigrationQueueQuery = (region: string) =>
+export const useVolumesMigrationQueueQuery = (
+  region: string,
+  enabled: boolean
+) =>
   useQuery<VolumesMigrationQueue, APIError[]>(
     [`${queryKey}-queue`, region],
     () => getVolumesMigrationQueue(region),
-    queryPresets.shortLived
+    { ...queryPresets.shortLived, enabled }
   );
 
 export const useVolumesMigrateMutation = () =>
