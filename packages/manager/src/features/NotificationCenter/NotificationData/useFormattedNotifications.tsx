@@ -304,14 +304,14 @@ const interceptNotification = (
   if (notification.type === 'volume_migration_scheduled') {
     const jsx = (
       <Typography>
-        Some of your Volumes are scheduled for a free upgrade to NVMe Block
+        Attached Volumes are eligible for a free upgrade to NVMe-based Block
         Storage. Visit the{' '}
         <Link to={'/account/maintenance/'} onClick={onClose}>
           Maintenance page
         </Link>{' '}
-        to view upcoming scheduled upgrades or{' '}
+        to view scheduled upgrades or visit the{' '}
         <Link to={'/volumes'} onClick={onClose}>
-          view all Volumes
+          Volumes page
         </Link>{' '}
         to begin self-service upgrades if available.
       </Typography>
