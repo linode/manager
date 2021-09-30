@@ -57,7 +57,7 @@ import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
-import { NotificationType } from '@linode/api-v4';
+import { EventAction, NotificationType } from '@linode/api-v4';
 
 export const makeResourcePage = (
   e: any[],
@@ -546,7 +546,7 @@ export const handlers = [
     });
     const volumeMigrationScheduled = eventFactory.build({
       entity: { type: 'volume', id: 0, label: 'volume-0' },
-      action: 'volume_migrate_scheduled',
+      action: 'volume_migrate_scheduled' as EventAction,
       message: 'Volume 0 has been scheduled for upgrade to NVMe.',
       percent_complete: 100,
     });
@@ -743,6 +743,7 @@ export const handlers = [
           // pastDueBalance,
           // ...notificationFactory.buildList(1),
           // gdprNotification,
+          blockStorageMigrationNotification,
           // generalGlobalNotice,
           // outageNotification,
           // minorSeverityNotification,
