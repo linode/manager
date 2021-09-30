@@ -103,18 +103,18 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
 
   const isNVMe = hardwareType === 'nvme';
 
-  const scheduledVolumeMigrationNotifications = notifications.filter(
+  const eligibleForUpgradeToNVMe = notifications.some(
     (notification) =>
-      notification.type === ('volume_migration_scheduled' as NotificationType)
+      notification.type ===
+        ('volume_migration_scheduled' as NotificationType) &&
+      (notification.entity?.id === id || notification.body?.includes(region))
   );
-  const matchedNotification = scheduledVolumeMigrationNotifications.find(
-    (notification) =>
-      notification.entity?.id === id || notification.body?.includes(region)
-  );
-  const eligibleForUpgradeToNVMe = Boolean(matchedNotification);
 
   const goToAttachedLinode = () => {
-    history.push(`/linodes/${linodeId}/upgrade`);
+    // Make sure Volume is attached before redirect
+    if (linodeId) {
+      history.push(`/linodes/${linodeId}/upgrade`);
+    }
   };
 
   const nvmeUpgradeScheduled = events.some(
