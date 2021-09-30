@@ -13,23 +13,33 @@ import HelpIcon from 'src/components/HelpIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  helpWrapper: {
+    display: 'flex',
+    alignItems: 'flex-end',
+    flexWrap: 'wrap',
+  },
   wrapper: {
     marginTop: theme.spacing(2),
   },
   noTransform: {
     transform: 'none',
   },
-  root: {
-    marginTop: 0,
+  label: {
+    fontFamily: theme.font.normal,
+  },
+  helperTextTop: {
+    marginBottom: theme.spacing(),
+    marginTop: theme.spacing(),
   },
   helpWrapperContainer: {
     display: 'flex',
     width: '100%',
   },
-  helpWrapper: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
+  expand: {
+    maxWidth: '100%',
+  },
+  root: {
+    marginTop: 0,
   },
   helpWrapperTextField: {
     width: 415,
@@ -40,9 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   helpIcon: {
     padding: '0px 0px 0px 8px',
   },
-  expand: {
-    maxWidth: '100%',
-  },
   errorText: {
     display: 'flex',
     alignItems: 'center',
@@ -51,47 +58,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: 5,
     width: '100%',
   },
-  absolute: {
-    position: 'absolute',
-  },
   editable: {
     wordBreak: 'keep-all',
     paddingLeft: 1,
   },
-  helperTextTop: {
-    marginBottom: theme.spacing(),
-    marginTop: theme.spacing(),
-  },
-  noMarginTop: {
-    marginTop: 0,
-  },
-  label: {
-    fontFamily: theme.font.normal,
+  absolute: {
+    position: 'absolute',
   },
 }));
 
 interface BaseProps {
-  errorText?: string;
-  errorGroup?: string;
-  helperTextPosition?: 'top' | 'bottom';
-  tooltipText?: string;
   className?: any;
-  expand?: boolean;
+  dataAttrs?: Record<string, any>;
   editable?: boolean;
+  errorGroup?: string;
+  errorText?: string;
+  expand?: boolean;
+  hasAbsoluteError?: boolean;
+  helperTextPosition?: 'top' | 'bottom';
+  hideLabel?: boolean;
+  inputId?: string;
+  loading?: boolean;
   /**
    * The number amounts allowed in TextField and
    * the "type" prop must also be set to "number"
    */
-  min?: number;
   max?: number;
-  dataAttrs?: Record<string, any>;
+  min?: number;
   noMarginTop?: boolean;
-  loading?: boolean;
-  hideLabel?: boolean;
-  hasAbsoluteError?: boolean;
-  inputId?: string;
-  required?: boolean;
   optional?: boolean;
+  required?: boolean;
+  tooltipText?: string;
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
@@ -132,6 +129,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     optional,
     required,
     SelectProps,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     theme,
     tooltipText,
     type,
@@ -301,8 +299,8 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
           }}
           className={classNames(
             {
-              [classes.helpWrapperTextField]: Boolean(tooltipText),
               [classes.root]: true,
+              [classes.helpWrapperTextField]: Boolean(tooltipText),
             },
             className
           )}
