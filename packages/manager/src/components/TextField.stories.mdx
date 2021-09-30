@@ -11,12 +11,11 @@ import TextField from 'src/components/TextField';
 
 Text fields allow users to enter text into a UI.
 
-| Components               | Guidelines                                                                                                                                                                                                                                                                                                 |
-| :----------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Containers               | The size of the container should be proportional to the expected user input                                                                                                                                                                                                                                |
-| Label                    | Always try to write crisp and clear labels. Avoid long labels; use succinct, short and descriptive labels (a word or two) so users can quickly scan your form. Label text shouldn’t take up multiple lines                                                                                                 |
-| Placeholder / input text | Placeholder is the text that users see before they interact with a field. Input text is the text the user has entered into a text field. It’s important to select the right text for the placeholder. Don’t make the user guess what format they should use for the field. Tell this information up front. |
-| Helper text / error text | Optional element                                                                                                                                                                                                                                                                                           |
+| Components  | Guidelines                                                                       |
+| :---------- | :------------------------------------------------------------------------------- |
+| Containers  | The size of the container should be proportional to the expected user input.     |
+| Label       | Always try to write crisp and clear labels and shouldn’t take up multiple lines. |
+| Placeholder | If provide, describe what the input should be and use sentence case.             |
 
 ### Usage
 
@@ -29,7 +28,7 @@ Text fields allow users to enter text into a UI.
 
 <Canvas>
   <Story name="Default">
-    <TextField label="Input Label" placeholder="Default State">
+    <TextField label="Input Label" placeholder="Default state">
       Default State
     </TextField>
   </Story>
@@ -39,25 +38,17 @@ Text fields allow users to enter text into a UI.
 
 <hr />
 
-Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix them.
-
-#### Main principles
-
-- Should be easy to notice and understand
-- Should be easy to locate
-- Users should not have to memorize instructions in order to fix error
+Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix them. Users should not have to memorize instructions in order to fix the error.
 
 #### Inline validation
 
-As soon as the user has finished filling in a field, an indicator should appear nearby if the field contains an error.
-
-Use colors to differentiate error fields from normal ones. Red is the color most affiliated with errors. In most cases, avoid showing the error until the user has finished with the field and moved to the next field.
+When the user has finished filling in a field and clicks the submit button, an indicator should appear nearby if the field contains an error. Use red to differentiate error fields from normal ones.
 
 <Canvas>
   <Story name="Error">
     <TextField
-      label="Input Label"
-      placeholder="Error State"
+      label="Label"
+      placeholder="Error state"
       errorText="This input needs further attention!"
     >
       Error State
@@ -71,7 +62,7 @@ Use colors to differentiate error fields from normal ones. Red is the color most
 
 export const Template = (args) => (
   <TextField
-    label="Input Label"
+    label="Label"
     placeholder="I'm a text field, style me using the table below"
     {...args}
   >
@@ -97,29 +88,36 @@ export const Template = (args) => (
     }}
     argTypes={{
       disabled: {
-        defaultValue: false,
         description: 'If true, the component is disabled.',
         table: {
           type: { summary: 'boolean' },
           defaultValue: { summary: 'false' },
         },
       },
+      errorText: {
+        description: 'Displays error text below the text field.',
+      },
       expand: {
+        description:
+          'If true, the text field will take up the full width of its container.',
         table: {
           defaultValue: { summary: 'false' },
         },
       },
       helperText: {
+        description: 'Displays informative text below the text field.',
         table: {
           type: { summary: 'string' },
         },
       },
       helperTextPosition: {
+        description: 'Changes the position of the helper text.',
         table: {
           defaultValue: { summary: 'bottom' },
         },
       },
       hideLabel: {
+        description: 'Removes the label.',
         table: {
           defaultValue: { summary: 'false' },
         },
@@ -131,6 +129,7 @@ export const Template = (args) => (
         },
       },
       noMarginTop: {
+        description: 'Removes the spacing above the text field.',
         table: {
           defaultValue: { summary: 'false' },
         },
