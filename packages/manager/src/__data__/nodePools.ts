@@ -13,6 +13,11 @@ export const pool1: ExtendedNodePool = {
     },
   ],
   clusterID: 10,
+  autoscaler: {
+    enabled: false,
+    min: 1,
+    max: 1,
+  },
 };
 
 export const pool2: ExtendedNodePool = {
@@ -32,6 +37,11 @@ export const pool2: ExtendedNodePool = {
     },
   ],
   clusterID: 10,
+  autoscaler: {
+    enabled: false,
+    min: 1,
+    max: 1,
+  },
 };
 
 export const pool3: ExtendedNodePool = {
@@ -46,6 +56,11 @@ export const pool3: ExtendedNodePool = {
     },
   ],
   clusterID: 10,
+  autoscaler: {
+    enabled: false,
+    min: 1,
+    max: 1,
+  },
 };
 
 export const extendedPools = [pool1, pool2, pool3];
