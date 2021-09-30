@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     marginTop: 30,
     marginLeft: -20,
-    color: theme.cmrTextColors.tableHeader,
   },
   selectContainer: {
     width: 415 + theme.spacing(2),

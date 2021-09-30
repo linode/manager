@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  helpIcon: {
+    marginLeft: -theme.spacing(),
+  },
 }));
 
 type CombinedProps = Props;
@@ -96,7 +99,9 @@ export const Button: React.FC<CombinedProps> = (props) => {
           {loading ? <Reload /> : props.children}
         </span>
       </_Button>
-      {tooltipText && <HelpIcon text={tooltipText} />}
+      {tooltipText && (
+        <HelpIcon className={classes.helpIcon} text={tooltipText} />
+      )}
     </React.Fragment>
   );
 };
