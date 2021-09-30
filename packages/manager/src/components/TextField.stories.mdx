@@ -84,10 +84,13 @@ export const Template = (args) => (
     name="Component API"
     args={{
       disabled: false,
-      editable: false,
+      errorText: '',
       expand: false,
+      helperText: '',
+      helperTextPosition: 'bottom',
       hideLabel: false,
       loading: false,
+      noMarginTop: false,
       optional: false,
       required: false,
       tooltipText: '',
@@ -95,14 +98,39 @@ export const Template = (args) => (
     argTypes={{
       disabled: {
         defaultValue: false,
-        description: 'A text field should be disabled if...',
+        description: 'If true, the component is disabled.',
         table: {
           type: { summary: 'boolean' },
           defaultValue: { summary: 'false' },
         },
       },
+      expand: {
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      helperText: {
+        table: {
+          type: { summary: 'string' },
+        },
+      },
+      helperTextPosition: {
+        table: {
+          defaultValue: { summary: 'bottom' },
+        },
+      },
+      hideLabel: {
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
       loading: {
         description: 'Used to depict a loading state.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      noMarginTop: {
         table: {
           defaultValue: { summary: 'false' },
         },
@@ -135,7 +163,10 @@ export const Template = (args) => (
   exclude={[
     'className',
     'dataAttrs',
+    'editable',
+    'errorGroup',
     'focused',
+    'hasAbsoluteError',
     'hiddenLabel',
     'inputId',
     'ref',
