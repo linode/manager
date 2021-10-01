@@ -110,13 +110,6 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
       (notification.entity?.id === id || notification.body?.includes(region))
   );
 
-  const goToAttachedLinode = () => {
-    // Make sure Volume is attached before redirect
-    if (linodeId) {
-      history.push(`/linodes/${linodeId}/upgrade`);
-    }
-  };
-
   const nvmeUpgradeScheduled = events.some(
     (event) =>
       event.action === ('volume_migrate_scheduled' as EventAction) &&
@@ -162,12 +155,14 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                     data-testid="nvme-chip"
                   />
                 </Grid>
-              ) : eligibleForUpgradeToNVMe && !nvmeUpgradeScheduled ? (
+              ) : linodeId &&
+                eligibleForUpgradeToNVMe &&
+                !nvmeUpgradeScheduled ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
                     className={classes.chip}
                     label="UPGRADE TO NVMe"
-                    onClick={goToAttachedLinode}
+                    onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
                     data-testid="upgrade-chip"
                   />
                 </Grid>
