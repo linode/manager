@@ -219,6 +219,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           ...upgradeVolumesDialog,
           open: true,
         }));
+        history.replace({ search: 'upgrade=true' });
         break;
     }
   };
