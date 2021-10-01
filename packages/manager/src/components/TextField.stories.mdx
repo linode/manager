@@ -11,20 +11,20 @@ import TextField from 'src/components/TextField';
 
 Text fields allow users to enter text into a UI.
 
-| Components  | Guidelines                                                                       |
-| :---------- | :------------------------------------------------------------------------------- |
-| Containers  | The size of the container should be proportional to the expected user input.     |
-| Label       | Always try to write crisp and clear labels and shouldn’t take up multiple lines. |
-| Placeholder | If provide, describe what the input should be and use sentence case.             |
+| Elements    | Guidelines                                                                   |
+| :---------- | :--------------------------------------------------------------------------- |
+| Containers  | The size of the container should be proportional to the expected user input. |
+| Label       | Should clearly identify the field.                                           |
+| Placeholder | Not always needed, describe what the input should be, and use sentence case. |
 
 ### Usage
 
 <hr />
 
-- Input fields should be sized to the data being entered (example the entry for a street address should be wider than a zip code).
-- Ensure that the field can accommodate one more characters than the maximum number to be entered.
-- Balance this goal with the visual benefits of fields of the same length.
-  - A somewhat outsized input that aligns with the fields above and below it might be the best choice.
+- Input fields should be sized to the data being entered.
+- Ensure that a text field can accommodate at least one more character than the defined maximum number.
+- Balance the goal of sizing fields to the expected user input with the visual benefit of fields of the same width.
+  - A form with fields of the same width looks easier to complete.
 
 <Canvas>
   <Story name="Default">
@@ -38,11 +38,11 @@ Text fields allow users to enter text into a UI.
 
 <hr />
 
-Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix them. Users should not have to memorize instructions in order to fix the error.
+Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix it. Users should not have to memorize instructions in order to fix the error.
 
 #### Inline validation
 
-When the user has finished filling in a field and clicks the submit button, an indicator should appear nearby if the field contains an error. Use red to differentiate error fields from normal ones.
+When the user has finished filling in a field and clicks the submit button, an indicator should appear if the field contains an error. Use red to differentiate error fields from normal ones.
 
 <Canvas>
   <Story name="Error">
