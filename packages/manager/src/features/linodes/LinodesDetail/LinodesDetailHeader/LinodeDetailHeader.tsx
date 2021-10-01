@@ -230,7 +230,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       queryParams.resize ||
       queryParams.rescue ||
       queryParams.rebuild ||
-      queryParams.migrate
+      queryParams.migrate ||
+      queryParams.upgrade
     ) {
       history.replace({ search: undefined });
     }

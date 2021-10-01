@@ -17,7 +17,7 @@ export const getVolumesMigrationQueue = (region: string) =>
 /**
  * migrateVolumes
  *
- * Adds the specifed Volumes to the migration queue
+ * Adds the specified Volumes to the migration queue
  *
  * @param volumes - array of the ids of the volumes you intend to migrate
  */
