@@ -1,7 +1,7 @@
 // @todo: this import?
 import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import InputLabel from 'src/components/core/InputLabel';
@@ -124,7 +124,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={classnames({
+      className={classNames({
         [classes.root]: true,
         // Inject the className if given as as prop.
         [props.className ?? '']: Boolean(props.className),

@@ -17,7 +17,7 @@ import useDomains from 'src/hooks/useDomains';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import DomainRecords from '../DomainRecordsWrapper';
 
-type RouteProps = RouteComponentProps<{ domainId?: string }>;
+type RouteProps = RouteComponentProps<{ domainId?: string }, any, any>;
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),

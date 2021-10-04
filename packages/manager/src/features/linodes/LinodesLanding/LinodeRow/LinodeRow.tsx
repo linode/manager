@@ -4,7 +4,7 @@ import {
   LinodeBackups,
   LinodeStatus,
 } from '@linode/api-v4/lib/linodes';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';

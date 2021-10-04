@@ -5,7 +5,7 @@ import {
   getDatabaseConnection,
 } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -207,7 +207,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           >
             <Grid item className="py0">
               <Chip
-                className={classnames({
+                className={classNames({
                   [classes.statusChip]: true,
                   [statusToClass[status]]: true,
                   statusOtherDetail: ['initializing'].includes(status),

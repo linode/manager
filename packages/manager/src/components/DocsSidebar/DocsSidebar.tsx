@@ -1,5 +1,5 @@
 import HelpOutline from '@material-ui/icons/HelpOutline';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';

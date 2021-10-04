@@ -24,7 +24,7 @@ interface ImageItem extends Item<string> {
   className?: string;
 }
 
-interface ImageOptionProps extends OptionProps<any> {
+interface ImageOptionProps extends OptionProps<any, any> {
   data: ImageItem;
 }
 

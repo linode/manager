@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { PoolNodeRequest } from '@linode/api-v4/lib/kubernetes/types';
 import { LinodeType, LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
@@ -180,7 +180,7 @@ export class SelectPlanPanel extends React.Component<
           <TableRow
             data-qa-plan-row={type.label}
             key={type.id}
-            className={classnames({
+            className={classNames({
               [classes.disabledRow]: disabled,
             })}
           >

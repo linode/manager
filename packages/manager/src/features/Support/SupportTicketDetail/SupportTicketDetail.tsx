@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as Bluebird from 'bluebird';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';

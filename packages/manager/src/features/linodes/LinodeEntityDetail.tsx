@@ -1,6 +1,6 @@
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -360,7 +360,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               className={`p0 ${isDetailLanding && classes.chipWrapper}`}
             >
               <Chip
-                className={classnames({
+                className={classNames({
                   [classes.statusChip]: true,
                   [classes.statusChipLandingDetailView]: isDetailLanding,
                   [classes.statusRunning]: isRunning,
@@ -884,7 +884,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
           )}
           {linodeRegionDisplay && (
             <Typography
-              className={classnames({
+              className={classNames({
                 [classes.listItem]: true,
                 [classes.listItemLast]: matchesSmDown,
               })}

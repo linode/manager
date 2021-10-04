@@ -334,6 +334,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         if (signedAgreement) {
           queryClient.executeMutation({
             variables: { eu_model: true, privacy_policy: true },
+            // @ts-expect-error React Query... why?
             mutationFn: signAgreement,
             mutationKey: queryKey,
             onError: reportAgreementSigningError,

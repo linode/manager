@@ -122,7 +122,7 @@ type CombinedProps = WithSnackbarProps &
   DispatchProps &
   LabelProps &
   FeatureFlagConsumerProps &
-  RouteComponentProps<{}> &
+  RouteComponentProps<{}, any, any> &
   ProfileProps &
   AgreementsProps;
 
@@ -185,7 +185,10 @@ const isNonDefaultImageType = (prevType: string, type: string) => {
 };
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
-  params = getParamsFromUrl(this.props.location.search);
+  params = getParamsFromUrl(this.props.location.search) as Record<
+    string,
+    string
+  >;
 
   state: State = {
     ...defaultState,
@@ -585,6 +588,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         if (signedAgreement) {
           queryClient.executeMutation({
             variables: { eu_model: true, privacy_policy: true },
+            // @ts-expect-error React Query... why?
             mutationFn: signAgreement,
             mutationKey: queryKey,
             onError: reportAgreementSigningError,

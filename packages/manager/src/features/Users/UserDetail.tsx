@@ -26,7 +26,7 @@ import UserProfile from './UserProfile';
 
 const UserDetail: React.FC = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
-  const location = useLocation();
+  const location = useLocation<{ newUsername: string; success: boolean }>();
   const history = useHistory();
 
   const { data: profile, refetch: refreshProfile } = useProfile();

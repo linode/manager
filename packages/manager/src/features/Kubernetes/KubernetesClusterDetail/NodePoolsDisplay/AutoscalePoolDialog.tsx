@@ -2,7 +2,7 @@ import { AutoscaleNodePool } from '@linode/api-v4/lib/kubernetes';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

@@ -25,7 +25,7 @@ export interface RegionItem extends Item<string> {
   country: string;
   disabledMessage?: string | JSX.Element;
 }
-interface RegionOptionProps extends OptionProps<any> {
+interface RegionOptionProps extends OptionProps<any, any> {
   data: RegionItem;
 }
 

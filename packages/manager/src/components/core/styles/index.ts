@@ -30,6 +30,6 @@ export {
 
 export { createMuiTheme } from '@material-ui/core/styles';
 
-export { Theme } from '@material-ui/core/styles/createMuiTheme';
+export { Theme } from '@material-ui/core/styles/createTheme';
 
 export { default as useMediaQuery } from '@material-ui/core/useMediaQuery';

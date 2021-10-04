@@ -93,7 +93,7 @@ interface Props {
 }
 type CombinedProps = Props &
   WithStyles<ClassNames> &
-  RouteComponentProps<{}> &
+  RouteComponentProps<{}, any, any> &
   GlobalErrorProps;
 
 interface State {

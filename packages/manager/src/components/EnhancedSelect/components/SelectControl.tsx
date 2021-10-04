@@ -12,7 +12,7 @@ const inputComponent: React.FC<SelectProps> = ({ inputRef, ...props }) => {
   return <div ref={inputRef} {...props} />;
 };
 
-interface Props extends ControlProps<any> {}
+interface Props extends ControlProps<any, any> {}
 
 const SelectControl: React.FC<Props> = (props) => {
   return (
