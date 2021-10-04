@@ -49,11 +49,11 @@ const HACheckbox: React.FC<Props> = (props) => {
             Enable HA Control Plane
           </Typography>
           <Typography>
-            A high availability control plane sets up Kubernetes with important
-            components replicated on multiple masters so there is no single
-            point of failure.{' '}
-            <Link to="https://www.linode.com/idk/">
-              Read about the benefits of HA.
+            A high availability control plane is replicated on multiple master
+            nodes to provide a 99.99% uptime SLA for your Kubernetes cluster.
+            Recommended for critical production workloads.{' '}
+            <Link to="https://www.linode.com/docs/guides/kubernetes/">
+              Learn more.
             </Link>
           </Typography>
         </Box>
