@@ -110,7 +110,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
       (notification.entity?.id === id || notification.body?.includes(region))
   );
 
-  const nvmeUpgradeScheduled = events.some(
+  const nvmeUpgradeScheduledByUser = events.some(
     (event) =>
       event.action === ('volume_migrate_scheduled' as EventAction) &&
       event.entity?.id === id
@@ -157,7 +157,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                 </Grid>
               ) : linodeId &&
                 eligibleForUpgradeToNVMe &&
-                !nvmeUpgradeScheduled ? (
+                !nvmeUpgradeScheduledByUser ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
                     className={classes.chip}
