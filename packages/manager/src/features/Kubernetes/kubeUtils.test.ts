@@ -14,6 +14,11 @@ const mockNodePool = {
   type: extendedTypes[0].id,
   count: 4,
   totalMonthlyPrice: 10,
+  autoscaler: {
+    enabled: false,
+    min: 1,
+    max: 1,
+  },
 };
 
 const badNodePool = {
@@ -23,6 +28,11 @@ const badNodePool = {
   type: 'not-a-real-type',
   count: 1,
   totalMonthlyPrice: 0,
+  autoscaler: {
+    enabled: false,
+    min: 1,
+    max: 1,
+  },
 };
 
 describe('helper functions', () => {

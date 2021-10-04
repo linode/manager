@@ -41,6 +41,7 @@ export interface Flags {
   apiMaintenance: APIMaintenance;
   productInformationBanners: ProductInformationBannerFlag[];
   lkeHighAvailability: boolean;
+  autoscaler: boolean;
 }
 
 type PromotionalOfferFeature =
