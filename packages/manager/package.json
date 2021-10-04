@@ -207,7 +207,7 @@
     "css-loader": "^3.5.2",
     "csstype": "^2.5.5",
     "cypress": "^8.2.0",
-    "cypress-axe": "^0.8.1",
+    "cypress-axe": "^0.13.0",
     "cypress-file-upload": "^5.0.7",
     "cypress-real-events": "^1.5.1",
     "dotenv": "^6.2.0",
