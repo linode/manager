@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { takeLast } from 'ramda';
+import { take, takeLast } from 'ramda';
 /**
  * Expiration is the beginning of the day of the first day of the month.
  * Expiration: yyyy-MM-01 00:00:00
@@ -33,6 +33,20 @@ export const formatExpiry = (expiry: string): string => {
   return expiryData[1].length > 2
     ? `${expiryData[0]}/${takeLast(2, expiryData[1])}`
     : expiry;
+};
+
+export const parseExpiryYear = (
+  expiryYear: string | undefined
+): string | undefined => {
+  if (!expiryYear) {
+    return undefined;
+  }
+
+  if (expiryYear.length > 2) {
+    return expiryYear;
+  }
+
+  return take(2, String(new Date().getFullYear())) + expiryYear;
 };
 
 export default hasExpirationPassedFor();

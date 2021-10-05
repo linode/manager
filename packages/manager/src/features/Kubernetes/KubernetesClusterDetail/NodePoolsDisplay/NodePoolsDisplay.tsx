@@ -1,6 +1,8 @@
 import {
   PoolNodeRequest,
   PoolNodeResponse,
+  autoscaleNodePool,
+  AutoscaleNodePool as AutoscaleNodePoolValues,
 } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -23,6 +25,7 @@ import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
 import RecycleAllPoolNodesDialog from './RecycleAllPoolNodesDialog';
+import AutoscalePoolDialog from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -64,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
+  clusterID: number;
   clusterLabel: string;
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
@@ -76,10 +80,12 @@ export interface Props {
   recycleAllClusterNodes: () => Promise<{}>;
   recycleAllPoolNodes: (poolID: number) => Promise<{}>;
   recycleNode: (nodeID: string) => Promise<{}>;
+  getNodePools: () => Promise<any>;
 }
 
 export const NodePoolsDisplay: React.FC<Props> = (props) => {
   const {
+    clusterID,
     clusterLabel,
     pools,
     types,
@@ -89,6 +95,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
     recycleAllClusterNodes,
     recycleAllPoolNodes,
     recycleNode,
+    getNodePools,
   } = props;
 
   const classes = useStyles();
@@ -98,6 +105,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
   const recycleAllPoolNodesDialog = useDialog<number>(recycleAllPoolNodes);
   const recycleAllClusterNodesDialog = useDialog(recycleAllClusterNodes);
   const recycleNodeDialog = useDialog<string>(recycleNode);
+  const autoscalePoolDialog = useDialog<any>(autoscaleNodePool);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
   const handleShowMore = () => {
@@ -193,6 +201,38 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
       });
   };
 
+  const handleAutoscalePool = (
+    values: AutoscaleNodePoolValues,
+    setSubmitting: (isSubmitting: boolean) => void,
+    setWarningMessage: (warning: string) => void
+  ) => {
+    const { dialog, submitDialog, handleError } = autoscalePoolDialog;
+    if (!dialog.entityID) {
+      return;
+    }
+
+    submitDialog({ clusterID, nodePoolID: dialog.entityID, autoscaler: values })
+      .then(() => {
+        enqueueSnackbar(
+          `Autoscaling updated for Node Pool ${dialog.entityID}.`,
+          { variant: 'success' }
+        );
+        getNodePools();
+      })
+      .catch((err) => {
+        handleError(
+          getAPIErrorOrDefault(
+            err,
+            `Error updating autoscaling for Node Pool ${dialog.entityID}.`
+          )[0].reason
+        );
+      })
+      .finally(() => {
+        setSubmitting(false);
+        setWarningMessage('');
+      });
+  };
+
   const handleRecycleAllPoolNodes = () => {
     const { dialog, submitDialog, handleError } = recycleAllPoolNodesDialog;
     if (!dialog.entityID) {
@@ -212,6 +252,10 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
   };
 
   const _pools = pools.slice(0, numPoolsToDisplay);
+
+  const getAutoscaler = () =>
+    pools.find((pool) => pool.id === autoscalePoolDialog.dialog.entityID)
+      ?.autoscaler;
 
   /**
    * If the API returns an error when fetching node pools,
@@ -286,12 +330,14 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
                       poolId={thisPool.id}
                       typeLabel={typeLabel}
                       nodes={nodes ?? []}
+                      autoscaler={thisPool.autoscaler}
                       handleClickResize={handleOpenResizeDrawer}
                       openDeletePoolDialog={deletePoolDialog.openDialog}
                       openRecycleAllNodesDialog={
                         recycleAllPoolNodesDialog.openDialog
                       }
                       openRecycleNodeDialog={recycleNodeDialog.openDialog}
+                      openAutoscalePoolDialog={autoscalePoolDialog.openDialog}
                     />
                   </div>
                 );
@@ -338,6 +384,22 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
               error={recycleNodeDialog.dialog.error}
               loading={recycleNodeDialog.dialog.isLoading}
               label={recycleNodeDialog.dialog.entityLabel}
+            />
+            <AutoscalePoolDialog
+              getAutoscaler={getAutoscaler}
+              handleOpenResizeDrawer={handleOpenResizeDrawer}
+              onSubmit={(
+                values: AutoscaleNodePoolValues,
+                setSubmitting: (isSubmitting: boolean) => void,
+                setWarningMessage: (warning: string) => void
+              ) =>
+                handleAutoscalePool(values, setSubmitting, setWarningMessage)
+              }
+              onClose={autoscalePoolDialog.closeDialog}
+              open={autoscalePoolDialog.dialog.isOpen}
+              error={autoscalePoolDialog.dialog.error}
+              loading={autoscalePoolDialog.dialog.isLoading}
+              poolID={autoscalePoolDialog.dialog.entityID}
             />
             <RecycleAllPoolNodesDialog
               open={recycleAllPoolNodesDialog.dialog.isOpen}

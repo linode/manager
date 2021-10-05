@@ -471,15 +471,16 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
             )}
             {isCreatingSecondaryDomain && (
               <MultipleIPInput
-                title="Primary Nameserver IP Address (required)"
+                title="Primary Nameserver IP Address"
                 className={classes.ip}
-                ips={values.master_ips.map(stringToExtendedIP)}
-                onChange={updatePrimaryIPAddress}
                 error={
                   formik.touched.master_ips
                     ? (primaryIPsError as string | undefined)
                     : undefined
                 }
+                ips={values.master_ips.map(stringToExtendedIP)}
+                onChange={updatePrimaryIPAddress}
+                required
               />
             )}
             {isCreatingPrimaryDomain && (
