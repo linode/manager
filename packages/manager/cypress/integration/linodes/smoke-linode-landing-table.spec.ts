@@ -231,12 +231,32 @@ describe('linode landing checks', () => {
 
 describe('linode landing actions', () => {
   it('deleting multiple linodes with action menu', () => {
+    const mockAccountSettings = accountSettingsFactory.build({
+      managed: false,
+    });
+
+    cy.intercept('GET', '*/account/settings', (req) => {
+      req.reply(mockAccountSettings);
+    }).as('getAccountSettings');
+
+    interceptOnce('GET', '*/profile/preferences*', {
+      linodes_view_style: 'list',
+      linodes_group_by_tag: false,
+      volumes_group_by_tag: false,
+      desktop_sidebar_open: false,
+      sortKeys: {
+        'linodes-landing': { order: 'asc', orderBy: 'label' },
+        volume: { order: 'asc', orderBy: 'label' },
+      },
+    }).as('getProfilePreferences');
     cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
     createLinode().then((linodeA) => {
       createLinode().then((linodeB) => {
         cy.visitWithLogin('/linodes');
+        cy.wait('@getAccountSettings');
+        cy.wait('@getProfilePreferences');
         getVisible('[data-qa-header="Linodes"]');
-        if (!cy.get('[data-qa-sort-label="asc"')) {
+        if (!cy.get('[data-qa-sort-label="asc"]')) {
           getClick('[aria-label="Sort by label"]');
         }
         deleteLinodeFromActionMenu(linodeA.label);

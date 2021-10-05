@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.49.0",
+  "version": "1.50.0",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -16,8 +16,8 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.57.0",
-    "@linode/validation": "0.4.0",
+    "@linode/api-v4": "^0.58.0",
+    "@linode/validation": "0.5.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -31,7 +31,7 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-router-hash-link": "^1.2.1",
     "algoliasearch": "^3.30.0",
-    "axios": "~0.21.2",
+    "axios": "~0.21.4",
     "axios-mock-adapter": "^1.15.0",
     "bluebird": "^3.5.1",
     "braintree-web": "^3.76.4",

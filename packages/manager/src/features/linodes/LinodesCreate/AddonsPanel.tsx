@@ -12,6 +12,7 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -62,10 +63,10 @@ interface Props {
   disabled?: boolean;
   selectedImageID?: string;
   selectedTypeID?: string;
-  hidePrivateIP?: boolean;
   labelError?: string;
   ipamError?: string;
   selectedRegionID?: string; // Used for filtering VLANs
+  createType: CreateTypes;
 }
 
 type CombinedProps = Props;
@@ -83,7 +84,10 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     selectedRegionID,
     selectedImageID,
     selectedTypeID,
+    createType,
   } = props;
+
+  const hidePrivateIP = createType === 'fromLinode';
 
   const classes = useStyles();
   const flags = useFlags();
@@ -92,12 +96,21 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
   // Doing this so that we can toggle our flag without enabling vlans for all customers.
   const capabilities = account?.capabilities ?? [];
-  const showVlans = capabilities.includes('Vlans') && flags.vlans;
+
+  // The VLAN section is shown when:
+  // - the user has the capability
+  // - the flag is on
+  // - the user is not creating by cloning (cloning copies the network interfaces)
+  const showVlans =
+    capabilities.includes('Vlans') &&
+    flags.vlans &&
+    createType !== 'fromLinode';
 
   const isBareMetal = /metal/.test(selectedTypeID ?? '');
 
   const vlanDisabledReason = getVlanDisabledReason(
     isBareMetal,
+    createType,
     selectedImageID
   );
 
@@ -180,7 +193,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
         </Grid>
         {
           /** /v4/linodes/instances/clone does *not* support the private IP flag */
-          props.hidePrivateIP ? null : (
+          hidePrivateIP ? null : (
             <Grid container>
               <Grid item xs={12}>
                 <Divider />
@@ -207,10 +220,13 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 
 const getVlanDisabledReason = (
   isBareMetal: boolean,
+  createType: CreateTypes,
   selectedImage?: string
 ) => {
   if (isBareMetal) {
     return 'VLANs cannot be used with Bare Metal Linodes.';
+  } else if (createType === 'fromBackup') {
+    return 'You cannot attach a VLAN when deploying to a new Linode from a backup.';
   } else if (!selectedImage) {
     return 'You must select an Image to attach a VLAN.';
   }

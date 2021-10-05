@@ -78,7 +78,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   helpIcon: {
-    color: theme.cmrTextColors.tableHeader,
     paddingTop: 0,
     paddingBottom: 0,
   },
@@ -938,28 +937,22 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item>
-              <ActionsPanel>
-                <Button
-                  onClick={formik.submitForm}
-                  buttonType="primary"
-                  disabled={readOnly}
-                  loading={formik.isSubmitting}
-                >
-                  {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
-                </Button>
-                <Button
-                  buttonType="secondary"
-                  className="cancel"
-                  onClick={onClose}
-                >
-                  Cancel
-                </Button>
-              </ActionsPanel>
-            </Grid>
           </React.Fragment>
         </DialogContent>
       </Grid>
+      <ActionsPanel>
+        <Button buttonType="secondary" className="cancel" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button
+          onClick={formik.submitForm}
+          buttonType="primary"
+          disabled={readOnly}
+          loading={formik.isSubmitting}
+        >
+          {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
+        </Button>
+      </ActionsPanel>
     </Dialog>
   );
 };

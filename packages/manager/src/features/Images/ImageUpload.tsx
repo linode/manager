@@ -17,13 +17,20 @@ import Prompt from 'src/components/Prompt';
 import TextField from 'src/components/TextField';
 import { Dispatch } from 'src/hooks/types';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
+import {
+  reportAgreementSigningError,
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { wrapInQuotes } from 'src/utilities/stringUtils';
+import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import ImagesPricingCopy from './ImagesCreate/ImagesPricingCopy';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -39,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginTop: theme.spacing(2),
     width: '80%',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   browseFilesButton: {
     marginLeft: '1rem',
@@ -60,17 +70,27 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { data: agreements } = useAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
+
   const classes = useStyles();
+  const regions = useRegionsQuery().data ?? [];
+  const dispatch: Dispatch = useDispatch();
   const { push } = useHistory();
+
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
   const flags = useFlags();
 
   const [region, setRegion] = React.useState<string>('');
-  const dispatch: Dispatch = useDispatch();
-  const regions = useRegionsQuery().data ?? [];
-  // @todo replace this with React-query
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
+  );
+
+  const showAgreement = Boolean(
+    !profile?.restricted && agreements?.eu_model === false && isEURegion(region)
   );
 
   //  This holds a "cancel function" from the Axios instance that handles image
@@ -112,7 +132,20 @@ export const ImageUpload: React.FC<Props> = (props) => {
     }
   };
 
-  const uploadingDisabled = !label || !region || !canCreateImage;
+  const onSuccess = () => {
+    if (hasSignedAgreement) {
+      updateAccountAgreements({
+        eu_model: true,
+        privacy_policy: true,
+      }).catch(reportAgreementSigningError);
+    }
+  };
+
+  const uploadingDisabled =
+    !label ||
+    !region ||
+    !canCreateImage ||
+    (showAgreement && !hasSignedAgreement);
 
   const errorMap = getErrorMap(['label', 'description', 'region'], errors);
 
@@ -196,6 +229,15 @@ export const ImageUpload: React.FC<Props> = (props) => {
             required
           />
 
+          {showAgreement ? (
+            <EUAgreementCheckbox
+              checked={hasSignedAgreement}
+              onChange={(e) => setHasSignedAgreement(e.target.checked)}
+              centerCheckbox
+              className={classes.helperText}
+            />
+          ) : null}
+
           <Typography className={classes.helperText}>
             For fastest initial upload, select the region that is geographically
             closest to you. Once uploaded you will be able to deploy the image
@@ -220,6 +262,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             setErrors={setErrors}
             setCancelFn={setCancelFn}
+            onSuccess={onSuccess}
           />
           <ActionsPanel>
             <Typography>

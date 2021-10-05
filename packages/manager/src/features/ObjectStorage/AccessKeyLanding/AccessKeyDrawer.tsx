@@ -76,6 +76,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
   const { objectStorageBuckets: buckets } = useBuckets();
   const { data: accountSettings } = useAccountSettings();
   const hidePermissionsTable = buckets.data.length === 0;
+  const createMode = mode === 'creating';
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   // This is for local display management only, not part of the payload
@@ -88,11 +89,10 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
     }
   }, [open]);
 
-  const title =
-    mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key Label';
+  const title = createMode ? 'Create Access Key' : 'Edit Access Key Label';
 
   const initialLabelValue =
-    mode !== 'creating' && objectStorageKey ? objectStorageKey.label : '';
+    !createMode && objectStorageKey ? objectStorageKey.label : '';
 
   const initialValues: FormState = {
     label: initialLabelValue,
@@ -118,12 +118,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Drawer
-      title={title}
-      open={open}
-      onClose={onClose}
-      wide={mode === 'creating'}
-    >
+    <Drawer title={title} open={open} onClose={onClose} wide={createMode}>
       {buckets.loading ? (
         <CircleProgress />
       ) : (
@@ -179,7 +174,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
                 )}
 
                 {/* Explainer copy if we're in 'creating' mode */}
-                {mode === 'creating' && (
+                {createMode && (
                   <Typography>
                     Generate an Access Key for use with an{' '}
                     <a
@@ -206,7 +201,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
                   onBlur={handleBlur}
                   disabled={isRestrictedUser || mode === 'viewing'}
                 />
-                {mode === 'creating' && !hidePermissionsTable ? (
+                {createMode && !hidePermissionsTable ? (
                   <LimitedAccessControls
                     mode={mode}
                     bucket_access={values.bucket_access}
@@ -217,21 +212,24 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
                 ) : null}
                 <ActionsPanel>
                   <Button
-                    buttonType="primary"
-                    onClick={beforeSubmit}
-                    loading={isSubmitting}
-                    disabled={isRestrictedUser}
-                    data-qa-submit
-                  >
-                    Submit
-                  </Button>
-                  <Button
+                    buttonType="secondary"
                     onClick={onClose}
                     data-qa-cancel
-                    buttonType="secondary"
-                    className="cancel"
                   >
                     Cancel
+                  </Button>
+                  <Button
+                    buttonType="primary"
+                    disabled={
+                      isRestrictedUser ||
+                      (mode !== 'creating' &&
+                        values.label === initialLabelValue)
+                    }
+                    loading={isSubmitting}
+                    onClick={beforeSubmit}
+                    data-qa-submit
+                  >
+                    {createMode ? 'Create Access Key' : 'Save Changes'}
                   </Button>
                 </ActionsPanel>
                 <EnableObjectStorageModal

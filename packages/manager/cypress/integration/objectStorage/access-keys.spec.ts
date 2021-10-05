@@ -21,12 +21,12 @@ describe('access keys', () => {
         fbtVisible('Object Storage');
       });
       fbtClick('Create Access Key');
-      containsVisible('Create an Access Key');
+      containsVisible('Create Access Key');
       getVisible('[data-testid="textfield-input"]').type(accessKeyLabel);
       getClick('[data-qa-toggle="false"]');
       getVisible('[data-qa-toggle="true"]');
       getClick('[aria-label="Select read/write for all"]');
-      fbtClick('Submit');
+      getClick('[data-qa-submit="true"]');
       cy.wait('@createAccessKey');
       fbtVisible(
         "For security purposes, we can only display your secret key once, after which it can't be recovered. Be sure to keep it in a safe place."

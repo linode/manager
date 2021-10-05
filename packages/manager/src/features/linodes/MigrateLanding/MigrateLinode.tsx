@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
@@ -13,14 +14,22 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useImages } from 'src/hooks/useImages';
 import { useTypes } from 'src/hooks/useTypes';
+import {
+  reportAgreementSigningError,
+  useAccountAgreements,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
+import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
+import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -39,6 +48,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   vlanHelperText: {
     marginTop: theme.spacing() / 2,
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-end',
+      flexWrap: 'wrap',
+    },
+  },
+  agreement: {
+    maxWidth: '70%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'unset',
+    },
+  },
+  button: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(2),
+    },
   },
 }));
 
@@ -59,6 +86,9 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
+  const { data: profile } = useProfile();
+  const { data: agreements } = useAccountAgreements();
+  const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
     null
@@ -68,6 +98,15 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const [APIError, setAPIError] = React.useState<string>('');
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
+    false
+  );
+
+  const showAgreement = Boolean(
+    !profile?.restricted &&
+      agreements?.eu_model === false &&
+      isEURegion(selectedRegion)
+  );
 
   React.useEffect(() => {
     scrollErrorIntoView();
@@ -125,6 +164,12 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
           'Your Linode has entered the migration queue and will begin migration shortly.',
           { variant: 'success' }
         );
+        if (hasSignedAgreement) {
+          updateAccountAgreements({
+            eu_model: true,
+            privacy_policy: true,
+          }).catch(reportAgreementSigningError);
+        }
         onClose();
       })
       .catch((e: APIErrorType[]) => {
@@ -193,17 +238,36 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
       />
-      <div className={classes.actionWrapper}>
+      <Box
+        display="flex"
+        justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+        alignItems="center"
+        className={classes.buttonGroup}
+      >
+        {showAgreement ? (
+          <EUAgreementCheckbox
+            checked={hasSignedAgreement}
+            onChange={(e) => setHasSignedAgreement(e.target.checked)}
+            className={classes.agreement}
+            centerCheckbox
+          />
+        ) : null}
         <Button
           buttonType="primary"
-          disabled={!!disabledText || !hasConfirmed}
+          disabled={
+            !!disabledText ||
+            !hasConfirmed ||
+            !selectedRegion ||
+            (showAgreement && !hasSignedAgreement)
+          }
           loading={isLoading}
           onClick={handleMigrate}
+          className={classes.button}
         >
           Enter Migration Queue
         </Button>
         {!!disabledText && <HelpIcon text={disabledText} />}
-      </div>
+      </Box>
     </Dialog>
   );
 };
