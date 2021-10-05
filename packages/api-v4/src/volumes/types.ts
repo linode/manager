@@ -42,3 +42,12 @@ export interface CloneVolumePayload {
 export interface ResizeVolumePayload {
   size: number;
 }
+
+export interface VolumesMigrationQueue {
+  volumes: number;
+  linodes: number;
+}
+
+export interface MigrateVolumesPayload {
+  volumes: number[];
+}
