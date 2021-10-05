@@ -23,6 +23,11 @@ export const nodePoolAPIFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>
     count: 3,
     type: 'g6-standard-1',
     nodes: kubeLinodeFactory.buildList(3),
+    autoscaler: {
+      enabled: false,
+      min: 1,
+      max: 1,
+    },
   }
 );
 
@@ -31,6 +36,11 @@ export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   count: 3,
   type: 'g6-standard-1',
   totalMonthlyPrice: 1000,
+  autoscaler: {
+    enabled: false,
+    min: 1,
+    max: 1,
+  },
 });
 
 export const nodePoolFactory = _nodePoolFactory.withDerivation1(
