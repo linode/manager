@@ -314,7 +314,9 @@ export type EventAction =
   | 'volume_detach'
   | 'volume_attach'
   | 'volume_resize'
-  | 'volume_clone';
+  | 'volume_clone'
+  | 'volume_migrate_scheduled'
+  | 'volume_migrate';
 
 export type EventStatus =
   | 'scheduled'

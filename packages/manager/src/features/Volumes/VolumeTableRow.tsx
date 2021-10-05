@@ -1,6 +1,10 @@
-import { Event } from '@linode/api-v4/lib/account';
+import {
+  Event,
+  EventAction,
+  NotificationType,
+} from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
@@ -10,9 +14,11 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import useNotifications from 'src/hooks/useNotifications';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
+import useEvents from 'src/hooks/useEvents';
 
 const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
@@ -34,14 +40,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'center',
   },
   chip: {
+    borderRadius: 1,
     fontSize: '0.65rem',
-    minHeight: theme.spacing(2),
-    paddingLeft: theme.spacing(0.5),
-    paddingRight: theme.spacing(0.5),
     marginTop: 0,
     marginBottom: 0,
     marginLeft: theme.spacing(2),
-    borderRadius: '1px',
+    minHeight: theme.spacing(2),
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
+  },
+  nvmeChip: {
     backgroundColor: 'transparent',
     border: '1px solid #02B159',
   },
@@ -85,12 +93,28 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     linodeStatus,
   } = props;
 
+  const { events } = useEvents();
+  const history = useHistory();
   const location = useLocation();
+  const notifications = useNotifications();
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
 
   const isNVMe = hardwareType === 'nvme';
+
+  const eligibleForUpgradeToNVMe = notifications.some(
+    (notification) =>
+      notification.type ===
+        ('volume_migration_scheduled' as NotificationType) &&
+      (notification.entity?.id === id || notification.body?.includes(region))
+  );
+
+  const nvmeUpgradeScheduledByUser = events.some(
+    (event) =>
+      event.action === ('volume_migrate_scheduled' as EventAction) &&
+      event.entity?.id === id
+  );
 
   return isUpdating ? (
     <TableRow
@@ -126,9 +150,20 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
               {isNVMe ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={classes.chip}
+                    className={`${classes.chip} ${classes.nvmeChip}`}
                     label="NVMe"
                     data-testid="nvme-chip"
+                  />
+                </Grid>
+              ) : linodeId &&
+                eligibleForUpgradeToNVMe &&
+                !nvmeUpgradeScheduledByUser ? (
+                <Grid item className={classes.chipWrapper}>
+                  <Chip
+                    className={classes.chip}
+                    label="UPGRADE TO NVMe"
+                    onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
+                    data-testid="upgrade-chip"
                   />
                 </Grid>
               ) : null}
