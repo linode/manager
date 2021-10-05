@@ -57,7 +57,7 @@ import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
-import { NotificationType } from '@linode/api-v4';
+import { EventAction, NotificationType } from '@linode/api-v4';
 
 export const makeResourcePage = (
   e: any[],
@@ -401,15 +401,40 @@ export const handlers = [
     const record = domainRecordFactory.build();
     return res(ctx.json(record));
   }),
+  rest.post('*/volumes/migrate', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/regions/*/migration-queue', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        volumes: 953,
+        linodes: 8,
+      })
+    );
+  }),
   rest.get('*/volumes', (req, res, ctx) => {
-    const hddVolumes = volumeFactory.buildList(2, {
+    const hddVolumeAttached = volumeFactory.build({
+      // eslint-disable-next-line sonarjs/no-duplicate-string
+      region: 'us-southeast',
+      linode_id: 10,
+    });
+    const hddVolumeAttached2 = volumeFactory.build({
+      region: 'us-southeast',
+      linode_id: 12,
+    });
+    const hddVolumeUnattached = volumeFactory.build({
       region: 'us-southeast',
     });
     const nvmeVolumes = volumeFactory.buildList(2, {
       hardware_type: 'nvme',
     });
 
-    const volumes = [...hddVolumes, ...nvmeVolumes];
+    const volumes = [
+      ...nvmeVolumes,
+      hddVolumeAttached,
+      hddVolumeAttached2,
+      hddVolumeUnattached,
+    ];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -530,13 +555,26 @@ export const handlers = [
         label: 'my-disk',
       },
     });
+    const volumeMigrationScheduled = eventFactory.build({
+      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      action: 'volume_migrate_scheduled' as EventAction,
+      message: 'Volume 0 has been scheduled for upgrade to NVMe.',
+      percent_complete: 100,
+    });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
       seen: true,
       percent_complete: 100,
     });
     return res.once(
-      ctx.json(makeResourcePage([...events, diskResize, ...oldEvents]))
+      ctx.json(
+        makeResourcePage([
+          ...events,
+          diskResize,
+          volumeMigrationScheduled,
+          ...oldEvents,
+        ])
+      )
     );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
