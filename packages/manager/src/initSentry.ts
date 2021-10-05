@@ -9,6 +9,7 @@ export const initSentry = () => {
       dsn: SENTRY_URL,
       release: process.env.VERSION,
       environment: process.env.NODE_ENV,
+      autoSessionTracking: false,
       beforeSend,
       ignoreErrors: [
         // Random plugins/extensions
