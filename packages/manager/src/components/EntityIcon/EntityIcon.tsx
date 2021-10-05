@@ -1,51 +1,41 @@
-import * as classNames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
-import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
+import StorageIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
 import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
-import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
+import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
+import ManagedIcon from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
+import MarketplaceIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import LongviewIcon from 'src/assets/icons/longview.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)',
-    },
-    to: {
-      transform: 'rotate(360deg)',
-    },
-  },
   root: {
-    position: 'relative',
-    color: 'transparent',
     display: 'flex',
-  },
-  default: {
     color: theme.color.grey1,
+    position: 'relative',
   },
 }));
 
 export type Variant =
+  | 'managed'
   | 'linode'
-  | 'nodebalancer'
   | 'volume'
-  | 'domain'
-  | 'stackscript'
-  | 'kube'
-  | 'bucket'
+  | 'nodebalancer'
   | 'firewall'
+  | 'stackscript'
+  | 'image'
+  | 'domain'
+  | 'kubernetes'
+  | 'storage'
+  | 'longview'
+  | 'marketplace'
   | 'object'
   | 'folder';
 
@@ -59,17 +49,21 @@ interface Props {
   stopAnimation?: boolean;
 }
 
-type CombinedProps = Props & WithTheme;
+type CombinedProps = Props;
 
 const iconMap = {
+  managed: ManagedIcon,
   linode: LinodeIcon,
-  nodebalancer: NodeBalancerIcon,
   volume: VolumeIcon,
-  domain: DomainIcon,
-  stackscript: StackScriptIcon,
-  kube: KubeIcon,
-  bucket: BucketIcon,
+  nodebalancer: NodeBalancerIcon,
   firewall: FirewallIcon,
+  stackscript: StackScriptIcon,
+  image: ImageIcon,
+  domain: DomainIcon,
+  kube: KubernetesIcon,
+  bucket: StorageIcon,
+  longview: LongviewIcon,
+  oca: MarketplaceIcon,
   object: ObjectIcon,
   folder: FolderIcon,
 };
@@ -95,8 +89,8 @@ const EntityIcon: React.FC<CombinedProps> = (props) => {
 
   const Icon = getIcon(variant);
 
-  const getStatusForDomain = (dStatus: string) => {
-    switch (dStatus) {
+  const getStatusForDomain = (domainStatus: string) => {
+    switch (domainStatus) {
       case 'edit_mode':
         return 'edit';
       case 'active':
@@ -110,8 +104,8 @@ const EntityIcon: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const getStatusForFirewall = (fStatus: string) =>
-    fStatus === 'enabled' ? 'running' : 'offline';
+  const getStatusForFirewall = (firewallStatus: string) =>
+    firewallStatus === 'enabled' ? 'running' : 'offline';
 
   const finalStatus =
     variant === 'domain'
@@ -122,14 +116,7 @@ const EntityIcon: React.FC<CombinedProps> = (props) => {
 
   return (
     <div
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.default]: true,
-          [classes[`${finalStatus}`]]: true,
-        },
-        className
-      )}
+      className={`${classes.root} ${className}`}
       style={{ top: marginTop }}
       data-qa-icon={variant}
       data-qa-entity-status={status || 'undefined'}
@@ -137,11 +124,9 @@ const EntityIcon: React.FC<CombinedProps> = (props) => {
       aria-label={`${variant} is ${finalStatus}`}
       {...rest}
     >
-      <Icon width={iconSize} height={iconSize} />
+      <Icon height={iconSize} width={iconSize} />
     </div>
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withTheme);
-
-export default enhanced(EntityIcon);
+export default EntityIcon;

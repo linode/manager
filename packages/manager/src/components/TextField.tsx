@@ -64,7 +64,6 @@ const styles = (theme: Theme) =>
     },
     helpIcon: {
       padding: '0px 0px 0px 8px',
-      color: theme.cmrTextColors.tableHeader,
     },
     expand: {
       maxWidth: '100%',

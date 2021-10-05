@@ -1,3 +1,4 @@
+import { BETA_API_ROOT } from '@src/constants';
 import { createMockBucket } from 'cypress/support/api/objectStorage';
 import {
   fbtClick,
@@ -17,9 +18,13 @@ describe('create bucket flow, mocked data', () => {
     cy.intercept('POST', '*/object-storage/buckets*', (req) => {
       req.reply(mockBucket);
     }).as('mockBucket');
+    cy.intercept('GET', '*/account/agreements', (req) => {
+      req.reply({ privacy_policy: true, eu_model: true });
+    }).as('mockEuAccept');
 
     cy.visitWithLogin('/object-storage/buckets');
     fbtClick('Create Bucket');
+    cy.wait('@mockEuAccept');
     getClick('[data-qa-cluster-label="true"]').type(bucketLabel);
     getClick('[data-qa-enhanced-select="Select a Region"]');
     getClick('[data-qa-region-select-item="eu-central-1"]');

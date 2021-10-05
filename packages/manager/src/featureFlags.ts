@@ -40,6 +40,7 @@ export interface Flags {
   imagesPriceInfo: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   apiMaintenance: APIMaintenance;
+  autoscaler: boolean;
 }
 
 type PromotionalOfferFeature =
