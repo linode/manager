@@ -1,4 +1,4 @@
-import { signAgreement } from '@linode/api-v4/lib/account';
+import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -586,9 +586,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         if (signedAgreement) {
-          queryClient.executeMutation({
+          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
             variables: { eu_model: true, privacy_policy: true },
-            // @ts-expect-error React Query... why?
             mutationFn: signAgreement,
             mutationKey: queryKey,
             onError: reportAgreementSigningError,
