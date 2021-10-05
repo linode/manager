@@ -4,12 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-10-05] - v1.51.0
+
+### Added:
+
+- Support for Autoscaling NodePools
+
+### Changed:
+
+- Improve experience attaching a VLAN when creating a Linode from a Backup or Clone
+- Swap Create Access Key button order
+- Validation error message with NodeBalancer
+
+### Fixed:
+
+- Formatting of long strings in Domains TXT records
+- Validation saying "expiring too far in the future" when entering credit card expiration date
+
 ## [2021-09-17] - v1.50.0
 
 ### Added:
+
 - GDPR Compliance notification, banner, and checkboxes
 
 ### Changed:
+
 - GiB to GB for Volumes
 - Remove “Glish” tab for Bare Metal Linodes
 - Reduce bottom padding for linodes grouped by tag
@@ -17,54 +36,65 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Primary button position to the right in Drawers and Modals
 
 ### Fixed:
+
 - Bug preventing Linode Configuration changes
 
 ## [2021-09-09] - v1.49.0
 
 ### Added:
+
 - Promotional banner for Object Storage
 - Banner and screen for upcoming maintenance
 - More validation for the label field in Firewall rules
 
 ### Changed:
+
 - Preserve Support Ticket replies between refreshes
 - Font size for Managed Credentials and Contacts copy
 - Vertically center icons and texts in dropdown
 - Allow more room for image names
 
 ### Fixed:
+
 - Action buttons being disabled upon Firewall creation for restricted users
 - Issue adding tags during Volume creation
 
 ## [2021-08-31] - v1.48.0
 
 ### Added:
+
 - Copy for Images pricing on the Create Image page
 - Price estimation for captured images
 
 ### Changed:
+
 - Labels’ “(required)” substring adjusted to normal weight
 
 ### Fixed:
+
 - Not all Linode maintenance events being populated
 
 ## [2021-08-26] - v1.47.1
 
 ### Added:
+
 - Display maintenance view when API is in maintenance mode
 
 ### Fixed:
+
 - Crash in account/billing for certain accounts
 
 ## [2021-08-24] - v1.47.0
 
 ### Added:
+
 - Support for multiple payment methods in “Make a Payment” drawer
 - Support for multiple payment methods in “Add a Payment” drawer
 - New minimum TTL values for domains
 - Restricted user support for Firewalls
 
 ### Changed:
+
 - Swap order of Shared and Dedicated CPU tabs
 - Button Placements and Styles (includes Migration modal fixes)
 - Marketplace app name from Severalnines to ClusterControl
@@ -73,6 +103,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Remove redundant headers for Managed
 
 ### Fixed:
+
 - Support ticket input with different font sizes
 - Kubernetes Debian images showing up in the Rebuild and Stackscript Dialogs
 - Warning styles

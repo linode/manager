@@ -1,3 +1,9 @@
+## [2021-10-05] - v0.59.0
+
+### Added:
+- AutoscaleNodePool
+- AutoscaleNodePoolRequest
+
 ## [2021-09-17] - v0.58.0
 
 ### Added:
