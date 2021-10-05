@@ -3,6 +3,7 @@ dist
 build
 lib
 **/api-v4/index.js
+**/api-v4/index.node.js
 **/api-v4/index.d.ts
 **/validation/index.js
 **/validation/index.d.ts
