@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing(2),
+    '& button': {
+      paddingLeft: theme.spacing(),
+    },
   },
   paragraphBreak: {
     marginTop: theme.spacing(2),

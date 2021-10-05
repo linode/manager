@@ -78,7 +78,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   helpIcon: {
-    color: theme.cmrTextColors.tableHeader,
     paddingTop: 0,
     paddingBottom: 0,
   },
