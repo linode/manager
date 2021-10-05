@@ -558,7 +558,21 @@ export const handlers = [
     const volumeMigrationScheduled = eventFactory.build({
       entity: { type: 'volume', id: 0, label: 'volume-0' },
       action: 'volume_migrate_scheduled' as EventAction,
-      message: 'Volume 0 has been scheduled for upgrade to NVMe.',
+      message: 'Volume 0 has been scheduled for an upgrade to NVMe.',
+      percent_complete: 100,
+    });
+    const volumeMigrating = eventFactory.build({
+      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      action: 'volume_migrate',
+      status: 'started',
+      message: 'Volume 0 is being upgraded to NVMe.',
+      percent_complete: 65,
+    });
+    const volumeMigrationFinished = eventFactory.build({
+      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      action: 'volume_migrate',
+      status: 'finished',
+      message: 'Volume 0 has finished upgrading to NVMe.',
       percent_complete: 100,
     });
     const oldEvents = eventFactory.buildList(20, {
@@ -571,8 +585,11 @@ export const handlers = [
         makeResourcePage([
           ...events,
           diskResize,
-          volumeMigrationScheduled,
           ...oldEvents,
+          ...oldEvents,
+          volumeMigrationScheduled,
+          volumeMigrating,
+          volumeMigrationFinished,
         ])
       )
     );

@@ -663,6 +663,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: (e) => `Volume ${e.entity!.label} has been detached.`,
     notification: (e) => `Volume ${e.entity!.label} has been detached.`,
   },
+  volume_migrate: {
+    started: (e) => `Volume ${e.entity!.label} is being upgraded to NVMe.`,
+    failed: (e) => `Volume ${e.entity!.label} failed to upgrade to NVMe.`,
+    finished: (e) => `Volume ${e.entity!.label} has been upgraded to NVMe.`,
+  },
+  volume_migrate_scheduled: {
+    scheduled: (e) =>
+      `Volume ${e.entity!.label} has been scheduled for an upgrade to NVMe.`,
+  },
   volume_resize: {
     notification: (e) => `Volume ${e.entity!.label} has been resized.`,
   },
