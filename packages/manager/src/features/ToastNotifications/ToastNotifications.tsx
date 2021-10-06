@@ -99,14 +99,18 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               `Error creating Image ${secondaryLabel}.`
             );
           case 'image_upload':
-            const isDeletion = event.message === 'Upload canceled.';
+            const isDeletion = event.message === 'Upload cancelled.';
             return _toastWithPersist(
               false,
               true,
               `Image ${label} is now available.`,
               isDeletion
                 ? undefined
-                : `There was a problem processing image ${label}: ${event.message}`
+                : `There was a problem processing image ${label}: ${
+                    event.message === 'Upload cancelled.'
+                      ? 'Upload canceled.'
+                      : event.message
+                  }`
             );
           case 'image_delete':
             return _toast(
