@@ -148,7 +148,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     const minAndMaxExist = typeof min === 'number' && typeof max === 'number';
 
     /**
-     * If we've provided a mix and max value, make sure the user
+     * If we've provided a min and max value, make sure the user
      * input doesn't go outside of those bounds ONLY if the input
      * type matches a number type.
      */
