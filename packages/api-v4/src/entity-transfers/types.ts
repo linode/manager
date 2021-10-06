@@ -1,7 +1,7 @@
 export type EntityTransferStatus =
   | 'pending'
   | 'accepted'
-  | 'cancelled'
+  | 'canceled'
   | 'completed'
   | 'failed'
   | 'stale';
