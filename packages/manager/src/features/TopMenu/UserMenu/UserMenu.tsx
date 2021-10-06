@@ -115,7 +115,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 50,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
+        background: '#F4F5F6',
         '& $caret': {
+          color: '#068E3E',
           marginTop: 4,
           transform: 'rotate(180deg)',
         },
