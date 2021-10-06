@@ -51,6 +51,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
   },
+  mode: {
+    '& .MuiSelect-root': {
+      height: 33,
+      minHeight: 33,
+      padding: theme.spacing(),
+      paddingTop: 9,
+    },
+  },
 }));
 
 export interface Props {
@@ -204,6 +212,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
           {forEdit && (
             <Grid item xs={6} sm={3} lg={2}>
               <TextField
+                className={classes.mode}
                 label="Mode"
                 inputId={`mode-${idx}`}
                 value={node.mode}

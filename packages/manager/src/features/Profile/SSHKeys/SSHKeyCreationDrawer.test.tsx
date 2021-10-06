@@ -5,8 +5,8 @@ import { SSHKeyCreationDrawer } from './SSHKeyCreationDrawer';
 jest.mock('@linode/api-v4/lib/profile');
 
 const o = {
-  labelField: `WithStyles(LinodeTextField)[data-qa-label-field=true]`,
-  keyField: `WithStyles(LinodeTextField)[data-qa-ssh-key-field]`,
+  labelField: `[data-qa-label-field=true]`,
+  keyField: `[data-qa-ssh-key-field]`,
   submitButton: `[data-qa-submit]`,
   cancelButton: `[data-qa-cancel]`,
 };

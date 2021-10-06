@@ -304,6 +304,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             },
             className
           )}
+          type={type}
         >
           {children}
         </TextField>
