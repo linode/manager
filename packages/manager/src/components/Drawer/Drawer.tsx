@@ -84,6 +84,7 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
       classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       ModalProps={{
         BackdropProps: { className: classes.backDrop },
+        disableBackdropClick: true,
       }}
       data-qa-drawer
       data-testid="drawer"
