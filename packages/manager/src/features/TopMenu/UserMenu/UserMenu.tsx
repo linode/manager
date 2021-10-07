@@ -157,7 +157,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   menuItemList: {
-    boxShadow: '0 6px 7px 0 rgba(0, 0, 0, 0.2)',
+    boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
     '&[data-reach-menu-items]': {
       backgroundColor: theme.cmrBGColors.bgPaper,
       border: 'none',
