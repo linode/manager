@@ -276,7 +276,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { enqueueSnackbar } = this.props;
     cancelBackups(this.props.linodeID)
       .then(() => {
-        enqueueSnackbar('Backups are being cancelled for this Linode', {
+        enqueueSnackbar('Backups are being canceled for this Linode', {
           variant: 'info',
         });
         // Just in case the user immediately disables backups
@@ -754,7 +754,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           </Typography>
           <Typography style={{ marginTop: 12 }}>
             <strong>Note: </strong>
-            Once backups for this Linode have been cancelled, you cannot
+            Once backups for this Linode have been canceled, you cannot
             re-enable them for 24 hours.
           </Typography>
         </ConfirmationDialog>

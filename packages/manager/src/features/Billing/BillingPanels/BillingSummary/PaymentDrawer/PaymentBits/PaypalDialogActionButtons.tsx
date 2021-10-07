@@ -8,7 +8,7 @@ export interface Props {
   paypalPaymentFailed: boolean;
   isExecutingPayment: boolean;
   initExecutePayment: () => void;
-  closeDialog: (wasCancelled: boolean) => void;
+  closeDialog: (wasCanceled: boolean) => void;
 }
 
 type CombinedProps = Props;
@@ -22,7 +22,7 @@ const PaypalDialogActionButtons: React.SFC<CombinedProps> = (props) => {
     closeDialog,
   } = props;
 
-  /** intentionally displays "payment cancelled" message to the user */
+  /** intentionally displays "payment canceled" message to the user */
   const handleCancelPayment = () => closeDialog(true);
 
   const handleCloseDialog = () => closeDialog(false);

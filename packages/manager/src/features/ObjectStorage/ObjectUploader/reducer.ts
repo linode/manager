@@ -9,7 +9,7 @@ type FileStatus =
   | 'OVERWRITE_NOTICE'
   | 'IN_PROGRESS'
   | 'FINISHED'
-  | 'CANCELLED'
+  | 'CANCELED'
   | 'ERROR';
 
 export interface ExtendedFile {
@@ -25,7 +25,7 @@ export interface ObjectUploaderState {
   numQueued: number;
   numInProgress: number;
   numFinished: number;
-  numCancelled: number;
+  numCanceled: number;
   numErrors: number;
 }
 
@@ -59,13 +59,13 @@ const cloneLandingReducer = (
         if (foundFileIdx === -1) {
           newFiles.push(file);
         } else {
-          // If we already have the file, and its status is FINISHED, CANCELLED,
+          // If we already have the file, and its status is FINISHED, CANCELED,
           // or ERROR, we re-queue the same file. We remove the file from the
           // original list and add it to the top, so we can be sure to see it.
           const foundFileStatus = draft.files[foundFileIdx].status;
           if (
             foundFileStatus === 'FINISHED' ||
-            foundFileStatus === 'CANCELLED' ||
+            foundFileStatus === 'CANCELED' ||
             foundFileStatus === 'ERROR'
           ) {
             draft.files.splice(foundFileIdx, 1);
@@ -155,7 +155,7 @@ export const defaultState: ObjectUploaderState = {
   numQueued: 0,
   numInProgress: 0,
   numFinished: 0,
-  numCancelled: 0,
+  numCanceled: 0,
   numErrors: 0,
 };
 
@@ -163,7 +163,7 @@ const updateCount = (draft: ObjectUploaderState) => {
   let numQueued = 0;
   let numInProgress = 0;
   let numFinished = 0;
-  let numCancelled = 0;
+  let numCanceled = 0;
   let numErrors = 0;
 
   draft.files.forEach((file) => {
@@ -173,8 +173,8 @@ const updateCount = (draft: ObjectUploaderState) => {
       numInProgress++;
     } else if (file.status === 'FINISHED') {
       numFinished++;
-    } else if (file.status === 'CANCELLED') {
-      numCancelled++;
+    } else if (file.status === 'CANCELED') {
+      numCanceled++;
     } else if (file.status === 'ERROR') {
       numErrors++;
     }
@@ -183,7 +183,7 @@ const updateCount = (draft: ObjectUploaderState) => {
   draft.numQueued = numQueued;
   draft.numInProgress = numInProgress;
   draft.numFinished = numFinished;
-  draft.numCancelled = numCancelled;
+  draft.numCanceled = numCanceled;
   draft.numErrors = numErrors;
 };
 
