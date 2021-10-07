@@ -162,27 +162,6 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       <Typography>
         Deleting a bucket is permanent and can&apos;t be undone.
       </Typography>
-      <Typography className={classes.copy}>
-        A bucket must be empty before deleting it. Please{' '}
-        <a
-          href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-        >
-          delete all objects
-        </a>
-        , or use{' '}
-        <a
-          href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-        >
-          another tool
-        </a>{' '}
-        to force deletion.
-      </Typography>
       {/* If the user is attempting to delete their last Bucket, remind them
       that they will still be billed unless they cancel Object Storage in
       Account Settings. */}
