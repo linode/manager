@@ -3,20 +3,43 @@ import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from 'src/components/core/styles';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import TextField from 'src/components/TextField';
+import Notice from 'src/components/Notice';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { useProfile } from 'src/queries/profile';
+
+type ClassNames = 'root';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginBottom: `16px !important`,
+      '& p': {
+        lineHeight: `unset`,
+        fontFamily: `LatoWeb`,
+        fontSize: `smaller`,
+      },
+    },
+  });
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface ContentProps {
   object_storage: AccountSettings['object_storage'];
@@ -72,7 +95,11 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   const { object_storage } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+  const [usernameInput, setUsername] = React.useState<string>('');
+
   const [isLoading, setLoading] = React.useState<boolean>(false);
+
+  const { data: profile } = useProfile();
 
   const handleClose = () => {
     setOpen(false);
@@ -83,6 +110,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
     setError(e[0].reason);
     setLoading(false);
   };
+  ``;
 
   const handleSubmit = () => {
     setLoading(true);
@@ -101,7 +129,12 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         Close
       </Button>
 
-      <Button buttonType="primary" onClick={handleSubmit} loading={isLoading}>
+      <Button
+        disabled={profile?.username !== usernameInput}
+        buttonType="primary"
+        onClick={handleSubmit}
+        loading={isLoading}
+      >
         Cancel Object Storage
       </Button>
     </ActionsPanel>
@@ -122,13 +155,25 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         title="Cancel Object Storage"
         actions={actions}
       >
-        <Typography variant="subtitle1">
-          Canceling Object Storage will permanently delete all buckets and their
-          objects. Object Storage Access Keys will be revoked.
+        <Notice
+          warning
+          className={props.classes.root}
+          text="Canceling Object Storage will permanently delete all buckets and their objects. Object Storage Access Keys will be revoked."
+        />
+        <Typography variant="body1">
+          To confirm cancellation, type your username in the field below.
         </Typography>
+        <TextField
+          label="Username"
+          value={usernameInput}
+          onChange={(e) => setUsername(e.target.value)}
+          aria-label="username field"
+        />
       </ConfirmationDialog>
     </>
   );
 };
 
-export default React.memo(EnableObjectStorage);
+const styled = withStyles(styles);
+
+export default React.memo(styled(EnableObjectStorage));
