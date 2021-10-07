@@ -1,3 +1,11 @@
+## [2021-10-05] - v0.6.0
+
+### Added:
+- AutoscaleNodePoolSchema
+
+### Changed:
+- CreditCardSchema
+
 ## [2021-09-17] - v0.5.0
 
 ### Added:
