@@ -5,14 +5,9 @@ import BarPercent from 'src/components/BarPercent';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
-import {
-  eventLabelGenerator,
-  eventMessageGenerator,
-} from 'src/eventMessageGenerator_CMR';
-import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/hooks/useTypes';
 import EntityIcon, { Variant } from 'src/components/EntityIcon';
 import Divider from 'src/components/core/Divider';
+import eventMessageGenerator from 'src/eventMessageGenerator';
 import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -56,16 +51,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { event, onClose } = props;
   const classes = useStyles();
 
-  const { linodes } = useLinodes();
-  const { types } = useTypes();
-  const _linodes = Object.values(linodes.itemsById);
-  const _types = types.entities;
   const { linkTarget, status, type } = useEventInfo(event);
-  const message = eventMessageGenerator(event, _linodes, _types);
-
-  if (message === null) {
-    return null;
-  }
 
   const parsedTimeRemaining = formatTimeRemaining(event.time_remaining);
 
@@ -75,9 +61,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
 
   const eventMessage = (
     <>
-      {eventLabelGenerator(event)}
-      {` `}
-      {message}
+      {eventMessageGenerator(event)}
       {formattedTimeRemaining}
     </>
   );
