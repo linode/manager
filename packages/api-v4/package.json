@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.58.0",
+  "version": "0.59.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -17,7 +17,8 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
-  "main": "./lib/index.js",
+  "main": "./index.node.js",
+  "browser": "./index.js",
   "types": "./lib/index.d.ts",
   "unpkg": "./index.js",
   "dependencies": {
@@ -31,6 +32,7 @@
   "scripts": {
     "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
     "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
+    "build:node": "yarn build --config webpack.node.config.js",
     "test": "jest --config jestconfig.json",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
@@ -39,6 +41,7 @@
   },
   "files": [
     "index.js",
+    "index.node.js",
     "index.d.ts",
     "lib/*",
     "package.json",
