@@ -229,7 +229,7 @@ class Backups extends Page {
     this.cancelConfirm.waitForDisplayed();
     this.cancelConfirm.click();
 
-    const toastMsg = 'Backups are being cancelled for this Linode';
+    const toastMsg = 'Backups are being canceled for this Linode';
     this.toastDisplays(toastMsg);
   }
 }

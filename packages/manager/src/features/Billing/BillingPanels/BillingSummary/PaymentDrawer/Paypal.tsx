@@ -252,14 +252,14 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
   };
 
   /*
-   * User was navigated to Paypal's site and then cancelled the payment and came back
+   * User was navigated to Paypal's site and then canceled the payment and came back
    * to cloud manager
    *
    * See documentation:
    * https://github.com/paypal/paypal-checkout-components/blob/master/docs/implement-checkout.md
    */
   const onCancel = () => {
-    setSuccess('Payment Cancelled');
+    setSuccess('Payment Canceled');
     setDialogOpen(false);
   };
 

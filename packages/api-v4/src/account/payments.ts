@@ -97,7 +97,7 @@ interface StagePaypalData {
  * Begins the process of making a payment through Paypal.
  *
  * @param data { object }
- * @param data.cancel_url The URL to have PayPal redirect to when Payment is cancelled.
+ * @param data.cancel_url The URL to have PayPal redirect to when Payment is canceled.
  * @param data.redirect_url The URL to have PayPal redirect to when Payment is approved.
  * @param data.usd { string } The dollar amount of the payment
  *

@@ -110,9 +110,9 @@ describe('machine image', () => {
     });
   });
 
-  it('uploads machine image, mock upload cancelled failed event', () => {
+  it('uploads machine image, mock upload canceled failed event', () => {
     const status = 'failed';
-    const message = 'Upload cancelled';
+    const message = 'Upload canceled';
     uploadImage();
     cy.wait('@imageUpload').then((xhr) => {
       const imageId = xhr.response?.body.image.id;
