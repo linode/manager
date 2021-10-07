@@ -98,11 +98,11 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   const actions = () => (
     <ActionsPanel>
       <Button buttonType="secondary" onClick={handleClose}>
-        Cancel
+        Close
       </Button>
 
       <Button buttonType="primary" onClick={handleSubmit} loading={isLoading}>
-        Confirm cancellation
+        Cancel Object Storage
       </Button>
     </ActionsPanel>
   );
@@ -119,11 +119,12 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         open={isOpen}
         error={error}
         onClose={() => handleClose()}
-        title="Just to confirm..."
+        title="Cancel Object Storage"
         actions={actions}
       >
         <Typography variant="subtitle1">
-          Are you sure you want to cancel Object Storage?
+          Canceling Object Storage will permanently delete all buckets and their
+          objects. Object Storage Access Keys will be revoked.
         </Typography>
       </ConfirmationDialog>
     </>
