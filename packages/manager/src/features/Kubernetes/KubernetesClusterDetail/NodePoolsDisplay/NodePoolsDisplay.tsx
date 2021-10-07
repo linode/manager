@@ -281,7 +281,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
       <Grid
         container
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
         updateFor={[classes]}
       >
         <Grid item>

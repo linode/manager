@@ -585,7 +585,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid
               container
-              justify="space-between"
+              justifyContent="space-between"
               alignItems="flex-end"
               style={{ marginTop: 8 }}
               data-qa-nodebalancer-settings-section

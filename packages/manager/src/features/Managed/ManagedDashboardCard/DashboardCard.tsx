@@ -61,7 +61,7 @@ const DashboardCard: React.FC<CombinedProps> = (props) => {
             container
             className={classes.header}
             alignItems={alignItems || 'flex-start'}
-            justify={alignHeader || 'space-between'}
+            justifyContent={alignHeader || 'space-between'}
           >
             {title && (
               <Grid item className={'p0'}>

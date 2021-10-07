@@ -142,7 +142,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
             container
             item
             alignItems="center"
-            justify="flex-end"
+            justifyContent="flex-end"
             xs={12}
             sm={8}
           >

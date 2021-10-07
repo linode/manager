@@ -222,7 +222,7 @@ export class SupportTicketsLanding extends React.PureComponent<
           container
           className="m0"
           alignItems="center"
-          justify="space-between"
+          justifyContent="space-between"
           updateFor={[classes]}
         >
           <Grid item className={`${classes.title} p0`}>

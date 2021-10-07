@@ -253,7 +253,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
         container
         className="m0"
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <Grid item className="p0">
           <Breadcrumb

@@ -111,7 +111,11 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Grid container className={`${classes.root} m0`} justify="space-between">
+      <Grid
+        container
+        className={`${classes.root} m0`}
+        justifyContent="space-between"
+      >
         <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}

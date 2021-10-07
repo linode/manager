@@ -194,7 +194,7 @@ const UserDetail: React.FC = () => {
   if (error) {
     return (
       <React.Fragment>
-        <Grid container justify="space-between">
+        <Grid container justifyContent="space-between">
           <Grid item>
             <Breadcrumb
               pathname={location.pathname}

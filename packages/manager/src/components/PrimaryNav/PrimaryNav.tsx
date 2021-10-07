@@ -246,7 +246,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       className={classes.menuGrid}
       container
       alignItems="flex-start"
-      justify="flex-start"
+      justifyContent="flex-start"
       direction="column"
       wrap="nowrap"
       spacing={0}

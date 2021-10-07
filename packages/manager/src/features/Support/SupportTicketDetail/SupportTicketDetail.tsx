@@ -276,7 +276,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       <Grid
         container
         alignItems="center"
-        justify="flex-start"
+        justifyContent="flex-start"
         className={classes.label}
       >
         <Grid item className={classes.labelIcon}>
@@ -374,7 +374,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid container justifyContent="space-between" alignItems="flex-end">
           <Grid item>
             <Breadcrumb
               pathname={location.pathname}

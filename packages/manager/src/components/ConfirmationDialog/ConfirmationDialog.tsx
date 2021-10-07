@@ -45,7 +45,6 @@ const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
     <Dialog
       {...dialogProps}
       className={classes.root}
-      disableBackdropClick={true}
       PaperProps={{ role: undefined }}
       role="dialog"
     >

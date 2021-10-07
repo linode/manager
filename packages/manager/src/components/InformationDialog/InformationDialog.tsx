@@ -11,12 +11,7 @@ interface Props extends DialogProps {
 export const InformationDialog: React.FC<Props> = (props) => {
   const { title, children, ...dialogProps } = props;
   return (
-    <Dialog
-      {...dialogProps}
-      disableBackdropClick={true}
-      PaperProps={{ role: undefined }}
-      role="dialog"
-    >
+    <Dialog {...dialogProps} PaperProps={{ role: undefined }} role="dialog">
       <DialogTitle
         className="dialog-title"
         title={title}

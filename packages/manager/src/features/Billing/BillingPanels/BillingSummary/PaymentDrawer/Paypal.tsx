@@ -343,7 +343,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
             You'll be taken to PayPal to complete your payment.
           </Typography>
         </Grid>
-        <Grid container alignItems="flex-end" justify="flex-start">
+        <Grid container alignItems="flex-end" justifyContent="flex-start">
           <Grid item style={{ position: 'relative' }}>
             {!enabled && (
               <Tooltip

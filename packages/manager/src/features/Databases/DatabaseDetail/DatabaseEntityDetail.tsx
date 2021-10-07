@@ -179,7 +179,7 @@ const Header: React.FC<HeaderProps> = (props) => {
         container
         className={classes.root}
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <Grid item className="px0">
           <Breadcrumb
@@ -203,7 +203,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             container
             className="m0"
             alignItems="center"
-            justify="space-between"
+            justifyContent="space-between"
           >
             <Grid item className="py0">
               <Chip
@@ -346,7 +346,7 @@ const Body: React.FC<BodyProps> = (props) => {
       item
       className={classes.body}
       direction="row"
-      justify="space-between"
+      justifyContent="space-between"
     >
       <Grid
         container
@@ -499,7 +499,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         container
         direction="row"
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <Grid container item className={classes.details} xs={12} sm={8}>
           <Typography className={classes.listItem}>

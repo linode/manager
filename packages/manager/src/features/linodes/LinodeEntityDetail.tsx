@@ -352,7 +352,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           container
           className="m0"
           alignItems="center"
-          justify="space-between"
+          justifyContent="space-between"
         >
           <Box display="flex" alignItems="center">
             <Grid
@@ -566,7 +566,7 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
         item
         className={classes.rightColumn}
         direction="row"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <AccessTable
           title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
@@ -868,7 +868,12 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
   );
 
   return (
-    <Grid container direction="row" alignItems="center" justify="space-between">
+    <Grid
+      container
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+    >
       <Grid
         container
         item

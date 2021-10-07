@@ -84,7 +84,6 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
       classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       ModalProps={{
         BackdropProps: { className: classes.backDrop },
-        disableBackdropClick: true,
       }}
       data-qa-drawer
       data-testid="drawer"
@@ -93,7 +92,7 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
     >
       <Grid
         container
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="center"
         className={classes.drawerHeader}
         updateFor={[title, classes]}
