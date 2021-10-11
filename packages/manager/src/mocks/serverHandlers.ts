@@ -546,19 +546,25 @@ export const handlers = [
       message:
         'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
     });
-    const diskResize = eventFactory.build({
-      action: 'disk_resize',
-      percent_complete: 75,
-      secondary_entity: {
-        type: 'disk',
-        id: 1,
-        label: 'my-disk',
-      },
-    });
     const volumeMigrationScheduled = eventFactory.build({
       entity: { type: 'volume', id: 0, label: 'volume-0' },
       action: 'volume_migrate_scheduled' as EventAction,
-      message: 'Volume 0 has been scheduled for upgrade to NVMe.',
+      status: 'scheduled',
+      message: 'Volume 0 has been scheduled for an upgrade to NVMe.',
+      percent_complete: 100,
+    });
+    const volumeMigrating = eventFactory.build({
+      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      action: 'volume_migrate',
+      status: 'started',
+      message: 'Volume 0 is being upgraded to NVMe.',
+      percent_complete: 65,
+    });
+    const volumeMigrationFinished = eventFactory.build({
+      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      action: 'volume_migrate',
+      status: 'finished',
+      message: 'Volume 0 has finished upgrading to NVMe.',
       percent_complete: 100,
     });
     const oldEvents = eventFactory.buildList(20, {
@@ -570,9 +576,11 @@ export const handlers = [
       ctx.json(
         makeResourcePage([
           ...events,
-          diskResize,
-          volumeMigrationScheduled,
           ...oldEvents,
+          ...oldEvents,
+          volumeMigrationScheduled,
+          volumeMigrating,
+          volumeMigrationFinished,
         ])
       )
     );
