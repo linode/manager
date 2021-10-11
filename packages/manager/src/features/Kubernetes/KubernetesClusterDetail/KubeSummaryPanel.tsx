@@ -27,6 +27,9 @@ import { pluralize } from 'src/utilities/pluralize';
 import { getTotalClusterPrice } from '../kubeUtils';
 import KubeConfigDrawer from './KubeConfigDrawer';
 import KubernetesDialog from './KubernetesDialog';
+import Chip from 'src/components/core/Chip';
+import useFlags from 'src/hooks/useFlags';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -113,6 +116,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     right: theme.spacing(),
   },
+  dashboard: {
+    '& svg': {
+      height: 14,
+      marginLeft: 4,
+    },
+  },
 }));
 
 interface Props {
@@ -158,6 +167,8 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
+  const flags = useFlags();
+  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability && true;
 
   const isHighlyAvailable = cluster.control_plane.high_availability;
 
@@ -240,7 +251,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         direction="column"
         justify="space-between"
         xs={12}
-        lg={4}
+        lg={5}
       >
         <Grid item>
           <Typography className={classes.label}>
@@ -285,6 +296,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     );
   };
 
+  cluster.type = 'lke-basic';
+  console.log(cluster.type);
+
   return (
     <React.Fragment>
       <Paper className={classes.root}>
@@ -293,8 +307,8 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
           alignItems="flex-start"
           className={classes.mainGridContainer}
         >
-          <Grid item container direction="row" xs={12} lg={4}>
-            <Grid item>
+          <Grid item container direction="row" xs={12} lg={3}>
+            <Grid item lg={7}>
               <Grid
                 container
                 item
@@ -337,7 +351,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               </Grid>
             </Grid>
 
-            <Grid item>
+            <Grid item lg={6}>
               <Grid
                 container
                 item
@@ -380,24 +394,56 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             </Grid>
           </Grid>
 
-          {setKubeconfigDisplay()}
+          <Grid item container direction="row" lg={9} justify="space-between">
+            {setKubeconfigDisplay()}
 
-          <Grid item className={classes.tags} xs={12} lg={4}>
-            <TagsPanel
-              align="right"
-              tags={cluster.tags}
-              updateTags={handleUpdateTags}
-            />
+            <Grid item container direction="row" xs={12} lg={6} className="foobar">
+              <Grid item container direction="column" lg={12} alignContent="flex-end">
+                <Grid item container dirction="column" justify="space-between">
+                  {isLkeHighAvailabilityEnabled && cluster?.type === 'lke-standard' ? (
+                    <Grid item={2}>
+                      <Chip label="HA CLUSTER"/>
+                    </Grid>
+                  ) : null
+                  }
+
+                  <Button
+                    className={classes.dashboard}
+                    buttonType="secondary"
+                    onClick={() => {}}
+                    compact
+                  >
+                    Kubernetes Dashboard
+                    <OpenInNewIcon />
+                  </Button>
+                  <Button
+                    buttonType="secondary"
+                    onClick={() => openDialog(cluster.id)}
+                    compact
+                  >
+                    Delete
+                  </Button>
+                  {isLkeHighAvailabilityEnabled && cluster?.type === 'lke-basic' ? (
+                    <Button
+                      buttonType="primary"
+                      onClick={()=>{}}
+                      compact
+                    >
+                      Upgrade to HA
+                    </Button>
+                  ) : null
+                  }
+                </Grid>
+              </Grid>
+              <Grid item className={classes.tags} xs={12} lg={12}>
+                <TagsPanel
+                  align="right"
+                  tags={cluster.tags}
+                  updateTags={handleUpdateTags}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-
-          <Button
-            buttonType="secondary"
-            onClick={() => openDialog(cluster.id)}
-            className={classes.deleteButton}
-            compact
-          >
-            Delete Cluster
-          </Button>
         </Grid>
       </Paper>
 
