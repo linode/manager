@@ -137,9 +137,13 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     ...textFieldProps
   } = props;
 
-  const [_value, setValue] = React.useState<string | number>(
-    typeof value === 'string' || typeof value === 'number' ? value : ''
-  );
+  const [_value, setValue] = React.useState<string | number>('');
+
+  React.useEffect(() => {
+    if (typeof value === 'string' || typeof value === 'number') {
+      setValue(value);
+    }
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const numberTypes = ['tel', 'number'];
