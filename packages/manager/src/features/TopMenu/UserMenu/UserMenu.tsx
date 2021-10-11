@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 50,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        background: '#F4F5F6',
+        background: theme.cmrBGColors.bgApp,
         '& $caret': {
           color: '#068E3E',
           marginTop: 4,
