@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import {
+  CreditCardData,
   PaymentMethod,
-  ThirdPartyPayment as ThirdPartyPaymentTypes,
+  PayPalData,
 } from '@linode/api-v4/lib/account/types';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
@@ -43,7 +44,7 @@ interface Props {
 
 const PaymentMethodRow: React.FC<Props> = (props) => {
   const { paymentMethod, onDelete } = props;
-  const { data: creditCard, type, is_default } = paymentMethod;
+  const { data: paymentMethodData, type, is_default } = paymentMethod;
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -96,12 +97,9 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
       <Grid container className={classes.container}>
         <Grid item className={classes.item}>
           {paymentMethod.type === 'credit_card' ? (
-            <CreditCard creditCard={creditCard} />
+            <CreditCard creditCard={paymentMethod.data} />
           ) : (
-            <ThirdPartyPayment
-              thirdPartyPayment={type as ThirdPartyPaymentTypes}
-              creditCard={creditCard}
-            />
+            <ThirdPartyPayment paymentMethod={paymentMethod} />
           )}
         </Grid>
         <Grid item className={classes.item} style={{ paddingRight: 0 }}>
@@ -112,7 +110,15 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
         <Grid item className={classes.actions}>
           <ActionMenu
             actionsList={actions}
-            ariaLabel={`Action menu for card ending in ${creditCard?.last_four}`}
+            ariaLabel={
+              type === 'paypal'
+                ? `Action menu for Paypal ${
+                    (paymentMethodData as PayPalData).email
+                  }`
+                : `Action menu for card ending in ${
+                    (paymentMethodData as CreditCardData)?.last_four
+                  }`
+            }
           />
         </Grid>
       </Grid>

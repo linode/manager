@@ -13,7 +13,7 @@ import HelpIcon from 'src/components/HelpIcon';
 import classNames from 'classnames';
 import { reportException } from 'src/exceptionReporting';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   button: {
     border: 0,
     padding: 0,
@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   disabled: {
     cursor: 'default',
+    // Allows us to disable the pointer even the button PayPal creates
+    pointerEvents: 'none',
     opacity: 0.3,
     '&:hover': {
       opacity: 0.3,
