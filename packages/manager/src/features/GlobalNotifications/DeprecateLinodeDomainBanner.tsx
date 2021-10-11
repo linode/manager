@@ -30,7 +30,11 @@ export const DeprecateLinodeDomainBanner: React.FC<{}> = () => {
         <span className={classes.domains}>nodebalancer.linode.com</span> domains
         provided to all Linodes and NodeBalancers. By December 31st, 2021,
         update your scripts, applications, or settings to use the new default
-        domain. <Link to="">Review documentation here</Link>.
+        domain.{' '}
+        <Link to="https://www.linode.com/docs/guides/members-linode-com-migration">
+          Review documentation here
+        </Link>
+        .
       </Typography>
     </Notice>
   );
