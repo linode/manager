@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&[aria-expanded="true"]': {
         background: theme.cmrBGColors.bgApp,
         '& $caret': {
-          color: '#068E3E',
+          color: '#0683E3',
           marginTop: 4,
           transform: 'rotate(180deg)',
         },
