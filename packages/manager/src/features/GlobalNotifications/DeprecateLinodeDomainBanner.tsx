@@ -4,6 +4,7 @@ import { useDismissibleBanner } from 'src/components/DismissibleBanner/Dismissib
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 
+// @todo: Remove this on December 8, 2021
 export const DeprecateLinodeDomainBanner: React.FC<{}> = () => {
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
     'deprecate-linode-domain'
