@@ -34,6 +34,7 @@ import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { v4 } from 'uuid';
 import GooglePayButton from './GooglePayButton';
+import PayPalButton from './PayPalButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
@@ -534,14 +535,13 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 </Typography>
               </Grid>
               <Grid container>
-                <Grid item>
-                  <AsyncPaypal
-                    key={payPalKey}
-                    usd={usd}
-                    setSuccess={setSuccess}
-                    asyncScriptOnLoad={onScriptLoad}
-                    isScriptLoaded={isPaypalScriptLoaded}
+                <Grid item xs={9} sm={6}>
+                  <PayPalButton
+                    usd={+usd}
                     disabled={isProcessing}
+                    setSuccess={setSuccess}
+                    setError={setErrorMessage}
+                    setProcessing={setIsProcessing}
                   />
                 </Grid>
                 <Grid item xs={9} sm={6}>
