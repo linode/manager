@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NoticeProps } from 'react-select/src/components/Menu';
 import Typography from 'src/components/core/Typography';
 
-interface Props extends NoticeProps<any> {}
+interface Props extends NoticeProps<any, any> {}
 
 type CombinedProps = Props;
 

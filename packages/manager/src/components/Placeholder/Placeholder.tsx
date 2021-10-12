@@ -120,7 +120,7 @@ const Placeholder: React.FC<CombinedProps> = (props) => {
       spacing={3}
       alignItems="center"
       direction="column"
-      justify="center"
+      justifyContent="center"
       className={`${classes.root} ${props.className}`}
     >
       <Grid item xs={12} className={isEntity ? classes.entity : ''}>
@@ -147,7 +147,7 @@ const Placeholder: React.FC<CombinedProps> = (props) => {
           item
           direction="row"
           alignItems="center"
-          justify="center"
+          justifyContent="center"
         >
           {buttonProps.map((thisButton, index) => (
             <Grid item key={`placeholder-button-${index}`}>

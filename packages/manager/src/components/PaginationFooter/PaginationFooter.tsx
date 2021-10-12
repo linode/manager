@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import {
   createStyles,
@@ -104,7 +104,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
     return (
       <Grid
         container
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="center"
         className={classNames({
           [classes.root]: true,

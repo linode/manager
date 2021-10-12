@@ -65,7 +65,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
           container
           direction="row"
           alignItems="center"
-          justify="space-between"
+          justifyContent="space-between"
           wrap="nowrap"
         >
           <Grid item>

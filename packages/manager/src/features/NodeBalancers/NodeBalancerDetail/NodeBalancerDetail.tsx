@@ -294,7 +294,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           <Grid
             container
             className={`${classes.root} m0`}
-            justify="space-between"
+            justifyContent="space-between"
           >
             <Grid item className="p0">
               <Breadcrumb

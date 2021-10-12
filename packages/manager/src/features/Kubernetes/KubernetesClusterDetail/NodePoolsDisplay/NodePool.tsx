@@ -65,7 +65,7 @@ const NodePool: React.FC<Props> = (props) => {
         container
         className="my0"
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <Grid item>
           <Typography variant="h2">{typeLabel}</Typography>

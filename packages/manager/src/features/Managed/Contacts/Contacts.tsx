@@ -138,7 +138,7 @@ const Contacts: React.FC<CombinedProps> = (props) => {
           className={classes.header}
           container
           alignItems="center"
-          justify="flex-end"
+          justifyContent="flex-end"
         >
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink

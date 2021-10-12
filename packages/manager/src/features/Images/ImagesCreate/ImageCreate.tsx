@@ -10,7 +10,7 @@ const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
 export const ImageCreate: React.FC<CombinedProps> = (props) => {
-  const { location } = useHistory();
+  const { location } = useHistory<any>();
 
   const [label, setLabel] = React.useState<string>(
     location?.state ? location.state.imageLabel : ''

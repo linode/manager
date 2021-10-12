@@ -15,7 +15,7 @@ Default.story = {
 };
 
 export const Center = () => (
-  <Grid container justify="center">
+  <Grid container justifyContent="center">
     <Grid item>
       <HelpIcon text="There is some help text! Yada, yada, yada..." />
     </Grid>
@@ -27,7 +27,7 @@ Center.story = {
 };
 
 export const Left = () => (
-  <Grid container justify="flex-start">
+  <Grid container justifyContent="flex-start">
     <Grid item>
       <HelpIcon text="There is some help text! Yada, yada, yada..." />
     </Grid>
@@ -39,7 +39,7 @@ Left.story = {
 };
 
 export const Right = () => (
-  <Grid container justify="flex-end">
+  <Grid container justifyContent="flex-end">
     <Grid item>
       <HelpIcon text="There is some help text! Yada, yada, yada..." />
     </Grid>

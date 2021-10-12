@@ -478,7 +478,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={pageTitle} />
         {generalError && <Notice error text={generalError} />}
-        <Grid container justify="space-between">
+        <Grid container justifyContent="space-between">
           <Grid item className="py0">
             <Breadcrumb
               pathname={location.pathname}

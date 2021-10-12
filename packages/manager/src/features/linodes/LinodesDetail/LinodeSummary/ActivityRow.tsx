@@ -58,7 +58,7 @@ export const ActivityRow: React.FC<CombinedProps> = (props) => {
       className={classes.root}
       container
       direction={'row'}
-      justify={'space-between'}
+      justifyContent={'space-between'}
       alignItems={'center'}
       data-qa-activity-row
     >

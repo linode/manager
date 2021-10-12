@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';

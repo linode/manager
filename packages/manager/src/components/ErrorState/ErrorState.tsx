@@ -1,5 +1,5 @@
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import {
   createStyles,
@@ -54,7 +54,7 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
         [props.classes.compact]: props.compact,
         [props.classes.cozy]: !!props.cozy,
       })}
-      justify="center"
+      justifyContent="center"
       alignItems="center"
     >
       <Grid item data-testid="error-state">

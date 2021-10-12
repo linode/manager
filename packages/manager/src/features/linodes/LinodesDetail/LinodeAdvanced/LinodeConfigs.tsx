@@ -183,7 +183,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         <Grid
           container
           alignItems="flex-end"
-          justify="flex-end"
+          justifyContent="flex-end"
           className={classes.root}
         >
           <Grid item className={classes.addNewWrapper}>

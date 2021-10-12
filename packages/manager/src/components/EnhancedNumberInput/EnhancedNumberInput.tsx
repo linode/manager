@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Minus from 'src/assets/icons/minusSign.svg';
 import Plus from 'src/assets/icons/plusSign.svg';
@@ -119,7 +119,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
   const classes = useStyles();
   return (
     <div
-      className={classnames({
+      className={classNames({
         [classes.small]: small,
         [classes.inputGroup]: true,
       })}
@@ -147,7 +147,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
         value={value}
         onChange={onChange}
         inputProps={{
-          className: classnames({
+          className: classNames({
             [classes.input]: true,
           }),
           min,

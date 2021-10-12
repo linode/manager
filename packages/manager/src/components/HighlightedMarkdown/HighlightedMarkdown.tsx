@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as hljs from 'highlight.js/lib/core';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';

@@ -13,7 +13,7 @@ import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel';
 
-type CombinedProps = WithImages & RouteComponentProps<{}>;
+type CombinedProps = WithImages & RouteComponentProps<{}, any, any>;
 
 export const StackScriptsLanding: React.FC<CombinedProps> = (props) => {
   const { history, imagesData } = props;

@@ -1,5 +1,5 @@
 import { getTags } from '@linode/api-v4/lib/tags';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';

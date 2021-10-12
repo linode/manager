@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Skeleton, { SkeletonProps } from 'src/components/core/Skeleton';
 import { makeStyles, Theme } from 'src/components/core/styles';

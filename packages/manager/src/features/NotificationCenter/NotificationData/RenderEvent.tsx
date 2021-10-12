@@ -1,5 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account/types';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles } from 'src/components/core/styles';
@@ -72,7 +72,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
       <Grid
         container
         className={classes.root}
-        justify="space-between"
+        justifyContent="space-between"
         data-test-id={event.action}
       >
         <Grid item xs={8}>

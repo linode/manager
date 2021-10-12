@@ -123,7 +123,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
       <Grid
         container
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         updateFor={[title, props.children]}
       >
         <div className={classes.sticky}>

@@ -896,7 +896,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             <Grid
               updateFor={[submitting, classes]}
               container
-              justify="flex-end"
+              justifyContent="flex-end"
               alignItems="center"
             >
               <ActionsPanel className={classes.actionsPanel}>

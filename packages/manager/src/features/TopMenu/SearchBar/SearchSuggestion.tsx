@@ -17,7 +17,7 @@ export interface SearchSuggestionT {
   status?: LinodeStatus;
 }
 
-interface Props extends OptionProps<any> {
+interface Props extends OptionProps<any, any> {
   data: {
     label: string;
     data: SearchSuggestionT;

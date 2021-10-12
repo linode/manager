@@ -1,5 +1,5 @@
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { useDropzone, FileRejection } from 'react-dropzone';
