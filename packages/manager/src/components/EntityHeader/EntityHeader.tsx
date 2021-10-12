@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -142,7 +142,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
             container
             item
             alignItems="center"
-            justify="flex-end"
+            justifyContent="flex-end"
             xs={12}
             sm={8}
           >
@@ -166,7 +166,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
         <Grid
           item
           xs={12}
-          className={classnames({
+          className={classNames({
             [classes.breadcrumbOuter]: isDetailLanding,
             [classes.breadCrumbDetail]: Boolean(parentLink),
             [classes.breadCrumbSecondary]: Boolean(isSecondary),
@@ -180,7 +180,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
           ) : null}
           {body && (
             <Grid
-              className={classnames({
+              className={classNames({
                 [classes.contentOuter]: true,
                 [bodyClassName ?? '']: Boolean(bodyClassName),
               })}

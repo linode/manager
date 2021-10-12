@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -271,7 +271,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
    */
   return (
     <div
-      className={classnames({
+      className={classNames({
         [classes.appFrame]: true,
         /**
          * hidden to prevent some jankiness with the app loading before the splash screen

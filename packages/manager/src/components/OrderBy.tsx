@@ -145,7 +145,7 @@ export const OrderBy: React.FC<CombinedProps> = (props) => {
   const initialValues = getInitialValuesFromUserPreferences(
     props.preferenceKey ?? '',
     preferences ?? {},
-    params,
+    params as Record<string, string>,
     props.orderBy ?? 'label',
     props.order ?? 'desc'
   );

@@ -1,6 +1,6 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { DateTime, Interval } from 'luxon';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
@@ -156,7 +156,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
         >
           <button className={classes.arrowIconOuter} onClick={decrementOffset}>
             <ArrowBackIosIcon
-              className={classnames({
+              className={classNames({
                 [classes.arrowIconInner]: true,
                 [classes.arrowIconDisabled]: monthOffset === maxMonthOffset,
               })}
@@ -169,7 +169,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
           </span>
           <button className={classes.arrowIconOuter} onClick={incrementOffset}>
             <ArrowBackIosIcon
-              className={classnames({
+              className={classNames({
                 [classes.arrowIconInner]: true,
                 [classes.arrowIconForward]: true,
                 [classes.arrowIconDisabled]: monthOffset === minMonthOffset,

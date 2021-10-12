@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
