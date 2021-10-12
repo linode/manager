@@ -59,7 +59,6 @@ export const nodePoolFactory = _nodePoolFactory.withDerivation1(
 export const kubernetesClusterFactory = Factory.Sync.makeFactory<ExtendedCluster>(
   {
     id: Factory.each((id) => id),
-    type: 'lke-basic',
     created: '2020-04-08T16:58:21',
     updated: '2020-04-08T16:58:21',
     region: 'us-central',
@@ -71,6 +70,7 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<ExtendedCluster
     totalCPU: 4,
     totalStorage: 1000,
     tags: [],
+    control_plane: { high_availability: false },
   }
 );
 
@@ -83,7 +83,6 @@ export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointRe
 export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>(
   {
     id: Factory.each((id) => id),
-    type: 'lke-basic',
     created: '2020-04-08T16:58:21',
     updated: '2020-04-08T16:58:21',
     region: 'us-central',
@@ -91,5 +90,6 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
     label: Factory.each((i) => `test-cluster-${i}`),
     k8s_version: '1.21',
     tags: [],
+    control_plane: { high_availability: false },
   }
 );

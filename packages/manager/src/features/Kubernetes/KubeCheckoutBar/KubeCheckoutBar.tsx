@@ -11,10 +11,6 @@ import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
-import {
-  getHAPrice,
-  useAllKubernetesTypesQuery,
-} from 'src/queries/kubernetesTypes';
 import { useProfile } from 'src/queries/profile';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 
@@ -49,11 +45,8 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   const flags = useFlags();
 
-  const { data: kubernetesTypes } = useAllKubernetesTypesQuery(
-    flags.lkeHighAvailability
-  );
-
-  const haPrice = getHAPrice(kubernetesTypes)?.monthly;
+  // @todo I don't think the API returns the HA price, how should we go about this? Add it to the constants, feature flag?
+  const haPrice = 100;
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);

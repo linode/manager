@@ -56,7 +56,6 @@ import {
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
-import { kubernetesTypeFactory } from 'src/factories/kubernetesTypes';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 
 export const makeResourcePage = (
@@ -266,17 +265,6 @@ export const handlers = [
       region: payload?.region ?? 'us-east',
     });
     return res(ctx.json(linode));
-  }),
-  rest.get('*/lke/types', async (req, res, ctx) => {
-    const normalCluster = kubernetesTypeFactory.build({
-      id: 'lke-basic',
-      availability: 'standard',
-    });
-    const haCluster = kubernetesTypeFactory.build({
-      id: 'lke-standard',
-      availability: 'high',
-    });
-    return res(ctx.json(makeResourcePage([normalCluster, haCluster])));
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
     const clusters = kubernetesAPIResponse.buildList(10);

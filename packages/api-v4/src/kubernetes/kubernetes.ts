@@ -14,7 +14,6 @@ import {
   KubernetesCluster,
   KubernetesEndpointResponse,
   KubernetesVersion,
-  LKEPlan,
 } from './types';
 
 /**
@@ -44,7 +43,7 @@ export const getKubernetesCluster = (clusterID: number) =>
 /**
  * createKubernetesClusters
  *
- * Create a new Cluster.
+ * Create a new cluster.
  */
 export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
   Request<KubernetesCluster>(
@@ -56,7 +55,7 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
 /**
  * updateKubernetesCluster
  *
- * Create a new Cluster.
+ * Update an existing cluster.
  */
 export const updateKubernetesCluster = (
   clusterID: number,
@@ -141,24 +140,3 @@ export const recycleClusterNodes = (clusterID: number) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/recycle`)
   );
-
-/**
- * getLKETypes
- *
- * @returns a page of LKE plan types
- */
-export const getLKETypes = (params?: any) =>
-  Request<Page<LKEPlan>>(
-    setMethod('GET'),
-    setParams(params),
-    setURL(`${API_ROOT}/lke/types`)
-  );
-
-/**
- * getLKEType
- *
- * @param id {string} the id of a LKE plan
- * @returns the information for the requested LKE plan
- */
-export const getLKEType = (id: string) =>
-  Request<LKEPlan>(setMethod('GET'), setURL(`${API_ROOT}/lke/types/${id}`));

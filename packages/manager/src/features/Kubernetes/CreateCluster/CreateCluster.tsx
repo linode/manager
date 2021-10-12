@@ -187,9 +187,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     ) as PoolNodeRequest[];
 
     const payload: CreateKubeClusterPayload = {
-      // Type is nullable so rather than passing 'lke-basic',
-      // we let the API use the basic ($0) default plan.
-      type: highAvailability ? 'lke-standard' : undefined,
+      control_plane: { high_availability: highAvailability },
       region: selectedRegion,
       node_pools,
       label,

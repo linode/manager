@@ -1,5 +1,3 @@
-import { PriceObject } from 'src/linodes';
-
 export interface KubernetesCluster {
   created: string;
   updated: string;
@@ -9,7 +7,7 @@ export interface KubernetesCluster {
   k8s_version: string;
   id: number;
   tags: string[];
-  type: KubernetesClusterTypes;
+  control_plane: ControlPlaneOptions;
 }
 
 export interface KubeNodePoolResponse {
@@ -55,19 +53,14 @@ export interface KubernetesEndpointResponse {
   endpoint: string;
 }
 
-export type KubernetesClusterTypes = 'lke-basic' | 'lke-standard';
+export interface ControlPlaneOptions {
+  high_availability: boolean;
+}
 
 export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   region?: string; // Will be caught by Yup if undefined
   node_pools: PoolNodeRequest[];
   k8s_version?: string; // Will be caught by Yup if undefined
-  type?: KubernetesClusterTypes;
-}
-
-export interface LKEPlan {
-  id: string;
-  label: string;
-  price: PriceObject;
-  availability: 'high' | 'standard';
+  control_plane?: ControlPlaneOptions;
 }
