@@ -3,12 +3,7 @@ import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,25 +16,22 @@ import Grid from 'src/components/Grid';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
 import { useProfile } from 'src/queries/profile';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginBottom: `16px !important`,
-      '& p': {
-        lineHeight: `unset`,
-        fontFamily: `LatoWeb`,
-        fontSize: `smaller`,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: `16px !important`,
+    '& p': {
+      lineHeight: `unset`,
+      fontFamily: `LatoWeb`,
+      fontSize: `smaller`,
     },
-  });
+  },
+}));
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 interface ContentProps {
   object_storage: AccountSettings['object_storage'];
@@ -93,6 +85,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
 
 export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   const { object_storage } = props;
+  const classes = useStyles();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [usernameInput, setUsername] = React.useState<string>('');
@@ -157,7 +150,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
       >
         <Notice
           warning
-          className={props.classes.root}
+          className={classes.root}
           text="Canceling Object Storage will permanently delete all buckets and their objects. Object Storage Access Keys will be revoked."
         />
         <Typography variant="body1">
@@ -174,6 +167,4 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default React.memo(styled(EnableObjectStorage));
+export default React.memo(EnableObjectStorage);
