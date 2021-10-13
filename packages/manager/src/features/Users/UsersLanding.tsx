@@ -233,7 +233,7 @@ const UsersLanding: React.FC<Props> = (props) => {
       <Grid
         container
         alignItems="flex-end"
-        justify="flex-end"
+        justifyContent="flex-end"
         className={classes.userLandingHeader}
       >
         <Grid item className={classes.addNewWrapper}>

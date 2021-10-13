@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Link, LinkProps, useLocation } from 'react-router-dom';
 import Account from 'src/assets/icons/account.svg';
@@ -246,7 +246,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       className={classes.menuGrid}
       container
       alignItems="flex-start"
-      justify="flex-start"
+      justifyContent="flex-start"
       direction="column"
       wrap="nowrap"
       spacing={0}

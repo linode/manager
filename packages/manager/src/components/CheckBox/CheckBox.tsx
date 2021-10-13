@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';

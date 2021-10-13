@@ -152,7 +152,7 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Grid container className={classes.root} justify="space-between">
+      <Grid container className={classes.root} justifyContent="space-between">
         <Grid item className="p0">
           <Breadcrumb
             pathname={props.location.pathname}
