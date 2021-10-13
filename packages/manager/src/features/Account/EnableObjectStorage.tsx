@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& p': {
       lineHeight: 'unset',
       fontFamily: theme.font.normal,
-      fontSize: '0.0875rem',
+      fontSize: '0.875rem',
     },
   },
 }));
