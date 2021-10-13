@@ -154,7 +154,8 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
           text="Canceling Object Storage will permanently delete all buckets and their objects. Object Storage Access Keys will be revoked."
         />
         <Typography variant="body1">
-          To confirm cancellation, type your username in the field below.
+          To confirm cancellation, type your username,{' '}
+          <strong>{profile?.username}</strong>, in the field below.
         </Typography>
         <TextField
           label="Username"
