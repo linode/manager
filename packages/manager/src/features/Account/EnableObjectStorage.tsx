@@ -18,11 +18,11 @@ import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: `16px !important`,
+    marginBottom: '16px !important',
     '& p': {
-      lineHeight: `unset`,
-      fontFamily: `LatoWeb`,
-      fontSize: `smaller`,
+      lineHeight: 'unset',
+      fontFamily: theme.font.normal,
+      fontSize: '0.0875rem',
     },
   },
 }));
