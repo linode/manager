@@ -25,6 +25,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '0.875rem',
     },
   },
+  input: {
+    maxWidth: 'unset',
+    width: '100%',
+  },
 }));
 
 interface Props {
@@ -159,6 +163,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         </Typography>
         <TextField
           label="Username"
+          className={classes.input}
           value={usernameInput}
           onChange={(e) => setUsername(e.target.value)}
           aria-label="username field"
