@@ -160,7 +160,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   const deleteBucketConfirmationMessage = bucketToRemove ? (
     <React.Fragment>
       <Typography>
-        Deleting a bucket is permanent and can&apos;t be undone.
+        Deleting a bucket is permanent and can&rsquo;t be undone.
       </Typography>
       {/* If the user is attempting to delete their last Bucket, remind them
       that they will still be billed unless they cancel Object Storage in
