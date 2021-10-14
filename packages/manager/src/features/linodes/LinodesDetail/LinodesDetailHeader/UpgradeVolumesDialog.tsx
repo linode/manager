@@ -78,7 +78,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
           : undefined
       }
     >
-      All Volumes attached to Linode {linode.label} will be upgraded to
+      All Volumes attached to this Linode ({linode.label}) will be upgraded to
       high-performance{' '}
       <Link to="https://www.linode.com/products/block-storage/">
         NVMe block storage
@@ -87,7 +87,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
       <Paper className={classes.notice}>
         This Linode will be rebooted as part of the upgrade process.
       </Paper>
-      There are currently <b>{migrationQueue?.linodes || 0}</b> Linodes in the
+      There are currently {migrationQueue?.linodes || 0} Linodes in the
       migration queue.
     </Dialog>
   );
