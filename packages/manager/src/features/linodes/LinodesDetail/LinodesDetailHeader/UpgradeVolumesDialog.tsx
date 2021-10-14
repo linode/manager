@@ -61,7 +61,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
         Cancel
       </Button>
       <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
-        Enter Migration Queue
+        Enter Upgrade Queue
       </Button>
     </ActionsPanel>
   );
@@ -78,7 +78,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
           : undefined
       }
     >
-      All Volumes attached to this Linode ({linode.label}) will be upgraded to
+      All Volumes attached to Linode {linode.label} will be upgraded to
       high-performance{' '}
       <Link to="https://www.linode.com/products/block-storage/">
         NVMe block storage
