@@ -45,9 +45,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
 
   const flags = useFlags();
 
-  // @todo I don't think the API returns the HA price, how should we go about this? Add it to the constants, feature flag?
-  const haPrice = 100;
-
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
@@ -67,10 +64,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     <CheckoutBar
       data-qa-checkout-bar
       heading="Cluster Summary"
-      calculatedPrice={getTotalClusterPrice(
-        pools,
-        highAvailability ? haPrice : undefined
-      )}
+      calculatedPrice={getTotalClusterPrice(pools, highAvailability)}
       isMakingRequest={submitting}
       disabled={disableCheckout}
       onDeploy={createCluster}
@@ -97,13 +91,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        {flags.lkeHighAvailability && haPrice ? (
+        {flags.lkeHighAvailability ? (
           <>
             <Divider spacingTop={16} />
             <HACheckbox
               checked={highAvailability}
               onChange={(e) => setHighAvailability(e.target.checked)}
-              haPrice={haPrice}
             />
             <Divider spacingTop={16} />
           </>

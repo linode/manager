@@ -5,6 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Link from 'src/components/Link';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   heading: {
@@ -23,7 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  haPrice: number;
   checked: boolean;
   onChange: (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -32,7 +32,7 @@ export interface Props {
 }
 
 const HACheckbox: React.FC<Props> = (props) => {
-  const { checked, onChange, haPrice } = props;
+  const { checked, onChange } = props;
   const classes = useStyles();
 
   return (
@@ -59,7 +59,11 @@ const HACheckbox: React.FC<Props> = (props) => {
         </Box>
       </Box>
       <Box className={classes.price}>
-        <DisplayPrice price={haPrice} fontSize="16px" interval="month" />
+        <DisplayPrice
+          price={HIGH_AVAILABILITY_PRICE}
+          fontSize="16px"
+          interval="month"
+        />
       </Box>
     </Box>
   );

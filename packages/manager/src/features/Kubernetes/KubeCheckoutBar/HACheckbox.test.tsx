@@ -4,7 +4,6 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import HACheckbox, { Props } from './HACheckbox';
 
 const props: Props = {
-  haPrice: 1,
   checked: false,
   onChange: jest.fn(),
 };

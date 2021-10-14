@@ -159,14 +159,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
 
-  // @todo we should REALLY make sure the control_plane object will always be in the API responce
   const isHighlyAvailable = cluster.control_plane.high_availability;
 
-  // @todo where to get this value from
-  const haPrice = 100;
-
   // Deletion handlers
-  //
   // NB: this is using dispatch directly because I don't want to
   // add re-render issues to our useKubernetesClusters hook, especially
   // since we're going to switch to queries for all of these soon.
@@ -335,7 +330,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   <Typography>
                     {`$${getTotalClusterPrice(
                       cluster.node_pools,
-                      isHighlyAvailable ? haPrice : undefined
+                      isHighlyAvailable
                     )}/month`}
                   </Typography>
                 </Grid>
