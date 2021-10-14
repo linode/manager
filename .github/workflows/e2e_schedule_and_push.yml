@@ -1,4 +1,4 @@
-name: E2E Tests
+name: Run Tests On Push
 env:
   USER_1: ${{ secrets.USER_1 }}
   USER_2: ${{ secrets.USER_2 }}
@@ -8,17 +8,15 @@ env:
 on:
   schedule:
     - cron: "0 13 * * 1-5"
-  pull_request_target:
-    types: [labeled, synchronize]
   push:
     branches:
       - develop
       - staging
+      - master
 
 jobs:
   run-cypress-e2e:
-    if: (github.event == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e')) || (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging')
-    concurrency: UI
+    concurrency: UI_TESTS
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
