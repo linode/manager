@@ -145,6 +145,7 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
     },
     validationSchema: getSchema(mode, selectedMode),
     validateOnChange: true,
+    enableReinitialize: true,
     onSubmit: (values) => submitForm(values),
   });
 
