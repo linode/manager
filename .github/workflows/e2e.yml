@@ -18,6 +18,7 @@ on:
 jobs:
   run-cypress-e2e:
     if: (github.event == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'e2e')) || (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging')
+    concurrency: UI
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
