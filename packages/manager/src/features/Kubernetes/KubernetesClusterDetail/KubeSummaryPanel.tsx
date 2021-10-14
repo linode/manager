@@ -30,6 +30,7 @@ import KubernetesDialog from './KubernetesDialog';
 import Chip from 'src/components/core/Chip';
 import useFlags from 'src/hooks/useFlags';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import UpgradeClusterDialog from './UpgradeClusterDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -168,7 +169,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
   const flags = useFlags();
-  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability && true;
+  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability;
 
   const isHighlyAvailable = cluster.control_plane.high_availability;
 
@@ -184,6 +185,10 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
 
   const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
     _deleteCluster
+  );
+
+  const { dialog: upgradeDialog, closeDialog: closeUpgradeDialog, openDialog: openUpgradeDialog, submitDialog: submitUpgradeDialog } = useDialog(
+    () => { }
   );
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
@@ -295,9 +300,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       </Grid>
     );
   };
-
-  cluster.type = 'lke-basic';
-  console.log(cluster.type);
 
   return (
     <React.Fragment>
@@ -426,7 +428,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   {isLkeHighAvailabilityEnabled && cluster?.type === 'lke-basic' ? (
                     <Button
                       buttonType="primary"
-                      onClick={()=>{}}
+                      onClick={() => openUpgradeDialog()}
                       compact
                     >
                       Upgrade to HA
@@ -463,6 +465,13 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         clusterPools={cluster.node_pools}
         onClose={closeDialog}
         onDelete={() => submitDialog(cluster.id)}
+      />
+      <UpgradeClusterDialog
+        open={upgradeDialog.isOpen}
+        loading={upgradeDialog.isLoading}
+        error={upgradeDialog.error}
+        onClose={closeUpgradeDialog}
+        onUpgrade={() => submitUpgradeDialog}
       />
     </React.Fragment>
   );
