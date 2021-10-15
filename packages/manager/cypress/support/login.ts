@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 
+// handles login authorization and visits specified url
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const _loginWithToken = (win) => {
   win.localStorage.setItem('authentication/oauth-token', oauthtoken);

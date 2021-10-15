@@ -1,15 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createLinode, deleteLinodeById } from '../support/api/linodes';
-import {
-  createClient,
-  deleteClientById,
-  makeClientLabel,
-} from '../support/api/longview';
-import { containsVisible, fbtVisible, getVisible } from '../support/helpers';
-import { waitForAppLoad } from '../support/ui/common';
-import strings from '../support/cypresshelpers';
-import { ClientRequest } from 'http';
-import { LongviewClient } from '../../../api-v4/lib';
+import { createLinode } from '../../support/api/linodes';
+import { createClient, makeClientLabel } from '../../support/api/longview';
+import { containsVisible, fbtVisible, getVisible } from '../../support/helpers';
+import { waitForAppLoad } from '../../support/ui/common';
+import strings from '../../support/cypresshelpers';
+import { LongviewClient } from '@linode/api-v4';
 
 describe('longview', () => {
   it('tests longview', () => {

@@ -1,9 +1,9 @@
-import { pages } from '../support/ui/constants';
+import { pages } from '../../support/ui/constants';
 
 describe('smoke - deep link', () => {
   // check if we run oinly one test
 
-  pages.forEach((page) => {
+  pages.forEach((page: any) => {
     if (!page.goWithUI) {
       return;
     }

@@ -27,7 +27,6 @@ function getConfiguration() {
   return { env: conf.parsed };
 }
 
-const registerVisualRegTasks = require('./visualRegPlugin');
 function checkNodeVersionRequiredByLinode() {
   const v = process.version.substr(1, process.version.length - 1).split('.');
   if (![12, 10].includes(v[0])) {
@@ -36,7 +35,6 @@ function checkNodeVersionRequiredByLinode() {
 }
 
 module.exports = (on, _config) => {
-  registerVisualRegTasks(on);
   checkNodeVersionRequiredByLinode();
 
   on('task', {
