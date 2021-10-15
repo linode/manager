@@ -24,6 +24,7 @@ chai.use(chaiString);
 
 import './commands';
 
+// runs before each test file
 before(() => {
   deleteAllTestData();
 });
