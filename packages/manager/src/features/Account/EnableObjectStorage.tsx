@@ -99,7 +99,6 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
     setError(e[0].reason);
     setLoading(false);
   };
-  ``;
 
   const handleSubmit = () => {
     setLoading(true);
