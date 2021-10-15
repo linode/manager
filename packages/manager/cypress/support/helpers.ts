@@ -1,3 +1,5 @@
+/* These are shortened methods that will handle finding and clicking or
+finding and asserting visible without having to chain. They don't chain off of cy */
 const visible = 'be.visible';
 
 export const containsVisible = (text) => {
