@@ -1,4 +1,4 @@
-name: Run Tests On Push
+name: Run Tests On Push/Schedule
 concurrency: UI_TESTS
 env:
   USER_1: ${{ secrets.USER_1 }}
