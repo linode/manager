@@ -10,7 +10,9 @@ import CloseSnackbar from './CloseSnackbar';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& span': {
+      borderRadius: 4,
       color: theme.palette.text.primary,
+      fontSize: '0.875rem',
     },
   },
   info: {
