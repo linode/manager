@@ -406,7 +406,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
                 eligible for a <b>free upgrade</b> to high performance NVMe
                 Block Storage.{' '}
                 <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-now-available/">
-                  Learn More
+                  Learn more
                 </Link>
                 .
               </Typography>
