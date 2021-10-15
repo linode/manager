@@ -182,12 +182,16 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(17, {
+    const onlineLinodes = linodeFactory.buildList(3, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
     });
+    const linodeWithEligibleVolumes = linodeFactory.build({
+      id: 20,
+      label: 'debianDistro',
+    });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
-    const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
+    const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -207,6 +211,7 @@ export const handlers = [
     });
     const linodes = [
       ...onlineLinodes,
+      linodeWithEligibleVolumes,
       ...offlineLinodes,
       ...busyLinodes,
       linodeFactory.build({
@@ -414,27 +419,15 @@ export const handlers = [
   }),
   rest.get('*/volumes', (req, res, ctx) => {
     const hddVolumeAttached = volumeFactory.build({
-      // eslint-disable-next-line sonarjs/no-duplicate-string
-      region: 'us-southeast',
-      linode_id: 10,
-    });
-    const hddVolumeAttached2 = volumeFactory.build({
-      region: 'us-southeast',
-      linode_id: 12,
-    });
-    const hddVolumeUnattached = volumeFactory.build({
-      region: 'us-southeast',
+      id: 20,
+      linode_id: 20,
+      label: 'eligibleNow',
     });
     const nvmeVolumes = volumeFactory.buildList(2, {
       hardware_type: 'nvme',
     });
 
-    const volumes = [
-      ...nvmeVolumes,
-      hddVolumeAttached,
-      hddVolumeAttached2,
-      hddVolumeUnattached,
-    ];
+    const volumes = [...nvmeVolumes, hddVolumeAttached];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -539,32 +532,32 @@ export const handlers = [
     );
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const events = eventFactory.buildList(1, {
-      action: 'lke_node_create',
-      percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' },
-      message:
-        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
-    });
+    // const events = eventFactory.buildList(1, {
+    //   action: 'lke_node_create',
+    //   percent_complete: 15,
+    //   entity: { type: 'linode', id: 999, label: 'linode-1' },
+    //   message:
+    //     'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+    // });
     const volumeMigrationScheduled = eventFactory.build({
-      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      entity: { type: 'volume', id: 6, label: 'bravoExample' },
       action: 'volume_migrate_scheduled' as EventAction,
       status: 'scheduled',
-      message: 'Volume 0 has been scheduled for an upgrade to NVMe.',
+      message: 'Volume bravoExample has been scheduled for an upgrade to NVMe.',
       percent_complete: 100,
     });
     const volumeMigrating = eventFactory.build({
-      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      entity: { type: 'volume', id: 5, label: 'zetaEjemplo' },
       action: 'volume_migrate',
       status: 'started',
-      message: 'Volume 0 is being upgraded to NVMe.',
+      message: 'Volume zetaEjemplo is being upgraded to NVMe.',
       percent_complete: 65,
     });
     const volumeMigrationFinished = eventFactory.build({
-      entity: { type: 'volume', id: 0, label: 'volume-0' },
+      entity: { type: 'volume', id: 6, label: 'alphaExample' },
       action: 'volume_migrate',
       status: 'finished',
-      message: 'Volume 0 has finished upgrading to NVMe.',
+      message: 'Volume alphaExample has finished upgrading to NVMe.',
       percent_complete: 100,
     });
     const oldEvents = eventFactory.buildList(20, {
@@ -575,7 +568,7 @@ export const handlers = [
     return res.once(
       ctx.json(
         makeResourcePage([
-          ...events,
+          // ...events,
           ...oldEvents,
           ...oldEvents,
           volumeMigrationScheduled,
@@ -743,9 +736,9 @@ export const handlers = [
       type: 'volume_migration_scheduled' as NotificationType,
       entity: {
         type: 'volume',
-        label: 'volume-0',
-        id: 0,
-        url: '/volumes/0',
+        label: 'eligibleNow',
+        id: 20,
+        url: '/volumes/20',
       },
       when: '2021-09-30T04:00:00',
       message:
@@ -753,14 +746,14 @@ export const handlers = [
       label: 'You have a scheduled Block Storage volume upgrade pending!',
       severity: 'major',
       until: '2021-10-16T04:00:00',
-      body: 'Your volumes in us-southeast will be upgraded to NVMe.',
+      body: 'Your volumes in us-east will be upgraded to NVMe.',
     });
 
     const blockStorageMigrationNotification2 = notificationFactory.build({
       type: 'volume_migration_scheduled' as NotificationType,
       entity: {
-        type: 'volume1',
-        label: 'volume-1',
+        type: 'volume',
+        label: 'testVol-1',
         id: 1,
         url: '/volumes/1',
       },
@@ -770,7 +763,7 @@ export const handlers = [
       label: 'You have a scheduled Block Storage volume upgrade pending!',
       severity: 'major',
       until: '2021-10-16T04:00:00',
-      body: 'Your volumes in us-southeast will be upgraded to NVMe.',
+      body: 'Your volumes in us-east will be upgraded to NVMe.',
     });
 
     return res(
