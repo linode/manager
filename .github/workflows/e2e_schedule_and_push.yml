@@ -1,4 +1,5 @@
 name: Run Tests On Push
+concurrency: UI_TESTS
 env:
   USER_1: ${{ secrets.USER_1 }}
   USER_2: ${{ secrets.USER_2 }}
@@ -16,7 +17,6 @@ on:
 
 jobs:
   run-cypress-e2e:
-    concurrency: UI_TESTS
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
