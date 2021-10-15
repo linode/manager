@@ -50,16 +50,8 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body1">
-            Object Storage is enabled on your account. To cancel Object Storage,
-            all buckets must be removed from the account. For more information
-            on how to delete large amounts of objects within a bucket, consult
-            our guide on{' '}
-            <ExternalLink
-              fixedIcon
-              text="lifecycle policies."
-              link="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
-            />{' '}
-            Upon cancellation, all Object Storage Access Keys will be revoked.
+            Object Storage is enabled on your account. Upon cancellation, all
+            Object Storage Access Keys will be revoked.
           </Typography>
         </Grid>
         <Grid item>
