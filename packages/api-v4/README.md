@@ -42,15 +42,15 @@ import { baseRequest } from '@linode/api-v4/lib/request';
  * intercepts every request with the following config
  * see https://github.com/axios/axios#interceptors for more documentation.
  */
-baseRequest.interceptors.request.use(config => {
+baseRequest.interceptors.request.use((config) => {
   const myToken = '1234';
 
   return {
     ...config,
     headers: {
       ...config.headers,
-      Authorization: `Bearer ${myToken}`
-    }
+      Authorization: `Bearer ${myToken}`,
+    },
   };
 });
 ```
@@ -62,10 +62,10 @@ import './request';
 import { getAccount } from '@linode/api-v4/lib/account';
 
 getAccount()
-  .then(response => {
+  .then((response) => {
     document.getElementById('root').innerHTML = `<div>${response.email}</div>`;
   })
-  .catch(e => {
+  .catch((e) => {
     console.error(e);
   });
 ```
@@ -77,7 +77,7 @@ const { setToken, getProfile } = require('@linode/api-v4');
 
 setToken('access-token');
 
-getProfile().then(response => {
+getProfile().then((response) => {
   return response.username;
 });
 ```
@@ -97,6 +97,23 @@ import { getLinodes } from '@linode/api-v4'; // This is fine
 import { getLinodes } from '@linode/api-v4/lib/linodes'; // This works too
 ```
 
+#### Important note about imports
+
+If you are using interceptors on the base request, you should keep your import paths consistent (import either from root or from `/lib`) or else the interceptors will not work.
+
+```js
+import { baseRequest } from '@linode/api-v4';
+import { getLinodes } from '@linode/api-v4/lib/linodes';
+
+baseRequest.interceptors.use(customInterceptor);
+getLinodes(); // customInterceptor not called!
+
+// To fix, change the first import to:
+// import { baseRequest } from '@linode/api-v4/lib/request';
+//
+// (or, import getLinodes from '@linode/api-v4')
+```
+
 ### Pagination and Filtering
 
 APIv4 supports [pagination](https://developers.linode.com/api/v4/#pagination) and [filtering and sorting](https://developers.linode.com/api/v4/#filtering-and-sorting). Paginated endpoints include the current page, total number
@@ -105,7 +122,7 @@ of pages, and total number of results in the response:
 ```js
 import { getLinodes } from '@linode/api-v4/lib/linodes';
 
-getLinodes().then(response => {
+getLinodes().then((response) => {
   console.log(response);
 });
 
