@@ -28,9 +28,10 @@ Text fields allow users to enter text into a UI.
 
 <Canvas>
   <Story name="Default">
-    <TextField label="Input Label" placeholder="Default state">
-      Default State
-    </TextField>
+    <TextField label="Label" placeholder="Placeholder" />
+  </Story>
+  <Story name="Number">
+    <TextField label="Number Input" placeholder="0" type="number" />
   </Story>
 </Canvas>
 
@@ -50,9 +51,7 @@ When the user has finished filling in a field and clicks the submit button, an i
       label="Label"
       placeholder="Error state"
       errorText="This input needs further attention!"
-    >
-      Error State
-    </TextField>
+    />
   </Story>
 </Canvas>
 
@@ -63,11 +62,9 @@ When the user has finished filling in a field and clicks the submit button, an i
 export const Template = (args) => (
   <TextField
     label="Label"
-    placeholder="I'm a text field, style me using the table below"
+    placeholder="I'm a text field, style me using the table below."
     {...args}
-  >
-    Experimental State
-  </TextField>
+  />
 );
 
 <Canvas>
@@ -85,6 +82,7 @@ export const Template = (args) => (
       optional: false,
       required: false,
       tooltipText: '',
+      value: 'This is a test input.',
     }}
     argTypes={{
       disabled: {
@@ -128,6 +126,10 @@ export const Template = (args) => (
           defaultValue: { summary: 'false' },
         },
       },
+      min: {
+        description:
+          'The number amounts required in TextField and the "type" prop must also be set to "number"',
+      },
       noMarginTop: {
         description: 'Removes the spacing above the text field.',
         table: {
@@ -150,6 +152,16 @@ export const Template = (args) => (
         description:
           'Displays informative text when users hover over the icon.',
       },
+      type: {
+        description:
+          'Type of the input element. It should be a valid HTML5 input type.',
+        table: {
+          type: { summary: 'string' },
+          defaultValue: { summary: 'string' },
+        },
+        type: 'inline-radio',
+        options: ['Number', 'String'],
+      },
     }}
   >
     {Template.bind({})}
@@ -169,5 +181,6 @@ export const Template = (args) => (
     'hiddenLabel',
     'inputId',
     'ref',
+    'value',
   ]}
 />
