@@ -12,6 +12,7 @@ import {
   useVolumesMigrateMutation,
   useVolumesMigrationQueueQuery,
 } from 'src/queries/volumesMigrations';
+import Typography from 'src/components/core/Typography';
 
 interface Props {
   open: boolean;
@@ -78,17 +79,19 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
           : undefined
       }
     >
-      All Volumes attached to Linode {linode.label} will be upgraded to
-      high-performance{' '}
-      <Link to="https://www.linode.com/products/block-storage/">
-        NVMe block storage
-      </Link>
-      .
-      <Paper className={classes.notice}>
-        This Linode will be rebooted as part of the upgrade process.
-      </Paper>
-      There are currently {migrationQueue?.linodes || 0} Linodes in the
-      migration queue.
+      <Typography>
+        All Volumes attached to Linode {linode.label} will be upgraded to
+        high-performance{' '}
+        <Link to="https://www.linode.com/products/block-storage/">
+          NVMe block storage
+        </Link>
+        .
+        <Paper className={classes.notice}>
+          This Linode will be rebooted as part of the upgrade process.
+        </Paper>
+        There are currently {migrationQueue?.linodes || 0} Linodes in the
+        migration queue.
+      </Typography>
     </Dialog>
   );
 };
