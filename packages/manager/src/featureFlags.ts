@@ -43,6 +43,7 @@ export interface Flags {
   lkeHighAvailability: boolean;
   autoscaler: boolean;
   deprecateLinodeDomainBanner: boolean;
+  kubernetesDashboardAvailability: boolean;
 }
 
 type PromotionalOfferFeature =

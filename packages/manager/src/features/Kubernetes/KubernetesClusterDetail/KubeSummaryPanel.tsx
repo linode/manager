@@ -31,6 +31,7 @@ import Chip from 'src/components/core/Chip';
 import useFlags from 'src/hooks/useFlags';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import UpgradeClusterDialog from './UpgradeClusterDialog';
+import { updateKubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -169,9 +170,10 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
   const flags = useFlags();
-  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability;
+  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability || true;
+  const isKubeDashboardEnabled = flags.kubernetesDashboardAvailability || true;
 
-  const isHighlyAvailable = cluster.control_plane.high_availability;
+  const isHighlyAvailable = cluster?.control_plane?.high_availability;
 
   // Deletion handlers
   // NB: this is using dispatch directly because I don't want to
@@ -187,9 +189,17 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     _deleteCluster
   );
 
-  const { dialog: upgradeDialog, closeDialog: closeUpgradeDialog, openDialog: openUpgradeDialog, submitDialog: submitUpgradeDialog } = useDialog(
-    () => { }
-  );
+  const _updateCluster = (clusterId: number) =>
+    updateKubernetesCluster(clusterId, {
+      control_plane: { high_availability: true },
+    });
+
+  const {
+    dialog: upgradeDialog,
+    closeDialog: closeUpgradeDialog,
+    openDialog: openUpgradeDialog,
+    submitDialog: submitUpgradeDialog,
+  } = useDialog(_updateCluster);
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
@@ -399,25 +409,41 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
           <Grid item container direction="row" lg={9} justify="space-between">
             {setKubeconfigDisplay()}
 
-            <Grid item container direction="row" xs={12} lg={6} className="foobar">
-              <Grid item container direction="column" lg={12} alignContent="flex-end">
-                <Grid item container dirction="column" justify="space-between">
-                  {isLkeHighAvailabilityEnabled && cluster?.type === 'lke-standard' ? (
-                    <Grid item={2}>
-                      <Chip label="HA CLUSTER"/>
+            <Grid
+              item
+              container
+              direction="row"
+              xs={12}
+              lg={6}
+              className="foobar"
+            >
+              <Grid
+                item
+                container
+                direction="column"
+                lg={12}
+                alignContent="flex-end"
+              >
+                <Grid item container direction="row" justify="space-between">
+                  {isLkeHighAvailabilityEnabled &&
+                  cluster?.control_plane?.high_availability ? (
+                    <Grid item lg={2}>
+                      <Chip label="HA CLUSTER" />
                     </Grid>
-                  ) : null
-                  }
-
-                  <Button
-                    className={classes.dashboard}
-                    buttonType="secondary"
-                    onClick={() => {}}
-                    compact
-                  >
-                    Kubernetes Dashboard
-                    <OpenInNewIcon />
-                  </Button>
+                  ) : null}
+                  {isKubeDashboardEnabled ? (
+                    <Button
+                      className={classes.dashboard}
+                      buttonType="secondary"
+                      onClick={() => {
+                        window.open('https://duckduckgo.com', '_blank');
+                      }}
+                      compact
+                    >
+                      Kubernetes Dashboard
+                      <OpenInNewIcon />
+                    </Button>
+                  ) : null}
                   <Button
                     buttonType="secondary"
                     onClick={() => openDialog(cluster.id)}
@@ -425,16 +451,16 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   >
                     Delete
                   </Button>
-                  {isLkeHighAvailabilityEnabled && cluster?.type === 'lke-basic' ? (
+                  {isLkeHighAvailabilityEnabled &&
+                  !cluster?.control_plane?.high_availability ? (
                     <Button
                       buttonType="primary"
-                      onClick={() => openUpgradeDialog()}
+                      onClick={() => openUpgradeDialog(cluster.id)}
                       compact
                     >
                       Upgrade to HA
                     </Button>
-                  ) : null
-                  }
+                  ) : null}
                 </Grid>
               </Grid>
               <Grid item className={classes.tags} xs={12} lg={12}>
@@ -468,10 +494,8 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       />
       <UpgradeClusterDialog
         open={upgradeDialog.isOpen}
-        loading={upgradeDialog.isLoading}
-        error={upgradeDialog.error}
         onClose={closeUpgradeDialog}
-        onUpgrade={() => submitUpgradeDialog}
+        onUpgrade={() => submitUpgradeDialog(cluster.id)}
       />
     </React.Fragment>
   );
