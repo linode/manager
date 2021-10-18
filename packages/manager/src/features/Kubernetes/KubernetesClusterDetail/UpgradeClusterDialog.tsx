@@ -4,7 +4,6 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -22,15 +21,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   open: boolean;
-  loading: boolean;
-  error?: string;
   onClose: () => void;
-  onUpgrade: () => void;
-  checked: boolean;
-  onCheckChange: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => void;
+  onUpgrade: any;
 }
 
 type CombinedProps = Props;
@@ -64,36 +56,42 @@ const renderActions = (
 };
 
 const UpgradeClusterDialog: React.FC<CombinedProps> = (props) => {
-  const {
-    open,
-    loading,
-    error,
-    onClose,
-    onUpgrade,
-  } = props;
+  const { open, onClose, onUpgrade } = props;
   const classes = useStyles();
   const [checked, setChecked] = React.useState(false);
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
+
+  const foo = () => {
+    onUpgrade();
+  };
 
   return (
     <ConfirmationDialog
       open={open}
       title={'Upgrade to High Availability'}
       onClose={onClose}
-      actions={() => renderActions(!checked, onClose, onUpgrade) }
+      actions={() => renderActions(!checked, onClose, foo)}
     >
-      <Notice warning text="Upgrading to high availability cannot be reversed." />
+      <Notice
+        warning
+        text="Upgrading to high availability cannot be reversed."
+      />
       <Typography variant="body1">
         A high availability (HA) control plane sets up Kubernetes with important
-        components replicated on multiple masters so there is no single point of failure.
+        components replicated on multiple masters so there is no single point of
+        failure.
       </Typography>
-      <Typography variant="body1">
-        HA costs $69/month per cluster
-      </Typography>
+      <Typography variant="body1">HA costs $69/month per cluster</Typography>
       <Box>
         <Box display="flex" flexDirection="row" alignItems="flex-start">
-          <CheckBox className={classes.checkbox} checked={checked} onChange={toggleChecked} />
-          <Typography className={classes.heading} >Enable HA Control Plane</Typography>
+          <CheckBox
+            className={classes.checkbox}
+            checked={checked}
+            onChange={toggleChecked}
+          />
+          <Typography className={classes.heading}>
+            Enable HA Control Plane
+          </Typography>
         </Box>
       </Box>
     </ConfirmationDialog>
