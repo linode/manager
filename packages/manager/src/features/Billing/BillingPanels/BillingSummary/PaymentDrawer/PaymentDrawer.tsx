@@ -482,7 +482,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                       onChange={handleCVVChange}
                       noMarginTop
                       optional
-                      small
                       type="text"
                       value={cvv}
                     />
