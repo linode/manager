@@ -355,7 +355,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-interval
                   disabled={disabled}
-                  small
                 />
                 <FormHelperText>
                   Seconds between health check probes
@@ -386,7 +385,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-timeout
                   disabled={disabled}
-                  small
                 />
                 <FormHelperText>
                   Seconds to wait before considering the probe a failure. 1-30.
@@ -416,7 +414,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   }}
                   data-qa-active-check-attempts
                   disabled={disabled}
-                  small
                 />
                 <FormHelperText>
                   Number of failed probes before taking a node out of rotation.
@@ -444,7 +441,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorText={errorMap.check_path}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     disabled={disabled}
-                    small
                   />
                 </Grid>
               )}
@@ -469,7 +465,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorText={errorMap.check_body}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     disabled={disabled}
-                    small
                   />
                 </Grid>
               )}
@@ -654,7 +649,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               errorText={errorMap.port || errorMap.configs}
               errorGroup={forEdit ? `${configIdx}` : undefined}
               data-qa-port
-              small
               disabled={disabled}
               noMarginTop
               InputProps={{ id: `port-${configIdx}` }}
@@ -707,7 +701,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorText={errorMap.ssl_cert}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     data-qa-cert-field
-                    small
                     disabled={disabled}
                   />
                 </Grid>
@@ -722,7 +715,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorText={errorMap.ssl_key}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     data-qa-private-key-field
-                    small
                     disabled={disabled}
                   />
                 </Grid>
