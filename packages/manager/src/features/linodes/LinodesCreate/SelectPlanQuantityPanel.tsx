@@ -157,7 +157,6 @@ export class SelectPlanPanel extends React.Component<
           <EnhancedNumberInput
             value={type.count}
             setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
-            small
           />
           {isOnCreate && (
             <Button
@@ -211,7 +210,6 @@ export class SelectPlanPanel extends React.Component<
                     // unless we've just landed on the form or all the inputs are empty.
                     !isOnCreate && Boolean(selectedID) && type.count < 1
                   }
-                  small
                 />
                 {isOnCreate && (
                   <Button

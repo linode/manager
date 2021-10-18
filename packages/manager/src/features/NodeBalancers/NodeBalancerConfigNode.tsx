@@ -51,6 +51,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
   },
+  mode: {
+    '& .MuiSelect-root': {
+      height: 33,
+      minHeight: 33,
+      padding: theme.spacing(),
+      paddingTop: 9,
+    },
+  },
 }));
 
 export interface Props {
@@ -124,7 +132,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               errorText={nodesErrorMap.label}
               errorGroup={forEdit ? `${configIdx}` : undefined}
               data-qa-backend-ip-label
-              small
               disabled={disabled}
             />
           </Grid>
@@ -184,7 +191,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               errorText={nodesErrorMap.port}
               errorGroup={forEdit ? `${configIdx}` : undefined}
               data-qa-backend-ip-port
-              small
               noMarginTop
               disabled={disabled}
             />
@@ -199,7 +205,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
               errorText={nodesErrorMap.weight}
               errorGroup={forEdit ? `${configIdx}` : undefined}
               data-qa-backend-ip-weight
-              small
               noMarginTop
               disabled={disabled}
             />
@@ -207,6 +212,7 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
           {forEdit && (
             <Grid item xs={6} sm={3} lg={2}>
               <TextField
+                className={classes.mode}
                 label="Mode"
                 inputId={`mode-${idx}`}
                 value={node.mode}
@@ -215,7 +221,6 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
                 onChange={onNodeModeChange}
                 errorText={nodesErrorMap.mode}
                 data-qa-backend-ip-mode
-                small
                 noMarginTop
                 disabled={disabled}
               >

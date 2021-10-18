@@ -238,7 +238,6 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
             hideLabel
             onSearch={handleSearch}
             debounceTime={250}
-            small
           />
         </Grid>
         <Grid item className={`py0 ${classes.sortSelect}`}>
