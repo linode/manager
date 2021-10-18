@@ -78,9 +78,12 @@ export const Template = (args) => (
       helperTextPosition: 'bottom',
       hideLabel: false,
       loading: false,
+      max: null,
+      min: null,
       noMarginTop: false,
       optional: false,
       required: false,
+      type: 'string',
       tooltipText: '',
       value: 'This is a test input.',
     }}
@@ -160,7 +163,14 @@ export const Template = (args) => (
           defaultValue: { summary: 'string' },
         },
         type: 'inline-radio',
-        options: ['Number', 'String'],
+        options: ['number', 'string'],
+      },
+      value: {
+        description:
+          'The value of the input element, required for a controlled component.',
+        table: {
+          type: { summary: 'any' },
+        },
       },
     }}
   >
@@ -181,6 +191,5 @@ export const Template = (args) => (
     'hiddenLabel',
     'inputId',
     'ref',
-    'value',
   ]}
 />
