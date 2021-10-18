@@ -42,6 +42,7 @@ export interface Flags {
   productInformationBanners: ProductInformationBannerFlag[];
   lkeHighAvailability: boolean;
   autoscaler: boolean;
+  deprecateLinodeDomainBanner: boolean;
 }
 
 type PromotionalOfferFeature =

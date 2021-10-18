@@ -238,7 +238,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         item
         container
         direction="column"
-        justify="space-between"
+        justifyContent="space-between"
         xs={12}
         lg={4}
       >

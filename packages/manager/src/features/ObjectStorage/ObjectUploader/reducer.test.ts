@@ -9,7 +9,7 @@ describe('reducer', () => {
     numQueued: 0,
     numInProgress: 0,
     numFinished: 0,
-    numCancelled: 0,
+    numCanceled: 0,
     numErrors: 0,
   };
 

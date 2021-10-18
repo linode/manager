@@ -2,7 +2,7 @@ import { AutoscaleNodePool } from '@linode/api-v4/lib/kubernetes';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -51,14 +51,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.red,
   },
   resize: {
-    marginTop: -4,
-    marginLeft: -2,
-    marginRight: 2,
+    fontSize: 'inherit',
+    marginTop: -3.2,
+    marginLeft: -4,
+    marginRight: 0,
     minHeight: 0,
     padding: 0,
   },
   notice: {
     fontFamily: theme.font.bold,
+    fontSize: 15,
   },
   input: {
     minWidth: 'auto',

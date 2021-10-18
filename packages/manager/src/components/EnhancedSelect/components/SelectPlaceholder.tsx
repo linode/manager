@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends PlaceholderProps<any> {}
+interface Props extends PlaceholderProps<any, any> {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

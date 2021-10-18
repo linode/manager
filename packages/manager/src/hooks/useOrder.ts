@@ -27,7 +27,7 @@ export const useOrder = (initial: OrderSet, preferenceKey?: string) => {
   const initialOrder = getInitialValuesFromUserPreferences(
     preferenceKey || '',
     preferences || {},
-    params,
+    params as Record<string, string>,
     initial.orderBy,
     initial.order
   ) as OrderSet;

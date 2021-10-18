@@ -263,7 +263,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid container item justify="flex-end" className="m0">
+            <Grid container item justifyContent="flex-end" className="m0">
               <ActionsPanel>
                 <Button
                   buttonType="secondary"

@@ -337,10 +337,6 @@ const darkThemeOptions = {
           color: '#fff',
         },
       },
-      '&$disabled': {
-        color: '#5c6470',
-        backgroundColor: '#454b54',
-      },
     },
     MuiButtonBase: {
       root: {

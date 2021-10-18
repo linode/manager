@@ -750,7 +750,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     return (
       <Paper className={classes.globalSection} data-qa-entity-section>
-        <Grid container justify="space-between" alignItems="center">
+        <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
             <Typography
               variant="h2"

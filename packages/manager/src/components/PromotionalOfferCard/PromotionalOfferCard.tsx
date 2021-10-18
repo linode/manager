@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import HeavenlyBucketIcon from 'src/assets/icons/promotionalOffers/heavenly-bucket.svg';
@@ -110,7 +110,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper
-      className={classnames({
+      className={classNames({
         [classes.root]: true,
         [classes.fullWidth]: props.fullWidth,
         // Inject the className if given as as prop.
@@ -121,14 +121,14 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
         <Logo className={classes.logo} width={iconSize} height={iconSize} />
       )}
       <div
-        className={classnames({
+        className={classNames({
           [classes.copy]: true,
           [classes.alignLeft]: fullWidth,
         })}
       >
         <Typography
           variant="subtitle2"
-          className={classnames({
+          className={classNames({
             [classes.centerText]: !fullWidth,
             [classes.capMaxWidth]: !fullWidth,
           })}
@@ -143,7 +143,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
             {offer.buttons.slice(0, 2).map((button) => (
               <Button
                 key={button.text}
-                className={classnames({
+                className={classNames({
                   [classes.button]: true,
                   [classes.buttonSecondary]: button.type === 'secondary',
                 })}
@@ -158,7 +158,7 @@ export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
         {offer.footnote && (
           <Typography
             variant="body1"
-            className={classnames({
+            className={classNames({
               [classes.footnote]: true,
               [classes.centerText]: !fullWidth,
               [classes.capMaxWidth]: !fullWidth,

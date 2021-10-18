@@ -258,7 +258,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           currentVersion={cluster.k8s_version}
         />
       </Grid>
-      <Grid container className={classes.root} justify="space-between">
+      <Grid container className={classes.root} justifyContent="space-between">
         <Grid item className="p0">
           <Breadcrumb
             onEditHandlers={{
