@@ -159,8 +159,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
 
+  const isHighlyAvailable = cluster.control_plane.high_availability;
+
   // Deletion handlers
-  //
   // NB: this is using dispatch directly because I don't want to
   // add re-render issues to our useKubernetesClusters hook, especially
   // since we're going to switch to queries for all of these soon.
@@ -327,7 +328,10 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               >
                 <Grid item className={classes.iconTextOuter}>
                   <Typography>
-                    {`$${getTotalClusterPrice(cluster.node_pools)}/month`}
+                    {`$${getTotalClusterPrice(
+                      cluster.node_pools,
+                      isHighlyAvailable
+                    )}/month`}
                   </Typography>
                 </Grid>
               </Grid>

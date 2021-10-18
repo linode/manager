@@ -43,7 +43,7 @@ export const getKubernetesCluster = (clusterID: number) =>
 /**
  * createKubernetesClusters
  *
- * Create a new Cluster.
+ * Create a new cluster.
  */
 export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
   Request<KubernetesCluster>(
@@ -55,7 +55,7 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
 /**
  * updateKubernetesCluster
  *
- * Create a new Cluster.
+ * Update an existing cluster.
  */
 export const updateKubernetesCluster = (
   clusterID: number,

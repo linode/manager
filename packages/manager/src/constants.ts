@@ -314,3 +314,6 @@ export const MOCK_SERVICE_WORKER =
 
 // Maximum payment methods
 export const MAXIMUM_PAYMENT_METHODS = 6;
+
+// Price of LKE's High Availability offering in USD
+export const HIGH_AVAILABILITY_PRICE = 100;

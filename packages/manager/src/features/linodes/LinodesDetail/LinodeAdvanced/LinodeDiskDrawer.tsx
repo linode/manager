@@ -145,6 +145,7 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
     },
     validationSchema: getSchema(mode, selectedMode),
     validateOnChange: true,
+    enableReinitialize: true,
     onSubmit: (values) => submitForm(values),
   });
 
@@ -283,27 +284,25 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
             </FormHelperText>
           </form>
         </Grid>
-        <Grid item className={classes.section}>
-          <ActionsPanel>
-            <Button
-              onClick={() => formik.handleSubmit()}
-              buttonType="primary"
-              loading={formik.isSubmitting}
-              data-testid="submit-disk-form"
-            >
-              {submitLabelMap[mode]}
-            </Button>
-            <Button
-              onClick={props.onClose}
-              buttonType="secondary"
-              className="cancel"
-              data-qa-disk-cancel
-            >
-              Cancel
-            </Button>
-          </ActionsPanel>
-        </Grid>
       </Grid>
+      <ActionsPanel>
+        <Button
+          onClick={props.onClose}
+          buttonType="secondary"
+          className="cancel"
+          data-qa-disk-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={() => formik.handleSubmit()}
+          buttonType="primary"
+          loading={formik.isSubmitting}
+          data-testid="submit-disk-form"
+        >
+          {submitLabelMap[mode]}
+        </Button>
+      </ActionsPanel>
     </Drawer>
   );
 };

@@ -1,4 +1,5 @@
 import {
+  CreateKubeClusterPayload,
   createKubernetesCluster,
   PoolNodeRequest,
 } from '@linode/api-v4/lib/kubernetes';
@@ -56,10 +57,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   sidebar: {
-    background: theme.color.white,
-    padding: `0px 0px ${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
-    [theme.breakpoints.up('lg')]: {
-      background: 'none',
+    marginTop: '0px !important',
+    paddingTop: '0px !important',
+    background: 'none',
+    [theme.breakpoints.down('md')]: {
+      padding: `${theme.spacing(3)}px !important`,
+      marginTop: `${theme.spacing(3)}px !important`,
+      background: theme.color.white,
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: `${theme.spacing()}px !important`,
     },
   },
   inner: {
@@ -138,6 +145,9 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const [selectedRegion, setSelectedRegion] = React.useState<string>('');
   const [nodePools, setNodePools] = React.useState<PoolNodeWithPrice[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
+  const [highAvailability, setHighAvailability] = React.useState<boolean>(
+    false
+  );
   const [version, setVersion] = React.useState<Item<string> | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -175,7 +185,9 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     const node_pools = nodePools.map(
       pick(['type', 'count'])
     ) as PoolNodeRequest[];
-    const payload = {
+
+    const payload: CreateKubeClusterPayload = {
+      control_plane: { high_availability: highAvailability },
       region: selectedRegion,
       node_pools,
       label,
@@ -243,7 +255,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
      * Otherwise, show an error state.
      */
 
-    return <ErrorState errorText={'An unexpected error occurred.'} />;
+    return <ErrorState errorText="An unexpected error occurred." />;
   }
 
   return (
@@ -292,16 +304,10 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
                 }
                 regions={filteredRegions}
                 selectedID={selectedID}
-                textFieldProps={
-                  // Only show the "Find out which region is best for you" message if there are
-                  // actually multiple regions to choose from.
-                  filteredRegions.length > 1
-                    ? {
-                        helperText: regionHelperText,
-                        helperTextPosition: 'top',
-                      }
-                    : undefined
-                }
+                textFieldProps={{
+                  helperText: regionHelperText,
+                  helperTextPosition: 'top',
+                }}
               />
             </Grid>
             <Grid item>
@@ -345,7 +351,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
       </Grid>
       <Grid
         item
-        className={`${classes.sidebar} mlSidebar`}
+        className={`mlSidebar ${classes.sidebar}`}
         data-testid="kube-checkout-bar"
       >
         <KubeCheckoutBar
@@ -355,8 +361,14 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
           updatePool={updatePool}
           removePool={removePool}
           typesData={typesData || []}
+          highAvailability={highAvailability}
+          setHighAvailability={setHighAvailability}
           region={selectedRegion}
+          hasAgreed={hasAgreed}
+          toggleHasAgreed={toggleHasAgreed}
           updateFor={[
+            hasAgreed,
+            highAvailability,
             selectedRegion,
             nodePools,
             submitting,
@@ -366,8 +378,6 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
             createCluster,
             classes,
           ]}
-          hasAgreed={hasAgreed}
-          toggleHasAgreed={toggleHasAgreed}
         />
       </Grid>
     </Grid>

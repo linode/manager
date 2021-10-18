@@ -54,7 +54,15 @@ describe('helper functions', () => {
 
   describe('getTotalClusterPrice', () => {
     it('should calculate the total cluster price', () => {
-      expect(getTotalClusterPrice([mockNodePool, mockNodePool])).toBe(20);
+      expect(getTotalClusterPrice([mockNodePool, mockNodePool], false)).toBe(
+        20
+      );
+    });
+
+    it('should calculate the total cluster price with HA enabled', () => {
+      expect(getTotalClusterPrice([mockNodePool, mockNodePool], true)).toBe(
+        120
+      );
     });
   });
 

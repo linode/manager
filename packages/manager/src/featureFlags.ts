@@ -38,8 +38,9 @@ export interface Flags {
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
   imagesPriceInfo: boolean;
-  productInformationBanners: ProductInformationBannerFlag[];
   apiMaintenance: APIMaintenance;
+  productInformationBanners: ProductInformationBannerFlag[];
+  lkeHighAvailability: boolean;
   autoscaler: boolean;
   deprecateLinodeDomainBanner: boolean;
 }
