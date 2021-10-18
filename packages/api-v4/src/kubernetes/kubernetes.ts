@@ -13,6 +13,7 @@ import {
   KubeConfigResponse,
   KubernetesCluster,
   KubernetesEndpointResponse,
+  KubernetesDashboardResponse,
   KubernetesVersion,
 } from './types';
 
@@ -127,6 +128,17 @@ export const getKubernetesClusterEndpoints = (clusterID: number) =>
   Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
+  );
+
+/** getKubernetesClusterDashboard
+ * Returns the URL for a single Kubernetes Dashboard for a single Kubernetes Cluster by ID.
+ *
+ */
+
+export const getKubernetesClusterDashboard = (clusterID: number) =>
+  Request<KubernetesDashboardResponse>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/dashboard`)
   );
 
 /** recycleClusterNodes

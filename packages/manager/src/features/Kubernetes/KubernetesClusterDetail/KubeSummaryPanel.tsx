@@ -131,6 +131,9 @@ interface Props {
   endpoint: string | null;
   endpointError?: string;
   endpointLoading: boolean;
+  dashboard: string;
+  dashboardError?: string;
+  dashboardLoading: boolean;
   kubeconfigAvailable: boolean;
   kubeconfigError?: string;
   handleUpdateTags: (updatedTags: string[]) => Promise<KubernetesCluster>;
@@ -158,6 +161,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     endpoint,
     endpointError,
     endpointLoading,
+    dashboard,
+    dashboardError,
+    dashboardLoading,
     kubeconfigAvailable,
     kubeconfigError,
     handleUpdateTags,
@@ -435,8 +441,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                     <Button
                       className={classes.dashboard}
                       buttonType="secondary"
+                      disabled={
+                        dashboardLoading || dashboardError !== undefined
+                      }
                       onClick={() => {
-                        window.open('https://duckduckgo.com', '_blank');
+                        window.open(dashboard, '_blank');
                       }}
                       compact
                     >
