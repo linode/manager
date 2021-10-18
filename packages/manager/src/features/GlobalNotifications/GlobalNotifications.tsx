@@ -7,6 +7,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import ComplianceBanner from './ComplianceBanner';
 import ComplianceUpdateModal from './ComplianceUpdateModal';
+import DeprecateLinodeDomainBanner from './DeprecateLinodeDomainBanner';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import RegionStatusBanner from './RegionStatusBanner';
 
@@ -37,6 +38,9 @@ const GlobalNotifications: React.FC<{}> = () => {
       <ComplianceUpdateModal />
       {!isEmpty(suppliedMaintenances) && !hasDismissedMaintenances ? (
         <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
+      ) : null}
+      {flags.deprecateLinodeDomainBanner ? (
+        <DeprecateLinodeDomainBanner />
       ) : null}
     </>
   );

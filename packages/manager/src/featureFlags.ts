@@ -40,6 +40,8 @@ export interface Flags {
   imagesPriceInfo: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   apiMaintenance: APIMaintenance;
+  autoscaler: boolean;
+  deprecateLinodeDomainBanner: boolean;
 }
 
 type PromotionalOfferFeature =

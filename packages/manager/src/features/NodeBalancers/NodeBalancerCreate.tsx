@@ -48,7 +48,7 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { signAgreement } from '@linode/api-v4/lib/account';
+import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import withAgreements, {
   AgreementsProps,
@@ -332,7 +332,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           `${nodeBalancer.label}: ${nodeBalancer.region}`
         );
         if (signedAgreement) {
-          queryClient.executeMutation({
+          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
             mutationKey: queryKey,
@@ -585,7 +585,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid
               container
-              justify="space-between"
+              justifyContent="space-between"
               alignItems="flex-end"
               style={{ marginTop: 8 }}
               data-qa-nodebalancer-settings-section

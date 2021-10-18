@@ -1,5 +1,5 @@
 import Close from '@material-ui/icons/Close';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -51,7 +51,7 @@ export const DismissibleBanner: React.FC<Props> = (props) => {
 
   return (
     <Paper
-      className={classnames(
+      className={classNames(
         {
           [classes.root]: true,
           [classes.productInformationIndicator]: productInformationIndicator,

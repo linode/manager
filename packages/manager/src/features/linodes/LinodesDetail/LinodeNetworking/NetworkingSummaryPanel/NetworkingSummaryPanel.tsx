@@ -52,7 +52,7 @@ const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
 
   return (
     <Paper className={classes.root}>
-      <Grid container justify="space-between">
+      <Grid container justifyContent="space-between">
         <Grid item xs={12} sm={6} md={3}>
           <NetworkTransfer linodeID={linodeID} linodeLabel={linodeLabel} />
         </Grid>

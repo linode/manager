@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { components, OptionProps } from 'react-select';
 
-interface Props extends OptionProps<any> {
+interface Props extends OptionProps<any, any> {
   value: number | string;
   attrs?: Record<string, string | boolean>;
 }

@@ -1,5 +1,5 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { clamp } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
