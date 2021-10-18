@@ -53,6 +53,10 @@ export interface KubernetesEndpointResponse {
   endpoint: string;
 }
 
+export interface KubernetesDashboardResponse {
+  endpoint: string;
+}
+
 export interface ControlPlaneOptions {
   high_availability: boolean;
 }
