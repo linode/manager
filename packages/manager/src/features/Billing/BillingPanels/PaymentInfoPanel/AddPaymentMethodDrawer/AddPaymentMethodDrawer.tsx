@@ -12,6 +12,7 @@ import AddCreditCardForm from './AddCreditCardForm';
 import useFlags from 'src/hooks/useFlags';
 import Notice from 'src/components/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
+import { PayPalChip } from '../PayPalChip';
 
 interface Props {
   open: boolean;
@@ -80,6 +81,9 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     'google_pay'
   );
 
+  // const isPaypalEnabled = flags.additionalPaymentMethods?.includes('paypal');
+  const isPaypalEnabled = true;
+
   const disabled = isProcessing || hasMaxPaymentMethods;
 
   return (
@@ -114,6 +118,33 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
                 makeToast={makeToast}
                 onClose={onClose}
                 setProcessing={setIsProcessing}
+              />
+            </Grid>
+          </Grid>
+        </>
+      ) : null}
+      {isPaypalEnabled ? (
+        <>
+          <Divider />
+          <Grid className={classes.root} container>
+            <Grid item xs={8} md={9}>
+              <Typography variant="h3">PayPal</Typography>
+              <Typography>
+                You’ll be taken to PayPal to complete sign up.
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              item
+              xs={4}
+              md={3}
+              justify="flex-end"
+              alignContent="center"
+            >
+              <PayPalChip
+                onClose={onClose}
+                setProcessing={setIsProcessing}
+                disabled={disabled}
               />
             </Grid>
           </Grid>

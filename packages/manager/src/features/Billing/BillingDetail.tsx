@@ -15,6 +15,7 @@ import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -62,7 +63,12 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <React.Fragment>
+    <PayPalScriptProvider
+      options={{
+        'client-id':
+          'AXrQzrp1Fwa5VQwDv9uQZ6mySQZpvrozT92ezyYh-QbKTIpiqACbfxjI-RF1ueXkUQGKapgIQFZ5Iehk',
+      }}
+    >
       <DocumentTitleSegment segment={`Account & Billing`} />
       <div data-testid="billing-detail">
         <Grid container>
@@ -98,7 +104,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
       </div>
-    </React.Fragment>
+    </PayPalScriptProvider>
   );
 };
 
