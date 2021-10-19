@@ -17,7 +17,6 @@ import { CSVLink } from 'react-csv';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
-import Typography from 'src/components/core/Typography';
 import { useOrder } from 'src/hooks/useOrder';
 import MaintenanceTableRow from './MaintenanceTableRow';
 import * as sync from 'css-animation-sync';
@@ -26,9 +25,10 @@ import {
   useAllAccountMaintenanceQuery,
 } from 'src/queries/accountMaintenance';
 
+export type MaintenanceEntities = 'Linode' | 'Volume';
+
 interface Props {
-  // we will add more types when the endpoint supports them
-  type: 'Linode';
+  type: MaintenanceEntities;
 }
 
 const preferenceKey = 'account-maintenance';
@@ -77,24 +77,41 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   const { type } = props;
   const csvRef = React.useRef<any>();
   const classes = useStyles();
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, `${preferenceKey}-${type.toLowerCase()}`);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'status',
       order: 'desc',
     },
-    preferenceKey + '-order'
+    `${preferenceKey}-order-${type.toLowerCase()}`,
+    type.toLowerCase()
   );
+
+  /**
+   * getFilter
+   *
+   * The logic in here is a bit weird, but because the API does not let us filter
+   * on entity.type, we need to filter on the mainteance type. When we add more maintenance
+   * types, we may want to make this a switch and make the logic more robust.
+   * @param type type of entity
+   * @returns a filter for APIv4 to get events for a specific entity type
+   */
+  const getFilter = (type: MaintenanceEntities) => {
+    const volumeType = 'volume_migration';
+    const linodeTypes = ['reboot', 'cold_migration', 'live_migration'];
+
+    if (type === 'Linode') {
+      return { '+or': linodeTypes };
+    }
+
+    return volumeType;
+  };
 
   const filter = {
     ['+order_by']: orderBy,
     ['+order']: order,
-    // We will want to make queries for each type of entity
-    // when this endpoint supports more than Linodes
-    // entity: {
-    //   type: 'Linode',
-    // },
+    type: getFilter(type),
   };
 
   const { data: csv, refetch: getCSVData } = useAllAccountMaintenanceQuery(
@@ -147,9 +164,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Typography variant="h2" className={classes.heading}>
-        Linodes
-      </Typography>
       <Table>
         <TableHead>
           <TableRow>

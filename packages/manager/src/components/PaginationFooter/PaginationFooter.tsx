@@ -89,6 +89,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
     }
 
     const finalOptions = [...baseOptions];
+
     // Add "Show All" to the list of options if the consumer has so specified.
     if (showAll) {
       finalOptions.push({ label: 'Show All', value: Infinity });
