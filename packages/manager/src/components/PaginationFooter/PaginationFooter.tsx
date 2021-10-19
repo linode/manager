@@ -40,9 +40,6 @@ const styles = (theme: Theme) =>
         paddingLeft: 12,
       },
     },
-    children: {
-      marginLeft: 'auto',
-    },
   });
 
 export interface PaginationProps {
@@ -129,7 +126,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             />
           )}
         </Grid>
-        {children ? <div className={classes.children}>{children}</div> : null}
+        {children ? <Grid item>{children}</Grid> : null}
         {!fixedSize ? (
           <Grid item className={`${classes.select} p0`}>
             <Select
