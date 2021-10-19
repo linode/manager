@@ -15,7 +15,6 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { CSVLink } from 'react-csv';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
 import MaintenanceTableRow from './MaintenanceTableRow';
@@ -24,6 +23,7 @@ import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
 } from 'src/queries/accountMaintenance';
+import Accordion from 'src/components/Accordion';
 
 export type MaintenanceEntities = 'Linode' | 'Volume';
 
@@ -50,17 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     color: theme.cmrTextColors.tableHeader,
     fontSize: '.9rem',
-  },
-  CSVlinkContainer: {
-    marginTop: theme.spacing(0.5),
-    '&.MuiGrid-item': {
-      paddingRight: 0,
-    },
-  },
-  CSVwrapper: {
-    marginLeft: 0,
-    marginRight: 0,
-    width: '100%',
   },
   cell: {
     width: '12%',
@@ -163,7 +152,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <Accordion heading={`${type}s`} defaultExpanded>
       <Table>
         <TableHead>
           <TableRow>
@@ -222,10 +211,10 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
         eventCategory={`${type} Maintenance Table`}
-      />
-      {data && data.results > 0 ? (
-        <Grid container className={classes.CSVwrapper} justify="flex-end">
-          <Grid item className={classes.CSVlinkContainer}>
+        forceShow
+      >
+        {data && data.results > 0 ? (
+          <>
             {/*
               We are using a hidden CSVLink and an <a> to allow us to lazy load the
               entire maintenance list for the CSV download. The <a> is what shows up
@@ -247,10 +236,10 @@ const MaintenanceTable: React.FC<Props> = (props) => {
             >
               Download CSV
             </a>
-          </Grid>
-        </Grid>
-      ) : null}
-    </React.Fragment>
+          </>
+        ) : null}
+      </PaginationFooter>
+    </Accordion>
   );
 };
 

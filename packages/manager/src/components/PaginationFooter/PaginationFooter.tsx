@@ -12,7 +12,7 @@ import PaginationControls from '../PaginationControls';
 
 export const MIN_PAGE_SIZE = 25;
 
-type ClassNames = 'root' | 'padded' | 'select';
+type ClassNames = 'root' | 'padded' | 'select' | 'children';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,6 +40,9 @@ const styles = (theme: Theme) =>
         paddingLeft: 12,
       },
     },
+    children: {
+      marginLeft: 'auto',
+    },
   });
 
 export interface PaginationProps {
@@ -49,6 +52,7 @@ export interface PaginationProps {
   eventCategory: string;
   showAll?: boolean;
   fixedSize?: boolean;
+  forceShow?: boolean;
 }
 
 interface Props extends PaginationProps {
@@ -82,9 +86,11 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       padded,
       eventCategory,
       showAll,
+      children,
+      forceShow,
     } = this.props;
 
-    if (count <= MIN_PAGE_SIZE && !fixedSize) {
+    if (!forceShow && count <= MIN_PAGE_SIZE && !fixedSize) {
       return null;
     }
 
@@ -123,6 +129,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             />
           )}
         </Grid>
+        {children ? <div className={classes.children}>{children}</div> : null}
         {!fixedSize ? (
           <Grid item className={`${classes.select} p0`}>
             <Select

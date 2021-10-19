@@ -487,6 +487,7 @@ export const handlers = [
               entity: { type: 'volume', label: 'my-volume-0', id: 0 },
               status: 'pending',
               reason: 'Free upgrade to faster NVMe hardware',
+              type: 'volume_migration',
             }),
           ]
         : [
