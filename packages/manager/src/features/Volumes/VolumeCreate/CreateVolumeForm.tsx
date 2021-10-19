@@ -251,7 +251,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   {flags.blockStorageAvailability ? (
                     <Notice success className={classes.notice}>
                       High-performance NVMe block storage is currently available
-                      in Newark, NJ.
+                      in Atlanta, GA and Newark, NJ.
                     </Notice>
                   ) : null}
                   <Typography variant="body1" data-qa-volume-size-help>
