@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import { useClientToken } from 'src/queries/accountPayment';
 import { SetSuccess } from './types';
 import Notice from 'src/components/Notice';
@@ -14,7 +14,7 @@ import {
 import { unstable_batchedUpdates } from 'react-dom';
 import { client, paypalCheckout } from 'braintree-web';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     position: 'relative',
   },
@@ -39,6 +39,13 @@ interface Props {
   disabled: boolean;
 }
 
+interface TransactionInfo {
+  amount: number;
+  orderID: string;
+  onApproveMessage: string;
+  onErrorMessage: string;
+}
+
 export const PayPalButton: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {
@@ -57,21 +64,47 @@ export const PayPalButton: React.FC<Props> = (props) => {
 
   const disabledDueToPrice = usd < 5 || usd > 10000;
 
-  const [payPalLoadingError, setPayPalLoadingError] = React.useState<boolean>(
-    false
-  );
+  const [
+    payPalInitializationError,
+    setPayPalInitializationError,
+  ] = React.useState<boolean>(false);
+
   const [
     payPalCheckoutInstance,
     setPayPalCheckoutInstance,
   ] = React.useState<any>();
 
+  /**
+   * Needed to pass dynamic amount to PayPal without re-render
+   * https://github.com/paypal/react-paypal-js/issues/161
+   */
+  const stateRef = React.useRef<TransactionInfo>();
+
+  const [transaction, setTransaction] = React.useState<TransactionInfo>({
+    amount: usd,
+    orderID: '',
+    onApproveMessage: '',
+    onErrorMessage: '',
+  });
+
+  React.useEffect(() => {
+    setTransaction({
+      amount: usd,
+      orderID: '',
+      onApproveMessage: '',
+      onErrorMessage: '',
+    });
+  }, [usd]);
+
+  stateRef.current = transaction;
+
   React.useEffect(() => {
     if (data?.client_token) {
-      loadBraintreeClient(data.client_token);
+      initPayPalCheckout(data.client_token);
     }
   }, [data]);
 
-  const loadBraintreeClient = async (token: string) => {
+  const initPayPalCheckout = async (token: string) => {
     try {
       const clientInstance = await client.create({ authorization: token });
       const checkoutInstance = await paypalCheckout.create({
@@ -82,15 +115,15 @@ export const PayPalButton: React.FC<Props> = (props) => {
         setPayPalCheckoutInstance(checkoutInstance);
       });
     } catch (e) {
-      setPayPalLoadingError(true);
+      setPayPalInitializationError(true);
     }
   };
 
-  const createOrder = () => {
+  const createOrder = (): Promise<string> => {
     return payPalCheckoutInstance.createPayment({
       flow: 'checkout',
       currency: 'USD',
-      amount: usd,
+      amount: stateRef!.current!.amount,
       intent: 'capture',
     });
   };
@@ -98,9 +131,9 @@ export const PayPalButton: React.FC<Props> = (props) => {
   const onApprove = (data: any) => {
     return payPalCheckoutInstance
       .tokenizePayment(data)
-      .then((payload: unknown) => {
+      .then((payload: any) => {
         // send nonce to server
-        console.log(payload.nonce)
+        console.log(payload)
       });
   };
 
@@ -117,8 +150,12 @@ export const PayPalButton: React.FC<Props> = (props) => {
     );
   }
 
-  if (status === 'error' || clientTokenError || payPalLoadingError) {
+  if (clientTokenError) {
     return <Notice error text="Error loading PayPal." />;
+  }
+
+  if (payPalInitializationError) {
+    return <Notice error text="Error initializing PayPal." />;
   }
 
   return (
@@ -140,19 +177,15 @@ export const PayPalButton: React.FC<Props> = (props) => {
           'data-client-token': data?.client_token,
         }}
       >
-        <PayPalButtons
-          style={{ height: 35 }}
-          fundingSource={FUNDING.PAYPAL}
-          disabled={disabledDueToPrice || disabledDueToProcessing}
-          createOrder={createOrder}
-          onApprove={onApprove}
-          /**
-           * We need to re-render the button if the amount changes
-           * https://paypal.github.io/react-paypal-js/?path=/docs/example-paypalbuttons--dynamic-amount
-           * https://github.com/paypal/paypal-checkout-components/issues/1693
-           */
-          forceReRender={[usd]}
-        />
+        {payPalCheckoutInstance ? (
+          <PayPalButtons
+            style={{ height: 35 }}
+            fundingSource={FUNDING.PAYPAL}
+            disabled={disabledDueToPrice || disabledDueToProcessing}
+            createOrder={createOrder}
+            onApprove={onApprove}
+          />
+        ) : null}
       </PayPalScriptProvider>
     </div>
   );
