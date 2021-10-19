@@ -12,7 +12,7 @@ import PaginationControls from '../PaginationControls';
 
 export const MIN_PAGE_SIZE = 25;
 
-type ClassNames = 'root' | 'padded' | 'select' | 'children';
+type ClassNames = 'root' | 'padded' | 'select';
 
 const styles = (theme: Theme) =>
   createStyles({
