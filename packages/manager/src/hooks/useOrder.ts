@@ -1,4 +1,4 @@
-import qs from 'qs';
+import * as qs from 'qs';
 import { useState, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';

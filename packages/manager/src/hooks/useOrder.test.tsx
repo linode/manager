@@ -131,9 +131,9 @@ describe('useOrder hook', () => {
       )
     );
 
-    expect(mockHistory.replace).toBeCalledWith({
-      search: `?order=${handleOrderChangeOrder.order}&orderBy=${handleOrderChangeOrder.orderBy}`,
-    });
+    expect(mockHistory.replace).toBeCalledWith(
+      `?order=${handleOrderChangeOrder.order}&orderBy=${handleOrderChangeOrder.orderBy}`
+    );
 
     expect(result.current.order).toBe(handleOrderChangeOrder.order);
     expect(result.current.orderBy).toBe(handleOrderChangeOrder.orderBy);
