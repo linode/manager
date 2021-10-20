@@ -16,6 +16,7 @@ import ContactInfo from './BillingPanels/ContactInfoPanel';
 import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { PAYPAL_CLIENT_ID } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -63,12 +64,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <PayPalScriptProvider
-      options={{
-        'client-id':
-          'AXrQzrp1Fwa5VQwDv9uQZ6mySQZpvrozT92ezyYh-QbKTIpiqACbfxjI-RF1ueXkUQGKapgIQFZ5Iehk',
-      }}
-    >
+    <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
       <DocumentTitleSegment segment={`Account & Billing`} />
       <div data-testid="billing-detail">
         <Grid container>
