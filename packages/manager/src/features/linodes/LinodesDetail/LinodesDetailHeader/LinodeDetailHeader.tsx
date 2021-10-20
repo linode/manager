@@ -299,34 +299,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const volumesBannerAction = isCreateMode ? 'Create' : 'Attach';
 
-  const openCreateVolumeDrawer = (e: any) => {
-    e.preventDefault();
-
-    if (linode.id && linode.label && linode.region) {
-      dispatch(
-        openForCreating('Created from Linode Details', {
-          linodeId: linode.id,
-          linodeLabel: linode.label,
-          linodeRegion: linode.region,
-        })
-      );
-    }
-  };
-
-  const openAttachVolumeDrawer = (e: any) => {
-    e.preventDefault();
-
-    if (linode.id && linode.label && linode.region) {
-      dispatch(openForAttaching(linode.id, linode.region, linode.label));
-    }
-  };
-
-  return (
-    <>
-      <HostMaintenance linodeStatus={linodeStatus} />
-      <MutationNotification disks={linodeDisks} />
-      <Notifications />
-      {showVolumesBanner && (isAtlanta || isNewark) ? (
+  const NVMeBanner = () => {
+    if (showVolumesBanner && (isAtlanta || isNewark)) {
+      return (
         <DismissibleBanner
           preferenceKey={`block-storage-available-${
             isAtlanta ? 'atlanta' : 'newark'
@@ -370,7 +345,40 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
             </Grid>
           </Grid>
         </DismissibleBanner>
-      ) : null}
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const openCreateVolumeDrawer = (e: any) => {
+    e.preventDefault();
+
+    if (linode.id && linode.label && linode.region) {
+      dispatch(
+        openForCreating('Created from Linode Details', {
+          linodeId: linode.id,
+          linodeLabel: linode.label,
+          linodeRegion: linode.region,
+        })
+      );
+    }
+  };
+
+  const openAttachVolumeDrawer = (e: any) => {
+    e.preventDefault();
+
+    if (linode.id && linode.label && linode.region) {
+      dispatch(openForAttaching(linode.id, linode.region, linode.label));
+    }
+  };
+
+  return (
+    <>
+      <HostMaintenance linodeStatus={linodeStatus} />
+      <MutationNotification disks={linodeDisks} />
+      <Notifications />
+      <NVMeBanner />
       <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"
