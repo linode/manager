@@ -491,11 +491,8 @@ export const handlers = [
             }),
           ]
         : [
-            ...accountMaintenanceFactory.buildList(1, {
-              entity: { label: 'very-long-name-for-a-linode-for-testing' },
-            }),
-            ...accountMaintenanceFactory.buildList(20, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(5, { status: 'started' }),
+            ...accountMaintenanceFactory.buildList(3, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(2, { status: 'started' }),
           ];
 
     if (req.headers.get('x-filter')) {
