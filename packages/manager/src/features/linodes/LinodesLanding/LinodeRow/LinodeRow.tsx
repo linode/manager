@@ -175,7 +175,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
       >
         {!maintenanceStartTime ? (
           loading ? (
-            <>
+            <div className={classes.status}>
               <StatusIcon status={iconStatus} />
               <button
                 className={classes.statusLink}
@@ -187,21 +187,20 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
                   text={transitionText(status, id, recentEvent)}
                 />
               </button>
-            </>
+            </div>
           ) : (
-            <>
+            <div className={classes.status}>
               <StatusIcon status={iconStatus} />
               {displayStatus.includes('_')
                 ? capitalizeAllWords(displayStatus.replace('_', ' '))
                 : capitalize(displayStatus)}
-            </>
+            </div>
           )
         ) : (
           <div className={classes.maintenanceOuter}>
             <strong>Maintenance Scheduled</strong>
             <HelpIcon
               text={<MaintenanceText />}
-              className={classes.statusHelpIcon}
               tooltipPosition="top"
               interactive
               classes={{ tooltip: classes.maintenanceTooltip }}
