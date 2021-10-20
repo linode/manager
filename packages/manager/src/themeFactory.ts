@@ -1126,10 +1126,7 @@ const themeDefaults: ThemeDefaults = () => {
           color: '#606469',
           backgroundColor: 'white',
           borderLeft: `6px solid transparent`,
-          borderRadius: `4px !important`,
-          [breakpoints.up('md')]: {
-            borderRadius: 0,
-          },
+          borderRadius: 4,
         },
       },
       MuiSvgIcon: {
