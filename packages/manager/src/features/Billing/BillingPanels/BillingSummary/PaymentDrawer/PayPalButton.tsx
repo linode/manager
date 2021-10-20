@@ -1,18 +1,22 @@
-import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
-import { useClientToken } from 'src/queries/accountPayment';
-import { SetSuccess } from './types';
-import Notice from 'src/components/Notice';
-import Tooltip from 'src/components/core/Tooltip';
-import CircleProgress from 'src/components/CircleProgress';
-import Grid from 'src/components/Grid';
+import { makePayment } from '@linode/api-v4/lib/account/payments';
 import {
   PayPalScriptProvider,
   PayPalButtons,
   FUNDING,
 } from '@paypal/react-paypal-js';
-import { unstable_batchedUpdates } from 'react-dom';
 import { client, paypalCheckout } from 'braintree-web';
+import * as React from 'react';
+import { unstable_batchedUpdates } from 'react-dom';
+import { makeStyles } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
+import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
+import { reportException } from 'src/exceptionReporting';
+import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
+import { useClientToken } from 'src/queries/accountPayment';
+import { queryClient } from 'src/queries/base';
+import { SetSuccess } from './types';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,7 +36,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  usd: number;
+  usd: string;
   setSuccess: SetSuccess;
   setError: (error: string) => void;
   setProcessing: (processing: boolean) => void;
@@ -40,10 +44,8 @@ interface Props {
 }
 
 interface TransactionInfo {
-  amount: number;
+  amount: string;
   orderID: string;
-  onApproveMessage: string;
-  onErrorMessage: string;
 }
 
 export const PayPalButton: React.FC<Props> = (props) => {
@@ -57,12 +59,12 @@ export const PayPalButton: React.FC<Props> = (props) => {
   const {
     usd,
     disabled: disabledDueToProcessing,
-    // setSuccess,
-    // setError,
-    // setProcessing,
+    setSuccess,
+    setError,
+    setProcessing,
   } = props;
 
-  const disabledDueToPrice = usd < 5 || usd > 10000;
+  const disabledDueToPrice = +usd < 5 || +usd > 10000;
 
   const [
     payPalInitializationError,
@@ -83,16 +85,12 @@ export const PayPalButton: React.FC<Props> = (props) => {
   const [transaction, setTransaction] = React.useState<TransactionInfo>({
     amount: usd,
     orderID: '',
-    onApproveMessage: '',
-    onErrorMessage: '',
   });
 
   React.useEffect(() => {
     setTransaction({
       amount: usd,
       orderID: '',
-      onApproveMessage: '',
-      onErrorMessage: '',
     });
   }, [usd]);
 
@@ -114,7 +112,10 @@ export const PayPalButton: React.FC<Props> = (props) => {
       unstable_batchedUpdates(() => {
         setPayPalCheckoutInstance(checkoutInstance);
       });
-    } catch (e) {
+    } catch (error) {
+      reportException(error, {
+        message: 'Error initializing PayPal.',
+      });
       setPayPalInitializationError(true);
     }
   };
@@ -128,13 +129,37 @@ export const PayPalButton: React.FC<Props> = (props) => {
     });
   };
 
-  const onApprove = (data: any) => {
-    return payPalCheckoutInstance
-      .tokenizePayment(data)
-      .then((payload: any) => {
-        // send nonce to server
-        console.log(payload)
+  const onApprove = async (data: any) => {
+    setProcessing(true);
+    const payload = await payPalCheckoutInstance.tokenizePayment(data);
+
+    // send nonce to server
+    try {
+      const response = await makePayment({
+        nonce: payload.nonce,
+        usd: stateRef!.current!.amount,
       });
+      queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+
+      setProcessing(false);
+      setSuccess(
+        `Payment for $${
+          stateRef!.current!.amount
+        } successfully submitted with PayPal`,
+        true,
+        response.warnings
+      );
+    } catch (error) {
+      if (error.statusCode === 'CANCELED') {
+        return;
+      }
+
+      const errorMsg = 'Unable to complete PayPal payment.';
+      reportException(error, {
+        message: errorMsg,
+      });
+      setError(errorMsg);
+    }
   };
 
   if (clientTokenLoading) {

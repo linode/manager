@@ -445,7 +445,9 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                     <Button
                       buttonType="primary"
                       onClick={handleOpenDialog}
-                      disabled={paymentTooLow || selectedCardExpired}
+                      disabled={
+                        paymentTooLow || selectedCardExpired || isProcessing
+                      }
                     >
                       Pay Now
                     </Button>
@@ -506,7 +508,9 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                   <Button
                     buttonType="primary"
                     onClick={handleOpenDialog}
-                    disabled={paymentTooLow || selectedCardExpired}
+                    disabled={
+                      paymentTooLow || selectedCardExpired || isProcessing
+                    }
                   >
                     Pay Now
                   </Button>
@@ -537,7 +541,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
               <Grid container>
                 <Grid item xs={9} sm={6}>
                   <PayPalButton
-                    usd={+usd}
+                    usd={usd}
                     disabled={isProcessing}
                     setSuccess={setSuccess}
                     setError={setErrorMessage}
