@@ -52,11 +52,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
+# <<<<<<< HEAD
+
+> > > > > > > release-1.51.0
+
 - Bug preventing Linode Configuration changes
 
 ## [2021-09-09] - v1.49.0
 
 ### Added:
+
+# <<<<<<< HEAD
+
+> > > > > > > release-1.51.0
 
 - Promotional banner for Object Storage
 - Banner and screen for upcoming maintenance
@@ -64,12 +72,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed:
 
+# <<<<<<< HEAD
+
+> > > > > > > release-1.51.0
+
 - Preserve Support Ticket replies between refreshes
 - Font size for Managed Credentials and Contacts copy
 - Vertically center icons and texts in dropdown
 - Allow more room for image names
 
 ### Fixed:
+
+# <<<<<<< HEAD
+
+> > > > > > > release-1.51.0
 
 - Action buttons being disabled upon Firewall creation for restricted users
 - Issue adding tags during Volume creation
