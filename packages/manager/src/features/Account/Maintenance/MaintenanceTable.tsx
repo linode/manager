@@ -211,33 +211,29 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
         eventCategory={`${type} Maintenance Table`}
-        forceShow
+        forceShow={data && data.results > 0}
       >
-        {data && data.results > 0 ? (
-          <>
-            {/*
-              We are using a hidden CSVLink and an <a> to allow us to lazy load the
-              entire maintenance list for the CSV download. The <a> is what shows up
-              to the user and the onClick fetches the full user data and then
-              uses a ref to 'click' the real CSVLink.
-              This adds some complexity but gives us the benefit of lazy loading a potentially
-              large set of maintenance events on mount for the CSV download.
-            */}
-            <CSVLink
-              ref={csvRef}
-              headers={headersForCSVDownload}
-              filename={`maintenance-${Date.now()}.csv`}
-              data={cleanCSVData(csv || [])}
-            />
-            <a
-              className={`${classes.CSVlink} ${classes.CSVlink}`}
-              onClick={downloadCSV}
-              aria-hidden="true"
-            >
-              Download CSV
-            </a>
-          </>
-        ) : null}
+        {/*
+          We are using a hidden CSVLink and an <a> to allow us to lazy load the
+          entire maintenance list for the CSV download. The <a> is what shows up
+          to the user and the onClick fetches the full user data and then
+          uses a ref to 'click' the real CSVLink.
+          This adds some complexity but gives us the benefit of lazy loading a potentially
+          large set of maintenance events on mount for the CSV download.
+        */}
+        <CSVLink
+          ref={csvRef}
+          headers={headersForCSVDownload}
+          filename={`maintenance-${Date.now()}.csv`}
+          data={cleanCSVData(csv || [])}
+        />
+        <a
+          className={`${classes.CSVlink} ${classes.CSVlink}`}
+          onClick={downloadCSV}
+          aria-hidden="true"
+        >
+          Download CSV
+        </a>
       </PaginationFooter>
     </Accordion>
   );
