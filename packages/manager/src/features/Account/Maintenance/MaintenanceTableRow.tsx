@@ -24,7 +24,14 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
   return (
     <TableRow key={entity.id}>
       <TableCell>
-        <Link to={`/${entity.type}s/${entity.id}`} tabIndex={0}>
+        <Link
+          to={
+            entity.type === 'linode'
+              ? `/${entity.type}s/${entity.id}`
+              : `/${entity.type}s`
+          }
+          tabIndex={0}
+        >
           {entity.label}
         </Link>
       </TableCell>

@@ -186,5 +186,5 @@ export const maintenanceActionTextMap: Record<
   reboot:
     'During this time, your Linode will be shut down and remain offline, then returned to its last state (running or powered off).',
   volume_migration:
-    'During this time, your Linode will be rebooted to perform a volume upgrade.',
+    'During this time, your Linode will be shut down and upgraded, then returned to its last state (running or powered off).',
 };
