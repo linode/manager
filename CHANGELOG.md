@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-10-20] - v1.52.0
+
+### Added:
+- NVMe banner for Newark, NJ
+
+### Changed:
+- Update to React v17.0.2
+- Raise threshold for large account
+- Add hover states for top nav icons
+
+### Fixed:
+- Consistent spelling of "canceled"
+- Vertical alignment for Linode status column
+
+
 ## [2021-10-05] - v1.51.0
 
 ### Added:

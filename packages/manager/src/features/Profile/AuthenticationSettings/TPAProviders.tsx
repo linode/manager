@@ -1,5 +1,5 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
 import GitHubIcon from 'src/assets/icons/providers/github-logo.svg';
@@ -156,7 +156,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             return (
               <Grid item md={4} key={thisProvider.displayName}>
                 <Button
-                  className={classnames({
+                  className={classNames({
                     [classes.provider]: true,
                     [classes.enabled]: props.authType === thisProvider.name,
                   })}

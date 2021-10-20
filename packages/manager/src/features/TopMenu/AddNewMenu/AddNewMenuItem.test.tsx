@@ -1,17 +1,14 @@
-import { mount, shallow } from 'enzyme';
 import * as React from 'react';
-
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-
 import AddNewMenuItem from './AddNewMenuItem';
-
 import { Provider } from 'react-redux';
 import store from 'src/store';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('AddNewMenuItem', () => {
   it('should render without error', () => {
-    shallow(
+    renderWithTheme(
       <Provider store={store}>
         <LinodeThemeWrapper theme="dark">
           <AddNewMenuItem
@@ -25,7 +22,7 @@ describe('AddNewMenuItem', () => {
   });
 
   it('should not render a divider if not the last item', () => {
-    const result = mount(
+    const result = renderWithTheme(
       <Provider store={store}>
         <LinodeThemeWrapper theme="dark">
           <AddNewMenuItem
@@ -37,6 +34,6 @@ describe('AddNewMenuItem', () => {
       </Provider>
     );
 
-    expect(result.find('WithStyles(Divider)')).toHaveLength(0);
+    expect(result.queryAllByRole('Divider')).toHaveLength(0);
   });
 });

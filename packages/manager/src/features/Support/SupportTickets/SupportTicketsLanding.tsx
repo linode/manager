@@ -93,7 +93,7 @@ interface Props {
 }
 type CombinedProps = Props &
   WithStyles<ClassNames> &
-  RouteComponentProps<{}> &
+  RouteComponentProps<{}, any, any> &
   GlobalErrorProps;
 
 interface State {
@@ -222,7 +222,7 @@ export class SupportTicketsLanding extends React.PureComponent<
           container
           className="m0"
           alignItems="center"
-          justify="space-between"
+          justifyContent="space-between"
           updateFor={[classes]}
         >
           <Grid item className={`${classes.title} p0`}>

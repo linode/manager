@@ -106,7 +106,10 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               `Image ${label} is now available.`,
               isDeletion
                 ? undefined
-                : `There was a problem processing image ${label}: ${event.message}`
+                : `There was a problem processing image ${label}: ${event.message?.replace(
+                    'cancelled',
+                    'canceled'
+                  )}`
             );
           case 'image_delete':
             return _toast(
