@@ -32,6 +32,7 @@ import useFlags from 'src/hooks/useFlags';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import UpgradeClusterDialog from './UpgradeClusterDialog';
 import { updateKubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import { useKubernetesDashboardQuery } from 'src/queries/kubernetesDashboard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -131,9 +132,6 @@ interface Props {
   endpoint: string | null;
   endpointError?: string;
   endpointLoading: boolean;
-  dashboard: string;
-  dashboardError?: string;
-  dashboardLoading: boolean;
   kubeconfigAvailable: boolean;
   kubeconfigError?: string;
   handleUpdateTags: (updatedTags: string[]) => Promise<KubernetesCluster>;
@@ -161,9 +159,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     endpoint,
     endpointError,
     endpointLoading,
-    dashboard,
-    dashboardError,
-    dashboardLoading,
     kubeconfigAvailable,
     kubeconfigError,
     handleUpdateTags,
@@ -176,10 +171,15 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
   const flags = useFlags();
-  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability || true;
-  const isKubeDashboardEnabled = flags.kubernetesDashboardAvailability || true;
+  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability;
+  const isKubeDashboardEnabled = flags.kubernetesDashboardAvailability;
 
   const isHighlyAvailable = cluster?.control_plane?.high_availability;
+
+  const {
+    data: dashboard,
+    error: dashboardError,
+  } = useKubernetesDashboardQuery(cluster.id);
 
   // Deletion handlers
   // NB: this is using dispatch directly because I don't want to
@@ -204,7 +204,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     dialog: upgradeDialog,
     closeDialog: closeUpgradeDialog,
     openDialog: openUpgradeDialog,
-    submitDialog: submitUpgradeDialog,
   } = useDialog(_updateCluster);
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
@@ -441,11 +440,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                     <Button
                       className={classes.dashboard}
                       buttonType="secondary"
-                      disabled={
-                        dashboardLoading || dashboardError !== undefined
-                      }
+                      disabled={Boolean(dashboardError)}
                       onClick={() => {
-                        window.open(dashboard, '_blank');
+                        window.open(dashboard?.endpoint, '_blank');
                       }}
                       compact
                     >
@@ -504,7 +501,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       <UpgradeClusterDialog
         open={upgradeDialog.isOpen}
         onClose={closeUpgradeDialog}
-        onUpgrade={() => submitUpgradeDialog(cluster.id)}
+        clusterID={cluster.id}
       />
     </React.Fragment>
   );

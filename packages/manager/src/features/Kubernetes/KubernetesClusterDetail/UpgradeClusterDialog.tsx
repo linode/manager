@@ -7,6 +7,7 @@ import Notice from 'src/components/Notice';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 
 const useStyles = makeStyles((theme: Theme) => ({
   heading: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   open: boolean;
   onClose: () => void;
-  onUpgrade: any;
+  clusterID: number;
 }
 
 type CombinedProps = Props;
@@ -56,13 +57,28 @@ const renderActions = (
 };
 
 const UpgradeClusterDialog: React.FC<CombinedProps> = (props) => {
-  const { open, onClose, onUpgrade } = props;
+  const { open, onClose, clusterID } = props;
   const classes = useStyles();
   const [checked, setChecked] = React.useState(false);
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
 
-  const foo = () => {
-    onUpgrade();
+  const { updateKubernetesCluster } = useKubernetesClusters();
+  const [error, setError] = React.useState<string | undefined>();
+  const [submitting, setSubmitting] = React.useState(false);
+
+  const onUpgrade = () => {
+    setSubmitting(true);
+    setError(undefined);
+    updateKubernetesCluster(clusterID, {
+      control_plane: { high_availability: true },
+    })
+      .then(() => {
+        setSubmitting(false);
+      })
+      .catch((e) => {
+        setSubmitting(false);
+        setError(e[0].reason);
+      });
   };
 
   return (
@@ -70,7 +86,8 @@ const UpgradeClusterDialog: React.FC<CombinedProps> = (props) => {
       open={open}
       title={'Upgrade to High Availability'}
       onClose={onClose}
-      actions={() => renderActions(!checked, onClose, foo)}
+      actions={() => renderActions(!checked || submitting, onClose, onUpgrade)}
+      error={error}
     >
       <Notice
         warning

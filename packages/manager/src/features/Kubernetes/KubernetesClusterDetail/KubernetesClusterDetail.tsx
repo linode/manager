@@ -1,7 +1,6 @@
 import {
   getKubeConfig,
   getKubernetesClusterEndpoints,
-  getKubernetesClusterDashboard,
   KubernetesEndpointResponse,
   recycleAllNodes,
   recycleClusterNodes,
@@ -84,14 +83,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
 
-  const [dashboard, setDashboard] = React.useState<string>('');
-  const [dashboardError, setDashboardError] = React.useState<
-    string | undefined
-  >(undefined);
-  const [dashboardLoading, setDashboardLoading] = React.useState<boolean>(
-    false
-  );
-
   const [
     kubeconfigAvailable,
     setKubeconfigAvailability,
@@ -120,12 +111,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
     setEndpoint(endpointToDisplay ?? null);
     setEndpointLoading(false);
     clearInterval(endpointAvailabilityInterval.current);
-  };
-
-  const successfulClusterDashboardResponse = (dashboardUrl: string) => {
-    setDashboardError(undefined);
-    setDashboard(dashboardUrl);
-    setDashboardLoading(false);
   };
 
   // Create a function to check if the Kubeconfig is available.
@@ -200,18 +185,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
                 .reason
             );
           }
-        });
-      setDashboardLoading(true);
-      getKubernetesClusterDashboard(clusterID)
-        .then((response) => {
-          successfulClusterDashboardResponse(response.endpoint);
-        })
-        .catch((error) => {
-          setDashboardLoading(false);
-          setDashboardError(
-            getAPIErrorOrDefault(error, 'Cluster dashboard not available')[0]
-              .reason
-          );
         });
 
       kubeconfigAvailabilityCheck(clusterID, true);
@@ -309,9 +282,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           endpoint={endpoint}
           endpointError={endpointError}
           endpointLoading={endpointLoading}
-          dashboard={dashboard}
-          dashboardError={dashboardError}
-          dashboardLoading={dashboardLoading}
           kubeconfigAvailable={kubeconfigAvailable}
           kubeconfigError={kubeconfigError}
           handleUpdateTags={(newTags: string[]) =>
