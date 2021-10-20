@@ -350,6 +350,17 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 paymentMethods?.map((paymentMethod: PaymentMethod) => {
                   const { id, type, is_default } = paymentMethod;
 
+                  const getIsCardExpired = (paymentMethod: PaymentMethod) => {
+                    if (paymentMethod.type === 'paypal') {
+                      return false;
+                    }
+
+                    return Boolean(
+                      paymentMethod.data.expiry &&
+                        isCreditCardExpired(paymentMethod.data.expiry)
+                    );
+                  };
+
                   const getHeading = (paymentMethod: PaymentMethod) => {
                     switch (paymentMethod.type) {
                       case 'paypal':
@@ -361,19 +372,17 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                     }
                   };
 
-                  const getSubHeading = (paymentMethod: PaymentMethod) => {
+                  const getSubHeading = (
+                    paymentMethod: PaymentMethod,
+                    isExpired: boolean
+                  ) => {
                     // eslint-disable-next-line sonarjs/no-small-switch
                     switch (paymentMethod.type) {
                       case 'paypal':
                         return paymentMethod.data.email;
                       default:
-                        const cardIsExpired = Boolean(
-                          paymentMethod.data.expiry &&
-                            isCreditCardExpired(paymentMethod.data.expiry)
-                        );
-
                         return `${
-                          cardIsExpired ? 'Expired' : 'Expires'
+                          isExpired ? 'Expired' : 'Expires'
                         } ${formatExpiry(paymentMethod.data.expiry ?? '')}`;
                     }
                   };
@@ -388,22 +397,14 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                     }
                   };
 
-                  const getIsCardExpired = (paymentMethod: PaymentMethod) => {
-                    if (paymentMethod.type === 'paypal') {
-                      return false;
-                    }
-
-                    return Boolean(
-                      paymentMethod.data.expiry &&
-                        isCreditCardExpired(paymentMethod.data.expiry)
-                    );
-                  };
-
                   const heading = getHeading(paymentMethod);
 
-                  const subHeading = getSubHeading(paymentMethod);
-
                   const cardIsExpired = getIsCardExpired(paymentMethod);
+
+                  const subHeading = getSubHeading(
+                    paymentMethod,
+                    cardIsExpired
+                  );
 
                   const renderIcon = () => {
                     const Icon = getIcon(paymentMethod);

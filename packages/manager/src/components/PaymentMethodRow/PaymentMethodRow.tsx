@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  CreditCardData,
-  PaymentMethod,
-  PayPalData,
-} from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
@@ -44,7 +40,7 @@ interface Props {
 
 const PaymentMethodRow: React.FC<Props> = (props) => {
   const { paymentMethod, onDelete } = props;
-  const { data: paymentMethodData, type, is_default } = paymentMethod;
+  const { type, is_default } = paymentMethod;
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -88,6 +84,16 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
     },
   ];
 
+  const getActionMenuAriaLabel = (paymentMethod: PaymentMethod) => {
+    // eslint-disable-next-line sonarjs/no-small-switch
+    switch (paymentMethod.type) {
+      case 'paypal':
+        return `Action menu for Paypal ${paymentMethod.data.email}`;
+      default:
+        return `Action menu for card ending in ${paymentMethod.data.last_four}`;
+    }
+  };
+
   return (
     <Paper
       className={classes.root}
@@ -110,15 +116,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
         <Grid item className={classes.actions}>
           <ActionMenu
             actionsList={actions}
-            ariaLabel={
-              type === 'paypal'
-                ? `Action menu for Paypal ${
-                    (paymentMethodData as PayPalData).email
-                  }`
-                : `Action menu for card ending in ${
-                    (paymentMethodData as CreditCardData)?.last_four
-                  }`
-            }
+            ariaLabel={getActionMenuAriaLabel(paymentMethod)}
           />
         </Grid>
       </Grid>
