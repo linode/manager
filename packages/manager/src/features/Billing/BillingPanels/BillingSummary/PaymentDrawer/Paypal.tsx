@@ -23,7 +23,7 @@ import {
   executePaypalPayment,
   stagePaypalPayment,
 } from '@linode/api-v4/lib/account';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CircleProgress from 'src/components/CircleProgress';
@@ -252,14 +252,14 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
   };
 
   /*
-   * User was navigated to Paypal's site and then cancelled the payment and came back
+   * User was navigated to Paypal's site and then canceled the payment and came back
    * to cloud manager
    *
    * See documentation:
    * https://github.com/paypal/paypal-checkout-components/blob/master/docs/implement-checkout.md
    */
   const onCancel = () => {
-    setSuccess('Payment Cancelled');
+    setSuccess('Payment Canceled');
     setDialogOpen(false);
   };
 
@@ -297,7 +297,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
           )}
           <div
             data-qa-paypal-button
-            className={classnames({
+            className={classNames({
               [classes.paypalButtonWrapper]: true,
               [classes.PaypalHidden]: !enabled || disabled,
             })}
@@ -343,7 +343,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
             You'll be taken to PayPal to complete your payment.
           </Typography>
         </Grid>
-        <Grid container alignItems="flex-end" justify="flex-start">
+        <Grid container alignItems="flex-end" justifyContent="flex-start">
           <Grid item style={{ position: 'relative' }}>
             {!enabled && (
               <Tooltip
@@ -357,7 +357,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
             )}
             <div
               data-qa-paypal-button
-              className={classnames({
+              className={classNames({
                 [classes.align]: !showGooglePay,
                 [classes.paypalButtonWrapper]: true,
                 [classes.PaypalHidden]: !enabled,

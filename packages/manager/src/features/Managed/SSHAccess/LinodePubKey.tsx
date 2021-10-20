@@ -141,7 +141,7 @@ const LinodePubKey: React.FC<{}> = () => {
 
   return (
     <Paper className={classes.root}>
-      <Grid container justify="space-between">
+      <Grid container justifyContent="space-between">
         <Grid item xs={12} md={3} lg={4} className={classes.copy}>
           <Box display="flex" flexDirection="row">
             <SSHKeyIcon className={classes.icon} />

@@ -42,7 +42,7 @@ export const ActivitySummaryContent: React.FC<CombinedProps> = (props) => {
       <Grid
         container
         alignContent="center"
-        justify="center"
+        justifyContent="center"
         data-qa-activity-loading
       >
         <CircleProgress mini />
@@ -55,7 +55,7 @@ export const ActivitySummaryContent: React.FC<CombinedProps> = (props) => {
       <Grid
         container
         alignContent="center"
-        justify="center"
+        justifyContent="center"
         data-qa-activity-empty
       >
         <Typography className={classes.emptyState} variant="body1">

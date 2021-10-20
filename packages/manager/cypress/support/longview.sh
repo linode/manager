@@ -1,9 +1,5 @@
 #!/usr/bin/expect -f
-
-# set linodeIp [lindex $argv 0]
-# set linodePassword [lindex $argv 1]
-# set curlCommand [lindex $argv 2]
-
+# this script is used in the longview test
 spawn ssh root@$env(LINODEIP)
 sleep 65
 expect "*yes/no*"

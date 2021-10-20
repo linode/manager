@@ -4,7 +4,7 @@ import {
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
@@ -421,7 +421,7 @@ export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = R
       <TableRow
         key={id}
         onClick={handleClick}
-        className={classnames({
+        className={classNames({
           [styles.disabledTableRow]: disabled,
         })}
         data-testid={`lv-sub-table-row-${id}`}

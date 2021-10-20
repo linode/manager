@@ -3,12 +3,10 @@
   "private": true,
   "license": "Apache-2.0",
   "devDependencies": {
-    "audit-ci": "^2.4.2",
     "husky": "^3.0.1",
     "patch-package": "^6.1.0",
     "postinstall": "^0.6.0",
-    "typescript": "~4.1.5",
-    "wait-on": "^4.0.0"
+    "typescript": "~4.1.5"
   },
   "husky": {
     "hooks": {
@@ -33,9 +31,6 @@
     "storybook": "yarn workspace linode-manager storybook",
     "storybook:e2e": "yarn workspace linode-manager storybook:e2e",
     "storybook:debug": "yarn storybook:e2e --color --debug",
-    "e2e": "yarn workspace linode-manager e2e --color",
-    "e2e:all": "yarn workspace linode-manager e2e:all --color",
-    "e2e:modified": "yarn workspace linode-manager e2e:modified --color",
     "cy:run": "yarn workspace linode-manager cy:run",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
@@ -59,8 +54,7 @@
     "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
     "ws": "^7.4.6",
-    "browserslist": "^4.16.5",
-    "set-value": "^4.0.1"
+    "browserslist": "^4.16.5"
   },
   "workspaces": {
     "packages": [

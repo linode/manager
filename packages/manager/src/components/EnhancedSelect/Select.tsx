@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import ReactSelect, { Props as SelectProps } from 'react-select';
 import CreatableSelect, {
@@ -126,7 +126,7 @@ export interface BaseSelectProps
   required?: boolean;
 }
 
-interface CreatableProps extends CreatableSelectProps<any> {}
+interface CreatableProps extends CreatableSelectProps<any, any> {}
 
 class Select extends React.PureComponent<CombinedProps, {}> {
   // React-Select changed the behavior of clearing isMulti Selects in v3.

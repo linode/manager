@@ -1,6 +1,6 @@
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
@@ -201,7 +201,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 : undefined
             }
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-            className={classnames({
+            className={classNames({
               [classes.disabledRow]:
                 isSamePlan || planTooSmall || isDisabledClass,
             })}

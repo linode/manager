@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -61,7 +61,7 @@ const DashboardCard: React.FC<CombinedProps> = (props) => {
             container
             className={classes.header}
             alignItems={alignItems || 'flex-start'}
-            justify={alignHeader || 'space-between'}
+            justifyContent={alignHeader || 'space-between'}
           >
             {title && (
               <Grid item className={'p0'}>

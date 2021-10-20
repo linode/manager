@@ -93,7 +93,12 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
         '' /* Empty so that we can display the logo beneath the close button rather than a text title */
       }
     >
-      <Grid container direction="row" alignItems="center" justify="center">
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+      >
         <Grid
           item
           className={`${classes.logo} ${
@@ -117,7 +122,12 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
         </Grid>
       </Grid>
       <Divider spacingTop={24} />
-      <Grid container direction="column" alignItems="center" justify="center">
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+      >
         <Grid item>
           <Typography variant="h3" className={classes.summary}>
             {app.summary}

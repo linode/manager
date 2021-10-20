@@ -18,7 +18,7 @@ export const EntityTransfersLanding: React.FC<{}> = (_) => {
     undefined
   );
 
-  const location = useLocation();
+  const location = useLocation<{ transfer?: EntityTransfer }>();
   const history = useHistory();
 
   const handleCloseSuccessDialog = () => {

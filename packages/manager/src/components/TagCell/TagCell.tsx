@@ -1,5 +1,5 @@
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';

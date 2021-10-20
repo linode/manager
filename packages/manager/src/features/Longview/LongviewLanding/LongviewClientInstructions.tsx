@@ -66,7 +66,7 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
       <Grid
         container
         direction="row"
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="flex-start"
         spacing={2}
         aria-label="Installation instructions for the Longview agent"
@@ -98,7 +98,7 @@ export const LongviewClientInstructions: React.FC<Props> = (props) => {
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <ActionMenu
                 longviewClientID={clientID}

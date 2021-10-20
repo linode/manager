@@ -17,16 +17,6 @@ export const Default = () => {
   );
 };
 
-export const SmallVariant = () => {
-  const [value, setValue] = React.useState<number>(0);
-
-  return (
-    <Grid container style={{ padding: '2em' }}>
-      <EnhancedNumberInput value={value} setValue={setValue} small />
-    </Grid>
-  );
-};
-
 export const Disabled = () => {
   const [value, setValue] = React.useState<number>(0);
 

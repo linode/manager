@@ -1,5 +1,4 @@
-import { updateAccountInfo } from '@linode/api-v4';
-import { Account } from '@linode/api-v4/lib/account';
+import { Account, updateAccountInfo } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import countryData from 'country-region-data';
 import { defaultTo, lensPath, pick, set } from 'ramda';

@@ -104,7 +104,6 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
           <EnhancedNumberInput
             value={updatedCount}
             setValue={handleChange}
-            small
             min={1}
           />
         </div>

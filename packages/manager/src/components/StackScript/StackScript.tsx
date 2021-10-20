@@ -133,7 +133,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Grid container alignItems="flex-start" justify="space-between">
+      <Grid container alignItems="flex-start" justifyContent="space-between">
         <H1Header
           className={classes.headerLabel}
           title={label}

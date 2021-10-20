@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
@@ -61,7 +61,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         placeholder={placeholder}
         error={error}
         hideStrengthLabel
-        className={classnames({
+        className={classNames({
           [classes.accessPanel]: true,
           [classes.marginTop]: !isOptional,
         })}

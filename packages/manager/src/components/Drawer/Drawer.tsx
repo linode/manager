@@ -93,7 +93,7 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
     >
       <Grid
         container
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="center"
         className={classes.drawerHeader}
         updateFor={[title, classes]}

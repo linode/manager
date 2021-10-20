@@ -152,7 +152,7 @@ export const Referrals: React.FC<{}> = () => {
               {pending !== undefined && pending > 0 ? (
                 <Grid
                   container
-                  justify="space-between"
+                  justifyContent="space-between"
                   className={classes.referrals}
                 >
                   <Grid item>Pending referrals</Grid>
@@ -161,7 +161,7 @@ export const Referrals: React.FC<{}> = () => {
               ) : null}
               <Grid
                 container
-                justify="space-between"
+                justifyContent="space-between"
                 className={classes.referrals}
               >
                 <Grid item>Completed referrals</Grid>
@@ -169,7 +169,7 @@ export const Referrals: React.FC<{}> = () => {
               </Grid>
               <Grid
                 container
-                justify="space-between"
+                justifyContent="space-between"
                 className={classes.earned}
               >
                 <Grid item>Credit earned</Grid>
@@ -190,7 +190,7 @@ export const Referrals: React.FC<{}> = () => {
           <Grid
             container
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             wrap="nowrap"
             className={classes.images}
           >

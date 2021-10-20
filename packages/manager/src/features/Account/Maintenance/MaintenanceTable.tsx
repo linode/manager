@@ -210,7 +210,11 @@ const MaintenanceTable: React.FC<Props> = (props) => {
         eventCategory={`${type} Maintenance Table`}
       />
       {data && data.results > 0 ? (
-        <Grid container className={classes.CSVwrapper} justify="flex-end">
+        <Grid
+          container
+          className={classes.CSVwrapper}
+          justifyContent="flex-end"
+        >
           <Grid item className={classes.CSVlinkContainer}>
             {/*
               We are using a hidden CSVLink and an <a> to allow us to lazy load the
