@@ -15,9 +15,6 @@ const useStyles = makeStyles(() => ({
   capitalize: {
     textTransform: 'capitalize',
   },
-  padding: {
-    padding: 8,
-  },
 }));
 
 const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
@@ -54,7 +51,7 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
         </TableCell>
       </Hidden>
       <Hidden mdDown>
-        <TableCell className={classes.padding}>
+        <TableCell>
           <HighlightedMarkdown textOrMarkdown={reason} />
         </TableCell>
       </Hidden>
