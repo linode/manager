@@ -423,11 +423,16 @@ export const handlers = [
       linode_id: 20,
       label: 'eligibleNow',
     });
+    const hddVolumeAttached2 = volumeFactory.build({
+      id: 5,
+      linode_id: 5,
+      label: 'upgrading',
+    });
     const nvmeVolumes = volumeFactory.buildList(2, {
       hardware_type: 'nvme',
     });
 
-    const volumes = [...nvmeVolumes, hddVolumeAttached];
+    const volumes = [...nvmeVolumes, hddVolumeAttached, hddVolumeAttached2];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -547,10 +552,10 @@ export const handlers = [
       percent_complete: 100,
     });
     const volumeMigrating = eventFactory.build({
-      entity: { type: 'volume', id: 5, label: 'zetaEjemplo' },
+      entity: { type: 'volume', id: 5, label: 'example-upgrading' },
       action: 'volume_migrate',
       status: 'started',
-      message: 'Volume zetaEjemplo is being upgraded to NVMe.',
+      message: 'Volume example-upgrading is being upgraded to NVMe.',
       percent_complete: 65,
     });
     const volumeMigrationFinished = eventFactory.build({
@@ -750,12 +755,12 @@ export const handlers = [
     });
 
     const blockStorageMigrationNotification2 = notificationFactory.build({
-      type: 'volume_migration_scheduled' as NotificationType,
+      type: 'volume_migration_imminent' as NotificationType,
       entity: {
         type: 'volume',
-        label: 'testVol-1',
-        id: 1,
-        url: '/volumes/1',
+        label: 'upgrading',
+        id: 5,
+        url: '/volumes/5',
       },
       when: '2021-09-30T04:00:00',
       message:

@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     border: '1px solid #02B159',
   },
+  upgradingChip: {
+    backgroundColor: 'transparent',
+    border: '1px solid #ccc',
+  },
 }));
 
 export type CombinedProps = ExtendedVolume & ActionHandlers;
@@ -110,6 +114,12 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
       (notification.entity?.id === id || notification.body?.includes(region))
   );
 
+  const upgradingToNVMe = notifications.some(
+    (notification) =>
+      notification.type === ('volume_migration_imminent' as NotificationType) &&
+      (notification.entity?.id === id || notification.body?.includes(region))
+  );
+
   const nvmeUpgradeScheduledByUser = events.some(
     (event) =>
       event.action === ('volume_migrate_scheduled' as EventAction) &&
@@ -164,6 +174,14 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                     label="UPGRADE TO NVMe"
                     onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
                     data-testid="upgrade-chip"
+                  />
+                </Grid>
+              ) : linodeId && upgradingToNVMe && !nvmeUpgradeScheduledByUser ? (
+                <Grid item className={classes.chipWrapper}>
+                  <Chip
+                    className={`${classes.chip} ${classes.upgradingChip}`}
+                    label="UPGRADE PENDING"
+                    data-testid="upgrading-chip"
                   />
                 </Grid>
               ) : null}
