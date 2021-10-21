@@ -35,11 +35,11 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
           {entity.label}
         </Link>
       </TableCell>
-      <TableCell>
+      <TableCell noWrap>
         <div>{formatDate(when)}</div>
       </TableCell>
       <Hidden xsDown>
-        <TableCell className={classes.capitalize}>
+        <TableCell className={classes.capitalize} noWrap>
           {type.replace('_', ' ')}
         </TableCell>
       </Hidden>

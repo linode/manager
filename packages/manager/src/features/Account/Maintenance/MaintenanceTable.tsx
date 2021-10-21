@@ -139,7 +139,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
       );
     } else if (data) {
       return data.data.map((item: AccountMaintenance) => (
-        <MaintenanceTableRow key={`${item.entity.id}`} {...item} />
+        <MaintenanceTableRow key={`${item.entity.id}-${item.type}`} {...item} />
       ));
     }
 
