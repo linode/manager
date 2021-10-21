@@ -122,7 +122,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
     <Paper className={classes.root}>
       <Grid container>
         <Grid item xs={12}>
-          <Grid container justify="space-between">
+          <Grid container justifyContent="space-between">
             <Grid item className={classes.titleWrapper} style={{ flex: 1 }}>
               <Link to={`/account/billing`}>
                 <IconButton
@@ -179,7 +179,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
         </Grid>
         <Grid item xs={12}>
           {invoice && (
-            <Grid container justify="flex-end">
+            <Grid container justifyContent="flex-end">
               <Grid item className={classes.totals}>
                 <Typography variant="h2">
                   Subtotal:{' '}

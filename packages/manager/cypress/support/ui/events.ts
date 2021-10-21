@@ -1,3 +1,4 @@
+// asserts text in popup toast notifications
 export const assertToast = (message: string, elementNumber: number = 1) => {
   cy.get('[data-qa-toast]')
     .then((elements) => {

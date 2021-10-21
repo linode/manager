@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import LinearProgress from 'src/components/core/LinearProgress';
 import { makeStyles, Theme, useTheme } from 'src/components/core/styles';

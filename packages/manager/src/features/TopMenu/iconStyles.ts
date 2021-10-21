@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
       padding: 3,
     },
     '&:hover, &:focus': {
-      color: '#c1c1c0',
+      color: '#606469',
     },
     '&:first-of-type': {
       [theme.breakpoints.up('sm')]: {

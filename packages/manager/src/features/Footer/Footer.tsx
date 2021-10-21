@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
