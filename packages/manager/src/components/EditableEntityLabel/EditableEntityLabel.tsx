@@ -64,7 +64,7 @@ export const EditableEntityLabel: React.FC<Props> = (props) => {
       direction="row"
       wrap="nowrap"
       alignItems="center"
-      justify="flex-start"
+      justifyContent="flex-start"
       className={`${classes.root} m0`}
     >
       {!isEditing && iconVariant && (

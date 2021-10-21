@@ -21,7 +21,7 @@ const TableHeader: React.FC<CombinedProps> = ({ title, action }) => {
   const classes = useStyles();
 
   return (
-    <Grid container justify="space-between" alignItems="flex-end">
+    <Grid container justifyContent="space-between" alignItems="flex-end">
       <Grid item>
         <Typography
           variant="h2"

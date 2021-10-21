@@ -136,7 +136,6 @@ const ProcessesLanding: React.FC<Props> = (props) => {
           >
             <TextField
               className={classes.filterInput}
-              small
               placeholder="Filter by process or user..."
               label="Filter by process or user"
               hideLabel

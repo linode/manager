@@ -112,7 +112,11 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={thisFirewall.label} />
-      <Grid container className={`${classes.root} m0`} justify="space-between">
+      <Grid
+        container
+        className={`${classes.root} m0`}
+        justifyContent="space-between"
+      >
         <Grid item className="p0">
           <Breadcrumb
             pathname={props.location.pathname}

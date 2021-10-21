@@ -1,6 +1,6 @@
 import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
 import { Linode } from '@linode/api-v4/lib/linodes/types';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -352,7 +352,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           container
           className="m0"
           alignItems="center"
-          justify="space-between"
+          justifyContent="space-between"
         >
           <Box display="flex" alignItems="center">
             <Grid
@@ -360,7 +360,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               className={`p0 ${isDetailLanding && classes.chipWrapper}`}
             >
               <Chip
-                className={classnames({
+                className={classNames({
                   [classes.statusChip]: true,
                   [classes.statusChipLandingDetailView]: isDetailLanding,
                   [classes.statusRunning]: isRunning,
@@ -566,7 +566,7 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
         item
         className={classes.rightColumn}
         direction="row"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <AccessTable
           title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
@@ -868,7 +868,12 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
   );
 
   return (
-    <Grid container direction="row" alignItems="center" justify="space-between">
+    <Grid
+      container
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+    >
       <Grid
         container
         item
@@ -884,7 +889,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
           )}
           {linodeRegionDisplay && (
             <Typography
-              className={classnames({
+              className={classNames({
                 [classes.listItem]: true,
                 [classes.listItemLast]: matchesSmDown,
               })}

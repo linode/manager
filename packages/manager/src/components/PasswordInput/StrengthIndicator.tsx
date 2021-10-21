@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { isNil } from 'ramda';
 import * as React from 'react';
 import {

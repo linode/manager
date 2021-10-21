@@ -65,7 +65,7 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
   const icons = addIconsToAttachments(attachments);
 
   return (
-    <Grid item container justify="flex-start" className={classes.root}>
+    <Grid item container justifyContent="flex-start" className={classes.root}>
       <Grid item className={classes.attachmentPaperWrapper}>
         <Typography variant="h3">Attachments</Typography>
         <TicketAttachmentRow

@@ -1,4 +1,4 @@
-import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4';
+import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';

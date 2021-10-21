@@ -176,7 +176,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
       <Grid
         container
         direction="row"
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="flex-start"
       >
         <Grid item xs={12}>

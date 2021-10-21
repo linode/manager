@@ -154,7 +154,7 @@ const TransferContent: React.FC<ContentProps> = (props) => {
 
   if (loading) {
     return (
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item>
           <CircleProgress mini />
         </Grid>

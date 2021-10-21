@@ -2,7 +2,7 @@ import {
   CreditCard as CreditCardType,
   ThirdPartyPayment as ThirdPartyPaymentType,
 } from '@linode/api-v4/lib/account/types';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';

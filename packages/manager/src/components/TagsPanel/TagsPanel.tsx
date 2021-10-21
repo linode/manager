@@ -1,5 +1,5 @@
 import { getTags } from '@linode/api-v4/lib/tags';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
