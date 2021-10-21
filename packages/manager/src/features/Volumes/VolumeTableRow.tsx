@@ -111,13 +111,15 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     (notification) =>
       notification.type ===
         ('volume_migration_scheduled' as NotificationType) &&
-      (notification.entity?.id === id || notification.body?.includes(region))
+      notification.entity?.id === id &&
+      notification.body?.includes(region)
   );
 
   const upgradingToNVMe = notifications.some(
     (notification) =>
       notification.type === ('volume_migration_imminent' as NotificationType) &&
-      (notification.entity?.id === id || notification.body?.includes(region))
+      notification.entity?.id === id &&
+      notification.body?.includes(region)
   );
 
   const nvmeUpgradeScheduledByUser = events.some(
