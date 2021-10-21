@@ -8,7 +8,7 @@ import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
 type Props = TextFieldProps & {
-  value?: string;
+  value?: string | undefined;
   required?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
