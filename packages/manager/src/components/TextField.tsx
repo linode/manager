@@ -89,7 +89,10 @@ interface BaseProps {
   optional?: boolean;
   required?: boolean;
   tooltipText?: string;
+  value?: Value;
 }
+
+type Value = string | number | undefined | null;
 
 interface TextFieldPropsOverrides extends TextFieldProps {
   // We override this prop to make it required
@@ -137,12 +140,10 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     ...textFieldProps
   } = props;
 
-  const [_value, setValue] = React.useState<string | number>('');
+  const [_value, setValue] = React.useState<Value>(value);
 
   React.useEffect(() => {
-    if (typeof value === 'string' || typeof value === 'number') {
-      setValue(value);
-    }
+    setValue(value);
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
