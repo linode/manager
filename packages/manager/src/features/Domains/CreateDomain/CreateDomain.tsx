@@ -174,10 +174,13 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
-  const [
-    defaultRecordsSetting,
-    setDefaultRecordsSetting,
-  ] = React.useState<DefaultRecordsType>('none');
+  const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
+    Item<DefaultRecordsType>
+  >({
+    value: 'none',
+    label: 'Do not insert default records for me.',
+  });
+
   const [selectedDefaultLinode, setSelectedDefaultLinode] = React.useState<
     Linode | undefined
   >(undefined);
@@ -242,7 +245,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
      * In this case, the user wants default domain records created, but
      * they haven't supplied a Linode or NodeBalancer
      */
-    if (defaultRecordsSetting === 'linode' && !selectedDefaultLinode) {
+    if (defaultRecordsSetting.value === 'linode' && !selectedDefaultLinode) {
       return setErrors([
         {
           reason: 'Please select a Linode.',
@@ -252,7 +255,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
     }
 
     if (
-      defaultRecordsSetting === 'nodebalancer' &&
+      defaultRecordsSetting.value === 'nodebalancer' &&
       !selectedDefaultNodeBalancer
     ) {
       return setErrors([
@@ -285,7 +288,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
          * This only applies to master domains.
          */
         if (values.type === 'master') {
-          if (defaultRecordsSetting === 'linode') {
+          if (defaultRecordsSetting.value === 'linode') {
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
@@ -312,7 +315,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
               });
           }
 
-          if (defaultRecordsSetting === 'nodebalancer') {
+          if (defaultRecordsSetting.value === 'nodebalancer') {
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
@@ -364,7 +367,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   const updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>
     setSelectedDefaultNodeBalancer(nodebalancer);
 
-  const updateInsertDefaultRecords = (value: DefaultRecordsType) =>
+  const updateInsertDefaultRecords = (value: Item<DefaultRecordsType>) =>
     setDefaultRecordsSetting(value);
 
   const updateType = (
@@ -488,12 +491,9 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
                 <Select
                   isClearable={false}
                   onChange={(value: Item<DefaultRecordsType>) =>
-                    updateInsertDefaultRecords(value.value)
+                    updateInsertDefaultRecords(value)
                   }
-                  defaultValue={{
-                    value: 'none',
-                    label: 'Do not insert default records for me.',
-                  }}
+                  value={defaultRecordsSetting}
                   label="Insert Default Records"
                   options={[
                     {
@@ -519,29 +519,30 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
                 </FormHelperText>
               </React.Fragment>
             )}
-            {isCreatingPrimaryDomain && defaultRecordsSetting === 'linode' && (
-              <React.Fragment>
-                <LinodeSelect
-                  linodeError={errorMap.defaultLinode}
-                  handleChange={updateSelectedLinode}
-                  selectedLinode={
-                    selectedDefaultLinode ? selectedDefaultLinode.id : null
-                  }
-                  disabled={disabled}
-                />
-                {!errorMap.defaultLinode && (
-                  <FormHelperText>
-                    {selectedDefaultLinode && !selectedDefaultLinode.ipv6
-                      ? `We'll automatically create domains for the first IPv4 address on this
-                  Linode.`
-                      : `We'll automatically create domain records for both the first
-                  IPv4 and IPv6 addresses on this Linode.`}
-                  </FormHelperText>
-                )}
-              </React.Fragment>
-            )}
             {isCreatingPrimaryDomain &&
-              defaultRecordsSetting === 'nodebalancer' && (
+              defaultRecordsSetting.value === 'linode' && (
+                <React.Fragment>
+                  <LinodeSelect
+                    linodeError={errorMap.defaultLinode}
+                    handleChange={updateSelectedLinode}
+                    selectedLinode={
+                      selectedDefaultLinode ? selectedDefaultLinode.id : null
+                    }
+                    disabled={disabled}
+                  />
+                  {!errorMap.defaultLinode && (
+                    <FormHelperText>
+                      {selectedDefaultLinode && !selectedDefaultLinode.ipv6
+                        ? `We'll automatically create domains for the first IPv4 address on this
+                  Linode.`
+                        : `We'll automatically create domain records for both the first
+                  IPv4 and IPv6 addresses on this Linode.`}
+                    </FormHelperText>
+                  )}
+                </React.Fragment>
+              )}
+            {isCreatingPrimaryDomain &&
+              defaultRecordsSetting.value === 'nodebalancer' && (
                 <React.Fragment>
                   <NodeBalancerSelect
                     nodeBalancerError={errorMap.defaultNodeBalancer}
