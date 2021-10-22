@@ -12,6 +12,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
@@ -197,8 +198,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
       )}
       <PayPalScriptProvider
         options={{
-          'client-id':
-            'AXrQzrp1Fwa5VQwDv9uQZ6mySQZpvrozT92ezyYh-QbKTIpiqACbfxjI-RF1ueXkUQGKapgIQFZ5Iehk',
+          'client-id': PAYPAL_CLIENT_ID,
           'data-client-token': data?.client_token,
         }}
       >
