@@ -162,7 +162,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     }
   };
 
-  if (clientTokenLoading) {
+  if (clientTokenLoading || !payPalCheckoutInstance) {
     return (
       <Grid
         container
