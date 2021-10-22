@@ -32,7 +32,7 @@ import useFlags from 'src/hooks/useFlags';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import UpgradeClusterDialog from './UpgradeClusterDialog';
 import { updateKubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import { useKubernetesDashboardQuery } from 'src/queries/kubernetesDashboard';
+import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
