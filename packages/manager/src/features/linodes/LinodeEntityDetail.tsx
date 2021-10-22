@@ -646,6 +646,9 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.tableStatic,
     fontFamily: '"UbuntuMono", monospace, sans-serif',
     position: 'relative',
+    '& div': {
+      fontSize: 15,
+    },
   },
   copyCell: {
     width: 36,
