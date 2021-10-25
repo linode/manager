@@ -149,8 +149,87 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 
 #### Running the E2E tests
 
-1. Follow the [Getting Started guide](GETTING_STARTED.md) to get Cloud Manager running locally.
+1. Follow the [Getting Started guide](GETTING_STARTED.md) to get Cloud Manager running locally and get your .env setup.
 2. Go to [cloud.linode.com/profile/tokens](https://cloud.linode.com/profile/tokens) and click "Add a Personal Access Token" to create a token to use for the `MANAGER_OAUTH` environment variable in `packages/manager/.env`.
 3. In one terminal window, run the app with `yarn up`.
-4. In another terminal window, run the tests with `yarn cy:e2e`.
+4. In another terminal window, run the tests with `yarn cy:e2e` (runs headlessly).
 5. Alternatively, use the interactive interface with `yarn cy:debug`.
+6. To run the tests against your PR in GitHub, add the `e2e` label
+7. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
+8. [Cypress Plugins](https://docs.cypress.io/plugins/directory)
+9. Test Example:
+    ```tsx
+    /* this test will not pass on cloud manager.
+    it is only intended to show correct test structure, syntax,
+    and to provide examples of patterns/methods commonly used in the tests */
+    
+    // start of a test block. Multiple tests can be nested within
+    describe('linode landing checks', () => {
+      // hook that runs before each test
+       beforeEach(() => {
+         // uses factory to build data (factories found in packages/manager/src/factories) 
+          const mockAccountSettings = accountSettingsFactory.build({
+            managed: false,
+          });
+          // mocks response with cy.intercept
+           cy.intercept('GET', '*/account/settings', (req) => {
+                req.reply(mockAccountSettings);
+                //alias
+            }).as('getAccountSettings');
+        });
+        // start of individual test block
+      it('checks the landng page side menu items', () => {
+          
+          /* intercept only once method for when a call happens multiple times 
+          but you only want to stub it once declared in `/cypress/support/ui/common.ts` */
+           interceptOnce('GET', '*/profile/preferences*', {
+              linodes_view_style: 'list',
+              linodes_group_by_tag: false,
+              volumes_group_by_tag: false,
+              desktop_sidebar_open: false,
+              sortKeys: {
+                'linodes-landing': { order: 'asc', orderBy: 'label' },
+                volume: { order: 'asc', orderBy: 'label' },
+              },
+            // intercept aliased as `getProfilePreferences`
+            }).as('getProfilePreferences');
+
+            /* uses .env variables for login authorization and navigates to /linodes page.
+            `visitWithLogin` is found in /cypress/support/login.ts */
+            cy.visitWithLogin('/linodes');
+            // as page loads, wait by alias to mock state
+            cy.wait('@getProfilePreferences');
+            cy.wait('@getAccountSettings');
+
+             /* `getVisible` defined in /cypress/support/helpers.ts 
+             plus a few other commonly used commands shortened as methods */
+             getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
+            // use `within` to search inside/use data from/assert on a specific page element
+                cy.get(`[data-qa-ip-main]`)
+                   // `realHover` and more real event methods from cypress real events plugin
+                    .realHover()
+                    .then(() => { 
+                        getVisible(`[aria-label="Copy ${ip} to clipboard"]`);
+                    });
+                getVisible(`[aria-label="Action menu for Linode ${label}"]`);
+             });
+          // `findByText` and others from cypress testing library plugin
+            cy.findByText('Oh Snap!', { timeout: 1000 }).should('not.exist');
+      });
+    });
+    ```
+  
+10. How to use intercepts:
+    ```tsx
+      // stub response syntax:
+      cy.intercept('POST', ‘/path’, {response}) or cy.intercept(‘/path’, (req) => { req.reply({response})}).as('something');
+	    // edit and end response syntax: 
+      cy.intercept('GET', ‘/path’, (req) => { req.send({edit: something})}).as('something');
+	    // edit request syntax:
+      cy.intercept('POST', ‘/path’, (req) => { req.body.storyName = 'some name'; req.continue().as('something');
+  
+      // use alias syntax:
+       wait(‘@something’).then({})
+      ```
+
+

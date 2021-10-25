@@ -22,8 +22,10 @@ import useLinodeActions from 'src/hooks/useLinodeActions';
 import useNotifications from 'src/hooks/useNotifications';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import useVolumes from 'src/hooks/useVolumes';
+import { useProfile } from 'src/queries/profile';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import { openForAttaching, openForCreating } from 'src/store/volumeForm';
+import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
@@ -35,11 +37,9 @@ import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
+import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
-import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
-import { parseQueryParams } from 'src/utilities/queryParams';
-import { useProfile } from 'src/queries/profile';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
 
 interface Props {
@@ -145,6 +145,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const { updateLinode, deleteLinode } = useLinodeActions();
   const history = useHistory();
+
+  const isAtlanta = linode.region === 'us-southeast';
+  const isNewark = linode.region === 'us-east';
 
   const openPowerActionDialog = (
     bootAction: BootAction,
@@ -294,11 +297,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     return deleteLinode(linodeId);
   };
 
-  const region = 'us-southeast';
   const showVolumesBanner =
-    flags.blockStorageAvailability &&
-    linode.region === region &&
-    numAttachedVolumes === 0;
+    flags.blockStorageAvailability && numAttachedVolumes === 0;
 
   const upgradeableVolumeIds = notifications
     .filter(
@@ -319,13 +319,73 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
   //    3. the Volume is in the right region
   const allUnattachedAtlantaVolumes = Object.values(volumes.itemsById).filter(
     (thisVolume) =>
-      thisVolume.linode_id === null && thisVolume.region === region
+      thisVolume.linode_id === null && thisVolume.region === 'us-southeast'
   );
 
-  const isCreateMode =
-    numAttachedVolumes === 0 && allUnattachedAtlantaVolumes.length === 0;
+  const allUnattachedNewarkVolumes = Object.values(volumes.itemsById).filter(
+    (thisVolume) =>
+      thisVolume.linode_id === null && thisVolume.region === 'us-east'
+  );
+
+  const isCreateMode = isAtlanta
+    ? numAttachedVolumes === 0 && allUnattachedAtlantaVolumes.length === 0
+    : isNewark
+    ? numAttachedVolumes === 0 && allUnattachedNewarkVolumes.length === 0
+    : false;
 
   const volumesBannerAction = isCreateMode ? 'Create' : 'Attach';
+
+  const NVMeBanner = () => {
+    if (showVolumesBanner && (isAtlanta || isNewark)) {
+      return (
+        <DismissibleBanner
+          preferenceKey={`block-storage-available-${
+            isAtlanta ? 'atlanta' : 'newark'
+          }`}
+          productInformationIndicator
+        >
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Grid item>
+              {isAtlanta ? (
+                <Typography>
+                  Atlanta is the first data center with our new high-performance{' '}
+                  <Link to="https://www.linode.com/products/block-storage/">
+                    NVMe Block Storage
+                  </Link>
+                  .
+                </Typography>
+              ) : (
+                <Typography>
+                  High-performance{' '}
+                  <Link to="https://www.linode.com/products/block-storage/">
+                    NVMe Block Storage
+                  </Link>{' '}
+                  is now available in Newark, NJ.
+                </Typography>
+              )}
+            </Grid>
+            <Grid item>
+              <Button
+                buttonType="primary"
+                onClick={
+                  isCreateMode ? openCreateVolumeDrawer : openAttachVolumeDrawer
+                }
+              >
+                {volumesBannerAction} a Volume
+              </Button>
+            </Grid>
+          </Grid>
+        </DismissibleBanner>
+      );
+    } else {
+      return null;
+    }
+  };
 
   const openCreateVolumeDrawer = (e: any) => {
     e.preventDefault();
@@ -422,6 +482,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           </Grid>
         </DismissibleBanner>
       ) : null}
+      <NVMeBanner />
       <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"

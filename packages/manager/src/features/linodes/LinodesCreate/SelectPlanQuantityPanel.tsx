@@ -1,4 +1,4 @@
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { PoolNodeRequest } from '@linode/api-v4/lib/kubernetes/types';
 import { LinodeType, LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
@@ -157,7 +157,6 @@ export class SelectPlanPanel extends React.Component<
           <EnhancedNumberInput
             value={type.count}
             setValue={(newCount: number) => updatePlanCount(type.id, newCount)}
-            small
           />
           {isOnCreate && (
             <Button
@@ -180,7 +179,7 @@ export class SelectPlanPanel extends React.Component<
           <TableRow
             data-qa-plan-row={type.label}
             key={type.id}
-            className={classnames({
+            className={classNames({
               [classes.disabledRow]: disabled,
             })}
           >
@@ -211,7 +210,6 @@ export class SelectPlanPanel extends React.Component<
                     // unless we've just landed on the form or all the inputs are empty.
                     !isOnCreate && Boolean(selectedID) && type.count < 1
                   }
-                  small
                 />
                 {isOnCreate && (
                   <Button

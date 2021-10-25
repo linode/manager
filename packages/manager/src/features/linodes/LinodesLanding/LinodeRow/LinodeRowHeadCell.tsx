@@ -1,6 +1,6 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -114,7 +114,7 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
 
   return (
     <TableCell
-      className={classnames({
+      className={classNames({
         [classes.root]: true,
       })}
       style={style}

@@ -36,7 +36,7 @@ declare module '@material-ui/core/styles/createPalette' {
 /**
  * Augmenting the Theme and ThemeOptions.
  */
-declare module '@material-ui/core/styles/createMuiTheme' {
+declare module '@material-ui/core/styles/createTheme' {
   interface Theme {
     name: string;
     '@keyframes rotate': any;
@@ -660,7 +660,7 @@ const themeDefaults: ThemeDefaults = () => {
         },
       },
       MuiCollapse: {
-        container: {
+        root: {
           width: '100%',
         },
       },
@@ -1126,10 +1126,7 @@ const themeDefaults: ThemeDefaults = () => {
           color: '#606469',
           backgroundColor: 'white',
           borderLeft: `6px solid transparent`,
-          borderRadius: 0,
-          [breakpoints.up('md')]: {
-            borderRadius: 0,
-          },
+          borderRadius: 4,
         },
       },
       MuiSvgIcon: {

@@ -186,7 +186,7 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment segment="Monitors" />
       <Grid
         container
-        justify="flex-end"
+        justifyContent="flex-end"
         alignItems="flex-end"
         updateFor={[classes]}
       >

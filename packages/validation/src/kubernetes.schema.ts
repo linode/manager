@@ -1,8 +1,40 @@
-import { array, number, object, string } from 'yup';
+import { array, number, object, string, boolean } from 'yup';
 
 export const nodePoolSchema = object().shape({
   type: string(),
   count: number(),
+});
+
+export const AutoscaleNodePoolSchema = object({
+  enabled: boolean(),
+  min: number().when('enabled', {
+    is: true,
+    then: number()
+      .required()
+      .test(
+        'min',
+        'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.',
+        function (min) {
+          if (!min) {
+            return false;
+          }
+          if (min < 1 || min > 99) {
+            return false;
+          }
+          if (min > this.parent['max']) {
+            return false;
+          }
+          return true;
+        }
+      ),
+  }),
+  max: number().when('enabled', {
+    is: true,
+    then: number()
+      .required()
+      .min(1, 'Maximum must be between 1 and 100 nodes.')
+      .max(100, 'Maximum must be between 1 and 100 nodes.'),
+  }),
 });
 
 export const clusterLabelSchema = string()

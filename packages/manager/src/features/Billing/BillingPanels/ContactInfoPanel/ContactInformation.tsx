@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -88,7 +88,10 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
-  const history = useHistory();
+  const history = useHistory<{
+    contactDrawerOpen?: boolean;
+    focusEmail?: boolean;
+  }>();
 
   const [
     editContactDrawerOpen,

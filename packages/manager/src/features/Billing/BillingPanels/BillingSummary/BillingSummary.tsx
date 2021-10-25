@@ -5,7 +5,7 @@ import {
 } from '@linode/api-v4/lib/account/types';
 import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import Box from 'src/components/core/Box';
@@ -112,7 +112,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
 
   const { replace } = useHistory();
-  const location = useLocation();
+  const location = useLocation<{ paymentMethod: PaymentMethod }>();
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
@@ -170,7 +170,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     ? 'Credit'
     : 'You have no balance at this time.';
 
-  const accountBalanceClassnames = classnames({
+  const accountBalanceClassnames = classNames({
     [classes.noBalanceOrNotDue]:
       balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod),
     [classes.pastDueBalance]: pastDueBalance,

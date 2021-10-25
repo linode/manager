@@ -7,7 +7,7 @@ import {
 } from '@reach/menu-button';
 import '@reach/menu-button/styles.css';
 import { positionRight } from '@reach/popover';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import KebabIcon from 'src/assets/icons/kebab.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
