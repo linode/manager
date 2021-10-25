@@ -77,7 +77,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
           <Paper>
             <Grid
               container
-              justify="space-between"
+              justifyContent="space-between"
               alignItems="flex-start"
               item
               xs={12}
@@ -108,7 +108,7 @@ export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
           lastUpdated={lastUpdated}
           lastUpdatedError={!!lastUpdatedError}
         />
-        <Grid container justify="space-between" item spacing={0}>
+        <Grid container justifyContent="space-between" item spacing={0}>
           <ListeningServices
             services={pathOr([], ['Ports', 'listening'], listeningPortsData)}
             servicesLoading={listeningPortsLoading && !lastUpdated}

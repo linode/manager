@@ -65,7 +65,6 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
             label={field.label}
             onChange={this.handleSelectOneOf}
             value={value}
-            // small={isOptional}
             select
           >
             {oneof.map((choice: string, index) => {

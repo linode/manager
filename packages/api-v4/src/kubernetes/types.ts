@@ -14,6 +14,7 @@ export interface KubeNodePoolResponse {
   id: number;
   nodes: PoolNodeResponse[];
   type: string;
+  autoscaler: AutoscaleNodePool;
 }
 
 export interface PoolNodeResponse {
@@ -25,6 +26,18 @@ export interface PoolNodeResponse {
 export interface PoolNodeRequest {
   type: string;
   count: number;
+}
+
+export interface AutoscaleNodePool {
+  enabled: boolean;
+  min: number;
+  max: number;
+}
+
+export interface AutoscaleNodePoolRequest {
+  clusterID: number;
+  nodePoolID: number;
+  autoscaler: AutoscaleNodePool;
 }
 
 export interface KubeConfigResponse {

@@ -386,7 +386,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   return (
     <Grid container>
       <DocumentTitleSegment segment="Create Domain" />
-      <Grid container alignItems="center" justify="space-between">
+      <Grid container alignItems="center" justifyContent="space-between">
         <Grid item className="p0">
           <Breadcrumb
             pathname={location.pathname}

@@ -1,4 +1,4 @@
-import { signAgreement } from '@linode/api-v4/lib/account';
+import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -122,7 +122,7 @@ type CombinedProps = WithSnackbarProps &
   DispatchProps &
   LabelProps &
   FeatureFlagConsumerProps &
-  RouteComponentProps<{}> &
+  RouteComponentProps<{}, any, any> &
   ProfileProps &
   AgreementsProps;
 
@@ -185,7 +185,10 @@ const isNonDefaultImageType = (prevType: string, type: string) => {
 };
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
-  params = getParamsFromUrl(this.props.location.search);
+  params = getParamsFromUrl(this.props.location.search) as Record<
+    string,
+    string
+  >;
 
   state: State = {
     ...defaultState,
@@ -583,7 +586,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         if (signedAgreement) {
-          queryClient.executeMutation({
+          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
             mutationKey: queryKey,

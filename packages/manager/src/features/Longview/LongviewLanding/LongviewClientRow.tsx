@@ -103,7 +103,7 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
       <Grid
         container
         wrap="nowrap"
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="flex-start"
         aria-label="List of Your Longview Clients"
         data-testid="longview-client-row"
@@ -164,7 +164,7 @@ const LongviewClientRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <ActionMenu
                 longviewClientID={clientID}

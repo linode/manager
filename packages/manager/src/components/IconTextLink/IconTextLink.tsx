@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';

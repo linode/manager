@@ -144,7 +144,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
       <Grid
         container
         className={classes.loading}
-        justify="center"
+        justifyContent="center"
         alignContent="center"
       >
         <CircleProgress mini />

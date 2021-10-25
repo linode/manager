@@ -1,3 +1,15 @@
+## [2021-10-20] - v0.60.0
+
+### Changed:
+Change default export from /lib to root
+Add build config for Node.js
+
+## [2021-10-05] - v0.59.0
+
+### Added:
+- AutoscaleNodePool
+- AutoscaleNodePoolRequest
+
 ## [2021-09-17] - v0.58.0
 
 ### Added:

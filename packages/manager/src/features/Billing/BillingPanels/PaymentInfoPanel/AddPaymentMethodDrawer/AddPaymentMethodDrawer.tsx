@@ -106,7 +106,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
               item
               xs={4}
               md={3}
-              justify="flex-end"
+              justifyContent="flex-end"
               alignContent="center"
             >
               <GooglePayChip

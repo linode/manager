@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account';
 import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';

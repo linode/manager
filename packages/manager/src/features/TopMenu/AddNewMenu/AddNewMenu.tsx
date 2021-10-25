@@ -118,12 +118,12 @@ const styles = (theme: Theme) =>
     },
     menuItemList: {
       '&[data-reach-menu-items]': {
-        zIndex: 3000,
-        padding: 0,
-        border: 'none',
-        whiteSpace: 'normal',
-        boxShadow: `0 0 5px ${theme.color.boxShadow}`,
         backgroundColor: theme.bg.white,
+        border: 'none',
+        boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+        padding: 0,
+        whiteSpace: 'normal',
+        zIndex: 3000,
       },
     },
     menuPopover: {

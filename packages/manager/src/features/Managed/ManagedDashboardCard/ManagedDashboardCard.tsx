@@ -159,7 +159,7 @@ const LoadingErrorOrContent: React.FC<ContentProps> = (props) => {
     <Grid
       container
       direction="row"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       className={classes.outerContainer}
     >
@@ -167,7 +167,7 @@ const LoadingErrorOrContent: React.FC<ContentProps> = (props) => {
         container
         item
         direction="column"
-        justify="space-around"
+        justifyContent="space-around"
         alignItems="center"
         xs={12}
         sm={5}

@@ -258,7 +258,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           currentVersion={cluster.k8s_version}
         />
       </Grid>
-      <Grid container className={classes.root} justify="space-between">
+      <Grid container className={classes.root} justifyContent="space-between">
         <Grid item className="p0">
           <Breadcrumb
             onEditHandlers={{
@@ -294,6 +294,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
       </Grid>
       <Grid item xs={12}>
         <NodePoolsDisplay
+          clusterID={cluster.id}
           clusterLabel={cluster.label}
           pools={cluster.node_pools}
           types={props.typesData || []}
@@ -323,6 +324,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           }
           recycleNode={handleRecycleNode}
           recycleAllClusterNodes={handleRecycleAllClusterNodes}
+          getNodePools={() =>
+            props.requestNodePools(+props.match.params.clusterID)
+          }
         />
       </Grid>
     </>

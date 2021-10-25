@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/support';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as Bluebird from 'bluebird';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -276,7 +276,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       <Grid
         container
         alignItems="center"
-        justify="flex-start"
+        justifyContent="flex-start"
         className={classes.label}
       >
         <Grid item className={classes.labelIcon}>
@@ -374,7 +374,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid container justifyContent="space-between" alignItems="flex-end">
           <Grid item>
             <Breadcrumb
               pathname={location.pathname}

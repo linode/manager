@@ -116,7 +116,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
         <Grid
           container
           alignItems="flex-end"
-          justify="flex-end"
+          justifyContent="flex-end"
           className={classes.sshKeysHeader}
         >
           <Grid className={classes.addNewWrapper} item>

@@ -80,7 +80,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
     <Grid
       className={`${classes.root} m0`}
       container
-      justify="space-between"
+      justifyContent="space-between"
       data-qa-linode={linode.label}
     >
       <Grid item className="p0">

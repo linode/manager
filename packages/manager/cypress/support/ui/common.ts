@@ -56,6 +56,7 @@ export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.wait('@getNotifications');
 };
 
+// use this if the call happens multiple times but you only want to intercept it once
 export const interceptOnce = (
   method: Method,
   url: RouteMatcher,

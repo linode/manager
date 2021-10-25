@@ -112,7 +112,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   changeViewInstant = (style: 'grid' | 'list') => {
     const { history, location } = this.props;
 
-    const updatedParams = updateParams<Params>(location.search, (params) => ({
+    const updatedParams = updateParams(location.search, (params) => ({
       ...params,
       view: style,
     }));
@@ -439,7 +439,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                             <Grid
                               container
                               className={classes.CSVwrapper}
-                              justify="flex-end"
+                              justifyContent="flex-end"
                             >
                               <Grid item className={classes.CSVlinkContainer}>
                                 <CSVLink
@@ -561,8 +561,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
-  const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });
+const updateParams = (params: string, updater: (s: any) => any) => {
+  const paramsAsObject = parse(params, { ignoreQueryPrefix: true });
   return stringify(updater(paramsAsObject));
 };
 

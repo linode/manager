@@ -44,7 +44,9 @@ export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
       return history.push('/');
     }
 
-    const hashParams: QueryParams = parseQueryParams(location.hash.substr(1));
+    const hashParams = (parseQueryParams(
+      location.hash.substr(1)
+    ) as unknown) as QueryParams;
 
     const {
       access_token: accessToken,

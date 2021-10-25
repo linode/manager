@@ -1,7 +1,7 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -516,7 +516,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           ) : (
             <React.Fragment>
               <div
-                className={classnames({
+                className={classNames({
                   [classes.searchWrapper]: true,
                   [classes.landing]: !isSelecting,
                 })}

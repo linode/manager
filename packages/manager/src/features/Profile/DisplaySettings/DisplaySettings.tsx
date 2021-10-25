@@ -31,7 +31,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   const loggedInAsCustomer = useSelector(
     (state: ApplicationState) => state.authentication.loggedInAsCustomer
   );
-  const location = useLocation();
+  const location = useLocation<{ focusEmail: boolean }>();
 
   const emailRef = React.createRef<HTMLInputElement>();
 

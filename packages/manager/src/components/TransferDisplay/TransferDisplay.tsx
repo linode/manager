@@ -159,7 +159,7 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
     >
       <Grid
         container
-        justify="space-between"
+        justifyContent="space-between"
         alignItems="center"
         className={classes.title}
       >
@@ -168,7 +168,11 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
           <Close />
         </button>
       </Grid>
-      <Grid container justify="space-between" style={{ marginBottom: 0 }}>
+      <Grid
+        container
+        justifyContent="space-between"
+        style={{ marginBottom: 0 }}
+      >
         <Grid item style={{ marginRight: 10 }}>
           <Typography>{used} GB Used</Typography>
         </Grid>

@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Props extends IndicatorProps<any> {}
+interface Props extends IndicatorProps<any, any> {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

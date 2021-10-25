@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';

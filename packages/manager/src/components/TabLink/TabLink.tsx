@@ -1,5 +1,5 @@
 import { Link } from '@reach/router';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import {
   createStyles,

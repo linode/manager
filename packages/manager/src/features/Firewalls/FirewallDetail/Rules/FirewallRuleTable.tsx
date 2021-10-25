@@ -1,5 +1,5 @@
 import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 import {
@@ -388,7 +388,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button
-                className={classnames({
+                className={classNames({
                   [classes.undoButton]: true,
                   [classes.highlight]: status !== 'PENDING_DELETION',
                 })}

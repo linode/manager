@@ -164,7 +164,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           className={classes.root}
           container
           alignItems="flex-end"
-          justify="space-between"
+          justifyContent="space-between"
         >
           <RootRef rootRef={this.disksHeader}>
             <Grid item className="p0">
