@@ -12,6 +12,7 @@ type Props = TextFieldProps & {
   required?: boolean;
   tooltipText?: string;
   label: string;
+  value: string | undefined;
 };
 
 class HideShowText extends React.Component<Props, State> {
@@ -25,7 +26,7 @@ class HideShowText extends React.Component<Props, State> {
 
   render() {
     const { hidden } = this.state;
-    const { label } = this.props;
+    const { label, value } = this.props;
 
     return (
       <TextField
@@ -33,6 +34,7 @@ class HideShowText extends React.Component<Props, State> {
         dataAttrs={{
           'data-qa-hide': hidden,
         }}
+        value={value}
         label={label}
         type={hidden ? 'password' : 'text'}
         InputProps={{
