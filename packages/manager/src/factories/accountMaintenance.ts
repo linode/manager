@@ -26,7 +26,7 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
       label: `my-linode-${id}`,
       id,
       type: 'linode',
-      url: '/v4/linode/instances/id',
+      url: `/v4/linode/instances/${id}`,
     })),
   }
 );

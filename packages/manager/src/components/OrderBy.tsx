@@ -54,7 +54,8 @@ export const getInitialValuesFromUserPreferences = (
   preferences: UserPreferences,
   params: Record<string, string>,
   defaultOrderBy: string,
-  defaultOrder: Order
+  defaultOrder: Order,
+  prefix?: string
 ) => {
   /**
    * Priority order is:
@@ -65,6 +66,17 @@ export const getInitialValuesFromUserPreferences = (
    * 4. default values
    *
    */
+  if (
+    prefix &&
+    ['asc', 'desc'].includes(params[`${prefix}-order`]) &&
+    params[`${prefix}-order`]
+  ) {
+    return {
+      order: params[`${prefix}-order`],
+      orderBy: params[`${prefix}-orderBy`],
+    };
+  }
+
   if (['asc', 'desc'].includes(params.order) && params.orderBy) {
     return {
       order: params.order,
