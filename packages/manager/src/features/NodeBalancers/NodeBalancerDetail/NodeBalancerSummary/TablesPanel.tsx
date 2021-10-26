@@ -4,7 +4,6 @@ import {
 } from '@linode/api-v4/lib/nodebalancers';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -21,9 +20,10 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
+import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
-import { ApplicationState } from 'src/store';
+import getUserTimezone from 'src/utilities/getUserTimezone';
 import { initAll } from 'src/utilities/initAll';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
 
@@ -84,7 +84,11 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = Props & WithTheme & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  WithTheme &
+  ProfileProps &
+  StateProps &
+  WithStyles<ClassNames>;
 
 const statsFetchInterval = 30000;
 
@@ -192,9 +196,11 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     statsError: string | undefined,
     loadingStats: boolean
   ) => {
-    const { classes, timezone, theme } = this.props;
+    const { classes, theme, profile } = this.props;
     const { stats } = this.state;
     const data = pathOr([[]], ['data', 'connections'], stats);
+
+    const timezone = getUserTimezone(profile.data);
 
     if (loadingStats) {
       return loading();
@@ -334,16 +340,8 @@ interface StateProps {
   timezone: string;
 }
 
-const withTimezone = connect((state: ApplicationState, ownProps) => ({
-  timezone: pathOr(
-    'UTC',
-    ['__resources', 'profile', 'data', 'timezone'],
-    state
-  ),
-}));
-
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(withTheme, withTimezone, styled);
+const enhanced = compose<CombinedProps, Props>(withTheme, withProfile, styled);
 
 export default enhanced(TablesPanel);

@@ -5,7 +5,7 @@ import {
   getDatabaseConnection,
 } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -179,7 +179,7 @@ const Header: React.FC<HeaderProps> = (props) => {
         container
         className={classes.root}
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <Grid item className="px0">
           <Breadcrumb
@@ -203,11 +203,11 @@ const Header: React.FC<HeaderProps> = (props) => {
             container
             className="m0"
             alignItems="center"
-            justify="space-between"
+            justifyContent="space-between"
           >
             <Grid item className="py0">
               <Chip
-                className={classnames({
+                className={classNames({
                   [classes.statusChip]: true,
                   [statusToClass[status]]: true,
                   statusOtherDetail: ['initializing'].includes(status),
@@ -346,7 +346,7 @@ const Body: React.FC<BodyProps> = (props) => {
       item
       className={classes.body}
       direction="row"
-      justify="space-between"
+      justifyContent="space-between"
     >
       <Grid
         container
@@ -499,7 +499,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         container
         direction="row"
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
       >
         <Grid container item className={classes.details} xs={12} sm={8}>
           <Typography className={classes.listItem}>

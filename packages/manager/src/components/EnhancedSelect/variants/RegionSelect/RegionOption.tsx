@@ -25,7 +25,7 @@ export interface RegionItem extends Item<string> {
   country: string;
   disabledMessage?: string | JSX.Element;
 }
-interface RegionOptionProps extends OptionProps<any> {
+interface RegionOptionProps extends OptionProps<any, any> {
   data: RegionItem;
 }
 
@@ -58,7 +58,7 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
             container
             direction="row"
             alignItems="center"
-            justify="flex-start"
+            justifyContent="flex-start"
           >
             <Grid item className="py0">
               {data.flag && data.flag()}
@@ -71,7 +71,7 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
           container
           direction="row"
           alignItems="center"
-          justify="flex-start"
+          justifyContent="flex-start"
         >
           <Grid item className="py0">
             {data.flag && data.flag()}

@@ -107,7 +107,7 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
   return (
     <Grid
       container
-      justify="space-between"
+      justifyContent="space-between"
       alignItems="flex-end"
       data-qa-linode={linode.label}
     >

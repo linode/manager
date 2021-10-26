@@ -24,7 +24,7 @@ interface ImageItem extends Item<string> {
   className?: string;
 }
 
-interface ImageOptionProps extends OptionProps<any> {
+interface ImageOptionProps extends OptionProps<any, any> {
   data: ImageItem;
 }
 
@@ -44,7 +44,12 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
       attrs={{ ['data-qa-image-select-item']: data.value }}
       {...props}
     >
-      <Grid container direction="row" alignItems="center" justify="flex-start">
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="flex-start"
+      >
         <Grid item className="py0">
           <span className={`${props.data.className} ${classes.icon}`} />
         </Grid>

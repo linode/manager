@@ -78,7 +78,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           value={usedDiskSpace}
           rounded
         />
-        <Grid container justify="space-between">
+        <Grid container justifyContent="space-between">
           <Grid item style={{ marginRight: 10 }}>
             <Typography>{usedDiskSpace} MB Allocated</Typography>
           </Grid>

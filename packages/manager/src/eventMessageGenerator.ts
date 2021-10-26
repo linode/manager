@@ -34,7 +34,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Your account settings have been updated.`,
   },
   backups_cancel: {
-    notification: (e) => `Backups have been cancelled for ${e.entity!.label}.`,
+    notification: (e) => `Backups have been canceled for ${e.entity!.label}.`,
   },
   backups_enable: {
     notification: (e) => `Backups have been enabled for ${e.entity!.label}.`,
@@ -178,7 +178,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (_) => `You have accepted a service transfer.`,
   },
   entity_transfer_cancel: {
-    notification: (_) => `A service transfer has been cancelled.`,
+    notification: (_) => `A service transfer has been canceled.`,
   },
   entity_transfer_create: {
     notification: (_) => `A service transfer has been created.`,

@@ -44,7 +44,7 @@ export const MonitorTickets: React.FC<Props> = (props) => {
     <Grid
       container
       direction="column"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       className={classes.root}
     >

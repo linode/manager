@@ -33,7 +33,7 @@ export const useOrder = (
   const initialOrder = getInitialValuesFromUserPreferences(
     preferenceKey || '',
     preferences || {},
-    params,
+    params as Record<string, string>,
     initial.orderBy,
     initial.order,
     prefix
