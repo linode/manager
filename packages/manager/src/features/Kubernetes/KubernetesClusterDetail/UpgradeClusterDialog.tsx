@@ -5,20 +5,10 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import CheckBox from 'src/components/CheckBox';
-import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  heading: {
-    paddingTop: theme.spacing(0.5),
-    paddingButtom: theme.spacing(),
-  },
-  checkbox: {
-    marginTop: -8,
-    marginLeft: -8,
-  },
-}));
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import { HACopy } from '../KubeCheckoutBar/HACheckbox';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   open: boolean;
@@ -26,15 +16,13 @@ interface Props {
   clusterID: number;
 }
 
-type CombinedProps = Props;
-
 const renderActions = (
   disabled: boolean,
   onClose: () => void,
   onUpgrade: () => void
 ) => {
   return (
-    <ActionsPanel style={{ padding: 0 }}>
+    <ActionsPanel>
       <Button
         buttonType="secondary"
         onClick={onClose}
@@ -56,9 +44,9 @@ const renderActions = (
   );
 };
 
-const UpgradeClusterDialog: React.FC<CombinedProps> = (props) => {
+const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const { open, onClose, clusterID } = props;
-  const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = React.useState(false);
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
 
@@ -74,6 +62,8 @@ const UpgradeClusterDialog: React.FC<CombinedProps> = (props) => {
     })
       .then(() => {
         setSubmitting(false);
+        enqueueSnackbar('Enabled HA Control Plane', { variant: 'success' });
+        onClose();
       })
       .catch((e) => {
         setSubmitting(false);
@@ -84,33 +74,24 @@ const UpgradeClusterDialog: React.FC<CombinedProps> = (props) => {
   return (
     <ConfirmationDialog
       open={open}
-      title={'Upgrade to High Availability'}
+      title="Upgrade to High Availability"
       onClose={onClose}
-      actions={() => renderActions(!checked || submitting, onClose, onUpgrade)}
+      actions={renderActions(!checked || submitting, onClose, onUpgrade)}
       error={error}
     >
       <Notice
         warning
         text="Upgrading to high availability cannot be reversed."
       />
-      <Typography variant="body1">
-        A high availability (HA) control plane sets up Kubernetes with important
-        components replicated on multiple masters so there is no single point of
-        failure.
+      <HACopy />
+      <Typography variant="body1" style={{ marginTop: 12, marginBottom: 8 }}>
+        HA costs ${HIGH_AVAILABILITY_PRICE}/month per cluster
       </Typography>
-      <Typography variant="body1">HA costs $69/month per cluster</Typography>
-      <Box>
-        <Box display="flex" flexDirection="row" alignItems="flex-start">
-          <CheckBox
-            className={classes.checkbox}
-            checked={checked}
-            onChange={toggleChecked}
-          />
-          <Typography className={classes.heading}>
-            Enable HA Control Plane
-          </Typography>
-        </Box>
-      </Box>
+      <CheckBox
+        checked={checked}
+        onChange={toggleChecked}
+        text="Enable HA Control Plane"
+      />
     </ConfirmationDialog>
   );
 };
