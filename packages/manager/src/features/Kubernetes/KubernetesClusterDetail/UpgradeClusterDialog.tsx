@@ -85,7 +85,10 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
       />
       <HACopy />
       <Typography variant="body1" style={{ marginTop: 12, marginBottom: 8 }}>
-        HA costs ${HIGH_AVAILABILITY_PRICE}/month per cluster
+        Pricing for the HA control plane is ${HIGH_AVAILABILITY_PRICE} per month
+        per cluster. By completing this upgrade, you are agreeing to the
+        additional fee on your monthly bill and understand the HA upgrade can
+        only be reversed by deleting your cluster.
       </Typography>
       <CheckBox
         checked={checked}
