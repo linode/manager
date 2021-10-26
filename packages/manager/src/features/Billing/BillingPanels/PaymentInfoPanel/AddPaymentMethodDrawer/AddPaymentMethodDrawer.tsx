@@ -81,8 +81,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     'google_pay'
   );
 
-  // const isPaypalEnabled = flags.additionalPaymentMethods?.includes('paypal');
-  const isPaypalEnabled = true;
+  const isPayPalEnabled = flags.additionalPaymentMethods?.includes('paypal');
 
   const disabled = isProcessing || hasMaxPaymentMethods;
 
@@ -123,7 +122,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           </Grid>
         </>
       ) : null}
-      {isPaypalEnabled ? (
+      {isPayPalEnabled ? (
         <>
           <Divider />
           <Grid className={classes.root} container>
