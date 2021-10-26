@@ -325,7 +325,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
           className={classes.mainGridContainer}
         >
           <Grid item container direction="row" xs={12} lg={3}>
-            <Grid item lg={7}>
+            <Grid item lg={6}>
               <Grid
                 container
                 item
@@ -419,7 +419,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               container
               direction="row"
               xs={12}
-              lg={6}
+              lg={7}
               className="foobar"
             >
               <Grid
@@ -455,7 +455,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                     onClick={() => openDialog(cluster.id)}
                     compact
                   >
-                    Delete
+                    Delete Cluster
                   </Button>
                   {isLkeHighAvailabilityEnabled &&
                   !cluster?.control_plane?.high_availability ? (
