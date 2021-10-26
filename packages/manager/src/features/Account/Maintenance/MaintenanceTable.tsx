@@ -81,7 +81,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
    * getFilter
    *
    * The logic in here is a bit weird, but because the API does not let us filter
-   * on entity.type, we need to filter on the mainteance type. When we add more maintenance
+   * on entity.type, we need to filter on the maintenance type. When we add more maintenance
    * types, we may want to make this a switch and make the logic more robust.
    * @param type type of entity
    * @returns a filter for APIv4 to get events for a specific entity type
