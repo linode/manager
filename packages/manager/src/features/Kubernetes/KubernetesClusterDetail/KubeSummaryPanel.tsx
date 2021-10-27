@@ -90,6 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 115,
   },
   tags: {
+    paddingRight: '0 !important',
     display: 'flex',
     flexDirection: 'column',
     alignSelf: 'stretch',
@@ -466,6 +467,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               xs={12}
               lg={7}
               className="foobar"
+              justifyContent="flex-end"
             >
               <Grid
                 item
