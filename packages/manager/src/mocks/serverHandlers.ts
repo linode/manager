@@ -706,6 +706,10 @@ export const handlers = [
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
+  rest.post('*/networking/ipv6/ranges', (req, res, ctx) => {
+    const range = req.body?.['prefix_length'];
+    return res(ctx.json({ range, route_target: '2001:DB8::0000' }));
+  }),
   rest.post('*/account/payments', (req, res, ctx) => {
     return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
