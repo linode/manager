@@ -79,7 +79,8 @@ export const deleteKubernetesCluster = (clusterID: number) =>
     setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
   );
 
-/** getKubeConfig
+/**
+ * getKubeConfig
  *
  * Returns a base64 encoded string of a cluster's kubeconfig.yaml
  *
@@ -89,6 +90,19 @@ export const deleteKubernetesCluster = (clusterID: number) =>
 export const getKubeConfig = (clusterId: number) =>
   Request<KubeConfigResponse>(
     setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
+  );
+
+/**
+ * resetKubeConfig
+ *
+ * Regenerates the cluster's kubeconfig.yaml
+ *
+ * @param clusterId
+ */
+export const resetKubeConfig = (clusterId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
     setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
   );
 

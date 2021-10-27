@@ -1,6 +1,7 @@
 import {
   getKubeConfig,
   KubernetesCluster,
+  resetKubeConfig,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
@@ -8,6 +9,7 @@ import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
+import ResetIcon from 'src/assets/icons/reset.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -61,6 +63,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     color: theme.palette.primary.main,
+  },
+  kubeconfigElement: {
+    display: 'flex',
+    alignItems: 'center',
+    borderRight: `1px solid #c4c4c4`,
+    '&:last-child': {
+      borderRight: 'none',
+    },
   },
   kubeconfigFileText: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -244,6 +254,22 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       });
   };
 
+  const handleResetKubeConfig = () => {
+    resetKubeConfig(cluster.id)
+      .then(() => {
+        enqueueSnackbar('Successfully reset your kubeconfig', {
+          variant: 'success',
+        });
+      })
+      .catch((error: APIError[]) => {
+        enqueueSnackbar(
+          getAPIErrorOrDefault(error, 'Unable to reset your kubeconfig')[0]
+            .reason,
+          { variant: 'error' }
+        );
+      });
+  };
+
   const handleOpenDrawer = () => {
     setDrawerError(null);
     setDrawerLoading(true);
@@ -287,22 +313,41 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
 
           {kubeconfigAvailable ? (
             <div className={classes.kubeconfigElements}>
-              <Typography
-                className={classes.kubeconfigFileText}
-                onClick={downloadKubeConfig}
-              >
-                {`${cluster.label}-kubeconfig.yaml`}
-              </Typography>
-
-              <div>
+              <div className={classes.kubeconfigElement}>
                 <DownloadIcon
                   className={classes.kubeconfigIcons}
                   onClick={downloadKubeConfig}
                 />
+                <Typography
+                  className={classes.kubeconfigFileText}
+                  onClick={downloadKubeConfig}
+                >
+                  {`${cluster.label}-kubeconfig.yaml`}
+                </Typography>
+              </div>
+              <div className={classes.kubeconfigElement}>
                 <DetailsIcon
                   className={classes.kubeconfigIcons}
                   onClick={handleOpenDrawer}
                 />
+                <Typography
+                  className={classes.kubeconfigFileText}
+                  onClick={handleOpenDrawer}
+                >
+                  View
+                </Typography>
+              </div>
+              <div className={classes.kubeconfigElement}>
+                <ResetIcon
+                  className={classes.kubeconfigIcons}
+                  onClick={handleResetKubeConfig}
+                />
+                <Typography
+                  className={classes.kubeconfigFileText}
+                  onClick={handleResetKubeConfig}
+                >
+                  Reset
+                </Typography>
               </div>
             </div>
           ) : (
