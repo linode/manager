@@ -54,7 +54,7 @@ class Example extends React.PureComponent<WithSnackbarProps, {}> {
 const Enhanced = withSnackbar(Example);
 
 export default {
-  title: 'UI Elements/Notification/Toast',
+  title: 'UI Elements/Notifications/Toast',
 };
 
 export const Default = () => (
