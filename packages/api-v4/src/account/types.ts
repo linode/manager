@@ -38,7 +38,8 @@ export type AccountCapability =
   | 'Kubernetes'
   | 'Cloud Firewall'
   | 'Vlans'
-  | 'Machine Images';
+  | 'Machine Images'
+  | 'LKE HA Control Planes';
 
 export interface AccountSettings {
   managed: boolean;

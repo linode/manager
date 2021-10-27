@@ -35,6 +35,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import UpgradeClusterDialog from './UpgradeClusterDialog';
 import { updateKubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
+import { useAccount } from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -175,6 +176,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     handleUpdateTags,
   } = props;
   const classes = useStyles();
+  const { data: account } = useAccount();
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
@@ -182,7 +184,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
   const flags = useFlags();
-  const isLkeHighAvailabilityEnabled = flags.lkeHighAvailability;
+
+  const isLkeHighAvailabilityEnabled =
+    flags.lkeHighAvailability &&
+    account?.capabilities.includes('LKE HA Control Planes');
+
   const isKubeDashboardEnabled = flags.kubernetesDashboardAvailability;
 
   const isHighlyAvailable = cluster?.control_plane?.high_availability;

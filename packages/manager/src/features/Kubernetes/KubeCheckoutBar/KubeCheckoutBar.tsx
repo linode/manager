@@ -13,6 +13,7 @@ import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
 import { useProfile } from 'src/queries/profile';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
+import { useAccount } from 'src/queries/account';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -49,7 +50,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
   const { data: profile } = useProfile();
+  const { data: account } = useAccount();
   const { data: agreements } = useAccountAgreements();
+
   const showGDPRCheckbox =
     isEURegion(region) &&
     !profile?.restricted &&
@@ -59,6 +62,10 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const disableCheckout = Boolean(
     needsAPool || (!hasAgreed && showGDPRCheckbox)
   );
+
+  const showHighAvalibility =
+    flags.lkeHighAvailability &&
+    account?.capabilities.includes('LKE HA Control Planes');
 
   return (
     <CheckoutBar
@@ -91,7 +98,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        {flags.lkeHighAvailability ? (
+        {showHighAvalibility ? (
           <>
             <Divider spacingTop={16} />
             <HACheckbox
