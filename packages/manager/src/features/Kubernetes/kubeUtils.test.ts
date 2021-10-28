@@ -1,3 +1,4 @@
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { nodePoolRequests } from 'src/__data__/nodePools';
 
@@ -61,7 +62,7 @@ describe('helper functions', () => {
 
     it('should calculate the total cluster price with HA enabled', () => {
       expect(getTotalClusterPrice([mockNodePool, mockNodePool], true)).toBe(
-        120
+        20 + HIGH_AVAILABILITY_PRICE
       );
     });
   });

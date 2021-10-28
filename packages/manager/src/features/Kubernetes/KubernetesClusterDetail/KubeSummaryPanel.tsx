@@ -199,10 +199,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     error: dashboardError,
   } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardEnabled);
 
-  const {
-    mutateAsync: resetKubeConfig,
-    isLoading,
-  } = useResetKubeConfigMutation();
+  const { mutateAsync: resetKubeConfig } = useResetKubeConfigMutation();
 
   // Deletion handlers
   // NB: this is using dispatch directly because I don't want to
