@@ -15,6 +15,10 @@ const useStyles = makeStyles(() => ({
   capitalize: {
     textTransform: 'capitalize',
   },
+  status: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));
 
 const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
@@ -44,13 +48,15 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell>
-        <StatusIcon status={status == 'started' ? 'other' : 'inactive'} />
-        {
-          // @ts-expect-error api will change pending -> scheduled
-          status === 'pending' || status === 'scheduled'
-            ? 'Scheduled'
-            : capitalize(status)
-        }{' '}
+        <div className={classes.status}>
+          <StatusIcon status={status == 'started' ? 'other' : 'inactive'} />
+          {
+            // @ts-expect-error api will change pending -> scheduled
+            status === 'pending' || status === 'scheduled'
+              ? 'Scheduled'
+              : capitalize(status)
+          }{' '}
+        </div>
       </TableCell>
       <Hidden smDown>
         <TableCell data-testid="relative-date">
