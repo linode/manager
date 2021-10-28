@@ -1,5 +1,4 @@
 import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4/lib/account';
-import classNames from 'classnames';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
@@ -32,11 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     marginRight: theme.spacing(),
   },
-  payPal: {
-    border: `1px solid ${theme.color.grey2}`,
-    background: 'white',
-    padding: '4px 7px',
-  },
 }));
 
 export const thirdPartyPaymentMap = {
@@ -60,7 +54,9 @@ export const renderThirdPartyPaymentBody = (paymentMethod: PaymentMethod) => {
     case 'paypal':
       return (
         <Typography>
-          <span>{paymentMethod.data.email}</span>
+          <span style={{ wordBreak: 'break-all' }}>
+            {paymentMethod.data.email}
+          </span>
         </Typography>
       );
     default:
@@ -84,11 +80,7 @@ export const TPP: React.FC<Props> = (props) => {
   return (
     <>
       <Grid item className={classes.icon}>
-        <Icon
-          className={classNames({
-            [classes.payPal]: paymentMethod.type === 'paypal',
-          })}
-        />
+        <Icon />
       </Grid>
       <Grid item className={classes.paymentTextContainer}>
         {!matchesSmDown ? (
