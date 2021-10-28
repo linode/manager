@@ -7,6 +7,29 @@ import { makeStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles(() => ({
+  root: {
+    '& $button': {
+      width: 35,
+      height: 34,
+      minWidth: 30,
+      border: '1px solid #CCCCCC',
+    },
+    '& $input': {
+      padding: '0 8px',
+    },
+    '& $textField': {
+      width: 50,
+      minWidth: 40,
+      height: 34,
+      minHeight: 30,
+    },
+    '& $plusIcon': {
+      width: 14,
+    },
+    '& $minusIcon': {
+      width: 12,
+    },
+  },
   button: {
     width: 40,
     height: 40,
@@ -46,34 +69,10 @@ const useStyles = makeStyles(() => ({
       minHeight: 'fit-content',
     },
   },
-  small: {
-    '& $button': {
-      width: 35,
-      height: 34,
-      minWidth: 30,
-      border: '1px solid #CCCCCC',
-    },
-    '& $input': {
-      padding: '0 8px',
-    },
-    '& $textField': {
-      width: 50,
-      minWidth: 40,
-      height: 34,
-      minHeight: 30,
-    },
-    '& $plusIcon': {
-      width: 14,
-    },
-    '& $minusIcon': {
-      width: 12,
-    },
-  },
 }));
 
 interface Props {
   inputLabel?: string;
-  small?: boolean;
   value: number;
   setValue: (value: number) => void;
   disabled?: boolean;
@@ -84,7 +83,7 @@ interface Props {
 type FinalProps = Props;
 
 export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
-  const { inputLabel, small, setValue, disabled } = props;
+  const { inputLabel, setValue, disabled } = props;
 
   const max = props.max ?? 100;
   const min = props.min ?? 0;
@@ -118,12 +117,7 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
   // TODO add error prop for error handling
   const classes = useStyles();
   return (
-    <div
-      className={classNames({
-        [classes.small]: small,
-        [classes.inputGroup]: true,
-      })}
-    >
+    <div className={`${classes.root} ${classes.inputGroup}`}>
       <Button
         buttonType="outlined"
         className={classes.button}
@@ -143,7 +137,6 @@ export const EnhancedNumberInput: React.FC<FinalProps> = (props) => {
         aria-live="polite"
         name="Quantity"
         hideLabel
-        small={small}
         value={value}
         onChange={onChange}
         inputProps={{

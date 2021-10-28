@@ -12,9 +12,9 @@ type ClassNames =
   | 'actionCell'
   | 'actionInner'
   | 'bodyRow'
+  | 'status'
   | 'statusCell'
   | 'statusCellMaintenance'
-  | 'statusHelpIcon'
   | 'statusLink'
   | 'ipCell'
   | 'ipCellWrapper'
@@ -64,6 +64,10 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
       width: '17%',
     },
+    status: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
         width: '20%',
@@ -81,12 +85,7 @@ const styles = (theme: Theme) =>
         color: theme.cmrTextColors.linkActiveLight,
         padding: '0 6px',
         position: 'relative',
-        top: 1,
       },
-    },
-    statusHelpIcon: {
-      position: 'relative',
-      top: -2,
     },
     statusLink: {
       backgroundColor: 'transparent',

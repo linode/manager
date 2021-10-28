@@ -81,7 +81,7 @@ class StoryTable extends React.Component {
 }
 
 export default {
-  title: 'Components/Table',
+  title: 'Components/Tables',
 };
 
 export const Default = () => (
