@@ -77,6 +77,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.cmrTextColors.linkActiveLight,
     cursor: 'pointer',
     marginRight: theme.spacing(1),
+    whiteSpace: 'nowrap',
   },
   kubeconfigIcons: {
     color: theme.cmrTextColors.linkActiveLight,
