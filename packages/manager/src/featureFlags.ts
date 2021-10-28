@@ -92,7 +92,7 @@ export interface Provider {
   href: string;
 }
 
-export type AdditionalPaymentMethod = 'google_pay';
+export type AdditionalPaymentMethod = 'google_pay' | 'paypal';
 
 export interface ImagesPricingBanner {
   key: string;

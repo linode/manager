@@ -91,7 +91,6 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
           <EnhancedNumberInput
             value={nodeCount}
             setValue={updateNodeCount}
-            small
             min={1}
           />
         </Grid>
