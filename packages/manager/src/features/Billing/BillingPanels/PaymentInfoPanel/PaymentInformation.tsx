@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexShrink: 0,
     height: 20,
     marginRight: '2px',
+    marginLeft: '-6px',
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
