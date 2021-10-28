@@ -61,7 +61,9 @@ export const useFormattedNotifications = (): NotificationItem[] => {
      */
     return (
       !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
-      thisNotification.type !== 'volume_migration_scheduled'
+      !['volume_migration_scheduled', 'volume_migration_imminent'].includes(
+        thisNotification.type
+      )
     );
   });
 

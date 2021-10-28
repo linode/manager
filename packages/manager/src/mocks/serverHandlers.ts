@@ -426,7 +426,7 @@ export const handlers = [
     const hddVolumeAttached2 = volumeFactory.build({
       id: 2,
       linode_id: 2,
-      label: 'upgrading',
+      label: 'example-upgrading',
     });
     const nvmeVolumes = volumeFactory.buildList(2, {
       hardware_type: 'nvme',
@@ -552,8 +552,8 @@ export const handlers = [
       percent_complete: 100,
     });
     const volumeMigrating = eventFactory.build({
-      entity: { type: 'volume', id: 5, label: 'example-upgrading' },
-      action: 'volume_migrate',
+      entity: { type: 'volume', id: 2, label: 'example-upgrading' },
+      action: 'volume_migrate' as EventAction,
       status: 'started',
       message: 'Volume example-upgrading is being upgraded to NVMe.',
       percent_complete: 65,
@@ -750,7 +750,7 @@ export const handlers = [
         message:
           'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
         label: 'You have a scheduled Block Storage volume upgrade pending!',
-        severity: 'major',
+        severity: 'critical',
         until: '2021-10-16T04:00:00',
         body: 'Your volumes in us-east will be upgraded to NVMe.',
       }
@@ -761,7 +761,7 @@ export const handlers = [
         type: 'volume_migration_imminent' as NotificationType,
         entity: {
           type: 'volume',
-          label: 'upgrading',
+          label: 'example-upgrading',
           id: 2,
           url: '/volumes/2',
         },
