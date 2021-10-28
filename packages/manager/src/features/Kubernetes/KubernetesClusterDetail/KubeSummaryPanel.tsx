@@ -1,7 +1,6 @@
 import {
   getKubeConfig,
   KubernetesCluster,
-  resetKubeConfig,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useSnackbar } from 'notistack';
@@ -36,6 +35,7 @@ import UpgradeClusterDialog from './UpgradeClusterDialog';
 import { updateKubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
 import { useAccount } from 'src/queries/account';
+import { useResetKubeConfigMutation } from 'src/queries/kubernetesConfig';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -197,7 +197,12 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const {
     data: dashboard,
     error: dashboardError,
-  } = useKubernetesDashboardQuery(cluster.id);
+  } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardEnabled);
+
+  const {
+    mutateAsync: resetKubeConfig,
+    isLoading,
+  } = useResetKubeConfigMutation();
 
   // Deletion handlers
   // NB: this is using dispatch directly because I don't want to
@@ -263,7 +268,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   };
 
   const handleResetKubeConfig = () => {
-    resetKubeConfig(cluster.id)
+    resetKubeConfig({ id: cluster.id })
       .then(() => {
         enqueueSnackbar('Successfully reset your kubeconfig', {
           variant: 'success',
@@ -315,48 +320,40 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             {renderEndpoint(endpoint, endpointLoading, endpointError)}
           </Typography>
         </Grid>
-
         <Grid item>
           <Typography className={classes.label}>Kubeconfig:</Typography>
-
           {kubeconfigAvailable ? (
             <div className={classes.kubeconfigElements}>
-              <div className={classes.kubeconfigElement}>
-                <DownloadIcon
-                  className={classes.kubeconfigIcons}
-                  onClick={downloadKubeConfig}
-                />
-                <Typography
-                  className={classes.kubeconfigFileText}
-                  onClick={downloadKubeConfig}
-                >
+              <Grid
+                item
+                onClick={downloadKubeConfig}
+                className={classes.kubeconfigElement}
+              >
+                <DownloadIcon className={classes.kubeconfigIcons} />
+                <Typography className={classes.kubeconfigFileText}>
                   {`${cluster.label}-kubeconfig.yaml`}
                 </Typography>
-              </div>
-              <div className={classes.kubeconfigElement}>
-                <DetailsIcon
-                  className={classes.kubeconfigIcons}
-                  onClick={handleOpenDrawer}
-                />
-                <Typography
-                  className={classes.kubeconfigFileText}
-                  onClick={handleOpenDrawer}
-                >
+              </Grid>
+              <Grid
+                item
+                onClick={handleOpenDrawer}
+                className={classes.kubeconfigElement}
+              >
+                <DetailsIcon className={classes.kubeconfigIcons} />
+                <Typography className={classes.kubeconfigFileText}>
                   View
                 </Typography>
-              </div>
-              <div className={classes.kubeconfigElement}>
-                <ResetIcon
-                  className={classes.kubeconfigIcons}
-                  onClick={handleResetKubeConfig}
-                />
-                <Typography
-                  className={classes.kubeconfigFileText}
-                  onClick={handleResetKubeConfig}
-                >
+              </Grid>
+              <Grid
+                item
+                onClick={handleResetKubeConfig}
+                className={classes.kubeconfigElement}
+              >
+                <ResetIcon className={classes.kubeconfigIcons} />
+                <Typography className={classes.kubeconfigFileText}>
                   Reset
                 </Typography>
-              </div>
+              </Grid>
             </div>
           ) : (
             <Typography>
