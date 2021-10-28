@@ -4,40 +4,38 @@ import {
   WithSnackbarProps,
 } from 'notistack';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import CloseSnackbar from './CloseSnackbar';
 
-type ClassNames = 'root' | 'info' | 'success' | 'error' | 'warning';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& span': {
+      color: theme.palette.text.primary,
+      fontSize: '0.875rem',
+    },
+  },
+  info: {
+    backgroundColor: theme.bg.white,
+    borderLeftColor: theme.palette.primary.main,
+  },
+  success: {
+    backgroundColor: theme.bg.white,
+    borderLeftColor: theme.palette.primary.main,
+  },
+  error: {
+    backgroundColor: theme.bg.white,
+    borderLeftColor: theme.palette.status.errorDark,
+  },
+  warning: {
+    backgroundColor: theme.bg.white,
+    borderLeftColor: theme.palette.status.warningDark,
+  },
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    info: {
-      backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.primary.main,
-    },
-    success: {
-      backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.primary.main,
-    },
-    error: {
-      backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.status.errorDark,
-    },
-    warning: {
-      backgroundColor: theme.bg.white,
-      borderLeftColor: theme.palette.status.warningDark,
-    },
-  });
-
-type CombinedProps = SnackbarProviderProps & WithStyles<ClassNames>;
+type CombinedProps = SnackbarProviderProps;
 
 const SnackBar: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
   /**
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
@@ -47,7 +45,7 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
     notistackRef?.current?.closeSnackbar(key);
   };
 
-  const { children, classes, ...rest } = props;
+  const { children, ...rest } = props;
 
   return (
     <SnackbarProvider
@@ -72,6 +70,4 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(SnackBar);
+export default SnackBar;

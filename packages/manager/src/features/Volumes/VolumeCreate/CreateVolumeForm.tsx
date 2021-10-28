@@ -14,6 +14,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -137,6 +138,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const doesNotHavePermission =
     profile?.restricted && !hasGrant('add_volumes', grants);
 
+  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
+    'block-storage-available'
+  );
+
   return (
     <Formik
       initialValues={initialValues}
@@ -248,10 +253,15 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             <Grid container direction="column">
               <Grid item className={classes.root}>
                 <Paper>
-                  {flags.blockStorageAvailability ? (
-                    <Notice success className={classes.notice}>
+                  {flags.blockStorageAvailability && !hasDismissedBanner ? (
+                    <Notice
+                      success
+                      className={classes.notice}
+                      dismissible
+                      onClose={handleDismiss}
+                    >
                       High-performance NVMe block storage is currently available
-                      in Atlanta, Georgia.
+                      in Atlanta, GA and Newark, NJ.
                     </Notice>
                   ) : null}
                   <Typography variant="body1" data-qa-volume-size-help>
