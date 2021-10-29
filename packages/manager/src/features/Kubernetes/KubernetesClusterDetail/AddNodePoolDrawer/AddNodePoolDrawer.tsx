@@ -54,9 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& span': {
       fontWeight: 'bold',
     },
-    [theme.breakpoints.up('md')]: {
-      marginTop: 0,
-    },
   },
   boxOuter: {
     width: '100%',
