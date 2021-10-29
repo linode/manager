@@ -67,7 +67,7 @@ class ImagesPricingBanner extends React.Component<
 
 ## How this works
 
-Cloud Manager uses the official LaunchDarkly [React SDK](https://docs.launchdarkly.com/sdk/client-side/react). The LaunchDarkly ID is given as an env variable, `REACT_APP_LAUNCH_DARKLY_ID`.
+Cloud Manager uses the official LaunchDarkly [React SDK](https://docs.launchdarkly.com/sdk/client-side/react). The LaunchDarkly ID is given as an env variable, `VITE_LAUNCH_DARKLY_ID`.
 
 The SDK uses React Context to provide and consume flags. Our main `App.tsx` component is wrapped in the `featureFlagProvider` higher-order-component (HOC), which is either:
 
