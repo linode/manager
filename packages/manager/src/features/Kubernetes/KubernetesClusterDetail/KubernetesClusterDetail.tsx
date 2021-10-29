@@ -19,6 +19,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import KubeContainer, {
   DispatchProps,
 } from 'src/containers/kubernetes.container';
@@ -219,7 +220,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   } = useDialog(_updateCluster);
 
   const isHighAvailabilityFeatureEnabled = Boolean(
-    flags.lkeHighAvailability &&
+    HIGH_AVAILABILITY_PRICE &&
+      flags.lkeHighAvailability &&
       account?.capabilities.includes('LKE HA Control Planes')
   );
 
