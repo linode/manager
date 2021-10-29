@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   upgradeToHAButton: {
-    marginRight: theme.spacing(),
     marginLeft: 24,
   },
 }));
