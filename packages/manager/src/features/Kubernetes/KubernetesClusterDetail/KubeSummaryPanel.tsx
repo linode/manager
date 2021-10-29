@@ -196,9 +196,8 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const matches = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
   const isLkeHighAvailabilityEnabled =
-    (flags.lkeHighAvailability &&
-      account?.capabilities.includes('LKE HA Control Planes')) ||
-    true;
+    flags.lkeHighAvailability &&
+    account?.capabilities.includes('LKE HA Control Planes');
 
   const isKubeDashboardEnabled = flags.kubernetesDashboardAvailability;
 
