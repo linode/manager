@@ -9,6 +9,7 @@ export default defineConfig({
     reactRefresh(),
     reactSvgPlugin(),
   ],
+  envDir: './',
   define: { 'process.env': process.env },
   resolve: {
     alias: {

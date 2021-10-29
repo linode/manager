@@ -11,25 +11,24 @@ interface EnvironmentOption {
 
 // Parse a node env to collect environment options. Set environment variables as follows:
 //
-// REACT_APP_DEV_TOOLS_ENV_1_LABEL="Prod"
-// REACT_APP_DEV_TOOLS_ENV_1_API_ROOT="https://api.linode.com/v4"
-// REACT_APP_DEV_TOOLS_ENV_1_LOGIN_ROOT="https://login.linode.com"
-// REACT_APP_DEV_TOOLS_ENV_1_CLIENT_ID=<YOUR_CLIENT_ID>
+// VITE_DEV_TOOLS_ENV_1_LABEL="Prod"
+// VITE_DEV_TOOLS_ENV_1_API_ROOT="https://api.linode.com/v4"
+// VITE_DEV_TOOLS_ENV_1_LOGIN_ROOT="https://login.linode.com"
+// VITE_DEV_TOOLS_ENV_1_CLIENT_ID=<YOUR_CLIENT_ID>
 //
 // Repeat for each desired environment, incrementing the "1" to "2", e.g.:
 //
-// REACT_APP_DEV_TOOLS_ENV_2_LABEL+"Another environment"
+// VITE_DEV_TOOLS_ENV_2_LABEL+"Another environment"
 export const getOptions = (env: typeof process.env) => {
   const envVariables = Object.keys(env);
-
   return envVariables.reduce<EnvironmentOption[]>((acc, thisEnvVariable) => {
-    const parsed = /REACT_APP_DEV_TOOLS_ENV_(.)_LABEL/.exec(thisEnvVariable);
+    const parsed = /VITE_DEV_TOOLS_ENV_(.)_LABEL/.exec(thisEnvVariable);
     if (!parsed) {
       return acc;
     }
 
     const num = parsed[1];
-    const base = `REACT_APP_DEV_TOOLS_ENV_${num}`;
+    const base = `VITE_DEV_TOOLS_ENV_${num}`;
 
     return [
       ...acc,
@@ -43,7 +42,7 @@ export const getOptions = (env: typeof process.env) => {
   }, []);
 };
 
-const options = getOptions(process.env);
+const options = getOptions((import.meta.env as unknown) as typeof process.env);
 
 // This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
 // and CLIENT_ID environment variables, giving client-side control over the environment.

@@ -8,16 +8,16 @@ export const isProductionBuild = process.env.NODE_ENV === PRODUCTION;
 
 /** required for the app to function */
 export const APP_ROOT =
-  process.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
+  process.env.VITE_APP_ROOT || 'http://localhost:3000';
 export const LOGIN_ROOT =
-  process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
+  process.env.VITE_LOGIN_ROOT || 'https://login.linode.com';
 export const API_ROOT =
-  process.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
+  process.env.VITE_API_ROOT || 'https://api.linode.com/v4';
 export const BETA_API_ROOT = API_ROOT + 'beta';
 export const LISH_ROOT =
-  process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
+  process.env.VITE_LISH_ROOT || 'webconsole.linode.com';
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
-export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+export const CLIENT_ID = process.env.VITE_CLIENT_ID;
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
@@ -26,18 +26,18 @@ export const DOCS_SEARCH_URL =
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
-  process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
+  process.env.VITE_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY =
-  process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
+  process.env.VITE_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
-  process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
+  process.env.VITE_LAUNCH_DARKLY_ID || '';
 export const LINODE_STATUS_PAGE_URL =
-  process.env.REACT_APP_STATUS_PAGE_URL || 'https://status.linode.com/api/v2';
+  process.env.VITE_STATUS_PAGE_URL || 'https://status.linode.com/api/v2';
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
 export const API_MAX_PAGE_SIZE =
-  Number(process.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
+  Number(process.env.VITE_API_MAX_PAGE_SIZE) || 500;
 
 // Having more of a single entity than this number classifies you as having
 // a "large account". Keeping separate from the API max in case they need
@@ -46,32 +46,32 @@ export const LARGE_ACCOUNT_THRESHOLD = API_MAX_PAGE_SIZE;
 
 // Sets Paypal Environment, valid values: 'sandbox|production'
 export const PAYPAL_CLIENT_ENV =
-  process.env.REACT_APP_PAYPAL_ENV || 'production';
+  process.env.VITE_PAYPAL_ENV || 'production';
 
 // Google Pay Merchant ID
-export const GPAY_MERCHANT_ID = process.env.REACT_APP_GPAY_MERCHANT_ID;
+export const GPAY_MERCHANT_ID = process.env.VITE_GPAY_MERCHANT_ID;
 
 // Google Pay Environment: 'TEST|PRODUCTION'
-export const GPAY_CLIENT_ENV = process.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
+export const GPAY_CLIENT_ENV = process.env.VITE_GPAY_ENV || 'PRODUCTION';
 
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 
 /** optional variables */
-export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
+export const SENTRY_URL = process.env.VITE_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
-export const GA_ID = process.env.REACT_APP_GA_ID;
-export const GTM_ID = process.env.REACT_APP_GTM_ID;
+export const GA_ID = process.env.VITE_GA_ID;
+export const GTM_ID = process.env.VITE_GTM_ID;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
-export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
+export const ACCESS_TOKEN = process.env.VITE_ACCESS_TOKEN;
 
 export const LOG_PERFORMANCE_METRICS =
   !isProductionBuild &&
-  process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
+  process.env.VITE_LOG_PERFORMANCE_METRICS === 'true';
 
 export const DISABLE_EVENT_THROTTLE =
-  Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
+  Boolean(process.env.VITE_DISABLE_EVENT_THROTTLE) || false;
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO
@@ -311,7 +311,7 @@ export const MINIMUM_PASSWORD_STRENGTH = 2;
 
 // When true, use the mock API defined in serverHandlers.ts instead of making network requests
 export const MOCK_SERVICE_WORKER =
-  process.env.REACT_APP_MOCK_SERVICE_WORKER === 'true';
+  process.env.VITE_MOCK_SERVICE_WORKER === 'true';
 
 // Maximum payment methods
 export const MAXIMUM_PAYMENT_METHODS = 6;
