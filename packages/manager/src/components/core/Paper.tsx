@@ -1,5 +1,5 @@
 import _Paper, { PaperProps as _PaperProps } from '@material-ui/core/Paper';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import FormHelperText from './FormHelperText';

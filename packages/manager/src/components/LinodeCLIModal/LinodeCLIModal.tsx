@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
     padding: theme.spacing(),
     whiteSpace: 'nowrap',
-    fontFamily: '"SourceCodePro", monospace, sans-serif',
+    fontFamily: '"UbuntuMono", monospace, sans-serif',
     wordBreak: 'break-all',
     position: 'relative',
     width: '100%',

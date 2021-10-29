@@ -483,22 +483,27 @@ export const handlers = [
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
 
-    const accountMaintenance = [
-      ...accountMaintenanceFactory.buildList(1, {
-        entity: { label: 'very-long-name-for-a-linode-for-testing' },
-        when: new Date(Date.now() + 5000).toISOString(),
-      }),
-      ...accountMaintenanceFactory.buildList(5, { status: 'pending' }),
-      ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
-    ];
+    const accountMaintenance =
+      headers.type === 'volume_migration'
+        ? [
+            accountMaintenanceFactory.build({
+              entity: { type: 'volume', label: 'my-volume-0', id: 0 },
+              status: 'pending',
+              reason: 'Free upgrade to faster NVMe hardware',
+              type: 'volume_migration',
+            }),
+          ]
+        : [
+            ...accountMaintenanceFactory.buildList(3, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(2, { status: 'started' }),
+          ];
 
     if (req.headers.get('x-filter')) {
-      const sort = JSON.parse(req.headers.get('x-filter') || '{}');
-
       accountMaintenance.sort((a, b) => {
-        const statusA = a[sort['+order_by']];
-        const statusB = b[sort['+order_by']];
+        const statusA = a[headers['+order_by']];
+        const statusB = b[headers['+order_by']];
 
         if (statusA < statusB) {
           return -1;
@@ -509,7 +514,7 @@ export const handlers = [
         return 0;
       });
 
-      if (sort['+order'] == 'desc') {
+      if (headers['+order'] == 'desc') {
         accountMaintenance.reverse();
       }
       return res(
@@ -519,7 +524,7 @@ export const handlers = [
             (page - 1) * pageSize + pageSize
           ),
           page,
-          pages: accountMaintenance.length / pageSize,
+          pages: Math.ceil(accountMaintenance.length / pageSize),
           results: accountMaintenance.length,
         })
       );

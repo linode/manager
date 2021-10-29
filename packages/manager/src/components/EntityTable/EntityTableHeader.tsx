@@ -190,7 +190,7 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
             onClick={toggleGroupByTag}
             disableRipple
             className={classes.toggleButton}
-            // Group by Tag is only available when you have less than 500 Domains
+            // Group by Tag is not available if you have a large account.
             // See https://github.com/linode/manager/pull/6653 for more details
             disabled={isLargeAccount}
           >

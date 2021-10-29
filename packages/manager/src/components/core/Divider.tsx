@@ -3,7 +3,7 @@ import Divider, {
 } from '@material-ui/core/Divider';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -31,7 +31,7 @@ const _Divider: React.FC<Props> = (props) => {
 
   return (
     <Divider
-      className={classnames({
+      className={classNames({
         [classes.root]: true,
         [classes.light]: light,
       })}

@@ -2,7 +2,7 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Button from 'src/components/Button';
 
 <Meta
-  title="UI Elements/Button"
+  title="UI Elements/Buttons"
   component={Button}
   decorators={[
     (Story) => (
@@ -113,7 +113,7 @@ export const Template = (args) => (
 
 <Canvas>
   <Story
-    name="Default"
+    name="Component API"
     args={{
       buttonType: 'primary',
       compact: false,
@@ -130,13 +130,27 @@ export const Template = (args) => (
       compact: {
         description:
           'Removes the spacing to the left and right of the text for secondary buttons only.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
       },
       disabled: {
         description:
           'A button should remain disabled until all required data has been entered in a form or data has been changed in an edit state.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      fullWidth: {
+        table: {
+          defaultValue: { summary: 'false' },
+        },
       },
       loading: {
         description: 'Used to depict a loading state.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
       },
       tooltipText: {
         description:
@@ -149,7 +163,7 @@ export const Template = (args) => (
 </Canvas>
 
 <ArgsTable
-  story="Default"
+  story="Component API"
   sort="requiredFirst"
   exclude={[
     <!-- These are props that are not relevant -->

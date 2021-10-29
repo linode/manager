@@ -77,7 +77,7 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
       container
       wrap="nowrap"
       direction="row"
-      justify="flex-start"
+      justifyContent="flex-start"
       alignItems="flex-start"
     >
       <Grid item className={classes.selectContainer}>

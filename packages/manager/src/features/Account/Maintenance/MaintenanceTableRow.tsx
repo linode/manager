@@ -15,9 +15,6 @@ const useStyles = makeStyles(() => ({
   capitalize: {
     textTransform: 'capitalize',
   },
-  padding: {
-    padding: 8,
-  },
 }));
 
 const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
@@ -27,15 +24,22 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
   return (
     <TableRow key={entity.id}>
       <TableCell>
-        <Link to={`/${entity.type}s/${entity.id}`} tabIndex={0}>
+        <Link
+          to={
+            entity.type === 'linode'
+              ? `/${entity.type}s/${entity.id}`
+              : `/${entity.type}s`
+          }
+          tabIndex={0}
+        >
           {entity.label}
         </Link>
       </TableCell>
-      <TableCell>
+      <TableCell noWrap>
         <div>{formatDate(when)}</div>
       </TableCell>
       <Hidden xsDown>
-        <TableCell className={classes.capitalize}>
+        <TableCell className={classes.capitalize} noWrap>
           {type.replace('_', ' ')}
         </TableCell>
       </Hidden>
@@ -54,7 +58,7 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
         </TableCell>
       </Hidden>
       <Hidden mdDown>
-        <TableCell className={classes.padding}>
+        <TableCell>
           <HighlightedMarkdown textOrMarkdown={reason} />
         </TableCell>
       </Hidden>

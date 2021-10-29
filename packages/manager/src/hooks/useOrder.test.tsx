@@ -131,9 +131,33 @@ describe('useOrder hook', () => {
       )
     );
 
-    expect(mockHistory.replace).toBeCalledWith({
-      search: `?order=${handleOrderChangeOrder.order}&orderBy=${handleOrderChangeOrder.orderBy}`,
-    });
+    expect(mockHistory.replace).toBeCalledWith(
+      `?order=${handleOrderChangeOrder.order}&orderBy=${handleOrderChangeOrder.orderBy}`
+    );
+
+    expect(result.current.order).toBe(handleOrderChangeOrder.order);
+    expect(result.current.orderBy).toBe(handleOrderChangeOrder.orderBy);
+  });
+
+  it('should update query params when handleOrderChange is called (with prefix)', () => {
+    const prefix = 'volume';
+    const { result } = renderHook(
+      () => useOrder(defaultOrder, undefined, prefix),
+      {
+        wrapper: wrapWithStore,
+      }
+    );
+
+    act(() =>
+      result.current.handleOrderChange(
+        handleOrderChangeOrder.orderBy,
+        handleOrderChangeOrder.order
+      )
+    );
+
+    expect(mockHistory.replace).toBeCalledWith(
+      `?${prefix}-order=${handleOrderChangeOrder.order}&${prefix}-orderBy=${handleOrderChangeOrder.orderBy}`
+    );
 
     expect(result.current.order).toBe(handleOrderChangeOrder.order);
     expect(result.current.orderBy).toBe(handleOrderChangeOrder.orderBy);
