@@ -10,8 +10,7 @@ import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 export const HACopy = () => (
   <Typography>
     A high availability (HA) control plane is replicated on multiple master
-    nodes to provide 99.99% uptime for your Kubernetes cluster, and is
-    recommended for production workloads.{' '}
+    nodes to provide 99.99% uptime, and is recommended for production workloads.{' '}
     <Link to="https://www.linode.com/docs/guides/kubernetes/">
       Learn more about the HA control plane.
     </Link>

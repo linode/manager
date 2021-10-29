@@ -3,14 +3,17 @@ import {
   KubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
-import ResetIcon from 'src/assets/icons/reset.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
+import ResetIcon from 'src/assets/icons/reset.svg';
 import Button from 'src/components/Button';
+import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, useMediaQuery } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -20,6 +23,8 @@ import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { useDialog } from 'src/hooks/useDialog';
+import { useResetKubeConfigMutation } from 'src/queries/kubernetesConfig';
+import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
 import { deleteCluster } from 'src/store/kubernetes/kubernetes.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { downloadFile } from 'src/utilities/downloadFile';
@@ -28,15 +33,6 @@ import { pluralize } from 'src/utilities/pluralize';
 import { getTotalClusterPrice } from '../kubeUtils';
 import KubeConfigDrawer from './KubeConfigDrawer';
 import KubernetesDialog from './KubernetesDialog';
-import Chip from 'src/components/core/Chip';
-import useFlags from 'src/hooks/useFlags';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import UpgradeClusterDialog from './UpgradeClusterDialog';
-import { updateKubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
-import { useAccount } from 'src/queries/account';
-import { useResetKubeConfigMutation } from 'src/queries/kubernetesConfig';
-import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -137,14 +133,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  buttons: {
-    marginRight: theme.spacing(),
-  },
   dashboard: {
     '& svg': {
       height: 14,
       marginLeft: 4,
     },
+  },
+  buttons: {
+    marginRight: theme.spacing(),
   },
 }));
 
@@ -156,6 +152,8 @@ interface Props {
   kubeconfigAvailable: boolean;
   kubeconfigError?: string;
   handleUpdateTags: (updatedTags: string[]) => Promise<KubernetesCluster>;
+  isClusterHighlyAvailable: boolean;
+  isKubeDashboardFeatureEnabled: boolean;
 }
 
 const renderEndpoint = (
@@ -183,30 +181,22 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     kubeconfigAvailable,
     kubeconfigError,
     handleUpdateTags,
+    isClusterHighlyAvailable,
+    isKubeDashboardFeatureEnabled,
   } = props;
   const classes = useStyles();
-  const { data: account } = useAccount();
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
-  const flags = useFlags();
   const matches = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
-
-  const isLkeHighAvailabilityEnabled =
-    flags.lkeHighAvailability &&
-    account?.capabilities.includes('LKE HA Control Planes');
-
-  const isKubeDashboardEnabled = flags.kubernetesDashboardAvailability;
-
-  const isHighlyAvailable = cluster?.control_plane?.high_availability;
 
   const {
     data: dashboard,
     error: dashboardError,
-  } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardEnabled);
+  } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardFeatureEnabled);
 
   const {
     mutateAsync: resetKubeConfig,
@@ -226,17 +216,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
     _deleteCluster
   );
-
-  const _updateCluster = (clusterId: number) =>
-    updateKubernetesCluster(clusterId, {
-      control_plane: { high_availability: true },
-    });
-
-  const {
-    dialog: upgradeDialog,
-    closeDialog: closeUpgradeDialog,
-    openDialog: openUpgradeDialog,
-  } = useDialog(_updateCluster);
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
@@ -432,7 +411,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   <Typography>
                     {`$${getTotalClusterPrice(
                       cluster.node_pools,
-                      isHighlyAvailable
+                      isClusterHighlyAvailable
                     )}/month`}
                   </Typography>
                 </Grid>
@@ -508,13 +487,12 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   direction={matches ? 'row-reverse' : 'row'}
                   justifyContent="flex-end"
                 >
-                  {isLkeHighAvailabilityEnabled &&
-                  cluster?.control_plane?.high_availability ? (
+                  {isClusterHighlyAvailable ? (
                     <Grid item>
                       <Chip label="HA CLUSTER" />
                     </Grid>
                   ) : null}
-                  {isKubeDashboardEnabled ? (
+                  {isKubeDashboardFeatureEnabled ? (
                     <Button
                       className={`${classes.dashboard} ${classes.buttons}`}
                       buttonType="secondary"
@@ -534,16 +512,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   >
                     Delete Cluster
                   </Button>
-                  {isLkeHighAvailabilityEnabled &&
-                  !cluster?.control_plane?.high_availability ? (
-                    <Button
-                      className={classes.buttons}
-                      buttonType="primary"
-                      onClick={() => openUpgradeDialog(cluster.id)}
-                    >
-                      Upgrade to HA
-                    </Button>
-                  ) : null}
                 </Grid>
               </Grid>
               <Grid item className={classes.tags} xs={12} lg={12}>
@@ -574,11 +542,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         clusterPools={cluster.node_pools}
         onClose={closeDialog}
         onDelete={() => submitDialog(cluster.id)}
-      />
-      <UpgradeClusterDialog
-        open={upgradeDialog.isOpen}
-        onClose={closeUpgradeDialog}
-        clusterID={cluster.id}
       />
     </React.Fragment>
   );
