@@ -22,6 +22,9 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
     case 'volume_delete':
       return handleVolumeDelete(dispatch, status, id);
 
+    case 'volume_migrate':
+      return handleVolumeMigrate(dispatch, status);
+
     default:
       return;
   }
@@ -78,6 +81,20 @@ const handleVolumeDelete = (
         result: {},
       });
       return dispatch(action);
+  }
+};
+
+const handleVolumeMigrate = (dispatch: Dispatch<any>, status: EventStatus) => {
+  switch (status) {
+    case 'started':
+    case 'finished':
+      dispatch(getAllVolumes({ setLoading: false }));
+    case 'failed':
+    case 'notification':
+    case 'scheduled':
+
+    default:
+      return;
   }
 };
 
