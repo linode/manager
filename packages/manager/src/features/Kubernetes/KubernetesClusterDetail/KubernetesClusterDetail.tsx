@@ -335,10 +335,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
             })
           }
           isClusterHighlyAvailable={
-            Boolean(
-              flags.lkeHighAvailability &&
-                account?.capabilities.includes('LKE HA Control Planes')
-            ) && cluster?.control_plane?.high_availability
+            isHighAvailabilityFeatureEnabled &&
+            cluster.control_plane.high_availability
           }
           isKubeDashboardFeatureEnabled={Boolean(
             flags.kubernetesDashboardAvailability
