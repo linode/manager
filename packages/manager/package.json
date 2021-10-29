@@ -13,6 +13,7 @@
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts"
   },
   "dependencies": {
+    "@fontsource/lato": "^4.5.0",
     "@linode/api-v4": "^0.60.0",
     "@linode/validation": "0.7.0",
     "@material-ui/core": "^4.11.0",

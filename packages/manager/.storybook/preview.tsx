@@ -2,7 +2,7 @@
 import { select, withKnobs } from '@storybook/addon-knobs';
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 import React from 'react';
-import '../public/fonts/fonts.css';
+import "@fontsource/lato";
 import CssBaseline from '../src/components/core/CssBaseline';
 import { ThemeProvider } from '../src/components/core/styles';
 import '../src/index.css';

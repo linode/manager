@@ -138,9 +138,9 @@ const primaryColors = {
 };
 
 const primaryFonts = {
-  normal: '"LatoWeb", sans-serif',
+  normal: '"Lato", sans-serif',
   semiBold: '"LatoWebSemibold", sans-serif',
-  bold: '"LatoWebBold", sans-serif',
+  bold: '"Lato", sans-serif',
 };
 
 const iconCircleAnimation = {

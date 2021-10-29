@@ -57,7 +57,7 @@ const styles = (theme: Theme) =>
       borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       '& .noticeText': {
         ...theme.typography.body1,
-        fontFamily: '"LatoWeb", sans-serif',
+        fontFamily: '"Lato", sans-serif',
       },
       marginTop: 20,
       paddingLeft: 10,

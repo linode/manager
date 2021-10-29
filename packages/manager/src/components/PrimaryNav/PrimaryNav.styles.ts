@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     color: theme.color.primaryNavText,
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
+    fontFamily: 'Lato', // we keep this bold at all times
     opacity: 1,
     transition: theme.transitions.create(['color']),
     whiteSpace: 'nowrap',

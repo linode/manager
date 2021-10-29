@@ -38,7 +38,7 @@ const styles = (theme: Theme) =>
       borderRadius: '50%',
       backgroundColor: theme.color.grey3,
       fontSize: 17,
-      fontFamily: 'LatoWebBold',
+      fontFamily: 'Lato',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
