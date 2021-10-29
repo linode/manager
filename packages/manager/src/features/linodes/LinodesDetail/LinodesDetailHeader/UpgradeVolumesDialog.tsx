@@ -1,18 +1,21 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import Link from 'src/components/Link';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { ExtendedLinode } from '../types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useSnackbar } from 'notistack';
+import Typography from 'src/components/core/Typography';
+import Link from 'src/components/Link';
+import { Dispatch } from 'src/hooks/types';
 import {
   useVolumesMigrateMutation,
   useVolumesMigrationQueueQuery,
 } from 'src/queries/volumesMigrations';
-import Typography from 'src/components/core/Typography';
+import { requestNotifications } from 'src/store/notification/notification.requests';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { ExtendedLinode } from '../types';
 
 interface Props {
   open: boolean;
@@ -35,6 +38,8 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
+  const dispatch: Dispatch = useDispatch();
+
   const { data: migrationQueue } = useVolumesMigrationQueueQuery(
     linode.region,
     open
@@ -52,6 +57,8 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
         `Successfully added ${linode.label}'s volumes to the migration queue.`,
         { variant: 'success' }
       );
+      // Re-request notifications so the Upgrade Volume banner on the Linode Detail page disappears.
+      dispatch(requestNotifications());
       onClose();
     });
   };
