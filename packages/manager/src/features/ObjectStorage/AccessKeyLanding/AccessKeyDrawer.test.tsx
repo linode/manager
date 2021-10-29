@@ -17,7 +17,7 @@ describe('AccessKeyDrawer', () => {
   };
   renderWithTheme(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {
-    expect(screen.getByText(/create an access key/i)).toBeInTheDocument();
+    expect(screen.getByTestId('drawer-title')).toBeInTheDocument();
   });
 
   describe('default scopes helper method', () => {

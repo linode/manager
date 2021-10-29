@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import SortUp from 'src/assets/icons/sort-up.svg?component';
 import Sort from 'src/assets/icons/unsorted.svg?component';

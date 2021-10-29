@@ -53,7 +53,7 @@ export const TipSection: React.FunctionComponent<CombinedProps> = (props) => {
         container
         item
         direction="row"
-        justify="flex-start"
+        justifyContent="flex-start"
         alignItems="center"
       >
         <Grid item>

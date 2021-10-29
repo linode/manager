@@ -1,7 +1,7 @@
 import Check from '@material-ui/icons/Check';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
@@ -219,12 +219,13 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
           errorText={errorText}
           InputProps={{ className: classes.inputRoot }}
           inputProps={{
-            className: classnames({
+            className: classNames({
               [classes.headline]: typeVariant === 'h1',
               [classes.title]: typeVariant === 'h2',
               [classes.input]: true,
             }),
           }}
+          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={true}
           editable
         />

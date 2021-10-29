@@ -1,13 +1,13 @@
+import { PaymentMethod } from '@linode/api-v4';
 import {
   ActivePromotion,
   PromotionServiceType,
 } from '@linode/api-v4/lib/account/types';
-import { PaymentMethod } from '@linode/api-v4';
 import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
-import { useHistory, useRouteMatch, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -17,11 +17,11 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
+import useAccountManagement from 'src/hooks/useAccountManagement';
 import useNotifications from 'src/hooks/useNotifications';
+import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
-import useAccountManagement from 'src/hooks/useAccountManagement';
-import { isWithinDays } from 'src/utilities/date';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,11 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpIcon: {
     padding: `0px 8px`,
-    color: '#888f91',
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
   },
   noBalanceOrNotDue: {
     color: theme.palette.text.primary,
@@ -117,7 +112,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
 
   const { replace } = useHistory();
-  const location = useLocation();
+  const location = useLocation<{ paymentMethod: PaymentMethod }>();
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
     false
@@ -175,7 +170,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     ? 'Credit'
     : 'You have no balance at this time.';
 
-  const accountBalanceClassnames = classnames({
+  const accountBalanceClassnames = classNames({
     [classes.noBalanceOrNotDue]:
       balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod),
     [classes.pastDueBalance]: pastDueBalance,

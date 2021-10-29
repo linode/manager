@@ -1,7 +1,7 @@
 // @todo: this import?
 import { InputBaseProps } from '@material-ui/core/InputBase';
 import Close from '@material-ui/icons/Close';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import InputLabel from 'src/components/core/InputLabel';
@@ -49,9 +49,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
   },
-  infoIcon: {
-    marginTop: '-1.05rem',
-    color: '#888F91',
+  helpIcon: {
+    marginTop: -15,
+    marginLeft: -4,
+  },
+  required: {
+    fontFamily: theme.font.normal,
   },
 }));
 
@@ -66,6 +69,7 @@ export interface Props {
   onBlur?: (ips: ExtendedIP[]) => void;
   inputProps?: InputBaseProps;
   className?: string;
+  required?: boolean;
 }
 
 export const MultipleIPInput: React.FC<Props> = (props) => {
@@ -78,6 +82,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     helperText,
     tooltip,
     placeholder,
+    required,
   } = props;
   const classes = useStyles();
 
@@ -119,7 +124,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={classnames({
+      className={classNames({
         [classes.root]: true,
         // Inject the className if given as as prop.
         [props.className ?? '']: Boolean(props.className),
@@ -129,13 +134,18 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
           <HelpIcon
-            className={classes.infoIcon}
+            className={classes.helpIcon}
             text={tooltip}
             tooltipPosition="right"
           />
         </div>
       ) : (
-        <InputLabel>{title}</InputLabel>
+        <InputLabel>
+          {title}
+          {required ? (
+            <span className={classes.required}> (required)</span>
+          ) : null}
+        </InputLabel>
       )}
       {helperText && (
         <Typography className={classes.helperText}>{helperText}</Typography>
@@ -147,7 +157,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
           key={`domain-transfer-ip-${idx}`}
           direction="row"
           alignItems="center"
-          justify="center"
+          justifyContent="center"
           data-testid="domain-transfer-input"
         >
           <Grid item xs={11}>

@@ -31,7 +31,7 @@ import { requestRegions } from 'src/store/regions/regions.actions';
 import { MapState } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
-type CombinedProps = DispatchProps & StateProps;
+type CombinedProps = DispatchProps & StateProps & { children: any };
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {

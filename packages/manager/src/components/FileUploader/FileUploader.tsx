@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
@@ -122,6 +122,7 @@ interface Props {
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
   // Send a function for cancelling the upload back to the parent.
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
+  onSuccess?: () => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
@@ -134,6 +135,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     dropzoneDisabled,
     apiError,
     setErrors,
+    onSuccess,
   } = props;
 
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
@@ -243,6 +245,10 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
       const handleSuccess = () => {
+        if (onSuccess) {
+          onSuccess();
+        }
+
         dispatch({
           type: 'UPDATE_FILES',
           filesToUpdate: [path],
@@ -397,10 +403,9 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   const UploadZoneActive = state.files.length !== 0;
 
-  const placeholder =
-    !label || !region
-      ? 'To upload an image, complete the required fields.'
-      : 'You can browse your device to upload an image file or drop it here.';
+  const placeholder = dropzoneDisabled
+    ? 'To upload an image, complete the required fields.'
+    : 'You can browse your device to upload an image file or drop it here.';
 
   return (
     <div

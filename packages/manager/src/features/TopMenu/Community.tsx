@@ -1,6 +1,6 @@
 import * as React from 'react';
-import * as classNames from 'classnames';
 import Community from 'src/assets/icons/community_nav.svg?component';
+import classNames from 'classnames';
 import Link from 'src/components/Link';
 import { useStyles } from './iconStyles';
 import TopMenuIcon from './TopMenuIcon';

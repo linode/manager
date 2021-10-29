@@ -78,7 +78,7 @@ const initialOrder = { order: 'asc' as Order, orderBy: 'domain' };
 export type CombinedProps = DispatchProps &
   DomainProps &
   Props &
-  RouteComponentProps<{}> &
+  RouteComponentProps<{}, any, any> &
   StateProps &
   WithSnackbarProps;
 

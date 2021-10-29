@@ -4,10 +4,10 @@ import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import TextField from 'src/components/TextField';
 import ConfirmTransferDialog from './ConfirmTransferDialog';
-import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -68,9 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  helpIcon: {
-    color: theme.color.grey1,
-  },
   makeTransfer: {
     [theme.breakpoints.up('md')]: {
       '&.MuiGrid-item': {
@@ -127,7 +124,7 @@ export const TransferControls: React.FC<{}> = (_) => {
         container
         className={classes.root}
         alignItems="center"
-        justify="space-between"
+        justifyContent="space-between"
         wrap="nowrap"
       >
         <Grid
@@ -164,10 +161,7 @@ export const TransferControls: React.FC<{}> = (_) => {
               Review Details
             </Button>
             <Hidden smDown>
-              <HelpIcon
-                className={classes.helpIcon}
-                text="Enter a service transfer token to review the details and accept the transfer."
-              />
+              <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
             </Hidden>
           </Grid>
         </Grid>

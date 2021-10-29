@@ -1,7 +1,7 @@
 import { PaymentMethod } from '@linode/api-v4';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { APIWarning } from '@linode/api-v4/lib/types';
-import * as classnames from 'classnames';
+import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import makeAsyncScriptLoader from 'react-async-script';
@@ -116,11 +116,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpIcon: {
     padding: `0px 8px`,
-    color: '#888f91',
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
   },
 }));
 
@@ -332,7 +327,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 <strong>
                   Current balance:{' '}
                   <span
-                    className={classnames({
+                    className={classNames({
                       [classes.credit]: account?.balance < 0,
                     })}
                   >
@@ -409,7 +404,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                     return (
                       <Grid key={id} className={classes.paymentMethod}>
                         <SelectionCard
-                          className={classnames({
+                          className={classNames({
                             [classes.selectionCard]: true,
                             [classes.expired]: cardIsExpired,
                           })}
@@ -487,7 +482,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                       onChange={handleCVVChange}
                       noMarginTop
                       optional
-                      small
                       type="text"
                       value={cvv}
                     />

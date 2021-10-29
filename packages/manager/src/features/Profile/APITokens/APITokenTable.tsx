@@ -543,7 +543,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           className={`${classes.root} m0`}
           container
           alignItems="center"
-          justify="space-between"
+          justifyContent="space-between"
         >
           <Grid item>
             <Typography

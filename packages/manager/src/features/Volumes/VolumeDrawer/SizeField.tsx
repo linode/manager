@@ -39,7 +39,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const helperText = resize
-    ? `This volume can range from ${resize} GiB to ${MAX_VOLUME_SIZE} GiB in size.`
+    ? `This volume can range from ${resize} GB to ${MAX_VOLUME_SIZE} GB in size.`
     : undefined;
 
   const price = value >= 10 ? (value / 10).toFixed(2) : '0.00';
@@ -51,7 +51,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
         errorText={error}
         helperText={helperText}
         InputProps={{
-          endAdornment: <InputAdornment position="end"> GiB </InputAdornment>,
+          endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
         }}
         label="Size"
         name={name}
@@ -64,7 +64,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
       />
       <FormHelperText>
         {resize || isFromLinode ? (
-          'The size of the new volume in GiB.'
+          'The size of the new volume in GB.'
         ) : (
           <span className={classes.helper}>${price}/month</span>
         )}

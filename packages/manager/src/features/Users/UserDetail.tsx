@@ -8,7 +8,6 @@ import {
   useHistory,
   useLocation,
   useParams,
-  useRouteMatch,
 } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -18,6 +17,8 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
+import { queryKey } from 'src/queries/accountUsers';
+import { queryClient } from 'src/queries/base';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import UserPermissions from './UserPermissions';
@@ -25,8 +26,7 @@ import UserProfile from './UserProfile';
 
 const UserDetail: React.FC = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
-  const match = useRouteMatch('/users/:username');
-  const location = useLocation();
+  const location = useLocation<{ newUsername: string; success: boolean }>();
   const history = useHistory();
 
   const { data: profile, refetch: refreshProfile } = useProfile();
@@ -129,15 +129,15 @@ const UserDetail: React.FC = () => {
 
         /**
          * If the user we updated is the current user, we need to reflect that change at the global level.
+         * Otherwise, refetch the account's users so it has the new username
          */
         if (profile?.username === originalUsername) {
           refreshProfile();
+        } else {
+          queryClient.invalidateQueries(queryKey);
         }
 
-        /**
-         * I really have no idea whats going on here.
-         */
-        history.push(match!.path.replace(':username', user.username!), {
+        history.replace(`/account/users/${user.username}`, {
           success: true,
         });
       })
@@ -194,7 +194,7 @@ const UserDetail: React.FC = () => {
   if (error) {
     return (
       <React.Fragment>
-        <Grid container justify="space-between">
+        <Grid container justifyContent="space-between">
           <Grid item>
             <Breadcrumb
               pathname={location.pathname}

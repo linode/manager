@@ -10,7 +10,7 @@ export const Default = () => {
   return (
     <Grid
       container
-      justify="center"
+      justifyContent="center"
       style={{ backgroundColor: '#F4F4F4', height: '100%' }}
     >
       <Grid item xs={10}>

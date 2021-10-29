@@ -1,5 +1,5 @@
 import Close from '@material-ui/icons/Close';
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg?component';
 import Check from 'src/assets/icons/check.svg?component';

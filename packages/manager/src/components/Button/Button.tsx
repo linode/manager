@@ -1,4 +1,4 @@
-import * as classNames from 'classnames';
+import classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg?component';
@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   reg: {
     display: 'flex',
     alignItems: 'center',
+  },
+  helpIcon: {
+    marginLeft: -theme.spacing(),
   },
 }));
 
@@ -96,7 +99,9 @@ export const Button: React.FC<CombinedProps> = (props) => {
           {loading ? <Reload /> : props.children}
         </span>
       </_Button>
-      {tooltipText && <HelpIcon text={tooltipText} />}
+      {tooltipText && (
+        <HelpIcon className={classes.helpIcon} text={tooltipText} />
+      )}
     </React.Fragment>
   );
 };

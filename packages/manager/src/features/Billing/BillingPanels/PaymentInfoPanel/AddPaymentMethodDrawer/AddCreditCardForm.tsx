@@ -9,12 +9,12 @@ import { addPaymentMethod } from '@linode/api-v4/lib';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
-import { CreditCardSchema } from '@linode/validation';
-import { take } from 'ramda';
+import { CreditCardSchema } from '@linode/validation/lib';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import CheckBox from 'src/components/CheckBox';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { InputBaseComponentProps } from '@material-ui/core/InputBase/InputBase';
+import { parseExpiryYear } from 'src/utilities/creditCard';
 
 const useStyles = makeStyles((theme: Theme) => ({
   error: {
@@ -150,12 +150,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             onChange={(e) => {
               const value: string[] = e.target.value.split('/');
               setFieldValue('expiry_month', value[0]);
-              setFieldValue(
-                'expiry_year',
-                value[1]
-                  ? take(2, String(new Date().getFullYear())) + value[1]
-                  : undefined
-              );
+              setFieldValue('expiry_year', parseExpiryYear(value[1]));
             }}
             label="Expiration Date"
             placeholder="MM/YY"

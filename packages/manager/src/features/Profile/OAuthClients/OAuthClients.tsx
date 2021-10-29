@@ -372,7 +372,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           className={`${classes.root} m0`}
           container
           alignItems="center"
-          justify="flex-end"
+          justifyContent="flex-end"
         >
           <Grid className={classes.addNewWrapper} item>
             <AddNewLink

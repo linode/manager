@@ -70,7 +70,7 @@ export const MonitorStatus: React.FC<CombinedProps> = (props) => {
       container
       direction="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.root}
       item
     >

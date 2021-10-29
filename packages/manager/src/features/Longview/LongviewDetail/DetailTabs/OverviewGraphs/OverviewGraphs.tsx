@@ -94,7 +94,7 @@ export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
           <Grid
             container
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="center"
             spacing={4}
           >
