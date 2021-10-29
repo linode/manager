@@ -510,7 +510,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 >
                   {isLkeHighAvailabilityEnabled &&
                   cluster?.control_plane?.high_availability ? (
-                    <Grid item lg={2}>
+                    <Grid item>
                       <Chip label="HA CLUSTER" />
                     </Grid>
                   ) : null}
