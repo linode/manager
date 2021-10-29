@@ -59,12 +59,7 @@ export default {
 export const ListView = () => (
   <Provider store={store}>
     <Grid spacing={8}>
-      <EntityTable
-        entity="domains"
-        headers={headers}
-        row={domainRow}
-        isGroupedByTag
-      />
+      <EntityTable entity="domains" headers={headers} row={domainRow} />
     </Grid>
   </Provider>
 );

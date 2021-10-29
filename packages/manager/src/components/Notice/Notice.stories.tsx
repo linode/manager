@@ -4,7 +4,7 @@ import store from 'src/store';
 import Notice from './Notice';
 
 export default {
-  title: 'UI Elements/Notification/Notice',
+  title: 'UI Elements/Notifications/Notice',
 };
 
 export const AllNotices = () => (

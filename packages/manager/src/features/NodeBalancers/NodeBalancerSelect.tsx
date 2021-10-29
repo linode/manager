@@ -6,12 +6,17 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withNodeBalancers from 'src/containers/withNodeBalancers.container';
+import {
+  WithNodeBalancerActions,
+  withNodeBalancerActions,
+} from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface WithNodeBalancersProps {
   nodeBalancersData: NodeBalancer[];
   nodeBalancersLoading: boolean;
   nodeBalancersError?: APIError[];
+  nodeBalancersLastUpdated: number;
 }
 
 interface Props {
@@ -24,7 +29,7 @@ interface Props {
   textFieldProps?: TextFieldProps;
 }
 
-type CombinedProps = Props & WithNodeBalancersProps;
+type CombinedProps = Props & WithNodeBalancersProps & WithNodeBalancerActions;
 
 const nodeBalancersToItems = (nodeBalancers: NodeBalancer[]): Item<number>[] =>
   nodeBalancers.map((thisNodeBalancer) => ({
@@ -53,10 +58,21 @@ const NodeBalancerSelect: React.FC<CombinedProps> = (props) => {
     nodeBalancerError,
     nodeBalancersError,
     nodeBalancersLoading,
+    nodeBalancersLastUpdated,
     nodeBalancersData,
+    nodeBalancerActions,
     region,
     selectedNodeBalancer,
   } = props;
+
+  React.useEffect(() => {
+    // If NodeBalacers have not yet been requested when this component was mounted,
+    // make the API call to get them.
+    if (nodeBalancersLastUpdated === 0) {
+      nodeBalancerActions.getAllNodeBalancers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const nodeBalancer = region
     ? nodeBalancersData.filter(
@@ -93,17 +109,6 @@ const NodeBalancerSelect: React.FC<CombinedProps> = (props) => {
 
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  withNodeBalancers(
-    (
-      ownProps,
-      nodeBalancersData,
-      nodeBalancersLoading,
-      nodeBalancersError
-    ) => ({
-      ...ownProps,
-      nodeBalancersData,
-      nodeBalancersLoading,
-      nodeBalancersError,
-    })
-  )
+  withNodeBalancerActions,
+  withNodeBalancers()
 )(NodeBalancerSelect);

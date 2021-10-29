@@ -2,7 +2,7 @@ import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
+import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   billingGroup: {
     marginBottom: theme.spacing(3),
   },
-  googlePayNoticeContainer: {
+  paymentMethodNoticeContainer: {
     fontSize: '0.875rem',
     marginTop: theme.spacing(2),
     padding: `8px 0px`,
@@ -57,10 +57,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 0,
     },
   },
-  googlePayIcon: {
+  payPalIcon: {
     flexShrink: 0,
     height: 20,
-    marginRight: theme.spacing(),
+    marginRight: '2px',
+    marginLeft: '-6px',
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -105,23 +106,13 @@ const PaymentInformation: React.FC<Props> = (props) => {
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
-  const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
-    'google_pay'
-  );
+  const isPayPalEnabled = flags.additionalPaymentMethods?.includes('paypal');
 
-  const showAddPaymentMethodButton =
-    paymentMethods?.length === 0 ||
-    isGooglePayEnabled ||
-    (!isGooglePayEnabled &&
-      !paymentMethods?.some(
-        (method: PaymentMethod) => method.type === 'credit_card'
-      ));
-
-  const showGooglePayAvailableNotice =
+  const showPayPalAvailableNotice =
     !loading &&
-    isGooglePayEnabled &&
+    isPayPalEnabled &&
     !paymentMethods?.some(
-      (paymetMethod: PaymentMethod) => paymetMethod.type === 'google_pay'
+      (paymetMethod: PaymentMethod) => paymetMethod.type === 'paypal'
     );
 
   const doDelete = () => {
@@ -172,16 +163,14 @@ const PaymentInformation: React.FC<Props> = (props) => {
               Payment Methods
             </Typography>
           </Grid>
-          {showAddPaymentMethodButton ? (
-            <Grid item>
-              <Button
-                className={classes.edit}
-                onClick={() => replace(drawerLink)}
-              >
-                Add Payment Method
-              </Button>
-            </Grid>
-          ) : null}
+          <Grid item>
+            <Button
+              className={classes.edit}
+              onClick={() => replace(drawerLink)}
+            >
+              Add Payment Method
+            </Button>
+          </Grid>
         </Grid>
         {loading ? (
           <Grid className={classes.loading}>
@@ -209,17 +198,17 @@ const PaymentInformation: React.FC<Props> = (props) => {
             />
           ))
         )}
-        {showGooglePayAvailableNotice ? (
+        {showPayPalAvailableNotice ? (
           <DismissibleBanner
-            className={classes.googlePayNoticeContainer}
-            preferenceKey="google-pay-available-notification"
+            className={classes.paymentMethodNoticeContainer}
+            preferenceKey="paypal-available-notification"
           >
             <Box display="flex" alignItems="center">
-              <GooglePayIcon className={classes.googlePayIcon} />
+              <PayPalIcon className={classes.payPalIcon} />
               <Typography>
-                Google Pay is now available for recurring payments.{' '}
+                PayPal is now available for recurring payments.{' '}
                 <Link to="#" onClick={() => replace(drawerLink)}>
-                  Add Google Pay
+                  Add PayPal.
                 </Link>
               </Typography>
             </Box>
