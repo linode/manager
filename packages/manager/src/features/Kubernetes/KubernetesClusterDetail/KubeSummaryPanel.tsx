@@ -12,7 +12,9 @@ import { useHistory } from 'react-router-dom';
 import DetailsIcon from 'src/assets/icons/code-file.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
+import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, useMediaQuery } from 'src/components/core/styles';
@@ -28,7 +30,10 @@ import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
 import { deleteCluster } from 'src/store/kubernetes/kubernetes.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { downloadFile } from 'src/utilities/downloadFile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  getAPIErrorOrDefault,
+  getErrorStringOrDefault,
+} from 'src/utilities/errorUtils';
 import { pluralize } from 'src/utilities/pluralize';
 import { getTotalClusterPrice } from '../kubeUtils';
 import KubeConfigDrawer from './KubeConfigDrawer';
@@ -201,6 +206,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const {
     mutateAsync: resetKubeConfig,
     isLoading: isResettingKubeConfig,
+    error: resetKubeConfigError,
   } = useResetKubeConfigMutation();
 
   // Deletion handlers
@@ -216,6 +222,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
     _deleteCluster
   );
+
+  const [
+    resetKubeConfigDialogOpen,
+    setResetKubeConfigDialogOpen,
+  ] = React.useState(false);
 
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
@@ -256,19 +267,12 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   };
 
   const handleResetKubeConfig = () => {
-    resetKubeConfig({ id: cluster.id })
-      .then(() => {
-        enqueueSnackbar('Successfully reset your kubeconfig', {
-          variant: 'success',
-        });
-      })
-      .catch((error: APIError[]) => {
-        enqueueSnackbar(
-          getAPIErrorOrDefault(error, 'Unable to reset your kubeconfig')[0]
-            .reason,
-          { variant: 'error' }
-        );
+    return resetKubeConfig({ id: cluster.id }).then(() => {
+      setResetKubeConfigDialogOpen(false);
+      enqueueSnackbar('Successfully reset Kubeconfig', {
+        variant: 'success',
       });
+    });
   };
 
   const handleOpenDrawer = () => {
@@ -334,9 +338,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               </Grid>
               <Grid
                 item
-                onClick={
-                  isResettingKubeConfig ? undefined : handleResetKubeConfig
-                }
+                onClick={() => setResetKubeConfigDialogOpen(true)}
                 className={classes.kubeconfigElement}
               >
                 <ResetIcon
@@ -543,6 +545,40 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         onClose={closeDialog}
         onDelete={() => submitDialog(cluster.id)}
       />
+      <ConfirmationDialog
+        open={resetKubeConfigDialogOpen}
+        onClose={() => setResetKubeConfigDialogOpen(false)}
+        title="Confirmation: Reset Cluster Kubeconfig?"
+        actions={
+          <ActionsPanel>
+            <Button
+              buttonType="secondary"
+              onClick={() => setResetKubeConfigDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              buttonType="primary"
+              onClick={() => handleResetKubeConfig()}
+              loading={isResettingKubeConfig}
+            >
+              Reset Kubeconfig
+            </Button>
+          </ActionsPanel>
+        }
+        error={
+          resetKubeConfigError && resetKubeConfigError.length > 0
+            ? getErrorStringOrDefault(
+                resetKubeConfigError,
+                'Unable to reset Kubeconfig'
+              )
+            : undefined
+        }
+      >
+        This will delete and regenerate the cluster&apos;s Kubeconfig file. You
+        will no longer be able to access this cluster via your previous
+        Kubeconfig file. This action cannot be undone.
+      </ConfirmationDialog>
     </React.Fragment>
   );
 };
