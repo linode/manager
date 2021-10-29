@@ -44,8 +44,8 @@ const ActionPanel: React.FC<CombinedProps> = (props) => {
       data-qa-buttons
       className={classNames({
         [classes.root]: true,
-        ...(className && { [className]: true }),
         actionPanel: true,
+        ...(className && { [className]: true }),
       })}
       style={style}
     >
