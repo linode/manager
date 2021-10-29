@@ -321,7 +321,10 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 onClick={downloadKubeConfig}
                 className={classes.kubeconfigElement}
               >
-                <DownloadIcon className={classes.kubeconfigIcons} />
+                <DownloadIcon
+                  className={classes.kubeconfigIcons}
+                  style={{ marginLeft: 0 }}
+                />
                 <Typography className={classes.kubeconfigFileText}>
                   {`${cluster.label}-kubeconfig.yaml`}
                 </Typography>
