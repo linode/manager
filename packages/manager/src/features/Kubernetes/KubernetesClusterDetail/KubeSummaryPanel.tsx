@@ -36,6 +36,7 @@ import { updateKubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
 import { useAccount } from 'src/queries/account';
 import { useResetKubeConfigMutation } from 'src/queries/kubernetesConfig';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -66,26 +67,35 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.main,
   },
   kubeconfigElement: {
+    cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     borderRight: `1px solid #c4c4c4`,
+    '&:hover': {
+      opacity: 0.7,
+    },
     '&:last-child': {
       borderRight: 'none',
     },
   },
   kubeconfigFileText: {
     color: theme.cmrTextColors.linkActiveLight,
-    cursor: 'pointer',
     marginRight: theme.spacing(1),
     whiteSpace: 'nowrap',
   },
   kubeconfigIcons: {
-    color: theme.cmrTextColors.linkActiveLight,
-    cursor: 'pointer',
     height: 16,
     width: 16,
     margin: `0 ${theme.spacing(1)}px`,
     objectFit: 'contain',
+  },
+  disabled: {
+    color: theme.palette.text.primary,
+    pointer: 'default',
+    pointerEvents: 'none',
+    '& g': {
+      stroke: theme.palette.text.primary,
+    },
   },
   iconTextOuter: {
     flexBasis: '72%',
@@ -199,7 +209,10 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     error: dashboardError,
   } = useKubernetesDashboardQuery(cluster.id, isKubeDashboardEnabled);
 
-  const { mutateAsync: resetKubeConfig } = useResetKubeConfigMutation();
+  const {
+    mutateAsync: resetKubeConfig,
+    isLoading: isResettingKubeConfig,
+  } = useResetKubeConfigMutation();
 
   // Deletion handlers
   // NB: this is using dispatch directly because I don't want to
@@ -343,11 +356,23 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               </Grid>
               <Grid
                 item
-                onClick={handleResetKubeConfig}
+                onClick={
+                  isResettingKubeConfig ? undefined : handleResetKubeConfig
+                }
                 className={classes.kubeconfigElement}
               >
-                <ResetIcon className={classes.kubeconfigIcons} />
-                <Typography className={classes.kubeconfigFileText}>
+                <ResetIcon
+                  className={classNames({
+                    [classes.kubeconfigIcons]: true,
+                    [classes.disabled]: isResettingKubeConfig,
+                  })}
+                />
+                <Typography
+                  className={classNames({
+                    [classes.kubeconfigFileText]: true,
+                    [classes.disabled]: isResettingKubeConfig,
+                  })}
+                >
                   Reset
                 </Typography>
               </Grid>
