@@ -12,7 +12,7 @@ import ResetIcon from 'src/assets/icons/reset.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles, Theme, useMediaQuery } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
@@ -90,11 +90,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     objectFit: 'contain',
   },
   disabled: {
-    color: theme.palette.text.primary,
+    color: theme.palette.text.secondary,
     pointer: 'default',
     pointerEvents: 'none',
     '& g': {
-      stroke: theme.palette.text.primary,
+      stroke: theme.palette.text.secondary,
     },
   },
   iconTextOuter: {
@@ -102,7 +102,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 115,
   },
   tags: {
-    paddingRight: '0 !important',
     display: 'flex',
     flexDirection: 'column',
     alignSelf: 'stretch',
@@ -138,9 +137,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  deleteButton: {
-    position: 'absolute',
-    right: theme.spacing(),
+  buttons: {
+    marginRight: theme.spacing(),
   },
   dashboard: {
     '& svg': {
@@ -195,10 +193,12 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
   const flags = useFlags();
+  const matches = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
   const isLkeHighAvailabilityEnabled =
-    flags.lkeHighAvailability &&
-    account?.capabilities.includes('LKE HA Control Planes');
+    (flags.lkeHighAvailability &&
+      account?.capabilities.includes('LKE HA Control Planes')) ||
+    true;
 
   const isKubeDashboardEnabled = flags.kubernetesDashboardAvailability;
 
@@ -501,8 +501,14 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 direction="column"
                 lg={12}
                 alignContent="flex-end"
+                style={matches ? { margin: 1 } : undefined}
               >
-                <Grid item container direction="row" justify="space-between">
+                <Grid
+                  item
+                  container
+                  direction={matches ? 'row-reverse' : 'row'}
+                  justifyContent="flex-end"
+                >
                   {isLkeHighAvailabilityEnabled &&
                   cluster?.control_plane?.high_availability ? (
                     <Grid item lg={2}>
@@ -511,31 +517,30 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   ) : null}
                   {isKubeDashboardEnabled ? (
                     <Button
-                      className={classes.dashboard}
+                      className={`${classes.dashboard} ${classes.buttons}`}
                       buttonType="secondary"
                       disabled={Boolean(dashboardError)}
                       onClick={() => {
                         window.open(dashboard?.endpoint, '_blank');
                       }}
-                      compact
                     >
                       Kubernetes Dashboard
                       <OpenInNewIcon />
                     </Button>
                   ) : null}
                   <Button
+                    className={classes.buttons}
                     buttonType="secondary"
                     onClick={() => openDialog(cluster.id)}
-                    compact
                   >
                     Delete Cluster
                   </Button>
                   {isLkeHighAvailabilityEnabled &&
                   !cluster?.control_plane?.high_availability ? (
                     <Button
+                      className={classes.buttons}
                       buttonType="primary"
                       onClick={() => openUpgradeDialog(cluster.id)}
-                      compact
                     >
                       Upgrade to HA
                     </Button>
