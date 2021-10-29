@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    borderRight: `1px solid #c4c4c4`,
+    borderRight: '1px solid #c4c4c4',
     '&:hover': {
       opacity: 0.7,
     },
