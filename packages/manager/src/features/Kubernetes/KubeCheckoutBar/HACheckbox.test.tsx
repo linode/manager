@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import HACheckbox, { Props } from './HACheckbox';
 
@@ -8,11 +9,19 @@ const props: Props = {
   onChange: jest.fn(),
 };
 
+const shouldRender = HIGH_AVAILABILITY_PRICE !== undefined;
+
 describe('HACheckbox', () => {
   it('the component should render', () => {
-    const { getByTestId } = renderWithTheme(<HACheckbox {...props} />);
+    const { getByTestId, container } = renderWithTheme(
+      <HACheckbox {...props} />
+    );
 
-    expect(getByTestId('ha-checkbox')).toBeVisible();
+    if (shouldRender) {
+      expect(getByTestId('ha-checkbox')).toBeVisible();
+    } else {
+      expect(container).toBeEmptyDOMElement();
+    }
   });
 
   it('should call the onChange function on click', () => {
@@ -20,12 +29,20 @@ describe('HACheckbox', () => {
 
     const checkbox = container.querySelector('input');
 
-    if (!checkbox) {
+    if (!checkbox && shouldRender) {
       fail('Checkbox input not found');
     }
 
-    fireEvent.click(checkbox);
+    if (checkbox && !shouldRender) {
+      fail(
+        'High Availability Checkbox was rendered, but no price was provided.'
+      );
+    }
 
-    expect(props.onChange).toHaveBeenCalled();
+    if (checkbox) {
+      fireEvent.click(checkbox);
+
+      expect(props.onChange).toHaveBeenCalled();
+    }
   });
 });

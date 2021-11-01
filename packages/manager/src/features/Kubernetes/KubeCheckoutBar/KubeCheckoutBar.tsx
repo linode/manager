@@ -65,7 +65,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   );
 
   const showHighAvalibility = Boolean(
-    HIGH_AVAILABILITY_PRICE &&
+    HIGH_AVAILABILITY_PRICE !== undefined &&
       flags.lkeHighAvailability &&
       account?.capabilities.includes('LKE HA Control Planes')
   );

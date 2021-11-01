@@ -46,6 +46,10 @@ const HACheckbox: React.FC<Props> = (props) => {
   const { checked, onChange } = props;
   const classes = useStyles();
 
+  if (HIGH_AVAILABILITY_PRICE === undefined) {
+    return null;
+  }
+
   return (
     <Box>
       <Box display="flex" flexDirection="row" alignItems="flex-start">
