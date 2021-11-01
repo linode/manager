@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-11-01] - v1.53.0
+
+### Added:
+- Kubernetes High Availability feature
+
+### Changed:
+- Remove deprecate Linode domains banner
+- IP address font color on Firefox in dark mode
+
+### Fixed:
+- Button placement and improved spacing in Add Node Pool Drawer
+- Inserting default values from NodeBalancers when creating new Domain
+- Timezone issue with NodeBalancer graphs
+
 ## [2021-10-20] - v1.52.0
 
 ### Added:
