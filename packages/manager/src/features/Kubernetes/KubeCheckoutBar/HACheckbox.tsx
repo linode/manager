@@ -7,6 +7,17 @@ import DisplayPrice from 'src/components/DisplayPrice';
 import Link from 'src/components/Link';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
+export const HACopy = () => (
+  <Typography>
+    A high availability (HA) control plane is replicated on multiple master
+    nodes to provide 99.99% uptime, and is recommended for production workloads.{' '}
+    <Link to="https://www.linode.com/docs/guides/kubernetes/">
+      Learn more about the HA control plane
+    </Link>
+    .
+  </Typography>
+);
+
 const useStyles = makeStyles((theme: Theme) => ({
   heading: {
     paddingTop: theme.spacing(0.5),
@@ -35,6 +46,10 @@ const HACheckbox: React.FC<Props> = (props) => {
   const { checked, onChange } = props;
   const classes = useStyles();
 
+  if (HIGH_AVAILABILITY_PRICE === undefined) {
+    return null;
+  }
+
   return (
     <Box>
       <Box display="flex" flexDirection="row" alignItems="flex-start">
@@ -48,14 +63,7 @@ const HACheckbox: React.FC<Props> = (props) => {
           <Typography className={classes.heading}>
             Enable HA Control Plane
           </Typography>
-          <Typography>
-            A high availability control plane is replicated on multiple master
-            nodes to provide a 99.99% uptime SLA for your Kubernetes cluster.
-            Recommended for critical production workloads.{' '}
-            <Link to="https://www.linode.com/docs/guides/kubernetes/">
-              Learn more.
-            </Link>
-          </Typography>
+          <HACopy />
         </Box>
       </Box>
       <Box className={classes.price}>
