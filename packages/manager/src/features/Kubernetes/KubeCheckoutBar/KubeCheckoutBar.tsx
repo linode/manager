@@ -14,6 +14,7 @@ import NodePoolSummary from './NodePoolSummary';
 import { useProfile } from 'src/queries/profile';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useAccount } from 'src/queries/account';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -63,9 +64,11 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     needsAPool || (!hasAgreed && showGDPRCheckbox)
   );
 
-  const showHighAvalibility =
-    flags.lkeHighAvailability &&
-    account?.capabilities.includes('LKE HA Control Planes');
+  const showHighAvalibility = Boolean(
+    HIGH_AVAILABILITY_PRICE !== undefined &&
+      flags.lkeHighAvailability &&
+      account?.capabilities.includes('LKE HA Control Planes')
+  );
 
   return (
     <CheckoutBar

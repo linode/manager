@@ -31,7 +31,7 @@ export const getTotalClusterPrice = (
       : accumulator + node.totalMonthlyPrice;
   }, 0);
 
-  return highAvailability ? price + HIGH_AVAILABILITY_PRICE : price;
+  return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
 };
 
 export const addPriceToNodePool = (
