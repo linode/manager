@@ -507,6 +507,11 @@ const themeDefaults: ThemeDefaults = () => {
       hidden: visuallyHidden,
     },
     overrides: {
+      MuiCheckbox: {
+        root: {
+          color: '#ccc',
+        },
+      },
       MuiAppBar: {
         colorDefault: {
           backgroundColor: 'inherit',

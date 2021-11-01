@@ -3,6 +3,7 @@ import {
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { pluralize } from 'src/utilities/pluralize';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
@@ -20,12 +21,18 @@ export const getMonthlyPrice = (
   return thisType ? (thisType.price.monthly ?? 0) * count : 0;
 };
 
-export const getTotalClusterPrice = (pools: PoolNodeWithPrice[]) =>
-  pools.reduce((accumulator, node) => {
+export const getTotalClusterPrice = (
+  pools: PoolNodeWithPrice[],
+  highAvailability: boolean = false
+) => {
+  const price = pools.reduce((accumulator, node) => {
     return node.queuedForDeletion
       ? accumulator // If we're going to delete it, don't include it in the cost
       : accumulator + node.totalMonthlyPrice;
   }, 0);
+
+  return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
+};
 
 export const addPriceToNodePool = (
   pool: ExtendedPoolNode,

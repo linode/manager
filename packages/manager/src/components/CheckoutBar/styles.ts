@@ -29,6 +29,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
         marginLeft: 0,
       },
     },
+    [theme.breakpoints.down('md')]: {
+      paddingBottom: `0px !important`,
+    },
   },
   sidebarTitle: {
     fontSize: '1.5rem',

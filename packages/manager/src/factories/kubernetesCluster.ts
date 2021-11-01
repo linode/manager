@@ -63,13 +63,14 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<ExtendedCluster
     updated: '2020-04-08T16:58:21',
     region: 'us-central',
     status: 'ready',
-    label: Factory.each((i) => `test-cluster-${i}`),
-    k8s_version: '1.17',
+    label: Factory.each((i) => `cluster-${i}`),
+    k8s_version: '1.21',
     node_pools: nodePoolFactory.buildList(2),
     totalMemory: 1000,
     totalCPU: 4,
     totalStorage: 1000,
     tags: [],
+    control_plane: { high_availability: false },
   }
 );
 
@@ -87,7 +88,8 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
     region: 'us-central',
     status: 'ready',
     label: Factory.each((i) => `test-cluster-${i}`),
-    k8s_version: '1.17',
+    k8s_version: '1.21',
     tags: [],
+    control_plane: { high_availability: false },
   }
 );

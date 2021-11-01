@@ -1,8 +1,10 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+import { kubernetesClusterFactory } from 'src/factories';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
-import { extendedClusters } from 'src/__data__/kubernetes';
 import { ClusterRow, Props } from './ClusterRow';
+
+const extendedClusters = kubernetesClusterFactory.buildList(3);
 
 const cluster = {
   ...extendedClusters[0],
@@ -31,7 +33,7 @@ describe('ClusterRow component', () => {
   it('renders a TableRow with label, and region', () => {
     const { getByText } = render(wrapWithTableBody(<ClusterRow {...props} />));
 
-    getByText('cluster-1');
+    getByText('cluster-0');
     getByText('Dallas, TX');
   });
 });

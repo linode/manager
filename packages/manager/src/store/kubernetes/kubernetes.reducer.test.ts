@@ -1,6 +1,5 @@
 import { prop, sortBy } from 'ramda';
-import { extendedClusters } from 'src/__data__/kubernetes';
-
+import { kubernetesClusterFactory } from 'src/factories';
 import {
   deleteClusterActions,
   requestClusterActions,
@@ -10,6 +9,7 @@ import {
 } from './kubernetes.actions';
 import reducer, { defaultState } from './kubernetes.reducer';
 
+const extendedClusters = kubernetesClusterFactory.buildList(2);
 const mockError = [{ reason: 'an error' }];
 
 const addEntities = () =>
