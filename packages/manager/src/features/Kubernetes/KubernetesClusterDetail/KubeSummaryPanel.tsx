@@ -421,7 +421,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                     {`$${getTotalClusterPrice(
                       cluster.node_pools,
                       isClusterHighlyAvailable
-                    )}/month`}
+                    ).toFixed(2)}/month`}
                   </Typography>
                 </Grid>
               </Grid>
