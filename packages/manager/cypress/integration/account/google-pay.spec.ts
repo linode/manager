@@ -88,24 +88,13 @@ describe('Google Pay', () => {
     cy.visitWithLogin('/account/billing');
   });
 
-  it('tests update payment flow - google pay', () => {
+  it('adds google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
     }).as('getPaymentMethod');
     cy.wait('@getPaymentMethod');
     fbtClick('Add Payment Method');
-    getClick('[data-qa-button="gpayChip"]');
-    cy.wait('@braintree');
-  });
-
-  it('adds google pay method', () => {
-    cy.intercept(braintreeURL).as('braintree');
-    cy.intercept('GET', getPaymentURL, (req) => {
-      req.reply(getPaymentMethodDataWithoutGpay);
-    }).as('getPaymentMethod');
-    cy.wait('@getPaymentMethod');
-    fbtClick('Add Google Pay');
     getClick('[data-qa-button="gpayChip"]');
     cy.wait('@braintree');
   });
