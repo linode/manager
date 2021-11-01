@@ -25,12 +25,9 @@ import {
 } from 'src/queries/accountMaintenance';
 import Accordion from 'src/components/Accordion';
 import Box from 'src/components/core/Box';
+import classNames from 'classnames';
 
 export type MaintenanceEntities = 'Linode' | 'Volume';
-
-interface Props {
-  type: MaintenanceEntities;
-}
 
 const preferenceKey = 'account-maintenance';
 
@@ -48,6 +45,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '&.MuiAccordion-root.Mui-expanded': {
       marginBottom: theme.spacing(),
+    },
+  },
+  topMargin: {
+    '&.MuiAccordion-root': {
+      marginTop: theme.spacing(2),
     },
   },
   csvLink: {
@@ -68,12 +70,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+interface Props {
+  type: MaintenanceEntities;
+  expanded: boolean;
+  toggleExpanded: () => void;
+  addTopMargin: boolean;
+}
+
 const MaintenanceTable: React.FC<Props> = (props) => {
-  const { type } = props;
+  const { type, expanded, toggleExpanded, addTopMargin } = props;
   const csvRef = React.useRef<any>();
   const classes = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type.toLowerCase()}`);
-  const [expanded, setExpanded] = React.useState(true);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
@@ -161,10 +169,13 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   return (
     <>
       <Accordion
-        className={classes.root}
+        className={classNames({
+          [classes.root]: true,
+          [classes.topMargin]: addTopMargin,
+        })}
         heading={`${type}s`}
         expanded={expanded}
-        onChange={() => setExpanded((previous) => !previous)}
+        onChange={() => toggleExpanded()}
       >
         <Table>
           <TableHead>
