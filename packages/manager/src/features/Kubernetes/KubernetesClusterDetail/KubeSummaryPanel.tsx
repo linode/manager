@@ -147,6 +147,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttons: {
     marginRight: theme.spacing(),
   },
+  chip: {
+    backgroundColor: '#f1f7fd',
+    fontSize: 10,
+  },
 }));
 
 interface Props {
@@ -494,7 +498,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 >
                   {isClusterHighlyAvailable ? (
                     <Grid item>
-                      <Chip label="HA CLUSTER" />
+                      <Chip className={`${classes.chip}`} label="HA CLUSTER" />
                     </Grid>
                   ) : null}
                   {isKubeDashboardFeatureEnabled ? (
