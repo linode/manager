@@ -551,7 +551,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       <ConfirmationDialog
         open={resetKubeConfigDialogOpen}
         onClose={() => setResetKubeConfigDialogOpen(false)}
-        title="Confirmation: Reset Cluster Kubeconfig?"
+        title="Reset Cluster Kubeconfig?"
         actions={
           <ActionsPanel>
             <Button
