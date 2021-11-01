@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   button: {
+    paddingTop: 0,
     marginTop: '0 !important',
   },
   priceDisplay: {
@@ -49,15 +50,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem',
     lineHeight: '1.25rem',
     marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     '& span': {
       fontWeight: 'bold',
     },
-    [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing(2),
-      marginTop: 0,
-    },
   },
   boxOuter: {
+    width: '100%',
     [theme.breakpoints.down('sm')]: {
       alignItems: 'flex-start',
       flexDirection: 'column',
@@ -171,23 +170,22 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
           resetValues={resetDrawer}
         />
         {currentCount > 0 && currentCount < 3 && (
-          <Notice important warning text={nodeWarning} spacingTop={8} />
+          <Notice
+            important
+            warning
+            text={nodeWarning}
+            spacingTop={8}
+            spacingBottom={16}
+          />
         )}
         <ActionsPanel className={classes.button}>
           <Box
             display="flex"
             flexDirection="row"
             alignItems="center"
+            justifyContent={currentCount > 0 ? 'space-between' : 'flex-end'}
             className={classes.boxOuter}
           >
-            <Button
-              buttonType="primary"
-              onClick={() => handleAdd()}
-              disabled={currentCount === 0}
-              loading={isSubmitting}
-            >
-              Add pool
-            </Button>
             {currentCount > 0 && (
               <Typography className={classes.priceDisplay}>
                 This pool will add{' '}
@@ -199,6 +197,14 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
                 to this cluster.
               </Typography>
             )}
+            <Button
+              buttonType="primary"
+              onClick={() => handleAdd()}
+              disabled={currentCount === 0}
+              loading={isSubmitting}
+            >
+              Add pool
+            </Button>
           </Box>
         </ActionsPanel>
       </form>
