@@ -19,6 +19,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PaymentMethod } from '@linode/api-v4';
 import classNames from 'classnames';
+import { reportException } from 'src/exceptionReporting';
 
 const useStyles = makeStyles((theme: Theme) => ({
   errorIcon: {
@@ -120,12 +121,24 @@ export const PayPalChip: React.FC<Props> = (props) => {
       .catch((errors: APIError[]) => {
         setProcessing(false);
 
-        enqueueSnackbar(
-          getAPIErrorOrDefault(errors, 'Unable to add payment method')[0]
-            .reason,
-          { variant: 'error' }
-        );
+        const error = getAPIErrorOrDefault(
+          errors,
+          'Unable to add payment method'
+        )[0].reason;
+
+        enqueueSnackbar(error, { variant: 'error' });
+
+        reportException(error, {
+          message: "Failed to add PayPal as a payment method with Linode's API",
+        });
       });
+  };
+
+  const onError = (error: unknown) => {
+    reportException(
+      'A PayPal error occurred preventing a user from adding PayPal as a payment method.',
+      { error }
+    );
   };
 
   if (error) {
@@ -155,6 +168,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
         fundingSource={FUNDING.PAYPAL}
         createBillingAgreement={createBillingAgreement}
         onApprove={onApprove}
+        onError={onError}
       />
     </div>
   );

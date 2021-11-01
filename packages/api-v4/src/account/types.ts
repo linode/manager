@@ -400,23 +400,13 @@ export interface CreditCardData {
   card_type?: CardType;
 }
 
-// Google Pay data extends CreditCardData, but use type alias to avoid empty interface
-export type GooglePayData = CreditCardData;
-
 export type PaymentMethod =
   | {
       id: number;
-      type: 'credit_card';
+      type: 'credit_card' | 'google_pay';
       is_default: boolean;
       created: string;
       data: CreditCardData;
-    }
-  | {
-      id: number;
-      type: 'google_pay';
-      is_default: boolean;
-      created: string;
-      data: GooglePayData;
     }
   | {
       id: number;
