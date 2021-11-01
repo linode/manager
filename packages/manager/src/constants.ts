@@ -317,6 +317,6 @@ export const MAXIMUM_PAYMENT_METHODS = 6;
 
 // Price of LKE's High Availability offering in USD
 export const HIGH_AVAILABILITY_PRICE =
-  process.env.REACT_APP_HIGH_AVAILABILITY_PRICE === undefined
+  process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
     ? undefined
-    : Number(process.env.REACT_APP_HIGH_AVAILABILITY_PRICE);
+    : Number(process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
