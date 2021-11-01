@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     // Allows us to disable the pointer on the PayPal button because the SDK does not
     pointerEvents: 'none',
   },
+  button: {
+    marginRight: -8,
+  },
 }));
 
 interface Props {
@@ -159,6 +162,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
   return (
     <div
       className={classNames({
+        [classes.button]: true,
         [classes.disabled]: disabled,
       })}
     >
