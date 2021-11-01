@@ -5,28 +5,35 @@ import {
   recycleAllNodes,
   recycleClusterNodes,
   recycleNode,
+  updateKubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import KubeContainer, {
   DispatchProps,
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { useDialog } from 'src/hooks/useDialog';
+import useFlags from 'src/hooks/useFlags';
 import usePolling from 'src/hooks/usePolling';
+import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
+import UpgradeClusterDialog from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       paddingBottom: 20,
     },
+  },
+  upgradeToHAButton: {
+    marginLeft: 24,
   },
 }));
 interface KubernetesContainerProps {
@@ -66,6 +76,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   props
 ) => {
   const classes = useStyles();
+  const flags = useFlags();
+  const { data: account } = useAccount();
 
   const {
     cluster,
@@ -196,6 +208,27 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
     };
   }, []);
 
+  const _updateCluster = (clusterId: number) =>
+    updateKubernetesCluster(clusterId, {
+      control_plane: { high_availability: true },
+    });
+
+  const {
+    dialog: upgradeDialog,
+    closeDialog: closeUpgradeDialog,
+    openDialog: openUpgradeDialog,
+  } = useDialog(_updateCluster);
+
+  const isHighAvailabilityFeatureEnabled = Boolean(
+    HIGH_AVAILABILITY_PRICE !== undefined &&
+      flags.lkeHighAvailability &&
+      account?.capabilities.includes('LKE HA Control Planes')
+  );
+
+  const isClusterHighlyAvailable =
+    isHighAvailabilityFeatureEnabled &&
+    cluster?.control_plane?.high_availability;
+
   if (clustersLoadError) {
     const error = getAPIErrorOrDefault(
       clustersLoadError,
@@ -272,8 +305,21 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
             data-qa-breadcrumb
           />
         </Grid>
-        <Grid item className="p0" style={{ marginTop: 14 }}>
+        <Grid
+          item
+          className="p0"
+          style={{ marginTop: 14, marginBottom: 8, display: 'flex' }}
+        >
           <DocsLink href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
+          {isHighAvailabilityFeatureEnabled && !isClusterHighlyAvailable ? (
+            <Button
+              className={classes.upgradeToHAButton}
+              buttonType="primary"
+              onClick={() => openUpgradeDialog(cluster.id)}
+            >
+              Upgrade to HA
+            </Button>
+          ) : null}
         </Grid>
       </Grid>
       <Grid item xs={12}>
@@ -290,6 +336,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
               tags: newTags,
             })
           }
+          isClusterHighlyAvailable={
+            isHighAvailabilityFeatureEnabled &&
+            cluster.control_plane.high_availability
+          }
+          isKubeDashboardFeatureEnabled={Boolean(
+            flags.kubernetesDashboardAvailability
+          )}
         />
       </Grid>
       <Grid item xs={12}>
@@ -329,6 +382,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           }
         />
       </Grid>
+      <UpgradeClusterDialog
+        open={upgradeDialog.isOpen}
+        onClose={closeUpgradeDialog}
+        clusterID={cluster.id}
+      />
     </>
   );
 };
