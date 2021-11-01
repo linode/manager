@@ -45,6 +45,11 @@ const headersForCSVDownload = [
 ];
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '&.MuiAccordion-root.Mui-expanded': {
+      marginBottom: theme.spacing(),
+    },
+  },
   csvLink: {
     [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing(),
@@ -156,6 +161,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   return (
     <>
       <Accordion
+        className={classes.root}
         heading={`${type}s`}
         expanded={expanded}
         onChange={() => setExpanded((previous) => !previous)}
@@ -173,6 +179,17 @@ const MaintenanceTable: React.FC<Props> = (props) => {
               >
                 Date
               </TableSortCell>
+              <Hidden smDown>
+                <TableSortCell
+                  active={orderBy === 'when'}
+                  direction={order}
+                  label="when"
+                  handleClick={handleOrderChange}
+                  className={classes.cell}
+                >
+                  When
+                </TableSortCell>
+              </Hidden>
               <Hidden xsDown>
                 <TableSortCell
                   active={orderBy === 'type'}
@@ -193,17 +210,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
               >
                 Status
               </TableSortCell>
-              <Hidden smDown>
-                <TableSortCell
-                  active={orderBy === 'when'}
-                  direction={order}
-                  label="when"
-                  handleClick={handleOrderChange}
-                  className={classes.cell}
-                >
-                  When
-                </TableSortCell>
-              </Hidden>
               <Hidden mdDown>
                 <TableCell style={{ width: '40%' }}>Reason</TableCell>
               </Hidden>

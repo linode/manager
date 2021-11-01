@@ -39,9 +39,12 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
           {entity.label}
         </Link>
       </TableCell>
-      <TableCell noWrap>
-        <div>{formatDate(when)}</div>
-      </TableCell>
+      <TableCell noWrap>{formatDate(when)}</TableCell>
+      <Hidden smDown>
+        <TableCell data-testid="relative-date">
+          {parseAPIDate(when).toRelative()}
+        </TableCell>
+      </Hidden>
       <Hidden xsDown>
         <TableCell className={classes.capitalize} noWrap>
           {type.replace('_', ' ')}
@@ -54,15 +57,12 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
             // @ts-expect-error api will change pending -> scheduled
             status === 'pending' || status === 'scheduled'
               ? 'Scheduled'
+              : status === 'started'
+              ? 'In Progress'
               : capitalize(status)
-          }{' '}
+          }
         </div>
       </TableCell>
-      <Hidden smDown>
-        <TableCell data-testid="relative-date">
-          {parseAPIDate(when).toRelative()}
-        </TableCell>
-      </Hidden>
       <Hidden mdDown>
         <TableCell>
           <HighlightedMarkdown textOrMarkdown={reason} />
