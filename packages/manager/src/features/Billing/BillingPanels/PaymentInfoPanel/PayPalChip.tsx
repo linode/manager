@@ -74,7 +74,6 @@ export const PayPalChip: React.FC<Props> = (props) => {
           vault: true,
           commit: false,
           intent: 'tokenize',
-          // billingAgreementDescription: 'You agree to allow Linode to charge you monthy.',
           ...options,
         },
       });
@@ -87,8 +86,6 @@ export const PayPalChip: React.FC<Props> = (props) => {
   ) =>
     actions.braintree.createPayment({
       flow: 'vault',
-      // The following are optional params
-      // billingAgreementDescription: 'You agree to allow Linode to charge you monthy.',
     });
 
   const onApprove = async (
