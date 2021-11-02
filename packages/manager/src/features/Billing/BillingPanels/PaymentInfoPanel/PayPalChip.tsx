@@ -70,11 +70,11 @@ export const PayPalChip: React.FC<Props> = (props) => {
       dispatch({
         type: 'resetOptions',
         value: {
+          ...options,
           'data-client-token': data?.client_token,
           vault: true,
           commit: false,
           intent: 'tokenize',
-          ...options,
         },
       });
     }
