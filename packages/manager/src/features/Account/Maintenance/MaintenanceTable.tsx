@@ -24,12 +24,10 @@ import {
   useAllAccountMaintenanceQuery,
 } from 'src/queries/accountMaintenance';
 import Accordion from 'src/components/Accordion';
+import Box from 'src/components/core/Box';
+import classNames from 'classnames';
 
 export type MaintenanceEntities = 'Linode' | 'Volume';
-
-interface Props {
-  type: MaintenanceEntities;
-}
 
 const preferenceKey = 'account-maintenance';
 
@@ -44,7 +42,17 @@ const headersForCSVDownload = [
 ];
 
 const useStyles = makeStyles((theme: Theme) => ({
-  CSVlink: {
+  root: {
+    '&.MuiAccordion-root.Mui-expanded': {
+      marginBottom: theme.spacing(),
+    },
+  },
+  topMargin: {
+    '&.MuiAccordion-root': {
+      marginTop: theme.spacing(2),
+    },
+  },
+  csvLink: {
     [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing(),
     },
@@ -62,8 +70,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+interface Props {
+  type: MaintenanceEntities;
+  expanded: boolean;
+  toggleExpanded: () => void;
+  addTopMargin: boolean;
+}
+
 const MaintenanceTable: React.FC<Props> = (props) => {
-  const { type } = props;
+  const { type, expanded, toggleExpanded, addTopMargin } = props;
   const csvRef = React.useRef<any>();
   const classes = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type.toLowerCase()}`);
@@ -152,41 +167,20 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   };
 
   return (
-    <Accordion heading={`${type}s`} defaultExpanded>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell className={classes.cell}>Label</TableCell>
-            <TableSortCell
-              active={orderBy === 'when'}
-              direction={order}
-              label="when"
-              handleClick={handleOrderChange}
-              className={classes.cell}
-            >
-              Date
-            </TableSortCell>
-            <Hidden xsDown>
-              <TableSortCell
-                active={orderBy === 'type'}
-                direction={order}
-                label="type"
-                handleClick={handleOrderChange}
-                className={classes.cell}
-              >
-                Type
-              </TableSortCell>
-            </Hidden>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              label="status"
-              handleClick={handleOrderChange}
-              className={classes.cell}
-            >
-              Status
-            </TableSortCell>
-            <Hidden smDown>
+    <>
+      <Accordion
+        className={classNames({
+          [classes.root]: true,
+          [classes.topMargin]: addTopMargin,
+        })}
+        heading={`${type}s`}
+        expanded={expanded}
+        onChange={() => toggleExpanded()}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.cell}>Label</TableCell>
               <TableSortCell
                 active={orderBy === 'when'}
                 direction={order}
@@ -194,48 +188,81 @@ const MaintenanceTable: React.FC<Props> = (props) => {
                 handleClick={handleOrderChange}
                 className={classes.cell}
               >
-                When
+                Date
               </TableSortCell>
-            </Hidden>
-            <Hidden mdDown>
-              <TableCell style={{ width: '40%' }}>Reason</TableCell>
-            </Hidden>
-          </TableRow>
-        </TableHead>
-        <TableBody>{renderTableContent()}</TableBody>
-      </Table>
-      <PaginationFooter
-        count={data?.results || 0}
-        handlePageChange={pagination.handlePageChange}
-        handleSizeChange={pagination.handlePageSizeChange}
-        page={pagination.page}
-        pageSize={pagination.pageSize}
-        eventCategory={`${type} Maintenance Table`}
-        forceShow={data && data.results > 0}
-      >
-        {/*
-          We are using a hidden CSVLink and an <a> to allow us to lazy load the
-          entire maintenance list for the CSV download. The <a> is what shows up
-          to the user and the onClick fetches the full user data and then
-          uses a ref to 'click' the real CSVLink.
-          This adds some complexity but gives us the benefit of lazy loading a potentially
-          large set of maintenance events on mount for the CSV download.
-        */}
-        <CSVLink
-          ref={csvRef}
-          headers={headersForCSVDownload}
-          filename={`maintenance-${Date.now()}.csv`}
-          data={cleanCSVData(csv || [])}
+              <Hidden smDown>
+                <TableSortCell
+                  active={orderBy === 'when'}
+                  direction={order}
+                  label="when"
+                  handleClick={handleOrderChange}
+                  className={classes.cell}
+                >
+                  When
+                </TableSortCell>
+              </Hidden>
+              <Hidden xsDown>
+                <TableSortCell
+                  active={orderBy === 'type'}
+                  direction={order}
+                  label="type"
+                  handleClick={handleOrderChange}
+                  className={classes.cell}
+                >
+                  Type
+                </TableSortCell>
+              </Hidden>
+              <TableSortCell
+                active={orderBy === 'status'}
+                direction={order}
+                label="status"
+                handleClick={handleOrderChange}
+                className={classes.cell}
+              >
+                Status
+              </TableSortCell>
+              <Hidden mdDown>
+                <TableCell style={{ width: '40%' }}>Reason</TableCell>
+              </Hidden>
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderTableContent()}</TableBody>
+        </Table>
+        <PaginationFooter
+          count={data?.results || 0}
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          eventCategory={`${type} Maintenance Table`}
         />
-        <a
-          className={`${classes.CSVlink} ${classes.CSVlink}`}
-          onClick={downloadCSV}
-          aria-hidden="true"
-        >
-          Download CSV
-        </a>
-      </PaginationFooter>
-    </Accordion>
+      </Accordion>
+      {expanded ? (
+        <Box display="flex" justifyContent="flex-end">
+          {/*
+            We are using a hidden CSVLink and an <a> to allow us to lazy load the
+            entire maintenance list for the CSV download. The <a> is what shows up
+            to the user and the onClick fetches the full user data and then
+            uses a ref to 'click' the real CSVLink.
+            This adds some complexity but gives us the benefit of lazy loading a potentially
+            large set of maintenance events on mount for the CSV download.
+          */}
+          <CSVLink
+            ref={csvRef}
+            headers={headersForCSVDownload}
+            filename={`maintenance-${Date.now()}.csv`}
+            data={cleanCSVData(csv || [])}
+          />
+          <a
+            className={classes.csvLink}
+            onClick={downloadCSV}
+            aria-hidden="true"
+          >
+            Download CSV
+          </a>
+        </Box>
+      ) : null}
+    </>
   );
 };
 

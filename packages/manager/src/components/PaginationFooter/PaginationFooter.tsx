@@ -49,7 +49,6 @@ export interface PaginationProps {
   eventCategory: string;
   showAll?: boolean;
   fixedSize?: boolean;
-  forceShow?: boolean;
 }
 
 interface Props extends PaginationProps {
@@ -83,11 +82,9 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
       padded,
       eventCategory,
       showAll,
-      children,
-      forceShow,
     } = this.props;
 
-    if (!forceShow && count <= MIN_PAGE_SIZE && !fixedSize) {
+    if (count <= MIN_PAGE_SIZE && !fixedSize) {
       return null;
     }
 
@@ -126,7 +123,6 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             />
           )}
         </Grid>
-        {children ? <Grid item>{children}</Grid> : null}
         {!fixedSize ? (
           <Grid item className={`${classes.select} p0`}>
             <Select
