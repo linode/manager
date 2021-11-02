@@ -9,10 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import { Dispatch } from 'src/hooks/types';
-import {
-  useVolumesMigrateMutation,
-  useVolumesMigrationQueueQuery,
-} from 'src/queries/volumesMigrations';
+import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedLinode } from '../types';
@@ -26,10 +23,9 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) => ({
   notice: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(1),
     borderLeft: `solid 6px ${theme.color.yellow}`,
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(),
   },
 }));
 
@@ -40,16 +36,13 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
 
   const dispatch: Dispatch = useDispatch();
 
-  const { data: migrationQueue } = useVolumesMigrationQueueQuery(
-    linode.region,
-    open
-  );
-
   const {
     mutateAsync: migrateVolumes,
     isLoading,
     error,
   } = useVolumesMigrateMutation();
+
+  const numUpgradeableVolumes = upgradeableVolumeIds.length;
 
   const onSubmit = () => {
     migrateVolumes(upgradeableVolumeIds).then(() => {
@@ -76,7 +69,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
 
   return (
     <Dialog
-      title="Upgrade Volumes"
+      title={`Upgrade Volume${numUpgradeableVolumes === 1 ? '' : 's'}`}
       open={open}
       onClose={onClose}
       actions={actions}
@@ -87,17 +80,17 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
       }
     >
       <Typography>
-        All Volumes attached to Linode {linode.label} will be upgraded to
-        high-performance{' '}
-        <Link to="https://www.linode.com/products/block-storage/">
-          NVMe block storage
-        </Link>
-        .
+        {numUpgradeableVolumes === 1
+          ? 'A Volume attached to Linode '
+          : 'Volumes attached to '}
+        {linode.label} will be upgraded to high-performance NVMe Block Storage.
+        This is a free upgrade and will not incur any additional service
+        charges. Check upgrade eligibility or current status of Volumes on the{' '}
+        <Link to="/account/maintenance">Maintenance Page</Link>.
         <Paper className={classes.notice}>
-          This Linode will be rebooted as part of the upgrade process.
+          As part of the upgrade process, this Linode may be rebooted and will
+          be returned to its last known state prior to the upgrade.
         </Paper>
-        There are currently {migrationQueue?.linodes || 0} Linodes in the
-        migration queue.
       </Typography>
     </Dialog>
   );
