@@ -4,13 +4,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 import CircleProgress from 'src/components/CircleProgress';
 import { BraintreePayPalCheckoutTokenizationOptions } from '@paypal/react-paypal-js/dist/types/types/braintree/paypalCheckout';
-import {
-  BraintreePayPalButtons,
-  CreateBillingAgreementActions,
-  FUNDING,
-  OnApproveBraintreeActions,
-  usePayPalScriptReducer,
-} from '@paypal/react-paypal-js';
 import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
@@ -20,6 +13,13 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PaymentMethod } from '@linode/api-v4';
 import classNames from 'classnames';
 import { reportException } from 'src/exceptionReporting';
+import {
+  BraintreePayPalButtons,
+  CreateBillingAgreementActions,
+  FUNDING,
+  OnApproveBraintreeActions,
+  usePayPalScriptReducer,
+} from '@paypal/react-paypal-js';
 
 const useStyles = makeStyles((theme: Theme) => ({
   errorIcon: {
