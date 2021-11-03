@@ -1,6 +1,7 @@
 import {
   getNodeBalancer,
   getNodeBalancerConfigs,
+  NodeBalancer,
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -80,6 +81,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   state: State = {
     nodeBalancer: undefined,
     ApiError: undefined,
+    labelInput: undefined,
   };
 
   pollInterval: number;
@@ -348,6 +350,18 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                   nodeBalancerClientConnThrottle={
                     nodeBalancer.client_conn_throttle
                   }
+                  updateNodeBalancerStore={(data: NodeBalancer) => {
+                    if (this.state.nodeBalancer) {
+                      this.setState({
+                        nodeBalancer: {
+                          ...this.state.nodeBalancer,
+                          label: data.label,
+                          client_conn_throttle: data.client_conn_throttle,
+                        },
+                        labelInput: data.label,
+                      });
+                    }
+                  }}
                 />
               </SafeTabPanel>
             </TabPanels>
