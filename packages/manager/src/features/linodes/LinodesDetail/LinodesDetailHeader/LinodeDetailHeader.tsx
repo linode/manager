@@ -463,9 +463,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
                 {numUpgradeableVolumes === 1
                   ? 'A Volume attached to this Linode is '
                   : 'Volumes attached to this Linode are '}
-                eligible for a <b>free upgrade</b> to high performance NVMe
-                Block Storage.{' '}
-                <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-now-available/">
+                eligible for a <b>free upgrade</b> to Linode&rsquo;s
+                high-performance NVMe Block Storage.{' '}
+                <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
                   Learn more
                 </Link>
                 .
