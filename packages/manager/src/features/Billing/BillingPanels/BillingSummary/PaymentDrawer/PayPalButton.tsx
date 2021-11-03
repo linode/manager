@@ -1,18 +1,18 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
 import {
-  PayPalScriptProvider,
-  PayPalButtons,
+  BraintreePayPalButtons,
+  CreateOrderBraintreeActions,
   FUNDING,
+  OnApproveBraintreeActions,
+  OnApproveBraintreeData,
+  usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
-import { client, paypalCheckout } from 'braintree-web';
 import * as React from 'react';
-import { unstable_batchedUpdates } from 'react-dom';
 import { makeStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
@@ -56,6 +56,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     isLoading: clientTokenLoading,
     error: clientTokenError,
   } = useClientToken();
+  const [{ options }, dispatch] = usePayPalScriptReducer();
 
   const {
     usd,
@@ -67,15 +68,29 @@ export const PayPalButton: React.FC<Props> = (props) => {
 
   const disabledDueToPrice = +usd < 5 || +usd > 10000;
 
-  const [
-    payPalInitializationError,
-    setPayPalInitializationError,
-  ] = React.useState<boolean>(false);
-
-  const [
-    payPalCheckoutInstance,
-    setPayPalCheckoutInstance,
-  ] = React.useState<any>();
+  React.useEffect(() => {
+    /**
+     * When the Braintree client token is received,
+     * set the PayPal context only if the token has changed.
+     * The '!==' statements makes sure we don't re-render
+     * when this component is re-mounted.
+     */
+    if (
+      data?.client_token &&
+      options['data-client-token'] !== data.client_token
+    ) {
+      dispatch({
+        type: 'resetOptions',
+        value: {
+          'data-client-token': data?.client_token,
+          vault: false,
+          commit: false,
+          intent: 'capture',
+          ...options,
+        },
+      });
+    }
+  }, [data, dispatch, options]);
 
   /**
    * Needed to pass dynamic amount to PayPal without re-render
@@ -97,32 +112,11 @@ export const PayPalButton: React.FC<Props> = (props) => {
 
   stateRef.current = transaction;
 
-  React.useEffect(() => {
-    if (data?.client_token) {
-      initPayPalCheckout(data.client_token);
-    }
-  }, [data]);
-
-  const initPayPalCheckout = async (token: string) => {
-    try {
-      const clientInstance = await client.create({ authorization: token });
-      const checkoutInstance = await paypalCheckout.create({
-        client: clientInstance,
-      });
-
-      unstable_batchedUpdates(() => {
-        setPayPalCheckoutInstance(checkoutInstance);
-      });
-    } catch (error) {
-      reportException(error, {
-        message: 'Error initializing PayPal.',
-      });
-      setPayPalInitializationError(true);
-    }
-  };
-
-  const createOrder = (): Promise<string> => {
-    return payPalCheckoutInstance.createPayment({
+  const createOrder = (
+    data: Record<string, unknown>,
+    actions: CreateOrderBraintreeActions
+  ): Promise<string> => {
+    return actions.braintree.createPayment({
       flow: 'checkout',
       currency: 'USD',
       amount: stateRef!.current!.amount,
@@ -130,19 +124,21 @@ export const PayPalButton: React.FC<Props> = (props) => {
     });
   };
 
-  const onApprove = async (data: any) => {
+  const onApprove = async (
+    data: OnApproveBraintreeData,
+    actions: OnApproveBraintreeActions
+  ) => {
     setProcessing(true);
-    const payload = await payPalCheckoutInstance.tokenizePayment(data);
 
-    // send nonce to server
     try {
+      const payload = await actions.braintree.tokenizePayment(data);
+      // send nonce to server
       const response = await makePayment({
         nonce: payload.nonce,
         usd: stateRef!.current!.amount,
       });
       queryClient.invalidateQueries(`${accountBillingKey}-payments`);
 
-      setProcessing(false);
       setSuccess(
         `Payment for $${
           stateRef!.current!.amount
@@ -160,10 +156,19 @@ export const PayPalButton: React.FC<Props> = (props) => {
         message: errorMsg,
       });
       setError(errorMsg);
+    } finally {
+      setProcessing(false);
     }
   };
 
-  if (clientTokenLoading || !payPalCheckoutInstance) {
+  const onError = (error: Record<string, unknown>) => {
+    reportException(
+      'An error occurred when trying to make a one-time PayPal payment.',
+      { error }
+    );
+  };
+
+  if (clientTokenLoading || !options['data-client-token']) {
     return (
       <Grid
         container
@@ -180,10 +185,6 @@ export const PayPalButton: React.FC<Props> = (props) => {
     return <Notice error text="Error loading PayPal." />;
   }
 
-  if (payPalInitializationError) {
-    return <Notice error text="Error initializing PayPal." />;
-  }
-
   return (
     <div className={classes.root}>
       {disabledDueToPrice && (
@@ -196,22 +197,14 @@ export const PayPalButton: React.FC<Props> = (props) => {
           <div className={classes.mask} />
         </Tooltip>
       )}
-      <PayPalScriptProvider
-        options={{
-          'client-id': PAYPAL_CLIENT_ID,
-          'data-client-token': data?.client_token,
-        }}
-      >
-        {payPalCheckoutInstance ? (
-          <PayPalButtons
-            style={{ height: 35 }}
-            fundingSource={FUNDING.PAYPAL}
-            disabled={disabledDueToPrice || disabledDueToProcessing}
-            createOrder={createOrder}
-            onApprove={onApprove}
-          />
-        ) : null}
-      </PayPalScriptProvider>
+      <BraintreePayPalButtons
+        style={{ height: 35 }}
+        fundingSource={FUNDING.PAYPAL}
+        disabled={disabledDueToPrice || disabledDueToProcessing}
+        createOrder={createOrder}
+        onApprove={onApprove}
+        onError={onError}
+      />
     </div>
   );
 };
