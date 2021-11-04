@@ -4,7 +4,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import RootRef from 'src/components/core/RootRef';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -121,7 +120,7 @@ const Contacts: React.FC<CombinedProps> = (props) => {
   const contactDrawer = useOpenClose();
 
   // Ref for handling "scrollTo" on Paginated component.
-  const contactsTableRef = React.createRef();
+  const contactsTableRef = React.createRef<HTMLDivElement>();
 
   const groups = generateGroupsFromContacts(contacts);
 
@@ -133,24 +132,23 @@ const Contacts: React.FC<CombinedProps> = (props) => {
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
       </Typography>
-      <RootRef rootRef={contactsTableRef}>
-        <Grid
-          className={classes.header}
-          container
-          alignItems="center"
-          justifyContent="flex-end"
-        >
-          <Grid item className={classes.addNewWrapper}>
-            <AddNewLink
-              onClick={() => {
-                setContactDrawerMode('create');
-                contactDrawer.open();
-              }}
-              label="Add Contact"
-            />
-          </Grid>
+      <Grid
+        ref={contactsTableRef}
+        className={classes.header}
+        container
+        alignItems="center"
+        justifyContent="flex-end"
+      >
+        <Grid item className={classes.addNewWrapper}>
+          <AddNewLink
+            onClick={() => {
+              setContactDrawerMode('create');
+              contactDrawer.open();
+            }}
+            label="Add Contact"
+          />
         </Grid>
-      </RootRef>
+      </Grid>
       <OrderBy data={contacts} orderBy="name" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (

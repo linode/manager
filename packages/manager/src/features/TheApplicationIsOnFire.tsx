@@ -13,12 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const TheApplicationIsOnFire: React.FC<{}> = (props) => {
   return (
-    <Dialog
-      open
-      disableBackdropClick={true}
-      PaperProps={{ role: undefined }}
-      role="dialog"
-    >
+    <Dialog open PaperProps={{ role: undefined }} role="dialog">
       <DialogTitle title="Oh snap!" />
       <DialogContent>
         <Typography variant="subtitle1" style={{ marginBottom: 16 }}>
