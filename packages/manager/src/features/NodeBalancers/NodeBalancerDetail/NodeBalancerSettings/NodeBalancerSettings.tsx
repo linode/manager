@@ -45,6 +45,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
   const {
     nodeBalancerId,
     nodeBalancerLabel,
+    nodeBalancerClientConnThrottle,
     nodeBalancerActions: { updateNodeBalancer, deleteNodeBalancer },
     updateNodeBalancerDetailState,
   } = props;
@@ -64,7 +65,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
   );
 
   const [connectionThrottle, setConnectionThrottle] = React.useState<number>(
-    props.nodeBalancerClientConnThrottle
+    nodeBalancerClientConnThrottle
   );
   const [
     isConnectionThrottleSaving,
@@ -84,7 +85,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
-  const onSaveUsername = () => {
+  const onSaveLabel = () => {
     setIsLabelSaving(true);
     setLabelError(undefined);
 
@@ -158,7 +159,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
           className={classes.spacing}
           loading={isLabelSaving}
           disabled={label === nodeBalancerLabel}
-          onClick={onSaveUsername}
+          onClick={onSaveLabel}
           data-qa-label-save
         >
           Save
