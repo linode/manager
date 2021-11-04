@@ -251,6 +251,19 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     },
   ];
 
+  updateNodeBalancerState = (data: NodeBalancer) => {
+    if (this.state.nodeBalancer) {
+      this.setState({
+        nodeBalancer: {
+          ...this.state.nodeBalancer,
+          label: data.label,
+          client_conn_throttle: data.client_conn_throttle,
+        },
+        labelInput: data.label,
+      });
+    }
+  };
+
   render() {
     const matches = (pathName: string) =>
       Boolean(matchPath(this.props.location.pathname, { path: pathName }));
@@ -350,18 +363,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                   nodeBalancerClientConnThrottle={
                     nodeBalancer.client_conn_throttle
                   }
-                  updateNodeBalancerStore={(data: NodeBalancer) => {
-                    if (this.state.nodeBalancer) {
-                      this.setState({
-                        nodeBalancer: {
-                          ...this.state.nodeBalancer,
-                          label: data.label,
-                          client_conn_throttle: data.client_conn_throttle,
-                        },
-                        labelInput: data.label,
-                      });
-                    }
-                  }}
+                  updateNodeBalancerDetailState={this.updateNodeBalancerState}
                 />
               </SafeTabPanel>
             </TabPanels>

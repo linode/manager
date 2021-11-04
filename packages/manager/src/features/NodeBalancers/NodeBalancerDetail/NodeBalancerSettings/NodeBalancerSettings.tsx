@@ -8,7 +8,6 @@ import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import {
@@ -34,7 +33,7 @@ interface Props {
   nodeBalancerId: number;
   nodeBalancerLabel: string;
   nodeBalancerClientConnThrottle: number;
-  updateNodeBalancerStore: (data: NodeBalancer) => void;
+  updateNodeBalancerDetailState: (data: NodeBalancer) => void;
 }
 
 type CombinedProps = Props & WithNodeBalancerActions;
@@ -47,7 +46,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
     nodeBalancerId,
     nodeBalancerLabel,
     nodeBalancerActions: { updateNodeBalancer, deleteNodeBalancer },
-    updateNodeBalancerStore,
+    updateNodeBalancerDetailState,
   } = props;
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
@@ -92,7 +91,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
     updateNodeBalancer({ nodeBalancerId, label })
       .then((data) => {
         setIsLabelSaving(false);
-        updateNodeBalancerStore(data);
+        updateNodeBalancerDetailState(data);
       })
       .catch((error) => {
         setIsLabelSaving(false);
@@ -115,7 +114,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
     })
       .then((data) => {
         setIsConnectionThrottleSaving(false);
-        updateNodeBalancerStore(data);
+        updateNodeBalancerDetailState(data);
       })
       .catch((error) => {
         setIsConnectionThrottleSaving(false);
@@ -146,7 +145,6 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
     <div>
       <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
       <Accordion heading="NodeBalancer Label" defaultExpanded>
-        {labelError ? <Notice error text={labelError} /> : null}
         <TextField
           label="Label"
           placeholder="Enter a label between 3 and 32 characters"
@@ -159,6 +157,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
           buttonType="primary"
           className={classes.spacing}
           loading={isLabelSaving}
+          disabled={label === nodeBalancerLabel}
           onClick={onSaveUsername}
           data-qa-label-save
         >
@@ -166,9 +165,6 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
         </Button>
       </Accordion>
       <Accordion heading="Client Connection Throttle" defaultExpanded>
-        {connectionThrottleError ? (
-          <Notice error text={connectionThrottleError} />
-        ) : null}
         <TextField
           InputProps={{
             endAdornment: (
@@ -194,6 +190,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
           buttonType="primary"
           className={classes.spacing}
           loading={isConnectionThrottleSaving}
+          disabled={connectionThrottle === props.nodeBalancerClientConnThrottle}
           onClick={onSaveConnectionThrottle}
           data-qa-label-save
         >
@@ -207,7 +204,9 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
         >
           Delete
         </Button>
-        <Typography className={classes.spacing}>Delete NodeBalancer</Typography>
+        <Typography className={classes.spacing}>
+          Deleting a NodeBalancer will remove associated configurations.
+        </Typography>
       </Accordion>
       <DeletionDialog
         typeToConfirm
