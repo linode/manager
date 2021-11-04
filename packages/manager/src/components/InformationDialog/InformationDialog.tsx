@@ -9,11 +9,15 @@ interface Props extends DialogProps {
 }
 
 export const InformationDialog: React.FC<Props> = (props) => {
-  const { title, children, ...dialogProps } = props;
+  const { title, children, onClose, ...dialogProps } = props;
   return (
     <Dialog
       {...dialogProps}
-      disableBackdropClick={true}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') {
+          onClose();
+        }
+      }}
       PaperProps={{ role: undefined }}
       role="dialog"
     >

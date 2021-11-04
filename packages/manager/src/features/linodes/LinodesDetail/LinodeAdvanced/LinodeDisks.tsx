@@ -8,7 +8,6 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Hidden from 'src/components/core/Hidden';
-import RootRef from 'src/components/core/RootRef';
 import {
   createStyles,
   Theme,
@@ -166,13 +165,11 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
           justifyContent="space-between"
         >
-          <RootRef rootRef={this.disksHeader}>
-            <Grid item className="p0">
-              <Typography variant="h3" className={classes.headline}>
-                Disks
-              </Typography>
-            </Grid>
-          </RootRef>
+          <Grid item ref={this.disksHeader} className="p0">
+            <Typography variant="h3" className={classes.headline}>
+              Disks
+            </Typography>
+          </Grid>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openDrawerForCreation}

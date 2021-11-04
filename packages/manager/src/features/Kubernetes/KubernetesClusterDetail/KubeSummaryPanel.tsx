@@ -473,9 +473,14 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             </Grid>
           </Grid>
 
-          <Grid item container direction="row" lg={9} justify="space-between">
+          <Grid
+            item
+            container
+            direction="row"
+            lg={9}
+            justifyContent="space-between"
+          >
             {setKubeconfigDisplay()}
-
             <Grid
               item
               container

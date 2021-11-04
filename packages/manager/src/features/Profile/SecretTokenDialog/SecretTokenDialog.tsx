@@ -35,9 +35,12 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
     <Dialog
       title={title}
       open={open}
-      onClose={onClose}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') {
+          onClose();
+        }
+      }}
       disableEscapeKeyDown
-      disableBackdropClick
       maxWidth="sm"
     >
       <Notice

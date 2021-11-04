@@ -39,13 +39,17 @@ type CombinedProps = Props;
 const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { title, children, actions, error, ...dialogProps } = props;
+  const { title, children, actions, error, onClose, ...dialogProps } = props;
 
   return (
     <Dialog
       {...dialogProps}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') {
+          onClose();
+        }
+      }}
       className={classes.root}
-      disableBackdropClick={true}
       PaperProps={{ role: undefined }}
       role="dialog"
     >

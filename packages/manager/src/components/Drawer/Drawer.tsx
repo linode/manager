@@ -73,18 +73,22 @@ const styles = (theme: Theme) =>
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DDrawer: React.FC<CombinedProps> = (props) => {
-  const { title, classes, children, wide, ...rest } = props;
+  const { title, classes, children, wide, onClose, ...rest } = props;
 
   const titleID = convertForAria(title);
 
   return (
     <Drawer
       anchor="right"
+      onClose={(event, reason) => {
+        if (onClose && reason !== 'backdropClick') {
+          onClose(event, reason);
+        }
+      }}
       {...rest}
       classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       ModalProps={{
         BackdropProps: { className: classes.backDrop },
-        disableBackdropClick: true,
       }}
       data-qa-drawer
       data-testid="drawer"
