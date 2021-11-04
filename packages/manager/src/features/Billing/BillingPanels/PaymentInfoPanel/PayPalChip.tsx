@@ -3,7 +3,6 @@ import { useClientToken } from 'src/queries/accountPayment';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 import CircleProgress from 'src/components/CircleProgress';
-import { BraintreePayPalCheckoutTokenizationOptions } from '@paypal/react-paypal-js/dist/types/types/braintree/paypalCheckout';
 import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
@@ -14,6 +13,7 @@ import { PaymentMethod } from '@linode/api-v4';
 import classNames from 'classnames';
 import { reportException } from 'src/exceptionReporting';
 import {
+  OnApproveBraintreeData,
   BraintreePayPalButtons,
   CreateBillingAgreementActions,
   FUNDING,
@@ -78,6 +78,9 @@ export const PayPalChip: React.FC<Props> = (props) => {
         },
       });
     }
+    // Intentially only run this effect when data changes. We don't need to run
+    // when the PayPal options change because we set them here with dispatch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const createBillingAgreement = (
@@ -89,7 +92,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
     });
 
   const onApprove = async (
-    data: BraintreePayPalCheckoutTokenizationOptions,
+    data: OnApproveBraintreeData,
     actions: OnApproveBraintreeActions
   ) => {
     setProcessing(true);
