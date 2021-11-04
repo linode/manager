@@ -51,7 +51,7 @@ interface Props {
 
 export const PayPalChip: React.FC<Props> = (props) => {
   const { onClose, disabled, setProcessing } = props;
-  const { data, isLoading, error } = useClientToken();
+  const { data, isLoading, error: clientTokenError } = useClientToken();
   const [{ options }, dispatch] = usePayPalScriptReducer();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -141,7 +141,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
     );
   };
 
-  if (error) {
+  if (clientTokenError) {
     return (
       <HelpIcon
         className={classes.errorIcon}

@@ -13,7 +13,7 @@ import useFlags from 'src/hooks/useFlags';
 import Notice from 'src/components/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { PayPalChip } from '../PayPalChip';
-import PayPalErrorBoundry from '../PayPalErrorBoundry';
+import PayPalErrorBoundary from '../PayPalErrorBoundary';
 
 interface Props {
   open: boolean;
@@ -141,13 +141,13 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
               justify="flex-end"
               alignContent="center"
             >
-              <PayPalErrorBoundry>
+              <PayPalErrorBoundary>
                 <PayPalChip
                   onClose={onClose}
                   setProcessing={setIsProcessing}
                   disabled={disabled}
                 />
-              </PayPalErrorBoundry>
+              </PayPalErrorBoundary>
             </Grid>
           </Grid>
         </>

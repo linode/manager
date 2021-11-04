@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import HelpIcon from 'src/components/HelpIcon';
 import { reportException } from 'src/exceptionReporting';
 import {
@@ -32,7 +32,7 @@ interface State {
 
 type Props = WithStyles<ClassNames>;
 
-class PayaPalErrorBoundary extends React.Component<Props, State> {
+class PayPalErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { error: false };
@@ -66,4 +66,4 @@ class PayaPalErrorBoundary extends React.Component<Props, State> {
 
 const styled = withStyles(styles);
 
-export default styled(PayaPalErrorBoundary);
+export default styled(PayPalErrorBoundary);
