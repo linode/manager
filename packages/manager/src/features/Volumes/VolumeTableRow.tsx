@@ -49,13 +49,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(0.5),
     paddingRight: theme.spacing(0.5),
   },
+  forceUpgradeChip: {
+    backgroundColor: theme.color.chipButton,
+    '&:hover': {
+      backgroundColor: theme.color.chipButtonHover,
+    },
+  },
+  upgradePendingChip: {
+    backgroundColor: 'transparent',
+    border: '1px solid #ccc',
+  },
   nvmeChip: {
     backgroundColor: 'transparent',
     border: '1px solid #02B159',
-  },
-  upgradingChip: {
-    backgroundColor: 'transparent',
-    border: '1px solid #ccc',
   },
 }));
 
@@ -171,7 +177,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                 !nvmeUpgradeScheduledByUserImminent ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={classes.chip}
+                    className={`${classes.chip} ${classes.forceUpgradeChip}`}
                     label="UPGRADE TO NVMe"
                     onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
                     data-testid="upgrade-chip"
@@ -182,7 +188,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                   nvmeUpgradeScheduledByUserInProgress) ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={`${classes.chip} ${classes.upgradingChip}`}
+                    className={`${classes.chip} ${classes.upgradePendingChip}`}
                     label="UPGRADE PENDING"
                     data-testid="upgrading-chip"
                   />
