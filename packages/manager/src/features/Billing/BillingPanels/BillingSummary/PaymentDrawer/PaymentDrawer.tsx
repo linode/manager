@@ -8,6 +8,7 @@ import makeAsyncScriptLoader from 'react-async-script';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
+import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
@@ -329,6 +330,11 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
               type="number"
               placeholder={`${minimumPayment} minimum`}
               disabled={isProcessing}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">$</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
