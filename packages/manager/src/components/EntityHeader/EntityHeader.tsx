@@ -147,7 +147,13 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
             sm={8}
           >
             {props.children}
-            {docsLink ? <DocsLink href={docsLink} label={docsLabel} /> : null}
+            {docsLink ? (
+              <DocsLink
+                href={docsLink}
+                label={docsLabel}
+                analyticsLabel={`${title} Landing`}
+              />
+            ) : null}
             <div className={classes.actions}>{actions}</div>
           </Grid>
         </Grid>

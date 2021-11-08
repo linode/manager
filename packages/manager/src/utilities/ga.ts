@@ -369,10 +369,11 @@ export const sendEntityTransferCopyDraftEmailEvent = (): void => {
   });
 };
 
-export const sendHelpButtonClickEvent = (buttonLabel: string) => {
+export const sendHelpButtonClickEvent = (url: string, from?: string) => {
   sendEvent({
     category: 'Help Button',
-    action: buttonLabel,
+    action: url,
+    label: from,
   });
 };
 
