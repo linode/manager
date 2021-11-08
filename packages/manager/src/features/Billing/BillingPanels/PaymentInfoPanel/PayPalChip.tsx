@@ -78,7 +78,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
         },
       });
     }
-    // Intentially only run this effect when client token data changes. We don't need to run
+    // Intentionally only run this effect when client token data changes. We don't need to run
     // when the PayPal options change because we set them here with dispatch.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
