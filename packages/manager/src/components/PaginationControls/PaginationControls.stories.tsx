@@ -29,3 +29,5 @@
 // storiesOf('Pagination Controls', module).add('Interactive example', () => (
 //   <Example />
 // ));
+
+export {};
