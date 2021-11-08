@@ -58,6 +58,10 @@ type CombinedProps = Props;
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...MetricDisplayStyles(theme),
+  canvasContainer: {
+    position: 'relative',
+    width: '80%',
+  },
 }));
 
 const lineOptions: ChartDataSets = {
@@ -275,7 +279,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   });
   return (
     <div className={classes.wrapper}>
-      <div>
+      <div className={classes.canvasContainer}>
         <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
       {legendRendered && legendRows && (
