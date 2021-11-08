@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.MuiGrid-item': {
       paddingTop: 0,
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.only('sm')]: {
       marginRight: theme.spacing(),
     },
   },
@@ -160,7 +160,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
         </Grid>
         <Grid item className={classes.actions}>
           <Button
-            buttonType="secondary"
+            buttonType="primary"
             disabled={disabled}
             onClick={() => setDeviceDrawerOpen(true)}
             compact
