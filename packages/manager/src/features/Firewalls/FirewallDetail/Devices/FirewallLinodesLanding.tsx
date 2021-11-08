@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.MuiGrid-item': {
       paddingTop: 0,
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.only('sm')]: {
       marginRight: theme.spacing(),
     },
   },
