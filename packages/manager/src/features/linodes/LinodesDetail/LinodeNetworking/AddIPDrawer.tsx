@@ -167,30 +167,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
     !selectedIPv4 ||
     readOnly;
 
-  const AllocateButton = (
-    <Button
-      buttonType="primary"
-      onClick={handleAllocateIPv4}
-      disabled={disabledIPv4}
-      style={{ marginBottom: 8 }}
-      loading={submitting}
-    >
-      Allocate
-    </Button>
-  );
-
   const disabledIPv6 = !selectedIPv6Prefix || readOnly;
-  const AllocateButton2 = (
-    <Button
-      buttonType="primary"
-      onClick={handleCreateIPv6Range}
-      disabled={disabledIPv6}
-      style={{ marginBottom: 8 }}
-      loading={submitting}
-    >
-      Allocate
-    </Button>
-  );
 
   const _tooltipCopy =
     disabledIPv4 && selectedIPv4
@@ -198,6 +175,25 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
         ? 'You do not have permission to modify this Linode.'
         : tooltipCopy[selectedIPv4]
       : null;
+
+  const buttonJSX = (type: 'IPv4' | 'IPv6') => {
+    const IPv4 = type === 'IPv4';
+
+    const onClick = IPv4 ? handleAllocateIPv4 : handleCreateIPv6Range;
+    const disabled = IPv4 ? disabledIPv4 : disabledIPv6;
+
+    return (
+      <Button
+        buttonType="primary"
+        onClick={onClick}
+        disabled={disabled}
+        style={{ marginBottom: 8 }}
+        loading={submitting}
+      >
+        Allocate
+      </Button>
+    );
+  };
 
   return (
     <Drawer open={open} onClose={onClose} title="Add an IP Address">
@@ -238,10 +234,10 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
           </Button>
           {_tooltipCopy ? (
             <Tooltip title={_tooltipCopy}>
-              <div style={{ display: 'inline' }}>{AllocateButton}</div>
+              <div style={{ display: 'inline' }}>{buttonJSX('IPv4')}</div>
             </Tooltip>
           ) : (
-            AllocateButton
+            buttonJSX('IPv4')
           )}
         </ActionsPanel>
         <Typography variant="h2" className={classes.ipv6}>
@@ -279,7 +275,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
             Close
           </Button>
-          {AllocateButton2}
+          {buttonJSX('IPv6')}
         </ActionsPanel>
       </React.Fragment>
     </Drawer>
