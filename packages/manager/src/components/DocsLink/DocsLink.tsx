@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   href: string;
   label?: string;
+  analyticsLabel?: string;
 }
 
 type CombinedProps = Props;
@@ -34,7 +35,7 @@ type CombinedProps = Props;
 export const DocsLink: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { href, label } = props;
+  const { href, label, analyticsLabel } = props;
 
   return (
     <IconTextLink
@@ -43,7 +44,7 @@ export const DocsLink: React.FC<CombinedProps> = (props) => {
       text={label ?? 'Docs'}
       title={label ?? 'Docs'}
       onClick={() => {
-        sendHelpButtonClickEvent(href);
+        sendHelpButtonClickEvent(href, analyticsLabel);
         window.open(href, '_blank', 'noopener');
       }}
       aria-describedby="external-site"

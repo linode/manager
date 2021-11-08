@@ -103,7 +103,10 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
         />
       </Grid>
       <Grid item className="px0" style={{ marginTop: 4 }}>
-        <DocsLink href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/" />
+        <DocsLink
+          href="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+          analyticsLabel="Linode Detail"
+        />
       </Grid>
     </Grid>
   );
