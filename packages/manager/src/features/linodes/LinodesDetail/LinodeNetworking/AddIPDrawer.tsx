@@ -229,9 +229,6 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
           </Typography>
         )}
         <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Close
-          </Button>
           {_tooltipCopy ? (
             <Tooltip title={_tooltipCopy}>
               <div style={{ display: 'inline' }}>{buttonJSX('IPv4')}</div>
@@ -271,12 +268,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself.
         </Typography>
-        <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Close
-          </Button>
-          {buttonJSX('IPv6')}
-        </ActionsPanel>
+        <ActionsPanel>{buttonJSX('IPv6')}</ActionsPanel>
       </React.Fragment>
     </Drawer>
   );
