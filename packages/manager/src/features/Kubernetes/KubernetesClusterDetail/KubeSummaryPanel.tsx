@@ -154,6 +154,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(0.5),
     paddingRight: theme.spacing(0.5),
   },
+  actionRow: {
+    flexDirection: 'column',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-end',
+      flexDirection: 'row',
+    },
+  },
 }));
 
 interface Props {
@@ -487,13 +494,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               direction="row"
               xs={12}
               lg={7}
-              className="foobar"
               justifyContent="flex-end"
             >
               <Grid
                 item
                 container
-                direction="column"
                 lg={12}
                 alignContent="flex-end"
                 style={matches ? { margin: 1 } : undefined}
@@ -502,7 +507,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                   item
                   container
                   direction={matches ? 'row-reverse' : 'row'}
-                  justifyContent="flex-end"
+                  justifyContent={matches ? 'flex-start' : 'flex-end'}
                 >
                   {isClusterHighlyAvailable ? (
                     <Grid item>
