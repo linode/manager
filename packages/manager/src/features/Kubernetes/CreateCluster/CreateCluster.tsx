@@ -113,7 +113,7 @@ const regionHelperText = (
       target="_blank"
       aria-describedby="external-site"
       rel="noopener noreferrer"
-      href="https://www.linode.com/speedtest"
+      href="https://www.linode.com/speed-test/"
       style={{ fontWeight: 600 }}
     >
       our speedtest page

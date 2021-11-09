@@ -67,7 +67,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
             target="_blank"
             aria-describedby="external-site"
             rel="noopener noreferrer"
-            href="https://www.linode.com/speedtest"
+            href="https://www.linode.com/speed-test/"
           >
             Use our speedtest page
           </a>
