@@ -60,8 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   payPalIcon: {
     flexShrink: 0,
     height: 20,
-    marginRight: '2px',
-    marginLeft: '-6px',
+    marginRight: '6px',
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
