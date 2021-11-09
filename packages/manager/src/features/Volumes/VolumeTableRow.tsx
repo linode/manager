@@ -49,6 +49,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(0.5),
     paddingRight: theme.spacing(0.5),
   },
+  forceUpgradeChip: {
+    backgroundColor: theme.color.chipButton,
+    '&:hover': {
+      backgroundColor: theme.color.chipButtonHover,
+    },
+  },
+  upgradePendingChip: {
+    backgroundColor: 'transparent',
+    border: '1px solid #ccc',
+  },
   nvmeChip: {
     backgroundColor: 'transparent',
     border: '1px solid #02B159',
@@ -107,13 +117,20 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     (notification) =>
       notification.type ===
         ('volume_migration_scheduled' as NotificationType) &&
-      (notification.entity?.id === id || notification.body?.includes(region))
+      notification.entity?.id === id
   );
 
-  const nvmeUpgradeScheduledByUser = events.some(
+  const nvmeUpgradeScheduledByUserImminent = notifications.some(
+    (notification) =>
+      notification.type === ('volume_migration_imminent' as NotificationType) &&
+      notification.entity?.id === id
+  );
+
+  const nvmeUpgradeScheduledByUserInProgress = events.some(
     (event) =>
-      event.action === ('volume_migrate_scheduled' as EventAction) &&
-      event.entity?.id === id
+      event.action === ('volume_migrate' as EventAction) &&
+      event.entity?.id === id &&
+      event.status === 'started'
   );
 
   return isUpdating ? (
@@ -157,13 +174,23 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                 </Grid>
               ) : linodeId &&
                 eligibleForUpgradeToNVMe &&
-                !nvmeUpgradeScheduledByUser ? (
+                !nvmeUpgradeScheduledByUserImminent ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={classes.chip}
+                    className={`${classes.chip} ${classes.forceUpgradeChip}`}
                     label="UPGRADE TO NVMe"
                     onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
                     data-testid="upgrade-chip"
+                  />
+                </Grid>
+              ) : linodeId &&
+                (nvmeUpgradeScheduledByUserImminent ||
+                  nvmeUpgradeScheduledByUserInProgress) ? (
+                <Grid item className={classes.chipWrapper}>
+                  <Chip
+                    className={`${classes.chip} ${classes.upgradePendingChip}`}
+                    label="UPGRADE PENDING"
+                    data-testid="upgrading-chip"
                   />
                 </Grid>
               ) : null}
