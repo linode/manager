@@ -1,4 +1,11 @@
 <h1 align="center">
+
+지금부터 이곳은 나의 영역이다.
+pull request를 연습 해볼 것이다! 
+
+자 이젠 연동이 되었다.
+확인해보자 
+
   <img src="https://www.linode.com/media/images/logos/diagonal/light/linode-logo_diagonal_light_medium.png" width="200" />
   <br />
   Linode Cloud Manager
