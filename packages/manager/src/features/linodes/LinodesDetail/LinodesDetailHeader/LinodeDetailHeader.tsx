@@ -414,39 +414,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
-      {showVolumesBanner ? (
-        <DismissibleBanner
-          preferenceKey="block-storage-available-atlanta"
-          productInformationIndicator
-        >
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justify="space-between"
-          >
-            <Grid item>
-              <Typography>
-                Atlanta is the first data center with our new high-performance{' '}
-                <Link to="https://www.linode.com/products/block-storage/">
-                  NVMe Block Storage
-                </Link>
-                .
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button
-                buttonType="primary"
-                onClick={
-                  isCreateMode ? openCreateVolumeDrawer : openAttachVolumeDrawer
-                }
-              >
-                {volumesBannerAction} a Volume
-              </Button>
-            </Grid>
-          </Grid>
-        </DismissibleBanner>
-      ) : null}
       {numUpgradeableVolumes > 0 ? (
         <DismissibleBanner
           preferenceKey="upgradable-volumes-attached"
