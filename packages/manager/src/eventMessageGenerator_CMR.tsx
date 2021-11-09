@@ -38,7 +38,11 @@ export const eventMessageGenerator = (
     case 'lassie_reboot':
       return 'reboot (Lassie watchdog service)';
     case 'linode_reboot':
-      return `reboot with ${e.secondary_entity?.label}`;
+      if (e.secondary_entity !== null) {
+        return `reboot with ${e.secondary_entity?.label}`;
+      } else {
+        return 'is rebooting.';
+      }
     case 'linode_shutdown':
       return 'shutdown';
     case 'linode_delete':
@@ -68,6 +72,8 @@ export const eventMessageGenerator = (
       return 'provisioning';
     case 'image_upload':
       return 'image uploading';
+    case 'volume_migrate':
+      return `Volume ${e.entity?.label} is being upgraded to NVMe.`;
 
     default:
       // If we haven't handled it explicitly here, it doesn't count as

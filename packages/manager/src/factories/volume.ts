@@ -12,4 +12,5 @@ export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   updated: '2019-01-01',
   filesystem_path: '/mnt',
   linode_id: null,
+  hardware_type: 'hdd',
 });

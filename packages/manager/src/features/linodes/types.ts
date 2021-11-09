@@ -5,7 +5,8 @@ export type DialogType =
   | 'resize'
   | 'rescue'
   | 'rebuild'
-  | 'detach_vlan';
+  | 'detach_vlan'
+  | 'upgrade_volumes';
 export type OpenDialog = (
   type: DialogType,
   linodeID: number,

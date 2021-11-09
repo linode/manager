@@ -73,6 +73,10 @@ const LinodeDetail: React.FC<CombinedProps> = (props) => {
                     from={`${url}/migrate`}
                     to={`${url}?migrate=true`}
                   />
+                  <Redirect
+                    from={`${url}/upgrade`}
+                    to={`${url}?upgrade=true`}
+                  />
                 </Switch>
               </React.Fragment>
             )}

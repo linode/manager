@@ -75,7 +75,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
 
   const eventMessage = (
     <>
-      {eventLabelGenerator(event)}
+      {event.action !== 'volume_migrate' ? eventLabelGenerator(event) : ''}
       {` `}
       {message}
       {formattedTimeRemaining}
