@@ -423,11 +423,16 @@ export const handlers = [
       linode_id: 20,
       label: 'eligibleNow',
     });
+    const hddVolumeAttached2 = volumeFactory.build({
+      id: 2,
+      linode_id: 2,
+      label: 'example-upgrading',
+    });
     const nvmeVolumes = volumeFactory.buildList(2, {
       hardware_type: 'nvme',
     });
 
-    const volumes = [...nvmeVolumes, hddVolumeAttached];
+    const volumes = [...nvmeVolumes, hddVolumeAttached, hddVolumeAttached2];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -552,10 +557,10 @@ export const handlers = [
       percent_complete: 100,
     });
     const volumeMigrating = eventFactory.build({
-      entity: { type: 'volume', id: 5, label: 'zetaEjemplo' },
-      action: 'volume_migrate',
+      entity: { type: 'volume', id: 2, label: 'example-upgrading' },
+      action: 'volume_migrate' as EventAction,
       status: 'started',
-      message: 'Volume zetaEjemplo is being upgraded to NVMe.',
+      message: 'Volume example-upgrading is being upgraded to NVMe.',
       percent_complete: 65,
     });
     const volumeMigrationFinished = eventFactory.build({
@@ -737,39 +742,43 @@ export const handlers = [
     //   severity: 'major',
     // });
 
-    const blockStorageMigrationNotification = notificationFactory.build({
-      type: 'volume_migration_scheduled' as NotificationType,
-      entity: {
-        type: 'volume',
-        label: 'eligibleNow',
-        id: 20,
-        url: '/volumes/20',
-      },
-      when: '2021-09-30T04:00:00',
-      message:
-        'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-      label: 'You have a scheduled Block Storage volume upgrade pending!',
-      severity: 'major',
-      until: '2021-10-16T04:00:00',
-      body: 'Your volumes in us-east will be upgraded to NVMe.',
-    });
+    const blockStorageMigrationScheduledNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_scheduled' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'eligibleNow',
+          id: 20,
+          url: '/volumes/20',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'critical',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
 
-    const blockStorageMigrationNotification2 = notificationFactory.build({
-      type: 'volume_migration_scheduled' as NotificationType,
-      entity: {
-        type: 'volume',
-        label: 'testVol-1',
-        id: 1,
-        url: '/volumes/1',
-      },
-      when: '2021-09-30T04:00:00',
-      message:
-        'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-      label: 'You have a scheduled Block Storage volume upgrade pending!',
-      severity: 'major',
-      until: '2021-10-16T04:00:00',
-      body: 'Your volumes in us-east will be upgraded to NVMe.',
-    });
+    const blockStorageMigrationImminentNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_imminent' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'example-upgrading',
+          id: 2,
+          url: '/volumes/2',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'major',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
 
     return res(
       ctx.json(
@@ -785,8 +794,8 @@ export const handlers = [
           // emailBounce,
           // migrationNotification,
           // balanceNotification,
-          blockStorageMigrationNotification,
-          blockStorageMigrationNotification2,
+          blockStorageMigrationScheduledNotification,
+          blockStorageMigrationImminentNotification,
         ])
       )
     );
