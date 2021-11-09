@@ -5,7 +5,7 @@ import { deleteVolumeActions } from './volume.actions';
 import { getAllVolumes, getOneVolume } from './volume.requests';
 
 const volumeEventsHandler: EventHandler = (event, dispatch) => {
-  const { action, entity, status } = event;
+  const { action, entity, status, percent_complete } = event;
   const { id } = entity;
 
   switch (action) {
@@ -21,6 +21,9 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
 
     case 'volume_delete':
       return handleVolumeDelete(dispatch, status, id);
+
+    case 'volume_migrate':
+      return handleVolumeMigrate(dispatch, status, percent_complete);
 
     default:
       return;
@@ -78,6 +81,26 @@ const handleVolumeDelete = (
         result: {},
       });
       return dispatch(action);
+  }
+};
+
+const handleVolumeMigrate = (
+  dispatch: Dispatch<any>,
+  status: EventStatus,
+  percent_complete: number | null
+) => {
+  switch (status) {
+    case 'started':
+    case 'finished':
+      if (percent_complete === 100) {
+        dispatch(getAllVolumes({ setLoading: false }));
+      }
+    case 'failed':
+    case 'notification':
+    case 'scheduled':
+
+    default:
+      return;
   }
 };
 

@@ -15,8 +15,9 @@ const useStyles = makeStyles(() => ({
   capitalize: {
     textTransform: 'capitalize',
   },
-  padding: {
-    padding: 8,
+  status: {
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 
@@ -27,34 +28,43 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
   return (
     <TableRow key={entity.id}>
       <TableCell>
-        <Link to={`/${entity.type}s/${entity.id}`} tabIndex={0}>
+        <Link
+          to={
+            entity.type === 'linode'
+              ? `/${entity.type}s/${entity.id}`
+              : `/${entity.type}s`
+          }
+          tabIndex={0}
+        >
           {entity.label}
         </Link>
       </TableCell>
-      <TableCell>
-        <div>{formatDate(when)}</div>
-      </TableCell>
-      <Hidden xsDown>
-        <TableCell className={classes.capitalize}>
-          {type.replace('_', ' ')}
-        </TableCell>
-      </Hidden>
-      <TableCell>
-        <StatusIcon status={status == 'started' ? 'other' : 'inactive'} />
-        {
-          // @ts-expect-error api will change pending -> scheduled
-          status === 'pending' || status === 'scheduled'
-            ? 'Scheduled'
-            : capitalize(status)
-        }{' '}
-      </TableCell>
+      <TableCell noWrap>{formatDate(when)}</TableCell>
       <Hidden smDown>
         <TableCell data-testid="relative-date">
           {parseAPIDate(when).toRelative()}
         </TableCell>
       </Hidden>
+      <Hidden xsDown>
+        <TableCell className={classes.capitalize} noWrap>
+          {type.replace('_', ' ')}
+        </TableCell>
+      </Hidden>
+      <TableCell>
+        <div className={classes.status}>
+          <StatusIcon status={status == 'started' ? 'other' : 'inactive'} />
+          {
+            // @ts-expect-error api will change pending -> scheduled
+            status === 'pending' || status === 'scheduled'
+              ? 'Scheduled'
+              : status === 'started'
+              ? 'In Progress'
+              : capitalize(status)
+          }
+        </div>
+      </TableCell>
       <Hidden mdDown>
-        <TableCell className={classes.padding}>
+        <TableCell>
           <HighlightedMarkdown textOrMarkdown={reason} />
         </TableCell>
       </Hidden>

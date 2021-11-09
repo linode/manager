@@ -210,6 +210,8 @@ const darkThemeOptions = {
     tagText: '#9caec9',
     tagIcon: '#9caec9',
     tagBorder: '#2e3238',
+    chipButton: '#415d81',
+    chipButtonHover: '#374863',
   },
   cmrBGColors,
   cmrBorderColors,
