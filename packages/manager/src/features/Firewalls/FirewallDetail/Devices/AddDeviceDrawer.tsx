@@ -105,6 +105,9 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           filteredLinodes={currentDevices}
         />
         <ActionsPanel>
+          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+            Cancel
+          </Button>
           <Button
             buttonType="primary"
             onClick={handleSubmit}
@@ -113,9 +116,6 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
             data-qa-submit
           >
             Add
-          </Button>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-            Cancel
           </Button>
         </ActionsPanel>
       </form>

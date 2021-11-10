@@ -31,7 +31,7 @@ import {
   maintenanceResponseFactory,
   monitorFactory,
   nodeBalancerFactory,
-  // notificationFactory,
+  notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   profileFactory,
@@ -50,13 +50,14 @@ import {
   makeObjectsPage,
   paymentMethodFactory,
   accountMaintenanceFactory,
-  gdprComplianceNotification,
+  // gdprComplianceNotification,
 } from 'src/factories';
 
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
+import { EventAction, NotificationType } from '@linode/api-v4';
 
 export const makeResourcePage = (
   e: any[],
@@ -181,12 +182,16 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(17, {
+    const onlineLinodes = linodeFactory.buildList(3, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
     });
+    const linodeWithEligibleVolumes = linodeFactory.build({
+      id: 20,
+      label: 'debianDistro',
+    });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
-    const busyLinodes = linodeFactory.buildList(5, { status: 'migrating' });
+    const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -206,6 +211,7 @@ export const handlers = [
     });
     const linodes = [
       ...onlineLinodes,
+      linodeWithEligibleVolumes,
       ...offlineLinodes,
       ...busyLinodes,
       linodeFactory.build({
@@ -400,8 +406,33 @@ export const handlers = [
     const record = domainRecordFactory.build();
     return res(ctx.json(record));
   }),
+  rest.post('*/volumes/migrate', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/regions/*/migration-queue', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        volumes: 953,
+        linodes: 8,
+      })
+    );
+  }),
   rest.get('*/volumes', (req, res, ctx) => {
-    const volumes = volumeFactory.buildList(0);
+    const hddVolumeAttached = volumeFactory.build({
+      id: 20,
+      linode_id: 20,
+      label: 'eligibleNow',
+    });
+    const hddVolumeAttached2 = volumeFactory.build({
+      id: 2,
+      linode_id: 2,
+      label: 'example-upgrading',
+    });
+    const nvmeVolumes = volumeFactory.buildList(2, {
+      hardware_type: 'nvme',
+    });
+
+    const volumes = [...nvmeVolumes, hddVolumeAttached, hddVolumeAttached2];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -452,22 +483,27 @@ export const handlers = [
     accountMaintenanceFactory.resetSequenceNumber();
     const page = Number(req.url.searchParams.get('page') || 1);
     const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+    const headers = JSON.parse(req.headers.get('x-filter') || '{}');
 
-    const accountMaintenance = [
-      ...accountMaintenanceFactory.buildList(1, {
-        entity: { label: 'very-long-name-for-a-linode-for-testing' },
-        when: new Date(Date.now() + 5000).toISOString(),
-      }),
-      ...accountMaintenanceFactory.buildList(5, { status: 'pending' }),
-      ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
-    ];
+    const accountMaintenance =
+      headers.type === 'volume_migration'
+        ? [
+            accountMaintenanceFactory.build({
+              entity: { type: 'volume', label: 'my-volume-0', id: 0 },
+              status: 'pending',
+              reason: 'Free upgrade to faster NVMe hardware',
+              type: 'volume_migration',
+            }),
+          ]
+        : [
+            ...accountMaintenanceFactory.buildList(3, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(2, { status: 'started' }),
+          ];
 
     if (req.headers.get('x-filter')) {
-      const sort = JSON.parse(req.headers.get('x-filter') || '{}');
-
       accountMaintenance.sort((a, b) => {
-        const statusA = a[sort['+order_by']];
-        const statusB = b[sort['+order_by']];
+        const statusA = a[headers['+order_by']];
+        const statusB = b[headers['+order_by']];
 
         if (statusA < statusB) {
           return -1;
@@ -478,7 +514,7 @@ export const handlers = [
         return 0;
       });
 
-      if (sort['+order'] == 'desc') {
+      if (headers['+order'] == 'desc') {
         accountMaintenance.reverse();
       }
       return res(
@@ -488,7 +524,7 @@ export const handlers = [
             (page - 1) * pageSize + pageSize
           ),
           page,
-          pages: accountMaintenance.length / pageSize,
+          pages: Math.ceil(accountMaintenance.length / pageSize),
           results: accountMaintenance.length,
         })
       );
@@ -506,21 +542,33 @@ export const handlers = [
     );
   }),
   rest.get('*/events', (req, res, ctx) => {
-    const events = eventFactory.buildList(1, {
-      action: 'lke_node_create',
-      percent_complete: 15,
-      entity: { type: 'linode', id: 999, label: 'linode-1' },
-      message:
-        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+    // const events = eventFactory.buildList(1, {
+    //   action: 'lke_node_create',
+    //   percent_complete: 15,
+    //   entity: { type: 'linode', id: 999, label: 'linode-1' },
+    //   message:
+    //     'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+    // });
+    const volumeMigrationScheduled = eventFactory.build({
+      entity: { type: 'volume', id: 6, label: 'bravoExample' },
+      action: 'volume_migrate_scheduled' as EventAction,
+      status: 'scheduled',
+      message: 'Volume bravoExample has been scheduled for an upgrade to NVMe.',
+      percent_complete: 100,
     });
-    const diskResize = eventFactory.build({
-      action: 'disk_resize',
-      percent_complete: 75,
-      secondary_entity: {
-        type: 'disk',
-        id: 1,
-        label: 'my-disk',
-      },
+    const volumeMigrating = eventFactory.build({
+      entity: { type: 'volume', id: 2, label: 'example-upgrading' },
+      action: 'volume_migrate' as EventAction,
+      status: 'started',
+      message: 'Volume example-upgrading is being upgraded to NVMe.',
+      percent_complete: 65,
+    });
+    const volumeMigrationFinished = eventFactory.build({
+      entity: { type: 'volume', id: 6, label: 'alphaExample' },
+      action: 'volume_migrate',
+      status: 'finished',
+      message: 'Volume alphaExample has finished upgrading to NVMe.',
+      percent_complete: 100,
     });
     const oldEvents = eventFactory.buildList(20, {
       action: 'account_update',
@@ -528,7 +576,16 @@ export const handlers = [
       percent_complete: 100,
     });
     return res.once(
-      ctx.json(makeResourcePage([...events, diskResize, ...oldEvents]))
+      ctx.json(
+        makeResourcePage([
+          // ...events,
+          ...oldEvents,
+          ...oldEvents,
+          volumeMigrationScheduled,
+          volumeMigrating,
+          volumeMigrationFinished,
+        ])
+      )
     );
   }),
   rest.get('*/support/tickets', (req, res, ctx) => {
@@ -613,7 +670,7 @@ export const handlers = [
     //   body: null
     // });
 
-    const gdprNotification = gdprComplianceNotification.build();
+    // const gdprNotification = gdprComplianceNotification.build();
 
     // const generalGlobalNotice = {
     //   type: 'notice',
@@ -685,12 +742,50 @@ export const handlers = [
     //   severity: 'major',
     // });
 
+    const blockStorageMigrationScheduledNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_scheduled' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'eligibleNow',
+          id: 20,
+          url: '/volumes/20',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'critical',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
+
+    const blockStorageMigrationImminentNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_imminent' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'example-upgrading',
+          id: 2,
+          url: '/volumes/2',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'major',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
+
     return res(
       ctx.json(
         makeResourcePage([
           // pastDueBalance,
           // ...notificationFactory.buildList(1),
-          gdprNotification,
+          // gdprNotification,
           // generalGlobalNotice,
           // outageNotification,
           // minorSeverityNotification,
@@ -699,6 +794,8 @@ export const handlers = [
           // emailBounce,
           // migrationNotification,
           // balanceNotification,
+          blockStorageMigrationScheduledNotification,
+          blockStorageMigrationImminentNotification,
         ])
       )
     );

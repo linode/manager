@@ -340,6 +340,8 @@ const themeDefaults: ThemeDefaults = () => {
       tagText: '#3a3f46',
       tagIcon: '#7daee8',
       tagBorder: '#fff',
+      chipButton: '#e5f1ff',
+      chipButtonHover: '#cce2ff',
     },
     cmrBGColors,
     cmrTextColors,
@@ -507,6 +509,11 @@ const themeDefaults: ThemeDefaults = () => {
       hidden: visuallyHidden,
     },
     overrides: {
+      MuiCheckbox: {
+        root: {
+          color: '#ccc',
+        },
+      },
       MuiAppBar: {
         colorDefault: {
           backgroundColor: 'inherit',

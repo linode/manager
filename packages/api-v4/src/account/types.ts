@@ -38,7 +38,8 @@ export type AccountCapability =
   | 'Kubernetes'
   | 'Cloud Firewall'
   | 'Vlans'
-  | 'Machine Images';
+  | 'Machine Images'
+  | 'LKE HA Control Planes';
 
 export interface AccountSettings {
   managed: boolean;
@@ -201,7 +202,9 @@ export type NotificationType =
   | 'ticket_abuse'
   | 'notice'
   | 'promotion'
-  | 'user_email_bounce';
+  | 'user_email_bounce'
+  | 'volume_migration_scheduled'
+  | 'volume_migration_imminent';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -312,7 +315,9 @@ export type EventAction =
   | 'volume_detach'
   | 'volume_attach'
   | 'volume_resize'
-  | 'volume_clone';
+  | 'volume_clone'
+  | 'volume_migrate_scheduled'
+  | 'volume_migrate';
 
 export type EventStatus =
   | 'scheduled'
@@ -385,7 +390,7 @@ export interface SaveCreditCardData {
 export interface AccountMaintenance {
   reason: string;
   status: 'pending' | 'started';
-  type: 'reboot' | 'cold_migration' | 'live_migration';
+  type: 'reboot' | 'cold_migration' | 'live_migration' | 'volume_migration';
   when: string;
   entity: {
     id: number;

@@ -63,7 +63,14 @@ describe('Maintenance Table', () => {
         return res(ctx.json(makeResourcePage(accountMaintenance)));
       })
     );
-    renderWithTheme(<MaintenanceTable type="Linode" />);
+    renderWithTheme(
+      <MaintenanceTable
+        type="Linode"
+        expanded={true}
+        toggleExpanded={() => null}
+        addTopMargin={false}
+      />
+    );
 
     // Loading state should render
     expect(screen.getByTestId(loadingTestId)).toBeInTheDocument();
@@ -80,7 +87,14 @@ describe('Maintenance Table', () => {
   });
 
   it('should render the CSV download button if there are items', async () => {
-    renderWithTheme(<MaintenanceTable type="Linode" />);
+    renderWithTheme(
+      <MaintenanceTable
+        type="Linode"
+        expanded={true}
+        toggleExpanded={() => null}
+        addTopMargin={false}
+      />
+    );
 
     screen.getByText('Download CSV');
   });
@@ -92,7 +106,15 @@ describe('Maintenance Table', () => {
       })
     );
 
-    renderWithTheme(<MaintenanceTable type="Linode" />, { queryClient });
+    renderWithTheme(
+      <MaintenanceTable
+        type="Linode"
+        expanded={true}
+        toggleExpanded={() => null}
+        addTopMargin={false}
+      />,
+      { queryClient }
+    );
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 

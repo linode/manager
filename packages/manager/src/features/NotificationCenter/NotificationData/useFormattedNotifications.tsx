@@ -1,4 +1,8 @@
-import { Notification, NotificationSeverity } from '@linode/api-v4/lib/account';
+import {
+  Notification,
+  NotificationSeverity,
+  NotificationType,
+} from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -30,6 +34,12 @@ export const useFormattedNotifications = (): NotificationItem[] => {
   } = useDismissibleNotifications();
 
   const notifications = useNotifications();
+
+  const volumeMigrationScheduledIsPresent = notifications.some(
+    (notification) =>
+      notification.type === ('volume_migration_scheduled' as NotificationType)
+  );
+
   const classes = useStyles();
 
   const dayOfMonth = DateTime.local().day;
@@ -39,25 +49,46 @@ export const useFormattedNotifications = (): NotificationItem[] => {
     context.closeDrawer();
   };
 
-  return notifications
-    .filter((thisNotification) => {
-      /**
-       * Don't show balance overdue notifications at the beginning of the month
-       * to avoid causing anxiety if an automatic payment takes time to process.
-       * This is a temporary hack; customers can have their payment grace period extended
-       * to more than 3 days, and using this method also means that if you're more than
-       * a month overdue the notification will disappear for three days.
-       */
-      return !(thisNotification.type === 'payment_due' && dayOfMonth <= 3);
-    })
-    .map((notification, idx) =>
-      formatNotificationForDisplay(
-        interceptNotification(notification, handleClose, classes),
-        idx,
-        handleClose,
-        !hasDismissedNotifications([notification], 'notificationDrawer')
+  const filteredNotifications = notifications.filter((thisNotification) => {
+    /**
+     * Don't show balance overdue notifications at the beginning of the month
+     * to avoid causing anxiety if an automatic payment takes time to process.
+     * This is a temporary hack; customers can have their payment grace period extended
+     * to more than 3 days, and using this method also means that if you're more than
+     * a month overdue the notification will disappear for three days.
+     *
+     * Also filter out volume_migration_scheduled notifications, since those will be condensed into a single customized one.
+     */
+    return (
+      !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
+      !['volume_migration_scheduled', 'volume_migration_imminent'].includes(
+        thisNotification.type
       )
     );
+  });
+
+  if (volumeMigrationScheduledIsPresent) {
+    filteredNotifications.push({
+      type: 'volume_migration_scheduled' as NotificationType,
+      entity: null,
+      when: null,
+      message:
+        'You have pending volume migrations. Check the maintenance page for more details.',
+      label: 'You have a scheduled Block Storage volume upgrade pending!',
+      severity: 'major',
+      until: null,
+      body: null,
+    });
+  }
+
+  return filteredNotifications.map((notification, idx) =>
+    formatNotificationForDisplay(
+      interceptNotification(notification, handleClose, classes),
+      idx,
+      handleClose,
+      !hasDismissedNotifications([notification], 'notificationDrawer')
+    )
+  );
 };
 
 /**
@@ -265,6 +296,28 @@ const interceptNotification = (
   if (isEUModelContractNotification(notification)) {
     // This needs to be its own component so it can use hooks.
     const jsx = <ComplianceNotification />;
+
+    return {
+      ...notification,
+      jsx,
+    };
+  }
+
+  if (notification.type === 'volume_migration_scheduled') {
+    const jsx = (
+      <Typography>
+        Attached Volumes are eligible for a free upgrade to NVMe-based Block
+        Storage. Visit the{' '}
+        <Link to={'/account/maintenance/'} onClick={onClose}>
+          Maintenance page
+        </Link>{' '}
+        to view scheduled upgrades or visit the{' '}
+        <Link to={'/volumes'} onClick={onClose}>
+          Volumes page
+        </Link>{' '}
+        to begin self-service upgrades if available.
+      </Typography>
+    );
 
     return {
       ...notification,

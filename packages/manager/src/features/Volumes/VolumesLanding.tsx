@@ -107,7 +107,7 @@ const volumeHeaders = [
     label: 'Label',
     dataColumn: 'label',
     sortable: true,
-    widthPercent: 25,
+    widthPercent: 40,
   },
   {
     label: 'Region',
@@ -122,17 +122,10 @@ const volumeHeaders = [
     widthPercent: 5,
   },
   {
-    label: 'File System Path',
-    dataColumn: 'File System Path',
-    sortable: false,
-    widthPercent: 25,
-    hideOnMobile: true,
-  },
-  {
     label: 'Attached To',
     dataColumn: 'Attached To',
     sortable: false,
-    widthPercent: 20,
+    widthPercent: 25,
   },
 ];
 

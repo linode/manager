@@ -7,6 +7,7 @@ export interface KubernetesCluster {
   k8s_version: string;
   id: number;
   tags: string[];
+  control_plane: ControlPlaneOptions;
 }
 
 export interface KubeNodePoolResponse {
@@ -52,9 +53,18 @@ export interface KubernetesEndpointResponse {
   endpoint: string;
 }
 
+export interface KubernetesDashboardResponse {
+  endpoint: string;
+}
+
+export interface ControlPlaneOptions {
+  high_availability: boolean;
+}
+
 export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   region?: string; // Will be caught by Yup if undefined
   node_pools: PoolNodeRequest[];
   k8s_version?: string; // Will be caught by Yup if undefined
+  control_plane?: ControlPlaneOptions;
 }

@@ -185,4 +185,6 @@ export const maintenanceActionTextMap: Record<
     'During this time, your Linode will be live migrated to a new host, then returned to its last state (running or powered off).',
   reboot:
     'During this time, your Linode will be shut down and remain offline, then returned to its last state (running or powered off).',
+  volume_migration:
+    'During this time, your Linode will be shut down and upgraded, then returned to its last state (running or powered off).',
 };

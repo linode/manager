@@ -1,3 +1,4 @@
+import * as qs from 'qs';
 import { useState, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
@@ -16,9 +17,14 @@ import { debounce } from 'throttle-debounce';
  * updated and the user preferences are also updated.
  * @param initial {OrderSet} include the initial order
  * @param preferenceKey {string} include a preference key so user order preference is persisted
+ * @param prefix {string} prefix in the url we can have many useOrders on the same page
  * @returns {order, orderBy, handleOrderChange}
  */
-export const useOrder = (initial: OrderSet, preferenceKey?: string) => {
+export const useOrder = (
+  initial: OrderSet,
+  preferenceKey?: string,
+  prefix?: string
+) => {
   const { preferences, updatePreferences } = usePreferences();
   const location = useLocation();
   const history = useHistory();
@@ -29,7 +35,8 @@ export const useOrder = (initial: OrderSet, preferenceKey?: string) => {
     preferences || {},
     params as Record<string, string>,
     initial.orderBy,
-    initial.order
+    initial.order,
+    prefix
   ) as OrderSet;
 
   const [orderBy, setOrderBy] = useState(initialOrder.orderBy);
@@ -52,7 +59,21 @@ export const useOrder = (initial: OrderSet, preferenceKey?: string) => {
     setOrderBy(newOrderBy);
     setOrder(newOrder);
 
-    history.replace({ search: `?order=${newOrder}&orderBy=${newOrderBy}` });
+    const urlData = prefix
+      ? {
+          [`${prefix}-order`]: newOrder,
+          [`${prefix}-orderBy`]: newOrderBy,
+        }
+      : {
+          order: newOrder,
+          orderBy: newOrderBy,
+        };
+
+    const queryParams = qs.parse(location.search.replace('?', ''));
+
+    const newQueries = { ...queryParams, ...urlData };
+
+    history.replace(`?${qs.stringify(newQueries)}`);
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
