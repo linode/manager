@@ -26,6 +26,7 @@ import SelectionCard from 'src/components/SelectionCard';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
@@ -285,6 +286,14 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
     }
   };
 
+  const onScriptLoad = () => {
+    setIsPaypalScriptLoaded(true);
+  };
+
+  const renderError = (errorMsg: string) => {
+    return <Notice error text={errorMsg} />;
+  };
+
   if (!accountLoading && account?.balance === undefined) {
     return (
       <Grid container>
@@ -292,10 +301,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       </Grid>
     );
   }
-
-  const onScriptLoad = () => {
-    setIsPaypalScriptLoaded(true);
-  };
 
   return (
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
@@ -496,13 +501,18 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           <Grid container>
             <Grid item xs={9} sm={6}>
               {braintreePayPal ? (
-                <PayPalButton
-                  usd={usd}
-                  disabled={isProcessing}
-                  setSuccess={setSuccess}
-                  setError={setErrorMessage}
-                  setProcessing={setIsProcessing}
-                />
+                <PayPalErrorBoundary
+                  renderError={(errorMsg) => renderError(errorMsg)}
+                >
+                  <PayPalButton
+                    usd={usd}
+                    disabled={isProcessing}
+                    setSuccess={setSuccess}
+                    setError={setErrorMessage}
+                    setProcessing={setIsProcessing}
+                    renderError={renderError}
+                  />
+                </PayPalErrorBoundary>
               ) : (
                 <AsyncPaypal
                   key={payPalKey}

@@ -12,7 +12,6 @@ import { makeStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import { reportException } from 'src/exceptionReporting';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
@@ -41,6 +40,7 @@ interface Props {
   setSuccess: SetSuccess;
   setError: (error: string) => void;
   setProcessing: (processing: boolean) => void;
+  renderError: (errorMsg: string) => JSX.Element;
   disabled: boolean;
 }
 
@@ -64,6 +64,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     setSuccess,
     setError,
     setProcessing,
+    renderError,
   } = props;
 
   const disabledDueToPrice = +usd < 5 || +usd > 10000;
@@ -203,7 +204,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
   }
 
   if (clientTokenError) {
-    return <Notice error text="Error loading PayPal." />;
+    return renderError('Error loading PayPal.');
   }
 
   return (
