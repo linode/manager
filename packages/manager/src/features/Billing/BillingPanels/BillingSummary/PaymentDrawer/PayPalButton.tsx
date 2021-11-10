@@ -82,15 +82,36 @@ export const PayPalButton: React.FC<Props> = (props) => {
       dispatch({
         type: 'resetOptions',
         value: {
-          'data-client-token': data?.client_token,
-          vault: false,
-          commit: false,
-          intent: 'capture',
           ...options,
+          'data-client-token': data?.client_token,
         },
       });
     }
-  }, [data, dispatch, options]);
+    // Intentionally only run this effect when client token data changes. We don't need to run
+    // when the PayPal options change because we set them here with dispatch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  React.useEffect(() => {
+    // On mount, if we were previously vaulting (adding a payment method),
+    // set the PayPal options to capture a one time payment.
+    if (
+      options.vault === true ||
+      options.commit === false ||
+      options.intent !== 'capture'
+    ) {
+      dispatch({
+        type: 'resetOptions',
+        value: {
+          ...options,
+          vault: false,
+          commit: true,
+          intent: 'capture',
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /**
    * Needed to pass dynamic amount to PayPal without re-render
@@ -173,7 +194,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
       <Grid
         container
         className={classes.loading}
-        justify="center"
+        justifyContent="center"
         alignContent="center"
       >
         <CircleProgress mini />

@@ -71,9 +71,6 @@ export const PayPalChip: React.FC<Props> = (props) => {
         value: {
           ...options,
           'data-client-token': data?.client_token,
-          vault: true,
-          commit: false,
-          intent: 'tokenize',
         },
       });
     }
@@ -81,6 +78,27 @@ export const PayPalChip: React.FC<Props> = (props) => {
     // when the PayPal options change because we set them here with dispatch.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  React.useEffect(() => {
+    // On mount, if we were previously not vaulting (one time payment),
+    // set the PayPal options to vault for adding a payment method.
+    if (
+      options.vault === false ||
+      options.commit === true ||
+      options.intent !== 'tokenize'
+    ) {
+      dispatch({
+        type: 'resetOptions',
+        value: {
+          ...options,
+          vault: true,
+          commit: false,
+          intent: 'tokenize',
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const createBillingAgreement = (
     _: Record<string, unknown>,
