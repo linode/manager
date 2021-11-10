@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import HelpIcon from 'src/components/HelpIcon';
+import { makeStyles } from 'src/components/core/styles';
 import CircleProgress from 'src/components/CircleProgress';
 import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
@@ -20,19 +19,7 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  errorIcon: {
-    color: theme.color.red,
-    marginRight: -20,
-    '&:hover': {
-      color: theme.color.red,
-      opacity: 0.7,
-    },
-    '& svg': {
-      height: 28,
-      width: 28,
-    },
-  },
+const useStyles = makeStyles(() => ({
   disabled: {
     // Allows us to disable the pointer on the PayPal button because the SDK does not
     pointerEvents: 'none',
@@ -45,11 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   setProcessing: (processing: boolean) => void;
   onClose: () => void;
+  renderError: (errorMsg: string) => JSX.Element;
   disabled: boolean;
 }
 
 export const PayPalChip: React.FC<Props> = (props) => {
-  const { onClose, disabled, setProcessing } = props;
+  const { onClose, disabled, setProcessing, renderError } = props;
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const [{ options }, dispatch] = usePayPalScriptReducer();
   const classes = useStyles();
@@ -71,9 +59,6 @@ export const PayPalChip: React.FC<Props> = (props) => {
         value: {
           ...options,
           'data-client-token': data?.client_token,
-          vault: true,
-          commit: false,
-          intent: 'tokenize',
         },
       });
     }
@@ -81,6 +66,27 @@ export const PayPalChip: React.FC<Props> = (props) => {
     // when the PayPal options change because we set them here with dispatch.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  React.useEffect(() => {
+    // On mount, if we were previously not vaulting (one time payment),
+    // set the PayPal options to vault for adding a payment method.
+    if (
+      options.vault === false ||
+      options.commit === true ||
+      options.intent !== 'tokenize'
+    ) {
+      dispatch({
+        type: 'resetOptions',
+        value: {
+          ...options,
+          vault: true,
+          commit: false,
+          intent: 'tokenize',
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const createBillingAgreement = (
     _: Record<string, unknown>,
@@ -140,14 +146,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
   };
 
   if (clientTokenError) {
-    return (
-      <HelpIcon
-        className={classes.errorIcon}
-        isError={true}
-        size={35}
-        text="Error loading PayPal."
-      />
-    );
+    return renderError('Error initializing PayPal');
   }
 
   if (isLoading || !options['data-client-token']) {

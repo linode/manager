@@ -14,6 +14,7 @@ import Notice from 'src/components/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
+import HelpIcon from 'src/components/HelpIcon';
 
 interface Props {
   open: boolean;
@@ -54,6 +55,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     ...theme.applyLinkStyles,
   },
+  errorIcon: {
+    color: theme.color.red,
+    marginRight: -20,
+    '&:hover': {
+      color: theme.color.red,
+      opacity: 0.7,
+    },
+    '& svg': {
+      height: 28,
+      width: 28,
+    },
+  },
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
@@ -73,6 +86,17 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     enqueueSnackbar(message, {
       variant,
     });
+  };
+
+  const renderError = (errorMsg: string) => {
+    return (
+      <HelpIcon
+        className={classes.errorIcon}
+        isError={true}
+        size={35}
+        text={errorMsg}
+      />
+    );
   };
 
   const hasMaxPaymentMethods = paymentMethods
@@ -119,6 +143,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
                 makeToast={makeToast}
                 onClose={onClose}
                 setProcessing={setIsProcessing}
+                renderError={renderError}
               />
             </Grid>
           </Grid>
@@ -139,13 +164,14 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
               item
               xs={4}
               md={3}
-              justify="flex-end"
+              justifyContent="flex-end"
               alignContent="center"
             >
-              <PayPalErrorBoundary>
+              <PayPalErrorBoundary renderError={renderError}>
                 <PayPalChip
                   onClose={onClose}
                   setProcessing={setIsProcessing}
+                  renderError={renderError}
                   disabled={disabled}
                 />
               </PayPalErrorBoundary>
