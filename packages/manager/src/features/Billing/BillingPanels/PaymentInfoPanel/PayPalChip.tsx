@@ -9,7 +9,6 @@ import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { PaymentMethod } from '@linode/api-v4';
 import classNames from 'classnames';
 import { reportException } from 'src/exceptionReporting';
 import {
@@ -103,14 +102,10 @@ export const PayPalChip: React.FC<Props> = (props) => {
   };
 
   const onNonce = (nonce: string) => {
-    const paymentMethods = queryClient.getQueryData<PaymentMethod[]>(
-      `${accountPaymentKey}-all`
-    );
-
     addPaymentMethod({
       type: 'payment_method_nonce',
       data: { nonce },
-      is_default: paymentMethods?.length === 0,
+      is_default: true,
     })
       .then(() => {
         queryClient.invalidateQueries(`${accountPaymentKey}-all`);

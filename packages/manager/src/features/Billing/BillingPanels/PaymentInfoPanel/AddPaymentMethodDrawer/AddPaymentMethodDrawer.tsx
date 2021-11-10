@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     marginTop: 4,
+    marginBottom: 4,
   },
   progress: {
     marginBottom: 18,
@@ -153,13 +154,9 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
         </>
       ) : null}
       <>
-        <Divider spacingBottom={16} spacingTop={16} />
+        <Divider spacingBottom={16} />
         <Typography variant="h3">Credit Card</Typography>
-        <AddCreditCardForm
-          hasNoPaymentMethods={paymentMethods?.length === 0}
-          disabled={disabled}
-          onClose={onClose}
-        />
+        <AddCreditCardForm disabled={disabled} onClose={onClose} />
       </>
     </Drawer>
   );
