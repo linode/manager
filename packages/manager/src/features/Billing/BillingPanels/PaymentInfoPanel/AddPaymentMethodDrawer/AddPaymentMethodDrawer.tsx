@@ -143,7 +143,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
                 makeToast={makeToast}
                 onClose={onClose}
                 setProcessing={setIsProcessing}
-                renderError={(errorMsg) => renderError(errorMsg)}
+                renderError={renderError}
               />
             </Grid>
           </Grid>
@@ -167,13 +167,11 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
               justifyContent="flex-end"
               alignContent="center"
             >
-              <PayPalErrorBoundary
-                renderError={(errorMsg) => renderError(errorMsg)}
-              >
+              <PayPalErrorBoundary renderError={renderError}>
                 <PayPalChip
                   onClose={onClose}
                   setProcessing={setIsProcessing}
-                  renderError={(errorMsg) => renderError(errorMsg)}
+                  renderError={renderError}
                   disabled={disabled}
                 />
               </PayPalErrorBoundary>

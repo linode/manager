@@ -501,9 +501,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           <Grid container>
             <Grid item xs={9} sm={6}>
               {braintreePayPal ? (
-                <PayPalErrorBoundary
-                  renderError={(errorMsg) => renderError(errorMsg)}
-                >
+                <PayPalErrorBoundary renderError={renderError}>
                   <PayPalButton
                     usd={usd}
                     disabled={isProcessing}
