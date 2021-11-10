@@ -8,6 +8,7 @@ import makeAsyncScriptLoader from 'react-async-script';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
+import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
@@ -25,6 +26,7 @@ import SelectionCard from 'src/components/SelectionCard';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
+import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
@@ -33,11 +35,12 @@ import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { v4 } from 'uuid';
 import GooglePayButton from './GooglePayButton';
+import PayPalButton from './PayPalButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 
-// @TODO: remove unused code and feature flag logic once google pay is released
+// @TODO: remove feature flag logic and old paypal code once braintree paypal is released
 const useStyles = makeStyles((theme: Theme) => ({
   currentBalance: {
     fontSize: '1.1rem',
@@ -154,7 +157,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
 
-  const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
+  const braintreePayPal = flags.additionalPaymentMethods?.includes('paypal');
 
   const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
 
@@ -283,6 +286,14 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
     }
   };
 
+  const onScriptLoad = () => {
+    setIsPaypalScriptLoaded(true);
+  };
+
+  const renderError = (errorMsg: string) => {
+    return <Notice error text={errorMsg} />;
+  };
+
   if (!accountLoading && account?.balance === undefined) {
     return (
       <Grid container>
@@ -290,10 +301,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       </Grid>
     );
   }
-
-  const onScriptLoad = () => {
-    setIsPaypalScriptLoaded(true);
-  };
 
   return (
     <Drawer title="Make a Payment" open={open} onClose={onClose}>
@@ -332,6 +339,11 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
               type="number"
               placeholder={`${minimumPayment} minimum`}
               disabled={isProcessing}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">$</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Divider spacingTop={32} spacingBottom={16} />
@@ -462,7 +474,9 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                   <Button
                     buttonType="primary"
                     onClick={handleOpenDialog}
-                    disabled={paymentTooLow || selectedCardExpired}
+                    disabled={
+                      paymentTooLow || selectedCardExpired || isProcessing
+                    }
                   >
                     Pay Now
                   </Button>
@@ -479,50 +493,52 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
             usd={usd}
           />
           <Divider spacingTop={28} spacingBottom={16} />
-          {showGooglePay ? (
-            <>
-              <Grid item>
-                <Typography variant="h3" className={classes.header}>
-                  <strong>Or pay via:</strong>
-                </Typography>
-              </Grid>
-              <Grid container>
-                <Grid item>
-                  <AsyncPaypal
-                    key={payPalKey}
+          <Grid item>
+            <Typography variant="h3" className={classes.header}>
+              <strong>Or pay via:</strong>
+            </Typography>
+          </Grid>
+          <Grid container>
+            <Grid item xs={9} sm={6}>
+              {braintreePayPal ? (
+                <PayPalErrorBoundary renderError={renderError}>
+                  <PayPalButton
                     usd={usd}
-                    setSuccess={setSuccess}
-                    asyncScriptOnLoad={onScriptLoad}
-                    isScriptLoaded={isPaypalScriptLoaded}
-                    disabled={isProcessing}
-                  />
-                </Grid>
-                <Grid item xs={9} sm={6}>
-                  <GooglePayButton
-                    transactionInfo={{
-                      totalPriceStatus: 'FINAL',
-                      currencyCode: 'USD',
-                      countryCode: 'US',
-                      totalPrice: usd,
-                    }}
-                    balance={account?.balance ?? false}
                     disabled={isProcessing}
                     setSuccess={setSuccess}
                     setError={setErrorMessage}
                     setProcessing={setIsProcessing}
+                    renderError={renderError}
                   />
-                </Grid>
-              </Grid>
-            </>
-          ) : (
-            <AsyncPaypal
-              key={payPalKey}
-              usd={usd}
-              setSuccess={setSuccess}
-              asyncScriptOnLoad={onScriptLoad}
-              isScriptLoaded={isPaypalScriptLoaded}
-            />
-          )}
+                </PayPalErrorBoundary>
+              ) : (
+                <AsyncPaypal
+                  key={payPalKey}
+                  usd={usd}
+                  setSuccess={setSuccess}
+                  asyncScriptOnLoad={onScriptLoad}
+                  isScriptLoaded={isPaypalScriptLoaded}
+                  disabled={isProcessing}
+                />
+              )}
+            </Grid>
+            <Grid item xs={9} sm={6}>
+              <GooglePayButton
+                transactionInfo={{
+                  totalPriceStatus: 'FINAL',
+                  currencyCode: 'USD',
+                  countryCode: 'US',
+                  totalPrice: usd,
+                }}
+                balance={account?.balance ?? false}
+                disabled={isProcessing}
+                setSuccess={setSuccess}
+                setError={setErrorMessage}
+                setProcessing={setIsProcessing}
+                renderError={renderError}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Drawer>
