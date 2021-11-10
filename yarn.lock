@@ -2060,6 +2060,18 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
+"@linode/api-v4@^0.60.0":
+  version "0.60.0"
+  resolved "https://registry.yarnpkg.com/@linode/api-v4/-/api-v4-0.60.0.tgz#c63cf21219c62d21b7d1c170a5e216aa2e013dc8"
+  integrity sha512-FS9oo2mkkTFuThpjInG3kARFbMIJzd7rCnYhraHdNul/7pr+v0C2D1HU9nFOumx1wr5aGf1wjukAfMIVLqc8DA==
+  dependencies:
+    "@linode/validation" "0.7.0"
+    "@types/yup" "^0.29.13"
+    axios "~0.21.4"
+    ipaddr.js "^2.0.0"
+    querystring "^0.2.0"
+    yup "^0.32.9"
+
 "@material-ui/core@^4.11.0":
   version "4.12.3"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.12.3.tgz#80d665caf0f1f034e52355c5450c0e38b099d3ca"
