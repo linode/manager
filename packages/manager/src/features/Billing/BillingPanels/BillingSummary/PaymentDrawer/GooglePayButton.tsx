@@ -68,6 +68,7 @@ interface Props {
   setSuccess: SetSuccess;
   setError: (error: string) => void;
   setProcessing: (processing: boolean) => void;
+  renderError: (errorMsg: string) => JSX.Element;
   disabled: boolean;
 }
 
@@ -86,6 +87,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     setSuccess,
     setError,
     setProcessing,
+    renderError,
   } = props;
 
   /**
@@ -132,11 +134,11 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   };
 
   if (status === 'error' || clientTokenError) {
-    return <Notice error text="Error loading Google Pay." />;
+    return renderError('Error loading Google Pay.');
   }
 
   if (initializationError) {
-    return <Notice error text="Error initializing Google Pay." />;
+    return renderError('Eror initializing Google Pay.');
   }
 
   if (isLoading) {

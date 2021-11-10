@@ -535,6 +535,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                 setSuccess={setSuccess}
                 setError={setErrorMessage}
                 setProcessing={setIsProcessing}
+                renderError={renderError}
               />
             </Grid>
           </Grid>
