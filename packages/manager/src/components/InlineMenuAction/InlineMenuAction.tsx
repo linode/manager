@@ -79,16 +79,14 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
         enterDelay={500}
         leaveDelay={0}
       >
-        <div>
-          <Button
-            className={`${className} ${classes.btnRoot}`}
-            onClick={onClick}
-            disabled={disabled}
-            loading={loading}
-          >
-            {actionText}
-          </Button>
-        </div>
+        <Button
+          className={`${className} ${classes.btnRoot}`}
+          onClick={onClick}
+          disabled={disabled}
+          loading={loading}
+        >
+          {actionText}
+        </Button>
       </Tooltip>
     );
   }
