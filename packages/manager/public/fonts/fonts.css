@@ -37,16 +37,13 @@
   text-rendering: optimizeLegibility;
 }
 
-/* Webfont: SourceCodePro-Regular */
+/* Webfont: UbuntuMono */
 @font-face {
-  font-family: 'SourceCodePro';
+  font-family: 'UbuntuMono';
   src: 
-    /* IE6-IE8 */ url('fonts/SourceCodePro-Regular.ttf.woff2')
-      format('woff2'),
-    /* Modern Browsers */ url('fonts/SourceCodePro-Regular.ttf.woff')
-      format('woff'),
-    /* Modern Browsers */ url('fonts/SourceCodePro-Regular.ttf')
-      format('truetype');
+    /* IE6-IE8 */ url('fonts/UbuntuMono-Regular.woff2') format('woff2'),
+    /* Modern Browsers */ url('fonts/UbuntuMono-Regular.woff') format('woff'),
+    /* Modern Browsers */ url('fonts/UbuntuMono-Regular.ttf') format('truetype');
   font-style: normal;
   font-weight: normal;
   text-rendering: optimizeLegibility;

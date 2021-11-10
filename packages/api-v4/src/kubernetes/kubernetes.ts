@@ -13,6 +13,7 @@ import {
   KubeConfigResponse,
   KubernetesCluster,
   KubernetesEndpointResponse,
+  KubernetesDashboardResponse,
   KubernetesVersion,
 } from './types';
 
@@ -43,7 +44,7 @@ export const getKubernetesCluster = (clusterID: number) =>
 /**
  * createKubernetesClusters
  *
- * Create a new Cluster.
+ * Create a new cluster.
  */
 export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
   Request<KubernetesCluster>(
@@ -55,7 +56,7 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
 /**
  * updateKubernetesCluster
  *
- * Create a new Cluster.
+ * Update an existing cluster.
  */
 export const updateKubernetesCluster = (
   clusterID: number,
@@ -78,7 +79,8 @@ export const deleteKubernetesCluster = (clusterID: number) =>
     setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
   );
 
-/** getKubeConfig
+/**
+ * getKubeConfig
  *
  * Returns a base64 encoded string of a cluster's kubeconfig.yaml
  *
@@ -88,6 +90,19 @@ export const deleteKubernetesCluster = (clusterID: number) =>
 export const getKubeConfig = (clusterId: number) =>
   Request<KubeConfigResponse>(
     setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
+  );
+
+/**
+ * resetKubeConfig
+ *
+ * Regenerates the cluster's kubeconfig.yaml
+ *
+ * @param clusterId
+ */
+export const resetKubeConfig = (clusterId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
     setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
   );
 
@@ -127,6 +142,17 @@ export const getKubernetesClusterEndpoints = (clusterID: number) =>
   Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
+  );
+
+/** getKubernetesClusterDashboard
+ * Returns the URL for a single Kubernetes Dashboard for a single Kubernetes Cluster by ID.
+ *
+ */
+
+export const getKubernetesClusterDashboard = (clusterID: number) =>
+  Request<KubernetesDashboardResponse>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/dashboard`)
   );
 
 /** recycleClusterNodes

@@ -1,3 +1,14 @@
+## [2021-11-01] - v0.61.0
+### Added:
+- Support for enabling Kubernetes High Availability
+- Endpoints for getting Kubernetes Dashboard and resetting Kube config
+
+## [2021-10-20] - v0.60.0
+
+### Changed:
+Change default export from /lib to root
+Add build config for Node.js
+
 ## [2021-10-05] - v0.59.0
 
 ### Added:

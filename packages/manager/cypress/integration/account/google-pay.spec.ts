@@ -2,11 +2,9 @@
 import {
   containsVisible,
   fbtClick,
-  fbtVisible,
   getClick,
   getVisible,
 } from 'cypress/support/helpers';
-import { contains } from 'cypress/types/jquery';
 
 const getPaymentMethodDataWithGpay = {
   data: [
@@ -32,25 +30,6 @@ const getPaymentMethodDataWithGpay = {
   page: 1,
   pages: 1,
   results: 2,
-};
-
-const getPaymentMethodDataWithoutGpay = {
-  data: [
-    {
-      id: 420330,
-      type: 'credit_card',
-      is_default: true,
-      created: '2021-07-27T14:37:43',
-      data: {
-        card_type: 'American Express',
-        last_four: '2222',
-        expiry: '07/2025',
-      },
-    },
-  ],
-  page: 1,
-  pages: 1,
-  results: 1,
 };
 
 const getPaymentMethodDataWithGpayExpired = {
@@ -88,24 +67,13 @@ describe('Google Pay', () => {
     cy.visitWithLogin('/account/billing');
   });
 
-  it('tests update payment flow - google pay', () => {
+  it('adds google pay method', () => {
     cy.intercept(braintreeURL).as('braintree');
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
     }).as('getPaymentMethod');
     cy.wait('@getPaymentMethod');
     fbtClick('Add Payment Method');
-    getClick('[data-qa-button="gpayChip"]');
-    cy.wait('@braintree');
-  });
-
-  it('adds google pay method', () => {
-    cy.intercept(braintreeURL).as('braintree');
-    cy.intercept('GET', getPaymentURL, (req) => {
-      req.reply(getPaymentMethodDataWithoutGpay);
-    }).as('getPaymentMethod');
-    cy.wait('@getPaymentMethod');
-    fbtClick('Add Google Pay');
     getClick('[data-qa-button="gpayChip"]');
     cy.wait('@braintree');
   });

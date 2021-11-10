@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-11-01] - v1.53.0
+
+### Added:
+- Kubernetes High Availability feature
+
+### Changed:
+- Remove deprecate Linode domains banner
+- IP address font color on Firefox in dark mode
+
+### Fixed:
+- Button placement and improved spacing in Add Node Pool Drawer
+- Inserting default values from NodeBalancers when creating new Domain
+- Timezone issue with NodeBalancer graphs
+
+## [2021-10-20] - v1.52.0
+
+### Added:
+- NVMe banner for Newark, NJ
+
+### Changed:
+- Update to React v17.0.2
+- Raise threshold for large account
+- Add hover states for top nav icons
+
+### Fixed:
+- Consistent spelling of "canceled"
+- Vertical alignment for Linode status column
+
+
 ## [2021-10-05] - v1.51.0
 
 ### Added:

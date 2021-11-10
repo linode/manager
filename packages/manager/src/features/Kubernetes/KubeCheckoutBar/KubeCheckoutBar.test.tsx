@@ -11,6 +11,8 @@ const types = typeFactory.buildList(5);
 const props: Props = {
   pools,
   submitting: false,
+  highAvailability: false,
+  setHighAvailability: jest.fn(),
   updatePool: jest.fn(),
   removePool: jest.fn(),
   createCluster: jest.fn(),

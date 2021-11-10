@@ -46,8 +46,8 @@ export const LARGE_ACCOUNT_THRESHOLD = 1500;
 // PayPal Client ID
 export const PAYPAL_CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
 
-// @todo deprecate after braintree paypal is released
 // Sets Paypal Environment, valid values: 'sandbox|production'
+// @todo lets depreate this with the PayPal + Braintree work
 export const PAYPAL_CLIENT_ENV =
   process.env.REACT_APP_PAYPAL_ENV || 'production';
 
@@ -318,3 +318,9 @@ export const MOCK_SERVICE_WORKER =
 
 // Maximum payment methods
 export const MAXIMUM_PAYMENT_METHODS = 6;
+
+// Price of LKE's High Availability offering in USD
+export const HIGH_AVAILABILITY_PRICE =
+  process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
+    ? undefined
+    : Number(process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);

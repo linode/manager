@@ -23,8 +23,8 @@ import {
   Paypal,
   PaypalResponse,
   SaveCreditCardData,
-  PaymentMethodData,
   MakePaymentData,
+  PaymentMethodPayload,
 } from './types';
 
 /**
@@ -207,7 +207,7 @@ export const getClientToken = () => {
  * @param data.data.cvv { string } credit card's cvv
  *
  */
-export const addPaymentMethod = (data: PaymentMethodData) => {
+export const addPaymentMethod = (data: PaymentMethodPayload) => {
   return Request<{}>(
     setURL(`${API_ROOT}/account/payment-methods`),
     setMethod('POST'),

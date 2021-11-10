@@ -9,7 +9,6 @@ import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
-import { PaymentMethod } from '@linode/api-v4/lib/account';
 import { reportException } from 'src/exceptionReporting';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
@@ -121,15 +120,10 @@ export const gPay = async (
         response.warnings
       );
     } else {
-      const paymentMethods = queryClient.getQueryData<PaymentMethod[]>(
-        `${accountPaymentKey}-all`
-      );
-
       await addPaymentMethod({
         type: 'payment_method_nonce',
         data: { nonce },
-        // Make Google Pay default if they have no payment methods upon add
-        is_default: paymentMethods?.length === 0,
+        is_default: true,
       });
       queryClient.invalidateQueries(`${accountPaymentKey}-all`);
       setMessage('Successfully added Google Pay', 'success');
