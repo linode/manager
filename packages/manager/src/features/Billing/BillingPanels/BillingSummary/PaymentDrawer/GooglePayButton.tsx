@@ -11,7 +11,6 @@ import {
   gPay,
 } from 'src/features/Billing/Providers/GooglePay';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
-import Notice from 'src/components/Notice';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
