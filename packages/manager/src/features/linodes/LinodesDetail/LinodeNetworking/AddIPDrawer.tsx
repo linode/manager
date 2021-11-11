@@ -13,6 +13,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import ExternalLink from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -34,8 +35,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 type IPType = 'v4Public' | 'v4Private';
 
 const ipOptions: Item<IPType>[] = [
-  { value: 'v4Public', label: 'IPv4 – Public' },
-  { value: 'v4Private', label: 'IPv4 – Private' },
+  { value: 'v4Public', label: 'Public' },
+  { value: 'v4Private', label: 'Private' },
 ];
 
 const prefixOptions = [
@@ -60,6 +61,21 @@ const explainerCopy: Record<IPType, JSX.Element> = {
       private IP addresses in the same data center does not incur transfer quota
       usage. To ensure that the private IP is properly configured once added,
       it&apos;s best to reboot your Linode.
+    </>
+  ),
+};
+
+const IPv6ExplanatoryCopy = {
+  56: (
+    <>
+      These larger ranges are typically only required by specialized systems or
+      networking applications.
+    </>
+  ),
+  64: (
+    <>
+      This is the most common range provided to our customers and sufficient for
+      most applications that require additional IPv6 addresses.
     </>
   ),
 };
@@ -203,7 +219,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
           <Notice error text={errorMessageIPv4} spacingTop={8} />
         )}
         <Typography variant="h3" className={classes.ipSubheader}>
-          Select IPv4 type
+          Select type
         </Typography>
         <RadioGroup
           aria-label="ip-option"
@@ -266,8 +282,17 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
         </RadioGroup>
         <Typography>
           IPv6 addresses are allocated as ranges, which you can choose to
-          distribute and further route yourself.
+          distribute and further route yourself.{' '}
+          <ExternalLink to="https://www.linode.com/docs/guides/an-overview-of-ipv6-on-linode/">
+            Learn more
+          </ExternalLink>
+          .
         </Typography>
+        {selectedIPv6Prefix && (
+          <Typography variant="body1" className={classes.copy}>
+            {IPv6ExplanatoryCopy[selectedIPv6Prefix]}
+          </Typography>
+        )}
         <ActionsPanel>{buttonJSX('IPv6')}</ActionsPanel>
       </React.Fragment>
     </Drawer>
