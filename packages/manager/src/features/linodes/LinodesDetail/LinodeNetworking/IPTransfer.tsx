@@ -128,6 +128,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     readOnly,
   } = props;
   const classes = useStyles();
+  console.log(ipAddresses, props)
   const [ips, setIPs] = React.useState<IPRowState>(
     props.ipAddresses.reduce(
       (acc, ip) => ({
@@ -224,6 +225,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           /** We need to find the selected Linode's IPs and return the first. */
           updateSelectedIP(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
+            console.log(linode)
             if (linode) {
               return linode.ipv4[0];
             }
@@ -325,6 +327,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
+    console.log(selectedLinodesIPs)
     const IPList = selectedLinodesIPs.map((ip) => {
       return { label: ip, value: ip };
     });
