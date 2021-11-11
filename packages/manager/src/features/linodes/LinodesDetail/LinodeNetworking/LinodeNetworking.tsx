@@ -40,6 +40,7 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import AddIPDrawer from './AddIPDrawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
+import DeleteIPv6RangeConfirm from './DeleteIPv6RangeConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharing from './IPSharing';
 import IPTransfer from './IPTransfer';
@@ -80,6 +81,7 @@ interface State {
   linodeIPs?: LinodeIPsResponse;
   allIPs?: IPAddress[];
   removeIPDialogOpen: boolean;
+  removeIPRangeDialogOpen: boolean;
   initialLoading: boolean;
   ipv6Loading: boolean;
   ipv6Error?: string;
@@ -111,6 +113,7 @@ export const ipv4TableID = 'ips';
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
     removeIPDialogOpen: false,
+    removeIPRangeDialogOpen: false,
     addIPDrawerOpen: false,
     editRDNSDrawerOpen: false,
     viewRDNSDrawerOpen: false,
@@ -143,6 +146,20 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.setState({
       removeIPDialogOpen: false,
       currentlySelectedIP: undefined,
+    });
+  };
+
+  openRemoveIPRangeDialog = (range: IPRange) => {
+    this.setState({
+      removeIPRangeDialogOpen: !this.state.removeIPRangeDialogOpen,
+      currentlySelectedIPRange: range,
+    });
+  };
+
+  closeRemoveIPRangeDialog = () => {
+    this.setState({
+      removeIPRangeDialogOpen: false,
+      currentlySelectedIPRange: undefined,
     });
   };
 
@@ -308,6 +325,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               ipType={type}
               ipAddress={_range}
               onEdit={() => this.handleOpenEditRDNSForRange(_range)}
+              onRemove={this.openRemoveIPRangeDialog}
               readOnly={readOnly}
             />
           ) : null}
@@ -550,11 +568,23 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           readOnly={readOnly}
         />
 
-        {this.state.currentlySelectedIP && linodeID && (
-          <DeleteIPConfirm
-            handleClose={this.closeRemoveIPDialog}
-            IPAddress={this.state.currentlySelectedIP.address}
-            open={this.state.removeIPDialogOpen}
+        {this.state.currentlySelectedIP &&
+          linodeID &&
+          !currentlySelectedIPRange && (
+            <DeleteIPConfirm
+              handleClose={this.closeRemoveIPDialog}
+              IPAddress={this.state.currentlySelectedIP.address}
+              open={this.state.removeIPDialogOpen}
+              linode={this.props.linode}
+              ipRemoveSuccess={this.handleRemoveIPSuccess}
+            />
+          )}
+
+        {currentlySelectedIPRange && (
+          <DeleteIPv6RangeConfirm
+            handleClose={this.closeRemoveIPRangeDialog}
+            IPv6Range={currentlySelectedIPRange.range}
+            open={this.state.removeIPRangeDialogOpen}
             linode={this.props.linode}
             ipRemoveSuccess={this.handleRemoveIPSuccess}
           />

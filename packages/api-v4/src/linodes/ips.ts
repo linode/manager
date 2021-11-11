@@ -57,3 +57,17 @@ export const removeIPAddress = (payload: {
     setMethod('DELETE')
   );
 };
+
+/**
+ * removeIPv6Range
+ *
+ * Deletes a Linode's IPv6 range.
+ *
+ * @param {IPv6Range: string} payload - the IPv6 Range for which you'd like the delete request to be invoked
+ */
+export const removeIPv6Range = (payload: { IPv6Range: string }) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/networking/ipv6/ranges/${payload.IPv6Range}`),
+    setMethod('DELETE')
+  );
+};
