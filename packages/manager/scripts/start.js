@@ -82,7 +82,7 @@ choosePort(HOST, DEFAULT_PORT)
     );
 
     console.log('Webpack server config', serverConfig);
-    const devServer = new WebpackDevServer(compiler, serverConfig);
+    const devServer = new WebpackDevServer(serverConfig, compiler);
     // Launch WebpackDevServer.
     devServer.listen(port, HOST, (err) => {
       if (err) {
