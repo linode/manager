@@ -43,7 +43,11 @@ export const API_MAX_PAGE_SIZE =
 // a "large account".
 export const LARGE_ACCOUNT_THRESHOLD = 1500;
 
+// PayPal Client ID
+export const PAYPAL_CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
+
 // Sets Paypal Environment, valid values: 'sandbox|production'
+// @todo lets depreate this with the PayPal + Braintree work
 export const PAYPAL_CLIENT_ENV =
   process.env.REACT_APP_PAYPAL_ENV || 'production';
 

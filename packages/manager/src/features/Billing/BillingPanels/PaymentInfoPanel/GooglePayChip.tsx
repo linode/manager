@@ -3,17 +3,16 @@ import { VariantType } from 'notistack';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import {
   initGooglePaymentInstance,
   gPay,
 } from 'src/features/Billing/Providers/GooglePay';
 import CircleProgress from 'src/components/CircleProgress';
-import HelpIcon from 'src/components/HelpIcon';
 import classNames from 'classnames';
 import { reportException } from 'src/exceptionReporting';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   button: {
     border: 0,
     padding: 0,
@@ -31,24 +30,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0.3,
     },
   },
-  errorIcon: {
-    color: theme.color.red,
-    marginRight: -20,
-    '&:hover': {
-      color: theme.color.red,
-      opacity: 0.7,
-    },
-    '& svg': {
-      height: 28,
-      width: 28,
-    },
-  },
 }));
 
 interface Props {
   makeToast: (message: string, variant: VariantType) => void;
   setProcessing: (processing: boolean) => void;
   onClose: () => void;
+  renderError: (errorMsg: string) => JSX.Element;
   disabled: boolean;
 }
 
@@ -58,6 +46,7 @@ export const GooglePayChip: React.FC<Props> = (props) => {
     makeToast,
     setProcessing,
     onClose,
+    renderError,
   } = props;
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
@@ -102,17 +91,12 @@ export const GooglePayChip: React.FC<Props> = (props) => {
     );
   };
 
-  if (status === 'error' || clientTokenError || initializationError) {
-    return (
-      <HelpIcon
-        className={classes.errorIcon}
-        isError={true}
-        size={35}
-        text={`Error ${
-          initializationError ? 'initializing' : 'loading'
-        } Google Pay.`}
-      />
-    );
+  if (status === 'error' || clientTokenError) {
+    return renderError('Error loading Google Pay.');
+  }
+
+  if (initializationError) {
+    return renderError('Error initializing Google Pay.');
   }
 
   if (isLoading) {

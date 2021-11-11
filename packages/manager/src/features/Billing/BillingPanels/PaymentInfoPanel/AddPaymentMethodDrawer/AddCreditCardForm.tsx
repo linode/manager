@@ -11,7 +11,6 @@ import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';
 import { CreditCardSchema } from '@linode/validation';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import CheckBox from 'src/components/CheckBox';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { InputBaseComponentProps } from '@material-ui/core/InputBase/InputBase';
 import { parseExpiryYear } from 'src/utilities/creditCard';
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   onClose: () => void;
   disabled: boolean;
-  hasNoPaymentMethods: boolean;
 }
 
 interface Values {
@@ -36,7 +34,6 @@ interface Values {
   expiry_month: string;
   expiry_year: string;
   cvv: string;
-  is_default: boolean;
   address: string;
   address2: string;
   city: string;
@@ -46,13 +43,13 @@ interface Values {
 }
 
 const AddCreditCardForm: React.FC<Props> = (props) => {
-  const { onClose, disabled, hasNoPaymentMethods } = props;
+  const { onClose, disabled } = props;
   const [error, setError] = React.useState<string>();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const addCreditCard = async (
-    { card_number, cvv, expiry_month, expiry_year, is_default }: Values,
+    { card_number, cvv, expiry_month, expiry_year }: Values,
     {
       setSubmitting,
       setFieldError,
@@ -67,7 +64,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
     try {
       await addPaymentMethod({
         type: 'credit_card',
-        is_default,
+        is_default: true,
         data: {
           card_number,
           cvv,
@@ -108,7 +105,6 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
       expiry_month: '',
       expiry_year: '',
       cvv: '',
-      is_default: true,
       address: '',
       address2: '',
       city: '',
@@ -122,6 +118,13 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
 
   const disableInput = isSubmitting || disabled;
 
+  const disableAddButton =
+    disabled ||
+    !values.card_number ||
+    !values.expiry_month ||
+    !values.expiry_year ||
+    !values.cvv;
+
   return (
     <form onSubmit={handleSubmit}>
       {error && (
@@ -129,7 +132,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
           <Notice error text={error} />
         </Grid>
       )}
-      <Grid container spacing={0}>
+      <Grid container spacing={1}>
         <Grid item xs={12}>
           <TextField
             name="card_number"
@@ -245,23 +248,21 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             errorText={errors.country}
             />
             */}
-          <CheckBox
-            text="Make Default"
-            checked={values.is_default}
-            onChange={() => setFieldValue('is_default', !values.is_default)}
-            disabled={disableInput || hasNoPaymentMethods}
-          />
         </Grid>
       </Grid>
       <ActionsPanel style={{ marginTop: 0 }}>
-        <Button onClick={onClose} buttonType="secondary" disabled={disabled}>
+        <Button
+          onClick={onClose}
+          buttonType="secondary"
+          disabled={disableInput}
+        >
           Cancel
         </Button>
         <Button
           type="submit"
           buttonType="primary"
           loading={isSubmitting}
-          disabled={disabled}
+          disabled={disableAddButton}
         >
           Add Credit Card
         </Button>
