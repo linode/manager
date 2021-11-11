@@ -1,8 +1,4 @@
-import {
-  CreditCard as CreditCardType,
-  ThirdPartyPayment as ThirdPartyPaymentType,
-} from '@linode/api-v4/lib/account/types';
-import classNames from 'classnames';
+import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
@@ -35,11 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: theme.font.bold,
     marginRight: theme.spacing(),
   },
-  payPal: {
-    border: `1px solid ${theme.color.grey2}`,
-    background: 'white',
-    padding: '4px 7px',
-  },
 }));
 
 export const thirdPartyPaymentMap = {
@@ -54,41 +45,50 @@ export const thirdPartyPaymentMap = {
 };
 
 interface Props {
-  thirdPartyPayment: ThirdPartyPaymentType;
-  creditCard: CreditCardType;
+  paymentMethod: PaymentMethod;
 }
 
-export const getIcon = (paymentMethod: ThirdPartyPaymentType) => {
+export const renderThirdPartyPaymentBody = (paymentMethod: PaymentMethod) => {
+  // eslint-disable-next-line sonarjs/no-small-switch
+  switch (paymentMethod.type) {
+    case 'paypal':
+      return (
+        <Typography>
+          <span style={{ wordBreak: 'break-all' }}>
+            {paymentMethod.data.email}
+          </span>
+        </Typography>
+      );
+    default:
+      return <CreditCard creditCard={paymentMethod.data} showIcon={false} />;
+  }
+};
+
+export const getIcon = (paymentMethod: ThirdPartyPayment) => {
   return thirdPartyPaymentMap[paymentMethod].icon;
 };
 
-export type CombinedProps = Props;
-
-export const TPP: React.FC<CombinedProps> = (props) => {
-  const { thirdPartyPayment, creditCard } = props;
+export const TPP: React.FC<Props> = (props) => {
+  const { paymentMethod } = props;
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const Icon = getIcon(thirdPartyPayment);
+  const Icon = getIcon(paymentMethod.type as ThirdPartyPayment);
 
   return (
     <>
       <Grid item className={classes.icon}>
-        <Icon
-          className={classNames({
-            [classes.payPal]: thirdPartyPayment === 'paypal',
-          })}
-        />
+        <Icon />
       </Grid>
       <Grid item className={classes.paymentTextContainer}>
         {!matchesSmDown ? (
           <Typography className={classes.paymentMethodLabel}>
-            {thirdPartyPaymentMap[thirdPartyPayment].label}
+            {thirdPartyPaymentMap[paymentMethod.type].label}
           </Typography>
         ) : null}
-        <CreditCard creditCard={creditCard} showIcon={false} />
+        {renderThirdPartyPaymentBody(paymentMethod)}
       </Grid>
     </>
   );
