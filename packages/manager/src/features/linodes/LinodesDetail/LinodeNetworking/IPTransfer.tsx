@@ -24,7 +24,10 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
+import { queryKey } from 'src/queries/networking';
+import { queryClient } from 'src/queries/base';
 import { useLinodesQuery } from 'src/queries/linodes';
+import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
 
@@ -128,7 +131,6 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     readOnly,
   } = props;
   const classes = useStyles();
-  console.log(ipAddresses, props)
   const [ips, setIPs] = React.useState<IPRowState>(
     props.ipAddresses.reduce(
       (acc, ip) => ({
@@ -157,6 +159,8 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     },
     open // only run the query if the modal is open
   );
+
+  const { data: ipv6RangesData } = useIpv6RangesQuery();
 
   const linodes = Object.values(data?.linodes ?? []).filter(
     (l) => l.id !== linodeID
@@ -194,11 +198,27 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         () => isSwapping(mode),
         compose(
           setSelectedIP(ip, firstLinode.ipv4[0]),
-          setSelectedLinodesIPs(ip, firstLinode.ipv4)
+          updateSelectedLinodesIPs(ip, () => {
+            const linodeIpv6Ranges = getLinodeIpv6Ranges(firstLinode.ipv6);
+            return [...firstLinode.ipv4, ...linodeIpv6Ranges];
+          })
         )
       )
     );
     setIPs((currentState) => newState(currentState));
+  };
+
+  const getLinodeIpv6Ranges = (ipv6: string | null) => {
+    return (
+      ipv6RangesData?.data
+        .filter(
+          (ipv6RangeData) =>
+            ipv6RangeData.route_target === ipv6?.substring(0, ipv6.indexOf('/'))
+        )
+        .map(
+          (ipv6RangeData) => `${ipv6RangeData.range}/${ipv6RangeData.prefix}`
+        ) ?? []
+    );
   };
 
   const onSelectedLinodeChange = (ip: string) => (e: Item) => {
@@ -217,7 +237,8 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           updateSelectedLinodesIPs(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
             if (linode) {
-              return linode.ipv4;
+              const linodeIpv6Ranges = getLinodeIpv6Ranges(linode?.ipv6);
+              return [...linode.ipv4, ...linodeIpv6Ranges];
             }
             return [];
           }),
@@ -225,7 +246,6 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           /** We need to find the selected Linode's IPs and return the first. */
           updateSelectedIP(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
-            console.log(linode)
             if (linode) {
               return linode.ipv4[0];
             }
@@ -327,7 +347,6 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
-    console.log(selectedLinodesIPs)
     const IPList = selectedLinodesIPs.map((ip) => {
       return { label: ip, value: ip };
     });
@@ -406,6 +425,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             setSubmitting(false);
             setError(undefined);
             setSuccessMessage('IP transferred successfully.');
+            queryClient.invalidateQueries(queryKey);
           })
           .catch((err) => {
             setError(
@@ -535,9 +555,6 @@ const setSelectedIP = (ip: string, selectedIP: string) =>
 
 const setSelectedLinodeID = (ip: string, selectedLinodeID: number | string) =>
   set(L.selectedLinodeID(ip), selectedLinodeID);
-
-const setSelectedLinodesIPs = (ip: string, selectedLinodesIPs: string[]) =>
-  set(L.selectedLinodesIPs(ip), selectedLinodesIPs);
 
 const updateSelectedLinodesIPs = (ip: string, fn: (s: string[]) => string[]) =>
   over(L.selectedLinodesIPs(ip), fn);
