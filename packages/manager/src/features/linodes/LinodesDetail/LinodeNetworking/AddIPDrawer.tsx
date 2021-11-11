@@ -68,13 +68,13 @@ const explainerCopy: Record<IPType, JSX.Element> = {
 const IPv6ExplanatoryCopy = {
   56: (
     <>
-      These larger ranges are typically only required by specialized systems or
+      /56 ranges are typically only required by specialized systems or
       networking applications.
     </>
   ),
   64: (
     <>
-      This is the most common range provided to our customers and sufficient for
+      /64 is the most common range provided to our customers and sufficient for
       most applications that require additional IPv6 addresses.
     </>
   ),
@@ -280,6 +280,11 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
             />
           ))}
         </RadioGroup>
+        {selectedIPv6Prefix && (
+          <Typography variant="body1" style={{ marginBottom: '1rem' }}>
+            {IPv6ExplanatoryCopy[selectedIPv6Prefix]}
+          </Typography>
+        )}
         <Typography>
           IPv6 addresses are allocated as ranges, which you can choose to
           distribute and further route yourself.{' '}
@@ -288,11 +293,6 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
           </ExternalLink>
           .
         </Typography>
-        {selectedIPv6Prefix && (
-          <Typography variant="body1" className={classes.copy}>
-            {IPv6ExplanatoryCopy[selectedIPv6Prefix]}
-          </Typography>
-        )}
         <ActionsPanel>{buttonJSX('IPv6')}</ActionsPanel>
       </React.Fragment>
     </Drawer>
