@@ -12,6 +12,9 @@ import AddCreditCardForm from './AddCreditCardForm';
 import useFlags from 'src/hooks/useFlags';
 import Notice from 'src/components/Notice';
 import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
+import { PayPalChip } from '../PayPalChip';
+import PayPalErrorBoundary from '../PayPalErrorBoundary';
+import HelpIcon from 'src/components/HelpIcon';
 
 interface Props {
   open: boolean;
@@ -26,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     marginTop: 4,
+    marginBottom: 4,
   },
   progress: {
     marginBottom: 18,
@@ -51,6 +55,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     ...theme.applyLinkStyles,
   },
+  errorIcon: {
+    color: theme.color.red,
+    marginRight: -20,
+    '&:hover': {
+      color: theme.color.red,
+      opacity: 0.7,
+    },
+    '& svg': {
+      height: 28,
+      width: 28,
+    },
+  },
 }));
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
@@ -72,6 +88,17 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
     });
   };
 
+  const renderError = (errorMsg: string) => {
+    return (
+      <HelpIcon
+        className={classes.errorIcon}
+        isError={true}
+        size={35}
+        text={errorMsg}
+      />
+    );
+  };
+
   const hasMaxPaymentMethods = paymentMethods
     ? paymentMethods.length >= MAXIMUM_PAYMENT_METHODS
     : false;
@@ -79,6 +106,8 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   const isGooglePayEnabled = flags.additionalPaymentMethods?.includes(
     'google_pay'
   );
+
+  const isPayPalEnabled = flags.additionalPaymentMethods?.includes('paypal');
 
   const disabled = isProcessing || hasMaxPaymentMethods;
 
@@ -114,19 +143,46 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
                 makeToast={makeToast}
                 onClose={onClose}
                 setProcessing={setIsProcessing}
+                renderError={renderError}
               />
             </Grid>
           </Grid>
         </>
       ) : null}
+      {isPayPalEnabled ? (
+        <>
+          <Divider />
+          <Grid className={classes.root} container>
+            <Grid item xs={8} md={9}>
+              <Typography variant="h3">PayPal</Typography>
+              <Typography>
+                You’ll be taken to PayPal to complete sign up.
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              item
+              xs={4}
+              md={3}
+              justifyContent="flex-end"
+              alignContent="center"
+            >
+              <PayPalErrorBoundary renderError={renderError}>
+                <PayPalChip
+                  onClose={onClose}
+                  setProcessing={setIsProcessing}
+                  renderError={renderError}
+                  disabled={disabled}
+                />
+              </PayPalErrorBoundary>
+            </Grid>
+          </Grid>
+        </>
+      ) : null}
       <>
-        <Divider spacingBottom={16} spacingTop={16} />
+        <Divider spacingBottom={16} />
         <Typography variant="h3">Credit Card</Typography>
-        <AddCreditCardForm
-          hasNoPaymentMethods={paymentMethods?.length === 0}
-          disabled={disabled}
-          onClose={onClose}
-        />
+        <AddCreditCardForm disabled={disabled} onClose={onClose} />
       </>
     </Drawer>
   );

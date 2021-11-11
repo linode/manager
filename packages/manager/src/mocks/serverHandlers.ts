@@ -534,11 +534,33 @@ export const handlers = [
   }),
   rest.get('*/account/payment-methods', (req, res, ctx) => {
     const defaultPaymentMethod = paymentMethodFactory.build({
+      data: { card_type: 'MasterCard' },
       is_default: true,
     });
-    const otherPaymentMethods = paymentMethodFactory.buildList(5);
+
+    const googlePayPaymentMethod = paymentMethodFactory.build({
+      type: 'google_pay',
+    });
+
+    const paypalPaymentMethod = paymentMethodFactory.build({
+      type: 'paypal',
+      data: {
+        email: 'test@example.com',
+        paypal_id: '6781945682',
+      },
+    });
+
+    const otherPaymentMethod = paymentMethodFactory.build();
+
     return res(
-      ctx.json(makeResourcePage([defaultPaymentMethod, ...otherPaymentMethods]))
+      ctx.json(
+        makeResourcePage([
+          defaultPaymentMethod,
+          otherPaymentMethod,
+          googlePayPaymentMethod,
+          paypalPaymentMethod,
+        ])
+      )
     );
   }),
   rest.get('*/events', (req, res, ctx) => {

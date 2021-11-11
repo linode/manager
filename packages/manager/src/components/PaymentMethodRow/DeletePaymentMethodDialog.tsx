@@ -2,10 +2,7 @@ import * as React from 'react';
 import ActionsPanel from '../ActionsPanel';
 import Button from '../Button';
 import Dialog from 'src/components/ConfirmationDialog';
-import {
-  PaymentMethod,
-  ThirdPartyPayment as ThirdPartyPaymentTypes,
-} from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
 import Grid from '../Grid';
@@ -64,10 +61,7 @@ export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
           {paymentMethod && paymentMethod.type === 'credit_card' ? (
             <CreditCard creditCard={paymentMethod.data} />
           ) : paymentMethod ? (
-            <ThirdPartyPayment
-              thirdPartyPayment={paymentMethod.type as ThirdPartyPaymentTypes}
-              creditCard={paymentMethod.data}
-            />
+            <ThirdPartyPayment paymentMethod={paymentMethod} />
           ) : null}
         </Grid>
       </Grid>
