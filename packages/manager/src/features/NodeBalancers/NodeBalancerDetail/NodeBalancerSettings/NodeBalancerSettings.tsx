@@ -20,12 +20,20 @@ import {
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
-import DeletionDialog from 'src/components/DeletionDialog';
 import { useHistory } from 'react-router-dom';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   spacing: {
     marginTop: theme.spacing(),
+  },
+  notice: {
+    '& p': {
+      fontFamily: theme.font.normal,
+      fontSize: '0.875rem',
+    },
   },
 }));
 
@@ -142,6 +150,20 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
       });
   };
 
+  const actions = (
+    <ActionsPanel>
+      <Button
+        buttonType="secondary"
+        onClick={() => setIsDeleteDialogOpen(false)}
+      >
+        Cancel
+      </Button>
+      <Button buttonType="primary" onClick={handleDelete} loading={isDeleting}>
+        Delete NodeBalancer
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
     <div>
       <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
@@ -205,16 +227,10 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
         >
           Delete
         </Button>
-        <Typography className={classes.spacing}>
-          Deleting a NodeBalancer will remove associated configurations.
-        </Typography>
       </Accordion>
-      <DeletionDialog
-        typeToConfirm
-        entity="NodeBalancer"
+      <ConfirmationDialog
+        title={`Delete NodeBalancer ${label}?`}
         open={isDeleteDialogOpen}
-        label={nodeBalancerLabel}
-        loading={isDeleting}
         error={
           deleteError && deleteError.length > 0
             ? getErrorStringOrDefault(
@@ -224,8 +240,17 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
             : undefined
         }
         onClose={() => setIsDeleteDialogOpen(false)}
-        onDelete={handleDelete}
-      />
+        actions={actions}
+      >
+        <Notice warning className={classes.notice}>
+          Deleting this NodeBalancer is permanent and can’t be undone.
+        </Notice>
+        <Typography variant="body1">
+          Traffic will no longer be routed through this NodeBalancer. Please
+          check your DNS settings and either provide the IP address of another
+          active NodeBalancer, or route traffic directly to you Linode.
+        </Typography>
+      </ConfirmationDialog>
     </div>
   );
 };
