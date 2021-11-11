@@ -76,6 +76,14 @@ export const baseApps = {
   '804143': 'Peppermint',
   '804144': 'Ant Media Server',
   '804172': 'Owncast',
+  '869127': 'Moodle',
+  '869129': 'aaPanel',
+  '869153': 'Splunk',
+  '869155': 'Chevereto',
+  '869156': 'NirvaShare',
+  '869158': 'ClusterControl',
+  '869159': 'MagicSpam',
+  '869623': 'JetBackup',
 };
 
 const oneClickFilter = [

@@ -98,6 +98,45 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/azuracast.svg',
   },
   {
+    name: 'BeEF',
+    description: `Test the security posture of a client or application using client-side vectors, all powered by a simple API. This project is developed solely for lawful research and penetration testing.`,
+    summary:
+      'Browser Exploitation Framework (BeEF) is an open source web browser penetration tool.',
+    related_guides: [
+      {
+        title: 'Deploy BeEF With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-beef-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://github.com/beefproject/beef',
+        href: 'https://github.com/beefproject/beef',
+      },
+    ],
+    logo_url: 'assets/beef_color.svg',
+  },
+  {
+    name: 'BitNinja',
+    description: `Add a critical layer of security to your server with a built-in web application firewall, inbound and outbound DoS detection, and real time IP reputation protection.`,
+    summary: 'Full-stack server protection suite.',
+    related_guides: [
+      {
+        title: 'Deploy BitNinja With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-bitninja-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://doc.bitninja.io/',
+        href: 'https://doc.bitninja.io/',
+      },
+    ],
+    logo_url: 'assets/bitninja_color.svg',
+  },
+  {
     name: 'Chevereto',
     description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
     summary:
@@ -446,6 +485,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/grafana_color.svg',
   },
   {
+    name: 'Harbor',
+    description: `Open source registry for images and containers. Linode recommends using Harbor with Linode Kubernetes Engine (LKE).`,
+    summary: 'Cloud native container registry for Kubernetes and more.',
+    related_guides: [
+      {
+        title: 'Deploy Harbor With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-harbor-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://goharbor.io/docs',
+        href: 'https://goharbor.io/docs',
+      },
+    ],
+    logo_url: 'assets/harbor_color.svg',
+  },
+  {
     name: 'Jenkins',
     description: `Jenkins is an open source automation tool which can build, test, and deploy your infrastructure.`,
     summary: `A tool that gives you access to a massive library of plugins to support automation in your project's lifecycle.`,
@@ -647,6 +705,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/lemp_color.svg',
   },
   {
+    name: 'LiteSpeed cPanel',
+    description: `High-performance LiteSpeed web server equipped with WHM/cPanel and WHM LiteSpeed Plugin.`,
+    summary: 'Next-generation web server with cPanel and WHM.',
+    related_guides: [
+      {
+        title: 'Deploy LiteSpeed cPanel With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-litespeed-cpanel-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.litespeedtech.com/cp/cpanel/',
+        href: 'https://docs.litespeedtech.com/cp/cpanel/',
+      },
+    ],
+    logo_url: 'assets/litespeedcpanel_color.svg',
+  },
+  {
     name: 'Mist.io',
     description: `Streamline infrastructure management in one UI or by using the Mist.io RESTful API.`,
     summary:
@@ -728,6 +805,63 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/nirvashare_color.svg',
+  },
+  {
+    name: 'OpenLiteSpeed Django',
+    description: `Simple deployment for OLS web server, Python LSAPI, and CertBot.`,
+    summary: 'OLS web server with Django development framework.',
+    related_guides: [
+      {
+        title: 'Deploy OpenLiteSpeed Django With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-openlitespeed-django-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.litespeedtech.com/cloud/images/django/',
+        href: 'https://docs.litespeedtech.com/cloud/images/django/',
+      },
+    ],
+    logo_url: 'assets/openlitespeeddjango_color.svg',
+  },
+  {
+    name: 'OpenLiteSpeed NodeJS',
+    description: `High-performance open source web server with Node and CertBot, in addition to features like HTTP/3 support and easy SSL setup.`,
+    summary: 'OLS web server with NodeJS JavaScript runtime environment.',
+    related_guides: [
+      {
+        title: 'Deploy OpenLiteSpeed NodeJS With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-openlitespeed-nodejs-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
+        href: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
+      },
+    ],
+    logo_url: 'assets/openlitespeednodejs_color.svg',
+  },
+  {
+    name: 'OpenLiteSpeed Rails',
+    description: `Easy setup to run Ruby apps in the cloud and take advantage of OpenLiteSpeed server features like SSL, HTTP/3 support, and RewriteRules.`,
+    summary: 'OLS web server with Ruby and CertBot.',
+    related_guides: [
+      {
+        title: 'Deploy OpenLiteSpeed Rails With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-openlitespeed-rails-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.litespeedtech.com/cloud/images/rails/',
+        href: 'https://docs.litespeedtech.com/cloud/images/rails/',
+      },
+    ],
+    logo_url: 'assets/openlitespeedrails_color.svg',
   },
   {
     name: 'OpenLiteSpeed WordPress',
@@ -841,6 +975,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/percona_color.svg',
   },
   {
+    name: 'Pritunl',
+    description: `User-friendly VPN for both individual and commercial use. Choose from three pricing plans.`,
+    summary: 'Enterprise open source VPN.',
+    related_guides: [
+      {
+        title: 'Deploy Pritunl With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-pritunl-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.pritunl.com/docs',
+        href: 'https://docs.pritunl.com/docs',
+      },
+    ],
+    logo_url: 'assets/pritunl_color.svg',
+  },
+  {
     name: 'RabbitMQ',
     description: `Connect and scale applications with asynchronous messaging and highly available work queues, all controlled through an intuitive management UI.`,
     summary: 'Most popular open source message broker',
@@ -879,6 +1032,25 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/redis_color.svg',
+  },
+  {
+    name: 'Rocket.Chat',
+    description: `Put data privacy first with an alternative to programs like Slack and Microsoft Teams.`,
+    summary: 'Feature-rich self-hosted chat and collaboration platform.',
+    related_guides: [
+      {
+        title: 'Deploy Rocket.Chat With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-rocketchat-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.rocket.chat/',
+        href: 'https://docs.rocket.chat/',
+      },
+    ],
+    logo_url: 'assets/rocketchat_color.svg',
   },
   {
     name: 'Ruby on Rails',
@@ -1227,6 +1399,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/minecraft_color.svg',
   },
   {
+    name: 'UTunnel',
+    description: `With a focus on simplicity, utunnel envisions simple secure VPN access for all with an intuitive UI and pricing structure.`,
+    summary: 'User-friendly and scalable VPN.',
+    related_guides: [
+      {
+        title: 'Deploy UTunnel With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-utunnel-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://help.utunnel.io/',
+        href: 'https://help.utunnel.io/',
+      },
+    ],
+    logo_url: 'assets/utunnel_color.svg',
+  },
+  {
     name: 'Valheim',
     description: `In the relatively peaceful place called Valheim, traveling farther comes with a price: more enemies and greater challenges to stay alive. Experience a punishing combat system, intense boss battles, and a complex building system to construct Viking warships and more.`,
     summary:
@@ -1283,6 +1474,44 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/vscodeserver_color.svg',
+  },
+  {
+    name: 'WarpSpeed',
+    description: `Feature-rich, self-hosted VPN based on WireGuard® protocol, plus convenient features like single sign-on, real-time bandwidth monitoring, and unlimited users/devices.`,
+    summary: 'Secure low-latency VPN powered by WireGuard® protocol.',
+    related_guides: [
+      {
+        title: 'Deploy WarpSpeed With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-warpspeed-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://bunker.services/products/warpspeed',
+        href: 'https://bunker.services/products/warpspeed',
+      },
+    ],
+    logo_url: 'assets/warpspeed_color.svg',
+  },
+  {
+    name: 'Wazuh',
+    description: `Infrastructure monitoring solution to detect threats, intrusion attempts, unauthorized user actions, and provide security analytics.`,
+    summary: 'Free open source security monitoring solution.',
+    related_guides: [
+      {
+        title: 'Deploy Wazuh With Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/guides/deploying-wazuh-marketplace-app',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://documentation.wazuh.com/current/index.html',
+        href: 'https://documentation.wazuh.com/current/index.html',
+      },
+    ],
+    logo_url: 'assets/wazuh_color.svg',
   },
   {
     name: 'Webmin',
