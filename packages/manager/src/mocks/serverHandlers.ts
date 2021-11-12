@@ -706,6 +706,9 @@ export const handlers = [
   rest.post('*/networking/vlans', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
+  rest.post('*/networking/ips/assign', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.post('*/account/payments', (req, res, ctx) => {
     return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
