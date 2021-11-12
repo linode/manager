@@ -303,10 +303,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `An IP address has been updated on your account.`,
   },
   ipv6pool_add: {
-    notification: (e) => 'An IPv6 range has been added on your account.',
+    notification: () => 'An IPv6 range has been added.',
   },
   ipv6pool_delete: {
-    notification: (e) => 'An IPv6 range has been deleted on your account.',
+    notification: () => 'An IPv6 range has been deleted.',
   },
   lish_boot: {
     scheduled: (e) =>
