@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import * as md5 from 'md5';
+import md5 from 'md5';
 import { useState } from 'react';
 import { usePreferences } from 'src/hooks/usePreferences';
 import { DismissedNotification } from 'src/store/preferences/preferences.actions';

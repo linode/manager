@@ -1,5 +1,5 @@
 import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
-import * as copy from 'copy-to-clipboard';
+import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import { update } from 'ramda';
 import * as React from 'react';
