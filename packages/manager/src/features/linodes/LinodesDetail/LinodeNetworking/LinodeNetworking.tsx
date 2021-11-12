@@ -143,7 +143,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   openRemoveIPRangeDialog = (range: IPRange) => {
     this.setState({
-      removeIPRangeDialogOpen: !this.state.removeIPRangeDialogOpen,
+      removeIPRangeDialogOpen: true,
       currentlySelectedIPRange: range,
     });
   };
