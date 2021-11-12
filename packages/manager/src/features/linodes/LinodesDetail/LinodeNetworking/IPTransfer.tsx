@@ -1,4 +1,4 @@
-import { assignAddresses } from '@linode/api-v4/lib/networking';
+import { assignAddresses, IPRange } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   both,
@@ -121,6 +121,22 @@ const defaultState = (
   sourceIPsLinodeID,
 });
 
+export const getLinodeIpv6Ranges = (
+  ipv6RangesData: IPRange[] | undefined,
+  ipv6: string | null
+) => {
+  return (
+    ipv6RangesData
+      ?.filter(
+        (ipv6RangeData) =>
+          ipv6RangeData.route_target === ipv6?.substring(0, ipv6.indexOf('/'))
+      )
+      .map(
+        (ipv6RangeData) => `${ipv6RangeData.range}/${ipv6RangeData.prefix}`
+      ) ?? []
+  );
+};
+
 const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   const {
     ipAddresses,
@@ -203,26 +219,16 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         compose(
           setSelectedIP(ip, firstLinode.ipv4[0]),
           updateSelectedLinodesIPs(ip, () => {
-            const linodeIpv6Ranges = getLinodeIpv6Ranges(firstLinode.ipv6);
+            const linodeIpv6Ranges = getLinodeIpv6Ranges(
+              ipv6RangesData?.data,
+              firstLinode.ipv6
+            );
             return [...firstLinode.ipv4, ...linodeIpv6Ranges];
           })
         )
       )
     );
     setIPs((currentState) => newState(currentState));
-  };
-
-  const getLinodeIpv6Ranges = (ipv6: string | null) => {
-    return (
-      ipv6RangesData?.data
-        .filter(
-          (ipv6RangeData) =>
-            ipv6RangeData.route_target === ipv6?.substring(0, ipv6.indexOf('/'))
-        )
-        .map(
-          (ipv6RangeData) => `${ipv6RangeData.range}/${ipv6RangeData.prefix}`
-        ) ?? []
-    );
   };
 
   const onSelectedLinodeChange = (ip: string) => (e: Item) => {
@@ -241,7 +247,10 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           updateSelectedLinodesIPs(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
             if (linode) {
-              const linodeIpv6Ranges = getLinodeIpv6Ranges(linode?.ipv6);
+              const linodeIpv6Ranges = getLinodeIpv6Ranges(
+                ipv6RangesData?.data,
+                linode?.ipv6
+              );
               return [...linode.ipv4, ...linodeIpv6Ranges];
             }
             return [];
