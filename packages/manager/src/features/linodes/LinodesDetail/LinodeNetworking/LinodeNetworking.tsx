@@ -472,11 +472,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
 
-    const selectedIPAddress = currentlySelectedIPRange
-      ? currentlySelectedIPRange.range
-      : this.state.currentlySelectedIP
-      ? this.state.currentlySelectedIP.address
-      : null;
+    let selectedIPAddress;
+    let ipv6Prefix;
+    if (currentlySelectedIPRange) {
+      selectedIPAddress = currentlySelectedIPRange.range;
+      ipv6Prefix = currentlySelectedIPRange.prefix;
+    } else if (this.state.currentlySelectedIP) {
+      selectedIPAddress = this.state.currentlySelectedIP.address;
+    }
 
     return (
       <div>
@@ -581,6 +584,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             linode={
               this.state.currentlySelectedIP ? this.props.linode : undefined
             }
+            prefix={ipv6Prefix}
             ipRemoveSuccess={this.handleRemoveIPSuccess}
           />
         )}

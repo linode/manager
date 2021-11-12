@@ -21,6 +21,7 @@ interface Props {
   linode?: Linode;
   IPAddress: string;
   ipRemoveSuccess?: (linode?: Linode) => void;
+  prefix?: number;
 }
 
 type CombinedProps = Props & LoadingErrorProps;
@@ -97,14 +98,22 @@ const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const { handleClose, open, loading, error, IPAddress, linode } = props;
+  const {
+    handleClose,
+    open,
+    loading,
+    error,
+    IPAddress,
+    linode,
+    prefix,
+  } = props;
 
   return (
     <ConfirmationDialog
       open={open}
       onClose={handleClose}
       error={error}
-      title={`Delete ${IPAddress}?`}
+      title={`Delete ${IPAddress} ${prefix}?`}
       actions={
         <DeleteIPActions
           loading={loading}
