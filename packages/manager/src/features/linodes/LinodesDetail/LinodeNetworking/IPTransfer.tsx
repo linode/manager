@@ -160,7 +160,11 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     open // only run the query if the modal is open
   );
 
-  const { data: ipv6RangesData } = useIpv6RangesQuery();
+  const {
+    data: ipv6RangesData,
+    isLoading: ipv6RangesLoading,
+    error: ipv6RangesError,
+  } = useIpv6RangesQuery();
 
   const linodes = Object.values(data?.linodes ?? []).filter(
     (l) => l.id !== linodeID
@@ -338,7 +342,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           label="Select Linode"
           hideLabel
           onInputChange={handleInputChange}
-          isLoading={isLoading}
+          isLoading={isLoading || ipv6RangesLoading}
           errorText={linodesError?.[0].reason}
           overflowPortal
         />
@@ -486,7 +490,10 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        {isLoading && searchText === '' ? (
+        {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
+          <Notice error text={'There was an error loading IPv6 Ranges'} />
+        ) : null}
+        {(isLoading || ipv6RangesLoading) && searchText === '' ? (
           <div className={classes.loading}>
             <CircleProgress mini />
           </div>
