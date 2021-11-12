@@ -16,36 +16,30 @@ interface Props {
 
 type CombinedProps = Props;
 
-class DeleteIPActions extends React.PureComponent<CombinedProps> {
-  handleDeleteIP = () => {
-    const { linodeID, IPAddress } = this.props;
+const DeleteIPActions: React.FC<CombinedProps> = (props) => {
+  const { handleCancel, loading, linodeID, handleDelete, IPAddress } = props;
+
+  const handleDeleteIP = () => {
     linodeID
-      ? this.props.handleDelete({
+      ? handleDelete({
           linodeID,
           IPAddress,
         })
-      : this.props.handleDelete({
+      : handleDelete({
           IPv6Range: IPAddress,
         });
   };
 
-  render() {
-    const { handleCancel, loading, linodeID } = this.props;
-    return (
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={handleCancel}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.handleDeleteIP}
-          loading={loading}
-        >
-          {linodeID ? 'Delete IP' : 'Delete Range'}
-        </Button>
-      </ActionsPanel>
-    );
-  }
-}
+  return (
+    <ActionsPanel>
+      <Button buttonType="secondary" onClick={handleCancel}>
+        Cancel
+      </Button>
+      <Button buttonType="primary" onClick={handleDeleteIP} loading={loading}>
+        {linodeID ? 'Delete IP' : 'Delete Range'}
+      </Button>
+    </ActionsPanel>
+  );
+};
 
 export default DeleteIPActions;

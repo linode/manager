@@ -34,8 +34,8 @@ interface IPDeleteArgs {
   IPAddress: string;
 }
 
-class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
-  handleRemoveIP = (data: IPDeleteArgs) => {
+const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
+  const handleRemoveIP = (data: IPDeleteArgs) => {
     const {
       setErrorAndClearLoading,
       setLoadingAndClearErrors,
@@ -43,7 +43,7 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       ipRemoveSuccess,
       handleClose,
       linode,
-    } = this.props;
+    } = props;
 
     setLoadingAndClearErrors();
 
@@ -68,14 +68,15 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
         setErrorAndClearLoading(errorText[0].reason);
       });
   };
-  handleRemoveRange = (data: IPv6RangeDeleteArgs) => {
+
+  const handleRemoveRange = (data: IPv6RangeDeleteArgs) => {
     const {
       setErrorAndClearLoading,
       setLoadingAndClearErrors,
       clearLoadingAndErrors,
       ipRemoveSuccess,
       handleClose,
-    } = this.props;
+    } = props;
 
     setLoadingAndClearErrors();
 
@@ -96,34 +97,32 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       });
   };
 
-  render() {
-    const { handleClose, open, loading, error, IPAddress, linode } = this.props;
+  const { handleClose, open, loading, error, IPAddress, linode } = props;
 
-    return (
-      <ConfirmationDialog
-        open={open}
-        onClose={handleClose}
-        error={error}
-        title={`Delete ${IPAddress}?`}
-        actions={
-          <DeleteIPActions
-            loading={loading}
-            handleCancel={handleClose}
-            IPAddress={IPAddress}
-            linodeID={linode ? linode.id : undefined}
-            handleDelete={linode ? this.handleRemoveIP : this.handleRemoveRange}
-          />
-        }
-      >
-        <Typography>
-          {linode
-            ? 'Are you sure you want to delete this IP Address? This action cannot be undone.'
-            : 'Are you sure you want to delete this IPv6 Range? This action cannot be undone.'}
-        </Typography>
-      </ConfirmationDialog>
-    );
-  }
-}
+  return (
+    <ConfirmationDialog
+      open={open}
+      onClose={handleClose}
+      error={error}
+      title={`Delete ${IPAddress}?`}
+      actions={
+        <DeleteIPActions
+          loading={loading}
+          handleCancel={handleClose}
+          IPAddress={IPAddress}
+          linodeID={linode ? linode.id : undefined}
+          handleDelete={linode ? handleRemoveIP : handleRemoveRange}
+        />
+      }
+    >
+      <Typography>
+        {linode
+          ? 'Are you sure you want to delete this IP Address? This action cannot be undone.'
+          : 'Are you sure you want to delete this IPv6 Range? This action cannot be undone.'}
+      </Typography>
+    </ConfirmationDialog>
+  );
+};
 
 export default compose<CombinedProps, Props>(withLoadingAndError)(
   DeleteIPConfirm
