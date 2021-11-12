@@ -145,6 +145,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
 
   const handleAllocateIPv4 = () => {
     setSubmittingIPv4(true);
+    setErrorMessageIPv4('');
 
     // Only IPv4 addresses can currently be allocated.
     allocateIPAddress(linodeID, {
@@ -164,6 +165,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
 
   const handleCreateIPv6Range = () => {
     setSubmittingIPv6(true);
+    setErrorMessageIPv6('');
 
     createIPv6Range({
       linode_id: linodeID,
