@@ -27,13 +27,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "14.17.4"
-      - uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       node_modules
+      #       */*/node_modules
+      #       ~/.cache/Cypress
+      #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
       - run: |
           echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
