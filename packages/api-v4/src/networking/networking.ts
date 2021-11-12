@@ -14,6 +14,7 @@ import Request, {
 } from '../request';
 import { ResourcePage as Page } from '../types';
 import {
+  CreateIPv6RangePayload,
   IPAddress,
   IPAssignmentPayload,
   IPRange,
@@ -142,3 +143,16 @@ export const getIPv6Ranges = (params?: any) =>
     setMethod('GET'),
     setParams(params)
   );
+
+/**
+ * Allows self-serving range creation by the customer
+ *
+ */
+
+export const createIPv6Range = (payload: CreateIPv6RangePayload) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/networking/ipv6/ranges`),
+    setMethod('POST'),
+    setData(payload)
+  );
+};
