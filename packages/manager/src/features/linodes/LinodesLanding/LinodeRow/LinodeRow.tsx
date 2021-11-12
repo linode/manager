@@ -233,25 +233,23 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
         />
       </Hidden>
 
-      <TableCell className={classes.actionCell} data-qa-notifications>
-        <div className={classes.actionInner}>
-          <RenderFlag
-            mutationAvailable={mutationAvailable}
-            linodeNotifications={linodeNotifications}
-            classes={classes}
-          />
-          <LinodeActionMenu
-            linodeId={id}
-            linodeLabel={label}
-            linodeRegion={region}
-            linodeType={type}
-            linodeStatus={status}
-            linodeBackups={backups}
-            openDialog={openDialog}
-            openPowerActionDialog={openPowerActionDialog}
-            inTableContext
-          />
-        </div>
+      <TableCell actionCell data-qa-notifications>
+        <RenderFlag
+          mutationAvailable={mutationAvailable}
+          linodeNotifications={linodeNotifications}
+          classes={classes}
+        />
+        <LinodeActionMenu
+          linodeId={id}
+          linodeLabel={label}
+          linodeRegion={region}
+          linodeType={type}
+          linodeStatus={status}
+          linodeBackups={backups}
+          openDialog={openDialog}
+          openPowerActionDialog={openPowerActionDialog}
+          inTableContext
+        />
       </TableCell>
     </TableRow>
   );
