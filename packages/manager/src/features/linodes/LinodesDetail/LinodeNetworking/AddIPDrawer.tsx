@@ -100,13 +100,15 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);
+  const [submittingIPv4, setSubmittingIPv4] = React.useState(false);
   const [errorMessageIPv4, setErrorMessageIPv4] = React.useState('');
 
   const [
     selectedIPv6Prefix,
     setSelectedIPv6Prefix,
   ] = React.useState<IPv6Prefix | null>(null);
-  const [submitting, setSubmitting] = React.useState(false);
+
+  const [submittingIPv6, setSubmittingIPv6] = React.useState(false);
   const [errorMessageIPv6, setErrorMessageIPv6] = React.useState('');
 
   const {
@@ -142,7 +144,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
   };
 
   const handleAllocateIPv4 = () => {
-    setSubmitting(true);
+    setSubmittingIPv4(true);
 
     // Only IPv4 addresses can currently be allocated.
     allocateIPAddress(linodeID, {
@@ -150,30 +152,30 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
       public: selectedIPv4 === 'v4Public',
     })
       .then((_) => {
-        setSubmitting(false);
+        setSubmittingIPv4(false);
         onSuccess();
         onClose();
       })
       .catch((errResponse) => {
-        setSubmitting(false);
+        setSubmittingIPv4(false);
         setErrorMessageIPv4(getErrorStringOrDefault(errResponse));
       });
   };
 
   const handleCreateIPv6Range = () => {
-    setSubmitting(true);
+    setSubmittingIPv6(true);
 
     createIPv6Range({
       linode_id: linodeID,
       prefix_length: Number(selectedIPv6Prefix) as IPv6Prefix,
     })
       .then((_: any) => {
-        setSubmitting(false);
+        setSubmittingIPv6(false);
         onSuccess();
         onClose();
       })
       .catch((errResponse: APIError[]) => {
-        setSubmitting(false);
+        setSubmittingIPv6(false);
         setErrorMessageIPv6(getErrorStringOrDefault(errResponse));
       });
   };
@@ -197,6 +199,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
 
     const onClick = IPv4 ? handleAllocateIPv4 : handleCreateIPv6Range;
     const disabled = IPv4 ? disabledIPv4 : disabledIPv6;
+    const submitting = IPv4 ? submittingIPv4 : submittingIPv6;
 
     return (
       <Button
