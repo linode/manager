@@ -1,43 +1,42 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { IPv6RangeDeleteArgs, IPDeleteArgs } from './DeleteIPConfirm';
 
 interface Props {
-  handleDelete: (data: { linodeID: number; IPAddress: string }) => void;
+  handleDelete: (data: IPv6RangeDeleteArgs | IPDeleteArgs) => void;
   IPAddress: string;
-  linodeID: number;
+  linodeID?: number;
   handleCancel: () => void;
   loading: boolean;
 }
 
 type CombinedProps = Props;
 
-class DeleteIPActions extends React.PureComponent<CombinedProps> {
-  handleDeleteIP = () => {
-    const { linodeID, IPAddress } = this.props;
-    this.props.handleDelete({
-      linodeID,
-      IPAddress,
-    });
+const DeleteIPActions: React.FC<CombinedProps> = (props) => {
+  const { handleCancel, loading, linodeID, handleDelete, IPAddress } = props;
+
+  const handleDeleteIP = () => {
+    linodeID
+      ? handleDelete({
+          linodeID,
+          IPAddress,
+        })
+      : handleDelete({
+          IPv6Range: IPAddress,
+        });
   };
 
-  render() {
-    const { handleCancel, loading } = this.props;
-    return (
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={handleCancel}>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.handleDeleteIP}
-          loading={loading}
-        >
-          Delete IP
-        </Button>
-      </ActionsPanel>
-    );
-  }
-}
+  return (
+    <ActionsPanel>
+      <Button buttonType="secondary" onClick={handleCancel}>
+        Cancel
+      </Button>
+      <Button buttonType="primary" onClick={handleDeleteIP} loading={loading}>
+        {linodeID ? 'Delete IP' : 'Delete Range'}
+      </Button>
+    </ActionsPanel>
+  );
+};
 
 export default DeleteIPActions;
