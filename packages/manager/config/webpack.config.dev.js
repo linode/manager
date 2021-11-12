@@ -1,6 +1,5 @@
 'use strict';
 
-const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -153,18 +152,30 @@ module.exports = {
               },
             },
           },
-          // Compile .tsx?
+          // Compile .ts
           {
-            test: /\.(ts|tsx)$/,
+            test: /\.ts$/,
             include: paths.appSrc,
             exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
             use: [
               {
-                loader: require.resolve('ts-loader'),
+                loader: require.resolve('esbuild-loader'),
                 options: {
-                  // disable type checker - we will use it in fork plugin
-                  transpileOnly: true,
-                  onlyCompileBundledFiles: true,
+                  loader: 'ts',
+                },
+              },
+            ],
+          },
+          // Compile .tsx?
+          {
+            test: /\.tsx$/,
+            include: paths.appSrc,
+            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
+            use: [
+              {
+                loader: require.resolve('esbuild-loader'),
+                options: {
+                  loader: 'tsx',
                 },
               },
             ],
@@ -176,7 +187,17 @@ module.exports = {
           // in development "style" loader enables hot editing of CSS.
           {
             test: /\.css$/,
-            use: ['style-loader', 'css-loader'],
+            use: [
+              'style-loader',
+              'css-loader',
+              {
+                loader: 'esbuild-loader',
+                options: {
+                  loader: 'css',
+                  minify: true,
+                },
+              },
+            ],
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.

@@ -30,7 +30,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
+    "start": "concurrently \"tsc -w --preserveWatchOutput\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
     "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
     "build:node": "yarn build --config webpack.node.config.js",
     "test": "jest --config jestconfig.json",

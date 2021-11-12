@@ -193,6 +193,7 @@
     "dotenv": "^6.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
+    "esbuild-loader": "^2.16.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "~8.1.0",
     "eslint-plugin-cypress": "^2.11.3",
