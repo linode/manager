@@ -710,6 +710,9 @@ export const handlers = [
     const range = req.body?.['prefix_length'];
     return res(ctx.json({ range, route_target: '2001:DB8::0000' }));
   }),
+  rest.post('*/networking/ips/assign', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.post('*/account/payments', (req, res, ctx) => {
     return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
