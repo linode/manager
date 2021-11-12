@@ -1,13 +1,10 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { IPv6RangeDeleteArgs, IPDeleteArgs } from './DeleteIPConfirm';
 
 interface Props {
-  handleDelete: (data: {
-    linodeID?: number;
-    IPAddress?: string;
-    IPv6Range?: string;
-  }) => void;
+  handleDelete: (data: IPv6RangeDeleteArgs | IPDeleteArgs) => void;
   IPAddress: string;
   linodeID?: number;
   handleCancel: () => void;

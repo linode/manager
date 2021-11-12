@@ -26,11 +26,11 @@ interface Props {
 
 type CombinedProps = Props & LoadingErrorProps;
 
-interface IPv6RangeDeleteArgs {
+export interface IPv6RangeDeleteArgs {
   IPv6Range: string;
 }
 
-interface IPDeleteArgs {
+export interface IPDeleteArgs {
   linodeID: number;
   IPAddress: string;
 }
@@ -82,7 +82,7 @@ const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
     setLoadingAndClearErrors();
 
     removeIPv6Range(data)
-      .then((response) => {
+      .then((_) => {
         clearLoadingAndErrors();
         if (ipRemoveSuccess) {
           ipRemoveSuccess();
@@ -125,9 +125,9 @@ const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
       }
     >
       <Typography>
-        {linode
-          ? 'Are you sure you want to delete this IP Address? This action cannot be undone.'
-          : 'Are you sure you want to delete this IPv6 Range? This action cannot be undone.'}
+        {`Are you sure you want to delete ${
+          linode ? 'this IP Address' : 'this IPv6 Range'
+        }? This action cannot be undone.`}
       </Typography>
     </ConfirmationDialog>
   );
