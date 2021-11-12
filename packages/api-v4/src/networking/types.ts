@@ -44,3 +44,11 @@ export interface IPAssignmentPayload {
   region: string;
   assignments: IPAssignment[];
 }
+
+export type IPv6Prefix = 56 | 64;
+
+export interface CreateIPv6RangePayload {
+  linode_id?: number;
+  route_target?: string;
+  prefix_length: IPv6Prefix;
+}
