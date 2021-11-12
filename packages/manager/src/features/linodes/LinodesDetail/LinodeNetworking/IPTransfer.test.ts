@@ -1,6 +1,6 @@
-import { getLinodeIpv6Ranges } from './IPTransfer';
+import { getLinodeIPv6Ranges } from './IPTransfer';
 
-describe('getLinodeIpv6Ranges', () => {
+describe('getLinodeIPv6Ranges', () => {
   const ipv6Ranges = [
     {
       range: '2fff:db08:e003:1::',
@@ -24,15 +24,15 @@ describe('getLinodeIpv6Ranges', () => {
 
   it('returns an array of ranges', () => {
     expect(
-      getLinodeIpv6Ranges(ipv6Ranges, '2600:3c03::f03c:92ff:fe8d:5c0d/128')
+      getLinodeIPv6Ranges(ipv6Ranges, '2600:3c03::f03c:92ff:fe8d:5c0d/128')
     ).toEqual(['2fff:db08:e003:2::/64', '2fff:db08:e003:3::/56']);
   });
 
   it('returns an empty array if at least one argument is undefined or null', () => {
     expect(
-      getLinodeIpv6Ranges(undefined, '2600:3c03::f03c:92ff:fe8d:5b1b/128')
+      getLinodeIPv6Ranges(undefined, '2600:3c03::f03c:92ff:fe8d:5b1b/128')
     ).toEqual([]);
-    expect(getLinodeIpv6Ranges(ipv6Ranges, null)).toEqual([]);
-    expect(getLinodeIpv6Ranges(undefined, null)).toEqual([]);
+    expect(getLinodeIPv6Ranges(ipv6Ranges, null)).toEqual([]);
+    expect(getLinodeIPv6Ranges(undefined, null)).toEqual([]);
   });
 });

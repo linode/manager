@@ -24,7 +24,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
-import { queryKey } from 'src/queries/networking';
+import { ipv6RangeQueryKey } from 'src/queries/networking';
 import { queryClient } from 'src/queries/base';
 import { useLinodesQuery } from 'src/queries/linodes';
 import { useIpv6RangesQuery } from 'src/queries/networking';
@@ -121,7 +121,7 @@ const defaultState = (
   sourceIPsLinodeID,
 });
 
-export const getLinodeIpv6Ranges = (
+export const getLinodeIPv6Ranges = (
   ipv6RangesData: IPRange[] | undefined,
   ipv6: string | null
 ) => {
@@ -219,11 +219,11 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         compose(
           setSelectedIP(ip, firstLinode.ipv4[0]),
           updateSelectedLinodesIPs(ip, () => {
-            const linodeIpv6Ranges = getLinodeIpv6Ranges(
+            const linodeIPv6Ranges = getLinodeIPv6Ranges(
               ipv6RangesData?.data,
               firstLinode.ipv6
             );
-            return [...firstLinode.ipv4, ...linodeIpv6Ranges];
+            return [...firstLinode.ipv4, ...linodeIPv6Ranges];
           })
         )
       )
@@ -247,11 +247,11 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           updateSelectedLinodesIPs(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
             if (linode) {
-              const linodeIpv6Ranges = getLinodeIpv6Ranges(
+              const linodeIPv6Ranges = getLinodeIPv6Ranges(
                 ipv6RangesData?.data,
                 linode?.ipv6
               );
-              return [...linode.ipv4, ...linodeIpv6Ranges];
+              return [...linode.ipv4, ...linodeIPv6Ranges];
             }
             return [];
           }),
@@ -438,7 +438,8 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             setSubmitting(false);
             setError(undefined);
             setSuccessMessage('IP transferred successfully.');
-            queryClient.invalidateQueries(queryKey);
+            // get updated route_target for ipv6 ranges
+            queryClient.invalidateQueries(ipv6RangeQueryKey);
           })
           .catch((err) => {
             setError(
