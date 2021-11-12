@@ -40,7 +40,6 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import AddIPDrawer from './AddIPDrawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
-import DeleteIPv6RangeConfirm from './DeleteIPv6RangeConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharing from './IPSharing';
 import IPTransfer from './IPTransfer';
@@ -142,13 +141,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  closeRemoveIPDialog = () => {
-    this.setState({
-      removeIPDialogOpen: false,
-      currentlySelectedIP: undefined,
-    });
-  };
-
   openRemoveIPRangeDialog = (range: IPRange) => {
     this.setState({
       removeIPRangeDialogOpen: !this.state.removeIPRangeDialogOpen,
@@ -156,9 +148,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  closeRemoveIPRangeDialog = () => {
+  closeRemoveDialog = () => {
     this.setState({
+      removeIPDialogOpen: false,
       removeIPRangeDialogOpen: false,
+      currentlySelectedIP: undefined,
       currentlySelectedIPRange: undefined,
     });
   };
@@ -213,10 +207,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       });
   };
 
-  handleRemoveIPSuccess = (linode: Linode) => {
+  handleRemoveIPSuccess = (linode?: Linode) => {
     /** refresh local state and redux state so our data is persistent everywhere */
     this.refreshIPs();
-    this.props.upsertLinode(linode);
+    linode && this.props.upsertLinode(linode);
   };
 
   displayRangeDrawer = (range: IPRange) => () => {
@@ -476,6 +470,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
 
+    const selectedIPAddress = currentlySelectedIPRange
+      ? currentlySelectedIPRange.range
+      : this.state.currentlySelectedIP
+      ? this.state.currentlySelectedIP.address
+      : null;
+
     return (
       <div>
         {readOnly && <LinodePermissionsError />}
@@ -568,24 +568,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           readOnly={readOnly}
         />
 
-        {this.state.currentlySelectedIP &&
-          linodeID &&
-          !currentlySelectedIPRange && (
-            <DeleteIPConfirm
-              handleClose={this.closeRemoveIPDialog}
-              IPAddress={this.state.currentlySelectedIP.address}
-              open={this.state.removeIPDialogOpen}
-              linode={this.props.linode}
-              ipRemoveSuccess={this.handleRemoveIPSuccess}
-            />
-          )}
-
-        {currentlySelectedIPRange && (
-          <DeleteIPv6RangeConfirm
-            handleClose={this.closeRemoveIPRangeDialog}
-            IPv6Range={currentlySelectedIPRange.range}
-            open={this.state.removeIPRangeDialogOpen}
-            linode={this.props.linode}
+        {selectedIPAddress && (
+          <DeleteIPConfirm
+            handleClose={this.closeRemoveDialog}
+            IPAddress={selectedIPAddress}
+            open={
+              this.state.removeIPDialogOpen ||
+              this.state.removeIPRangeDialogOpen
+            }
+            linode={
+              this.state.currentlySelectedIP ? this.props.linode : undefined
+            }
             ipRemoveSuccess={this.handleRemoveIPSuccess}
           />
         )}

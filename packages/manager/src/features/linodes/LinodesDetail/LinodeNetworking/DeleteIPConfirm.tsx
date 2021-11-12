@@ -1,4 +1,8 @@
-import { Linode, removeIPAddress } from '@linode/api-v4/lib/linodes';
+import {
+  Linode,
+  removeIPAddress,
+  removeIPv6Range,
+} from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -14,20 +18,24 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 interface Props {
   handleClose: () => void;
   open: boolean;
-  linode: Linode;
+  linode?: Linode;
   IPAddress: string;
-  ipRemoveSuccess?: (linode: Linode) => void;
+  ipRemoveSuccess?: (linode?: Linode) => void;
 }
 
 type CombinedProps = Props & LoadingErrorProps;
 
-interface DeleteArgs {
+interface IPv6RangeDeleteArgs {
+  IPv6Range: string;
+}
+
+interface IPDeleteArgs {
   linodeID: number;
   IPAddress: string;
 }
 
 class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
-  handleRemoveIP = (data: DeleteArgs) => {
+  handleRemoveIP = (data: IPDeleteArgs) => {
     const {
       setErrorAndClearLoading,
       setLoadingAndClearErrors,
@@ -39,10 +47,11 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
 
     setLoadingAndClearErrors();
 
-    return removeIPAddress(data)
+    removeIPAddress(data)
       .then((response) => {
         clearLoadingAndErrors();
-        if (ipRemoveSuccess) {
+        // linode will always exist here
+        if (ipRemoveSuccess && linode) {
           const linodeWithRemovedIP = {
             ...linode,
             ipv4: linode.ipv4.filter((eachIP) => eachIP !== data.IPAddress),
@@ -59,15 +68,36 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
         setErrorAndClearLoading(errorText[0].reason);
       });
   };
-  render() {
+  handleRemoveRange = (data: IPv6RangeDeleteArgs) => {
     const {
+      setErrorAndClearLoading,
+      setLoadingAndClearErrors,
+      clearLoadingAndErrors,
+      ipRemoveSuccess,
       handleClose,
-      open,
-      loading,
-      error,
-      IPAddress,
-      linode: { id: linodeID },
     } = this.props;
+
+    setLoadingAndClearErrors();
+
+    removeIPv6Range(data)
+      .then((response) => {
+        clearLoadingAndErrors();
+        if (ipRemoveSuccess) {
+          ipRemoveSuccess();
+          handleClose();
+        }
+      })
+      .catch((e) => {
+        const errorText = getAPIErrorOrDefault(
+          e,
+          'There was an error removing this IP range. Please try again later.'
+        );
+        setErrorAndClearLoading(errorText[0].reason);
+      });
+  };
+
+  render() {
+    const { handleClose, open, loading, error, IPAddress, linode } = this.props;
 
     return (
       <ConfirmationDialog
@@ -80,14 +110,15 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
             loading={loading}
             handleCancel={handleClose}
             IPAddress={IPAddress}
-            linodeID={linodeID}
-            handleDelete={this.handleRemoveIP}
+            linodeID={linode ? linode.id : undefined}
+            handleDelete={linode ? this.handleRemoveIP : this.handleRemoveRange}
           />
         }
       >
         <Typography>
-          Are you sure you want to delete this IP Address? This action cannot be
-          undone.
+          {linode
+            ? 'Are you sure you want to delete this IP Address? This action cannot be undone.'
+            : 'Are you sure you want to delete this IPv6 Range? This action cannot be undone.'}
         </Typography>
       </ConfirmationDialog>
     );
