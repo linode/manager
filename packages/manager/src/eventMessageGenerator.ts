@@ -302,6 +302,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   ipaddress_update: {
     notification: (e) => `An IP address has been updated on your account.`,
   },
+  ipv6pool_add: {
+    notification: (e) => 'An IPv6 range has been added on your account.',
+  },
+  ipv6pool_delete: {
+    notification: (e) => 'An IPv6 range has been deleted on your account.',
+  },
   lish_boot: {
     scheduled: (e) =>
       `Linode ${
