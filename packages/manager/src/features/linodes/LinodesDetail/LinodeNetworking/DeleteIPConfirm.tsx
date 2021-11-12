@@ -113,7 +113,7 @@ const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
       open={open}
       onClose={handleClose}
       error={error}
-      title={`Delete ${IPAddress}${prefix ? ' /' + prefix : ''}?`}
+      title={`Delete ${IPAddress}${prefix ? ` /${prefix}` : ''}?`}
       actions={
         <DeleteIPActions
           loading={loading}
