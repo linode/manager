@@ -100,7 +100,14 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
       region: 'us-southeast',
       public: false,
     },
-    global: [],
+    global: [
+      {
+        prefix: 64,
+        range: '2600:3c02:e000:0201::',
+        region: 'us-southeast',
+        route_target: '2600:3c02::f03c:92ff:fe9d:0f25',
+      },
+    ],
   },
 });
 

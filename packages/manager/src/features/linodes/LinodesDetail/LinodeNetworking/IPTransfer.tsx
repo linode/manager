@@ -1,4 +1,4 @@
-import { assignAddresses } from '@linode/api-v4/lib/networking';
+import { assignAddresses, IPRange } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   both,
@@ -24,7 +24,10 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
+import { ipv6RangeQueryKey } from 'src/queries/networking';
+import { queryClient } from 'src/queries/base';
 import { useLinodesQuery } from 'src/queries/linodes';
+import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
 
@@ -118,6 +121,22 @@ const defaultState = (
   sourceIPsLinodeID,
 });
 
+export const getLinodeIPv6Ranges = (
+  ipv6RangesData: IPRange[] | undefined,
+  ipv6: string | null
+) => {
+  return (
+    ipv6RangesData
+      ?.filter(
+        (ipv6RangeData) =>
+          ipv6RangeData.route_target === ipv6?.substring(0, ipv6.indexOf('/'))
+      )
+      .map(
+        (ipv6RangeData) => `${ipv6RangeData.range}/${ipv6RangeData.prefix}`
+      ) ?? []
+  );
+};
+
 const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
   const {
     ipAddresses,
@@ -157,6 +176,12 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     open // only run the query if the modal is open
   );
 
+  const {
+    data: ipv6RangesData,
+    isLoading: ipv6RangesLoading,
+    error: ipv6RangesError,
+  } = useIpv6RangesQuery();
+
   const linodes = Object.values(data?.linodes ?? []).filter(
     (l) => l.id !== linodeID
   );
@@ -193,7 +218,13 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         () => isSwapping(mode),
         compose(
           setSelectedIP(ip, firstLinode.ipv4[0]),
-          setSelectedLinodesIPs(ip, firstLinode.ipv4)
+          updateSelectedLinodesIPs(ip, () => {
+            const linodeIPv6Ranges = getLinodeIPv6Ranges(
+              ipv6RangesData?.data,
+              firstLinode.ipv6
+            );
+            return [...firstLinode.ipv4, ...linodeIPv6Ranges];
+          })
         )
       )
     );
@@ -216,7 +247,11 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           updateSelectedLinodesIPs(ip, () => {
             const linode = linodes.find((l) => l.id === Number(e.value));
             if (linode) {
-              return linode.ipv4;
+              const linodeIPv6Ranges = getLinodeIPv6Ranges(
+                ipv6RangesData?.data,
+                linode?.ipv6
+              );
+              return [...linode.ipv4, ...linodeIPv6Ranges];
             }
             return [];
           }),
@@ -316,7 +351,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
           label="Select Linode"
           hideLabel
           onInputChange={handleInputChange}
-          isLoading={isLoading}
+          isLoading={isLoading || ipv6RangesLoading}
           errorText={linodesError?.[0].reason}
           overflowPortal
         />
@@ -403,6 +438,8 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             setSubmitting(false);
             setError(undefined);
             setSuccessMessage('IP transferred successfully.');
+            // get updated route_target for ipv6 ranges
+            queryClient.invalidateQueries(ipv6RangeQueryKey);
           })
           .catch((err) => {
             setError(
@@ -463,7 +500,10 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        {isLoading && searchText === '' ? (
+        {!isLoading && !ipv6RangesLoading && ipv6RangesError ? (
+          <Notice error text={'There was an error loading IPv6 Ranges'} />
+        ) : null}
+        {(isLoading || ipv6RangesLoading) && searchText === '' ? (
           <div className={classes.loading}>
             <CircleProgress mini />
           </div>
@@ -532,9 +572,6 @@ const setSelectedIP = (ip: string, selectedIP: string) =>
 
 const setSelectedLinodeID = (ip: string, selectedLinodeID: number | string) =>
   set(L.selectedLinodeID(ip), selectedLinodeID);
-
-const setSelectedLinodesIPs = (ip: string, selectedLinodesIPs: string[]) =>
-  set(L.selectedLinodesIPs(ip), selectedLinodesIPs);
 
 const updateSelectedLinodesIPs = (ip: string, fn: (s: string[]) => string[]) =>
   over(L.selectedLinodesIPs(ip), fn);
