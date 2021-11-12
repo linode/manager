@@ -210,7 +210,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   handleRemoveIPSuccess = (linode?: Linode) => {
     /** refresh local state and redux state so our data is persistent everywhere */
     this.refreshIPs();
-    linode && this.props.upsertLinode(linode);
+    if (linode) {
+      this.props.upsertLinode(linode);
+    }
   };
 
   displayRangeDrawer = (range: IPRange) => () => {
