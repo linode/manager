@@ -30,7 +30,7 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "tsc -w",
+    "start": "tsc -w --preserveWatchOutput",
     "build": "tsc",
     "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
