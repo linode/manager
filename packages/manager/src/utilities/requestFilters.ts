@@ -30,17 +30,18 @@ export const generatePollingFilter = (
   inIds: number[] = [],
   neqIds: number[] = []
 ) => {
-  let filter: any = { created: { '+gte': timestamp } };
+  let filter;
+  const c = { created: { '+gte': timestamp } };
 
   if (neqIds.length > 0) {
     filter = {
-      '+and': [...filter, ...generateNeqFilter('id', neqIds)],
+      '+and': [c, ...generateNeqFilter('id', neqIds)],
     };
   }
 
   if (inIds.length > 0) {
     filter = {
-      '+or': [...filter, ...generateInFilter('id', inIds)],
+      '+or': [c, ...generateInFilter('id', inIds)],
     };
   }
 
