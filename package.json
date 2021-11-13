@@ -24,7 +24,7 @@
     "build": "yarn build:validation && yarn build:sdk && yarn workspace linode-manager build",
     "build:analyze": "yarn build --bundle-analyze",
     "build:packages": "concurrently -n api-v4,validation \"yarn workspace @linode/api-v4 build\" \"yarn workspace @linode/validation build\"",
-    "up": "yarn install:all && yarn build:packages && yarn start:all",
+    "up": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all",
     "start:all": "concurrently -n api-v4,manager \"yarn workspace @linode/api-v4 start\" \"sleep 2.5; yarn workspace linode-manager start\"",
     "start:manager": "yarn workspace linode-manager start",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
