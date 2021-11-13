@@ -248,7 +248,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
         <Typography variant="body1">
           Traffic will no longer be routed through this NodeBalancer. Please
           check your DNS settings and either provide the IP address of another
-          active NodeBalancer, or route traffic directly to you Linode.
+          active NodeBalancer, or route traffic directly to your Linode.
         </Typography>
       </ConfirmationDialog>
     </div>
