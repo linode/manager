@@ -7,10 +7,12 @@
     "serve": "vite preview",
     "storybook": "yarn run start-storybook -p 6006 --ci",
     "test": "jest --color",
+    "precommit": "lint-staged && yarn typecheck",
     "cy:run": "cypress run -b chrome",
     "cy:e2e": "cypress run --headless -b chrome",
     "cy:debug": "cypress open",
-    "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts"
+    "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@fontsource/lato": "^4.5.0",
