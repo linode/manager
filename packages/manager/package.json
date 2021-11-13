@@ -325,7 +325,8 @@
   },
   "workspaces": {
     "nohoist": [
-      "wdio-jasmine-framework*",
+      "css-loader",
+      "style-loader",
       "launchdarkly-js-client-sdk",
       "launchdarkly-js-sdk-common",
       "launchdarkly-react-client-sdk"
