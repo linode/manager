@@ -2346,7 +2346,7 @@ Cloud Firewalls:
 
 - Conditional Logic When Validating SOA Record for Slave Domains
 - Fix Linode Clone kebab
-- VITE_LISH_ROOT typo
+- REACT_APP_LISH_ROOT typo
 - Maintenance Banner Styles
 - Added missing issuer to TFA URI
 - Adds Linode Label to Notification Drawer List Item
