@@ -5,7 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
+// const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -46,7 +46,7 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: [paths.appIndexJs],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -115,6 +115,7 @@ module.exports = {
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
       new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
+    fallback: { crypto: false },
   },
   module: {
     strictExportPresence: true,
@@ -161,18 +162,30 @@ module.exports = {
               },
             },
           },
-          // Compile .tsx?
+          // Compile .ts
           {
-            test: /\.(ts|tsx)$/,
+            test: /\.ts$/,
             include: paths.appSrc,
-            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/],
+            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
             use: [
               {
-                loader: require.resolve('ts-loader'),
+                loader: require.resolve('esbuild-loader'),
                 options: {
-                  // disable type checker - we will use it in fork plugin
-                  transpileOnly: true,
-                  onlyCompileBundledFiles: true,
+                  loader: 'ts',
+                },
+              },
+            ],
+          },
+          // Compile .tsx?
+          {
+            test: /\.tsx$/,
+            include: paths.appSrc,
+            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
+            use: [
+              {
+                loader: require.resolve('esbuild-loader'),
+                options: {
+                  loader: 'tsx',
                 },
               },
             ],
@@ -205,17 +218,6 @@ module.exports = {
               },
               {
                 loader: require.resolve('postcss-loader'),
-                options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
-                  ident: 'postcss',
-                  plugins: () => [
-                    require('postcss-flexbugs-fixes'),
-                    autoprefixer({
-                      flexbox: 'no-2009',
-                    }),
-                  ],
-                },
               },
             ],
           },
@@ -241,7 +243,7 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.mjs$/, /\.html$/, /\.json$/],
+            exclude: [/\.js$/, /\.mjs$/, /\.html$/, /\.json$/, /\.cjs$/],
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
             },
@@ -282,15 +284,16 @@ module.exports = {
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.
-    new ManifestPlugin({
-      fileName: 'asset-manifest.json',
-    }),
+    // new ManifestPlugin({
+    //   fileName: 'asset-manifest.json',
+    // }),
     // Perform type checking and linting in a separate process to speed up compilation
     new ForkTsCheckerWebpackPlugin({
       async: false,
-      memoryLimit: 4096,
-      tsconfig: paths.appTsConfig,
-      eslint: paths.appEsLintConfig,
+      typescript: {
+        memoryLimit: 4096,
+        tsconfig: paths.appTsConfig,
+      },
     }),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
@@ -315,16 +318,6 @@ module.exports = {
       openAnalyzer: false,
     }),
   ],
-  // Some libraries import Node modules but don't use them in the browser.
-  // Tell Webpack to provide empty mocks for them so importing them works.
-  node: {
-    dgram: 'empty',
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    child_process: 'empty',
-  },
-
   // Utilize webpack performance budgets that will fail the build if the assets
   // exceed the configured size.
   // See https://webpack.js.org/configuration/performance/
