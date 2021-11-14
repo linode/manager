@@ -32,6 +32,7 @@
   "scripts": {
     "start": "tsc -w --preserveWatchOutput",
     "build": "tsc",
+    "build:node": "tsc",
     "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
