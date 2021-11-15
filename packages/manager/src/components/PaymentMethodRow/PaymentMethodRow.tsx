@@ -23,6 +23,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   actions: {
     marginLeft: 'auto',
+    '& button': {
+      margin: 0,
+    },
   },
   item: {
     display: 'flex',
