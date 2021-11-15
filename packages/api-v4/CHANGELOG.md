@@ -1,3 +1,19 @@
+## [2021-11-15] - v0.63.0
+
+### Added:
+
+- PayPalData
+- CreditCardData
+- removeIPv6Range
+- CreateIPv6RangePayload
+- IPv6Prefix
+
+### Changed:
+
+- PaymentMethodData
+- addPaymentMethod
+- PaymentMethod
+
 ## [2021-11-09] - v0.62.0
 ### Added:
 - Types, methods, and interfaces related to Block Storage migrations
