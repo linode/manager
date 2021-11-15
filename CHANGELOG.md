@@ -4,16 +4,46 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2021-11-15] - v1.55.0
+
+### Added:
+
+Elastic IPs:
+
+- Add IPv6 ranges to IP Transfer modal
+- Handle IPv6 events language
+- Handle IPv6 range deletion
+
+PayPal:
+
+- Add PayPal as recurring payment method
+- Use react-paypal-js for one time PayPal payments
+
+- Add Q4 releases for Marketplace
+- Add delete button to NodeBalancer Detail in settings
+
+### Changed:
+
+- Update "Add an IP Address" drawer and provide the ability to add IPv6 ranges
+- Updates to payment method logic and UI
+
+### Fixed:
+
+- Table row height too high in Safari
+
 ## [2021-11-09] - v1.54.0
 
 ### Added:
+
 - Support for Block Storage migrations and flow for upgrading volumes to NVMe
 
 ### Changed:
+
 - URL of HA Cluster guide link
 - Removed "File System Path" column from Volumes landing table
 
 ### Fixed:
+
 - Button order in the Add Linode to Firewall drawer
 - Button alignment in the Enable All Backups drawer
 - Linode Networking Graph Overlapping with DNS Resolvers
@@ -21,13 +51,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2021-11-01] - v1.53.0
 
 ### Added:
+
 - Kubernetes High Availability feature
 
 ### Changed:
+
 - Remove deprecate Linode domains banner
 - IP address font color on Firefox in dark mode
 
 ### Fixed:
+
 - Button placement and improved spacing in Add Node Pool Drawer
 - Inserting default values from NodeBalancers when creating new Domain
 - Timezone issue with NodeBalancer graphs
@@ -35,17 +68,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2021-10-20] - v1.52.0
 
 ### Added:
+
 - NVMe banner for Newark, NJ
 
 ### Changed:
+
 - Update to React v17.0.2
 - Raise threshold for large account
 - Add hover states for top nav icons
 
 ### Fixed:
+
 - Consistent spelling of "canceled"
 - Vertical alignment for Linode status column
-
 
 ## [2021-10-05] - v1.51.0
 
