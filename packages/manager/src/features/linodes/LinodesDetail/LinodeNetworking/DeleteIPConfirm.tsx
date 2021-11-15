@@ -1,4 +1,8 @@
-import { Linode, removeIPAddress } from '@linode/api-v4/lib/linodes';
+import {
+  Linode,
+  removeIPAddress,
+  removeIPv6Range,
+} from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -14,20 +18,25 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 interface Props {
   handleClose: () => void;
   open: boolean;
-  linode: Linode;
+  linode?: Linode;
   IPAddress: string;
-  ipRemoveSuccess?: (linode: Linode) => void;
+  ipRemoveSuccess?: (linode?: Linode) => void;
+  prefix?: number;
 }
 
 type CombinedProps = Props & LoadingErrorProps;
 
-interface DeleteArgs {
+export interface IPv6RangeDeleteArgs {
+  IPv6Range: string;
+}
+
+export interface IPDeleteArgs {
   linodeID: number;
   IPAddress: string;
 }
 
-class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
-  handleRemoveIP = (data: DeleteArgs) => {
+const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
+  const handleRemoveIP = (data: IPDeleteArgs) => {
     const {
       setErrorAndClearLoading,
       setLoadingAndClearErrors,
@@ -35,14 +44,15 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       ipRemoveSuccess,
       handleClose,
       linode,
-    } = this.props;
+    } = props;
 
     setLoadingAndClearErrors();
 
-    return removeIPAddress(data)
+    removeIPAddress(data)
       .then((response) => {
         clearLoadingAndErrors();
-        if (ipRemoveSuccess) {
+        // linode will always exist here
+        if (ipRemoveSuccess && linode) {
           const linodeWithRemovedIP = {
             ...linode,
             ipv4: linode.ipv4.filter((eachIP) => eachIP !== data.IPAddress),
@@ -59,40 +69,69 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
         setErrorAndClearLoading(errorText[0].reason);
       });
   };
-  render() {
-    const {
-      handleClose,
-      open,
-      loading,
-      error,
-      IPAddress,
-      linode: { id: linodeID },
-    } = this.props;
 
-    return (
-      <ConfirmationDialog
-        open={open}
-        onClose={handleClose}
-        error={error}
-        title={`Delete ${IPAddress}?`}
-        actions={
-          <DeleteIPActions
-            loading={loading}
-            handleCancel={handleClose}
-            IPAddress={IPAddress}
-            linodeID={linodeID}
-            handleDelete={this.handleRemoveIP}
-          />
+  const handleRemoveRange = (data: IPv6RangeDeleteArgs) => {
+    const {
+      setErrorAndClearLoading,
+      setLoadingAndClearErrors,
+      clearLoadingAndErrors,
+      ipRemoveSuccess,
+      handleClose,
+    } = props;
+
+    setLoadingAndClearErrors();
+
+    removeIPv6Range(data)
+      .then((_) => {
+        clearLoadingAndErrors();
+        if (ipRemoveSuccess) {
+          ipRemoveSuccess();
+          handleClose();
         }
-      >
-        <Typography>
-          Are you sure you want to delete this IP Address? This action cannot be
-          undone.
-        </Typography>
-      </ConfirmationDialog>
-    );
-  }
-}
+      })
+      .catch((e) => {
+        const errorText = getAPIErrorOrDefault(
+          e,
+          'There was an error removing this IP range. Please try again later.'
+        );
+        setErrorAndClearLoading(errorText[0].reason);
+      });
+  };
+
+  const {
+    handleClose,
+    open,
+    loading,
+    error,
+    IPAddress,
+    linode,
+    prefix,
+  } = props;
+
+  return (
+    <ConfirmationDialog
+      open={open}
+      onClose={handleClose}
+      error={error}
+      title={`Delete ${IPAddress}${prefix ? ` /${prefix}` : ''}?`}
+      actions={
+        <DeleteIPActions
+          loading={loading}
+          handleCancel={handleClose}
+          IPAddress={IPAddress}
+          linodeID={linode ? linode.id : undefined}
+          handleDelete={linode ? handleRemoveIP : handleRemoveRange}
+        />
+      }
+    >
+      <Typography>
+        {`Are you sure you want to delete ${
+          linode ? 'this IP Address' : 'this IPv6 Range'
+        }? This action cannot be undone.`}
+      </Typography>
+    </ConfirmationDialog>
+  );
+};
 
 export default compose<CombinedProps, Props>(withLoadingAndError)(
   DeleteIPConfirm
