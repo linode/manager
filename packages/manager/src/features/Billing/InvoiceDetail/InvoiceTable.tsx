@@ -3,11 +3,9 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
-import TableFooter from 'src/components/core/TableFooter';
 import TableHead from 'src/components/core/TableHead';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import DownloadCSV from 'src/components/DownloadCSV';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -34,13 +32,12 @@ interface Props {
   loading: boolean;
   errors?: APIError[];
   items?: InvoiceItem[];
-  invoiceDate?: string;
 }
 
 const InvoiceTable: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { loading, errors, items, invoiceDate } = props;
+  const { loading, errors, items } = props;
 
   return (
     <Table aria-label="Invoice Details" className={classes.table} noBorder>
@@ -61,19 +58,6 @@ const InvoiceTable: React.FC<Props> = (props) => {
       <TableBody>
         <MaybeRenderContent loading={loading} errors={errors} items={items} />
       </TableBody>
-      <TableFooter>
-        {items && invoiceDate ? (
-          <div style={{ marginTop: 8 }}>
-            <DownloadCSV
-              filename={`invoice-${invoiceDate}.csv`}
-              headers={csvHeaders}
-              data={items}
-            >
-              Download CSV
-            </DownloadCSV>
-          </div>
-        ) : null}
-      </TableFooter>
     </Table>
   );
 };
@@ -82,17 +66,6 @@ const renderDate = (v: null | string) =>
   v ? <DateTimeDisplay value={v} data-qa-invoice-date /> : null;
 
 const renderQuantity = (v: null | number) => (v ? v : null);
-
-const csvHeaders = [
-  { label: 'Description', key: 'label' },
-  { label: 'From', key: 'from' },
-  { label: 'To', key: 'to' },
-  { label: 'Quantity', key: 'quantity' },
-  { label: 'Unit Price', key: 'unit_price' },
-  { label: 'Amount (USD)', key: 'amount' },
-  { label: 'Tax (USD)', key: 'tax' },
-  { label: 'Total (USD)', key: 'total' },
-];
 
 const RenderData: React.FC<{
   items: InvoiceItem[];
