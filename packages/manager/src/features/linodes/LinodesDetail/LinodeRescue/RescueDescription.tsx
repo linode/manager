@@ -7,6 +7,8 @@ import Link from 'src/components/Link';
 const rescueDescription = {
   text: `If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot your Linode into Rescue Mode. This is a safe environment for performing many system recovery and disk management tasks.`,
   link: 'https://www.linode.com/docs/guides/rescue-and-rebuild/',
+  firewallWarning:
+    'Cloud Firewall rules are not enabled when booting into Rescue Mode.',
 };
 
 interface Props {
@@ -34,6 +36,9 @@ const RescueDescription: React.FC<Props> = (props) => {
       <Typography>
         {rescueDescription.text}{' '}
         <Link to={rescueDescription.link}>Learn more.</Link>
+      </Typography>
+      <Typography className={classes.copy}>
+        {rescueDescription.firewallWarning}
       </Typography>
       {linodeId ? (
         <Typography className={classes.copy}>
