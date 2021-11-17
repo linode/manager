@@ -1,4 +1,7 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster,
+} from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -20,10 +23,12 @@ import { objectStorageClusterDisplay } from 'src/constants';
 import bucketDrawerContainer, {
   DispatchProps,
 } from 'src/containers/bucketDrawer.container';
-import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
-import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { BucketError } from 'src/store/bucket/types';
+import {
+  useDeleteBucketMutation,
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   sendDeleteBucketEvent,
@@ -55,15 +60,20 @@ export type CombinedProps = Props & DispatchProps;
 export const BucketLanding: React.FC<CombinedProps> = (props) => {
   const { isRestrictedUser, openBucketDrawer } = props;
 
-  const classes = useStyles();
-
-  const { objectStorageClusters } = useObjectStorageClusters();
   const {
-    objectStorageBuckets,
-    deleteObjectStorageBucket,
+    data: objectStorageClusters,
+    isLoading: areClustersLoading,
+    error: clustersErrors,
+  } = useObjectStorageClusters();
+  const {
+    data: objectStorageBuckets,
+    isLoading: areBucketsLoading,
+    error: bucketsErrors,
   } = useObjectStorageBuckets();
 
-  const { data, loading, bucketErrors, lastUpdated } = objectStorageBuckets;
+  const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
+
+  const classes = useStyles();
 
   const removeBucketConfirmationDialog = useOpenClose();
   const [bucketToRemove, setBucketToRemove] = React.useState<
@@ -105,7 +115,8 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     setIsLoading(true);
 
     const { cluster, label } = bucketToRemove;
-    deleteObjectStorageBucket({ cluster, label })
+
+    deleteBucket({ cluster, label })
       .then(() => {
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
@@ -186,7 +197,9 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       {/* If the user is attempting to delete their last Bucket, remind them
       that they will still be billed unless they cancel Object Storage in
       Account Settings. */}
-      {data.length === 1 && <CancelNotice className={classes.copy} />}
+      {objectStorageBuckets?.length === 1 && (
+        <CancelNotice className={classes.copy} />
+      )}
       <Typography className={classes.copy}>
         To confirm deletion, type the name of the bucket (
         <b>{bucketToRemove.label}</b>) in the field below:
@@ -194,44 +207,50 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     </React.Fragment>
   ) : null;
 
+  const unavailableClusters =
+    objectStorageClusters?.filter(
+      (cluster: ObjectStorageCluster) => cluster.status === 'unavailable'
+    ) || [];
+
   if (isRestrictedUser) {
     return <RenderEmpty onClick={openBucketDrawer} />;
   }
 
-  // Show a general error state if there is a Cluster error.
-  if (objectStorageClusters.error) {
+  if (clustersErrors || bucketsErrors) {
     return <RenderError data-qa-error-state />;
   }
 
-  if (lastUpdated === 0 || loading) {
+  if (
+    areClustersLoading ||
+    areBucketsLoading ||
+    objectStorageBuckets === undefined
+  ) {
     return <RenderLoading />;
   }
 
-  const allBucketRequestsFailed =
-    bucketErrors?.length === objectStorageClusters.entities.length;
-
-  // Show a general error state if all the bucket requests failed.
-  if (allBucketRequestsFailed || objectStorageClusters.error) {
-    return <RenderError data-qa-error-state />;
-  }
-
-  if (lastUpdated > 0 && data.length === 0) {
+  if (objectStorageBuckets?.length === 0) {
     return (
       <>
-        {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
+        {unavailableClusters.length > 0 && (
+          <UnavailableClustersDisplay
+            unavailableClusters={unavailableClusters}
+          />
+        )}
         <RenderEmpty onClick={openBucketDrawer} />
       </>
     );
   }
 
-  const totalUsage = sumBucketUsage(data);
+  const totalUsage = sumBucketUsage(objectStorageBuckets);
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
-      {bucketErrors && <BucketErrorDisplay bucketErrors={bucketErrors} />}
+      {unavailableClusters.length > 0 && (
+        <UnavailableClustersDisplay unavailableClusters={unavailableClusters} />
+      )}
       <Grid item xs={12}>
-        <OrderBy data={data} order={'asc'} orderBy={'label'}>
+        <OrderBy data={objectStorageBuckets} order={'asc'} orderBy={'label'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
             const bucketTableProps = {
               orderBy,
@@ -246,7 +265,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           }}
         </OrderBy>
         {/* If there's more than one Bucket, display the total usage. */}
-        {data.length > 1 ? (
+        {objectStorageBuckets.length > 1 ? (
           <Typography
             style={{ marginTop: 18, width: '100%', textAlign: 'center' }}
             variant="body1"
@@ -254,7 +273,9 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
             Total storage used: {readableBytes(totalUsage).formatted}
           </Typography>
         ) : null}
-        <TransferDisplay spacingTop={data.length > 1 ? 8 : 18} />
+        <TransferDisplay
+          spacingTop={objectStorageBuckets.length > 1 ? 8 : 18}
+        />
       </Grid>
       <ConfirmationDialog
         open={removeBucketConfirmationDialog.isOpen}
@@ -340,18 +361,16 @@ const enhanced = compose<CombinedProps, Props>(
 
 export default enhanced(BucketLanding);
 
-interface BucketErrorDisplayProps {
-  bucketErrors: BucketError[];
+interface UnavailableClustersDisplayProps {
+  unavailableClusters: ObjectStorageCluster[];
 }
 
-const BucketErrorDisplay: React.FC<BucketErrorDisplayProps> = React.memo(
-  ({ bucketErrors }) => {
+const UnavailableClustersDisplay: React.FC<UnavailableClustersDisplayProps> = React.memo(
+  ({ unavailableClusters }) => {
     return (
       <Banner
-        regionsAffected={bucketErrors.map(
-          (thisError) =>
-            objectStorageClusterDisplay[thisError.clusterId] ??
-            thisError.clusterId
+        regionsAffected={unavailableClusters.map(
+          (cluster) => objectStorageClusterDisplay[cluster.id] || cluster.id
         )}
       />
     );

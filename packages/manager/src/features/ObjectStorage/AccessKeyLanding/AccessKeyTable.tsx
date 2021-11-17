@@ -1,11 +1,10 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
+import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import CopyTooltip from 'src/components/CopyTooltip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import { PaginationProps } from 'src/components/Pagey';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -14,6 +13,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import AccessKeyMenu from './AccessKeyMenu';
 import { OpenAccessDrawer } from './types';
+import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -29,22 +29,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
+  data: ObjectStorageKey[] | undefined;
+  isLoading: boolean;
+  error: APIError[] | undefined | null;
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
   openDrawer: OpenAccessDrawer;
 }
 
-export type CombinedProps = Props & PaginationProps<ObjectStorageKey>;
-
-export const AccessKeyTable: React.FC<CombinedProps> = (props) => {
+export const AccessKeyTable: React.FC<Props> = (props) => {
   const {
-    data,
-    loading,
-    error,
     isRestrictedUser,
     openRevokeDialog,
     openDrawer,
+    data,
+    isLoading,
+    error,
   } = props;
 
   const classes = useStyles();
@@ -54,7 +55,7 @@ export const AccessKeyTable: React.FC<CombinedProps> = (props) => {
       return <TableRowEmptyState colSpan={12} />;
     }
 
-    if (loading) {
+    if (isLoading) {
       return <TableRowLoading colSpan={3} widths={[50]} oneLine />;
     }
 

@@ -27,10 +27,9 @@ import bucketDrawerContainer, {
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useFlags from 'src/hooks/useFlags';
-import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
-import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import useOpenClose from 'src/hooks/useOpenClose';
 import useReduxLoad from 'src/hooks/useReduxLoad';
+import { useObjectStorageBuckets } from 'src/queries/objectStorage';
 import { openBucketDrawer } from 'src/store/bucketDrawer/bucketDrawer.actions';
 import { MODE } from './AccessKeyLanding/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
@@ -70,10 +69,11 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
     }
   }, [dispatch, createBucketRouteMatch]);
 
-  const { objectStorageClusters } = useObjectStorageClusters();
+  const { _isRestrictedUser, accountSettings } = useAccountManagement();
   const {
-    objectStorageBuckets,
-    requestObjectStorageBuckets,
+    data: objectStorageBuckets,
+    isLoading: areBucketsLoading,
+    error: bucketsErrors,
   } = useObjectStorageBuckets();
 
   const createOrEditDrawer = useOpenClose();
@@ -96,39 +96,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
     setMode(mode);
     createOrEditDrawer.open();
   };
-
-  const { _isRestrictedUser, accountSettings } = useAccountManagement();
-
-  const clustersLoaded = objectStorageClusters.lastUpdated > 0;
-
-  const bucketsLoadingOrLoaded =
-    objectStorageBuckets.loading ||
-    objectStorageBuckets.lastUpdated > 0 ||
-    objectStorageBuckets.bucketErrors;
-
-  React.useEffect(() => {
-    // Object Storage is not available for restricted users.
-    if (_isRestrictedUser) {
-      return;
-    }
-
-    // Once the OBJ Clusters have been loaded, request Buckets from each Cluster.
-    if (clustersLoaded && !bucketsLoadingOrLoaded) {
-      const clusterIds = objectStorageClusters.entities.map(
-        (thisCluster) => thisCluster.id
-      );
-
-      requestObjectStorageBuckets(clusterIds).catch(() => {
-        /** We choose to do nothing, relying on the Redux error state. */
-      });
-    }
-  }, [
-    _isRestrictedUser,
-    clustersLoaded,
-    bucketsLoadingOrLoaded,
-    objectStorageClusters,
-    requestObjectStorageBuckets,
-  ]);
 
   React.useEffect(() => {
     setRoute(props.location.pathname.replace('/object-storage/', ''));
@@ -154,9 +121,9 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   // A user needs to explicitly cancel Object Storage in their Account Settings in order to stop
   // being billed. If they have the service enabled but do not have any buckets, show a warning.
   const shouldDisplayBillingNotice =
-    objectStorageBuckets.lastUpdated > 0 &&
-    !objectStorageBuckets.bucketErrors &&
-    objectStorageBuckets.data.length === 0 &&
+    !areBucketsLoading &&
+    !bucketsErrors &&
+    objectStorageBuckets?.length === 0 &&
     accountSettings?.object_storage === 'active';
 
   const matchesAccessKeys = Boolean(

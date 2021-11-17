@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { pageyProps } from 'src/__data__/pageyProps';
-import { AccessKeyTable, CombinedProps } from './AccessKeyTable';
+import { AccessKeyTable, Props } from './AccessKeyTable';
 
 describe('ObjectStorageKeyTable', () => {
-  const props: CombinedProps = {
+  const props: Props = {
     openDrawer: jest.fn(),
     openRevokeDialog: jest.fn(),
     isRestrictedUser: false,
-    ...pageyProps,
+    isLoading: false,
+    data: [],
+    error: undefined,
   };
 
   it('it includes a header with "Label" and "Access Key" cells', () => {
@@ -19,7 +20,7 @@ describe('ObjectStorageKeyTable', () => {
 
   it('returns a loading state when loading', () => {
     const { getByTestId } = renderWithTheme(
-      <AccessKeyTable {...props} loading={true} />
+      <AccessKeyTable {...props} isLoading={true} />
     );
     getByTestId('table-row-loading');
   });
