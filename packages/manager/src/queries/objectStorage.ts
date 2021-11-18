@@ -1,5 +1,6 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { queryClient, queryPresets } from './base';
 import { getAll } from 'src/utilities/getAll';
 import {
@@ -7,11 +8,13 @@ import {
   deleteBucket,
   getBuckets,
   getClusters,
+  getObjectList,
   getObjectStorageKeys,
   ObjectStorageBucket,
   ObjectStorageBucketRequestPayload,
   ObjectStorageCluster,
   ObjectStorageKey,
+  ObjectStorageObjectListResponse,
 } from '@linode/api-v4/lib/object-storage';
 
 export const queryKey = 'object-stroage';
@@ -86,3 +89,17 @@ export const useDeleteBucketMutation = () => {
     }
   );
 };
+
+export const useObjectBucketDetailsInfiniteQuery = (
+  cluster: string,
+  bucket: string,
+  prefix: string
+) =>
+  useInfiniteQuery<ObjectStorageObjectListResponse, APIError[]>(
+    [queryKey, cluster, bucket, prefix],
+    ({ pageParam }) =>
+      getObjectList(cluster, bucket, { marker: pageParam, delimiter, prefix }),
+    {
+      getNextPageParam: (lastPage) => lastPage.next_marker,
+    }
+  );
