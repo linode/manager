@@ -38,6 +38,7 @@ describe('ObjectStorageLanding', () => {
     );
 
     renderWithTheme(<BucketLanding {...props} />);
+
     screen.getByTestId('circle-progress');
   });
 
@@ -57,7 +58,7 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />);
+    renderWithTheme(<BucketLanding {...props} />, { queryClient });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
