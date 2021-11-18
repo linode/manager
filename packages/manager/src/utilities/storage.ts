@@ -72,6 +72,10 @@ interface StackScriptData extends StackScriptPayload {
   id: number | string;
 }
 
+interface StackScriptDataWithUpdated extends StackScriptData {
+  updated: string;
+}
+
 export interface DevToolsEnv {
   apiRoot: string;
   loginRoot: string;
@@ -107,8 +111,8 @@ export interface Storage {
     set: (v: TicketReply) => void;
   };
   stackScriptInProgress: {
-    get: () => StackScriptData;
-    set: (s: StackScriptData) => void;
+    get: () => StackScriptDataWithUpdated;
+    set: (s: StackScriptDataWithUpdated) => void;
   };
   devToolsEnv: {
     get: () => DevToolsEnv | null;
