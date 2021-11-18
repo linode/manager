@@ -158,7 +158,7 @@ export const BucketDetail: React.FC = () => {
 
       await _deleteObject(url);
 
-      queryClient.invalidateQueries(`${queryKey}-buckets`);
+      queryClient.refetchQueries(`${queryKey}-buckets`);
 
       setDeleteObjectLoading(false);
       setDeleteObjectDialogOpen(false);
@@ -201,6 +201,7 @@ export const BucketDetail: React.FC = () => {
   const maybeAddObjectToTable = (path: string, sizeInBytes: number) => {
     const action = tableUpdateAction(prefix, path);
     if (action) {
+      queryClient.refetchQueries(`${queryKey}-buckets`);
       if (action.type === 'FILE') {
         addOneFile(action.name, sizeInBytes);
       } else {
@@ -320,10 +321,10 @@ export const BucketDetail: React.FC = () => {
                     isFetching={isFetching}
                     isFetchingNextPage={isFetchingNextPage}
                     error={error ? error : undefined}
-                    prefix={prefix}
                     handleClickDownload={handleDownload}
                     handleClickDelete={handleClickDelete}
                     handleClickDetails={handleClickDetails}
+                    numOfDisplayedObjects={numOfDisplayedObjects}
                   />
                 </TableBody>
               </Table>

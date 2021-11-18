@@ -18,10 +18,10 @@ interface Props {
   isFetching: boolean;
   isFetchingNextPage: boolean;
   error?: APIError[];
-  prefix: string;
   handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: (object: ObjectStorageObject) => void;
+  numOfDisplayedObjects: number;
 }
 
 const ObjectTableContent: React.FC<Props> = (props) => {
@@ -30,10 +30,10 @@ const ObjectTableContent: React.FC<Props> = (props) => {
     isFetching,
     isFetchingNextPage,
     error,
-    prefix,
     handleClickDownload,
     handleClickDelete,
     handleClickDetails,
+    numOfDisplayedObjects,
   } = props;
 
   const { width } = useWindowDimensions();
@@ -51,8 +51,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
     );
   }
 
-  // If there is no prefix, this is NOT a folder, so display the empty bucket message.
-  if (data.length === 0 && !prefix) {
+  if (numOfDisplayedObjects === 0) {
     return <TableRowEmptyState colSpan={6} message="This bucket is empty." />;
   }
 
