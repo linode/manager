@@ -394,6 +394,10 @@ export const handlers = [
     const buckets = objectStorageBucketFactory.buildList(1);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
+  rest.get('*/object-storage/buckets', (req, res, ctx) => {
+    const buckets = objectStorageBucketFactory.buildList(10);
+    return res(ctx.json(makeResourcePage(buckets)));
+  }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
     const clusters = objectStorageClusterFactory.buildList(3);
     return res(ctx.json(makeResourcePage(clusters)));
