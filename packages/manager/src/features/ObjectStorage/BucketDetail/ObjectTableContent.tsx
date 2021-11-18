@@ -1,4 +1,7 @@
-import { ObjectStorageObject } from '@linode/api-v4';
+import {
+  ObjectStorageObject,
+  ObjectStorageObjectListResponse,
+} from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -11,7 +14,7 @@ import FolderTableRow from './FolderTableRow';
 import ObjectTableRow from './ObjectTableRow';
 
 interface Props {
-  data: ObjectStorageObject[];
+  data: ObjectStorageObjectListResponse[];
   isFetching: boolean;
   isFetchingNextPage: boolean;
   error?: APIError[];
@@ -53,50 +56,50 @@ const ObjectTableContent: React.FC<Props> = (props) => {
     return <TableRowEmptyState colSpan={6} message="This bucket is empty." />;
   }
 
-  // A folder is considered "empty" if `_shouldDisplayObject` is `false` for
-  // every object in the folder.
-  // const isFolderEmpty = data.every((object) => !object._shouldDisplayObject);
-
-  // if (isFolderEmpty) {
-  //   return <TableRowEmptyState colSpan={6} message="This folder is empty." />;
-  // }
-
   // Be more strict with truncation lengths on smaller viewports.
   const maxNameWidth = width < 600 ? 20 : 40;
 
   return (
     <>
-      {data.map((object) => {
-        if (isFolder(object)) {
+      {data.map((page) => {
+        return page.data.map((object) => {
+          if (isFolder(object)) {
+            return (
+              <FolderTableRow
+                key={object.name}
+                folderName={object.name}
+                displayName={truncateEnd(
+                  displayName(object.name),
+                  maxNameWidth
+                )}
+                manuallyCreated={false}
+              />
+            );
+          }
+
           return (
-            <FolderTableRow
+            <ObjectTableRow
               key={object.name}
-              folderName={object.name}
-              displayName={truncateEnd(displayName(object.name), maxNameWidth)}
+              displayName={truncateMiddle(
+                displayName(object.name),
+                maxNameWidth
+              )}
+              fullName={object.name}
+              /**
+               * In reality, if there's no `size` or `last_modified`, we're
+               * probably dealing with a folder and will have already returned
+               * `null`. The OR fallbacks are to make TSC happy, and to safeguard
+               * in the event of the data being something we don't expect.
+               */
+              objectSize={object.size || 0}
+              objectLastModified={object.last_modified || ''}
               manuallyCreated={false}
+              handleClickDownload={handleClickDownload}
+              handleClickDelete={handleClickDelete}
+              handleClickDetails={() => handleClickDetails(object)}
             />
           );
-        }
-
-        return (
-          <ObjectTableRow
-            key={object.name}
-            displayName={truncateMiddle(displayName(object.name), maxNameWidth)}
-            fullName={object.name}
-            /**
-             * In reality, if there's no `size` or `last_modified`, we're
-             * probably dealing with a folder and will have already returned
-             * `null`. The OR fallbacks are to make TSC happy, and to safeguard
-             * in the event of the data being something we don't expect.
-             */
-            objectSize={object.size || 0}
-            objectLastModified={object.last_modified || ''}
-            manuallyCreated={false}
-            handleClickDownload={handleClickDownload}
-            handleClickDelete={handleClickDelete}
-            handleClickDetails={() => handleClickDetails(object)}
-          />
-        );
+        });
       })}
       {isFetchingNextPage && <TableRowLoading colSpan={12} transparent />}
     </>

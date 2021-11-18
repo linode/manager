@@ -276,12 +276,8 @@ export const BucketDetail: React.FC = () => {
     setObjectDetailDrawerOpen(false);
   };
 
-  const flattenData = (data: ObjectStorageObject[][]) =>
-    data.reduce((acc, val) => acc.concat(val), []);
-
-  const extendedData = flattenData(data?.pages.map((page) => page.data) || []);
-
-  const numOfDisplayedObjects = extendedData.length;
+  const numOfDisplayedObjects =
+    data?.pages.map((page) => page.data.length).reduce((a, b) => a + b, 0) || 0;
 
   if (!bucketName || !clusterId) {
     return null;
@@ -320,7 +316,7 @@ export const BucketDetail: React.FC = () => {
                 </TableHead>
                 <TableBody>
                   <ObjectTableContent
-                    data={extendedData}
+                    data={data?.pages || []}
                     isFetching={isFetching}
                     isFetchingNextPage={isFetchingNextPage}
                     error={error ? error : undefined}
