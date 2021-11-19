@@ -152,23 +152,9 @@ module.exports = {
               },
             },
           },
-          // Compile .ts
-          {
-            test: /\.ts$/,
-            include: paths.appSrc,
-            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
-            use: [
-              {
-                loader: require.resolve('esbuild-loader'),
-                options: {
-                  loader: 'ts',
-                },
-              },
-            ],
-          },
           // Compile .tsx?
           {
-            test: /\.tsx$/,
+            test: [/\.tsx$/, /\.ts$/],
             include: paths.appSrc,
             exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
             use: [
