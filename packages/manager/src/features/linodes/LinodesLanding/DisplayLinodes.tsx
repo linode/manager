@@ -47,6 +47,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  count: number;
   display: 'grid' | 'list';
   component: any;
   data: ExtendedLinode[];
@@ -63,6 +64,7 @@ type CombinedProps = Props & OrderByProps;
 const DisplayLinodes: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
+    count,
     data,
     display,
     component: Component,
@@ -78,27 +80,29 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
-  const { search } = useLocation();
-  const queryParams = queryString.parse(search);
-
   const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
     if (thisLinode.maintenance) {
       acc++;
     }
     return acc;
   }, 0);
+  const pageSize =
+    numberOfLinodesWithMaintenance > infinitePageSize
+      ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
+      : infinitePageSize;
+  const maxPageSize = Math.ceil(count / pageSize);
+
+  const { search } = useLocation();
+  const queryParams = queryString.parse(search);
+  const queryPage = Math.min(Number(queryParams.page), maxPageSize);
 
   return (
     <Paginate
       data={data}
-      page={Number(queryParams.page)}
+      page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
       // page size needed to show ALL Linodes with maintenance.
-      pageSize={
-        numberOfLinodesWithMaintenance > infinitePageSize
-          ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
-          : infinitePageSize
-      }
+      pageSize={pageSize}
       pageSizeSetter={setInfinitePageSize}
       updateUrl={updateUrl}
     >
@@ -190,7 +194,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   pageSize={pageSize}
-                  page={Number(queryParams.page) || page}
+                  page={queryPage || page}
                   eventCategory={'linodes landing'}
                   showAll
                 />
