@@ -39,6 +39,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   compact: {
     padding: 6,
   },
+  actionCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    height: 40,
+    padding: 0,
+    // Prevents Safari from adding margins to the ActionMenu button
+    '& > button': {
+      margin: 0,
+    },
+  },
 }));
 
 export interface Props extends TableCellProps {
@@ -51,6 +62,7 @@ export interface Props extends TableCellProps {
    */
   parentColumn?: string;
   compact?: boolean;
+  actionCell?: boolean;
 }
 
 type CombinedProps = Props;
@@ -58,7 +70,15 @@ type CombinedProps = Props;
 export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { className, parentColumn, noWrap, sortable, compact, ...rest } = props;
+  const {
+    className,
+    parentColumn,
+    noWrap,
+    sortable,
+    compact,
+    actionCell,
+    ...rest
+  } = props;
 
   return (
     <TableCell
@@ -67,6 +87,7 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
         [classes.noWrap]: noWrap,
         [classes.sortable]: sortable,
         [classes.compact]: compact,
+        [classes.actionCell]: actionCell,
         // hide the cell at small breakpoints if it's empty with no parent column
         emptyCell: !parentColumn && !props.children,
       })}

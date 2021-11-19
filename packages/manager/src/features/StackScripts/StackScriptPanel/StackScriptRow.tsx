@@ -106,7 +106,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
           </TableCell>
         </Hidden>
       )}
-      <TableCell>
+      <TableCell actionCell>
         <StackScriptsActionMenu
           stackScriptID={stackScriptID}
           stackScriptUsername={stackScriptUsername}
