@@ -56,7 +56,7 @@ interface Props {
   toggleGroupLinodes: () => boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
-  updateUrl: (page: number) => void;
+  updatePageUrl: (page: number) => void;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -75,7 +75,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
     toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
-    updateUrl,
+    updatePageUrl,
     ...rest
   } = props;
 
@@ -104,7 +104,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
       // page size needed to show ALL Linodes with maintenance.
       pageSize={pageSize}
       pageSizeSetter={setInfinitePageSize}
-      updateUrl={updateUrl}
+      updatePageUrl={updatePageUrl}
     >
       {({
         data: paginatedData,
