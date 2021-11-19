@@ -62,10 +62,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '25%',
     },
   },
-  actionCell: {
-    padding: 0,
-    paddingRight: '0 !important',
-  },
   link: {
     ...theme.applyLinkStyles,
     fontSize: '0.875rem',
@@ -159,7 +155,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           >
             <DateTimeDisplay value={expiry ?? ''} />
           </TableCell>
-          <TableCell className={classes.actionCell}>
+          <TableCell actionCell>
             <ActionMenu
               onCancelClick={() =>
                 handleCancelPendingTransferClick(token, entities)

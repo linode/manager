@@ -35,10 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   cellContents: {
     paddingLeft: '1rem',
   },
-  actionCell: {
-    padding: 0,
-    paddingRight: '0 !important',
-  },
   link: {
     ...theme.applyLinkStyles,
     fontSize: '0.875rem',

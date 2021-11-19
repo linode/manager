@@ -1268,17 +1268,9 @@ const themeDefaults: ThemeDefaults = () => {
       },
       MuiTableCell: {
         root: {
-          padding: 10,
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
-          '&:last-child': {
-            paddingRight: 10,
-          },
-          '& .action-menu': {
-            [breakpoints.down('sm')]: {
-              width: '100%',
-            },
-          },
+          padding: 10,
         },
         head: {
           fontSize: '.9rem',

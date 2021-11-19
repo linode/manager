@@ -1,7 +1,6 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { Duration } from 'luxon';
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -9,16 +8,6 @@ import { parseAPIDate } from 'src/utilities/date';
 import { formatDuration } from 'src/utilities/formatDuration';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 
-const useStyles = makeStyles(() => ({
-  actionCell: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: 0,
-    '&.MuiTableCell-root': {
-      paddingRight: 0,
-    },
-  },
-}));
 interface Props {
   backup: LinodeBackup;
   disabled: boolean;
@@ -32,7 +21,6 @@ const typeMap = {
 };
 
 const BackupTableRow: React.FC<Props> = (props) => {
-  const classes = useStyles();
   const { backup, disabled, handleRestore } = props;
 
   const onDeploy = () => {
@@ -69,7 +57,7 @@ const BackupTableRow: React.FC<Props> = (props) => {
       <TableCell parentColumn="Space Required" data-qa-space-required>
         {backup.disks.reduce((acc, disk) => acc + disk.size, 0)} MB
       </TableCell>
-      <TableCell className={classes.actionCell}>
+      <TableCell actionCell>
         <LinodeBackupActionMenu
           backup={backup}
           disabled={disabled}

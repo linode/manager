@@ -29,14 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     whiteSpace: 'nowrap',
   },
-  actionCell: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: 0,
-    '&.MuiTableCell-root': {
-      paddingRight: 0,
-    },
-  },
 }));
 
 export type CombinedProps = Firewall & ActionHandlers;
@@ -91,7 +83,7 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
           {getLinodesCellString(devices, loading, error.read)}
         </TableCell>
       </Hidden>
-      <TableCell className={classes.actionCell}>
+      <TableCell actionCell>
         <ActionMenu
           firewallID={id}
           firewallLabel={label}

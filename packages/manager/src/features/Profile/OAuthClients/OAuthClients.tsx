@@ -38,7 +38,7 @@ import Modals from './Modals';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 
-type ClassNames = 'root' | 'addNewWrapper' | 'actionCell';
+type ClassNames = 'root' | 'addNewWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -53,10 +53,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         marginRight: theme.spacing(),
       },
-    },
-    actionCell: {
-      display: 'flex',
-      justifyContent: 'flex-end',
     },
   });
 
@@ -319,8 +315,6 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   };
 
   renderRows = (data: OAuthClient[]) => {
-    const { classes } = this.props;
-
     return data.map(({ id, label, redirect_uri, public: isPublic }) => (
       <TableRow ariaLabel={label} key={id} data-qa-table-row={label}>
         <TableCell data-qa-oauth-label>{label}</TableCell>
@@ -333,7 +327,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         <Hidden xsDown>
           <TableCell data-qa-oauth-callback>{redirect_uri}</TableCell>
         </Hidden>
-        <TableCell className={classes.actionCell}>
+        <TableCell actionCell>
           <ActionMenu
             openSecretModal={this.openSecretModal}
             openDeleteModal={this.openDeleteModal}

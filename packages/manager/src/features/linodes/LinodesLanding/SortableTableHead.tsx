@@ -71,15 +71,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '18%',
     },
   },
-  actionCell: {
-    width: '16%',
-    [theme.breakpoints.only('md')]: {
-      width: '10%',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '12%',
-    },
-  },
 }));
 
 interface Props {
@@ -190,7 +181,7 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
             </Hidden>
           </>
         )}
-        <TableCell className={classes.actionCell}>
+        <TableCell>
           <div className={classes.controlHeader}>
             <div id="displayViewDescription" className="visually-hidden">
               Currently in {linodeViewPreference} view

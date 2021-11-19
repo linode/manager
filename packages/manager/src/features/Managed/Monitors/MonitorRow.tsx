@@ -35,12 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   errorStatus: {
     color: theme.color.red,
   },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-  },
 }));
 
 interface Props {
@@ -119,7 +113,7 @@ export const MonitorRow: React.FunctionComponent<CombinedProps> = (props) => {
       <TableCell data-qa-monitor-resource>
         <Typography>{monitor.address}</Typography>
       </TableCell>
-      <TableCell className={classes.actionCell}>
+      <TableCell actionCell>
         <ActionMenu
           status={monitor.status}
           monitorID={monitor.id}
