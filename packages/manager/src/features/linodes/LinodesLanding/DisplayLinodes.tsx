@@ -16,6 +16,8 @@ import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
+import queryString from 'query-string';
+import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -53,6 +55,7 @@ interface Props {
   toggleGroupLinodes: () => boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  updateUrl: (page: number) => void;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -70,10 +73,13 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
     toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
+    updateUrl,
     ...rest
   } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
+  const { search } = useLocation();
+  const queryParams = queryString.parse(search);
 
   const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
     if (thisLinode.maintenance) {
@@ -85,6 +91,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
   return (
     <Paginate
       data={data}
+      page={Number(queryParams.page)}
       // If there are more Linodes with maintenance than the current page size, show the minimum
       // page size needed to show ALL Linodes with maintenance.
       pageSize={
@@ -93,6 +100,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
           : infinitePageSize
       }
       pageSizeSetter={setInfinitePageSize}
+      updateUrl={updateUrl}
     >
       {({
         data: paginatedData,
@@ -182,7 +190,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   pageSize={pageSize}
-                  page={page}
+                  page={Number(queryParams.page) || page}
                   eventCategory={'linodes landing'}
                   showAll
                 />

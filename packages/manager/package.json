@@ -63,6 +63,7 @@
     "patch-package": "^6.1.0",
     "qrcode.react": "^0.8.0",
     "qs": "^6.6.0",
+    "query-string": "^7.0.1",
     "ramda": "~0.25.0",
     "react": "^17.0.2",
     "react-async-script": "^1.2.0",
