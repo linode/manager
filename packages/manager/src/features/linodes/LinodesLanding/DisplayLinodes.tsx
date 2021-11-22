@@ -194,7 +194,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   pageSize={pageSize}
-                  page={queryPage || page}
+                  page={queryPage}
                   eventCategory={'linodes landing'}
                   showAll
                 />

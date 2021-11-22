@@ -74,7 +74,18 @@ export default class Paginate extends React.Component<Props, State> {
   };
 
   render() {
-    const view = createDisplayPage(this.state.page, this.state.pageSize);
+    let view;
+    // update view based on page url
+    if (this.props.updatePageUrl) {
+      view = createDisplayPage(
+        this.props.page || 1,
+        this.props.pageSize || storage.pageSize.get() || 25
+      );
+    }
+    // update view based on state
+    else {
+      view = createDisplayPage(this.state.page, this.state.pageSize);
+    }
 
     const props = {
       ...this.props,
