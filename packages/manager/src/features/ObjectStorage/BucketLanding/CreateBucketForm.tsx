@@ -28,6 +28,7 @@ import { useProfile } from 'src/queries/profile';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
+  useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -62,7 +63,8 @@ export const CreateBucketForm: React.FC<Props> = (props) => {
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: profile } = useProfile();
-  const { data: bucketsData } = useObjectStorageBuckets();
+  const { data: clusters } = useObjectStorageClusters();
+  const { data: bucketsResponse } = useObjectStorageBuckets(clusters);
   const { mutateAsync: createBucket } = useCreateBucketMutation();
 
   return (
@@ -75,7 +77,7 @@ export const CreateBucketForm: React.FC<Props> = (props) => {
       ) => {
         const { cluster, label } = values;
 
-        if (isDuplicateBucket(bucketsData || [], label, cluster)) {
+        if (isDuplicateBucket(bucketsResponse?.buckets || [], label, cluster)) {
           setErrors({
             label: `You already have a bucket named ${label} in this region.`,
           });

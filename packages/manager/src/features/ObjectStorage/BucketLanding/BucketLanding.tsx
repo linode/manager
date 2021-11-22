@@ -25,6 +25,7 @@ import bucketDrawerContainer, {
 } from 'src/containers/bucketDrawer.container';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
+  BucketError,
   useDeleteBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -65,11 +66,12 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     isLoading: areClustersLoading,
     error: clustersErrors,
   } = useObjectStorageClusters();
+
   const {
-    data: objectStorageBuckets,
+    data: objectStorageBucketsResponce,
     isLoading: areBucketsLoading,
     error: bucketsErrors,
-  } = useObjectStorageBuckets();
+  } = useObjectStorageBuckets(objectStorageClusters);
 
   const { mutateAsync: deleteBucket } = useDeleteBucketMutation();
 
@@ -197,7 +199,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       {/* If the user is attempting to delete their last Bucket, remind them
       that they will still be billed unless they cancel Object Storage in
       Account Settings. */}
-      {objectStorageBuckets?.length === 1 && (
+      {objectStorageBucketsResponce?.buckets.length === 1 && (
         <CancelNotice className={classes.copy} />
       )}
       <Typography className={classes.copy}>
@@ -208,8 +210,8 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   ) : null;
 
   const unavailableClusters =
-    objectStorageClusters?.filter(
-      (cluster: ObjectStorageCluster) => cluster.status === 'unavailable'
+    objectStorageBucketsResponce?.errors.map(
+      (error: BucketError) => error.cluster
     ) || [];
 
   if (isRestrictedUser) {
@@ -223,12 +225,12 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   if (
     areClustersLoading ||
     areBucketsLoading ||
-    objectStorageBuckets === undefined
+    objectStorageBucketsResponce === undefined
   ) {
     return <RenderLoading />;
   }
 
-  if (objectStorageBuckets?.length === 0) {
+  if (objectStorageBucketsResponce?.buckets.length === 0) {
     return (
       <>
         {unavailableClusters.length > 0 && (
@@ -241,7 +243,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     );
   }
 
-  const totalUsage = sumBucketUsage(objectStorageBuckets);
+  const totalUsage = sumBucketUsage(objectStorageBucketsResponce.buckets);
 
   return (
     <React.Fragment>
@@ -250,7 +252,11 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         <UnavailableClustersDisplay unavailableClusters={unavailableClusters} />
       )}
       <Grid item xs={12}>
-        <OrderBy data={objectStorageBuckets} order={'asc'} orderBy={'label'}>
+        <OrderBy
+          data={objectStorageBucketsResponce.buckets}
+          order={'asc'}
+          orderBy={'label'}
+        >
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
             const bucketTableProps = {
               orderBy,
@@ -265,7 +271,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           }}
         </OrderBy>
         {/* If there's more than one Bucket, display the total usage. */}
-        {objectStorageBuckets.length > 1 ? (
+        {objectStorageBucketsResponce.buckets.length > 1 ? (
           <Typography
             style={{ marginTop: 18, width: '100%', textAlign: 'center' }}
             variant="body1"
@@ -274,7 +280,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           </Typography>
         ) : null}
         <TransferDisplay
-          spacingTop={objectStorageBuckets.length > 1 ? 8 : 18}
+          spacingTop={objectStorageBucketsResponce.buckets.length > 1 ? 8 : 18}
         />
       </Grid>
       <ConfirmationDialog

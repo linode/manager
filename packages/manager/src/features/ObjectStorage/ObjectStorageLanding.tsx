@@ -28,8 +28,10 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import { useObjectStorageBuckets } from 'src/queries/objectStorage';
+import {
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 import { openBucketDrawer } from 'src/store/bucketDrawer/bucketDrawer.actions';
 import { MODE } from './AccessKeyLanding/types';
 import BucketDrawer from './BucketLanding/BucketDrawer';
@@ -52,8 +54,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   const { replace } = props.history;
   const [mode, setMode] = React.useState<MODE>('creating');
 
-  useReduxLoad(['clusters']);
-
   const dispatch = useDispatch<Dispatch>();
 
   // @todo: dispatch bucket drawer open action
@@ -70,11 +70,14 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   }, [dispatch, createBucketRouteMatch]);
 
   const { _isRestrictedUser, accountSettings } = useAccountManagement();
+
+  const { data: objectStroageClusters } = useObjectStorageClusters();
+
   const {
-    data: objectStorageBuckets,
+    data: objectStorageBucketsResponce,
     isLoading: areBucketsLoading,
     error: bucketsErrors,
-  } = useObjectStorageBuckets();
+  } = useObjectStorageBuckets(objectStroageClusters);
 
   const createOrEditDrawer = useOpenClose();
 
@@ -123,7 +126,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
-    objectStorageBuckets?.length === 0 &&
+    objectStorageBucketsResponce?.buckets.length === 0 &&
     accountSettings?.object_storage === 'active';
 
   const matchesAccessKeys = Boolean(

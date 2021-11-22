@@ -67,55 +67,30 @@ describe('ObjectStorageLanding', () => {
 
   // @todo skipping right now, need to decide if i want to do per-cluster fetching
   it.skip('renders per-cluster errors', () => {
-    renderWithTheme(<BucketLanding {...props} />, {
-      customStore: {
-        __resources: {
-          buckets: {
-            loading: false,
-            lastUpdated: 1,
-            bucketErrors: [
-              {
-                clusterId: 'us-east-1',
-                error: { reason: 'An error occurred' },
-              },
-            ],
-          },
-        },
-      },
-    });
+    renderWithTheme(<BucketLanding {...props} />);
     screen.getByText(/^There was an error loading buckets in Newark, NJ/);
   });
 
   // @todo skipping right now, need to decide if i want to do per-cluster fetching
   it.skip('renders general error state', () => {
-    renderWithTheme(<BucketLanding {...props} />, {
-      customStore: {
-        __resources: {
-          buckets: {
-            loading: false,
-            lastUpdated: 1,
-            bucketErrors: [
-              {
-                clusterId: 'us-east-1',
-                error: { reason: 'An error occurred' },
-              },
-            ],
-          },
-          clusters: {
-            entities: [objectStorageClusterFactory.build()],
-          },
-        },
-      },
-    });
+    renderWithTheme(<BucketLanding {...props} />);
     screen.getByText(/^There was an error retrieving your buckets/);
   });
 
   it('renders rows for each Bucket', async () => {
     const buckets = objectStorageBucketFactory.buildList(2);
 
+    // Mock Clusters
+    server.use(
+      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+        const clusters = objectStorageClusterFactory.buildList(1);
+        return res(ctx.json(makeResourcePage(clusters)));
+      })
+    );
+
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets', (req, res, ctx) => {
+      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
         return res(ctx.json(makeResourcePage(buckets)));
       })
     );
@@ -133,9 +108,17 @@ describe('ObjectStorageLanding', () => {
       size: 1024 * 1024 * 1024 * 5,
     });
 
+    // Mock Clusters
+    server.use(
+      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+        const clusters = objectStorageClusterFactory.buildList(1);
+        return res(ctx.json(makeResourcePage(clusters)));
+      })
+    );
+
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets', (req, res, ctx) => {
+      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
         return res(ctx.json(makeResourcePage(buckets)));
       })
     );

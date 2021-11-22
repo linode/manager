@@ -15,7 +15,18 @@ import {
   ObjectStorageCluster,
   ObjectStorageKey,
   ObjectStorageObjectListResponse,
+  getBucketsInCluster,
 } from '@linode/api-v4/lib/object-storage';
+
+export interface BucketError {
+  cluster: ObjectStorageCluster;
+  error: APIError[];
+}
+
+interface BucketsResponce {
+  buckets: ObjectStorageBucket[];
+  errors: BucketError[];
+}
 
 export const queryKey = 'object-stroage';
 
@@ -30,18 +41,29 @@ export const getAllObjectStorageClusters = () =>
 export const getAllObjectStorageBuckets = () =>
   getAll<ObjectStorageBucket>(() => getBuckets())().then((data) => data.data);
 
-export const useObjectStorageClusters = () =>
+export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>(
     `${queryKey}-clusters`,
     getAllObjectStorageClusters,
-    queryPresets.oneTimeFetch
+    { ...queryPresets.oneTimeFetch, enabled }
   );
 
-export const useObjectStorageBuckets = () =>
-  useQuery<ObjectStorageBucket[], APIError[]>(
+export const useObjectStorageBuckets = (
+  clusters: ObjectStorageCluster[] | undefined,
+  enabled: boolean = true
+) =>
+  useQuery<BucketsResponce, APIError[]>(
     `${queryKey}-buckets`,
-    getAllObjectStorageBuckets,
-    queryPresets.oneTimeFetch
+    // Ideally we would use the line below, but if a cluster is down, the buckets on that
+    // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
+    // we can tell the user which clusters are having issues.
+    // getAllObjectStorageBuckets,
+    () => getAllBucketsFromClusters(clusters!),
+    {
+      ...queryPresets.longLived,
+      enabled: clusters !== undefined && enabled,
+      retry: false,
+    }
   );
 
 export const useObjectStorageAccessKeys = (params: any) =>
@@ -103,3 +125,31 @@ export const useObjectBucketDetailsInfiniteQuery = (
       getNextPageParam: (lastPage) => lastPage.next_marker,
     }
   );
+
+export const getAllBucketsFromClusters = async (
+  clusters: ObjectStorageCluster[]
+) => {
+  const promises = clusters.map((cluster) =>
+    getAll<ObjectStorageBucket>((params) =>
+      getBucketsInCluster(cluster.id, params)
+    )()
+      .then((data) => data.data)
+      .catch((error) => ({
+        error,
+        cluster,
+      }))
+  );
+
+  const data = await Promise.all(promises);
+
+  const buckets = data.filter((item) =>
+    Array.isArray(item)
+  ) as ObjectStorageBucket[][];
+
+  const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
+
+  return {
+    buckets: buckets.reduce((acc, val) => acc.concat(val), []),
+    errors,
+  } as BucketsResponce;
+};

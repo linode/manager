@@ -1,15 +1,13 @@
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
 import classNames from 'classnames';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useDropzone, FileRejection } from 'react-dropzone';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import bucketRequestsContainer, {
-  BucketsRequests,
-} from 'src/containers/bucketRequests.container';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/objectStorage';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { debounce } from 'throttle-debounce';
@@ -115,11 +113,10 @@ interface Props {
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
 }
 
-type CombinedProps = Props & WithSnackbarProps & BucketsRequests;
-
-const ObjectUploader: React.FC<CombinedProps> = (props) => {
+const ObjectUploader: React.FC<Props> = (props) => {
   const { clusterId, bucketName, prefix } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
 
   const [state, dispatch] = React.useReducer(
@@ -135,7 +132,7 @@ const ObjectUploader: React.FC<CombinedProps> = (props) => {
       state.numInProgress + state.numQueued + files.length >
       MAX_NUM_UPLOADS
     ) {
-      props.enqueueSnackbar(`Upload up to ${MAX_NUM_UPLOADS} files at a time`, {
+      enqueueSnackbar(`Upload up to ${MAX_NUM_UPLOADS} files at a time`, {
         variant: 'error',
       });
       return;
@@ -160,7 +157,7 @@ const ObjectUploader: React.FC<CombinedProps> = (props) => {
       errorMessage += ' for some files';
     }
 
-    props.enqueueSnackbar(errorMessage, {
+    enqueueSnackbar(errorMessage, {
       variant: 'error',
     });
   };
@@ -179,10 +176,11 @@ const ObjectUploader: React.FC<CombinedProps> = (props) => {
 
   const debouncedGetBucket = React.useRef(
     debounce(400, false, () =>
-      props
-        .getBucket({ cluster: props.clusterId, label: props.bucketName })
-        // It's OK to swallow the error here, since this request is for a silent UI update.
-        .catch((_) => null)
+      queryClient.invalidateQueries([
+        queryKey,
+        props.clusterId,
+        props.bucketName,
+      ])
     )
   ).current;
 
@@ -365,13 +363,7 @@ const ObjectUploader: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  React.memo,
-  bucketRequestsContainer
-);
-
-export default enhanced(ObjectUploader);
+export default React.memo(ObjectUploader);
 
 export const onUploadProgressFactory = (
   dispatch: (value: ObjectUploaderAction) => void,

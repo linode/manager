@@ -180,7 +180,6 @@ const typesSelector = (state: State) => state.types.entities;
 const kubernetesClusterSelector = (state: State) =>
   Object.values(state.kubernetes.itemsById);
 const kubePoolSelector = (state: State) => state.nodePools.entities;
-const bucketSelector = (state: State) => state.buckets.data;
 
 export default createSelector<
   State,
@@ -192,7 +191,6 @@ export default createSelector<
   LinodeType[],
   KubernetesCluster[],
   ExtendedNodePool[],
-  ObjectStorageBucket[],
   SearchableItem[]
 >(
   linodeSelector,
@@ -203,7 +201,6 @@ export default createSelector<
   typesSelector,
   kubernetesClusterSelector,
   kubePoolSelector,
-  bucketSelector,
   (
     linodes,
     volumes,
@@ -212,8 +209,7 @@ export default createSelector<
     nodebalancers,
     types,
     kubernetesClusters,
-    nodePools,
-    buckets
+    nodePools
   ) => {
     const arrOfImages = Object.values(images);
     const searchableLinodes = linodes.map((linode) =>
@@ -231,7 +227,6 @@ export default createSelector<
         return extendCluster(thisCluster, pools, types);
       })
       .map(kubernetesClusterToSearchableItem);
-    const searchableObjectStorageBuckets = buckets.map(bucketToSearchableItem);
 
     return [
       ...searchableLinodes,
@@ -240,7 +235,6 @@ export default createSelector<
       ...searchableDomains,
       ...searchableNodebalancers,
       ...searchableKubernetesClusters,
-      ...searchableObjectStorageBuckets,
     ];
   }
 );
