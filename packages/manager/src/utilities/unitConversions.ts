@@ -8,20 +8,16 @@ export const convertMegabytesTo = (data: number, removeDecimals?: boolean) => {
   if (totalToBytes >= gb) {
     // convert bytes to GB
     return removeDecimals
-      ? `${Math.max(Math.ceil(totalToBytes / gb))} GB`
-      : `${Math.max(Math.ceil(totalToBytes / gb)).toFixed(2)} GB`;
+      ? `${totalToBytes / gb} GB`
+      : `${(totalToBytes / gb).toFixed(2)} GB`;
   }
   if (totalToBytes >= mb) {
     // convert bytes to MB
-    return `${Math.max(Math.ceil((totalToBytes / mb) * 100) / 100).toFixed(
-      2
-    )} MB`;
+    return `${(((totalToBytes / mb) * 100) / 100).toFixed(2)} MB`;
   }
   if (totalToBytes >= kb) {
     // convert bytes to KB
-    return `${Math.max(Math.ceil((totalToBytes / kb) * 100) / 100).toFixed(
-      2
-    )} KB`;
+    return `${(((totalToBytes / kb) * 100) / 100).toFixed(2)} KB`;
   }
   return `${totalToBytes} bytes`;
 };
