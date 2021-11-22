@@ -1,5 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 import TableBody from 'src/components/core/TableBody';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -16,8 +17,7 @@ import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
-import queryString from 'query-string';
-import { useLocation } from 'react-router-dom';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -93,8 +93,8 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
   const maxPageSize = Math.ceil(count / pageSize);
 
   const { search } = useLocation();
-  const queryParams = queryString.parse(search);
-  const queryPage = Math.min(Number(queryParams.page), maxPageSize);
+  const params = getParamsFromUrl(search);
+  const queryPage = Math.min(Number(params.page), maxPageSize);
 
   return (
     <Paginate
