@@ -80,9 +80,12 @@ export const useCreateBucketMutation = () => {
     ObjectStorageBucketRequestPayload
   >(createBucket, {
     onSuccess: (newEntity) => {
-      queryClient.setQueryData<ObjectStorageBucket[]>(
+      queryClient.setQueryData<BucketsResponce>(
         `${queryKey}-buckets`,
-        (oldData) => [...(oldData || []), newEntity]
+        (oldData) => ({
+          buckets: [...(oldData?.buckets || []), newEntity],
+          errors: oldData?.errors || [],
+        })
       );
     },
   });
@@ -93,18 +96,20 @@ export const useDeleteBucketMutation = () => {
     (data) => deleteBucket(data),
     {
       onSuccess: (_, variables) => {
-        queryClient.setQueryData<ObjectStorageBucket[]>(
+        queryClient.setQueryData<BucketsResponce>(
           `${queryKey}-buckets`,
           (oldData) => {
-            return (
-              oldData?.filter(
-                (bucket: ObjectStorageBucket) =>
-                  !(
-                    bucket.cluster === variables.cluster &&
-                    bucket.label === variables.label
-                  )
-              ) || []
-            );
+            return {
+              buckets:
+                oldData?.buckets.filter(
+                  (bucket: ObjectStorageBucket) =>
+                    !(
+                      bucket.cluster === variables.cluster &&
+                      bucket.label === variables.label
+                    )
+                ) || [],
+              errors: oldData?.errors || [],
+            };
           }
         );
       },
