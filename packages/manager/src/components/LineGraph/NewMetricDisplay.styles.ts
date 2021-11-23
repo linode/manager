@@ -32,7 +32,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       },
     },
     container: {
-      borderTop: `1px solid ${theme.color.border3}`,
+      borderTop: `1px solid ${theme.cmrBorderColors.divider}`,
       color: '#777',
       fontSize: '0.875rem',
       marginTop: theme.spacing(0.5),
