@@ -11,8 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-
-import HelpIcon from 'src/components/HelpIcon';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon' | 'toolTip';
 
@@ -25,14 +24,6 @@ const styles = (theme: Theme) =>
     },
     link: {
       ...theme.applyLinkStyles,
-    },
-    icon: {
-      display: 'inline-block',
-      fontSize: '0.8em',
-      marginLeft: theme.spacing(1) / 3,
-    },
-    toolTip: {
-      paddingTop: theme.spacing(1),
     },
   });
 
@@ -60,16 +51,12 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
     <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>
       <Grid container direction="column" className={classes.root}>
         <Grid item>
-          <Typography variant="h2">
-            Back Up All New Linodes
-            {!!isManagedCustomer && (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`You're a Managed customer, which means your Linodes are already automatically
-              backed up - no need to toggle this setting.`}
-              />
-            )}
-          </Typography>
+          {!!isManagedCustomer ? (
+            <Notice success>
+              You're a Managed customer, which means your Linodes are already
+              automatically backed up - no need to toggle this setting.
+            </Notice>
+          ) : null}
         </Grid>
         <Grid item>
           <Typography variant="body1">
