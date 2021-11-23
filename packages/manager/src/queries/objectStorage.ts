@@ -148,6 +148,10 @@ export const getAllBucketsFromClusters = async (
 
   const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
 
+  if (errors.length === clusters.length) {
+    throw new Error('Unable to get Object Storage buckets.');
+  }
+
   return {
     buckets: buckets.reduce((acc, val) => acc.concat(val), []),
     errors,
