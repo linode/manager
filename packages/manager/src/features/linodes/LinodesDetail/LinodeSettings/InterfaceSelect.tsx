@@ -226,7 +226,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                   optional
                   placeholder="192.0.2.0/24"
                   tooltipOnMouseEnter={() =>
-                    sendLinodeCreateDocsEvent('IPAM Address Hover')
+                    sendLinodeCreateDocsEvent('IPAM Address Tooltip Hover')
                   }
                   tooltipText={
                     'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
