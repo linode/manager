@@ -94,7 +94,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
 
   const { search } = useLocation();
   const params = getParamsFromUrl(search);
-  const queryPage = Math.min(Number(params.page), maxPageNumber);
+  const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
   return (
     <Paginate
