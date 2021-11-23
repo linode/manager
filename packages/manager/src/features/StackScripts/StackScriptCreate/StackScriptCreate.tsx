@@ -41,7 +41,7 @@ import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { sessionStorage as storage } from 'src/utilities/sessionStorage';
+import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/profile';
