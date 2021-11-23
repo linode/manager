@@ -62,8 +62,6 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
               automatically backed up - no need to toggle this setting.
             </Notice>
           ) : null}
-        </Grid>
-        <Grid item>
           <Typography variant="body1">
             This controls whether Linode Backups are enabled, by default, for
             all Linodes when they are initially created. For each Linode with
