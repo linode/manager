@@ -25,6 +25,11 @@ const styles = (theme: Theme) =>
     link: {
       ...theme.applyLinkStyles,
     },
+    icon: {
+      display: 'inline-block',
+      fontSize: '0.8em',
+      marginLeft: theme.spacing(1) / 3,
+    },
   });
 
 interface Props {
