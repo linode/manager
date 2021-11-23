@@ -1,4 +1,8 @@
-import { Event } from '@linode/api-v4/lib/account';
+import {
+  Event,
+  EventAction,
+  NotificationType,
+} from '@linode/api-v4/lib/account';
 import { Config, Linode } from '@linode/api-v4/lib/linodes';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -33,6 +37,9 @@ import withLinodes, {
 import { resetEventsPolling } from 'src/eventsPolling';
 import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
+import withNotifications, {
+  WithNotifications,
+} from 'src/store/notification/notification.containers';
 import {
   LinodeOptions,
   openForClone,
@@ -100,7 +107,8 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   WithSnackbarProps &
-  WithMappedVolumesProps;
+  WithMappedVolumesProps &
+  WithNotifications;
 
 const volumeHeaders = [
   {
@@ -461,6 +469,48 @@ const filterVolumeEvents = (event: Event): boolean => {
   );
 };
 
+const includeNVMeBooleans = (
+  volumes: Volume[],
+  notifications: Notification[],
+  events: Event[]
+) => {
+  return volumes.reduce((acc: any, eachVolume) => {
+    const { id } = eachVolume;
+
+    // fix notification.type typing
+    const eligibleForUpgradeToNVMe = notifications.some(
+      (notification) =>
+        notification.type ===
+          ('volume_migration_scheduled' as NotificationType) &&
+        notification.entity?.id === id
+    );
+
+    const nvmeUpgradeScheduledByUserImminent = notifications.some(
+      (notification) =>
+        notification.type ===
+          ('volume_migration_imminent' as NotificationType) &&
+        notification.entity?.id === id
+    );
+
+    const nvmeUpgradeScheduledByUserInProgress = events.some(
+      (event) =>
+        event.action === ('volume_migrate' as EventAction) &&
+        event.entity?.id === id &&
+        event.status === 'started'
+    );
+
+    return [
+      ...acc,
+      {
+        ...eachVolume,
+        eligibleForUpgradeToNVMe,
+        nvmeUpgradeScheduledByUserImminent,
+        nvmeUpgradeScheduledByUserInProgress,
+      },
+    ];
+  }, []);
+};
+
 export default compose<CombinedProps, Props>(
   connected,
   withVolumesRequests,
@@ -468,6 +518,7 @@ export default compose<CombinedProps, Props>(
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents),
   })),
+  withNotifications(),
   withLinodes(),
   withVolumes(
     (
@@ -478,16 +529,26 @@ export default compose<CombinedProps, Props>(
       volumesResults,
       volumesError
     ) => {
-      const mappedVolumesDataWithLinodes = volumesData.map((volume) => {
-        const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
-          volume,
-          ownProps.linodesData
-        );
-        return addRecentEventToVolume(
-          volumeWithLinodeData,
-          ownProps.eventsData
-        );
-      });
+      const volumesWithNVMeBooleans = includeNVMeBooleans(
+        volumesData,
+        ownProps.notifications,
+        ownProps.eventsData
+      ); // fix ownProps.notifications
+
+      // console.log(volumesWithNVMeBooleans);
+
+      const mappedVolumesDataWithLinodes = volumesWithNVMeBooleans.map(
+        (volume: ExtendedVolume) => {
+          const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
+            volume,
+            ownProps.linodesData
+          );
+          return addRecentEventToVolume(
+            volumeWithLinodeData,
+            ownProps.eventsData
+          );
+        }
+      );
       return {
         ...ownProps,
         volumesData,
