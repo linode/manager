@@ -90,11 +90,11 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
     numberOfLinodesWithMaintenance > infinitePageSize
       ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
       : infinitePageSize;
-  const maxPageSize = Math.ceil(count / pageSize);
+  const maxPageNumber = Math.ceil(count / pageSize);
 
   const { search } = useLocation();
   const params = getParamsFromUrl(search);
-  const queryPage = Math.min(Number(params.page), maxPageSize);
+  const queryPage = Math.min(Number(params.page), maxPageNumber);
 
   return (
     <Paginate
