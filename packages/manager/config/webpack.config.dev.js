@@ -63,15 +63,6 @@ module.exports = {
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/');
     },
-    // Our CSS loader chain results in duplicates for some files. It's unclear
-    // to me why this is happening, but we use this fallback template function
-    // to correct the sourcemaps for these files.
-    devtoolFallbackModuleFilenameTemplate: (info) => {
-      const filePath = path
-        .relative(paths.appSrc, info.absoluteResourcePath)
-        .replace(/\\/g, '/');
-      return `${filePath}?${info.hash}`;
-    },
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -86,24 +77,8 @@ module.exports = {
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    // `web` extension prefixes have been added for better support
-    // for React Native Web.
-    extensions: [
-      '.mjs',
-      '.web.ts',
-      '.ts',
-      '.web.tsx',
-      '.tsx',
-      '.web.js',
-      '.js',
-      '.json',
-      '.web.jsx',
-      '.jsx',
-    ],
+    extensions: ['.mjs', '.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      'react-native': 'react-native-web',
       'src/': paths.appSrc,
     },
     plugins: [
@@ -115,28 +90,29 @@ module.exports = {
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
       new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
-    fallback: { crypto: false },
+    fallback: {
+      stream: 'stream-browserify',
+      crypto: 'crypto-browserify',
+      Buffer: 'buffer/',
+    },
   },
   module: {
     strictExportPresence: true,
     rules: [
-      {
-        test: /\.(js|jsx|mjs)$/,
-        loader: require.resolve('source-map-loader'),
-        enforce: 'pre',
-        include: paths.appSrc,
-      },
+      // @TODO what benefit does the source-map-loader provide?
+      // {
+      //   test: /\.(js|jsx|mjs)$/,
+      //   loader: require.resolve('source-map-loader'),
+      //   enforce: 'pre',
+      //   include: paths.appSrc,
+      // },
       {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
         oneOf: [
-          // "url" loader works like "file" loader except that it embeds assets
-          // smaller than specified limit in bytes as data URLs to avoid requests.
-          // A missing `test` is equivalent to a match.
           {
             test: /\.svg$/,
-            // @TODO this is broken :(
             exclude: [/font-logos.svg$/],
             use: {
               loader: '@svgr/webpack',
@@ -152,7 +128,6 @@ module.exports = {
               },
             },
           },
-          // Compile .tsx?
           {
             test: [/\.tsx$/, /\.ts$/],
             include: paths.appSrc,
@@ -166,11 +141,6 @@ module.exports = {
               },
             ],
           },
-          // "postcss" loader applies autoprefixer to our CSS.
-          // "css" loader resolves paths in CSS and adds assets as dependencies.
-          // "style" loader turns CSS into JS modules that inject <style> tags.
-          // In production, we use a plugin to extract that CSS to a file, but
-          // in development "style" loader enables hot editing of CSS.
           {
             test: /\.css$/,
             use: [
@@ -180,26 +150,14 @@ module.exports = {
                 loader: 'esbuild-loader',
                 options: {
                   loader: 'css',
-                  minify: true,
+                  minify: false,
                 },
               },
             ],
           },
-          // "file" loader makes sure those assets get served by WebpackDevServer.
-          // When you `import` an asset, you get its (virtual) filename.
-          // In production, they would get copied to the `build` folder.
-          // This loader doesn't use a "test" so it will catch all modules
-          // that fall through the other loaders.
           {
-            // Exclude `js` files to keep "css" loader working as it injects
-            // it's runtime that would otherwise processed through "file" loader.
-            // Also exclude `html` and `json` extensions so they get processed
-            // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.mjs$/, /\.html$/, /\.json$/, /\.cjs$/],
-            loader: require.resolve('file-loader'),
-            options: {
-              name: 'static/media/[name].[hash:8].[ext]',
-            },
+            test: /\.(jpe?g|svg|png|gif|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
+            type: 'asset/resource',
           },
         ],
       },
@@ -256,6 +214,9 @@ module.exports = {
       allowAsyncCycles: false,
       // set the current working directory for displaying module paths
       cwd: paths.appSrc,
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
     }),
   ],
   performance: {
