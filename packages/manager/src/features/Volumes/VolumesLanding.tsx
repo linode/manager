@@ -1,6 +1,7 @@
 import {
   Event,
   EventAction,
+  Notification,
   NotificationType,
 } from '@linode/api-v4/lib/account';
 import { Config, Linode } from '@linode/api-v4/lib/linodes';
@@ -477,7 +478,6 @@ const includeNVMeBooleans = (
   return volumes.reduce((acc: any, eachVolume) => {
     const { id } = eachVolume;
 
-    // fix notification.type typing
     const eligibleForUpgradeToNVMe = notifications.some(
       (notification) =>
         notification.type ===
@@ -533,9 +533,7 @@ export default compose<CombinedProps, Props>(
         volumesData,
         ownProps.notifications,
         ownProps.eventsData
-      ); // fix ownProps.notifications
-
-      // console.log(volumesWithNVMeBooleans);
+      );
 
       const mappedVolumesDataWithLinodes = volumesWithNVMeBooleans.map(
         (volume: ExtendedVolume) => {
