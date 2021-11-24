@@ -147,9 +147,11 @@ export const getAllBucketsFromClusters = async (
 
   const data = await Promise.all(promises);
 
-  const buckets = data.filter((item) =>
+  const bucketsPerCluster = data.filter((item) =>
     Array.isArray(item)
   ) as ObjectStorageBucket[][];
+
+  const buckets = bucketsPerCluster.reduce((acc, val) => acc.concat(val), []);
 
   const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
 
@@ -157,8 +159,5 @@ export const getAllBucketsFromClusters = async (
     throw new Error('Unable to get Object Storage buckets.');
   }
 
-  return {
-    buckets: buckets.reduce((acc, val) => acc.concat(val), []),
-    errors,
-  } as BucketsResponce;
+  return { buckets, errors } as BucketsResponce;
 };

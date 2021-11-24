@@ -53,7 +53,7 @@ describe('ObjectStorageLanding', () => {
 
     // Mock Buckets
     server.use(
-      rest.get('*/object-storage/buckets', (req, res, ctx) => {
+      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
         return res(ctx.json(makeResourcePage([])));
       })
     );
@@ -65,15 +65,66 @@ describe('ObjectStorageLanding', () => {
     screen.getByTestId('placeholder-button');
   });
 
-  // @todo skipping right now, need to decide if i want to do per-cluster fetching
-  it.skip('renders per-cluster errors', () => {
-    renderWithTheme(<BucketLanding {...props} />);
-    screen.getByText(/^There was an error loading buckets in Newark, NJ/);
+  it('renders per-cluster errors', async () => {
+    objectStorageBucketFactory.resetSequenceNumber();
+    objectStorageClusterFactory.resetSequenceNumber();
+
+    // Mock Clusters
+    server.use(
+      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+        const downCluster = objectStorageClusterFactory.build();
+        const upClusters = objectStorageClusterFactory.buildList(1, {
+          region: 'ap-south-1',
+        });
+        return res(ctx.json(makeResourcePage([downCluster, ...upClusters])));
+      })
+    );
+
+    // Mock Buckets
+    server.use(
+      rest.get('*/object-storage/buckets/cluster-0', (req, res, ctx) => {
+        return res.once(
+          ctx.status(500),
+          ctx.json([{ reason: 'Cluster offline!' }])
+        );
+      }),
+      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            makeResourcePage(
+              objectStorageBucketFactory.buildList(2, { cluster: 'ap-south-1' })
+            )
+          )
+        );
+      })
+    );
+
+    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+
+    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
+
+    screen.getByText(/^There was an error loading buckets in cluster-0/);
   });
 
-  // @todo skipping right now, need to decide if i want to do per-cluster fetching
-  it.skip('renders general error state', () => {
-    renderWithTheme(<BucketLanding {...props} />);
+  it('renders general error state', async () => {
+    // Mock Clusters
+    server.use(
+      rest.get('*/object-storage/clusters', (req, res, ctx) => {
+        const clusters = objectStorageClusterFactory.buildList(1);
+        return res(ctx.json(makeResourcePage(clusters)));
+      })
+    );
+
+    // Mock Buckets
+    server.use(
+      rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+        return res(ctx.status(500), ctx.json([{ reason: 'Cluster offline!' }]));
+      })
+    );
+    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+
+    await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
+
     screen.getByText(/^There was an error retrieving your buckets/);
   });
 
