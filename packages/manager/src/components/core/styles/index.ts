@@ -1,6 +1,7 @@
 import {
   WithStyles as _WithStyles,
   WithTheme as _WithTheme,
+  Theme,
 } from '@material-ui/core/styles';
 import { SvgIconProps as _SVGIconProps } from '@material-ui/core/SvgIcon';
 import { CSSProperties as _CSSProperties } from '@material-ui/styles';
@@ -30,6 +31,6 @@ export {
 
 export { createMuiTheme } from '@material-ui/core/styles';
 
-export { Theme } from '@material-ui/core/styles/createTheme';
+export type { Theme };
 
 export { default as useMediaQuery } from '@material-ui/core/useMediaQuery';

@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   menuItem: {
-    fontFamily: 'LatoWeb',
+    fontFamily: 'Lato',
     fontSize: '.9rem',
     '&:hover, &:focus': {
       backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,

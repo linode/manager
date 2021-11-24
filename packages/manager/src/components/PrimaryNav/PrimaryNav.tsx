@@ -265,7 +265,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             aria-label="Dashboard"
             title="Dashboard"
           >
-            <Logo width={115} height={43} />
+            <Logo />
           </Link>
         </div>
       </Grid>

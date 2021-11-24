@@ -1,30 +1,33 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "outDir": "build/dist",
-    "module": "esnext",
-    "target": "es5",
-    "lib": ["es2017", "dom"],
-    "downlevelIteration": true,
-    "sourceMap": true,
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
-    "jsx": "react",
-    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
-    "resolveJsonModule": true,
+    "noEmit": true,
+    "jsx": "react",
+    "outDir": "build/dist",
     "rootDir": "src",
-    "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"]
-    }
+    },
+    "sourceMap": true,
   },
+  "include": ["./src"],
   "exclude": [
     "node_modules",
     "cypress",
@@ -32,10 +35,6 @@
     "build",
     "e2e",
     "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts",
-    "src/components/Storyshots.test.tsx"
+    "jest"
   ]
 }

@@ -21,7 +21,7 @@ const styles = (theme: Theme) =>
     root: {},
     tag: {
       color: theme.palette.text.primary,
-      fontFamily: 'LatoWeb',
+      fontFamily: 'Lato',
     },
   });
 

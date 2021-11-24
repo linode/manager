@@ -43,7 +43,7 @@ export const getOptions = (env: typeof process.env) => {
   }, []);
 };
 
-const options = getOptions(process.env);
+const options = getOptions((import.meta.env as unknown) as typeof process.env);
 
 // This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
 // and CLIENT_ID environment variables, giving client-side control over the environment.

@@ -81,7 +81,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(3),
     },
     selectCell: {
-      fontFamily: 'LatoWebBold', // we keep this bold at all times
+      fontFamily: 'Lato', // we keep this bold at all times
       fontSize: '.9rem',
     },
     accessCell: {

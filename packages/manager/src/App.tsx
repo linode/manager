@@ -32,6 +32,8 @@ import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
 import GoTo from './GoTo';
 
+import "@fontsource/lato";
+
 interface Props {
   toggleTheme: () => void;
   location: RouteComponentProps['location'];
