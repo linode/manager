@@ -1,9 +1,4 @@
-import {
-  Event,
-  EventAction,
-  Notification,
-  NotificationType,
-} from '@linode/api-v4/lib/account';
+import { Event, Notification } from '@linode/api-v4/lib/account';
 import { Config, Linode } from '@linode/api-v4/lib/linodes';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -475,26 +470,24 @@ const addNVMeBooleansToVolume = (
   notifications: Notification[],
   events: Event[]
 ) => {
-  return volumes.reduce((acc: any, eachVolume) => {
+  return volumes.reduce((acc: ExtendedVolume[], eachVolume) => {
     const { id } = eachVolume;
 
     const eligibleForUpgradeToNVMe = notifications.some(
       (notification) =>
-        notification.type ===
-          ('volume_migration_scheduled' as NotificationType) &&
+        notification.type === 'volume_migration_scheduled' &&
         notification.entity?.id === id
     );
 
     const nvmeUpgradeScheduledByUserImminent = notifications.some(
       (notification) =>
-        notification.type ===
-          ('volume_migration_imminent' as NotificationType) &&
+        notification.type === 'volume_migration_imminent' &&
         notification.entity?.id === id
     );
 
     const nvmeUpgradeScheduledByUserInProgress = events.some(
       (event) =>
-        event.action === ('volume_migrate' as EventAction) &&
+        event.action === 'volume_migrate' &&
         event.entity?.id === id &&
         event.status === 'started'
     );
