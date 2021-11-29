@@ -61,6 +61,7 @@ interface Props {
   black?: boolean;
   fixedIcon?: boolean;
   hideIcon?: boolean;
+  onClick?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -76,10 +77,12 @@ class ExternalLink extends React.Component<CombinedProps> {
       black,
       fixedIcon,
       hideIcon,
+      onClick,
     } = this.props;
 
     return (
       <a
+        onClick={onClick}
         target="_blank"
         aria-describedby="external-site"
         rel="noopener noreferrer"

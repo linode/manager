@@ -6,6 +6,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import useVlansQuery from 'src/queries/vlans';
+import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
@@ -224,6 +225,9 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                   onChange={handleAddressChange}
                   optional
                   placeholder="192.0.2.0/24"
+                  tooltipOnMouseEnter={() =>
+                    sendLinodeCreateDocsEvent('IPAM Address Tooltip Hover')
+                  }
                   tooltipText={
                     'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
                   }
