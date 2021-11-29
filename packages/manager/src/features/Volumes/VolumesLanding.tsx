@@ -470,7 +470,7 @@ const filterVolumeEvents = (event: Event): boolean => {
   );
 };
 
-const includeNVMeBooleans = (
+const addNVMeBooleansToVolume = (
   volumes: Volume[],
   notifications: Notification[],
   events: Event[]
@@ -529,7 +529,7 @@ export default compose<CombinedProps, Props>(
       volumesResults,
       volumesError
     ) => {
-      const volumesWithNVMeBooleans = includeNVMeBooleans(
+      const volumesWithNVMeBooleans = addNVMeBooleansToVolume(
         volumesData,
         ownProps.notifications,
         ownProps.eventsData
