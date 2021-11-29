@@ -527,6 +527,7 @@ const themeDefaults: ThemeDefaults = () => {
       MuiButton: {
         root: {
           border: 'none',
+          borderRadius: 1,
           cursor: 'pointer',
           fontFamily: primaryFonts.bold,
           fontSize: '1rem',
@@ -538,7 +539,6 @@ const themeDefaults: ThemeDefaults = () => {
         },
         containedPrimary: {
           backgroundColor: primaryColors.main,
-          borderRadius: 1,
           color: '#fff',
           padding: '2px 20px',
           '&:hover, &:focus': {
@@ -578,7 +578,6 @@ const themeDefaults: ThemeDefaults = () => {
         outlined: {
           backgroundColor: 'transparent',
           border: `1px solid ${primaryColors.main}`,
-          borderRadius: 1,
           color: cmrTextColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
