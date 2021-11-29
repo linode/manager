@@ -131,7 +131,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       [
         {
           display: 'Linodes',
-          href: '/linodes?page=1',
+          href: '/linodes',
           activeLinks: ['/linodes', '/linodes/create'],
           icon: <Linode />,
         },
