@@ -1,5 +1,6 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 import TableBody from 'src/components/core/TableBody';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -16,6 +17,7 @@ import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import TableView from 'src/assets/icons/table-view.svg';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
 
 const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
@@ -45,6 +47,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  count: number;
   display: 'grid' | 'list';
   component: any;
   data: ExtendedLinode[];
@@ -53,6 +56,7 @@ interface Props {
   toggleGroupLinodes: () => boolean;
   linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  updatePageUrl: (page: number) => void;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -60,6 +64,7 @@ type CombinedProps = Props & OrderByProps;
 const DisplayLinodes: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
+    count,
     data,
     display,
     component: Component,
@@ -70,29 +75,36 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
     toggleGroupLinodes,
     linodeViewPreference,
     linodesAreGrouped,
+    updatePageUrl,
     ...rest
   } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
-
   const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
     if (thisLinode.maintenance) {
       acc++;
     }
     return acc;
   }, 0);
+  const pageSize =
+    numberOfLinodesWithMaintenance > infinitePageSize
+      ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
+      : infinitePageSize;
+  const maxPageNumber = Math.ceil(count / pageSize);
+
+  const { search } = useLocation();
+  const params = getParamsFromUrl(search);
+  const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
 
   return (
     <Paginate
       data={data}
+      page={queryPage}
       // If there are more Linodes with maintenance than the current page size, show the minimum
       // page size needed to show ALL Linodes with maintenance.
-      pageSize={
-        numberOfLinodesWithMaintenance > infinitePageSize
-          ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
-          : infinitePageSize
-      }
+      pageSize={pageSize}
       pageSizeSetter={setInfinitePageSize}
+      updatePageUrl={updatePageUrl}
     >
       {({
         data: paginatedData,
@@ -182,7 +194,7 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   pageSize={pageSize}
-                  page={page}
+                  page={queryPage}
                   eventCategory={'linodes landing'}
                   showAll
                 />
