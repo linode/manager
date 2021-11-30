@@ -1,11 +1,9 @@
 'use strict';
 
-const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -63,15 +61,6 @@ module.exports = {
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/');
     },
-    // Our CSS loader chain results in duplicates for some files. It's unclear
-    // to me why this is happening, but we use this fallback template function
-    // to correct the sourcemaps for these files.
-    devtoolFallbackModuleFilenameTemplate: (info) => {
-      const filePath = path
-        .relative(paths.appSrc, info.absoluteResourcePath)
-        .replace(/\\/g, '/');
-      return `${filePath}?${info.hash}`;
-    },
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -88,22 +77,8 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: [
-      '.mjs',
-      '.web.ts',
-      '.ts',
-      '.web.tsx',
-      '.tsx',
-      '.web.js',
-      '.js',
-      '.json',
-      '.web.jsx',
-      '.jsx',
-    ],
+    extensions: ['.mjs', '.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      'react-native': 'react-native-web',
       'src/': paths.appSrc,
     },
     plugins: [
@@ -115,7 +90,11 @@ module.exports = {
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
       new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
-    fallback: { crypto: false },
+    fallback: {
+      stream: 'stream-browserify',
+      crypto: 'crypto-browserify',
+      Buffer: 'buffer/',
+    },
   },
   module: {
     strictExportPresence: true,
@@ -123,12 +102,12 @@ module.exports = {
       // TODO: Disable require.ensure as it's not a standard language feature.
       // We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
       // { parser: { requireEnsure: false } },
-      {
-        test: /\.(js|jsx|mjs)$/,
-        loader: require.resolve('source-map-loader'),
-        enforce: 'pre',
-        include: paths.appSrc,
-      },
+      // {
+      //   test: /\.(js|jsx|mjs)$/,
+      //   loader: require.resolve('source-map-loader'),
+      //   enforce: 'pre',
+      //   include: paths.appSrc,
+      // },
       {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
@@ -136,15 +115,6 @@ module.exports = {
         oneOf: [
           // "url" loader works just like "file" loader but it also embeds
           // assets smaller than specified size as data URLs to avoid requests.
-          {
-            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-            exclude: [/__image_snapshots__/],
-            loader: require.resolve('url-loader'),
-            options: {
-              limit: 10000,
-              name: 'static/media/[name].[hash:8].[ext]',
-            },
-          },
           {
             test: /\.svg$/,
             exclude: [/font-logos.svg$/],
@@ -162,23 +132,8 @@ module.exports = {
               },
             },
           },
-          // Compile .ts
           {
-            test: /\.ts$/,
-            include: paths.appSrc,
-            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
-            use: [
-              {
-                loader: require.resolve('esbuild-loader'),
-                options: {
-                  loader: 'ts',
-                },
-              },
-            ],
-          },
-          // Compile .tsx?
-          {
-            test: /\.tsx$/,
+            test: [/\.tsx$/, /\.ts$/],
             include: paths.appSrc,
             exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
             use: [
@@ -190,63 +145,23 @@ module.exports = {
               },
             ],
           },
-          // The notation here is somewhat confusing.
-          // "postcss" loader applies autoprefixer to our CSS.
-          // "css" loader resolves paths in CSS and adds assets as dependencies.
-          // "style" loader normally turns CSS into JS modules injecting <style>,
-          // but unlike in development configuration, we do something different.
-          // `ExtractTextPlugin` first applies the "postcss" and "css" loaders
-          // (second argument), then grabs the result CSS and puts it into a
-          // separate file in our build process. This way we actually ship
-          // a single CSS file in production instead of JS code injecting <style>
-          // tags. If you use code splitting, however, any async bundles will still
-          // use the "style" loader inside the async code so CSS from them won't be
-          // in the main CSS file.
-          /** ********************************************************
-           * Start Temporary Solution
-           * re: https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/456
-           **********************************************************/
           {
             test: /\.css$/,
             use: [
-              require.resolve('style-loader'),
+              'style-loader',
+              'css-loader',
               {
-                loader: require.resolve('css-loader'),
+                loader: 'esbuild-loader',
                 options: {
-                  importLoaders: 1,
+                  loader: 'css',
+                  minify: true,
                 },
               },
-              {
-                loader: require.resolve('postcss-loader'),
-              },
             ],
           },
           {
-            test: /\.css$/,
-            use: [
-              {
-                loader: MiniCssExtractPlugin.loader,
-              },
-              'css-loader',
-            ],
-          },
-          /** ********************************************************
-           * End Temporary Solution.
-           **********************************************************/
-          // "file" loader makes sure assets end up in the `build` folder.
-          // When you `import` an asset, you get its filename.
-          // This loader doesn't use a "test" so it will catch all modules
-          // that fall through the other loaders.
-          {
-            loader: require.resolve('file-loader'),
-            // Exclude `js` files to keep "css" loader working as it injects
-            // it's runtime that would otherwise processed through "file" loader.
-            // Also exclude `html` and `json` extensions so they get processed
-            // by webpacks internal loaders.
-            exclude: [/\.js$/, /\.mjs$/, /\.html$/, /\.json$/, /\.cjs$/],
-            options: {
-              name: 'static/media/[name].[hash:8].[ext]',
-            },
+            test: /\.(jpe?g|svg|png|gif|ico|eot|ttf|woff2?)(\?v=\d+\.\d+\.\d+)?$/i,
+            type: 'asset/resource',
           },
           // ** STOP ** Are you adding a new loader?
           // Make sure to add the new loader(s) before the "file" loader.
@@ -316,6 +231,9 @@ module.exports = {
         'bundle_analyzer_report.html'
       ),
       openAnalyzer: false,
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
     }),
   ],
   // Utilize webpack performance budgets that will fail the build if the assets
