@@ -89,7 +89,7 @@ const entityMap: Record<string, EntityType> = {
   Volumes: 'volume_id',
   Domains: 'domain_id',
   NodeBalancers: 'nodebalancer_id',
-  Kubernetes: 'lkecluster_id,
+  Kubernetes: 'lkecluster_id',
 };
 
 const entityIdToNameMap: Partial<Record<EntityType, string>> = {
