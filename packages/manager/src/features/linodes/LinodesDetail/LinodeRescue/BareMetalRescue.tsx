@@ -67,7 +67,7 @@ export const BareMetalRescue: React.FC<Props> = (props) => {
       actions={actions}
       error={error}
     >
-      <RescueDescription linodeId={linodeID} />
+      <RescueDescription linodeId={linodeID} isBareMetal />
     </ConfirmationDialog>
   );
 };

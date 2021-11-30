@@ -3,6 +3,7 @@ import {
   UpdateLinodeSchema,
 } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from 'src/constants';
+import { Firewall } from '../firewalls/types';
 import Request, {
   setData,
   setMethod,
@@ -136,4 +137,16 @@ export const changeLinodePassword = (linodeId: number, root_pass: string) =>
     setURL(`${API_ROOT}/linode/instances/${linodeId}/password`),
     setData({ root_pass }),
     setMethod('POST')
+  );
+
+/**
+ * getLinodeFirewalls
+ *
+ * View Firewall information for Firewalls associated with this Linode
+ */
+
+export const getLinodeFirewalls = (linodeId: number) =>
+  Request<Page<Firewall>>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/firewalls`),
+    setMethod('GET')
   );
