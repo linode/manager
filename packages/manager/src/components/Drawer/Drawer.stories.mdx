@@ -1,0 +1,127 @@
+import Button from 'src/components/Button';
+import Typography from 'src/components/core/Typography';
+import ActionsPanel from '../ActionsPanel';
+import TextField from '../TextField';
+import Drawer from './Drawer';
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { NotificationDrawer } from 'src/features/NotificationCenter';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import { Provider } from 'react-redux';
+import { baseStore } from 'src/utilities/testHelpers';
+import { eventFactory, notificationFactory } from 'src/factories';
+
+export const mockEvents = eventFactory.buildList(1);
+export const mockNotifications = notificationFactory.buildList(1);
+
+<Meta title="Components/Drawer" component={Drawer} />
+
+# Drawer
+
+#### Overview
+
+- Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
+- Like traditional modals, they block interaction with the page content.
+- They are elevated above the app’s UI and don’t affect the screen’s layout grid.
+
+#### Behavior
+
+- Clicking a button on the screen opens the drawer.
+- Clicking off of the drawer closes it and data will not be saved.
+- Drawers can also be closed by clicking the “X” icon or the “Close” button.
+
+export const Template = (args, context) => {
+  const close = () => context.setOpen(false);
+  return (
+    <>
+      <Button buttonType="primary" onClick={() => context.setOpen(true)}>
+        Click to open Drawer
+      </Button>
+      <Drawer title="My Drawer" open={context.open} onClose={close}>
+        <Typography>
+          This is some test copy which acts as content for this Drawer
+          component. It's very interesting and you should read all of it. This
+          text has to be sufficiently long to test that it doesn't expand the
+          drawer to an unreasonable width.
+        </Typography>
+        <TextField
+          label="Input Some Text"
+          placeholder="This is a placeholder"
+        />
+        <ActionsPanel>
+          <Button buttonType="primary" onClick={close}>
+            Save
+          </Button>
+          <Button buttonType="secondary" onClick={close}>
+            Cancel
+          </Button>
+        </ActionsPanel>
+      </Drawer>
+    </>
+  );
+};
+
+<Canvas>
+  <Story
+    name="Default"
+    decorators={[
+      (Story) => {
+        const [open, setOpen] = React.useState(false);
+        return Story({ open, setOpen });
+      },
+    ]}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+# Notification Drawer
+
+#### Overview
+
+There are two sections in the Notifications drawer:
+
+- **Notifications** are informational messages and are usually not tied directly to user input or activity in the system. They inform the user of a change in the system state or of an event that may be of interest.
+- **Events** present the status of actions taken by the user.
+
+#### Behavior
+
+**Notifications can be**
+
+- Contextual: Applied to a specific piece of UI
+- General: Applied to the system as a whole
+
+**Notification types**
+
+- Action-required: Alerts users of an action that must be taken.
+- Passive: Reports system occurrences. Does not require users to take action.
+
+export const NotificationDrawerTemplate = (args, context) => {
+  const close = () => context.setOpen(false);
+  const notificationData = useNotificationData(mockEvents, mockNotifications);
+  return (
+    <>
+      <Button buttonType="primary" onClick={() => context.setOpen(true)}>
+        Click to open Drawer
+      </Button>
+      <NotificationDrawer
+        open={context.open}
+        onClose={() => context.setOpen(false)}
+        data={notificationData}
+      />
+    </>
+  );
+};
+
+<Canvas>
+  <Story
+    name="Notification Drawer"
+    decorators={[
+      (Story) => {
+        const [open, setOpen] = React.useState(false);
+        return Story({ open, setOpen });
+      },
+    ]}
+  >
+    {NotificationDrawerTemplate.bind({})}
+  </Story>
+</Canvas>
