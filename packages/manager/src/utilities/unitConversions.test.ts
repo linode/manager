@@ -3,6 +3,7 @@ import {
   readableBytes,
   ReadableBytesOptions,
   convertStorageUnit,
+  convertMegabytesTo,
 } from './unitConversions';
 
 describe('conversion helper functions', () => {
@@ -304,6 +305,35 @@ describe('conversion helper functions', () => {
 
     it('should convert gigabytes to bytes', () => {
       expect(convertStorageUnit('TB', 5, 'B')).toBe(5 * Math.pow(base, 4));
+    });
+  });
+
+  describe('convertMegabytesTo', () => {
+    const oneByteInMegabytes = Number.parseFloat('9.5367431640625e-7');
+    const oneKilobyteInMegabytes = 0.0009765625;
+    const oneGigabyteInMegabytes = 1024;
+    const rationalGigabyteQuantity = 1377.28;
+    const rationalKilobyteQuantity = 0.0013134765625;
+
+    it('should convert megabytes to bytes', () => {
+      expect(convertMegabytesTo(oneByteInMegabytes)).toBe('1 bytes');
+    });
+
+    it('should convert megabytes to kilobytes', () => {
+      expect(convertMegabytesTo(oneKilobyteInMegabytes)).toBe('1.00 KB');
+    });
+
+    it('should convert megabytes to gigabytes', () => {
+      expect(convertMegabytesTo(oneGigabyteInMegabytes)).toBe('1.00 GB');
+    });
+
+    it('should only return whole numbers when the removeDecimals argument is passed when the result is measured in gigabytes', () => {
+      expect(convertMegabytesTo(oneGigabyteInMegabytes, true)).toBe('1 GB');
+    });
+
+    it('should return two decimals of precision for quantities between whole numbers', () => {
+      expect(convertMegabytesTo(rationalKilobyteQuantity)).toBe('1.34 KB');
+      expect(convertMegabytesTo(rationalGigabyteQuantity)).toBe('1.34 GB');
     });
   });
 });

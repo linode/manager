@@ -57,11 +57,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(),
     },
   },
-  actionCell: {
-    '&.emptyCell': {
-      fontSize: '0.875em !important',
-    },
-  },
 }));
 
 interface Props {
@@ -272,7 +267,7 @@ export const CredentialList: React.FC<CombinedProps> = (props) => {
                       >
                         Last Decrypted
                       </TableSortCell>
-                      <TableCell className={classes.actionCell} />
+                      <TableCell />
                     </TableRow>
                   </TableHead>
                   <TableBody>

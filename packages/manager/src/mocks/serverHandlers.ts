@@ -182,7 +182,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(3, {
+    const onlineLinodes = linodeFactory.buildList(60, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
     });

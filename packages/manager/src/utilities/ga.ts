@@ -391,3 +391,10 @@ export const sendImageUploadEvent = (action: string, imageSize: string) => {
     label: imageSize,
   });
 };
+
+export const sendLinodeCreateDocsEvent = (action: string) => {
+  sendEvent({
+    category: 'Linode Create Contextual Help',
+    action,
+  });
+};

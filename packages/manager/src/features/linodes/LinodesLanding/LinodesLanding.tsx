@@ -120,6 +120,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     history.push(`?${updatedParams}`);
   };
 
+  updatePageUrl = (page: number) => {
+    this.props.history.push(`?page=${page}`);
+  };
+
   /**
    * when you change the linode view, send an event to google analytics, debounced.
    */
@@ -424,6 +428,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     display={linodeViewPreference}
                                     toggleLinodeView={toggleLinodeView}
                                     toggleGroupLinodes={toggleGroupLinodes}
+                                    updatePageUrl={this.updatePageUrl}
                                     linodesAreGrouped={false}
                                     linodeViewPreference={linodeViewPreference}
                                     component={

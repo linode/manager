@@ -25,5 +25,6 @@ export const clearUserInput = () => {
     rev_note: '',
     description: '',
     images: [],
+    updated: '',
   });
 };

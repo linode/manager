@@ -9,8 +9,6 @@ import {
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
 type ClassNames =
-  | 'actionCell'
-  | 'actionInner'
   | 'bodyRow'
   | 'status'
   | 'statusCell'
@@ -28,27 +26,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    actionCell: {
-      paddingTop: 0,
-      paddingBottom: 0,
-      paddingLeft: 0,
-      width: '22%',
-      textAlign: 'right',
-      '&:last-child': {
-        paddingRight: 0,
-      },
-      [theme.breakpoints.down('sm')]: {
-        width: '5%',
-      },
-    },
-    actionInner: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      marginRight: 1,
-      '& a': {
-        lineHeight: '1rem',
-      },
-    },
     bodyRow: {
       height: 'auto',
       '&:hover': {

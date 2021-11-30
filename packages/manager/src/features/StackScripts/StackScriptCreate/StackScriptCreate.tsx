@@ -75,6 +75,7 @@ interface State {
   dialogOpen: boolean;
   apiResponse?: StackScript;
   isLoadingStackScript: boolean;
+  updated: string;
 }
 
 interface Props {
@@ -105,6 +106,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     isSubmitting: false,
     dialogOpen: false,
     isLoadingStackScript: false,
+    updated: '',
   };
 
   static docs = [StackScripts];
@@ -127,7 +129,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       this.setState({ isLoadingStackScript: true });
       getStackScript(+stackScriptID)
         .then((response) => {
-          if (response.id === valuesFromStorage.id) {
+          const responseUpdated = Date.parse(response.updated);
+          const localUpdated = Date.parse(valuesFromStorage.updated);
+          const stackScriptHasBeenUpdatedElsewhere =
+            responseUpdated > localUpdated;
+          if (
+            response.id === valuesFromStorage.id &&
+            !stackScriptHasBeenUpdatedElsewhere
+          ) {
             this.setState({
               label: valuesFromStorage.label ?? '',
               description: valuesFromStorage.description ?? '',
@@ -146,6 +155,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               script: response.script,
               apiResponse: response, // Saved for use when resetting the form
               isLoadingStackScript: false,
+              updated: response.updated,
             });
           }
         })
@@ -179,6 +189,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       script,
       images,
       revisionNote: rev_note,
+      updated,
     } = this.state;
     const {
       mode,
@@ -200,6 +211,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         script,
         images,
         rev_note,
+        updated,
       });
     }
   };

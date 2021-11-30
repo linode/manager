@@ -22,12 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       fill: theme.bg.lightBlue,
     },
   },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-  },
   objectNameButton: {
     ...theme.applyLinkStyles,
     color: theme.cmrTextColors.linkActiveLight,
@@ -93,7 +87,7 @@ const ObjectTableRow: React.FC<Props> = (props) => {
           <DateTimeDisplay value={objectLastModified} />
         </TableCell>
       </Hidden>
-      <TableCell className={classes.actionCell}>
+      <TableCell actionCell>
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
