@@ -1,0 +1,191 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import { partition } from 'ramda';
+import { Provider } from 'react-redux';
+import {
+  domainFactory,
+  firewallFactory,
+  volumeFactory,
+  imageFactory,
+  nodeBalancerFactory,
+  nodeBalancerConfigFactory
+} from 'src/factories';
+import store from 'src/store';
+import { getHeaders as getDomainHeaders } from 'src/features/Domains/DomainsLanding';
+import { getHeaders as getImageHeaders } from 'src/features/Images/ImagesLanding';
+import { headers as firewallHeaders } from 'src/features/Firewalls/FirewallLanding/FirewallLanding';
+import { headers as nodeBalancerHeaders } from 'src/features/NodeBalancers/NodeBalancersLanding/NodeBalancersLanding';
+import DomainRow from 'src/features/Domains/DomainTableRow';
+import FirewallRow from 'src/features/Firewalls/FirewallLanding/FirewallRow';
+import ImageRow, { ImageWithEvent } from 'src/features/Images/ImageRow';
+import NodeBalancerTableRow from 'src/features/NodeBalancers/NodeBalancersLanding/NodeBalancerTableRow';
+import { volumeHeaders } from 'src/features/Volumes/VolumesLanding';
+import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
+import EntityTable, { EntityTableRow, HeaderCell } from './EntityTable';
+
+<Meta
+  title="Components/Entity Table"
+  component={EntityTable}
+/>
+
+export const VolumesTable = () => {
+  const volumes = volumeFactory.buildList(10);
+  return (
+    <EntityTable
+      entity="volume"
+      headers={volumeHeaders}
+      row={{
+        handlers: {},
+        Component: VolumeTableRow,
+        data: volumes,
+        lastUpdated: 1637782175231,
+      }}
+      initialOrder={{ order: 'asc', orderBy: 'label' }}
+    />
+  )
+}
+
+export const DomainsTable = () => {
+  const domains = domainFactory.buildList(10);
+  const headers = [
+    {
+      label: 'Domain',
+      dataColumn: 'domain',
+      sortable: true,
+      widthPercent: 25,
+    },
+    {
+      label: 'Type',
+      dataColumn: 'type',
+      sortable: true,
+      widthPercent: 15,
+    },
+    {
+      label: 'Status',
+      dataColumn: 'status',
+      sortable: false,
+      widthPercent: 25,
+    },
+    {
+      label: 'Last Modified',
+      dataColumn: 'updated',
+      sortable: true,
+      widthPercent: 25,
+    },
+    {
+      label: 'Action Menu',
+      visuallyHidden: true,
+      dataColumn: '',
+      sortable: false,
+      widthPercent: 5,
+    },
+  ];
+  return (
+    <Provider store={store}>
+      <Grid spacing={8}>
+        <EntityTable
+          entity="domains"
+          headers={headers}
+          row={{
+            Component: DomainRow,
+            data: domains,
+            loading: false,
+            lastUpdated: 1637782175231,
+          }}
+        />
+      </Grid>
+    </Provider>
+  )
+}
+
+export const FirewallsTable = () => {
+  const firewalls = firewallFactory.buildList(10);
+  return (
+    <EntityTable
+      entity="firewall"
+      headers={firewallHeaders}
+      row={{
+        handlers: {},
+        Component: FirewallRow,
+        data: firewalls,
+        loading: false,
+        lastUpdated: 1637782175231,
+        error: undefined,
+      }}
+      initialOrder={{ order: 'asc', orderBy: 'domain' }}
+    />
+  )
+}
+
+export const ImagesTable = () => {
+  const manualHeaders = getImageHeaders('manual');
+  const manualImages = imageFactory.buildList(10);
+  return (
+    <EntityTable
+      entity="image"
+      headers={manualHeaders}
+      row={{
+        Component: ImageRow,
+        data: manualImages,
+        loading: false,
+        lastUpdated: 1637782175231,
+        handlers: {},
+      }}
+      initialOrder={{ order: 'asc', orderBy: 'label' }}
+    />
+  )
+}
+
+export const NodeBalancersTable = () => {
+  const configs = nodeBalancerConfigFactory.buildList(2);
+  const nodeBalancers = nodeBalancerFactory.buildList(10).map(nb => ({ ...nb, configs }));
+  return (
+    <EntityTable
+      entity="nodebalancer"
+      headers={nodeBalancerHeaders}
+      row={{
+        Component: NodeBalancerTableRow,
+        data: nodeBalancers,
+        handlers: {},
+        lastUpdated: 1637782175231,
+      }}
+      initialOrder={{ order: 'asc', orderBy: 'label' }}
+    />
+  )
+}
+
+# Entity Detail
+<Canvas>
+  <Story name="Volumes">
+    <h2 style={{marginTop: 0}}>Volumes: </h2>
+    <VolumesTable />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Domains">
+    <h2 style={{marginTop: 0}}>Domains: </h2>
+    <DomainsTable />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Firewalls">
+    <h2 style={{marginTop: 0}}>Firewalls: </h2>
+    <FirewallsTable />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Images">
+    <h2 style={{marginTop: 0}}>Images: </h2>
+    <ImagesTable />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="NodeBalancers">
+    <h2 style={{marginTop: 0}}>NodeBalancers: </h2>
+    <NodeBalancersTable />
+  </Story>
+</Canvas>
+

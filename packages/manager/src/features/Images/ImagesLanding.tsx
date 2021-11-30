@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const getHeaders = (tableType: 'automatic' | 'manual'): HeaderCell[] =>
+export const getHeaders = (tableType: 'automatic' | 'manual'): HeaderCell[] =>
   [
     {
       label: 'Image',

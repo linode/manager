@@ -102,7 +102,7 @@ type CombinedProps = Props &
   WithSnackbarProps &
   WithMappedVolumesProps;
 
-const volumeHeaders = [
+export const volumeHeaders = [
   {
     label: 'Label',
     dataColumn: 'label',
