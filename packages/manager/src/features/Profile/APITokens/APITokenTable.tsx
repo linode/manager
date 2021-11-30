@@ -1,3 +1,4 @@
+import { Account } from '@linode/api-v4/lib';
 import {
   createPersonalAccessToken,
   deleteAppToken,
@@ -7,12 +8,10 @@ import {
   Token,
   updatePersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
-import { Account } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { compose } from 'recompose';
-import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -37,6 +36,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
+import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
@@ -50,9 +50,7 @@ type ClassNames =
   | 'headline'
   | 'tokens'
   | 'addNewWrapper'
-  | 'addNewLink'
-  | 'labelCell'
-  | 'actionMenu';
+  | 'labelCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -77,10 +75,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('md')]: {
         width: '25%',
       },
-    },
-    actionMenu: {
-      display: 'flex',
-      justifyContent: 'flex-end',
     },
   });
 
@@ -478,7 +472,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   renderRows(tokens: Token[]) {
-    const { classes, title, type } = this.props;
+    const { title, type } = this.props;
 
     return tokens.map((token: Token) => (
       <TableRow
@@ -515,7 +509,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             }
           </Typography>
         </TableCell>
-        <TableCell className={classes.actionMenu}>
+        <TableCell actionCell>
           <APITokenMenu
             token={token}
             type={type}

@@ -79,12 +79,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 6,
     whiteSpace: 'nowrap',
   },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-  },
   table: {
     backgroundColor: theme.color.border3,
   },
@@ -384,7 +378,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         </Hidden>
 
         <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
-        <TableCell className={classes.actionCell}>
+        <TableCell actionCell>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button
