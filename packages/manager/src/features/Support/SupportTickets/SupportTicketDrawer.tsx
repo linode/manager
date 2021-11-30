@@ -68,7 +68,7 @@ export type EntityType =
   | 'volume_id'
   | 'domain_id'
   | 'nodebalancer_id'
-  | 'cluster_id'
+  | 'lkecluster_id'
   | 'none'
   | 'general';
 
@@ -89,7 +89,7 @@ const entityMap: Record<string, EntityType> = {
   Volumes: 'volume_id',
   Domains: 'domain_id',
   NodeBalancers: 'nodebalancer_id',
-  Kubernetes: 'cluster_id',
+  Kubernetes: 'lkecluster_id,
 };
 
 const entityIdToNameMap: Partial<Record<EntityType, string>> = {
@@ -97,7 +97,7 @@ const entityIdToNameMap: Partial<Record<EntityType, string>> = {
   volume_id: 'Volume',
   domain_id: 'Domain',
   nodebalancer_id: 'NodeBalancer',
-  cluster_id: 'Kubernetes Cluster',
+  lkecluster_id: 'Kubernetes Cluster',
 };
 
 const entityIdToTypeMap: Record<EntityType, string> = {
@@ -105,7 +105,7 @@ const entityIdToTypeMap: Record<EntityType, string> = {
   volume_id: 'volumes',
   domain_id: 'domains',
   nodebalancer_id: 'nodeBalancers',
-  cluster_id: 'kubernetesClusters',
+  lkecluster_id: 'kubernetesClusters',
   none: 'linodes',
   general: 'linodes',
 };
@@ -218,7 +218,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
         return;
       }
-      case 'cluster_id': {
+      case 'lkecluster_id': {
         handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
         return;
       }
