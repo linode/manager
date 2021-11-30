@@ -321,7 +321,7 @@ describe('utilities', () => {
     });
 
     it('handles edge cases', () => {
-      expect(getEstimatedCloneTime(0, 'sameDatacenter')).toBe('0 seconds ago');
+      expect(getEstimatedCloneTime(0, 'sameDatacenter')).toContain('0 seconds');
       expect(getEstimatedCloneTime(40000000, 'sameDatacenter')).toBe('20 days');
     });
   });
