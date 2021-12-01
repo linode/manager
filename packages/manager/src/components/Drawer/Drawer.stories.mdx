@@ -3,7 +3,14 @@ import Typography from 'src/components/core/Typography';
 import ActionsPanel from '../ActionsPanel';
 import TextField from '../TextField';
 import Drawer from './Drawer';
-import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+
+export const decorators = [
+  (Story) => {
+    const [open, setOpen] = React.useState(false);
+    return Story({ open, setOpen });
+  },
+];
 
 <Meta title="Components/Drawer" component={Drawer} />
 
@@ -28,7 +35,7 @@ export const Template = (args, context) => {
       <Button buttonType="primary" onClick={() => context.setOpen(true)}>
         Click to open Drawer
       </Button>
-      <Drawer title="My Drawer" open={context.open} onClose={close}>
+      <Drawer title="My Drawer" {...args} open={context.open} onClose={close}>
         <Typography>
           This is some test copy which acts as content for this Drawer
           component. It's very interesting and you should read all of it. This
@@ -53,15 +60,51 @@ export const Template = (args, context) => {
 };
 
 <Canvas>
+  <Story name="Default" decorators={decorators}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Component API
+
+<hr />
+
+_Props extends MUI's DrawerProps_
+
+<Canvas>
   <Story
-    name="Default"
-    decorators={[
-      (Story) => {
-        const [open, setOpen] = React.useState(false);
-        return Story({ open, setOpen });
+    name="Component API"
+    decorators={decorators}
+    args={{
+      open: false,
+      onClose: () => null,
+      title: 'My Drawer',
+      wide: false,
+    }}
+    argTypes={{
+      open: {
+        description: 'Whether or not the Drawer is currently open',
       },
-    ]}
+      onClose: {
+        description: 'The handler called when the "X" button is clicked',
+      },
+      title: {
+        description: 'The title displayed at the top of the Drawer',
+      },
+      wide: {
+        description:
+          'Whether or not the drawer should be wide (at small viewports and above)',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+    }}
   >
     {Template.bind({})}
   </Story>
 </Canvas>
+
+<ArgsTable
+  story="Component API"
+  include={['open', 'onClose', 'title', 'wide']}
+/>
