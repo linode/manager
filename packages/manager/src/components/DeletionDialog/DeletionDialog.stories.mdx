@@ -8,7 +8,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
   decorators={[
     (Story) => {
       return (
-        <div id="modal-story">
+        <div id="delete-modal-story">
           <Story />
         </div>
       );
@@ -23,7 +23,7 @@ export const Template = (args, context) => (
     disableEnforceFocus
     disableAutoFocus
     disablePortal
-    container={() => document.getElementById('modal-story')}
+    container={() => document.getElementById('delete-modal-story')}
     {...args}
   >
     {args.children}
@@ -43,22 +43,20 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
       typeToConfirm: true,
       entity: 'Linode',
       label: 'my-linode-0',
-      title: 'Are you sure?',
-      children: 'This deletion modal is making sure you really want to do this.',
       error: '',
     }}
     argTypes={{
       open: {
         description: 'Is the modal open?',
       },
+      typeToConfirm: {
+        description: `Whether or not a user is required to type the enity's label to delete.`,
+      },
       entity: {
-        description: 'What entity is this for?',
+        description: 'They type of entity that is going to be deleted',
       },
       label: {
         description: 'The label of the entity you will delete.',
-      },
-      children: {
-        description: 'The contents of the Modal.',
       },
       error: {
         description: 'Error that will be shown in the dialog.',

@@ -1,14 +1,13 @@
-import ConfirmationDialog from './ConfirmationDialog';
+import Dialog from './Dialog';
+import Typography from 'src/components/core/Typography';
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
-import Button from 'src/components/Button';
-import ActionsPanel from 'src/components/ActionsPanel';
 
 <Meta
-  title="Components/Modals/Confirmation Dialog"
+  title="Components/Modals/Dialog"
   decorators={[
     (Story) => {
       return (
-        <div id="confirm-modal-story">
+        <div id="dialog-story">
           <Story />
         </div>
       );
@@ -17,16 +16,16 @@ import ActionsPanel from 'src/components/ActionsPanel';
 />
 
 export const Template = (args, context) => (
-  <ConfirmationDialog
+  <Dialog
     style={{ position: 'unset' }}
     disableEnforceFocus
     disableAutoFocus
     disablePortal
-    container={() => document.getElementById('confirm-modal-story')}
+    container={() => document.getElementById('dialog-story')}
     {...args}
   >
     {args.children}
-  </ConfirmationDialog>
+  </Dialog>
 );
 
 # Modal
@@ -36,22 +35,21 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
 
 <Canvas>
   <Story
-    name="Confirmation Dialog"
+    name="Dialog"
     args={{
       open: true,
-      title: 'Are you sure?',
-      children: 'This confirmation modal is making sure you really want to do this.',
+      fullHeight: false,
+      fullWidth: false,
+      title: 'This is a Dialog',
+      children: 'This a basic dialog with children in it.',
       error: '',
-      actions: (
-        <ActionsPanel>
-          <Button>Cancel</Button>
-          <Button buttonType="primary">Continue</Button>
-        </ActionsPanel>
-      )
     }}
     argTypes={{
       open: {
         description: 'Is the modal open?',
+      },
+      fullHeight: {
+        description: 'Should the Modal take up the entire height of the viewport?',
       },
       children: {
         description: 'The contents of the Modal.',
@@ -70,7 +68,7 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
 
 
 <ArgsTable
-  story="Confirmation Dialog"
+  story="Dialog"
   exclude={[
     'ref',
   ]}
