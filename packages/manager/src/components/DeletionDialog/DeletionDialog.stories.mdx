@@ -1,0 +1,81 @@
+import DeletionDialog from './DeletionDialog';
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import Button from 'src/components/Button';
+import ActionsPanel from 'src/components/ActionsPanel';
+
+<Meta
+  title="Components/Modals/Deletion Dialog"
+  decorators={[
+    (Story) => {
+      return (
+        <div id="modal-story">
+          <Story />
+        </div>
+      );
+    },
+  ]}
+/>
+
+
+export const Template = (args, context) => (
+  <DeletionDialog
+    style={{ position: 'unset' }}
+    disableEnforceFocus
+    disableAutoFocus
+    disablePortal
+    container={() => document.getElementById('modal-story')}
+    {...args}
+  >
+    {args.children}
+  </DeletionDialog>
+);
+
+# Modal
+
+## Overview
+A modal dialog is a window that appears on top of a parent screen. It's called 'modal' because it creates a mode that disables the parent screen but keeps it visible. Users must interact with the modal to return to the main screen. 
+
+<Canvas>
+  <Story
+    name="Deletion Dialog"
+    args={{
+      open: true,
+      typeToConfirm: true,
+      entity: 'Linode',
+      label: 'my-linode-0',
+      title: 'Are you sure?',
+      children: 'This deletion modal is making sure you really want to do this.',
+      error: '',
+    }}
+    argTypes={{
+      open: {
+        description: 'Is the modal open?',
+      },
+      entity: {
+        description: 'What entity is this for?',
+      },
+      label: {
+        description: 'The label of the entity you will delete.',
+      },
+      children: {
+        description: 'The contents of the Modal.',
+      },
+      error: {
+        description: 'Error that will be shown in the dialog.',
+      },
+      onClose: {
+        description: 'Callback fired when the component requests to be closed.',
+      }
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+
+<ArgsTable
+  story="Deletion Dialog"
+  exclude={[
+    'ref',
+  ]}
+/>
