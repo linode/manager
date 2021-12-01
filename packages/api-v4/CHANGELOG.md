@@ -1,3 +1,8 @@
+## [2021-11-30] - v0.64.0
+
+### Added:
+- getLinodeFirewalls method
+
 ## [2021-11-15] - v0.63.0
 
 ### Added:
