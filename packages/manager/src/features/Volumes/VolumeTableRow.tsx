@@ -145,7 +145,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
         <Grid
           container
           wrap="nowrap"
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="flex-end"
         >
           {isVolumesLanding ? (
