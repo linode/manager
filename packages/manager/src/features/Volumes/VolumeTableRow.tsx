@@ -1,8 +1,4 @@
-import {
-  Event,
-  EventAction,
-  NotificationType,
-} from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -14,11 +10,9 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import useNotifications from 'src/hooks/useNotifications';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import useEvents from 'src/hooks/useEvents';
 
 const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
@@ -90,37 +84,18 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     linodeLabel,
     linode_id: linodeId,
     linodeStatus,
+    eligibleForUpgradeToNVMe,
+    nvmeUpgradeScheduledByUserImminent,
+    nvmeUpgradeScheduledByUserInProgress,
   } = props;
 
-  const { events } = useEvents();
   const history = useHistory();
   const location = useLocation();
-  const notifications = useNotifications();
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
 
   const isNVMe = hardwareType === 'nvme';
-
-  const eligibleForUpgradeToNVMe = notifications.some(
-    (notification) =>
-      notification.type ===
-        ('volume_migration_scheduled' as NotificationType) &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserImminent = notifications.some(
-    (notification) =>
-      notification.type === ('volume_migration_imminent' as NotificationType) &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserInProgress = events.some(
-    (event) =>
-      event.action === ('volume_migrate' as EventAction) &&
-      event.entity?.id === id &&
-      event.status === 'started'
-  );
 
   return isUpdating ? (
     <TableRow
