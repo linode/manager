@@ -102,6 +102,12 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
       fullHeight: {
         description: 'Should the Modal take up the entire height of the viewport?',
       },
+      fullWidth: {
+        description: 'Should the Modal take up the entire width of the viewport?',
+      },
+      title: {
+        description: 'Title that appears in the heading of the dialog.',
+      },
       children: {
         description: 'The contents of the Modal.',
       },
@@ -155,11 +161,17 @@ A Confirmation Dialog is used for confirming a simple task.
       open: {
         description: 'Is the modal open?',
       },
+      title: {
+        description: 'Title that appears in the heading of the dialog.',
+      },
       children: {
         description: 'The contents of the Modal.',
       },
       error: {
         description: 'Error that will be shown in the dialog.',
+      },
+      actions: {
+        description: 'Items that get rendered in the footer of the Dialog. Typicaly you put an `<ActionsPanel />` with `<Button />`s in it.',
       },
       onClose: {
         description: 'Callback fired when the component requests to be closed.',
