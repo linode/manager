@@ -1,6 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import { partition } from 'ramda';
 import { Provider } from 'react-redux';
+import { useTheme, useMediaQuery } from 'src/components/core/styles';
 import {
   domainFactory,
   firewallFactory,
@@ -32,6 +33,8 @@ export const VolumesTable = () => {
   return (
     <EntityTable
       entity="volume"
+      toggleGroupByTag={() => false}
+      isGroupedByTag={false}
       headers={volumeHeaders}
       row={{
         handlers: {},
@@ -45,45 +48,23 @@ export const VolumesTable = () => {
 }
 
 export const DomainsTable = () => {
+  const theme = useTheme();
+  const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
   const domains = domainFactory.buildList(10);
-  const headers = [
-    {
-      label: 'Domain',
-      dataColumn: 'domain',
-      sortable: true,
-      widthPercent: 25,
-    },
-    {
-      label: 'Type',
-      dataColumn: 'type',
-      sortable: true,
-      widthPercent: 15,
-    },
-    {
-      label: 'Status',
-      dataColumn: 'status',
-      sortable: false,
-      widthPercent: 25,
-    },
-    {
-      label: 'Last Modified',
-      dataColumn: 'updated',
-      sortable: true,
-      widthPercent: 25,
-    },
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 5,
-    },
-  ];
+  const headers = getDomainHeaders(
+    matchesXsDown,
+    matchesSmDown,
+    matchesMdDown
+  );
   return (
     <Provider store={store}>
       <Grid spacing={8}>
         <EntityTable
           entity="domains"
+          toggleGroupByTag={() => false}
+          isGroupedByTag={false}
           headers={headers}
           row={{
             Component: DomainRow,
@@ -141,6 +122,8 @@ export const NodeBalancersTable = () => {
   return (
     <EntityTable
       entity="nodebalancer"
+      toggleGroupByTag={() => false}
+      isGroupedByTag={false}
       headers={nodeBalancerHeaders}
       row={{
         Component: NodeBalancerTableRow,
@@ -154,37 +137,38 @@ export const NodeBalancersTable = () => {
 }
 
 # Entity Detail
+
+## Volumes
 <Canvas>
   <Story name="Volumes">
-    <h2 style={{marginTop: 0}}>Volumes: </h2>
     <VolumesTable />
   </Story>
 </Canvas>
 
+## Domains
 <Canvas>
   <Story name="Domains">
-    <h2 style={{marginTop: 0}}>Domains: </h2>
     <DomainsTable />
   </Story>
 </Canvas>
 
+## Firewalls
 <Canvas>
   <Story name="Firewalls">
-    <h2 style={{marginTop: 0}}>Firewalls: </h2>
     <FirewallsTable />
   </Story>
 </Canvas>
 
+## Images
 <Canvas>
   <Story name="Images">
-    <h2 style={{marginTop: 0}}>Images: </h2>
     <ImagesTable />
   </Story>
 </Canvas>
 
+## NodeBalancers
 <Canvas>
   <Story name="NodeBalancers">
-    <h2 style={{marginTop: 0}}>NodeBalancers: </h2>
     <NodeBalancersTable />
   </Story>
 </Canvas>
