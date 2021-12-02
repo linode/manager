@@ -1,6 +1,30 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import TopMenu from '/src/features/TopMenu/TopMenu';
+import { useState } from 'react';
+import TopMenu from '/src/features/TopMenu';
 
 <Meta title="Components/Navigation/Top Menu" component={TopMenu} />
 
-# TopMenu
+# Top Menu
+
+### Overview
+
+<hr />
+
+- Items presented in the top navigation are considered universally important and should be available regardless of any particular task.
+- The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
+
+export const Template = () => {
+  return (
+    <TopMenu
+      isSideMenuOpen={false}
+      openSideMenu={() => null}
+      desktopMenuToggle={() => null}
+      isLoggedInAsCustomer={false}
+      username="Gritty"
+    />
+  );
+};
+
+<Canvas style={{ background: '#f4f5f6' }}>
+  <Story name="Top Menu">{Template.bind({})}</Story>
+</Canvas>
