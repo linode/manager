@@ -1,36 +1,26 @@
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import Notice from 'src/components/Notice';
+import Button from 'src/components/Button';
 
-type ClassNames = 'root' | 'footnote' | 'link' | 'icon' | 'toolTip';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    footnote: {
-      fontSize: 14,
-      cursor: 'pointer',
-    },
-    link: {
-      ...theme.applyLinkStyles,
-    },
-    icon: {
-      display: 'inline-block',
-      fontSize: '0.8em',
-      marginLeft: theme.spacing(1) / 3,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  footnote: {
+    fontSize: 14,
+    cursor: 'pointer',
+  },
+  icon: {
+    display: 'inline-block',
+    fontSize: '0.8em',
+    marginLeft: theme.spacing(1) / 3,
+  },
+}));
 
 interface Props {
   backups_enabled: boolean;
@@ -40,17 +30,16 @@ interface Props {
   isManagedCustomer: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const AutoBackups: React.FC<CombinedProps> = (props) => {
+const AutoBackups: React.FC<Props> = (props) => {
   const {
     backups_enabled,
-    classes,
     hasLinodesWithoutBackups,
     onChange,
     openBackupsDrawer,
     isManagedCustomer,
   } = props;
+
+  const classes = useStyles();
 
   return (
     <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>
@@ -66,7 +55,7 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
             This controls whether Linode Backups are enabled, by default, for
             all Linodes when they are initially created. For each Linode with
             Backups enabled, your account will be billed the additional hourly
-            rate noted on the
+            rate noted on the &nbsp;
             <a
               data-qa-backups-price
               href="https://linode.com/backups"
@@ -74,7 +63,7 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
               aria-describedby="external-site"
               rel="noopener noreferrer"
             >
-              {` Backups pricing page`}
+              {`Backups pricing page`}
               <OpenInNew className={classes.icon} />
             </a>
             .
@@ -104,14 +93,15 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
           <Grid item>
             <Typography variant="body1" className={classes.footnote}>
               {`For existing Linodes without backups, `}
-              <button
+              <Button
+                compact
+                buttonType="secondary"
                 data-qa-backup-existing
-                className={classes.link}
                 onClick={openBackupsDrawer}
                 title="enable now"
               >
                 enable now
-              </button>
+              </Button>
               .
             </Typography>
           </Grid>
@@ -121,6 +111,4 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(AutoBackups);
+export default AutoBackups;
