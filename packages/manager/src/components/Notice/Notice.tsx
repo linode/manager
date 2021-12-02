@@ -128,7 +128,7 @@ interface Props extends GridProps {
   flag?: boolean;
   notificationList?: boolean;
   spacingTop?: 0 | 8 | 16 | 24;
-  spacingBottom?: 0 | 8 | 16 | 24;
+  spacingBottom?: 0 | 8 | 16 | 20 | 24;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   // Dismissible Props

@@ -1,40 +1,25 @@
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
+import Button from 'src/components/Button';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
-import HelpIcon from 'src/components/HelpIcon';
-
-type ClassNames = 'root' | 'footnote' | 'link' | 'icon' | 'toolTip';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    footnote: {
-      fontSize: 14,
-      cursor: 'pointer',
-    },
-    link: {
-      ...theme.applyLinkStyles,
-    },
-    icon: {
-      display: 'inline-block',
-      fontSize: '0.8em',
-      marginLeft: theme.spacing(1) / 3,
-    },
-    toolTip: {
-      paddingTop: theme.spacing(1),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  footnote: {
+    fontSize: 14,
+    cursor: 'pointer',
+  },
+  icon: {
+    display: 'inline-block',
+    fontSize: '0.8em',
+    marginLeft: theme.spacing(1) / 3,
+  },
+}));
 
 interface Props {
   backups_enabled: boolean;
@@ -44,39 +29,32 @@ interface Props {
   isManagedCustomer: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const AutoBackups: React.FC<CombinedProps> = (props) => {
+const AutoBackups: React.FC<Props> = (props) => {
   const {
     backups_enabled,
-    classes,
     hasLinodesWithoutBackups,
     onChange,
     openBackupsDrawer,
     isManagedCustomer,
   } = props;
 
+  const classes = useStyles();
+
   return (
     <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>
-      <Grid container direction="column" className={classes.root}>
+      <Grid container direction="column">
         <Grid item>
-          <Typography variant="h2">
-            Back Up All New Linodes
-            {!!isManagedCustomer && (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`You're a Managed customer, which means your Linodes are already automatically
-              backed up - no need to toggle this setting.`}
-              />
-            )}
-          </Typography>
-        </Grid>
-        <Grid item>
+          {!!isManagedCustomer ? (
+            <Notice success spacingBottom={20}>
+              You&rsquo;re a Managed customer, which means your Linodes are
+              already automatically backed up - no need to toggle this setting.
+            </Notice>
+          ) : null}
           <Typography variant="body1">
             This controls whether Linode Backups are enabled, by default, for
             all Linodes when they are initially created. For each Linode with
             Backups enabled, your account will be billed the additional hourly
-            rate noted on the
+            rate noted on the&nbsp;
             <a
               data-qa-backups-price
               href="https://linode.com/backups"
@@ -84,7 +62,7 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
               aria-describedby="external-site"
               rel="noopener noreferrer"
             >
-              {` Backups pricing page`}
+              Backups pricing page
               <OpenInNew className={classes.icon} />
             </a>
             .
@@ -93,7 +71,6 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
         <Grid item container direction="row" alignItems="center">
           <Grid item>
             <FormControlLabel
-              // className="toggleLabel"
               control={
                 <Toggle
                   onChange={onChange}
@@ -113,15 +90,16 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
         {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
           <Grid item>
             <Typography variant="body1" className={classes.footnote}>
-              {`For existing Linodes without backups, `}
-              <button
+              For existing Linodes without backups,&nbsp;
+              <Button
+                compact
+                buttonType="secondary"
                 data-qa-backup-existing
-                className={classes.link}
                 onClick={openBackupsDrawer}
                 title="enable now"
               >
                 enable now
-              </button>
+              </Button>
               .
             </Typography>
           </Grid>
@@ -131,6 +109,4 @@ const AutoBackups: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(AutoBackups);
+export default AutoBackups;
