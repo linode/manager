@@ -63,6 +63,7 @@ module.exports = {
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/');
     },
+    hashFunction: 'xxhash64',
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -98,6 +99,7 @@ module.exports = {
   },
   module: {
     strictExportPresence: true,
+    unsafeCache: true,
     rules: [
       // @TODO what benefit does the source-map-loader provide?
       // {
@@ -221,5 +223,14 @@ module.exports = {
   ],
   performance: {
     hints: false,
+  },
+  optimization: {
+    // https://github.com/webpack/webpack/issues/12102#issuecomment-938544497
+    sideEffects: false,
+    providedExports: false,
+  },
+  experiments: {
+    // https://github.com/webpack/webpack/issues/12102#issuecomment-938544497
+    cacheUnaffected: true,
   },
 };
