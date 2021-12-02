@@ -1,16 +1,15 @@
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
+import Accordion from 'src/components/Accordion';
+import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Accordion from 'src/components/Accordion';
 import Grid from 'src/components/Grid';
-import Toggle from 'src/components/Toggle';
 import Notice from 'src/components/Notice';
-import Button from 'src/components/Button';
+import Toggle from 'src/components/Toggle';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   footnote: {
     fontSize: 14,
     cursor: 'pointer',
@@ -43,19 +42,19 @@ const AutoBackups: React.FC<Props> = (props) => {
 
   return (
     <Accordion heading="Backup Auto Enrollment" defaultExpanded={true}>
-      <Grid container direction="column" className={classes.root}>
+      <Grid container direction="column">
         <Grid item>
           {!!isManagedCustomer ? (
-            <Notice success>
-              You're a Managed customer, which means your Linodes are already
-              automatically backed up - no need to toggle this setting.
+            <Notice success spacingBottom={20}>
+              You&rsquo;re a Managed customer, which means your Linodes are
+              already automatically backed up - no need to toggle this setting.
             </Notice>
           ) : null}
           <Typography variant="body1">
             This controls whether Linode Backups are enabled, by default, for
             all Linodes when they are initially created. For each Linode with
             Backups enabled, your account will be billed the additional hourly
-            rate noted on the &nbsp;
+            rate noted on the&nbsp;
             <a
               data-qa-backups-price
               href="https://linode.com/backups"
@@ -63,7 +62,7 @@ const AutoBackups: React.FC<Props> = (props) => {
               aria-describedby="external-site"
               rel="noopener noreferrer"
             >
-              {`Backups pricing page`}
+              Backups pricing page
               <OpenInNew className={classes.icon} />
             </a>
             .
@@ -72,7 +71,6 @@ const AutoBackups: React.FC<Props> = (props) => {
         <Grid item container direction="row" alignItems="center">
           <Grid item>
             <FormControlLabel
-              // className="toggleLabel"
               control={
                 <Toggle
                   onChange={onChange}
@@ -92,7 +90,7 @@ const AutoBackups: React.FC<Props> = (props) => {
         {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
           <Grid item>
             <Typography variant="body1" className={classes.footnote}>
-              {`For existing Linodes without backups, `}
+              For existing Linodes without backups,&nbsp;
               <Button
                 compact
                 buttonType="secondary"
