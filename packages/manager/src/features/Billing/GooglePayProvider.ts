@@ -51,9 +51,15 @@ export const initGooglePaymentInstance = async (
 const tokenizePaymentDataRequest = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
-  }
+  },
+  setMessage: (
+    message: string,
+    variant: VariantType,
+    warnings?: APIWarning[]
+  ) => void
 ) => {
   let paymentDataRequest: google.payments.api.PaymentDataRequest;
+
   try {
     paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
       merchantInfo,
@@ -65,7 +71,8 @@ const tokenizePaymentDataRequest = async (
     reportException(error, {
       message: 'Unable to open Google Pay.',
     });
-    return Promise.reject('Unable to open Google Pay.');
+    setMessage('Unable to open Google Pay.', 'error');
+    return Promise.reject();
   }
 
   const googlePayClient = new google.payments.api.PaymentsClient({
@@ -81,7 +88,8 @@ const tokenizePaymentDataRequest = async (
     allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
   });
   if (!isReadyToPay) {
-    return Promise.reject('Your device does not support Google Pay.');
+    setMessage('Your device does not support Google Pay.', 'error');
+    return Promise.reject();
   }
 
   const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
@@ -127,7 +135,6 @@ export const gPay = async (
       reportException(error, {
         message: 'Unable to complete Google Pay payment',
       });
-      setMessage('Unable to complete Google Pay payment', 'error');
     }
   };
 
@@ -144,25 +151,29 @@ export const gPay = async (
       reportException(error, {
         message: 'Unable to add payment method',
       });
-      // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
-      setMessage('Unable to add payment method', 'error');
     }
   };
 
+  const isOneTimePayment = action === 'one-time-payment';
   try {
-    const nonce = await tokenizePaymentDataRequest(transactionInfo);
+    const nonce = await tokenizePaymentDataRequest(transactionInfo, setMessage);
     setProcessing(true);
-    if (action === 'one-time-payment') {
+    if (isOneTimePayment) {
       await makeOneTimePayment(nonce);
     } else {
       await addRecurringPayment(nonce);
     }
     setProcessing(false);
   } catch (error) {
-    if (error.statusCode === 'CANCELED') {
+    setProcessing(false);
+    if (!error || error.statusCode === 'CANCELED') {
       return;
     }
-    // errorMsg from tokenizePaymentDataRequest
-    setMessage(error, 'error');
+
+    const errorMsg = isOneTimePayment
+      ? 'Unable to complete Google Pay payment'
+      : 'Unable to add payment method';
+    // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
+    setMessage(errorMsg, 'error');
   }
 };
